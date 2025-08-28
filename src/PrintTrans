@@ -1,0 +1,308 @@
+ public PrintTrans(long TransMasterID, string VoucherType, string FormType, string KitchenPrinterName, bool IsInvTrans = false, bool IsSalesView = false, string transDate = "2014-1-1", bool ShowPreview = false, int KitchenID = 0, string KitchenName = "", int _CommonKitchenProductGroupID = 0)
+ {
+
+     //KITCHEN PRINTINT FOR KOT
+     try
+     {
+
+         this.TransactionDate = Convert.ToDateTime(transDate);
+         showPreview = ShowPreview;
+         this.IsInvTrans = IsInvTrans;
+         this.IsSalesView = IsSalesView;
+         this.KitchenID = KitchenID;
+         this.KitchenPrinterName = KitchenPrinterName;
+         PrinterName = this.KitchenPrinterName;
+         this.KitchenName = KitchenName;
+         this.CommonKitchenProductGroupID = _CommonKitchenProductGroupID;
+         InitializeVariable();
+
+         //printDocument1.PrintPage += new PrintPageEventHandler(PrintDocument_PrintPage);
+
+         string path = "";
+         path = Environment.CurrentDirectory.ToString() + "\\PrintDesigns\\" + VoucherType + FormType + ".IDS";
+         SR = new StreamReader(path);
+
+         PD.PrintPage += new PrintPageEventHandler(PD_PrintPage);
+         if (TransMasterID < 10)
+         {
+             Transactionbarcode = "*00000" + TransMasterID.ToString() + "*";
+         }
+         if (TransMasterID < 100)
+         {
+             Transactionbarcode = "*0000" + TransMasterID.ToString() + "*";
+         }
+         else if (TransMasterID < 1000)
+         {
+             Transactionbarcode = "*000" + TransMasterID.ToString() + "*";
+         }
+         else
+         {
+             Transactionbarcode = "*" + TransMasterID.ToString() + "*";
+         }
+
+
+         if (IsInvTrans == true)
+         {
+             //Inventory Transaction
+             LoadInvData(TransMasterID, PrinterName);
+             SetMasterValues();
+         }
+         else if (IsSalesView == true)
+         {
+             //SalesView Transaction
+             LoadSVData(TransMasterID);
+         }
+         else
+         {
+             //Account Transaction
+             LoadAccData(TransMasterID);
+             TransactionTime = Convert.ToDateTime(dtTranMaster.Rows[0]["SystemDateTime"].ToString());
+         }
+         Print();
+     }
+     catch (Exception ex) { }
+ }
+
+ public PrintTrans(long TransMasterID, string VoucherType, string FormType, bool IsInvTrans = false, bool IsSalesView = false, string transDate = "2014-1-1", bool ShowPreview = false, int PrintCopies = 1, bool Isreprint = false, string PrintDesignType = "", bool IsPOSPrinting = false, bool IsFromSalesReceipt = false, bool IsPackingSliptPrint = false, int WarehouseID = 0, bool IsReprint = false, bool isPdf = false, string filepath = "", List<GatePassItem> gatePassItems = null)
+{
+    try
+    {
+        this.IsFromSalesReceipt = IsFromSalesReceipt;
+        if (PrintCopies > 0)
+        {
+            NoofCopies = PrintCopies;
+        }
+        this.TransactionDate = Convert.ToDateTime(transDate);
+        IS_POS_Printing = IsPOSPrinting;
+        VOUCHERTYPE = VoucherType;
+        showPreview = ShowPreview;
+        this.IsInvTrans = IsInvTrans;
+        this.IsSalesView = IsSalesView;
+        this.IsReprint = Isreprint;
+        PdfPrintPath = filepath;
+        InitializeVariable();
+        string path = "";
+        GatePassItems = gatePassItems ?? new List<GatePassItem>();
+        path = Environment.CurrentDirectory.ToString() + "\\PrintDesigns\\" + VoucherType + FormType + PrintDesignType + ".IDS";
+
+        if (new FileInfo(path).Exists == false)
+        {
+            if (FormType.EndsWith("B2C") || FormType.EndsWith("B2B"))
+            {
+                path = Environment.CurrentDirectory.ToString() + "\\PrintDesigns\\" + VoucherType + FormType.Substring(0, FormType.Length - 3) + PrintDesignType + ".IDS";
+
+            }
+        }
+
+
+        PolosysFrameWork.General.PRINT_DESIGN = "";
+
+        bool ShowTemplate = false;
+
+        if (PolosysFrameWork.Settings.MainSettings.UseTemplateSelectionForPrinting)
+        {
+            ShowTemplate = true;
+        }
+        if (ShowTemplate == true && IsPOSPrinting == false)
+        {
+
+            new frmPrintTemplates(VoucherType, FormType).ShowDialog();
+            if (PolosysFrameWork.General.PRINT_DESIGN != "")
+            {
+
+                MemoryStream stream = new MemoryStream();
+                StreamWriter writer = new StreamWriter(stream);
+                writer.Write(PolosysFrameWork.General.PRINT_DESIGN);
+                writer.Flush();
+                stream.Position = 0;
+                SR = new StreamReader(stream);
+
+                //string sss = SR.ReadLine();
+                //sss = SR.ReadLine();
+                //sss = SR.ReadLine();
+                //sss = SR.ReadLine();
+            }
+            else if (PolosysFrameWork.General.PRINT_TEMPLATE_CANCELLED == true)
+            {
+                return;
+            }
+            else
+            {
+                SR = new StreamReader(path);
+            }
+
+        }
+        else
+        {
+            SR = new StreamReader(path);
+        }
+
+        PD.PrintPage += new PrintPageEventHandler(PD_PrintPage);
+
+        if (TransMasterID < 10)
+        {
+            Transactionbarcode = "*00000" + TransMasterID.ToString() + "*";
+        }
+        if (TransMasterID < 100)
+        {
+            Transactionbarcode = "*0000" + TransMasterID.ToString() + "*";
+        }
+        else if (TransMasterID < 1000)
+        {
+            Transactionbarcode = "*000" + TransMasterID.ToString() + "*";
+        }
+        else
+        {
+            Transactionbarcode = "*" + TransMasterID.ToString() + "*";
+        }
+
+        if (IsInvTrans == true)
+        {
+            //Inventory Transaction
+            LoadInvData(TransMasterID, "", VoucherType);
+            LoadMultiPayment(TransMasterID);                    
+             if (VoucherType == "SOAll")
+            {
+                if (dtTranMaster.Rows[0]["InOut"].ToString().ToUpper() == "DINE IN")
+                {
+                    if (new System.IO.FileInfo("NoPrint_SOAll_DineIn.txt").Exists)
+                    {
+                        return;
+                    }
+
+                }
+            }
+            if (VoucherType == "KOT")
+            {
+                if (dtTranMaster.Rows[0]["InOut"].ToString().ToUpper() == "DINE IN")
+                {
+                    if (new System.IO.FileInfo("NoPrint_KOT_DineIn.txt").Exists)
+                    {
+                        return;
+                    }
+
+                }
+            }
+            if (VoucherType == "TSI")
+            {
+
+                if (dtTranMaster.Rows[0]["InOut"].ToString().ToUpper() == "TAKE AWAY")
+                {
+
+                    if (new System.IO.FileInfo(Environment.CurrentDirectory.ToString() + "\\PrintDesigns\\TSITA.IDS").Exists)
+                    {
+
+                        path = Environment.CurrentDirectory.ToString() + "\\PrintDesigns\\TSITA.IDS";
+                        SR = new StreamReader(path);
+
+                    }
+
+                }
+            }
+            if (VoucherType == "TSIALL")
+            {
+                if (dtTranMaster.Rows[0]["InOut"].ToString().ToUpper() == "TAKE AWAY")
+                {
+                    if (new System.IO.FileInfo(Environment.CurrentDirectory.ToString() + "\\PrintDesigns\\TSITAALL.IDS").Exists)
+                    {
+                        path = Environment.CurrentDirectory.ToString() + "\\PrintDesigns\\TSITAALL.IDS";
+                        SR = new StreamReader(path);
+                    }
+
+                }
+            }
+
+
+
+
+            if (IsPackingSliptPrint)
+            {
+
+                for (int i = 0; i < dtTransDetails.Rows.Count; i++)
+                {
+                    TotalBillQty += Convert.ToDouble(dtTransDetails.Rows[i]["Quantity"].ToString());
+ 
+                }
+                TotalBillItemNos = dtTransDetails.Rows.Count;
+                if (PolosysFrameWork.General.DBID_VALUE == "SUBAI_SWEETS")
+
+                {
+                    DataView dv = dtTransDetails.DefaultView;
+                    dv.Sort = "GroupName ASC, UnitName ASC,InvTransactionDetailID ASC";
+                    //dv.RowFilter = "WarehouseID=" + WarehouseID.ToString();
+                    dtTransDetails = dv.ToTable();
+
+
+                }
+                else
+                {
+
+
+                    DataView dv = dtTransDetails.DefaultView;
+                    dv.RowFilter = "WarehouseID=" + WarehouseID.ToString();
+                    dtTransDetails = dv.ToTable();
+                }
+            }
+
+            PartyLedgerID = Convert.ToInt64(dtTranMaster.Rows[0]["LedgerID"].ToString());
+            CashReceived = Convert.ToDouble(dtTranMaster.Rows[0]["CashReceived"].ToString());
+            BankAmt = Convert.ToDouble(dtTranMaster.Rows[0]["BankAmt"].ToString());
+            IN_OUT = dtTranMaster.Rows[0]["InOut"].ToString();
+            CashReturned = Convert.ToDouble(dtTranMaster.Rows[0]["CashReturned"].ToString());
+            AdjustmentAmount = Convert.ToDouble(dtTranMaster.Rows[0]["AdjustmentAmount"].ToString());
+            DeliveryAddress3 = dtTranMaster.Rows[0]["Address3"].ToString() + "";
+            TransDate = Convert.ToDateTime(dtTranMaster.Rows[0]["TransactionDate"].ToString());
+            TransactionTime = Convert.ToDateTime(dtTranMaster.Rows[0]["TransactionDateWithTime"].ToString());
+            BillDiscount = PolosysFrameWork.General.Val(dtTranMaster.Rows[0]["BillDiscount"].ToString());
+            PrivilegAmt = PolosysFrameWork.General.Val(dtTranMaster.Rows[0]["PrivAddAmount"].ToString()) + PolosysFrameWork.General.Val(dtTranMaster.Rows[0]["PrivRedeem"].ToString());
+            PrivilegeCardID = Convert.ToInt32(dtTranMaster.Rows[0]["PrivCardID"].ToString());
+            LoyaltyCardNo = dtTranMaster.Rows[0]["PrivCardNumber"].ToString();
+            PARTYNAME = dtTranMaster.Rows[0]["PartyName"].ToString(); ;
+            TotalItems = dtTransDetails.Rows.Count;
+            //PRICECATEGORYNAME = dtTranMaster.Rows[0]["PriceCategoryName"].ToString();
+            GetPrintCount(TransMasterID, VoucherType, FormType, true);
+
+        }
+        else if (IsSalesView == true)
+        {
+            //SalesView Transaction
+            LoadSVData(TransMasterID);
+            TransDate = Convert.ToDateTime(dtTranMaster.Rows[0]["TransactionDate"].ToString());
+        }
+        else
+        {
+            //Account Transaction
+            LoadAccData(TransMasterID);
+            TotalItems = dtTransDetails.Rows.Count;
+            TransDate = Convert.ToDateTime(dtTranMaster.Rows[0]["TransactionDate"].ToString());
+            TransactionTime = Convert.ToDateTime(dtTranMaster.Rows[0]["SystemDateTime"].ToString());
+            GrantTotal = PolosysFrameWork.General.Val(dtTranMaster.Rows[0]["TotalDebit"].ToString()) > 0 ? PolosysFrameWork.General.Val(dtTranMaster.Rows[0]["TotalDebit"].ToString()) : PolosysFrameWork.General.Val(dtTranMaster.Rows[0]["TotalCredit"].ToString());
+
+            JVTotalDebit = JVTotalCredit = 0;
+
+            DrCr = dtTranMaster.Rows[0]["DrCr"].ToString();
+            if (VOUCHERTYPE == "JV")
+            {
+                if (DrCr == "Dr")
+                {
+                    JVTotalDebit = GrantTotal;
+                    JVTotalCredit = 0;
+                }
+                else
+                {
+                    JVTotalDebit = 0;
+                    JVTotalCredit = GrantTotal;
+                }
+
+            }
+            GetPrintCount(TransMasterID, VoucherType, FormType, false);
+
+        }
+        Print(isPdf);
+        //if(GatePass)
+        //{
+        //    new PolosysWinERP5.Accounts.Transactions.PrintTrans(TransMasterID, "GTPS", "", true, false, DateTime.Today.ToShortDateString(), false, 1, false, "", false, false, false, 0, false, false, "");
+        //}
+    }
+    catch (Exception ex) { }
+}

@@ -714,14 +714,14 @@ const VirtualRow = React.memo(
               <div
                 className={`py-0 ${rowBg} transition-all duration-300 ease-in-out group`}
                 style={{
-                  minHeight:`${rowHeight+5}px`,
-                  height: `${rowHeight+10}px`,
+                  minHeight: `${rowHeight + 5}px`,
+                  height: `${rowHeight + 10}px`,
                   borderBottom: `0.5px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.1)" : `rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`}`,
                   backgroundColor: currentCell?.rowIndex === index ? appState.mode === "dark" ? "#444444" : formState.userConfig?.activeRowBg ? `rgb(${formState.userConfig.activeRowBg})` : "#e3f2fd"
                     : index % 2 === 0 ? appState.mode === "dark" ? "#333333" : "#fff" : appState.mode === "dark" ? "#444444" : "#f9f9f9",
-                    willChange:'background-color',
-                    transform: "translateZ(0)", // triggers GPU layer for smoother repaints
-                    boxSizing: "border-box",
+                  willChange: 'background-color',
+                  transform: "translateZ(0)", // triggers GPU layer for smoother repaints
+                  boxSizing: "border-box",
                 }}
               >
                 <div className="px-2 xs:px-3 sm:px-4 md:px-8 py-4 sm:py-6 md:py-8">
@@ -731,11 +731,11 @@ const VirtualRow = React.memo(
                       <div className="flex items-center justify-between gap-2 xs:gap-3 min-w-0 flex-1">
                         <div className="flex items-center gap-2 min-w-0">
                           <span className="text-gray-400 text-xs xs:text-sm font-medium whitespace-nowrap">
-                          #{item.productBatchID  || 'Product ID'}
-                        </span>
-                        <span className="text-gray-900 font-medium text-sm xs:text-base truncate" title={item.product}>
-                          {item.product || 'Product'}
-                        </span>
+                            #{item.productBatchID || 'Product ID'}
+                          </span>
+                          <span className="text-gray-900 font-medium text-sm xs:text-base truncate" title={item.product}>
+                            {item.product || 'Product'}
+                          </span>
                         </div>
                         <span className="text-gray-900 font-medium text-sm xs:text-base whitespace-nowrap self-end xs:self-auto">
                           ₹ {item.unitPrice || 'Price'}
@@ -1171,7 +1171,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       return visibleColumns;
     }, [columnOrder, formState.gridColumns]);
 
-    const ITEM_HEIGHT =isMobile? 193 : formState.userConfig?.gridRowHeight ?? 32;
+    const ITEM_HEIGHT = isMobile ? 193 : formState.userConfig?.gridRowHeight ?? 32;
 
     const { scrollTop, updateScroll, visibleItems, totalHeight } =
       useUltraFastVirtualScrolling(
@@ -1692,14 +1692,16 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
           if (input) input.select();
         }
       }
+      debugger;
       setPrevCell(currentCell?.rowIndex ?? -1);
       if (prevCell !== currentCell?.rowIndex) {
-        localStorage.setItem(
-          `${formState.transaction.master.voucherType}${formState.transaction.master.voucherForm}`,
-          JSON.stringify(
-            formState.transaction.details.filter((x) => x.productID > 0)
+        const data = formState.transaction.details.filter((x) => x.productID > 0);
+        if (data?.length > 0) {
+          localStorage.setItem(
+            `${formState.transaction.master.voucherType}${formState.transaction.master.voucherForm}`,
+            JSON.stringify(data)
           )
-        );
+        }
       }
     }, [currentCell]);
     React.useImperativeHandle(ref, () => ({
@@ -1875,7 +1877,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
             ref={containerRef}
             className="border border-gray-300 rounded"
             style={{
-              height: isMobile? `${height + 10}px` : `${height + 80}px`,
+              height: isMobile ? `${height + 10}px` : `${height + 80}px`,
               overflowY: "scroll",
               overflowX: "auto",
               position: "relative",

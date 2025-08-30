@@ -781,14 +781,51 @@ export const useNumberToWords = () => {
         });
     };
   }, []);
+  function toArabicNumber(input: number | string): string {
+  const enToArMap: { [key: string]: string } = {
+    "0": "۰",
+    "1": "۱",
+    "2": "۲",
+    "3": "۳",
+    "4": "۴",
+    "5": "۵",
+    "6": "۶",
+    "7": "۷",
+    "8": "۸",
+    "9": "۹"
+  };
 
+  return input
+    .toString()
+    .split("")
+    .map(char => (enToArMap[char] !== undefined ? enToArMap[char] : char))
+    .join("");
+}
+function getArabicDateNumber(ardate: string): string {
+  const arabicNum = "٠١٢٣٤٥٦٧٨٩";
+  let arabicNumber = "";
+
+  for (let i = 0; i < ardate.length; i++) {
+    const char = ardate.charAt(i);
+
+    if (/[0-9]/.test(char)) { // check if it's a digit
+      const index = parseInt(char, 10);
+      arabicNumber += arabicNum[index];
+    } else {
+      arabicNumber += char;
+    }
+  }
+
+  return arabicNumber;
+}
   return {
     // Main conversion functions
     convertToWords,
     convertAmount,
     convertAmountToEnglish,
     convertAmountToArabic,
-    
+    toArabicNumber,
+    getArabicDateNumber,
     // Utility functions
     getAvailableCurrencies,
     getCurrentCurrency,

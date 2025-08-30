@@ -1,10 +1,10 @@
 
 import { Option, OptionGroup } from "../../components/ERPComponents/erp-grouped-combo";
 import { CompanyDetails, initialCompanyDetails, BranchDetails, initialBranchDetails, HeaderFooter, initialHeaderFooter } from "../../redux/slices/user-session/reducer";
-import { initialPrintCustomFields, PrintCustomFields } from "../../utilities/use-common-values";
 import { modelToListFromObject } from "../../utilities/Utils";
 import { initialProductData, initialTransactionDetailData, TransactionMasterInitialData } from "../inventory/transactions/purchase/transaction-type-data";
 import { BarcodeLabel, TransactionDetail, TransactionMaster } from "../inventory/transactions/purchase/transaction-types";
+import { initialPrintCustomFields, PrintCustomFields } from "../use-print";
 
 export const fields = [
    "org_name",

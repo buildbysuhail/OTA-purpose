@@ -2693,7 +2693,34 @@ ERPAlert.show({
         }
 
         // Handle VAT and CST based on form type
+        if(clientSession.isAppGlobal) {
+          outDetail.hsnCode = product.hsnCode || "";
 
+          if (formState.transaction.master.voucherType !== "PE") {
+            outDetail.cgstPerc = Number(product.pCgstPerc || 0);
+            outDetail.sgstPerc = Number(product.pSgstPerc || 0);
+            outDetail.igstPerc = 0;
+
+            if (
+              formState.transaction.master.voucherForm.toLowerCase() === "interstate" ||
+              formState.transaction.master.voucherForm.toLowerCase() === "int" ||
+              formState.transaction.master.voucherForm.toLowerCase() === "import"
+            ) {
+              outDetail.cgstPerc = 0;
+              outDetail.sgstPerc = 0;
+              outDetail.igstPerc = Number(product.pIgstPerc || 0);
+            }
+
+            outDetail.cessPerc = Number(product.pCessPerc || 0);
+            outDetail.addnlCessPerc = Number(product.pAdditionalCessPerc || 0);
+          } else {
+            outDetail.cgstPerc = 0;
+            outDetail.sgstPerc = 0;
+            outDetail.igstPerc = 0;
+            outDetail.cessPerc = 0;
+            outDetail.addnlCessPerc = 0;
+          }
+        } else{
         if (formState.transaction.master.voucherForm === "VAT") {
           outDetail.vatPerc = Number(product.pVatPerc || 0);
           outDetail.cstPerc = Number(product.purchaseExciseTaxPerc || 0);
@@ -2701,6 +2728,7 @@ ERPAlert.show({
           outDetail.vatPerc = 0;
           outDetail.cstPerc = 0;
         }
+      }
 
         // Special handling for meter units
         const unitName = product.unitName?.toUpperCase().trim();

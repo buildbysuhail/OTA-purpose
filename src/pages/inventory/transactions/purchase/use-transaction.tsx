@@ -64,6 +64,7 @@ import {
 import {
   initialInventoryTotals,
   initialTransactionDetailData,
+  initialTransactionDetails2,
   TransactionFormStateInitialData,
   transactionInitialData,
   TransactionMasterInitialData,
@@ -2695,30 +2696,30 @@ ERPAlert.show({
         // Handle VAT and CST based on form type
         if(clientSession.isAppGlobal) {
           outDetail.hsnCode = product.hsnCode || "";
-
+          outDetail.details2 = {...outDetail.details2??initialTransactionDetails2}
           if (formState.transaction.master.voucherType !== "PE") {
-            outDetail.cgstPerc = Number(product.p_CGSTPerc || 0);
-            outDetail.sgstPerc = Number(product.p_SGSTPerc || 0);
-            outDetail.igstPerc = 0;
+            outDetail.details2!.cgstPerc = Number(product.p_CGSTPerc || 0);
+            outDetail.details2!.sgstPerc = Number(product.p_SGSTPerc || 0);
+            outDetail.details2!.igstPerc = 0;
 
             if (
               formState.transaction.master.voucherForm.toLowerCase() === "interstate" ||
               formState.transaction.master.voucherForm.toLowerCase() === "int" ||
               formState.transaction.master.voucherForm.toLowerCase() === "import"
             ) {
-              outDetail.cgstPerc = 0;
-              outDetail.sgstPerc = 0;
-              outDetail.igstPerc = Number(product.p_IGSTPerc || 0);
+              outDetail.details2!.cgstPerc = 0;
+              outDetail.details2!.sgstPerc = 0;
+              outDetail.details2!.igstPerc = Number(product.p_IGSTPerc || 0);
             }
 
-            outDetail.cessPerc = Number(product.p_CessPerc || 0);
-            outDetail.addnlCessPerc = Number(product.p_AdditionalCessPerc || 0);
+            outDetail.details2!.cessPerc = Number(product.p_CessPerc || 0);
+            outDetail.details2!.additionalCessPerc = Number(product.p_AdditionalCessPerc || 0);
           } else {
-            outDetail.cgstPerc = 0;
-            outDetail.sgstPerc = 0;
-            outDetail.igstPerc = 0;
-            outDetail.cessPerc = 0;
-            outDetail.addnlCessPerc = 0;
+            outDetail.details2!.cgstPerc = 0;
+            outDetail.details2!.sgstPerc = 0;
+            outDetail.details2!.igstPerc = 0;
+            outDetail.details2!.cessPerc = 0;
+            outDetail.details2!.additionalCessPerc = 0;
           }
         } else{
         if (formState.transaction.master.voucherForm === "VAT") {
@@ -2865,7 +2866,8 @@ ERPAlert.show({
 
       return result;
     } catch (err) {
-      return {};
+      console.log(err);
+      
     }
   };
 
@@ -2894,7 +2896,7 @@ ERPAlert.show({
       }
       outState = calculateRowAmount(
         Object.assign(detail, outDetail),
-        columnName,
+        columnName as any,
         {
           result: {
             transaction: {

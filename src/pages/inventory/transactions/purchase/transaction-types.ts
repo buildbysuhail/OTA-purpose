@@ -7,6 +7,25 @@ import { initialFormElements } from "./transaction-type-data";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { SummaryConfig } from "../../../../components/ERPComponents/erp-purchase-grid/dataGrid";
 
+// primitives we don't recurse into
+type Primitive = string | number | boolean | bigint | symbol | null | undefined | Date;
+
+// treat only plain objects as nestable
+type IsPlainObject<T> =
+  T extends Primitive ? false :
+  T extends Function ? false :
+  T extends readonly any[] ? false :
+  T extends object ? true : false;
+
+// leaf-only dot keys: "a" | "b.c" | "b.d.e" (no "b")
+type LeafDotKeys<T> = {
+  [K in Extract<keyof T, string>]:
+    IsPlainObject<NonNullable<T[K]>> extends true
+      ? `${K}.${LeafDotKeys<NonNullable<T[K]>>}`
+      : `${K}`
+}[Extract<keyof T, string>];
+
+export type TransactionDetailKeys = LeafDotKeys<TransactionDetail>;
 // Transaction interface
 export interface TransactionProps {
   voucherType?: string;
@@ -256,15 +275,6 @@ export interface TransactionDetail {
   vatAmount: number;
   cst: number;
 
-  //india
-  
-  cgstPerc: number;
-  sgstPerc: number;
-  igstPerc: number;
-  addnlCessPerc: number;
-  cessPerc: number;
-  cessAmt: number;
-  hsnCode: string;
 
   cstPerc: number;
   cost: number;
@@ -324,7 +334,9 @@ export interface TransactionDetail {
   unit2: string;
   unit3: string;
   btnPrintBarcodeStd: string;
-  isValid?: boolean;
+  isValid?: boolean;  
+  hsnCode: string;
+  details2?: TransactionDetails2
 }
 
 export interface TransactionDetails2 {
@@ -332,12 +344,12 @@ export interface TransactionDetails2 {
   branchID: number;
   cessPerc: number;
   cessAmt: number;
-  sGSTPerc: number;
-  sGST: number;
-  cGSTPerc: number;
-  cGST: number;
-  iGSTPerc: number;
-  iGST: number;
+  sgstPerc: number;
+  sgst: number;
+  cgstPerc: number;
+  cgst: number;
+  igstPerc: number;
+  igst: number;
   calamityCessPerc: number;
   calamityCess: number;
   additionalCessPerc: number;

@@ -3,7 +3,7 @@ import { Dispatch } from "react";
 import { AnyAction } from "redux";
 import { inputBox } from "../../../../redux/slices/app/types";
 import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
-import { TransactionMaster, TransactionValidationsData, TransactionDetail, TransactionMaster3, FormElementState, TransactionFormState, SummaryItems, TransactionData, BarcodeLabel, ProductDisplayDto, EmployeeType } from "./transaction-types";
+import { TransactionMaster, TransactionValidationsData, TransactionDetail, TransactionMaster3, FormElementState, TransactionFormState, SummaryItems, TransactionData, BarcodeLabel, ProductDisplayDto, EmployeeType, TransactionDetails2 } from "./transaction-types";
 import { generateUniqueKey } from "../../../../utilities/Utils";
 
 
@@ -52,7 +52,22 @@ export const initialInventoryTotals: SummaryItems = {
   margin: 0,
   salesPrice: ''
 };
-
+export const initialTransactionDetails2: TransactionDetails2 = {
+  invTransactionDetailID: 0,
+  branchID: 0,
+  cessPerc: 0,
+  cessAmt: 0,
+  sgstPerc: 0,
+  sgst: 0,
+  cgstPerc: 0,
+  cgst: 0,
+  igstPerc: 0,
+  igst: 0,
+  calamityCessPerc: 0,
+  calamityCess: 0,
+  additionalCessPerc: 0,
+  additionalCess: 0,
+};
 export const TransactionMasterInitialData: TransactionMaster = {
   invTransactionMasterID: 0,
   branchID: 0,
@@ -260,7 +275,8 @@ export const initialTransactionDetailData: TransactionDetail = {
   warehouseName: "",
   unitPriceTag: 0,
   unitDecimalPoint: 0,
-  multiFactor: 0
+  multiFactor: 0,
+  details2: initialTransactionDetails2
 };
 export const transactionInitialData: TransactionData = {
   master: TransactionMasterInitialData, details: Array.from({ length: 30 }, (_, index) => ({

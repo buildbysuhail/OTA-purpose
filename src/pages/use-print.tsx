@@ -8,12 +8,11 @@ import Urls from '../redux/urls';
 import { APIClient } from '../helpers/api-client';
 import { DeepPartial } from 'redux';
 import { isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from '../utilities/Utils';
-import { TransactionDetail, TransactionMaster } from './inventory/transactions/purchase/transaction-types';
 import { getArabicNumber } from './inventory/reports/tax-reports-ksa/vat-return-form/Vat-Return-Form-arabic';
 import { TransactionMasterInitialData } from './inventory/transactions/purchase/transaction-type-data';
 import merge from "lodash.merge";
 import { InvDataForPrint, InvDetailForPrint, InvMasterForPrint, PrintCustomFields } from './use-print-type';
-import { initialPrintCustomFields } from './use-print-type-data';
+import { initialInvDataForPrint, initialPrintCustomFields } from './use-print-type-data';
 
 
 type VoucherType = {
@@ -268,7 +267,7 @@ export const usePrintTrans = ({ voucherType, transactionType }: VoucherType) => 
     const privilageCardBalance = fields.includes("privilageCardBalance") //&& PrivCardNumber
     const taxAmountIncludingTaxOnDiscount = fields.includes("total5PercTaxValue") || fields.includes("total15PercTaxValue") || fields.includes("totalzeroPercentTaxValue")
     const taxableAmountIncludingTaxOnDiscount = fields.includes("total5PerctaxableValue") || fields.includes("total15PerctaxableValue") || fields.includes("totalzeroPercentTaxableValue")
-    let returnData: InvDataForPrint = initialDataForPrint;
+    let returnData: InvDataForPrint = initialInvDataForPrint;
     try {
 
       // PrevoiusDayLedgerBalance
@@ -286,7 +285,7 @@ export const usePrintTrans = ({ voucherType, transactionType }: VoucherType) => 
                                             &taxAmountIncludingTaxOnDiscount= ${taxAmountIncludingTaxOnDiscount}
                                             &privilageCardBalance= ${privilageCardBalance}`);
       returnData = merge({}, returnData, printData);
-      returnData.custom = returnData.custom ?? initialDataForPrint;
+      returnData.custom = returnData.custom ?? initialPrintCustomFields;
       const isKitchenPrint = !isNullOrUndefinedOrZero(kitchenIDParam) || !isNullOrUndefinedOrZero(commonKitchenProductGroupIDParam) ||
         !isNullOrUndefinedOrEmpty(kitchenPrinterNameParam) || !isNullOrUndefinedOrEmpty(kitchenNameParam)
       if (isKitchenPrint) {

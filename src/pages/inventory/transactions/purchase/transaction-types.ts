@@ -255,6 +255,17 @@ export interface TransactionDetail {
   vatPerc: number;
   vatAmount: number;
   cst: number;
+
+  //india
+  
+  cgstPerc: number;
+  sgstPerc: number;
+  igstPerc: number;
+  addnlCessPerc: number;
+  cessPerc: number;
+  cessAmt: number;
+  hsnCode: string;
+
   cstPerc: number;
   cost: number;
   batchNo: string;
@@ -659,6 +670,11 @@ interface ProductBatchDetailsForAutoBarcodeData {
   p_CessPerc: number;
   p_AdditionalCessPerc: number;
   p_CalamityCessPerc: number;
+  pCgstPerc: number;
+  pSgstPerc: number;
+  pIgstPerc: number;
+  pCessPerc: number;
+  pAdditionalCessPerc: number;
   hsnCode: string;
   // new fields
   supplierReferenceProductCode: string;

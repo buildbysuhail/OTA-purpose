@@ -94,7 +94,7 @@ import { AddColumnsManage } from "./column-manage";
 import { EditButton } from "./edit-button";
 import { useTranslation } from "react-i18next";
 import VoucherType, {purchaseVoucherTypes, salesVoucherTypes, accountsVoucherTypes} from "../../enums/voucher-types";
-import { AccountMasterFields, accountsFields, inventoryFields, barCodeField, fields } from "./fields";
+import {  accountsFields, inventoryFields, barCodeField } from "./fields";
 import { customJsonParse } from "../../utilities/jsonConverter";
 import { getPageDimensions } from "../InvoiceDesigner/utils/pdf-util";
 import { QRCodeComponent } from "./QRCodeComponent";
@@ -102,6 +102,7 @@ import GroupedComboBox from "../../components/ERPComponents/erp-grouped-combo";
 import { AccessPrinterList } from "../InvoiceDesigner/utils/get_printers";
 import { renderBarcode } from "../../utilities/barcode";
 import { ERPScrollArea } from "../../components/ERPComponents/erp-scrollbar";
+import { initialInvMasterForPrint } from "../use-print-type-data";
 
 interface SaveDialogProps {
   isOpen: boolean;
@@ -1834,7 +1835,7 @@ padding: `${
                               valueKey: "value",
                               labelKey: "label",
                             }}
-                            options={AccountMasterFields?.map(
+                            options={Object.keys(initialInvMasterForPrint)?.map(
                               (field, index) => ({
                                 value: field,
                                 label: field,
@@ -2732,7 +2733,7 @@ padding: `${
                               valueKey: "value",
                               labelKey: "label",
                             }}
-                            options={AccountMasterFields?.map((field) => ({
+                            options={Object.keys(initialInvMasterForPrint)?.map((field) => ({
                               value: field,
                               label: field,
                             }))}

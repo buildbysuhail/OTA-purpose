@@ -410,28 +410,6 @@ export const initialInvDetailForPrint: InvDetailForPrint = {
   detail2Data: initialInvDetail2ForPrint
 };
 
-export const initialInvDataForPrint: InvDataForPrint = {
-  master: initialInvMasterForPrint,
-  details: [initialInvDetailForPrint],
-  LedgerBalance: 0,
-  PreviousLedgerBalance: 0
-};
-
-// Helper function to create a new empty invoice
-export const createEmptyInvoice = (): InvDataForPrint => ({
-  master: { ...initialInvMasterForPrint },
-  details: [],
-  LedgerBalance: 0,
-  PreviousLedgerBalance: 0
-});
-
-// Helper function to create a new empty detail line
-export const createEmptyDetailLine = (slNo: number = 1): InvDetailForPrint => ({
-  ...initialInvDetailForPrint,
-  slNo
-});
-
-
 export const initialPrintCustomFields : PrintCustomFields = {
   streamReader: null,
   currentLine: "",
@@ -719,3 +697,19 @@ export const initialPrintCustomFields : PrintCustomFields = {
   kitchenId: 0,
   privilageCardBalance: 0
 };
+export const initialInvDataForPrint: InvDataForPrint = {
+  master: initialInvMasterForPrint,
+  details: [initialInvDetailForPrint],
+  LedgerBalance: 0,
+  custom:initialPrintCustomFields,
+  PreviousLedgerBalance: 0
+};
+
+
+// Helper function to create a new empty detail line
+export const createEmptyDetailLine = (slNo: number = 1): InvDetailForPrint => ({
+  ...initialInvDetailForPrint,
+  slNo
+});
+
+

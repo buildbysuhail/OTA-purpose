@@ -69,7 +69,7 @@ export const useTransactionHelper = (transactionType: string) => {
     const isClosed = userSession.financialYearStatus === "Closed";
     state.formElements.btnSave.disabled = !isClosed
       ? hasRight(state.formCode, UserAction.Add) &&
-        (state?.transaction?.details?.length ?? 0) > 0
+      (state?.transaction?.details?.length ?? 0) > 0
       : false;
 
     state.formElements.btnEdit.disabled = !isClosed
@@ -133,7 +133,7 @@ export const useTransactionHelper = (transactionType: string) => {
       if (
         applicationSettings.mainSettings?.allowPostdatedTrans &&
         moment(transDate).local().format("YYYY-MM-DD") !==
-          moment(softwareDate, "DD/MM/YYYY").local().format("YYYY-MM-DD")
+        moment(softwareDate, "DD/MM/YYYY").local().format("YYYY-MM-DD")
       ) {
         if (
           hasBlockedRight == undefined ||
@@ -143,7 +143,7 @@ export const useTransactionHelper = (transactionType: string) => {
           maxPostDate.setHours(0, 0, 0, 0); // Removes time part
           maxPostDate.setDate(
             maxPostDate.getDate() +
-              (applicationSettings.mainSettings?.postDatedTransInNumbers || 0)
+            (applicationSettings.mainSettings?.postDatedTransInNumbers || 0)
           );
 
           const transDateOnly = new Date(transDate);
@@ -167,7 +167,7 @@ export const useTransactionHelper = (transactionType: string) => {
       if (
         applicationSettings.mainSettings?.allowPredatedTrans &&
         moment(transDate).local().format("YYYY-MM-DD") !==
-          moment(softwareDate, "DD/MM/YYYY").local().format("YYYY-MM-DD")
+        moment(softwareDate, "DD/MM/YYYY").local().format("YYYY-MM-DD")
       ) {
         if (
           hasBlockedRight == undefined ||
@@ -177,12 +177,12 @@ export const useTransactionHelper = (transactionType: string) => {
           minPreDate.setHours(0, 0, 0, 0); // Removes time part
           minPreDate.setDate(
             minPreDate.getDate() -
-              (applicationSettings.mainSettings?.preDatedTransInNumbers || 0)
+            (applicationSettings.mainSettings?.preDatedTransInNumbers || 0)
           );
 
           const transDateOnly = new Date(transDate);
           transDateOnly.setHours(0, 0, 0, 0); // Removes time part
-          
+
           if (transDateOnly < minPreDate) {
             return {
               valid: false,
@@ -224,16 +224,16 @@ export const useTransactionHelper = (transactionType: string) => {
     result = result
       ? result
       : {
-          netAmount: 0,
-          transaction: {
-            master: {
-              grandTotal: 0,
-              grandTotalFc: undefined,
-              vatAmount: 0,
-              roundAmount: 0,
-            },
+        netAmount: 0,
+        transaction: {
+          master: {
+            grandTotal: 0,
+            grandTotalFc: undefined,
+            vatAmount: 0,
+            roundAmount: 0,
           },
-        };
+        },
+      };
 
     const netVal = summary.netValue;
     let netAmt = summary.total;
@@ -271,8 +271,8 @@ export const useTransactionHelper = (transactionType: string) => {
       result.transaction!.master!.roundAmount = 0;
       result.transaction!.master!.grandTotal = _grandTotal;
     }
-      result.transaction!.master!.totalGross = summary.gross;
-      result.transaction!.master!.totalDiscount = summary.discount;
+    result.transaction!.master!.totalGross = summary.gross;
+    result.transaction!.master!.totalDiscount = summary.discount;
 
     // Check if foreign currency calculation is needed
     if (formElements.pnlImport.visible && master.exchangeRate > 0) {
@@ -280,16 +280,16 @@ export const useTransactionHelper = (transactionType: string) => {
       if (exchangeRate > 0) {
         result.transaction!.master!.grandTotalFc = _grandTotal / exchangeRate;
       }
-      }
-      commonParams.formStateHandleFieldChangeKeysOnly &&
-        dispatch &&
-        dispatch(
-          commonParams.formStateHandleFieldChangeKeysOnly({ fields: result })
-        );
-    
+    }
+    commonParams.formStateHandleFieldChangeKeysOnly &&
+      dispatch &&
+      dispatch(
+        commonParams.formStateHandleFieldChangeKeysOnly({ fields: result })
+      );
+
     return result;
   };
-  
+
   const calculateRowAmount = (
     transactionDetail: TransactionDetail,
     currentColumn: keyof TransactionDetail,
@@ -314,7 +314,7 @@ export const useTransactionHelper = (transactionType: string) => {
     try {
       // Initialize variables with proper null checks and defaults
 
-      transactionDetail = {...transactionDetail, ...detail}
+      transactionDetail = { ...transactionDetail, ...detail }
       let qty = Number(transactionDetail.qty || 0);
       let freeQty = Number(transactionDetail.free || 0);
       let rate = Number(transactionDetail.unitPrice || 0);
@@ -327,6 +327,15 @@ export const useTransactionHelper = (transactionType: string) => {
       let ratePlusTax = 0;
       let cost = 0;
       let unitPrice = Number(transactionDetail.unitPrice || 0);
+
+
+      // India
+      let cgstPerc = Number(transactionDetail.cgstPerc || 0);
+      let sgstPerc = Number(transactionDetail.sgstPerc || 0);
+      let igstPerc = Number(transactionDetail.igstPerc || 0);
+      let addnlCessPerc = Number(transactionDetail.addnlCessPerc || 0);
+      let cessPerc = Number(transactionDetail.cessPerc || 0);
+      let cess = Number(transactionDetail.cessAmt || 0);
 
       detail.unitPrice = transactionDetail.unitPrice;
       // Handle RatePlusTax visibility and calculation
@@ -344,16 +353,34 @@ export const useTransactionHelper = (transactionType: string) => {
 
       // Handle RatePlusTax calculation when current column is RatePlusTax
       if (ratePlusTax > 0 && currentColumn === "ratePlusTax") {
-        const dval = vatPerc / 100 + 1;
-        let qty1 = qty || 1;
+        if (clientSession.isAppGlobal && formState.transaction.master.voucherForm !== "") {
+          let dval =
+            (Number(transactionDetail.cgstPerc || 0) +
+              Number(transactionDetail.sgstPerc || 0) +
+              Number(transactionDetail.igstPerc || 0) +
+              Number(transactionDetail.addnlCessPerc || 0)) /
+            100 +
+            1;
 
-        if (qty1 === 0) qty1 = 1;
+          let qty1 = Number(transactionDetail.qty || 1);
+          if (qty1 === 0) qty1 = 1;
 
-        rate = round((ratePlusTax * qty1) / dval, 3);
-        rate = rate / qty1;
+          let rate = round(((ratePlusTax * qty1) / dval),3)
+          
+          rate = (Number(rate) / qty1); // convert back to number
+        } else {
+          const dval = vatPerc / 100 + 1;
+          let qty1 = qty || 1;
 
-        // Update unit price in form state
-        detail.unitPrice = rate;
+          if (qty1 === 0) qty1 = 1;
+
+          rate = round((ratePlusTax * qty1) / dval, 3);
+          rate = rate / qty1;
+
+          // Update unit price in form state
+        }
+        
+          detail.unitPrice = rate;
       } else {
         const dval = vatPerc / 100 + 1;
         detail.ratePlusTax = round(unitPrice * dval, 4);
@@ -889,7 +916,7 @@ export const useTransactionHelper = (transactionType: string) => {
 
     try {
       let tot = 0;
-      
+
       if (!result) {
         result = {};
       }
@@ -942,7 +969,7 @@ export const useTransactionHelper = (transactionType: string) => {
     loadType?: string
   ): TransactionDetail[] => {
     const detailsLength = _details.length;
-let     details = [..._details];
+    let details = [..._details];
     let validDetailsCount = 0;
     for (let i = 0; i < detailsLength; i++) {
       const row = details[i];
@@ -995,7 +1022,7 @@ let     details = [..._details];
       }
       // Special handling for GRN type
       if (loadType === "PO") {
-         detail.poTransDetailsID = row.invTransactionDetailID
+        detail.poTransDetailsID = row.invTransactionDetailID
         detail.poTransDetailsIDTag = row.PendingQty
       }
 
@@ -1120,7 +1147,7 @@ let     details = [..._details];
 
       // Store original cost for restoration after calculation
       const originalCost = detail.cost;
-      
+
       // Calculate row amounts
       const res = calculateRowAmount(
         detail,
@@ -1181,7 +1208,7 @@ let     details = [..._details];
         break;
       }
 
-      const outputRow: any = {...detail};
+      const outputRow: any = { ...detail };
 
       // Core transaction fields
       outputRow.bulkRowInserted = false;
@@ -1380,7 +1407,7 @@ let     details = [..._details];
       address3: "",
       address4: "",
     };
-    master.partyName = !isNullOrUndefinedOrEmpty(master.displayName) ? master.displayName : master.partyName 
+    master.partyName = !isNullOrUndefinedOrEmpty(master.displayName) ? master.displayName : master.partyName
     master.invTransactionMasterID = formState.isEdit
       ? master.invTransactionMasterID
       : 0;
@@ -1390,15 +1417,15 @@ let     details = [..._details];
         ? moment().local().toISOString()
         : master.prevTransDate;
     master.cashAmt = master.cashReceived;
-    master.fromWarehouseID = master.fromWarehouseID > 0 ? master.fromWarehouseID : 
-     master.voucherType == VoucherType.PurchaseReturn ? 0 : 1;
+    master.fromWarehouseID = master.fromWarehouseID > 0 ? master.fromWarehouseID :
+      master.voucherType == VoucherType.PurchaseReturn ? 0 : 1;
     master.stockUpdate = formState.stockUpdate == false ? false : master.stockUpdate
-    master.supplyType =  master.supplyType == undefined || master.supplyType == null ? "" : master.supplyType.toString()
-          
+    master.supplyType = master.supplyType == undefined || master.supplyType == null ? "" : master.supplyType.toString()
+
     return master;
   };
-  const     applyDiscountsToItems = (): void => {
-    
+  const applyDiscountsToItems = (): void => {
+
     try {
       let outState: DeepPartial<TransactionFormState> = {
         transaction: { master: {}, details: [] },
@@ -1418,28 +1445,28 @@ let     details = [..._details];
       // Calculate total gross for items with productID > 0
       totalGross = formState.summary.gross;
       // Apply discount to each item with productID > 0
-      if(details.length > 0) {
-      details = details.map((item, i) => {
-        itemGross = item.gross ?? 0;
-        grossPerc = (itemGross / totalGross) * 100;
-        itemDisc = (billDisc * grossPerc) / 100;
-        discPerc = round((itemDisc / itemGross) * 100, 5);
+      if (details.length > 0) {
+        details = details.map((item, i) => {
+          itemGross = item.gross ?? 0;
+          grossPerc = (itemGross / totalGross) * 100;
+          itemDisc = (billDisc * grossPerc) / 100;
+          discPerc = round((itemDisc / itemGross) * 100, 5);
 
-        const detail = { slNo: item.slNo, discPerc: discPerc };
-        const updatedRow = calculateRowAmount(
-          item,
-          "discPerc",
-          { result: {transaction:{details:[detail]}} },
-          true
-        );
-       if(updatedRow?.transaction?.details?.length??0 > 0) {
-          outState.transaction!.details!.push(updatedRow.transaction!.details![0]);
-          return {...item, ...updatedRow.transaction!.details![0]};
-        }
-        return item;
-      });
-      
-      const summaryRes = calculateSummary(details, formState, {
+          const detail = { slNo: item.slNo, discPerc: discPerc };
+          const updatedRow = calculateRowAmount(
+            item,
+            "discPerc",
+            { result: { transaction: { details: [detail] } } },
+            true
+          );
+          if (updatedRow?.transaction?.details?.length ?? 0 > 0) {
+            outState.transaction!.details!.push(updatedRow.transaction!.details![0]);
+            return { ...item, ...updatedRow.transaction!.details![0] };
+          }
+          return item;
+        });
+
+        const summaryRes = calculateSummary(details, formState, {
           result: {},
         });
         let totalRes = calculateTotal(
@@ -1452,7 +1479,7 @@ let     details = [..._details];
             result: {},
           }
         );
-         if (totalRes) {
+        if (totalRes) {
           totalRes.summary = summaryRes.summary;
           totalRes.transaction = totalRes.transaction ?? {};
           totalRes.transaction.master = totalRes.transaction.master ?? {};
@@ -1461,18 +1488,18 @@ let     details = [..._details];
             ?.details as TransactionDetail[];
 
           dispatch(
-        formStateHandleFieldChangeKeysOnly({
-          fields: totalRes,
-          updateOnlyGivenDetailsColumns: true
-        })
-      );
+            formStateHandleFieldChangeKeysOnly({
+              fields: totalRes,
+              updateOnlyGivenDetailsColumns: true
+            })
+          );
         }
-    }
+      }
     } catch (ex: any) {
       console.error("Error applying discounts:", ex);
     }
   };
-  
+
   return {
     clearEntryControl,
     setUserRightsFn,
@@ -1488,6 +1515,6 @@ let     details = [..._details];
     refactorDetails,
     attachDetails,
     attachMaster,
-        applyDiscountsToItems
+    applyDiscountsToItems
   };
 };

@@ -328,7 +328,7 @@ export const useTransactionHelper = (transactionType: string) => {
       let ratePlusTax = 0;
       let cost = 0;
       let unitPrice = Number(transactionDetail.unitPrice || 0);
-debugger;
+      debugger;
 
       // India
       let cgstPerc = Number(transactionDetail.details2?.cgstPerc || 0);
@@ -366,7 +366,7 @@ debugger;
           let qty1 = Number(transactionDetail.qty || 1);
           if (qty1 === 0) qty1 = 1;
 
-          let rate = round(((ratePlusTax * qty1) / dval),3)
+          let rate = round(((ratePlusTax * qty1) / dval), 3)
 
           rate = (Number(rate) / qty1); // convert back to number
         } else {
@@ -380,8 +380,8 @@ debugger;
 
           // Update unit price in form state
         }
-        
-          detail.unitPrice = rate;
+
+        detail.unitPrice = rate;
       } else {
         const dval = vatPerc / 100 + 1;
         detail.ratePlusTax = round(unitPrice * dval, 4);
@@ -426,134 +426,139 @@ debugger;
 
       // India tax
       if (clientSession.isAppGlobal) {
-  // === Case 1: Additional Cess calculation ===
-  if (
-    netValue > 0 &&
-    currentColumn === "details2.additionalCess"
-  ) {
-    if (Number(detail.details2?.additionalCess || 0) > 0) {
-      const addCessAmount = Number(detail.details2?.additionalCess || 0);
-      detail.details2!.additionalCessPerc = Number(
-        ((addCessAmount * 100) / netValue).toFixed(3)
-      );
-    }
-  }
+        // === Case 1: Additional Cess calculation ===
+        if (
+          netValue > 0 &&
+          currentColumn === "details2.additionalCess"
+        ) {
+          if (Number(detail.details2?.additionalCess || 0) > 0) {
+            const addCessAmount = Number(detail.details2?.additionalCess || 0);
+            detail.details2!.additionalCessPerc = Number(
+              ((addCessAmount * 100) / netValue).toFixed(3)
+            );
+          }
+        }
 
-  // // === Case 2: Tax on MRP ===
-  // // if (formState.formElements) {
-  // //   const taxableMRP =
-  // //     Number(detail.mrp || 0) /
-  // //     (1 +
-  // //       (Number(detail.details2?.cgstPerc || 0) +
-  // //         Number(detail.details2?.sgstPerc || 0) +
-  // //         Number(detail.details2?.igstPerc || 0)) /
-  // //         100);
+        // // === Case 2: Tax on MRP ===
+        // // if (formState.formElements) {
+        // //   const taxableMRP =
+        // //     Number(detail.mrp || 0) /
+        // //     (1 +
+        // //       (Number(detail.details2?.cgstPerc || 0) +
+        // //         Number(detail.details2?.sgstPerc || 0) +
+        // //         Number(detail.details2?.igstPerc || 0)) /
+        // //         100);
 
-  //   // if (ckbTaxOnFreeItems) {
-  //   //   // including free qty
-  //   //   detail.details2!.cgst =
-  //   //     (qty + freeQty) * taxableMRP * (detail.details2?.cgstPerc || 0) / 100;
-  //   //   detail.details2!.sgst =
-  //   //     (qty + freeQty) * taxableMRP * (detail.details2?.sgstPerc || 0) / 100;
-  //   //   detail.details2!.igst =
-  //   //     (qty + freeQty) * taxableMRP * (detail.details2?.igstPerc || 0) / 100;
-  //   //   detail.details2!.additionalCess =
-  //   //     (qty + freeQty) * taxableMRP * (detail.details2?.additionalCessPerc || 0) / 100;
+        //   // if (ckbTaxOnFreeItems) {
+        //   //   // including free qty
+        //   //   detail.details2!.cgst =
+        //   //     (qty + freeQty) * taxableMRP * (detail.details2?.cgstPerc || 0) / 100;
+        //   //   detail.details2!.sgst =
+        //   //     (qty + freeQty) * taxableMRP * (detail.details2?.sgstPerc || 0) / 100;
+        //   //   detail.details2!.igst =
+        //   //     (qty + freeQty) * taxableMRP * (detail.details2?.igstPerc || 0) / 100;
+        //   //   detail.details2!.additionalCess =
+        //   //     (qty + freeQty) * taxableMRP * (detail.details2?.additionalCessPerc || 0) / 100;
 
-  //   //   if (detail.details2!.cessPerc > 0 && currentColumn !== "details2.cessAmt") {
-  //   //     detail.details2!.cessAmt =
-  //   //       (qty + freeQty) * taxableMRP * (detail.details2!.cessPerc || 0) / 100;
-  //   //   } else if (
-  //   //     (qty + freeQty) * taxableMRP > 0 &&
-  //   //     currentColumn === "details2.cessAmt"
-  //   //   ) {
-  //   //     detail.details2!.cessPerc =
-  //   //       (detail.details2!.cessAmt * 100) /
-  //   //       ((qty + freeQty) * taxableMRP);
-  //   //   } else {
-  //   //     detail.details2!.cessAmt = 0;
-  //   //     detail.details2!.cessPerc = 0;
-  //   //   }
-  //   // } else {
-  //     // without free qty
-  //     detail.details2!.cgst =
-  //       qty * taxableMRP * (detail.details2!.cgstPerc || 0) / 100;
-  //     detail.details2!.sgst =
-  //       qty * taxableMRP * (detail.details2!.sgstPerc || 0) / 100;
-  //     detail.details2!.igst =
-  //       qty * taxableMRP * (detail.details2!.igstPerc || 0) / 100;
-  //     detail.details2!.additionalCess =
-  //       qty * taxableMRP * (detail.details2!.additionalCessPerc || 0) / 100;
+        //   //   if (detail.details2!.cessPerc > 0 && currentColumn !== "details2.cessAmt") {
+        //   //     detail.details2!.cessAmt =
+        //   //       (qty + freeQty) * taxableMRP * (detail.details2!.cessPerc || 0) / 100;
+        //   //   } else if (
+        //   //     (qty + freeQty) * taxableMRP > 0 &&
+        //   //     currentColumn === "details2.cessAmt"
+        //   //   ) {
+        //   //     detail.details2!.cessPerc =
+        //   //       (detail.details2!.cessAmt * 100) /
+        //   //       ((qty + freeQty) * taxableMRP);
+        //   //   } else {
+        //   //     detail.details2!.cessAmt = 0;
+        //   //     detail.details2!.cessPerc = 0;
+        //   //   }
+        //   // } else {
+        //     // without free qty
+        //     detail.details2!.cgst =
+        //       qty * taxableMRP * (detail.details2!.cgstPerc || 0) / 100;
+        //     detail.details2!.sgst =
+        //       qty * taxableMRP * (detail.details2!.sgstPerc || 0) / 100;
+        //     detail.details2!.igst =
+        //       qty * taxableMRP * (detail.details2!.igstPerc || 0) / 100;
+        //     detail.details2!.additionalCess =
+        //       qty * taxableMRP * (detail.details2!.additionalCessPerc || 0) / 100;
 
-  //     if (detail.details2!.cessPerc > 0 && currentColumn !== "details2.cessAmt") {
-  //       detail.details2!.cessAmt =
-  //         qty * taxableMRP * (detail.details2!.cessPerc || 0) / 100;
-  //     } else if (
-  //       qty * taxableMRP > 0 &&
-  //       currentColumn === "details2.cessAmt"
-  //     ) {
-  //       detail.details2!.cessPerc =
-  //         (detail.details2!.cessAmt * 100) / (qty * taxableMRP);
-  //     } else {
-  //       detail.details2!.cessAmt = 0;
-  //       detail.details2!.cessPerc = 0;
-  //     }
-  //   // }
-  // } else {
-    // === Case 3: Tax on NetValue ===
-    detail.details2!.cgst = netValue * (detail.details2!.cgstPerc || 0) / 100;
-    detail.details2!.sgst = netValue * (detail.details2!.sgstPerc || 0) / 100;
-    detail.details2!.igst = netValue * (detail.details2!.igstPerc || 0) / 100;
-    detail.details2!.additionalCess = netValue * (detail.details2!.additionalCessPerc || 0) / 100;
+        //     if (detail.details2!.cessPerc > 0 && currentColumn !== "details2.cessAmt") {
+        //       detail.details2!.cessAmt =
+        //         qty * taxableMRP * (detail.details2!.cessPerc || 0) / 100;
+        //     } else if (
+        //       qty * taxableMRP > 0 &&
+        //       currentColumn === "details2.cessAmt"
+        //     ) {
+        //       detail.details2!.cessPerc =
+        //         (detail.details2!.cessAmt * 100) / (qty * taxableMRP);
+        //     } else {
+        //       detail.details2!.cessAmt = 0;
+        //       detail.details2!.cessPerc = 0;
+        //     }
+        //   // }
+        // } else {
+        // === Case 3: Tax on NetValue ===
+        detail.details2!.cgst = netValue * (detail.details2!.cgstPerc || 0) / 100;
+        detail.details2!.sgst = netValue * (detail.details2!.sgstPerc || 0) / 100;
+        detail.details2!.igst = netValue * (detail.details2!.igstPerc || 0) / 100;
+        detail.details2!.additionalCess = netValue * (detail.details2!.additionalCessPerc || 0) / 100;
 
-    if (detail.details2!.cessPerc > 0) {
-      detail.details2!.cessAmt = netValue * (detail.details2!.cessPerc || 0) / 100;
-    } else if (netValue > 0 && currentColumn === "details2.cessAmt") {
-      detail.details2!.cessPerc = (detail.details2!.cessAmt * 100) / netValue;
-    } else {
-      detail.details2!.cessAmt = 0;
-      detail.details2!.cessPerc = 0;
-    }
+        if (detail.details2!.cessPerc > 0) {
+          detail.details2!.cessAmt = netValue * (detail.details2!.cessPerc || 0) / 100;
+        } else if (netValue > 0 && currentColumn === "details2.cessAmt") {
+          detail.details2!.cessPerc = (detail.details2!.cessAmt * 100) / netValue;
+        } else {
+          detail.details2!.cessAmt = 0;
+          detail.details2!.cessPerc = 0;
+        }
 
-    // Handle free items tax
-    // if (ckbTaxOnFreeItems && freeQty > 0) {
-    //   const gross1 = freeQty * rate;
-    //   const netValue1 = gross1 - disc;
+        // Handle free items tax
+        // if (ckbTaxOnFreeItems && freeQty > 0) {
+        //   const gross1 = freeQty * rate;
+        //   const netValue1 = gross1 - disc;
 
-    //   const freeCgst = netValue1 * (detail.details2!.cgstPerc || 0) / 100;
-    //   const freeSgst = netValue1 * (detail.details2!.sgstPerc || 0) / 100;
-    //   const freeIgst = netValue1 * (detail.details2!.igstPerc || 0) / 100;
-    //   const freeAddCess =
-    //     netValue1 * (detail.details2!.additionalCessPerc || 0) / 100;
-    //   const freeCess =
-    //     detail.details2!.cessPerc > 0
-    //       ? netValue1 * (detail.details2!.cessPerc || 0) / 100
-    //       : 0;
+        //   const freeCgst = netValue1 * (detail.details2!.cgstPerc || 0) / 100;
+        //   const freeSgst = netValue1 * (detail.details2!.sgstPerc || 0) / 100;
+        //   const freeIgst = netValue1 * (detail.details2!.igstPerc || 0) / 100;
+        //   const freeAddCess =
+        //     netValue1 * (detail.details2!.additionalCessPerc || 0) / 100;
+        //   const freeCess =
+        //     detail.details2!.cessPerc > 0
+        //       ? netValue1 * (detail.details2!.cessPerc || 0) / 100
+        //       : 0;
 
-    //   detail.details2!.cgst += freeCgst;
-    //   detail.details2!.sgst += freeSgst;
-    //   detail.details2!.igst += freeIgst;
-    //   detail.details2!.additionalCess += freeAddCess;
-    //   detail.details2!.cessAmt += freeCess;
-    // }
-  // }
-  
+        //   detail.details2!.cgst += freeCgst;
+        //   detail.details2!.sgst += freeSgst;
+        //   detail.details2!.igst += freeIgst;
+        //   detail.details2!.additionalCess += freeAddCess;
+        //   detail.details2!.cessAmt += freeCess;
+        // }
+        // }
 
-  // === Final update (equivalent to dgvInventory cell values) ===
-  detail.details2!.cgst = round(detail.details2!.cgst);
-  detail.details2!.sgst = round(detail.details2!.sgst);
-  detail.details2!.igst = round(detail.details2!.igst);
-  detail.details2!.additionalCess = round(detail.details2!.additionalCess);
-  detail.details2!.cessAmt = round(detail.details2!.cessAmt);
-  detail.details2!.cessPerc = round(detail.details2!.cessPerc);
-}
+
+        // === Final update (equivalent to dgvInventory cell values) ===
+        detail.details2!.cgst = round(detail.details2!.cgst);
+        detail.details2!.sgst = round(detail.details2!.sgst);
+        detail.details2!.igst = round(detail.details2!.igst);
+        detail.details2!.additionalCess = round(detail.details2!.additionalCess);
+        detail.details2!.cessAmt = round(detail.details2!.cessAmt);
+        detail.details2!.cessPerc = round(detail.details2!.cessPerc);
+      }
 
       // Calculate net value per unit for cost calculation
       let netVal = rate - (rate * discPerc) / 100;
 
       // Calculate cost based on settings
       if (applicationSettings?.inventorySettings?.setProductCostWithVATAmount) {
-        cost = round(netVal + (netVal * vatPerc) / 100, 2);
+        if (clientSession.isAppGlobal) {
+
+          cost = round(netVal + (netVal * (detail.details2!.cgstPerc + detail.details2!.sgstPerc + detail.details2!.igstPerc + detail.details2!.cessPerc + detail.details2!.additionalCessPerc)) / 100);
+        } else {
+          cost = round(netVal + (netVal * vatPerc) / 100);
+        }
       } else {
         cost = netVal;
       }
@@ -563,8 +568,13 @@ debugger;
       detail.vatAmount = getFormattedValueIgnoreRoundingToNumber(vat);
 
       // Calculate final net amount (NetValue + VAT)
-      let netAmount = netValue + vat;
-      netAmount = round(netAmount, 4);
+      let netAmount = 0
+      if (clientSession.isAppGlobal) {
+        netAmount = round(netAmount+ (detail.details2!.cgst + detail.details2!.sgst + detail.details2!.igst + detail.details2!.cessAmt + detail.details2!.additionalCess));
+      } else {
+        netAmount = round(netAmount, 4);
+      }
+
 
       // Update gross and total
       detail.gross = getFormattedValueIgnoreRoundingToNumber(gross);

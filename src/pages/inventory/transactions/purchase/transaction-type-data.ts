@@ -276,7 +276,8 @@ export const initialTransactionDetailData: TransactionDetail = {
   unitPriceTag: 0,
   unitDecimalPoint: 0,
   multiFactor: 0,
-  details2: initialTransactionDetails2
+  details2: initialTransactionDetails2,
+  hsnCode: ""
 };
 export const transactionInitialData: TransactionData = {
   master: TransactionMasterInitialData, details: Array.from({ length: 30 }, (_, index) => ({
@@ -572,6 +573,48 @@ export const TransactionFormStateInitialData: TransactionFormState = {
     },
     {
       column: "salesPrice",
+      summaryType: "sum",
+      valueFormat: "currency",
+    },
+
+    {
+      column: "details2.cessPerc",
+      summaryType: "sum",
+      valueFormat: "currency",
+    },
+    {
+      column: "details2.cessAmt",
+      summaryType: "sum",
+      valueFormat: "currency",
+    },
+    {
+      column: "details2.sgstPerc",
+      summaryType: "sum",
+      valueFormat: "currency",
+    },
+    {
+      column: "details2.sgst",
+      summaryType: "sum",
+      valueFormat: "currency",
+    },
+
+    {
+      column: "details2.cgstPerc",
+      summaryType: "sum",
+      valueFormat: "currency",
+    },
+    {
+      column: "details2.cgst",
+      summaryType: "sum",
+      valueFormat: "currency",
+    },
+    {
+      column: "details2.igstPerc",
+      summaryType: "sum",
+      valueFormat: "currency",
+    },
+    {
+      column: "details2.igst",
       summaryType: "sum",
       valueFormat: "currency",
     },

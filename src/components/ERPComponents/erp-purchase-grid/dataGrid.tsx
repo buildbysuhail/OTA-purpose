@@ -69,7 +69,7 @@ import { initialTransactionDetails2 } from "../../../pages/inventory/transaction
 
 type DataItem = Record<string, any>;
 export interface SummaryConfig<T = any> {
-  column: keyof T;
+  column: TransactionDetailKeys;
   summaryType: "sum" | "min" | "max" | "avg" | "count" | "custom";
   valueFormat?: string;
   displayFormat?: string;
@@ -1784,6 +1784,10 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       return calculateSubtotal() - calculateDiscount();
     };
 
+    const getColumnKey = (key: string): string => {
+      return Object.keys(initialTransactionDetails2).includes(key) ? `details2.${key}`:  key
+    };
+
     return (
       <div
         style={{
@@ -2096,9 +2100,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                         zIndex: isFixed ? 110 : 100,
                       }}
                     >
-                      {formState.summary?.[
-                        column.dataField as keyof SummaryItems
-                      ] ?? ""}
+                      { formState.summary?.[getColumnKey(column.dataField ?? "") as keyof SummaryItems] ?? "" }
                     </div>
                   );
                 })}

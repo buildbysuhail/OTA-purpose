@@ -430,7 +430,7 @@ export const useTransactionHelper = (transactionType: string) => {
       detail.totalAddExpense = round(addAmt * qty);
 
       // Calculate VAT amount
-
+debugger;
       // India tax
       if (clientSession.isAppGlobal) {
         // === Case 1: Additional Cess calculation ===
@@ -509,12 +509,12 @@ export const useTransactionHelper = (transactionType: string) => {
         //   // }
         // } else {
         // === Case 3: Tax on NetValue ===
-        detail.details2!.cgst = netValue * (transactionDetail.details2!.cgstPerc || 0) / 100;
-        detail.details2!.sgst = netValue * (transactionDetail.details2!.sgstPerc || 0) / 100;
-        detail.details2!.igst = netValue * (transactionDetail.details2!.igstPerc || 0) / 100;
-        detail.details2!.additionalCess = netValue * (transactionDetail.details2!.additionalCessPerc || 0) / 100;
+        detail.details2.cgst = netValue * (transactionDetail.details2!.cgstPerc || 0) / 100;
+        detail.details2.sgst = netValue * (transactionDetail.details2!.sgstPerc || 0) / 100;
+        detail.details2.igst = netValue * (transactionDetail.details2!.igstPerc || 0) / 100;
+        detail.details2.additionalCess = netValue * (transactionDetail.details2!.additionalCessPerc || 0) / 100;
 
-        if (detail.details2!.cessPerc > 0) {
+        if (transactionDetail.details2!.cessPerc > 0) {
           detail.details2!.cessAmt = netValue * (transactionDetail.details2!.cessPerc || 0) / 100;
         } else if (netValue > 0 && currentColumn === "details2.cessAmt") {
           detail.details2!.cessPerc = (detail.details2!.cessAmt * 100) / netValue;
@@ -548,12 +548,12 @@ export const useTransactionHelper = (transactionType: string) => {
 
 
         // === Final update (equivalent to dgvInventory cell values) ===
-        detail.details2!.cgst = round(transactionDetail.details2!.cgst);
-        detail.details2!.sgst = round(transactionDetail.details2!.sgst);
-        detail.details2!.igst = round(transactionDetail.details2!.igst);
-        detail.details2!.additionalCess = round(transactionDetail.details2!.additionalCess);
-        detail.details2!.cessAmt = round(transactionDetail.details2!.cessAmt);
-        detail.details2!.cessPerc = round(transactionDetail.details2!.cessPerc);
+        detail.details2.cgst = round(detail.details2!.cgst);
+        detail.details2.sgst = round(detail.details2!.sgst);
+        detail.details2.igst = round(detail.details2!.igst);
+        detail.details2.additionalCess = round(detail.details2!.additionalCess);
+        detail.details2.cessAmt = round(detail.details2!.cessAmt);
+        detail.details2.cessPerc = round(detail.details2!.cessPerc);
       }
 
       let vat = round((netValue * vatPerc) / 100, 4);

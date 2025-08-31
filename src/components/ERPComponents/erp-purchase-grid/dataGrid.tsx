@@ -596,7 +596,7 @@ const VirtualRow = React.memo(
         column: ColumnModel,
         rowIndex: number
       ) => {
-        debugger;
+        
         const target = e.target as HTMLElement;
         const visibleColumns = columns.filter(
           (col) => col.visible !== false && col.dataField != null
@@ -1692,7 +1692,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
           if (input) input.select();
         }
       }
-      debugger;
+      
       setPrevCell(currentCell?.rowIndex ?? -1);
       if (prevCell !== currentCell?.rowIndex) {
         const data = formState.transaction.details.filter((x) => x.productID > 0);

@@ -670,11 +670,6 @@ interface ProductBatchDetailsForAutoBarcodeData {
   p_CessPerc: number;
   p_AdditionalCessPerc: number;
   p_CalamityCessPerc: number;
-  pCgstPerc: number;
-  pSgstPerc: number;
-  pIgstPerc: number;
-  pCessPerc: number;
-  pAdditionalCessPerc: number;
   hsnCode: string;
   // new fields
   supplierReferenceProductCode: string;

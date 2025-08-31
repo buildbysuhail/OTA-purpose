@@ -2690,15 +2690,15 @@ ERPAlert.show({
         // Handle listed product prices
         if (product.hasListedProductPrice) {
           outDetail.unitPrice = product.listedProductPrice;
-        }
+        }debugger;
 
         // Handle VAT and CST based on form type
         if(clientSession.isAppGlobal) {
           outDetail.hsnCode = product.hsnCode || "";
 
           if (formState.transaction.master.voucherType !== "PE") {
-            outDetail.cgstPerc = Number(product.pCgstPerc || 0);
-            outDetail.sgstPerc = Number(product.pSgstPerc || 0);
+            outDetail.cgstPerc = Number(product.p_CGSTPerc || 0);
+            outDetail.sgstPerc = Number(product.p_SGSTPerc || 0);
             outDetail.igstPerc = 0;
 
             if (
@@ -2708,11 +2708,11 @@ ERPAlert.show({
             ) {
               outDetail.cgstPerc = 0;
               outDetail.sgstPerc = 0;
-              outDetail.igstPerc = Number(product.pIgstPerc || 0);
+              outDetail.igstPerc = Number(product.p_IGSTPerc || 0);
             }
 
-            outDetail.cessPerc = Number(product.pCessPerc || 0);
-            outDetail.addnlCessPerc = Number(product.pAdditionalCessPerc || 0);
+            outDetail.cessPerc = Number(product.p_CessPerc || 0);
+            outDetail.addnlCessPerc = Number(product.p_AdditionalCessPerc || 0);
           } else {
             outDetail.cgstPerc = 0;
             outDetail.sgstPerc = 0;

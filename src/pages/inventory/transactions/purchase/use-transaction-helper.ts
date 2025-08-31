@@ -235,7 +235,7 @@ export const useTransactionHelper = (transactionType: string) => {
           },
         },
       };
-
+    debugger;
     const netVal = summary.netValue;
     let netAmt = summary.total;
     const tax = summary.vatAmount;
@@ -256,6 +256,7 @@ export const useTransactionHelper = (transactionType: string) => {
     result.transaction.master.vatAmount = round(tax);
     result.netAmount = round(netAmt);
 
+    let tcsAmt = 0;
     let _grandTotal = netAmt + additionalAmt - billDisc;
 
     if (master.hasroundOff) {
@@ -263,6 +264,7 @@ export const useTransactionHelper = (transactionType: string) => {
         result.transaction!.master!.roundAmount = parseFloat(
           (Math.round(_grandTotal) - _grandTotal).toFixed(3)
         );
+        _grandTotal = result.transaction!.master!.grandTotal??0 -  result.transaction!.master!.roundAmount
         result.transaction!.master!.grandTotal = Math.round(_grandTotal);
       } catch (err) {
         // handle error if needed
@@ -272,6 +274,10 @@ export const useTransactionHelper = (transactionType: string) => {
       result.transaction!.master!.roundAmount = 0;
       result.transaction!.master!.grandTotal = _grandTotal;
     }
+    
+    // if(clientSession.isAppGlobal && master.other.tcs > 0) {
+    //   result.transaction!.master!.other?.totTCS = result.transaction!.master!.grandTotal
+    // }
     result.transaction!.master!.totalGross = summary.gross;
     result.transaction!.master!.totalDiscount = summary.discount;
 
@@ -422,7 +428,6 @@ export const useTransactionHelper = (transactionType: string) => {
       detail.totalAddExpense = round(addAmt * qty);
 
       // Calculate VAT amount
-      let vat = round((netValue * vatPerc) / 100, 4);
 
       // India tax
       if (clientSession.isAppGlobal) {
@@ -548,9 +553,12 @@ export const useTransactionHelper = (transactionType: string) => {
         detail.details2!.cessPerc = round(detail.details2!.cessPerc);
       }
 
+      let vat = round((netValue * vatPerc) / 100, 4);
       // Calculate net value per unit for cost calculation
       let netVal = rate - (rate * discPerc) / 100;
-
+      if (clientSession.isAppGlobal) {
+        vat = detail.details2!.cgst + detail.details2!.sgst + detail.details2!.igst + detail.details2!.cessAmt + detail.details2!.additionalCess
+      }
       // Calculate cost based on settings
       if (applicationSettings?.inventorySettings?.setProductCostWithVATAmount) {
         if (clientSession.isAppGlobal) {
@@ -570,7 +578,7 @@ export const useTransactionHelper = (transactionType: string) => {
       // Calculate final net amount (NetValue + VAT)
       let netAmount = 0
       if (clientSession.isAppGlobal) {
-        netAmount = round(netAmount+ (detail.details2!.cgst + detail.details2!.sgst + detail.details2!.igst + detail.details2!.cessAmt + detail.details2!.additionalCess));
+        netAmount = round(vat);
       } else {
         netAmount = round(netAmount, 4);
       }
@@ -1059,7 +1067,7 @@ export const useTransactionHelper = (transactionType: string) => {
         result.summary = {};
       }
       const summaryConfig = formState.summaryConfig;
-
+      debugger;
       summaryConfig.forEach((config, index) => {
         try {
           // Calculate the summary value

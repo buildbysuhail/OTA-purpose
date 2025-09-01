@@ -750,7 +750,7 @@ const VirtualRow = React.memo(
                         <span
                           className={`rounded-sm p-1 text-xs xs:text-sm font-medium whitespace-nowrap ${appState.mode === "dark" ? "bg-[#444444] text-[#e0e0e0]" : "bg-white text-gray-500"}`}
                         >
-                          #{item.productBatchID || 'Product ID'}
+                          #{index+1}
                         </span>
                         <span
                           className={`font-medium text-sm xs:text-base truncate ${appState.mode === "dark" ? "text-[#e0e0e0]" : "text-gray-900"}`}

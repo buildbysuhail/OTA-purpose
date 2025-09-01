@@ -602,6 +602,9 @@ useEffect(() => {
   );
   const { hasRight } = useUserRights();
   const gridHeight = useMemo(() => {
+    if(deviceInfo?.isMobile) {
+      return window.innerHeight - 330
+    }
     let height;
     if (
       (formState.transactionLoading && _st.footerPosition === "right") ||

@@ -590,7 +590,7 @@ const VirtualRow = React.memo(
         column: ColumnModel,
         rowIndex: number
       ) => {
-        debugger;
+        
         const target = e.target as HTMLElement;
         const visibleColumns = columns.filter(
           (col) => col.visible !== false && col.dataField != null
@@ -734,13 +734,20 @@ const VirtualRow = React.memo(
             <div
               className={`py-0 ${rowBg} transition-all duration-300 ease-in-out group`}
               style={{
+                position:  'absolute',
+                top: `${top}px`,
+                left:  0,
+                height:  `${rowHeight}px`,
+                width: "100%",
+                display: "flex",
+                flexDirection: 'row',
                 borderBottom: `0.5px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.1)" : `rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`}`,
                 backgroundColor: appState.mode === "dark" ? "#333333" : "#fff",
                 marginTop: index === 0 ? '25px' : '0',
                 paddingBottom: index === details.length - 1 ? '0.5rem' : '0'
               }}
             >
-              <div className="p-2">
+              <div className="p-2 w-full">
                 <div
                   className={`rounded-lg shadow-sm w-full max-w-[730px] mx-auto ${appState.mode === "dark" ? "bg-[#2d2d2d] border border-[#444444]" : "bg-[#f8f8f8] border border-[#e4e3e8]"}`}
                 >
@@ -1000,7 +1007,7 @@ const VirtualRow = React.memo(
                   // TransactionDetails2
                   const isDetails2 = Object.keys(initialTransactionDetails2).includes(column.dataField as keyof TransactionDetails2)
                   if(isDetails2) {
-                    // debugger;
+                    // 
                   }
                   const fieldKey = column.dataField as TransactionDetailKeys;
                 const idField = column.idField as keyof TransactionDetail;
@@ -1379,7 +1386,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       return visibleColumns;
     }, [columnOrder, formState.gridColumns]);
 
-    const ITEM_HEIGHT = isMobile ? 193 : formState.userConfig?.gridRowHeight ?? 32;
+    const ITEM_HEIGHT = isMobile ? 140 : formState.userConfig?.gridRowHeight ?? 32;
 
     const { scrollTop, updateScroll, visibleItems, totalHeight } =
       useUltraFastVirtualScrolling(
@@ -2058,23 +2065,24 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
             ref={containerRef}
             className="border border-gray-300 rounded"
             style={{
-              height: isMobile ? '' : `${height + 80}px`,
+              height: `${height + 80}px`,
               overflowY: "scroll",
               overflowX: "auto",
               position: "relative",
               scrollbarWidth: "auto",
               scrollbarColor: appState.mode === "dark" ? "#555 #333" : "#ddd #f1f1f1",
             }}
-            onScroll={handleScroll}
+            onScroll={(e)=> {debugger; handleScroll(e);}}
           >
             <div
               style={{
-                width: `${!isMobile ? totalGridWidth : ''}px`,
+                width: `${!isMobile ? `${totalGridWidth}px` : '100%'}`,
                 minWidth: `${!isMobile ? totalGridWidth : 50}px`,
                 height: `${!isMobile ? totalHeight + 80 : totalHeight + 10}px`,
                 borderRadius: formState.userConfig?.gridBorderRadius ? `${formState.userConfig.gridBorderRadius}px` : "0px",
               }}
             >
+              {!isMobile &&
               <div
                 className="table-header"
                 style={{
@@ -2087,7 +2095,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                   height: `${headerRowHeight}px`,
                 }}
               >
-                {!isMobile && columns?.map((column, index) => {
+                {columns?.map((column, index) => {
                   const isFirstColumn = index === 0;
                   const isLastColumn = index === columns.length - 1;
                   const isFixed = isFirstColumn || isLastColumn;
@@ -2172,6 +2180,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                   );
                 })}
               </div>
+              }
               <div
                 style={{
                   position: "relative",

@@ -31,15 +31,23 @@ export const useUltraFastVirtualScrolling = (
   
   // Calculate visible items with large buffer to prevent white areas
   const getVisibleItems = useCallback(() => {
+    debugger;
     const visibleCount = Math.ceil(containerHeight / itemHeight);
-    const bufferSize = Math.max(10, Math.floor(visibleCount * 0.5)); // Large buffer
+    const totalCount = Math.ceil((scrollTop.current + containerHeight) / itemHeight);
+    const sd = Math.floor((totalCount - visibleCount) / 2) > Math.floor(visibleCount) ? Math.floor(visibleCount) : Math.floor((totalCount - visibleCount) / 2)
+    const bufferSize = Math.max(sd, Math.floor(visibleCount * 0.5)); // Large buffer
     
+    console.log(visibleCount);
+    console.log(bufferSize);
+    console.log(scrollTop.current);
     const startIndex = Math.max(0, Math.floor(scrollTop.current / itemHeight) - bufferSize);
     const endIndex = Math.min(
       itemCount - 1,
       Math.floor((scrollTop.current + containerHeight) / itemHeight) + bufferSize
     );
     
+    console.log(startIndex);
+    console.log(endIndex);
     const visibleItems = [];
     for (let i = startIndex; i <= endIndex; i++) {
       visibleItems.push({
@@ -47,17 +55,19 @@ export const useUltraFastVirtualScrolling = (
         top: i * itemHeight,
       });
     }
+    console.log(visibleItems);
     
     return { visibleItems, startIndex, endIndex };
   }, [itemCount, itemHeight, containerHeight]);
 
   // Immediate scroll update without RAF to prevent white areas
   const updateScroll = useCallback((newScrollTop: number) => {
+    debugger;
     scrollTop.current = newScrollTop;
     // Force immediate update for fast scrolling
     forceUpdate({});
   }, []);
-debugger;
+
   const totalHeight = itemCount * itemHeight;
   const { visibleItems, startIndex, endIndex } = getVisibleItems();
   

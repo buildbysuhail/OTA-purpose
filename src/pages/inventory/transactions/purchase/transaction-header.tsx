@@ -564,8 +564,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   <ERPModal
                     isOpen={isMoreModalOpen}
                     title={t("more_options")}
-                    width={650}
-                    height={580}
+                    width={710}
+                    height={450}
                     closeModal={closeMoreModal}
                     content={
                       <MoreOptionsModalContent
@@ -672,8 +672,12 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
       )}
 
       {deviceInfo?.isMobile && (
-        <div style={{ left: headerLeft }} className="fixed top-[110px] right-0 z-[39] dark:bg-dark-bg bg-white shadow-md transition-all duration-300">
-          <div className="flex items-end gap-1 relative px-2 !pb-3">
+        <div
+          style={{ left: headerLeft }}
+          className="fixed top-[87px] right-0 z-[39] dark:bg-dark-bg bg-white shadow-md transition-all duration-300 w-full"
+        >
+          {/* Top Section - Always visible */}
+          <div className="flex items-end gap-1 border-b dark:border-dark-border border-gray-300 relative px-2 !pb-3">
             <PartyLedger
               ref={ledgerIdRef}
               handleFieldKeyDown={handleFieldKeyDown}
@@ -698,29 +702,15 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
             />
           </div>
 
+          {/* Collapsible Dropdown Section */}
           <div
             ref={dropdownRef}
-            className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropDownOpen ? "max-h-[30vh] overflow-y-auto overflow-x-hidden" : "max-h-0 overflow-hidden"}`}
-            style={{ width: "100%", boxSizing: "border-box", }}>
-            <div className="p-4 md:p-2 dark:bg-dark-bg-card bg-white border-t dark:border-dark-border border-gray-300 shadow-lg">
-              <div className="grid xl:grid-cols-5 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 items-end gap-1">
-                <Employee
-                  dispatch={dispatch}
-                  formState={formState}
-                  t={t}
-                  handleKeyDown={handleKeyDown}
-                  handleFieldKeyDown={handleFieldKeyDown}
-                />
-
-                <DebitAccount
-                  transactionType={transactionType}
-                  dispatch={dispatch}
-                  formState={formState}
-                  t={t}
-                  handleKeyDown={handleKeyDown}
-                  handleFieldKeyDown={handleFieldKeyDown}
-                />
-
+            className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropDownOpen ? "max-h-[50vh] overflow-y-auto overflow-x-hidden" : "max-h-0 overflow-hidden"
+              }`}
+            style={{ width: "100%", boxSizing: "border-box" }}
+          >
+            <div className="p-2 dark:bg-dark-bg-card bg-white shadow-lg">
+              <div className="flex items-end flex-wrap gap-2">
                 <AccVoucherPrefix
                   ref={voucherNumberRef}
                   formState={formState}
@@ -729,7 +719,6 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   loadAndSetTransVoucher={loadAndSetTransVoucher}
                   t={t}
                 />
-
                 <AccVoucherNo
                   ref={voucherNumberRef}
                   formState={formState}
@@ -738,19 +727,33 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   loadAndSetTransVoucher={loadAndSetTransVoucher}
                   t={t}
                 />
-
                 <ReferenceDate
                   dispatch={dispatch}
                   formState={formState}
                   t={t}
                 />
-
                 <TransactionDate
                   formState={formState}
                   dispatch={dispatch}
                   t={t}
                 />
-
+              </div>
+              <div className="grid items-end grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-2 my-2">
+                <Employee
+                  dispatch={dispatch}
+                  formState={formState}
+                  t={t}
+                  handleKeyDown={handleKeyDown}
+                  handleFieldKeyDown={handleFieldKeyDown}
+                />
+                <DebitAccount
+                  transactionType={transactionType}
+                  dispatch={dispatch}
+                  formState={formState}
+                  t={t}
+                  handleKeyDown={handleKeyDown}
+                  handleFieldKeyDown={handleFieldKeyDown}
+                />
                 <Project
                   dispatch={dispatch}
                   formState={formState}
@@ -759,83 +762,13 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   handleFieldKeyDown={handleFieldKeyDown}
                 />
 
-                <InvoiceValue
-                  dispatch={dispatch}
-                  formState={formState}
-                  t={t}
-                  handleKeyDown={handleKeyDown}
-                />
-
-                <div>
-                  <ERPButton
-                    title={t("grn_number")}
-                    onClick={handleButtonClick}
-                    localInputBox={formState?.userConfig?.inputBoxStyle}
-                    className="!m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
-                    disabled={formState.transactionLoading}
-                  />
-                </div>
-
-                {isModalOpen && (
-                  <ERPModal
-                    isOpen={isModalOpen}
-                    title={t("grn_number")}
-                    width={600}
-                    height={300}
-                    closeModal={closeModal}
-                    content={
-                      <GrnNumber
-                        dispatch={dispatch}
-                        formState={formState}
-                        t={t}
-                        loadAndSetTransVoucher={loadAndSetTransVoucher}
-                        closeModal={closeModal}
-                      />
-                    }
-                  />
-                )}
-
-                <LedgerCode
-                  ref={ledgerCodeRef}
-                  handleKeyDown={handleKeyDown}
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                />
-
-                <VatTokenInput
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                  handleFieldKeyDown={handleFieldKeyDown}
-                  handleKeyDown={handleKeyDown}
-                />
-
-                {formState.formElements.inSearch?.visible && (
-                  <ERPCheckbox
-                    localInputBox={formState?.userConfig?.inputBoxStyle}
-                    id="inSearch"
-                    className="text-left !m-0 dark:text-dark-text"
-                    label={t(formState.formElements.inSearch.label)}
-                    checked={formState.inSearch}
-                    onChange={(e) => {
-                      dispatch(
-                        formStateHandleFieldChange({
-                          fields: { inSearch: e.target.checked },
-                        })
-                      );
-                    }}
-                    disabled={formState.formElements.pnlMasters?.disabled}
-                  />
-                )}
-
                 {formState.formElements.cbLabelDesign?.visible && (
                   <ERPDataCombobox
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     enableClearOption={false}
                     fetching={formState.transactionLoading}
                     id="labelDesignID"
-                    className="min-w-[180px] !m-0 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text"
+                    className="w-full !m-0 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text"
                     label={t(formState.formElements.cbLabelDesign.label)}
                     data={formState.transaction.master}
                     onSelectItem={(e) => {
@@ -859,127 +792,280 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       formState.formElements.pnlMasters?.disabled
                     }
                     disableEnterNavigation
-                    onKeyDown={(e: any) => {
+                    onKeyDown={(e) => {
                       handleKeyDown && handleKeyDown(e, "labelDesign");
-                    }}
-                  />
-                )}
-
-                <div>
-                  <ERPButton
-                    title={t("more")}
-                    variant="secondary"
-                    onClick={handleMoreButtonClick}
-                    className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
-                    disabled={formState.transactionLoading}
-                  />
-                </div>
-
-                {isMoreModalOpen && (
-                  <ERPModal
-                    isOpen={isMoreModalOpen}
-                    title={t("more_options")}
-                    width={650}
-                    height={600}
-                    closeModal={closeMoreModal}
-                    content={
-                      <MoreOptionsModalContent
-                        formState={formState}
-                        dispatch={dispatch}
-                        handleFieldChange={handleFieldChange}
-                        loadAndSetTransVoucher={loadAndSetTransVoucher}
-                        t={t}
-                      />
-                    }
-                  />
-                )}
-              </div>
-              {conditionalFooterComponents}
-              <div className="inline-flex items-end gap-1 border border-dashed dark:border-dark-border border-gray-400 p-2 rounded-md mt-2">
-                {formState.formElements.cbCurrency?.visible && (
-                  <ERPDataCombobox
-                    localInputBox={formState?.userConfig?.inputBoxStyle}
-                    enableClearOption={false}
-                    fetching={formState.transactionLoading}
-                    id="currencyId"
-                    className="min-w-[180px] !m-0 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text"
-                    label={t(formState.formElements.cbCurrency.label)}
-                    data={formState.transaction.master}
-                    onSelectItem={(e) => {
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: {
-                            currencyID: e.value,
-                          },
-                        })
-                      );
-                      handleFieldKeyDown("currencyId", "Enter");
-                    }}
-                    value={formState.transaction.master.currencyID}
-                    field={{
-                      id: "currencyId",
-                      valueKey: "id",
-                      labelKey: "code",
-                      getListUrl: Urls.data_currencies,
-                    }}
-                    disabled={
-                      formState.formElements.cbCurrency.disabled ||
-                      formState.formElements.pnlMasters?.disabled
-                    }
-                    disableEnterNavigation
-                    onKeyDown={(e: any) => {
-                      handleKeyDown && handleKeyDown(e, "currency");
                     }}
                   />
                 )}
 
                 <ERPInput
                   localInputBox={formState?.userConfig?.inputBoxStyle}
-                  id="exchangeRate"
-                  label={t(formState.formElements.exchangeRate.label)}
-                  value={formState.transaction.master.exchangeRate}
-                  fetching={formState.transactionLoading}
-                  disableEnterNavigation={true}
-                  onKeyDown={(e) => {
-                    handleKeyDown && handleKeyDown(e, "exchangeRate");
-                  }}
+                  id="partyName"
+                  label={t("name")}
+                  value={formState.transaction.master.partyName}
+                  className="max-w-full"
                   onChange={(e) =>
                     dispatch(
                       formStateMasterHandleFieldChange({
-                        fields: { exchangeRate: e.target?.value },
+                        fields: { partyName: e.target?.value },
                       })
                     )
                   }
-                  className="min-w-[180px] !m-0 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text"
                   disabled={
-                    formState.formElements.exchangeRate?.disabled ||
                     formState.formElements.pnlMasters?.disabled
                   }
                 />
 
-                {/* <ERPButton
-                  title={t("set")}
-                  variant="secondary"
-                  className="!m-0"
-                  disabled={formState.transactionLoading}
-                /> */}
+                <ERPInput
+                  localInputBox={formState?.userConfig?.inputBoxStyle}
+                  id="address1"
+                  label={t("address_1")}
+                  value={formState.transaction.master.address1}
+                  className="max-w-full"
+                  onChange={(e) =>
+                    dispatch(
+                      formStateMasterHandleFieldChange({
+                        fields: { address1: e.target?.value },
+                      })
+                    )
+                  }
+                  disabled={
+                    formState.formElements.pnlMasters?.disabled
+                  }
+                />
+
+                <ERPInput
+                  localInputBox={formState?.userConfig?.inputBoxStyle}
+                  id="address2"
+                  label={t('address_2')}
+                  value={formState.transaction.master.address2}
+                  className="max-w-full"
+                  onChange={(e) =>
+                    dispatch(
+                      formStateMasterHandleFieldChange({
+                        fields: { address2: e.target?.value },
+                      })
+                    )
+                  }
+                  disabled={
+                    formState.formElements.pnlMasters?.disabled
+                  }
+                />
               </div>
+
+              <div className="flex flex-wrap items-end gap-2">
+                <InvoiceValue
+                  dispatch={dispatch}
+                  formState={formState}
+                  t={t}
+                  handleKeyDown={handleKeyDown}
+                />
+                <LedgerCode
+                  ref={ledgerCodeRef}
+                  handleKeyDown={handleKeyDown}
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
+                <VatTokenInput
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  handleFieldKeyDown={handleFieldKeyDown}
+                  handleKeyDown={handleKeyDown}
+                />
+                {/* Conditional Elements */}
+                {formState.formElements.inSearch?.visible && (
+                  <ERPCheckbox
+                    localInputBox={formState?.userConfig?.inputBoxStyle}
+                    id="inSearch"
+                    className="text-left !m-0 dark:text-dark-text"
+                    label={t(formState.formElements.inSearch.label)}
+                    checked={formState.inSearch}
+                    onChange={(e) => {
+                      dispatch(
+                        formStateHandleFieldChange({
+                          fields: { inSearch: e.target.checked },
+                        })
+                      );
+                    }}
+                    disabled={formState.formElements.pnlMasters?.disabled}
+                  />
+                )}
+              </div>
+
+              <div className="flex items-center gap-2 mt-2">
+                <ERPButton
+                  title={t("grn_number")}
+                  onClick={handleButtonClick}
+                  localInputBox={formState?.userConfig?.inputBoxStyle}
+                  className="!m-0  dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+                  disabled={formState.transactionLoading}
+                />
+
+                <ERPButton
+                  title={t("more")}
+                  variant="secondary"
+                  onClick={handleMoreButtonClick}
+                  className=" dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+                  disabled={formState.transactionLoading}
+                />
+              </div>
+
+              {/* Modals */}
+              {isModalOpen && (
+                <ERPModal
+                  isOpen={isModalOpen}
+                  title={t("grn_number")}
+                  width={600}
+                  height={300}
+                  closeModal={closeModal}
+                  content={
+                    <GrnNumber
+                      dispatch={dispatch}
+                      formState={formState}
+                      t={t}
+                      loadAndSetTransVoucher={loadAndSetTransVoucher}
+                      closeModal={closeModal}
+                    />
+                  }
+                />
+              )}
+
+              {isMoreModalOpen && (
+                <ERPModal
+                  isOpen={isMoreModalOpen}
+                  title={t("more_options")}
+                  width={650}
+                  height={600}
+                  closeModal={closeMoreModal}
+                  content={
+                    <MoreOptionsModalContent
+                      formState={formState}
+                      dispatch={dispatch}
+                      handleFieldChange={handleFieldChange}
+                      loadAndSetTransVoucher={loadAndSetTransVoucher}
+                      t={t}
+                    />
+                  }
+                />
+              )}
+
+              {/* Conditional Footer Components */}
+              {conditionalFooterComponents}
+
+              {/* Currency Section */}
+              {formState.formElements.pnlImport.visible && (
+                <div className="border border-dashed dark:border-dark-border border-gray-400 p-3 rounded-md mt-2">
+                  <div className="grid items-end grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-2">
+                    {formState.formElements.cbCurrency?.visible && (
+                      <div className="w-full">
+                        <ERPDataCombobox
+                          localInputBox={formState?.userConfig?.inputBoxStyle}
+                          enableClearOption={false}
+                          fetching={formState.transactionLoading}
+                          id="currencyId"
+                          className="w-full !m-0 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text"
+                          label={t(formState.formElements.cbCurrency.label)}
+                          data={formState.transaction.master}
+                          onSelectItem={(e) => {
+                            dispatch(
+                              formStateMasterHandleFieldChange({
+                                fields: {
+                                  currencyID: e.value,
+                                },
+                              })
+                            );
+                            handleFieldKeyDown("currencyId", "Enter");
+                          }}
+                          value={formState.transaction.master.currencyID}
+                          field={{
+                            id: "currencyId",
+                            valueKey: "id",
+                            labelKey: "code",
+                            getListUrl: Urls.data_currencies,
+                          }}
+                          disabled={
+                            formState.formElements.cbCurrency.disabled ||
+                            formState.formElements.pnlMasters?.disabled
+                          }
+                          disableEnterNavigation
+                          onKeyDown={(e: any) => {
+                            handleKeyDown && handleKeyDown(e, "currency");
+                          }}
+                        />
+                      </div>
+                    )
+                    }
+
+                    < div className="w-full">
+                      <ERPInput
+                        localInputBox={formState?.userConfig?.inputBoxStyle}
+                        id="exchangeRate"
+                        label={t(formState.formElements.exchangeRate.label)}
+                        value={formState.transaction.master.exchangeRate}
+                        fetching={formState.transactionLoading}
+                        disableEnterNavigation={true}
+                        onKeyDown={(e) => {
+                          handleKeyDown && handleKeyDown(e, "exchangeRate");
+                        }}
+                        onChange={(e) =>
+                          dispatch(
+                            formStateMasterHandleFieldChange({
+                              fields: { exchangeRate: e.target?.value },
+                            })
+                          )
+                        }
+                        className="w-full !m-0 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text"
+                        disabled={
+                          formState.formElements.exchangeRate?.disabled ||
+                          formState.formElements.pnlMasters?.disabled
+                        }
+                      />
+                    </div>
+
+                    <div>
+                      <ERPButton
+                        title={t("set")}
+                        variant="secondary"
+                        className="!m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+                        disabled={formState.transactionLoading}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Chevron button - moves with dropdown content */}
+          {/* Chevron Toggle Button */}
           <div className="relative w-full">
             <div className="absolute left-1/2 transform -translate-x-1/2 top-0">
               <button
                 onClick={toggleDropdown}
-                className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-white rounded-b-lg border border-t-0 border-gray-300 transition-all duration-500 ${isDropDownOpen ? "dark:bg-dark-hover-bg bg-gray-100" : ""}`}
-                style={{ boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)", transform: isDropDownOpen ? "translateY(0)" : "translateY(0)", transition: "transform 0.5s ease-in-out", }}>
-                <ChevronDown className={`mx-2 transition-transform duration-500 dark:text-dark-text ${isDropDownOpen ? "transform rotate-180" : hasAnimated ? "" : "animate-[bounce_2s_1]"}`} size={24} />
+                className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-white rounded-b-lg border border-t-0 border-gray-300 transition-all duration-500 ${isDropDownOpen ? "dark:bg-dark-hover-bg bg-gray-100" : ""
+                  }`}
+                style={{
+                  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                  transform: isDropDownOpen ? "translateY(0)" : "translateY(0)",
+                  transition: "transform 0.5s ease-in-out",
+                }}
+              >
+                <ChevronDown
+                  className={`mx-2 transition-transform duration-500 dark:text-dark-text ${isDropDownOpen
+                    ? "transform rotate-180"
+                    : hasAnimated
+                      ? ""
+                      : "animate-[bounce_2s_1]"
+                    }`}
+                  size={24}
+                />
               </button>
             </div>
           </div>
         </div>
-      )}
+      )
+      }
       <ERPModal
         isOpen={formState.ledgerDetails}
         title={t("ledger_details")}
@@ -988,7 +1074,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
         closeModal={closeLedgerDetailsModal}
         content={<LedgerDetails closeModal={closeLedgerDetailsModal} t={t} />}
       />
-    </div>
+    </div >
   );
 };
 

@@ -86,11 +86,23 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   const [showAdjustmentOutside, setShowAdjustmentOutside] = useState(false);
   const [showCheckboxesOutside, setShowCheckboxesOutside] = useState(false);
   const [showAttachmentOutside, setShowAttachmentOutside] = useState(false);
+  const [dropupState, setDropupState] = useState<'closed' | 'minimal' | 'full'>('closed');
+  const [isSmallDevice, setIsSmallDevice] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      setIsSmallDevice(width >= 320 && width <= 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
-        isDropUpOpen &&
+        dropupState !== 'closed' &&
         dropUpRef.current &&
         !dropUpRef.current.contains(event.target as Node) &&
         !(event.target as HTMLElement).closest("button") &&
@@ -100,12 +112,12 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         !(event.target as HTMLElement).closest(".combobox-dropdown") &&
         !(event.target as HTMLElement).closest(".MuiAutocomplete-popper")
       ) {
-        toggleDropup();
+        setDropupState('closed');
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isDropUpOpen, toggleDropup]);
+  }, [dropupState]);
 
   useEffect(() => {
     const timer = setTimeout(() => setHasAnimated(true), 2000);
@@ -162,6 +174,33 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
     calculateTotal(formState.transaction.master, formState.summary, formState.formElements, { result: {}, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly })
   }, [formState.transaction.master.billDiscount, formState.transaction.master.hasroundOff, formState.transaction.master.adjustmentAmount]);
 
+  let clickTimer: NodeJS.Timeout | null = null;
+
+  const handleIconClick = () => {
+    if (!isSmallDevice) {
+      setDropupState(prev => prev === 'closed' ? 'full' : 'closed');
+      return;
+    }
+
+    if (clickTimer) {
+      clearTimeout(clickTimer);
+      clickTimer = null;
+      setDropupState('closed');
+      return;
+    }
+
+    clickTimer = setTimeout(() => {
+      clickTimer = null;
+      if (dropupState === 'closed') {
+        setDropupState('minimal');
+      } else if (dropupState === 'minimal') {
+        setDropupState('full');
+      } else if (dropupState === 'full') {
+        setDropupState('closed');
+      }
+    }, 250);
+  };
+
   const taxData = [
     { label: "SGST", value: 0 },
     { label: "CGST", value: 0 },
@@ -190,7 +229,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   };
 
   const warehouseComponent = (
-    <div className="max-w-[180px]">
+    <div className="w-full max-w-none sm:max-w-[180px]">
       <WarehouseID
         formState={formState}
         dispatch={dispatch}
@@ -202,7 +241,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   );
 
   const costCentreComponent = (
-    <div className="max-w-[180px]">
+    <div className="w-full max-w-none sm:max-w-[180px]">
       <CostCentreCombobox
         formState={formState}
         dispatch={dispatch}
@@ -214,7 +253,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   );
 
   const adjustmentComponent = (
-    <div className="flex flex-col max-w-[180px]">
+    <div className="flex flex-col w-full max-w-none sm:max-w-[180px]">
       <AdjustmentAmountInput
         transactionType={transactionType}
         formState={formState}
@@ -226,7 +265,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   );
 
   const checkboxesComponent = (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 w-full justify-start sm:justify-center">
       <AutoCalculationCheckbox
         formState={formState}
         dispatch={dispatch}
@@ -241,7 +280,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   );
 
   const attachmentComponent = (
-    <button className="text-[#2563eb] dark:text-[#60a5fa]">
+    <button className="text-[#2563eb] dark:text-[#60a5fa] w-full text-left sm:text-center">
       <span className="hover:underline text-[#0ea5e9] dark:text-[#60a5fa] capitalize" onClick={selectAttachment}>
         {t("attachment")}
       </span>
@@ -256,7 +295,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             {showWarehouseOutside && warehouseComponent}
             {showAdjustmentOutside && adjustmentComponent}
           </div>
-          <div className="flex flex-wrap items-end gap-1">
+          <div className="flex items-end gap-1">
             {showCostCentreOutside && costCentreComponent}
             {showAttachmentOutside && attachmentComponent}
           </div>
@@ -270,6 +309,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
       )}
     </div>
   ) : null;
+
   const toggleFooterPosition = () => {
     const newPosition: "bottom" | "right" = formState.userConfig?.footerPosition === "bottom" ? "right" : "bottom";
     const updatedUserConfig = {
@@ -278,6 +318,15 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
     };
     dispatch(formStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }));
   };
+
+  const hasDropupContent = isNewFooter
+    ? !showWarehouseOutside ||
+    !showCostCentreOutside ||
+    !showAdjustmentOutside ||
+    !showAttachmentOutside ||
+    formState.formElements.printOnSave.visible
+    : true;
+
   const renderSecondFooter = () => (
     <div
       className={`dark:bg-dark-bg ${footerLayout === "vertical" ? "flex flex-col justify-between h-full" : ""}`}
@@ -419,7 +468,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               </div>
             </div>
             {footerLayout !== "vertical" && outsideComponents}
-            <div className={`flex ${footerLayout === "vertical" ? "flex-col items-start w-full" : "flex-col items-end w-full md:w-auto"}`}>
+            <div className={`hidden md:flex ${footerLayout === "vertical" ? "flex-col items-start w-full" : "flex-col items-end w-full md:w-auto"}`}>
               <div className={`flex ${footerLayout === "vertical" ? "flex-col items-start" : "items-end"} gap-2 mb-2`}>
                 <div className={`flex items-center w-full ${footerLayout === "vertical" ? "justify-between" : "gap-2"}`}>
                   <CashPaidSection
@@ -438,7 +487,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     focusAmount={() => document.getElementById("amountID")?.focus()}
                   />
                 </div>
-                <div className="flex flex-col">
+                <div className="flex flex-col w-full">
                   <BillDiscountInput
                     formState={formState}
                     dispatch={dispatch}
@@ -450,7 +499,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 </div>
               </div>
 
-              <div className={`${footerLayout === "vertical" ? "w-[265px]" : "w-full md:w-[345px]"}`}>
+              <div className={`${footerLayout === "vertical" ? "w-full max-w-[265px]" : "w-full md:w-[345px]"}`}>
                 <div className="flex flex-col">
                   <ERPTextarea
                     id="remarks"
@@ -539,7 +588,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             {/* )} */}
           </div>
 
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 w-full sm:w-auto">
             <ERPButton
               variant="primary"
               ref={btnSaveRef}
@@ -553,7 +602,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 formState.transaction.details == null ||
                 formState.transaction.details.length == 0
               }
-              className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+              className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg flex-1 sm:flex-none"
             />
             <ERPButton
               title={t("cancel")}
@@ -561,7 +610,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               onClick={() => goToPreviousPage()}
               localInputBox={formState?.userConfig?.inputBoxStyle}
               startIcon={<X className="w-3.5 h-3.5" />}
-              className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+              className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg flex-1 sm:flex-none"
             />
           </div>
         </div>
@@ -570,10 +619,10 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   );
 
   const dropdownContent = (
-    <div className="p-4 md:p-2 dark:bg-dark-bg-card dark:border-t dark:border-r dark:border-l bg-white border-t border-r border-l border-gray-300 rounded-t-lg">
+    <div className="p-2 dark:bg-dark-bg-card bg-white border border-gray-300 dark:border md:border-t md:border-r md:border-l md:border-b-0 md:rounded-t-lg rounded-lg md:rounded-none">
       {isNewFooter ? (
-        <div className="flex items-end ps-[23px] gap-2 flex-wrap">
-          <div className="max-w-[180px]">
+        <div className="flex items-end gap-2 flex-wrap">
+          {/* <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
             <PriceCategoryCombobox
               formState={formState}
               dispatch={dispatch}
@@ -582,7 +631,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               handleFieldKeyDown={handleFieldKeyDown}
             />
           </div>
-          <div className="max-w-[180px]">
+          <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
             <SupplyTypeCombobox
               formState={formState}
               dispatch={dispatch}
@@ -590,12 +639,30 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               handleKeyDown={handleKeyDown}
               handleFieldKeyDown={handleFieldKeyDown}
             />
-          </div>
-          {checkboxesComponent}
-          {!showWarehouseOutside && warehouseComponent}
-          {!showCostCentreOutside && costCentreComponent}
-          {!showAdjustmentOutside && adjustmentComponent}
-          {!showAttachmentOutside && attachmentComponent}
+          </div> */}
+          {!showWarehouseOutside && (
+            <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
+              {warehouseComponent}
+            </div>
+          )}
+          {!showCostCentreOutside && (
+            <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
+              {costCentreComponent}
+            </div>
+          )}
+          {!showAdjustmentOutside && (
+            <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
+              {adjustmentComponent}
+            </div>
+          )}
+          {!showAttachmentOutside && (
+            <div className="w-full mb-2 sm:mb-0 sm:w-auto">
+              {attachmentComponent}
+            </div>
+          )}
+          {/* <div className="w-full mb-2 sm:mb-0 sm:w-auto">
+            {checkboxesComponent}
+          </div> */}
           <div className="flex items-center justify-between w-full">
             {formState.formElements.printOnSave.visible && (
               <ERPCheckbox
@@ -615,17 +682,56 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               />
             )}
           </div>
-          {/* <div className="w-full">
-            <ERPButton
-              title={t("grn_print")}
-              variant="secondary"
-              disabled={formState.transactionLoading}
-              className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
-            />
-          </div> */}
+          <div className="flex md:hidden flex-col w-full max-w-full">
+            <div className="flex flex-col gap-2 mb-2">
+              <div className="flex flex-wrap items-end gap-2 w-full">
+                <CashPaidSection
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  focusDiscount={focusDiscount}
+                  focusAmount={focusAmount}
+                />
+                <RoundOffInput
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  handleKeyDown={handleKeyDown}
+                  focusDiscount={() => document.getElementById("discountID")?.focus()}
+                  focusAmount={() => document.getElementById("amountID")?.focus()}
+                />
+                <BillDiscountInput
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  handleKeyDown={handleKeyDown}
+                  applyDiscountsToItems={applyDiscountsToItems}
+                />
+              </div>
+              <ERPTextarea
+                id="remarks"
+                required={true}
+                localInputBox={formState?.userConfig?.inputBoxStyle}
+                label={t(formState.formElements.remarks.label)}
+                value={formState.transaction.master.remarks}
+                onChange={(e) =>
+                  dispatch(
+                    formStateTransactionMasterHandleFieldChange({
+                      fields: { remarks: e.target?.value },
+                    })
+                  )
+                }
+                disabled={
+                  formState.formElements.remarks?.disabled ||
+                  formState.formElements.pnlMasters?.disabled
+                }
+                className={`dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text ${isNewFooter ? "h-[42px]" : ""} w-full`}
+              />
+            </div>
+          </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 items-end">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 items-end">
           <div className="w-full">
             <WarehouseID
               formState={formState}
@@ -671,7 +777,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               handleKeyDown={handleKeyDown}
             />
           </div>
-          <div className="flex items-center justify-between w-full">
+          <div className="flex items-center justify-between w-full sm:flex-col sm:items-start sm:gap-2">
             {formState.formElements.printOnSave.visible && (
               <ERPCheckbox
                 localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -689,20 +795,63 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 className="dark:text-dark-text"
               />
             )}
-            <AutoCalculationCheckbox
-              formState={formState}
-              dispatch={dispatch}
-              t={t}
-            />
-            <IsLockedCheckbox formState={formState} dispatch={dispatch} t={t} />
+            <div className="flex gap-2 flex-wrap">
+              <AutoCalculationCheckbox
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+              />
+              <IsLockedCheckbox formState={formState} dispatch={dispatch} t={t} />
+            </div>
           </div>
-          <button className="text-[#2563eb] dark:text-[#60a5fa]">
-            <span className="hover:underline text-[#0ea5e9] dark:text-[#60a5fa] capitalize" onClick={selectAttachment}>
-              {t("attachment")}
-            </span>
-          </button>
+          <div className="w-full sm:w-auto">
+            <button className="text-[#2563eb] dark:text-[#60a5fa] w-full text-left sm:text-center">
+              <span className="hover:underline text-[#0ea5e9] dark:text-[#60a5fa] capitalize" onClick={selectAttachment}>
+                {t("attachment")}
+              </span>
+            </button>
+          </div>
         </div>
       )}
+    </div>
+  );
+
+  const minimalContent = (
+    <div className="p-2 mt-1 mb-2 dark:bg-dark-bg-card bg-gray-50 border dark:border-dark-border border-gray-200 rounded-lg">
+      <div className="grid grid-cols-1 gap-1.5">
+        <NetAmountInput
+          formState={formState}
+          dispatch={dispatch}
+          t={t}
+          handleKeyDown={handleKeyDown}
+        />
+        <VatAmountLabel
+          formState={formState}
+          dispatch={dispatch}
+          t={t}
+          taxData={taxData}
+        />
+        <BillDiscountLabel
+          formState={formState}
+          dispatch={dispatch}
+          t={t}
+        />
+        {/* <NetTotalLabel
+          formState={formState}
+          dispatch={dispatch}
+          t={t}
+        /> */}
+        {formState.formElements.grandTotalFc.visible && (
+          <div>
+            <div className="flex items-center justify-between dark:text-dark-text">
+              <span>
+                {t(formState.formElements.grandTotalFc.label)}:
+              </span>
+              <span>{formState.transaction.master.grandTotalFc}</span>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 
@@ -714,7 +863,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   if (formState.userConfig?.footerPosition === "right") {
     return (
       <div
-        className={`fixed  ${isRtl ? "left-0" : "right-0"} h-[-webkit-fill-available] overflow-y-scroll w-[300px] shadow-lg p-2 z-30`}
+        className={`fixed ${isRtl ? "left-0" : "right-0"} h-[-webkit-fill-available] overflow-y-scroll w-[280px] sm:w-[300px] shadow-lg p-2 z-30`}
         style={{ top: `${170 + (getInputHeight())}px`, backgroundColor: formState.userConfig?.footerBg ? `rgb(${formState.userConfig.footerBg})` : '#f8f8ff', }}>
         {renderSecondFooter()}
       </div>
@@ -722,23 +871,25 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   } else {
     return (
       <>
-        {isDropUpOpen && (
-          <div className="fixed inset-0 bg-black/20 dark:bg-black/30 backdrop-blur-sm z-30" onClick={toggleDropup} />
+        {dropupState !== 'closed' && hasDropupContent && (
+          <div className="fixed inset-0 bg-black/20 dark:bg-black/30 backdrop-blur-sm z-30" onClick={() => setDropupState('closed')} />
         )}
         {!deviceInfo?.isMobile && (
-          <div className={`fixed dark:bg-dark-bg ${footerLayout === "vertical" ? `top-[170px] ${isRtl ? "left-0" : "right-0"} h-[-webkit-fill-available] w-[300px] overflow-y-auto p-2 z-20 bg-white border-l dark:border-dark-border border-l-slate-200` : "z-40 bottom-0 shadow-lg full-available-width dark:bg-dark-bg bg-[#f8f8ff]"}`}>
-            <div className={`${footerLayout === "vertical" ? "hidden" : "block"}`}>
-              <div className="relative w-full">
-                <div className="absolute left-1/2 transform -translate-x-1/2 top-[-18px]">
-                  <button onClick={toggleDropup} className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-[#f8f8ff] rounded-t-full border border-l-0 border-r-0 border-b-0 border-gray-300 transition-all duration-300 ${isDropUpOpen ? "dark:bg-dark-hover-bg bg-gray-100" : ""}`} style={{ boxShadow: "0 -2px 2px rgba(0, 0, 0, 0. gas1)" }}>
-                    <ChevronUp className={`mx-2 transition-transform duration-500 dark:text-dark-text ${isDropUpOpen ? "transform rotate-180" : hasAnimated ? "" : "animate-[bounce_2s_1]"}`} size={24} />
-                  </button>
+          <div className={`fixed dark:bg-dark-bg ${footerLayout === "vertical" ? `top-[170px] ${isRtl ? "left-0" : "right-0"} h-[-webkit-fill-available] w-[280px] sm:w-[300px] overflow-y-auto p-2 z-20 bg-white border-l dark:border-dark-border border-l-slate-200` : "z-40 bottom-0 shadow-lg full-available-width dark:bg-dark-bg bg-[#f8f8ff]"}`}>
+            {hasDropupContent && (
+              <div className={`${footerLayout === "vertical" ? "hidden" : "block"}`}>
+                <div className="relative w-full">
+                  <div className="absolute left-1/2 transform -translate-x-1/2 top-[-18px]">
+                    <button onClick={handleIconClick} className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-[#f8f8ff] rounded-t-full border border-l-0 border-r-0 border-b-0 border-gray-300 transition-all duration-300 ${dropupState !== 'closed' ? "dark:bg-dark-hover-bg bg-gray-100" : ""}`} style={{ boxShadow: "0 -2px 2px rgba(0, 0, 0, 0.1)" }}>
+                      <ChevronUp className={`mx-2 transition-transform duration-500 dark:text-dark-text ${dropupState === 'full' ? "transform rotate-180" : hasAnimated ? "" : "animate-[bounce_2s_1]"}`} size={24} />
+                    </button>
+                  </div>
+                </div>
+                <div ref={dropUpRef} className={`w-full pt-2 transition-all duration-500 ease-in-out overflow-y-auto ${dropupState === 'full' ? "max-h-[50vh]" : "max-h-0"}`}>
+                  {dropdownContent}
                 </div>
               </div>
-              <div ref={dropUpRef} className={`w-full pt-2 transition-all duration-500 ease-in-out overflow-y-auto ${isDropUpOpen ? "max-h-[50vh]" : "max-h-0"}`}>
-                {dropdownContent}
-              </div>
-            </div>
+            )}
             {selectedFooter}
             {setIsOpentwo &&
               <BottomSidebar
@@ -759,78 +910,68 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           </div>
         )}
         {deviceInfo?.isMobile && (
-          <div className="z-40 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg full-available-width lg:px-3 py-2 md:px-2 mb-[39px]"
+          <div className="z-40 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg full-available-width px-2 sm:px-3 py-2 mb-[65px]"
             style={{ boxShadow: "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)", }}>
-            <div className="relative w-full">
-              <div className="absolute left-1/2 transform -translate-x-1/2 -top-8">
-                <button
-                  onClick={toggleDropup}
-                  className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-[#f8f8ff] rounded-t-lg border border-b-0 border-gray-300 transition-all duration-300 ${isDropUpOpen ? "dark:bg-dark-hover-bg bg-gray-100" : ""}`}
-                  style={{ boxShadow: "0 -2px 4px rgba(0, 0, 0, 0.1)" }}>
-                  <ChevronUp className={`mx-2 transition-transform duration-500 dark:text-dark-text ${isDropUpOpen ? "transform rotate-180" : hasAnimated ? "" : "animate-[bounce_2s_1]"}`} size={24} />
-                </button>
-              </div>
-            </div>
-            <div
-              ref={dropUpRef}
-              className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropUpOpen ? "max-h-[30vh] overflow-y-auto overflow-x-hidden mb-6" : "max-h-0 overflow-hidden"}`}
-              style={{ width: "100%", boxSizing: "border-box" }}>
-              {dropdownContent}
-            </div>
-            <div className="flex items-end justify-between">
-              <div className="flex items-end gap-1 ps-[15px]">
-                <div className="grid grid-cols-1 gap-1">
-                  <NetAmountInput
-                    formState={formState}
-                    dispatch={dispatch}
-                    t={t}
-                    handleKeyDown={handleKeyDown}
-                  />
-                  <VatAmountLabel
-                    formState={formState}
-                    dispatch={dispatch}
-                    t={t}
-                    taxData={taxData}
-                  />
-                  <BillDiscountLabel
-                    formState={formState}
-                    dispatch={dispatch}
-                    t={t}
-                  />
-                </div>
-              </div>
-              <div className="flex items-end gap-4">
-                <div className="grid grid-cols-1 gap-1">
-                  {/* <NetTotalLabel
-                    formState={formState}
-                    dispatch={dispatch}
-                    t={t}
-                  /> */}
-                  {formState.formElements.grandTotalFc.visible && (
-                    <div>
-                      <div className="flex items-center justify-between dark:text-dark-text">
-                        <span>
-                          {t(formState.formElements.grandTotalFc.label)}
-                        </span>
-                        <span>:{formState.transaction.master.grandTotalFc}</span>
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="hidden md:block mr-2">
-                    <h6 className="font-semibold whitespace-nowrap text-[20px] dark:text-dark-text">
-                      <span className="!font-medium dark:!text-dark-text !text-gray-600">
-                        {t("total")}:{" "}
-                      </span>
-                      {getFormattedValue(formState.transaction.master?.roundAmount ?? 0)}
-                    </h6>
+            {hasDropupContent && (
+              <>
+                <div className="relative w-full">
+                  <div className="absolute left-1/2 transform -translate-x-1/2 -top-8">
+                    <button
+                      onClick={handleIconClick}
+                      className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-[#f8f8ff] rounded-t-lg border border-b-0 border-gray-300 transition-all duration-300 ${dropupState !== 'closed' ? "dark:bg-dark-hover-bg bg-gray-100" : ""}`}
+                      style={{ boxShadow: "0 -2px 4px rgba(0, 0, 0, 0.1)" }}>
+                      <ChevronUp className={`mx-2 transition-transform duration-500 dark:text-dark-text ${dropupState === 'full' ? "transform rotate-180" : hasAnimated ? "" : "animate-[bounce_2s_1]"}`} size={24} />
+                    </button>
                   </div>
-                  <div className="fixed bottom-0 left-0 w-full dark:bg-dark-bg-card bg-white flex p-0 z-10">
+                </div>
+                <div
+                  ref={dropUpRef}
+                  className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${dropupState !== 'closed' ? "max-h-[50vh] overflow-y-auto overflow-x-hidden" : "max-h-0 overflow-hidden"}`}
+                  style={{ width: "100%", boxSizing: "border-box" }}>
+                  {dropupState === 'minimal' ? minimalContent : <> {dropdownContent} {minimalContent} </>}
+                </div>
+              </>
+            )}
+            <div className="flex items-end justify-end gap-2 sm:gap-4">
+              <div className="grid grid-cols-1 gap-1">
+                {formState.formElements.grandTotalFc.visible && (
+                  <div>
+                    <div className="flex items-center justify-between dark:text-dark-text text-xs sm:text-sm">
+                      <span>
+                        {t(formState.formElements.grandTotalFc.label)}
+                      </span>
+                      <span>:{formState.transaction.master.grandTotalFc}</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div className="flex items-center gap-2">
+                {/* <div className="hidden sm:block mr-2">
+                  <h6 className="font-semibold whitespace-nowrap text-[18px] sm:text-[20px] dark:text-dark-text">
+                    <span className="!font-medium dark:!text-dark-text !text-gray-600 text-sm sm:text-base">
+                      {t("total")}:{" "}
+                    </span>
+                    {getFormattedValue(formState.transaction.master?.roundAmount ?? 0)}
+                  </h6>
+                </div> */}
+                <div className="fixed bottom-0 left-0 w-full dark:bg-dark-bg-card bg-[#f8f8ff] flex flex-col py-2 z-10">
+                  <div>
+                    <div className="flex justify-between items-center px-2">
+                      <span className="text-xs sm:text-sm font-bold dark:text-dark-text text-gray-900 uppercase">
+                        {t(formState.formElements.grandTotal.label)}
+                      </span>
+                      <span className="text-base sm:text-lg font-bold text-[#3b82f6]">
+                        {getFormattedValue(
+                          formState.transaction.master?.grandTotal ?? 0
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex gap-2 px-2 sm:px-4">
                     <ERPButton
                       title={t("close")}
                       onClick={() => goToPreviousPage()}
-                      className="flex-1 rounded-none !m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+                      className="flex-1 rounded-none !m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg text-sm sm:text-base"
                       localInputBox={formState?.userConfig?.inputBoxStyle}
                     />
                     <ERPButton
@@ -839,7 +980,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                       title={t("save")}
                       jumpTarget="save"
                       variant="primary"
-                      className="flex-1 rounded-none !m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+                      className="flex-1 rounded-none !m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg text-sm sm:text-base"
                       onClick={save}
                       disabled={
                         formState.formElements.pnlMasters?.disabled ||

@@ -490,6 +490,8 @@ export const exludedRoutes = [
     title: TransactionTitles.TaxOnExpensePayment,
     countries: [Countries.India],
   },
+  { title: TransactionTitles.PurchaseInvoiceVAT, countries: [Countries.India] },
+  { title: TransactionTitles.PurchaseReturnVAT, countries: [Countries.India] },
 ];
 
 export const isChooseVoucherEnabled = (title: string, userSession: UserModel) =>
@@ -502,6 +504,7 @@ export const isChooseVoucherEnabled = (title: string, userSession: UserModel) =>
     { title: TransactionTitles.JournalEntry, countries: [Countries.Saudi] },
     { title: TransactionTitles.DebitNote, countries: [Countries.Saudi] },
     { title: TransactionTitles.CreditNote, countries: [Countries.Saudi] },
+    { title: TransactionTitles.PurchaseInvoice, countries: [Countries.India] },
     {
       title: TransactionTitles.MultiJournalEntry,
       countries: [Countries.Saudi],

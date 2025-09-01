@@ -979,7 +979,7 @@ export const purchaseGridCol = (
         (userSession.countryId != Countries.India &&
           voucherType == VoucherType.PurchaseReturn &&
           ![
-            "hsnCode",
+            "hsnCodse",
             "cgst",
             "cgstPerc",
             "sgstPerc",

@@ -260,13 +260,13 @@ export const useTransactionHelper = (transactionType: string) => {
 
     let tcsAmt = 0;
     let _grandTotal = netAmt + additionalAmt - billDisc;
-
+debugger;
     if (master.hasroundOff) {
       try {
         result.transaction!.master!.roundAmount = parseFloat(
           (Math.round(_grandTotal) - _grandTotal).toFixed(3)
         );
-        _grandTotal = result.transaction!.master!.grandTotal ?? 0 - result.transaction!.master!.roundAmount
+        _grandTotal = _grandTotal ?? 0 - result.transaction!.master!.roundAmount
         result.transaction!.master!.grandTotal = Math.round(_grandTotal);
       } catch (err) {
         // handle error if needed

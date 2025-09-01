@@ -18,8 +18,8 @@ import DownloadBarcodePreview from "../../LabelDesigner/download-preview-barcode
 import { APIClient } from "../../../helpers/api-client";
 import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
 import { customJsonParse } from "../../../utilities/jsonConverter";
-import { usePrint } from "../../inventory/transactions/purchase/use-print";
 import { generateBarcodePages } from "../../../utilities/barcode";
+import { handleDirectPrint } from "../../../utilities/printUtil";
 
 interface BarcodeFormData {
   formBcode: number;
@@ -133,7 +133,6 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
   const { t } = useTranslation("system");
   const dispatch = useAppDispatch();
   const rootState = useRootState();
-  const { handleDirectPrint } = usePrint();
   const [barcodeFormLoading, setBarcodeFormLoading] = useState<boolean>(false);
   const [voucherFormLoading, setVoucherFormLoading] = useState<boolean>(false);
   const [standardBarcodeLoading, setStandardBarcodeLoading] = useState<boolean>(false);
@@ -283,7 +282,13 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
       // Direct print mode: Silent print without browser dialog
       setShowPrint(false);
  
-       handleDirectPrint(template,data,pages,template?.propertiesState?.printer)
+    //  handleDirectPrint({
+    //     template,
+    //     data,
+    //     page: pages,
+    //     DefaultPrinterName: template?.propertiesState?.printer,
+    //   });
+
     }
   } catch (error) {
     console.error('Error in print process:', error);
@@ -299,7 +304,7 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
       }));
     }, 1000);
   }
-  }, [barcodeDesc?.data,barcodeForm.data?.isFormTo, template, handleDirectPrint,]);
+  }, [barcodeDesc?.data,barcodeForm.data?.isFormTo, template,handleDirectPrint]);
 
 
   // Define columns for the Counters grid

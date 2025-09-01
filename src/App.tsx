@@ -327,8 +327,18 @@ useEffect(() => {
         isForm={true}
         closeModal={() => {
           dispatch(toggleSelectPrinterPopup({ isOpen: false }));
+          
         }}
-        content={<AccessPrinterList templateData={popupData.priceList?.template} t={t} />}
+        content={
+        <AccessPrinterList 
+        templateData={popupData.printerList?.template} 
+        data={popupData.printerList?.data??[]}
+        formState={[popupData.printerList?.formState]}
+        t={t} 
+        restInRoot
+        // onChange={(propertiesState) => dispatch(setTemplatePropertiesState(propertiesState))}
+        />
+      }
       /> 
     
 

@@ -47,6 +47,7 @@ import {
   FileSourceType
 } from "jsprintmanager";
 import { toggleSelectPrinterPopup } from "../../../../redux/slices/popup-reducer";
+import { handleDirectPrint } from "../../../../utilities/printUtil";
 const api = new APIClient();
 export const usePrint = () => {
   const { t } = useTranslation('system');
@@ -65,152 +66,6 @@ export const usePrint = () => {
    const [showPrint, setShowPrint] = useState<boolean>(false);
   const { hasRight } = useUserRights();
   const voucherTypeSet = new Set(Object.values(VoucherType));
-   // Add state for barcode images
-  const [barcodeImages, setBarcodeImages] = useState<{ [key: string]: string }>({});
-    // Function to generate barcode images
-
-  const generateBarcodeImagesForPrint = async (pages: any[], template: any) => {
-
-      const images: { [key: string]: string } = {};
-      if (template?.barcodeState?.placedComponents && pages) {
-    // Iterate over the pages structure instead of data
-    pages.forEach((page: any) => {
-      page.forEach((row: any) => {
-        row.forEach((item: any) => {
-          template.barcodeState?.placedComponents?.forEach((comp: any) => {
-            if (comp.type === DesignerElementType.barcode && comp.barcodeProps) {
-              const key = `${item.siNo}-${comp.id}`;
-              if (!images[key]) {
-                images[key] = generateBarcodeDataUrl(
-                  item.autoBarcode || '',
-                  comp.barcodeProps,
-                  comp.width,
-                  comp.height
-                );
-              }
-            }
-          });
-        });
-      });
-    });
-  }
-  setBarcodeImages(images);
-    //  if (template?.barcodeState?.placedComponents) {
-    //    data?.forEach((item: any) => {
-    //      template.barcodeState?.placedComponents?.forEach((comp: any) => {
-    //        if (comp.type === DesignerElementType.barcode && comp.barcodeProps) {
-    //      const key = `${item.siNo}-${comp.id}`;
-    //      images[key] = generateBarcodeDataUrl(
-    //        item.autoBarcode ,
-    //        comp.barcodeProps,
-    //        comp.width,
-    //        comp.height
-    //      );
-    //        }
-    //      });
-    //    });
-    //  }
-    //  setBarcodeImages(images);
-     return images;
-  };
-
-  const handleDirectPrint = async (template: any,data?:any,page?:any,DefaultPrinterName?:string) => {
-    let pdfDocument;
-    let noDefaultPrint:boolean = false;
-    const columnsPerRow = Number(template?.barcodeState?.labelState?.columnsPerRow) ?? 1;
-    const rowsPerPage = Number(template?.barcodeState?.labelState?.rowsPerPage) ?? 1;
-    const PrinterName = DefaultPrinterName || template?.propertiesState?.printer
-    const TotalPage = page || generateBarcodePages(data ?? [], columnsPerRow, rowsPerPage);
-    if (template?.templateGroup === "barcode") {
-      const barcodeImagesForPrint = await generateBarcodeImagesForPrint(TotalPage, template);
-      pdfDocument = (
-      <BarcodePDFDocument template={template} data={TotalPage} barcodeImages={barcodeImagesForPrint} />
-      );
-    } else {
-      pdfDocument = renderSelectedTemplate({
-        template: template,
-        data: formState.transaction,
-        currentBranch: currentBranch,
-        userSession: userSession,
-      });
-    }
-
-    try {
-      if(!PrinterName || PrinterName.trim() !== ""){
-        
-     await  ERPAlert.show({
-        text:t("Oops! No printer detected. Please set a printer before continuing."),
-        title: t("select_a_printer"),
-        icon: "warning",
-        confirmButtonText: t("set_printer"),
-        cancelButtonText: t("cancel"),
-        onConfirm: () => dispatch(toggleSelectPrinterPopup({ isOpen: true ,template:template})),
-        onCancel:()=>{noDefaultPrint = true}
-      });
-      }
-  if(PrinterName ){
-    
-  }
-      // Create a PDF blob
-      const blob = await pdf(pdfDocument).toBlob();
-         // 3. Ensure JSPM agent is running and connected
-    if (JSPrintManager.websocket_status !== WSStatus.Open) {
-         JSPrintManager.auto_reconnect = true;
-         JSPrintManager.start();
-    }
-      // 4. Create a new print job
-    const cpj = new ClientPrintJob();
-       // 5. Choose the printer: user-selected or default
-    if ( PrinterName&& PrinterName.trim() !== "") {
-      cpj.clientPrinter = new InstalledPrinter(PrinterName);
-    } else {
-      cpj.clientPrinter = new DefaultPrinter();
-    }
-
-       // 6. Attach the PDF blob to the print job
-    cpj.files.push(
-    new PrintFilePDF(
-      blob,                       // fileContent: your Blob
-      FileSourceType.BLOB,        // fileContentType: Blob source
-      "barcode-labels.pdf",       // fileName: must include extension
-      1                           // copies (optional, default = 1)
-    )
-  );
- // 7. Optional: Track status updates
-    cpj.onUpdated = (status) => {
-      console.log("Print job status update:", status);
-    };
-    cpj.onFinished = (result) => {
-      console.log("Print job finished:", result);
-      if (!result.success) {
-        console.error("Print job failed:", result.error);
-      }
-    };
-
-    // 8. Send the print job silently
-    await cpj.sendToClient();
-
-    } catch (error) {
-      console.error("Error printing voucher:", error);
-        // // Create a URL for the blob
-      // const pdfUrl = URL.createObjectURL(blob);
-         // // Open the PDF in a new tab for printing
-      // const printWindow = window.open(pdfUrl);
-      // if (!printWindow) {
-      //   console.error(
-      //     "Failed to open print window. Please check your browser settings."
-      //   );
-      //   alert(
-      //     "Failed to open print window. Please allow popups and try again."
-      //   );
-      //   return;
-      // }
-      // // Wait for the PDF to load in the new tab
-      // printWindow.onload = () => {
-      //   printWindow.print(); // Trigger print
-      // };
-    }
-  };
 
   const fetchDefaultTemplates = async (voucherType: any) => {
     // Create a set of all possible VoucherType values
@@ -496,7 +351,11 @@ export const usePrint = () => {
           formStateHandleFieldChange({ fields: {barcodeData:barcodeData,barcodePrevOpen:true }})
         );
       }else{
-       await handleDirectPrint(template,barcodeData,)
+            //  await handleDirectPrint({
+            //    template,
+            //    data:barcodeData,
+            //    formState
+            //  });
       };
 
        dispatch(
@@ -521,6 +380,6 @@ export const usePrint = () => {
   return {
     printVoucher,
     printBarcode,
-    handleDirectPrint,
+
   };
 };

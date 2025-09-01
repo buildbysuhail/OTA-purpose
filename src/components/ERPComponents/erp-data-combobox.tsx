@@ -98,6 +98,7 @@ interface ERPDataComboboxProps {
   labelInfo?: any;
   labelInfoProps?: any;
   noLabel?: boolean;
+  noPlaceholder?: boolean;
   noBorder?:boolean;
   noXMarkIcon?: boolean;
   triggerEffect?: boolean;
@@ -402,6 +403,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       data,
       value,
       noLabel,
+      noPlaceholder,
       noBorder=false,
       noXMarkIcon,
       required,
@@ -1830,8 +1832,10 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                   handleKeyDown(e);
                 }}
                 onKeyUp={onKeyUp}
-                placeholder={
-                  fetching || (initial && initial.value && !isNullOrUndefinedOrEmpty(initial.value))
+                  placeholder={
+                  noPlaceholder
+                    ? ""
+                    : fetching || (initial && initial.value && !isNullOrUndefinedOrEmpty(initial.value))
                     ? ""
                     : t("select") + " " + (label || id?.replaceAll("_", " "))
                 }

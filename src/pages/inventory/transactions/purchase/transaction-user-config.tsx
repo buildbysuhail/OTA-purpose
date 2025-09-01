@@ -191,7 +191,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
     <>
       <div className="group relative inline-flex flex-col items-center" title={t("settings")}>
         <button
-          className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? "p-1.5" : "p-2"} rounded-lg hover:bg-gray-200 transition-all duration-300 shadow-sm hover:shadow-lg transform hover:scale-105`}
+          className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors ${phone ? "p-1.5" : "p-2"} `}
           onClick={() => setIsOpen(true)}
         >
           <UserCog className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors duration-300" />
@@ -209,13 +209,13 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
         content={
           <div className="space-y-2 max-h-[calc(100vh-200px)] overflow-y-auto p-2">
             {/* View Toggle Section */}
-            <div className="mb-2 p-2 bg-gradient-to-br from-[#eff6ff] via-[#eef2ff] to-[#faf5ff] dark:from-dark-bg dark:via-dark-hover-bg dark:to-dark-border rounded-xl border border-[#bfdbfe] dark:border-dark-border shadow-sm">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-[#dbeafe] dark:bg-[#1e3a8a4D]">
+            <div className="mb-2 p-3 sm:p-4 bg-gradient-to-br from-[#eff6ff] via-[#eef2ff] to-[#faf5ff] dark:from-dark-bg dark:via-dark-hover-bg dark:to-dark-border rounded-xl border border-[#bfdbfe] dark:border-dark-border shadow-sm">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <div className="flex items-center space-x-3">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-[#dbeafe] dark:bg-[#1e3a8a4D] flex-shrink-0">
                     <Layout className="w-4 h-4 text-[#2563eb] dark:text-[#60a5fa]" />
                   </div>
-                  <div>
+                  <div className="min-w-0 flex-1">
                     <h3 className="text-sm font-semibold text-gray-800 dark:text-dark-text">
                       {t("view_settings")}
                     </h3>
@@ -225,50 +225,52 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-2">
-                  <span className="text-gray-700 dark:text-dark-text font-medium">  {isExpanded ? t("expanded_view") : t("compact_view")} </span>
-                  <div className="relative inline-block w-16 h-8">
-                    <input
-                      type="checkbox"
-                      id="toggle-view"
-                      className="sr-only"
-                      checked={isExpanded}
-                      onChange={handleToggle}
-                    />
-                    <label
-                      htmlFor="toggle-view"
-                      className={`block cursor-pointer rounded-full p-1 transition-all duration-300 ease-in-out shadow-inner ${isExpanded ? "bg-gradient-to-r from-[#3b82f6] to-[#4f46e5] shadow-[#bfdbfe]" : "bg-gray-300 dark:bg-gray-600 shadow-gray-200"}`}>
-                      <div className={`w-6 h-6 bg-white rounded-full shadow-lg transform transition-all duration-300 ease-in-out ${isExpanded ? "translate-x-8 shadow-[#93c5fd]" : "translate-x-0 shadow-gray-300"}`}></div>
-                    </label>
+                <div className="flex flex-col sm:flex-row gap-4 lg:gap-6">
+                  <div className="flex items-center justify-between sm:justify-start space-x-3">
+                    <span className="text-sm text-gray-700 dark:text-dark-text font-medium">{isExpanded ? t("expanded_view") : t("compact_view")}</span>
+                    <div className="relative inline-block w-16 h-8 flex-shrink-0">
+                      <input
+                        type="checkbox"
+                        id="toggle-view"
+                        className="sr-only"
+                        checked={isExpanded}
+                        onChange={handleToggle}
+                      />
+                      <label
+                        htmlFor="toggle-view"
+                        className={`block cursor-pointer rounded-full p-1 transition-all duration-300 ease-in-out shadow-inner ${isExpanded ? "bg-gradient-to-r from-[#3b82f6] to-[#4f46e5] shadow-[#bfdbfe]" : "bg-gray-300 dark:bg-gray-600 shadow-gray-200"}`}>
+                        <div className={`w-6 h-6 bg-white rounded-full shadow-lg transform transition-all duration-300 ease-in-out ${isExpanded ? "translate-x-8 shadow-[#93c5fd]" : "translate-x-0 shadow-gray-300"}`}></div>
+                      </label>
+                    </div>
                   </div>
-                </div>
 
-                <div className="flex items-center space-x-2">
-                  <span className="text-gray-700 dark:text-dark-text font-medium">{t("footer_position")}</span>
-                  <div className="relative inline-block w-16 h-8">
-                    <input
-                      type="checkbox"
-                      id="footer-position"
-                      className="sr-only"
-                      checked={formState.userConfig?.footerPosition === 'right'}
-                      onChange={() => {
-                        const newPosition = formState.userConfig?.footerPosition === 'bottom' ? 'right' : 'bottom';
-                        handleFieldChange('footerPosition', newPosition);
-                      }}
-                    />
-                    <label
-                      htmlFor="footer-position"
-                      className={`block cursor-pointer rounded-full p-1 transition-all duration-300 ease-in-out shadow-inner ${formState.userConfig?.footerPosition === 'right'
-                        ? 'bg-gradient-to-r from-[#3b82f6] to-[#4f46e5] shadow-[#bfdbfe]'
-                        : 'bg-gray-300 dark:bg-gray-600 shadow-gray-200'
-                        }`}>
-                      <div className={`w-6 h-6 bg-white rounded-full shadow-lg transform transition-all duration-300 ease-in-out ${formState.userConfig?.footerPosition === 'right' ? 'translate-x-8 shadow-[#93c5fd]' : 'translate-x-0 shadow-gray-300'
-                        }`}></div>
-                    </label>
+                  <div className="flex items-center justify-between sm:justify-start space-x-3">
+                    <span className="text-sm text-gray-700 dark:text-dark-text font-medium">{t("footer_position")}</span>
+                    <div className="relative inline-block w-16 h-8 flex-shrink-0">
+                      <input
+                        type="checkbox"
+                        id="footer-position"
+                        className="sr-only"
+                        checked={formState.userConfig?.footerPosition === 'right'}
+                        onChange={() => {
+                          const newPosition = formState.userConfig?.footerPosition === 'bottom' ? 'right' : 'bottom';
+                          handleFieldChange('footerPosition', newPosition);
+                        }}
+                      />
+                      <label
+                        htmlFor="footer-position"
+                        className={`block cursor-pointer rounded-full p-1 transition-all duration-300 ease-in-out shadow-inner ${formState.userConfig?.footerPosition === 'right'
+                          ? 'bg-gradient-to-r from-[#3b82f6] to-[#4f46e5] shadow-[#bfdbfe]'
+                          : 'bg-gray-300 dark:bg-gray-600 shadow-gray-200'
+                          }`}>
+                        <div className={`w-6 h-6 bg-white rounded-full shadow-lg transform transition-all duration-300 ease-in-out ${formState.userConfig?.footerPosition === 'right' ? 'translate-x-8 shadow-[#93c5fd]' : 'translate-x-0 shadow-gray-300'
+                          }`}></div>
+                      </label>
+                    </div>
+                    <span className="text-sm text-gray-700 dark:text-dark-text font-medium">
+                      {formState.userConfig?.footerPosition === 'bottom' ? t('bottom') : t('right')}
+                    </span>
                   </div>
-                  <span className="text-gray-700 dark:text-dark-text font-medium">
-                    {formState.userConfig?.footerPosition === 'bottom' ? t('bottom') : t('right')}
-                  </span>
                 </div>
               </div>
             </div>
@@ -279,7 +281,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
               defaultExpanded={true}
               icon={<Settings className="w-4 h-4 text-[#2563eb] dark:text-[#60a5fa]" />}
             >
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
                 <div className="space-y-2">
                   <ERPCheckbox
                     id="useBarcode"
@@ -422,8 +424,8 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
               defaultExpanded={false}
               icon={<Layout className="w-4 h-4 text-[#0891b2] dark:text-[#22d3ee]" />}
             >
-              <div className="space-y-2">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 items-end gap-4">
                   <ERPInput
                     id="maxWidth"
                     label={t("max_width")}
@@ -464,11 +466,11 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                 </div>
 
                 <div className="bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] dark:from-dark-hover-bg dark:to-dark-border rounded-xl p-4 border border-gray-200 dark:border-dark-border shadow-sm">
-                  <div className="flex items-center space-x-2 mb-2">
+                  <div className="flex space-x-3 mb-2">
                     <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-[#dbeafe] dark:bg-[#1e3a8a4D] shadow-sm">
                       <Layout className="w-4 h-4 text-[#2563eb] dark:text-[#60a5fa]" />
                     </div>
-                    <div>
+                    <div className="min-w-0 flex-1">
                       <h4 className="font-semibold text-gray-800 dark:text-dark-text text-base">
                         {t("alignment")}
                       </h4>
@@ -478,24 +480,24 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap gap-3">
+                  <div className="flex flex-wrap gap-2 sm:gap-3">
                     <ERPButton
                       title={t("left")}
                       variant={formState?.userConfig?.alignment === "left" ? "primary" : "secondary"}
                       onClick={() => handleFieldChange("alignment", "left")}
-                      className="min-w-[100px] transition-all duration-300"
+                      className="flex-1 sm:flex-none min-w-[80px] sm:min-w-[100px] transition-all duration-300"
                     />
                     <ERPButton
                       title={t("center")}
                       variant={formState?.userConfig?.alignment === "center" ? "primary" : "secondary"}
                       onClick={() => handleFieldChange("alignment", "center")}
-                      className="min-w-[100px] transition-all duration-300"
+                      className="flex-1 sm:flex-none min-w-[80px] sm:min-w-[100px] transition-all duration-300"
                     />
                     <ERPButton
                       title={t("right")}
                       variant={formState?.userConfig?.alignment === "right" ? "primary" : "secondary"}
                       onClick={() => handleFieldChange("alignment", "right")}
-                      className="min-w-[100px] transition-all duration-300"
+                      className="flex-1 sm:flex-none min-w-[80px] sm:min-w-[100px] transition-all duration-300"
                     />
                   </div>
                 </div>
@@ -511,11 +513,11 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
               <div className="space-y-4">
                 <div className="p-4">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div className="space-y-3">
+                    <div className="space-y-2">
                       <h6 className="font-semibold text-gray-700 dark:text-dark-text text-sm flex items-center space-x-2">
                         <span>{t("scrollbar_width")}</span>
                       </h6>
-                      <div className="space-y-2">
+                      <div className="space-y-1">
                         {["md", "sm"].map((width) => (
                           <div key={width} className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-dark-hover-bg transition-all duration-200">
                             <input
@@ -537,7 +539,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                       <div className="space-y-2">
                         <div className="flex items-center space-x-2">
                           <div
-                            className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
+                            className="relative h-12 w-12 flex-shrink-0 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
                             style={{ backgroundColor: `rgb(${appState.scrollbarColor ?? "128, 128, 128"})` }}>
                             <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
                             <input
@@ -555,11 +557,11 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                               className="opacity-0 w-full h-full cursor-pointer"
                             />
                           </div>
-                          <div className="flex-1">
+                          <div className="min-w-0 flex-1">
                             <label className="text-xs font-semibold text-gray-700 dark:text-dark-text block mb-1">
                               {t("scrollbar_color")}
                             </label>
-                            <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
+                            <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-2 rounded-md break-all">
                               rgb({appState.scrollbarColor || "128,128,128"})
                             </div>
                           </div>
@@ -575,7 +577,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                             {t("scrollbar_preview")}
                           </h6>
                         </div>
-                        <ERPScrollArea className="w-full h-64 border border-gray-300 overflow-y-auto rounded-md">
+                        <ERPScrollArea className="w-full h-48 sm:h-64 border border-gray-300 overflow-y-auto rounded-md">
                           <div className="space-y-2 p-4 text-sm text-gray-600 dark:text-dark-text/70">
                             <p className="font-medium text-gray-800 dark:text-dark-text">
                               {t("scroll_down_to_see_the_effect")}
@@ -631,11 +633,11 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                           className="opacity-0 w-full h-full cursor-pointer"
                         />
                       </div>
-                      <div className="flex-1">
+                      <div className="min-w-0 flex-1">
                         <label className="text-xs font-semibold text-gray-700 dark:text-dark-text block mb-1">
                           {t("page_background_color")}
                         </label>
-                        <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
+                        <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md break-all">
                           rgb({formState.userConfig?.outerPageBg})
                         </div>
                       </div>
@@ -723,45 +725,49 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
               icon={<Grid className="w-4 h-4 text-[#059669] dark:text-[#34d399]" />}>
               <div className="space-y-4">
                 {/* Existing grid settings fields */}
-                <div className="flex items-end gap-2">
-                  <ERPInput
-                    id="gridFontSize"
-                    label={t("font_size")}
-                    type="number"
-                    className="w-32"
-                    data={formState.userConfig}
-                    value={formState.userConfig?.gridFontSize || 0}
-                    onChangeData={(e: { gridFontSize: any }) => handleFieldChange("gridFontSize", parseInt(e.gridFontSize))}
-                  />
-                  <ERPInput
-                    id="gridRowHeight"
-                    type="number"
-                    className="w-32"
-                    label={t("row_height")}
-                    data={formState.userConfig}
-                    value={formState.userConfig?.gridRowHeight || 0}
-                    onChangeData={(e: { gridRowHeight: any }) => handleFieldChange("gridRowHeight", parseInt(e.gridRowHeight))}
-                  />
-                  <ERPInput
-                    type="number"
-                    className="w-32"
-                    id="gridHeaderRowHeight"
-                    label={t("header_row_height")}
-                    data={formState.userConfig}
-                    value={formState.userConfig?.gridHeaderRowHeight || 0}
-                    onChangeData={(e: { gridHeaderRowHeight: any }) => handleFieldChange("gridHeaderRowHeight", parseInt(e.gridHeaderRowHeight))}
-                  />
-                  <ERPInput
-                    min={0}
-                    step={1}
-                    type="number"
-                    className="w-32"
-                    id="gridBorderRadius"
-                    label={t("grid_border_radius_px")}
-                    data={formState.userConfig}
-                    value={formState.userConfig?.gridBorderRadius ?? 0}
-                    onChangeData={(e: { gridBorderRadius: any }) => handleFieldChange("gridBorderRadius", parseInt(e.gridBorderRadius))}
-                  />
+                <div className="flex flex-wrap items-end gap-2">
+                  <div className="w-full sm:w-32">
+                    <ERPInput
+                      id="gridFontSize"
+                      label={t("font_size")}
+                      type="number"
+                      data={formState.userConfig}
+                      value={formState.userConfig?.gridFontSize || 0}
+                      onChangeData={(e: { gridFontSize: any }) => handleFieldChange("gridFontSize", parseInt(e.gridFontSize))}
+                    />
+                  </div>
+                  <div className="w-full sm:w-32">
+                    <ERPInput
+                      id="gridRowHeight"
+                      type="number"
+                      label={t("row_height")}
+                      data={formState.userConfig}
+                      value={formState.userConfig?.gridRowHeight || 0}
+                      onChangeData={(e: { gridRowHeight: any }) => handleFieldChange("gridRowHeight", parseInt(e.gridRowHeight))}
+                    />
+                  </div>
+                  <div className="w-full sm:w-32">
+                    <ERPInput
+                      type="number"
+                      id="gridHeaderRowHeight"
+                      label={t("header_row_height")}
+                      data={formState.userConfig}
+                      value={formState.userConfig?.gridHeaderRowHeight || 0}
+                      onChangeData={(e: { gridHeaderRowHeight: any }) => handleFieldChange("gridHeaderRowHeight", parseInt(e.gridHeaderRowHeight))}
+                    />
+                  </div>
+                  <div className="w-full sm:w-32">
+                    <ERPInput
+                      min={0}
+                      step={1}
+                      type="number"
+                      id="gridBorderRadius"
+                      label={t("grid_border_radius_px")}
+                      data={formState.userConfig}
+                      value={formState.userConfig?.gridBorderRadius ?? 0}
+                      onChangeData={(e: { gridBorderRadius: any }) => handleFieldChange("gridBorderRadius", parseInt(e.gridBorderRadius))}
+                    />
+                  </div>
                   <ERPCheckbox
                     id="gridIsBold"
                     label={t("bold")}
@@ -778,7 +784,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                   />
                 </div>
 
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {/* Compact gridBorderColor field */}
                   <div className="space-y-1">
                     <div className="flex items-center space-x-2">
@@ -988,7 +994,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
           </div>
         }
         footer={
-          <div className="h-[70px] w-full flex justify-end items-center space-x-2 dark:!border-dark-border dark:!bg-dark-bg bg-gradient-to-r from-gray-50 to-white border-t p-2 rounded-b-md">
+          <div className="w-full flex justify-end items-center space-x-2 dark:!border-dark-border dark:!bg-dark-bg rounded-b-md">
             <ERPButton
               title={t("reset_all")}
               onClick={resetThemeChange}

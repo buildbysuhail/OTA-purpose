@@ -882,5 +882,26 @@
   "name_on_card": "الاسم على البطاقة",
   "inv_transaction_master_id": "معرّف معاملة المخزون الرئيسي",
   "actual_price": "السعر الفعلي",
-  "show_opening_stock": "إظهار المخزون الافتتاحي"
+  "show_opening_stock": "إظهار المخزون الافتتاحي",
+
+  "item_used_for_service_report": "تقرير الأصناف المستخدمة للخدمة",
+  "free_of_cost_reports_of": "تقارير الأصناف المجانية لـ",
+  "fast_moving_products": "المنتجات سريعة الحركة",
+  "purchase_period": "فترة الشراء",
+  "unsold_product_report": "تقرير المنتجات غير المباعة",
+  "selected_range": "النطاق المحدد",
+  "lpo_report": "تقرير أمر الشراء المحلي",
+  "routewise_sales_collection_report": "تقرير تحصيل المبيعات حسب المسار",
+  "inventory_status_report": "تقرير حالة المخزون",
+  "stock_journal_reports": "تقارير يومية المخزون",
+  "customer_visit_reports": "تقارير زيارات العملاء",
+  "customer_visit_last_visit": "زيارة العميل الأخيرة",
+  "collection_discount_report": "تقرير خصم التحصيل",
+  "discount_report_inventory": "تقرير خصم المخزون",
+  "customer_visit_total_visit": "إجمالي زيارات العميل",
+  "unsoled_products": "المنتجات غير المباعة",
+  "routewise_sales_collection": "تحصيل المبيعات حسب المسار",
+  "inventory_status": "حالة المخزون",
+  "void_report": "تقرير الإلغاء",
+  "sales_other_reports": "تقارير المبيعات الأخرى"
 }

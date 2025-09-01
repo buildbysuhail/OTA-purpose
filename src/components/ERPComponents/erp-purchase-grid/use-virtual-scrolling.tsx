@@ -57,7 +57,7 @@ export const useUltraFastVirtualScrolling = (
     // Force immediate update for fast scrolling
     forceUpdate({});
   }, []);
-
+debugger;
   const totalHeight = itemCount * itemHeight;
   const { visibleItems, startIndex, endIndex } = getVisibleItems();
   

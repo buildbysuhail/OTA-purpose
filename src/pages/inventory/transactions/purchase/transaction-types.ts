@@ -18,12 +18,16 @@ type IsPlainObject<T> =
   T extends object ? true : false;
 
 // leaf-only dot keys: "a" | "b.c" | "b.d.e" (no "b")
-type LeafDotKeys<T> = {
-  [K in Extract<keyof T, string>]:
-    IsPlainObject<NonNullable<T[K]>> extends true
-      ? `${K}.${LeafDotKeys<NonNullable<T[K]>>}`
-      : `${K}`
-}[Extract<keyof T, string>];
+type Prev = [never, 0, 1, 2]; // allows depth up to 5
+
+type LeafDotKeys<T, D extends number = 5> =
+  [D] extends [never] ? never :
+  {
+    [K in Extract<keyof T, string>]:
+      NonNullable<T[K]> extends object
+        ? `${K}` | `${K}.${LeafDotKeys<NonNullable<T[K]>, Prev[D]>}`
+        : `${K}`;
+  }[Extract<keyof T, string>];
 
 export type TransactionDetailKeys = LeafDotKeys<TransactionDetail>;
 // Transaction interface

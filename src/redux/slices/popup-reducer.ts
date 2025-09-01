@@ -10,7 +10,7 @@ export interface popupDataProps {
   name?:string;
   customTemplate?:string;
   template?:any;
-
+  formState?:any;
 }
 interface popupData {
   onCloseWithUnsavedChange: { warn: boolean, succeeded: boolean, canceled: boolean }
@@ -81,7 +81,7 @@ interface popupData {
   CustomDesignerPopup: popupDataProps;
 }
 const initialState: popupData = {
-  printerList:{isOpen:false},
+  printerList:{isOpen:false,template:null,data:null,formState:null},
   CustomDesignerPopup:{ isOpen: false, key: null,reload:false, mode: "edit" },
   onCloseWithUnsavedChange: { warn: false, succeeded: false, canceled: false },
   testPopup: { isOpen: false, key: null, mode: "edit", reload: true },
@@ -114,7 +114,7 @@ const initialState: popupData = {
   accountGroup: { isOpen: false, key: null, mode: "edit", reload: true },
   accountLedger: { isOpen: false, key: null, mode: "edit", reload: true },
   costCentre: { isOpen: false, key: null, mode: "edit", reload: true },
-  priceList: { isOpen: false, key: null, mode: "edit", reload: true },
+  priceList: { isOpen: false, key: null, mode: "edit", reload: true ,},
   branchLedger: { isOpen: false, key: null, mode: "edit", reload: true },
   authorizationSettings: { isOpen: false, key: null, mode: "edit", reload: true },
   barcodeprint: { isOpen: false, key: null, mode: "edit", reload: true },

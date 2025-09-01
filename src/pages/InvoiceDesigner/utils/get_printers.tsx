@@ -15,6 +15,10 @@ import {
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox"
 import type { PropertiesState } from "../Designer/interfaces"
 import ERPToast from "../../../components/ERPComponents/erp-toast"
+import ERPFormButtons from "../../../components/ERPComponents/erp-form-buttons";
+import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
+import { toggleSelectPrinterPopup } from "../../../redux/slices/popup-reducer";
+import { handleDirectPrint } from "../../../utilities/printUtil";
 
 interface PrinterInfo {
   name: string
@@ -26,8 +30,11 @@ interface PrinterInfo {
 
 interface usePrinterProps {
   templateData: any
+  data?:any
   t?: any
   handlePagePropsChange?: (property: keyof PropertiesState, value: any) => void
+  restInRoot?:boolean
+  formState?:any
 }
 
 export enum InstallationStatus {
@@ -38,12 +45,33 @@ export enum InstallationStatus {
   ERROR = "error",
 }
 
-export const AccessPrinterList = ({ templateData, t, handlePagePropsChange }: usePrinterProps) => {
+export const AccessPrinterList = ({ templateData, t, handlePagePropsChange,restInRoot,data,formState}: usePrinterProps) => {
   const [printers, setPrinters] = useState<PrinterInfo[]>([])
+  const [onChangePrinter, setOnChangePrinter] = useState<string>("");
   const [jspmStatus, setJspmStatus] = useState<WSStatus | null>(null)
   const [installationStatus, setInstallationStatus] = useState<InstallationStatus>(InstallationStatus.CHECKING)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+   const dispatch = useAppDispatch();
+
+const handlePrinterSet = (  value: any) => {
+  setOnChangePrinter(value);
+};
+
+const handleSubmit =async()=>{
+   if (!onChangePrinter) return;
+        // await handleDirectPrint({
+        //     template:templateData,
+        //     data,
+        //     DefaultPrinterName:onChangePrinter,
+        //     formState,
+        //   });
+          onClose();
+}
+
+const onClose=()=>{
+  dispatch(toggleSelectPrinterPopup({ isOpen: false }));
+}
 
     // Helper to wait
   const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -315,7 +343,7 @@ const handleInstallJSPrintManager = useCallback(async () => {
                 value: p.name,
                 label: `${p.name} ${p.isConnected ? "(Ready)" : "(Offline)"}`,
               }))}
-              onChange={(e) =>handlePagePropsChange && handlePagePropsChange("printer", e.value)}
+              onChange={(e) =>handlePagePropsChange && !restInRoot ?handlePagePropsChange("printer", e.value): handlePrinterSet(e.value)}
             />
           ) : (
             <Alert severity="warning">
@@ -335,6 +363,17 @@ const handleInstallJSPrintManager = useCallback(async () => {
             </Alert>
           )}
         </Stack>
+       
+          {restInRoot &&(
+          <ERPFormButtons
+            submitDisabled={isLoading}
+            isLoading={isLoading}
+            onCancel={onClose}
+            onSubmit={handleSubmit}
+          />
+          )}
+     
+
       </Box>
     )
   }

@@ -305,7 +305,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
         let final = value
         if (decimalPoint) {
           console.log(decimalPoint);
-          
+
           final =
             column.decimalPoint && value !== "" ? (() => {
               const num = parseFloat(value as any);
@@ -341,8 +341,8 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
       }
       setLocalValue(inputValue);
       console.log('inputValue');
-      
-console.log(inputValue);
+
+      console.log(inputValue);
 
       debounceCellChange(
         inputValue as any,
@@ -1950,6 +1950,8 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
     const headerLeft = isLargeScreen ? sidebarWidth : "0";
     const isRtl = appState.locale.rtl;
 
+    const { getFormattedValue } = useNumberFormat();
+
     const headerStyle = {
       left: isRtl ? "0" : headerLeft,
       right: isRtl ? headerLeft : "0",
@@ -2090,7 +2092,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
               scrollbarWidth: "auto",
               scrollbarColor: appState.mode === "dark" ? "#555 #333" : "#ddd #f1f1f1",
             }}
-            onScroll={(e) => { debugger; handleScroll(e); }}
+            onScroll={(e) => {  handleScroll(e); }}
           >
             <div
               style={{
@@ -2265,10 +2267,36 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                 }}
               >
                 {columns?.map((column, colIndex) => {
+                  
                   const isFirstColumn = colIndex === 0;
                   const isLastColumn = colIndex === columns.length - 1;
                   const isFixed = isFirstColumn || isLastColumn;
                   const showBorder = formState.userConfig?.showColumnBorder ?? true;
+                  const value = formState.summary?.[
+                    column.dataField as keyof SummaryItems
+                  ] ?? "";
+                  
+                  const final =
+                    column.dataType === "number" && value !== ""
+                      ? (() => {
+                        debugger;
+                        const num = parseFloat(value as any);
+                        console.log("Raw value:", value);
+                        console.log("Parsed num:", num);
+
+                        if (isNaN(num)) {
+                          console.log("Result: empty string (NaN case)");
+                          return "";
+                        }
+
+                        const rounded = getFormattedValue(num,false, applicationState.mainSettings.decimalPoints ?? 2);
+                        console.log("Rounded:", rounded);
+
+                        return rounded;
+                      })()
+                      : value;
+
+                  console.log("Final:", final);
                   return (
                     <div
                       key={`footer-${column.dataField}`}
@@ -2297,9 +2325,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                         zIndex: isFixed ? 110 : 100,
                       }}
                     >
-                      {formState.summary?.[
-                        column.dataField as keyof SummaryItems
-                      ] ?? ""}
+                      {final}
                     </div>
                   );
                 })}

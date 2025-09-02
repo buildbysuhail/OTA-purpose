@@ -142,12 +142,14 @@ export const purchaseGridCol = (
         dataType: "number",
         allowEditing: true,
         width: 130,
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
         alignment: "right",
       },
       {
         dataField: "gross",
         caption: t("gross"),
         dataType: "number",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
         readOnly: true,
         width: 100,
         alignment: "right",
@@ -157,6 +159,7 @@ export const purchaseGridCol = (
         dataField: "discPerc",
         caption: t("disc_perc"),
         dataType: "number",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
         allowEditing: true,
         width: 100,
         alignment: "right",
@@ -165,6 +168,7 @@ export const purchaseGridCol = (
         dataField: "discount",
         caption: t("discount"),
         dataType: "number",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
         allowEditing: true,
         width: 100,
         alignment: "right",
@@ -173,6 +177,7 @@ export const purchaseGridCol = (
         dataField: "netValue",
         caption: t("net_value"),
         dataType: "number",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
         width: 100,
         alignment: "right",
         readOnly: true,
@@ -185,6 +190,7 @@ export const purchaseGridCol = (
         width: 100,
         alignment: "right",
         readOnly: true,
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
       {
         dataField: "stock",
@@ -227,6 +233,7 @@ export const purchaseGridCol = (
         width: 200,
         alignment: "right",
         readOnly: true,
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
       {
         dataField: "lpr",
@@ -235,6 +242,7 @@ export const purchaseGridCol = (
         readOnly: true,
         width: 100,
         alignment: "right",
+        // decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
       {
         dataField: "lpc",
@@ -244,6 +252,7 @@ export const purchaseGridCol = (
         width: 100,
         alignment: "right",
         visible: false,
+        // decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
       {
         dataField: "stickerQty",
@@ -261,6 +270,7 @@ export const purchaseGridCol = (
         readOnly: true,
         width: 100,
         alignment: "right",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
       {
         dataField: "size",
@@ -278,6 +288,7 @@ export const purchaseGridCol = (
         allowEditing: true,
         width: 100,
         alignment: "right",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
       {
         dataField: "vatAmount",
@@ -287,6 +298,7 @@ export const purchaseGridCol = (
         readOnly: true,
         width: 100,
         alignment: "right",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
       {
         dataField: "cst",
@@ -295,6 +307,7 @@ export const purchaseGridCol = (
         visible: false,
         width: 100,
         alignment: "right",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
       {
         dataField: "cstPerc",
@@ -304,6 +317,7 @@ export const purchaseGridCol = (
         width: 100,
         allowEditing: true,
         alignment: "right",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
       {
         dataField: "hsnCode",
@@ -320,6 +334,7 @@ export const purchaseGridCol = (
         width: 100,
         visible: false,
         alignment: "right",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
       {
         dataField: "cgstPerc",
@@ -345,6 +360,7 @@ export const purchaseGridCol = (
         width: 100,
         visible: false,
         alignment: "right",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
       {
         dataField: "igstPerc",
@@ -362,6 +378,7 @@ export const purchaseGridCol = (
         width: 100,
         visible: false,
         allowEditing: true,
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
         alignment: "right",
       },
       {
@@ -377,6 +394,7 @@ export const purchaseGridCol = (
         dataField: "cessAmt",
         caption: t("cess_amt"),
         dataType: "number",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
         width: 100,
         visible: false,
         allowEditing: true,
@@ -394,6 +412,7 @@ export const purchaseGridCol = (
       {
         dataField: "additionalCess",
         caption: t("additional_cess"),
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
         visible: false,
         dataType: "number",
         width: 100,
@@ -413,6 +432,7 @@ export const purchaseGridCol = (
         dataField: "netRate",
         caption: t("net_rate"),
         dataType: "number",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
         width: 100,
         visible: false,
         allowEditing: true,
@@ -422,6 +442,7 @@ export const purchaseGridCol = (
         dataField: "cost",
         caption: t("cost"),
         dataType: "number",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
         readOnly: true,
         width: 100,
         alignment: "right",
@@ -440,7 +461,7 @@ export const purchaseGridCol = (
         dataType: "date",
         visible: false,
         width: 100,
-        format: "dd-MMM-yyyy",
+        format: "DD-MMM-YYYY",
         alignment: "left",
       },
       {
@@ -450,7 +471,7 @@ export const purchaseGridCol = (
         visible: false,
         width: 100,
         readOnly: true,
-        format: "dd-MMM-yyyy",
+        format: "DD-MMM-YYYY",
         alignment: "left",
       },
       {
@@ -520,6 +541,7 @@ export const purchaseGridCol = (
         dataField: "minSalePrice",
         caption: t("min_sale_price"),
         dataType: "number",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
         width: 150,
         readOnly: true,
         alignment: "right",
@@ -538,6 +560,7 @@ export const purchaseGridCol = (
         caption: t("unit_price_fc"),
         dataType: "number",
         allowEditing: true,
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
         width: 150,
         readOnly: false,
         alignment: "right",
@@ -578,6 +601,7 @@ export const purchaseGridCol = (
         caption: t("total_add_expense"),
         dataType: "number",
         width: 180,
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
         readOnly: true,
         alignment: "right",
         visible: false,
@@ -600,6 +624,7 @@ export const purchaseGridCol = (
         width: 100,
         allowEditing: true,
         alignment: "right",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
         visible: false,
       },
       {
@@ -628,6 +653,7 @@ export const purchaseGridCol = (
         width: 200,
         readOnly: true,
         alignment: "right",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
       {
         dataField: "unit2MRP",
@@ -637,6 +663,7 @@ export const purchaseGridCol = (
         width: 100,
         readOnly: true,
         alignment: "right",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
       {
         dataField: "unit2MBarcode",
@@ -682,6 +709,7 @@ export const purchaseGridCol = (
         width: 150,
         readOnly: true,
         alignment: "right",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
       {
         dataField: "unit3MRP",
@@ -691,6 +719,7 @@ export const purchaseGridCol = (
         width: 100,
         readOnly: true,
         alignment: "right",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
       {
         dataField: "unit3MBarcode",
@@ -791,6 +820,7 @@ export const purchaseGridCol = (
         visible: false,
         width: 130,
         alignment: "right",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
       {
         dataField: "warehouseID",
@@ -824,8 +854,8 @@ export const purchaseGridCol = (
         dataType: "number",
         visible: false,
         width: 140,
-
         alignment: "right",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
       {
         dataField: "memo",
@@ -858,6 +888,7 @@ export const purchaseGridCol = (
         width: 200,
         readOnly: true,
         alignment: "right",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
       {
         dataField: "unit2",
@@ -914,6 +945,7 @@ export const purchaseGridCol = (
         width: 55,
         visible: false,
         alignment: "center",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
       {
         dataField: "refTransDtailId",
@@ -1173,7 +1205,7 @@ export const purchaseGridCol = (
             "unit3",
             "btnPrintBarcodeStd",
           ].includes(gc.dataField ?? "")) ||
-           (userSession.countryId == Countries.India &&
+        (userSession.countryId == Countries.India &&
           voucherType == VoucherType.PurchaseEstimate &&
           ![
             "hsnCode",
@@ -1285,7 +1317,7 @@ export const purchaseGridCol = (
             "btnPrintBarcodeStd",
             "serial",
           ].includes(gc.dataField ?? "")) ||
-             (userSession.countryId == Countries.India &&
+        (userSession.countryId == Countries.India &&
           (voucherType == VoucherType.PurchaseOrder ||
             voucherType == VoucherType.PurchaseQuotation) &&
           ![
@@ -1513,19 +1545,19 @@ export const purchaseGridCol = (
       }
       if (
         userSession.countryId == Countries.India &&
-        (voucherType == VoucherType.PurchaseOrder || VoucherType.PurchaseQuotation)&&
+        (voucherType == VoucherType.PurchaseOrder ||
+          VoucherType.PurchaseQuotation) &&
         (mi.dataField?.includes("hsnCode") ||
           mi.dataField?.includes("cgst") ||
           mi.dataField?.includes("cgstPerc") ||
           mi.dataField?.includes("sgstPerc") ||
           mi.dataField?.includes("sgst") ||
-          mi.dataField?.includes("igstPerc")||
-          mi.dataField?.includes("igst")||
-          mi.dataField?.includes("cessPerc")||
-          mi.dataField?.includes("cessAmt")||
-          mi.dataField?.includes("additionalCessPerc")||
-          mi.dataField?.includes("additionalCess")
-        )
+          mi.dataField?.includes("igstPerc") ||
+          mi.dataField?.includes("igst") ||
+          mi.dataField?.includes("cessPerc") ||
+          mi.dataField?.includes("cessAmt") ||
+          mi.dataField?.includes("additionalCessPerc") ||
+          mi.dataField?.includes("additionalCess"))
       ) {
         return {
           ...mi,

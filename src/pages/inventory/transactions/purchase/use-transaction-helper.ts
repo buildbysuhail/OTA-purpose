@@ -577,13 +577,13 @@ debugger;
       // Update cost and VAT amount
       detail.cost = round(cost);
       detail.vatAmount = getFormattedValueIgnoreRoundingToNumber(vat);
-
+debugger;
       // Calculate final net amount (NetValue + VAT)
       let netAmount = 0
       if (clientSession.isAppGlobal) {
-        netAmount = round(netAmount + vat);
+        netAmount = round(netVal + vat);
       } else {
-        netAmount = round(netAmount+vat, 4);
+        netAmount = round(netVal+vat, 4);
       }
 
 

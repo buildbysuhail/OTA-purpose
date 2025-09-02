@@ -1,4 +1,4 @@
-export interface InvMasterForPrint {
+export interface PrintMasterDto {
   invTransactionMasterID: number;
   branchID: number;
   financialYearID: number;
@@ -135,7 +135,56 @@ export interface InvMasterForPrint {
   opADDData: OpticalDetailsADD;
   opCLData: OpticalDetailsCL;
   eInvoiceData: EInvoiceDetailsForPrint;
-  multiPaymentData:MultiPaymentForPrint;
+  multiPaymentData: MultiPaymentForPrint;
+  accTransactionMasterID: number;
+  departmentID: number;
+  costCentreID: number;
+  billwiseMasterID: number;
+  employeeID: number;
+  invTransactionID: number;
+  prevTransDate?: string;         // ISO string
+  bankDate: string;               // ISO string
+  referenceDate: string;          // ISO string
+  particulars: string;
+  totalDebit?: number;
+  billwiseTotalAdjAmt?: number;
+  billwiseAdjAmt?: number;
+  totalCredit?: number;
+  totDiscount?: number;
+  empIncentive?: number;
+  commonNarration: string;
+  formType: string;
+  debitNoteTransID: number;
+  creditNoteTransID: number;
+  currencyID: number;
+  accTransDetailID: number;
+  adjustedTransDetailID: number;
+  currencyRate?: number;
+  isPosted: boolean;
+  randomKey: number;
+  onlineTrans: string;
+  isEdit: boolean;
+  chequeStatus: string;
+  checkBouncedDate?: string;      // ISO string
+  drCr: string;
+  isSalesView: boolean;
+  refBranchID: number;
+  uuid: string;
+
+  oldAccTransactionMasterID?: number;
+  actionStatus?: string;
+  counterShiftID?: number;
+  isLocked?: boolean;
+  editId?: number;
+
+  notes: string;
+  masterAccount: string;
+  employeeName: string;
+  employeeCode: string;
+  branch: string;
+
+  netAmount: number;
+  returnAmount: number;
 }
 
 export interface InvMaster2ForPrint {
@@ -266,11 +315,7 @@ export interface EInvoiceDetailsForPrint {
   irn: string;
 }
 
-export interface MultiPaymentForPrint {
-  cardAmt: number;
-  upi: number;
-}
-export interface InvDetailForPrint {
+export interface PrintDetailDto {
   slNo: number;
   invTransactionDetailID: number;
   invTransactionMasterID: number;
@@ -319,7 +364,7 @@ export interface InvDetailForPrint {
   color: string;
   autoBarcode: string;
   mannualBarcode: string;
-  mfgDate?: Date | null;
+  mfgDate?: string; // ISO string
 
   brandName: string;
   brandID: number;
@@ -375,7 +420,7 @@ export interface InvDetailForPrint {
   warehouse: string;
   supplierReferenceProductCode: string;
   batchNo: string;
-  expiryDate?: Date | null;
+  expiryDate?: string; // ISO string
 
   schemeDiscAmt: number;
   schemeDiscPerc: number;
@@ -394,6 +439,66 @@ export interface InvDetailForPrint {
   gatePass: number;
   stockDetails: string;
 
+  voucherNumber: string;
+  dailyVoucherNumber: string;
+  voucherType: string;
+  branchID: number;
+  counterID: number;
+  partyName: string;
+  vatAmount: number;
+  billDiscount: number;
+  grandTotal: number;
+  roundAmount: number;
+  cashReceived: number;
+  advanceAmt: number;
+  cashReturned: number;
+  salesManIncentive: number;
+  adjustmentAmount: number;
+
+  branch: string;
+
+  siNo: number;
+  accTransactionDetailID: number;
+
+  ledgerCode: string;
+  accountName: string;
+  relatedLedgerCode: string;
+  particulars: string;
+  particularLedgerCode: string;
+
+  ledgerID: number;
+  relatedLedgerID: number;
+
+  debit?: number;
+  credit?: number;
+  amount: number;
+
+  narration: string;
+  discount?: number;
+  incentives?: number;
+  adjAmount?: number;
+
+  bankDate?: string; // ISO string
+  chequeNumber: string;
+  checkStatus: string;
+  checkBouncedDate?: string; // ISO string
+  chequeDate?: string; // ISO string
+
+  billwiseDetails: string;
+
+  ledgerNameArabic: string;
+  relatedLedgerNameArabic: string;
+
+  costCentreName: string;
+
+  txp_PartyName: string;
+  txp_TaxNo: string;
+  txp_TaxPercentage?: number;
+  txp_TaxAmount?: number;
+  txp_TaxableAmount?: number;
+  txp_RefNo: string;
+  txp_RefDate?: string; // ISO string
+
   detail2Data: InvDetail2ForPrint;
 }
 
@@ -410,22 +515,35 @@ export interface InvDetail2ForPrint {
   additionalCessPerc: number;
   gstPerc: number;
 }
-export interface InvDataForPrint {
-  master: InvMasterForPrint;
-  details: InvDetailForPrint[];
+
+export interface PrintResponse {
+  master: PrintMasterDto;
+  details: PrintDetailDto[];
+
   ledgerBalance: number;
   previousLedgerBalance: number;
   loyaltyCardBalance: number;
+
   totalTaxableValue0Percent: number;
   totalTaxableValue5Percent: number;
   totalTaxableValue15Percent: number;
+
   totalTaxValue5Percent: number;
   totalTaxValue15Percent: number;
+
   printCount: number;
+
   configData: EInvoiceIntegrationSettings;
+
   isCashInHandLedger: boolean;
   isLedgerUnderBank: boolean;
   isLedgerUnderCashOrBank: boolean;
+
+  salesBillNumbers: string;
+  salesBillAmounts: string;
+  salesRetBillNumbers: string;
+  salesRetBillAmounts: string;
+  custom: PrintCustomFields;
 }
 
 export interface EInvoiceIntegrationSettings {
@@ -442,9 +560,14 @@ export interface EInvoiceIntegrationSettings {
   productionCsidToken?: string;
   productionCsidSecret?: string;
   productionReqId?: string;
-  generatedDate?: string; // ISO-8601 string, e.g. "2025-09-02T12:34:56Z"
+  generatedDate?: string;   // ISO-8601 string, e.g. "2025-09-02T12:34:56Z"
   isSimulation?: boolean;
   systemCode?: string;
+}
+
+export interface MultiPaymentForPrint {
+  cardAmt: number;
+  upi: number;
 }
 
 export interface PrintCustomFields {
@@ -755,167 +878,4 @@ export interface PrintCustomFields {
   isKitchenMsg: boolean;
   kitchenId: number;
   privilageCardBalance: number;
-}
-
-export interface AccDataForPrint {
-  master: AccMasterForPrint;
-  details: AccDetailForPrint[];
-}
-
-export interface AccMasterForPrint {
-  accTransactionMasterId: number;
-  departmentId: number;
-  costCentreId: number;
-  billwiseMasterId: number;
-  employeeId: number;
-  invTransactionId: number;
-  transactionDate?: string;       // ISO string e.g. "2025-09-02T00:00:00Z"
-  prevTransDate?: string;         // ISO string
-  bankDate: string;               // non-nullable
-  voucherPrefix: string;
-  voucherNumber: number;
-  referenceNumber: string;
-  referenceDate: string;
-  dueDate: string;
-  particulars: string;
-  totalDebit?: number;
-  billwiseTotalAdjAmt?: number;
-  billwiseAdjAmt?: number;
-  totalCredit?: number;
-  totDiscount?: number;
-  empIncentive?: number;
-  commonNarration: string;
-  remarks: string;
-  voucherType: string;
-  formType: string;
-  debitNoteTransId: number;
-  creditNoteTransId: number;
-  currencyId: number;
-  accTransDetailId: number;
-  adjustedTransDetailId: number;
-  currencyRate?: number;
-  isPosted: boolean;
-  randomKey: number;
-  onlineTrans: string;
-  isEdit: boolean;
-  chequeStatus: string;
-  checkBouncedDate?: string;
-  drCr: string;
-  isSalesView: boolean;
-  branchId: number;
-  counterId: number;
-  refBranchId: number;
-  uuid: string;
-
-  financialYearId?: number;
-  displayOrderNumber?: number;
-  oldAccTransactionMasterId?: number;
-  isActive?: boolean;
-  actionStatus?: string;
-  counterShiftId?: number;
-  isLocked?: boolean;
-  editId?: number;
-
-  notes: string;
-  masterAccount: string;
-  employeeName: string;
-  employeeCode: string;
-  counterName: string;
-}
-
-export interface AccDetailForPrint {
-  siNo: number;
-  accTransactionDetailId: number;
-
-  ledgerCode: string;
-  accountName: string;
-  relatedLedgerCode: string;
-  particulars: string;
-  particularLedgerCode: string;
-
-  ledgerId: number;
-  relatedLedgerId: number;
-
-  debit: number;
-  credit: number;
-  amount: number;
-
-  narration: string;
-  discount?: number;
-  incentives?: number;
-  adjAmount?: number;
-
-  bankDate?: string;          // ISO string
-  chequeNumber: string;
-  checkStatus: string;
-  checkBouncedDate?: string;  // ISO string
-  chequeDate?: string;        // ISO string
-
-  billwiseDetails: string;
-
-  ledgerNameArabic: string;
-  relatedLedgerNameArabic: string;
-
-  costCentreName: string;
-
-  txp_PartyName: string;
-  txp_TaxNo: string;
-  txp_TaxPercentage?: number;
-  txp_TaxAmount?: number;
-  txp_TaxableAmount?: number;
-  txp_RefNo: string;
-  txp_RefDate?: string;       // ISO string
-}
-
-export interface SalesViewDataForPrint {
-  master: SalesReceiptMasterForPrint;
-  details: SalesReceiptDetailForPrint[];
-  salesBillNumbers: string;
-  salesBillAmounts: string;
-  salesRetBillNumbers: string;
-  salesRetBillAmounts: string;
-}
-
-export interface SalesReceiptMasterForPrint {
-  transactionDate: string;  // ISO string, e.g. "2025-09-02T12:34:56Z"
-  branchID: number;
-  branch: string;
-  referenceNumber: string;
-
-  netAmount: number;
-  billDiscount: number;
-  roundAmount: number;
-  returnAmount: number;
-  grandTotal: number;
-  cashReceived: number;
-  cashReturned: number;
-}
-
-export interface SalesReceiptDetailForPrint {
-  invTransactionMasterID: number;
-
-  voucherNumber: string;
-  dailyVoucherNumber: string;
-  voucherType: string;
-
-  branchID: number;
-  counterID: number;
-
-  partyName: string;
-
-  vatAmount: number;
-  vatPercentage: number;
-
-  totalDiscount: number;
-  billDiscount: number;
-  grandTotal: number;
-  totalProfit: number;
-  roundAmount: number;
-  cashReceived: number;
-  advanceAmt: number;
-  cashReturned: number;
-  salesManIncentive: number;
-  adjustmentAmount: number;
-
-  branch: string;
 }

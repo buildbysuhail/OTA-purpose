@@ -98,6 +98,7 @@ import { getInitialPreference } from "../../../../utilities/dx-grid-preference-u
 import GridTheme from "./grid-theme";
 import { purchaseGridCol } from "./transaction-grid-cols";
 import SavingOverlay from "../transaction-saving";
+import { BusinessType } from "../../../../enums/business-types";
 interface BilledItem {
   id?: number;
   name: string;
@@ -146,75 +147,75 @@ const TransactionForm: React.FC<TransactionProps> = ({
   //   // setTriggerEffect(true);
   // };
   const handleClearControls = async () => {
-  // 1) Guard: check voucher locked
-  if (formState?.transaction?.master?.isLocked) {
-    ERPAlert.show({
-      title: t("warning"),
-      text: t("voucher_is_locked"),
-      icon: "warning",
-    });
-    return;
-  }
-
-  try {
-    // 2) Ask for confirmation
-    const result: any = await ERPAlert.show({
-      title: t("clearing_transaction_question"),
-      text: t("once_clearing_this_transaction_cannot_be_recovered"),
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonText: t("yes"),
-      cancelButtonText: t("no"),
-    });
-
-    console.log("ERPAlert result:", result);
-
-    // 3) Normalize confirmation result (supports multiple shapes)
-    const confirmed =
-      !!result &&
-      (result.isConfirmed === true ||
-        result.value === true ||
-        result === true);
-
-    if (!confirmed) {
-      // user cancelled
+    // 1) Guard: check voucher locked
+    if (formState?.transaction?.master?.isLocked) {
+      ERPAlert.show({
+        title: t("warning"),
+        text: t("voucher_is_locked"),
+        icon: "warning",
+      });
       return;
     }
 
-    // 4) Call clearControls and await if it returns a promise
-    console.log("Calling clearControls...", {
-      isEdit: formState?.isEdit,
-      id: formState?.transaction?.master?.invTransactionMasterID,
-    });
+    try {
+      // 2) Ask for confirmation
+      const result: any = await ERPAlert.show({
+        title: t("clearing_transaction_question"),
+        text: t("once_clearing_this_transaction_cannot_be_recovered"),
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: t("yes"),
+        cancelButtonText: t("no"),
+      });
 
-    const maybePromise = clearControls(
-      formState.isEdit,
-      formState.transaction.master.invTransactionMasterID
-    );
+      console.log("ERPAlert result:", result);
 
-    if (maybePromise && typeof maybePromise.then === "function") {
-      await maybePromise;
+      // 3) Normalize confirmation result (supports multiple shapes)
+      const confirmed =
+        !!result &&
+        (result.isConfirmed === true ||
+          result.value === true ||
+          result === true);
+
+      if (!confirmed) {
+        // user cancelled
+        return;
+      }
+
+      // 4) Call clearControls and await if it returns a promise
+      console.log("Calling clearControls...", {
+        isEdit: formState?.isEdit,
+        id: formState?.transaction?.master?.invTransactionMasterID,
+      });
+
+      const maybePromise = clearControls(
+        formState.isEdit,
+        formState.transaction.master.invTransactionMasterID
+      );
+
+      if (maybePromise && typeof maybePromise.then === "function") {
+        await maybePromise;
+      }
+
+      // 5) Force UI refresh if you used that pattern earlier (uncomment/wire setTriggerEffect)
+      if (typeof setTriggerEffect === "function") {
+        // toggle to force re-render/update data grid etc.
+        setTriggerEffect((prev: any) => !prev);
+      }
+
+      // ERPAlert.show({
+      //   title: t("success"),
+      //   text: t("controls_cleared_successfully"),
+      //   icon: "success",
+      // });
+    } catch (err) {
+      console.error("Error in handleClearControls:", err);
+      ERPAlert.show({
+        title: t("error"),
+        text: t("something_went_wrong_clearing_controls"),
+        icon: "error",
+      });
     }
-
-    // 5) Force UI refresh if you used that pattern earlier (uncomment/wire setTriggerEffect)
-    if (typeof setTriggerEffect === "function") {
-      // toggle to force re-render/update data grid etc.
-      setTriggerEffect((prev: any) => !prev);
-    }
-
-    // ERPAlert.show({
-    //   title: t("success"),
-    //   text: t("controls_cleared_successfully"),
-    //   icon: "success",
-    // });
-  } catch (err) {
-    console.error("Error in handleClearControls:", err);
-    ERPAlert.show({
-      title: t("error"),
-      text: t("something_went_wrong_clearing_controls"),
-      icon: "error",
-    });
-  }
   };
 
   const { t } = useTranslation("transaction");
@@ -283,71 +284,71 @@ const TransactionForm: React.FC<TransactionProps> = ({
     clearInterval(timerRef.current);
   }
 
-// javascript// Add a new state to track when countdown should start
-const [startCountdown, setStartCountdown] = useState(false);
+  // javascript// Add a new state to track when countdown should start
+  const [startCountdown, setStartCountdown] = useState(false);
 
-useEffect(() => {
-  if (formState.selectedTheme && formState.selectedTheme.isInitial !== true) {
-    console.log('Theme selected, triggering countdown');
-    setStartCountdown(true);
+  useEffect(() => {
+    if (formState.selectedTheme && formState.selectedTheme.isInitial !== true) {
+      console.log('Theme selected, triggering countdown');
+      setStartCountdown(true);
 
-    // Apply the preview theme
-    dispatch(formStateHandleFieldChangeKeysOnly({
-      fields: {
-        userConfig: { ...formState.selectedTheme },
-        themeChangeCountdown: 8
-      }
-    }));
-  }
-}, [formState.selectedTheme]);
-
-
-// Separate effect for countdown - not dependent on selectedTheme
-useEffect(() => {
-  if (!startCountdown) return;
-  console.log('⏰ Starting countdown timer');
-  let countdown = 8;
-
-  const interval = setInterval(() => {
-    countdown -= 1;
-    console.log('⏱️ Tick - countdown:', countdown);
-    dispatch(formStateHandleFieldChangeKeysOnly({
-      fields: { themeChangeCountdown: countdown }
-    }));
-    debugger
-    if(formState.themeChangeCountdown===undefined ){
-      clearInterval(interval);
-      setStartCountdown(false);
-      return
-    }
-
-    if (countdown <= 0) {
+      // Apply the preview theme
       dispatch(formStateHandleFieldChangeKeysOnly({
         fields: {
-          userConfig: { ...formState.currentTheme },
-          selectedTheme: formState.currentTheme,
-          themeChangeCountdown: 0
+          userConfig: { ...formState.selectedTheme },
+          themeChangeCountdown: 8
         }
       }));
-
-      console.log('🛑 Countdown complete');
-      clearInterval(interval);
-      setStartCountdown(false);
-      // Revert to original theme
     }
-  }, 1000);
+  }, [formState.selectedTheme]);
 
-  return () => {
-    console.log('Cleanup countdown timer');
-    clearInterval(interval);
-  };
-}, [startCountdown, formState.currentTheme, formState.userConfig?.themeName,formState.themeChangeCountdown]);
 
-// Add this to monitor when selectedTheme changes
-useEffect(() => {
-  console.log('🔄 selectedTheme changed:', formState.selectedTheme);
-  console.log('  - isInitial flag:', formState.selectedTheme?.isInitial);
-}, [formState.selectedTheme]);
+  // Separate effect for countdown - not dependent on selectedTheme
+  useEffect(() => {
+    if (!startCountdown) return;
+    console.log('⏰ Starting countdown timer');
+    let countdown = 8;
+
+    const interval = setInterval(() => {
+      countdown -= 1;
+      console.log('⏱️ Tick - countdown:', countdown);
+      dispatch(formStateHandleFieldChangeKeysOnly({
+        fields: { themeChangeCountdown: countdown }
+      }));
+      debugger
+      if (formState.themeChangeCountdown === undefined) {
+        clearInterval(interval);
+        setStartCountdown(false);
+        return
+      }
+
+      if (countdown <= 0) {
+        dispatch(formStateHandleFieldChangeKeysOnly({
+          fields: {
+            userConfig: { ...formState.currentTheme },
+            selectedTheme: formState.currentTheme,
+            themeChangeCountdown: 0
+          }
+        }));
+
+        console.log('🛑 Countdown complete');
+        clearInterval(interval);
+        setStartCountdown(false);
+        // Revert to original theme
+      }
+    }, 1000);
+
+    return () => {
+      console.log('Cleanup countdown timer');
+      clearInterval(interval);
+    };
+  }, [startCountdown, formState.currentTheme, formState.userConfig?.themeName, formState.themeChangeCountdown]);
+
+  // Add this to monitor when selectedTheme changes
+  useEffect(() => {
+    console.log('🔄 selectedTheme changed:', formState.selectedTheme);
+    console.log('  - isInitial flag:', formState.selectedTheme?.isInitial);
+  }, [formState.selectedTheme]);
   const purchaseGridRef = useRef<{
     focusCell: (
       targetRow: number,
@@ -443,7 +444,7 @@ useEffect(() => {
     setIsDocumentModalOpen(false);
   };
 
-  const handleKeyDown = (e: any, field: string, rowIndex: number) => {};
+  const handleKeyDown = (e: any, field: string, rowIndex: number) => { };
   const formStateRef = useRef(formState);
   useEffect(() => {
     formStateRef.current = formState;
@@ -602,7 +603,7 @@ useEffect(() => {
   );
   const { hasRight } = useUserRights();
   const gridHeight = useMemo(() => {
-    if(deviceInfo?.isMobile) {
+    if (deviceInfo?.isMobile) {
       return window.innerHeight - 330
     }
     let height;
@@ -641,18 +642,18 @@ useEffect(() => {
   }, [financialYearID]);
 
   useEffect(() => {
-          debugger;
-   if(formState.isInitialLedger != true) {
-    loadLedgerData(undefined, dispatch);
-   } else{
-          dispatch(
-            formStateHandleFieldChange({
-              fields: {
-          isInitialLedger: false
-              },
-            })
-          );
-        }
+    debugger;
+    if (formState.isInitialLedger != true) {
+      loadLedgerData(undefined, dispatch);
+    } else {
+      dispatch(
+        formStateHandleFieldChange({
+          fields: {
+            isInitialLedger: false
+          },
+        })
+      );
+    }
   }, [formState.transaction.master.ledgerID]);
 
   useEffect(() => {
@@ -743,8 +744,8 @@ useEffect(() => {
           ? false
           : true;
       _formState.userRightsFormCode = formCode ?? "";
-      if(voucherType == "PI") {
-        if(isInvoker && formType == "IMPORT") {
+      if (voucherType == "PI") {
+        if (isInvoker && formType == "IMPORT") {
           _formState.userRightsFormCode = "PIIMPORT"
         }
       }
@@ -814,7 +815,7 @@ useEffect(() => {
         },
         cbEmployee: {
           ...initialFormElements.cbEmployee,
-          employeeType:  _formState.userConfig
+          employeeType: _formState.userConfig
             ?.showPurchaserOnly
             ? EmployeeType.Purchaser
             : _formState.formElements.cbEmployee.employeeType
@@ -867,15 +868,17 @@ useEffect(() => {
             _formState.userConfig?.presetWarehouseId ?? 0;
 
         } else {
-          if (
-            applicationSettings.accountsSettings.allowSalesCounter &&
-            (_formState.userConfig?.counterWiseWarehouseId ?? 0) > 0
-          ) {
-            _formState.transaction.master.fromWarehouseID =
-              _formState.userConfig?.counterWiseWarehouseId ?? 0;
-          } else {
-            _formState.transaction.master.fromWarehouseID =
-              applicationSettings.inventorySettings?.defaultWareHouse;
+          if (applicationSettings.mainSettings?.maintainBusinessType != BusinessType.Distribution) {
+            if (
+              applicationSettings.accountsSettings.allowSalesCounter &&
+              (_formState.userConfig?.counterWiseWarehouseId ?? 0) > 0
+            ) {
+              _formState.transaction.master.fromWarehouseID =
+                _formState.userConfig?.counterWiseWarehouseId ?? 0;
+            } else {
+              _formState.transaction.master.fromWarehouseID =
+                applicationSettings.inventorySettings?.defaultWareHouse;
+            }
           }
         }
       }
@@ -890,17 +893,17 @@ useEffect(() => {
         _formState.template = null;
       }
       const editableColumn = _formState.gridColumns?.find(
-        (col) => col.visible !== false && col.dataField != null &&  col.allowEditing == true && col.readOnly !== true
+        (col) => col.visible !== false && col.dataField != null && col.allowEditing == true && col.readOnly !== true
       );
-      _formState.currentCell ={
-        column: editableColumn?.dataField??"",
+      _formState.currentCell = {
+        column: editableColumn?.dataField ?? "",
         data: formState.transaction.details[0],
         rowIndex: 0,
       }
       debugger;
       _formState = await loadLedgerData(_formState) as any;
       _formState.isInitialLedger = true;
-        setTransVoucher(_formState, true);
+      setTransVoucher(_formState, true);
       // if (voucherNo != undefined && voucherNo > 0) {
       //   dispatch(
       //     setUserRight({ userSession: userSession, hasRight: hasRight })
@@ -923,14 +926,14 @@ useEffect(() => {
     }
   }, []);
   const onProcessSelected = useCallback(async (masterIds: string, loadType: string = "GRN") => {
-    if(masterIds.length > 0) {
+    if (masterIds.length > 0) {
 
-      dispatch(formStateHandleFieldChange({fields:{loading: {isLoading: true, text: `${loadType == "GRN" ? 'Please wait while loading GRN Items' : 'Please wait while loading Order Items'}`}}}));
-      const PendingTransDetails: any = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/PendingTransactionsByMasterIds`,`masterIDs=${masterIds}`)
-      if(PendingTransDetails && PendingTransDetails.details && PendingTransDetails.details.length > 0) {
+      dispatch(formStateHandleFieldChange({ fields: { loading: { isLoading: true, text: `${loadType == "GRN" ? 'Please wait while loading GRN Items' : 'Please wait while loading Order Items'}` } } }));
+      const PendingTransDetails: any = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/PendingTransactionsByMasterIds`, `masterIDs=${masterIds}`)
+      if (PendingTransDetails && PendingTransDetails.details && PendingTransDetails.details.length > 0) {
 
         const calculatedDetails: TransactionDetail[] = [];
-        const refactoredDetails = refactorDetails(PendingTransDetails.details, loadType,{result:{}}, formState.transaction.master.voucherForm);
+        const refactoredDetails = refactorDetails(PendingTransDetails.details, loadType, { result: {} }, formState.transaction.master.voucherForm);
         for (let index = 0; index < refactoredDetails.length; index++) {
           const element = refactoredDetails[index];
           const calculated = calculateRowAmount(
@@ -942,7 +945,7 @@ useEffect(() => {
           calculatedDetails.push(calculated.transaction!.details![0] as TransactionDetail);
         }
 
-        const details = [...calculatedDetails, ...formState.transaction?.details?.filter((x: any) => x.productID >0)  || []]
+        const details = [...calculatedDetails, ...formState.transaction?.details?.filter((x: any) => x.productID > 0) || []]
         if (details.length > 0 && calculateSummary && calculateTotal && formState && dispatch && formStateHandleFieldChangeKeysOnly) {
           const summaryRes = calculateSummary(details, formState, {
             result: {},
@@ -963,7 +966,7 @@ useEffect(() => {
             totalRes.transaction.master = { ...totalRes.transaction.master };
             totalRes.transaction.details = [];
             totalRes.batchesUnits = PendingTransDetails.batchesUnits;
-            totalRes.loading = {isLoading: false, text: ''}
+            totalRes.loading = { isLoading: false, text: '' }
 
             // Dispatch the state update
 
@@ -972,7 +975,7 @@ useEffect(() => {
               formStateHandleFieldChangeKeysOnly({
                 fields: totalRes,
                 updateOnlyGivenDetailsColumns: true,
-                rowIndex:lastIndex+1,
+                rowIndex: lastIndex + 1,
                 itemsToAddToDetails: calculatedDetails
               })
             );
@@ -981,7 +984,7 @@ useEffect(() => {
 
       } else {
 
-        dispatch(formStateHandleFieldChange({fields:{loading: {isLoading: false, text: ''}}}));
+        dispatch(formStateHandleFieldChange({ fields: { loading: { isLoading: false, text: '' } } }));
       }
     }
   }, [formState.transaction.details, formState.transaction.master]);
@@ -1244,8 +1247,8 @@ useEffect(() => {
                   },
                   currentCell: {
                     column: resw?.column,
-                    data: addDetails.length == 0 ? rowIndex : addDetails[addDetails.length-1],
-                    rowIndex: rowIndex+addDetails.length,
+                    data: addDetails.length == 0 ? rowIndex : addDetails[addDetails.length - 1],
+                    rowIndex: rowIndex + addDetails.length,
                   },
                 },
                 updateOnlyGivenDetailsColumns: true,
@@ -1329,9 +1332,9 @@ useEffect(() => {
 
 
 
-  const _purchaseGridCol: ColumnModel[] = purchaseGridCol(applicationSettings,userSession
-    ,voucherType ?? formState.transaction.master.voucherType
-    ,formType ?? formState.transaction.master.voucherForm,t,formState)??[]
+  const _purchaseGridCol: ColumnModel[] = purchaseGridCol(applicationSettings, userSession
+    , voucherType ?? formState.transaction.master.voucherType
+    , formType ?? formState.transaction.master.voucherForm, t, formState) ?? []
   // const [invoiceNo, setInvoiceNo] = useState<number>(3); // Default Invoice No.
   // const [date, setDate] = useState<string>("2024-09-23"); // Default Date
 
@@ -1429,24 +1432,24 @@ useEffect(() => {
     ApplicationMainSettingsInitialState
   );
 
-  const handleChange = (selectedOption: { value: string; label: string }) => {};
+  const handleChange = (selectedOption: { value: string; label: string }) => { };
 
   const goToPreviousPage = () => {
     debugger;
-  if (window.history.length <= 1) {
-    // No history to go back to, attempt to close the tab
-    window.close();
+    if (window.history.length <= 1) {
+      // No history to go back to, attempt to close the tab
+      window.close();
 
-    // If window.close() doesn't work (common in modern browsers),
-    // you can try this alternative approach
-    window.open('', '_self', '');
-    window.close();
+      // If window.close() doesn't work (common in modern browsers),
+      // you can try this alternative approach
+      window.open('', '_self', '');
+      window.close();
 
-    // Or as a last resort, redirect to a blank page
-    // window.location.href = 'about:blank';
-  } else {
-    window.history.back();
-  }
+      // Or as a last resort, redirect to a blank page
+      // window.location.href = 'about:blank';
+    } else {
+      window.history.back();
+    }
   };
   const [isPopupVisible, setIsPopupVisible] = useState(false);
 
@@ -1529,8 +1532,8 @@ useEffect(() => {
   // const toggleMenu = () => {
   //   setIsMenuOpen(!isMenuOpen);
   // };
-  const getInputHeight =() =>{
-    return formState.userConfig?.inputBoxStyle?.inputSize == "sm" ? remToPx (0) : formState.userConfig?.inputBoxStyle?.inputSize == "md" ? remToPx (0.75): formState.userConfig?.inputBoxStyle?.inputSize == "lg" ?  remToPx (1.375) : formState.userConfig?.inputBoxStyle?.inputSize == "customize" ? (remToPx (formState.userConfig?.inputBoxStyle?.inputHeight)??0) -23:0
+  const getInputHeight = () => {
+    return formState.userConfig?.inputBoxStyle?.inputSize == "sm" ? remToPx(0) : formState.userConfig?.inputBoxStyle?.inputSize == "md" ? remToPx(0.75) : formState.userConfig?.inputBoxStyle?.inputSize == "lg" ? remToPx(1.375) : formState.userConfig?.inputBoxStyle?.inputSize == "customize" ? (remToPx(formState.userConfig?.inputBoxStyle?.inputHeight) ?? 0) - 23 : 0
   }
 
   return (
@@ -1612,11 +1615,11 @@ useEffect(() => {
                     setIsPrintModalOpen={setIsPrintModalOpen}
                     onProcessSelected={onProcessSelected}
                     downloadImportTemplateHeadersOnly={downloadImportTemplateHeadersOnly}
-                    importFromExcel= {importFromExcel}
+                    importFromExcel={importFromExcel}
                   />
                 </div>
               </div>
-              </div>
+            </div>
 
             {/* header starts here */}
             <TransactionHeader
@@ -1780,49 +1783,49 @@ useEffect(() => {
             {/* Main Content */}
             <div className="flex flex-col w-full h-full mt-12 overflow-y-auto pb-[43px]">
               <div className="py-0">
-              <div
-                className="w-full max-w-full mx-0"
-                style={{
-                  position: "fixed",
-                  top: "47px",
-                  left: 0,
-                  right: 0,
-                  padding: 0,
-                  zIndex: 40,
-                }}
-              >
-                {formState.isEdit}
-                <div className="flex items-center p-0 border-b dark:border-dark-border border-gray-100 dark:bg-dark-bg bg-[#f4f4f5]">
-                  <Header
-                    formState={formState}
-                    dispatch={dispatch}
-                    // handleKeyDown={handleKeyDown} // Replace with your actual keydown handler
-                    t={t} // Replace with your translation function
-                    loadTemporaryRows={loadTemporaryRows}
-                    deleteTransVoucher={deleteTransVoucher}
-                    handleRefresh={handleRefresh}
-                    createNewVoucher={createNewVoucher}
-                    handleEdit={handleEdit}
-                    printVoucher={printVoucher}
-                    handleClearControls={handleClearControls}
-                    handleHistoryClick={handleHistoryClick}
-                    setIsHistorySidebarOpen={setIsHistorySidebarOpen}
-                    transactionType={formState.transactionType} // Replace with your actual transaction type
-                    voucherType={formState.transaction.master.voucherType} // Replace with your actual voucher type
-                    userSession={userSession} // Replace with your actual user session object
-                    unlockVoucher={unlockVoucher}
-                    setShowValidation={setShowValidation}
-                    showValidation={showValidation}
-                    selectTemplates={selectTemplates}
-                    goToPreviousPage={goToPreviousPage}
-                    isHistorySidebarOpen={isHistorySidebarOpen}
-                    setIsPrintModalOpen={setIsPrintModalOpen}
-                    onProcessSelected={onProcessSelected}
-                    downloadImportTemplateHeadersOnly={downloadImportTemplateHeadersOnly}
-                    importFromExcel= {importFromExcel}
-                  />
+                <div
+                  className="w-full max-w-full mx-0"
+                  style={{
+                    position: "fixed",
+                    top: "47px",
+                    left: 0,
+                    right: 0,
+                    padding: 0,
+                    zIndex: 40,
+                  }}
+                >
+                  {formState.isEdit}
+                  <div className="flex items-center p-0 border-b dark:border-dark-border border-gray-100 dark:bg-dark-bg bg-[#f4f4f5]">
+                    <Header
+                      formState={formState}
+                      dispatch={dispatch}
+                      // handleKeyDown={handleKeyDown} // Replace with your actual keydown handler
+                      t={t} // Replace with your translation function
+                      loadTemporaryRows={loadTemporaryRows}
+                      deleteTransVoucher={deleteTransVoucher}
+                      handleRefresh={handleRefresh}
+                      createNewVoucher={createNewVoucher}
+                      handleEdit={handleEdit}
+                      printVoucher={printVoucher}
+                      handleClearControls={handleClearControls}
+                      handleHistoryClick={handleHistoryClick}
+                      setIsHistorySidebarOpen={setIsHistorySidebarOpen}
+                      transactionType={formState.transactionType} // Replace with your actual transaction type
+                      voucherType={formState.transaction.master.voucherType} // Replace with your actual voucher type
+                      userSession={userSession} // Replace with your actual user session object
+                      unlockVoucher={unlockVoucher}
+                      setShowValidation={setShowValidation}
+                      showValidation={showValidation}
+                      selectTemplates={selectTemplates}
+                      goToPreviousPage={goToPreviousPage}
+                      isHistorySidebarOpen={isHistorySidebarOpen}
+                      setIsPrintModalOpen={setIsPrintModalOpen}
+                      onProcessSelected={onProcessSelected}
+                      downloadImportTemplateHeadersOnly={downloadImportTemplateHeadersOnly}
+                      importFromExcel={importFromExcel}
+                    />
+                  </div>
                 </div>
-              </div>
               </div>
 
               {/* Voucher Info */}
@@ -1949,8 +1952,8 @@ useEffect(() => {
           (!formState.transactionLoading &&
             formState.userConfig?.footerPosition !== "right" && (
               <TransactionFooter
-                transactionType={transactionType??""}
-                calculateTotal ={calculateTotal}
+                transactionType={transactionType ?? ""}
+                calculateTotal={calculateTotal}
                 formState={formState}
                 dispatch={dispatch}
                 t={t}
@@ -2038,7 +2041,7 @@ useEffect(() => {
                 })
               )
             }
-            content={<ProductSummaryMaster productID = {formState.currentCell?.data.productID} productBatchID = {formState.currentCell?.data.productBatchID}/>}
+            content={<ProductSummaryMaster productID={formState.currentCell?.data.productID} productBatchID={formState.currentCell?.data.productBatchID} />}
           />
         )}
         {formState.userConfig?.barCodePrev && (
@@ -2278,7 +2281,7 @@ useEffect(() => {
             onClose={() =>
               dispatch(
                 formStateHandleFieldChangeKeysOnly({
-                  fields: { showProductInformation: {show: false, index: 0} },
+                  fields: { showProductInformation: { show: false, index: 0 } },
                 })
               )
             }
@@ -2313,14 +2316,14 @@ useEffect(() => {
           />
         )}
       </div>
-       {formState.saving && (
-          <SavingOverlay saving={true} saveCompleted={formState.savingCompleted??false} savingSwitchAction={ formStateHandleFieldChange({
+      {formState.saving && (
+        <SavingOverlay saving={true} saveCompleted={formState.savingCompleted ?? false} savingSwitchAction={formStateHandleFieldChange({
           fields: {
-            savingCompleted: undefined,saving: false
+            savingCompleted: undefined, saving: false
           },
         })}
-          />
-        )}
+        />
+      )}
     </>
   );
 };

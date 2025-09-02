@@ -670,7 +670,7 @@ debugger;
     const details = formState.transaction.details;
 
     // Stock update restriction
-    if (!formState.transaction.master.stockUpdate) {
+    if (!formState.transaction.master.stockUpdate && formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote) {
       const confirm = await ERPAlert.show({
         icon: "info",
         title: t("stock_update_warning"),

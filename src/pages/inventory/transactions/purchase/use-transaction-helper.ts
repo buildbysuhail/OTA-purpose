@@ -581,9 +581,9 @@ debugger;
       // Calculate final net amount (NetValue + VAT)
       let netAmount = 0
       if (clientSession.isAppGlobal) {
-        netAmount = round(vat);
+        netAmount = round(netAmount + vat);
       } else {
-        netAmount = round(netAmount, 4);
+        netAmount = round(netAmount+vat, 4);
       }
 
 

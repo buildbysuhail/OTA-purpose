@@ -413,6 +413,7 @@ export interface InvDetail2ForPrint {
 export interface InvDataForPrint {
   master: InvMasterForPrint;
   details: InvDetailForPrint[];
+  custom: PrintCustomFields;
   ledgerBalance: number;
   previousLedgerBalance: number;
   loyaltyCardBalance: number;

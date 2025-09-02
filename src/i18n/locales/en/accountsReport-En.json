@@ -882,5 +882,26 @@
   "name_on_card": "Name On Card",
   "inv_transaction_master_id": "Inv Transaction Master ID",
   "actual_price": "Actual Price",
-  "show_opening_stock": "Show opening stock"
+  "show_opening_stock": "Show opening stock",
+
+  "item_used_for_service_report": "Item Used For Service Report",
+  "free_of_cost_reports_of": "Free Of Cost Reports Of",
+  "fast_moving_products": "Fast Moving Products",
+  "purchase_period": "Purchase Period",
+  "unsold_product_report": "Unsold Product Report",
+  "selected_range": "Selected Range",
+  "lpo_report": "LPO Report",
+  "routewise_sales_collection_report": "Routewise Sales Collection Report",
+  "inventory_status_report": "Inventory Status Report",
+  "stock_journal_reports": "Stock Journal Reports",
+  "customer_visit_reports": "Customer Visit Reports",
+  "customer_visit_last_visit": "Customer Visit Last Visit",
+  "collection_discount_report": "Collection Discount Report",
+  "discount_report_inventory": "Discount Report Inventory",
+  "customer_visit_total_visit": "Customer Visit Total Visit",
+  "unsoled_products": "Unsoled Products",
+  "routewise_sales_collection": "Routewise Sales Collection",
+  "inventory_status": "Inventory Status",
+  "void_report": "Void Report",
+  "sales_other_reports": "Sales Other Reports"
 }

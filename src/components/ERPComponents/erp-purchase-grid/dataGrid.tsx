@@ -18,6 +18,7 @@ import {
 import { RootState } from "../../../redux/store";
 import {
   ChevronDown,
+  CirclePlus,
   EllipsisVertical,
   FileUp,
   Info,
@@ -25,6 +26,7 @@ import {
   Paintbrush,
   Settings,
   Trash2,
+  X,
 } from "lucide-react";
 import GridPreferenceChooser from "../erp-gridpreference";
 import ERPDataCombobox from "../erp-data-combobox";
@@ -66,6 +68,7 @@ import { useTableResizeAndReorder } from "./use-resizing";
 import { useUltraFastVirtualScrolling } from "./use-virtual-scrolling";
 import { ApplicationSettingsType } from "../../../pages/settings/system/application-settings-types/application-settings-types";
 import { initialTransactionDetails2 } from "../../../pages/inventory/transactions/purchase/transaction-type-data";
+import ERPInput from "../../../components/ERPComponents/erp-input";
 
 type DataItem = Record<string, any>;
 export interface SummaryConfig<T = any> {
@@ -115,21 +118,6 @@ interface DataGridProps<T extends DataItem> {
   gridFooterFontColor?: string;
 }
 
-// export gridThemes = [
-//   {
-//     name: "theme1",
-//     image: "",
-//     fontSize: '',
-//     bold: '',
-//     borderColor: '',
-//     headerBG: '',
-//     headerFontColor: '',
-//     borderRadius: '',
-//     isColumnBorder: '',
-//     activeRowBG: '',
-//     rowHeight: ' ';
-//   },
-// ]
 interface EditableCellProps {
   rowIndex: number;
   column: ColumnModel;
@@ -169,6 +157,7 @@ interface DragState {
 }
 
 interface RowData {
+  t: any;
   details: TransactionDetail[];
   columns: ColumnModel[];
   tableWidth: number;
@@ -514,6 +503,7 @@ const SummaryRow: React.FC<{
 
 const VirtualRow = React.memo(
   ({
+    t,
     details,
     columns,
     tableWidth,
@@ -552,6 +542,7 @@ const VirtualRow = React.memo(
     const rowRef = useRef<HTMLTableRowElement>(null);
     const dispatch = useAppDispatch();
     const handleFocus = useCallback((columnKey: string) => { setFocusedColumn(columnKey); }, [index]);
+    const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
 
     const handleBlur = useCallback(() => {
       if (document.activeElement?.closest(".dx-datagrid")) return;
@@ -709,360 +700,577 @@ const VirtualRow = React.memo(
       return columnWidths.reduce((sum, width) => sum + width, 0);
     }, [columnWidths]);
 
+    const [itemName, setItemName] = useState('');
+    const [quantity, setQuantity] = useState('');
+    const [rate, setRate] = useState('');
+    const [unit, setUnit] = useState('Bag');
+    const [taxType, setTaxType] = useState('With Tax');
+    const [discount, setDiscount] = useState('0');
+    const [discountType, setDiscountType] = useState('₹');
+    const [taxPercentage, setTaxPercentage] = useState('None');
+
+    const calculateSubtotal = () => {
+      const qty = parseFloat(quantity) || 0;
+      const rateValue = parseFloat(rate) || 0;
+      return qty * rateValue;
+    };
+
+    const calculateDiscount = () => {
+      const discountValue = parseFloat(discount) || 0;
+      if (discountType === '%') {
+        return (calculateSubtotal() * discountValue) / 100;
+      }
+      return discountValue;
+    };
+
+    const calculatedTotal = () => {
+      return calculateSubtotal() - calculateDiscount();
+    };
+
     return (
       <>
-        {
-          isMobileGridRow ? (
-            <>
-              <div
-                className={`py-0 ${rowBg} transition-all duration-300 ease-in-out group`}
-                style={{
-                  minHeight: `${rowHeight + 5}px`,
-                  height: `${rowHeight + 10}px`,
-                  borderBottom: `0.5px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.1)" : `rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`}`,
-                  backgroundColor: currentCell?.rowIndex === index ? appState.mode === "dark" ? "#444444" : formState.userConfig?.activeRowBg ? `rgb(${formState.userConfig.activeRowBg})` : "#e3f2fd"
-                    : index % 2 === 0 ? appState.mode === "dark" ? "#333333" : "#fff" : appState.mode === "dark" ? "#444444" : "#f9f9f9",
-                  willChange: 'background-color',
-                  transform: "translateZ(0)", // triggers GPU layer for smoother repaints
-                  boxSizing: "border-box",
-                }}
-              >
-                <div className="px-2 xs:px-3 sm:px-4 md:px-8 py-4 sm:py-6 md:py-8">
-                  <div className="bg-white border border-gray-200 rounded-lg shadow-sm w-full max-w-none xs:max-w-sm sm:max-w-md md:max-w-lg mx-auto">
-
-                    <div className="flex flex-col md:flex-row sm:flex-row xs:flex-row xs:items-center xs:justify-between p-2 xs:p-3 sm:p-4 !pb-0 gap-2 xs:gap-3">
-                      <div className="flex items-center justify-between gap-2 xs:gap-3 min-w-0 flex-1">
-                        <div className="flex items-center gap-2 min-w-0">
-                          <span className="text-gray-400 text-xs xs:text-sm font-medium whitespace-nowrap">
-                            #{item.productBatchID || 'Product ID'}
-                          </span>
-                          <span className="text-gray-900 font-medium text-sm xs:text-base truncate" title={item.product}>
-                            {item.product || 'Product'}
-                          </span>
-                        </div>
-                        <span className="text-gray-900 font-medium text-sm xs:text-base whitespace-nowrap self-end xs:self-auto">
-                          ₹ {item.unitPrice || 'Price'}
+        {isMobileGridRow ? (
+          <>
+            <div
+              className={`py-0 ${rowBg} transition-all duration-300 ease-in-out group`}
+              style={{
+                position:  'absolute',
+                top: `${top}px`,
+                left:  0,
+                height:  `${rowHeight}px`,
+                width: "100%",
+                display: "flex",
+                flexDirection: 'row',
+                borderBottom: `0.5px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.1)" : `rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`}`,
+                backgroundColor: appState.mode === "dark" ? "#333333" : "#fff",
+                marginTop: index === 0 ? '25px' : '0',
+                paddingBottom: index === details.length - 1 ? '0.5rem' : '0'
+              }}
+            >
+              <div className="p-2 w-full">
+                <div
+                  className={`rounded-lg shadow-sm w-full max-w-[730px] mx-auto ${appState.mode === "dark" ? "bg-[#2d2d2d] border border-[#444444]" : "bg-[#f8f8f8] border border-[#e4e3e8]"}`}
+                >
+                  <div className="flex flex-col md:flex-row sm:flex-row xs:flex-row xs:items-center xs:justify-between p-2 xs:p-3 sm:p-4 !pb-0 gap-2 xs:gap-3">
+                    <div className="flex items-center justify-between gap-2 xs:gap-3 min-w-0 flex-1">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span
+                          className={`rounded-sm p-1 text-xs xs:text-sm font-medium whitespace-nowrap ${appState.mode === "dark" ? "bg-[#444444] text-[#e0e0e0]" : "bg-white text-gray-500"}`}
+                        >
+                          #{index+1}
+                        </span>
+                        <span
+                          className={`font-medium text-sm xs:text-base truncate ${appState.mode === "dark" ? "text-[#e0e0e0]" : "text-gray-900"}`}
+                          title={item.product}
+                        >
+                          {item.product || 'Product'}
                         </span>
                       </div>
+                      <span
+                        className={`font-medium text-sm xs:text-base whitespace-nowrap self-end xs:self-auto ${appState.mode === "dark" ? "text-[#e0e0e0]" : "text-gray-900"}`}
+                      >
+                        ₹ {item.unitPrice || 'Price'}
+                      </span>
                     </div>
-
-                    <div className="p-2 xs:p-3 sm:p-4 !pt-1 space-y-2 xs:space-y-3">
-                      <div className="flex items-start xs:items-center justify-between gap-2">
-                        <span className="text-gray-600 text-xs xs:text-sm whitespace-nowrap">
-                          Item Subtotal
+                  </div>
+                  <div className="p-2 xs:p-3 sm:p-4 !pt-1 space-y-2 xs:space-y-3">
+                    <div className="flex items-start xs:items-center justify-between gap-2">
+                      <span
+                        className={`text-xs xs:text-sm whitespace-nowrap ${appState.mode === "dark" ? "text-[#a0a0a0]" : "text-gray-600"}`}
+                      >
+                        Item Subtotal
+                      </span>
+                      <span
+                        className={`text-xs xs:text-sm text-right ${appState.mode === "dark" ? "text-[#a0a0a0]" : "text-gray-600"}`}
+                      >
+                        1 X ₹ 0 = ₹ {item.total || 'Sub Total'}
+                      </span>
+                    </div>
+                    <div className="flex items-start xs:items-center justify-between gap-2">
+                      <span
+                        className={`text-xs xs:text-sm whitespace-nowrap ${appState.mode === "dark" ? "text-[#ffa726]" : "text-orange-400"}`}
+                      >
+                        Discount (%): {item.discPerc || 'Discount'}%
+                      </span>
+                      <span
+                        className={`text-xs xs:text-sm text-right whitespace-nowrap ${appState.mode === "dark" ? "text-[#ffa726]" : "text-orange-400"}`}
+                      >
+                        ₹ {item.discount || 'Discount'}
+                      </span>
+                    </div>
+                    <div className="flex items-start xs:items-center justify-between gap-2">
+                      <span
+                        className={`text-xs xs:text-sm whitespace-nowrap ${appState.mode === "dark" ? "text-[#a0a0a0]" : "text-gray-600"}`}
+                      >
+                        Tax: {item.vatPerc || 'Tax'}%
+                      </span>
+                      <span
+                        className={`text-xs xs:text-sm text-right whitespace-nowrap ${appState.mode === "dark" ? "text-[#a0a0a0]" : "text-gray-600"}`}
+                      >
+                        ₹ {item.totalAddExpense || 'Tax'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {index === details.length - 19 && (
+              <button
+                onClick={() => setIsMobileModalOpen(true)}
+                className={`flex-1 w-full flex items-center justify-center gap-2 px-4 py-3 font-medium transition-all duration-200 shadow-md hover:shadow-lg ${appState.mode === "dark" ? "bg-[#444444] text-white hover:bg-[#555555] active:bg-[#666666] border border-[#555555]" : "bg-[#0084ff] text-white hover:bg-blue-700 active:bg-blue-800 border border-blue-600"}`}
+              >
+                <CirclePlus className="w-5 h-5" />
+                {t('add_items')}
+              </button>
+            )}
+            {isMobileModalOpen && (
+              <div className="fixed top-0 h-full inset-0 z-50 flex items-center justify-center bg-black/50">
+                <div
+                  className={`relative w-full h-full overflow-y-hidden ${appState.mode === "dark" ? "bg-[#2d2d2d] text-[#e0e0e0]" : "bg-white dark:bg-dark-bg-card"}`}
+                >
+                  {/* Close Button */}
+                  <button
+                    onClick={() => setIsMobileModalOpen(false)}
+                    className="absolute top-6 right-4 w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600 transition shadow-md"
+                  >
+                    <X className="w-4 h-4"/>
+                  </button>
+                  {/* Content */}
+                  <div className="mt-8 p-4">
+                    <ERPInput
+                      id={"itemName"}
+                      value={itemName}
+                      label="item_name"
+                      placeholder={t("enter_item_name")}
+                      onChange={(e) => setItemName(e.target.value)}
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                    />
+                    <div className="grid grid-cols-2 items-center gap-2">
+                      <ERPInput
+                        type="number"
+                        id={"quantity"}
+                        value={quantity}
+                        label={t("quantity")}
+                        placeholder={t("enter_quantity")}
+                        onChange={(e) => setQuantity(e.target.value)}
+                        localInputBox={formState?.userConfig?.inputBoxStyle}
+                      />
+                      <ERPDataCombobox
+                        id="unit"
+                        label="Unit"
+                        options={[
+                          { value: "Bag", label: "Bag" },
+                          { value: "Piece", label: "Piece" },
+                          { value: "Kg", label: "Kg" },
+                          { value: "Liter", label: "Liter" },
+                        ]}
+                        value={unit}
+                        onChange={(value) => setUnit(value?.value)}
+                        localInputBox={formState?.userConfig?.inputBoxStyle}
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 items-center gap-2 mb-3">
+                      <ERPInput
+                        type="number"
+                        id={"rate"}
+                        value={rate}
+                        label={t("rate")}
+                        placeholder={t("enter_rate")}
+                        onChange={(e) => setRate(e.target.value)}
+                        localInputBox={formState?.userConfig?.inputBoxStyle}
+                      />
+                      <ERPDataCombobox
+                        id="taxType"
+                        label="Tax"
+                        options={[
+                          { value: "With Tax", label: "With Tax" },
+                          { value: "Without Tax", label: "Without Tax" },
+                          { value: "Tax Exempt", label: "Tax Exempt" },
+                        ]}
+                        value={taxType}
+                        onChange={(value) => setTaxType(value?.value)}
+                        localInputBox={formState?.userConfig?.inputBoxStyle}
+                      />
+                    </div>
+                    {/* Totals & Taxes Section */}
+                    <div className="border-t pt-4 border-[#444444]">
+                      <h3
+                        className={`text-sm font-medium mb-4 ${appState.mode === "dark" ? "text-[#e0e0e0]" : "text-gray-700"}`}
+                      >
+                        Totals & Taxes
+                      </h3>
+                      <div className="flex justify-between items-center mb-3">
+                        <span
+                          className={`text-sm ${appState.mode === "dark" ? "text-[#a0a0a0]" : "text-gray-600"}`}
+                        >
+                          Subtotal (Rate x Qty)
                         </span>
-                        <span className="text-gray-600 text-xs xs:text-sm text-right">
-                          1 X ₹ 0 = ₹ {item.total || 'Sub Total'}
-                        </span>
+                        <span className="font-medium">₹ {calculateSubtotal().toFixed(2)}</span>
                       </div>
-
-                      <div className="flex items-start xs:items-center justify-between gap-2">
-                        <span className="text-orange-400 text-xs xs:text-sm whitespace-nowrap">
-                          Discount (%): {item.discPerc || 'Discount'}%
+                      <div className="flex items-center justify-between mb-3">
+                        <span
+                          className={`text-sm ${appState.mode === "dark" ? "text-[#a0a0a0]" : "text-gray-600"}`}
+                        >
+                          Discount
                         </span>
-                        <span className="text-orange-400 text-xs xs:text-sm text-right whitespace-nowrap">
-                          ₹ {item.discount || 'Discount'}
-                        </span>
+                        <div className="flex items-center space-x-2">
+                          <ERPInput
+                            type="number"
+                            noLabel={true}
+                            id={"discount"}
+                            className="w-16"
+                            value={discount}
+                            onChange={(e) => setDiscount(e.target.value)}
+                            localInputBox={formState?.userConfig?.inputBoxStyle}
+                          />
+                          <div
+                            className={`flex rounded ${appState.mode === "dark" ? "bg-[#444444]" : "bg-gray-100"}`}
+                          >
+                            <button
+                              onClick={() => setDiscountType('₹')}
+                              className={`px-2 py-1 text-xs rounded-l ${discountType === '₹' ? (appState.mode === "dark" ? "bg-[#ffa726] text-[#2d2d2d]" : "bg-orange-200 text-orange-800") : (appState.mode === "dark" ? "text-[#a0a0a0]" : "text-gray-600")}`}
+                            >
+                              ₹
+                            </button>
+                            <button
+                              onClick={() => setDiscountType('%')}
+                              className={`px-2 py-1 text-xs rounded-r ${discountType === '%' ? (appState.mode === "dark" ? "bg-[#ffa726] text-[#2d2d2d]" : "bg-orange-200 text-orange-800") : (appState.mode === "dark" ? "text-[#a0a0a0]" : "text-gray-600")}`}
+                            >
+                              %
+                            </button>
+                          </div>
+                          <span className="font-medium w-12 text-right">₹ {calculateDiscount().toFixed(2)}</span>
+                        </div>
                       </div>
-
-                      <div className="flex items-start xs:items-center justify-between gap-2">
-                        <span className="text-gray-600 text-xs xs:text-sm whitespace-nowrap">
-                          Tax: {item.vatPerc || 'Tax'}%
+                      {/* Tax */}
+                      <div className="flex items-center justify-between mb-4">
+                        <span
+                          className={`text-sm ${appState.mode === "dark" ? "text-[#a0a0a0]" : "text-gray-600"}`}
+                        >
+                          Tax %
                         </span>
-                        <span className="text-gray-600 text-xs xs:text-sm text-right whitespace-nowrap">
-                          ₹ {item.totalAddExpense || 'Tax'}
-                        </span>
+                        <div className="flex items-center space-x-2">
+                          <ERPDataCombobox
+                            id={"taxPercentage"}
+                            noLabel={true}
+                            noPlaceholder={true}
+                            value={taxPercentage}
+                            className="w-28"
+                            localInputBox={formState?.userConfig?.inputBoxStyle}
+                            onChange={(e) => setTaxPercentage(e.target.value)}
+                            options={[
+                              { label: 'None', value: 'none' },
+                              { label: '5%', value: '5' },
+                              { label: '12%', value: '12' },
+                              { label: '18%', value: '18' },
+                              { label: '28%', value: '28' },
+                            ]}
+                          />
+                          <span className="font-medium w-12 text-right">₹ 0.00</span>
+                        </div>
+                      </div>
+                      {/* Total Amount */}
+                      <div className="border-t pt-3 border-[#444444]">
+                        <div className="flex justify-between items-center">
+                          <span
+                            className={`font-semibold ${appState.mode === "dark" ? "text-[#e0e0e0]" : "text-gray-800"}`}
+                          >
+                            Total Amount:
+                          </span>
+                          <span className="font-bold text-lg">₹ {calculatedTotal().toFixed(2)}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </>
-          ) :
-            (
-              <div
-                className={`py-0 ${rowBg} transition-all duration-300 ease-in-out group`}
-                style={{
-                  position: isMobileEditRow ? 'static' : 'absolute',
-                  top: isMobileEditRow ? '' : `${top}px`,
-                  left: isMobileEditRow ? '' : 0,
-                  height: isMobileEditRow ? '' : `${rowHeight}px`,
-                  width: "100%",
-                  display: "flex",
-                  flexDirection: 'row',
-                  borderBottom: `0.5px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.1)" : `rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`}`,
-                  backgroundColor: currentCell?.rowIndex === index ? appState.mode === "dark" ? "#444444" : formState.userConfig?.activeRowBg ? `rgb(${formState.userConfig.activeRowBg})` : "#e3f2fd"
-                    : index % 2 === 0 ? appState.mode === "dark" ? "#333333" : "#fff" : appState.mode === "dark" ? "#444444" : "#f9f9f9",
-                }}
-              >
-                {columns.map((column, colIndex) => {
+            )}
+          </>
+        ) :
+          (
+            <div
+              className={`py-0 ${rowBg} transition-all duration-300 ease-in-out group`}
+              style={{
+                position: isMobileEditRow ? 'static' : 'absolute',
+                top: isMobileEditRow ? '' : `${top}px`,
+                left: isMobileEditRow ? '' : 0,
+                height: isMobileEditRow ? '' : `${rowHeight}px`,
+                width: "100%",
+                display: "flex",
+                flexDirection: 'row',
+                borderBottom: `0.5px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.1)" : `rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`}`,
+                backgroundColor: currentCell?.rowIndex === index ? appState.mode === "dark" ? "#444444" : formState.userConfig?.activeRowBg ? `rgb(${formState.userConfig.activeRowBg})` : "#e3f2fd"
+                  : index % 2 === 0 ? appState.mode === "dark" ? "#333333" : "#fff" : appState.mode === "dark" ? "#444444" : "#f9f9f9",
+              }}
+            >
+              {columns.map((column, colIndex) => {
                   // TransactionDetails2
                   const isDetails2 = Object.keys(initialTransactionDetails2).includes(column.dataField as keyof TransactionDetails2)
                   if(isDetails2) {
-                    // debugger;
+                    // 
                   }
                   const fieldKey = column.dataField as TransactionDetailKeys;
-                  const idField = column.idField as keyof TransactionDetail;
-                  const productId = item.productID;
+                const idField = column.idField as keyof TransactionDetail;
+                const productId = item.productID;
                   const cellValue = ((isDetails2 ? item.details2?.[fieldKey as keyof TransactionDetails2] : item[fieldKey as keyof TransactionDetail])??"") as string | boolean;
-                  const idValue = item[idField];
-                  const isFirstColumn = colIndex === 0;
-                  const isLastColumn = colIndex === columns.length - 1;
-                  const isFixed = isFirstColumn || isLastColumn;
-                  const showBorder = formState.userConfig?.showColumnBorder ?? true;
-                  let options: any[] = [];
-                  if (fieldKey === "unit") {
-                    options =
-                      formState.batchesUnits?.filter(
-                        (x) => x.productBatchID === item.productBatchID
-                      ) ?? [];
-                  }
-                  if (fieldKey === "warranty") {
-                    options = formState.dataWarranty ?? [];
-                  }
-                  if (fieldKey === "brandID") {
-                    options = formState.dataBrands ?? [];
-                  }
-                  const cellId = `${gridId}_${column.dataField}_${index}`;
-                  const borderColor = `${(column.readOnly || column.allowEditing == false ||
-                    formState.formElements.pnlMasters?.disabled !== true) &&
-                    currentCell?.column === column.dataField &&
-                    currentCell?.rowIndex === index ? appState.mode === "dark" ? "#444444" : formState.userConfig?.inputBoxStyle?.focusBgColor ? `rgb(${formState.userConfig?.inputBoxStyle?.focusBgColor})` : "#e3f2fd" : undefined}`;
+                const idValue = item[idField];
+                const isFirstColumn = colIndex === 0;
+                const isLastColumn = colIndex === columns.length - 1;
+                const isFixed = isFirstColumn || isLastColumn;
+                const showBorder = formState.userConfig?.showColumnBorder ?? true;
+                let options: any[] = [];
+                if (fieldKey === "unit") {
+                  options =
+                    formState.batchesUnits?.filter(
+                      (x) => x.productBatchID === item.productBatchID
+                    ) ?? [];
+                }
+                if (fieldKey === "warranty") {
+                  options = formState.dataWarranty ?? [];
+                }
+                if (fieldKey === "brandID") {
+                  options = formState.dataBrands ?? [];
+                }
+                const cellId = `${gridId}_${column.dataField}_${index}`;
+                const borderColor = `${(column.readOnly || column.allowEditing == false ||
+                  formState.formElements.pnlMasters?.disabled !== true) &&
+                  currentCell?.column === column.dataField &&
+                  currentCell?.rowIndex === index ? appState.mode === "dark" ? "#444444" : formState.userConfig?.inputBoxStyle?.focusBgColor ? `rgb(${formState.userConfig?.inputBoxStyle?.focusBgColor})` : "#e3f2fd" : undefined}`;
 
-                  return (
-                    <div
-                      key={`${column.dataField}`}
-                      style={{
-                        width: `${columnWidths[colIndex]}px`,
-                        minWidth: `${columnWidths[colIndex]}px`,
-                        maxWidth: `${columnWidths[colIndex]}px`,
-                        borderRight: isFirstColumn ? `2px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.2)" : `rgba(${gridBorderColor || "226,232,240"})`}`
-                          : isLastColumn ? "none" : showBorder ? `0.2px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.1)" : `rgba(${gridBorderColor || "226,232,240"}, 0.8)`}` : "none",
-                        borderLeft: isLastColumn ? `2px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.2)" : `rgba(${gridBorderColor || "226,232,240"})`}` : "none",
-                        fontSize: `${gridFontSize}px`,
-                        textAlign: column.dataField === "slNo" ? "center" : ["qty"].includes(column.dataField ?? "") ? "right" : "left",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: 'center',
-                        backgroundColor: currentCell?.rowIndex === index ? appState.mode === "dark" ? "#444444" : formState.userConfig?.activeRowBg ? `rgb(${formState.userConfig.activeRowBg})` : "#e3f2fd"
-                          : index % 2 === 0 ? appState.mode === "dark" ? "#333333" : "#fff" : appState.mode === "dark" ? "#444444" : "#f9f9f9",
-                        position: isFixed ? "sticky" : "relative",
-                        left: isFirstColumn ? "0px" : "auto",
-                        right: isLastColumn ? "0px" : "auto",
-                        zIndex: isFixed ? 50 : 1,
-                        gap: isLastColumn ? "8px" : "0",
-                      }}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setCurrentCell({
-                          column: column.dataField ?? "",
-                          data: item,
-                          rowIndex: index,
-                        });
-                      }}
-                    >
-                      {formState.transactionLoading ? (
+                return (
+                  <div
+                    key={`${column.dataField}`}
+                    style={{
+                      width: `${columnWidths[colIndex]}px`,
+                      minWidth: `${columnWidths[colIndex]}px`,
+                      maxWidth: `${columnWidths[colIndex]}px`,
+                      borderRight: isFirstColumn ? `2px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.2)" : `rgba(${gridBorderColor || "226,232,240"})`}`
+                        : isLastColumn ? "none" : showBorder ? `0.2px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.1)" : `rgba(${gridBorderColor || "226,232,240"}, 0.8)`}` : "none",
+                      borderLeft: isLastColumn ? `2px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.2)" : `rgba(${gridBorderColor || "226,232,240"})`}` : "none",
+                      fontSize: `${gridFontSize}px`,
+                      textAlign: column.dataField === "slNo" ? "center" : ["qty"].includes(column.dataField ?? "") ? "right" : "left",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: 'center',
+                      backgroundColor: currentCell?.rowIndex === index ? appState.mode === "dark" ? "#444444" : formState.userConfig?.activeRowBg ? `rgb(${formState.userConfig.activeRowBg})` : "#e3f2fd"
+                        : index % 2 === 0 ? appState.mode === "dark" ? "#333333" : "#fff" : appState.mode === "dark" ? "#444444" : "#f9f9f9",
+                      position: isFixed ? "sticky" : "relative",
+                      left: isFirstColumn ? "0px" : "auto",
+                      right: isLastColumn ? "0px" : "auto",
+                      zIndex: isFixed ? 50 : 1,
+                      gap: isLastColumn ? "8px" : "0",
+                    }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setCurrentCell({
+                        column: column.dataField ?? "",
+                        data: item,
+                        rowIndex: index,
+                      });
+                    }}
+                  >
+                    {formState.transactionLoading ? (
+                      <div
+                        className="parent-selector-loading"
+                        style={{
+                          width: "100%",
+                          margin: "3px 0",
+                          height: `${rowHeight}px`,
+                        }}
+                      >
                         <div
-                          className="parent-selector-loading"
+                          className="card_description loading"
                           style={{
-                            width: "100%",
-                            margin: "3px 0",
-                            height: `${rowHeight}px`,
-                          }}
-                        >
-                          <div
-                            className="card_description loading"
-                            style={{
-                              width: `${Math.floor(Math.random() * 50) + 40}%`,
-                              height: `${Math.min(rowHeight - 6, 16)}px`,
-                            }}
-                          />
-                        </div>
-                      ) : column.dataField === "slNo" ? (
-                        <div style={getCellContentStyle(column)} id={cellId}>
-                          {index + 1}
-                        </div>
-                      ) : column.dataType === "chk" ? (
-                        <input
-                          disabled={formState.formElements.pnlMasters?.disabled}
-                          type="checkbox"
-                          checked={
-                            cellValue == true ? true : false
-                          }
-                          onChange={(e) => {
-                            onChange(
-                              e.target.checked,
-                              column.dataField as keyof TransactionDetail,
-                              index
-                            );
+                            width: `${Math.floor(Math.random() * 50) + 40}%`,
+                            height: `${Math.min(rowHeight - 6, 16)}px`,
                           }}
                         />
-                      ) : column.dataType === "btn" ? (
+                      </div>
+                    ) : column.dataField === "slNo" ? (
+                      <div style={getCellContentStyle(column)} id={cellId}>
+                        {index + 1}
+                      </div>
+                    ) : column.dataType === "chk" ? (
+                      <input
+                        disabled={formState.formElements.pnlMasters?.disabled}
+                        type="checkbox"
+                        checked={
+                          cellValue == true ? true : false
+                        }
+                        onChange={(e) => {
+                          onChange(
+                            e.target.checked,
+                            column.dataField as keyof TransactionDetail,
+                            index
+                          );
+                        }}
+                      />
+                    ) : column.dataType === "btn" ? (
+                      <button
+                        disabled={formState.formElements.pnlMasters?.disabled}
+                        onClick={() =>
+                          handleKeyDown(
+                            cellValue,
+                            { key: "Enter" } as any,
+                            column as any,
+                            index
+                          )
+                        }
+                        className={`px-2 py-1 border rounded shadow-sm hover:shadow text-xs transition-all ${appState.mode === "dark" ? "bg-[#444444] text-[#e0e0e0] border-[#555555] hover:bg-[#555555]" : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50"}`}
+                        aria-label="Action button"
+                      >
+                        <svg
+                          className="w-3 h-3"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 12 12"
+                        >
+                          <rect
+                            x="1"
+                            y="3"
+                            width="10"
+                            height="6"
+                            rx="1"
+                            strokeWidth="1.5"
+                          />
+                        </svg>
+                      </button>
+                    ) : column.dataField === "removeCol" ? (
+                      <div className="flex items-center justify-center gap-1"
+                        style={{
+                          border: `solid 1px ${borderColor}`
+                        }}
+                      >
+                        <button
+                          onClick={() => handleInfoClick(index)}
+                          className={`group relative flex items-center justify-center w-7 h-7 transition-all duration-500 ease-out hover:rounded-full hover:scale-105 hover:shadow-lg hover:border ${appState.mode === "dark" ? "hover:bg-blue-900 hover:border-blue-700" : "hover:bg-blue-50 hover:border-blue-200"}`}>
+                          <Info className={`w-4 h-4 transition-all duration-300 ${appState.mode === "dark" ? "text-blue-400 group-hover:text-blue-300" : "text-blue-600 group-hover:text-blue-700"}`} />
+                        </button>
                         <button
                           disabled={formState.formElements.pnlMasters?.disabled}
-                          onClick={() =>
-                            handleKeyDown(
-                              cellValue,
-                              { key: "Enter" } as any,
-                              column as any,
-                              index
-                            )
-                          }
-                          className={`px-2 py-1 border rounded shadow-sm hover:shadow text-xs transition-all ${appState.mode === "dark" ? "bg-[#444444] text-[#e0e0e0] border-[#555555] hover:bg-[#555555]" : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50"}`}
-                          aria-label="Action button"
-                        >
-                          <svg
-                            className="w-3 h-3"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 12 12"
-                          >
-                            <rect
-                              x="1"
-                              y="3"
-                              width="10"
-                              height="6"
-                              rx="1"
-                              strokeWidth="1.5"
-                            />
-                          </svg>
+                          onClick={() => onKeyDown(item.slNo, { key: "Enter" } as any, "removeCol", index)}
+                          className={`group relative flex items-center justify-center w-7 h-7 transition-all duration-500 ease-out hover:rounded-full hover:scale-105 hover:shadow-lg hover:border ${appState.mode === "dark" ? "hover:bg-red-900 hover:border-red-700" : "hover:bg-red-50 hover:border-red-200"}`}>
+                          <Trash2 className={`w-4 h-4 transition-all duration-300 ${appState.mode === "dark" ? "text-red-400 group-hover:text-red-300" : "text-red-600 group-hover:text-red-700"}`} />
                         </button>
-                      ) : column.dataField === "removeCol" ? (
-                        <div className="flex items-center justify-center gap-1"
-                          style={{
-                            border: `solid 1px ${borderColor}`
-                          }}
-                        >
-                          <button
-                            onClick={() => handleInfoClick(index)}
-                            className={`group relative flex items-center justify-center w-7 h-7 transition-all duration-500 ease-out hover:rounded-full hover:scale-105 hover:shadow-lg hover:border ${appState.mode === "dark" ? "hover:bg-blue-900 hover:border-blue-700" : "hover:bg-blue-50 hover:border-blue-200"}`}>
-                            <Info className={`w-4 h-4 transition-all duration-300 ${appState.mode === "dark" ? "text-blue-400 group-hover:text-blue-300" : "text-blue-600 group-hover:text-blue-700"}`} />
-                          </button>
-                          <button
-                            disabled={formState.formElements.pnlMasters?.disabled}
-                            onClick={() => onKeyDown(item.slNo, { key: "Enter" } as any, "removeCol", index)}
-                            className={`group relative flex items-center justify-center w-7 h-7 transition-all duration-500 ease-out hover:rounded-full hover:scale-105 hover:shadow-lg hover:border ${appState.mode === "dark" ? "hover:bg-red-900 hover:border-red-700" : "hover:bg-red-50 hover:border-red-200"}`}>
-                            <Trash2 className={`w-4 h-4 transition-all duration-300 ${appState.mode === "dark" ? "text-red-400 group-hover:text-red-300" : "text-red-600 group-hover:text-red-700"}`} />
-                          </button>
-                        </div>
-                      ) : (column.dataField === "product" ||
-                        column.dataField === "pCode" ||
-                        column.dataField === "barCode") &&
-                        !column.readOnly &&
-                        formState.formElements.pnlMasters?.disabled !== true &&
-                        currentCell?.column === column.dataField &&
-                        currentCell?.rowIndex === index ? (
-                        <ERPProductSearch
-                          customStyle={customStyle}
-                          appState={appState}
-                          textAlign={column.alignment === "right" ? "right" : "left"}
-                          rowIndex={index}
-                          id={cellId}
-                          inputId={`${gridId}_${column.dataField}_${index}`}
-                          searchType={applicationSettings?.productsSettings?.usePopupWindowForItemSearch ? "modal" : "grid"}
-                          noLabel={true}
-                          showCheckBox={false}
-                          contextClassNametwo={`!text-sm !px-1 !py-0 !border-none !bg-transparent`}
-                          value={(cellValue as string) || ""}
-                          productDataUrl={`${Urls.inv_transaction_base}${transactionType}/products`}
-                          batchDataUrl={`${Urls.inv_transaction_base}${transactionType}/batches/`}
-                          className="h-[22px] text-sm"
-                          onFocus={() => handleFocus(column.dataField!)}
-                          onBlur={handleBlur}
-                          onKeyDown={(value, e) => { handleKeyDown(value, e, column, index) }}
-                          searchKey={column.dataField}
-                          advancedProductSearching={advancedProductSearching}
-                          useInSearch={useInSearch}
-                          searchByCodeAndName={searchByCodeAndName}
-                          onNextCellFind={nextCellFind}
-                          onRowSelected={(data: any, rowValue?: string) => {
-                            const res = {
-                              slNo: item.slNo,
-                              rowIndex: index,
-                              productBatchID: data.productBatchID,
-                              autoBarcode: data.autoBarcode,
-                              productCode: data.productCode,
-                              useProductCode: column.dataField === "pCode",
-                              searchText: rowValue,
-                              key: generateUniqueKey(),
-                            };
-                            dispatch(formStateHandleFieldChange({ fields: { batchSelectionData: JSON.stringify(res) }, }));
-                          }}
-                        />
-                      ) : column.dataField === "product" && !column.readOnly ? (
-                        <div
-                          style={{ ...getCellContentStyle(column), border: `solid 1px ${borderColor}` }}
-                          id={cellId}
-                          tabIndex={0}
-                          onFocus={() => handleFocus(column.dataField!)}
-                          onBlur={handleBlur}
-                          onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}>
-                          {productId > 0 ? cellValue ?? "" : ""}
-                        </div>
-                      ) : column.dataField === "status" ? (
-                        <div
-                          style={{
-                            ...getCellContentStyle(column),
-                            justifyContent: "center",
-                            border: `solid 1px ${borderColor}`
-                          }}
-                          id={cellId}
-                          tabIndex={0}
-                          className={`inline-flex px-2 py-1 font-medium rounded-full cursor-default ${cellValue === "Active" ? appState.mode === "dark" ? "bg-[#2d6a4f] text-[#b7e1cd]" : "bg-[#dcfce7] text-[#166534]" : ""}
+                      </div>
+                    ) : (column.dataField === "product" ||
+                      column.dataField === "pCode" ||
+                      column.dataField === "barCode") &&
+                      !column.readOnly &&
+                      formState.formElements.pnlMasters?.disabled !== true &&
+                      currentCell?.column === column.dataField &&
+                      currentCell?.rowIndex === index ? (
+                      <ERPProductSearch
+                        customStyle={customStyle}
+                        appState={appState}
+                        textAlign={column.alignment === "right" ? "right" : "left"}
+                        rowIndex={index}
+                        id={cellId}
+                        inputId={`${gridId}_${column.dataField}_${index}`}
+                        searchType={applicationSettings?.productsSettings?.usePopupWindowForItemSearch ? "modal" : "grid"}
+                        noLabel={true}
+                        showCheckBox={false}
+                        contextClassNametwo={`!text-sm !px-1 !py-0 !border-none !bg-transparent`}
+                        value={(cellValue as string) || ""}
+                        productDataUrl={`${Urls.inv_transaction_base}${transactionType}/products`}
+                        batchDataUrl={`${Urls.inv_transaction_base}${transactionType}/batches/`}
+                        className="h-[22px] text-sm"
+                        onFocus={() => handleFocus(column.dataField!)}
+                        onBlur={handleBlur}
+                        onKeyDown={(value, e) => { handleKeyDown(value, e, column, index) }}
+                        searchKey={column.dataField}
+                        advancedProductSearching={advancedProductSearching}
+                        useInSearch={useInSearch}
+                        searchByCodeAndName={searchByCodeAndName}
+                        onNextCellFind={nextCellFind}
+                        onRowSelected={(data: any, rowValue?: string) => {
+                          const res = {
+                            slNo: item.slNo,
+                            rowIndex: index,
+                            productBatchID: data.productBatchID,
+                            autoBarcode: data.autoBarcode,
+                            productCode: data.productCode,
+                            useProductCode: column.dataField === "pCode",
+                            searchText: rowValue,
+                            key: generateUniqueKey(),
+                          };
+                          dispatch(formStateHandleFieldChange({ fields: { batchSelectionData: JSON.stringify(res) }, }));
+                        }}
+                      />
+                    ) : column.dataField === "product" && !column.readOnly ? (
+                      <div
+                        style={{ ...getCellContentStyle(column), border: `solid 1px ${borderColor}` }}
+                        id={cellId}
+                        tabIndex={0}
+                        onFocus={() => handleFocus(column.dataField!)}
+                        onBlur={handleBlur}
+                        onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}>
+                        {productId > 0 ? cellValue ?? "" : ""}
+                      </div>
+                    ) : column.dataField === "status" ? (
+                      <div
+                        style={{
+                          ...getCellContentStyle(column),
+                          justifyContent: "center",
+                          border: `solid 1px ${borderColor}`
+                        }}
+                        id={cellId}
+                        tabIndex={0}
+                        className={`inline-flex px-2 py-1 font-medium rounded-full cursor-default ${cellValue === "Active" ? appState.mode === "dark" ? "bg-[#2d6a4f] text-[#b7e1cd]" : "bg-[#dcfce7] text-[#166534]" : ""}
                     ${cellValue === "Inactive" ? appState.mode === "dark" ? "bg-[#7b2e2e] text-[#f4a8a8]" : "bg-[#fee2e2] text-[#991b1b]" : ""}
                     ${cellValue === "Pending" ? appState.mode === "dark" ? "bg-[#6b4e31] text-[#fce5a8]" : "bg-[#fef9c3] text-[#854d0e]" : ""}`}
-                          onFocus={() => handleFocus(column.dataField!)}
-                          onBlur={handleBlur}
-                          onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}>
-                          {productId > 0 ? cellValue ?? "" : ""}
-                        </div>
-                      ) : column.allowEditing == true &&
-                        !column.readOnly &&
-                        formState.formElements.pnlMasters?.disabled !== true &&
-                        txtData.visible === true &&
-                        currentCell?.column === column.dataField &&
-                        currentCell?.rowIndex === index ? (
-                        <EditableCell
-                          appState={appState}
-                          type={column.dataType === "cb" ? "cb" : "any"}
-                          productId={productId}
-                          onChange={onChange}
-                          blockUnitOnDecimalPoint={blockUnitOnDecimalPoint}
-                          decimalLimit={2}
-                          rowIndex={index}
-                          column={column}
-                          value={column.dataType === "cb" ? (idValue as string | number) : (cellValue as string | number)}
-                          options={options}
-                          onFocus={() => handleFocus(column.dataField!)}
-                          onBlur={handleBlur}
-                          gridId={gridId}
-                          onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}
-                          gridFontSize={gridFontSize}
-                          gridIsBold={gridIsBold}
-                          formState={formState}
-                          rowHeight={rowHeight}
-                        />
-                      ) : (
-                        <div
-                          style={currentCell?.column === column.dataField &&
-                            currentCell?.rowIndex === index ? { ...getCellContentStyle(column), border: `solid 3px rgb(${formState.userConfig?.inputBoxStyle?.focusBgColor})`, background: '#fff' } : { ...getCellContentStyle(column) }}
-                          id={cellId}
-                          tabIndex={0}
-                          className="px-1 cursor-default"
-                          onFocus={() => handleFocus(column.dataField!)}
-                          onBlur={handleBlur}
-                          onKeyDown={(e) => handleKeyDown(cellValue ?? "", e, column, index)}>
-                          {productId > 0 ? cellValue ?? "" : ""}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            )
+                        onFocus={() => handleFocus(column.dataField!)}
+                        onBlur={handleBlur}
+                        onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}>
+                        {productId > 0 ? cellValue ?? "" : ""}
+                      </div>
+                    ) : column.allowEditing == true &&
+                      !column.readOnly &&
+                      formState.formElements.pnlMasters?.disabled !== true &&
+                      txtData.visible === true &&
+                      currentCell?.column === column.dataField &&
+                      currentCell?.rowIndex === index ? (
+                      <EditableCell
+                        appState={appState}
+                        type={column.dataType === "cb" ? "cb" : "any"}
+                        productId={productId}
+                        onChange={onChange}
+                        blockUnitOnDecimalPoint={blockUnitOnDecimalPoint}
+                        decimalLimit={2}
+                        rowIndex={index}
+                        column={column}
+                        value={column.dataType === "cb" ? (idValue as string | number) : (cellValue as string | number)}
+                        options={options}
+                        onFocus={() => handleFocus(column.dataField!)}
+                        onBlur={handleBlur}
+                        gridId={gridId}
+                        onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}
+                        gridFontSize={gridFontSize}
+                        gridIsBold={gridIsBold}
+                        formState={formState}
+                        rowHeight={rowHeight}
+                      />
+                    ) : (
+                      <div
+                        style={currentCell?.column === column.dataField &&
+                          currentCell?.rowIndex === index ? { ...getCellContentStyle(column), border: `solid 3px rgb(${formState.userConfig?.inputBoxStyle?.focusBgColor})`, background: '#fff' } : { ...getCellContentStyle(column) }}
+                        id={cellId}
+                        tabIndex={0}
+                        className="px-1 cursor-default"
+                        onFocus={() => handleFocus(column.dataField!)}
+                        onBlur={handleBlur}
+                        onKeyDown={(e) => handleKeyDown(cellValue ?? "", e, column, index)}>
+                        {productId > 0 ? cellValue ?? "" : ""}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )
         }
       </>
 
@@ -1141,7 +1349,6 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
     const popupRef = useRef<HTMLDivElement | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const virtualContainerRef = useRef<HTMLDivElement>(null);
-    const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
 
     const totalGridWidth = useMemo(() => {
       return columnWidths.reduce((sum, width) => sum + width, 0);
@@ -1179,7 +1386,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       return visibleColumns;
     }, [columnOrder, formState.gridColumns]);
 
-    const ITEM_HEIGHT = isMobile ? 193 : formState.userConfig?.gridRowHeight ?? 32;
+    const ITEM_HEIGHT = isMobile ? 140 : formState.userConfig?.gridRowHeight ?? 32;
 
     const { scrollTop, updateScroll, visibleItems, totalHeight } =
       useUltraFastVirtualScrolling(
@@ -1700,13 +1907,13 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
           if (input) input.select();
         }
       }
-      
+
       setPrevCell(currentCell?.rowIndex ?? -1);
       if (prevCell !== currentCell?.rowIndex) {
         const data = formState.transaction.details.filter((x) => x.productID > 0);
         if (data?.length > 0) {
-          localStorage.setItem(
-            `${formState.transaction.master.voucherType}${formState.transaction.master.voucherForm}`,
+        localStorage.setItem(
+          `${formState.transaction.master.voucherType}${formState.transaction.master.voucherForm}`,
             JSON.stringify(data)
           )
         }
@@ -1756,37 +1963,6 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
         document.removeEventListener("mousedown", handleClickOutside);
       };
     }, [isGridMenuOpen]);
-
-    const [itemName, setItemName] = useState('');
-    const [quantity, setQuantity] = useState('');
-    const [rate, setRate] = useState('');
-    const [unit, setUnit] = useState('Bag');
-    const [taxType, setTaxType] = useState('With Tax');
-    const [discount, setDiscount] = useState('0');
-    const [discountType, setDiscountType] = useState('₹');
-    const [taxPercentage, setTaxPercentage] = useState('None');
-
-    const calculateSubtotal = () => {
-      const qty = parseFloat(quantity) || 0;
-      const rateValue = parseFloat(rate) || 0;
-      return qty * rateValue;
-    };
-
-    const calculateDiscount = () => {
-      const discountValue = parseFloat(discount) || 0;
-      if (discountType === '%') {
-        return (calculateSubtotal() * discountValue) / 100;
-      }
-      return discountValue;
-    };
-
-    const calculateTotal = () => {
-      return calculateSubtotal() - calculateDiscount();
-    };
-
-    const getColumnKey = (key: string): string => {
-      return Object.keys(initialTransactionDetails2).includes(key) ? `details2.${key}`:  key
-    };
 
     return (
       <div
@@ -1889,27 +2065,28 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
             ref={containerRef}
             className="border border-gray-300 rounded"
             style={{
-              height: isMobile ? `${height + 10}px` : `${height + 80}px`,
+              height: `${height + 80}px`,
               overflowY: "scroll",
               overflowX: "auto",
               position: "relative",
               scrollbarWidth: "auto",
               scrollbarColor: appState.mode === "dark" ? "#555 #333" : "#ddd #f1f1f1",
             }}
-            onScroll={handleScroll}
+            onScroll={(e)=> {debugger; handleScroll(e);}}
           >
             <div
               style={{
-                width: `${!isMobile ? totalGridWidth : ''}px`,
+                width: `${!isMobile ? `${totalGridWidth}px` : '100%'}`,
                 minWidth: `${!isMobile ? totalGridWidth : 50}px`,
-                height: `${!isMobile ? totalHeight + 80 : totalHeight + 20}px`,
+                height: `${!isMobile ? totalHeight + 80 : totalHeight + 10}px`,
                 borderRadius: formState.userConfig?.gridBorderRadius ? `${formState.userConfig.gridBorderRadius}px` : "0px",
               }}
             >
+              {!isMobile &&
               <div
                 className="table-header"
                 style={{
-                  display: 'flex',
+                  display: isMobile ? 'none' : 'flex',
                   background: appState.mode === "dark" ? "linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 30%, #222222 70%, #2d2d2d 100%)" : gridHeaderBg ? `rgb(${gridHeaderBg})` : "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f1f5f9 70%, #f8fafc 100%)",
                   borderBottom: `0.5px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.1)" : `rgba(${gridBorderColor || "203,213,225"}, 0.4)`}`,
                   position: "sticky",
@@ -1918,7 +2095,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                   height: `${headerRowHeight}px`,
                 }}
               >
-                {!isMobile && columns?.map((column, index) => {
+                {columns?.map((column, index) => {
                   const isFirstColumn = index === 0;
                   const isLastColumn = index === columns.length - 1;
                   const isFixed = isFirstColumn || isLastColumn;
@@ -2003,6 +2180,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                   );
                 })}
               </div>
+              }
               <div
                 style={{
                   position: "relative",
@@ -2018,6 +2196,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                 ) : (
                   visibleItems.map(({ index, top }) => (
                     <VirtualRow
+                      t={t}
                       isMobileGridRow={isMobile}
                       appState={appState}
                       applicationSettings={applicationState}
@@ -2100,7 +2279,9 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                         zIndex: isFixed ? 110 : 100,
                       }}
                     >
-                      { formState.summary?.[getColumnKey(column.dataField ?? "") as keyof SummaryItems] ?? "" }
+                      {formState.summary?.[
+                        column.dataField as keyof SummaryItems
+                      ] ?? ""}
                     </div>
                   );
                 })}
@@ -2108,165 +2289,6 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
             </div>
           </div>
         </div>
-
-        <button onClick={() => setIsMobileModalOpen(true)} className={`${isMobile ? 'absolute top-0 left-0 z-[9999]' : 'hidden'}`}>
-          <Menu />
-        </button>
-        {isMobileModalOpen && (
-          <ERPModal
-            isOpen={isMobileModalOpen}
-            title=""
-            width={500}
-            height={575}
-            closeModal={() => setIsMobileModalOpen(false)}
-            content={
-              <>
-                <div className="bg-white p-3">
-                  {/* Item Name */}
-                  <div className="mb-4">
-                    <label className="block text-sm text-gray-600 mb-1">Item Name</label>
-                    <input
-                      type="text"
-                      value={itemName}
-                      onChange={(e) => setItemName(e.target.value)}
-                      className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Enter item name"
-                    />
-                  </div>
-
-                  {/* Quantity and Unit */}
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <label className="block text-sm text-gray-600 mb-1">Quantity</label>
-                      <input
-                        type="number"
-                        value={quantity}
-                        onChange={(e) => setQuantity(e.target.value)}
-                        className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="0"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm text-gray-600 mb-1">Unit</label>
-                      <div className="relative">
-                        <select
-                          value={unit}
-                          onChange={(e) => setUnit(e.target.value)}
-                          className="w-full p-3 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
-                          <option>Bag</option>
-                          <option>Piece</option>
-                          <option>Kg</option>
-                          <option>Liter</option>
-                        </select>
-                        <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Rate and Tax Type */}
-                  <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div>
-                      <label className="block text-sm text-gray-600 mb-1">Rate (Price/Unit)</label>
-                      <input
-                        type="number"
-                        value={rate}
-                        onChange={(e) => setRate(e.target.value)}
-                        className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="0"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm text-gray-600 mb-1">Tax</label>
-                      <div className="relative">
-                        <select
-                          value={taxType}
-                          onChange={(e) => setTaxType(e.target.value)}
-                          className="w-full p-3 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
-                          <option>With Tax</option>
-                          <option>Without Tax</option>
-                          <option>Tax Exempt</option>
-                        </select>
-                        <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Totals & Taxes Section */}
-                  <div className="border-t pt-4">
-                    <h3 className="text-sm font-medium text-gray-700 mb-4">Totals & Taxes</h3>
-
-                    {/* Subtotal */}
-                    <div className="flex justify-between items-center mb-3">
-                      <span className="text-sm text-gray-600">Subtotal (Rate x Qty)</span>
-                      <span className="font-medium">₹ {calculateSubtotal().toFixed(2)}</span>
-                    </div>
-
-                    {/* Discount */}
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-sm text-gray-600">Discount</span>
-                      <div className="flex items-center space-x-2">
-                        <input
-                          type="number"
-                          value={discount}
-                          onChange={(e) => setDiscount(e.target.value)}
-                          className="w-16 p-1 border border-gray-300 rounded text-center text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-                        />
-                        <div className="flex bg-gray-100 rounded">
-                          <button
-                            onClick={() => setDiscountType('₹')}
-                            className={`px-2 py-1 text-xs rounded-l ${discountType === '₹' ? 'bg-orange-200 text-orange-800' : 'text-gray-600'}`}
-                          >
-                            ₹
-                          </button>
-                          <button
-                            onClick={() => setDiscountType('%')}
-                            className={`px-2 py-1 text-xs rounded-r ${discountType === '%' ? 'bg-orange-200 text-orange-800' : 'text-gray-600'}`}
-                          >
-                            %
-                          </button>
-                        </div>
-                        <span className="font-medium w-12 text-right">₹ {calculateDiscount().toFixed(2)}</span>
-                      </div>
-                    </div>
-
-                    {/* Tax */}
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-sm text-gray-600">Tax %</span>
-                      <div className="flex items-center space-x-2">
-                        <div className="relative">
-                          <select
-                            value={taxPercentage}
-                            onChange={(e) => setTaxPercentage(e.target.value)}
-                            className="p-1 border border-gray-300 rounded text-sm appearance-none focus:outline-none focus:ring-1 focus:ring-blue-500 pr-6"
-                          >
-                            <option>None</option>
-                            <option>5%</option>
-                            <option>12%</option>
-                            <option>18%</option>
-                            <option>28%</option>
-                          </select>
-                          <ChevronDown className="absolute right-1 top-1/2 transform -translate-y-1/2 w-3 h-3 text-gray-400" />
-                        </div>
-                        <span className="font-medium w-12 text-right">₹ 0.00</span>
-                      </div>
-                    </div>
-
-                    {/* Total Amount */}
-                    <div className="border-t pt-3">
-                      <div className="flex justify-between items-center">
-                        <span className="font-semibold text-gray-800">Total Amount:</span>
-                        <span className="font-bold text-lg">₹ {calculateTotal().toFixed(2)}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </>
-            }
-          />
-        )}
-
       </div>
     );
   }

@@ -215,7 +215,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
       icon: "error",
     });
   }
-};
+  };
 
   const { t } = useTranslation("transaction");
   const [gridCode, setGridCode] = useState<string>(
@@ -290,13 +290,13 @@ useEffect(() => {
   if (formState.selectedTheme && formState.selectedTheme.isInitial !== true) {
     console.log('Theme selected, triggering countdown');
     setStartCountdown(true);
-    
+
     // Apply the preview theme
-    dispatch(formStateHandleFieldChangeKeysOnly({ 
-      fields: { 
-        userConfig: { ...formState.selectedTheme }, 
+    dispatch(formStateHandleFieldChangeKeysOnly({
+      fields: {
+        userConfig: { ...formState.selectedTheme },
         themeChangeCountdown: 8
-      } 
+      }
     }));
   }
 }, [formState.selectedTheme]);
@@ -304,44 +304,44 @@ useEffect(() => {
 
 // Separate effect for countdown - not dependent on selectedTheme
 useEffect(() => {
-
-  
-
   if (!startCountdown) return;
-  
   console.log('⏰ Starting countdown timer');
   let countdown = 8;
-  
+
   const interval = setInterval(() => {
     countdown -= 1;
     console.log('⏱️ Tick - countdown:', countdown);
-    
-    dispatch(formStateHandleFieldChangeKeysOnly({ 
-      fields: { themeChangeCountdown: countdown } 
+    dispatch(formStateHandleFieldChangeKeysOnly({
+      fields: { themeChangeCountdown: countdown }
     }));
     debugger
+    if(formState.themeChangeCountdown===undefined ){
+      clearInterval(interval);
+      setStartCountdown(false);
+      return
+    }
+
     if (countdown <= 0) {
-      dispatch(formStateHandleFieldChangeKeysOnly({ 
-        fields: { 
-          userConfig: { ...formState.currentTheme }, 
-          selectedTheme: formState.currentTheme, 
+      dispatch(formStateHandleFieldChangeKeysOnly({
+        fields: {
+          userConfig: { ...formState.currentTheme },
+          selectedTheme: formState.currentTheme,
           themeChangeCountdown: 0
-        } 
+        }
       }));
+
       console.log('🛑 Countdown complete');
       clearInterval(interval);
       setStartCountdown(false);
-      
       // Revert to original theme
-      
     }
   }, 1000);
-  
+
   return () => {
     console.log('Cleanup countdown timer');
     clearInterval(interval);
   };
-}, [startCountdown, formState.currentTheme, formState.userConfig?.themeName]);
+}, [startCountdown, formState.currentTheme, formState.userConfig?.themeName,formState.themeChangeCountdown]);
 
 // Add this to monitor when selectedTheme changes
 useEffect(() => {
@@ -602,6 +602,9 @@ useEffect(() => {
   );
   const { hasRight } = useUserRights();
   const gridHeight = useMemo(() => {
+    if(deviceInfo?.isMobile) {
+      return window.innerHeight - 330
+    }
     let height;
     if (
       (formState.transactionLoading && _st.footerPosition === "right") ||
@@ -638,18 +641,18 @@ useEffect(() => {
   }, [financialYearID]);
 
   useEffect(() => {
-    debugger;
+          debugger;
    if(formState.isInitialLedger != true) {
     loadLedgerData(undefined, dispatch);
    } else{
-    dispatch(
-      formStateHandleFieldChange({
-        fields: {
+          dispatch(
+            formStateHandleFieldChange({
+              fields: {
           isInitialLedger: false
-        },
-      })
-    );
-   }
+              },
+            })
+          );
+        }
   }, [formState.transaction.master.ledgerID]);
 
   useEffect(() => {
@@ -1433,18 +1436,18 @@ useEffect(() => {
   if (window.history.length <= 1) {
     // No history to go back to, attempt to close the tab
     window.close();
-    
+
     // If window.close() doesn't work (common in modern browsers),
     // you can try this alternative approach
     window.open('', '_self', '');
     window.close();
-    
+
     // Or as a last resort, redirect to a blank page
     // window.location.href = 'about:blank';
   } else {
     window.history.back();
   }
-};
+  };
   const [isPopupVisible, setIsPopupVisible] = useState(false);
 
   const popupRef = useRef<HTMLDivElement | null>(null);
@@ -1613,7 +1616,7 @@ useEffect(() => {
                   />
                 </div>
               </div>
-            </div>
+              </div>
 
             {/* header starts here */}
             <TransactionHeader
@@ -1776,34 +1779,51 @@ useEffect(() => {
 
             {/* Main Content */}
             <div className="flex flex-col w-full h-full mt-12 overflow-y-auto pb-[43px]">
-              <Header
-                formState={formState}
-                dispatch={dispatch}
-                // handleKeyDown={handleKeyDown} // Replace with your actual keydown handler
-                t={t} // Replace with your translation function
-                loadTemporaryRows={loadTemporaryRows}
-                deleteTransVoucher={deleteTransVoucher}
-                handleRefresh={handleRefresh}
-                createNewVoucher={createNewVoucher}
-                handleEdit={handleEdit}
-                printVoucher={printVoucher}
-                handleClearControls={handleClearControls}
-                handleHistoryClick={handleHistoryClick}
-                setIsHistorySidebarOpen={setIsHistorySidebarOpen}
-                transactionType={formState.transactionType} // Replace with your actual transaction type
-                voucherType={formState.transaction.master.voucherType} // Replace with your actual voucher type
-                userSession={userSession} // Replace with your actual user session object
-                unlockVoucher={unlockVoucher}
-                setShowValidation={setShowValidation}
-                showValidation={showValidation}
-                selectTemplates={selectTemplates}
-                goToPreviousPage={goToPreviousPage}
-                isHistorySidebarOpen={isHistorySidebarOpen}
-                setIsPrintModalOpen={setIsPrintModalOpen}
-                onProcessSelected={onProcessSelected}
-                downloadImportTemplateHeadersOnly={downloadImportTemplateHeadersOnly}
-                importFromExcel= {importFromExcel}
-              />
+              <div className="py-0">
+              <div
+                className="w-full max-w-full mx-0"
+                style={{
+                  position: "fixed",
+                  top: "47px",
+                  left: 0,
+                  right: 0,
+                  padding: 0,
+                  zIndex: 40,
+                }}
+              >
+                {formState.isEdit}
+                <div className="flex items-center p-0 border-b dark:border-dark-border border-gray-100 dark:bg-dark-bg bg-[#f4f4f5]">
+                  <Header
+                    formState={formState}
+                    dispatch={dispatch}
+                    // handleKeyDown={handleKeyDown} // Replace with your actual keydown handler
+                    t={t} // Replace with your translation function
+                    loadTemporaryRows={loadTemporaryRows}
+                    deleteTransVoucher={deleteTransVoucher}
+                    handleRefresh={handleRefresh}
+                    createNewVoucher={createNewVoucher}
+                    handleEdit={handleEdit}
+                    printVoucher={printVoucher}
+                    handleClearControls={handleClearControls}
+                    handleHistoryClick={handleHistoryClick}
+                    setIsHistorySidebarOpen={setIsHistorySidebarOpen}
+                    transactionType={formState.transactionType} // Replace with your actual transaction type
+                    voucherType={formState.transaction.master.voucherType} // Replace with your actual voucher type
+                    userSession={userSession} // Replace with your actual user session object
+                    unlockVoucher={unlockVoucher}
+                    setShowValidation={setShowValidation}
+                    showValidation={showValidation}
+                    selectTemplates={selectTemplates}
+                    goToPreviousPage={goToPreviousPage}
+                    isHistorySidebarOpen={isHistorySidebarOpen}
+                    setIsPrintModalOpen={setIsPrintModalOpen}
+                    onProcessSelected={onProcessSelected}
+                    downloadImportTemplateHeadersOnly={downloadImportTemplateHeadersOnly}
+                    importFromExcel= {importFromExcel}
+                  />
+                </div>
+              </div>
+              </div>
 
               {/* Voucher Info */}
               <div className="flex items-center justify-between gap-2 bg-white px-4 py-2 shadow-md text-gray-600 h-[70px]">

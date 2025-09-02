@@ -29,11 +29,11 @@ import { getFilteredReports } from "../../ERPComponents/reports/reports-list-fil
 
 interface SidebarProps {
   type:
-    | "erp"
-    | "account-settings"
-    | "workspace-settings"
-    | "settings"
-    | "reports";
+  | "erp"
+  | "account-settings"
+  | "workspace-settings"
+  | "settings"
+  | "reports";
 }
 
 const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
@@ -42,8 +42,8 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
   let applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
-  
-    const { hasRight} = useUserRights();
+
+  const { hasRight } = useUserRights();
   const { getAllowedFormCodes } = useUserRights();
   const [menuitems, setMenuitems] = useState<any>(() => {
     switch (type) {
@@ -132,7 +132,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
               (route) =>
                 route.title === item.title &&
                 route.countries.find((x) => x == userSession.countryId) !=
-                  undefined
+                undefined
             )
           ) {
             item.visible = false;
@@ -140,9 +140,9 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
         })
       );
       setMenuitems(st);
-    } else if (type == "reports") {      
+    } else if (type == "reports") {
       let st = menuitems;
-      setMenuitems(getFilteredReports(st, clientSession,applicationSettings, hasRight));
+      setMenuitems(getFilteredReports(st, clientSession, applicationSettings, hasRight));
     } else if (type == "erp") {
       let st: [] = [];
 
@@ -152,53 +152,53 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
         menuitems.flatMap((item: any) =>
           item.children
             ? item.children
-                .filter((child: any) => child.rights !== undefined)
-                .map((child: any) => child.rights)
+              .filter((child: any) => child.rights !== undefined)
+              .map((child: any) => child.rights)
             : []
         ),
         UserAction.Show
       );
-const sd = st
-  .map((x: any) => {
-    const filteredChildren = x.children
-      ?.map((item: any) => {
-        item.visible = true;
-        item.disabled = false;
+      const sd = st
+        .map((x: any) => {
+          const filteredChildren = x.children
+            ?.map((item: any) => {
+              item.visible = true;
+              item.disabled = false;
 
-        if (!allowedFormCodes.includes(item.rights)) {
-          item.visible = false;
-        }
+              if (!allowedFormCodes.includes(item.rights)) {
+                item.visible = false;
+              }
 
-        const isExcluded = exludedRoutes.find(
-              (route) =>
-                route.title === item.title &&
-                route.countries.find((x) => x == userSession.countryId) !=
+              const isExcluded = exludedRoutes.find(
+                (route) =>
+                  route.title === item.title &&
+                  route.countries.find((x) => x == userSession.countryId) !=
                   undefined
-            )
+              )
 
-        if (isExcluded) {
-          item.visible = false;
-        }
+              if (isExcluded) {
+                item.visible = false;
+              }
 
-        return item; // <-- Make sure this is not on a new line after `return`
-      })
-      ?.filter((child: any) => child.visible); // Only keep visible ones
+              return item; // <-- Make sure this is not on a new line after `return`
+            })
+            ?.filter((child: any) => child.visible); // Only keep visible ones
 
-    if (filteredChildren && filteredChildren.length > 0) {
-      return {
-        ...x,
-        children: filteredChildren,
-      };
-    }
-    if (!filteredChildren && x.type == "link") {
-      return {
-        ...x
-      };
-    }
+          if (filteredChildren && filteredChildren.length > 0) {
+            return {
+              ...x,
+              children: filteredChildren,
+            };
+          }
+          if (!filteredChildren && x.type == "link") {
+            return {
+              ...x
+            };
+          }
 
-    return null;
-  })
-  .filter((x) => x !== null);
+          return null;
+        })
+        .filter((x) => x !== null);
       // const sd = st.map((x: any) =>
       //   x.children?.map((item: any) => {
       //     item.visible = true;
@@ -222,7 +222,7 @@ const sd = st
       // );
       setMenuitems(sd);
     }
-  }, [userSession.countryId,userSession.userTypeCode, MENUITEMS, SettingsMenuItems]);
+  }, [userSession.countryId, userSession.userTypeCode, MENUITEMS, SettingsMenuItems]);
   const { t } = useTranslation();
   const [companyLogo, setCompanyLogo] = useState<string>("");
   const { appState, updateAppState } = useAppState();
@@ -315,7 +315,7 @@ const sd = st
     typeof window !== "undefined" ? [window.innerWidth] : [];
 
   const menuResizeFn = () => {
-    
+
     if (typeof window === "undefined") {
       // Handle the case where window is not available (server-side rendering)
       return;
@@ -329,7 +329,7 @@ const sd = st
     const theme = store.getState();
     const currentWidth = WindowPreSize[WindowPreSize.length - 1];
     const prevWidth = WindowPreSize[WindowPreSize.length - 2];
-    
+
 
     if (WindowPreSize.length > 1) {
       if (currentWidth < 992 && prevWidth >= 992) {
@@ -591,26 +591,26 @@ const sd = st
     setMenuitems((arr: any) => Array.isArray(arr) ? [...arr] : []);
   }
   function getParentObject(obj: any, childObject: any): any {
-  for (const key in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, key)) {
-      if (
-        typeof obj[key] === "object" &&
-        obj[key] !== null &&
-        JSON.stringify(obj[key]) === JSON.stringify(childObject)
-      ) {
-        return obj;
-      }
+    for (const key in obj) {
+      if (Object.prototype.hasOwnProperty.call(obj, key)) {
+        if (
+          typeof obj[key] === "object" &&
+          obj[key] !== null &&
+          JSON.stringify(obj[key]) === JSON.stringify(childObject)
+        ) {
+          return obj;
+        }
 
-      if (typeof obj[key] === "object" && obj[key] !== null) {
-        const parentObject = getParentObject(obj[key], childObject);
-        if (parentObject !== null) {
-          return parentObject;
+        if (typeof obj[key] === "object" && obj[key] !== null) {
+          const parentObject = getParentObject(obj[key], childObject);
+          if (parentObject !== null) {
+            return parentObject;
+          }
         }
       }
     }
+    return null;
   }
-  return null;
-}
 
   function setMenuAncestorsActive(targetObject: any) {
     const parent = getParentObject(menuitems, targetObject);
@@ -773,10 +773,10 @@ const sd = st
             if (theme.dir == "rtl") {
               if (
                 siblingULRect.left - siblingULRect.width - outterUlWidth + 150 <
-                  0 &&
+                0 &&
                 outterUlWidth < window.innerWidth &&
                 outterUlWidth + siblingULRect.width + siblingULRect.width <
-                  window.innerWidth
+                window.innerWidth
               ) {
                 targetObject.dirchange = true;
               } else {
@@ -785,10 +785,10 @@ const sd = st
             } else {
               if (
                 outterUlWidth + siblingULRect.right + siblingULRect.width + 50 >
-                  window.innerWidth &&
+                window.innerWidth &&
                 siblingULRect.right >= 0 &&
                 outterUlWidth + siblingULRect.width + siblingULRect.width <
-                  window.innerWidth
+                window.innerWidth
               ) {
                 targetObject.dirchange = true;
               } else {
@@ -928,20 +928,17 @@ const sd = st
                 {menuitems.map((levelone: any) => (
                   <Fragment key={Math.random()}>
                     <li
-                      className={`${
-                        levelone.menutitle
+                      className={`${levelone.menutitle
                           ? "slide__category"
                           : levelone.menutitle_lg
-                          ? "slide__category slide__category__lg"
+                            ? "slide__category slide__category__lg"
+                            : ""
+                        } ${levelone.hasTopBorder === true
+                          ? "border-t-[1px] border-solid border-t-white/10 pt-2"
                           : ""
-                      } ${
-                        levelone.hasTopBorder === true
-                          ? "border-t border-t-[1px] border-solid border-t-white/10 pt-2"
-                          : ""
-                      } ${levelone.type === "link" ? "slide" : ""}
-                         ${levelone.type === "sub" ? "slide has-sub" : ""} ${
-                        levelone?.active ? "open" : ""
-                      } ${levelone?.selected ? "active" : ""}`}
+                        } ${levelone.type === "link" ? "slide" : ""}
+                         ${levelone.type === "sub" ? "slide has-sub" : ""} ${levelone?.active ? "open" : ""
+                        } ${levelone?.selected ? "active" : ""}`}
                     >
                       {levelone.menutitle ? (
                         <span className="category-name flex">
@@ -978,9 +975,8 @@ const sd = st
                       {levelone.type === "link" ? (
                         <Link
                           to={levelone.path}
-                          className={`side-menu__item ${
-                            levelone.selected ? "active" : ""
-                          }`}
+                          className={`side-menu__item ${levelone.selected ? "active" : ""
+                            }`}
                         >
                           {levelone.icon}
                           <span className="side-menu__label">

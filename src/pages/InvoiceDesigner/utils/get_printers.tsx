@@ -18,10 +18,10 @@ import ERPToast from "../../../components/ERPComponents/erp-toast"
 import ERPFormButtons from "../../../components/ERPComponents/erp-form-buttons";
 import { useAppDispatch, useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { toggleSelectPrinterPopup } from "../../../redux/slices/popup-reducer";
-import { handleDirectPrint } from "../../../utilities/printUtil";
 import useCurrentBranch from "../../../utilities/hooks/use-current-branch";
 import { RootState } from "../../../redux/store";
 import { useTranslation } from "react-i18next";
+import { useDirectPrint } from "../../../utilities/hooks/use-direct-print";
 
 interface PrinterInfo {
   name: string
@@ -50,6 +50,7 @@ export enum InstallationStatus {
 
 export const AccessPrinterList = ({ templateData, t, handlePagePropsChange,restInRoot,data,formState}: usePrinterProps) => {
   const [printers, setPrinters] = useState<PrinterInfo[]>([])
+     const { directPrint } = useDirectPrint();
   const [onChangePrinter, setOnChangePrinter] = useState<string>("");
   const [jspmStatus, setJspmStatus] = useState<WSStatus | null>(null)
   const [installationStatus, setInstallationStatus] = useState<InstallationStatus>(InstallationStatus.CHECKING)
@@ -64,15 +65,11 @@ const handlePrinterSet = (  value: any) => {
 
 const handleSubmit =async()=>{
    if (!onChangePrinter) return;
-        await handleDirectPrint({
+        await directPrint({
             template:templateData,
             data,
             DefaultPrinterName:onChangePrinter,
             formState,
-            currentBranch,
-            userSession,
-            dispatch,
-            t
           });
           onClose();
 }

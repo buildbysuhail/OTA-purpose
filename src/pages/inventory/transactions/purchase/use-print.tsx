@@ -47,13 +47,14 @@ import {
   FileSourceType
 } from "jsprintmanager";
 import { toggleSelectPrinterPopup } from "../../../../redux/slices/popup-reducer";
-import { handleDirectPrint } from "../../../../utilities/printUtil";
+import { useDirectPrint } from "../../../../utilities/hooks/use-direct-print";
+
 const api = new APIClient();
 export const usePrint = () => {
   const { t } = useTranslation('system');
-  const currentBranch = useCurrentBranch();
+    const { directPrint } = useDirectPrint();
   const dispatch = useDispatch();
-  const userSession = useAppSelector((state: RootState) => state.UserSession);
+
   const formState = useAppSelector(
     (state: RootState) => state.InventoryTransaction
   );
@@ -351,14 +352,10 @@ export const usePrint = () => {
           formStateHandleFieldChange({ fields: {barcodeData:barcodeData,barcodePrevOpen:true }})
         );
       }else{
-             await handleDirectPrint({
+             await directPrint({
               template,
               data:barcodeData,
               formState,
-              currentBranch,
-              userSession,
-              dispatch,
-              t
              });
       };
 

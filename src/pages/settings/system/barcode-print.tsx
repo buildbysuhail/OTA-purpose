@@ -19,9 +19,7 @@ import { APIClient } from "../../../helpers/api-client";
 import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
 import { customJsonParse } from "../../../utilities/jsonConverter";
 import { generateBarcodePages } from "../../../utilities/barcode";
-import { handleDirectPrint } from "../../../utilities/printUtil";
-import useCurrentBranch from "../../../utilities/hooks/use-current-branch";
-import { RootState } from "../../../redux/store";
+import { useDirectPrint } from "../../../utilities/hooks/use-direct-print";
 
 interface BarcodeFormData {
   formBcode: number;
@@ -135,8 +133,7 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
   const { t } = useTranslation("system");
   const dispatch = useAppDispatch();
   const rootState = useRootState();
-  const currentBranch = useCurrentBranch();
-  const userSession = useAppSelector((state: RootState) => state.UserSession);
+  const { directPrint } = useDirectPrint();
   const [barcodeFormLoading, setBarcodeFormLoading] = useState<boolean>(false);
   const [voucherFormLoading, setVoucherFormLoading] = useState<boolean>(false);
   const [standardBarcodeLoading, setStandardBarcodeLoading] = useState<boolean>(false);
@@ -281,15 +278,11 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
       // Direct print mode: Silent print without browser dialog
       setShowPrint(false);
  
-     handleDirectPrint({
+     directPrint({
         template,
         data,
         page: pages,
         DefaultPrinterName: template?.propertiesState?.printer,
-        currentBranch,
-        userSession,
-        dispatch,
-        t
       });
 
     }
@@ -307,7 +300,7 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
       }));
     }, 1000);
   }
-  }, [barcodeDesc?.data,barcodeForm.data?.isFormTo, template,handleDirectPrint]);
+  }, [barcodeDesc?.data,barcodeForm.data?.isFormTo, template]);
 
 
   // Define columns for the Counters grid

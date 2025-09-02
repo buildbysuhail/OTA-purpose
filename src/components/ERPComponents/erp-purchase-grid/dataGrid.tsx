@@ -264,7 +264,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
       defaultBgColor: editCellComboBox?.defaultBgColor,
       bold: editCellComboBox?.bold,
     };
-    const {round} = useNumberFormat()
+    const { round } = useNumberFormat()
     const [localValue, setLocalValue] = useState<string>(
       productId > 0 ? value?.toString() : ""
     );
@@ -301,8 +301,19 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
       return true;
     };
     const debounceCellChange = useDebounce(
-      (value: string, key: keyof TransactionDetail, index: number) => {
-        onChange && onChange(value, key, rowIndex);
+      (value: any, key: keyof TransactionDetail, index: number, decimalPoint?: number) => {
+        let final = value
+        if (decimalPoint) {
+          console.log(decimalPoint);
+          
+          final =
+            column.decimalPoint && value !== "" ? (() => {
+              const num = parseFloat(value as any);
+              if (isNaN(num)) return ""; // return empty if not a valid number
+              return round(num, column.decimalPoint);
+            })() : value;
+        }
+        onChange && onChange(final, key, rowIndex);
       },
       300
     );
@@ -329,11 +340,15 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
         return;
       }
       setLocalValue(inputValue);
-      const formated  = column.decimalPoint ? round(parseFloat(inputValue), column.decimalPoint) : inputValue
+      console.log('inputValue');
+      
+console.log(inputValue);
+
       debounceCellChange(
-        formated as any,
+        inputValue as any,
         column.dataField as keyof TransactionDetail,
-        rowIndex
+        rowIndex,
+        column.decimalPoint
       );
     };
 

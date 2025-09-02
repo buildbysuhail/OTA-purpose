@@ -141,7 +141,7 @@ export const usePrint = () => {
     if (formState.printPreview) {
       setIsPrintModalOpen(true);
     } else {
-      await handleDirectPrint(template);
+      // await handleDirectPrint(template);
     }
   };
 
@@ -351,11 +351,15 @@ export const usePrint = () => {
           formStateHandleFieldChange({ fields: {barcodeData:barcodeData,barcodePrevOpen:true }})
         );
       }else{
-            //  await handleDirectPrint({
-            //    template,
-            //    data:barcodeData,
-            //    formState
-            //  });
+             await handleDirectPrint({
+              template,
+              data:barcodeData,
+              formState,
+              currentBranch,
+              userSession,
+              dispatch,
+              t
+             });
       };
 
        dispatch(
@@ -380,6 +384,5 @@ export const usePrint = () => {
   return {
     printVoucher,
     printBarcode,
-
   };
 };

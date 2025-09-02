@@ -4,7 +4,7 @@ import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import { toggleCounterPopup } from "../../../redux/slices/popup-reducer";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
-import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
+import { useAppDispatch, useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { useTranslation } from "react-i18next";
 import ERPInput from "../../../components/ERPComponents/erp-input";
@@ -20,6 +20,8 @@ import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
 import { customJsonParse } from "../../../utilities/jsonConverter";
 import { generateBarcodePages } from "../../../utilities/barcode";
 import { handleDirectPrint } from "../../../utilities/printUtil";
+import useCurrentBranch from "../../../utilities/hooks/use-current-branch";
+import { RootState } from "../../../redux/store";
 
 interface BarcodeFormData {
   formBcode: number;
@@ -133,6 +135,8 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
   const { t } = useTranslation("system");
   const dispatch = useAppDispatch();
   const rootState = useRootState();
+  const currentBranch = useCurrentBranch();
+  const userSession = useAppSelector((state: RootState) => state.UserSession);
   const [barcodeFormLoading, setBarcodeFormLoading] = useState<boolean>(false);
   const [voucherFormLoading, setVoucherFormLoading] = useState<boolean>(false);
   const [standardBarcodeLoading, setStandardBarcodeLoading] = useState<boolean>(false);
@@ -159,11 +163,6 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
         let gridHeightWindows =  modalHeight - 490;
         setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
       }, [isMaximized, modalHeight]);
-
-  const handleBarcodeStateChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    const newValue = type === 'checkbox' ? checked : value;
-  };
 
     const columnsPerRow = Number(template?.barcodeState?.labelState?.columnsPerRow) ?? 1;
     
@@ -230,7 +229,7 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
         background_image_footer: res?.payload?.data?.background_image_footer as string | undefined,
         signature_image: res?.payload?.data?.signature_image as string | undefined,
         branchId: res.branchId,
-        content: res.content,
+        // content: res.content,
         isCurrent: res.isCurrent,
         templateGroup: res.templateGroup,
         templateKind: res.templateKind,
@@ -282,12 +281,16 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
       // Direct print mode: Silent print without browser dialog
       setShowPrint(false);
  
-    //  handleDirectPrint({
-    //     template,
-    //     data,
-    //     page: pages,
-    //     DefaultPrinterName: template?.propertiesState?.printer,
-    //   });
+     handleDirectPrint({
+        template,
+        data,
+        page: pages,
+        DefaultPrinterName: template?.propertiesState?.printer,
+        currentBranch,
+        userSession,
+        dispatch,
+        t
+      });
 
     }
   } catch (error) {

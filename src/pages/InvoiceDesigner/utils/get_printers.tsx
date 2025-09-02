@@ -16,9 +16,12 @@ import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox
 import type { PropertiesState } from "../Designer/interfaces"
 import ERPToast from "../../../components/ERPComponents/erp-toast"
 import ERPFormButtons from "../../../components/ERPComponents/erp-form-buttons";
-import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
+import { useAppDispatch, useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { toggleSelectPrinterPopup } from "../../../redux/slices/popup-reducer";
 import { handleDirectPrint } from "../../../utilities/printUtil";
+import useCurrentBranch from "../../../utilities/hooks/use-current-branch";
+import { RootState } from "../../../redux/store";
+import { useTranslation } from "react-i18next";
 
 interface PrinterInfo {
   name: string
@@ -53,19 +56,24 @@ export const AccessPrinterList = ({ templateData, t, handlePagePropsChange,restI
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
    const dispatch = useAppDispatch();
-
+  const currentBranch = useCurrentBranch();
+  const userSession = useAppSelector((state: RootState) => state.UserSession);
 const handlePrinterSet = (  value: any) => {
   setOnChangePrinter(value);
 };
 
 const handleSubmit =async()=>{
    if (!onChangePrinter) return;
-        // await handleDirectPrint({
-        //     template:templateData,
-        //     data,
-        //     DefaultPrinterName:onChangePrinter,
-        //     formState,
-        //   });
+        await handleDirectPrint({
+            template:templateData,
+            data,
+            DefaultPrinterName:onChangePrinter,
+            formState,
+            currentBranch,
+            userSession,
+            dispatch,
+            t
+          });
           onClose();
 }
 

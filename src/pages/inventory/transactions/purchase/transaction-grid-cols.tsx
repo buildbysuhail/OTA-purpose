@@ -18,7 +18,6 @@ export const purchaseGridCol = (
   (
     [
       {
-        decimalPoint: applicationSettings.mainSettings.decimalPoints,
         dataField: "slNo",
         caption: "",
         dataType: "number",
@@ -36,6 +35,7 @@ export const purchaseGridCol = (
       },
       {
         dataField: "mrp",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
         caption: t("mrp"),
         dataType: "number",
         allowEditing: true,

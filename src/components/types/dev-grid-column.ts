@@ -39,6 +39,7 @@ export interface DevGridColumn {
     captionDynamic?: (filter: any) => string;
     groupIndex?:any;
     cssClass?:string;
+    decimalPoint?:number;
     editorOptions?: any;
     validationRules?: any;
     sortOrder?: "asc" | "desc";
@@ -88,11 +89,12 @@ export interface DevGridColumn {
     showInPdf: boolean;
     allowEditing: boolean;
     displayOrder: number;
+    decimalPoint?: number;
     groupIndex?:any
     order?:number
     type?:string
   }
-  export interface GridPreference {
+  export interface  GridPreference {
     font: string;
     fontSize: number;
     bold: boolean;

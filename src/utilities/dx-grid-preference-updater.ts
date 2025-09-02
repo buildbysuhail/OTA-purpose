@@ -56,6 +56,7 @@ export function getDefaultColumnPreference(column: DevGridColumn, index: number)
     showInPdf: column.showInPdf?? false,
     readOnly: column.readOnly ?? false,
     allowEditing: column.allowEditing ?? false,
+    decimalPoint: column.decimalPoint,
     }
   };
 export const getInitialPreference = async(gridId: any, columns: any, api: APIClient) =>{

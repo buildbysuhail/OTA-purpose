@@ -116,7 +116,7 @@ export const useNumberFormat = (): UseNumberFormatResult => {
   }
   function getFormattedValue(val: number, ignoreNullOrZero: boolean = false, decimalPoint: number|undefined = undefined, cuttingPoint: number = 0,
   numberOfZero: number = 0): string {
-    
+    debugger;
     if(cuttingPoint > 0) {
       
     
@@ -129,10 +129,7 @@ export const useNumberFormat = (): UseNumberFormatResult => {
     const _decimalPoint = decimalPoint != undefined ? decimalPoint: applicationSettings.mainSettings?.decimalPoints;
     console.log(`_decimalPoint${_decimalPoint}`);
     
-    let formattedText: string = val?.toLocaleString(undefined, {
-      minimumFractionDigits: _decimalPoint,
-      maximumFractionDigits: _decimalPoint,
-    });
+    let formattedText: string = parseFloat((val??"0").toString())?.toFixed( _decimalPoint);
     if(cuttingPoint > 0) {
        formattedText =  formatDecimal(formattedText, cuttingPoint, numberOfZero);
     }

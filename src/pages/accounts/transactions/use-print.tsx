@@ -18,10 +18,15 @@ import VoucherType from "../../../enums/voucher-types"
 import AdviceTemplate from "../../InvoiceDesigner/DownloadPreview/advice-template"
 import ChequeTemplate from "../../InvoiceDesigner/DownloadPreview/cheque-template"
 import ERPToast from "../../../components/ERPComponents/erp-toast"
+
+import { useTranslation } from "react-i18next"
+import { useDirectPrint } from "../../../utilities/hooks/use-direct-print"
 const api = new APIClient()
 export const useAccPrint = () => {
   const currentBranch = useCurrentBranch()
   const dispatch = useDispatch()
+
+    const { directPrint } = useDirectPrint();
   const userSession = useAppSelector((state: RootState) => state.UserSession)
   const formState = useAppSelector((state: RootState) => state.AccTransaction)
   const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings)
@@ -36,62 +41,62 @@ export const useAccPrint = () => {
 
   const { hasRight } = useUserRights()
   const voucherTypeSet = new Set(Object.values(VoucherType))
-  const adviceTem = ["PARP", "RARP"]
 
-  const handleDirectPrint = async (template: any, transaction?: any) => {
-    let pdfDocument
-    if (adviceTem.includes(template.templateGroup)) {
+
+  // const directPrint = async (template: any, transaction?: any) => {
+  //   let pdfDocument
+  //   if (adviceTem.includes(template.templateGroup)) {
       
-      const data = await api.getAsync(
-        `${Urls.payment_receipt_billwise_advice_for_print}?masterId=${formState.transaction.master.accTransactionMasterID}`,
-      )
-      pdfDocument = (
-        <AdviceTemplate
-          template={template}
-          data={data}
-          currentBranch={currentBranch}
-          userSession={userSession}
-        />
-      )
-    } else if (template.templateGroup == "Cheque") {
-      pdfDocument = <ChequeTemplate template={template} data={transaction} currentBranch={currentBranch} />
-    } else {
-      pdfDocument = renderSelectedTemplate({
-        template: template,
-        data: formState.transaction,
-        currentBranch: currentBranch,
-        userSession: userSession,
-      })
-    }
+  //     const data = await api.getAsync(
+  //       `${Urls.payment_receipt_billwise_advice_for_print}?masterId=${formState.transaction.master.accTransactionMasterID}`,
+  //     )
+  //     pdfDocument = (
+  //       <AdviceTemplate
+  //         template={template}
+  //         data={data}
+  //         currentBranch={currentBranch}
+  //         userSession={userSession}
+  //       />
+  //     )
+  //   } else if (template.templateGroup == "Cheque") {
+  //     pdfDocument = <ChequeTemplate template={template} data={transaction} currentBranch={currentBranch} />
+  //   } else {
+  //     pdfDocument = renderSelectedTemplate({
+  //       template: template,
+  //       data: formState.transaction,
+  //       currentBranch: currentBranch,
+  //       userSession: userSession,
+  //     })
+  //   }
 
-    try {
-      // Create a PDF blob
-      const blob = await pdf(pdfDocument).toBlob()
-      // Create a URL for the blob
-      const pdfUrl = URL.createObjectURL(blob)
+  //   try {
+  //     // Create a PDF blob
+  //     const blob = await pdf(pdfDocument).toBlob()
+  //     // Create a URL for the blob
+  //     const pdfUrl = URL.createObjectURL(blob)
 
-      // Open the PDF in a new tab for printing
-      const printWindow = window.open(pdfUrl)
-      if (!printWindow) {
-        console.error("Failed to open print window. Please check your browser settings.")
-        alert("Failed to open print window. Please allow popups and try again.")
-        return
-      }
-      // Wait for the PDF to load in the new tab
-      printWindow.onload = () => {
-        printWindow.print() // Trigger print
-      }
-      // Log user action
-      logUserAction({
-        action: `User Printed Voucher ${formState.transaction.master.voucherType}:${formState.transaction.master.formType}:${formState.transaction.master.voucherPrefix}${formState.transaction.master.voucherNumber}`,
-        module: "Voucher Print",
-        voucherType: formState.transaction.master.voucherType,
-        voucherNumber: `${formState.transaction.master.voucherPrefix}${formState.transaction.master.voucherNumber}`,
-      })
-    } catch (error) {
-      console.error("Error printing voucher:", error)
-    }
-  }
+  //     // Open the PDF in a new tab for printing
+  //     const printWindow = window.open(pdfUrl)
+  //     if (!printWindow) {
+  //       console.error("Failed to open print window. Please check your browser settings.")
+  //       alert("Failed to open print window. Please allow popups and try again.")
+  //       return
+  //     }
+  //     // Wait for the PDF to load in the new tab
+  //     printWindow.onload = () => {
+  //       printWindow.print() // Trigger print
+  //     }
+  //     // Log user action
+  //     logUserAction({
+  //       action: `User Printed Voucher ${formState.transaction.master.voucherType}:${formState.transaction.master.formType}:${formState.transaction.master.voucherPrefix}${formState.transaction.master.voucherNumber}`,
+  //       module: "Voucher Print",
+  //       voucherType: formState.transaction.master.voucherType,
+  //       voucherNumber: `${formState.transaction.master.voucherPrefix}${formState.transaction.master.voucherNumber}`,
+  //     })
+  //   } catch (error) {
+  //     console.error("Error printing voucher:", error)
+  //   }
+  // }
 
   const fetchDefaultTemplates = async (voucherType: any) => {
     try {
@@ -166,7 +171,7 @@ export const useAccPrint = () => {
     if (formState.userConfig?.printPreview) {
       dispatch(accFormStateHandleFieldChange({ fields: { isPrintModalOpen: true } }))
     } else {
-      await handleDirectPrint(template)
+      await directPrint({template,formState})
     }
   }
 
@@ -183,7 +188,7 @@ export const useAccPrint = () => {
       ERPToast.showWith("Please Set Template For Print", "warning");
       return
     }
-    await handleDirectPrint(template)
+    await directPrint({template,formState})
   }
 
   const printCheque = async (voucherType?: any, voucher?: AccTransactionFormState) => {
@@ -201,12 +206,16 @@ export const useAccPrint = () => {
       // Get the template
       const template = await getOrFetchTemplate(voucherTypes, voucher)
 
-      // Pass all cheque details at once to handleDirectPrint
+      // Pass all cheque details at once to directPrint
       if (template?.id == 0) {
         ERPToast.showWith("Please Set Template For Print", "warning");
         return
       }
-      await handleDirectPrint(template, chequeDetails)
+      await directPrint({
+            template,
+            data: chequeDetails,
+          });
+
     }
   }
 

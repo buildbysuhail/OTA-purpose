@@ -289,12 +289,19 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
       setLocalValue(value?.toString());
     }, [value]);
 
-    const validateNumberInput = (value: string) => {
+    const validateNumberInput = (value: string, _blockUnitOnDecimalPoint: boolean) => {
+      
       if (value === "") return true;
       const parts = value.split(".");
       if (parts.length > 2) return false;
+      if(parts.length == 2){
+        debugger
+      }
       if (parts[0] && !/^-?\d*$/.test(parts[0])) return false;
-      if (blockUnitOnDecimalPoint && parts.length === 2) {
+      if (parts.length === 2) {
+        if(_blockUnitOnDecimalPoint) {
+          return false
+        }
         if (parts[1].length > decimalLimit) return false;
         if (!/^\d*$/.test(parts[1])) return false;
       }
@@ -335,7 +342,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
           e.currentTarget.value = inputValue;
         }
       }
-      if (column.dataType === "number" && !validateNumberInput(inputValue)) {
+      if (column.dataType === "number" && !validateNumberInput(inputValue , column.dataField == "qty")) {
         e.currentTarget.value = localValue;
         return;
       }
@@ -2239,7 +2246,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                       searchByCodeAndName={formState.userConfig?.enableItemCodeSearchInNameColumn}
                       advancedProductSearching={false}
                       transactionType={transactionType ?? formState.transactionType}
-                      blockUnitOnDecimalPoint={false}
+                      blockUnitOnDecimalPoint={applicationState.inventorySettings.blockUnitOnDecimalPoint}
                       focusCell={focusCell}
                       nextCellFind={nextCellFind}
                       currentCell={currentCell}
@@ -2279,7 +2286,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                   const final =
                     column.dataType === "number" && value !== ""
                       ? (() => {
-                        debugger;
+                        
                         const num = parseFloat(value as any);
                         console.log("Raw value:", value);
                         console.log("Parsed num:", num);

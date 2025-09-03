@@ -11,7 +11,6 @@ export interface GrandTotalProps {
 }
 
 const BillDiscountLabel: React.FC<GrandTotalProps> = ({ formState, t }) => {
-
   const { getFormattedValue } = useNumberFormat();
   return (
     // <ERPLabel

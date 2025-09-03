@@ -6,12 +6,7 @@ interface VatAmountLabelProps extends VoucherElementProps {
   taxData: any[];
 }
 
-const VatAmountLabel: React.FC<VatAmountLabelProps> = ({
-  formState,
-  t,
-  taxData,
-}) => {
-
+const VatAmountLabel: React.FC<VatAmountLabelProps> = ({ formState, t, taxData, }) => {
   const { getFormattedValue } = useNumberFormat();
   return (
     // <ERPLabel

@@ -10,13 +10,7 @@ interface NetAmountInputProps extends VoucherElementProps {
   dispatch: any;
 }
 
-const NetAmountInput: React.FC<NetAmountInputProps> = ({
-  formState,
-  dispatch,
-  t,
-  handleKeyDown,
-}) => {
-
+const NetAmountInput: React.FC<NetAmountInputProps> = ({ formState, dispatch, t, handleKeyDown, }) => {
   const { getFormattedValue } = useNumberFormat();
   return (
     // <ERPInput

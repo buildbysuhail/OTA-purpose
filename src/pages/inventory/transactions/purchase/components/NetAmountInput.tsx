@@ -16,8 +16,8 @@ const NetAmountInput: React.FC<NetAmountInputProps> = ({
   t,
   handleKeyDown,
 }) => {
-  
-    const { getFormattedValue } = useNumberFormat();
+
+  const { getFormattedValue } = useNumberFormat();
   return (
     // <ERPInput
     //   localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -42,9 +42,10 @@ const NetAmountInput: React.FC<NetAmountInputProps> = ({
     //     formState.formElements.pnlMasters?.disabled
     //   }
     // />
-    <div className="flex justify-between items-center">
-      <span className="text-xs dark:text-dark-text text-gray-600 font-medium">{t(formState.formElements.netAmount.label)}</span>
-      <span className="text-sm font-semibold dark:text-dark-text text-gray-900">{" "}: {getFormattedValue(formState.summary.netValue??0)}</span>
+    <div className="flex items-center">
+      <span className="text-xs dark:text-dark-text text-gray-600 font-medium w-20">{t(formState.formElements.netAmount.label)}</span>
+      <span className="text-xs dark:text-dark-text text-gray-600 mr-2">:</span>
+      <span className="text-sm font-semibold dark:text-dark-text text-gray-900 flex-1 text-right">{getFormattedValue(formState.summary.netValue ?? 0)}</span>
     </div>
   );
 };

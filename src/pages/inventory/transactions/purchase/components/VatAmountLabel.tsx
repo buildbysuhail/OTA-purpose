@@ -11,8 +11,8 @@ const VatAmountLabel: React.FC<VatAmountLabelProps> = ({
   t,
   taxData,
 }) => {
-  
-      const { getFormattedValue } = useNumberFormat();
+
+  const { getFormattedValue } = useNumberFormat();
   return (
     // <ERPLabel
     //   id="vatAmount"
@@ -23,9 +23,10 @@ const VatAmountLabel: React.FC<VatAmountLabelProps> = ({
     //   showDropdown={true}
     //   dropdownData={taxData}
     // />
-    <div className="flex justify-between items-center">
-      <span className="text-xs dark:text-dark-text text-gray-600 font-medium">{t(formState.formElements.totTax.label)}</span>
-      <span className="text-sm font-semibold dark:text-dark-text text-gray-900">: {getFormattedValue(formState.transaction.master.vatAmount??0)}</span>
+    <div className="flex items-center">
+      <span className="text-xs dark:text-dark-text text-gray-600 font-medium w-20">{t(formState.formElements.totTax.label)}</span>
+      <span className="text-xs dark:text-dark-text text-gray-600 mr-2">:</span>
+      <span className="text-sm font-semibold dark:text-dark-text text-gray-900 flex-1 text-right">{getFormattedValue(formState.transaction.master.vatAmount ?? 0)}</span>
     </div>
   );
 };

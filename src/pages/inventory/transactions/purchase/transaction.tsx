@@ -612,9 +612,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
       (!formState.transactionLoading &&
         formState.userConfig?.footerPosition === "right")
     ) {
-      height = window.innerHeight - 260;
+      height = window.innerHeight - 303;
     } else {
-      height = window.innerHeight - 460;
+      height = window.innerHeight - 480;
     }
 
     console.log('Max safe integer:', Number.MAX_SAFE_INTEGER);
@@ -641,10 +641,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
     );
   }, [financialYearID]);
 
-  useEffect(() => {
-    debugger;
+useEffect(() => {
+  (async () => {
     if (formState.isInitialLedger != true) {
-      loadLedgerData(undefined, dispatch);
+      await loadLedgerData(undefined, dispatch);
     } else {
       dispatch(
         formStateHandleFieldChange({
@@ -654,7 +654,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
         })
       );
     }
-  }, [formState.transaction.master.ledgerID]);
+  })();
+}, [formState.transaction.master.ledgerID]);
 
   useEffect(() => {
     const initializeFormElements = async () => {
@@ -709,7 +710,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   : voucherType == "DNS"
                     ? applicationSettings.inventorySettings?.defaultSalesAcc
                     : applicationSettings.inventorySettings?.defaultPurchaseAcc,
-              ledgerID: applicationSettings.accountsSettings.defaultCashAcc,
+              ledgerID: applicationSettings.accountsSettings?.defaultCashAcc,
             },
           },
           formElements: {
@@ -724,6 +725,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
           printOnSave: applicationSettings.accountsSettings?.printAccAftersave,
         };
+        _formState = await loadLedgerData(_formState) as any;
+      _formState.isInitialLedger = true;
       } else {
         _formState = (await loadTransVoucher(
           false,
@@ -740,7 +743,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
       _formState.dataBrands = dataBrands;
 
       _formState.inSearch =
-        applicationSettings.productsSettings.batchCriteria != "NB"
+        applicationSettings.productsSettings?.batchCriteria != "NB"
           ? false
           : true;
       _formState.userRightsFormCode = formCode ?? "";
@@ -758,7 +761,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           ..._formState.transaction,
           master: {
             ..._formState.transaction.master,
-            costCentreID: applicationSettings.accountsSettings.defaultCostCenterID,
+            costCentreID: applicationSettings.accountsSettings?.defaultCostCenterID,
             hasroundOff:
               formType == "Import"
                 ? true
@@ -770,7 +773,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           ...formState.userConfig,
         },
         transactionType: transactionType ?? "",
-        dummyProducts: applicationSettings.productsSettings.loadDummyProducts,
+        dummyProducts: applicationSettings.productsSettings?.loadDummyProducts,
 
         formCode: formCode ?? "",
         title:
@@ -830,7 +833,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               formType == "BT"
                 ? LedgerType.Branch_Recv_Payable
                 : !applicationSettings.inventorySettings
-                  .showAccountReceivableInPurchase
+                  ?.showAccountReceivableInPurchase
                   ? LedgerType.Cash_Bank_Suppliers
                   : LedgerType.Cash_Bank_Suppliers_Customers,
         },
@@ -849,8 +852,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
         }
       } as any;
       _formState.transaction.master.costCentreID =
-        applicationSettings.accountsSettings.defaultCostCenterID;
-      if (applicationSettings.accountsSettings.maintainCostCenter) {
+        applicationSettings.accountsSettings?.defaultCostCenterID;
+      if (applicationSettings.accountsSettings?.maintainCostCenter) {
 
 
         if (_formState.userConfig?.presetCostenterId ?? 0 > 0) {
@@ -870,7 +873,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         } else {
           if (applicationSettings.mainSettings?.maintainBusinessType != BusinessType.Distribution) {
             if (
-              applicationSettings.accountsSettings.allowSalesCounter &&
+              applicationSettings.accountsSettings?.allowSalesCounter &&
               (_formState.userConfig?.counterWiseWarehouseId ?? 0) > 0
             ) {
               _formState.transaction.master.fromWarehouseID =
@@ -900,9 +903,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
         data: formState.transaction.details[0],
         rowIndex: 0,
       }
-      debugger;
-      _formState = await loadLedgerData(_formState) as any;
-      _formState.isInitialLedger = true;
+      // debugger;
+      // _formState = await loadLedgerData(_formState) as any;
+      // _formState.isInitialLedger = true;
       setTransVoucher(_formState, true);
       // if (voucherNo != undefined && voucherNo > 0) {
       //   dispatch(

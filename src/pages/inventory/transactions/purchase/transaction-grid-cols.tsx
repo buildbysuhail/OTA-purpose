@@ -35,7 +35,7 @@ export const purchaseGridCol = (
       },
       {
         dataField: "mrp",
-        decimalPoint: applicationSettings.mainSettings.decimalPoints,
+        decimalPoint: applicationSettings.mainSettings?.decimalPoints,
         caption: t("mrp"),
         dataType: "number",
         allowEditing: true,
@@ -199,6 +199,7 @@ export const purchaseGridCol = (
         readOnly: true,
         width: 100,
         alignment: "right",
+        decimalPoint:4
       },
       {
         dataField: "manualBarcode",
@@ -224,6 +225,7 @@ export const purchaseGridCol = (
         width: 100,
         allowEditing: true,
         alignment: "right",
+        decimalPoint:4
       },
       {
         dataField: "salesPrice",
@@ -560,11 +562,11 @@ export const purchaseGridCol = (
         caption: t("unit_price_fc"),
         dataType: "number",
         allowEditing: true,
-        decimalPoint: applicationSettings.mainSettings.decimalPoints,
         width: 150,
         readOnly: false,
         alignment: "right",
         visible: false,
+        decimalPoint:4
       },
       {
         dataField: "colour",
@@ -644,6 +646,7 @@ export const purchaseGridCol = (
         width: 100,
         readOnly: true,
         alignment: "right",
+        decimalPoint:4
       },
       {
         dataField: "unit2SalesRate",
@@ -1545,8 +1548,7 @@ export const purchaseGridCol = (
       }
       if (
         userSession.countryId == Countries.India &&
-        (voucherType == VoucherType.PurchaseOrder ||
-          VoucherType.PurchaseQuotation) &&
+        (voucherType == VoucherType.PurchaseOrder || VoucherType.PurchaseQuotation) &&
         (mi.dataField?.includes("hsnCode") ||
           mi.dataField?.includes("cgst") ||
           mi.dataField?.includes("cgstPerc") ||
@@ -1557,7 +1559,8 @@ export const purchaseGridCol = (
           mi.dataField?.includes("cessPerc") ||
           mi.dataField?.includes("cessAmt") ||
           mi.dataField?.includes("additionalCessPerc") ||
-          mi.dataField?.includes("additionalCess"))
+          mi.dataField?.includes("additionalCess")
+        )
       ) {
         return {
           ...mi,

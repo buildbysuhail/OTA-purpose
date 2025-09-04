@@ -2643,7 +2643,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             />
 
             {/* Voucher Info */}
-            <div className="flex items-center justify-between gap-2 bg-white px-4 py-2 shadow-md text-gray-600 h-[70px]">
+            <div className="flex items-center justify-between gap-2 bg-white px-4 py-2 shadow-md text-gray-600 h-[100px]">
               <div className="flex items-center gap-2 flex-1">
                 <AccVoucherPrefix
                   ref={voucherNumberRef}

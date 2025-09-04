@@ -503,7 +503,7 @@ export const useTransaction = (
         },
       };
     }
-    
+
     if (usingManualInvNumber) {
       vch.master = {
         ...vch.master,
@@ -936,7 +936,7 @@ export const useTransaction = (
   };
 
   const preSave = async () => {
-    
+
     if (
       formState.isEdit &&
       formState.userConfig?.mnuShowConfirmationForEditOnAccounts == true
@@ -1006,7 +1006,7 @@ export const useTransaction = (
         attachments: attachments,
         invAccTransactions: formState.transaction.invAccTransactions,
       };
-      
+
 params = sanitizeDataAdvanced(params, transactionInitialData)
       try {
         const saveRes =
@@ -1118,17 +1118,17 @@ dispatch(formStateHandleFieldChange({
       employeeID: userSession.employeeId > 0 ? userSession.employeeId : 0,
       voucherNumber: vNo ?? 0,
       inventoryLedgerID:
-        formState.transaction.master.voucherType == VoucherType.PurchaseReturn ? applicationSettings.inventorySettings?.defaultPurchaseReturnAcc 
+        formState.transaction.master.voucherType == VoucherType.PurchaseReturn ? applicationSettings.inventorySettings?.defaultPurchaseReturnAcc
               :  applicationSettings.inventorySettings?.defaultPurchaseAcc,
       ledgerID: applicationSettings.accountsSettings.defaultCashAcc,
       isLocked: false,
       grandTotal: 0,
       grandTotalFc: 0,
-      fromWarehouseID: 
-      formState.userConfig?.presetWarehouseId??0 > 0 ? formState.userConfig?.presetWarehouseId??0 
+      fromWarehouseID:
+      formState.userConfig?.presetWarehouseId??0 > 0 ? formState.userConfig?.presetWarehouseId??0
       : applicationSettings.inventorySettings?.defaultWareHouse,
-      costCentreID: 
-      formState.userConfig?.presetCostenterId??0 > 0 ? formState.userConfig?.presetCostenterId??0 
+      costCentreID:
+      formState.userConfig?.presetCostenterId??0 > 0 ? formState.userConfig?.presetCostenterId??0
       : applicationSettings.accountsSettings.defaultCostCenterID
 
     };
@@ -1152,7 +1152,7 @@ dispatch(formStateHandleFieldChange({
                 transaction: {
                   master: master,
                   details: [],
-                  
+
                 },
               },
               "inv"
@@ -1228,7 +1228,7 @@ dispatch(formStateHandleFieldChange({
     const editableColumns = formState.gridColumns?.filter(
         (col) => col.visible != false && col.dataField != null && col.allowEditing == true && col.readOnly !== true
       );
-      
+
       if(editableColumns && editableColumns.length > 0) {
     const res = focusColumn(0,editableColumns[0].dataField??"")
     setCurrentCell(res, formState.transaction.details[0] as TransactionDetail);
@@ -1264,7 +1264,7 @@ dispatch(formStateHandleFieldChange({
                     );
 
                     if (totalRes) {
-                      
+
                       totalRes.summary = summaryRes.summary;
                       totalRes.transaction = totalRes.transaction ?? {};
                       totalRes.transaction.master = { ...totalRes.transaction.master };
@@ -1277,7 +1277,7 @@ dispatch(formStateHandleFieldChange({
                         },
 
                       // Dispatch the state update
-                      
+
                       dispatch(
                         formStateHandleFieldChangeKeysOnly({
                           fields: totalRes,
@@ -1930,7 +1930,7 @@ dispatch(formStateHandleFieldChange({
                       totalRes.loading = {isLoading: false, text: ''}
 
                       // Dispatch the state update
-                      
+
                       dispatch(
                         formStateHandleFieldChangeKeysOnly({
                           fields: totalRes,
@@ -2054,6 +2054,18 @@ dispatch(formStateHandleFieldChange({
         icon: "warning",
       });
       return;
+    }
+
+    if (formState.transaction.master.isInvoiced === true) {
+      const invoicedConfirmResult = await ERPAlert.show({
+        title: t("warning"),
+        text: t("transaction_already_invoiced_cannot_delete_or_edit_do_you_want_to_proceed"),
+        icon: "warning",
+        confirmButtonText: t("ok"),
+      });
+      if (!invoicedConfirmResult) {
+        return;
+      }
     }
 
     try {
@@ -2855,7 +2867,7 @@ ERPAlert.show({
 
         return result;
       } else if (res?.productId > 0 && forImport != true) {
-        
+
         dispatch(formStateHandleFieldChangeKeysOnly(
             {
               fields:{
@@ -2873,9 +2885,9 @@ ERPAlert.show({
       return result;
     } catch (err) {
       console.log(err);
-      
+
         return result;
-      
+
     }
   };
 
@@ -2887,7 +2899,7 @@ ERPAlert.show({
     columnName: keyof TransactionDetail,
     rowIndex: number
   ) => {
-    
+
     const res = await api.getAsync(
       `${Urls.inv_transaction_base}${transactionType}/ProductBatchUnitPrices/${detail.productBatchID}/${outDetail.unitID}/${actualPriceVisible}`
     );
@@ -2961,7 +2973,7 @@ ERPAlert.show({
                 },
               });
               if (confirm) {
-                
+
       const slNos = formState.transaction.details.filter(x => x.productID > 0 && x.barcodePrinted != true && (x.stickerQty+ x.qty) > 0).map(x => x.slNo);
                 printBarcode(
                   slNos,
@@ -2984,9 +2996,9 @@ ERPAlert.show({
               );
             }
 
-            
+
     } catch (error) {
-      
+
     }
   }
   const handleTextDataKeyDown = async (
@@ -3051,7 +3063,7 @@ ERPAlert.show({
         case "i":
         case "I":
           if (isCtrlPressed) {
-          
+
             dispatch(
               formStateHandleFieldChange({
                        fields: {
@@ -3091,7 +3103,7 @@ ERPAlert.show({
             const unitID = units[nextUnitIndex].value;
             outDetail.unit = unitName;
             outDetail.unitID = unitID;
-            
+
             handleChangeUnit(
               outDetail,
               detail,
@@ -3173,7 +3185,7 @@ ERPAlert.show({
               const res = focusToNextColumn(rowIndex, columnName);
               setCurrentCell(res, data);
             }
-            } 
+            }
             // else if (columnName == "unitPrice") {
             // dispatch(
             //   commonParams.formStateHandleFieldChangeKeysOnly({
@@ -3183,7 +3195,7 @@ ERPAlert.show({
             //   })
             // );
             // return { handled: true };
-          // } 
+          // }
           else if (columnName == "unitPriceFC") {
             if (
               (() => {
@@ -3746,9 +3758,9 @@ ERPAlert.show({
             },
           })
         );
-  
+
         try {
-         
+
           if (!isNullOrUndefinedOrZero(ledgerID)) {
             const [ledgerBalance, ledgerData] = await Promise.all([
               (ledgerID ?? 0) > 0
@@ -3758,7 +3770,7 @@ ERPAlert.show({
                 `${Urls.inv_transaction_base}${transactionType}/LedgerDetails?LedgerId=${ledgerID}`
               ),
             ]);
-            
+
             const ret = {
                 ..._formState,
                 formElements:{
@@ -3776,7 +3788,7 @@ ERPAlert.show({
                 ledgerDataLoading: false,
                 transaction:{
                     ..._formState.transaction,
-                    master: {                      
+                    master: {
                       ..._formState.transaction?.master,
                       tokenNumber: ledgerData?.taxNumber,
                       ledgerID: ledgerID,
@@ -3791,7 +3803,7 @@ ERPAlert.show({
               fields: ret
             }));
             return ret;
-  
+
           } else {
             const ret = {
                   ..._formState,
@@ -3803,7 +3815,7 @@ ERPAlert.show({
                     ..._formState.transaction,
                         master:{
                       ..._formState.transaction?.master,
-      
+
                       tokenNumber: "",
                       ledgerID: null,
                       partyName:  "",
@@ -3834,7 +3846,7 @@ ERPAlert.show({
         );
         return {}
       };
-  
+
   return {
     downloadImportTemplateHeadersOnly,
     importFromExcel,

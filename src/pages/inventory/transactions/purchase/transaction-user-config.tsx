@@ -37,20 +37,11 @@ interface SectionProps {
   icon?: React.ReactNode;
 }
 
-const CollapsibleSection: React.FC<SectionProps> = ({
-  title,
-  children,
-  defaultExpanded = false,
-  icon
-}) => {
+const CollapsibleSection: React.FC<SectionProps> = ({ title, children, defaultExpanded = false, icon }) => {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
-
   return (
     <div className="mb-2 bg-white dark:bg-dark-bg-card rounded-xl shadow-sm border border-gray-200 dark:border-dark-border overflow-hidden">
-      <button
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full p-2 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-dark-hover-bg dark:to-dark-border hover:from-gray-100 hover:to-gray-200 dark:hover:from-dark-border dark:hover:to-gray-700 transition-all duration-300 ease-in-out flex items-center justify-between text-left group"
-      >
+      <button onClick={() => setIsExpanded(!isExpanded)} className="w-full p-2 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-dark-hover-bg dark:to-dark-border hover:from-gray-100 hover:to-gray-200 dark:hover:from-dark-border dark:hover:to-gray-700 transition-all duration-300 ease-in-out flex items-center justify-between text-left group">
         <div className="flex items-center space-x-2">
           <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white dark:bg-dark-bg shadow-sm group-hover:shadow-md transition-shadow duration-300">
             {icon}
@@ -73,10 +64,7 @@ const CollapsibleSection: React.FC<SectionProps> = ({
   );
 };
 
-export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
-  phone = false,
-  transactionType
-}) => {
+export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ phone = false, transactionType }) => {
   const formState = useAppSelector((state: RootState) => state.InventoryTransaction);
   const dispatch = useDispatch();
   const { t } = useTranslation("transaction");
@@ -132,7 +120,6 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
           })
         );
       });
-
     } catch (error) {
       console.error("Error post System Code settings:", error);
     } finally {
@@ -190,10 +177,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
   return (
     <>
       <div className="group relative inline-flex flex-col items-center" title={t("settings")}>
-        <button
-          className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors ${phone ? "p-1.5" : "p-2"} `}
-          onClick={() => setIsOpen(true)}
-        >
+        <button className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors ${phone ? "p-1.5" : "p-2"} `} onClick={() => setIsOpen(true)}>
           <UserCog className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors duration-300" />
         </button>
       </div>
@@ -259,12 +243,8 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
                       />
                       <label
                         htmlFor="footer-position"
-                        className={`block cursor-pointer rounded-full p-1 transition-all duration-300 ease-in-out shadow-inner ${formState.userConfig?.footerPosition === 'right'
-                          ? 'bg-gradient-to-r from-[#3b82f6] to-[#4f46e5] shadow-[#bfdbfe]'
-                          : 'bg-gray-300 dark:bg-gray-600 shadow-gray-200'
-                          }`}>
-                        <div className={`w-6 h-6 bg-white rounded-full shadow-lg transform transition-all duration-300 ease-in-out ${formState.userConfig?.footerPosition === 'right' ? 'translate-x-8 shadow-[#93c5fd]' : 'translate-x-0 shadow-gray-300'
-                          }`}></div>
+                        className={`block cursor-pointer rounded-full p-1 transition-all duration-300 ease-in-out shadow-inner ${formState.userConfig?.footerPosition === 'right' ? 'bg-gradient-to-r from-[#3b82f6] to-[#4f46e5] shadow-[#bfdbfe]' : 'bg-gray-300 dark:bg-gray-600 shadow-gray-200'}`}>
+                        <div className={`w-6 h-6 bg-white rounded-full shadow-lg transform transition-all duration-300 ease-in-out ${formState.userConfig?.footerPosition === 'right' ? 'translate-x-8 shadow-[#93c5fd]' : 'translate-x-0 shadow-gray-300'}`}></div>
                       </label>
                     </div>
                     <span className="text-sm text-gray-700 dark:text-dark-text font-medium">
@@ -276,11 +256,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
             </div>
 
             {/* Main Configuration Options - All checkboxes in one section */}
-            <CollapsibleSection
-              title={t("configuration_options")}
-              defaultExpanded={true}
-              icon={<Settings className="w-4 h-4 text-[#2563eb] dark:text-[#60a5fa]" />}
-            >
+            <CollapsibleSection title={t("configuration_options")} defaultExpanded={true} icon={<Settings className="w-4 h-4 text-[#2563eb] dark:text-[#60a5fa]" />}>
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
                 <div className="space-y-2">
                   <ERPCheckbox
@@ -399,11 +375,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
             </CollapsibleSection>
 
             {/* Cost Center Settings */}
-            <CollapsibleSection
-              title={t("cost_center_settings")}
-              defaultExpanded={false}
-              icon={<Building2 className="w-4 h-4 text-[#7c3aed] dark:text-[#a78bfa]" />}
-            >
+            <CollapsibleSection title={t("cost_center_settings")} defaultExpanded={false} icon={<Building2 className="w-4 h-4 text-[#7c3aed] dark:text-[#a78bfa]" />}>
               <ERPDataCombobox
                 id="presetCostenterId"
                 data={formState.userConfig}
@@ -419,11 +391,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
             </CollapsibleSection>
 
             {/* Layout & Dimensions */}
-            <CollapsibleSection
-              title={t("layout_dimensions")}
-              defaultExpanded={false}
-              icon={<Layout className="w-4 h-4 text-[#0891b2] dark:text-[#22d3ee]" />}
-            >
+            <CollapsibleSection title={t("layout_dimensions")} defaultExpanded={false} icon={<Layout className="w-4 h-4 text-[#0891b2] dark:text-[#22d3ee]" />}>
               <div className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 items-end gap-4">
                   <ERPInput
@@ -505,11 +473,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
             </CollapsibleSection>
 
             {/* Scrollbar Settings */}
-            <CollapsibleSection
-              title={t("scrollbar_settings")}
-              defaultExpanded={false}
-              icon={<Mouse className="w-4 h-4 text-[#8b5cf6] dark:text-[#a78bfa]" />}
-            >
+            <CollapsibleSection title={t("scrollbar_settings")} defaultExpanded={false} icon={<Mouse className="w-4 h-4 text-[#8b5cf6] dark:text-[#a78bfa]" />}>
               <div className="space-y-4">
                 <div className="p-4">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -608,11 +572,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
             </CollapsibleSection>
 
             {/* Color & Theme Settings */}
-            <CollapsibleSection
-              title={t("color_theme_settings")}
-              defaultExpanded={false}
-              icon={<Palette className="w-4 h-4 text-[#db2777] dark:text-[#f472b6]" />}
-            >
+            <CollapsibleSection title={t("color_theme_settings")} defaultExpanded={false} icon={<Palette className="w-4 h-4 text-[#db2777] dark:text-[#f472b6]" />}>
               <div className="space-y-2">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div className="space-y-1">
@@ -719,10 +679,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
               </div>
             </CollapsibleSection>
 
-            <CollapsibleSection
-              title={t("grid_settings")}
-              defaultExpanded={false}
-              icon={<Grid className="w-4 h-4 text-[#059669] dark:text-[#34d399]" />}>
+            <CollapsibleSection title={t("grid_settings")} defaultExpanded={false} icon={<Grid className="w-4 h-4 text-[#059669] dark:text-[#34d399]" />}>
               <div className="space-y-4">
                 {/* Existing grid settings fields */}
                 <div className="flex flex-wrap items-end gap-2">

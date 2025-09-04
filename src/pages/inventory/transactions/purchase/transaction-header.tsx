@@ -39,10 +39,7 @@ interface TransactionHeaderProps {
   formState: TransactionFormState;
   dispatch: any;
   handleKeyDown: any;
-  focusToNextColumn: (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]) => {
-    column: string;
-    rowIndex: number;
-  } | null;
+  focusToNextColumn: (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]) => { column: string; rowIndex: number; } | null;
   loadAndSetTransVoucher: any;
   t: any;
   handleLoadByRefNo: any;
@@ -91,10 +88,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   const isLargeScreen = window.innerWidth >= 1000;
   const headerLeft = isLargeScreen ? sidebarWidth : "0";
   const isRtl = appState.locale.rtl;
-  const headerStyle = {
-    left: isRtl ? "0" : headerLeft,
-    right: isRtl ? headerLeft : "0"
-  };
+  const headerStyle = { left: isRtl ? "0" : headerLeft, right: isRtl ? headerLeft : "0" };
 
   useEffect(() => {
     const handleResize = () => {
@@ -253,15 +247,11 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
               formState={formState}
               dispatch={dispatch}
               t={t}
-              setIsPartyDetailsOpen={() => {
-                setIsPartyDetailsOpen((prev: any) => {
-                  return !prev;
-                });
-              }}
+              setIsPartyDetailsOpen={() => { setIsPartyDetailsOpen((prev: any) => { return !prev; }); }}
             />
             <div>
               <button onClick={handleLedgerDetailsClick} aria-label="View Ledger Details" className="p-2 rounded-md shadow-md dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg hover:bg-gray-300 focus:outline-none transition-colors duration-200">
-                <Search className="w-5 h-5 dark:text-dark-text text-gray-700" />
+                <Search className="w-4 h-4 dark:text-dark-text text-gray-700" />
               </button>
             </div>
 
@@ -283,13 +273,15 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
               t={t}
             />
 
-            <ReferenceNumber
-              formState={formState}
-              dispatch={dispatch}
-              handleLoadByRefNo={handleLoadByRefNo}
-              ref={refNoRef}
-              t={t}
-            />
+            {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+              <ReferenceNumber
+                formState={formState}
+                dispatch={dispatch}
+                handleLoadByRefNo={handleLoadByRefNo}
+                ref={refNoRef}
+                t={t}
+              />
+            )}
 
             <ReferenceDate
               dispatch={dispatch}
@@ -325,16 +317,18 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   handleFieldKeyDown={handleFieldKeyDown}
                 />
 
-                <DebitAccount
-                  dispatch={dispatch}
-                  transactionType={transactionType}
-                  formState={formState}
-                  t={t}
-                  handleKeyDown={handleKeyDown}
-                  handleFieldKeyDown={handleFieldKeyDown}
-                />
+                <div className="mr-3">
+                  <DebitAccount
+                    dispatch={dispatch}
+                    transactionType={transactionType}
+                    formState={formState}
+                    t={t}
+                    handleKeyDown={handleKeyDown}
+                    handleFieldKeyDown={handleFieldKeyDown}
+                  />
+                </div>
 
-                <div className="ml-3">
+                {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
                   <Project
                     dispatch={dispatch}
                     formState={formState}
@@ -342,7 +336,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     handleKeyDown={handleKeyDown}
                     handleFieldKeyDown={handleFieldKeyDown}
                   />
-                </div>
+                )}
 
                 <InvoiceValue
                   dispatch={dispatch}
@@ -358,14 +352,15 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   dispatch={dispatch}
                   t={t}
                 />
-
-                <VatTokenInput
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                  handleFieldKeyDown={handleFieldKeyDown}
-                  handleKeyDown={handleKeyDown}
-                />
+                {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+                  <VatTokenInput
+                    formState={formState}
+                    dispatch={dispatch}
+                    t={t}
+                    handleFieldKeyDown={handleFieldKeyDown}
+                    handleKeyDown={handleKeyDown}
+                  />
+                )}
 
                 {formState.formElements.cbLabelDesign?.visible && (
                   <ERPDataCombobox
@@ -390,14 +385,9 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       labelKey: "name",
                       getListUrl: Urls.data_templates,
                     }}
-                    disabled={
-                      formState.formElements.cbLabelDesign.disabled ||
-                      formState.formElements.pnlMasters?.disabled
-                    }
+                    disabled={formState.formElements.cbLabelDesign.disabled || formState.formElements.pnlMasters?.disabled}
                     disableEnterNavigation
-                    onKeyDown={(e: any) => {
-                      handleKeyDown && handleKeyDown(e, "labelDesign");
-                    }}
+                    onKeyDown={(e: any) => { handleKeyDown && handleKeyDown(e, "labelDesign"); }}
                   />
                 )}
 
@@ -407,16 +397,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   label={t("name")}
                   value={formState.transaction.master.partyName}
                   className="max-w-full"
-                  onChange={(e) =>
-                    dispatch(
-                      formStateMasterHandleFieldChange({
-                        fields: { partyName: e.target?.value },
-                      })
-                    )
-                  }
-                  disabled={
-                    formState.formElements.pnlMasters?.disabled
-                  }
+                  onChange={(e) => dispatch(formStateMasterHandleFieldChange({ fields: { partyName: e.target?.value }, }))}
+                  disabled={formState.formElements.pnlMasters?.disabled}
                 />
 
                 <ERPInput
@@ -425,16 +407,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   label={t("address_1")}
                   value={formState.transaction.master.address1}
                   className="max-w-full"
-                  onChange={(e) =>
-                    dispatch(
-                      formStateMasterHandleFieldChange({
-                        fields: { address1: e.target?.value },
-                      })
-                    )
-                  }
-                  disabled={
-                    formState.formElements.pnlMasters?.disabled
-                  }
+                  onChange={(e) => dispatch(formStateMasterHandleFieldChange({ fields: { address1: e.target?.value }, }))}
+                  disabled={formState.formElements.pnlMasters?.disabled}
                 />
 
                 <ERPInput
@@ -443,16 +417,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   label={t('address_2')}
                   value={formState.transaction.master.address2}
                   className="max-w-full"
-                  onChange={(e) =>
-                    dispatch(
-                      formStateMasterHandleFieldChange({
-                        fields: { address2: e.target?.value },
-                      })
-                    )
-                  }
-                  disabled={
-                    formState.formElements.pnlMasters?.disabled
-                  }
+                  onChange={(e) => dispatch(formStateMasterHandleFieldChange({ fields: { address2: e.target?.value }, }))}
+                  disabled={formState.formElements.pnlMasters?.disabled}
                 />
 
                 {formState.transaction.master.voucherType === VoucherType.PurchaseOrder && userSession.dbIdValue === "572054329920" &&
@@ -478,20 +444,13 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       labelKey: "name",
                       getListUrl: Urls.data_order_status,
                     }}
-                    disabled={
-                      formState.formElements.cbLabelDesign.disabled ||
-                      formState.formElements.pnlMasters?.disabled
-                    }
+                    disabled={formState.formElements.cbLabelDesign.disabled || formState.formElements.pnlMasters?.disabled}
                     disableEnterNavigation
-                    onKeyDown={(e: any) => {
-                      handleKeyDown && handleKeyDown(e, "labelDesign");
-                    }}
+                    onKeyDown={(e: any) => { handleKeyDown && handleKeyDown(e, "labelDesign"); }}
                   />
                 }
 
-                {formState.formElements.orderApprovalStatus.visible && (
-                  formState.formElements.orderApprovalStatus.label
-                )}
+                {formState.formElements.orderApprovalStatus.visible && (formState.formElements.orderApprovalStatus.label)}
 
                 {formState.transaction.master.voucherType === VoucherType.PurchaseOrder &&
                   <div>
@@ -510,13 +469,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     className="text-left !m-0 dark:text-dark-text"
                     label={t(formState.formElements.inSearch.label)}
                     checked={formState.inSearch}
-                    onChange={(e) => {
-                      dispatch(
-                        formStateHandleFieldChange({
-                          fields: { inSearch: e.target.checked },
-                        })
-                      );
-                    }}
+                    onChange={(e) => { dispatch(formStateHandleFieldChange({ fields: { inSearch: e.target.checked }, })); }}
                     disabled={formState.formElements.pnlMasters?.disabled}
                   />
                 )}
@@ -592,17 +545,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       className="min-w-[180px] !m-0 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text"
                       label={t(formState.formElements.cbCurrency.label)}
                       data={formState.transaction.master}
-                      onSelectItem={(e) => {
-                        dispatch(
-                          formStateMasterHandleFieldChange({
-                            fields: {
-                              currencyID: e.value,
-                              exchangeRate: e.name,
-                            },
-                          })
-                        );
-                        handleFieldKeyDown("currencyId", "Enter");
-                      }}
+                      onSelectItem={(e) => { dispatch(formStateMasterHandleFieldChange({ fields: { currencyID: e.value, exchangeRate: e.name, }, })); handleFieldKeyDown("currencyId", "Enter"); }}
                       value={formState.transaction.master.currencyID}
                       field={{
                         id: "currencyId",
@@ -629,21 +572,10 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     value={formState.transaction.master.exchangeRate}
                     disableEnterNavigation={true}
                     fetching={formState.transactionLoading}
-                    onKeyDown={(e) => {
-                      handleKeyDown && handleKeyDown(e, "exchangeRate");
-                    }}
-                    onChange={(e) =>
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: { exchangeRate: e.target?.value },
-                        })
-                      )
-                    }
+                    onKeyDown={(e) => { handleKeyDown && handleKeyDown(e, "exchangeRate"); }}
+                    onChange={(e) => dispatch(formStateMasterHandleFieldChange({ fields: { exchangeRate: e.target?.value }, }))}
                     className="min-w-[180px] !m-0 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text"
-                    disabled={
-                      formState.formElements.exchangeRate?.disabled ||
-                      formState.formElements.pnlMasters?.disabled
-                    }
+                    disabled={formState.formElements.exchangeRate?.disabled || formState.formElements.pnlMasters?.disabled}
                   />
 
                   <ERPButton
@@ -663,7 +595,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
               <button
                 onClick={toggleDropdown}
                 className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-white rounded-b-full border border-l-0 border-r-0 border-t-0 border-gray-300 transition-all duration-500 ${isDropDownOpen ? "dark:bg-dark-hover-bg bg-gray-100" : ""}`}
-                style={{ boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)", transform: isDropDownOpen ? "translateY(0)" : "translateY(0)", transition: "transform 0.5s ease-in-out", }} >
+                style={{  transform: isDropDownOpen ? "translateY(0)" : "translateY(0)", transition: "transform 0.5s ease-in-out", }} >
                 <ChevronDown className={`mx-2 transition-transform duration-500 dark:text-dark-text ${isDropDownOpen ? "transform rotate-180" : hasAnimated ? "" : "animate-[bounce_2s_1]"}`} size={24} />
               </button>
             </div>
@@ -672,10 +604,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
       )}
 
       {deviceInfo?.isMobile && (
-        <div
-          style={{ left: headerLeft }}
-          className="fixed top-[87px] right-0 z-[39] dark:bg-dark-bg bg-white shadow-md transition-all duration-300 w-full"
-        >
+        <div style={{ left: headerLeft }} className="fixed top-[87px] right-0 z-[39] dark:bg-dark-bg bg-white shadow-md transition-all duration-300 w-full">
           {/* Top Section - Always visible */}
           <div className="flex items-end gap-1 border-b dark:border-dark-border border-gray-300 relative px-2 !pb-3">
             <PartyLedger
@@ -686,29 +615,21 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
               formState={formState}
               dispatch={dispatch}
               t={t}
-              setIsPartyDetailsOpen={() => {
-                setIsPartyDetailsOpen((prev: any) => {
-                  return !prev;
-                });
-              }}
+              setIsPartyDetailsOpen={() => { setIsPartyDetailsOpen((prev: any) => { return !prev; }); }}
             />
-
-            <ReferenceNumber
-              formState={formState}
-              dispatch={dispatch}
-              handleLoadByRefNo={handleLoadByRefNo}
-              ref={refNoRef}
-              t={t}
-            />
+            {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+              <ReferenceNumber
+                formState={formState}
+                dispatch={dispatch}
+                handleLoadByRefNo={handleLoadByRefNo}
+                ref={refNoRef}
+                t={t}
+              />
+            )}
           </div>
 
           {/* Collapsible Dropdown Section */}
-          <div
-            ref={dropdownRef}
-            className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropDownOpen ? "max-h-[50vh] overflow-y-auto overflow-x-hidden" : "max-h-0 overflow-hidden"
-              }`}
-            style={{ width: "100%", boxSizing: "border-box" }}
-          >
+          <div ref={dropdownRef} className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropDownOpen ? "max-h-[50vh] overflow-y-auto overflow-x-hidden" : "max-h-0 overflow-hidden"}`} style={{ width: "100%", boxSizing: "border-box" }}>
             <div className="p-2 dark:bg-dark-bg-card bg-white shadow-lg">
               <div className="flex items-end flex-wrap gap-2">
                 <AccVoucherPrefix
@@ -754,13 +675,15 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   handleKeyDown={handleKeyDown}
                   handleFieldKeyDown={handleFieldKeyDown}
                 />
-                <Project
-                  dispatch={dispatch}
-                  formState={formState}
-                  t={t}
-                  handleKeyDown={handleKeyDown}
-                  handleFieldKeyDown={handleFieldKeyDown}
-                />
+                {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+                  <Project
+                    dispatch={dispatch}
+                    formState={formState}
+                    t={t}
+                    handleKeyDown={handleKeyDown}
+                    handleFieldKeyDown={handleFieldKeyDown}
+                  />
+                )}
 
                 {formState.formElements.cbLabelDesign?.visible && (
                   <ERPDataCombobox
@@ -771,30 +694,12 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     className="w-full !m-0 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text"
                     label={t(formState.formElements.cbLabelDesign.label)}
                     data={formState.transaction.master}
-                    onSelectItem={(e) => {
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: {
-                            labelDesignID: e.value,
-                          },
-                        })
-                      );
-                      handleFieldKeyDown("labelDesignID", "Enter");
-                    }}
+                    onSelectItem={(e) => { dispatch(formStateMasterHandleFieldChange({ fields: { labelDesignID: e.value, }, })); handleFieldKeyDown("labelDesignID", "Enter"); }}
                     value={formState.transaction.master.labelDesignID}
-                    field={{
-                      id: "labelDesignID",
-                      valueKey: "id",
-                      labelKey: "name",
-                    }}
-                    disabled={
-                      formState.formElements.cbLabelDesign.disabled ||
-                      formState.formElements.pnlMasters?.disabled
-                    }
+                    field={{ id: "labelDesignID", valueKey: "id", labelKey: "name", }}
+                    disabled={formState.formElements.cbLabelDesign.disabled || formState.formElements.pnlMasters?.disabled}
                     disableEnterNavigation
-                    onKeyDown={(e) => {
-                      handleKeyDown && handleKeyDown(e, "labelDesign");
-                    }}
+                    onKeyDown={(e) => { handleKeyDown && handleKeyDown(e, "labelDesign"); }}
                   />
                 )}
 
@@ -804,16 +709,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   label={t("name")}
                   value={formState.transaction.master.partyName}
                   className="max-w-full"
-                  onChange={(e) =>
-                    dispatch(
-                      formStateMasterHandleFieldChange({
-                        fields: { partyName: e.target?.value },
-                      })
-                    )
-                  }
-                  disabled={
-                    formState.formElements.pnlMasters?.disabled
-                  }
+                  onChange={(e) => dispatch(formStateMasterHandleFieldChange({ fields: { partyName: e.target?.value }, }))}
+                  disabled={formState.formElements.pnlMasters?.disabled}
                 />
 
                 <ERPInput
@@ -822,16 +719,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   label={t("address_1")}
                   value={formState.transaction.master.address1}
                   className="max-w-full"
-                  onChange={(e) =>
-                    dispatch(
-                      formStateMasterHandleFieldChange({
-                        fields: { address1: e.target?.value },
-                      })
-                    )
-                  }
-                  disabled={
-                    formState.formElements.pnlMasters?.disabled
-                  }
+                  onChange={(e) => dispatch(formStateMasterHandleFieldChange({ fields: { address1: e.target?.value }, }))}
+                  disabled={formState.formElements.pnlMasters?.disabled}
                 />
 
                 <ERPInput
@@ -840,16 +729,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   label={t('address_2')}
                   value={formState.transaction.master.address2}
                   className="max-w-full"
-                  onChange={(e) =>
-                    dispatch(
-                      formStateMasterHandleFieldChange({
-                        fields: { address2: e.target?.value },
-                      })
-                    )
-                  }
-                  disabled={
-                    formState.formElements.pnlMasters?.disabled
-                  }
+                  onChange={(e) => dispatch(formStateMasterHandleFieldChange({ fields: { address2: e.target?.value }, }))}
+                  disabled={formState.formElements.pnlMasters?.disabled}
                 />
               </div>
 
@@ -867,13 +748,15 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   dispatch={dispatch}
                   t={t}
                 />
-                <VatTokenInput
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                  handleFieldKeyDown={handleFieldKeyDown}
-                  handleKeyDown={handleKeyDown}
-                />
+                {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+                  <VatTokenInput
+                    formState={formState}
+                    dispatch={dispatch}
+                    t={t}
+                    handleFieldKeyDown={handleFieldKeyDown}
+                    handleKeyDown={handleKeyDown}
+                  />
+                )}
                 {/* Conditional Elements */}
                 {formState.formElements.inSearch?.visible && (
                   <ERPCheckbox
@@ -882,13 +765,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     className="text-left !m-0 dark:text-dark-text"
                     label={t(formState.formElements.inSearch.label)}
                     checked={formState.inSearch}
-                    onChange={(e) => {
-                      dispatch(
-                        formStateHandleFieldChange({
-                          fields: { inSearch: e.target.checked },
-                        })
-                      );
-                    }}
+                    onChange={(e) => { dispatch(formStateHandleFieldChange({ fields: { inSearch: e.target.checked }, })); }}
                     disabled={formState.formElements.pnlMasters?.disabled}
                   />
                 )}
@@ -968,31 +845,12 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                           className="w-full !m-0 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text"
                           label={t(formState.formElements.cbCurrency.label)}
                           data={formState.transaction.master}
-                          onSelectItem={(e) => {
-                            dispatch(
-                              formStateMasterHandleFieldChange({
-                                fields: {
-                                  currencyID: e.value,
-                                },
-                              })
-                            );
-                            handleFieldKeyDown("currencyId", "Enter");
-                          }}
+                          onSelectItem={(e) => { dispatch(formStateMasterHandleFieldChange({ fields: { currencyID: e.value, }, })); handleFieldKeyDown("currencyId", "Enter"); }}
                           value={formState.transaction.master.currencyID}
-                          field={{
-                            id: "currencyId",
-                            valueKey: "id",
-                            labelKey: "code",
-                            getListUrl: Urls.data_currencies,
-                          }}
-                          disabled={
-                            formState.formElements.cbCurrency.disabled ||
-                            formState.formElements.pnlMasters?.disabled
-                          }
+                          field={{ id: "currencyId", valueKey: "id", labelKey: "code", getListUrl: Urls.data_currencies, }}
+                          disabled={formState.formElements.cbCurrency.disabled || formState.formElements.pnlMasters?.disabled}
                           disableEnterNavigation
-                          onKeyDown={(e: any) => {
-                            handleKeyDown && handleKeyDown(e, "currency");
-                          }}
+                          onKeyDown={(e: any) => { handleKeyDown && handleKeyDown(e, "currency"); }}
                         />
                       </div>
                     )
@@ -1006,21 +864,10 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                         value={formState.transaction.master.exchangeRate}
                         fetching={formState.transactionLoading}
                         disableEnterNavigation={true}
-                        onKeyDown={(e) => {
-                          handleKeyDown && handleKeyDown(e, "exchangeRate");
-                        }}
-                        onChange={(e) =>
-                          dispatch(
-                            formStateMasterHandleFieldChange({
-                              fields: { exchangeRate: e.target?.value },
-                            })
-                          )
-                        }
+                        onKeyDown={(e) => { handleKeyDown && handleKeyDown(e, "exchangeRate"); }}
+                        onChange={(e) => dispatch(formStateMasterHandleFieldChange({ fields: { exchangeRate: e.target?.value }, }))}
                         className="w-full !m-0 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text"
-                        disabled={
-                          formState.formElements.exchangeRate?.disabled ||
-                          formState.formElements.pnlMasters?.disabled
-                        }
+                        disabled={formState.formElements.exchangeRate?.disabled || formState.formElements.pnlMasters?.disabled}
                       />
                     </div>
 
@@ -1041,25 +888,13 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
           {/* Chevron Toggle Button */}
           <div className="relative w-full">
             <div className="absolute left-1/2 transform -translate-x-1/2 top-0">
-              <button
-                onClick={toggleDropdown}
-                className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-white rounded-b-lg border border-t-0 border-gray-300 transition-all duration-500 ${isDropDownOpen ? "dark:bg-dark-hover-bg bg-gray-100" : ""
-                  }`}
+              <button onClick={toggleDropdown} className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-white rounded-b-lg border border-t-0 border-gray-300 transition-all duration-500 ${isDropDownOpen ? "dark:bg-dark-hover-bg bg-gray-100" : ""}`}
                 style={{
                   boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
                   transform: isDropDownOpen ? "translateY(0)" : "translateY(0)",
                   transition: "transform 0.5s ease-in-out",
-                }}
-              >
-                <ChevronDown
-                  className={`mx-2 transition-transform duration-500 dark:text-dark-text ${isDropDownOpen
-                    ? "transform rotate-180"
-                    : hasAnimated
-                      ? ""
-                      : "animate-[bounce_2s_1]"
-                    }`}
-                  size={24}
-                />
+                }}>
+                <ChevronDown className={`mx-2 transition-transform duration-500 dark:text-dark-text ${isDropDownOpen ? "transform rotate-180" : hasAnimated ? "" : "animate-[bounce_2s_1]"}`} size={24} />
               </button>
             </div>
           </div>
@@ -1074,7 +909,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
         closeModal={closeLedgerDetailsModal}
         content={<LedgerDetails closeModal={closeLedgerDetailsModal} t={t} />}
       />
-    </div >
+    </div>
   );
 };
 

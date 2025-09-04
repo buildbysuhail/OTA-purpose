@@ -199,6 +199,7 @@ export const purchaseGridCol = (
         readOnly: true,
         width: 100,
         alignment: "right",
+        decimalPoint:4
       },
       {
         dataField: "manualBarcode",
@@ -224,6 +225,7 @@ export const purchaseGridCol = (
         width: 100,
         allowEditing: true,
         alignment: "right",
+        decimalPoint:4
       },
       {
         dataField: "salesPrice",
@@ -560,11 +562,11 @@ export const purchaseGridCol = (
         caption: t("unit_price_fc"),
         dataType: "number",
         allowEditing: true,
-        decimalPoint: applicationSettings.mainSettings.decimalPoints,
         width: 150,
         readOnly: false,
         alignment: "right",
         visible: false,
+        decimalPoint:4
       },
       {
         dataField: "colour",
@@ -644,6 +646,7 @@ export const purchaseGridCol = (
         width: 100,
         readOnly: true,
         alignment: "right",
+        decimalPoint:4
       },
       {
         dataField: "unit2SalesRate",

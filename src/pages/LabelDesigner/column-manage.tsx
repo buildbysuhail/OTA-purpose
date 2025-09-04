@@ -13,7 +13,7 @@ import ERPSlider from "../../components/ERPComponents/erp-slider";
 import { tableColumns } from "../InvoiceDesigner/Designer/interfaces";
 import ERPFormButtons from "../../components/ERPComponents/erp-form-buttons";
 import ERPCheckbox from "../../components/ERPComponents/erp-checkbox";
-import { initialInvMasterForPrint } from "../use-print-type-data";
+import { initialPrintMasterDto } from "../use-print-type-data";
 interface AddColumnsManageProps {
     onSubmit: (columnData: tableColumns) => void;
     onDelete?: () => void;
@@ -77,7 +77,7 @@ interface AddColumnsManageProps {
         onChangeData={(data) =>
             handleFieldChange("field", data.field )
         }
-        options={Object.keys(initialInvMasterForPrint)?.map((field, index) => ({
+        options={Object.keys(initialPrintMasterDto)?.map((field, index) => ({
         value: field,
         label: field,
         }))}

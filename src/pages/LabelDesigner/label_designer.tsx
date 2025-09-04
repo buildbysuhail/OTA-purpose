@@ -102,7 +102,7 @@ import GroupedComboBox from "../../components/ERPComponents/erp-grouped-combo";
 import { AccessPrinterList } from "../InvoiceDesigner/utils/get_printers";
 import { renderBarcode } from "../../utilities/barcode";
 import { ERPScrollArea } from "../../components/ERPComponents/erp-scrollbar";
-import { initialInvMasterForPrint } from "../use-print-type-data";
+import { initialPrintMasterDto } from "../use-print-type-data";
 
 interface SaveDialogProps {
   isOpen: boolean;
@@ -1835,7 +1835,7 @@ padding: `${
                               valueKey: "value",
                               labelKey: "label",
                             }}
-                            options={Object.keys(initialInvMasterForPrint)?.map(
+                            options={Object.keys(initialPrintMasterDto)?.map(
                               (field, index) => ({
                                 value: field,
                                 label: field,
@@ -2733,7 +2733,7 @@ padding: `${
                               valueKey: "value",
                               labelKey: "label",
                             }}
-                            options={Object.keys(initialInvMasterForPrint)?.map((field) => ({
+                            options={Object.keys(initialPrintMasterDto)?.map((field) => ({
                               value: field,
                               label: field,
                             }))}
@@ -3385,7 +3385,7 @@ padding: `${
               borderRadius: "0 4px 4px 0",
             }}
           >
-            <AccessPrinterList templateData={templateData} t={t} handlePagePropsChange={handlePagePropsChange} />
+            <AccessPrinterList templateData={templateData}  handlePagePropsChange={handlePagePropsChange} />
           </Box>
         )}
       </Stack>

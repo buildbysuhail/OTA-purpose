@@ -11,8 +11,7 @@ export interface GrandTotalProps {
 }
 
 const BillDiscountLabel: React.FC<GrandTotalProps> = ({ formState, t }) => {
-  
-      const { getFormattedValue } = useNumberFormat();
+  const { getFormattedValue } = useNumberFormat();
   return (
     // <ERPLabel
     //   id="grandTotal"
@@ -23,9 +22,10 @@ const BillDiscountLabel: React.FC<GrandTotalProps> = ({ formState, t }) => {
     //   boxed
     //   textAlign="right"
     // />
-    <div className="flex justify-between items-center">
-      <span className="text-xs dark:text-dark-text text-gray-600 font-medium">{t(formState.formElements.billDiscount.label)}</span>
-      <span className="text-sm font-semibold dark:text-dark-text text-gray-900">: {getFormattedValue(formState.transaction.master.billDiscount??0)}</span>
+    <div className="flex items-center">
+      <span className="text-xs dark:text-dark-text text-gray-600 font-medium w-20">{t(formState.formElements.billDiscount.label)}</span>
+      <span className="text-xs dark:text-dark-text text-gray-600 mr-2">:</span>
+      <span className="text-sm font-semibold dark:text-dark-text text-gray-900 flex-1 text-right">{getFormattedValue(formState.transaction.master.billDiscount ?? 0)}</span>
     </div>
   );
 };

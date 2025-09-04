@@ -823,9 +823,9 @@ export const purchaseGridCol = (
         decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
       {
-        dataField: "warehouseID",
+        dataField: "warehouse",
         caption: t("warehouse"),
-        dataType: "number",
+        dataType: "string",
         visible: false,
         width: 130,
         readOnly: true,

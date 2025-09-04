@@ -31,7 +31,7 @@ const AccountTransactionsTemplatePreview = ({ data, template, currentBranch, use
         
         {/* Main Content Container */}
         <div
-        className="z-10 relative  flex flex-col flex-grow-1"
+        className="z-10 relative  flex flex-col flex-grow-1 h-full w-full"
           style={{
             // display: "flex",
             // flexDirection: "column",

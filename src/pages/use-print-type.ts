@@ -500,6 +500,9 @@ export interface PrintDetailDto {
   txp_RefDate?: string; // ISO string
 
   detail2Data: InvDetail2ForPrint;
+
+  mannualAutoBarcode: string;
+  groupNameHead: string;
 }
 
 export interface InvDetail2ForPrint {
@@ -574,12 +577,6 @@ export interface MultiPaymentForPrint {
   upi: number;
 }
 
-export interface PrintCustomDetailsFields {
-  
-  mannualBarcode: string;
-  autoBarcode: string;
-  groupNameHead: number;
-}
 export interface PrintCustomFields {
   // Stream & Current
   streamReader: any | null;
@@ -647,7 +644,6 @@ export interface PrintCustomFields {
   printInCopy: number;
 
   // Financial calculations
-  grandTotal: number;
   totReturnAmount: number;
   roundAmt: number;
   adjustmentAmount: number;

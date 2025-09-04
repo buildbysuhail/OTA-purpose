@@ -95,34 +95,31 @@ export const usePrintTrans = ({ voucherType, transactionType }: VoucherType) => 
     return parts[index] || "";
   }, []);
 
-  const getHeaderFooterValue = useCallback((fieldName: string) => {
-
-    const values = userSession.headerFooter;
-    return values[fieldName as keyof HeaderFooter] || "";
-  }, []);
 
 
-  const updateDetailsAndSummary = useCallback(async (printData: PrintResponse) => {
+  const updateDetailsAndSummary = useCallback(async (printData: PrintResponse, fields: (keyof PrintDetailDto)[]) => {
     const dtTransDetails = printData.details;
     if (!dtTransDetails) return;
 
-    // Local accumulators
-    //  
-
-    //   case "groupNameHead":
-    //     v = data.detail.groupName;
-    // let currentRow = 0;
-
-    
-      // case "mannualOrAutoBarcode":
-      //   v = data.detail.mannualBarcode || data.detail.autoBarcode;
-      //   break;
-
-    //currentRow for slNo
-
-    // Process each detail row
     for (let i = 0; i < dtTransDetails.length; i++) {
       const row: PrintDetailDto = dtTransDetails[i];
+
+      if (fields && fields.length > 0) {
+        const customFields = fields.filter(f =>
+          ["groupNameHead", "mannualOrAutoBarcode"].includes(f as string)
+        );
+        for (let j = 0; j < customFields.length; j++) {
+          switch (voucherType) {
+            case "groupNameHead":
+              dtTransDetails[i].groupNameHead = dtTransDetails[i].groupName;
+            case "mannualOrAutoBarcode":
+              dtTransDetails[i].mannualAutoBarcode = dtTransDetails[i].mannualBarcode || dtTransDetails[i].autoBarcode;
+
+          }
+        }
+      }
+
+
       if (!printData.custom.isInvTrans && !printData.custom.isSalesView && !printData.custom.isServiceTrans) {
         printData.custom.pageTotDebit += row.debit ?? 0;
         const amt = (row.debit ?? 0) + (row.credit ?? 0);
@@ -252,9 +249,9 @@ export const usePrintTrans = ({ voucherType, transactionType }: VoucherType) => 
       printData.custom.totalFree += row.free ?? 0;
 
       // MRP calc
-      const mrp = row.mrp??0;
-      const qty = row.quantity??0;
-      const rateWithTax = row.rateWithTax??0;
+      const mrp = row.mrp ?? 0;
+      const qty = row.quantity ?? 0;
+      const rateWithTax = row.rateWithTax ?? 0;
       if (mrp > 0) {
         printData.custom.mrpDifference += (mrp * qty) - (rateWithTax * qty);
         printData.custom.mrpTotal += mrp * qty;
@@ -262,11 +259,11 @@ export const usePrintTrans = ({ voucherType, transactionType }: VoucherType) => 
 
       // currentRow = i + 1;
     }
+    printData.details = dtTransDetails;
 
     if (!printData.custom.isInvTrans && !printData.custom.isSalesView && !printData.custom.isServiceTrans) {
       const debit = printData.master.totalDebit || 0;
       const credit = printData.master.totalCredit || 0;
-      printData.custom.grandTotal = debit > 0 ? debit : credit;
       printData.master.grandTotal = debit > 0 ? debit : credit;
     }
     // Finalize
@@ -433,7 +430,7 @@ export const usePrintTrans = ({ voucherType, transactionType }: VoucherType) => 
             (printData?.master.totalDebit || 0 > 0 ?
               printData?.master.totalDebit || 0 :
               printData?.master.totalCredit || 0) : 0;
-          returnData.custom.grandTotal = grandTotalValue;
+          returnData.master.grandTotal = grandTotalValue;
           returnData.custom.jvTotalDebit = 0;
           returnData.custom.jvTotalCredit = 0;
 
@@ -621,19 +618,20 @@ export const usePrintTrans = ({ voucherType, transactionType }: VoucherType) => 
 
   // Get common values - massive function with 200+ field calculations
   const getCommonValues = useCallback((field:
-    {fieldName: keyof PrintCustomFields, 
-      format: string, 
+    {
+      fieldName: keyof PrintCustomFields,
+      format: string,
       type: "string" | "number" | "date" | "boolean" | "object" | "datetime",
-    fildLength: number
-  }, 
-  data:PrintResponse,) => {
+      fildLength: number
+    },
+    data: PrintResponse,) => {
     let v = "";
     switch (field.fieldName) {
       case "amountInWords":
         v = getAmountInWords(data.master.grandTotal);
         break;
       case "amountInWordsLine2":
-        const ln = field.fildLength??0;
+        const ln = field.fildLength ?? 0;
         v = getAmountInWords(data.master.grandTotal);
         if (v.length > ln) {
           v = v.substring(ln);
@@ -651,24 +649,24 @@ export const usePrintTrans = ({ voucherType, transactionType }: VoucherType) => 
         v = data.custom.transactionBarcode;
         break;
       case "eInvoiceQRCode":
-         v = data.master.eInvoiceData.eInvoiceQRCode;
+        v = data.master.eInvoiceData.eInvoiceQRCode;
         break;
       case "qrcodeKsaEinvoicePhase1":
-         v = getKsaQrCode(data.master.transactionDate, data.master.grandTotal.toFixed(2),data.master.vatAmount.toFixed(2),data.master.companyData);
+        v = getKsaQrCode(data.master.transactionDate, data.master.grandTotal.toFixed(2), data.master.vatAmount.toFixed(2), data.master.companyData);
         break;
       case "qrcodeKsaEinvoice":
       case "qrcodeKsaEinvoiceNotEncrypted":
-        if(data.productionReqId) {
+        if (data.productionReqId) {
           v = data.master.eInvoiceData.iqr
         }
-        if(v="") {
-          v = getKsaQrCode(data.master.transactionDate, data.master.grandTotal.toFixed(2),data.master.vatAmount.toFixed(2),data.master.companyData);
+        if (v = "") {
+          v = getKsaQrCode(data.master.transactionDate, data.master.grandTotal.toFixed(2), data.master.vatAmount.toFixed(2), data.master.companyData);
         }
         break;
       case "qrcodeKsaEinvoicePhase2":
         v = data.master.eInvoiceData.iqr
-        if(v="") {
-          v = getKsaQrCode(data.master.transactionDate, data.master.grandTotal.toFixed(2),data.master.vatAmount.toFixed(2),data.master.companyData);
+        if (v = "") {
+          v = getKsaQrCode(data.master.transactionDate, data.master.grandTotal.toFixed(2), data.master.vatAmount.toFixed(2), data.master.companyData);
         }
         break;
       case "deliveryPhone":
@@ -1617,87 +1615,87 @@ export const usePrintTrans = ({ voucherType, transactionType }: VoucherType) => 
 
     return v;
   }, [
-    
+
   ]);
 }
-  // Format field values based on format specification
-  // const getFormatedValues = useCallback((value, format) => {
-  //   let t = "";
-  //   const ws = " ".repeat(200);
+// Format field values based on format specification
+// const getFormatedValues = useCallback((value, format) => {
+//   let t = "";
+//   const ws = " ".repeat(200);
 
-  //   if (isQRCodeFont(fldFont)) return value;
+//   if (isQRCodeFont(fldFont)) return value;
 
-  //   if (format && format.includes("#") && !format.includes("**")) {
-  //     t = parseFloat(value || 0).toLocaleString(undefined, {
-  //       minimumFractionDigits: format.includes(".") ? 2 : 0,
-  //       maximumFractionDigits: format.includes(".") ? 2 : 0
-  //     });
-  //   } else if (format && format.toUpperCase() === "QTY") {
-  //     t = Math.round(parseFloat(value || 0)).toString();
-  //   } else if (format && format.toUpperCase() === "QTY1") {
-  //     const t1 = parseFloat(value || 0);
-  //     const t2 = Math.round(t1);
-  //     t = t1 !== t2 ? t1.toFixed(1) : t2.toString();
-  //   } else if (format && format.toUpperCase() === "QTY2") {
-  //     const t1 = parseFloat(value || 0);
-  //     const t2 = Math.round(t1);
-  //     t = t1 !== t2 ? t1.toFixed(2) : t2.toString();
-  //   } else if (format && format.toUpperCase() === "QTY3") {
-  //     const t1 = parseFloat(value || 0);
-  //     const t2 = Math.round(t1);
-  //     t = t1 !== t2 ? t1.toFixed(3) : t2.toString();
-  //   } else if (format && format.toUpperCase() === "AR_NUM") {
-  //     t = Math.round(parseFloat(value || 0)).toString();
-  //     t = getArabicNumber(t);
-  //   } else if (format && format.toUpperCase() === "SHRINK") {
-  //     t = value;
-  //   } else if (format && format.toUpperCase() === "AR_DIG2") {
-  //     t = parseFloat(value || 0).toFixed(2);
-  //     t = getArabicNumber(t);
-  //   } else if (format && format.toUpperCase() === "AR_DATE") {
-  //     t = transDate.toLocaleDateString('en-GB');
-  //     t = getArabicDateNumber(t);
-  //   } else if (format && format.toUpperCase() === "AR_DIG3") {
-  //     t = parseFloat(value || 0).toFixed(3);
-  //     t = getArabicNumber(t);
-  //   } else if (format && (format.includes("d") || format.includes("M") || format.includes("y"))) {
-  //     t = new Date(value).toLocaleDateString();
-  //   } else if (format && (format.includes("H") || format.includes("h") || format.includes("m") || format.includes("s"))) {
-  //     t = new Date(value).toLocaleTimeString();
-  //   } else if (format && format.toUpperCase() === "NONE") {
-  //     t = value;
-  //   } else if (format && format.toUpperCase() === "BIZ") {
-  //     const num = parseFloat(value || 0);
-  //     t = num === 0 ? "" : num.toFixed(2);
-  //   } else {
-  //     t = value;
-  //   }
+//   if (format && format.includes("#") && !format.includes("**")) {
+//     t = parseFloat(value || 0).toLocaleString(undefined, {
+//       minimumFractionDigits: format.includes(".") ? 2 : 0,
+//       maximumFractionDigits: format.includes(".") ? 2 : 0
+//     });
+//   } else if (format && format.toUpperCase() === "QTY") {
+//     t = Math.round(parseFloat(value || 0)).toString();
+//   } else if (format && format.toUpperCase() === "QTY1") {
+//     const t1 = parseFloat(value || 0);
+//     const t2 = Math.round(t1);
+//     t = t1 !== t2 ? t1.toFixed(1) : t2.toString();
+//   } else if (format && format.toUpperCase() === "QTY2") {
+//     const t1 = parseFloat(value || 0);
+//     const t2 = Math.round(t1);
+//     t = t1 !== t2 ? t1.toFixed(2) : t2.toString();
+//   } else if (format && format.toUpperCase() === "QTY3") {
+//     const t1 = parseFloat(value || 0);
+//     const t2 = Math.round(t1);
+//     t = t1 !== t2 ? t1.toFixed(3) : t2.toString();
+//   } else if (format && format.toUpperCase() === "AR_NUM") {
+//     t = Math.round(parseFloat(value || 0)).toString();
+//     t = getArabicNumber(t);
+//   } else if (format && format.toUpperCase() === "SHRINK") {
+//     t = value;
+//   } else if (format && format.toUpperCase() === "AR_DIG2") {
+//     t = parseFloat(value || 0).toFixed(2);
+//     t = getArabicNumber(t);
+//   } else if (format && format.toUpperCase() === "AR_DATE") {
+//     t = transDate.toLocaleDateString('en-GB');
+//     t = getArabicDateNumber(t);
+//   } else if (format && format.toUpperCase() === "AR_DIG3") {
+//     t = parseFloat(value || 0).toFixed(3);
+//     t = getArabicNumber(t);
+//   } else if (format && (format.includes("d") || format.includes("M") || format.includes("y"))) {
+//     t = new Date(value).toLocaleDateString();
+//   } else if (format && (format.includes("H") || format.includes("h") || format.includes("m") || format.includes("s"))) {
+//     t = new Date(value).toLocaleTimeString();
+//   } else if (format && format.toUpperCase() === "NONE") {
+//     t = value;
+//   } else if (format && format.toUpperCase() === "BIZ") {
+//     const num = parseFloat(value || 0);
+//     t = num === 0 ? "" : num.toFixed(2);
+//   } else {
+//     t = value;
+//   }
 
-  //   // Apply alignment
-  //   // const fieldLen = parseInt(fldLength || t.length);
+//   // Apply alignment
+//   // const fieldLen = parseInt(fldLength || t.length);
 
-  //   // if (fldAlign === "Left") {
-  //   //   t = (t + ws).substring(0, fieldLen);
-  //   // } else if (fldAlign === "Right" || fldAlign === "Right Justify") {
-  //   //   t = (ws + t).slice(-fieldLen);
-  //   // } else if (fldAlign === "Center") {
-  //   //   const totalPad = fieldLen - t.length;
-  //   //   const leftPad = Math.floor(totalPad / 2);
-  //   //   const rightPad = totalPad - leftPad;
-  //   //   t = " ".repeat(leftPad) + t + " ".repeat(rightPad);
-  //   //   t = t.substring(0, fieldLen);
-  //   // } else {
-  //   //   try {
-  //   //     t = (t + ws).substring(0, fieldLen);
-  //   //   } catch (error) {
-  //   //     // Handle error
-  //   //   }
-  //   // }
+//   // if (fldAlign === "Left") {
+//   //   t = (t + ws).substring(0, fieldLen);
+//   // } else if (fldAlign === "Right" || fldAlign === "Right Justify") {
+//   //   t = (ws + t).slice(-fieldLen);
+//   // } else if (fldAlign === "Center") {
+//   //   const totalPad = fieldLen - t.length;
+//   //   const leftPad = Math.floor(totalPad / 2);
+//   //   const rightPad = totalPad - leftPad;
+//   //   t = " ".repeat(leftPad) + t + " ".repeat(rightPad);
+//   //   t = t.substring(0, fieldLen);
+//   // } else {
+//   //   try {
+//   //     t = (t + ws).substring(0, fieldLen);
+//   //   } catch (error) {
+//   //     // Handle error
+//   //   }
+//   // }
 
-  //   return t;
-  // }, [fldFont, fldAlign, fldLength, transDate]);
+//   return t;
+// }, [fldFont, fldAlign, fldLength, transDate]);
 
-  // Detail printing functions
+// Detail printing functions
 
 
 

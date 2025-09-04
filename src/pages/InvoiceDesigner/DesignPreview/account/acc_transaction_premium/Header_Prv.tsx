@@ -3,44 +3,20 @@ import { useEffect, useState } from "react";
 import { DesignerElementType, type PlacedComponent, type TemplateState, } from "../../../Designer/interfaces";
 import { generateQRCodeDataUrl } from "../../../utils/qrSvgToImg";
 import { renderComponent } from "../../../DownloadPreview/customElement";
+import useLogo from "../../../utils/useLogo";
 
 const styles = StyleSheet.create({
-  headerContainer: {
-    width: "100%",
-    position: "relative",
-    flexDirection: "column",
-    flexWrap: "wrap",
-  },
-  companyInfo: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    zIndex: 10,
-  },
-  orgName: {
-    textTransform: "capitalize",
-    fontWeight: "semibold",
-  },
-  orgAddress: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 2,
-  },
+
+
+
+
   otherInfo: {
     display: "flex",
     flexDirection: "row",
     gap: 2,
     justifyContent: "flex-start",
   },
-  bgImage: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-    zIndex: -10,
-  },
+
   headerTop: {
     width: "100%",
     position: "relative",
@@ -51,7 +27,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const Header = ({
+const AccPrevHeader = ({
   data,
   template,
   currentBranch,
@@ -69,7 +45,7 @@ const Header = ({
   bindData?: any;
 }) => {
   const [qrCodeImages, setQrCodeImages] = useState<{ [key: string]: string }>({});
-
+  const Logo = useLogo()
   useEffect(() => {
     const generateQRCodes = async () => {
       const images: { [key: string]: string } = {};
@@ -121,18 +97,11 @@ const Header = ({
     fontFamily,
   };
 
-  const isValidLogo = (logo: any): boolean => {
-    if (!logo) return false;
-    if (typeof logo !== "string") return false;
-    if (logo.trim() === "") return false;
-    return true;
-  };
-
   return (
     <div
+    className="w-full h-auto relative flex flex-col flex-wrap z-10"
+
       style={{
-        ...styles.headerContainer,
-        height: "auto",
         backgroundColor: template?.headerState?.bgColor || "#fff",
       }}
       // fixed={!headerState?.isFirstOnly}
@@ -140,12 +109,13 @@ const Header = ({
       {/* Background Image */}
       {template?.background_image_header && (
         <img
+         className="absolute inset-0 w-full h-full  -z-10"
           src={template?.background_image_header || "/placeholder.svg"}
           alt="Header Background"
           style={{
-            ...styles.bgImage,
-            objectPosition: headerState?.bg_image_header_position || "center",
-          }}
+             objectPosition: (headerState?.bg_image_header_position ?? "center") as React.CSSProperties["objectPosition"],
+             objectFit: (headerState?.bg_image_header_objectFit ?? "fill") as React.CSSProperties["objectFit"],
+           }}
         />
       )}
 
@@ -165,44 +135,29 @@ const Header = ({
 
       {/* Company Info */}
       <div
+      className="flex flex-row justify-between w-full z-10 my-1"
         style={{
-          ...styles.companyInfo,
-          marginTop: 4,
-          marginBottom: 4,
           paddingTop: paddingTop,
           paddingRight: paddingRight,
           paddingLeft: paddingLeft,
         }}>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignContent: "center",
-            justifyContent: "center",
-            paddingLeft: 8,
-          }}>
-          {headerState?.showLogo && isValidLogo(currentBranch?.logo) && (
+        <div className="flex flex-col content-center justify-center pl-2">
+          {headerState?.showLogo && Logo && (
             <img
-              src={currentBranch.logo || "/placeholder.svg"}
+              src={Logo}
               alt="Logo"
               style={{ width: 80 * logoWidthRatio }}
             />
           )}
           {headerState?.showOrgName && (
-            <p
-              style={{
-                color: orgNameFontColor,
-                fontSize: orgNameFontSize,
-                fontWeight: "semibold",
-                fontFamily: fontFamily,
-                textAlign: "center",
-              }}>
-              {currentBranch?.name}
+            <p className="capitalize font-semibold" 
+            style={{...fontStyles,color: headerState?.OrganizationFontColor, fontSize: headerState?.OrganizationFontSize }}>
+              {currentBranch.company?.name}
             </p>
           )}
         </div>
 
-        <div style={styles.orgAddress}>
+        <div className="flex flex-col gap-2">
           {headerState?.showOrgAddress &&
             currentBranch.address?.map((org: any, idx: number) => (
               <p key={`ADDK_${idx}`} style={fontStyles}>
@@ -215,7 +170,7 @@ const Header = ({
                 {headerState?.phoneLabel || "Phone No"}:
               </span>
               <span style={fontStyles}>
-                {currentBranch?.phone || "1234567891"}
+                {currentBranch?.phone}
               </span>
             </div>
           )}
@@ -225,7 +180,7 @@ const Header = ({
                 {headerState?.faxLabel || "Fax No"}:
               </span>
               <span style={fontStyles}>
-                {currentBranch?.fax || "##12344543"}
+                {currentBranch?.fax }
               </span>
             </div>
           )}
@@ -235,7 +190,7 @@ const Header = ({
                 {headerState?.emailLabel || "Email"}:
               </span>
               <span style={fontStyles}>
-                {currentBranch?.email || "accounts@companyName.com"}
+                {currentBranch?.email }
               </span>
             </div>
           )}
@@ -247,4 +202,4 @@ const Header = ({
   );
 };
 
-export default Header;
+export default AccPrevHeader;

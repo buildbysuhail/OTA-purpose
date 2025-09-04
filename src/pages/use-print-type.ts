@@ -500,6 +500,9 @@ export interface PrintDetailDto {
   txp_RefDate?: string; // ISO string
 
   detail2Data: InvDetail2ForPrint;
+
+  mannualAutoBarcode: string;
+  groupNameHead: string;
 }
 
 export interface InvDetail2ForPrint {
@@ -544,6 +547,10 @@ export interface PrintResponse {
   salesRetBillNumbers: string;
   salesRetBillAmounts: string;
   custom: PrintCustomFields;
+  hasGroupHeaderPrinting: boolean;
+  detail: PrintDetailDto;
+  productionReqId: boolean;
+  // isCashInHandLedger: boolean;
 }
 
 export interface EInvoiceIntegrationSettings {
@@ -589,6 +596,11 @@ export interface PrintCustomFields {
   width: number;
   height: number;
   printerName: string;
+  printTime: string;
+  printDate: string;
+  date: string;
+  printCopyStatus: string;
+  printCopyStatus2: string;
   showPrinterSelection: boolean;
   gapBetweenItems: number;
   kitchenPrinterName: string;
@@ -630,10 +642,8 @@ export interface PrintCustomFields {
   dtTransDetails: any | null;
   noOfCopies: number;
   printInCopy: number;
-  groupNameHeadHeight: number;
 
   // Financial calculations
-  grandTotal: number;
   totReturnAmount: number;
   roundAmt: number;
   adjustmentAmount: number;
@@ -646,6 +656,10 @@ export interface PrintCustomFields {
   exchangeRate: number;
   qrPay: number;
   bankCard: number;
+  amountInWords: string;
+  amountInWordsLine2: string;
+  amountInWordsInArabic: string;
+  mannualOrAutoBarcode: string;
 
   // Transaction flags
   isInvTrans: boolean;
@@ -814,8 +828,6 @@ export interface PrintCustomFields {
   productUnitRemarks: string;
   productUnitRemarksOrProductName: string;
   narration: string;
-  mannualBarcode: string;
-  autoBarcode: string;
   transactionBarcode: string;
   billNumberBarcode: string;
   pageTotalBarcode: string;
@@ -845,6 +857,13 @@ export interface PrintCustomFields {
   lastDetailsPrintTop: number;
   currentPrintingSection: string;
 
+  //KSA
+  qrcodeKsaEinvoicePhase1: string;
+  qrcodeKsaEinvoicePhase2: string;
+  eInvoiceQRCode: string;
+  qrcodeKsaEinvoice: string;
+  qrcodeKsaEinvoiceNotEncrypted : string;
+
   // Address and party data
   inOut: string;
   partyName: string;
@@ -854,6 +873,10 @@ export interface PrintCustomFields {
   noOfItemsInVoucher: number;
   deliveryAddress3: string;
   priceCategoryName: string;
+  deliveryPhone: string;
+  deliveryStreet: string;
+  deliveryLandmark: string;
+  deliveryRemarks: string;
 
   // Cheque printing
   isCheque: boolean;

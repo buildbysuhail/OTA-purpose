@@ -139,21 +139,18 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
                 {/* Preview Container with Modern Styling */}
                 <div
                   ref={previewContainerRef}
-                  className="shadow-lg border border-gray-200  overflow-hidden"
+                  className="shadow-lg   border border-gray-200 overflow-hidden"
                   style={{
                     width: `${templateStyleProperties.previewWidth??500}pt`,
                     height: `${templateStyleProperties.previewHeight??500}pt`,
-                     paddingTop: `${templateStyleProperties.paddingTop ?? 0}pt`,
-                    paddingRight: `${templateStyleProperties.paddingRight ?? 0}pt`,
-                    paddingBottom: `${templateStyleProperties.paddingBottom ?? 0}pt`,
-                    paddingLeft: `${templateStyleProperties.paddingLeft ?? 0}pt`,
+      
                   }}
                 >
                   {/* Paper Effect */}
                   {/* <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900" /> */}
 
                   {/* Template Content */}
-                  <div className="relative h-full w-full overflow-auto">
+                  <div className="relative h-full   w-full ">
                     {React.cloneElement(templateComponent, stableTemplateProps)}
                   </div>
                 </div>

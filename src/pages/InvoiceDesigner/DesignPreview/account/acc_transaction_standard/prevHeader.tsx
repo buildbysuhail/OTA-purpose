@@ -128,7 +128,7 @@ const Logo = useLogo()
           <div className="items-center">
             {headerState?.showOrgAddress &&
             currentBranch.address?.map((line: string, idx: number) => (
-              <p key={idx} style={{...fontStyles, fontSize: template?.propertiesState?.font_size || 12 }}>{line}</p>
+              <p key={idx} style={fontStyles}>{line}</p>
             ))}
           </div>
         </div>

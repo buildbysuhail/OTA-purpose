@@ -6,8 +6,6 @@ import {
   ItemTableState,
   PropertiesState,
   TotalState,
-  accTableState,
-  adviceTableState,
   CustomElementType,
   TemplateState,
   ItemTableMasterState,
@@ -95,9 +93,7 @@ const templateSlice = createSlice({
     ) => {
       state.activeTemplate.itemTableState = action.payload;
     },
-    setTemplateAccTableState: (state, action: PayloadAction<accTableState>) => {
-      state.activeTemplate.accTableState = action.payload;
-    },
+
     // setTemplateTableState: <T,>(state, action: PayloadAction<{key: keyof T, fields: DeepPartial<TableColumn<T>>}>) => {
     //   Object.keys in fields each _key, value
     //   find index from state.activeTemplate.tableState using key
@@ -124,22 +120,20 @@ const templateSlice = createSlice({
   );
   
   if (columnIndex !== -1) {
-    const existingColumn = state.activeTemplate.tableState[columnIndex];
+    state.activeTemplate.tableState = state.activeTemplate.tableState.map(
+      (column: any, index: number) =>
+    index === columnIndex ? { ...column, ...fields } : column
+    );
+    // const existingColumn = state.activeTemplate.tableState[columnIndex];
     
-    state.activeTemplate.tableState[columnIndex] = {
-      ...existingColumn,
-      ...fields
-    };
+    // state.activeTemplate.tableState[columnIndex] = {
+    //   ...existingColumn,
+    //   ...fields
+    // };
   }
 },
     setTemplateTableMasterState: (state, action: PayloadAction<ItemTableMasterState>) => {
       state.activeTemplate.itemTableMasterState = action.payload;
-    },
-    setTemplateAdviceTableState: (
-      state,
-      action: PayloadAction<adviceTableState>
-    ) => {
-      state.activeTemplate.adviceTableState = action.payload;
     },
     setTemplateTotalState: (state, action: PayloadAction<TotalState>) => {
       state.activeTemplate.totalState = action.payload;
@@ -270,9 +264,7 @@ export const {
   setTemplatePropertiesState,
   setTemplateHeaderState,
   setTemplateItemTableState,
-  setTemplateAccTableState,
   setTemplateTableState,
-  setTemplateAdviceTableState,
   setTemplateTotalState,
   setTemplateFooterState,
   setTemplateCustomElements,

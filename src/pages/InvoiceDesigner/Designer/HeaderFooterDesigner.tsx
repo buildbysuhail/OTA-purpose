@@ -82,16 +82,17 @@ const HeaderFooterDesigner = ({}: FooterDesignerProps) => {
                     checked={headerState?.showHeader}
                     onChange={(e) => handleChange("header", "showHeader", e.target.checked)}
                 />
+        
                 <ERPCheckbox
                     id="showLogo"
                     label={t("show_organization_logo")}
                     checked={headerState?.showLogo}
                     onChange={(e) => handleChange("header", "showLogo", e.target.checked)}
                 />
-{/* userBranches?.branches?.find(x => x.id == userSession.currentBranchId && x.clientId == userSession.currentClientId)?.logo !== undefined &&
-                    userBranches?.branches?.find(x => x.id == userSession.currentBranchId && x.clientId == userSession.currentClientId)?.logo !== null && //the condition of show logo now it remove temp)*/} 
-                {headerState?.showLogo && Logo && (
-                        <div className="flex flex-col gap-2">
+
+                   {headerState?.showLogo &&  (
+                    Logo ? (
+                           <div className="flex flex-col gap-2">
                             <img src={Logo} className="border border-dashed mb-2 h-16 w-full object-contain" />
 
                             <div className="flex items-center space-x-3">
@@ -130,7 +131,18 @@ const HeaderFooterDesigner = ({}: FooterDesignerProps) => {
                           </div>
                           
                         </div>
+                    ):(
+                    <div className="flex flex-col items-center justify-center p-4 border border-dashed rounded-md text-center text-sm text-gray-500 bg-gray-50">
+                        <span className="font-medium text-gray-700">
+                        No logo set
+                        </span>
+                        <span className="text-xs text-gray-600">
+                        You can upload your company logo in <strong>Account Settings</strong> to personalize your ERP workspace.
+                        </span>
+                    </div>                     
+                    )
                     )}
+                        
 
                
                         <ERPCheckbox
@@ -395,7 +407,7 @@ const HeaderFooterDesigner = ({}: FooterDesignerProps) => {
                     onChange={(e) => handleChange("header", "isFirstOnly", e.target.checked)}
                 />
 
-                {headerState?.isFirstOnly &&
+                {/* {headerState?.isFirstOnly &&
                     <ERPInput
 
                         value={headerState?.headerHeight ?? 20}
@@ -416,7 +428,7 @@ const HeaderFooterDesigner = ({}: FooterDesignerProps) => {
                      
                     />
 
-                }
+                } */}
             </div>
             {/* <div
                 className="flex justify-between items-center pb-4 border-b cursor-pointer bg-white p-4"

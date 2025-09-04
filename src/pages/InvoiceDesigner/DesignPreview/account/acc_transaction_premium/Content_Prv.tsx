@@ -5,36 +5,6 @@ import type { AccTransactionData } from "../../../../accounts/transactions/acc-t
 import VoucherType from "../../../../../enums/voucher-types";
 
 const styles = StyleSheet.create({
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    width: "100%",
-  },
-  headerBG: {
-    height: 50,
-    width: "100%",
-    overflow: "hidden",
-  },
-  companyInfo: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    zIndex: 10,
-  },
-  logo: {
-    marginTop: 4,
-    marginBottom: 4,
-  },
-  orgName: {
-    textTransform: "capitalize",
-    fontWeight: "bold",
-  },
-  orgAddress: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 2,
-  },
   docTitle: {
     fontSize: 18,
     fontWeight: "bold",
@@ -90,7 +60,7 @@ const styles = StyleSheet.create({
 });
 
 
-const Content = ({
+const AccPrvContent = ({
   data,
   template,
   currentBranch,
@@ -139,15 +109,9 @@ const Content = ({
     fontFamily,
   };
 
-  const isValidSignature = (logo: any): boolean => {
-    if (!logo) return false;
-    if (typeof logo !== "string") return false;
-    if (logo.trim() === "") return false;
-    return true;
-  };
 
   return (
-    <div style={styles.container}>
+    <div className="flex flex-col w-full">
       {/* Doc Title */}
       {headerState?.showDocTitle && (
         <h1
@@ -353,4 +317,4 @@ const Content = ({
   );
 };
 
-export default Content;
+export default AccPrvContent;

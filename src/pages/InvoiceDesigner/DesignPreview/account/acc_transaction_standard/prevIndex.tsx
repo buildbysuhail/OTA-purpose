@@ -9,11 +9,18 @@ import Content from "./prevContent";
 
 const AccountPrvTransactionsVoucher = ({ data, template, currentBranch, userSession, clientSession }: AccountTransactionProps) => {
 
-
+const propertiesState = template?.propertiesState
   return (
 
 
-        <div  className="flex flex-col border border-gray-600">
+        <div  className="flex flex-col h-full w-full border border-gray-600"
+        style={{
+          paddingTop: `${propertiesState?.padding?.top ?? 0}pt`,
+          paddingRight: `${propertiesState?.padding?.right ?? 0}pt`,
+          paddingBottom: `${propertiesState?.padding?.bottom ?? 0}pt`,
+          paddingLeft: `${propertiesState?.padding?.left ?? 0}pt`,
+        }}
+        >
           {
             template?.headerState?.showHeader &&(
            <PrevHeader data={data} template={template} currentBranch={currentBranch} userSession={userSession} />

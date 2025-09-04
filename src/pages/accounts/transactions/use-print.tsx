@@ -42,62 +42,6 @@ export const useAccPrint = () => {
   const { hasRight } = useUserRights()
   const voucherTypeSet = new Set(Object.values(VoucherType))
 
-
-  // const directPrint = async (template: any, transaction?: any) => {
-  //   let pdfDocument
-  //   if (adviceTem.includes(template.templateGroup)) {
-      
-  //     const data = await api.getAsync(
-  //       `${Urls.payment_receipt_billwise_advice_for_print}?masterId=${formState.transaction.master.accTransactionMasterID}`,
-  //     )
-  //     pdfDocument = (
-  //       <AdviceTemplate
-  //         template={template}
-  //         data={data}
-  //         currentBranch={currentBranch}
-  //         userSession={userSession}
-  //       />
-  //     )
-  //   } else if (template.templateGroup == "Cheque") {
-  //     pdfDocument = <ChequeTemplate template={template} data={transaction} currentBranch={currentBranch} />
-  //   } else {
-  //     pdfDocument = renderSelectedTemplate({
-  //       template: template,
-  //       data: formState.transaction,
-  //       currentBranch: currentBranch,
-  //       userSession: userSession,
-  //     })
-  //   }
-
-  //   try {
-  //     // Create a PDF blob
-  //     const blob = await pdf(pdfDocument).toBlob()
-  //     // Create a URL for the blob
-  //     const pdfUrl = URL.createObjectURL(blob)
-
-  //     // Open the PDF in a new tab for printing
-  //     const printWindow = window.open(pdfUrl)
-  //     if (!printWindow) {
-  //       console.error("Failed to open print window. Please check your browser settings.")
-  //       alert("Failed to open print window. Please allow popups and try again.")
-  //       return
-  //     }
-  //     // Wait for the PDF to load in the new tab
-  //     printWindow.onload = () => {
-  //       printWindow.print() // Trigger print
-  //     }
-  //     // Log user action
-  //     logUserAction({
-  //       action: `User Printed Voucher ${formState.transaction.master.voucherType}:${formState.transaction.master.formType}:${formState.transaction.master.voucherPrefix}${formState.transaction.master.voucherNumber}`,
-  //       module: "Voucher Print",
-  //       voucherType: formState.transaction.master.voucherType,
-  //       voucherNumber: `${formState.transaction.master.voucherPrefix}${formState.transaction.master.voucherNumber}`,
-  //     })
-  //   } catch (error) {
-  //     console.error("Error printing voucher:", error)
-  //   }
-  // }
-
   const fetchDefaultTemplates = async (voucherType: any) => {
     try {
       const res = await api.getAsync(`${Urls.default_template}?template_group=${voucherType}`)

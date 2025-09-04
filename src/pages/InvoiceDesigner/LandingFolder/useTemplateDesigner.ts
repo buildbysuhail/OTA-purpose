@@ -54,10 +54,7 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,
   const templateStyleProperties = useMemo(() => {
     const pageOrientation = templateData.propertiesState?.orientation === "landscape" ? "landscape" : "portrait";
     const pageSize = templateData.propertiesState?.pageSize ?? "A4";
-    const paddingLeft = templateData.propertiesState?.padding?.left ;
-    const paddingRight = templateData.propertiesState?.padding?.right ;
-    const paddingTop = templateData.propertiesState?.padding?.top ;
-    const paddingBottom = templateData.propertiesState?.padding?.bottom;
+
     const selectedPageSize = getPageDimensions(
       pageSize,
       templateData.propertiesState?.width,
@@ -72,10 +69,6 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,
     return {
       previewWidth,
       previewHeight,
-      paddingLeft,
-      paddingRight,
-      paddingTop,
-      paddingBottom
     };
   }, [
     templateData.propertiesState?.orientation,

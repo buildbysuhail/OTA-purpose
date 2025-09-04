@@ -574,6 +574,12 @@ export interface MultiPaymentForPrint {
   upi: number;
 }
 
+export interface PrintCustomDetailsFields {
+  
+  mannualBarcode: string;
+  autoBarcode: string;
+  groupNameHead: number;
+}
 export interface PrintCustomFields {
   // Stream & Current
   streamReader: any | null;
@@ -639,7 +645,6 @@ export interface PrintCustomFields {
   dtTransDetails: any | null;
   noOfCopies: number;
   printInCopy: number;
-  groupNameHead: number;
 
   // Financial calculations
   grandTotal: number;
@@ -827,8 +832,6 @@ export interface PrintCustomFields {
   productUnitRemarks: string;
   productUnitRemarksOrProductName: string;
   narration: string;
-  mannualBarcode: string;
-  autoBarcode: string;
   transactionBarcode: string;
   billNumberBarcode: string;
   pageTotalBarcode: string;

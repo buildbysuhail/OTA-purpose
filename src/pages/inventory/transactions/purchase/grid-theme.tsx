@@ -422,7 +422,7 @@ const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, transactionTy
   };
 
   return (
-    <ERPResizableSidebar isOpen={isOpen} setIsOpen={onClose} minWidth={450}>
+    <ERPResizableSidebar isOpen={isOpen} setIsOpen={onClose} minWidth={450} overlayNeeded={false}>
       <div className="flex flex-col h-[94vh] dark:bg-dark-bg bg-gray-50">
         {/* Header */}
         <div className="flex justify-between items-center mb-6 px-4 pt-4">

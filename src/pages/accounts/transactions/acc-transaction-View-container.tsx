@@ -205,7 +205,7 @@ useEffect(() => {
   const onRowClick = useCallback(
    
     async (event: any) => {
-       debugger;
+       
       const _event = event.data != undefined ? event : event?.event;
       const clickedRow = _event.data;
         // Extract values

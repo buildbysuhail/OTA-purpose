@@ -4,6 +4,7 @@ import { VoucherElementProps } from "../../purchase/transaction-types";
 import { formStateMasterHandleFieldChange } from "../reducer";
 import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
 import { ChevronUp } from "lucide-react";
+import VoucherType from "../../../../../enums/voucher-types";
 
 interface BillDiscountInputProps extends VoucherElementProps {
   handleKeyDown?: (
@@ -15,14 +16,7 @@ interface BillDiscountInputProps extends VoucherElementProps {
   applyDiscountsToItems?: () => void; // Add this line
 }
 
-const BillDiscountInput: React.FC<BillDiscountInputProps> = ({
-  formState,
-  dispatch,
-  t,
-  handleKeyDown,
-  footerLayout,
-  applyDiscountsToItems, // Add this line
-}) => {
+const BillDiscountInput: React.FC<BillDiscountInputProps> = ({ formState, dispatch, t, handleKeyDown, footerLayout, applyDiscountsToItems, }) => {
   const { value, onChange } = useDebouncedInput(
     formState.transaction.master.billDiscount || "",
     (debouncedValue) => {
@@ -45,40 +39,30 @@ const BillDiscountInput: React.FC<BillDiscountInputProps> = ({
       label={t(formState.formElements.billDiscount.label)}
       value={value}
       disableEnterNavigation={true}
-      onKeyDown={(e) => {
-        handleKeyDown && handleKeyDown(e, "billDiscount");
-      }}
+      onKeyDown={(e) => { handleKeyDown && handleKeyDown(e, "billDiscount"); }}
       onChange={(e) => onChange(e.target.value)}
-      className={`${
-        footerLayout === "vertical"
-          ? "w-full"
-          : "max-w-[110px] min-w-[110px] !m-0"
-      }`}
-      disabled={
-        formState.formElements.billDiscount?.disabled ||
-        formState.formElements.pnlMasters?.disabled
-      }
+      className={`${footerLayout === "vertical" ? "w-full" : "max-w-[110px] min-w-[110px] !m-0"}`}
+      disabled={formState.formElements.billDiscount?.disabled || formState.formElements.pnlMasters?.disabled}
       customButton={
-        <button
-          type="button"
-          style={{
-            background: "#8080809c",
-            border: "none",
-            borderRadius: "6px 6px 6px 6px",
-            padding: "0px 0px",
-            height: "100%",
-            display: "flex",
-            alignItems: "center",
-            cursor: "pointer",
-            // marginRight: "-7px",
-            // marginLeft: "-7px"
-          }}
-          onClick={() => {
-            if (applyDiscountsToItems) applyDiscountsToItems();
-          }}
-        >
-          <ChevronUp size={20} color="#fff" />
-        </button>
+        formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+          <button
+            type="button"
+            style={{
+              background: "#8080809c",
+              border: "none",
+              borderRadius: "6px 6px 6px 6px",
+              padding: "0px 0px",
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              cursor: "pointer",
+              // marginRight: "-7px",
+              // marginLeft: "-7px"
+            }}
+            onClick={() => { if (applyDiscountsToItems) applyDiscountsToItems(); }}>
+            <ChevronUp size={20} color="#fff" />
+          </button>
+        )
       }
     />
   );

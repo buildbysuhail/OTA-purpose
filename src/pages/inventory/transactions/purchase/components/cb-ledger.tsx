@@ -4,6 +4,7 @@ import { VoucherElementProps } from "../../purchase/transaction-types";
 import Urls from "../../../../../redux/urls";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import { updateFormElement, formStateMasterHandleFieldChange } from "../reducer";
+import VoucherType from "../../../../../enums/voucher-types";
 
 interface LedgerProps extends VoucherElementProps {
   handleFieldKeyDown: (field: string, key: string) => void;
@@ -12,18 +13,7 @@ interface LedgerProps extends VoucherElementProps {
 }
 
 const PartyLedger = React.forwardRef<HTMLInputElement, LedgerProps>(
-  (
-    {
-      formState,
-      dispatch,
-      t,
-      handleKeyDown,
-      transactionType,
-      handleFieldKeyDown,
-      setIsPartyDetailsOpen,
-    },
-    ref
-  ) => {
+  ({ formState, dispatch, t, handleKeyDown, transactionType, handleFieldKeyDown, setIsPartyDetailsOpen, }, ref) => {
     const { getFormattedValue } = useNumberFormat();
     console.log("mj23");
     console.log({ formState: formState.transactionLoading });
@@ -75,23 +65,22 @@ const PartyLedger = React.forwardRef<HTMLInputElement, LedgerProps>(
                 formState.formElements.pnlMasters?.disabled
               }
               labelInfo={
-                formState.formElements.pnlMasters?.disabled == true ? null : (
-                  <div>
-                    <span className="text-primary" >
-                      <a type="popup"
-                        onClick={setIsPartyDetailsOpen}
-                        className="hover:underline text-[#0ea5e9] capitalize ml-1 pe-3 cursor-pointer"
-                      >
-                        details
-                      </a>
-                      {t("bal")}:{" "}
-                      {`${getFormattedValue(
-                        formState.ledgerBalance < 0
-                          ? -1 * formState.ledgerBalance
-                          : formState.ledgerBalance || 0
-                      )} ${(formState.ledgerBalance ?? 0) < 0 ? "Cr" : "Dr"}`}
-                    </span>
-                  </div>
+                formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+                  <>
+                    {formState.formElements.pnlMasters?.disabled == true ? null : (
+                      <div>
+                        <span className="text-primary" >
+                          <a type="popup" onClick={setIsPartyDetailsOpen} className="hover:underline text-[#0ea5e9] capitalize ml-1 pe-3 cursor-pointer">details</a>
+                          {t("bal")}:{" "}
+                          {`${getFormattedValue(
+                            formState.ledgerBalance < 0
+                              ? -1 * formState.ledgerBalance
+                              : formState.ledgerBalance || 0
+                          )} ${(formState.ledgerBalance ?? 0) < 0 ? "Cr" : "Dr"}`}
+                        </span>
+                      </div>
+                    )}
+                  </>
                 )
               }
             />

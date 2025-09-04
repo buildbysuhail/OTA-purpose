@@ -46,6 +46,7 @@ const ReferenceNumber = React.forwardRef<
                 ref={ref}
                 localInputBox={formState?.userConfig?.inputBoxStyle}
                 id="purchaseInvoiceDate"
+                required={true}
                 label={t(formState.formElements.referenceNumber.label)}
                 value={value}
                 className="w-full min-w-[135px]"

@@ -35,7 +35,7 @@ export const purchaseGridCol = (
       },
       {
         dataField: "mrp",
-        decimalPoint: applicationSettings.mainSettings.decimalPoints,
+        decimalPoint: applicationSettings.mainSettings?.decimalPoints,
         caption: t("mrp"),
         dataType: "number",
         allowEditing: true,
@@ -1548,8 +1548,7 @@ export const purchaseGridCol = (
       }
       if (
         userSession.countryId == Countries.India &&
-        (voucherType == VoucherType.PurchaseOrder ||
-          VoucherType.PurchaseQuotation) &&
+        (voucherType == VoucherType.PurchaseOrder || VoucherType.PurchaseQuotation) &&
         (mi.dataField?.includes("hsnCode") ||
           mi.dataField?.includes("cgst") ||
           mi.dataField?.includes("cgstPerc") ||
@@ -1560,7 +1559,8 @@ export const purchaseGridCol = (
           mi.dataField?.includes("cessPerc") ||
           mi.dataField?.includes("cessAmt") ||
           mi.dataField?.includes("additionalCessPerc") ||
-          mi.dataField?.includes("additionalCess"))
+          mi.dataField?.includes("additionalCess")
+        )
       ) {
         return {
           ...mi,

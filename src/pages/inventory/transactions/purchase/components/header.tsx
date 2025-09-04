@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import PendingOrderList from "../pending-order-list";
 import ERPFileUploadButton from "../../../../../components/ERPComponents/erp-file-upload-button";
+import VoucherType from "../../../../../enums/voucher-types";
 
 interface HeaderProps extends VoucherElementProps {
   loadTemporaryRows: () => Promise<void>;
@@ -263,7 +264,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                 className="absolute rounded-lg bg-white dark:bg-[#1f2937] text-black dark:text-[#f3f4f6] shadow-xl border border-[#e5e7eb] dark:border-[#374151] p-2 z-50 backdrop-blur-sm"
                 style={{ top: "45px", left: "-231px", width: "273px", }}>
                 <nav className="w-full">
-                  <ul className="space-y-1 h-80 overflow-y-scroll scrollbar-thin">
+                  <ul className="space-y-1 max-h-80 overflow-y-auto scrollbar-thin">
                     {formState.formElements.lnkUnlockVoucher?.visible && (
                       <li>
                         <button
@@ -371,16 +372,18 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                       </button>
                     </li>
 
-                    <li>
-                      <button
-                        className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fefce8] hover:text-[#a16207] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047] transition-all duration-200 rounded-md group text-left"
-                        onClick={(e) => setIsPendingOrderOpen({ open: true, type: "GRN" })}>
-                        <div className="w-8 h-8 bg-[#fef3c7] dark:bg-[#78350f4d] rounded-full flex items-center justify-center group-hover:bg-[#fde68a] dark:group-hover:bg-[#78350fcc] group-hover:scale-110 transition-all duration-200">
-                          <Package className="h-4 w-4 text-[#a16207] dark:text-[#fde047]" />
-                        </div>
-                        <span className="font-medium">{t('pending_goods_receipt_list')}</span>
-                      </button>
-                    </li>
+                    {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+                      <li>
+                        <button
+                          className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fefce8] hover:text-[#a16207] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047] transition-all duration-200 rounded-md group text-left"
+                          onClick={(e) => setIsPendingOrderOpen({ open: true, type: "GRN" })}>
+                          <div className="w-8 h-8 bg-[#fef3c7] dark:bg-[#78350f4d] rounded-full flex items-center justify-center group-hover:bg-[#fde68a] dark:group-hover:bg-[#78350fcc] group-hover:scale-110 transition-all duration-200">
+                            <Package className="h-4 w-4 text-[#a16207] dark:text-[#fde047]" />
+                          </div>
+                          <span className="font-medium">{t('pending_goods_receipt_list')}</span>
+                        </button>
+                      </li>
+                    )}
 
                     <li>
                       <button
@@ -543,7 +546,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                       <PendingOrderList
                         closeModal={() => setIsPendingOrderOpen({ open: false, type: "PO" })}
                         t={t}
-                        voucherType="PO"
+                        voucherType={isPendingOrderOpen.type}
                         onProcessSelected={onProcessSelected}
                       />
                     }

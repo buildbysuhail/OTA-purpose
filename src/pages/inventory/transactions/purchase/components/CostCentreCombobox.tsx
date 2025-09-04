@@ -22,6 +22,7 @@ const CostCentreCombobox = React.forwardRef<
       enableClearOption={false}
       id="costCentreID"
       className="min-w-[180px] !m-0"
+      required={true}
       label={t(formState.formElements.cbCostCentre.label)}
       data={formState.transaction.master}
       onSelectItem={(e) => {

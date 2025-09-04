@@ -99,7 +99,7 @@ const createStore = async (
   return new CustomStore({
     key: "productID",
     async load(loadOptions: any) {
-      debugger;
+      
       if (
         !loadOptions.sort ||
         (Array.isArray(loadOptions.sort) && loadOptions.sort.length === 0)
@@ -466,7 +466,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     }, []);
 
     useEffect(() => {
-      debugger;
+      
 
       if (showBatchGrid == false) {
         productIDRef.current = undefined;
@@ -474,7 +474,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     }, [showBatchGrid]);
 
     useEffect(() => {
-      debugger;
+      
       const loadLedgerData = async () => {
         if ((formState.batchGridShowKey ?? 0) > 0) {
           productIDRef.current = formState.batchGridShowKey;
@@ -629,7 +629,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
 
     const handleGridKeyDown = useCallback(
       async (e: any) => {
-        debugger;
+        
         const key = e.event?.key;
         if (!key) return;
 

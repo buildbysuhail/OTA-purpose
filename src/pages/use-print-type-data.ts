@@ -761,7 +761,7 @@ export const initialPrintDetailDto: PrintDetailDto = {
 // ---------------------- Full Response ---------------------- //
 export const initialPrintResponse: PrintResponse = {
   master: initialPrintMasterDto,
-  details: [initialPrintDetailDto],
+  details: [],
   ledgerBalance: 0,
   previousLedgerBalance: 0,
   loyaltyCardBalance: 0,

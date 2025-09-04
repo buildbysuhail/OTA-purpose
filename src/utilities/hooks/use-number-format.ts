@@ -116,7 +116,7 @@ export const useNumberFormat = (): UseNumberFormatResult => {
   }
   function getFormattedValue(val: number, ignoreNullOrZero: boolean = false, decimalPoint: number|undefined = undefined, cuttingPoint: number = 0,
   numberOfZero: number = 0): string {
-    debugger;
+    
     if(cuttingPoint > 0) {
       
     

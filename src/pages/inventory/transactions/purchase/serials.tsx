@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { DataGrid } from "devextreme-react";
 import { Column, Editing, KeyboardNavigation, Paging, RemoteOperations, Scrolling } from "devextreme-react/data-grid";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
@@ -10,6 +10,7 @@ import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import { formStateHandleFieldChangeKeysOnly } from "./reducer";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
+import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 
 interface SerialItem {
   slNo: number;
@@ -18,8 +19,6 @@ interface SerialItem {
 }
 
 interface SerialsProps {
-  isMaximized?: boolean;
-  modalHeight?: any;
   isOpen: boolean;
   data: string;
   productId: number | null;
@@ -28,66 +27,103 @@ interface SerialsProps {
   t: (key: string) => string;
 }
 
-const Serials: React.FC<SerialsProps> = ({ data,isOpen, productId, onClose, rowIndex, t,}) => {
+const Serials: React.FC<SerialsProps> = ({ data, isOpen, productId, onClose, rowIndex, t }) => {
   const [serialData, setSerialData] = useState<SerialItem[]>([{ slNo: 1, serial: '' }]);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const dataGridRef = useRef<any>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const formState = useSelector((state: RootState) => state.InventoryTransaction);
 
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
-    
-    if (isOpen && data && data !=  "") {
-     const formattedData = (data??"").split(',').map((serial: string, index: number) => ({
+    if (isOpen && data && data !== "") {
+      const formattedData = data.split(',').map((serial: string, index: number) => ({
         slNo: index + 1,
-        serial: serial || ''
-        
-      })) || [];
-    setSerialData(formattedData)
-  // Defer focusing until the grid is fully rendered
-      if (dataGridRef.current && formattedData.length > 0) {
-        setTimeout(() => {
-          dataGridRef.current.instance.editCell(formattedData.length - 1, 1);
-        }, 100);
+        serial: serial.trim() || ''
+      }));
+      
+      setSerialData(formattedData);
+      
+      // Focus on the last row with proper cleanup
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
       }
+      
+      timeoutRef.current = setTimeout(() => {
+        if (dataGridRef.current && formattedData.length > 0) {
+          dataGridRef.current.instance.editCell(formattedData.length - 1, 1);
+        }
+      }, 100);
     } else if (isOpen) {
       setSerialData([{ slNo: 1, serial: '' }]);
-      if (dataGridRef.current) {
-        setTimeout(() => {
-          dataGridRef.current.instance.editCell(0, 1);
-        }, 100);
+      
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
       }
+      
+      timeoutRef.current = setTimeout(() => {
+        if (dataGridRef.current) {
+          dataGridRef.current.instance.editCell(0, 1);
+        }
+      }, 100);
     }
   }, [isOpen, data]);
 
   const handleSaveButtonClick = async () => {
-    
-
     setIsSaving(true);
     try {
-      const dataToSaveString = serialData
-    .filter(item => item.serial && item.serial.trim() !== '')
-    .map(item => item.serial.trim())
-    .join(',');
+      const validSerials = serialData.filter(item => item.serial && item.serial.trim() !== '');
+      const dataToSaveString = validSerials.map(item => item.serial.trim()).join(',');
+      const lt = validSerials.length;
 
-
-        const slNo = formState.transaction.details[rowIndex].slNo;
-    dispatch(
-                formStateHandleFieldChangeKeysOnly({
-                 
-                  fields: {serialNoEntryData: {visible: false, data:"", rowIndex:-1}, transaction: {
-                    details:[{productDescription:dataToSaveString ,slNo: slNo}]
-                  }}
-                  ,updateOnlyGivenDetailsColumns: true, rowIndex
-                }));
+      const slNo = formState.transaction.details[rowIndex].slNo;
+      
+      dispatch(
+        formStateHandleFieldChangeKeysOnly({
+          fields: {
+            serialNoEntryData: { visible: false, data: "", rowIndex: -1 },
+            transaction: {
+              details: [{
+                productDescription: dataToSaveString,
+                qty: lt,
+                slNo: slNo
+              }]
+            }
+          },
+          updateOnlyGivenDetailsColumns: true,
+          rowIndex
+        })
+      );
+      
+      onClose(); // Close modal on successful save
     } catch (error) {
       console.error("Error saving serials:", error);
+      ERPAlert.show({
+        title: t("error"),
+        text: t("failed_to_save_serials"),
+      });
     } finally {
       setIsSaving(false);
     }
   };
+
+  const checkForDuplicate = useCallback((value: string, excludeIndex?: number): boolean => {
+    const normalizedValue = value.trim().toUpperCase();
+    return serialData.some((item, index) => {
+      if (excludeIndex !== undefined && index === excludeIndex) return false;
+      return item.serial.trim().toUpperCase() === normalizedValue;
+    });
+  }, [serialData]);
 
   const onEditorPreparing = (e: any) => {
     if (e.parentType === 'dataRow' && e.dataField === 'serial') {
@@ -96,44 +132,74 @@ const dispatch = useDispatch();
         if (originalKeyDown) {
           originalKeyDown(event);
         }
-        if (event.event.key === 'Enter' && event.component) {
+        debugger;
+        if (["Enter", "ArrowUp", "ArrowDown"].includes(event.event.key) && event.component) {
           const currentValue = event.component.option('text');
+          
           if (currentValue && currentValue.trim() !== '') {
+            // Check for duplicates
+            if (checkForDuplicate(currentValue, e.row.rowIndex)) {
+              ERPAlert.show({
+                title: t("warning"),
+                text: t("duplicate_serial"),
+              });
+          event.event.preventDefault();
+              return;
+            }
+            
             const rowIndex = e.row.rowIndex;
             const isLastRow = rowIndex === serialData.length - 1;
-            if (isLastRow) {
-              const updatedData = [...serialData];
-              updatedData[rowIndex].serial = currentValue;
-              updatedData.push({ slNo: serialData.length + 1, serial: '' });
-              setSerialData(updatedData);
-           setTimeout(() => {
-                if (dataGridRef.current) {
-                  // dataGridRef.current.instance.editCell(rowIndex + 1, 1);
-                }
-              }, 0);
-            } else {
-             setTimeout(() => {
-                if (dataGridRef.current) {
-                  dataGridRef.current.instance.editCell(rowIndex + 1, 1);
-                }
-              }, 0);
+            
+            // Update the current row's serial
+            setSerialData(prevData => {
+              const updatedData = [...prevData];
+              updatedData[rowIndex] = { ...updatedData[rowIndex], serial: currentValue.trim() };
+              
+              // Add new row if this is the last row
+              if (isLastRow && ["Enter", "ArrowDown"].includes(event.event.key)) {
+                updatedData.push({ slNo: updatedData.length + 1, serial: '' });
+              }
+              
+              return updatedData;
+            });
+            
+            // Move to next row
+            if (timeoutRef.current) {
+              clearTimeout(timeoutRef.current);
             }
-            event.event.preventDefault();
+            
+            timeoutRef.current = setTimeout(() => {
+              if (dataGridRef.current) {
+                const nextRowIndex = isLastRow ? rowIndex + 1 : rowIndex + 1;
+                dataGridRef.current.instance.editCell(nextRowIndex, 1);
+              }
+            }, 50);
           }
+          
+          event.event.preventDefault();
         }
       };
     }
   };
 
-const onContentReady = (e: any) => {
-    if (serialData.length > 0 && dataGridRef.current) {
+  const onContentReady = (e: any) => {
+    // Only focus on initial load, not on every content ready
+    if (serialData.length > 0 && dataGridRef.current && !isSaving) {
       const lastRowIndex = serialData.length - 1;
-      // Focus the cell in the 'serial' column (index 1) of the last row
-      setTimeout(() => {
-        if (dataGridRef.current) {
-          e.component.editCell(lastRowIndex, 1);
+      const lastRowSerial = serialData[lastRowIndex]?.serial;
+      
+      // Only focus if the last row is empty
+      if (!lastRowSerial || lastRowSerial.trim() === '') {
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
         }
-      }, 100);
+        
+        timeoutRef.current = setTimeout(() => {
+          if (dataGridRef.current) {
+            e.component.editCell(lastRowIndex, 1);
+          }
+        }, 50);
+      }
     }
   };
 
@@ -159,7 +225,6 @@ const onContentReady = (e: any) => {
               repaintChangesOnly={true}
               height={300}
             >
-
               <Editing
                 mode="cell"
                 allowAdding={false}
@@ -187,14 +252,8 @@ const onContentReady = (e: any) => {
                 allowEditing={true}
               />
 
-              <Paging
-                pageSize={100}
-              />
-
-              <Scrolling
-                mode="standard"
-              />
-
+              <Paging pageSize={100} />
+              <Scrolling mode="standard" />
               <RemoteOperations
                 filtering={false}
                 sorting={false}

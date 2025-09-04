@@ -1,9 +1,10 @@
-import Table from "./Table";
+import AccPrvTable from "./Table_Prv";
 import { getPageDimensions, getPageSizeForPDF } from "../../../utils/pdf-util";
-import Header from "./Header";
-import Content from "./Content";
+import AccPrevHeader from "./Header_Prv";
+import AccPrvContent from "./Content_Prv";
 import FontRegistration from "../../../../LabelDesigner/fontRegister";
 import { TemplateState } from "../../../Designer/interfaces";
+import { useEffect } from "react";
 
 export interface AccountTransactionProps {
   data?: any;
@@ -16,57 +17,54 @@ export interface AccountTransactionProps {
 }
 
 const AccountTransactionsTemplatePreview = ({ data, template, currentBranch, userSession, clientSession, bindingDemoData }: AccountTransactionProps) => {
-  const paperSize = template?.propertiesState?.pageSize || "A4";
-  const pageOrientation = template?.propertiesState?.orientation === "landscape" ? "landscape" : "portrait";
-  const paddingLeft = template?.propertiesState?.padding?.left || 10;
-  const paddingRight = template?.propertiesState?.padding?.right || 10;
-  const paddingTop = template?.propertiesState?.padding?.top || 10;
-  const paddingBottom = template?.propertiesState?.padding?.bottom || 10;
-  const pageSize = template?.propertiesState?.pageSize ?? "A4";
-  const selectedPageSize = getPageDimensions(pageSize, template?.propertiesState?.width, template?.propertiesState?.height,);
-  const pdfPageSize = getPageSizeForPDF(pageSize, selectedPageSize);
 
+   const headerState = template?.headerState;
+  const totalState = template?.totalState;
+  const propertiesState = template?.propertiesState;
   return (
-    <div>
-      <FontRegistration />
-      <div data-size={pdfPageSize} data-orientation={pageOrientation}>
+    <div  className="flex flex-col h-full w-full">
+
         {/* Header */}
-        <Header data={data} template={template} currentBranch={currentBranch} userSession={userSession} bindData={bindingDemoData} />
+        {headerState?.showHeader &&(
+         <AccPrevHeader data={data} template={template} currentBranch={currentBranch} userSession={userSession} bindData={bindingDemoData}/>
+        )}
+        
         {/* Main Content Container */}
         <div
+        className="z-10 relative  flex flex-col flex-grow-1"
           style={{
-            display: "flex",
-            flexDirection: "column",
+            // display: "flex",
+            // flexDirection: "column",
             backgroundColor: template?.propertiesState?.bg_color || "#fff",
-            padding: paddingTop, paddingRight, paddingBottom, paddingLeft,
-            flexGrow: 1,
+          paddingTop: `${propertiesState?.padding?.top ?? 0}pt`,
+          paddingRight: `${propertiesState?.padding?.right ?? 0}pt`,
+          paddingBottom: `${propertiesState?.padding?.bottom ?? 0}pt`,
+          paddingLeft: `${propertiesState?.padding?.left ?? 0}pt`,
+            // flexGrow: 1,
           }}>
           {/* Background Image */}
           {template?.background_image && (
             <img
-              src={template.background_image || "/placeholder.svg"}
+              src={template.background_image}
+               alt="Background"
+               className="absolute inset-0 w-full h-full -z-10"
               style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                zIndex: -20,
-                objectPosition: template?.propertiesState?.bg_image_position ?? "center",
-              }}
+                      objectPosition: (propertiesState?.bg_image_position ?? "center") as React.CSSProperties["objectPosition"],
+                      objectFit: (propertiesState?.bg_image_objectFit ?? "fill") as React.CSSProperties["objectFit"],
+                    }}
             />
           )}
           {/* Content Section */}
-          <Content data={data} template={template} currentBranch={currentBranch} clientSession={clientSession} />
+          <AccPrvContent data={data} template={template} currentBranch={currentBranch} clientSession={clientSession} />
 
           {/* Table Section - Allow to break across pages */}
-          <Table data={data} template={template} />
+          <AccPrvTable data={data} template={template} />
         </div>
 
         {/* Footer */}
         {/* <Footer data={data} template={template} /> */}
       </div>
-    </div>
+
   );
 };
 

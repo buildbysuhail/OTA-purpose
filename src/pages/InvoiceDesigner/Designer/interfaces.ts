@@ -46,8 +46,6 @@ export interface TemplateState<T> {
   tableState?: TableColumn<T>[];
   itemTableMasterState?: ItemTableMasterState;
   itemTableState?: ItemTableState;
-  accTableState?:accTableState;
-  adviceTableState?:adviceTableState;
   totalState?: TotalState;
   footerState?: FooterState;
   barcodeState?: BarcodeState;
@@ -532,70 +530,7 @@ export interface TableColumn<T> {
   field: keyof T;
   show: boolean;
 }
-export interface accTableState extends ItemTableMasterState{
 
-  showLedgerCode?: boolean;
-  ledgerCodeLabel?: string;
-  ledgerCodeWidth?: string;
-
-  showLedger?: boolean;
-  ledgerLabel?: string;
-  ledgerWidth?: string;
-
-  showAmount?: boolean;
-  amountLabel?: string;
-  amountWidth?: string;
-
-  showNarration?: boolean;
-  narrationLabel?: string;
-  narrationWidth?: string;
-
-  showBillwiseDetails?: boolean;
-  billwiseDetailsLabel?: string;
-  billwiseDetailsWidth?: string;
-
-  showDiscount?: boolean;
-  discountLabel?: string;
-  discountWidth?: string;
-
-  showCostCenter?: boolean;
-  costCenterLabel?: string;
-  costCenterWidth?: string;
-
-  showAmountFc?: boolean;
-  amountFcLabel?: string;
-  amountFcWidth?: string;
-
-  showBankCharge?: boolean;
-  bankChargeLabel?: string;
-  bankChargeWidth?: string;
-}
-export interface adviceTableState extends ItemTableMasterState{
-
-  showDate?:boolean;
-  DateLabel?: string;
-  DateWidth?: string;
-
-  showAmount?: boolean;
-  AmountLabel?: string;
-  AmountWidth?: string;
-
-  showDueAmount?: boolean;
-  DueAmountLabel?: string;
-  DueAmountWidth?: string;
-
-  showPayment?: boolean;
-  PaymentLabel?: string;
-  PaymentWidth?: string;
-
-  showBalance?: boolean;
-  BalanceLabel?: string;
-  BalanceWidth?: string;
-
-  showPaidStatement?: boolean;
-  PaidStatementLabel?: string;
-  PaidStatementWidth?: string;
-}
 export interface ItemTableState extends ItemTableMasterState {
   // Item Description
   itemDescriptionFontColor?: string;

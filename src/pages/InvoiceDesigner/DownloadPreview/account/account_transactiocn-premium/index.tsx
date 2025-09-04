@@ -20,10 +20,7 @@ export interface AccountTransactionProps {
 }
 
 const AccountTransactionsTemplate = ({ data, template, currentBranch, userSession,clientSession,bindingDemoData }: AccountTransactionProps) => {
-  const paperSize = template?.propertiesState?.pageSize || "A4"
   const pageOrientation = template?.propertiesState?.orientation === "landscape" ? "landscape" : "portrait"
-
-  // Paddings
   const paddingLeft = template?.propertiesState?.padding?.left || 10
   const paddingRight = template?.propertiesState?.padding?.right || 10
   const paddingTop = template?.propertiesState?.padding?.top || 10
@@ -40,8 +37,10 @@ const AccountTransactionsTemplate = ({ data, template, currentBranch, userSessio
       <FontRegistration />
       <Page size={pdfPageSize} orientation={pageOrientation}>
         {/* Header */}
+        {template?.headerState?.showHeader && (
         <Header data={data} template={template} currentBranch={currentBranch} userSession={userSession} bindData={bindingDemoData}/>
-
+        )}
+        
         {/* Main Content Container */}
         <View
           style={{
@@ -50,6 +49,8 @@ const AccountTransactionsTemplate = ({ data, template, currentBranch, userSessio
             backgroundColor: template?.propertiesState?.bg_color || "#fff",
             padding: paddingTop, paddingRight, paddingBottom ,paddingLeft,
             flexGrow: 1,
+            position:"relative",
+            zIndex:10
           }}
         >
           {/* Background Image */}
@@ -62,7 +63,7 @@ const AccountTransactionsTemplate = ({ data, template, currentBranch, userSessio
                 left: 0,
                 width: "100%",
                 height: "100%",
-                zIndex: -20,
+                zIndex: -10,
                 objectPosition: template?.propertiesState?.bg_image_position ?? "center",
               }}
             />

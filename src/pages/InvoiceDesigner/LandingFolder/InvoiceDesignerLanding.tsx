@@ -41,14 +41,6 @@ const InvoiceDesigner = () => {
   const kindKey = templateKind ?? Object.keys(kindsForMap)[0];
   const config = templateConfig[groupKey]?.[typeKey]?.[kindKey];
   
-console.log("🔍 Template Lookup Info", {
-  groupKey,
-  typeKey,
-  kindKey,
-  availableTypes: Object.keys(templateConfig[groupKey] || {}),
-  availableKinds: Object.keys(kindsForMap),
-  configExists: !!templateConfig[groupKey]?.[typeKey]?.[kindKey],
-});
   
   if (!config) {
     throw new Error(`No config for group='${groupKey}', type='${typeKey}', kind='${kindKey}'`);

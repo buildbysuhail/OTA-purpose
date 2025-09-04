@@ -8,7 +8,7 @@ import { AppState } from "../redux/slices/app/types";
 import moment from "moment";
 import dayjs from "dayjs";
 import { useNumberFormat } from "./hooks/use-number-format";
-import { TemplateState } from "../pages/InvoiceDesigner/Designer/interfaces";
+import { TableColumn, TemplateState } from "../pages/InvoiceDesigner/Designer/interfaces";
 import Urls from "../redux/urls";
 import { customJsonParse } from "./jsonConverter";
 import { APIClient } from "../helpers/api-client";
@@ -1120,6 +1120,16 @@ export function modelToListFromObject<T extends Record<string, any>>(obj: T, idP
     label: toReadableLabel(key)
   }));
 }
+
+export function generateTableColumns<T extends object>(obj: T): TableColumn<T>[] {
+  return (Object.keys(obj) as (keyof T)[]).map((key) => ({
+    field: key,
+    label: String(key),
+    show: false,
+    width: 0
+  }));
+}
+
 // More practical approach: convert from an object instance
 export function bindDataForPrint(field: string,master: any, details: any, detail: any , userSession: UserModel,
   convertAmountToEnglish: (amount: number, currency?: Currencies | undefined) => string,

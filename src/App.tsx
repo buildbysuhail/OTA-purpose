@@ -334,7 +334,6 @@ useEffect(() => {
         templateData={popupData.printerList?.template} 
         data={popupData.printerList?.data??[]}
         formState={[popupData.printerList?.formState]}
-        t={t} 
         restInRoot
         // onChange={(propertiesState) => dispatch(setTemplatePropertiesState(propertiesState))}
         />

@@ -34,7 +34,6 @@ interface PrinterInfo {
 interface usePrinterProps {
   templateData: any
   data?:any
-  t?: any
   handlePagePropsChange?: (property: keyof PropertiesState, value: any) => void
   restInRoot?:boolean
   formState?:any
@@ -48,9 +47,10 @@ export enum InstallationStatus {
   ERROR = "error",
 }
 
-export const AccessPrinterList = ({ templateData, t, handlePagePropsChange,restInRoot,data,formState}: usePrinterProps) => {
+export const AccessPrinterList = ({ templateData, handlePagePropsChange,restInRoot,data,formState}: usePrinterProps) => {
+  const { t } = useTranslation("labelDesigner");
   const [printers, setPrinters] = useState<PrinterInfo[]>([])
-     const { directPrint } = useDirectPrint();
+  const { directPrint } = useDirectPrint();
   const [onChangePrinter, setOnChangePrinter] = useState<string>("");
   const [jspmStatus, setJspmStatus] = useState<WSStatus | null>(null)
   const [installationStatus, setInstallationStatus] = useState<InstallationStatus>(InstallationStatus.CHECKING)
@@ -315,16 +315,16 @@ const handleInstallJSPrintManager = useCallback(async () => {
 
     return (
       <Box sx={{ mb: 1 }}>
-        <Stack spacing={2}>
+        <Stack spacing={1}>
           {/* Connection Status */}
           <Stack direction="row" spacing={1} alignItems="center">
               <CheckCircle color="green" size={16} />
-            <Typography color="green">{t("Printer Manager Connected")}</Typography>
+            <Typography color="green" variant="body2">{t("Printer Manager Connected")}</Typography>
             <Chip
               label={`${printers.length} ${t("printers found")}`}
               size="small"
               variant="outlined"
-              icon={<PrinterIconMUI />}
+              icon={<PrinterIconMUI size={16}/>}
             />
           </Stack>
 
@@ -335,6 +335,7 @@ const handleInstallJSPrintManager = useCallback(async () => {
               <Typography variant="body2">{t("Loading printers...")}</Typography>
             </Stack>
           ) : printers.length > 0 ? (
+            <Stack sx={{px:1}}>
             <ERPDataCombobox
               id="printer"
               data={templateData?.propertiesState}
@@ -350,6 +351,7 @@ const handleInstallJSPrintManager = useCallback(async () => {
               }))}
               onChange={(e) =>handlePagePropsChange && !restInRoot ?handlePagePropsChange("printer", e.value): handlePrinterSet(e.value)}
             />
+             </Stack>
           ) : (
             <Alert severity="warning">
               <Typography variant="body2">

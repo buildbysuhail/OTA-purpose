@@ -1,5 +1,5 @@
 // hooks/useLogo.ts
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import useCurrentBranch from "../../../utilities/hooks/use-current-branch";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
@@ -10,6 +10,10 @@ import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 export const useLogo = (): string | undefined => {
   const currentBranch = useCurrentBranch();
   const userSession = useSelector((state: RootState) => state.UserSession);
+  useEffect(()=>{
+ console.log("currentBranch",currentBranch,"userSession",userSession);
+ 
+  },[])
 
   const logo = useMemo(() => {
     // 1) currentBranch logo
@@ -26,7 +30,7 @@ export const useLogo = (): string | undefined => {
 
 
     return undefined;
-  }, [currentBranch, userSession, userSession]);
+  }, [currentBranch, userSession]);
 
   return logo;
 };

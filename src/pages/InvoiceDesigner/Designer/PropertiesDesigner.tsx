@@ -15,6 +15,7 @@ import ERPSlider from "../../../components/ERPComponents/erp-slider";
 import { useTranslation } from "react-i18next";
 import { TemplateImagesTypes } from "../LandingFolder/InvoiceDesignerLanding";
 import { RootState } from "../../../redux/store";
+import { AccessPrinterList } from "../utils/get_printers";
 
 interface PropertiesDesignerProps {
   propertiesState?: PropertiesState;
@@ -122,7 +123,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
                 }
                 min={200}
                 max={1000}
-                step={10}
+                step={1}
               />
             </div>
           </div>
@@ -154,7 +155,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
                 }
                 min={200}
                 max={1000}
-                step={10}
+                step={1}
               />
             </div>
           </div>
@@ -181,6 +182,38 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
           ]}
           label={t("orientation")}
         />
+
+             <ERPCheckbox
+                id="select_printer"
+                label= {t("Enable Printer Selection")}
+                checked={propertiesState?.select_printer}
+                onChange={(e) => onChange?.({ ...propertiesState, select_printer: e.target.checked })}
+              />
+
+              {propertiesState?.select_printer &&(
+              <div
+                  className="
+                    pl-2
+                    border-l-[3px] border-l-primary
+                    bg-gray-50 dark:bg-gray-900
+                    rounded-r-md
+                  "
+                >
+                <AccessPrinterList 
+                  templateData={templateData}  
+                  handlePagePropsChange={(property, value) => {
+                    // Create a new state object with the updated property
+                    const updatedState = {
+                      ...propertiesState,
+                      [property]: value
+                    };
+                    onChange?.(updatedState);
+                  }}
+                  />
+              </div>
+
+              )}              
+      
 
         <div>
           <label htmlFor="padding" className="font-light text-sm">
@@ -571,15 +604,12 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
           />
         </div>
       </div>
-      {/* <div
-        className="flex justify-between items-center pb-4 border-b cursor-pointer  p-4"
-        onClick={() => setTab(currentTab === "bg_props" ? "" : "bg_props")}
-      >
-        <div>Background</div>
-        <div>
-          <ChevronDownIcon className={`h-5  ${currentTab === "bg_props" ? "" : "-rotate-90"} transition-all`} />
-        </div>
-      </div> */}
+
+
+
+
+
+
       <div className="transition-all  flex flex-col gap-4  p-4">
         <label htmlFor="background" className="font-regular text-sm">
           {t("background_image")}

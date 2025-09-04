@@ -17,12 +17,10 @@ import {
 } from "../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../redux/store";
 import {
-  ChevronDown,
   CirclePlus,
   EllipsisVertical,
   FileUp,
   Info,
-  Menu,
   Paintbrush,
   Settings,
   Trash2,
@@ -52,9 +50,10 @@ import type {
 import {
   formStateDeleteDetails,
   formStateHandleFieldChange,
+  formStateTransactionDetailsRowsAdd,
 } from "../../../pages/inventory/transactions/purchase/reducer";
 import useDebounce from "../../../pages/inventory/transactions/purchase/use-debounce";
-import { generateUniqueKey } from "../../../utilities/Utils";
+import { generateUniqueKey, isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from "../../../utilities/Utils";
 import "../../../assets/css/loader-style.css";
 import { ERPSimpleComboboxRef } from "../../ERPComponents/erp-simple-combobox";
 import { AppState, inputBox } from "../../../redux/slices/app/types";
@@ -67,9 +66,10 @@ import { saveAs } from "file-saver";
 import { useTableResizeAndReorder } from "./use-resizing";
 import { useUltraFastVirtualScrolling } from "./use-virtual-scrolling";
 import { ApplicationSettingsType } from "../../../pages/settings/system/application-settings-types/application-settings-types";
-import { initialTransactionDetails2 } from "../../../pages/inventory/transactions/purchase/transaction-type-data";
+import { initialTransactionDetailData, initialTransactionDetails2 } from "../../../pages/inventory/transactions/purchase/transaction-type-data";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
+import moment from "moment";
 
 type DataItem = Record<string, any>;
 export interface SummaryConfig<T = any> {
@@ -290,16 +290,16 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
     }, [value]);
 
     const validateNumberInput = (value: string, _blockUnitOnDecimalPoint: boolean) => {
-      
+
       if (value === "") return true;
       const parts = value.split(".");
       if (parts.length > 2) return false;
-      if(parts.length == 2){
+      if (parts.length == 2) {
         debugger
       }
       if (parts[0] && !/^-?\d*$/.test(parts[0])) return false;
       if (parts.length === 2) {
-        if(_blockUnitOnDecimalPoint) {
+        if (_blockUnitOnDecimalPoint) {
           return false
         }
         if (parts[1].length > decimalLimit) return false;
@@ -342,7 +342,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
           e.currentTarget.value = inputValue;
         }
       }
-      if (column.dataType === "number" && !validateNumberInput(inputValue , column.dataField == "qty")) {
+      if (column.dataType === "number" && !validateNumberInput(inputValue, column.dataField == "qty")) {
         e.currentTarget.value = localValue;
         return;
       }
@@ -766,13 +766,13 @@ const VirtualRow = React.memo(
                 width: "100%",
                 display: "flex",
                 flexDirection: 'row',
-                borderBottom: `0.5px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.1)" : `rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`}`,
+                // borderBottom: `0.5px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.1)" : `rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`}`,
                 backgroundColor: appState.mode === "dark" ? "#333333" : "#fff",
-                marginTop: index === 0 ? '25px' : '0',
+                // marginTop: index === 0 ? '8px' : '0',
                 paddingBottom: index === details.length - 1 ? '0.5rem' : '0'
               }}
             >
-              <div className="p-2 w-full">
+              <div className="p-1 w-full">
                 <div
                   className={`rounded-lg shadow-sm w-full max-w-[730px] mx-auto ${appState.mode === "dark" ? "bg-[#2d2d2d] border border-[#444444]" : "bg-[#f8f8f8] border border-[#e4e3e8]"}`}
                 >
@@ -1032,7 +1032,7 @@ const VirtualRow = React.memo(
                 // TransactionDetails2
                 const isDetails2 = Object.keys(initialTransactionDetails2).includes(column.dataField as keyof TransactionDetails2)
                 if (isDetails2) {
-                  // 
+                  //
                 }
                 const fieldKey = column.dataField as TransactionDetailKeys;
                 const idField = column.idField as keyof TransactionDetail;
@@ -1288,7 +1288,8 @@ const VirtualRow = React.memo(
                         onFocus={() => handleFocus(column.dataField!)}
                         onBlur={handleBlur}
                         onKeyDown={(e) => handleKeyDown(cellValue ?? "", e, column, index)}>
-                        {productId > 0 ? column.decimalPoint ? getFormattedValue(cellValue as any, false, column.decimalPoint) : cellValue ?? "" : ""}
+                        {productId > 0 ? column.decimalPoint ? getFormattedValue(cellValue as any, false, column.decimalPoint) :
+                          column.dataType == "date" && !isNullOrUndefinedOrEmpty(column.format) ? moment(cellValue as any).format(column.format) : cellValue ?? "" : ""}
                       </div>
                     )}
                   </div>
@@ -1411,7 +1412,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       return visibleColumns;
     }, [columnOrder, formState.gridColumns]);
 
-    const ITEM_HEIGHT = isMobile ? 140 : formState.userConfig?.gridRowHeight ?? 32;
+    const ITEM_HEIGHT = window.innerWidth < 480 ? 125 : window.innerWidth <= 768 ? 140 : formState.userConfig?.gridRowHeight ?? 32;
 
     const { scrollTop, updateScroll, visibleItems, totalHeight } =
       useUltraFastVirtualScrolling(
@@ -1943,7 +1944,17 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
           )
         }
       }
-    }, [currentCell]);
+      if (prevCell !== currentCell?.rowIndex && isNullOrUndefinedOrZero(currentCell?.data.productID)) {
+        const rc = 20 - formState.transaction.details.filter((x: any) => isNullOrUndefinedOrZero(x.productID)).length
+        const rows = Array.from({ length: rc }, (_, index) => ({
+          ...initialTransactionDetailData,
+          slNo: generateUniqueKey()
+        }));
+        dispatch(
+          formStateTransactionDetailsRowsAdd(rows)
+        );
+      }
+    }, [currentCell, currentCell?.rowIndex]);
     React.useImperativeHandle(ref, () => ({
       focusCell,
       nextCellFind,
@@ -1995,6 +2006,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       <div
         style={{
           position: isMobile ? 'relative' : 'static',
+          marginTop: isMobile ? '22px' : '',
           maxWidth: "100%",
           width: "100%",
           overflowX: "auto",
@@ -2090,16 +2102,17 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
           )}
           <div
             ref={containerRef}
-            className="border border-gray-300 rounded"
+            className="border border-gray-300 "
             style={{
-              height: `${height + 80}px`,
+              height: `${height + 110}px`,
               overflowY: "scroll",
               overflowX: "auto",
               position: "relative",
               scrollbarWidth: "auto",
+              paddingTop: isMobile ? '8px' : '',
               scrollbarColor: appState.mode === "dark" ? "#555 #333" : "#ddd #f1f1f1",
             }}
-            onScroll={(e) => {  handleScroll(e); }}
+            onScroll={(e) => { handleScroll(e); }}
           >
             <div
               style={{
@@ -2274,7 +2287,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                 }}
               >
                 {columns?.map((column, colIndex) => {
-                  
+
                   const isFirstColumn = colIndex === 0;
                   const isLastColumn = colIndex === columns.length - 1;
                   const isFixed = isFirstColumn || isLastColumn;
@@ -2282,11 +2295,11 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                   const value = formState.summary?.[
                     column.dataField as keyof SummaryItems
                   ] ?? "";
-                  
+
                   const final =
                     column.dataType === "number" && value !== ""
                       ? (() => {
-                        
+
                         const num = parseFloat(value as any);
                         console.log("Raw value:", value);
                         console.log("Parsed num:", num);
@@ -2296,7 +2309,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                           return "";
                         }
 
-                        const rounded = getFormattedValue(num,false, applicationState.mainSettings.decimalPoints ?? 2);
+                        const rounded = getFormattedValue(num, false, applicationState.mainSettings.decimalPoints ?? 2);
                         console.log("Rounded:", rounded);
 
                         return rounded;

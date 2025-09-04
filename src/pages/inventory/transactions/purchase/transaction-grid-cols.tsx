@@ -290,7 +290,6 @@ export const purchaseGridCol = (
         allowEditing: true,
         width: 100,
         alignment: "right",
-        decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
       {
         dataField: "vatAmount",
@@ -319,7 +318,7 @@ export const purchaseGridCol = (
         width: 100,
         allowEditing: true,
         alignment: "right",
-        decimalPoint: applicationSettings.mainSettings.decimalPoints,
+        decimalPoint: 2
       },
       {
         dataField: "hsnCode",
@@ -543,7 +542,6 @@ export const purchaseGridCol = (
         dataField: "minSalePrice",
         caption: t("min_sale_price"),
         dataType: "number",
-        decimalPoint: applicationSettings.mainSettings.decimalPoints,
         width: 150,
         readOnly: true,
         alignment: "right",
@@ -556,6 +554,7 @@ export const purchaseGridCol = (
         width: 250,
         alignment: "right",
         visible: false,
+        decimalPoint:2,
       },
       {
         dataField: "unitPriceFC",
@@ -626,7 +625,6 @@ export const purchaseGridCol = (
         width: 100,
         allowEditing: true,
         alignment: "right",
-        decimalPoint: applicationSettings.mainSettings.decimalPoints,
         visible: false,
       },
       {
@@ -703,6 +701,7 @@ export const purchaseGridCol = (
         width: 100,
         readOnly: true,
         alignment: "right",
+           decimalPoint:4
       },
       {
         dataField: "unit3SalesRate",
@@ -823,7 +822,7 @@ export const purchaseGridCol = (
         visible: false,
         width: 130,
         alignment: "right",
-        decimalPoint: applicationSettings.mainSettings.decimalPoints,
+        // decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
       {
         dataField: "warehouse",

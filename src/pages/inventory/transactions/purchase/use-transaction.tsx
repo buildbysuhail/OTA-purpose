@@ -1065,12 +1065,12 @@ dispatch(formStateHandleFieldChange({
       );
       }
       } catch (error) {
-         formStateHandleFieldChange({
+         dispatch(formStateHandleFieldChange({
           fields: {
             saving: false,
             savingCompleted: true,
           },
-        })
+        }))
          ERPAlert.show({
                   icon: "warning",
                   text: "Please try Again",

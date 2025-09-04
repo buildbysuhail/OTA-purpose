@@ -78,6 +78,29 @@ const ProductSummaryReport2: React.FC<{
       allowFiltering: true,
       width: 100,
       showInPdf:true,
+    cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.sPrice == null
+              ? ""
+              : getFormattedValue(cellElement.data.sPrice, false, 2);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.sPrice == null
+            ? ""
+            : getFormattedValue(cellElement.data.sPrice, false, 2);
+        }
+      },
     },
     {
       dataField: "stockIn",
@@ -86,6 +109,29 @@ const ProductSummaryReport2: React.FC<{
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+  cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.stockIn == null
+              ? ""
+              : getFormattedValue(cellElement.data.stockIn, false, 2);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.stockIn == null
+            ? ""
+            : getFormattedValue(cellElement.data.stockIn, false, 2);
+        }
+      },
     },
     {
       dataField: "stockOut",
@@ -94,6 +140,29 @@ const ProductSummaryReport2: React.FC<{
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+    cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.stockOut == null
+              ? ""
+              : getFormattedValue(cellElement.data.stockOut, false, 2);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.stockOut == null
+            ? ""
+            : getFormattedValue(cellElement.data.stockOut, false, 2);
+        }
+      },
     },
     {
       dataField: "stock",
@@ -103,6 +172,29 @@ const ProductSummaryReport2: React.FC<{
       allowFiltering: true,
       width: 100,
       showInPdf:true,
+  cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.stock == null
+              ? ""
+              : getFormattedValue(cellElement.data.stock, false, 2);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.stock == null
+            ? ""
+            : getFormattedValue(cellElement.data.stock, false, 2);
+        }
+      },
     },
     {
       dataField: "wStock",
@@ -111,6 +203,29 @@ const ProductSummaryReport2: React.FC<{
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+  cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.wStock == null
+              ? ""
+              : getFormattedValue(cellElement.data.wStock, false, 2);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.wStock == null
+            ? ""
+            : getFormattedValue(cellElement.data.wStock, false, 2);
+        }
+      },
     },
     {
       dataField: "pPrice",
@@ -120,6 +235,29 @@ const ProductSummaryReport2: React.FC<{
       allowFiltering: true,
       width: 100,
       showInPdf:true,
+    cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.pPrice == null
+              ? ""
+              : getFormattedValue(cellElement.data.pPrice, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.pPrice == null
+            ? ""
+            : getFormattedValue(cellElement.data.pPrice, false, 4);
+        }
+      },
     },
     {
       dataField: "brandName",

@@ -34,3 +34,4 @@
 // once_deleted_this_transaction_cannot_be_recovered
 // clearing_transaction_question
 // once_clearing_this_transaction_cannot_be_recovered
+// Duplicate serial

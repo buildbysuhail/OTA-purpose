@@ -31,7 +31,7 @@ export const useUltraFastVirtualScrolling = (
   
   // Calculate visible items with large buffer to prevent white areas
   const getVisibleItems = useCallback(() => {
-    debugger;
+    
     const visibleCount = Math.ceil(containerHeight / itemHeight);
     const totalCount = Math.ceil((scrollTop.current + containerHeight) / itemHeight);
     const sd = Math.floor((totalCount - visibleCount) / 2) > Math.floor(visibleCount) ? Math.floor(visibleCount) : Math.floor((totalCount - visibleCount) / 2)
@@ -62,7 +62,7 @@ export const useUltraFastVirtualScrolling = (
 
   // Immediate scroll update without RAF to prevent white areas
   const updateScroll = useCallback((newScrollTop: number) => {
-    debugger;
+    
     scrollTop.current = newScrollTop;
     // Force immediate update for fast scrolling
     forceUpdate({});

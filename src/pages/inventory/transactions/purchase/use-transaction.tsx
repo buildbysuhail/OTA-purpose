@@ -291,7 +291,7 @@ export const useTransaction = (
     setVoucherNo?: boolean | false,
     loadVType?: string
   ) => {
-    
+    debugger;
     const _s_isDirty = isDirtyTransaction(
       formState.prev,
       {
@@ -475,7 +475,7 @@ export const useTransaction = (
       isUsingManualInvNo: usingManualInvNumber, // Convert boolean to string
       isActualPriceVisible: formState.gridColumns.find(x => x.dataField == "actualSalesPrice")?.visible??false
     };
-debugger;
+
     // ByGRN
     let vch = await api.getAsync(url, new URLSearchParams(params).toString());
     if (loadVType == "GRN") {
@@ -603,7 +603,8 @@ debugger;
         voucher.transaction
       );
     }
-
+ voucher = await loadLedgerData(voucher) as any;
+      voucher.isInitialLedger = true;
     return voucher;
   };
   const refactorAttachments = (transaction: TransactionData) => {
@@ -1067,9 +1068,14 @@ dispatch(formStateHandleFieldChange({
          formStateHandleFieldChange({
           fields: {
             saving: false,
-            savingCompleted: undefined,
+            savingCompleted: true,
           },
         })
+         ERPAlert.show({
+                  icon: "warning",
+                  text: "Please try Again",
+                  title: "",
+                });
       }
 
     }
@@ -1258,7 +1264,7 @@ dispatch(formStateHandleFieldChange({
                     );
 
                     if (totalRes) {
-                      debugger;
+                      
                       totalRes.summary = summaryRes.summary;
                       totalRes.transaction = totalRes.transaction ?? {};
                       totalRes.transaction.master = { ...totalRes.transaction.master };
@@ -2691,7 +2697,7 @@ ERPAlert.show({
         // Handle listed product prices
         if (product.hasListedProductPrice) {
           outDetail.unitPrice = product.listedProductPrice;
-        }debugger;
+        }
 
         // Handle VAT and CST based on form type
         if(clientSession.isAppGlobal) {
@@ -2849,7 +2855,7 @@ ERPAlert.show({
 
         return result;
       } else if (res?.productId > 0 && forImport != true) {
-        debugger;
+        
         dispatch(formStateHandleFieldChangeKeysOnly(
             {
               fields:{
@@ -3045,7 +3051,7 @@ ERPAlert.show({
         case "i":
         case "I":
           if (isCtrlPressed) {
-          debugger;
+          
             dispatch(
               formStateHandleFieldChange({
                        fields: {
@@ -3188,7 +3194,7 @@ ERPAlert.show({
                 }
               })() === 0
             ) {
-              event.preventDefault();
+              // event.preventDefault();
               const confirm = await ERPAlert.show({
                 icon: "info",
                 title: t("warning"),
@@ -3230,7 +3236,7 @@ ERPAlert.show({
               data.salesPrice > 0
             ) {
               if (data.unitPrice > data.salesPrice) {
-                event.preventDefault();
+                // event.preventDefault();
                 const confirm = await ERPAlert.show({
                   icon: "info",
                   title: t("warning"),
@@ -3264,14 +3270,14 @@ ERPAlert.show({
               }
             }
           } else if (columnName == "btnPrintBarcode") {
-            
+            debugger;
             if((formState.transaction.details[rowIndex].qty + formState.transaction.details[rowIndex].stickerQty) <= 0) {
               break
             }
             const isReprint =
               formState.transaction.details[rowIndex].barcodePrinted;
             if (isReprint) {
-              event.preventDefault();
+              // event.preventDefault();
               const confirm = await ERPAlert.show({
                 icon: "info",
                 title: t("reprint_barcode"),
@@ -3752,7 +3758,7 @@ ERPAlert.show({
                 `${Urls.inv_transaction_base}${transactionType}/LedgerDetails?LedgerId=${ledgerID}`
               ),
             ]);
-            debugger;
+            
             const ret = {
                 ..._formState,
                 formElements:{

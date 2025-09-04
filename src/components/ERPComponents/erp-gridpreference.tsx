@@ -73,7 +73,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
   const [preferences, setPreferences] = useState<GridPreference>(initialGridPreference);
 
   useEffect(() => {
-    debugger;
+    
     const fetchPreferences = async () => {       
     const initialPreferences = await getInitialPreference(gridId, columns, new APIClient());
     // onApplyPreferences && onApplyPreferences(initialGridPreference)

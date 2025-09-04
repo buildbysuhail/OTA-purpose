@@ -237,7 +237,7 @@ export const useTransactionHelper = (transactionType: string) => {
           },
         },
       };
-    debugger;
+    
     const netVal = summary.netValue;
     let netAmt = summary.total;
     const tax = summary.vatAmount;
@@ -260,7 +260,7 @@ export const useTransactionHelper = (transactionType: string) => {
 
     let tcsAmt = 0;
     let _grandTotal = netAmt + additionalAmt - billDisc;
-debugger;
+
     if (master.hasroundOff) {
       try {
         result.transaction!.master!.roundAmount = parseFloat(
@@ -336,7 +336,7 @@ debugger;
       let ratePlusTax = 0;
       let cost = 0;
       let unitPrice = Number(transactionDetail.unitPrice || 0);
-      debugger;
+      
 
       // India
       let cgstPerc = Number(transactionDetail.details2?.cgstPerc || 0);
@@ -430,7 +430,7 @@ debugger;
       detail.totalAddExpense = round(addAmt * qty);
 
       // Calculate VAT amount
-debugger;
+
       // India tax
       if (clientSession.isAppGlobal) {
         // === Case 1: Additional Cess calculation ===
@@ -577,7 +577,7 @@ debugger;
       // Update cost and VAT amount
       detail.cost = round(cost);
       detail.vatAmount = getFormattedValueIgnoreRoundingToNumber(vat);
-debugger;
+
       // Calculate final net amount (NetValue + VAT)
       let netAmount = 0
       if (clientSession.isAppGlobal) {
@@ -924,10 +924,10 @@ debugger;
       if (!detail || typeof detail !== "object") {
         return null;
       }
-          debugger;
+          
         let value: any;
         if (columnName.startsWith("details2.")) {
-          debugger;
+          
           const oth = columnName.substring("details2.".length);
           value = detail.details2?.[oth as keyof TransactionDetails2] as any;
         }
@@ -1077,7 +1077,7 @@ debugger;
           result.summary = {};
         }
         const summaryConfig = formState.summaryConfig;
-        debugger;
+        
         summaryConfig.forEach((config, index) => {
           try {
             // Calculate the summary value

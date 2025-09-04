@@ -274,15 +274,12 @@ const InvTransactionSlice = createSlice({
     // Add multiple rows to the transaction details
     formStateTransactionDetailsRowsAdd: (
       state,
-      action: PayloadAction<any[]>
+      action: PayloadAction<TransactionDetail[]>
     ) => {
-      // const serializedRows = action.payload.map((row) => ({
-      //   ...row,
-      //   chqDate: new Date(row.chqDate).toISOString(),
-      //   bankDate: new Date(row.bankDate).toISOString(),
-      //   amount: state.f
-      // }));
-      // state.transaction.details.push(...serializedRows);
+      action.payload.forEach((row: TransactionDetail) => {
+        state.transaction.details.push(row);  
+      })
+      
     },
 
     formStateTransactionIvAccTransactionsRowsUpdate: (

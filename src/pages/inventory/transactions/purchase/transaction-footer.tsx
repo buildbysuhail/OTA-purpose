@@ -1,5 +1,4 @@
 import WarehouseID from "./components/warehouse-id ";
-import RemarksInput from "./components/RemarksInput.";
 import IsLockedCheckbox from "./components/IsLockedCheckbox";
 import AutoCalculationCheckbox from "./components/AutoCalculationCheckbox";
 import CashPaidSection from "./components/CashPaidSection";
@@ -12,7 +11,6 @@ import RoundOffInput from "./components/RoundOffInput";
 import NetAmountInput from "./components/NetAmountInput";
 import BillDiscountInput from "./components/BillDiscountInput";
 import BillDiscountLabel from "./components/bill-discount-label";
-import NetTotalLabel from "./components/NetTotalLabel";
 import { useEffect, useRef, useState } from "react";
 import { Check, ChevronUp, X, EllipsisVertical, PanelBottom, PanelRight } from "lucide-react";
 import BottomSidebar from "../../../../components/ERPComponents/bottom-sidebar";
@@ -25,8 +23,8 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import { TransactionFormState } from "./transaction-types";
 import { useAppState } from "../../../../utilities/hooks/useAppState";
-import { accFormStateTransactionMasterHandleFieldChange } from "../../../accounts/transactions/reducer";
 import { remToPx } from "../../../../utilities/Utils";
+import VoucherType from "../../../../enums/voucher-types";
 
 interface TransactionFooterProps {
   formState: TransactionFormState;
@@ -77,10 +75,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   const { appState } = useAppState();
   const isRtl = appState.locale.rtl;
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
-
   const isNewFooter = formState.userConfig?.useNewFooter ?? false;
   const isSidebar = formState.userConfig?.footerPosition === "right";
-
   const [showWarehouseOutside, setShowWarehouseOutside] = useState(false);
   const [showCostCentreOutside, setShowCostCentreOutside] = useState(false);
   const [showAdjustmentOutside, setShowAdjustmentOutside] = useState(false);
@@ -280,7 +276,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   );
 
   const attachmentComponent = (
-    <button className="text-[#2563eb] dark:text-[#60a5fa] w-full text-left sm:text-center">
+    <button className="text-[#2563eb] dark:text-[#60a5fa] w-full text-left">
       <span className="hover:underline text-[#0ea5e9] dark:text-[#60a5fa] capitalize" onClick={selectAttachment}>
         {t("attachment")}
       </span>
@@ -293,18 +289,26 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         <>
           <div className="flex flex-wrap items-end gap-1">
             {showWarehouseOutside && warehouseComponent}
-            {showAdjustmentOutside && adjustmentComponent}
+            {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+              <>{showAdjustmentOutside && adjustmentComponent}</>
+            )}
           </div>
           <div className="flex items-end gap-1">
-            {showCostCentreOutside && costCentreComponent}
+            {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+              <>{showCostCentreOutside && costCentreComponent}</>
+            )}
             {showAttachmentOutside && attachmentComponent}
           </div>
         </>
       ) : (
         <>
           {showWarehouseOutside && warehouseComponent}
-          {showCostCentreOutside && costCentreComponent}
-          {showAdjustmentOutside && adjustmentComponent}
+          {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+            <>{showCostCentreOutside && costCentreComponent}</>
+          )}
+          {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+            <>{showAdjustmentOutside && adjustmentComponent}</>
+          )}
         </>
       )}
     </div>
@@ -356,13 +360,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                       id="printOnSave"
                       label={t(formState.formElements.printOnSave.label)}
                       checked={formState.printOnSave}
-                      onChange={(e) =>
-                        dispatch(
-                          formStateHandleFieldChange({
-                            fields: { printOnSave: e.target.checked },
-                          })
-                        )
-                      }
+                      onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { printOnSave: e.target.checked }, }))}
                       disabled={formState.formElements.printOnSave?.disabled}
                     />
                   )}
@@ -458,34 +456,34 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           <div className={`flex ${footerLayout === "vertical" ? "flex-col items-start justify-start" : "p-2 flex-col md:flex-row items-end justify-end gap-4"}`}>
             <div className={`${footerLayout === "vertical" ? "hidden" : "block"}`}>
               <div className="absolute top-1.5 left-1">
-                <button
-                  onClick={toggleFooterPosition}
-                  className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 dark:bg-dark-bg opacity-50 hover:opacity-100 transition-all duration-300"
-                  title={t("display_the_footer_on_the_right")}
-                >
+                <button onClick={toggleFooterPosition} className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 dark:bg-dark-bg opacity-50 hover:opacity-100 transition-all duration-300" title={t("display_the_footer_on_the_right")}>
                   <PanelRight className="text-[#b3b3b9] dark:text-dark-text w-4 h-4" />
                 </button>
               </div>
             </div>
             {footerLayout !== "vertical" && outsideComponents}
-            <div className={`hidden md:flex ${footerLayout === "vertical" ? "flex-col items-start w-full" : "flex-col items-end w-full md:w-auto"}`}>
+            <div className={`hidden md:flex ${footerLayout === "vertical" ? "flex-col items-start w-full" : "flex-col items-start w-full md:w-auto"}`}>
               <div className={`flex ${footerLayout === "vertical" ? "flex-col items-start" : "items-end"} gap-2 mb-2`}>
                 <div className={`flex items-center w-full ${footerLayout === "vertical" ? "justify-between" : "gap-2"}`}>
-                  <CashPaidSection
-                    formState={formState}
-                    dispatch={dispatch}
-                    t={t}
-                    focusDiscount={focusDiscount}
-                    focusAmount={focusAmount}
-                  />
-                  <RoundOffInput
-                    formState={formState}
-                    dispatch={dispatch}
-                    t={t}
-                    handleKeyDown={handleKeyDown}
-                    focusDiscount={() => document.getElementById("discountID")?.focus()}
-                    focusAmount={() => document.getElementById("amountID")?.focus()}
-                  />
+                  {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+                    <CashPaidSection
+                      formState={formState}
+                      dispatch={dispatch}
+                      t={t}
+                      focusDiscount={focusDiscount}
+                      focusAmount={focusAmount}
+                    />
+                  )}
+                  {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+                    <RoundOffInput
+                      formState={formState}
+                      dispatch={dispatch}
+                      t={t}
+                      handleKeyDown={handleKeyDown}
+                      focusDiscount={() => document.getElementById("discountID")?.focus()}
+                      focusAmount={() => document.getElementById("amountID")?.focus()}
+                    />
+                  )}
                 </div>
                 <div className="flex flex-col w-full">
                   <BillDiscountInput
@@ -507,17 +505,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     label={t(formState.formElements.remarks.label)}
                     value={formState.transaction.master.remarks}
-                    onChange={(e) =>
-                      dispatch(
-                        formStateTransactionMasterHandleFieldChange({
-                          fields: { remarks: e.target?.value },
-                        })
-                      )
-                    }
-                    disabled={
-                      formState.formElements.remarks?.disabled ||
-                      formState.formElements.pnlMasters?.disabled
-                    }
+                    onChange={(e) => dispatch(formStateTransactionMasterHandleFieldChange({ fields: { remarks: e.target?.value }, }))}
+                    disabled={formState.formElements.remarks?.disabled || formState.formElements.pnlMasters?.disabled}
                     className={`dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text ${isNewFooter ? "h-[42px]" : ""}`}
                   />
                 </div>
@@ -558,9 +547,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   {t(formState.formElements.grandTotal.label)}
                 </span>
                 <span className="text-lg font-bold text-[#3b82f6]">
-                  {getFormattedValue(
-                    formState.transaction.master?.grandTotal ?? 0
-                  )}
+                  {getFormattedValue(formState.transaction.master?.grandTotal ?? 0)}
                 </span>
               </div>
             </div>
@@ -575,13 +562,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               id="printOnSave"
               label={t(formState.formElements.printOnSave.label)}
               checked={formState.printOnSave}
-              onChange={(e) =>
-                dispatch(
-                  formStateHandleFieldChange({
-                    fields: { printOnSave: e.target.checked },
-                  })
-                )
-              }
+              onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { printOnSave: e.target.checked }, }))}
               disabled={formState.formElements.printOnSave?.disabled}
               className="dark:text-dark-text"
             />
@@ -594,14 +575,10 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               ref={btnSaveRef}
               jumpTarget="save"
               onClick={save}
-              title={t("save_transaction")}
+              title={t("save")}
               startIcon={<Check className="w-3.5 h-3.5" />}
               localInputBox={formState?.userConfig?.inputBoxStyle}
-              disabled={
-                formState.formElements.pnlMasters?.disabled ||
-                formState.transaction.details == null ||
-                formState.transaction.details.length == 0
-              }
+              disabled={formState.formElements.pnlMasters?.disabled || formState.transaction.details == null || formState.transaction.details.length == 0}
               className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg flex-1 sm:flex-none"
             />
             <ERPButton
@@ -645,15 +622,23 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               {warehouseComponent}
             </div>
           )}
-          {!showCostCentreOutside && (
-            <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
-              {costCentreComponent}
-            </div>
+          {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+            <>
+              {!showCostCentreOutside && (
+                <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
+                  {costCentreComponent}
+                </div>
+              )}
+            </>
           )}
-          {!showAdjustmentOutside && (
-            <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
-              {adjustmentComponent}
-            </div>
+          {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+            <>
+              {!showAdjustmentOutside && (
+                <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
+                  {adjustmentComponent}
+                </div>
+              )}
+            </>
           )}
           {!showAttachmentOutside && (
             <div className="w-full mb-2 sm:mb-0 sm:w-auto">
@@ -670,13 +655,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 id="printOnSave"
                 label={t(formState.formElements.printOnSave.label)}
                 checked={formState.printOnSave}
-                onChange={(e) =>
-                  dispatch(
-                    formStateHandleFieldChange({
-                      fields: { printOnSave: e.target.checked },
-                    })
-                  )
-                }
+                onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { printOnSave: e.target.checked }, }))}
                 disabled={formState.formElements.printOnSave?.disabled}
                 className="dark:text-dark-text"
               />
@@ -685,21 +664,25 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           <div className="flex md:hidden flex-col w-full max-w-full">
             <div className="flex flex-col gap-2 mb-2">
               <div className="flex flex-wrap items-end gap-2 w-full">
-                <CashPaidSection
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                  focusDiscount={focusDiscount}
-                  focusAmount={focusAmount}
-                />
-                <RoundOffInput
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                  handleKeyDown={handleKeyDown}
-                  focusDiscount={() => document.getElementById("discountID")?.focus()}
-                  focusAmount={() => document.getElementById("amountID")?.focus()}
-                />
+                {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+                  <CashPaidSection
+                    formState={formState}
+                    dispatch={dispatch}
+                    t={t}
+                    focusDiscount={focusDiscount}
+                    focusAmount={focusAmount}
+                  />
+                )}
+                {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+                  <RoundOffInput
+                    formState={formState}
+                    dispatch={dispatch}
+                    t={t}
+                    handleKeyDown={handleKeyDown}
+                    focusDiscount={() => document.getElementById("discountID")?.focus()}
+                    focusAmount={() => document.getElementById("amountID")?.focus()}
+                  />
+                )}
                 <BillDiscountInput
                   formState={formState}
                   dispatch={dispatch}
@@ -714,17 +697,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 localInputBox={formState?.userConfig?.inputBoxStyle}
                 label={t(formState.formElements.remarks.label)}
                 value={formState.transaction.master.remarks}
-                onChange={(e) =>
-                  dispatch(
-                    formStateTransactionMasterHandleFieldChange({
-                      fields: { remarks: e.target?.value },
-                    })
-                  )
-                }
-                disabled={
-                  formState.formElements.remarks?.disabled ||
-                  formState.formElements.pnlMasters?.disabled
-                }
+                onChange={(e) => dispatch(formStateTransactionMasterHandleFieldChange({ fields: { remarks: e.target?.value }, }))}
+                disabled={formState.formElements.remarks?.disabled || formState.formElements.pnlMasters?.disabled}
                 className={`dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text ${isNewFooter ? "h-[42px]" : ""} w-full`}
               />
             </div>
@@ -784,13 +758,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 id="printOnSave"
                 label={t(formState.formElements.printOnSave.label)}
                 checked={formState.printOnSave}
-                onChange={(e) =>
-                  dispatch(
-                    formStateHandleFieldChange({
-                      fields: { printOnSave: e.target.checked },
-                    })
-                  )
-                }
+                onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { printOnSave: e.target.checked }, }))}
                 disabled={formState.formElements.printOnSave?.disabled}
                 className="dark:text-dark-text"
               />
@@ -817,7 +785,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   );
 
   const minimalContent = (
-    <div className="p-2 mt-1 mb-2 dark:bg-dark-bg-card bg-gray-50 border dark:border-dark-border border-gray-200 rounded-lg">
+    <div className="p-2 mt-1 mb-2 sm:mb-3 dark:bg-dark-bg-card bg-gray-50 border dark:border-dark-border border-gray-200 rounded-lg">
       <div className="grid grid-cols-1 gap-1.5">
         <NetAmountInput
           formState={formState}
@@ -961,9 +929,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                         {t(formState.formElements.grandTotal.label)}
                       </span>
                       <span className="text-base sm:text-lg font-bold text-[#3b82f6]">
-                        {getFormattedValue(
-                          formState.transaction.master?.grandTotal ?? 0
-                        )}
+                        {getFormattedValue(formState.transaction.master?.grandTotal ?? 0)}
                       </span>
                     </div>
                   </div>
@@ -982,12 +948,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                       variant="primary"
                       className="flex-1 rounded-none !m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg text-sm sm:text-base"
                       onClick={save}
-                      disabled={
-                        formState.formElements.pnlMasters?.disabled ||
-                        formState.transaction.details == null ||
-                        formState.transaction.details.length == 0 ||
-                        formState.transactionLoading
-                      }
+                      disabled={formState.formElements.pnlMasters?.disabled || formState.transaction.details == null || formState.transaction.details.length == 0 || formState.transactionLoading}
                     />
                   </div>
                 </div>

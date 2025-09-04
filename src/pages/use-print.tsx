@@ -7,12 +7,13 @@ import { HeaderFooter } from '../redux/slices/user-session/reducer';
 import Urls from '../redux/urls';
 import { APIClient } from '../helpers/api-client';
 import { DeepPartial } from 'redux';
-import { isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from '../utilities/Utils';
+import { getAmountInWords, isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from '../utilities/Utils';
 import { getArabicNumber } from './inventory/reports/tax-reports-ksa/vat-return-form/Vat-Return-Form-arabic';
 import { TransactionMasterInitialData } from './inventory/transactions/purchase/transaction-type-data';
-import { PrintResponse, PrintDetailDto, PrintMasterDto, PrintCustomFields } from './use-print-type';
+import { PrintResponse, PrintDetailDto, PrintMasterDto, PrintCustomFields, CompanyDetailsForPrint } from './use-print-type';
 import { initialPrintCustomFields, initialPrintResponse } from './use-print-type-data';
 import { merge } from 'lodash';
+import { DevGridColumn } from '../components/types/dev-grid-column';
 
 
 type VoucherType = {
@@ -21,6 +22,42 @@ type VoucherType = {
 };
 
 const api = new APIClient();
+export function getKsaQrCode(transDate: Date, totalWithVat: string, vat: string, companyData: CompanyDetailsForPrint): string {
+  const sellerName = companyData.companyRegistredNameEnglish; // replace with config/company profile
+  const vatRegNo = companyData.companyTaxRegNumber;        // replace with config/company profile
+
+  // Format datetime like "YYYY-MM-DDTHH:mm:ssZ"
+  const dateStr = transDate.getUTCFullYear().toString().padStart(4, "0")
+    + "-" + (transDate.getUTCMonth() + 1).toString().padStart(2, "0")
+    + "-" + transDate.getUTCDate().toString().padStart(2, "0");
+
+  const timeStr = transDate.getUTCHours().toString().padStart(2, "0")
+    + ":" + transDate.getUTCMinutes().toString().padStart(2, "0")
+    + ":" + transDate.getUTCSeconds().toString().padStart(2, "0");
+
+  const datetime = `${dateStr}T${timeStr}Z`;
+
+  // Tag-Length-Value (TLV) encoding
+  const tlv: [number, string][] = [
+    [1, sellerName],
+    [2, vatRegNo],
+    [3, datetime],
+    [4, totalWithVat],
+    [5, vat]
+  ];
+
+  // Encode TLV into bytes
+  let bytes: number[] = [];
+  for (const [tag, value] of tlv) {
+    const valueBytes = new TextEncoder().encode(value);
+    bytes.push(tag); // tag
+    bytes.push(valueBytes.length); // length
+    bytes.push(...valueBytes); // value
+  }
+
+  // Convert to Base64
+  return btoa(String.fromCharCode(...bytes));
+}
 
 export const usePrintTrans = ({ voucherType, transactionType }: VoucherType) => {
   // Core class variables - exact match to C#
@@ -372,10 +409,10 @@ export const usePrintTrans = ({ voucherType, transactionType }: VoucherType) => 
               returnData.details = sorted;
             } else {
               if (warehouseID > 0) {
-                const filtered = (printData.details || []).filter((item: TransactionDetail) =>
+                const filtered = (printData.details || []).filter((item: PrintDetailDto) =>
                   (item.warehouseID || 0) === warehouseID
                 );
-                returnData.printData.details = filtered;
+                returnData.details = filtered;
               }
             }
           }
@@ -417,247 +454,269 @@ export const usePrintTrans = ({ voucherType, transactionType }: VoucherType) => 
   }, []);
 
   // Check if field should be hidden based on hide codes
-  const checkForHide = useCallback((fldHideCodes: string, data: any) => {
-    let result = false;
+  // const checkForHide = useCallback((fldHideCodes: string, data: any) => {
+  //   let result = false;
 
-    switch (fldHideCodes) {
-      case "RETAMT":
-        if (totReturnAmount === 0) result = true;
-        break;
-      case "ROUNDAMT":
-        if (roundAmt === 0) result = true;
-        break;
-      case "ADDAMT":
-        if (adjustmentAmount === 0) result = true;
-        break;
-      case "IN":
-        if (inOut === "DINE IN" || inOut === "PARCEL") result = true;
-        break;
-      case "OUT":
-        if (inOut === "TAKE AWAY" || inOut === "DELIVERY") result = true;
-        break;
-      case "TAKE AWAY":
-        if (inOut === "TAKE AWAY") result = true;
-        break;
-      case "DELIVERY":
-        if (inOut === "DELIVERY") result = true;
-        break;
-      case "DINE IN":
-        if (inOut === "DINE IN") result = true;
-        break;
-      case "PARCEL":
-        if (inOut === "PARCEL") result = true;
-        break;
-      case "TOTDISC":
-        if (billDiscount + sumOfTotDisc === 0) result = true;
-        break;
-      case "BILLDISCOUNT":
-        if (billDiscount === 0) result = true;
-        break;
-      case "BALPAID":
-        if (balancePaid === 0) result = true;
-        break;
-      case "LASTPAGE":
-        if (pageNo === noOfPages) result = true;
-        break;
-      case "CASHACC":
-        if (isCashInHandLedger(partyLedgerID)) result = true;
-        break;
-      case "BANKACC":
-        if (isBankLedger(partyLedgerID)) result = true;
-        break;
-      case "CASHBANKACC":
-        if (checkIsLedgerUnderCashOrBank(partyLedgerID)) result = true;
-        break;
-      case "PARTYACC":
-        if (!checkIsLedgerUnderCashOrBank(partyLedgerID)) result = true;
-        break;
-      case "SALEBILLNOS":
-        if (salesBillNumbers === "") result = true;
-        break;
-      case "SALERETBILLNOS":
-        if (salesRetBillNumbers === "") result = true;
-        break;
-      case "PRIVLEGEAMT":
-        if (privilegeCardID === 0) result = true;
-        break;
-      case "ISREPRINT":
-        if (isReprint === false) result = true;
-        break;
-      case "5%TAXABLE":
-        if (total5PerctaxableValue === 0) result = true;
-        break;
-      case "0%TAXABLE":
-        if (zeroPercentTaxableValue === 0) result = true;
-        break;
-      case "15%TAXABLE":
-        if (total15PerctaxableValue === 0) result = true;
-        break;
-      // Delivery address parts
-      case "DELIVERYPHONE":
-        result = getDeliveryAddressPart(deliveryAddress3, 0) === "";
-        break;
-      case "DELIVERYSTREET":
-        result = getDeliveryAddressPart(deliveryAddress3, 1) === "";
-        break;
-      case "DELIVERYLANDMARK":
-        result = getDeliveryAddressPart(deliveryAddress3, 2) === "";
-        break;
-      case "DELIVERYREMARKS":
-        result = getDeliveryAddressPart(deliveryAddress3, 3) === "";
-        break;
-      // GST taxable amounts
-      case "TAXABLE 0%":
-        if (zeroTaxable === 0) {
-          result = true;
-          setSkipLineHeight(prev => prev + 12);
-        }
-        break;
-      case "TAXABLE 3%":
-        if (threeTaxable === 0) {
-          result = true;
-          setSkipLineHeight(prev => prev + 12);
-        }
-        break;
-      case "TAXABLE 5%":
-        if (fiveTaxable === 0) {
-          result = true;
-          setSkipLineHeight(prev => prev + 12);
-        }
-        break;
-      case "TAXABLE 12%":
-        if (twelveTaxable === 0) {
-          result = true;
-          setSkipLineHeight(prev => prev + 12);
-        }
-        break;
-      case "TAXABLE 18%":
-        if (eighteenTaxable === 0) {
-          result = true;
-          setSkipLineHeight(prev => prev + 12);
-        }
-        break;
-      case "TAXABLE 28%":
-        if (twentyEightTaxable === 0) {
-          result = true;
-          setSkipLineHeight(prev => prev + 12);
-        }
-        break;
-      case "GST 0%":
-        if (zeroTaxable === 0) result = true;
-        break;
-      case "GST 3%":
-        if (threeTaxable === 0) result = true;
-        break;
-      case "GST 5%":
-        if (fiveTaxable === 0) result = true;
-        break;
-      case "GST 12%":
-        if (twelveTaxable === 0) result = true;
-        break;
-      case "GST 18%":
-        if (eighteenTaxable === 0) result = true;
-        break;
-      case "GST 28%":
-        if (twentyEightTaxable === 0) result = true;
-        break;
-      default:
-        result = false;
-        break;
-    }
+  //   switch (fldHideCodes) {
+  //     case "RETAMT":
+  //       if (totReturnAmount === 0) result = true;
+  //       break;
+  //     case "ROUNDAMT":
+  //       if (roundAmt === 0) result = true;
+  //       break;
+  //     case "ADDAMT":
+  //       if (adjustmentAmount === 0) result = true;
+  //       break;
+  //     case "IN":
+  //       if (inOut === "DINE IN" || inOut === "PARCEL") result = true;
+  //       break;
+  //     case "OUT":
+  //       if (inOut === "TAKE AWAY" || inOut === "DELIVERY") result = true;
+  //       break;
+  //     case "TAKE AWAY":
+  //       if (inOut === "TAKE AWAY") result = true;
+  //       break;
+  //     case "DELIVERY":
+  //       if (inOut === "DELIVERY") result = true;
+  //       break;
+  //     case "DINE IN":
+  //       if (inOut === "DINE IN") result = true;
+  //       break;
+  //     case "PARCEL":
+  //       if (inOut === "PARCEL") result = true;
+  //       break;
+  //     case "TOTDISC":
+  //       if (billDiscount + sumOfTotDisc === 0) result = true;
+  //       break;
+  //     case "BILLDISCOUNT":
+  //       if (billDiscount === 0) result = true;
+  //       break;
+  //     case "BALPAID":
+  //       if (balancePaid === 0) result = true;
+  //       break;
+  //     case "LASTPAGE":
+  //       if (pageNo === noOfPages) result = true;
+  //       break;
+  //     case "CASHACC":
+  //       if (isCashInHandLedger(partyLedgerID)) result = true;
+  //       break;
+  //     case "BANKACC":
+  //       if (isBankLedger(partyLedgerID)) result = true;
+  //       break;
+  //     case "CASHBANKACC":
+  //       if (checkIsLedgerUnderCashOrBank(partyLedgerID)) result = true;
+  //       break;
+  //     case "PARTYACC":
+  //       if (!checkIsLedgerUnderCashOrBank(partyLedgerID)) result = true;
+  //       break;
+  //     case "SALEBILLNOS":
+  //       if (salesBillNumbers === "") result = true;
+  //       break;
+  //     case "SALERETBILLNOS":
+  //       if (salesRetBillNumbers === "") result = true;
+  //       break;
+  //     case "PRIVLEGEAMT":
+  //       if (privilegeCardID === 0) result = true;
+  //       break;
+  //     case "ISREPRINT":
+  //       if (isReprint === false) result = true;
+  //       break;
+  //     case "5%TAXABLE":
+  //       if (total5PerctaxableValue === 0) result = true;
+  //       break;
+  //     case "0%TAXABLE":
+  //       if (zeroPercentTaxableValue === 0) result = true;
+  //       break;
+  //     case "15%TAXABLE":
+  //       if (total15PerctaxableValue === 0) result = true;
+  //       break;
+  //     // Delivery address parts
+  //     case "DELIVERYPHONE":
+  //       result = getDeliveryAddressPart(deliveryAddress3, 0) === "";
+  //       break;
+  //     case "DELIVERYSTREET":
+  //       result = getDeliveryAddressPart(deliveryAddress3, 1) === "";
+  //       break;
+  //     case "DELIVERYLANDMARK":
+  //       result = getDeliveryAddressPart(deliveryAddress3, 2) === "";
+  //       break;
+  //     case "DELIVERYREMARKS":
+  //       result = getDeliveryAddressPart(deliveryAddress3, 3) === "";
+  //       break;
+  //     // GST taxable amounts
+  //     case "TAXABLE 0%":
+  //       if (zeroTaxable === 0) {
+  //         result = true;
+  //         setSkipLineHeight(prev => prev + 12);
+  //       }
+  //       break;
+  //     case "TAXABLE 3%":
+  //       if (threeTaxable === 0) {
+  //         result = true;
+  //         setSkipLineHeight(prev => prev + 12);
+  //       }
+  //       break;
+  //     case "TAXABLE 5%":
+  //       if (fiveTaxable === 0) {
+  //         result = true;
+  //         setSkipLineHeight(prev => prev + 12);
+  //       }
+  //       break;
+  //     case "TAXABLE 12%":
+  //       if (twelveTaxable === 0) {
+  //         result = true;
+  //         setSkipLineHeight(prev => prev + 12);
+  //       }
+  //       break;
+  //     case "TAXABLE 18%":
+  //       if (eighteenTaxable === 0) {
+  //         result = true;
+  //         setSkipLineHeight(prev => prev + 12);
+  //       }
+  //       break;
+  //     case "TAXABLE 28%":
+  //       if (twentyEightTaxable === 0) {
+  //         result = true;
+  //         setSkipLineHeight(prev => prev + 12);
+  //       }
+  //       break;
+  //     case "GST 0%":
+  //       if (zeroTaxable === 0) result = true;
+  //       break;
+  //     case "GST 3%":
+  //       if (threeTaxable === 0) result = true;
+  //       break;
+  //     case "GST 5%":
+  //       if (fiveTaxable === 0) result = true;
+  //       break;
+  //     case "GST 12%":
+  //       if (twelveTaxable === 0) result = true;
+  //       break;
+  //     case "GST 18%":
+  //       if (eighteenTaxable === 0) result = true;
+  //       break;
+  //     case "GST 28%":
+  //       if (twentyEightTaxable === 0) result = true;
+  //       break;
+  //     default:
+  //       result = false;
+  //       break;
+  //   }
 
-    return result;
-  }, [
-  ]);
+  //   return result;
+  // }, [
+  // ]);
 
   // Get field value - this is the massive function with 200+ cases
 
 
   // Get common values - massive function with 200+ field calculations
-  const getCommonValues = useCallback((fieldName: keyof PrintCustomFields) => {
+  const getCommonValues = useCallback((field:
+    {fieldName: keyof PrintCustomFields, 
+      format: string, 
+      type: "string" | "number" | "date" | "boolean" | "object" | "datetime",
+    fildLength: number
+  }, 
+  data:PrintResponse,) => {
     let v = "";
-    switch (fieldName) {
-      case "AMOUNTINWORDS":
-        v = getAmountInWords(grantTotal);
+    switch (field.fieldName) {
+      case "amountInWords":
+        v = getAmountInWords(data.master.grandTotal);
         break;
-      case "AMOUNTINWORDSLINE2":
-        const ln = parseInt(fldLength || "0");
-        v = getAmountInWords(grantTotal);
+      case "amountInWordsLine2":
+        const ln = field.fildLength??0;
+        v = getAmountInWords(data.master.grandTotal);
         if (v.length > ln) {
           v = v.substring(ln);
         } else {
           v = "";
         }
         break;
-      case "AMOUNTINWORDSINARABIC":
-        v = getAmountInWordsInArabic(grantTotal);
+      case "amountInWordsInArabic":
+        v = convertAmountToArabic(data.master.grandTotal);
         break;
-      case "MANNUALORAUTOBARCODE":
-        v = mannualBarcode || autoBarcode;
+      case "mannualOrAutoBarcode":
+        v = data.detail.mannualBarcode || data.detail.autoBarcode;
         break;
-      case "BILLNUMBERBARCODE":
-        v = billNumberBarcode;
+      case "billNumberBarcode":
+        v = data.custom.billNumberBarcode;
         break;
-      case "TRANSACTIONBARCODE":
-        v = transactionBarcode;
+      case "transactionBarcode":
+        v = data.custom.transactionBarcode;
         break;
-      case "QRCODE_KSA_EINVOICE_PHASE1":
-      case "QRCODE_KSA_EINVOICE":
-      case "QRCODE_KSA_EINVOICE_NOT_ENCRYPTED":
-        v = getQRCodeKSA();
+      case "eInvoiceQRCode":
+         v = data.master.eInvoiceData.eInvoiceQRCode;
         break;
-      case "DELIVERYPHONE":
-        v = getDeliveryAddressPart(deliveryAddress3, 0);
+      case "qrcodeKsaEinvoicePhase1":
+         v = getKsaQrCode(data.master.transactionDate, data.master.grandTotal.toFixed(2),data.master.vatAmount.toFixed(2),data.master.companyData);
         break;
-      case "DELIVERYSTREET":
-        v = getDeliveryAddressPart(deliveryAddress3, 1);
+      case "qrcodeKsaEinvoice":
+      case "qrcodeKsaEinvoiceNotEncrypted":
+        if(data.productionReqId) {
+          v = data.master.eInvoiceData.iqr
+        }
+        if(v="") {
+          v = getKsaQrCode(data.master.transactionDate, data.master.grandTotal.toFixed(2),data.master.vatAmount.toFixed(2),data.master.companyData);
+        }
         break;
-      case "DELIVERYLANDMARK":
-        v = getDeliveryAddressPart(deliveryAddress3, 2);
+      case "qrcodeKsaEinvoicePhase2":
+        v = data.master.eInvoiceData.iqr
+        if(v="") {
+          v = getKsaQrCode(data.master.transactionDate, data.master.grandTotal.toFixed(2),data.master.vatAmount.toFixed(2),data.master.companyData);
+        }
         break;
-      case "DELIVERYREMARKS":
-        v = getDeliveryAddressPart(deliveryAddress3, 3);
+      case "deliveryPhone":
+        v = getDeliveryAddressPart(data.custom.deliveryAddress3, 0);
         break;
-      case "BILLNUMBER_PREF_BARCODE":
-        v = billNumberPrefBarcode;
+      case "deliveryStreet":
+        v = getDeliveryAddressPart(data.custom.deliveryAddress3, 1);
         break;
-      case "TOKENBARCODE":
-        v = tokenBarcode;
+      case "deliveryLandmark":
+        v = getDeliveryAddressPart(data.custom.deliveryAddress3, 2);
         break;
-      case "VOUCHERNUMBERBARCODE":
-        v = voucherNumberBarcode;
+      case "deliveryRemarks":
+        v = getDeliveryAddressPart(data.custom.deliveryAddress3, 3);
         break;
-      case "GROUPNAMEHEAD":
-        v = lastGroupName;
+      case "billNumberPrefBarcode":
+        v = data.custom.billNumberPrefBarcode;
         break;
-      case "PRINTTIME":
+      case "tokenBarcode":
+        v = data.custom.tokenBarcode;
+        break;
+      case "voucherNumberBarcode":
+        v = data.custom.voucherNumberBarcode;
+        break;
+      case "groupNameHead":
+        v = data.detail.groupName;
+        break;
+      case "printTime":
         v = new Date().toLocaleTimeString();
         break;
-      case "TRANSACTIONTIME":
-        v = transactionTime.toLocaleTimeString();
+      case "transactionTime":
+        v = data.custom.transactionTime;
         break;
-      case "PRINTDATE":
+      case "printDate":
         v = new Date().toLocaleDateString();
         break;
-      case "DATE":
+      case "date":
         v = new Date().toDateString();
         break;
-      case "PRINTCOPYSTATUS":
-        switch (printInCopy) {
+      case "printCopyStatus":
+        switch (data.custom.noOfCopies) {
           case 1: v = "Original"; break;
           case 2: v = "Duplicate"; break;
           case 3: v = "Triplicate"; break;
           case 4: v = "Quadriplicate"; break;
-          default: v = `${printInCopy} Th Copy`; break;
+          default: v = `${data.custom.noOfCopies} Th Copy`; break;
         }
         break;
-      case "PRINTCOPYSTATUS2":
-        switch (printInCopy) {
+      case "printCopyStatus2":
+        switch (data.custom.noOfCopies) {
           case 1: v = "Customers Copy"; break;
           case 2: v = "Office Copy"; break;
           case 3: v = "Store Copy"; break;
           case 4: v = "Sales man Copy"; break;
-          default: v = `${printInCopy} Th Copy`; break;
+          default: v = `${data.custom.noOfCopies} Th Copy`; break;
         }
         break;
       case "SALESBILLNUMBERS":
@@ -1554,41 +1613,7 @@ export const usePrintTrans = ({ voucherType, transactionType }: VoucherType) => 
 
     return v;
   }, [
-    // Include all dependencies
-    grantTotal, fldLength, totReturnAmount, roundAmt, adjustmentAmount,
-    mannualBarcode, autoBarcode, billNumberBarcode, transactionBarcode,
-    deliveryAddress3, billNumberPrefBarcode, tokenBarcode, voucherNumberBarcode,
-    lastGroupName, transactionTime, printInCopy, salesBillNumbers,
-    salesRetBillNumbers, billAmounts, retBillAmounts, totalItems, totalQty,
-    totalPageQty, totalFree, totalQtyFree, pageTotFree, sumOfCGST, sumOfSGST,
-    sumOfIGST, sumOfCessAmt, sumOfAddCessAmt, sumOfGST, sumGST, zeroTaxable,
-    zeroSGSTAmt, zeroCGSTAmt, zeroIGSTAmt, zeroTotal, threeTaxable, threeSGST,
-    threeCGST, threeIGST, threeTotal, fiveTaxable, fiveSGSTAmt, fiveCGSTAmt,
-    fiveIGSTAmt, fiveTotal, twelveTaxable, twelveSGSTAmt, twelveCGSTAmt,
-    twelveIGSTAmt, twelveTotal, eighteenTaxable, eighteenSGSTAmt, eighteenCGSTAmt,
-    eighteenIGSTAmt, eighteenTotal, twentyEightTaxable, twentyEightSGSTAmt,
-    twentyEightCGSTAmt, twentyEightIGSTAmt, twentyEightTotal, mrpTotal,
-    mrpDifference, qrPay, bankCard, sumOfGross, sumOfGrossfc, sumOfDisc,
-    sumOfTax, sumOfNetAmt, sumOfVAT, sumOfTotDisc, sumOfCST, sumOfNetValue,
-    sumOfMRP, sumOfNosQty, sumOfMRPRate, sumOfSchemDisc, sumOfNetWeight,
-    stateName, stateCode, totalSavedAmt, totalNetAmount, billDiscount,
-    pageTotalofGross, pageTotalofDisc, pageTotalofTax, pageTotalofNetAmt,
-    pageTotalofSchmeDisc, pageTotalofVAT, pageTotalofTotDisc, pageTotalofCST,
-    pageTotalofNetValue, pageTotalofNosQty, pageNo, noOfPages, pageTotDebit,
-    pageTotAmount, freeString, currentRow, productUnitRemarksOrProductName,
-    partyName, prodName, prodDescription, productCode, modelNoKOT, productBatchID,
-    invQty, dtTranMaster, inOut, partyLedgerID, cashReceived, cashReturned,
-    bankAmt, total5PerctaxableValue, total5PercTaxValue, total15PerctaxableValue,
-    total15PercTaxValue, zeroPercentTaxableValue, zeroPercentTaxValue,
-    invTransactionMasterID, openingBalance, transDate, sumOfGrossfc, cashPaidOrRcvd,
-    qtyWithUnit, unitNetValue, loyaltyCardNo, chequeDate, chequePaytoAccountName,
-    chequeAmount, chequeRemarks, chequeAmountInWords, voucherType, stockTransferTotalSalesValue,
-    pageTotalBarcode, jvTotalDebit, jvTotalCredit, invoiceNumberAndPageTotalBarcode,
-    pWidth, pHeight, nonHeightWidth, printCount, kmKitchenRemarks, kmWaiter,
-    kmOrderNumber, kmTableNo, kmSeatNo, kmTokenNumber, kmServeType, narration,
-    totalBillQty, totalBillItemNos, bankCardName, serviceItems, serviceItemsAMT,
-    productNameGatePass, qtyGatePass, gatePass, transactionTimeGate, totalItemsGate,
-    tokenBarcodeGate, gt
+    
   ]);
 
   // Format field values based on format specification

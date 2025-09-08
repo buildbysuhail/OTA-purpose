@@ -203,40 +203,40 @@ export const usePrintTrans = ({ voucherType, transactionType }: VoucherType) => 
 
         if (totalGSTPerc === 0) {
           printData.custom.zeroTaxable += netValue;
-          printData.custom.zeroSGSTAmt += sgst;
-          printData.custom.zeroCGSTAmt += cgst;
-          printData.custom.zeroIGSTAmt += igst;
-          printData.custom.zeroTotal += cgst + sgst + igst;
+          printData.custom.sGST_0_Perc += sgst;
+          printData.custom.cGST_0_Perc += cgst;
+          printData.custom.iGST_0_Perc += igst;
+          printData.custom.total_0_Perc += cgst + sgst + igst;
         } else if (totalGSTPerc === 3) {
-          printData.custom.threeTaxable += netValue;
-          printData.custom.threeSGST += sgst;
-          printData.custom.threeCGST += cgst;
-          printData.custom.threeIGST += igst;
-          printData.custom.threeTotal += cgst + sgst + igst;
+          printData.custom.taxable_3_Perc += netValue;
+          printData.custom.sGST_3_Perc += sgst;
+          printData.custom.cGST_3_Perc += cgst;
+          printData.custom.iGST_3_Perc += igst;
+          printData.custom.total_3_Perc += cgst + sgst + igst;
         } else if (totalGSTPerc === 5) {
-          printData.custom.fiveTaxable += netValue;
-          printData.custom.fiveSGSTAmt += sgst;
-          printData.custom.fiveCGSTAmt += cgst;
-          printData.custom.fiveIGSTAmt += igst;
-          printData.custom.fiveTotal += cgst + sgst + igst;
+          printData.custom.taxable_5_Perc += netValue;
+          printData.custom.sGST_5_Perc += sgst;
+          printData.custom.cGST_5_Perc += cgst;
+          printData.custom.iGST_5_Perc += igst;
+          printData.custom.total_5_Perc += cgst + sgst + igst;
         } else if (totalGSTPerc === 12) {
-          printData.custom.twelveTaxable += netValue;
-          printData.custom.twelveSGSTAmt += sgst;
-          printData.custom.twelveCGSTAmt += cgst;
-          printData.custom.twelveIGSTAmt += igst;
-          printData.custom.twelveTotal += cgst + sgst + igst;
+          printData.custom.taxable_12_Perc += netValue;
+          printData.custom.sGST_12_Perc += sgst;
+          printData.custom.cGST_12_Perc += cgst;
+          printData.custom.iGST_12_Perc += igst;
+          printData.custom.total_12_Perc += cgst + sgst + igst;
         } else if (totalGSTPerc === 18) {
-          printData.custom.eighteenTaxable += netValue;
-          printData.custom.eighteenSGSTAmt += sgst;
-          printData.custom.eighteenCGSTAmt += cgst;
-          printData.custom.eighteenIGSTAmt += igst;
-          printData.custom.eighteenTotal += cgst + sgst + igst;
+          printData.custom.taxable_18_Perc += netValue;
+          printData.custom.sGST_18_Perc += sgst;
+          printData.custom.cGST_18_Perc += cgst;
+          printData.custom.iGST_18_Perc += igst;
+          printData.custom.total_18_Perc += cgst + sgst + igst;
         } else if (totalGSTPerc === 28) {
-          printData.custom.twentyEightTaxable += netValue;
-          printData.custom.twentyEightSGSTAmt += sgst;
-          printData.custom.twentyEightCGSTAmt += cgst;
-          printData.custom.twentyEightIGSTAmt += igst;
-          printData.custom.twentyEightTotal += cgst + sgst + igst;
+          printData.custom.taxable_28_Perc += netValue;
+          printData.custom.sGST_28_Perc += sgst;
+          printData.custom.cGST_28_Perc += cgst;
+          printData.custom.iGST_28_Perc += igst;
+          printData.custom.total_28_Perc += cgst + sgst + igst;
         }
       }
 
@@ -721,18 +721,18 @@ export const usePrintTrans = ({ voucherType, transactionType }: VoucherType) => 
           default: v = `${data.custom.noOfCopies} Th Copy`; break;
         }
         break;
-      // case "SALESBILLNUMBERS":
-      //   v = salesBillNumbers.slice(0, -1);
-      //   break;
-      // case "SALESRETBILLNUMBERS":
-      //   v = salesRetBillNumbers.slice(0, -1);
-      //   break;
-      // case "BILLAMOUNTS":
-      //   v = billAmounts.slice(0, -1);
-      //   break;
-      // case "RETBILLAMOUNTS":
-      //   v = retBillAmounts ? retBillAmounts.slice(0, -1) : "";
-      //   break;
+      case "salesBillNumbers":
+        v = data.custom.salesBillNumbers.slice(0, -1);
+        break;
+      case "salesRetBillNumbers":
+        v = data.custom.salesRetBillNumbers.slice(0, -1);
+        break;
+      case "billAmounts":
+        v = data.custom.billAmounts.slice(0, -1);
+        break;
+      case "retBillAmounts":
+        v = data.custom.retBillAmounts ? data.custom.retBillAmounts.slice(0, -1) : "";
+        break;
       // case "HEADER1":
       // case "HEADER2":
       // case "HEADER3":
@@ -757,696 +757,696 @@ export const usePrintTrans = ({ voucherType, transactionType }: VoucherType) => 
       // case "FOOTER10":
       //   v = getHeaderFooterValue(fieldNameUpper);
       //   break;
-      // case "TOTALITEMS":
-      //   v = totalItems.toString();
-      //   break;
-      // case "SUM OF QTY":
-      //   v = totalQty.toString();
-      //   break;
-      // case "PAGE TOTAL OF QTY":
-      //   v = totalPageQty.toString();
-      //   break;
-      // case "SUM OF FREE":
-      //   v = totalFree.toString();
-      //   break;
-      // case "SUM OF QTY+FREE":
-      // case "TOTAL QTY AND FREE":
-      //   setTotalQtyFree(totalFree + totalQty);
-      //   v = totalQtyFree.toString();
-      //   break;
-      // case "PAGE TOTAL OF FREE":
-      //   v = pageTotFree.toString();
-      //   break;
-      // // GST calculations
-      // case "SUM OF CGST":
-      //   v = sumOfCGST.toString();
-      //   break;
-      // case "SUM OF SGST":
-      //   v = sumOfSGST.toString();
-      //   break;
-      // case "SUM OF IGST":
-      //   v = sumOfIGST.toString();
-      //   break;
-      // case "SUM OF CESSAMT":
-      //   v = sumOfCessAmt.toString();
-      //   break;
-      // case "SUM OF ADDCESSAMT":
-      //   v = sumOfAddCessAmt.toString();
-      //   break;
-      // case "SUM OF GST":
-      //   v = sumOfGST.toString();
-      //   break;
-      // case "GST":
-      //   v = sumGST.toString();
-      //   break;
-      // case "TAXABLE 0%":
-      //   v = zeroTaxable.toString();
-      //   break;
-      // case "SGST 0%":
-      //   v = zeroSGSTAmt.toString();
-      //   break;
-      // case "CGST 0%":
-      //   v = zeroCGSTAmt.toString();
-      //   break;
-      // case "IGST 0%":
-      //   v = zeroIGSTAmt.toString();
-      //   break;
-      // case "TOTAL 0%":
-      //   v = zeroTotal.toString();
-      //   break;
-      // case "TAXABLE 3%":
-      //   v = threeTaxable.toString();
-      //   break;
-      // case "SGST 3%":
-      //   v = threeSGST.toString();
-      //   break;
-      // case "CGST 3%":
-      //   v = threeCGST.toString();
-      //   break;
-      // case "IGST 3%":
-      //   v = threeIGST.toString();
-      //   break;
-      // case "TOTAL 3%":
-      //   v = threeTotal.toString();
-      //   break;
-      // case "TAXABLE 5%":
-      //   v = fiveTaxable.toString();
-      //   break;
-      // case "SGST 5%":
-      //   v = fiveSGSTAmt.toString();
-      //   break;
-      // case "CGST 5%":
-      //   v = fiveCGSTAmt.toString();
-      //   break;
-      // case "IGST 5%":
-      //   v = fiveIGSTAmt.toString();
-      //   break;
-      // case "TOTAL 5%":
-      //   v = fiveTotal.toString();
-      //   break;
-      // case "TAXABLE 12%":
-      //   v = twelveTaxable.toString();
-      //   break;
-      // case "SGST 12%":
-      //   v = twelveSGSTAmt.toString();
-      //   break;
-      // case "CGST 12%":
-      //   v = twelveCGSTAmt.toString();
-      //   break;
-      // case "IGST 12%":
-      //   v = twelveIGSTAmt.toString();
-      //   break;
-      // case "TOTAL 12%":
-      //   v = twelveTotal.toString();
-      //   break;
-      // case "TAXABLE 18%":
-      //   v = eighteenTaxable.toString();
-      //   break;
-      // case "SGST 18%":
-      //   v = eighteenSGSTAmt.toString();
-      //   break;
-      // case "CGST 18%":
-      //   v = eighteenCGSTAmt.toString();
-      //   break;
-      // case "IGST 18%":
-      //   v = eighteenIGSTAmt.toString();
-      //   break;
-      // case "TOTAL 18%":
-      //   v = eighteenTotal.toString();
-      //   break;
-      // case "TAXABLE 28%":
-      //   v = twentyEightTaxable.toString();
-      //   break;
-      // case "SGST 28%":
-      //   v = twentyEightSGSTAmt.toString();
-      //   break;
-      // case "CGST 28%":
-      //   v = twentyEightCGSTAmt.toString();
-      //   break;
-      // case "IGST 28%":
-      //   v = twentyEightIGSTAmt.toString();
-      //   break;
-      // case "TOTAL 28%":
-      //   v = twentyEightTotal.toString();
-      //   break;
-      // case "GST 0%":
-      //   v = (zeroSGSTAmt + zeroCGSTAmt).toString();
-      //   break;
-      // case "GST 3%":
-      //   v = (threeSGST + threeCGST).toString();
-      //   break;
-      // case "GST 5%":
-      //   v = (fiveSGSTAmt + fiveCGSTAmt).toString();
-      //   break;
-      // case "GST 12%":
-      //   v = (twelveSGSTAmt + twelveCGSTAmt).toString();
-      //   break;
-      // case "GST 18%":
-      //   v = (eighteenSGSTAmt + eighteenCGSTAmt).toString();
-      //   break;
-      // case "GST 28%":
-      //   v = (twentyEightSGSTAmt + twentyEightCGSTAmt).toString();
-      //   break;
-      // case "MRPTOTAL":
-      //   v = mrpTotal.toString();
-      //   break;
-      // case "MRPDIFFERENCE":
-      //   v = mrpDifference.toString();
-      //   break;
-      // case "QRPAY":
-      //   v = qrPay.toString();
-      //   break;
-      // case "BANKCARD":
-      //   v = bankCard.toString();
-      //   break;
-      // case "SUM OF GROSS":
-      //   v = sumOfGross.toString();
-      //   break;
-      // case "TOTALGROSSFC":
-      //   v = sumOfGrossfc.toString();
-      //   break;
-      // case "SUM OF DISC":
-      //   v = sumOfDisc.toString();
-      //   break;
-      // case "SUM OF TAX":
-      //   v = sumOfTax.toString();
-      //   break;
-      // case "SUM OF NETAMT":
-      //   v = sumOfNetAmt.toString();
-      //   break;
-      // case "SUM OF VAT":
-      //   v = sumOfVAT.toString();
-      //   break;
-      // case "SUM OF TOTDISC":
-      //   v = sumOfTotDisc.toString();
-      //   break;
-      // case "SUM OF CST":
-      //   v = sumOfCST.toString();
-      //   break;
-      // case "SUM OF NETVALUE":
-      //   v = sumOfNetValue.toString();
-      //   break;
-      // case "SUM OF MRP":
-      //   v = sumOfMRP.toString();
-      //   break;
-      // case "SUM OF NOSQTY":
-      //   v = sumOfNosQty.toString();
-      //   break;
-      // case "SUM OF MRPRATE":
-      //   v = sumOfMRPRate.toString();
-      //   break;
-      // case "SUM OF SCHEMEDISC":
-      //   v = sumOfSchemDisc.toString();
-      //   break;
-      // case "SUM OF NETWEIGHT":
-      //   v = sumOfNetWeight.toString();
-      //   break;
-      // case "STATENAME":
-      //   v = stateName;
-      //   break;
-      // case "STATECODE":
-      //   v = stateCode;
-      //   break;
-      // case "YOU SAVED":
-      //   const bill = totalNetAmount - billDiscount;
-      //   setTotalSavedAmt(mrpTotal - bill);
-      //   const roundSave = posRoundAmount(totalSavedAmt);
+      case "totalItems":
+        v = data.custom.totalItems.toString();
+        break;
+      case "sumOfQty":
+        v = data.custom.totalQty.toString();
+        break;
+      case "pageTotalOfQty":
+        v = data.custom.totalPageQty.toString();
+        break;
+      case "sumOfFree":
+        v = data.custom.totalFree.toString();
+        break;
+      case "sumOfQtyFree":
+      // case "totalQtyAndFree":
+      //   setTotalQtyFree(data.custom.totalFree + data.custom.totalQty);
+      //   v = data.custom.totalQtyFree.toString();
+      //   break;
+      case "pageTotalOfFree":
+        v = data.custom.pageTotFree.toString();
+        break;
+      // GST calculations
+      case "sumOfCGST":
+        v = data.custom.sumOfCGST.toString();
+        break;
+      case "sumOfSGST":
+        v = data.custom.sumOfSGST.toString();
+        break;
+      case "sumOfIGST":
+        v = data.custom.sumOfIGST.toString();
+        break;
+      case "sumOfCessAmt":
+        v = data.custom.sumOfCessAmt.toString();
+        break;
+      case "sumOfAddCessAmt":
+        v = data.custom.sumOfAddCessAmt.toString();
+        break;
+      case "sumOfGST":
+        v = data.custom.sumOfGST.toString();
+        break;
+      case "gst":
+        v = data.custom.sumGST.toString();
+        break;
+      case "totalTaxableValue0Percent":
+        v = data.custom.zeroTaxable.toString();
+        break;
+      case "sGST_0_Perc":
+        v = data.custom.sGST_0_Perc.toString();
+        break;
+      case "cGST_0_Perc":
+        v = data.custom.cGST_0_Perc.toString();
+        break;
+      case "iGST_0_Perc":
+        v = data.custom.iGST_0_Perc.toString();
+        break;
+      case "total_0_Perc":
+        v = data.custom.total_0_Perc.toString();
+        break;
+      case "taxable_3_Perc":
+        v = data.custom.taxable_3_Perc.toString();
+        break;
+      case "sGST_3_Perc":
+        v = data.custom.sGST_3_Perc.toString();
+        break;
+      case "cGST_3_Perc":
+        v = data.custom.cGST_3_Perc.toString();
+        break;
+      case "iGST_3_Perc":
+        v = data.custom.iGST_3_Perc.toString();
+        break;
+      case "total_3_Perc":
+        v = data.custom.total_3_Perc.toString();
+        break;
+      case "taxable_5_Perc":
+        v = data.custom.taxable_5_Perc.toString();
+        break;
+      case "sGST_5_Perc":
+        v = data.custom.sGST_5_Perc.toString();
+        break;
+      case "cGST_5_Perc":
+        v = data.custom.cGST_5_Perc.toString();
+        break;
+      case "iGST_5_Perc":
+        v = data.custom.iGST_5_Perc.toString();
+        break;
+      case "total_5_Perc":
+        v = data.custom.total_5_Perc.toString();
+        break;
+      case "taxable_12_Perc":
+        v = data.custom.taxable_12_Perc.toString();
+        break;
+      case "sGST_12_Perc":
+        v = data.custom.sGST_12_Perc.toString();
+        break;
+      case "cGST_12_Perc":
+        v = data.custom.cGST_12_Perc.toString();
+        break;
+      case "iGST_12_Perc":
+        v = data.custom.iGST_12_Perc.toString();
+        break;
+      case "total_12_Perc":
+        v = data.custom.total_12_Perc.toString();
+        break;
+      case "taxable_18_Perc":
+        v = data.custom.taxable_18_Perc.toString();
+        break;
+      case "sGST_18_Perc":
+        v = data.custom.sGST_18_Perc.toString();
+        break;
+      case "cGST_18_Perc":
+        v = data.custom.cGST_18_Perc.toString();
+        break;
+      case "iGST_18_Perc":
+        v = data.custom.iGST_18_Perc.toString();
+        break;
+      case "total_18_Perc":
+        v = data.custom.total_18_Perc.toString();
+        break;
+      case "taxable_28_Perc":
+        v = data.custom.taxable_28_Perc.toString();
+        break;
+      case "sGST_28_Perc":
+        v = data.custom.sGST_28_Perc.toString();
+        break;
+      case "cGST_28_Perc":
+        v = data.custom.cGST_28_Perc.toString();
+        break;
+      case "iGST_28_Perc":
+        v = data.custom.iGST_28_Perc.toString();
+        break;
+      case "total_28_Perc":
+        v = data.custom.total_28_Perc.toString();
+        break;
+      case "gST_0_Perc":
+        v = (data.custom.sGST_0_Perc + data.custom.cGST_0_Perc).toString();
+        break;
+      case "gST_3_Perc":
+        v = (data.custom.sGST_3_Perc + data.custom.cGST_3_Perc).toString();
+        break;
+      case "gST_5_Perc":
+        v = (data.custom.sGST_5_Perc + data.custom.cGST_5_Perc).toString();
+        break;
+      case "gST_12_Perc":
+        v = (data.custom.sGST_12_Perc + data.custom.cGST_12_Perc).toString();
+        break;
+      case "gST_18_Perc":
+        v = (data.custom.sGST_18_Perc + data.custom.cGST_18_Perc).toString();
+        break;
+      case "gST_28_Perc":
+        v = (data.custom.sGST_28_Perc + data.custom.cGST_28_Perc).toString();
+        break;
+      case "mrpTotal":
+        v = data.custom.mrpTotal.toString();
+        break;
+      case "mrpDifference":
+        v = data.custom.mrpDifference.toString();
+        break;
+      case "qrPay":
+        v = data.custom.qrPay.toString();
+        break;
+      case "bankCard":
+        v = data.custom.bankCard.toString();
+        break;
+      case "sumOfGross":
+        v = data.custom.sumOfGross.toString();
+        break;
+      case "totalGrossFc":
+        v = data.custom.sumOfGrossfc.toString();
+        break;
+      case "sumOfDisc":
+        v = data.custom.sumOfDisc.toString();
+        break;
+      case "sumOfTax":
+        v = data.custom.sumOfTax.toString();
+        break;
+      case "sumOfNetAmt":
+        v = data.custom.sumOfNetAmt.toString();
+        break;
+      case "sumOfVAT":
+        v = data.custom.sumOfVAT.toString();
+        break;
+      case "sumOfTotDisc":
+        v = data.custom.sumOfTotDisc.toString();
+        break;
+      case "sumOfCST":
+        v = data.custom.sumOfCST.toString();
+        break;
+      case "sumOfNetValue":
+        v = data.custom.sumOfNetValue.toString();
+        break;
+      case "sumOfMRP":
+        v = data.custom.sumOfMRP.toString();
+        break;
+      case "sumOfNosQty":
+        v = data.custom.sumOfNosQty.toString();
+        break;
+      case "sumOfMRPRate":
+        v = data.custom.sumOfMRPRate.toString();
+        break;
+      case "sumOfSchemDisc":
+        v = data.custom.sumOfSchemDisc.toString();
+        break;
+      case "sumOfNetWeight":
+        v = data.custom.sumOfNetWeight.toString();
+        break;
+      case "stateName":
+        v = data.custom.stateName;
+        break;
+      case "stateCode":
+        v = data.custom.stateCode;
+        break;
+      // case "youSaved":
+      //   const bill = data.custom.totalNetAmount - data.custom.billDiscount;
+      //   setTotalSavedAmt(data.custom.mrpTotal - bill);
+      //   const roundSave = posRoundAmount(data.custom.totalSavedAmt);
       //   v = roundSave.toString();
       //   break;
-      // // Page totals
-      // case "PAGE TOTAL OF GROSS":
-      //   v = pageTotalofGross.toString();
+      // Page totals
+      case "pageTotalofGross":
+        v = data.custom.pageTotalofGross.toString();
+        break;
+      case "pageTotalofDisc":
+        v = data.custom.pageTotalofDisc.toString();
+        break;
+      case "pageTotalofTax":
+        v = data.custom.pageTotalofTax.toString();
+        break;
+      case "pageTotalofNetAmt":
+        v = data.custom.pageTotalofNetAmt.toString();
+        break;
+      case "pageTotalofSchmeDisc":
+        v = data.custom.pageTotalofSchmeDisc.toString();
+        break;
+      case "pageTotalofVAT":
+        v = data.custom.pageTotalofVAT.toString();
+        break;
+      case "pageTotalofTotDisc":
+        v = data.custom.pageTotalofTotDisc.toString();
+        break;
+      case "pageTotalofCST":
+        v = data.custom.pageTotalofCST.toString();
+        break;
+      case "pageTotalofNetValue":
+        v = data.custom.pageTotalofNetValue.toString();
+        break;
+      case "pageTotalofNosQty":
+        v = data.custom.pageTotalofNosQty.toString();
+        break;
+      case "pageNo":
+        v = data.custom.pageNo.toString();
+        break;
+      case "pageNoOfM":
+        v = `Page ${data.custom.pageNo} Of ${data.custom.noOfPages}`;
+        break;
+      case "noOfPages":
+        v = data.custom.noOfPages.toString();
+        break;
+      case "totalQty":
+        v = data.custom.totalQty.toString();
+        break;
+      case "totalPageQty":
+        v = data.custom.totalPageQty.toString();
+        break;
+      case "pageTotDebit":
+        v = data.custom.pageTotDebit.toString();
+        break;
+      case "totalNetAmount":
+        v = data.custom.totalNetAmount.toString();
+        break;
+      case "pageTotAmount":
+        v = data.custom.pageTotAmount.toString();
+        break;
+      case "freeString":
+        v = data.custom.freeString;
+        break;
+      case "groupWiseSiNo":
+      case "siNo":
+        v = data.custom.currentRow.toString();
+        break;
+      case "productUnitRemarksOrProductName":
+        v = data.custom.productUnitRemarksOrProductName;
+        break;
+      case "partyNameLine2":
+        const flen = parseInt(data.custom.fldLength || "0");
+        if (data.custom.partyName.length > flen) {
+          v = data.custom.partyName.substring(flen);
+        } else {
+          v = "";
+        }
+        break;
+      case "productName2":
+        let len = parseInt(data.custom.fldLength || "0");
+        if (data.custom.prodName.length > len) {
+          v = data.custom.prodName.substring(len);
+        } else {
+          v = "";
+        }
+        break;
+      case "productName3":
+        len = parseInt(data.custom.fldLength || "0");
+        if (data.custom.prodName.length > len * 2) {
+          v = data.custom.prodName.substring(len * 2);
+        } else {
+          v = "";
+        }
+        break;
+      case "productDescription2":
+        len = parseInt(data.custom.fldLength || "0");
+        if (data.custom.prodDescription.length > len) {
+          v = data.custom.prodDescription.substring(len);
+        } else {
+          v = "";
+        }
+        break;
+      case "productDescription3":
+        len = parseInt(data.custom.fldLength || "0");
+        if (data.custom.prodDescription.length > len * 2) {
+          v = data.custom.prodDescription.substring(len * 2);
+        } else {
+          v = "";
+        }
+        break;
+      case "productDescription4":
+        len = parseInt(data.custom.fldLength || "0");
+        if (data.custom.prodDescription.length > len * 3) {
+          v = data.custom.prodDescription.substring(len * 3);
+        } else {
+          v = "";
+        }
+        break;
+      case "productDescription5":
+        len = parseInt(data.custom.fldLength || "0");
+        if (data.custom.prodDescription.length > len * 4) {
+          v = data.custom.prodDescription.substring(len * 4);
+        } else {
+          v = "";
+        }
+        break;
+      case "productNameOrOpenProductName":
+        v = data.custom.prodName;
+        if (data.custom.productCode === "0") {
+          v = data.custom.modelNoKOT;
+        }
+        break;
+      case "productDescriptionOrName":
+        v = data.custom.prodDescription || data.custom.prodName;
+        break;
+      // case "qtyDetails":
+      //   v = getProductStockDetails(data.custom.productBatchID.toString(), data.custom.invQty);
       //   break;
-      // case "PAGE TOTAL OF DISC":
-      //   v = pageTotalofDisc.toString();
-      //   break;
-      // case "PAGE TOTAL OF TAX":
-      //   v = pageTotalofTax.toString();
-      //   break;
-      // case "PAGE TOTAL OF NETAMT":
-      //   v = pageTotalofNetAmt.toString();
-      //   break;
-      // case "PAGE TOTAL OF SCHEMEDISC":
-      //   v = pageTotalofSchmeDisc.toString();
-      //   break;
-      // case "PAGE TOTAL OF VAT":
-      //   v = pageTotalofVAT.toString();
-      //   break;
-      // case "PAGE TOTAL OF TOTDISC":
-      //   v = pageTotalofTotDisc.toString();
-      //   break;
-      // case "PAGE TOTAL OF CST":
-      //   v = pageTotalofCST.toString();
-      //   break;
-      // case "PAGE TOTAL OF NETVAKUE":
-      //   v = pageTotalofNetValue.toString();
-      //   break;
-      // case "PAGE TOTAL OF NOSQTY":
-      //   v = pageTotalofNosQty.toString();
-      //   break;
-      // case "PAGENO":
-      //   v = pageNo.toString();
-      //   break;
-      // case "PAGE N OF M":
-      //   v = `Page ${pageNo} Of ${noOfPages}`;
-      //   break;
-      // case "NOOFPAGES":
-      //   v = noOfPages.toString();
-      //   break;
-      // case "TOTALQTY":
-      //   v = totalQty.toString();
-      //   break;
-      // case "TOTALPAGEQTY":
-      //   v = totalPageQty.toString();
-      //   break;
-      // case "PAGETOTDEBIT":
-      //   v = pageTotDebit.toString();
-      //   break;
-      // case "TOTALNETAMOUNT":
-      //   v = totalNetAmount.toString();
-      //   break;
-      // case "PAGETOTAMOUNT":
-      //   v = pageTotAmount.toString();
-      //   break;
-      // case "FREESTRING":
-      //   v = freeString;
-      //   break;
-      // case "GROUPWISESINO":
-      // case "SI_NO":
-      //   v = currentRow.toString();
-      //   break;
-      // case "PRODUCTUNITREMARKSORPRODUCTNAME":
-      //   v = productUnitRemarksOrProductName;
-      //   break;
-      // case "PARTYNAMELINE2":
-      //   const flen = parseInt(fldLength || "0");
-      //   if (partyName.length > flen) {
-      //     v = partyName.substring(flen);
-      //   } else {
-      //     v = "";
-      //   }
-      //   break;
-      // case "PRODUCTNAME2":
-      //   let len = parseInt(fldLength || "0");
-      //   if (prodName.length > len) {
-      //     v = prodName.substring(len);
-      //   } else {
-      //     v = "";
-      //   }
-      //   break;
-      // case "PRODUCTNAME3":
-      //   len = parseInt(fldLength || "0");
-      //   if (prodName.length > len * 2) {
-      //     v = prodName.substring(len * 2);
-      //   } else {
-      //     v = "";
-      //   }
-      //   break;
-      // case "PRODUCTDESCRIPTION2":
-      //   len = parseInt(fldLength || "0");
-      //   if (prodDescription.length > len) {
-      //     v = prodDescription.substring(len);
-      //   } else {
-      //     v = "";
-      //   }
-      //   break;
-      // case "PRODUCTDESCRIPTION3":
-      //   len = parseInt(fldLength || "0");
-      //   if (prodDescription.length > len * 2) {
-      //     v = prodDescription.substring(len * 2);
-      //   } else {
-      //     v = "";
-      //   }
-      //   break;
-      // case "PRODUCTDESCRIPTION4":
-      //   len = parseInt(fldLength || "0");
-      //   if (prodDescription.length > len * 3) {
-      //     v = prodDescription.substring(len * 3);
-      //   } else {
-      //     v = "";
-      //   }
-      //   break;
-      // case "PRODUCTDESCRIPTION5":
-      //   len = parseInt(fldLength || "0");
-      //   if (prodDescription.length > len * 4) {
-      //     v = prodDescription.substring(len * 4);
-      //   } else {
-      //     v = "";
-      //   }
-      //   break;
-      // case "PRODUCTNAMEOROPENPRODUCTNAME":
-      //   v = prodName;
-      //   if (productCode === "0") {
-      //     v = modelNoKOT;
-      //   }
-      //   break;
-      // case "PRODUCTDESCRIPTIONORNAME":
-      //   v = prodDescription || prodName;
-      //   break;
-      // case "QTYDETAILS":
-      //   v = getProductStockDetails(productBatchID.toString(), invQty);
-      //   break;
-      // case "INOUTARABIC":
-      //   if (dtTranMaster && dtTranMaster[0]) {
-      //     const inOutValue = dtTranMaster[0].InOut;
-      //     if (inOutValue === "DINE IN") {
-      //       v = "محلي";
-      //     } else if (inOutValue === "TAKE AWAY") {
-      //       v = "سفري";
-      //     } else if (inOutValue === "PARCEL") {
-      //       v = "قطعة";
-      //     } else if (inOutValue === "DELIVERY") {
-      //       v = "توصيل";
-      //     }
-      //   }
-      //   break;
-      // case "MODEOFPAYMENT":
-      //   if (isCashInHandLedger(partyLedgerID)) {
-      //     if (grantTotal === cashReceived) {
+      case "inOutArabic":
+        if (data.custom.dtTranMaster && data.custom.dtTranMaster[0]) {
+          const inOutValue = data.custom.dtTranMaster[0].InOut;
+          if (inOutValue === "DINE IN") {
+            v = "محلي";
+          } else if (inOutValue === "TAKE AWAY") {
+            v = "سفري";
+          } else if (inOutValue === "PARCEL") {
+            v = "قطعة";
+          } else if (inOutValue === "DELIVERY") {
+            v = "توصيل";
+          }
+        }
+        break;
+      // case "modeOfPayment":
+      //   if (isCashInHandLedger(data.custom.partyLedgerID)) {
+      //     if (data.custom.grantTotal === data.custom.cashReceived) {
       //       v = "CASH";
-      //     } else if (grantTotal === cashReturned) {
+      //     } else if (data.custom.grantTotal === data.custom.cashReturned) {
       //       v = "CASH";
-      //     } else if (grantTotal === bankAmt) {
+      //     } else if (data.custom.grantTotal === data.custom.bankAmt) {
       //       v = "BANK";
       //     } else {
       //       v = "CASH/BANK";
       //     }
-      //   } else if (checkIsLedgerUnderBank(partyLedgerID)) {
+      //   } else if (checkIsLedgerUnderBank(data.custom.partyLedgerID)) {
       //     v = "BANK";
-      //   } else if (grantTotal === cashReceived) {
+      //   } else if (data.custom.grantTotal === data.custom.cashReceived) {
       //     v = "CASH";
-      //   } else if (grantTotal === cashReturned) {
+      //   } else if (data.custom.grantTotal === data.custom.cashReturned) {
       //     v = "CASH";
-      //   } else if (grantTotal === bankAmt) {
+      //   } else if (data.custom.grantTotal === data.custom.bankAmt) {
       //     v = "BANK";
-      //   } else if (grantTotal === cashReceived + bankAmt) {
+      //   } else if (data.custom.grantTotal === data.custom.cashReceived + data.custom.bankAmt) {
       //     v = "CASH+BANK";
       //   } else {
       //     v = "CREDIT";
       //   }
       //   break;
-      // case "MODEOFPAYMENTARABIC":
-      //   if (isCashInHandLedger(partyLedgerID)) {
-      //     if (grantTotal === cashReceived) {
+      // case "modeOfPaymentArabic":
+      //   if (isCashInHandLedger(data.custom.partyLedgerID)) {
+      //     if (data.custom.grantTotal === data.custom.cashReceived) {
       //       v = "نقدي";
-      //     } else if (grantTotal === cashReturned) {
+      //     } else if (data.custom.grantTotal === data.custom.cashReturned) {
       //       v = "نقدي";
-      //     } else if (grantTotal === bankAmt) {
+      //     } else if (data.custom.grantTotal === data.custom.bankAmt) {
       //       v = "شبكة";
       //     } else {
       //       v = "نقدي/شبكة";
       //     }
-      //   } else if (checkIsLedgerUnderBank(partyLedgerID)) {
+      //   } else if (checkIsLedgerUnderBank(data.custom.partyLedgerID)) {
       //     v = "شبكة";
-      //   } else if (grantTotal === cashReceived) {
+      //   } else if (data.custom.grantTotal === data.custom.cashReceived) {
       //     v = "نقدي";
-      //   } else if (grantTotal === cashReceived + bankAmt) {
+      //   } else if (data.custom.grantTotal === data.custom.cashReceived + data.custom.bankAmt) {
       //     v = "نقدي+شبكة";
-      //   } else if (grantTotal === cashReturned) {
+      //   } else if (data.custom.grantTotal === data.custom.cashReturned) {
       //     v = "نقدي";
-      //   } else if (grantTotal === bankAmt) {
+      //   } else if (data.custom.grantTotal === data.custom.bankAmt) {
       //     v = "شبكة";
       //   } else {
       //     v = "آجل";
       //   }
       //   break;
-      // case "PAIDORNOT":
-      //   v = cashReceived > 0 ? "Paid" : "Not Paid";
-      //   break;
-      // // Tax calculations with discount
-      // case "5%TOTALTAXABLEVALUE":
-      //   const taxableAmt5 = getTaxableAmountIncludingTaxOnDiscount(invTransactionMasterID, 5);
+      case "paidOrNot":
+        v = data.custom.cashReceived > 0 ? "Paid" : "Not Paid";
+        break;
+      // Tax calculations with discount
+      // case "totalTaxableValue_5_Perc":
+      //   const taxableAmt5 = getTaxableAmountIncludingTaxOnDiscount(data.custom.invTransactionMasterID, 5);
       //   if (taxableAmt5 > 0) {
       //     setTotal5PerctaxableValue(taxableAmt5);
       //   }
-      //   v = total5PerctaxableValue.toString();
+      //   v = data.custom.total5PerctaxableValue.toString();
       //   break;
-      // case "5%TOTALTAXVALUE":
-      //   const taxAmt5 = getTaxAmountIncludingTaxOnDiscount(invTransactionMasterID, 5);
+      // case "totalTaxValue_5_Perc":
+      //   const taxAmt5 = getTaxAmountIncludingTaxOnDiscount(data.custom.invTransactionMasterID, 5);
       //   if (taxAmt5 > 0) {
       //     setTotal5PercTaxValue(taxAmt5);
       //   }
-      //   v = total5PercTaxValue.toString();
+      //   v = data.custom.total5PercTaxValue.toString();
       //   break;
-      // case "15%TOTALTAXABLEVALUE":
-      //   const taxableAmt15 = getTaxableAmountIncludingTaxOnDiscount(invTransactionMasterID, 15.0);
+      // case "totalTaxableValue_15_Perc":
+      //   const taxableAmt15 = getTaxableAmountIncludingTaxOnDiscount(data.custom.invTransactionMasterID, 15.0);
       //   if (taxableAmt15 > 0) {
       //     setTotal15PerctaxableValue(taxableAmt15);
       //   }
-      //   v = total15PerctaxableValue.toString();
+      //   v = data.custom.total15PerctaxableValue.toString();
       //   break;
-      // case "15%TOTALTAXVALUE":
-      //   const taxAmt15 = getTaxAmountIncludingTaxOnDiscount(invTransactionMasterID, 15.0);
+      // case "totalTaxValue_15_Perc":
+      //   const taxAmt15 = getTaxAmountIncludingTaxOnDiscount(data.custom.invTransactionMasterID, 15.0);
       //   if (taxAmt15 > 0) {
       //     setTotal15PercTaxValue(taxAmt15);
       //   }
-      //   v = total15PercTaxValue.toString();
+      //   v = data.custom.total15PercTaxValue.toString();
       //   break;
-      // case "0%TOTALTAXABLEVALUE":
-      //   const taxableAmt0 = getTaxableAmountIncludingTaxOnDiscount(invTransactionMasterID, 0);
+      // case "totalTaxableValue_0_Perc":
+      //   const taxableAmt0 = getTaxableAmountIncludingTaxOnDiscount(data.custom.invTransactionMasterID, 0);
       //   if (taxableAmt0 > 0) {
       //     setZeroPercentTaxableValue(taxableAmt0);
       //   }
       //   v = zeroPercentTaxableValue.toString();
       //   break;
-      // case "0%TOTALTAXVALUE":
+      // case "totalTaxValue_0_Perc":
       //   setZeroPercentTaxValue(0);
       //   v = zeroPercentTaxValue.toString();
       //   break;
-      // case "AMOUNTINWORDSPAYABLE":
-      //   const payableAmount = grantTotal - (dtTranMaster && dtTranMaster[0] ? parseFloat(dtTranMaster[0].SRAmount || 0) : 0);
-      //   v = getAmountInWords(payableAmount);
-      //   break;
-      // // Balance calculations
-      // case "OB-CASH RCVD":
-      //   if (!isCashInHandLedger(partyLedgerID)) {
-      //     setOpeningBalance(getLedgerBalance(partyLedgerID, transDate));
-      //     v = (openingBalance - cashReceived).toString();
+      case "amountInWordsPayable":
+        const payableAmount = data.custom.grantTotal - (data.custom.dtTranMaster && data.custom.dtTranMaster[0] ? parseFloat(data.custom.dtTranMaster[0].SRAmount || 0) : 0);
+        v = getAmountInWords(payableAmount);
+        break;
+      // Balance calculations
+      // case "obCashRcvd":
+      //   if (!isCashInHandLedger(data.custom.partyLedgerID)) {
+      //     setOpeningBalance(getLedgerBalance(data.custom.partyLedgerID, data.custom.transDate));
+      //     v = (data.custom.openingBalance - data.custom.cashReceived).toString();
       //   }
       //   break;
-      // case "RUNNING BALANCE":
-      //   if (!isCashInHandLedger(partyLedgerID)) {
-      //     const runningBal = getLedgerBalance(partyLedgerID, transDate);
+      // case "runningBalance":
+      //   if (!isCashInHandLedger(data.custom.partyLedgerID)) {
+      //     const runningBal = getLedgerBalance(data.custom.partyLedgerID, data.custom.transDate);
       //     v = runningBal.toString();
       //   }
       //   break;
-      // case "LEDGER BALANCE":
-      //   if (!isCashInHandLedger(partyLedgerID)) {
-      //     const ledgerBal = getLedgerBalance(partyLedgerID);
+      // case "ledgerBalance":
+      //   if (!isCashInHandLedger(data.custom.partyLedgerID)) {
+      //     const ledgerBal = getLedgerBalance(data.custom.partyLedgerID);
       //     v = ledgerBal.toString();
       //   }
       //   break;
-      // case "PREVIOUS DAY LEDGER BALANCE":
-      //   if (!isCashInHandLedger(partyLedgerID)) {
+      // case "previousDayLedgerBalance":
+      //   if (!isCashInHandLedger(data.custom.partyLedgerID)) {
       //     if (getDBIDValue().trim() === "543140180640") {
-      //       if (getDefaultCustomerLedgerID() === partyLedgerID) {
+      //       if (getDefaultCustomerLedgerID() === data.custom.partyLedgerID) {
       //         v = "0";
       //       } else {
-      //         const ledgerBal = getPreviousDayLedgerBalance(partyLedgerID, transactionDate);
+      //         const ledgerBal = getPreviousDayLedgerBalance(data.custom.partyLedgerID, data.custom.transactionDate);
       //         v = ledgerBal.toString();
       //       }
       //     } else {
-      //       const ledgerBal = getPreviousDayLedgerBalance(partyLedgerID, transactionDate);
+      //       const ledgerBal = getPreviousDayLedgerBalance(data.custom.partyLedgerID, data.custom.transactionDate);
       //       v = ledgerBal.toString();
       //     }
       //   }
       //   break;
-      // case "LEDGERBALANCEANDGRANDTOTAL":
-      //   if (!isCashInHandLedger(partyLedgerID)) {
-      //     setOpeningBalance(getLedgerBalance(partyLedgerID, transDate));
-      //     const adjustedBalance = openingBalance - (grantTotal - cashReceived);
-      //     v = (Math.abs(adjustedBalance) + grantTotal).toString();
+      // case "ledgerBalanceAndGrandTotal":
+      //   if (!isCashInHandLedger(data.custom.partyLedgerID)) {
+      //     setOpeningBalance(getLedgerBalance(data.custom.partyLedgerID, data.custom.transDate));
+      //     const adjustedBalance = data.custom.openingBalance - (data.custom.grantTotal - data.custom.cashReceived);
+      //     v = (Math.abs(adjustedBalance) + data.custom.grantTotal).toString();
       //   }
       //   break;
-      // case "LEDGER BALANCE AMOUNT IN WORDS":
-      //   if (!isCashInHandLedger(partyLedgerID)) {
-      //     const ledgerBal = getLedgerBalance(partyLedgerID);
+      // case "ledgerBalanceAmountInWords":
+      //   if (!isCashInHandLedger(data.custom.partyLedgerID)) {
+      //     const ledgerBal = getLedgerBalance(data.custom.partyLedgerID);
       //     v = getAmountInWords(Math.abs(ledgerBal));
       //   }
       //   break;
-      // case "CURRENT BILL BALANCE":
-      //   v = cashReturned.toString();
+      case "currentBillBalance":
+        v = data.custom.cashReturned.toString();
+        break;
+      case "totalAdvance":
+        v = (data.custom.grantTotal - data.custom.cashReceived - data.custom.bankAmt).toString();
+        break;
+      case "totNetValueBillDisc":
+        v = (data.custom.sumOfNetValue - data.custom.billDiscount).toString();
+        break;
+      case "grandTotalBillDisc":
+        v = (data.custom.grantTotal - data.custom.billDiscount).toString();
+        break;
+      case "grandTotalCouponAmt":
+        const couponAmt = data.custom.dtTranMaster && data.custom.dtTranMaster[0] ? parseFloat(data.custom.dtTranMaster[0].CouponAmt || 0) : 0;
+        v = (data.custom.grantTotal - couponAmt).toString();
+        break;
+      case "qtyWithUnit":
+        v = data.custom.qtyWithUnit;
+        break;
+      case "unitNetValue":
+        v = data.custom.unitNetValue.toString();
+        break;
+      case "vehicleNumber":
+        v = data.custom.dtTranMaster && data.custom.dtTranMaster[0] ? (data.custom.dtTranMaster[0].VehicleNumber || "") : "";
+        break;
+      case "billDiscountPlusDiscount":
+        v = (data.custom.billDiscount + data.custom.sumOfDisc).toString();
+        break;
+      case "partyDisplayName":
+        v = data.custom.dtTranMaster && data.custom.dtTranMaster[0] ? (data.custom.dtTranMaster[0].PartyDisplayName || "") : "";
+        break;
+      // Vehicle details
+      case "vehicleName":
+        v = data.custom.dtTranMaster && data.custom.dtTranMaster[0] ? (data.custom.dtTranMaster[0].VehicleName || "") : "";
+        break;
+      case "vehicleModel":
+        v = data.custom.dtTranMaster && data.custom.dtTranMaster[0] ? (data.custom.dtTranMaster[0].VehicleModel || "") : "";
+        break;
+      case "vehicleCapacity":
+        v = data.custom.dtTranMaster && data.custom.dtTranMaster[0] ? (data.custom.dtTranMaster[0].VehicleCapacity || "") : "";
+        break;
+      case "vehicleManufacturer":
+        v = data.custom.dtTranMaster && data.custom.dtTranMaster[0] ? (data.custom.dtTranMaster[0].VehicleManufacturer || "") : "";
+        break;
+      case "vehicleOwner":
+        v = data.custom.dtTranMaster && data.custom.dtTranMaster[0] ? (data.custom.dtTranMaster[0].VehicleOwner || "") : "";
+        break;
+      case "vehicleColor":
+        v = data.custom.dtTranMaster && data.custom.dtTranMaster[0] ? (data.custom.dtTranMaster[0].VehicleColor || "") : "";
+        break;
+      case "vehicleOdometer":
+        v = data.custom.dtTranMaster && data.custom.dtTranMaster[0] ? (data.custom.dtTranMaster[0].VehicleOdometer || "") : "";
+        break;
+      case "vehicleRemarks":
+        v = data.custom.dtTranMaster && data.custom.dtTranMaster[0] ? (data.custom.dtTranMaster[0].VehicleRemarks || "") : "";
+        break;
+      case "balanceAmtPayable":
+        const srAmount = data.custom.dtTranMaster && data.custom.dtTranMaster[0] ? parseFloat(data.custom.dtTranMaster[0].SRAmount || 0) : 0;
+        v = (data.custom.grantTotal - srAmount).toString();
+        break;
+      // case "privilageCardBalance":
+      //   v = data.custom.loyaltyCardNo.trim() === "" ? "0" : getLoyaltyCardBalance(data.custom.loyaltyCardNo).toString();
       //   break;
-      // case "TOTAL-ADVANCE":
-      //   v = (grantTotal - cashReceived - bankAmt).toString();
-      //   break;
-      // case "TOTNETVALUE-BILLDISC":
-      //   v = (sumOfNetValue - billDiscount).toString();
-      //   break;
-      // case "GRANDTOTAL-BILLDISC":
-      //   v = (grantTotal - billDiscount).toString();
-      //   break;
-      // case "GRANDTOTAL-COUPONAMT":
-      //   const couponAmt = dtTranMaster && dtTranMaster[0] ? parseFloat(dtTranMaster[0].CouponAmt || 0) : 0;
-      //   v = (grantTotal - couponAmt).toString();
-      //   break;
-      // case "QTYWITHUNIT":
-      //   v = qtyWithUnit;
-      //   break;
-      // case "UNITNETVALUE":
-      //   v = unitNetValue.toString();
-      //   break;
-      // case "VEHICLENUMBER":
-      //   v = dtTranMaster && dtTranMaster[0] ? (dtTranMaster[0].VehicleNumber || "") : "";
-      //   break;
-      // case "BILLDISCOUNTPLUSDISCOUNT":
-      //   v = (billDiscount + sumOfDisc).toString();
-      //   break;
-      // case "PARTYDISPLAYNAME":
-      //   v = dtTranMaster && dtTranMaster[0] ? (dtTranMaster[0].PartyDisplayName || "") : "";
-      //   break;
-      // // Vehicle details
-      // case "VEHICLENAME":
-      //   v = dtTranMaster && dtTranMaster[0] ? (dtTranMaster[0].VehicleName || "") : "";
-      //   break;
-      // case "VEHICLEMODEL":
-      //   v = dtTranMaster && dtTranMaster[0] ? (dtTranMaster[0].VehicleModel || "") : "";
-      //   break;
-      // case "VEHICLECAPACITY":
-      //   v = dtTranMaster && dtTranMaster[0] ? (dtTranMaster[0].VehicleCapacity || "") : "";
-      //   break;
-      // case "VEHICLEMANUFACTURER":
-      //   v = dtTranMaster && dtTranMaster[0] ? (dtTranMaster[0].VehicleManufacturer || "") : "";
-      //   break;
-      // case "VEHICLEOWNER":
-      //   v = dtTranMaster && dtTranMaster[0] ? (dtTranMaster[0].VehicleOwner || "") : "";
-      //   break;
-      // case "VEHICLECOLOR":
-      //   v = dtTranMaster && dtTranMaster[0] ? (dtTranMaster[0].VehicleColor || "") : "";
-      //   break;
-      // case "VEHICLEODOMETER":
-      //   v = dtTranMaster && dtTranMaster[0] ? (dtTranMaster[0].VehicleOdometer || "") : "";
-      //   break;
-      // case "VEHICLEREMARKS":
-      //   v = dtTranMaster && dtTranMaster[0] ? (dtTranMaster[0].VehicleRemarks || "") : "";
-      //   break;
-      // case "BALANCE AMT PAYABLE":
-      //   const srAmount = dtTranMaster && dtTranMaster[0] ? parseFloat(dtTranMaster[0].SRAmount || 0) : 0;
-      //   v = (grantTotal - srAmount).toString();
-      //   break;
-      // case "PRIVILAGECARDBALANCE":
-      //   v = loyaltyCardNo.trim() === "" ? "0" : getLoyaltyCardBalance(loyaltyCardNo).toString();
-      //   break;
-      // // Cheque printing fields
-      // case "CHEQUE_CHEQUEDATE":
-      //   v = chequeDate;
-      //   break;
-      // case "CHEQUE_PAYTOACCOUNTNAME":
-      //   v = chequePaytoAccountName;
-      //   break;
-      // case "CHEQUE_AMOUNT":
-      //   v = `***${parseFloat(chequeAmount).toFixed(2)}/-***`;
-      //   break;
-      // case "CHEQUE_REMARKS":
-      //   v = chequeRemarks;
-      //   break;
-      // case "CHEQUE_AMOUNTINWORDSLINE1":
-      //   const chequeWordsLine1 = `***${getAmountInWords(parseFloat(chequeAmount))}***`;
+      // Cheque printing fields
+      case "chequeDate":
+        v = data.custom.chequeDate;
+        break;
+      case "chequePaytoAccountName":
+        v = data.custom.chequePaytoAccountName;
+        break;
+      case "chequeAmount":
+        v = `***${parseFloat(data.custom.chequeAmount).toFixed(2)}/-***`;
+        break;
+      case "chequeRemarks":
+        v = data.custom.chequeRemarks;
+        break;
+      // case "chequeAmountInWordsLine1":
+      //   const chequeWordsLine1 = `***${getAmountInWords(parseFloat(data.custom.chequeAmount))}***`;
       //   setChequeAmountInWords(chequeWordsLine1);
-      //   len = parseInt(fldLength || "0");
+      //   len = parseInt(data.custom.fldLength || "0");
       //   if (chequeWordsLine1.length > len) {
       //     v = chequeWordsLine1.substring(0, len);
       //   } else {
       //     v = chequeWordsLine1;
       //   }
       //   break;
-      // case "CHEQUE_AMOUNTINWORDSLINE2":
-      //   if (!chequeAmountInWords) {
-      //     setChequeAmountInWords(`***${getAmountInWords(parseFloat(chequeAmount))}***`);
+      // case "chequeAmountInWordsLine2":
+      //   if (!data.custom.chequeAmountInWords) {
+      //     setChequeAmountInWords(`***${getAmountInWords(parseFloat(data.custom.chequeAmount))}***`);
       //   }
-      //   len = parseInt(fldLength || "0");
-      //   if (chequeAmountInWords.length > len) {
-      //     v = chequeAmountInWords.substring(len);
+      //   len = parseInt(data.custom.fldLength || "0");
+      //   if (data.custom.chequeAmountInWords.length > len) {
+      //     v = data.custom.chequeAmountInWords.substring(len);
       //   } else {
       //     v = "";
       //   }
       //   break;
-      // case "CHEQUE_AMOUNTINWORDSLINE3":
-      //   if (!chequeAmountInWords) {
-      //     setChequeAmountInWords(`***${getAmountInWords(parseFloat(chequeAmount))}***`);
+      // case "chequeAmountInWordsLine3":
+      //   if (!data.custom.chequeAmountInWords) {
+      //     setChequeAmountInWords(`***${getAmountInWords(parseFloat(data.custom.chequeAmount))}***`);
       //   }
-      //   len = parseInt(fldLength || "0");
-      //   if (chequeAmountInWords.length > len * 2) {
-      //     v = chequeAmountInWords.substring(len * 2);
+      //   len = parseInt(data.custom.fldLength || "0");
+      //   if (data.custom.chequeAmountInWords.length > len * 2) {
+      //     v = data.custom.chequeAmountInWords.substring(len * 2);
       //   } else {
       //     v = "";
       //   }
       //   break;
-      // case "PREVIOUSBALANCE":
+      // case "previousBalance":
       //   if (voucherType === "CP" || voucherType === "BP") {
-      //     if (!isCashInHandLedger(partyLedgerID)) {
-      //       setOpeningBalance(getLedgerBalance(partyLedgerID, transDate));
-      //       const adjustedBalance = openingBalance - cashPaidOrRcvd;
+      //     if (!isCashInHandLedger(data.custom.partyLedgerID)) {
+      //       setOpeningBalance(getLedgerBalance(data.custom.partyLedgerID, data.custom.transDate));
+      //       const adjustedBalance = data.custom.openingBalance - data.custom.cashPaidOrRcvd;
       //       v = adjustedBalance.toString();
       //     }
       //   } else if (voucherType === "CR" || voucherType === "BR") {
-      //     if (!isCashInHandLedger(partyLedgerID)) {
-      //       setOpeningBalance(getLedgerBalance(partyLedgerID, transDate));
-      //       const adjustedBalance = openingBalance + cashPaidOrRcvd;
+      //     if (!isCashInHandLedger(data.custom.partyLedgerID)) {
+      //       setOpeningBalance(getLedgerBalance(data.custom.partyLedgerID, data.custom.transDate));
+      //       const adjustedBalance = data.custom.openingBalance + data.custom.cashPaidOrRcvd;
       //       v = adjustedBalance.toString();
       //     }
       //   } else {
-      //     if (!isCashInHandLedger(partyLedgerID)) {
+      //     if (!isCashInHandLedger(data.custom.partyLedgerID)) {
       //       if (voucherType === "SR") {
-      //         setOpeningBalance(getLedgerBalance(partyLedgerID, transDate));
-      //         const adjustedBalance = openingBalance + (grantTotal + cashReturned);
+      //         setOpeningBalance(getLedgerBalance(data.custom.partyLedgerID, data.custom.transDate));
+      //         const adjustedBalance = data.custom.openingBalance + (data.custom.grantTotal + data.custom.cashReturned);
       //         v = adjustedBalance.toString();
       //       } else {
-      //         setOpeningBalance(getLedgerBalance(partyLedgerID, transDate));
-      //         const adjustedBalance = openingBalance - (grantTotal - cashReceived);
+      //         setOpeningBalance(getLedgerBalance(data.custom.partyLedgerID, data.custom.transDate));
+      //         const adjustedBalance = data.custom.openingBalance - (data.custom.grantTotal - data.custom.cashReceived);
       //         v = adjustedBalance.toString();
       //       }
       //     }
       //   }
       //   break;
-      // case "CLOSINGBALANCE":
-      //   if (!isCashInHandLedger(partyLedgerID)) {
-      //     setOpeningBalance(getLedgerBalance(partyLedgerID, transDate));
-      //     v = openingBalance.toString();
+      // case "closingBalance":
+      //   if (!isCashInHandLedger(data.custom.partyLedgerID)) {
+      //     setOpeningBalance(getLedgerBalance(data.custom.partyLedgerID, data.custom.transDate));
+      //     v = data.custom.openingBalance.toString();
       //   }
       //   break;
-      // case "INVOICE STATUS":
-      //   const oldInvTrID = dtTranMaster && dtTranMaster[0] ? parseFloat(dtTranMaster[0].OldInvTransactionID || 0) : 0;
-      //   v = oldInvTrID === 0 ? "NEW" : "EDITED";
-      //   break;
-      // case "NETAMOUNT":
-      //   v = (grantTotal + billDiscount).toString();
-      //   break;
-      // case "GRANTTOTAL":
-      //   if (getIsAppGlobal() && getBusinessType() === "Restaurant") {
-      //     v = posRoundAmount(grantTotal).toString();
-      //   } else {
-      //     v = grantTotal.toString();
-      //   }
-      //   break;
-      // case "TOTALSALESVALUE":
-      //   v = stockTransferTotalSalesValue.toString();
-      //   break;
-      // case "PAGETOTALBARCODE":
-      //   v = pageTotalBarcode;
-      //   break;
-      // case "JVTOTALDEBIT":
-      //   v = jvTotalDebit.toString();
-      //   break;
-      // case "JVTOTALCREDIT":
-      //   v = jvTotalCredit.toString();
-      //   break;
-      // case "INVOICENUMBERANDPAGETOTALBARCODE":
-      //   v = invoiceNumberAndPageTotalBarcode;
-      //   break;
-      // case "WIDTH":
-      //   v = pWidth;
-      //   break;
-      // case "HEIGHT":
-      //   v = pHeight;
-      //   break;
-      // case "NON HEIGHT AND WIDTH UNIT":
-      //   v = nonHeightWidth;
-      //   break;
-      // case "PRINTCOUNT":
-      //   v = printCount;
-      //   break;
-      // case "SPECIAL LEDGER BALANCE":
+      case "invoiceStatus":
+        const oldInvTrID = data.custom.dtTranMaster && data.custom.dtTranMaster[0] ? parseFloat(data.custom.dtTranMaster[0].OldInvTransactionID || 0) : 0;
+        v = oldInvTrID === 0 ? "NEW" : "EDITED";
+        break;
+      case "netAmount":
+        v = (data.custom.grantTotal + data.custom.billDiscount).toString();
+        break;
+      case "grantTotal":
+        if (getIsAppGlobal() && getBusinessType() === "Restaurant") {
+          v = posRoundAmount(data.custom.grantTotal).toString();
+        } else {
+          v = data.custom.grantTotal.toString();
+        }
+        break;
+      case "totalSalesValue":
+        v = data.custom.stockTransferTotalSalesValue.toString();
+        break;
+      case "pageTotalBarcode":
+        v = data.custom.pageTotalBarcode;
+        break;
+      case "jvTotalDebit":
+        v = data.custom.jvTotalDebit.toString();
+        break;
+      case "jvTotalCredit":
+        v = data.custom.jvTotalCredit.toString();
+        break;
+      case "invoiceNumberAndPageTotalBarcode":
+        v = data.custom.invoiceNumberAndPageTotalBarcode;
+        break;
+      case "width":
+        v = data.custom.pWidth;
+        break;
+      case "height":
+        v = data.custom.pHeight;
+        break;
+      case "nonHeightAndWidthUnit":
+        v = data.custom.nonHeightWidth;
+        break;
+      case "printCount":
+        v = data.custom.printCount;
+        break;
+      // case "specialLedgerBalance":
       //   if (fileExistsSync("SpecialLedgerID.txt")) {
       //     const specialLedgerID = readFileSync("SpecialLedgerID.txt");
       //     if (specialLedgerID) {
@@ -1455,7 +1455,7 @@ export const usePrintTrans = ({ voucherType, transactionType }: VoucherType) => 
       //     }
       //   }
       //   break;
-      // case "SPECIAL LEDGER BALANCE 2":
+      // case "specialLedgerBalance2":
       //   if (fileExistsSync("SpecialLedgerID2.txt")) {
       //     const specialLedgerID = readFileSync("SpecialLedgerID2.txt");
       //     if (specialLedgerID) {
@@ -1464,151 +1464,151 @@ export const usePrintTrans = ({ voucherType, transactionType }: VoucherType) => 
       //     }
       //   }
       //   break;
-      // case "LOGGED USERNAME":
-      //   v = getLoggedUsername();
-      //   break;
-      // // Kitchen message fields
-      // case "KM_KITCHENREMARKS":
-      //   v = kmKitchenRemarks;
-      //   break;
-      // case "KM_WAITER":
-      //   v = kmWaiter;
-      //   break;
-      // case "KM_ORDERNUMBER":
-      //   v = kmOrderNumber;
-      //   break;
-      // case "KM_TABLENO":
-      //   v = kmTableNo;
-      //   break;
-      // case "KM_SEATNO":
-      //   v = kmSeatNo;
-      //   break;
-      // case "KM_TOKENNUMBER":
-      //   v = kmTokenNumber;
-      //   break;
-      // case "KM_SERVETYPE":
-      //   v = kmServeType;
-      //   break;
-      // case "KM_KITCHENREMARKS1":
-      //   len = parseInt(fldLength || "0");
-      //   if (kmKitchenRemarks.length > len) {
-      //     v = kmKitchenRemarks.substring(len);
-      //   } else {
-      //     v = "";
-      //   }
-      //   break;
-      // case "KM_KITCHENREMARKS2":
-      //   len = parseInt(fldLength || "0");
-      //   if (kmKitchenRemarks.length > len * 2) {
-      //     v = kmKitchenRemarks.substring(len * 2);
-      //   } else {
-      //     v = "";
-      //   }
-      //   break;
-      // case "KM_KITCHENREMARKS3":
-      //   len = parseInt(fldLength || "0");
-      //   if (kmKitchenRemarks.length > len * 3) {
-      //     v = kmKitchenRemarks.substring(len * 3);
-      //   } else {
-      //     v = "";
-      //   }
-      //   break;
-      // case "KM_KITCHENREMARKS4":
-      //   len = parseInt(fldLength || "0");
-      //   if (kmKitchenRemarks.length > len * 4) {
-      //     v = kmKitchenRemarks.substring(len * 4);
-      //   } else {
-      //     v = "";
-      //   }
-      //   break;
-      // case "NARRATION2":
-      //   len = parseInt(fldLength || "0");
-      //   if (narration.length > len) {
-      //     v = narration.substring(len);
-      //   } else {
-      //     v = "";
-      //   }
-      //   break;
-      // case "TOTALBILLQTY":
-      //   v = totalBillQty.toString();
-      //   break;
-      // case "TOTALBILLITEMNOS":
-      //   v = totalBillItemNos.toString();
-      //   break;
-      // case "BANKCARDNAME":
-      //   v = bankCardName;
-      //   break;
-      // // Service items
-      // case "SERVICEITEMONE":
-      //   v = serviceItems.length > 0 ? serviceItems[0] : "";
-      //   break;
-      // case "SERVICEITEMTWO":
-      //   v = serviceItems.length > 1 ? serviceItems[1] : "";
-      //   break;
-      // case "SERVICEITEMTHREE":
-      //   v = serviceItems.length > 2 ? serviceItems[2] : "";
-      //   break;
-      // case "SERVICEITEMONEAMT":
-      //   v = serviceItemsAMT.length > 0 ? serviceItemsAMT[0] : "";
-      //   break;
-      // case "SERVICEITEMTWOAMT":
-      //   v = serviceItemsAMT.length > 1 ? serviceItemsAMT[1] : "";
-      //   break;
-      // case "SERVICEITEMTHREEAMT":
-      //   v = serviceItemsAMT.length > 2 ? serviceItemsAMT[2] : "";
-      //   break;
-      // case "GRANDTOTAL-RETRUN":
-      //   const grandTot = grantTotal;
-      //   const srAmt = dtTranMaster && dtTranMaster[0] ? parseFloat(dtTranMaster[0].SRAmount || 0) : 0;
-      //   v = (grandTot - srAmt).toString();
-      //   break;
-      // // Gate pass fields
-      // case "PRODUCTSGATEPASS":
+      case "loggedUsername":
+        v = getLoggedUsername();
+        break;
+      // Kitchen message fields
+      case "kmKitchenRemarks":
+        v = data.custom.kmKitchenRemarks;
+        break;
+      case "kmWaiter":
+        v = data.custom.kmWaiter;
+        break;
+      case "kmOrderNumber":
+        v = data.custom.kmOrderNumber;
+        break;
+      case "kmTableNo":
+        v = data.custom.kmTableNo;
+        break;
+      case "kmSeatNo":
+        v = data.custom.kmSeatNo;
+        break;
+      case "kmTokenNumber":
+        v = data.custom.kmTokenNumber;
+        break;
+      case "kmServeType":
+        v = data.custom.kmServeType;
+        break;
+      case "kmKitchenRemarks1":
+        len = parseInt(data.custom.fldLength || "0");
+        if (data.custom.kmKitchenRemarks.length > len) {
+          v = data.custom.kmKitchenRemarks.substring(len);
+        } else {
+          v = "";
+        }
+        break;
+      case "kmKitchenRemarks2":
+        len = parseInt(data.custom.fldLength || "0");
+        if (data.custom.kmKitchenRemarks.length > len * 2) {
+          v = data.custom.kmKitchenRemarks.substring(len * 2);
+        } else {
+          v = "";
+        }
+        break;
+      case "kmKitchenRemarks3":
+        len = parseInt(data.custom.fldLength || "0");
+        if (data.custom.kmKitchenRemarks.length > len * 3) {
+          v = data.custom.kmKitchenRemarks.substring(len * 3);
+        } else {
+          v = "";
+        }
+        break;
+      case "kmKitchenRemarks4":
+        len = parseInt(data.custom.fldLength || "0");
+        if (data.custom.kmKitchenRemarks.length > len * 4) {
+          v = data.custom.kmKitchenRemarks.substring(len * 4);
+        } else {
+          v = "";
+        }
+        break;
+      case "narration2":
+        len = parseInt(data.custom.fldLength || "0");
+        if (data.custom.narration.length > len) {
+          v = data.custom.narration.substring(len);
+        } else {
+          v = "";
+        }
+        break;
+      case "totalBillQty":
+        v = data.custom.totalBillQty.toString();
+        break;
+      case "totalBillItemNos":
+        v = data.custom.totalBillItemNos.toString();
+        break;
+      case "bankCardName":
+        v = data.custom.bankCardName;
+        break;
+      // Service items
+      case "serviceItemOne":
+        v = data.custom.serviceItems.length > 0 ? data.custom.serviceItems[0] : "";
+        break;
+      case "serviceItemTwo":
+        v = data.custom.serviceItems.length > 1 ? data.custom.serviceItems[1] : "";
+        break;
+      case "serviceItemThree":
+        v = data.custom.serviceItems.length > 2 ? data.custom.serviceItems[2] : "";
+        break;
+      case "serviceItemOneAmt":
+        v = data.custom.serviceItemsAMT.length > 0 ? data.custom.serviceItemsAMT[0] : "";
+        break;
+      case "serviceItemTwoAmt":
+        v = data.custom.serviceItemsAMT.length > 1 ? data.custom.serviceItemsAMT[1] : "";
+        break;
+      case "serviceItemThreeAmt":
+        v = data.custom.serviceItemsAMT.length > 2 ? data.custom.serviceItemsAMT[2] : "";
+        break;
+      case "grandTotalReturn":
+        const grandTot = data.custom.grantTotal;
+        const srAmt = data.custom.dtTranMaster && data.custom.dtTranMaster[0] ? parseFloat(data.custom.dtTranMaster[0].SRAmount || 0) : 0;
+        v = (grandTot - srAmt).toString();
+        break;
+      // Gate pass fields
+      // case "productsGatePass":
       //   setGt(true);
-      //   if (productNameGatePass && gatePass) {
-      //     v = productNameGatePass;
+      //   if (data.custom.productNameGatePass && data.custom.gatePass) {
+      //     v = data.custom.productNameGatePass;
       //   }
       //   break;
-      // case "QTYGATEPASS":
-      //   if (qtyGatePass > 0 && gatePass) {
-      //     v = qtyGatePass.toString();
+      case "qtyGatePass":
+        if (data.custom.qtyGatePass > 0 && data.custom.gatePass) {
+          v = data.custom.qtyGatePass.toString();
+        }
+        break;
+      // case "transactionTimeDateWithTimeGate":
+      //   if (data.custom.gatePass) {
+      //     v = data.custom.transactionTimeGate.toLocaleTimeString();
       //   }
       //   break;
-      // case "TRANSACTIONTIMEDATEWITHTIME_GATE":
-      //   if (gatePass) {
-      //     v = transactionTimeGate.toLocaleTimeString();
-      //   }
-      //   break;
-      // case "PRINTDATE_GATE":
-      //   if (gatePass) {
-      //     v = new Date().toLocaleDateString();
-      //   }
-      //   break;
-      // case "TOTALITEMS_GATE":
-      //   if (gatePass) {
-      //     v = totalItemsGate.toString();
-      //   }
-      //   break;
-      // case "VOUCHERNUMBER_GATE":
-      //   if (gatePass) {
-      //     v = tokenBarcodeGate;
-      //   }
-      //   break;
-      // case "TOKEN_GATE":
-      //   if (gatePass) {
-      //     v = "PLEASE KEEP YOUR TOKEN";
-      //   }
-      //   break;
-      // case "VOUCGER_NO_GATE":
-      //   if (gatePass) {
-      //     v = "*** VOUCHER NO ***";
-      //   }
-      //   break;
-      // case "NAME_GATE":
-      //   if (gatePass) {
-      //     v = "GATEPASS";
-      //   }
-      //   break;
+      case "printDateGate":
+        if (data.custom.gatePass) {
+          v = new Date().toLocaleDateString();
+        }
+        break;
+      case "totalItemsGate":
+        if (data.custom.gatePass) {
+          v = data.custom.totalItemsGate.toString();
+        }
+        break;
+      case "voucherNumberGate":
+        if (data.custom.gatePass) {
+          v = data.custom.tokenBarcodeGate;
+        }
+        break;
+      case "tokenGate":
+        if (data.custom.gatePass) {
+          v = "PLEASE KEEP YOUR TOKEN";
+        }
+        break;
+      case "voucherNoGate":
+        if (data.custom.gatePass) {
+          v = "*** VOUCHER NO ***";
+        }
+        break;
+      case "nameGate":
+        if (data.custom.gatePass) {
+          v = "GATEPASS";
+        }
+        break;
       default:
         break;
     }

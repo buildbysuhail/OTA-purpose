@@ -142,9 +142,9 @@ export interface PrintMasterDto {
   billwiseMasterID: number;
   employeeID: number;
   invTransactionID: number;
-  prevTransDate?: string;         // ISO string
-  bankDate: string;               // ISO string
-  referenceDate: string;          // ISO string
+  prevTransDate?: string; // ISO string
+  bankDate: string; // ISO string
+  referenceDate: string; // ISO string
   particulars: string;
   totalDebit?: number;
   billwiseTotalAdjAmt?: number;
@@ -165,7 +165,7 @@ export interface PrintMasterDto {
   onlineTrans: string;
   isEdit: boolean;
   chequeStatus: string;
-  checkBouncedDate?: string;      // ISO string
+  checkBouncedDate?: string; // ISO string
   drCr: string;
   isSalesView: boolean;
   refBranchID: number;
@@ -591,7 +591,7 @@ export interface EInvoiceIntegrationSettings {
   productionCsidToken?: string;
   productionCsidSecret?: string;
   productionReqId?: string;
-  generatedDate?: string;   // ISO-8601 string, e.g. "2025-09-02T12:34:56Z"
+  generatedDate?: string; // ISO-8601 string, e.g. "2025-09-02T12:34:56Z"
   isSimulation?: boolean;
   systemCode?: string;
 }
@@ -765,35 +765,35 @@ export interface PrintCustomFields {
   // GST details
   zeroTaxable: number;
   sumGST: number;
-  zeroCGSTAmt: number;
-  zeroSGSTAmt: number;
-  zeroIGSTAmt: number;
-  zeroTotal: number;
-  threeTaxable: number;
-  threeCGST: number;
-  threeSGST: number;
-  threeIGST: number;
-  threeTotal: number;
-  fiveTaxable: number;
-  fiveCGSTAmt: number;
-  fiveSGSTAmt: number;
-  fiveIGSTAmt: number;
-  fiveTotal: number;
-  twelveTaxable: number;
-  twelveCGSTAmt: number;
-  twelveSGSTAmt: number;
-  twelveIGSTAmt: number;
-  twelveTotal: number;
-  eighteenTaxable: number;
-  eighteenCGSTAmt: number;
-  eighteenSGSTAmt: number;
-  eighteenIGSTAmt: number;
-  eighteenTotal: number;
-  twentyEightTaxable: number;
-  twentyEightCGSTAmt: number;
-  twentyEightSGSTAmt: number;
-  twentyEightIGSTAmt: number;
-  twentyEightTotal: number;
+  cGST_0_Perc: number;
+  sGST_0_Perc: number;
+  iGST_0_Perc: number;
+  total_0_Perc: number;
+  taxable_3_Perc: number;
+  cGST_3_Perc: number;
+  sGST_3_Perc: number;
+  iGST_3_Perc: number;
+  total_3_Perc: number;
+  taxable_5_Perc: number;
+  cGST_5_Perc: number;
+  sGST_5_Perc: number;
+  iGST_5_Perc: number;
+  total_5_Perc: number;
+  taxable_12_Perc: number;
+  cGST_12_Perc: number;
+  sGST_12_Perc: number;
+  iGST_12_Perc: number;
+  total_12_Perc: number;
+  taxable_18_Perc: number;
+  cGST_18_Perc: number;
+  sGST_18_Perc: number;
+  iGST_18_Perc: number;
+  total_18_Perc: number;
+  taxable_28_Perc: number;
+  cGST_28_Perc: number;
+  sGST_28_Perc: number;
+  iGST_28_Perc: number;
+  total_28_Perc: number;
 
   // Additional calculations
   mrpDifference: number;
@@ -886,7 +886,7 @@ export interface PrintCustomFields {
   qrcodeKsaEinvoicePhase2: string;
   eInvoiceQRCode: string;
   qrcodeKsaEinvoice: string;
-  qrcodeKsaEinvoiceNotEncrypted : string;
+  qrcodeKsaEinvoiceNotEncrypted: string;
 
   // Address and party data
   inOut: string;
@@ -925,4 +925,96 @@ export interface PrintCustomFields {
   isKitchenMsg: boolean;
   kitchenId: number;
   privilageCardBalance: number;
+
+  sumOfQty: number;
+  pageTotalOfQty: number;
+  sumOfFree: number;
+  sumOfQtyFree: number;
+  totalQtyAndFree: number;
+  pageTotalOfFree: number;
+  gst: number;
+  totalTaxableValue0Percent: number;
+  gST_0_Perc: number;
+  gST_3_Perc: number;
+  gST_5_Perc: number;
+  gST_12_Perc: number;
+  gST_18_Perc: number;
+  gST_28_Perc: number;
+  totalGrossFc: number;
+  siNo: number;
+  grantTotal: number;
+
+  youSaved: string;
+  groupWiseSiNo: string;
+  pageNoOfM: string;
+  partyNameLine2: string;
+  productName2: string;
+  productName3: string;
+  productDescription2: string;
+  productDescription3: string;
+  productDescription4: string;
+  productDescription5: string;
+  productNameOrOpenProductName: string;
+  productDescriptionOrName: string;
+  qtyDetails: string;
+  inOutArabic: string;
+  modeOfPayment: string;
+  modeOfPaymentArabic: string;
+  paidOrNot: string;
+  totalTaxableValue_5_Perc: string;
+  totalTaxValue_5_Perc: string;
+  totalTaxableValue_15_Perc: string;
+  totalTaxValue_15_Perc: string;
+  totalTaxableValue_0_Perc: string;
+  totalTaxValue_0_Perc: string;
+  amountInWordsPayable: string;
+  runningBalance: string;
+  ledgerBalance: string;
+  previousDayLedgerBalance: string;
+  ledgerBalanceAndGrandTotal: string;
+  ledgerBalanceAmountInWords: string;
+  currentBillBalance: string;
+  totalAdvance: string;
+  totNetValueBillDisc: string;
+  grandTotalBillDisc: string;
+  grandTotalCouponAmt: string;
+  vehicleNumber: string;
+  billDiscountPlusDiscount: string;
+  partyDisplayName: string;
+  vehicleName: string;
+  vehicleModel: string;
+  vehicleCapacity: string;
+  vehicleManufacturer: string;
+  vehicleOwner: string;
+  vehicleColor: string;
+  vehicleOdometer: string;
+  vehicleRemarks: string;
+  balanceAmtPayable: string;
+  chequeAmountInWordsLine1: string;
+  chequeAmountInWordsLine2: string;
+  chequeAmountInWordsLine3: string;
+  previousBalance: string;
+  closingBalance: string;
+  invoiceStatus: string;
+  netAmount: string;
+  totalSalesValue: string;
+  nonHeightAndWidthUnit: string;
+  specialLedgerBalance: string;
+  specialLedgerBalance2: string;
+  loggedUsername: string;
+  narration2: string;
+  serviceItemOne: string;
+  serviceItemTwo: string;
+  serviceItemThree: string;
+  serviceItemOneAmt: string;
+  serviceItemTwoAmt: string;
+  serviceItemThreeAmt: string;
+  grandTotalReturn: string;
+  productsGatePass: string;
+  transactionTimeDateWithTimeGate: string;
+  printDateGate: string;
+  tokenGate: string;
+  voucherNoGate: string;
+  nameGate: string;
+  obCashRcvd: string;
 }

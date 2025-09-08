@@ -12,26 +12,28 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import moment from "moment";
 const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
   const dispatch = useAppDispatch();
-  const { t } = useTranslation('accountsReport');
-  const { getFormattedValue } = useNumberFormat()
+  const { t } = useTranslation("accountsReport");
+  const { getFormattedValue } = useNumberFormat();
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
       dataField: "date",
-      caption: t('date'),
+      caption: t("date"),
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
       width: 120,
-      showInPdf:true,
-        cellRender: (
-                          cellElement: any,
-                          cellInfo: any,
-                          filter: any,
-                          exportCell: any
-                        ) => {
-                           return  (cellElement.data.date==null||cellElement.data.date==""?"":moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")) ; // Ensures proper formatting
-                        }
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        return cellElement.data.date == null || cellElement.data.date == ""
+          ? ""
+          : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY"); // Ensures proper formatting
+      },
     },
     {
       dataField: "form",
@@ -48,7 +50,7 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "refNo",
@@ -80,7 +82,7 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -94,38 +96,58 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
             balance == null
               ? ""
               : balance < 0
-                ? getFormattedValue(-1 * balance)
-                : getFormattedValue(balance);
-          return exportCell != undefined ? {
-            ...exportCell,
-            text: cellInfo.value,
-            bold: cellElement.data.particulars === "TOTAL" ? true : '',
+              ? getFormattedValue(-1 * balance)
+              : getFormattedValue(balance);
+          return exportCell != undefined
+            ? {
+                ...exportCell,
+                text: cellInfo.value,
+                bold: cellElement.data.particulars === "TOTAL" ? true : "",
 
-            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
-            font: {
-              ...exportCell.font,
-              // color: isDebit ? "#129151" : "#DC143C",
-              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : "",
-              size: 10,
-              style: cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
-              bold: cellElement.data.particulars === "TOTAL" ? true : false,
-            }
-          } : undefined;
+                textColor:
+                  cellElement.data.particulars === "TOTAL" ? "#FF0000" : "",
+                font: {
+                  ...exportCell.font,
+                  // color: isDebit ? "#129151" : "#DC143C",
+                  color:
+                    cellElement.data.particulars === "TOTAL"
+                      ? { argb: "FFFF0000" }
+                      : "",
+                  size: 10,
+                  style:
+                    cellElement.data.particulars === "TOTAL"
+                      ? "bold"
+                      : "normal",
+                  bold: cellElement.data.particulars === "TOTAL" ? true : false,
+                },
+              }
+            : undefined;
+        } else {
+          return (
+            <span
+              className={`${
+                cellElement.data.particulars === "TOTAL"
+                  ? "font-bold text-[#DC143C]"
+                  : cellElement.data.particulars === "Pending Cheques" ||
+                    cellElement.data.particulars === "Total Pending Cheque Amt"
+                  ? "font-bold text-blue"
+                  : ""
+              }`}
+            >
+              {cellElement.data.particulars}
+            </span>
+          );
         }
-        else {
-          return ( <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ? 'font-bold text-blue' : ''}`}>
-          {cellElement.data.particulars}
-        </span>)
-}}
+      },
     },
     {
       dataField: "debit",
-      caption: t('debit'),
+      caption: t("debit"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 170,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -138,31 +160,58 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
           const value =
             balance == null
               ? ""
+              : cellElement.data.particulars === "TOTAL"
+              ? getFormattedValue(balance, false, 2)
               : balance < 0
-                ? getFormattedValue(-1 * balance)
-                : getFormattedValue(balance);
-          return exportCell != undefined ? {
-            ...exportCell,
-            text: value,
-            bold: cellElement.data.particulars === "TOTAL" ? true : '',
-            alignment: "right",
-            alignmentExcel: { horizontal: 'right' },
-            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
-            font: {
-              ...exportCell.font,
-              // color: isDebit ? "#129151" : "#DC143C",
-              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : "",
-              size: 10,
-              style: cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
-              bold: cellElement.data.particulars === "TOTAL" ? true : false,
-            }
-          } : undefined;
+              ? getFormattedValue(-1 * balance, false, 4)
+              : getFormattedValue(balance, false, 4);
+          return exportCell != undefined
+            ? {
+                ...exportCell,
+                text: value,
+                bold: cellElement.data.particulars === "TOTAL" ? true : "",
+                alignment: "right",
+                alignmentExcel: { horizontal: "right" },
+                textColor:
+                  cellElement.data.particulars === "TOTAL" ? "#FF0000" : "",
+                font: {
+                  ...exportCell.font,
+                  // color: isDebit ? "#129151" : "#DC143C",
+                  color:
+                    cellElement.data.particulars === "TOTAL"
+                      ? { argb: "FFFF0000" }
+                      : "",
+                  size: 10,
+                  style:
+                    cellElement.data.particulars === "TOTAL"
+                      ? "bold"
+                      : "normal",
+                  bold: cellElement.data.particulars === "TOTAL" ? true : false,
+                },
+              }
+            : undefined;
+        } else {
+          return (
+            <span
+              className={`${
+                cellElement.data.particulars === "TOTAL"
+                  ? "font-bold text-[#DC143C]"
+                  : ""
+              }`}
+            >
+              {`${
+                cellElement.data?.debit == 0 || cellElement.data?.debit == null
+                  ? ""
+                  : cellElement.data.particulars === "TOTAL"
+                  ? getFormattedValue(cellElement.data.debit, false, 2)
+                  : cellElement.data.debit < 0
+                  ? getFormattedValue(-1 * cellElement.data.debit, false, 4)
+                  : getFormattedValue(cellElement.data.debit, false, 4)
+              }`}
+            </span>
+          );
         }
-        else {
-          return ( <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
-        </span>)
-        }}
+      },
     },
     {
       dataField: "credit",
@@ -171,7 +220,7 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 170,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -184,31 +233,62 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
           const value =
             balance == null
               ? ""
+              : cellElement.data.particulars === "TOTAL"
+              ? getFormattedValue(balance, false, 2)
               : balance < 0
-                ? getFormattedValue(-1 * balance)
-                : getFormattedValue(balance);
-          return exportCell != undefined ? {
-            ...exportCell,
-            text: value,
-            bold: cellElement.data.particulars === "TOTAL" ? true : '',
-            alignment: "right",
-            alignmentExcel: { horizontal: 'right' },
-            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
-            font: {
-              ...exportCell.font,
-              // color: isDebit ? "#129151" : "#DC143C",
-              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : "",
-              size: 10,
-              style: cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
-              bold: cellElement.data.particulars === "TOTAL" ? true : false,
-            }
-          } : undefined;
+              ? getFormattedValue(-1 * balance, false, 4)
+              : getFormattedValue(balance, false, 4);
+          return exportCell != undefined
+            ? {
+                ...exportCell,
+                text: value,
+                bold: cellElement.data.particulars === "TOTAL" ? true : "",
+                alignment: "right",
+                alignmentExcel: { horizontal: "right" },
+                textColor:
+                  cellElement.data.particulars === "TOTAL" ? "#FF0000" : "",
+                font: {
+                  ...exportCell.font,
+                  // color: isDebit ? "#129151" : "#DC143C",
+                  color:
+                    cellElement.data.particulars === "TOTAL"
+                      ? { argb: "FFFF0000" }
+                      : "",
+                  size: 10,
+                  style:
+                    cellElement.data.particulars === "TOTAL"
+                      ? "bold"
+                      : "normal",
+                  bold: cellElement.data.particulars === "TOTAL" ? true : false,
+                },
+              }
+            : undefined;
+        } else {
+          return (
+            <span
+              className={`${
+                cellElement.data.particulars === "TOTAL"
+                  ? "font-bold text-[#DC143C]"
+                  : cellElement.data.particulars === "Pending Cheques" ||
+                    cellElement.data.particulars === "Total Pending Cheque Amt"
+                  ? "font-bold text-blue"
+                  : ""
+              }`}
+            >
+              {`${
+                cellElement.data?.credit == 0 ||
+                cellElement.data?.credit == null
+                  ? ""
+                  : cellElement.data.particulars === "TOTAL"
+                  ? getFormattedValue(cellElement.data.credit, false, 2)
+                  : cellElement.data.credit < 0
+                  ? getFormattedValue(-1 * cellElement.data.credit, false, 4)
+                  : getFormattedValue(cellElement.data.credit, false, 4)
+              }`}
+            </span>
+          );
         }
-        else {
-          return (   <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ? 'font-bold text-blue' : ''}`}>
-          {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
-        </span>)
-}}
+      },
     },
     {
       dataField: "balance",
@@ -217,7 +297,7 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 170,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -231,34 +311,42 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
             balance == null
               ? ""
               : balance < 0
-                ? getFormattedValue(-1 * balance)+ ' Cr'
-                : getFormattedValue(balance)+' Dr';
-          return exportCell != undefined ? {
-            ...exportCell,
-            text: value,
-            bold:  true,
-            alignment: "right",
-            alignmentExcel: { horizontal: 'right' },
-            textColor:  '#FF0000' ,
-            font: {
-              ...exportCell.font,
-              // color: isDebit ? "#129151" : "#DC143C",
-              color: { argb: 'FFFF0000' },
-              size: 10,
-              style:  'bold',
-              bold:  true ,
-            }
-          } : undefined;
+              ? getFormattedValue(-1 * balance, false, 2) + " Cr"
+              : getFormattedValue(balance, false, 2) + " Dr";
+          return exportCell != undefined
+            ? {
+                ...exportCell,
+                text: value,
+                bold: true,
+                alignment: "right",
+                alignmentExcel: { horizontal: "right" },
+                textColor: "#FF0000",
+                font: {
+                  ...exportCell.font,
+                  // color: isDebit ? "#129151" : "#DC143C",
+                  color: { argb: "FFFF0000" },
+                  size: 10,
+                  style: "bold",
+                  bold: true,
+                },
+              }
+            : undefined;
+        } else {
+          return (
+            <span className={`${"font-bold text-[#DC143C]"}`}>
+              {`${
+                cellElement.data?.balance == null
+                  ? "0"
+                  : cellElement.data.balance < 0
+                  ? getFormattedValue(-1 * cellElement.data.balance, false, 2) +
+                    " Cr"
+                  : getFormattedValue(cellElement.data.balance, false, 2) +
+                    " Dr"
+              }`}
+            </span>
+          );
         }
-        else {
-          return (  <span className={`${"font-bold text-[#DC143C]"}`}>
-          {`${cellElement.data?.balance == null
-            ? '0'
-            : cellElement.data.balance < 0
-              ? getFormattedValue(-1 * cellElement.data.balance) + ' Cr'
-              : getFormattedValue(cellElement.data.balance) + ' Dr'}`}
-        </span>)
-}}
+      },
     },
     {
       dataField: "ledger",
@@ -325,6 +413,22 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
       width: 170,
     },
     {
+      dataField: "remarks",
+      caption: t("remarks"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 170,
+    },
+    {
+      dataField: "notes",
+      caption: t("notes"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 170,
+    },
+    {
       dataField: "accTransactionDetailID",
       caption: t("accTransaction_detail_id"),
       dataType: "string",
@@ -337,25 +441,24 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-        
-              <div className="grid grid-cols-1 gap-3">
-                <ErpDevGrid
-                 heightToAdjustOnWindows={280}
-                  columns={columns}
-                  gridHeader={t("party_summary_ledger_report")}
-                  dataUrl={Urls.acc_reports_party_summary_ledger}
-                  method={ActionType.POST}
-                  gridId="grd_party_summary_ledger_report"
-                  postData={filter}
-                  popupAction={toggleCostCentrePopup}
-                  // allowEditing={false}
-                  hideGridAddButton={true}
-                  // gridAddButtonType="popup"
-                  reload={true}
-                ></ErpDevGrid>
-              </div>
-            </div>
+          <div className="grid grid-cols-1 gap-3">
+            <ErpDevGrid
+              heightToAdjustOnWindows={280}
+              columns={columns}
+              gridHeader={t("party_summary_ledger_report")}
+              dataUrl={Urls.acc_reports_party_summary_ledger}
+              method={ActionType.POST}
+              gridId="grd_party_summary_ledger_report"
+              postData={filter}
+              popupAction={toggleCostCentrePopup}
+              // allowEditing={false}
+              hideGridAddButton={true}
+              // gridAddButtonType="popup"
+              reload={true}
+            ></ErpDevGrid>
           </div>
+        </div>
+      </div>
     </Fragment>
   );
 };

@@ -35,3 +35,4 @@
 // clearing_transaction_question
 // once_clearing_this_transaction_cannot_be_recovered
 // Duplicate serial
+// price_category_name

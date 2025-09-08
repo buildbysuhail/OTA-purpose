@@ -439,16 +439,10 @@ const newUrl = `/accounts/transactions/CashPayment/${vchno}${queryString ? `?${q
     const fetchTemplate = async () => {
       const result = await getTemplate(input?.voucherType, formState);
       setTemplate(result);
-     const voucherData = await loadAccTransVoucher(
-      false,
-      input?.voucherNo,
-      input?.voucherPrefix,
-      input?.voucherType,
-      input?.formType,
-      "",
-      input?.transactionMasterID
+     const voucherData = await api.getAsync(
+      "/api/core/print/getInvoice",`invoiceNo=${input?.voucherNo}&voucherPrefix=${input?.voucherPrefix}&voucherType=${input?.voucherType}&branchId=${1}`
     );
-    setVchr(voucherData?.transaction);
+    setVchr(voucherData);
     console.log("template",result,"data",voucherData?.transaction);
     };
     fetchTemplate();
@@ -723,10 +717,10 @@ const MemoizedGrid = useMemo(() => {
                               style={{
                                       width: `${templateStyleProperties.previewWidth??500}pt`,
                                       height: `${templateStyleProperties.previewHeight??500}pt`,
-                                      paddingTop: `${templateStyleProperties.paddingTop ?? 0}pt`,
-                                      paddingRight: `${templateStyleProperties.paddingRight ?? 0}pt`,
-                                      paddingBottom: `${templateStyleProperties.paddingBottom ?? 0}pt`,
-                                      paddingLeft: `${templateStyleProperties.paddingLeft ?? 0}pt`,
+                                      // paddingTop: `${templateStyleProperties.paddingTop ?? 0}pt`,
+                                      // paddingRight: `${templateStyleProperties.paddingRight ?? 0}pt`,
+                                      // paddingBottom: `${templateStyleProperties.paddingBottom ?? 0}pt`,
+                                      // paddingLeft: `${templateStyleProperties.paddingLeft ?? 0}pt`,
 
                                     }}
                             >

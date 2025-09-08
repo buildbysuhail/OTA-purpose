@@ -18,7 +18,7 @@ export const inventoryFields: OptionGroup[] = [
   { groupName: 'InvMaster', options: modelToListFromObject<TransactionMaster>(TransactionMasterInitialData,"master___") },
   { groupName: 'InvDetails',  options: modelToListFromObject<TransactionDetail>(initialTransactionDetailData,"details___") },
   { groupName: 'Organization',  options: modelToListFromObject<CompanyDetails>(initialCompanyDetails,"org___") },
-  { groupName: 'Branch',  options: modelToListFromObject<BranchDetails>(initialBranchDetails,"branch___") },
+  // { groupName: 'Branch',  options: modelToListFromObject<BranchDetails>(initialBranchDetails,"branch___") },
   { groupName: 'HeaderFooter',  options: modelToListFromObject<HeaderFooter>(initialHeaderFooter,"headerFooter___") },
 ];
 export const accountsFields: OptionGroup[] = [
@@ -26,7 +26,7 @@ export const accountsFields: OptionGroup[] = [
   { groupName: 'AccMaster',  options: modelToListFromObject<TransactionMaster>(TransactionMasterInitialData,"master___") },
   { groupName: 'AccDetails',  options: modelToListFromObject<TransactionMaster>(TransactionMasterInitialData,"details___") },
   { groupName: 'Organization',  options: modelToListFromObject<CompanyDetails>(initialCompanyDetails,"org___") },
-  { groupName: 'Branch',  options: modelToListFromObject<BranchDetails>(initialBranchDetails,"branch___") },
+  // { groupName: 'Branch',  options: modelToListFromObject<BranchDetails>(initialBranchDetails,"branch___") },
   { groupName: 'HeaderFooter',  options: modelToListFromObject<HeaderFooter>(initialHeaderFooter,"headerFooter___") },
 ];
 export const barCodeField: OptionGroup[] = [

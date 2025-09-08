@@ -12,9 +12,10 @@ import { TableColumn, TemplateState } from "../pages/InvoiceDesigner/Designer/in
 import Urls from "../redux/urls";
 import { customJsonParse } from "./jsonConverter";
 import { APIClient } from "../helpers/api-client";
-import { getCommonValues } from "./use-common-values";
 import { Currencies } from "./number-to-words";
 import { BranchDetails, CompanyDetails, HeaderFooter, UserModel } from "../redux/slices/user-session/reducer";
+import { PrintResponse, PrintMasterDto, PrintDetailDto, CompanyDetailsForPrint } from "../pages/use-print-type";
+import { getCommonValues } from "../pages/use-print";
 const api = new APIClient();
 export function capitalizeFirstLetter(text: string) {
   return text.charAt(0)?.toUpperCase() + text.slice(1);
@@ -1115,6 +1116,10 @@ function toReadableLabel(key: string): string {
 
 // More practical approach: convert from an object instance
 export function modelToListFromObject<T extends Record<string, any>>(obj: T, idPrefix?: string): IdLabel[] {
+
+  // initiallettee capitalize
+  //cGST_5_Perc = CGST 5%
+  // _Perc = %
   return Object.keys(obj).map(key => ({
     id: `${idPrefix??""}${key}`,
     label: toReadableLabel(key)
@@ -1131,31 +1136,5 @@ export function generateTableColumns<T extends object>(obj: T): TableColumn<T>[]
 }
 
 // More practical approach: convert from an object instance
-export function bindDataForPrint(field: string,master: any, details: any, detail: any , userSession: UserModel,
-  convertAmountToEnglish: (amount: number, currency?: Currencies | undefined) => string,
-  convertAmountToArabic: (amount: number, currency?: Currencies | undefined) => string,): any {
-  const splitData = field.split("___");
-  const group = splitData[0] as any;
-  const key = splitData[1];
 
-  debugger;
-  if(group == "master") {
-    return master?.[key]
-  }
-  else if(group == "details") {
-    return master?.[key]
-  }
-  else if(group == "custom") {
-    return getCommonValues(key as any,master,details,detail,1,userSession,convertAmountToEnglish, convertAmountToArabic)
-  }
-  else if(group == "branch") {
-    return userSession.currentBranchDetails?.[key as keyof BranchDetails]
-  }
-  else if(group == "org") {
-    return userSession.currentCompanyDetails?.[key as keyof CompanyDetails]
-  }
-  else if(group == "headerFooter") {
-    return userSession.headerFooter?.[key as keyof HeaderFooter]
-  }
-}
 

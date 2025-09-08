@@ -6,6 +6,7 @@ import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
 import { initialFormElements } from "./transaction-type-data";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { SummaryConfig } from "../../../../components/ERPComponents/erp-purchase-grid/dataGrid";
+import { PrintResponse } from "../../../use-print-type";
 
 // primitives we don't recurse into
 type Primitive = string | number | boolean | bigint | symbol | null | undefined | Date;
@@ -30,6 +31,7 @@ type LeafDotKeys<T, D extends number = 5> =
   }[Extract<keyof T, string>];
 
 export type TransactionDetailKeys = LeafDotKeys<TransactionDetail>;
+export type PrintResponseKeys = LeafDotKeys<PrintResponse>;
 // Transaction interface
 export interface TransactionProps {
   voucherType?: string;

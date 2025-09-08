@@ -239,20 +239,21 @@ export interface PartyDetailsForPrint {
 }
 
 export interface CompanyDetailsForPrint {
-  companyRegistredNameEnglish: string;
-  companyRegistredNameArabic: string;
-  companyTaxRegNumber: string;
-  companyCRNumber: string;
-  companyBuildingNo: string;
-  companyStreetName: string;
-  companyDistrict: string;
-  companyCity: string;
-  companyPostalCode: string;
-  companyAdditionalNo: string;
-  companyCountry: string;
-  companyEmail: string;
-  companyTelephone: string;
-  companyMobile: string;
+  registeredName: string;
+  registeredNameArabic: string;
+  taxRegNo: string;
+  crNumber: string;
+  buildingNo: string;
+  streetName: string;
+  district: string;
+  city: string;
+  postalCode: string;
+  additionalNo: string;
+  country: string;
+  emailAddress: string;
+  telephone: string;
+  mobile: string;
+  companyLogo: string;
 }
 
 export interface VehicleDetailsForPrint {
@@ -314,7 +315,29 @@ export interface EInvoiceDetailsForPrint {
   acknowledgementDate?: Date | null;
   irn: string;
 }
+export interface HeaderFooter {
+heading1: string;
+  heading2: string;
+  heading3: string;
+  heading4: string;
+  heading5: string;
+  heading6: string;
+  heading7: string;
+  heading8: string;
+  heading9: string;
+  heading10: string;
 
+  footer1: string;
+  footer2: string;
+  footer3: string;
+  footer4: string;
+  footer5: string;
+  footer6: string;
+  footer7: string;
+  footer8: string;
+  footer9: string;
+  footer10: string;
+}
 export interface PrintDetailDto {
   slNo: number;
   invTransactionDetailID: number;
@@ -548,7 +571,8 @@ export interface PrintResponse {
   salesRetBillAmounts: string;
   custom: PrintCustomFields;
   hasGroupHeaderPrinting: boolean;
-  detail: PrintDetailDto;
+  companyDetailsForPrint: CompanyDetailsForPrint  
+  headerFooter: HeaderFooter;
   productionReqId: boolean;
   // isCashInHandLedger: boolean;
 }

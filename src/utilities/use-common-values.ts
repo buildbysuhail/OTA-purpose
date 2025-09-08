@@ -153,22 +153,22 @@
 
 
 
-  export const getCommonValues = (
-    fieldName: any,
-    master: any,
-    details: any[],
-    detail: any,
-    copyCount: number,
-    userSession: any,
-    convertAmountToEnglish: (amount: number, currency?: any | undefined) => string,
-    convertAmountToArabic: (amount: number, currency?: any | undefined) => string,
-    options?: {
-      fieldLength?: number;
-      isCashInHandLedger?: boolean;
-      isLedgerUnderBank?: boolean;
-    }
-  ):string => {
-    return "";
+  // export const getCommonValues = (
+  //   fieldName: any,
+  //   master: any,
+  //   details: any[],
+  //   detail: any,
+  //   copyCount: number,
+  //   userSession: any,
+  //   convertAmountToEnglish: (amount: number, currency?: any | undefined) => string,
+  //   convertAmountToArabic: (amount: number, currency?: any | undefined) => string,
+  //   options?: {
+  //     fieldLength?: number;
+  //     isCashInHandLedger?: boolean;
+  //     isLedgerUnderBank?: boolean;
+  //   }
+  // ):string => {
+  //   return "";
     
-  };
+  // };
 

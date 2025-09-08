@@ -581,9 +581,9 @@ export const useTransactionHelper = (transactionType: string) => {
       // Calculate final net amount (NetValue + VAT)
       let netAmount = 0
       if (clientSession.isAppGlobal) {
-        netAmount = round(netVal + vat);
+        netAmount = round(netValue + vat);
       } else {
-        netAmount = round(netVal+vat, 4);
+        netAmount = round(netValue+vat, 4);
       }
 
 

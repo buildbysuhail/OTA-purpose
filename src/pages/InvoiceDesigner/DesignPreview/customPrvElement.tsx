@@ -3,6 +3,7 @@ import {
   DesignerElementType,
   PlacedComponent,
 } from "../Designer/interfaces";
+import { bindDataForPrint } from "../../use-print";
 
 interface Props {
   component: PlacedComponent;
@@ -35,7 +36,6 @@ export const RenderPreviewComponent: React.FC<Props> = ({
     height: `${component.height || 50}pt`,
     width: `${component.width || 50}pt`,
   };
-const {bindDataForPrint} = usePrint
   switch (component.type) {
     case DesignerElementType.text:
       return (
@@ -85,7 +85,7 @@ const {bindDataForPrint} = usePrint
               margin: 0,
             }}
           >
-            {bindDataForPrint(component.content, data?.master, data?.details, data?.details,userSession,convertAmountToEnglish,convertAmountToArabic)}
+            {bindDataForPrint(component.content, data?.master, data?.details,convertAmountToEnglish,convertAmountToArabic)}
           </p>
         </div>
       );

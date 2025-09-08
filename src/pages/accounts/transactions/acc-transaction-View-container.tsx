@@ -103,7 +103,7 @@ const AccTransactionFormContainerView: React.FC<AccTransactionProps> = (
   //   const handleSearch = (query: string) => {
   //   setSearchQuery(query);
   // };
-
+debugger;
 const { printVoucher, getTemplate } = useAccPrint();
   const [searchParams] = useSearchParams();
   const { voucherNo: voucherNoParam } = useParams<{ voucherNo: string }>();
@@ -175,7 +175,6 @@ useEffect(() => {
   // Set max height based on window size
 
   const [template,setTemplate]= useState<any>(null)
-  const [vchr, setVchr] = useState<any>(null);
   const { t } = useTranslation("transaction");
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const userSession = useAppSelector((state: RootState) => state.UserSession);
@@ -439,11 +438,7 @@ const newUrl = `/accounts/transactions/CashPayment/${vchno}${queryString ? `?${q
     const fetchTemplate = async () => {
       const result = await getTemplate(input?.voucherType, formState);
       setTemplate(result);
-     const voucherData = await api.getAsync(
-      "/api/core/print/getInvoice",`invoiceNo=${input?.voucherNo}&voucherPrefix=${input?.voucherPrefix}&voucherType=${input?.voucherType}&branchId=${1}`
-    );
-    setVchr(voucherData);
-    console.log("template",result,"data",voucherData?.transaction);
+ 
     };
     fetchTemplate();
   }, [input, formState]); 
@@ -460,7 +455,9 @@ const newUrl = `/accounts/transactions/CashPayment/${vchno}${queryString ? `?${q
           maxHeight,
           stableTemplateProps,
           templateStyleProperties
-        } = useTemplateDesigner({ templateGroup:groupKey, templateKind: kindKey, designerType:typeKey,template })
+        } = useTemplateDesigner({ templateGroup:groupKey, templateKind: kindKey, designerType:typeKey,template
+          ,invTransMasterIDParam:input.transactionMasterID,transactionType:input.transactionType
+         })
 
 const MemoizedGrid = useMemo(() => {
   return (
@@ -734,11 +731,10 @@ const MemoizedGrid = useMemo(() => {
 
                               }}
                               >
-                        {templateToRender?.PreviewComponent && template && vchr ? (
+                        {templateToRender?.PreviewComponent && template ? (
                           React.cloneElement(templateToRender.PreviewComponent, {
                             ...stableTemplateProps,
                             template,
-                            data: vchr,
                           })
                         ) : (
                           <div>Loading...</div>

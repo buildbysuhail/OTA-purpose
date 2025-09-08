@@ -102,19 +102,19 @@ export const Content = ({ data, template, currentBranch, docIDKey, currency }: {
           <div style={{ display: "flex", flexDirection: "column", gap: 10, }}>
             <div style={{ display: "flex", flexDirection: "row", gap: 2, }}>
               <span style={labelStyles}>  {headerState?.numberField ? `${headerState?.numberField} :` : "No :"}</span>
-              <span style={fontStyles}>  {data.master?.voucherNumber || 1}</span>
+              <span style={fontStyles}>  {data?.master?.voucherNumber || 1}</span>
             </div>
 
             <div style={{ display: "flex", flexDirection: "row", gap: 2, }}>
               <span style={labelStyles}> {headerState?.accountTransactionInfo?.dateField ? `${headerState?.accountTransactionInfo?.dateField} :` : "Date :"}</span>
-              <span style={fontStyles}>  {FormatDate(data.master?.transactionDate)}</span>
+              <span style={fontStyles}>  {FormatDate(data?.master?.transactionDate)}</span>
             </div>
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 2, }}>
             <div style={{ border: "1pt solid rgb(23, 23, 23)", display: "flex", flexDirection: "row", justifyContent: "center", padding: 4, borderRadius: 2, minWidth: 100, }}>
               <span style={fontStyles}>
-                <CurrencyFormatter amount={data.master?.totalDebit} />
+                <CurrencyFormatter amount={data?.master?.totalDebit} />
               </span>
             </div>
           </div>
@@ -135,7 +135,7 @@ export const Content = ({ data, template, currentBranch, docIDKey, currency }: {
           <span style={labelStyles}>the sum of rupees :</span>
           <div style={{ flex: 1, borderBottom: "1pt solid rgb(25, 25, 25)" }}>
             <span style={fontStyles}>
-              {getAmountInWords(Number(data.master?.totalDebit))}
+              {getAmountInWords(Number(data?.master?.totalDebit))}
             </span>
           </div>
         </div>

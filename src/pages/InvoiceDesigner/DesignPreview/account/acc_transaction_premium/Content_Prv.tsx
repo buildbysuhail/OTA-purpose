@@ -140,7 +140,7 @@ const AccPrvContent = ({
                   width: "66.66%",
                 }}
               >
-                {dateTrimmer(data.master?.transactionDate)}
+                {dateTrimmer(data?.master?.transactionDate)}
               </span>
             </div>
           )}
@@ -155,7 +155,7 @@ const AccPrvContent = ({
                   width: "66.66%",
                 }}
               >
-                {dateTrimmer(data.master?.transactionDate)}
+                {dateTrimmer(data?.master?.transactionDate)}
               </span>
             </div>
           )}
@@ -209,7 +209,7 @@ const AccPrvContent = ({
                   width: "66.66%",
                 }}
               >
-                {getAmountInWords(Number(data.master?.totalAmount), clientSession?.currency ?? "INR")}
+                {getAmountInWords(Number(data?.master?.totalAmount), clientSession?.currency ?? "INR")}
               </span>
             </div>
           )}
@@ -231,7 +231,7 @@ const AccPrvContent = ({
             </span>
             <span style={{ fontSize: totalState?.amtReceivedFontSize ?? 14 }}>
               {totalState?.currencyPosition === "before" ? clientSession?.currency_symbol ?? "INR" : ""}{" "}
-              {data.master?.totalAmount}{" "}
+              {data?.master?.totalAmount}{" "}
               {totalState?.currencyPosition === "after" ? clientSession?.currency_symbol ?? "INR" : ""}
             </span>
           </div>
@@ -276,7 +276,7 @@ const AccPrvContent = ({
             <span style={fontStyles}>{footerState?.signatureLabel ?? "Authority Signature"}</span>
             <div className="w-full border-b border-gray-300 flex justify-end">
               {headerState?.showLogo && isValidSignature(currentBranch?.logo) && (
-                <img src={currentBranch.logo || "/placeholder.svg"} alt="Signature" style={{ width: 80 * logoWidthRatio }} />
+                <img src={currentBranch?.logo || "/placeholder.svg"} alt="Signature" style={{ width: 80 * logoWidthRatio }} />
               )}
             </div>
           </div>

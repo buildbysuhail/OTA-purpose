@@ -112,7 +112,7 @@ export  const Header = ({ data, template, currentBranch,}: { data: any; template
           justifyContent:"flex-start", alignItems:"flex-start",paddingLeft:10}}>
              {headerState?.showLogo && isValidLogo(currentBranch?.logo) && (
             <Image
-              src={currentBranch.logo}
+              src={currentBranch?.logo}
               style={{ width: 80 * logoWidthRatio }}
             />
              )}
@@ -123,7 +123,7 @@ export  const Header = ({ data, template, currentBranch,}: { data: any; template
           )}
 
             {headerState?.showOrgAddress &&
-            currentBranch.address?.map((org: any, idx: number) => (
+            currentBranch?.address?.map((org: any, idx: number) => (
               <Text key={`ADDK_${idx}`} style={fontStyles}>{org}</Text>
             ))
           }
@@ -136,20 +136,20 @@ export  const Header = ({ data, template, currentBranch,}: { data: any; template
          }
            {/* <View style={{flexDirection:"row",gap:5,}}>
            {headerState?.adviceTransInfo?.showPrefix &&
-           <Text style={[labelStyles,{fontSize:8,fontWeight:700}]}>{data.master?.voucherPrefix}</Text>
+           <Text style={[labelStyles,{fontSize:8,fontWeight:700}]}>{data?.master?.voucherPrefix}</Text>
           }
            {headerState?.adviceTransInfo?.showVoucherNumber &&
-           <Text style={[labelStyles,{fontSize:8,fontWeight:700}]}>{`${headerState?.adviceTransInfo?.voucherNumber ??"Payment No"} : ${data.master?.voucherNumber}`}</Text>
+           <Text style={[labelStyles,{fontSize:8,fontWeight:700}]}>{`${headerState?.adviceTransInfo?.voucherNumber ??"Payment No"} : ${data?.master?.voucherNumber}`}</Text>
           }
-           {headerState?.adviceTransInfo?.showFormType && data.master?.formType ||  data.master?.formType !== " "  &&
-           <Text style={[labelStyles,{fontSize:8,fontWeight:700}]}>{`[${data.master?.formType}]`}</Text>
+           {headerState?.adviceTransInfo?.showFormType && data?.master?.formType ||  data?.master?.formType !== " "  &&
+           <Text style={[labelStyles,{fontSize:8,fontWeight:700}]}>{`[${data?.master?.formType}]`}</Text>
           }
            </View> */}
            
         </View>
         <View style={[styles.orgAddress,{flexBasis:"33.33%",}]}>
           {headerState?.showOrgAddress &&
-            currentBranch.address?.map((org: any, idx: number) => (
+            currentBranch?.address?.map((org: any, idx: number) => (
               <Text key={`ADDK_${idx}`} style={fontStyles}>{org}</Text>
             ))
           }

@@ -152,14 +152,14 @@ const AccPrevHeader = ({
           {headerState?.showOrgName && (
             <p className="capitalize font-semibold" 
             style={{...fontStyles,color: headerState?.OrganizationFontColor, fontSize: headerState?.OrganizationFontSize }}>
-              {currentBranch.company?.name}
+              {currentBranch?.company?.name}
             </p>
           )}
         </div>
 
         <div className="flex flex-col gap-2">
           {headerState?.showOrgAddress &&
-            currentBranch.address?.map((org: any, idx: number) => (
+            currentBranch?.address?.map((org: any, idx: number) => (
               <p key={`ADDK_${idx}`} style={fontStyles}>
                 {org}
               </p>

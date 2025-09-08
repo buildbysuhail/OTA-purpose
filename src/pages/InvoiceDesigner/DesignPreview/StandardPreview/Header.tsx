@@ -86,7 +86,7 @@ const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency}
           {headerState?.showOrgName && <a style={{ color: orgNameFontColor, fontSize: orgNameFontSize }} className="capitalize font-semibold">{currentBranch?.name}</a>}
           {headerState?.showOrgAddress && (
             <div style={styles.labelStyles} className="flex flex-col">
-              {currentBranch.address?.map((org: any, idx: number) => (
+              {currentBranch?.address?.map((org: any, idx: number) => (
                 <p key={`ADDK_${idx}`}>{org}</p>
               ))}
             </div>

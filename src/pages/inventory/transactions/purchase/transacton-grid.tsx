@@ -12,7 +12,7 @@ import {
   TransactionBase,
   transactionRoutes,
 } from "../../../../components/common/content/transaction-routes";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const toggleTransactionPopup = (payload: {
   isOpen: boolean;
@@ -114,10 +114,57 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "center",
         showInPdf: true,
+        bold: true,
         cssClass: "centered-header",
-        cellRender: (data: any) => (
-          <div style={{ textAlign: "center" }}>{data.value}</div>
-        ),
+        cellRender: (cellInfo) => {
+          const row = cellInfo.data;
+          const transactionMasterID = parseInt(row.invTransactionMasterID || "0", 10);
+          const vchtype = row.voucherType;
+          const voucherform = row.formType;
+          const prefix = row.voucherPrefix;
+          const vchno = row.voucherNumber;
+          const financialYearID = parseInt(row.financialYearID || "0", 10);
+
+          const tr = transactionRoutes.find((x) => x.voucherType === vchtype);
+
+          let transactionData: any = {};
+          if (parseInt(vchno, 10) > 0) {
+            transactionData = {
+              transactionMasterID,
+              formType: voucherform,
+              voucherPrefix: prefix,
+              voucherType: vchtype,
+              financialYearID,
+              formCode: tr?.formCode,
+              transactionType: tr?.transactionType,
+              transactionBase: tr?.transactionBase,
+              title: tr?.title,
+              drCr: tr?.drCr,
+            };
+          }
+ // Convert object to query string
+    const queryString = new URLSearchParams(
+      Object.entries(transactionData).reduce((acc, [key, value]) => {
+        acc[key] = String(value ?? "");
+        return acc;
+      }, {} as Record<string, string>)
+    ).toString();
+    
+          return (
+            <div style={{ textAlign: "center" }}>
+              <Link
+                to={`/inventory/transactions/Purchase/${cellInfo.value}?${queryString}`}
+                style={{ color: "#1b6de0", textDecoration: "underline" }}
+                onClick={() => {
+                  console.log("cellInfo", cellInfo);
+                  console.log("transactionData", transactionData);
+                }}
+              >
+                {cellInfo.value}
+              </Link>
+            </div>
+          );
+        }
       },
       {
         dataField: "purchaseInvoiceNumber",

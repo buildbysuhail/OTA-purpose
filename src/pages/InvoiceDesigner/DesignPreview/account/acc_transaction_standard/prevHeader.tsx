@@ -121,13 +121,13 @@ const Logo = useLogo()
           )}
           {headerState?.showOrgName && (
             <p className="capitalize font-semibold" style={{...fontStyles,color: headerState?.OrganizationFontColor, fontSize: headerState?.OrganizationFontSize }}>
-              {currentBranch.company?.name}
+              {currentBranch?.company?.name}
             </p>
           )}
           </div>
           <div className="items-center">
             {headerState?.showOrgAddress &&
-            currentBranch.address?.map((line: string, idx: number) => (
+            currentBranch?.address?.map((line: string, idx: number) => (
               <p key={idx} style={fontStyles}>{line}</p>
             ))}
           </div>

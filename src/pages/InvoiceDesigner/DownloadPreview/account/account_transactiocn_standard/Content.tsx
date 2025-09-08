@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
               }}>
                 <Text style={labelStyles}>{headerState?.numberField?`${headerState?.numberField} :`:"No :"}</Text>
                 <Text style={[fontStyles, styles.dottedBorder,{width:50}]}>
-                  {data.master?.voucherNumber }
+                  {data?.master?.voucherNumber }
                 </Text>
                </View>
             }
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
               }}>
                 <Text style={labelStyles}>{headerState?.accountTransactionInfo?.dateField?`${headerState?.accountTransactionInfo?.dateField} :`:"Date :"}</Text>
                 <Text style={[fontStyles, styles.dottedBorder]}>
-                  {dateTrimmer(data.master?.transactionDate)}
+                  {dateTrimmer(data?.master?.transactionDate)}
                 </Text>
               </View>
             }
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
               <Text style={labelStyles}>{headerState?.accountTransactionInfo?.paymentMode?`${headerState?.accountTransactionInfo?.paymentMode}`:"PAYMENT GIVEN TO"}:</Text>
               <View style={{ flex: 1,  borderBottom:"1px dotted rgb(38, 37, 37)"}}>
                 <Text style={fontStyles}>
-              {data.details[indexNO]?.ledgerName}
+              {data?.details[indexNO]?.ledgerName}
               </Text>
               </View>
             </View>
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
               <Text style={labelStyles}>the sum of rupees :</Text>
               <View style={{ flex: 1,  borderBottom:"1px dotted rgb(38, 37, 37)"}}>
                 <Text style={fontStyles}>
-                {getAmountInWords(Number(data.details[indexNO]?.amount), clientSession?.currency?? "INR")}
+                {getAmountInWords(Number(data?.details[indexNO]?.amount), clientSession?.currency?? "INR")}
               </Text>
               </View>
         </View>
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
                 }}
               >
                 {totalState?.currencyPosition === "before" ? clientSession?.currencySymbol ?? "INR" : ""}
-                {data.details[indexNO]?.amount}
+                {data?.details[indexNO]?.amount}
                 {totalState?.currencyPosition === "after" ? clientSession?.currencySymbol ?? "INR" : ""}
               </Text>
             </View>

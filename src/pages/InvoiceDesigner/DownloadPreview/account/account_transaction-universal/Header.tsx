@@ -121,7 +121,7 @@ export  const Header = ({ data, template, currentBranch,userSession}: { data: an
         <View style={{ flexBasis: "20%", display: "flex",justifyContent:"flex-start", alignItems:"center"}}>
          {headerState?.showLogo && isValidLogo(currentBranch?.logo) && (
             <Image
-              src={currentBranch.logo}
+              src={currentBranch?.logo}
               style={{ width: 80 * logoWidthRatio }}
             />
              )}

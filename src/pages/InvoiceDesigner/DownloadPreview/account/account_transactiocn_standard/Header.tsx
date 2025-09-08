@@ -105,7 +105,7 @@ export  const Header = ({ data, template, currentBranch,docIDKey,currency}: { da
           justifyContent:"flex-start", alignItems:"flex-start",paddingLeft:10}}>
              {headerState?.showLogo && isValidLogo(currentBranch?.logo) && (
             <Image
-              src={currentBranch.logo}
+              src={currentBranch?.logo}
               style={{ width: 80 * logoWidthRatio }}
             />
              )}
@@ -126,7 +126,7 @@ export  const Header = ({ data, template, currentBranch,docIDKey,currency}: { da
           </View>
         <View style={[styles.orgAddress,{flexBasis:"33.33%",}]}>
           {headerState?.showOrgAddress &&
-            currentBranch.address?.map((org: any, idx: number) => (
+            currentBranch?.address?.map((org: any, idx: number) => (
               <Text key={`ADDK_${idx}`} style={fontStyles}>{org}</Text>
             ))
           }

@@ -306,7 +306,7 @@ const Content: FC<ContentProps> = () => {
                     </RouteGuard>
                   }
                 />
-                <Route
+                {/* <Route
                   key={index}
                   path={`${route.transactionBase}/${route.transactionType}/:voucherNo/edit`}
                   element={
@@ -323,13 +323,13 @@ const Content: FC<ContentProps> = () => {
                       />
                     </RouteGuard>
                   }
-                />
+                /> */}
               </>
             )}
             {route.transactionBase == TransactionBase.Purchase && (
               <>
                 <Route
-                  key={index}
+                  key={`${index}-${route.transactionBase}-${route.transactionType}-`}
                   path={`${route.transactionBase}/${route.transactionType}`}
                   element={
                     <RouteGuard formCode={route.formCode} action={route.action}>
@@ -365,7 +365,8 @@ const Content: FC<ContentProps> = () => {
                   path={`${route.transactionBase}/${route.transactionType}/:voucherNo`}
                   element={
                     <RouteGuard formCode={route.formCode} action={route.action}>
-                      <TransactionFormContainer ///abc
+                      <SearchProvider>
+                      <AccTransactionFormContainerView ///abc
                         voucherType={route.voucherType}
                         transactionType={route.transactionType}
                         formCode={route.formCode}
@@ -375,10 +376,11 @@ const Content: FC<ContentProps> = () => {
                         drCr={route.drCr}
                         voucherNo={0}
                       />
+                      </SearchProvider>
                     </RouteGuard>
                   }
                 />
-                <Route
+                {/* <Route
                   key={index}
                   path={`${route.transactionBase}/${route.transactionType}/:voucherNo/edit`}
                   element={
@@ -395,7 +397,7 @@ const Content: FC<ContentProps> = () => {
                       />
                     </RouteGuard>
                   }
-                />
+                /> */}
               </>
             )}
           </>

@@ -25,6 +25,7 @@ import { handleResponse } from "../../../utilities/HandleResponse";
 import { APIClient } from "../../../helpers/api-client";
 import { getOrientedDimensions, getPageDimensions } from "../utils/pdf-util";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
+import { loadPrintData } from "../../use-print";
 
 const api = new APIClient();
 
@@ -32,10 +33,11 @@ interface UseTemplateDesignerProps {
   templateGroup: string;
   templateKind: string;
   designerType: string;
-  template?:any;
+  template?: TemplateState<unknown>
+  invTransMasterIDParam?: number, voucherTypeParam?: string, isInvTrans?: boolean, isSalesView?: boolean, isServiceTrans?: boolean, transDate?: string, printCopies?: number, isReprint?: boolean, isPOSPrinting?: boolean, isFromSalesReceipt?: boolean, isPackingSlipPrint?: boolean, warehouseID?: number, kitchenIDParam?: number, kitchenPrinterNameParam?: string, kitchenNameParam?: string, commonKitchenProductGroupIDParam?: number,  transactionType?: string, dbIdValue?: string, voucherType?: string, isAppGlobal?: boolean
 }
 
-export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,template }: UseTemplateDesignerProps) => {
+export const useTemplateDesigner = ({ templateGroup, templateKind, designerType, template,invTransMasterIDParam,voucherTypeParam,isInvTrans,isSalesView,isServiceTrans,transDate,printCopies,isReprint,isPOSPrinting,isFromSalesReceipt,isPackingSlipPrint,warehouseID,kitchenIDParam,kitchenPrinterNameParam,kitchenNameParam,commonKitchenProductGroupIDParam,transactionType,dbIdValue,voucherType,isAppGlobal}: UseTemplateDesignerProps) => {
   const { t } = useTranslation("system");
   const { id } = useParams();
   const navigate = useNavigate();
@@ -50,7 +52,7 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,
   // Add ref for preview container
   const previewContainerRef = useRef<HTMLDivElement>(null);
 
-//  Create consolidated template style properties object
+  //  Create consolidated template style properties object
   const templateStyleProperties = useMemo(() => {
     const pageOrientation = templateData.propertiesState?.orientation === "landscape" ? "landscape" : "portrait";
     const pageSize = templateData.propertiesState?.pageSize ?? "A4";
@@ -80,7 +82,7 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,
     templateData.propertiesState?.padding?.left,
     templateData.propertiesState?.padding?.right,
     templateData.propertiesState?.padding?.top,
-  
+
   ]);
   const [designTabs, setDesignTabs] = useState<DesignSectionType[]>([]);
   const [currentSection, setCurrentSection] = useState<DesignSectionType | null>(null);
@@ -93,24 +95,35 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,
   });
   const [maxHeight, setMaxHeight] = useState<number>(500);
   useEffect(() => {
-console.log("userSession",userSession,"currentBranch",currentBranch,);
+    console.log("userSession", userSession, "currentBranch", currentBranch,);
 
   }, []);
+
   // Stabilize props for PDFViewer
   const stableTemplateProps = useMemo(
-    () => ({
-      template: templateData,
-      data: DummyVoucherData,
-      currentBranch,
-      userSession,
-      clientSession,
-    }),
-    [templateData, currentBranch, userSession, clientSession]
+    async () => {
+      let data = DummyVoucherData;
+      if (invTransMasterIDParam) {
+
+        data = await loadPrintData(invTransMasterIDParam??0,voucherTypeParam??"",isInvTrans,isSalesView
+          , isServiceTrans,transDate, printCopies,isReprint,isPOSPrinting,isFromSalesReceipt,isPackingSlipPrint,warehouseID
+          , kitchenIDParam,kitchenPrinterNameParam, kitchenNameParam,commonKitchenProductGroupIDParam,template,transactionType,dbIdValue,voucherType,isAppGlobal
+         ) as any
+      }
+      return {
+        template: templateData,
+        data: data,
+        currentBranch,
+        userSession,
+        clientSession,
+      }
+    },
+    [templateData, currentBranch, userSession, clientSession,invTransMasterIDParam,transactionType]
   );
 
   // Set max height based on window size
   useEffect(() => {
-    const wh = window.innerHeight ;
+    const wh = window.innerHeight;
     setMaxHeight(wh);
   }, []);
 
@@ -164,28 +177,28 @@ console.log("userSession",userSession,"currentBranch",currentBranch,);
     getPDFTemplateData();
   }, [getPDFTemplateData]);
 
-   // Function to convert preview component to image
- const capturePreviewAsImage = useCallback(async (): Promise<string> => {
-  if (!previewContainerRef.current) {
-    throw new Error("Preview container not found");
-  }
+  // Function to convert preview component to image
+  const capturePreviewAsImage = useCallback(async (): Promise<string> => {
+    if (!previewContainerRef.current) {
+      throw new Error("Preview container not found");
+    }
 
-  // Find the actual preview content container (the one with template styling)
-  const previewContent = previewContainerRef.current.querySelector('[data-template-preview]') as HTMLElement;
-  const targetElement = previewContent || previewContainerRef.current;
+    // Find the actual preview content container (the one with template styling)
+    const previewContent = previewContainerRef.current.querySelector('[data-template-preview]') as HTMLElement;
+    const targetElement = previewContent || previewContainerRef.current;
 
-try {
-    const canvas = await html2canvas(targetElement, {
-      backgroundColor: "#ffffff", // or your bg
-      scale: 2,                   // smooth scaling
-      useCORS: true,
-    });
-    return canvas.toDataURL("image/png", 0.95);
-  } catch (err) {
-    console.error("Image capture failed:", err);
-    throw err;
-  }
-}, [templateStyleProperties]);
+    try {
+      const canvas = await html2canvas(targetElement, {
+        backgroundColor: "#ffffff", // or your bg
+        scale: 2,                   // smooth scaling
+        useCORS: true,
+      });
+      return canvas.toDataURL("image/png", 0.95);
+    } catch (err) {
+      console.error("Image capture failed:", err);
+      throw err;
+    }
+  }, [templateStyleProperties]);
 
   // Handle template saving
   const handleSave = useCallback(
@@ -196,7 +209,7 @@ try {
           ...templateData.propertiesState,
           template_group: templateGroup,
           template_kind: templateKind,
-          template_type:designerType,
+          template_type: designerType,
         },
       };
 
@@ -279,7 +292,7 @@ try {
     stableTemplateProps,
     manageSaveAccTemplate,
     dispatch,
-   templateStyleProperties,
+    templateStyleProperties,
     previewContainerRef,
   };
 };

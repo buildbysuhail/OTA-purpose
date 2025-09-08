@@ -123,11 +123,11 @@ export const HeaderTemp = ({
       {/* Company Logo and Title */}
       <View style={styles.headerRow}>
         {isValidLogo(currentBranch?.logo) && (
-          <Image src={currentBranch.logo || "/placeholder.svg"} style={styles.companyLogo} />
+          <Image src={currentBranch?.logo || "/placeholder.svg"} style={styles.companyLogo} />
         )}
 
         <View style={styles.companyTitle}>
-          <Text style={styles.arabicTitle}>{currentBranch.nameInSecondLanguage || ""}</Text>
+          <Text style={styles.arabicTitle}>{currentBranch?.nameInSecondLanguage || ""}</Text>
           <Text style={styles.englishTitle}>{userSession.headerFooter?.heading7 || ""}</Text>
         </View>
       </View>

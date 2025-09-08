@@ -193,7 +193,7 @@ const [qrCodeImages, setQrCodeImages] = useState<{ [key: string]: string }>({});
         >
           {headerState?.showLogo && isValidLogo(currentBranch?.logo) && (
             <Image
-              src={currentBranch.logo || "/placeholder.svg"}
+              src={currentBranch?.logo || "/placeholder.svg"}
               style={{ width: 80 * logoWidthRatio }}
             />
           )}
@@ -214,7 +214,7 @@ const [qrCodeImages, setQrCodeImages] = useState<{ [key: string]: string }>({});
 
         <View style={styles.orgAddress}>
           {headerState?.showOrgAddress &&
-            currentBranch.address?.map((org: any, idx: number) => (
+            currentBranch?.address?.map((org: any, idx: number) => (
               <Text key={`ADDK_${idx}`} style={fontStyles}>
                 {org}
               </Text>

@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
               }}>
                 <Text style={labelStyles}>{headerState?.numberField?`${headerState?.numberField} :`:"No :"}</Text>
                 <Text style={fontStyles}>
-                  {data.master?.voucherNumber || 1}
+                  {data?.master?.voucherNumber || 1}
                 </Text>
               </View>
 
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
               }}>
                   <Text style={labelStyles}>{headerState?.accountTransactionInfo?.dateField?`${headerState?.accountTransactionInfo?.dateField} :`:"Date :"}</Text>
                 <Text style={fontStyles}>
-                 {FormatDate(data.master?.transactionDate)}
+                 {FormatDate(data?.master?.transactionDate)}
                 </Text>
               </View>
           </View>
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
                 {/* <Text style={labelStyles}>{currency?`${currency} :`:"SR :"}</Text> */}
                 <View style={{border:"1pt solid rgb(23, 23, 23)",display:"flex",flexDirection:"row",justifyContent:"center",padding:4,borderRadius:2,minWidth:100,}}>
                 <Text style={[fontStyles]}>
-                 <CurrencyFormatter amount={data.master?.totalDebit} ></CurrencyFormatter> 
+                 <CurrencyFormatter amount={data?.master?.totalDebit} ></CurrencyFormatter> 
                 </Text>
                 </View>
              </View>
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
               <Text style={labelStyles}>the sum of rupees :</Text>
               <View style={{ flex: 1, borderBottom: "1pt solid rgb(25, 25, 25)"}}>
               <Text style={fontStyles}>
-              {getAmountInWords(Number(data.master?.totalDebit))}
+              {getAmountInWords(Number(data?.master?.totalDebit))}
              
               </Text>
               </View>

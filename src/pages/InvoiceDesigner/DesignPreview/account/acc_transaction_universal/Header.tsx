@@ -121,7 +121,7 @@ const Header = ({ data, template, currentBranch, userSession }: any) => {
         <div style={{ flexBasis: "20%", display: "flex", justifyContent: "flex-start", alignItems: "center" }}>
           {headerState?.showLogo && isValidLogo(currentBranch?.logo) && (
             <img
-              src={currentBranch.logo}
+              src={currentBranch?.logo}
               alt="Logo"
               style={{ width: 80 * logoWidthRatio }}
             />

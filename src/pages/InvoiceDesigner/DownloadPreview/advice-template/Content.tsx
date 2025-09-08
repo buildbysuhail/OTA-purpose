@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
                                 ...fontStyles,
                                 color: custNameFontColor, fontSize: custNameFontSize
                               }}>
-                              {data.master?.ledgerName || "MARKET ALIYA"}
+                              {data?.master?.ledgerName || "MARKET ALIYA"}
                               </Text>
                         )}
  
@@ -109,8 +109,8 @@ const styles = StyleSheet.create({
                       </View>
                       <View style={{...styles.customerInfo,flexBasis:"45%"}}>
                       <Text style={fontStyles}>
-                        {/* {data.master?.date || "12/5/2024"} */}
-                        {dateTrimmer(data.master?.transactionDate)}
+                        {/* {data?.master?.date || "12/5/2024"} */}
+                        {dateTrimmer(data?.master?.transactionDate)}
                       </Text>
                       </View>
                     </View>
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
                       </View>
                       <View style={{...styles.customerInfo,flexBasis:"45%"}}>
                       <Text style={fontStyles}>
-                        {data.master?.referenceNumber}
+                        {data?.master?.referenceNumber}
                       </Text>
                       </View>
                     </View>
@@ -141,8 +141,8 @@ const styles = StyleSheet.create({
                       </View>
                       <View style={{...styles.customerInfo,flexBasis:"45%"}}>
                       <Text style={fontStyles}>
-                        {/* {data.master?.date || "12/5/2024"} */}
-                        {dateTrimmer(data.master?.transactionDate)}
+                        {/* {data?.master?.date || "12/5/2024"} */}
+                        {dateTrimmer(data?.master?.transactionDate)}
                       </Text>
                       </View>
                     </View>
@@ -157,8 +157,8 @@ const styles = StyleSheet.create({
                       </View>
                       <View style={{...styles.customerInfo,flexBasis:"45%"}}>
                       <Text style={fontStyles}>
-                        {/* {data.master?.date || "12/5/2024"} */}
-                        {dateTrimmer(data.master?.transactionDate)}
+                        {/* {data?.master?.date || "12/5/2024"} */}
+                        {dateTrimmer(data?.master?.transactionDate)}
                       </Text>
                       </View>
                     </View>
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
                       </View>
                       <View style={{...styles.customerInfo,flexBasis:"45%"}}>
                       <Text style={fontStyles}>
-                        {data.master?.bankAccName}
+                        {data?.master?.bankAccName}
                       </Text>
                       </View>
                     </View>
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
        <Text style={labelStyles}>Dear Sir,</Text>
     
         <Text style={fontStyles}>
-          {`We have cleared the below invoices with document number ${data.master?.voucherNumber}`}
+          {`We have cleared the below invoices with document number ${data?.master?.voucherNumber}`}
         </Text>
 
         </View> 

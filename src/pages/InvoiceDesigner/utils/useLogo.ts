@@ -17,7 +17,7 @@ export const useLogo = (): string | undefined => {
 
   const logo = useMemo(() => {
     // 1) currentBranch logo
-    if (currentBranch?.logo) return currentBranch.logo;
+    if (currentBranch?.logo) return currentBranch?.logo;
 
     // 2) find in userBranches
     const fromUseSessionBranches = userSession?.branches?.find((b) => b?.id == userSession?.currentBranchId )?.logo;

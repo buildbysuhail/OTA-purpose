@@ -173,7 +173,7 @@ export const Content = ({
             <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width: "100%" }}>
               <Text style={labelStyles}>{headerState?.numberField || "Payment#"}</Text>
               <Text style={[fontStyles, { borderBottom: "0.5px solid #DFDFDF", width: "66.66%" }]}>
-                {data.master?.voucherNumber}
+                {data?.master?.voucherNumber}
               </Text>
             </View>
           )}
@@ -182,7 +182,7 @@ export const Content = ({
             <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width: "100%" }}>
               <Text style={labelStyles}>{headerState?.accountTransactionInfo?.dateField || "Payment Date"}</Text>
               <Text style={[fontStyles, { borderBottom: "0.5px solid #DFDFDF", width: "66.66%" }]}>
-                {dateTrimmer(data.master?.transactionDate)}
+                {dateTrimmer(data?.master?.transactionDate)}
               </Text>
             </View>
           )}
@@ -222,7 +222,7 @@ export const Content = ({
             <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width: "100%" }}>
               <Text style={labelStyles}>Amount In Words</Text>
               <Text style={[fontStyles, { borderBottom: "0.5px solid #DFDFDF", width: "66.66%" }]}>
-                {getAmountInWords(Number(data.master?.totalAmount),clientSession?.currency??"INR" )}
+                {getAmountInWords(Number(data?.master?.totalAmount),clientSession?.currency??"INR" )}
               </Text>
             </View>
           )}
@@ -247,7 +247,7 @@ export const Content = ({
           </Text>
           <Text style={{ fontSize: totalState?.amtReceivedFontSize ?? 14 }}>
             {totalState?.currencyPosition === "before" ? clientSession?.currency_symbol??"INR" : ""}{" "}
-            {data.master?.totalAmount}{" "}
+            {data?.master?.totalAmount}{" "}
             {totalState?.currencyPosition === "after" ? clientSession?.currency_symbol??"INR" : ""}
           </Text>
         </View>
@@ -300,7 +300,7 @@ export const Content = ({
               }}
             >
               {headerState?.showLogo && isValidSignature(currentBranch?.logo) && (
-                <Image src={currentBranch.logo || "/placeholder.svg"} style={{ width: 80 * logoWidthRatio }} />
+                <Image src={currentBranch?.logo || "/placeholder.svg"} style={{ width: 80 * logoWidthRatio }} />
               )}
             </View>
           </View>

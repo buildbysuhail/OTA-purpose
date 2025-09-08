@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { ArrowLeftIcon, ZoomIn, ZoomOut, RotateCcw } from "lucide-react"
 import PropertiesDesigner from "../Designer/PropertiesDesigner"
 import HeaderFooterDesigner from "../Designer/HeaderFooterDesigner"
@@ -37,7 +37,8 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
       manageSaveAccTemplate,
       dispatch,
      templateStyleProperties ,
-     previewContainerRef
+     previewContainerRef,
+     masterId
     } = useTemplateDesigner({ templateGroup, templateKind: designerKind, designerType })
 
     const SectionComponent = currentSection ? sections[currentSection.type] : null
@@ -151,7 +152,7 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
 
                   {/* Template Content */}
                   <div className="relative h-full   w-full ">
-                    {React.cloneElement(templateComponent, stableTemplateProps)}
+                    {React.cloneElement(templateComponent,  stableTemplateProps)}
                   </div>
                 </div>
 

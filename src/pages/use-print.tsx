@@ -325,7 +325,7 @@ export const loadPrintData = async (invTransMasterIDParam: number, voucherTypePa
                                             console.log(printData);
     if(isNullOrUndefinedOrEmpty(printData?.master)) 
       return printData;
-                                            
+       debugger;                                     
     returnData = merge({}, returnData, printData);
     returnData.custom = returnData.custom ?? initialPrintCustomFields;
     const isKitchenPrint = !isNullOrUndefinedOrZero(kitchenIDParam) || !isNullOrUndefinedOrZero(commonKitchenProductGroupIDParam) ||
@@ -621,29 +621,24 @@ export const loadPrintData = async (invTransMasterIDParam: number, voucherTypePa
 // Get common values - massive function with 200+ field calculations
 
 
-export const getCommonValues = (field:
-  {
-    fieldName: keyof PrintCustomFields,
-    format: string,
-    type: "string" | "number" | "date" | "boolean" | "object" | "datetime",
-    fildLength: number
-  },
+export const getCommonValues = (field: string,
+  
   data: PrintResponse,
   convertAmountToArabic: any) => {
   let v = "";
-  switch (field.fieldName) {
+  switch (field) {
     case "amountInWords":
       v = getAmountInWords(data.master.grandTotal);
       break;
-    case "amountInWordsLine2":
-      const ln = field.fildLength ?? 0;
-      v = getAmountInWords(data.master.grandTotal);
-      if (v.length > ln) {
-        v = v.substring(ln);
-      } else {
-        v = "";
-      }
-      break;
+    // case "amountInWordsLine2":
+    //   const ln = field.le ?? 0;
+    //   v = getAmountInWords(data.master.grandTotal);
+    //   if (v.length > ln) {
+    //     v = v.substring(ln);
+    //   } else {
+    //     v = "";
+    //   }
+    //   break;
     case "amountInWordsInArabic":
       v = convertAmountToArabic(data.master.grandTotal);
       break;
@@ -1627,6 +1622,9 @@ export function bindDataForPrint(field: string, printData: PrintResponse,
   const splitData = field.split("___");
   const group = splitData[0] as any;
   const key = splitData[1];
+  if(field == "custom___transactionBarcode"){
+    debugger;
+  }
   if(isNullOrUndefinedOrEmpty(printData?.master)) 
     return "";
   const master = printData?.master

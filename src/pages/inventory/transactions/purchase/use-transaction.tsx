@@ -442,7 +442,7 @@ export const useTransaction = (
         openUnsavedPrompt: false,
       })
     );
-
+debugger;
     let url = `${Urls.inv_transaction_base}${transactionType}`;
     let _voucherNumber =
       voucherNumber ?? (formState.transaction?.master?.voucherNumber || 0);
@@ -499,10 +499,11 @@ export const useTransaction = (
           voucherType: voucherType ?? formState.transaction.master.voucherType,
           voucherPrefix:
             voucherPrefix ?? formState.transaction.master.voucherPrefix,
-          formType: formType ?? formState.transaction.master.voucherForm,
+          voucherForm: formType ?? formState.transaction.master.voucherForm,
         },
       };
     }
+    debugger;
 
     if (usingManualInvNumber) {
       vch.master = {
@@ -511,7 +512,7 @@ export const useTransaction = (
         voucherType: voucherType ?? formState.transaction.master.voucherType,
         voucherPrefix:
           voucherPrefix ?? formState.transaction.master.voucherPrefix,
-        formType: formType ?? formState.transaction.master.voucherForm,
+        voucherForm: formType ?? formState.transaction.master.voucherForm,
         invTransactionMasterID: ["GRN", "PO", "SO"].includes(loadVType ?? "")
           ? null
           : vch.master.invTransactionMasterID,
@@ -2047,14 +2048,14 @@ dispatch(formStateHandleFieldChange({
   // Delete button handler
   const deleteTransVoucher = async () => {
     // Check if voucher is locked
-    if (formState.transaction.master.isLocked) {
-      ERPAlert.show({
-        title: t("warning"),
-        text: t("voucher_is_locked"),
-        icon: "warning",
-      });
-      return;
-    }
+    // if (formState.transaction.master.isLocked) {
+    //   ERPAlert.show({
+    //     title: t("warning"),
+    //     text: t("voucher_is_locked"),
+    //     icon: "warning",
+    //   });
+    //   return;
+    // }
 
     if (formState.transaction.master.isInvoiced === true) {
       const invoicedConfirmResult = await ERPAlert.show({
@@ -2071,53 +2072,53 @@ dispatch(formStateHandleFieldChange({
     try {
       // Check if transaction is in edit mode
 
-      const result = await api.postAsync(
-        `${Urls.inv_transaction_base}${transactionType}/GetAndSetTransactionEditMode`,
-        {
-          transactionType: "I",
-          transactionMasterId:
-            formState.transaction.master.invTransactionMasterID ?? 0,
-        }
-      );
+      // const result = await api.postAsync(
+      //   `${Urls.inv_transaction_base}${transactionType}/GetAndSetTransactionEditMode`,
+      //   {
+      //     transactionType: "I",
+      //     transactionMasterId:
+      //       formState.transaction.master.invTransactionMasterID ?? 0,
+      //   }
+      // );
 
-      if (result?.isOk && result.message === "") {
+      // if (result?.isOk && result.message === "") {
         // Check if day is closed
-        const closedDateResult = await api.getAsync(
-          `${Urls.inv_transaction_base}GetClosedDate`
-        );
+        // const closedDateResult = await api.getAsync(
+        //   `${Urls.inv_transaction_base}GetClosedDate`
+        // );
 
-        if (closedDateResult?.isOk) {
-          const closedDate = new Date(closedDateResult.data);
-          const prevTransDate = new Date(
-            formState.transaction.master.prevTransDate
-          );
+        // if (closedDateResult?.isOk) {
+        //   const closedDate = new Date(closedDateResult.data);
+        //   const prevTransDate = new Date(
+        //     formState.transaction.master.prevTransDate
+        //   );
 
-          if (closedDate.getTime() >= prevTransDate.getTime()) {
-            ERPAlert.show({
-              title: t("invalid_transaction_date"),
-              text: t("cannot_delete_day_closed"),
-              icon: "warning",
-            });
-            return;
-          }
-        }
+        //   if (closedDate.getTime() >= prevTransDate.getTime()) {
+        //     ERPAlert.show({
+        //       title: t("invalid_transaction_date"),
+        //       text: t("cannot_delete_day_closed"),
+        //       icon: "warning",
+        //     });
+        //     return;
+        //   }
+        // }
 
         // Validate transaction date
-        const validateTransactionDateRes = validateTransactionDate(
-          new Date(formState.transaction.master.transactionDate),
-          false,
-          undefined,
-          hasBlockedRight
-        );
+        // const validateTransactionDateRes = validateTransactionDate(
+        //   new Date(formState.transaction.master.transactionDate),
+        //   false,
+        //   undefined,
+        //   hasBlockedRight
+        // );
 
-        if (!validateTransactionDateRes.valid) {
-          ERPAlert.show({
-            title: t("invalid_transaction_date"),
-            text: validateTransactionDateRes.message,
-            icon: "warning",
-          });
-          return;
-        }
+        // if (!validateTransactionDateRes.valid) {
+        //   ERPAlert.show({
+        //     title: t("invalid_transaction_date"),
+        //     text: validateTransactionDateRes.message,
+        //     icon: "warning",
+        //   });
+        //   return;
+        // }
 
         // Show delete confirmation dialog
         const deleteConfirmResult = await ERPAlert.show({
@@ -2174,15 +2175,15 @@ ERPAlert.show({
             });
           }
         }
-      } else {
-        // Voucher is in use by another user
-        const editInfo = result?.message?.split(";") || [];
-        ERPAlert.show({
-          title: t("voucher_in_use"),
-          text: `This Voucher is already in use by ${editInfo[1]} opened for edit in system ${editInfo[0]} at ${editInfo[2]}`,
-          icon: "warning",
-        });
-      }
+      // } else {
+      //   // Voucher is in use by another user
+      //   const editInfo = result?.message?.split(";") || [];
+      //   ERPAlert.show({
+      //     title: t("voucher_in_use"),
+      //     text: `This Voucher is already in use by ${editInfo[1]} opened for edit in system ${editInfo[0]} at ${editInfo[2]}`,
+      //     icon: "warning",
+      //   });
+      // }
     } catch (error) {
       console.error("Error handling delete:", error);
       ERPAlert.show({
@@ -2740,6 +2741,7 @@ ERPAlert.show({
             outDetail.details2!.additionalCessPerc = 0;
           }
         } else{
+          debugger;
         if (formState.transaction.master.voucherForm === "VAT") {
           outDetail.vatPerc = Number(product.pVatPerc || 0);
           outDetail.cstPerc = Number(product.purchaseExciseTaxPerc || 0);

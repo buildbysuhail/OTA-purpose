@@ -5,14 +5,10 @@ import { generateQRCodeDataUrl } from "../../../utils/qrSvgToImg";
 import { RenderPreviewComponent } from "../../customPrvElement";
 import { useNumberToWords } from "../../../../../utilities/number-to-words";
 
-const PrevHeader = ({ data, template, currentBranch,userSession }: {
+const PrevHeader = ({ data, template}: {
   data: any;
   template?: TemplateState<unknown>;
-  currentBranch: any;
-  docIDKey?: string;
-  currency?: string;
-  userSession?: any;
-  bindData?:any;
+
 }) => {
 const { convertAmountToEnglish, convertAmountToArabic } = useNumberToWords();
   const [qrCodeImages, setQrCodeImages] = useState<{ [key: string]: string }>({});
@@ -104,8 +100,6 @@ const Logo = useLogo()
                       key={component.id}
                       component={component}
                       data={data}
-                      userSession={userSession}
-                      currentBranch={currentBranch}
                       qrCodeImages={qrCodeImages}
                       convertAmountToArabic={convertAmountToArabic}
                       convertAmountToEnglish={convertAmountToEnglish}
@@ -117,20 +111,29 @@ const Logo = useLogo()
         <div className="flex flex-col flex-[33.33%] justify-start items-start pl-2">
           <div className="flex items-center space-x-1">
           {headerState?.showLogo && Logo && (
-            <img src={Logo} alt="Logo" style={{ width: logoWidth }} />
+            <img src={data?.companyDetails?.companyLogo||Logo} alt="Logo" style={{ width: logoWidth }} />
           )}
           {headerState?.showOrgName && (
             <p className="capitalize font-semibold" style={{...fontStyles,color: headerState?.OrganizationFontColor, fontSize: headerState?.OrganizationFontSize }}>
-              {currentBranch?.company?.name}
+              {data?.companyDetails?.registeredName}
             </p>
           )}
           </div>
-          <div className="items-center">
-            {headerState?.showOrgAddress &&
-            currentBranch?.address?.map((line: string, idx: number) => (
-              <p key={idx} style={fontStyles}>{line}</p>
-            ))}
-          </div>
+          
+          {headerState?.showOrgAddress && (
+            <div className="">
+              <p style={fontStyles}>
+                Building No. {data?.companyDetails?.buildingNo}, {data?.companyDetails?.streetName}
+              </p>
+              <p style={fontStyles}>
+                City: {data?.companyDetails?.city}, Postal Code: {data?.companyDetails?.postalCode} 
+              </p>
+              <p style={fontStyles}>Additional No.: {data?.companyDetails?.additionalNo}</p>
+              <p style={fontStyles}>District: {data?.companyDetails?.district}, {data?.companyDetails?.country}</p>
+            </div>
+          )}
+
+          
         </div>
         <div className="flex flex-[33.33%] justify-center items-center">
           {headerState?.showDocTitle && (
@@ -153,19 +156,19 @@ const Logo = useLogo()
           {headerState?.hasPhoneField && (
             <div className="flex gap-1">
               <span style={labelStyles}>{headerState?.phoneLabel || "Phone No"}:</span>
-              <span style={fontStyles}>{currentBranch?.phone}</span>
+              <span style={fontStyles}>{data?.companyDetails?.mobile}</span>
             </div>
           )}
            {headerState?.hasEmailField && (
             <div className="flex gap-1">
               <span style={labelStyles}>{headerState?.emailLabel || "Email"}:</span>
-              <span style={fontStyles}>{currentBranch?.phone}</span>
+              <span style={fontStyles}>{data?.companyDetails?.emailAddress}</span>
             </div>
           )}
           {headerState?.hasfaxField && (
             <div className="flex gap-1">
               <span style={labelStyles}>{headerState?.faxLabel || "Fax No"}:</span>
-              <span style={fontStyles}>{currentBranch?.fax}</span>
+              <span style={fontStyles}>{data?.companyDetails?.registeredName}</span>
             </div>
           )}
         </div>
@@ -186,7 +189,7 @@ const Logo = useLogo()
                     <RenderPreviewComponent
                       key={component.id}
                       component={component}
-                      data={userSession?.headerFooter}
+                      data={data}
                       qrCodeImages={qrCodeImages}
                       convertAmountToArabic={convertAmountToArabic}
                       convertAmountToEnglish={convertAmountToEnglish}

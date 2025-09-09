@@ -7,7 +7,7 @@ import { AccountTransactionProps } from "../../../DownloadPreview/account/accoun
 import PrevHeader from "./prevHeader";
 import Content from "./prevContent";
 
-const AccountPrvTransactionsVoucher = ({ data, template, currentBranch, userSession, clientSession }: AccountTransactionProps) => {
+const AccountPrvTransactionsVoucher = ({ data, template }: AccountTransactionProps) => {
 
 const propertiesState = template?.propertiesState
   return (
@@ -23,11 +23,11 @@ const propertiesState = template?.propertiesState
         >
           {
             template?.headerState?.showHeader &&(
-           <PrevHeader data={data} template={template} currentBranch={currentBranch} userSession={userSession} />
+           <PrevHeader data={data} template={template} />
             )
           }
           
-          <Content data={data} template={template} currentBranch={currentBranch} indexNO={0} clientSession={clientSession} />
+          <Content data={data} template={template}  />
         </div>
       
 

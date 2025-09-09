@@ -48,7 +48,8 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,
   const clientSession = useSelector((state: RootState) => state.ClientSession);
   const storeTemplate = useSelector((state: RootState) => state.Template?.activeTemplate);
   const templateData = template ?? storeTemplate;
-
+    const [stableTemplateProps, setStableTemplateProps] = useState<any>(null);
+  const [loadingStableProps, setLoadingStableProps] = useState<boolean>(false);
   // Add ref for preview container
   const previewContainerRef = useRef<HTMLDivElement>(null);
 
@@ -100,26 +101,62 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,
   }, []);
 
   // Stabilize props for PDFViewer
-  const stableTemplateProps = useMemo(
-    async () => {
-      let data = DummyVoucherData;
-      if (invTransMasterIDParam) {
+ useEffect(() => {
+    const load = async () => {
+      try {
+        setLoadingStableProps(true);
 
-        data = await loadPrintData(invTransMasterIDParam??0,voucherTypeParam??"",isInvTrans,isSalesView
-          , isServiceTrans,transDate, printCopies,isReprint,isPOSPrinting,isFromSalesReceipt,isPackingSlipPrint,warehouseID
-          , kitchenIDParam,kitchenPrinterNameParam, kitchenNameParam,commonKitchenProductGroupIDParam,template,transactionType,dbIdValue,voucherType,isAppGlobal
-         ) as any
+        let data = DummyVoucherData;
+        if (invTransMasterIDParam) {
+          data = (await loadPrintData(
+            invTransMasterIDParam ?? 0,
+            voucherTypeParam ?? "",
+            isInvTrans,
+            isSalesView,
+            isServiceTrans,
+            transDate,
+            printCopies,
+            isReprint,
+            isPOSPrinting,
+            isFromSalesReceipt,
+            isPackingSlipPrint,
+            warehouseID,
+            kitchenIDParam,
+            kitchenPrinterNameParam,
+            kitchenNameParam,
+            commonKitchenProductGroupIDParam,
+            template,
+            transactionType,
+            dbIdValue,
+            voucherType,
+            isAppGlobal
+          )) as any;
+        }
+
+        const props = {
+          template: templateData,
+          data,
+
+        };
+
+        setStableTemplateProps(props);
+      } catch (err) {
+        // handle/log error if you want
+         setStableTemplateProps(null);
+      } finally {
+        setLoadingStableProps(false);
       }
-      return {
-        template: templateData,
-        data: data,
-        currentBranch,
-        userSession,
-        clientSession,
-      }
-    },
-    [templateData, currentBranch, userSession, clientSession,invTransMasterIDParam,transactionType]
-  );
+    };
+
+    load();
+  // include all deps that should retrigger reload
+  }, [
+    templateData,
+    invTransMasterIDParam,
+    transactionType,
+    // ...any other vars used above
+  ]);
+
 
   // Set max height based on window size
   useEffect(() => {
@@ -294,5 +331,6 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,
     dispatch,
     templateStyleProperties,
     previewContainerRef,
+    masterId:invTransMasterIDParam,
   };
 };

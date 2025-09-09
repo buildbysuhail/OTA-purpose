@@ -9,9 +9,6 @@ interface Props {
   component: PlacedComponent;
   data?: any;
   qrCodeImages?: { [key: string]: string };
-  bindData?: any;
-  userSession?: any;
-  currentBranch?: any;
   convertAmountToEnglish: any;
   convertAmountToArabic: any;
 }
@@ -23,8 +20,6 @@ export const RenderPreviewComponent: React.FC<Props> = ({
   component,
   data,
   qrCodeImages,
-  userSession,
-  currentBranch,
   convertAmountToEnglish,
   convertAmountToArabic
 }) => {
@@ -85,7 +80,7 @@ export const RenderPreviewComponent: React.FC<Props> = ({
               margin: 0,
             }}
           >
-            {bindDataForPrint(component.content, data?.master, data?.details,convertAmountToEnglish,convertAmountToArabic)}
+            {bindDataForPrint(component.content, data,convertAmountToEnglish,convertAmountToArabic)|| "N\A"} 
           </p>
         </div>
       );

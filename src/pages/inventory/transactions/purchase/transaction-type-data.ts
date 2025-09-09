@@ -50,7 +50,12 @@ export const initialInventoryTotals: SummaryItems = {
   pCode: '',
   barCode: '',
   margin: 0,
-  salesPrice: ''
+  salesPrice: '',
+  cgst: 0,
+  sgst: 0,
+  igst: 0,
+  cessAmt: 0,
+  additionalCess: 0
 };
 export const initialTransactionDetails2: TransactionDetails2 = {
   invTransactionDetailID: 0,

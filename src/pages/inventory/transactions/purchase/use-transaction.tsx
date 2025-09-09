@@ -2752,12 +2752,20 @@ export const useTransaction = (
           }
         } else {
           debugger;
-          if (formState.transaction.master.voucherForm === "VAT") {
+          if(clientSession.isAppGlobal) {
+            if (formState.transaction.master.voucherForm.toLowerCase() === "tax") {
+            outDetail.vatPerc = Number(product.pVatPerc || 0);
+          } else {
+            outDetail.vatPerc = 0;
+          }
+          } else {
+            if (formState.transaction.master.voucherForm === "VAT") {
             outDetail.vatPerc = Number(product.pVatPerc || 0);
             outDetail.cstPerc = Number(product.purchaseExciseTaxPerc || 0);
           } else {
             outDetail.vatPerc = 0;
             outDetail.cstPerc = 0;
+          }
           }
         }
 

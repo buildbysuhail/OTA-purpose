@@ -29,6 +29,7 @@ import {
   initialTransactionDetailData,
   initialTransactionDetails2,
   transactionInitialData,
+  TransactionMaster3InitialData,
 } from "./transaction-type-data";
 import { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import { useDispatch } from "react-redux";
@@ -243,6 +244,11 @@ export const useTransactionHelper = (transactionType: string) => {
     const netVal = summary.netValue;
     let netAmt = summary.total;
     const tax = summary.vatAmount;
+    const cgst = summary.cgst;
+    const sgst = summary.sgst;
+    const igst = summary.igst;
+    const cessAmt = summary.cessAmt;
+    const additionalCess = summary.additionalCess;
 
     if (+(netVal + tax) !== +netAmt) {
       netAmt = round(netVal + tax);
@@ -258,6 +264,14 @@ export const useTransactionHelper = (transactionType: string) => {
       result.transaction.master = {};
     }
     result.transaction.master.vatAmount = round(tax);
+    if(clientSession.isAppGlobal) {
+    result.transaction.master.master3 ?? TransactionMaster3InitialData;
+    result.transaction.master.master3!.totCGST = round(cgst);
+    result.transaction.master.master3!.totSGST = round(sgst);
+    result.transaction.master.master3!.totIGST = round(igst);
+    result.transaction.master.master3!.totCess = round(cessAmt);
+    result.transaction.master.master3!.totAdditionalCess = round(additionalCess);
+    }
     result.netAmount = round(netAmt);
 
     let tcsAmt = 0;

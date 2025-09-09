@@ -212,6 +212,7 @@ export interface TransactionMaster {
   prevTransDate: string;
   oldLedgerID: number;
   dueDays: number;
+  master3: TransactionMaster3
 }
 
 export interface TransactionMaster3 {
@@ -436,6 +437,11 @@ export interface SummaryItems {
   barCode: string;
   margin: number;
   salesPrice: string;
+  cgst: number;
+  sgst: number;
+  igst: number;
+  cessAmt: number;
+  additionalCess: number;
 }
 
 export interface ProductDisplayDto {

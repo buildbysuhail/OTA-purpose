@@ -372,7 +372,7 @@ export const transactionRoutes: TransactionRoute[] = [
     action: UserAction.Show,
     voucherType: VoucherType.PurchaseOrder,
     transactionType: "PurchaseOrder",
-    formType: "",
+    formType: "VAT",
     title: TransactionTitles.PurchaseOrder,
     drCr: "Dr",
     listTitle: TransactionListTitles.PurchaseOrders,

@@ -22,11 +22,13 @@ import {
   getExcelCellValue,
   isNullOrUndefinedOrEmpty,
   isNullOrUndefinedOrZero,
+  sanitizeDataAdvanced,
 } from "../../../../utilities/Utils";
 import {
   initialInventoryTotals,
   initialTransactionDetailData,
   initialTransactionDetails2,
+  transactionInitialData,
 } from "./transaction-type-data";
 import { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import { useDispatch } from "react-redux";
@@ -555,7 +557,7 @@ export const useTransactionHelper = (transactionType: string) => {
         detail.details2.cessAmt = round(detail.details2!.cessAmt);
         detail.details2.cessPerc = round(detail.details2!.cessPerc);
       }
-
+debugger;
       let vat = round((netValue * vatPerc) / 100, 4);
       // Calculate net value per unit for cost calculation
       let netVal = rate - (rate * discPerc) / 100;
@@ -1353,16 +1355,18 @@ export const useTransactionHelper = (transactionType: string) => {
       let hasError = false;
 
       for (let i = 0; i < details.length; i++) {
-        const detail = details[i];
+        const rowDetail = details[i];
         const rowNumber = i + 1;
 
+        
         // Check if row is empty - break if product is empty (matching C# logic)
-        if (!(detail.productID > 0)) {
+        if (!(rowDetail.productID > 0)) {
           break;
         }
 
-        const outputRow: any = { ...detail };
-
+let detail  = sanitizeDataAdvanced({...rowDetail}, initialTransactionDetailData)
+        let outputRow: any = { ...detail };
+        debugger;
         // Core transaction fields
         outputRow.bulkRowInserted = false;
         outputRow.productBatchID = detail.productBatchID;
@@ -1572,7 +1576,7 @@ export const useTransactionHelper = (transactionType: string) => {
       master.cashAmt = master.cashReceived;
       master.fromWarehouseID = master.fromWarehouseID > 0 ? master.fromWarehouseID :
         master.voucherType == VoucherType.PurchaseReturn ? 0 : 1;
-      master.stockUpdate = formState.stockUpdate == false ? false : master.stockUpdate
+      master.stockUpdate = master.stockUpdate
       master.supplyType = master.supplyType == undefined || master.supplyType == null ? "" : master.supplyType.toString()
 
       return master;

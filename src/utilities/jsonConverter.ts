@@ -66,6 +66,16 @@ export function modelToBase64Unicode(model: any): string {
     throw error;
   }
 }
+export function safeBase64Decode(str: string) {
+  try {
+    str = str.replace(/-/g, '+').replace(/_/g, '/'); // URL-safe → normal
+    while (str.length % 4) str += "="; // fix padding
+    return atob(str);
+  } catch (e) {
+    console.error("Invalid base64:", str);
+    return null;
+  }
+}
 export function base64ToModelUnicode(base64String: string): string {
   try {
     const binaryString = atob(base64String); // Decode Base64 to binary string

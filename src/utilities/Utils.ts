@@ -1071,7 +1071,8 @@ export const remToPx = (rem: number) =>
     if (data.hasOwnProperty(key)) {
       const value = data[key];
       const initialValue = initialState?.[key];
-if(key == "cashReceived") {
+if(key == "qty") {
+  debugger;
 }
       // Handle empty string to number conversion
       if (opts.convertEmptyStrings && value === "" && typeof initialValue === "number") {

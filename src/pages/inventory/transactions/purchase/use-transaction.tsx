@@ -20,6 +20,7 @@ import {
 import {
   customJsonParse,
   modelToBase64Unicode,
+  safeBase64Decode,
 } from "../../../../utilities/jsonConverter";
 import {
   isNullOrUndefinedOrZero,
@@ -269,9 +270,9 @@ export const useTransaction = (
         `${Urls.inv_transaction_base}${transactionType}/GetLocalSettings`
       );
       localStorage.setItem("utInvc", base64);
-      // Decode the base64 back to JSON string
-      const _userConfig = atob(base64);
-      const userConfig: UserConfig = customJsonParse(_userConfig);
+      // Decode the base64 back to JSON string      
+        const _userConfig = safeBase64Decode(base64 ?? "");;
+      const userConfig: UserConfig = customJsonParse(_userConfig??"{}");
 
       return userConfig;
     } catch (error) {
@@ -382,8 +383,9 @@ export const useTransaction = (
     const Utc = localStorage.getItem("utInvc");
     let userConfig: UserConfig | undefined;
     if (Utc) {
-      const _userConfig = atob(Utc);
-      userConfig = customJsonParse(_userConfig);
+      
+        const _userConfig = safeBase64Decode(Utc ?? "");;
+      userConfig = customJsonParse(_userConfig??"{}");
     } else {
       userConfig = await fetchUserConfig();
     }

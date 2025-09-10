@@ -91,7 +91,7 @@ import DocumentProperties from "./document-properties";
 import ProductInformation from "./product-information";
 import DownloadBarcodePreview from "../../../LabelDesigner/download-preview-barcode";
 import { barCodeField } from "../../../LabelDesigner/fields";
-import { customJsonParse, modelToBase64 } from "../../../../utilities/jsonConverter";
+import { customJsonParse, modelToBase64, safeBase64Decode } from "../../../../utilities/jsonConverter";
 import { Countries } from "../../../../redux/slices/user-session/reducer";
 import BlurLoader from "../../../../components/ERPComponents/erp-loader";
 import { getInitialPreference } from "../../../../utilities/dx-grid-preference-updater";
@@ -134,8 +134,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
   // localInputBox,
 }) => {
   const Utc = localStorage.getItem("utInvc");
-  const st = atob(Utc ?? "");
-  const _st: UserConfig = customJsonParse(st);
+  const st = safeBase64Decode(Utc ?? "");
+  const _st: UserConfig = customJsonParse(st??"{}");
 
   const [triggerEffect, setTriggerEffect] = useState(false);
   // const handleClearControls = () => {

@@ -1080,8 +1080,13 @@ const VirtualRow = React.memo(
                       display: "flex",
                       alignItems: "center",
                       justifyContent: 'center',
-                      backgroundColor: currentCell?.rowIndex === index ? appState.mode === "dark" ? "#444444" : formState.userConfig?.activeRowBg ? `rgb(${formState.userConfig.activeRowBg})` : "#e3f2fd"
-                        : index % 2 === 0 ? appState.mode === "dark" ? "#333333" : "#fff" : appState.mode === "dark" ? "#444444" : "#f9f9f9",
+                      backgroundColor: (currentCell?.rowIndex === index && currentCell?.column === column.dataField)
+                        ? (appState.mode === "dark" ? "#555555" : formState.userConfig?.inputBoxStyle?.focusBgColor ? `rgb(${formState.userConfig.inputBoxStyle.focusBgColor})` : "#bfdbfe")
+                        : currentCell?.rowIndex === index
+                          ? (appState.mode === "dark" ? "#444444" : formState.userConfig?.activeRowBg ? `rgb(${formState.userConfig.activeRowBg})` : "#e3f2fd")
+                          : index % 2 === 0
+                            ? (appState.mode === "dark" ? "#333333" : "#fff")
+                            : (appState.mode === "dark" ? "#444444" : "#f9f9f9"),
                       position: isFixed ? "sticky" : "relative",
                       left: isFirstColumn ? "0px" : "auto",
                       right: isLastColumn ? "0px" : "auto",

@@ -17,7 +17,7 @@ interface GridThemeProps {
   onClearThemeChangeInterval: () => void;
   t: (key: string) => string;
   formState: TransactionFormState;
-  transactionType: any
+  transactionType: any;
 }
 
 interface Theme {
@@ -35,9 +35,12 @@ interface Theme {
   showColumnBorder: boolean;
   activeRowBg: string;
   gridRowHeight: number;
+  activeCellBg: string;
   colors: string[];
 }
+
 const api = new APIClient();
+
 // TablePreview Component
 const TablePreview = ({ theme }: { theme: Theme }) => {
   const headerBgColor = `rgb(${theme.gridHeaderBg})`;
@@ -46,13 +49,14 @@ const TablePreview = ({ theme }: { theme: Theme }) => {
   const footerTextColor = `rgb(${theme.gridFooterFontColor})`;
   const borderColor = `rgb(${theme.gridBorderColor})`;
   const activeRowBg = `rgb(${theme.activeRowBg})`;
+  const activeCellBg = `rgb(${theme.activeCellBg})`;
 
   return (
     <div className="w-full h-24 overflow-hidden text-xs bg-gray-50" style={{ borderRadius: `${theme.gridBorderRadius}px` }}>
       <table className="w-full h-full border-collapse">
         <thead>
           <tr style={{ backgroundColor: headerBgColor, color: headerTextColor }}>
-            <th className="px-1 py-1 text-left" style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontWeight: theme.gridIsBold ? 'bold' : 'normal', fontSize: `${Math.max(theme.gridFontSize - 2, 8)}px` }} >
+            <th className="px-1 py-1 text-left" style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontWeight: theme.gridIsBold ? 'bold' : 'normal', fontSize: `${Math.max(theme.gridFontSize - 2, 8)}px` }}>
               ID
             </th>
             <th className="px-1 py-1 text-left" style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontWeight: theme.gridIsBold ? 'bold' : 'normal', fontSize: `${Math.max(theme.gridFontSize - 2, 8)}px` }}>
@@ -66,7 +70,7 @@ const TablePreview = ({ theme }: { theme: Theme }) => {
         {/* Body */}
         <tbody className="bg-white">
           <tr style={{ backgroundColor: activeRowBg }}>
-            <td className="px-1 py-1" style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontSize: `${Math.max(theme.gridFontSize - 3, 7)}px`, height: `${Math.max(theme.gridRowHeight / 3, 8)}px` }}>
+            <td className="px-1 py-1" style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontSize: `${Math.max(theme.gridFontSize - 3, 7)}px`, height: `${Math.max(theme.gridRowHeight / 3, 8)}px`, backgroundColor: activeCellBg }}>
               001
             </td>
             <td className="px-1 py-1" style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontSize: `${Math.max(theme.gridFontSize - 3, 7)}px` }}>
@@ -83,7 +87,7 @@ const TablePreview = ({ theme }: { theme: Theme }) => {
             <td className="px-1 py-1" style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontSize: `${Math.max(theme.gridFontSize - 3, 7)}px` }}>
               Phone
             </td>
-            <td className="px-1 py-1" style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontSize: `${Math.max(theme.gridFontSize - 3, 7)}px` }} >
+            <td className="px-1 py-1" style={{ border: theme.showColumnBorder ? `1px solid ${borderColor}` : 'none', fontSize: `${Math.max(theme.gridFontSize - 3, 7)}px` }}>
               Pending
             </td>
           </tr>
@@ -123,6 +127,7 @@ const gridThemes = [
     showColumnBorder: true,
     activeRowBg: "240,249,255",
     gridRowHeight: 33,
+    activeCellBg: "252,254,255", // Softer light blue
     colors: ["#f8fafc", "#e2e8f0", "#cbd5e1"]
   },
   {
@@ -140,6 +145,7 @@ const gridThemes = [
     showColumnBorder: true,
     activeRowBg: "219,234,254",
     gridRowHeight: 40,
+    activeCellBg: "242,248,255", // Brighter sky tint
     colors: ["#2563eb", "#3b82f6", "#dbeafe"]
   },
   {
@@ -157,6 +163,7 @@ const gridThemes = [
     showColumnBorder: false,
     activeRowBg: "209,250,229",
     gridRowHeight: 40,
+    activeCellBg: "237,252,245", // Gentle mint glow
     colors: ["#059669", "#10b981", "#d1fae5"]
   },
   {
@@ -174,6 +181,7 @@ const gridThemes = [
     showColumnBorder: true,
     activeRowBg: "204,251,241",
     gridRowHeight: 36,
+    activeCellBg: "232,254,249", // Aqua tint, brighter
     colors: ["#0d9488", "#14b8a6", "#ccfbf1"]
   },
   {
@@ -191,6 +199,7 @@ const gridThemes = [
     showColumnBorder: false,
     activeRowBg: "237,233,254",
     gridRowHeight: 42,
+    activeCellBg: "249,247,255", // Soft lilac glow
     colors: ["#6d28d9", "#7c3aed", "#ede9fe"]
   },
   {
@@ -208,6 +217,7 @@ const gridThemes = [
     showColumnBorder: true,
     activeRowBg: "255,228,230",
     gridRowHeight: 36,
+    activeCellBg: "255,245,247", // Bright blush tone
     colors: ["#be123c", "#e11d48", "#ffe4e6"]
   },
   {
@@ -225,6 +235,7 @@ const gridThemes = [
     showColumnBorder: true,
     activeRowBg: "224,231,255",
     gridRowHeight: 38,
+    activeCellBg: "244,248,255", // Gentle indigo fade
     colors: ["#4338ca", "#6366f1", "#e0e7ff"]
   },
   {
@@ -242,6 +253,7 @@ const gridThemes = [
     showColumnBorder: true,
     activeRowBg: "226,232,240",
     gridRowHeight: 36,
+    activeCellBg: "244,246,250", // Softer gray
     colors: ["#334155", "#475569", "#e2e8f0"]
   },
   {
@@ -259,6 +271,7 @@ const gridThemes = [
     showColumnBorder: true,
     activeRowBg: "243,244,246",
     gridRowHeight: 36,
+    activeCellBg: "252,252,252", // Crisp white
     colors: ["#111827", "#374151", "#f3f4f6"]
   },
   {
@@ -276,6 +289,7 @@ const gridThemes = [
     showColumnBorder: false,
     activeRowBg: "220,252,231",
     gridRowHeight: 38,
+    activeCellBg: "240,254,248", // Subtle mint white
     colors: ["#22c55e", "#4ade80", "#dcfce7"]
   },
   {
@@ -293,6 +307,7 @@ const gridThemes = [
     showColumnBorder: true,
     activeRowBg: "224,242,254",
     gridRowHeight: 38,
+    activeCellBg: "246,251,255", // Very light blue
     colors: ["#0ea5e9", "#38bdf8", "#e0f2fe"]
   },
   {
@@ -310,6 +325,7 @@ const gridThemes = [
     showColumnBorder: true,
     activeRowBg: "243,244,246",
     gridRowHeight: 36,
+    activeCellBg: "252,252,252", // Clean white-gray
     colors: ["#4b5563", "#6b7280", "#f3f4f6"]
   },
   {
@@ -327,6 +343,7 @@ const gridThemes = [
     showColumnBorder: true,
     activeRowBg: "255,237,213",
     gridRowHeight: 38,
+    activeCellBg: "255,248,240", // Peach white
     colors: ["#f97316", "#fb923c", "#fed7aa"]
   },
   {
@@ -344,6 +361,7 @@ const gridThemes = [
     showColumnBorder: true,
     activeRowBg: "219,234,254",
     gridRowHeight: 38,
+    activeCellBg: "242,248,255", // Polished light blue
     colors: ["#1d4ed8", "#3b82f6", "#dbeafe"]
   },
   {
@@ -361,6 +379,7 @@ const gridThemes = [
     showColumnBorder: true,
     activeRowBg: "226,232,240",
     gridRowHeight: 36,
+    activeCellBg: "246,248,252", // Subtle lighter tone
     colors: ["#64748b", "#94a3b8", "#e2e8f0"]
   },
 ];
@@ -398,7 +417,18 @@ const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, transactionTy
 
   const handleSelectTheme = (theme: any) => {
     if (formState.selectedTheme?.themeName !== theme.themeName) {
-      dispatch(formStateHandleFieldChangeKeysOnly({ fields: { selectedTheme: { ...theme, isInitial: false } } }));
+      dispatch(formStateHandleFieldChangeKeysOnly({
+        fields: {
+          selectedTheme: { ...theme, isInitial: false },
+          userConfig: {
+            ...formState.userConfig,
+            inputBoxStyle: {
+              ...formState.userConfig?.inputBoxStyle,
+              focusBgColor: theme.activeCellBg
+            }
+          }
+        }
+      }));
     }
   };
 
@@ -406,7 +436,6 @@ const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, transactionTy
     try {
       debugger;
       if (!formState.selectedTheme) return;
-      console.log("fulluserconfig", { ...formState?.userConfig, ...formState.selectedTheme });
       const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, { ...formState?.userConfig, ...formState.selectedTheme });
       handleResponse(response, () => {
         const base64 = modelToBase64({ ...formState?.userConfig, ...formState.selectedTheme });
@@ -416,11 +445,9 @@ const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, transactionTy
         onClose();
       });
     } catch (error) {
-      console.log("error in save table theme", error
-      );
-    } finally { }
+      console.log("error in save table theme", error);
+    }
   };
-
   return (
     <ERPResizableSidebar isOpen={isOpen} setIsOpen={onClose} minWidth={450} overlayNeeded={false}>
       <div className="flex flex-col h-[94vh] dark:bg-dark-bg bg-gray-50">

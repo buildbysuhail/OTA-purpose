@@ -544,7 +544,7 @@ export interface TransactionFormState {
   dataBrands: [];
   isPopupVisible: boolean;
   showGridTheme: boolean;
-  stockUpdate: boolean;
+  // stockUpdate: boolean;
   batchGridShowKey?: number;
   orderStatus?: string;
   selectedTheme?: any

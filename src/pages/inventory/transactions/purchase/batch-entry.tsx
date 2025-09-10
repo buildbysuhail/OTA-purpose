@@ -40,28 +40,30 @@ interface InventoryDetail {
   unit3?: string;
 }
 
-const BatchEntryModal: React.FC<BatchEntryModalProps> = ({ isOpen, onClose, t, rowIndex,data }) => {
+const BatchEntryModal: React.FC<BatchEntryModalProps> = ({ isOpen, onClose, t, rowIndex, data }) => {
   const dispatch = useDispatch();
   const formState = useSelector((state: RootState) => state.InventoryTransaction);
-useEffect(() => {
-            
-  if(formState.batchEntryData.visible && formState.batchEntryData.data != "") {
-    const data = JSON.parse(formState.batchEntryData.data)
-    setBatchData(data);
-  }
-  
-}, [formState.batchEntryData])
-const handleSet = () => {
-            
+  useEffect(() => {
+
+    if (formState.batchEntryData.visible && formState.batchEntryData.data != "") {
+      const data = JSON.parse(formState.batchEntryData.data)
+      setBatchData(data);
+    }
+
+  }, [formState.batchEntryData])
+  const handleSet = () => {
+
     const slNo = formState.transaction.details[rowIndex].slNo;
     dispatch(
-                formStateHandleFieldChangeKeysOnly({
-                 
-                  fields: { batchEntryData: {visible: false, data:"", rowIndex:-1},transaction: {
-                    details:[{...batchData,slNo: slNo}]
-                  }}
-                  ,updateOnlyGivenDetailsColumns: true, rowIndex
-                }))
+      formStateHandleFieldChangeKeysOnly({
+
+        fields: {
+          batchEntryData: { visible: false, data: "", rowIndex: -1 }, transaction: {
+            details: [{ ...batchData, slNo: slNo }]
+          }
+        }
+        , updateOnlyGivenDetailsColumns: true, rowIndex
+      }))
 
   };
   const [batchData, setBatchData] = useState<InventoryDetail & {
@@ -116,11 +118,11 @@ const handleSet = () => {
                   <ERPCheckbox
                     id='batchEnabled'
                     label={t("batch")}
-                    checked={batchData.batchEnabled || false}
+                    checked={batchData.batchEnabled !== false}
                     onChange={(e) => handleFieldChange('batchEnabled', e.target.checked)}
                   />
                 </div>
-                <div className="flex flex-col gap-2 border border-dashed p-2 border-black rounded-md h-[200px]">
+                <div className={`flex flex-col gap-2 border border-dashed p-2 border-black rounded-md h-[200px] ${!batchData.batchEnabled ? "opacity-50 pointer-events-none" : ""}`}>
                   {/* Batch No */}
                   <div className="flex flex-col sm:flex-row sm:items-center">
                     <label className="w-full sm:w-20 text-xs mb-1 sm:mb-0">
@@ -132,6 +134,7 @@ const handleSet = () => {
                       className="flex-1 h-6 text-xs w-full"
                       noLabel={true}
                       onChange={(e) => handleFieldChange('batchNo', e.target.value)}
+                      disabled={!batchData.batchEnabled}
                     />
                   </div>
                   {/* Exp Days */}
@@ -145,6 +148,7 @@ const handleSet = () => {
                       className="w-full sm:w-24 h-6 text-xs"
                       noLabel={true}
                       onChange={(e) => handleFieldChange('expDays', e.target.value)}
+                      disabled={!batchData.batchEnabled}
                     />
                   </div>
                   {/* Exp Date */}
@@ -158,6 +162,7 @@ const handleSet = () => {
                       value={batchData.expDate}
                       className="flex-1 h-6 text-xs w-full"
                       onChange={(e) => handleFieldChange('expDate', e.target.value)}
+                      disabled={!batchData.batchEnabled}
                     />
                   </div>
                   {/* Mfd Date */}
@@ -171,6 +176,7 @@ const handleSet = () => {
                       value={batchData.mfdDate}
                       className="flex-1 h-6 text-xs w-full"
                       onChange={(e) => handleFieldChange('mfdDate', e.target.value)}
+                      disabled={!batchData.batchEnabled}
                     />
                   </div>
                   {/* MRP */}
@@ -184,11 +190,11 @@ const handleSet = () => {
                       className="w-full sm:w-24 h-6 text-xs"
                       noLabel={true}
                       onChange={(e) => handleFieldChange('mrp', e.target.value)}
+                      disabled={!batchData.batchEnabled}
                     />
                   </div>
                 </div>
               </div>
-
 
               <div className="w-[250px]">
                 {/* Unit 2 Section */}
@@ -203,7 +209,7 @@ const handleSet = () => {
                       />
                     </div>
                   </div>
-                  <div className="flex flex-col gap-2 border border-dashed p-2 border-black rounded-md h-[200px]">
+                  <div className={`flex flex-col gap-2 border border-dashed p-2 border-black rounded-md h-[200px] ${!batchData.unit2Enabled ? "opacity-50 pointer-events-none" : ""}`}>
                     {/* Unit 2 Dropdown */}
                     <div className="flex flex-col sm:flex-row sm:items-center">
                       <label className="w-full sm:w-24 text-xs mb-1 sm:mb-0">
@@ -224,6 +230,7 @@ const handleSet = () => {
                           handleFieldChange('unitID2', data.value);
                           handleFieldChange('unit2', data.text);
                         }}
+                        disabled={!batchData.unit2Enabled}
                       />
                     </div>
                     {/* Unit 2 Qty */}
@@ -237,6 +244,7 @@ const handleSet = () => {
                         className="w-full sm:w-24 h-6 text-xs"
                         noLabel={true}
                         onChange={(e) => handleFieldChange('unit2Qty', e.target.value)}
+                        disabled={!batchData.unit2Enabled}
                       />
                     </div>
                     {/* Unit 2 Sales Rate */}
@@ -250,6 +258,7 @@ const handleSet = () => {
                         className="w-full sm:w-24 h-6 text-xs"
                         noLabel={true}
                         onChange={(e) => handleFieldChange('unit2SalesRate', e.target.value)}
+                        disabled={!batchData.unit2Enabled}
                       />
                     </div>
                     {/* Unit 2 MRP */}
@@ -263,6 +272,7 @@ const handleSet = () => {
                         className="w-full sm:w-24 h-6 text-xs"
                         noLabel={true}
                         onChange={(e) => handleFieldChange('unit2MRP', e.target.value)}
+                        disabled={true}
                       />
                     </div>
                     {/* Unit 2 MBarcode */}
@@ -276,6 +286,7 @@ const handleSet = () => {
                         className="flex-1 h-6 text-xs w-full"
                         noLabel={true}
                         onChange={(e) => handleFieldChange('unit2MBarcode', e.target.value)}
+                        disabled={!batchData.unit2Enabled}
                       />
                     </div>
                     {/* Unit 2 Sticker Qty */}
@@ -289,6 +300,7 @@ const handleSet = () => {
                         className="w-full sm:w-24 h-6 text-xs"
                         noLabel={true}
                         onChange={(e) => handleFieldChange('unit2StickerQty', parseInt(e.target.value) || 0)}
+                        disabled={!batchData.unit2Enabled}
                       />
                     </div>
                   </div>
@@ -307,7 +319,7 @@ const handleSet = () => {
                     />
                   </div>
                 </div>
-                <div className="flex flex-col gap-2 border border-dashed p-2 border-black rounded-md h-[200px]">
+                <div className={`flex flex-col gap-2 border border-dashed p-2 border-black rounded-md h-[200px] ${!batchData.unit3Enabled ? "opacity-50 pointer-events-none" : ""}`}>
                   {/* Unit 3 Dropdown */}
                   <div className="flex flex-col sm:flex-row sm:items-center">
                     <label className="w-full sm:w-24 text-xs mb-1 sm:mb-0">
@@ -328,6 +340,7 @@ const handleSet = () => {
                         handleFieldChange('unitID3', data.value);
                         handleFieldChange('unit3', data.text);
                       }}
+                      disabled={!batchData.unit3Enabled}
                     />
                   </div>
                   {/* Unit 3 Qty */}
@@ -341,6 +354,7 @@ const handleSet = () => {
                       className="w-full sm:w-24 h-6 text-xs"
                       noLabel={true}
                       onChange={(e) => handleFieldChange('unit3Qty', e.target.value)}
+                      disabled={!batchData.unit3Enabled}
                     />
                   </div>
                   {/* Unit 3 Sales Rate */}
@@ -354,6 +368,7 @@ const handleSet = () => {
                       className="w-full sm:w-24 h-6 text-xs"
                       noLabel={true}
                       onChange={(e) => handleFieldChange('unit3SalesRate', e.target.value)}
+                      disabled={!batchData.unit3Enabled}
                     />
                   </div>
                   {/* Unit 3 MRP */}
@@ -367,6 +382,7 @@ const handleSet = () => {
                       className="w-full sm:w-24 h-6 text-xs"
                       noLabel={true}
                       onChange={(e) => handleFieldChange('unit3MRP', e.target.value)}
+                      disabled={true}
                     />
                   </div>
                   {/* Unit 3 MBarcode */}
@@ -380,6 +396,7 @@ const handleSet = () => {
                       className="flex-1 h-6 text-xs w-full"
                       noLabel={true}
                       onChange={(e) => handleFieldChange('unit3MBarcode', e.target.value)}
+                      disabled={!batchData.unit3Enabled}
                     />
                   </div>
                   {/* Unit 3 Sticker Qty */}
@@ -393,6 +410,7 @@ const handleSet = () => {
                       className="w-full sm:w-24 h-6 text-xs"
                       noLabel={true}
                       onChange={(e) => handleFieldChange('unit3StickerQty', parseInt(e.target.value) || 0)}
+                      disabled={!batchData.unit3Enabled}
                     />
                   </div>
                 </div>

@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useEffect, useRef, useState, forwardRef, Ref } from "react";
+import React, { Fragment, useEffect, useRef, useState, forwardRef, Ref } from "react";
 import ERPInput from "./erp-input";
 import { LockClosedIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { capitalizeAndAddSpace, moveArrayElement } from "../../utilities/Utils";
@@ -10,6 +10,7 @@ import { APIClient } from "../../helpers/api-client";
 import Urls from "../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { Ellipsis } from "lucide-react";
+import ERPToast from "./erp-toast";
 
 interface GridPreferenceChooserProps {
   gridId: string;
@@ -73,12 +74,12 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
   const [preferences, setPreferences] = useState<GridPreference>(initialGridPreference);
 
   useEffect(() => {
-    
-    const fetchPreferences = async () => {       
-    const initialPreferences = await getInitialPreference(gridId, columns, new APIClient());
-    // onApplyPreferences && onApplyPreferences(initialGridPreference)
-    setPreferences(initialPreferences); 
-  };
+
+    const fetchPreferences = async () => {
+      const initialPreferences = await getInitialPreference(gridId, columns, new APIClient());
+      // onApplyPreferences && onApplyPreferences(initialGridPreference)
+      setPreferences(initialPreferences);
+    };
     fetchPreferences();
   }, [gridId, columns, onApplyPreferences]);
 
@@ -146,18 +147,20 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
     try {
       const preference = JSON.stringify(preferences);
       localStorage.setItem(`gridPreferences_${gridId}`, preference);
-      await api.postAsync(Urls.grid_preference, { GridID: gridId, Design: preference });
+      await api.postAsync(Urls.grid_preference, { GridID: gridId, Design: preference, });
       setIsOpen(false);
       onChange(preferences);
+      ERPToast.show("Grid saved successfully.", "success");
     } catch (error) {
       console.error("Error saving preferences:", error);
+      ERPToast.show("Failed to save grid preferences. Please try again.", "error");
     } finally {
       setIsSaving(false);
     }
   };
 
   const handleResetGrid = async () => {
-      localStorage.removeItem(`gridPreferences_${gridId}`)
+    localStorage.removeItem(`gridPreferences_${gridId}`)
     if (isSaving) return;
     setIsSaving(true);
     try {
@@ -167,8 +170,10 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
       setPreferences(initialPreferences);
       setIsOpen(false);
       onChange(initialPreferences);
+      ERPToast.show("Grid Reset Successfully", "success");
     } catch (error) {
       console.error("Error resetting preferences:", error);
+      ERPToast.show("Failed to reset grid preferences. Please try again.", "error");
     } finally {
       setIsSaving(false);
     }

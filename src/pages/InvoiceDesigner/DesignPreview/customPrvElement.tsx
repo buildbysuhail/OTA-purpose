@@ -42,6 +42,7 @@ export const RenderPreviewComponent: React.FC<Props> = ({
               fontStyle: component.fontStyle || "normal",
               textAlign: (component.textAlign as any) || "center",
               margin: 0,
+               textDecoration:"underline"
             }}
           >
             {component.content}
@@ -78,6 +79,7 @@ export const RenderPreviewComponent: React.FC<Props> = ({
               minHeight: `${component.height || 50}pt`,
               width: `${component.width || 50}pt`,
               margin: 0,
+              textDecoration:"underline"
             }}
           >
             {bindDataForPrint(component.content, data,convertAmountToEnglish,convertAmountToArabic)|| "N\A"} 

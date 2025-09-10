@@ -1258,7 +1258,7 @@ if (
           ) {
             printPaymentReceiptAdvice();
           } else {
-            printVoucher();
+            printVoucher(formState.transaction.master.accTransactionMasterID, transactionType, formState.transaction.master.voucherType, formState.transaction.master.transactionDate);
           }
         }
 

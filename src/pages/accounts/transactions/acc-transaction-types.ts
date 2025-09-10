@@ -469,7 +469,7 @@ export interface AccTransactionFormState {
   printCheque: boolean
   keepNarration: boolean
   amountInWords: string,
-  template?: any,
+  template?:any,
   templates?: [],
   templatesData?: TemplateState<AccTransactionRow>[]
   userConfig?: AccUserConfig;

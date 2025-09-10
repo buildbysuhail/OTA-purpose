@@ -24,11 +24,9 @@ const { convertAmountToEnglish, convertAmountToArabic } = useNumberToWords();
   const NameFontColor = headerState?.OrganizationFontColor || "#000";
   const NameFontSize = headerState?.OrganizationFontSize || 12;
 
-   const customElementsTop = headerState?.customTop?.customElements ?? [];
-   const customTopHeight = headerState?.customTop?.height ?? 0;
+   const customElementsTop = headerState?.customElements?.elements ?? [];
+   const customTopHeight = headerState?.customElements?.height ?? 0;
 
-   const customElementsBottom = headerState?.customBottom?.customElements ?? [];
-   const customBotHeight = headerState?.customBottom?.height ?? 0;
   const fontStyles = {
     color,
     fontSize,
@@ -50,8 +48,7 @@ const Logo = useLogo()
       const generateQRCodes = async () => {
         const images: { [key: string]: string } = {};
         const qrComponents: PlacedComponent[] = [
-          ...(template?.headerState?.customTop?.customElements || []),
-          ...(template?.headerState?.customBottom?.customElements || []),
+          ...(template?.headerState?.customElements?.elements || []),
         ].filter((comp) => comp.type === DesignerElementType.qrCode);
   
         for (const component of qrComponents) {
@@ -63,17 +60,17 @@ const Logo = useLogo()
         setQrCodeImages(images);
       };
       generateQRCodes();
-    },[template?.headerState?.customTop?.customElements,template?.headerState?.customBottom?.customElements]);
+    },[template?.headerState?.customElements?.elements]);
 
 
 
 
   return (
     <div
-      className="w-full relative flex flex-col flex-wrap border-b border-gray-600 z-10"
+      className="w-full relative flex flex-col  border-b border-gray-600 z-10"
       style={{ backgroundColor: template?.headerState?.bgColor || "#fff", height: headerState?.isFirstOnly && headerState?.headerHeight ? `${headerState.headerHeight}px` : "auto" }}
     >
-      {template?.background_image_header && (
+      {/* {template?.background_image_header && (
         <img
           src={template.background_image_header}
           alt="Header Background"
@@ -83,7 +80,7 @@ const Logo = useLogo()
             objectFit: (headerState?.bg_image_header_objectFit ?? "fill") as React.CSSProperties["objectFit"],
           }}
         />
-      )}
+      )} */}
             {/* headTop */}
             {Array.isArray(customElementsTop) && customElementsTop.length > 0 && (
               <div
@@ -107,96 +104,8 @@ const Logo = useLogo()
                   ))}
               </div>
             )}
-      <div className="flex flex-wrap w-full my-2 z-10">
-        <div className="flex flex-col flex-[33.33%] justify-start items-start pl-2">
-          <div className="flex items-center space-x-1">
-          {headerState?.showLogo && Logo && (
-            <img src={data?.companyDetails?.companyLogo||Logo} alt="Logo" style={{ width: logoWidth }} />
-          )}
-          {headerState?.showOrgName && (
-            <p className="capitalize font-semibold" style={{...fontStyles,color: headerState?.OrganizationFontColor, fontSize: headerState?.OrganizationFontSize }}>
-              {data?.companyDetails?.registeredName}
-            </p>
-          )}
-          </div>
-          
-          {headerState?.showOrgAddress && (
-            <div className="">
-              <p style={fontStyles}>
-                Building No. {data?.companyDetails?.buildingNo}, {data?.companyDetails?.streetName}
-              </p>
-              <p style={fontStyles}>
-                City: {data?.companyDetails?.city}, Postal Code: {data?.companyDetails?.postalCode} 
-              </p>
-              <p style={fontStyles}>Additional No.: {data?.companyDetails?.additionalNo}</p>
-              <p style={fontStyles}>District: {data?.companyDetails?.district}, {data?.companyDetails?.country}</p>
-            </div>
-          )}
 
-          
-        </div>
-        <div className="flex flex-[33.33%] justify-center items-center">
-          {headerState?.showDocTitle && (
-            <p
-              className="text-base"
-              style={{
-                ...fontStyles,
-                color: headerState?.docTitleFontColor,
-                fontSize: headerState?.docTitleFontSize,
-                textDecoration: headerState?.docTitleUnderline ? "underline" : "none",
-              }}
-            >
-              {headerState?.docTitle || "Account Transaction"}
-            </p>
-          )}
-        </div>
-        <div className="flex flex-col flex-[33.33%] items-end pr-2">
-        
-
-          {headerState?.hasPhoneField && (
-            <div className="flex gap-1">
-              <span style={labelStyles}>{headerState?.phoneLabel || "Phone No"}:</span>
-              <span style={fontStyles}>{data?.companyDetails?.mobile}</span>
-            </div>
-          )}
-           {headerState?.hasEmailField && (
-            <div className="flex gap-1">
-              <span style={labelStyles}>{headerState?.emailLabel || "Email"}:</span>
-              <span style={fontStyles}>{data?.companyDetails?.emailAddress}</span>
-            </div>
-          )}
-          {headerState?.hasfaxField && (
-            <div className="flex gap-1">
-              <span style={labelStyles}>{headerState?.faxLabel || "Fax No"}:</span>
-              <span style={fontStyles}>{data?.companyDetails?.registeredName}</span>
-            </div>
-          )}
-        </div>
-      </div>
-
-                  {/* headBottom */}
-            {Array.isArray(customElementsBottom) && customElementsBottom.length > 0 && (
-              <div
-                style={{
-                minHeight: `${customBotHeight}pt`, height:`${customBotHeight}pt`,
-                width: "100%",
-                position: "relative",
-                }
-
-                }
-              >
-                 {customElementsBottom.map((component) => (
-                    <RenderPreviewComponent
-                      key={component.id}
-                      component={component}
-                      data={data}
-                      qrCodeImages={qrCodeImages}
-                      convertAmountToArabic={convertAmountToArabic}
-                      convertAmountToEnglish={convertAmountToEnglish}
-                    />
-                  ))}
-              </div>
-            )}
+     
     </div>
   );
 };

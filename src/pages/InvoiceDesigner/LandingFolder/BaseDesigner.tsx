@@ -3,11 +3,11 @@
 import React, { useEffect, useState } from "react"
 import { ArrowLeftIcon, ZoomIn, ZoomOut, RotateCcw } from "lucide-react"
 import PropertiesDesigner from "../Designer/PropertiesDesigner"
-import HeaderFooterDesigner from "../Designer/HeaderFooterDesigner"
 import save_svg from "../../../assets/svg/save.svg"
 import { useTemplateDesigner } from "./useTemplateDesigner"
 import { setTemplatePropertiesState } from "../../../redux/slices/templates/reducer"
 import { ERPScrollArea } from "../../../components/ERPComponents/erp-scrollbar"
+import HeaderDesigner from "../Designer/HeaderDesigner"
 
 interface BaseDesignerProps {
   designerType: string
@@ -17,7 +17,7 @@ interface BaseDesignerProps {
   sections: Record<string, React.ComponentType>
 }
 
-const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
+const BaseDesigner: React.FC<BaseDesignerProps> = React.memo( 
   ({ templateGroup, designerType, designerKind,templateComponent, sections }) => {
     const {
       t,
@@ -42,7 +42,6 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
     } = useTemplateDesigner({ templateGroup, templateKind: designerKind, designerType })
 
     const SectionComponent = currentSection ? sections[currentSection.type] : null
-
     return (
       <div className="flex h-full text-black dark:text-white bg-white dark:bg-body_dark">
         {/* Mini Tab Icons */}
@@ -98,9 +97,9 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
             />
           )}
 
-          {currentSection?.type === "header&footer" && <HeaderFooterDesigner />}
+          {currentSection?.type === "header" && <HeaderDesigner />}
 
-          {SectionComponent && currentSection?.type !== "properties" && currentSection?.type !== "header&footer" && (
+          {SectionComponent && currentSection?.type !== "properties" && currentSection?.type !== "header" && (
             <SectionComponent />
           )}
         </div>

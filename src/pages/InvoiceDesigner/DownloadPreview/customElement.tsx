@@ -6,10 +6,22 @@ import {
   QRCodeProps,
 } from "../Designer/interfaces";
 import type { Style } from "@react-pdf/types";
+import { bindDataForPrint } from "../../use-print";
 
 const pxToPt = (px: number) => px * (72 / 96);
+interface Props {
+  component: PlacedComponent;
+  data?: any;
+  qrCodeImages?: { [key: string]: string };
+  convertAmountToEnglish: any;
+  convertAmountToArabic: any;
+}
 
-export const renderComponent = (component: PlacedComponent, data?: any,qrCodeImages?: { [key: string]: string },bindData?:any) => {
+export const renderComponent = (component: PlacedComponent,
+  convertAmountToEnglish: any,
+  convertAmountToArabic: any,
+  data?: any,
+  qrCodeImages?: { [key: string]: string }) => {
 
 
   const baseStyle: Style = {
@@ -81,7 +93,8 @@ export const renderComponent = (component: PlacedComponent, data?: any,qrCodeIma
               width: component.width || 50,
             }}
           >
-            {data[component.content] || "N/A"}
+            {bindDataForPrint(component.content, data,convertAmountToEnglish,convertAmountToArabic)|| "N\A"} 
+            {data?.[component.content] || "N/A"}
           </Text>
         </View>
       );

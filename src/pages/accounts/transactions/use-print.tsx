@@ -103,7 +103,9 @@ export const useAccPrint = () => {
   return template;
 };
 
-  const printVoucher = async (voucherType?: any, voucher?: AccTransactionFormState) => {
+  const printVoucher = async (masterID: number,transactionType: string,voucherType?: any, transDate?: string) => {
+
+    transDate = transDate??(new Date()).toISOString();
    
     const template = await getTemplate(voucherType, formState);
     if (template?.id == 0) {
@@ -115,7 +117,7 @@ export const useAccPrint = () => {
     if (formState.userConfig?.printPreview) {
       dispatch(accFormStateHandleFieldChange({ fields: { isPrintModalOpen: true } }))
     } else {
-      await directPrint({template,formState})
+      await directPrint({template: template,masterIDParam: masterID, isInvTrans: false,dbIdValue: userSession.dbIdValue,isAppGlobal: clientSession.isAppGlobal, printCopies:1, transactionType: transactionType,transDate: transDate})
     }
   }
 
@@ -132,7 +134,7 @@ export const useAccPrint = () => {
       ERPToast.showWith("Please Set Template For Print", "warning");
       return
     }
-    await directPrint({template,formState})
+    await directPrint({template})
   }
 
   const printCheque = async (voucherType?: any, voucher?: AccTransactionFormState) => {

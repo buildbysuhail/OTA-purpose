@@ -1,20 +1,20 @@
 import { Document, Page, View, Image } from "@react-pdf/renderer"
 
 import Table from "./Table"
-import Footer from "./Footer"
-import type { TemplateState } from "../../../Designer/interfaces"
-import FontRegistration from "../../../../LabelDesigner/fontRegister"
+import { TemplateState } from "../../Designer/interfaces"
+import { getPageDimensions, getPageSizeForPDF } from "../../utils/pdf-util"
+import FontRegistration from "../../../LabelDesigner/fontRegister"
 import { Header } from "./Header"
-import { Content } from "./Content"
-import { getPageDimensions, getPageSizeForPDF } from "../../../utils/pdf-util"
+import {Footer} from  "./Footer"
 
 export interface AccountTransactionProps {
   data?: any
   template?: TemplateState<unknown>
+
   
 }
 
-const AccountTransactionsTemplate = ({ data, template }: AccountTransactionProps) => {
+const SharedDownloadTemplate = ({ data, template}: AccountTransactionProps) => {
   const pageOrientation = template?.propertiesState?.orientation === "landscape" ? "landscape" : "portrait"
   const paddingLeft = template?.propertiesState?.padding?.left || 10
   const paddingRight = template?.propertiesState?.padding?.right || 10
@@ -33,7 +33,7 @@ const AccountTransactionsTemplate = ({ data, template }: AccountTransactionProps
       <Page size={pdfPageSize} orientation={pageOrientation}>
         {/* Header */}
         {template?.headerState?.showHeader && (
-        <Header data={data} template={template} currentBranch={currentBranch} userSession={userSession} bindData={bindingDemoData}/>
+        <Header data={data} template={template} />
         )}
         
         {/* Main Content Container */}
@@ -65,17 +65,21 @@ const AccountTransactionsTemplate = ({ data, template }: AccountTransactionProps
           )}
 
           {/* Content Section */}
-          <Content data={data} template={template} currentBranch={currentBranch} clientSession={clientSession} />
+        
 
           {/* Table Section - Allow to break across pages */}
           <Table data={data} template={template} />
         </View>
 
         {/* Footer */}
-        {/* <Footer data={data} template={template} /> */}
+  
+        <Footer data={data} template={template} />
+       
+        
+        
       </Page>
     </Document>
   )
 }
 
-export default AccountTransactionsTemplate
+export default SharedDownloadTemplate

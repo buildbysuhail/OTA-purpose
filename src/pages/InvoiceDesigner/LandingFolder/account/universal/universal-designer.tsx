@@ -26,10 +26,10 @@ import { customJsonParse } from "../../../../../utilities/jsonConverter";
 import { convertPdfBlobToImage, generatePdfBlob } from "../../../utils/pdf-save";
 import AccUniversalTransaction from "./designer/transactions-designer";
 import AccountTransactionsUniversal from "../../../DownloadPreview/account/account_transaction-universal";
-import HeaderFooterDesigner from "../../../Designer/HeaderFooterDesigner";
 import ERPModal from "../../../../../components/ERPComponents/erp-modal";
 import { useRootState } from "../../../../../utilities/hooks/useRootState";
 import { toggleCustomDesignerPopup } from "../../../../../redux/slices/popup-reducer";
+import HeaderDesigner from "../../../Designer/HeaderDesigner";
 
 interface DesignSectionType {
   id: number;
@@ -268,7 +268,7 @@ const UniversalDesigner : React.FC<StandardDesignType> = ({}) => {
                     />
                }
                 {currentSection.type == "header&footer" &&
-                  <HeaderFooterDesigner/>
+                  <HeaderDesigner/>
                 }
 
                  {currentSection.type == "transactions" &&

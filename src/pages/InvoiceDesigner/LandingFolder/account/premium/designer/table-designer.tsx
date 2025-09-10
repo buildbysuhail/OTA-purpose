@@ -127,6 +127,7 @@ const LabelsEditor = <T,>({ tableState, currentTableState,  onChange}: ItemTable
   );
 };
 
+
 const LayoutEditor = ({ masterState, onChange }: ItemTableLayoutDesignerProps) => {
   const [searchParams] = useSearchParams();
   const templateGroup = searchParams?.get("template_group");

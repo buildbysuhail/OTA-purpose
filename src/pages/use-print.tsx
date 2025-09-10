@@ -251,7 +251,7 @@ const updateDetailsAndSummary = async (printData: PrintResponse, fields: (keyof 
 
   return printData;
 };
-export const loadPrintData = async (invTransMasterIDParam: number, voucherTypeParam: string,
+export const loadPrintData = async (MasterIDParam: number, voucherTypeParam: string,
   isInvTrans = false,
   isSalesView = false,
   isServiceTrans = false,
@@ -313,11 +313,11 @@ export const loadPrintData = async (invTransMasterIDParam: number, voucherTypePa
     // );
     // console.log(fieldsTable);
     // console.log(mergedCustomElements);
-    console.log(`${invTransMasterIDParam}-invTransMasterIDParam`);
+    console.log(`${MasterIDParam}-MasterIDParam`);
     
     const printData: PrintResponse = await api.getAsync(`${isInvTrans ? Urls.inv_transaction_base: Urls.acc_transaction_base}${transactionType}/print/?
         KitchenId=${0}&CommonKitchenProductGroupId=${0}&IncludeStockDetails=${true}&IncludePreviousLedgerBalance=${true}
-        &IncludeLoyaltyCardBalance=${true}&masterId=${invTransMasterIDParam}&multiPayment=${multiPayment}
+        &IncludeLoyaltyCardBalance=${true}&masterId=${MasterIDParam}&multiPayment=${multiPayment}
                                             &printCount= ${printCount}
                                             &taxableAmountIncludingTaxOnDiscount= ${taxableAmountIncludingTaxOnDiscount}
                                             &taxAmountIncludingTaxOnDiscount= ${taxAmountIncludingTaxOnDiscount}
@@ -338,14 +338,14 @@ export const loadPrintData = async (invTransMasterIDParam: number, voucherTypePa
       returnData.custom.commonKitchenProductGroupID = commonKitchenProductGroupIDParam;
     }
     let barcode = "";
-    if (invTransMasterIDParam < 10) {
-      barcode = `*00000${invTransMasterIDParam}*`;
-    } else if (invTransMasterIDParam < 100) {
-      barcode = `*0000${invTransMasterIDParam}*`;
-    } else if (invTransMasterIDParam < 1000) {
-      barcode = `*000${invTransMasterIDParam}*`;
+    if (MasterIDParam < 10) {
+      barcode = `*00000${MasterIDParam}*`;
+    } else if (MasterIDParam < 100) {
+      barcode = `*0000${MasterIDParam}*`;
+    } else if (MasterIDParam < 1000) {
+      barcode = `*000${MasterIDParam}*`;
     } else {
-      barcode = `*${invTransMasterIDParam}*`;
+      barcode = `*${MasterIDParam}*`;
     }
 
     returnData.custom.transactionBarcode = barcode;
@@ -643,28 +643,28 @@ export const getCommonValues = (field: string,
       v = convertAmountToArabic(data.master.grandTotal);
       break;
     case "billNumberBarcode":
-      v = data.custom.billNumberBarcode;
+      v = data.custom?.billNumberBarcode;
       break;
     case "transactionBarcode":
-      v = data.custom.transactionBarcode;
+      v = data.custom?.transactionBarcode;
       break;
     case "eInvoiceQRCode":
-      v = data.master.eInvoiceData.eInvoiceQRCode;
+      v = data.master?.eInvoiceData?.eInvoiceQRCode;
       break;
     case "qrcodeKsaEinvoicePhase1":
-      v = getKsaQrCode(data.master.transactionDate, data.master.grandTotal.toFixed(2), data.master.vatAmount.toFixed(2), data.master.companyData);
+      v = getKsaQrCode(data.master?.transactionDate, data.master.grandTotal.toFixed(2), data.master.vatAmount.toFixed(2), data.master.companyData);
       break;
     case "qrcodeKsaEinvoice":
     case "qrcodeKsaEinvoiceNotEncrypted":
       if (data.productionReqId) {
-        v = data.master.eInvoiceData.iqr
+        v = data.master?.eInvoiceData?.iqr
       }
       if (v = "") {
         v = getKsaQrCode(data.master.transactionDate, data.master.grandTotal.toFixed(2), data.master.vatAmount.toFixed(2), data.master.companyData);
       }
       break;
     case "qrcodeKsaEinvoicePhase2":
-      v = data.master.eInvoiceData.iqr
+      v = data.master?.eInvoiceData?.iqr
       if (v = "") {
         v = getKsaQrCode(data.master.transactionDate, data.master.grandTotal.toFixed(2), data.master.vatAmount.toFixed(2), data.master.companyData);
       }
@@ -1615,6 +1615,7 @@ export const getCommonValues = (field: string,
 
   return v;
 };
+
 export function bindDataForPrint(field: string, printData: PrintResponse,
   convertAmountToEnglish: (amount: number, currency?: Currencies | undefined) => string,
   convertAmountToArabic: (amount: number, currency?: Currencies | undefined) => string,

@@ -12,6 +12,7 @@ import { toggleCustomDesignerPopup } from "../../../redux/slices/popup-reducer";
 import PDFBarcodeDesigner from "../../LabelDesigner/label_designer";
 import { DesignerConfigMap, templateConfig } from "./designSection";
 import { RootState } from "../../../redux/store";
+import SharedTemplatePreview from "../DesignPreview/shared";
 
 
 export interface TemplateImagesTypes {
@@ -39,7 +40,13 @@ const InvoiceDesigner = () => {
   const typeKey = templateType?.toUpperCase() ?? "STANDARD";
   const kindsForMap = templateConfig[groupKey]?.[typeKey] || {};
   const kindKey = templateKind ?? Object.keys(kindsForMap)[0];
-  const config = templateConfig[groupKey]?.[typeKey]?.[kindKey];
+  const config = templateConfig[groupKey]?.[typeKey]?.[kindKey]
+  // ??{
+
+  //       downloadComponent: <AccountTransactionsTemplate />,
+  //       PreviewComponent: <SharedTemplatePreview />,
+  //       sections: { transactions: AccPremiumTransaction, table: TablePremiumDesigner, footer: () => null },
+  //     }
   
   
   if (!config) {

@@ -306,22 +306,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
     });
   };
 
-  const handlePageResize = (
-    e: React.SyntheticEvent,
-    { size }: { size: { width: number; height: number } }
-  ) => {
-    setTemplateData((prevData: TemplateState<unknown>) => {
-      const updated = {
-        ...prevData,
-        propertiesState: {
-          ...prevData.propertiesState,
-          width: size.width,
-          height: size.height,
-        },
-      };
-      return updated;
-    });
-  };
+
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setActiveTab(newValue);
@@ -519,7 +504,9 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
     }
   };
 
-  const handleComponentClick = (component: PlacedComponent) => {
+  const handleComponentClick = (e: React.MouseEvent,component: PlacedComponent) => {
+      e.preventDefault()
+    e.stopPropagation()
     setSelectedComponent(component);
     setActiveTab("element");
   };
@@ -761,13 +748,14 @@ const handleQRCodePropertyChange = (
   };
 
   const handleMouseDown = (e: React.MouseEvent, component: PlacedComponent) => {
+     e.preventDefault()
+    e.stopPropagation()
     const canvasRect = canvasRef.current?.getBoundingClientRect();
     if (canvasRect) {
       setDraggingComponent(component);
       const offsetX = e.clientX - canvasRect.left - component.x;
       const offsetY = e.clientY - canvasRect.top - component.y;
       setDragOffset({ x: offsetX, y: offsetY });
-      e.stopPropagation();
     }
   };
 
@@ -796,8 +784,9 @@ const handleQRCodePropertyChange = (
     }
   };
 
-  const handleMouseUp = () => {
-    setDraggingComponent(null);
+  const handleMouseUp = (e: React.MouseEvent)  => {
+   e.stopPropagation()
+    setDraggingComponent(null)
   };
 
   const handleSave = async (dataUrl?: string) => {
@@ -809,7 +798,7 @@ const handleQRCodePropertyChange = (
         dispatch(
           setTemplateCustomElements({
             payload: {
-              customElements: templateData.barcodeState?.placedComponents || [],
+              elements: templateData.barcodeState?.placedComponents || [],
               height: templateData.barcodeState?.labelState?.labelHeight,
             },
             field: customTemplate,
@@ -1240,7 +1229,7 @@ const handleRemoveImage =()=>{
             key={component.id}
             id={`component-${component.id}`}
             style={style}
-            onClick={() => handleComponentClick(component)}
+            onClick={(e) => handleComponentClick(e, component)}
             onMouseDown={(e) => handleMouseDown(e, component)}
           >
             {barcodeErrors &&
@@ -1278,7 +1267,7 @@ const handleRemoveImage =()=>{
             key={component.id}
             id={`component-${component.id}`}
             style={style}
-            onClick={() => handleComponentClick(component)}
+            onClick={(e) => handleComponentClick(e, component)}
             onMouseDown={(e) => handleMouseDown(e, component)}
           >
             {component.content}
@@ -1303,7 +1292,7 @@ const handleRemoveImage =()=>{
               width: "auto",
               height: "auto",
             }}
-            onClick={() => handleComponentClick(component)}
+            onClick={(e) => handleComponentClick(e, component)}
             onMouseDown={(e) => handleMouseDown(e, component)}
           >
             <table
@@ -1414,7 +1403,7 @@ const handleRemoveImage =()=>{
                   ? "2px solid #2196f3"
                   : "none",
             }}
-            onClick={() => handleComponentClick(component)}
+            onClick={(e) => handleComponentClick(e, component)}
             onMouseDown={(e) => handleMouseDown(e, component)}
           >
             <div
@@ -1445,7 +1434,7 @@ const handleRemoveImage =()=>{
                   ? "2px solid #2196f3"
                   : "none",
             }}
-            onClick={() => handleComponentClick(component)}
+           onClick={(e) => handleComponentClick(e, component)}
             onMouseDown={(e) => handleMouseDown(e, component)}
           >
             <img
@@ -1491,7 +1480,7 @@ const handleRemoveImage =()=>{
               height: `${component.areaProps?.height ?? 500}pt`,
               backgroundColor: `${component.areaProps?.bgColor ?? "white"}`,
             }}
-            onClick={() => handleComponentClick(component)}
+            onClick={(e) => handleComponentClick(e, component)}
             onMouseDown={(e) => handleMouseDown(e, component)}
           >
             <DeleteButton

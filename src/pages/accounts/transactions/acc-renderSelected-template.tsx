@@ -1,37 +1,23 @@
-import AccountTransactionsTemplate, { AccountTransactionProps } from "../../InvoiceDesigner/DownloadPreview/account/account_transactiocn-premium";
-import AccountTransactionsVoucher from "../../InvoiceDesigner/DownloadPreview/account/account_transactiocn_standard";
-import AccountTransactionsUniversal from "../../InvoiceDesigner/DownloadPreview/account/account_transaction-universal";
+import React from "react";
+import { AccountTransactionProps } from "../../InvoiceDesigner/DownloadPreview/Shared";
+import { templateConfig } from "../../InvoiceDesigner/LandingFolder/designSection";
+import { DocumentProps,Document  } from "@react-pdf/renderer";
 
-export const renderSelectedTemplate = (props: AccountTransactionProps) => {
-  const { template, data, currentBranch, userSession } = props;
 
-  switch (template?.templateKind) {
-    case "premium":
-      return (
-        <AccountTransactionsTemplate
-          template={template}
-          data={data}
-          currentBranch={currentBranch}
-        />
-      );
-    case "standard":
-      return (
-        <AccountTransactionsVoucher
-          template={template}
-          data={data}
-          currentBranch={currentBranch}
-        />
-      );
-    case "universal":
-      return (
-        <AccountTransactionsUniversal
-          template={template}
-          data={data}
-          currentBranch={currentBranch}
-          userSession={userSession}
-        />
-      );
-    default:
-      return <></>;
+export const renderSelectedTemplate = (props: AccountTransactionProps) : React.ReactElement<DocumentProps> => {
+  const { template, data } = props;
+  const groupKey = template?.templateGroup ?? "";
+  const typeKey = template?.templateType?.toUpperCase() ?? "STANDARD";
+  const kindKey = template?.templateKind ?? "";
+
+  const config = templateConfig[groupKey]?.[typeKey]?.[kindKey];
+
+  if (config?.downloadComponent && template) {
+    return React.cloneElement(config.downloadComponent, {
+      data,
+      template,
+    })as React.ReactElement<DocumentProps>;
   }
+
+  return <Document />;
 };

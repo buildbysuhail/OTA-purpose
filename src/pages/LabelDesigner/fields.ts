@@ -15,16 +15,16 @@ interface fdf  {
 }
 export const inventoryFields: OptionGroup[] = [
   { groupName: 'Custom', options: modelToListFromObject<PrintCustomFields>(initialPrintCustomFields,"custom___") },
-  { groupName: 'InvMaster', options: modelToListFromObject<TransactionMaster>(TransactionMasterInitialData,"master___") },
-  { groupName: 'InvDetails',  options: modelToListFromObject<TransactionDetail>(initialTransactionDetailData,"details___") },
+  { groupName: 'Master', options: modelToListFromObject<TransactionMaster>(TransactionMasterInitialData,"master___") },
+  { groupName: 'Details',  options: modelToListFromObject<TransactionDetail>(initialTransactionDetailData,"details___") },
   { groupName: 'Organization',  options: modelToListFromObject<CompanyDetails>(initialCompanyDetails,"org___") },
   // { groupName: 'Branch',  options: modelToListFromObject<BranchDetails>(initialBranchDetails,"branch___") },
   { groupName: 'HeaderFooter',  options: modelToListFromObject<HeaderFooter>(initialHeaderFooter,"headerFooter___") },
 ];
 export const accountsFields: OptionGroup[] = [
   { groupName: 'Custom', options: modelToListFromObject<PrintCustomFields>(initialPrintCustomFields,"custom___") },
-  { groupName: 'AccMaster',  options: modelToListFromObject<TransactionMaster>(TransactionMasterInitialData,"master___") },
-  { groupName: 'AccDetails',  options: modelToListFromObject<TransactionMaster>(TransactionMasterInitialData,"details___") },
+  { groupName: 'Master',  options: modelToListFromObject<TransactionMaster>(TransactionMasterInitialData,"master___") },
+  { groupName: 'Details',  options: modelToListFromObject<TransactionMaster>(TransactionMasterInitialData,"details___") },
   { groupName: 'Organization',  options: modelToListFromObject<CompanyDetails>(initialCompanyDetails,"org___") },
   // { groupName: 'Branch',  options: modelToListFromObject<BranchDetails>(initialBranchDetails,"branch___") },
   { groupName: 'HeaderFooter',  options: modelToListFromObject<HeaderFooter>(initialHeaderFooter,"headerFooter___") },
@@ -32,6 +32,13 @@ export const accountsFields: OptionGroup[] = [
 export const barCodeField: OptionGroup[] = [
   {groupName: "BarCodeField",options:modelToListFromObject<BarcodeLabel>(initialProductData,"barcode___")}
 ]
+export const imgField: OptionGroup[] = [
+ { groupName: 'Organization',  options: modelToListFromObject<CompanyDetails>(initialCompanyDetails,"org___") },
+]
+export const qrCodeField: OptionGroup[] = [
+  { groupName: 'Master', options: modelToListFromObject<TransactionMaster>(TransactionMasterInitialData,"master___") },
+]
+
 export const bindingDemoData = {
   org_name: "Acme Corporation Pvt Ltd",
   org_branch: "Bangalore Branch",

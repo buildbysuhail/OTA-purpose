@@ -32,7 +32,7 @@ interface FooterDesignerProps {
     headerState?: HeaderState;
 }
 
-const HeaderFooterDesigner = ({}: FooterDesignerProps) => {
+const HeaderDesigner = ({}: FooterDesignerProps) => {
     const inputFile = useRef<HTMLInputElement>(null);
     const inputFooterFile = useRef<HTMLInputElement>(null);
     const [searchParams] = useSearchParams();
@@ -75,8 +75,7 @@ const HeaderFooterDesigner = ({}: FooterDesignerProps) => {
                     className=""
                     />
                 </div>
-
-                <ERPCheckbox
+                 <ERPCheckbox
                     id="showHeader"
                     label={t("show_header")}
                     checked={headerState?.showHeader}
@@ -227,6 +226,7 @@ const HeaderFooterDesigner = ({}: FooterDesignerProps) => {
                                 />
                             )}
                         </div>
+                        
              
             </div>
          <div className="transition-all  flex flex-col gap-5 bg-white p-4">
@@ -523,9 +523,11 @@ const HeaderFooterDesigner = ({}: FooterDesignerProps) => {
                         </>
                     }
                 </div>
+
+               
             </div>
         </ERPScrollArea>
     );
 };
 
-export default HeaderFooterDesigner;
+export default HeaderDesigner;

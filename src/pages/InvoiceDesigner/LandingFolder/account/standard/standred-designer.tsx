@@ -26,7 +26,8 @@ import { handleResponse } from "../../../../../utilities/HandleResponse";
 import { customJsonParse } from "../../../../../utilities/jsonConverter";
 import { convertPdfBlobToImage, generatePdfBlob } from "../../../utils/pdf-save";
 import TotalStdDesigner from "./designer/total-designer";
-import HeaderFooterDesigner from "../../../Designer/HeaderFooterDesigner";
+import HeaderDesigner from "../../../Designer/HeaderDesigner";
+
 
 interface DesignSectionType {
   id: number;
@@ -267,7 +268,7 @@ const StandardDesigner : React.FC<StandardDesignType> = ({}) => {
                     />
                }
                 {currentSection.type == "header&footer" &&
-                  <HeaderFooterDesigner/>
+                  <HeaderDesigner/>
                 }
 
                  {currentSection.type == "transactions" &&

@@ -539,8 +539,9 @@ export const DummyVoucherData ={
         "country": "Saudi Arabia",
         "emailAddress": "info@unitedsama.com",
         "telephone": "",
-        "mobile": "",
-        "companyLogo": ""
+        "mobile": "5248748525",
+        "companyLogo": "",
+        "faxNumber":"2154125"
     },
     "headerFooter": {
         "heading1": "Sama United Trading Company",

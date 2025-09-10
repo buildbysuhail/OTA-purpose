@@ -34,10 +34,10 @@ interface UseTemplateDesignerProps {
   templateKind: string;
   designerType: string;
   template?: TemplateState<unknown>
-  invTransMasterIDParam?: number, voucherTypeParam?: string, isInvTrans?: boolean, isSalesView?: boolean, isServiceTrans?: boolean, transDate?: string, printCopies?: number, isReprint?: boolean, isPOSPrinting?: boolean, isFromSalesReceipt?: boolean, isPackingSlipPrint?: boolean, warehouseID?: number, kitchenIDParam?: number, kitchenPrinterNameParam?: string, kitchenNameParam?: string, commonKitchenProductGroupIDParam?: number,  transactionType?: string, dbIdValue?: string, voucherType?: string, isAppGlobal?: boolean
+  MasterIDParam?: number, voucherTypeParam?: string, isInvTrans?: boolean, isSalesView?: boolean, isServiceTrans?: boolean, transDate?: string, printCopies?: number, isReprint?: boolean, isPOSPrinting?: boolean, isFromSalesReceipt?: boolean, isPackingSlipPrint?: boolean, warehouseID?: number, kitchenIDParam?: number, kitchenPrinterNameParam?: string, kitchenNameParam?: string, commonKitchenProductGroupIDParam?: number,  transactionType?: string, dbIdValue?: string, voucherType?: string, isAppGlobal?: boolean
 }
 
-export const useTemplateDesigner = ({ templateGroup, templateKind, designerType, template,invTransMasterIDParam,voucherTypeParam,isInvTrans,isSalesView,isServiceTrans,transDate,printCopies,isReprint,isPOSPrinting,isFromSalesReceipt,isPackingSlipPrint,warehouseID,kitchenIDParam,kitchenPrinterNameParam,kitchenNameParam,commonKitchenProductGroupIDParam,transactionType,dbIdValue,voucherType,isAppGlobal}: UseTemplateDesignerProps) => {
+export const useTemplateDesigner = ({ templateGroup, templateKind, designerType, template,MasterIDParam,voucherTypeParam,isInvTrans,isSalesView,isServiceTrans,transDate,printCopies,isReprint,isPOSPrinting,isFromSalesReceipt,isPackingSlipPrint,warehouseID,kitchenIDParam,kitchenPrinterNameParam,kitchenNameParam,commonKitchenProductGroupIDParam,transactionType,dbIdValue,voucherType,isAppGlobal}: UseTemplateDesignerProps) => {
   const { t } = useTranslation("system");
   const { id } = useParams();
   const navigate = useNavigate();
@@ -105,11 +105,10 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,
     const load = async () => {
       try {
         setLoadingStableProps(true);
-
-        let data = DummyVoucherData;
-        if (invTransMasterIDParam) {
+         let data = DummyVoucherData;
+        if (MasterIDParam) {
           data = (await loadPrintData(
-            invTransMasterIDParam ?? 0,
+            MasterIDParam ?? 0,
             voucherTypeParam ?? "",
             isInvTrans,
             isSalesView,
@@ -151,10 +150,28 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,
     load();
   // include all deps that should retrigger reload
   }, [
-    templateData,
-    invTransMasterIDParam,
-    transactionType,
-    // ...any other vars used above
+  templateData,
+  MasterIDParam,
+  transactionType,
+  voucherTypeParam,
+  isInvTrans,
+  isSalesView,
+  isServiceTrans,
+  transDate,
+  printCopies,
+  isReprint,
+  isPOSPrinting,
+  isFromSalesReceipt,
+  isPackingSlipPrint,
+  warehouseID,
+  kitchenIDParam,
+  kitchenPrinterNameParam,
+  kitchenNameParam,
+  commonKitchenProductGroupIDParam,
+  template,
+  dbIdValue,
+  voucherType,
+  isAppGlobal,
   ]);
 
 
@@ -331,6 +348,6 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,
     dispatch,
     templateStyleProperties,
     previewContainerRef,
-    masterId:invTransMasterIDParam,
+    masterId:MasterIDParam,
   };
 };

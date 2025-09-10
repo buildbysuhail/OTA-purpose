@@ -451,13 +451,12 @@ const newUrl = `/accounts/transactions/CashPayment/${vchno}${queryString ? `?${q
     }, [groupKey, typeKey, kindKey]);
 
      
-        const {
-          maxHeight,
-          stableTemplateProps,
-          templateStyleProperties
-        } = useTemplateDesigner({ templateGroup:groupKey, templateKind: kindKey, designerType:typeKey,template
-          ,invTransMasterIDParam:input.transactionMasterID,transactionType:input.transactionType
-         })
+  const {
+    stableTemplateProps,
+    templateStyleProperties
+    } = useTemplateDesigner({ templateGroup:groupKey, templateKind: kindKey, designerType:typeKey,template
+    ,MasterIDParam:input.transactionMasterID,transactionType:input.transactionType
+    })
 
 const MemoizedGrid = useMemo(() => {
   return (
@@ -714,11 +713,6 @@ const MemoizedGrid = useMemo(() => {
                               style={{
                                       width: `${templateStyleProperties.previewWidth??500}pt`,
                                       height: `${templateStyleProperties.previewHeight??500}pt`,
-                                      // paddingTop: `${templateStyleProperties.paddingTop ?? 0}pt`,
-                                      // paddingRight: `${templateStyleProperties.paddingRight ?? 0}pt`,
-                                      // paddingBottom: `${templateStyleProperties.paddingBottom ?? 0}pt`,
-                                      // paddingLeft: `${templateStyleProperties.paddingLeft ?? 0}pt`,
-
                                     }}
                             >
 

@@ -123,8 +123,8 @@ useEffect(() => {
   let api = new APIClient();
   const dispatch = useAppDispatch();
   const rootState = useRootState();
-  const popupData = useSelector((state: RootState) => state.PopupData);
-  const withUnsavedChange = useAppSelector((state: RootState) => state.PopupData.onCloseWithUnsavedChange);
+  const popupData = useSelector((state: RootState) => state?.PopupData);
+  const withUnsavedChange = useAppSelector((state: RootState) => state?.PopupData?.onCloseWithUnsavedChange);
   const [MyclassName, setMyClass] = useState("");
   const navigate = useNavigate();
   const { pathname } = useLocation();

@@ -19,13 +19,16 @@ import { useTranslation } from "react-i18next";
 import useCurrentBranch from "./use-current-branch";
 import { useAppSelector } from "./useAppDispatch";
 import { RootState } from "../../redux/store";
+import { useEffect, useState } from "react";
+import { loadPrintData } from "../../pages/use-print";
+import SharedDownloadTemplate from "../../pages/InvoiceDesigner/DownloadPreview/Shared";
 
 interface DirectPrintArgs {
-  template: any;
+  template?: any;
   data?: any;
   page?: any;
   DefaultPrinterName?: string;
-  formState?: any;
+  masterIDParam?: number, voucherTypeParam?: string, isInvTrans?: boolean, isSalesView?: boolean, isServiceTrans?: boolean, transDate?: string, printCopies?: number, isReprint?: boolean, isPOSPrinting?: boolean, isFromSalesReceipt?: boolean, isPackingSlipPrint?: boolean, warehouseID?: number, kitchenIDParam?: number, kitchenPrinterNameParam?: string, kitchenNameParam?: string, commonKitchenProductGroupIDParam?: number,  transactionType?: string, dbIdValue?: string, voucherType?: string, isAppGlobal?: boolean
 
 }
 
@@ -35,7 +38,7 @@ export const useDirectPrint = () => {
   const currentBranch = useCurrentBranch();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   const adviceTem = ["PARP", "RARP"]
-
+   
       const generateBarcodeImagesForPrint = async (pages: any[], template: any) => {
       const images: { [key: string]: string } = {};
       if (template?.barcodeState?.placedComponents && pages) {
@@ -67,7 +70,8 @@ export const useDirectPrint = () => {
     data,
     page,
     DefaultPrinterName,
-    formState,
+    masterIDParam,voucherTypeParam,isInvTrans,isSalesView,isServiceTrans,transDate,printCopies,isReprint,isPOSPrinting,isFromSalesReceipt,isPackingSlipPrint,warehouseID,kitchenIDParam,kitchenPrinterNameParam,kitchenNameParam,commonKitchenProductGroupIDParam,transactionType,dbIdValue,voucherType,isAppGlobal
+
   }: DirectPrintArgs) => {
 
     try {
@@ -114,12 +118,39 @@ export const useDirectPrint = () => {
   //     pdfDocument = <ChequeTemplate template={template} data={transaction} currentBranch={currentBranch} />
       }
        else {
-        pdfDocument = renderSelectedTemplate({
-          template,
-          data: formState?.transaction,
-          currentBranch,
-          userSession,
-        });
+        let _data = data;
+          if (masterIDParam) {
+            _data = (await loadPrintData(
+              masterIDParam ?? 0,
+              voucherTypeParam ?? "",
+              isInvTrans,
+              isSalesView,
+              isServiceTrans,
+              transDate,
+              printCopies,
+              isReprint,
+              isPOSPrinting,
+              isFromSalesReceipt,
+              isPackingSlipPrint,
+              warehouseID,
+              kitchenIDParam,
+              kitchenPrinterNameParam,
+              kitchenNameParam,
+              commonKitchenProductGroupIDParam,
+              template,
+              transactionType,
+              dbIdValue,
+              voucherType,
+              isAppGlobal
+            )) as any;
+          }
+         pdfDocument = (
+          <SharedDownloadTemplate
+            template={template}
+            data={_data}
+          />
+        );
+
       }
 
       // 2. If no printer detected, ask user
@@ -132,7 +163,7 @@ export const useDirectPrint = () => {
           cancelButtonText: t("cancel"),
           onConfirm: () => {
             dispatch?.(
-              toggleSelectPrinterPopup({ isOpen: true, template, data, formState })
+              toggleSelectPrinterPopup({ isOpen: true, template, data})
             );
             setPrinter = true;
           },

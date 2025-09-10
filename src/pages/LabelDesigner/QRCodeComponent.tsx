@@ -7,7 +7,7 @@ interface QRCodeComponentProps {
   component: PlacedComponent;
   isSelected: boolean;
   style: React.CSSProperties;
-  handleComponentClick: (component: PlacedComponent) => void;
+  handleComponentClick: (e: React.MouseEvent, component: PlacedComponent) => void;
   handleMouseDown: (e: React.MouseEvent, component: PlacedComponent) => void;
   handleDelete: (id: number) => void;
   qrCodeRefs: React.MutableRefObject<{ [key: number]: HTMLDivElement | null }>;
@@ -105,7 +105,7 @@ export const QRCodeComponent: React.FC<QRCodeComponentProps> = ({
         border: isSelected ? "2px solid #2196f3" : "none",
         zIndex: 1, // Ensure parent is above other elements
       }}
-      onClick={() => handleComponentClick(component)}
+      onClick={(e) => handleComponentClick(e, component)}
       onMouseDown={(e) => handleMouseDown(e, component)}
     >
       <div

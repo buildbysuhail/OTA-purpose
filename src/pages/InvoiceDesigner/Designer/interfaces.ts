@@ -64,7 +64,7 @@ export interface HistoryComponent {
  }
 export interface CustomElementType {
  height?: number;
-customElements: PlacedComponent[];
+elements: PlacedComponent[];
  }
 export interface LabelState {
   columnsPerRow?: number;
@@ -342,6 +342,18 @@ export interface HeaderState {
   orgNameFontSize?: number;
   orgNameFontColor?: string;
 
+    /// Font
+  font_size?: number;
+  font_color?: string;
+  font_weight?: number;
+  fontStyle?: "normal" | "italic";
+
+  /// Label Properties
+  label_font_size?: number;
+  label_font_color?: string;
+  label_font_weight?: number;
+  label_font_style?:"normal"|"italic";
+
   /// Document Information
   showNumberField?: boolean;
   numberField?: string;
@@ -451,8 +463,7 @@ export interface HeaderState {
   accountTransactionInfo?:accountTransactionInfo;
   adviceTransInfo?:adviceTransInfo;
 
-  customTop:CustomElementType,
-  customBottom:CustomElementType,
+  customElements:CustomElementType,
 }
 export interface accountTransactionInfo {
 
@@ -726,6 +737,7 @@ export interface FooterState {
   show_page_number?: boolean;
 
   bg_image_footer_position?: string;
+  customElements?:CustomElementType,
 }
 // export const initialTemplateState: ActionState<TemplateState> = {
 //   loading: false,
@@ -1272,8 +1284,8 @@ export const initialBacodeTemplateState = <T>(): ActionState<TemplateState<T>> =
     accountTransactionInfo: {},
     adviceTransInfo: {},
 
-    customTop: { height: 0, customElements: [] },
-    customBottom:  { height: 0, customElements: [] },
+    customElements: { height: 0, elements: [] },
+
     }
   },
 });

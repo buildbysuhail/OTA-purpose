@@ -8,7 +8,7 @@
 // import { DummyInvoiceData, DummyVoucherData } from "./constants/DummyData";
 // import ItemTableDesigner from "./Designer/ItemTableDesigner";
 // import PropertiesDesigner from "./Designer/PropertiesDesigner";
-// import HeaderFooterDesigner from "./Designer/HeaderFooterDesigner";
+// import HeaderDesigner from "./Designer/HeaderDesigner";
 // import ERPToast from "../../components/ERPComponents/erp-toast";
 // import { TemplateReducerState } from "../../redux/reducers/TemplateReducer";
 // import { handleResponse } from "../../utilities/HandleResponse";
@@ -423,7 +423,7 @@
 //         }
 
 //         {currentSection.type == "header&footer" &&
-//           <HeaderFooterDesigner
+//           <HeaderDesigner
 //             tempImages={{ templateImages, setTemplateImages }}
 //             footerState={templateData?.activeTemplate?.footerState}
 //             headerState={templateData?.activeTemplate?.headerState}

@@ -29,8 +29,8 @@ import AccPremiumTransaction from "./designer/transaction-desiner";
 import AccountTransactionsTemplate from "../../../DownloadPreview/account/account_transactiocn-premium";
 import TotalPremiumDesigner from "./designer/total-designer";
 import TablePremiumDesigner from "./designer/table-designer";
-import HeaderFooterDesigner from "../../../Designer/HeaderFooterDesigner";
 import { bindingDemoData } from "../../../../LabelDesigner/fields";
+import HeaderDesigner from "../../../Designer/HeaderDesigner";
 
 interface DesignSectionType {
   id: number;
@@ -271,7 +271,7 @@ const PremiumDesigner : React.FC<StandardDesignType> = () => {
                     />
                  }
                  {currentSection.type == "header&footer" &&
-                  <HeaderFooterDesigner/>
+                  <HeaderDesigner/>
                  }
 
                  {currentSection.type == "transactions" &&

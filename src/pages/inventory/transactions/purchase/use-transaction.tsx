@@ -1098,10 +1098,13 @@ export const useTransaction = (
   };
   const clearControls = async (
     isEdit: boolean,
-    transactionMasterID: number
+    transactionMasterID?: number
   ) => {
-    await undoEditMode(isEdit, transactionMasterID);
-    const vNo = await getNextVoucherNumber(
+    if(transactionMasterID??0 > 0) {
+    await undoEditMode(isEdit, transactionMasterID??0);
+    
+  }
+  const vNo = await getNextVoucherNumber(
       formState.transaction.master.voucherForm,
       formState.transaction.master.voucherType,
       formState.transaction.master.voucherPrefix,
@@ -2148,6 +2151,7 @@ export const useTransaction = (
               text: t("transaction_deleted_successfully"),
               icon: "success",
             });
+            clearControls(false)
           } else {
             debugger;
             ERPAlert.show({

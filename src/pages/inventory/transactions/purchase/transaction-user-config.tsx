@@ -5,7 +5,7 @@ import Urls from "../../../../redux/urls";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
 import { useDispatch } from "react-redux";
-import { formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly } from "./reducer";
+import { formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly, formStateMasterHandleFieldChange } from "./reducer";
 import { handleResponse } from "../../../../utilities/HandleResponse";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import { UserConfig } from "./transaction-types";
@@ -71,7 +71,6 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
   const [isExpanded, setIsExpanded] = useState<boolean>(formState.userConfig?.isExpanded || false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { appState, updateAppState } = useAppState();
-  const [stockUpdate, setStockUpdate] = useState<boolean>(false);
   const handleToggle = () => {
     const newValue = !isExpanded;
     setIsExpanded(newValue);
@@ -83,7 +82,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
   };
 
   const handleStockUpdateChange = (value: boolean) => {
-    setStockUpdate(value);
+      dispatch(formStateMasterHandleFieldChange({ fields: { stockUpdate: value } }));
   };
 
   const handleInputBoxChange = (field: keyof inputBox, value: any) => {
@@ -366,8 +365,8 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                   <ERPCheckbox
                     id="stockUpdate"
                     label={t("stock_update")}
-                    data={formState.stockUpdate}
-                    checked={formState.stockUpdate}
+                    data={formState.transaction.master}
+                    checked={formState.transaction.master.stockUpdate}
                     onChangeData={(e) => handleStockUpdateChange(e.stockUpdate)}
                   />
                 </div>

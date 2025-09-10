@@ -1,9 +1,9 @@
-import React, {  useCallback,  useEffect,  useMemo,  useRef,  useState,  forwardRef,  Fragment,} from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState, forwardRef, Fragment, } from "react";
 import { createPortal } from "react-dom";
 import { APIClient } from "../../helpers/api-client";
 import debounce from "lodash/debounce";
 import { DataGrid } from "devextreme-react";
-import {  Column,  KeyboardNavigation,  Paging,  Scrolling,  Selection,} from "devextreme-react/cjs/data-grid";
+import { Column, KeyboardNavigation, Paging, Scrolling, Selection, } from "devextreme-react/cjs/data-grid";
 import { useTranslation } from "react-i18next";
 import CustomStore from "devextreme/data/custom_store";
 import ERPInput from "../../components/ERPComponents/erp-input";
@@ -99,7 +99,7 @@ const createStore = async (
   return new CustomStore({
     key: "productID",
     async load(loadOptions: any) {
-      
+
       if (
         !loadOptions.sort ||
         (Array.isArray(loadOptions.sort) && loadOptions.sort.length === 0)
@@ -315,7 +315,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       () => [
         {
           dataField: "productBatchID",
-          caption: t("productBatchID"),
+          caption: t("product_batch_id"),
           dataType: "number",
           width: 150,
           allowSorting: true,
@@ -324,7 +324,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
         },
         {
           dataField: "productCode",
-          caption: t("productCode"),
+          caption: t("product_code"),
           dataType: "string",
           width: 150,
           allowSorting: true,
@@ -333,7 +333,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
         },
         {
           dataField: "autoBarcode",
-          caption: t("autoBarcode"),
+          caption: t("auto_barcode"),
           dataType: "string",
           width: 150,
           allowSorting: true,
@@ -342,7 +342,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
         },
         {
           dataField: "sPrice",
-          caption: t("sprice"),
+          caption: t("s_price"),
           dataType: "number",
           width: 100,
           allowSorting: true,
@@ -351,7 +351,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
         },
         {
           dataField: "pPrice",
-          caption: t("pPrice"),
+          caption: t("p_price"),
           dataType: "number",
           width: 100,
           allowSorting: true,
@@ -378,7 +378,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
         },
         {
           dataField: "unitID",
-          caption: t("unitID"),
+          caption: t("unit_id"),
           dataType: "number",
           minWidth: 100,
           allowSorting: true,
@@ -405,7 +405,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
         },
         {
           dataField: "brandName",
-          caption: t("brandName"),
+          caption: t("brand_name"),
           dataType: "string",
           minWidth: 100,
           allowSorting: true,
@@ -466,7 +466,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     }, []);
 
     useEffect(() => {
-      
+
 
       if (showBatchGrid == false) {
         productIDRef.current = undefined;
@@ -474,7 +474,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     }, [showBatchGrid]);
 
     useEffect(() => {
-      
+
       const loadLedgerData = async () => {
         if ((formState.batchGridShowKey ?? 0) > 0) {
           productIDRef.current = formState.batchGridShowKey;

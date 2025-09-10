@@ -425,7 +425,7 @@
   "warehouse_id": "معرف المستودع",
   "sort_order": "ترتيب الفرز",
   "profit_percentage": "نسبة الربح %",
-  "scheme_discount": "خصم المخطط",
+  "scheme_disc": "خصم المخطط",
   "memo": "مذكرة",
   "memo_editor": "محرر المذكرة",
   "row_number": "رقم الصف",
@@ -719,5 +719,18 @@
   "auto_reset_in": "إعادة الضبط التلقائي خلال:",
   "address_1": "العنوان 1",
   "address_2": "العنوان 2",
-  "stock_update": "تحديث المخزون"
+  "stock_update": "تحديث المخزون",
+
+  "supplier_pcode": "رمز المورد",
+  "pb": "PB",
+  "item_batch_id": "معرف دفعة الصنف",
+  "print_barcode": "طباعة الباركود",
+  "s_price": "سعر البيع",
+  "brand_name": "اسم العلامة التجارية",
+  "me": "ME",
+  "pbs": "PBS",
+  "sl": "SL",
+  "header_row_height": "ارتفاع صف الرأس",
+  "clearing_transaction_question": "هل أنت متأكد أنك تريد مسح هذه المعاملة؟",
+  "once_clearing_this_transaction_cannot_be_recovered": "بمجرد مسح هذه المعاملة لا يمكن استعادتها"
 }

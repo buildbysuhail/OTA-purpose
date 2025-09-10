@@ -425,7 +425,7 @@
   "warehouse_id": "Warehouse ID",
   "sort_order": "Sort Order",
   "profit_percentage": "Profit %",
-  "scheme_discount": "Scheme Discount",
+  "scheme_disc": "Scheme Disc",
   "memo": "Memo",
   "memo_editor": "Memo Editor",
   "row_number": "Row Number",
@@ -722,5 +722,18 @@
   "auto_reset_in": "Auto-reset in :",
   "address_1": "Address 1",
   "address_2": "Address 2",
-  "stock_update": "Stock update"
+  "stock_update": "Stock update",
+
+  "supplier_pcode": "Supplier PCode",
+  "pb": "PB",
+  "item_batch_id": "Item Batch ID",
+  "print_barcode": "Print Barcode",
+  "s_price": "S Price",
+  "brand_name": "Brand Name",
+  "me": "ME",
+  "pbs": "PBS",
+  "sl": "SL",
+  "header_row_height":"Header Row Height",
+  "clearing_transaction_question": "Are you sure you want to clear this transaction?",
+  "once_clearing_this_transaction_cannot_be_recovered": "Once clearing this transaction cannot be recovered"
 }

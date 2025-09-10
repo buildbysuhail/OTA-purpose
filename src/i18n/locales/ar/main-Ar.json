@@ -608,5 +608,6 @@
   "color_customization": "تخصيص اللون",
   "size_options": "خيارات الحجم",
   "grid_preference_chooser": "مُختار تفضيلات الشبكة",
-  "file_upload": "تحميل الملف"
+  "file_upload": "تحميل الملف",
+  "margins": "الهوامش"
 }

@@ -2726,15 +2726,13 @@ export const useTransaction = (
         if (clientSession.isAppGlobal) {
           outDetail.hsnCode = product.hsnCode || "";
           outDetail.details2 = { ...outDetail.details2 ?? initialTransactionDetails2 }
-          if (formState.transaction.master.voucherType !== "PE") {
+          // if (formState.transaction.master.voucherType !== "PI") {
             outDetail.details2!.cgstPerc = Number(product.p_CGSTPerc || 0);
             outDetail.details2!.sgstPerc = Number(product.p_SGSTPerc || 0);
             outDetail.details2!.igstPerc = 0;
 
             if (
-              formState.transaction.master.voucherForm.toLowerCase() === "interstate" ||
-              formState.transaction.master.voucherForm.toLowerCase() === "int" ||
-              formState.transaction.master.voucherForm.toLowerCase() === "import"
+              formState.transaction.master.voucherForm.toLowerCase() === "interstate" ||              formState.transaction.master.voucherForm.toLowerCase() === "import"
             ) {
               outDetail.details2!.cgstPerc = 0;
               outDetail.details2!.sgstPerc = 0;
@@ -2743,29 +2741,28 @@ export const useTransaction = (
 
             outDetail.details2!.cessPerc = Number(product.p_CessPerc || 0);
             outDetail.details2!.additionalCessPerc = Number(product.p_AdditionalCessPerc || 0);
-          } else {
-            outDetail.details2!.cgstPerc = 0;
-            outDetail.details2!.sgstPerc = 0;
-            outDetail.details2!.igstPerc = 0;
-            outDetail.details2!.cessPerc = 0;
-            outDetail.details2!.additionalCessPerc = 0;
-          }
+          // } else {
+          //   outDetail.details2!.cgstPerc = 0;
+          //   outDetail.details2!.sgstPerc = 0;
+          //   outDetail.details2!.igstPerc = 0;
+          //   outDetail.details2!.cessPerc = 0;
+          //   outDetail.details2!.additionalCessPerc = 0;
+          // }
         } else {
           debugger;
-          if(clientSession.isAppGlobal) {
-            if (formState.transaction.master.voucherForm.toLowerCase() === "tax") {
-            outDetail.vatPerc = Number(product.pVatPerc || 0);
-          } else {
-            outDetail.vatPerc = 0;
-          }
-          } else {
-            if (formState.transaction.master.voucherForm === "VAT") {
+         
+          const { voucherType, voucherForm } = formState.transaction.master;
+
+          if (
+            voucherType === "PO" ||
+            voucherType === "PE" ||
+            (voucherForm === "VAT" && voucherType !== "PO" && voucherType !== "PE")
+          ) {
             outDetail.vatPerc = Number(product.pVatPerc || 0);
             outDetail.cstPerc = Number(product.purchaseExciseTaxPerc || 0);
           } else {
             outDetail.vatPerc = 0;
             outDetail.cstPerc = 0;
-          }
           }
         }
 

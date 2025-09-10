@@ -342,7 +342,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
           e.currentTarget.value = inputValue;
         }
       }
-      if (column.dataType === "number" && !validateNumberInput(inputValue, column.dataField == "qty")) {
+      if (column.dataType === "number" && !validateNumberInput(inputValue, (column.dataField == "qty" && blockUnitOnDecimalPoint))) {
         e.currentTarget.value = localValue;
         return;
       }

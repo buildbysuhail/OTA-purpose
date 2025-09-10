@@ -40,7 +40,6 @@ interface HeaderProps extends VoucherElementProps {
 
 const useMediaQuery = (query: string) => {
   const [matches, setMatches] = useState(window.matchMedia(query).matches);
-
   useEffect(() => {
     const mediaQuery = window.matchMedia(query);
     setMatches(mediaQuery.matches);
@@ -48,7 +47,6 @@ const useMediaQuery = (query: string) => {
     mediaQuery.addEventListener('change', handler);
     return () => mediaQuery.removeEventListener('change', handler);
   }, [query]);
-
   return matches;
 };
 
@@ -80,9 +78,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
       onProcessSelected,
       downloadImportTemplateHeadersOnly,
       importFromExcel
-    },
-    ref
-  ) => {
+    }, ref) => {
     const [isPopupVisible, setIsPopupVisible] = useState(false);
     const popupRef = useRef<HTMLDivElement | null>(null);
     const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -99,21 +95,12 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
     };
 
     const closePopupVisible = () => {
-      dispatch(
-        formStateHandleFieldChange({
-          fields: { isPopupVisible: false },
-        })
-      );
+      setIsPopupVisible(false);
     };
 
     const togglePopupVisible = () => {
-      dispatch(
-        formStateHandleFieldChange({
-          fields: { isPopupVisible: !formState.isPopupVisible },
-        })
-      );
+      setIsPopupVisible(!isPopupVisible);
     };
-
 
     useEffect(() => {
       function handleClickOutside(event: MouseEvent) {
@@ -135,7 +122,6 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
     const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
     const onChooseTemplate = async () => { downloadImportTemplateHeadersOnly && downloadImportTemplateHeadersOnly() }
     const onSelectExcel = async (event: React.ChangeEvent<HTMLInputElement>) => { importFromExcel && importFromExcel(event) };
-
     const isAbove768 = useMediaQuery('(min-width: 768px)');
     const isAbove640 = useMediaQuery('(min-width: 640px)');
     const isAbove480 = useMediaQuery('(min-width: 480px)');
@@ -143,7 +129,6 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
     return (
       <>
         <div className={`!overflow-visible flex items-center justify-evenly md:justify-end space-x-2 p-1 w-full overflow-x-auto bg-[#f9fafb] md:bg-transparent`}>
-
           {/* Load Temp Rows */}
           <div className="group relative inline-flex flex-col items-center ps-[5px]" title="Load Details">
             <button disabled={formState.formElements.pnlMasters?.disabled}
@@ -252,7 +237,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
           <div className="relative">
             <button
               ref={buttonRef}
-              onClick={() => setIsPopupVisible(!isPopupVisible)}
+              onClick={togglePopupVisible}
               className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3  rounded-md hover:bg-gray-200 transition-colors`}
               title={t("more")}>
               <EllipsisVertical className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
@@ -304,19 +289,8 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                               label={formState.formElements.foreignCurrency.label}
                               className="flex-1"
                               checked={formState.foreignCurrency}
-                              onChange={(e) =>
-                                dispatch(
-                                  formStateHandleFieldChange({
-                                    fields: {
-                                      foreignCurrency: e.target.checked,
-                                    },
-                                  })
-                                )
-                              }
-                              disabled={
-                                formState.formElements.foreignCurrency?.disabled ||
-                                formState.formElements.pnlMasters?.disabled
-                              }
+                              onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { foreignCurrency: e.target.checked, }, }))}
+                              disabled={formState.formElements.foreignCurrency?.disabled || formState.formElements.pnlMasters?.disabled}
                             />
                           </div>
                         </div>
@@ -345,15 +319,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                               className="flex-1"
                               label={t(formState.formElements.printPreview.label)}
                               checked={formState.printPreview}
-                              onChange={(e) =>
-                                dispatch(
-                                  formStateHandleFieldChange({
-                                    fields: {
-                                      printPreview: e.target.checked,
-                                    },
-                                  })
-                                )
-                              }
+                              onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { printPreview: e.target.checked, }, }))}
                               disabled={formState.formElements.printPreview?.disabled}
                             />
                           </div>
@@ -403,7 +369,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                             <Upload className="h-4 w-4 text-[#065f46] dark:text-[#6ee7b7]" />
                           </div>
                           <ERPFileUploadButton
-                            buttonText={t("import_from_excel")}
+                          buttonText={t("import_from_excel")}
                             handleFileChange={onSelectExcel}
                             hideIcon={true}
                             buttonClassName="font-medium bg-transparent border-none p-0 hover:bg-transparent text-left flex-1"
@@ -418,9 +384,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                           <div className="w-8 h-8 bg-lime-100 dark:bg-lime-900/30 rounded-full flex items-center justify-center group-hover:bg-lime-200 dark:group-hover:bg-lime-900/50 group-hover:scale-110 transition-all duration-200">
                             <Printer className="h-4 w-4 text-lime-800 dark:text-lime-300" />
                           </div>
-                          <button
-                            className="font-medium bg-transparent border-none p-0 hover:bg-transparent text-left flex-1"
-                          >
+                          <button className="font-medium bg-transparent border-none p-0 hover:bg-transparent text-left flex-1">
                             {t("print_barcode")}
                           </button>
                         </div>

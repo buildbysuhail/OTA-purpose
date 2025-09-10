@@ -25,6 +25,7 @@ import { TransactionFormState } from "./transaction-types";
 import { useAppState } from "../../../../utilities/hooks/useAppState";
 import { remToPx } from "../../../../utilities/Utils";
 import VoucherType from "../../../../enums/voucher-types";
+import React from "react";
 
 interface TransactionFooterProps {
   formState: TransactionFormState;
@@ -44,6 +45,113 @@ interface TransactionFooterProps {
   applyDiscountsToItems: any;
   calculateTotal: any
 }
+
+interface Confetti {
+  id: number;
+  x: number;
+  y: number;
+  color: string;
+  rotation: number;
+  velocity: { x: number; y: number };
+  life: number;
+}
+
+interface ConfettiWrapperProps {
+  children: React.ReactElement;
+  onOriginalClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  triggerConfetti?: boolean;
+}
+
+// Confetti Wrapper Component
+const ConfettiWrapper: React.FC<ConfettiWrapperProps> = ({ children, onOriginalClick, triggerConfetti }) => {
+  const [confetti, setConfetti] = useState<Confetti[]>([]);
+  const colors = ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444', '#06b6d4'];
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const createConfetti = (clickX: number, clickY: number) => {
+    const newConfetti: Confetti[] = [];
+    for (let i = 0; i < 20; i++) {
+      newConfetti.push({
+        id: Date.now() + i,
+        x: clickX,
+        y: clickY,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        rotation: Math.random() * 360,
+        velocity: {
+          x: (Math.random() - 0.5) * 250,
+          y: Math.random() * -150 - 80
+        },
+        life: 100
+      });
+    }
+    setConfetti(prev => [...prev, ...newConfetti]);
+  };
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    // Call the original onClick handler
+    if (onOriginalClick) {
+      onOriginalClick(e);
+    }
+  };
+
+  useEffect(() => {
+    if (triggerConfetti && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      const clickX = rect.left + rect.width / 2;
+      const clickY = rect.top + rect.height / 2;
+      createConfetti(clickX, clickY);
+    }
+  }, [triggerConfetti]);
+
+  useEffect(() => {
+    if (confetti.length === 0) return;
+    const interval = setInterval(() => {
+      setConfetti(prev =>
+        prev
+          .map(piece => ({
+            ...piece,
+            x: piece.x + piece.velocity.x * 0.02,
+            y: piece.y + piece.velocity.y * 0.02,
+            velocity: {
+              x: piece.velocity.x * 0.98,
+              y: piece.velocity.y + 4
+            },
+            rotation: piece.rotation + 4,
+            life: piece.life - 1
+          }))
+          .filter(piece => piece.life > 0)
+      );
+    }, 16);
+
+    return () => clearInterval(interval);
+  }, [confetti]);
+
+  // Clone the child element and add our click handler
+  const clonedChild = React.cloneElement(children, {
+    onClick: handleClick,
+    ref: buttonRef
+  });
+
+  return (
+    <>
+      {/* Confetti particles */}
+      {confetti.map(piece => (
+        <div
+          key={piece.id}
+          className="fixed w-2 h-2 pointer-events-none z-[9999]"
+          style={{
+            left: piece.x,
+            top: piece.y,
+            backgroundColor: piece.color,
+            transform: `rotate(${piece.rotation}deg)`,
+            opacity: piece.life / 100,
+            borderRadius: Math.random() > 0.5 ? '50%' : '0%'
+          }}
+        />
+      ))}
+      {clonedChild}
+    </>
+  );
+};
 
 const TransactionFooter: React.FC<TransactionFooterProps> = ({
   formState,
@@ -84,6 +192,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   const [showAttachmentOutside, setShowAttachmentOutside] = useState(false);
   const [dropupState, setDropupState] = useState<'closed' | 'minimal' | 'full'>('closed');
   const [isSmallDevice, setIsSmallDevice] = useState(false);
+
+  const remToPx = (rem: number) => rem * 16;
 
   useEffect(() => {
     const handleResize = () => {
@@ -336,13 +446,13 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
       className={`dark:bg-dark-bg ${footerLayout === "vertical" ? "flex flex-col justify-between h-full" : ""}`}
       style={{ backgroundColor: formState.userConfig?.footerBg ? `rgb(${formState.userConfig.footerBg})` : undefined, }}>
       <div className={`${footerLayout === "vertical" ? "relative block" : "hidden"}`}>
-        <div className="flex justify-between">
-          <button onClick={toggleFooterPosition} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 dark:bg-dark-bg opacity-50 hover:opacity-100 transition-all duration-300"
-            title={t("display_the_footer_at_the_bottom")}>
+        <div className="flex justify-between space-x-2">
+          <button onClick={toggleFooterPosition} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 dark:bg-dark-bg opacity-50 hover:opacity-100 transition-all duration-300" title={t("display_the_footer_at_the_bottom")}>
             <PanelBottom className="text-[#b3b3b9] dark:text-dark-text w-4 h-4" />
           </button>
-          <button ref={buttonRef} onClick={() => setIsPopupVisible((prev) => !prev)} className="flex items-end justify-end dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 rounded-md hover:bg-gray-200 transition-colors">
-            <EllipsisVertical className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+
+          <button ref={buttonRef} onClick={() => setIsPopupVisible((prev) => !prev)} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 dark:bg-dark-bg opacity-50 hover:opacity-100 transition-all duration-300" title={t("more_options")} >
+            <EllipsisVertical className="w-4 h-4 text-gray-600 dark:text-dark-text" />
           </button>
         </div>
 
@@ -568,19 +678,19 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             />
             {/* )} */}
           </div>
-
           <div className="flex justify-end gap-2 w-full sm:w-auto">
-            <ERPButton
-              variant="primary"
-              ref={btnSaveRef}
-              jumpTarget="save"
-              onClick={save}
-              title={t("save")}
-              startIcon={<Check className="w-3.5 h-3.5" />}
-              localInputBox={formState?.userConfig?.inputBoxStyle}
-              disabled={formState.formElements.pnlMasters?.disabled || formState.transaction.details == null || formState.transaction.details.length == 0}
-              className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg flex-1 sm:flex-none"
-            />
+            <ConfettiWrapper onOriginalClick={save} triggerConfetti={formState.savingCompleted}>
+              <ERPButton
+                variant="primary"
+                ref={btnSaveRef}
+                jumpTarget="save"
+                title={t("save")}
+                startIcon={<Check className="w-3.5 h-3.5" />}
+                localInputBox={formState?.userConfig?.inputBoxStyle}
+                disabled={formState.formElements.pnlMasters?.disabled || formState.transaction.details == null || formState.transaction.details.length == 0}
+                className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg flex-1 sm:flex-none"
+              />
+            </ConfettiWrapper>
             <ERPButton
               title={t("cancel")}
               variant="secondary"
@@ -940,16 +1050,17 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                       className="flex-1 rounded-none !m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg text-sm sm:text-base"
                       localInputBox={formState?.userConfig?.inputBoxStyle}
                     />
-                    <ERPButton
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      ref={btnSaveRef}
-                      title={t("save")}
-                      jumpTarget="save"
-                      variant="primary"
-                      className="flex-1 rounded-none !m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg text-sm sm:text-base"
-                      onClick={save}
-                      disabled={formState.formElements.pnlMasters?.disabled || formState.transaction.details == null || formState.transaction.details.length == 0 || formState.transactionLoading}
-                    />
+                    <ConfettiWrapper onOriginalClick={save}>
+                      <ERPButton
+                        localInputBox={formState?.userConfig?.inputBoxStyle}
+                        ref={btnSaveRef}
+                        title={t("save")}
+                        jumpTarget="save"
+                        variant="primary"
+                        className="flex-1 rounded-none !m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg text-sm sm:text-base"
+                        disabled={formState.formElements.pnlMasters?.disabled || formState.transaction.details == null || formState.transaction.details.length == 0 || formState.transactionLoading}
+                      />
+                    </ConfettiWrapper>
                   </div>
                 </div>
               </div>

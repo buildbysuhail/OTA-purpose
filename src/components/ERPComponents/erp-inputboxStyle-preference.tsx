@@ -35,7 +35,7 @@ const StyleSection: React.FC<SectionProps> = ({ title, children, icon, className
         onClick={() => setIsExpanded(!isExpanded)}
         className="w-full p-2 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-dark-hover-bg dark:to-dark-border hover:from-gray-100 hover:to-gray-200 dark:hover:from-dark-border dark:hover:to-gray-700 transition-all duration-300 ease-in-out flex items-center justify-between text-left group"
       >
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center gap-2">
           <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white dark:bg-dark-bg shadow-sm group-hover:shadow-md transition-shadow duration-300">
             {icon}
           </div>
@@ -67,7 +67,7 @@ const ColorPicker: React.FC<{
 
   return (
     <div className="space-y-2">
-      <div className="flex items-center space-x-2 p-2 bg-gray-50 dark:bg-dark-hover-bg rounded-lg border border-gray-200 dark:border-dark-border">
+      <div className="flex items-center gap-2 p-2 bg-gray-50 dark:bg-dark-hover-bg rounded-lg border border-gray-200 dark:border-dark-border">
         <div
           className="relative h-12 w-12 rounded-lg border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
           style={{ backgroundColor: `rgb(${value ?? defaultColor})` }}

@@ -42,7 +42,7 @@ const CollapsibleSection: React.FC<SectionProps> = ({ title, children, defaultEx
   return (
     <div className="mb-2 bg-white dark:bg-dark-bg-card rounded-xl shadow-sm border border-gray-200 dark:border-dark-border overflow-hidden">
       <button onClick={() => setIsExpanded(!isExpanded)} className="w-full p-2 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-dark-hover-bg dark:to-dark-border hover:from-gray-100 hover:to-gray-200 dark:hover:from-dark-border dark:hover:to-gray-700 transition-all duration-300 ease-in-out flex items-center justify-between text-left group">
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center gap-2">
           <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white dark:bg-dark-bg shadow-sm group-hover:shadow-md transition-shadow duration-300">
             {icon}
           </div>
@@ -71,6 +71,8 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
   const [isExpanded, setIsExpanded] = useState<boolean>(formState.userConfig?.isExpanded || false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { appState, updateAppState } = useAppState();
+  const isRtl = appState.locale.rtl;
+  const [stockUpdate, setStockUpdate] = useState<boolean>(false);
   const handleToggle = () => {
     const newValue = !isExpanded;
     setIsExpanded(newValue);
@@ -194,7 +196,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
             {/* View Toggle Section */}
             <div className="mb-2 p-3 sm:p-4 bg-gradient-to-br from-[#eff6ff] via-[#eef2ff] to-[#faf5ff] dark:from-dark-bg dark:via-dark-hover-bg dark:to-dark-border rounded-xl border border-[#bfdbfe] dark:border-dark-border shadow-sm">
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center gap-2">
                   <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-[#dbeafe] dark:bg-[#1e3a8a4D] flex-shrink-0">
                     <Layout className="w-4 h-4 text-[#2563eb] dark:text-[#60a5fa]" />
                   </div>
@@ -209,7 +211,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 lg:gap-6">
-                  <div className="flex items-center justify-between sm:justify-start space-x-3">
+                  <div className="flex items-center justify-between sm:justify-start gap-3">
                     <span className="text-sm text-gray-700 dark:text-dark-text font-medium">{isExpanded ? t("expanded_view") : t("compact_view")}</span>
                     <div className="relative inline-block w-16 h-8 flex-shrink-0">
                       <input
@@ -222,12 +224,12 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                       <label
                         htmlFor="toggle-view"
                         className={`block cursor-pointer rounded-full p-1 transition-all duration-300 ease-in-out shadow-inner ${isExpanded ? "bg-gradient-to-r from-[#3b82f6] to-[#4f46e5] shadow-[#bfdbfe]" : "bg-gray-300 dark:bg-gray-600 shadow-gray-200"}`}>
-                        <div className={`w-6 h-6 bg-white rounded-full shadow-lg transform transition-all duration-300 ease-in-out ${isExpanded ? "translate-x-8 shadow-[#93c5fd]" : "translate-x-0 shadow-gray-300"}`}></div>
+                        <div className={`w-6 h-6 bg-white rounded-full shadow-lg transform transition-all duration-300 ease-in-out ${isExpanded ? isRtl ? "translate-x-[-2rem] shadow-[#93c5fd]" : "translate-x-8 shadow-[#93c5fd]" : "translate-x-0 shadow-gray-300"}`} ></div>
                       </label>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between sm:justify-start space-x-3">
+                  <div className="flex items-center justify-between sm:justify-start gap-3">
                     <span className="text-sm text-gray-700 dark:text-dark-text font-medium">{t("footer_position")}</span>
                     <div className="relative inline-block w-16 h-8 flex-shrink-0">
                       <input
@@ -243,7 +245,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                       <label
                         htmlFor="footer-position"
                         className={`block cursor-pointer rounded-full p-1 transition-all duration-300 ease-in-out shadow-inner ${formState.userConfig?.footerPosition === 'right' ? 'bg-gradient-to-r from-[#3b82f6] to-[#4f46e5] shadow-[#bfdbfe]' : 'bg-gray-300 dark:bg-gray-600 shadow-gray-200'}`}>
-                        <div className={`w-6 h-6 bg-white rounded-full shadow-lg transform transition-all duration-300 ease-in-out ${formState.userConfig?.footerPosition === 'right' ? 'translate-x-8 shadow-[#93c5fd]' : 'translate-x-0 shadow-gray-300'}`}></div>
+                        <div className={`w-6 h-6 bg-white rounded-full shadow-lg transform transition-all duration-300 ease-in-out ${formState.userConfig?.footerPosition === "right" ? isRtl ? "-translate-x-8 shadow-[#93c5fd]" : "translate-x-8 shadow-[#93c5fd]" : "translate-x-0 shadow-gray-300"}`}></div>
                       </label>
                     </div>
                     <span className="text-sm text-gray-700 dark:text-dark-text font-medium">
@@ -433,7 +435,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                 </div>
 
                 <div className="bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] dark:from-dark-hover-bg dark:to-dark-border rounded-xl p-4 border border-gray-200 dark:border-dark-border shadow-sm">
-                  <div className="flex space-x-3 mb-2">
+                  <div className="flex gap-2 mb-2">
                     <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-[#dbeafe] dark:bg-[#1e3a8a4D] shadow-sm">
                       <Layout className="w-4 h-4 text-[#2563eb] dark:text-[#60a5fa]" />
                     </div>
@@ -482,7 +484,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                       </h6>
                       <div className="space-y-1">
                         {["md", "sm"].map((width) => (
-                          <div key={width} className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-dark-hover-bg transition-all duration-200">
+                          <div key={width} className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-dark-hover-bg transition-all duration-200">
                             <input
                               type="radio"
                               name="data-page-scrollbar"
@@ -500,7 +502,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
 
                       {/* Scrollbar Color Picker */}
                       <div className="space-y-2">
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center gap-2">
                           <div
                             className="relative h-12 w-12 flex-shrink-0 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
                             style={{ backgroundColor: `rgb(${appState.scrollbarColor ?? "128, 128, 128"})` }}>
@@ -575,7 +577,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
               <div className="space-y-2">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center gap-2">
                       <div
                         className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
                         style={{ backgroundColor: `rgb(${formState.userConfig?.outerPageBg})` }}>
@@ -604,7 +606,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                   </div>
 
                   <div className="space-y-1">
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center gap-2">
                       <div
                         className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
                         style={{ backgroundColor: `rgb(${formState.userConfig?.innerPageBg})` }}>
@@ -633,7 +635,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                   </div>
 
                   <div className="space-y-1">
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center gap-2">
                       <div
                         className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
                         style={{ backgroundColor: `rgb(${formState.userConfig?.footerBg || '248,248,255'})` }}>
@@ -663,7 +665,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                 </div>
 
                 <div className="border-t border-gray-200 dark:border-dark-border pt-2">
-                  <h4 className="font-semibold text-gray-700 dark:text-dark-text mb-2 flex items-center space-x-2">
+                  <h4 className="font-semibold text-gray-700 dark:text-dark-text mb-2 flex items-center gap-2">
                     <Settings className="w-4 h-4" />
                     <span className="text-sm">{t("input_box_style")}</span>
                   </h4>
@@ -743,7 +745,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {/* Compact gridBorderColor field */}
                   <div className="space-y-1">
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center gap-2">
                       <div
                         className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
                         style={{ backgroundColor: formState.userConfig?.gridBorderColor ? `rgb(${formState.userConfig.gridBorderColor})` : "#000000" }}>
@@ -773,7 +775,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
 
                   {/* Compact gridHeaderBg field */}
                   <div className="space-y-1">
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center gap-2">
                       <div
                         className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
                         style={{ backgroundColor: formState.userConfig?.gridHeaderBg ? `rgb(${formState.userConfig.gridHeaderBg})` : "#ffffff" }}>
@@ -803,7 +805,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
 
                   {/* Compact gridHeaderFontColor field */}
                   <div className="space-y-1">
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center gap-2">
                       <div
                         className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
                         style={{ backgroundColor: formState.userConfig?.gridHeaderFontColor ? `rgb(${formState.userConfig.gridHeaderFontColor})` : "#1f2937" }}
@@ -834,7 +836,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
 
                   {/* Compact activeRowBg field */}
                   <div className="space-y-1">
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center gap-2">
                       <div
                         className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
                         style={{ backgroundColor: formState.userConfig?.activeRowBg ? `rgb(${formState.userConfig.activeRowBg})` : "#e3f2fd" }}
@@ -863,7 +865,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                     </div>
                   </div>
                   <div className="space-y-1">
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center gap-2">
                       <div
                         className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
                         style={{ backgroundColor: formState.userConfig?.gridFooterBg ? `rgb(${formState.userConfig.gridFooterBg})` : "#f8f9fa" }}
@@ -893,7 +895,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                   </div>
 
                   <div className="space-y-1">
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center gap-2">
                       <div
                         className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
                         style={{ backgroundColor: formState.userConfig?.gridFooterFontColor ? `rgb(${formState.userConfig.gridFooterFontColor})` : "#000000" }}
@@ -928,7 +930,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
             {/* Reset Section */}
             <div className="bg-gradient-to-r from-[#fef2f2] to-[#fdf2f8] dark:from-[#7f1d1d33] dark:to-[#83184333] border border-[#fecaca] dark:border-[#991b1b] rounded-xl p-2 shadow-sm">
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center gap-2">
                   <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-[#fee2e2] dark:bg-[#7f1d1d4D]">
                     <RotateCcw className="w-4 h-4 text-[#dc2626] dark:text-[#f87171]" />
                   </div>
@@ -950,7 +952,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
           </div>
         }
         footer={
-          <div className="w-full flex justify-end items-center space-x-2 dark:!border-dark-border dark:!bg-dark-bg rounded-b-md">
+          <div className="w-full flex justify-end items-center gap-2 dark:!border-dark-border dark:!bg-dark-bg rounded-b-md">
             <ERPButton
               title={t("reset_all")}
               onClick={resetThemeChange}

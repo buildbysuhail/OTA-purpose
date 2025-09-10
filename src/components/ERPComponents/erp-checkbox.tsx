@@ -57,6 +57,7 @@ const ERPCheckbox = forwardRef<HTMLInputElement, ERPCheckboxProps>(
     const appState = useAppSelector(
       (state: RootState) => state.AppState.appState
     );
+    const isRtl = appState.locale.rtl;
     // Use localInputBox if provided, otherwise fall back to global inputBox state
     const inputBoxState = localInputBox || appState?.inputBox;
 
@@ -124,9 +125,8 @@ const ERPCheckbox = forwardRef<HTMLInputElement, ERPCheckboxProps>(
     return (
       <div className={className}>
         <label
-          className={`inline-flex items-center ${inputBoxState.bold? "font-bold":"font-normal"} ${
-            disabled ? "cursor-not-allowed" : "cursor-pointer"
-          }`}
+          className={`inline-flex items-center ${inputBoxState.bold ? "font-bold" : "font-normal"} ${disabled ? "cursor-not-allowed" : "cursor-pointer"
+            }`}
         >
           <input
             ref={ref}
@@ -149,16 +149,14 @@ const ERPCheckbox = forwardRef<HTMLInputElement, ERPCheckboxProps>(
             data-jump-to={jumpTo}
             data-jump-target={jumpTarget}
             style={sizeStyles.checkbox}
-            className={`form-check-input dark:!bg-dark-bg-card dark:!border-dark-border ${
-              disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
-            } ${inputClassName}`}
+            className={`form-check-input dark:!bg-dark-bg-card dark:!border-dark-border ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+              } ${inputClassName}`}
             {...props}
           />
           {!noLabel && (
             <span
-              className={`ml-2 dark:!text-dark-text ${labelClassName} ${
-                disabled ? "text-gray-400" : "text-black"
-              }`}
+              className={`${isRtl ? "mr-2" : "ml-2"} dark:!text-dark-text ${labelClassName} ${disabled ? "text-gray-400" : "text-black"
+                }`}
               style={{
                 ...sizeStyles.label,
                 color: inputBoxState?.labelColor

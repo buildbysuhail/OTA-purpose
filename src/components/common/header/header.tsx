@@ -27,7 +27,7 @@ import { menuClose, toggleSidebar } from "./toggle-sidebar";
 import CachedUrls from "../../../redux/cached-urls";
 import config from "../../../config";
 import { APIClient } from "../../../helpers/api-client";
-const api  = new APIClient();
+const api = new APIClient();
 
 interface HeaderProps { }
 
@@ -199,7 +199,7 @@ const Header: FC<HeaderProps> = () => {
   //     window.removeEventListener("resize", handleResize);
   //   };
   // }, []);
-  
+
   const updateAppStateValues = (appState: AppState): AppState => {
     return {
       ...appState,
@@ -242,14 +242,14 @@ const Header: FC<HeaderProps> = () => {
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
 
   const refreshCache = async () => {
-   
-    try {      
+
+    try {
       api.clearInFlightRequests();
-      CachedUrls.forEach(async(x) => {
-        await api.getWithCacheAsync(x,"", true)        
+      CachedUrls.forEach(async (x) => {
+        await api.getWithCacheAsync(x, "", true)
         localStorage.setItem("lcct", new Date().toISOString());
       })
-      
+
     } catch (error) {
       console.error("Error refreshing cache:", error);
     }
@@ -284,7 +284,7 @@ const Header: FC<HeaderProps> = () => {
                 >
                   <span></span>
                 </Link> */}
-                <i className=" dark:text-dark-text ri-menu-2-line text-2xl mr-2" onClick={() => toggleSidebar(appState, updateAppState)}></i>
+                <i className=" dark:text-dark-text ri-menu-2-line text-2xl mr-2 cursor-pointer" onClick={() => toggleSidebar(appState, updateAppState)}></i>
               </div>
             </div>
 
@@ -394,7 +394,7 @@ const Header: FC<HeaderProps> = () => {
                   <i className="bx bx-moon header-link-icon"></i>
                 </Link>
                 <Link aria-label="anchor"
-                  className="hs-dark-mode-active:flex hidden hs-dark-mode group flex-shrink-0 justify-center items-center gap-2 
+                  className="hs-dark-mode-active:flex hidden hs-dark-mode group flex-shrink-0 justify-center items-center gap-2
              rounded-full font-medium text-defaulttextcolor  transition-all text-xs dark:bg-bodybg dark:bg-bgdark dark:hover:bg-black/20 dark:text-[#8c9097] dark:text-white/50 dark:hover:text-white dark:focus:ring-white/10 dark:focus:ring-offset-white/10"
                   to="#" data-hs-theme-click-value="light">
                   <i className="bx bx-sun header-link-icon"></i>

@@ -11,7 +11,7 @@ export default defineConfig({
   },
   build: {
     // outDir: 'build',
-    outDir: 'c:\\Host\\Polosys\\Ui',
+    outDir: 'd:\\Host\\Polosys\\Ui',
     chunkSizeWarningLimit: 50000,
     rollupOptions: {
       onwarn(warning, warn) {

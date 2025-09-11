@@ -571,7 +571,7 @@ export interface PrintResponse {
   salesRetBillAmounts: string;
   custom: PrintCustomFields;
   hasGroupHeaderPrinting: boolean;
-  companyDetailsForPrint: CompanyDetailsForPrint  
+  companyDetails: CompanyDetailsForPrint  
   headerFooter: HeaderFooter;
   productionReqId: boolean;
   // isCashInHandLedger: boolean;

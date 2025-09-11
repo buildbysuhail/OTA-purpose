@@ -28,6 +28,7 @@ export const setTransactionForHistory = (
         ..._formState.transaction,
         master: {
           ..._formState.transaction.master,
+          // master3:_formState.transaction.master == undefined ? {} : _formState.transaction.master.master3
           // employeeID: _formState.transaction.master.employeeID == null ? "" : _formState.transaction.master.employeeID,
           // currencyID: _formState.transaction.master.currencyID == null ? "" : _formState.transaction.master.currencyID,
         },

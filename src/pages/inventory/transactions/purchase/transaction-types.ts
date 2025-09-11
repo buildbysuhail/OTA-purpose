@@ -50,7 +50,6 @@ export interface TransactionProps {
 
 export interface TransactionData {
   master: TransactionMaster;
-  // master3: TransactionMaster3;
   masterValidations?: TransactionValidationsData;
   details: TransactionDetail[];
   invAccTransactions: InvAccTransaction[];
@@ -207,7 +206,6 @@ export interface TransactionMaster {
   hasCashPaid: boolean; //new
   hasroundOff: boolean; //new
   supplyType: string; //new
-  other: TransactionMaster3;
   labelDesignID: number;
   prevTransDate: string;
   oldLedgerID: number;

@@ -1,6 +1,6 @@
 import { Document, Page, View, Image } from "@react-pdf/renderer"
 
-import Table from "./Table"
+// import Table from "./Table"
 import { TemplateState } from "../../Designer/interfaces"
 import { getPageDimensions, getPageSizeForPDF } from "../../utils/pdf-util"
 import FontRegistration from "../../../LabelDesigner/fontRegister"
@@ -68,7 +68,7 @@ const SharedDownloadTemplate = ({ data, template}: AccountTransactionProps) => {
         
 
           {/* Table Section - Allow to break across pages */}
-          <Table data={data} template={template} />
+          {/* <Table data={data} template={template} /> */}
         </View>
 
         {/* Footer */}

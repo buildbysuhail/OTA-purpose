@@ -58,7 +58,8 @@ const PartyLedger = React.forwardRef<HTMLInputElement, LedgerProps>(
                 id: "ledgerID",
                 valueKey: "id",
                 labelKey: "name",
-                getListUrl: `${Urls.inv_transaction_base}${transactionType}/Data/AccLedgers/?ledgerType=${formState.formElements?.ledgerID?.accLedgerType}`,
+                getListUrl: `${Urls.inv_transaction_base}${transactionType}/Data/AccLedgers/`,
+                params: `ledgerType=${formState.formElements?.ledgerID?.accLedgerType}`
               }}
               disabled={
                 formState.formElements.ledgerID?.disabled ||

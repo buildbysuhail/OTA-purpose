@@ -35,7 +35,7 @@ const SharedTemplatePreview = ({ data, template, currentBranch, userSession, cli
           style={{
             // display: "flex",
             // flexDirection: "column",
-            backgroundColor: template?.propertiesState?.bg_color || "#fff",
+          backgroundColor: template?.propertiesState?.bg_color || "#fff",
           paddingTop: `${propertiesState?.padding?.top ?? 0}pt`,
           paddingRight: `${propertiesState?.padding?.right ?? 0}pt`,
           paddingBottom: `${propertiesState?.padding?.bottom ?? 0}pt`,

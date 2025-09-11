@@ -5,22 +5,9 @@ import { useEffect, useRef, useState } from "react";
 import { RootState } from "../../../redux/store";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { useTranslation } from "react-i18next";
-import { TemplateReducerState } from "../../../redux/reducers/TemplateReducer";
 import { FooterState, HeaderState } from "./interfaces";
-import { ERPScrollArea } from "../../../components/ERPComponents/erp-scrollbar";
-import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
-import ERPSlider from "../../../components/ERPComponents/erp-slider";
-import ERPInput from "../../../components/ERPComponents/erp-input";
-import ERPStepInput from "../../../components/ERPComponents/erp-step-input";
-import ERPToast from "../../../components/ERPComponents/erp-toast";
-import ErpDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
-import { handleSetTemplateBackgroundImageFooter, handleSetTemplateBackgroundImageHeader, setTemplateFooterState, setTemplateHeaderState } from "../../../redux/slices/templates/reducer";
-import ERPButton from "../../../components/ERPComponents/erp-button";
-import { useRootState } from "../../../utilities/hooks/useRootState";
-import { toggleCustomDesignerPopup } from "../../../redux/slices/popup-reducer";
 import CustomDesignerButton from "./customDesignerButton";
-import useLogo from "../utils/useLogo";
-
+import { StarIcon as StarIconSolid } from "@heroicons/react/24/solid"
 
 interface TempImageProps {
 }
@@ -50,33 +37,47 @@ const HeaderDesigner = ({}: FooterDesignerProps) => {
     /* ######################################################################################### */
     const templateData = useSelector((state: RootState) => state?.Template) 
     const headerState = templateData?.activeTemplate?.headerState || {};
-    const footerState = templateData?.activeTemplate?.footerState || {};
     const dispatch = useDispatch();
-    const handleChange = (type: "header" | "footer", key: keyof HeaderState  | keyof FooterState, value: string | number | boolean) => {
-        if (type === "header") {
-            dispatch(setTemplateHeaderState({ ...headerState, [key]: value }));
-        } else {
-            dispatch(setTemplateFooterState({ ...footerState, [key]: value }));
-        }
-    }
-    const Logo = useLogo()
+
     return (
         // <ERPScrollArea
         //     className={`overflow-y-auto overflow-x-hidden  flex h-auto max-h-[${maxHeight - 100}px] flex-col gap-1`}>
             <div className={"transition-all  flex flex-col gap-5 bg-white p-4"}>
                 <div className="flex justify-between items-center  border-b  bg-[#80808012] p-2"> 
                   <h6 className="">{t("header")}</h6>
-                   <CustomDesignerButton 
-                    LabelBefore="Add Before Header"
-                    LabelAfter="Add After Header"
-                    customFieldMaster={"headerState"}
-                    dispatch={dispatch}
-                    t={t}
-                    className=""
-                    />
+
                 </div>
 
-               
+               <div
+        key={`ti_head`}
+        className="
+          group relative w-full  
+          h-[250px] xs:h-[260px] sm:h-[280px] md:h-[300px] lg:h-[280px] 
+          aspect-[4/5] bg-white rounded-md
+          border border-slate-400 hover:border-slate-600 hover:shadow-xl 
+          overflow-hidden 
+        "
+      >
+
+
+        <div className="relative w-full h-[80%] bg-gradient-to-br from-slate-50 to-slate-100 overflow-hidden">
+          <img
+            src={headerState?.customElements?.thumbImage || "/placeholder.svg?height=300&width=240"}
+            alt={"header thumbImage"}
+            className="w-full h-full object-contine "
+          />
+
+        </div>
+
+        <div className="px-4 py-2  bg-slate-50 border-t border-slate-400 rounded-b-md min-h-[20%] overflow-hidden">
+                     <CustomDesignerButton 
+                    Label="Add Header"
+                    customFieldMaster={"headerState"}
+                    dispatch={dispatch}
+                    className=""
+                    />
+        </div>
+      </div> 
             </div>
         // </ERPScrollArea>
     );

@@ -1,3 +1,4 @@
+import { initialHeaderFooter } from '../redux/slices/user-session/reducer';
 import { 
   PrintMasterDto,
   PrintDetailDto,
@@ -69,20 +70,21 @@ export const initialPartyDetailsForPrint: PartyDetailsForPrint = {
 };
 
 export const initialCompanyDetailsForPrint: CompanyDetailsForPrint = {
-  companyRegistredNameEnglish: "",
-  companyRegistredNameArabic: "",
-  companyTaxRegNumber: "",
-  companyCRNumber: "",
-  companyBuildingNo: "",
-  companyStreetName: "",
-  companyDistrict: "",
-  companyCity: "",
-  companyPostalCode: "",
-  companyAdditionalNo: "",
-  companyCountry: "",
-  companyEmail: "",
-  companyTelephone: "",
-  companyMobile: ""
+ registeredName: "",
+  registeredNameArabic: "",
+  taxRegNo: "",
+  crNumber: "",
+  buildingNo: "",
+  streetName: "",
+  district: "",
+  city: "",
+  postalCode: "",
+  additionalNo: "",
+  country: "",
+  emailAddress: "",
+  telephone: "",
+  mobile: "",
+  companyLogo: "",
 };
 
 export const initialVehicleDetailsForPrint: VehicleDetailsForPrint = {
@@ -165,6 +167,7 @@ export const initialInvDetail2ForPrint: InvDetail2ForPrint = {
 };
 
 export const initialPrintCustomFields: PrintCustomFields = {
+  // Stream & Current
   streamReader: null,
   currentLine: "",
   salesBillNumbers: "",
@@ -172,6 +175,8 @@ export const initialPrintCustomFields: PrintCustomFields = {
   billAmounts: "",
   retBillAmounts: "",
   currentSettingsArray: [],
+
+  // Print settings
   backWardLines: 0,
   ejectLines: 0,
   linesPerPage: 0,
@@ -180,6 +185,11 @@ export const initialPrintCustomFields: PrintCustomFields = {
   width: 0,
   height: 0,
   printerName: "",
+  printTime: "",
+  printDate: "",
+  date: "",
+  printCopyStatus: "",
+  printCopyStatus2: "",
   showPrinterSelection: false,
   gapBetweenItems: 0,
   kitchenPrinterName: "",
@@ -192,6 +202,8 @@ export const initialPrintCustomFields: PrintCustomFields = {
   sortItemList: false,
   portForm: "",
   backgroundImgPath: "",
+
+  // Transaction data
   invTransactionMasterID: 0,
   fldName: "",
   fldText: "",
@@ -212,12 +224,14 @@ export const initialPrintCustomFields: PrintCustomFields = {
   dtSettings: "",
   pfSettings: "",
   ifSettings: "",
+
+  // Data tables
   dtTranMaster: null,
   dtTransDetails: null,
-  noOfCopies: 1,
-  printInCopy: 1,
-  groupNameHeadHeight: 0,
-  grandTotal: 0,
+  noOfCopies: 0,
+  printInCopy: 0,
+
+  // Financial calculations
   totReturnAmount: 0,
   roundAmt: 0,
   adjustmentAmount: 0,
@@ -230,6 +244,12 @@ export const initialPrintCustomFields: PrintCustomFields = {
   exchangeRate: 0,
   qrPay: 0,
   bankCard: 0,
+  amountInWords: "",
+  amountInWordsLine2: "",
+  amountInWordsInArabic: "",
+  mannualOrAutoBarcode: "",
+
+  // Transaction flags
   isInvTrans: false,
   isSalesView: false,
   isServiceTrans: false,
@@ -242,12 +262,16 @@ export const initialPrintCustomFields: PrintCustomFields = {
   lastGroupNameWithUnit: "",
   hasGroupHeaderPrinting: false,
   isPOSPrinting: false,
+
+  // Kitchen data
   kitchenID: 0,
   commonKitchenProductGroupID: 0,
   totalBillItemNos: 0,
   kitchenName: "",
-  pageNo: 1,
-  noOfPages: 1,
+
+  // Page and print state
+  pageNo: 0,
+  noOfPages: 0,
   totalItems: 0,
   pageTotDebit: 0,
   pageTotCredit: 0,
@@ -257,6 +281,8 @@ export const initialPrintCustomFields: PrintCustomFields = {
   totalNetAmount: 0,
   totalQty: 0,
   totalPageQty: 0,
+
+  // Detailed calculations
   sumOfGross: 0,
   unitNetValue: 0,
   sumOfDisc: 0,
@@ -271,6 +297,8 @@ export const initialPrintCustomFields: PrintCustomFields = {
   sumOfMRPRate: 0,
   sumOfSchemDisc: 0,
   sumOfGrossfc: 0,
+
+  // Page totals
   pageTotalofGross: 0,
   pageTotalofDisc: 0,
   pageTotalofTax: 0,
@@ -284,6 +312,8 @@ export const initialPrintCustomFields: PrintCustomFields = {
   pageTotFree: 0,
   totalFree: 0,
   totalQtyFree: 0,
+
+  // GST calculations
   sumOfCGST: 0,
   sumOfSGST: 0,
   sumOfIGST: 0,
@@ -291,39 +321,45 @@ export const initialPrintCustomFields: PrintCustomFields = {
   sumOfAddCessAmt: 0,
   sumOfGST: 0,
   sumOfNetWeight: 0,
+
+  // Service items
   serviceItems: [],
   serviceItemsAMT: [],
+
+  // GST details
   zeroTaxable: 0,
   sumGST: 0,
-  zeroCGSTAmt: 0,
-  zeroSGSTAmt: 0,
-  zeroIGSTAmt: 0,
-  zeroTotal: 0,
-  threeTaxable: 0,
-  threeCGST: 0,
-  threeSGST: 0,
-  threeIGST: 0,
-  threeTotal: 0,
-  fiveTaxable: 0,
-  fiveCGSTAmt: 0,
-  fiveSGSTAmt: 0,
-  fiveIGSTAmt: 0,
-  fiveTotal: 0,
-  twelveTaxable: 0,
-  twelveCGSTAmt: 0,
-  twelveSGSTAmt: 0,
-  twelveIGSTAmt: 0,
-  twelveTotal: 0,
-  eighteenTaxable: 0,
-  eighteenCGSTAmt: 0,
-  eighteenSGSTAmt: 0,
-  eighteenIGSTAmt: 0,
-  eighteenTotal: 0,
-  twentyEightTaxable: 0,
-  twentyEightCGSTAmt: 0,
-  twentyEightSGSTAmt: 0,
-  twentyEightIGSTAmt: 0,
-  twentyEightTotal: 0,
+  cGST_0_Perc: 0,
+  sGST_0_Perc: 0,
+  iGST_0_Perc: 0,
+  total_0_Perc: 0,
+  taxable_3_Perc: 0,
+  cGST_3_Perc: 0,
+  sGST_3_Perc: 0,
+  iGST_3_Perc: 0,
+  total_3_Perc: 0,
+  taxable_5_Perc: 0,
+  cGST_5_Perc: 0,
+  sGST_5_Perc: 0,
+  iGST_5_Perc: 0,
+  total_5_Perc: 0,
+  taxable_12_Perc: 0,
+  cGST_12_Perc: 0,
+  sGST_12_Perc: 0,
+  iGST_12_Perc: 0,
+  total_12_Perc: 0,
+  taxable_18_Perc: 0,
+  cGST_18_Perc: 0,
+  sGST_18_Perc: 0,
+  iGST_18_Perc: 0,
+  total_18_Perc: 0,
+  taxable_28_Perc: 0,
+  cGST_28_Perc: 0,
+  sGST_28_Perc: 0,
+  iGST_28_Perc: 0,
+  total_28_Perc: 0,
+
+  // Additional calculations
   mrpDifference: 0,
   totalCST: 0,
   mrpTotal: 0,
@@ -339,6 +375,8 @@ export const initialPrintCustomFields: PrintCustomFields = {
   stockTransferTotalSalesValue: 0,
   cashPaidOrRcvd: 0,
   loyaltyCardNo: "",
+
+  // Tax calculations
   total5PerctaxableValue: 0,
   total5PercTaxValue: 0,
   totalzeroPercentTaxableValue: 0,
@@ -350,6 +388,8 @@ export const initialPrintCustomFields: PrintCustomFields = {
   drCr: "",
   jvTotalDebit: 0,
   jvTotalCredit: 0,
+
+  // Gate pass data
   gatePass: false,
   productNameGatePass: "",
   qtyGatePass: 0,
@@ -362,6 +402,8 @@ export const initialPrintCustomFields: PrintCustomFields = {
   transactionTimeGate: "",
   totalItemsGate: 0,
   tokenBarcodeGate: "",
+
+  // Current row state
   currentRow: 0,
   linesPerCurrentPage: 0,
   freeString: "",
@@ -374,8 +416,6 @@ export const initialPrintCustomFields: PrintCustomFields = {
   productUnitRemarks: "",
   productUnitRemarksOrProductName: "",
   narration: "",
-  mannualBarcode: "",
-  autoBarcode: "",
   transactionBarcode: "",
   billNumberBarcode: "",
   pageTotalBarcode: "",
@@ -388,10 +428,14 @@ export const initialPrintCustomFields: PrintCustomFields = {
   voucherNumberBarcode: "",
   billNumberPrefBarcode: "",
   oldInvTransactionID: 0,
+
+  // Print section states
   isIHPrinted: false,
   isPHPrinted: false,
   isPFPrinted: false,
   isDTPrinted: false,
+
+  // Print positioning
   dtSecTop: 0,
   dtSecExtra: 0,
   pfSecTop: 0,
@@ -400,6 +444,15 @@ export const initialPrintCustomFields: PrintCustomFields = {
   skipLineHeight: 0,
   lastDetailsPrintTop: 0,
   currentPrintingSection: "",
+
+  // KSA
+  qrcodeKsaEinvoicePhase1: "",
+  qrcodeKsaEinvoicePhase2: "",
+  eInvoiceQRCode: "",
+  qrcodeKsaEinvoice: "",
+  qrcodeKsaEinvoiceNotEncrypted: "",
+
+  // Address and party data
   inOut: "",
   partyName: "",
   address1: "",
@@ -408,12 +461,20 @@ export const initialPrintCustomFields: PrintCustomFields = {
   noOfItemsInVoucher: 0,
   deliveryAddress3: "",
   priceCategoryName: "",
+  deliveryPhone: "",
+  deliveryStreet: "",
+  deliveryLandmark: "",
+  deliveryRemarks: "",
+
+  // Cheque printing
   isCheque: false,
   chequeDate: "",
   chequePaytoAccountName: "",
   chequeAmount: "",
   chequeAmountInWords: "",
   chequeRemarks: "",
+
+  // Kitchen message
   kmWaiter: "",
   kmOrderNumber: "",
   kmTableNo: "",
@@ -427,8 +488,102 @@ export const initialPrintCustomFields: PrintCustomFields = {
   kmKitchenRemarks4: "",
   isKitchenMsg: false,
   kitchenId: 0,
-  privilageCardBalance: 0
+  privilageCardBalance: 0,
+
+  // Extra calculations
+  sumOfQty: 0,
+  pageTotalOfQty: 0,
+  sumOfFree: 0,
+  sumOfQtyFree: 0,
+  totalQtyAndFree: 0,
+  pageTotalOfFree: 0,
+  gst: 0,
+  totalTaxableValue0Percent: 0,
+  gST_0_Perc: 0,
+  gST_3_Perc: 0,
+  gST_5_Perc: 0,
+  gST_12_Perc: 0,
+  gST_18_Perc: 0,
+  gST_28_Perc: 0,
+  totalGrossFc: 0,
+  siNo: 0,
+  grantTotal: 0,
+
+  youSaved: "",
+  groupWiseSiNo: "",
+  pageNoOfM: "",
+  partyNameLine2: "",
+  productName2: "",
+  productName3: "",
+  productDescription2: "",
+  productDescription3: "",
+  productDescription4: "",
+  productDescription5: "",
+  productNameOrOpenProductName: "",
+  productDescriptionOrName: "",
+  qtyDetails: "",
+  inOutArabic: "",
+  modeOfPayment: "",
+  modeOfPaymentArabic: "",
+  paidOrNot: "",
+  totalTaxableValue_5_Perc: "",
+  totalTaxValue_5_Perc: "",
+  totalTaxableValue_15_Perc: "",
+  totalTaxValue_15_Perc: "",
+  totalTaxableValue_0_Perc: "",
+  totalTaxValue_0_Perc: "",
+  amountInWordsPayable: "",
+  runningBalance: "",
+  ledgerBalance: "",
+  previousDayLedgerBalance: "",
+  ledgerBalanceAndGrandTotal: "",
+  ledgerBalanceAmountInWords: "",
+  currentBillBalance: "",
+  totalAdvance: "",
+  totNetValueBillDisc: "",
+  grandTotalBillDisc: "",
+  grandTotalCouponAmt: "",
+  vehicleNumber: "",
+  billDiscountPlusDiscount: "",
+  partyDisplayName: "",
+  vehicleName: "",
+  vehicleModel: "",
+  vehicleCapacity: "",
+  vehicleManufacturer: "",
+  vehicleOwner: "",
+  vehicleColor: "",
+  vehicleOdometer: "",
+  vehicleRemarks: "",
+  balanceAmtPayable: "",
+  chequeAmountInWordsLine1: "",
+  chequeAmountInWordsLine2: "",
+  chequeAmountInWordsLine3: "",
+  previousBalance: "",
+  closingBalance: "",
+  invoiceStatus: "",
+  netAmount: "",
+  totalSalesValue: "",
+  nonHeightAndWidthUnit: "",
+  specialLedgerBalance: "",
+  specialLedgerBalance2: "",
+  loggedUsername: "",
+  narration2: "",
+  serviceItemOne: "",
+  serviceItemTwo: "",
+  serviceItemThree: "",
+  serviceItemOneAmt: "",
+  serviceItemTwoAmt: "",
+  serviceItemThreeAmt: "",
+  grandTotalReturn: "",
+  productsGatePass: "",
+  transactionTimeDateWithTimeGate: "",
+  printDateGate: "",
+  tokenGate: "",
+  voucherNoGate: "",
+  nameGate: "",
+  obCashRcvd: "",
 };
+
 
 // ---------------------- Master Object ---------------------- //
 export const initialPrintMasterDto: PrintMasterDto = {
@@ -594,8 +749,9 @@ export const initialPrintMasterDto: PrintMasterDto = {
   returnAmount: 0
 };
 
+
 // ---------------------- Detail Object ---------------------- //
-export const initialPrintDetailDto: PrintDetailDto = {
+export const initialPrintDetailDto : PrintDetailDto = {
   slNo: 1,
   invTransactionDetailID: 0,
   invTransactionMasterID: 0,
@@ -755,7 +911,9 @@ export const initialPrintDetailDto: PrintDetailDto = {
   txp_TaxableAmount: 0,
   txp_RefNo: "",
   txp_RefDate: "",
-  detail2Data: initialInvDetail2ForPrint
+  detail2Data: initialInvDetail2ForPrint,
+  mannualAutoBarcode: '',
+  groupNameHead: ''
 };
 
 // ---------------------- Full Response ---------------------- //
@@ -779,7 +937,11 @@ export const initialPrintResponse: PrintResponse = {
   salesBillAmounts: "",
   salesRetBillNumbers: "",
   salesRetBillAmounts: "",
-  custom: initialPrintCustomFields
+  custom: initialPrintCustomFields,
+  hasGroupHeaderPrinting: false,
+  companyDetails: initialCompanyDetailsForPrint,
+  headerFooter: initialHeaderFooter,
+  productionReqId: false
 };
 
 

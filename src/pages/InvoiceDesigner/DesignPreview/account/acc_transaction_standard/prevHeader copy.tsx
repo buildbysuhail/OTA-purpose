@@ -24,11 +24,10 @@ const { convertAmountToEnglish, convertAmountToArabic } = useNumberToWords();
   const NameFontColor = headerState?.OrganizationFontColor || "#000";
   const NameFontSize = headerState?.OrganizationFontSize || 12;
 
-   const customElementsTop = headerState?.customTop?.customElements ?? [];
-   const customTopHeight = headerState?.customTop?.height ?? 0;
+   const customElements = headerState?.customElements?.elements ?? [];
+   const customHeight = headerState?.customElements?.height ?? 0;
 
-   const customElementsBottom = headerState?.customBottom?.customElements ?? [];
-   const customBotHeight = headerState?.customBottom?.height ?? 0;
+
   const fontStyles = {
     color,
     fontSize,
@@ -50,8 +49,7 @@ const Logo = useLogo()
       const generateQRCodes = async () => {
         const images: { [key: string]: string } = {};
         const qrComponents: PlacedComponent[] = [
-          ...(template?.headerState?.customTop?.customElements || []),
-          ...(template?.headerState?.customBottom?.customElements || []),
+          ...(template?.headerState?.customElements?.elements  || []),
         ].filter((comp) => comp.type === DesignerElementType.qrCode);
   
         for (const component of qrComponents) {
@@ -63,7 +61,7 @@ const Logo = useLogo()
         setQrCodeImages(images);
       };
       generateQRCodes();
-    },[template?.headerState?.customTop?.customElements,template?.headerState?.customBottom?.customElements]);
+    },[template?.headerState?.customElements?.elements]);
 
 
 
@@ -85,17 +83,17 @@ const Logo = useLogo()
         />
       )}
             {/* headTop */}
-            {Array.isArray(customElementsTop) && customElementsTop.length > 0 && (
+            {Array.isArray(customElements) && customElements.length > 0 && (
               <div
                 style={{
-                minHeight: `${customTopHeight}pt`, height:`${customTopHeight}pt`,
+                minHeight: `${customHeight}pt`, height:`${customHeight}pt`,
                 width: "100%",
                 // position: "relative",
                 }
 
                 }
               >
-                 {customElementsTop.map((component) => (
+                 {customElements.map((component) => (
                     <RenderPreviewComponent
                       key={component.id}
                       component={component}
@@ -175,29 +173,6 @@ const Logo = useLogo()
         </div>
       </div>
 
-                  {/* headBottom */}
-            {Array.isArray(customElementsBottom) && customElementsBottom.length > 0 && (
-              <div
-                style={{
-                minHeight: `${customBotHeight}pt`, height:`${customBotHeight}pt`,
-                width: "100%",
-                position: "relative",
-                }
-
-                }
-              >
-                 {customElementsBottom.map((component) => (
-                    <RenderPreviewComponent
-                      key={component.id}
-                      component={component}
-                      data={data}
-                      qrCodeImages={qrCodeImages}
-                      convertAmountToArabic={convertAmountToArabic}
-                      convertAmountToEnglish={convertAmountToEnglish}
-                    />
-                  ))}
-              </div>
-            )}
     </div>
   );
 };

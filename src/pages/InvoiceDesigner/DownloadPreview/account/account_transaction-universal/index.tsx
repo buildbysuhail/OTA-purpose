@@ -7,7 +7,7 @@ import { AccountTransactionProps } from "../account_transactiocn-premium";
 import { getPageDimensions, getPageSizeForPDF } from "../../../utils/pdf-util";
 
 
-const AccountTransactionsUniversal = ({ data, template, currentBranch,userSession}: AccountTransactionProps) => {
+const AccountTransactionsUniversal = ({ data, template,}: AccountTransactionProps) => {
 
 // Paddings
 const paddingLeft = template?.propertiesState?.padding?.left || 10;
@@ -50,9 +50,9 @@ return (
           border:"3pt solid rgb(104, 101, 101)",
           }}>
         {/* Header */}
-        <Header data={data} template={template} currentBranch={currentBranch} userSession={userSession}/>
+        {/* <Header data={data} template={template} currentBranch={currentBranch} userSession={userSession}/> */}
         {/* Content */}
-          <Content data={data} template={template} currentBranch={currentBranch} />
+          {/* <Content data={data} template={template} currentBranch={currentBranch} /> */}
       </View>
       </View>
     </View>

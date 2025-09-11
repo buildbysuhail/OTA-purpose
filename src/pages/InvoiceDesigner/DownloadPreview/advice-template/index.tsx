@@ -5,10 +5,10 @@ import FontRegistration from "../../../LabelDesigner/fontRegister";
 import { AccountTransactionProps } from "../account/account_transactiocn-premium";
 import { Header } from "./Header";
 import { Content } from "./Content";
-import Table from "./Table";
+// import Table from "./Table";
 import { Footer } from "./Footer";
 
-const AdviceTemplate = ({ data, template, currentBranch,userSession }: AccountTransactionProps) => {
+const AdviceTemplate = ({ data, template, }: AccountTransactionProps) => {
 // Paddings
 const paddingLeft = template?.propertiesState?.padding?.left || 10;
 const paddingRight = template?.propertiesState?.padding?.right || 10;
@@ -30,12 +30,12 @@ return (
     }}>
    
         {/* Header */}
-       <Header data={data} template={template} currentBranch={currentBranch} />
+       {/* <Header data={data} template={template} currentBranch={currentBranch} />
         
-        <Content data={data} template={template} currentBranch={currentBranch} />
+        <Content data={data} template={template} currentBranch={currentBranch} /> */}
         {/* Table */}
         <View style={{flexGrow:1}}>
-        <Table data={data} template={template} />
+        {/* <Table data={data} template={template} /> */}
         </View>
       
         {/* Footer */}

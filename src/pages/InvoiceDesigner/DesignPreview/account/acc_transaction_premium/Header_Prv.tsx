@@ -50,8 +50,8 @@ const AccPrevHeader = ({
     const generateQRCodes = async () => {
       const images: { [key: string]: string } = {};
       const qrComponents: PlacedComponent[] = [
-        ...(template?.headerState?.customTop?.customElements || []),
-        ...(template?.headerState?.customBottom?.customElements || []),
+        ...(headerState?.customElements?.elements|| []),
+    
       ].filter((comp) => comp.type === DesignerElementType.qrCode);
 
       for (const component of qrComponents) {
@@ -67,8 +67,8 @@ const AccPrevHeader = ({
 
   const logoWidthRatio = template?.headerState?.logoSize ? template.headerState?.logoSize / 100 : 0.5;
   const headerState = template?.headerState;
-  const customElements = headerState?.customTop?.customElements ?? [];
-  const customTopHeight = headerState?.customTop?.height ?? 0;
+  const customElements = headerState?.customElements?.elements ?? [];
+  const customTopHeight = headerState?.customElements?.height ?? 0;
   const paddingLeft = template?.propertiesState?.padding?.left;
   const paddingRight = template?.propertiesState?.padding?.right;
   const paddingTop = template?.propertiesState?.padding?.top || 10;

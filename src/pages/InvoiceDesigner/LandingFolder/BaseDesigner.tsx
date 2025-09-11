@@ -8,6 +8,7 @@ import { useTemplateDesigner } from "./useTemplateDesigner"
 import { setTemplatePropertiesState } from "../../../redux/slices/templates/reducer"
 import { ERPScrollArea } from "../../../components/ERPComponents/erp-scrollbar"
 import HeaderDesigner from "../Designer/HeaderDesigner"
+import FooterDesigner from "../Designer/FooterDesigner"
 
 interface BaseDesignerProps {
   designerType: string
@@ -99,9 +100,10 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
 
           {currentSection?.type === "header" && <HeaderDesigner />}
 
-          {SectionComponent && currentSection?.type !== "properties" && currentSection?.type !== "header" && (
+          {SectionComponent && currentSection?.type !== "properties" && currentSection?.type !== "header" && currentSection?.type !== "footer" &&(
             <SectionComponent />
           )}
+           {currentSection?.type === "footer" && <FooterDesigner />}
         </div>
 
         {/* Modern Preview Panel */}
@@ -133,7 +135,7 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
 
           {/* Preview Content   overflow-y-auto overflow-x-hidden  flex h-auto max-h-[${maxHeight - 100}px] flex-col gap-1*/}
           <ERPScrollArea className={`overflow-auto  flex-1 p-6`}
-          maxHeight={maxHeight - 100}>
+           maxHeight={maxHeight - 100}>
             <div className="flex justify-center"  >
               <div className="relative">
                 {/* Preview Container with Modern Styling */}

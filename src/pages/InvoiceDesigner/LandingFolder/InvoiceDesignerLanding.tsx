@@ -22,7 +22,7 @@ export interface TemplateImagesTypes {
   background_image_footer: string | null;
 }
 
-interface LocationState {
+interface LocationState { 
 templateType?: string;
   templateKind?: string;
 }
@@ -41,16 +41,10 @@ const InvoiceDesigner = () => {
   const kindsForMap = templateConfig[groupKey]?.[typeKey] || {};
   const kindKey = templateKind ?? Object.keys(kindsForMap)[0];
   const config = templateConfig[groupKey]?.[typeKey]?.[kindKey]
-  // ??{
-
-  //       downloadComponent: <AccountTransactionsTemplate />,
-  //       PreviewComponent: <SharedTemplatePreview />,
-  //       sections: { transactions: AccPremiumTransaction, table: TablePremiumDesigner, footer: () => null },
-  //     }
   
   
   if (!config) {
-    throw new Error(`No config for group='${groupKey}', type='${typeKey}', kind='${kindKey}'`);
+    throw new Error(`No template for group='${groupKey}', type='${typeKey}', kind='${kindKey}'`);
   }
 
 
@@ -61,7 +55,7 @@ const InvoiceDesigner = () => {
           designerKind={templateKind ||"standard"}
           templateGroup={templateGroup} // Pass templateGroup explicitly
           templateComponent={config.PreviewComponent}
-          sections={config.sections}
+          sections={config?.sections}
         />
       <ERPModal
         isForm={true}

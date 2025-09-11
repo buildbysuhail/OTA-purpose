@@ -21,7 +21,7 @@ const TotalTCSInput: React.FC<TotalTCSInputProps> = ({
       id="totTCS"
       type="number"
       label={t(formState.formElements.totTCS.label)}
-      value={formState.transaction.master.other.totTCS}
+      value={formState.transaction.master.master3.totTCS}
       disableEnterNavigation={true}
       onKeyDown={(e) => {
         handleKeyDown && handleKeyDown(e, "totTCS");

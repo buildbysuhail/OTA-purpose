@@ -69,7 +69,6 @@ const handleSubmit =async()=>{
             template:templateData,
             data,
             DefaultPrinterName:onChangePrinter,
-            formState,
           });
           onClose();
 }

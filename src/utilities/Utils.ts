@@ -838,7 +838,7 @@ if (!subtleCrypto) throw new Error("Web Crypto API not available");
 }
 export const getApLocalData = (key: string) => {
   const df = localStorage.getItem(key);
-  if(df == null) {
+  if(df == null || df == undefined || df == "undefined") {
     return null;
   }
   return JSON.parse(df);

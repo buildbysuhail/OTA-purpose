@@ -11,11 +11,11 @@ import TablePremiumDesigner from "./account/premium/designer/table-designer";
 import AccStandardTransaction from "./account/standard/designer/transactions-designer";
 import AccUniversalTransaction from "./account/universal/designer/transactions-designer";
 
-import SharedTemplatePreview from "../DesignPreview/account/acc_transaction_standard/prevIndex";
 import { PrintDetailDto } from "../../use-print-type";
 import { generateTableColumns } from "../../../utilities/Utils";
 import { initialPrintDetailDto } from "../../use-print-type-data";
 import SharedDownloadTemplate from "../DownloadPreview/Shared";
+import SharedTemplatePreview from "../DesignPreview/shared";
 
 export  interface DesignSectionType {
   id: number;
@@ -50,7 +50,7 @@ export const templateConfig: DesignerConfigMap = {
       standard: {
         downloadComponent: <SharedDownloadTemplate />,
         PreviewComponent: <SharedTemplatePreview />,
-        sections: { transactions: AccStandardTransaction, footer: () => null },
+        sections: {},
       },
     },
     PREMIUM: {
@@ -66,7 +66,7 @@ export const templateConfig: DesignerConfigMap = {
       universal: {
         downloadComponent: <SharedDownloadTemplate />,
         PreviewComponent: <SharedTemplatePreview />,
-        sections: { transactions: AccUniversalTransaction,footer: () => null },
+        sections: {},
       },
     },
   },

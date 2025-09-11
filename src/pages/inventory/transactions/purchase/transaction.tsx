@@ -1998,8 +1998,8 @@ useEffect(() => {
                 {renderSelectedTemplate({
                   template: formState.template,
                   data: formState.transaction,
-                  currentBranch: currentBranch,
-                  userSession: userSession,
+                  // currentBranch: currentBranch,
+                  // userSession: userSession,
                 })}
               </PDFViewer>
             }

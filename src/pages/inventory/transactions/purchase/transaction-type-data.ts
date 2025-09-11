@@ -19,7 +19,7 @@ export const TransactionMaster3InitialData: TransactionMaster3 = {
   totSGST: 0.0,
   totCGST: 0.0,
   totIGST: 0.0,
-  totCess: 10.0,
+  totCess: 0.0,
   totAdditionalCess: 0.0,
   totCalamityCess: 0.0,
   totTCS: 0.0,

@@ -146,7 +146,7 @@ export const TransactionMasterInitialData: TransactionMaster = {
   privAddAmount: 0.0,
   privRedeem: 0.0,
   orderCardNo: 0,
-  isInvoiced: false,
+  isInvoiced: true,
   mannualInvoiceNumber: "",
   inout: "",
   cashAmt: 0.0,

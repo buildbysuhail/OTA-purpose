@@ -10,8 +10,8 @@ export const cdnUrl = import.meta.env.VITE_CDN_URL;
 export const projectName = import.meta.env.VITE_PROJECT_NAME;
 
 const CachedUrls: string[] = [
-  Urls.data_acc_ledgers,Urls.data_costcentres, '/Inventory/Purchase/Data/AccLedgers/',
-  ...transactionRoutes.map((x: any) => `/Inventory/${x.transactionType}/Data/AccLedgers/`)
+  Urls.data_acc_ledgers,Urls.data_costcentres, 
+  ...transactionRoutes.map((x: any) => `/${x.transactionBase}/${x.transactionType}/Data/AccLedgers/`)
 ]
 
 export default CachedUrls;

@@ -247,13 +247,13 @@ const InvTransactionSlice = createSlice({
         // Update the corresponding field in the state
         const fieldValue = fields[key as keyof TransactionMaster3];
         const isDateField =
-          (state.transaction.master.other[
+          (state.transaction.master.master3[
             key as keyof TransactionMaster3
           ] as typeof fieldValue) instanceof Date;
         if (isDateField) {
         }
         // Convert Date fields to ISO strings
-        (state.transaction.master.other[
+        (state.transaction.master.master3[
           key as keyof TransactionMaster3
         ] as typeof fieldValue) = isDateField
           ? new Date(fieldValue).toISOString()

@@ -20,7 +20,6 @@ import ErpAvatar from "../../ERPComponents/erp-avatar";
 import { useTranslation } from "react-i18next";
 import { ReportsMenuItems } from "./sidemenu/reports-routes";
 import { Countries } from "../../../redux/slices/user-session/reducer";
-import ItemTableDesigner from "../../../pages/InvoiceDesigner/Designer/ItemTableDesigner";
 import { UserAction, useUserRights } from "../../../helpers/user-right-helper";
 import { exludedRoutes } from "../content/transaction-routes";
 import profile from "../../../assets/images/faces/profile-circle.512x512.png";

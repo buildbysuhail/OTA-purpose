@@ -263,6 +263,9 @@ export const useTransactionHelper = (transactionType: string) => {
     if (!result.transaction.master) {
       result.transaction.master = {};
     }
+    if (!result.transaction.master.master3) {
+      result.transaction.master.master3 = {};
+    }
     result.transaction.master.vatAmount = round(tax);
     if(clientSession.isAppGlobal) {
     result.transaction.master.master3 ?? TransactionMaster3InitialData;

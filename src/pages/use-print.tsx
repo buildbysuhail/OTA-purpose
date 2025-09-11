@@ -1644,7 +1644,7 @@ export function bindDataForPrint(field: string, printData: PrintResponse,
   //   return userSession.currentBranchDetails?.[key as keyof BranchDetails]
   // }
   else if (group == "org") {
-    return printData.companyDetailsForPrint?.[key as (keyof CompanyDetailsForPrint)]
+    return printData.companyDetails?.[key as (keyof CompanyDetailsForPrint)]
   }
   else if (group == "headerFooter") {
     return printData.headerFooter?.[key as keyof HeaderFooter]

@@ -24,7 +24,6 @@ import {
 } from "./reducer";
 import { DeepPartial } from "redux";
 import { pdf, BlobProvider } from "@react-pdf/renderer";
-import { renderSelectedTemplate } from "./renderSelected-template";
 import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import { DesignerElementType, TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
@@ -355,7 +354,6 @@ export const usePrint = () => {
              await directPrint({
               template,
               data:barcodeData,
-              formState,
              });
       };
 

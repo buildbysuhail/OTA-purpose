@@ -66,14 +66,14 @@ const HeaderDesigner = ({}: FooterDesignerProps) => {
             <div className={"transition-all  flex flex-col gap-5 bg-white p-4"}>
                 <div className="flex justify-between items-center  border-b  bg-[#80808012] p-2"> 
                   <h6 className="">{t("header")}</h6>
-                   <CustomDesignerButton 
+                   {/* <CustomDesignerButton 
                     LabelBefore="Add Before Header"
                     LabelAfter="Add After Header"
                     customFieldMaster={"headerState"}
                     dispatch={dispatch}
                     t={t}
                     className=""
-                    />
+                    /> */}
                 </div>
                  <ERPCheckbox
                     id="showHeader"

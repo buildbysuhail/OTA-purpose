@@ -4,82 +4,6 @@ const DefaultSITemplates: DeafultTemplateProps[] = [
   {
     content: {
       /* ################  Standard Template  ################ */
-      adviceTableState:{
-    
-        showLineItemNumber: true,
-        lineItemNumberLabel: "Invoice Number",
-        lineItemNumberWidth: "",
-
-        showDate: true,
-        DateLabel: "Date",
-        DateWidth: "",
-      
-        // Amount Fields
-        showAmount: true,
-        AmountLabel: "Amount",
-        AmountWidth: "",
-      
-        // Due Amount Fields
-        showDueAmount: true,
-        DueAmountLabel: "Due Amount",
-        DueAmountWidth: "",
-      
-        // Payment Fields
-        showPayment: true,
-        PaymentLabel: "Payment",
-        PaymentWidth: "",
-      
-        // Balance Fields
-        showBalance: true,
-        BalanceLabel: "Balance",
-        BalanceWidth: "",
-      
-        // Paid Statement Fields
-        showPaidStatement: true,
-        PaidStatementLabel: "Full Paid",
-        PaidStatementWidth: "",
-      },
-      accTableState:{
-        showLineItemNumber: true,
-        lineItemNumberLabel: "SiNo",
-        lineItemNumberWidth: "10%",
-  
-        showLedgerCode: true,
-        ledgerCodeLabel: "Ledger code",
-        ledgerCodeWidth: "",
-  
-        showLedger: true,
-        ledgerLabel: "Ledger",
-        ledgerWidth: "",
-  
-        showAmount: true,
-        amountLabel: "Amount",
-        amountWidth: "",
-  
-        showNarration: false,
-        narrationLabel: "Narration",
-        narrationWidth: "",
-  
-        showBillwiseDetails: false,
-        billwiseDetailsLabel: "Bill wise details",
-        billwiseDetailsWidth: "",
-  
-        showDiscount: true,
-        discountLabel: "Discount",
-        discountWidth: "",
-  
-        showCostCenter: false,
-        costCenterLabel: "Cost Center",
-        costCenterWidth: "",
-  
-        showAmountFc: false,
-        amountFcLabel: "AmountFc",
-        amountFcWidth: "",
-  
-        showBankCharge: true,
-        bankChargeLabel: "BankCharge",
-        bankChargeWidth: "",
-      },
       totalState: {
         showTotalSection: true,
         showSubTotalLabel: true,
@@ -225,16 +149,16 @@ const DefaultSITemplates: DeafultTemplateProps[] = [
         showBalanceDue: false,
         balanceDueLabel: "",
       },
-      customTop: {
-      height: 0,customElements: [],
-     },
-      customBottom: {
-      height: 0,customElements: [],
+      customElements: {
+      height: 0,elements: [],thumbImage:""
      },
     },
       footerState: {
         notesLabel: "Notes",
         noteFontSize: 12,
+        customElements: {
+         height: 0,elements: [],thumbImage:""
+        },
       },
       itemTableState: {
         amountLabel: "Amount",
@@ -281,82 +205,7 @@ const DefaultSITemplates: DeafultTemplateProps[] = [
   {
     content: {
       /* ################  Retail- Standard Template  ################ */
-      adviceTableState:{
-    
-        showLineItemNumber: true,
-        lineItemNumberLabel: "Invoice Number",
-        lineItemNumberWidth: "",
 
-        showDate: true,
-        DateLabel: "Date",
-        DateWidth: "",
-      
-        // Amount Fields
-        showAmount: true,
-        AmountLabel: "Amount",
-        AmountWidth: "",
-      
-        // Due Amount Fields
-        showDueAmount: true,
-        DueAmountLabel: "Due Amount",
-        DueAmountWidth: "",
-      
-        // Payment Fields
-        showPayment: true,
-        PaymentLabel: "Payment",
-        PaymentWidth: "",
-      
-        // Balance Fields
-        showBalance: true,
-        BalanceLabel: "Balance",
-        BalanceWidth: "",
-      
-        // Paid Statement Fields
-        showPaidStatement: true,
-        PaidStatementLabel: "Full Paid",
-        PaidStatementWidth: "",
-      },
-      accTableState:{
-        showLineItemNumber: true,
-        lineItemNumberLabel: "SiNo",
-        lineItemNumberWidth: "10%",
-  
-        showLedgerCode: true,
-        ledgerCodeLabel: "Ledger code",
-        ledgerCodeWidth: "",
-  
-        showLedger: true,
-        ledgerLabel: "Ledger",
-        ledgerWidth: "",
-  
-        showAmount: true,
-        amountLabel: "Amount",
-        amountWidth: "",
-  
-        showNarration: false,
-        narrationLabel: "Narration",
-        narrationWidth: "",
-  
-        showBillwiseDetails: false,
-        billwiseDetailsLabel: "Bill wise details",
-        billwiseDetailsWidth: "",
-  
-        showDiscount: true,
-        discountLabel: "Discount",
-        discountWidth: "",
-  
-        showCostCenter: false,
-        costCenterLabel: "Cost Center",
-        costCenterWidth: "",
-  
-        showAmountFc: false,
-        amountFcLabel: "AmountFc",
-        amountFcWidth: "",
-  
-        showBankCharge: true,
-        bankChargeLabel: "BankCharge",
-        bankChargeWidth: "",
-      },
       totalState: {
         balanceFontSize: 8,
         shippingLabel: "Shipping",
@@ -501,12 +350,10 @@ const DefaultSITemplates: DeafultTemplateProps[] = [
         showBalanceDue: false,
         balanceDueLabel: "",
       },
-      customTop: {
-      height: 0,customElements: [],
+      customElements: {
+      height: 0,elements: [],thumbImage:""
      },
-      customBottom: {
-      height: 0,customElements: [],
-     },
+
     },
       footerState: {
         notesLabel: "Notes",

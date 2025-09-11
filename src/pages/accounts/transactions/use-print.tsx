@@ -15,8 +15,7 @@ import type { TemplateState } from "../../InvoiceDesigner/Designer/interfaces"
 import { customJsonParse } from "../../../utilities/jsonConverter"
 import Urls from "../../../redux/urls"
 import VoucherType from "../../../enums/voucher-types"
-import AdviceTemplate from "../../InvoiceDesigner/DownloadPreview/advice-template"
-import ChequeTemplate from "../../InvoiceDesigner/DownloadPreview/cheque-template"
+
 import ERPToast from "../../../components/ERPComponents/erp-toast"
 
 import { useTranslation } from "react-i18next"

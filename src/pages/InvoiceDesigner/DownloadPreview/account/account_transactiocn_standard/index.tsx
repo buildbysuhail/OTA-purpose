@@ -7,7 +7,7 @@ import { AccountTransactionProps } from "../account_transactiocn-premium";
 import { getPageDimensions, getPageSizeForPDF } from "../../../utils/pdf-util";
 import { AccTransactionRow } from "../../../../accounts/transactions/acc-transaction-types";
 
-const AccountDowTransactionsVoucher = ({ data, template, currentBranch,userSession,clientSession}: AccountTransactionProps) => {
+const AccountDowTransactionsVoucher = ({ data, template,}: AccountTransactionProps) => {
 
 // Paddings
 const paddingLeft = template?.propertiesState?.padding?.left || 10;
@@ -51,9 +51,9 @@ const renderPage = (detail: any, index: any) => {
         border: "1.5px solid rgb(104, 101, 101)"
       }}>
         {/* Header */}
-        <Header data={detail} template={template} currentBranch={currentBranch} />
+        <Header data={detail} template={template} />
         {/* Content */}
-        <Content data={detail} template={template} currentBranch={currentBranch}  indexNO={index} clientSession={clientSession}/>
+        <Content data={detail} template={template} />
       </View>
     </View>
   );

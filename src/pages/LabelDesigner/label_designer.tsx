@@ -224,7 +224,7 @@ export interface barcodeCreateProps {
   fontSize: number;
   textMargin: number;
   fontStyle: 'normal' | 'bold' | 'italic';
-}
+} 
 
 // Utility: convert points (pt) to device pixels for <canvas>
 function ptToPx(pt: number) {
@@ -800,6 +800,7 @@ const handleQRCodePropertyChange = (
             payload: {
               elements: templateData.barcodeState?.placedComponents || [],
               height: templateData.barcodeState?.labelState?.labelHeight,
+              thumbImage:dataUrl??""
             },
             field: customTemplate,
           })
@@ -841,25 +842,75 @@ const handleQRCodePropertyChange = (
   };
 
   const manageSaveTemplate = async () => {
-    if (forCustomRows) {
-      await handleSave();
-      return true;
-    } else {
-      if (!templateData?.propertiesState?.templateName) {
-        ERPToast.show("Template name is required", "error");
-      } else {
-        const node = document.getElementById("teplate-container-base");
-        if (node) {
-          try {
-            const canvas = await html2canvas(node);
-            const dataUrl = canvas.toDataURL("image/png");
-            await handleSave(dataUrl);
-          } catch (error) {
-            console.error("Error capturing canvas:", error);
-          }
-        }
-      }
+    try {
+    const node = document.getElementById("teplate-container");
+    if (!node) {
+      ERPToast.show("Template container not found", "error");
+      return false;
     }
+
+  // Get the ResizableBox parent to understand the actual design bounds
+    const resizableBox = node.closest(".react-resizable")
+    const targetElement = resizableBox || node
+ // Save original styles
+    const originalStyles = {
+      transform: node.style.transform,
+      overflow: node.style.overflow,
+      border: node.style.border,
+    }
+
+     // Temporarily optimize for screenshot
+    node.style.transform = "scale(1)" // Remove any zoom scaling
+    node.style.overflow = "visible"
+    node.style.border = "none" // Remove dashed border for clean capture
+
+    // Wait for any pending renders
+    await new Promise((resolve) => setTimeout(resolve, 100))
+
+    // Get the actual content bounds (excluding any padding/margins from parent)
+    const rect = node.getBoundingClientRect()
+  const canvas = await html2canvas(node, {
+      backgroundColor:"#ffffff",
+      scale:  3, // Higher resolution for crisp output
+      useCORS: true,
+      allowTaint: true,
+      x: 0,
+      y: 0,
+      width: rect.width,
+      height: rect.height,
+      scrollX: 0,
+      scrollY: 0,
+      // Capture only the visible content area
+      windowWidth: rect.width,
+      windowHeight: rect.height,
+    })
+
+    // Restore original styles
+    Object.assign(node.style, originalStyles)
+
+    // Convert to high-quality data URL
+    const dataUrl = canvas.toDataURL("image/png", 1.0)
+
+    // If saving for custom rows, just save
+    if (forCustomRows) {
+      await handleSave(dataUrl);
+      return true;
+    }
+
+    // Validate template name
+    if (!templateData?.propertiesState?.templateName) {
+      ERPToast.show("Template name is required", "error");
+      return false;
+    }
+
+    // Normal save
+    await handleSave(dataUrl);
+    return true;
+  } catch (error) {
+    console.error("Error saving template:", error);
+    ERPToast.show("Failed to save template", "error");
+    return false;
+  }
   };
 
   const handlePagePropsChange = (
@@ -1037,7 +1088,7 @@ const handleRemoveImage =()=>{
         ...prev, // Preserve existing templateData
         barcodeState: {
           ...prev.barcodeState, // Preserve other barcodeState properties
-          placedComponents: nestedValue?.customElements || [], // Load from template
+          placedComponents: nestedValue?.elements || [], // Load from template 
           labelState: {
             ...prev.barcodeState?.labelState, // Preserve labelState
             labelHeight: nestedValue?.height || 200,
@@ -1673,10 +1724,12 @@ padding: `${
         >
           {/* {templateGroup === "barcode" ? ( */}
           <ResizableBox
+            // id="teplate-container-imge"
             width={labelWidthPx}
             height={labelHeightPx}
             minConstraints={[pointToPx(50), pointToPx(50)]}
             maxConstraints={[pointToPx(1200), pointToPx(800)]}
+            
             resizeHandles={[
               forCustomRows
                 ? "s"

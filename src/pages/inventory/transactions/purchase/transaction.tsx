@@ -54,7 +54,6 @@ import { useUserRights } from "../../../../helpers/user-right-helper";
 import { Info, X } from "lucide-react";
 import { PDFViewer } from "@react-pdf/renderer";
 import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
-import { renderSelectedTemplate } from "./renderSelected-template";
 import moment from "moment";
 import ERPAttachment from "../../../../components/ERPComponents/erp-attachment";
 import HistorySidebar from "./historySidebar";
@@ -1988,21 +1987,21 @@ useEffect(() => {
                 formStateHandleFieldChange({ fields: { printPreview: false } })
               );
             }}
-            content={
-              <PDFViewer
-                className="pdf-viewer"
-                width="100%"
-                height={700}
-                style={{ padding: "10px" }}
-              >
-                {renderSelectedTemplate({
-                  template: formState.template,
-                  data: formState.transaction,
-                  // currentBranch: currentBranch,
-                  // userSession: userSession,
-                })}
-              </PDFViewer>
-            }
+            // content={
+            //   <PDFViewer
+            //     className="pdf-viewer"
+            //     width="100%"
+            //     height={700}
+            //     style={{ padding: "10px" }}
+            //   >
+            //     {renderSelectedTemplate({
+            //       template: formState.template,
+            //       data: formState.transaction,
+            //       // currentBranch: currentBranch,
+            //       // userSession: userSession,
+            //     })}
+            //   </PDFViewer>
+            // }
           />
         )}
         {formState.isFormStateDetailOpen && (

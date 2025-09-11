@@ -64,7 +64,8 @@ export interface HistoryComponent {
  }
 export interface CustomElementType {
  height?: number;
-elements: PlacedComponent[];
+ elements: PlacedComponent[];
+ thumbImage:string
  }
 export interface LabelState {
   columnsPerRow?: number;
@@ -1284,7 +1285,7 @@ export const initialBacodeTemplateState = <T>(): ActionState<TemplateState<T>> =
     accountTransactionInfo: {},
     adviceTransInfo: {},
 
-    customElements: { height: 0, elements: [] },
+    customElements: { height: 0, elements: [] ,thumbImage:""},
 
     }
   },

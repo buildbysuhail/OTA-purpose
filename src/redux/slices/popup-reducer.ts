@@ -82,7 +82,7 @@ interface popupData {
 }
 const initialState: popupData = {
   printerList:{isOpen:false,template:null,data:null,formState:null},
-  CustomDesignerPopup:{ isOpen: false, key: null,reload:false, mode: "edit" },
+  CustomDesignerPopup:{ isOpen: false, key: null,reload:false, mode: "edit" ,},
   onCloseWithUnsavedChange: { warn: false, succeeded: false, canceled: false },
   testPopup: { isOpen: false, key: null, mode: "edit", reload: true },
   groupOrder: { isOpen: false, key: null, mode: "edit", reload: true },

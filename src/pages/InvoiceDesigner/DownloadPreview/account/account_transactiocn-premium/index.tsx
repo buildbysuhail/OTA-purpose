@@ -1,11 +1,11 @@
 import { Document, Page, View, Image } from "@react-pdf/renderer"
 
-import Table from "./Table"
+// import Table from "./Table"
 import Footer from "./Footer"
 import type { TemplateState } from "../../../Designer/interfaces"
 import FontRegistration from "../../../../LabelDesigner/fontRegister"
-import { Header } from "./Header"
-import { Content } from "./Content"
+// import { Header } from "./Header"
+// import { Content } from "./Content"
 import { getPageDimensions, getPageSizeForPDF } from "../../../utils/pdf-util"
 
 export interface AccountTransactionProps {
@@ -32,9 +32,9 @@ const AccountTransactionsTemplate = ({ data, template }: AccountTransactionProps
       <FontRegistration />
       <Page size={pdfPageSize} orientation={pageOrientation}>
         {/* Header */}
-        {template?.headerState?.showHeader && (
-        <Header data={data} template={template} currentBranch={currentBranch} userSession={userSession} bindData={bindingDemoData}/>
-        )}
+        {/* {template?.headerState?.showHeader && (
+        // <Header data={data} template={template}/>
+        )} */}
         
         {/* Main Content Container */}
         <View
@@ -65,10 +65,10 @@ const AccountTransactionsTemplate = ({ data, template }: AccountTransactionProps
           )}
 
           {/* Content Section */}
-          <Content data={data} template={template} currentBranch={currentBranch} clientSession={clientSession} />
+          {/* <Content data={data} template={template} /> */}
 
           {/* Table Section - Allow to break across pages */}
-          <Table data={data} template={template} />
+          {/* <Table data={data} template={template} /> */}
         </View>
 
         {/* Footer */}

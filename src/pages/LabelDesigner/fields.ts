@@ -1,11 +1,11 @@
 
 import { Option, OptionGroup } from "../../components/ERPComponents/erp-grouped-combo";
-import { CompanyDetails, initialCompanyDetails, BranchDetails, initialBranchDetails, HeaderFooter, initialHeaderFooter } from "../../redux/slices/user-session/reducer";
+import {  HeaderFooter, initialHeaderFooter } from "../../redux/slices/user-session/reducer";
 import { modelToListFromObject } from "../../utilities/Utils";
 import { initialProductData, initialTransactionDetailData, TransactionMasterInitialData } from "../inventory/transactions/purchase/transaction-type-data";
 import { BarcodeLabel, TransactionDetail, TransactionMaster } from "../inventory/transactions/purchase/transaction-types";
-import { PrintCustomFields } from "../use-print-type";
-import { initialPrintCustomFields } from "../use-print-type-data";
+import { CompanyDetailsForPrint, PrintCustomFields } from "../use-print-type";
+import { initialCompanyDetailsForPrint, initialPrintCustomFields } from "../use-print-type-data";
 
 
 
@@ -17,7 +17,7 @@ export const inventoryFields: OptionGroup[] = [
   { groupName: 'Custom', options: modelToListFromObject<PrintCustomFields>(initialPrintCustomFields,"custom___") },
   { groupName: 'Master', options: modelToListFromObject<TransactionMaster>(TransactionMasterInitialData,"master___") },
   { groupName: 'Details',  options: modelToListFromObject<TransactionDetail>(initialTransactionDetailData,"details___") },
-  { groupName: 'Organization',  options: modelToListFromObject<CompanyDetails>(initialCompanyDetails,"org___") },
+  { groupName: 'Organization',  options: modelToListFromObject<CompanyDetailsForPrint>(initialCompanyDetailsForPrint,"org___") },
   // { groupName: 'Branch',  options: modelToListFromObject<BranchDetails>(initialBranchDetails,"branch___") },
   { groupName: 'HeaderFooter',  options: modelToListFromObject<HeaderFooter>(initialHeaderFooter,"headerFooter___") },
 ];
@@ -25,7 +25,7 @@ export const accountsFields: OptionGroup[] = [
   { groupName: 'Custom', options: modelToListFromObject<PrintCustomFields>(initialPrintCustomFields,"custom___") },
   { groupName: 'Master',  options: modelToListFromObject<TransactionMaster>(TransactionMasterInitialData,"master___") },
   { groupName: 'Details',  options: modelToListFromObject<TransactionMaster>(TransactionMasterInitialData,"details___") },
-  { groupName: 'Organization',  options: modelToListFromObject<CompanyDetails>(initialCompanyDetails,"org___") },
+  { groupName: 'Organization',  options: modelToListFromObject<CompanyDetailsForPrint>(initialCompanyDetailsForPrint,"org___") },
   // { groupName: 'Branch',  options: modelToListFromObject<BranchDetails>(initialBranchDetails,"branch___") },
   { groupName: 'HeaderFooter',  options: modelToListFromObject<HeaderFooter>(initialHeaderFooter,"headerFooter___") },
 ];
@@ -33,7 +33,7 @@ export const barCodeField: OptionGroup[] = [
   {groupName: "BarCodeField",options:modelToListFromObject<BarcodeLabel>(initialProductData,"barcode___")}
 ]
 export const imgField: OptionGroup[] = [
- { groupName: 'Organization',  options: modelToListFromObject<CompanyDetails>(initialCompanyDetails,"org___") },
+ { groupName: 'Organization',  options: modelToListFromObject<CompanyDetailsForPrint>(initialCompanyDetailsForPrint,"org___") },
 ]
 export const qrCodeField: OptionGroup[] = [
   { groupName: 'Master', options: modelToListFromObject<TransactionMaster>(TransactionMasterInitialData,"master___") },

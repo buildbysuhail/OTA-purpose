@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export  const Header = ({ data, template, currentBranch,docIDKey,currency}: { data: any; template?: TemplateState<unknown>; currentBranch: any, docIDKey?: string;currency?: string;}) => {
+export  const Header = ({ data, template}: { data: any; template?: TemplateState<unknown>; }) => {
   const logoWidthRatio = template?.headerState?.logoSize ? template.headerState?.logoSize / 100 : 0.5;
   const headerState = template?.headerState;
 
@@ -101,7 +101,7 @@ export  const Header = ({ data, template, currentBranch,docIDKey,currency}: { da
       )}
       {/* Company Info */}
       <View style={styles.companyInfo}>
-        <View style={{ display: "flex", flexDirection: "column",flexBasis:"33.33%",
+        {/* <View style={{ display: "flex", flexDirection: "column",flexBasis:"33.33%",
           justifyContent:"flex-start", alignItems:"flex-start",paddingLeft:10}}>
              {headerState?.showLogo && isValidLogo(currentBranch?.logo) && (
             <Image
@@ -114,7 +114,7 @@ export  const Header = ({ data, template, currentBranch,docIDKey,currency}: { da
               {currentBranch?.name}
             </Text>
           )}
-        </View>
+        </View> */}
         <View style={{ flexBasis: "33.33%", display: "flex", justifyContent: "flex-end",alignItems:"center"  }}>
          {headerState?.showDocTitle &&
              <Text style={[styles.docTitle, {  textDecoration:headerState?.docTitleUnderline?"underline":"none", color: headerState?.docTitleFontColor, fontSize: headerState?.docTitleFontSize, fontFamily: fontFamily }]}>
@@ -124,7 +124,7 @@ export  const Header = ({ data, template, currentBranch,docIDKey,currency}: { da
         
           
           </View>
-        <View style={[styles.orgAddress,{flexBasis:"33.33%",}]}>
+        {/* <View style={[styles.orgAddress,{flexBasis:"33.33%",}]}>
           {headerState?.showOrgAddress &&
             currentBranch?.address?.map((org: any, idx: number) => (
               <Text key={`ADDK_${idx}`} style={fontStyles}>{org}</Text>
@@ -142,7 +142,7 @@ export  const Header = ({ data, template, currentBranch,docIDKey,currency}: { da
               <Text style={fontStyles}>{currentBranch?.fax}</Text>
             </View>
           )}
-        </View>
+        </View> */}
         
       </View>
     </View>

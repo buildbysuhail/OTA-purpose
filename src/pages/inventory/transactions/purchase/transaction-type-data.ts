@@ -186,7 +186,29 @@ export const TransactionMasterInitialData: TransactionMaster = {
   prevTransDate: "",
   oldLedgerID: 0,
   dueDays: 0,
-  gRNMasterID: 0
+  gRNMasterID: 0,
+  master3:{
+  invTransactionMasterID: 0,
+  branchID: 0,
+  totSchemeDiscount: 0,
+  totSGST: 0,
+  totCGST: 0,
+  totIGST: 0,
+  totCess: 0,
+  totAdditionalCess: 0,
+  totCalamityCess: 0,
+  totTCS: 0,
+  totTDS: 0,
+  shipLegalName: "",
+  shipTradeName: "",
+  shipGstIn: "",
+  shipPinCode: 0,
+  shipAddress1: "",
+  shipAddress2: "",
+  shipLocation: "",
+  shipStateCode: 0,
+},
+
 }
 export const initialTransactionDetailData: TransactionDetail = {
   slNo: "",

@@ -851,12 +851,13 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
         ) {
           params = new URLSearchParams(field?.params).toString();
         }
+        debugger;
         const url = field?.getListUrlDynamic?.(data) || field?.getListUrl || "";
         if (cacheEnabled) {
 debugger;
           const res = await api.getWithCacheAsync(url, params);
           const _CachedUrls = CachedUrls;
-          if (_CachedUrls.some((cachedUrl) => url.includes(cachedUrl))) {
+          if (_CachedUrls.some((cachedUrl) => url.toLocaleLowerCase().includes(cachedUrl.toLocaleLowerCase()))) {
             localStorage.setItem(btoa(url), JSON.stringify(res));
             return filterLedgers(res, params);
           }
@@ -882,10 +883,11 @@ debugger;
 
         // Check if data is available in Redux
         let _continue = true;
+        debugger
         let fetchWithCache = false;
         const url = field?.getListUrlDynamic?.(data) || field?.getListUrl || "";
         if (
-          CachedUrls.some((cachedUrl) => url.includes(cachedUrl)) &&
+          CachedUrls.some((cachedUrl) => url?.toLocaleLowerCase().includes(cachedUrl.toLocaleLowerCase())) &&
           reload != true
         ) {
           fetchWithCache = true;

@@ -199,7 +199,7 @@ export const purchaseGridCol = (
         readOnly: true,
         width: 100,
         alignment: "right",
-        decimalPoint:4
+        decimalPoint: 4,
       },
       {
         dataField: "manualBarcode",
@@ -225,7 +225,7 @@ export const purchaseGridCol = (
         width: 100,
         allowEditing: true,
         alignment: "right",
-        decimalPoint:4
+        decimalPoint: 4,
       },
       {
         dataField: "salesPrice",
@@ -318,7 +318,7 @@ export const purchaseGridCol = (
         width: 100,
         allowEditing: true,
         alignment: "right",
-        decimalPoint: 2
+        decimalPoint: 2,
       },
       {
         dataField: "hsnCode",
@@ -554,7 +554,7 @@ export const purchaseGridCol = (
         width: 250,
         alignment: "right",
         visible: false,
-        decimalPoint:2,
+        decimalPoint: 2,
       },
       {
         dataField: "unitPriceFC",
@@ -565,7 +565,7 @@ export const purchaseGridCol = (
         readOnly: false,
         alignment: "right",
         visible: false,
-        decimalPoint:4
+        decimalPoint: 4,
       },
       {
         dataField: "colour",
@@ -644,7 +644,7 @@ export const purchaseGridCol = (
         width: 100,
         readOnly: true,
         alignment: "right",
-        decimalPoint:4
+        decimalPoint: 4,
       },
       {
         dataField: "unit2SalesRate",
@@ -701,7 +701,7 @@ export const purchaseGridCol = (
         width: 100,
         readOnly: true,
         alignment: "right",
-           decimalPoint:4
+        decimalPoint: 4,
       },
       {
         dataField: "unit3SalesRate",
@@ -957,14 +957,15 @@ export const purchaseGridCol = (
         visible: false,
         alignment: "center",
       },
-      {
-        dataField: "btnPrintBarcodeStd",
-        caption: t("pbs"),
-        dataType: "string",
-        width: 250,
-        visible: false,
-        alignment: "left",
-      },
+      //not in web
+      // {
+      //   dataField: "btnPrintBarcodeStd",
+      //   caption: t("pbs"),
+      //   dataType: "string",
+      //   width: 250,
+      //   visible: false,
+      //   alignment: "left",
+      // },
       {
         dataField: "removeCol",
         caption: "",
@@ -981,6 +982,7 @@ export const purchaseGridCol = (
         (userSession.countryId != Countries.India &&
           voucherType == VoucherType.PurchaseInvoice &&
           ![
+            "mrp",
             "hsnCode",
             "cgst",
             "cgstPerc",
@@ -1013,6 +1015,7 @@ export const purchaseGridCol = (
         (userSession.countryId != Countries.India &&
           voucherType == VoucherType.PurchaseReturn &&
           ![
+            "mrp",
             "hsnCodse",
             "cgst",
             "cgstPerc",
@@ -1073,7 +1076,6 @@ export const purchaseGridCol = (
             "actualSalesPrice",
             "unit2",
             "unit3",
-            "btnPrintBarcodeStd",
             "mfdDate",
             "warranty",
           ].includes(gc.dataField ?? "")) ||
@@ -1128,7 +1130,6 @@ export const purchaseGridCol = (
             "actualSalesPrice",
             "unit2",
             "unit3",
-            "btnPrintBarcodeStd",
             "serial",
             "unitPriceFC",
             "grossFC",
@@ -1138,6 +1139,7 @@ export const purchaseGridCol = (
         (userSession.countryId != Countries.India &&
           voucherType == VoucherType.PurchaseEstimate &&
           ![
+            "mrp",
             "hsnCode",
             "cgst",
             "cgstPerc",
@@ -1205,7 +1207,6 @@ export const purchaseGridCol = (
             "actualSalesPrice",
             "unit2",
             "unit3",
-            "btnPrintBarcodeStd",
           ].includes(gc.dataField ?? "")) ||
         (userSession.countryId == Countries.India &&
           voucherType == VoucherType.PurchaseEstimate &&
@@ -1248,12 +1249,12 @@ export const purchaseGridCol = (
             "memo",
             "memoEditor",
             "actualSalesPrice",
-            "btnPrintBarcodeStd",
           ].includes(gc.dataField ?? "")) ||
         (userSession.countryId != Countries.India &&
           (voucherType == VoucherType.PurchaseOrder ||
             voucherType == VoucherType.PurchaseQuotation) &&
           ![
+            "mrp",
             "hsnCode",
             "cgst",
             "cgstPerc",
@@ -1316,7 +1317,6 @@ export const purchaseGridCol = (
             "actualSalesPrice",
             "unit2",
             "unit3",
-            "btnPrintBarcodeStd",
             "serial",
           ].includes(gc.dataField ?? "")) ||
         (userSession.countryId == Countries.India &&
@@ -1374,12 +1374,12 @@ export const purchaseGridCol = (
             "actualSalesPrice",
             "unit2",
             "unit3",
-            "btnPrintBarcodeStd",
             "serial",
           ].includes(gc.dataField ?? "")) ||
         (userSession.countryId != Countries.India &&
           voucherType == VoucherType.GoodsReceiptNote &&
           ![
+            "mrp",
             "hsnCode",
             "cgst",
             "cgstPerc",
@@ -1429,11 +1429,11 @@ export const purchaseGridCol = (
             "actualSalesPrice",
             "unit2",
             "unit3",
-            "btnPrintBarcodeStd",
           ].includes(gc.dataField ?? "")) ||
         (userSession.countryId != Countries.India &&
           voucherType == VoucherType.GoodsReceiptReturn &&
           ![
+            "mrp",
             "hsnCode",
             "cgst",
             "cgstPerc",
@@ -1494,7 +1494,6 @@ export const purchaseGridCol = (
             "actualSalesPrice",
             "unit2",
             "unit3",
-            "btnPrintBarcodeStd",
           ].includes(gc.dataField ?? ""))
     )
     .map((mi) => {
@@ -1547,7 +1546,8 @@ export const purchaseGridCol = (
       }
       if (
         userSession.countryId == Countries.India &&
-        (voucherType == VoucherType.PurchaseOrder || VoucherType.PurchaseQuotation) &&
+        (voucherType == VoucherType.PurchaseOrder ||
+          VoucherType.PurchaseQuotation) &&
         (mi.dataField?.includes("hsnCode") ||
           mi.dataField?.includes("cgst") ||
           mi.dataField?.includes("cgstPerc") ||
@@ -1558,8 +1558,7 @@ export const purchaseGridCol = (
           mi.dataField?.includes("cessPerc") ||
           mi.dataField?.includes("cessAmt") ||
           mi.dataField?.includes("additionalCessPerc") ||
-          mi.dataField?.includes("additionalCess")
-        )
+          mi.dataField?.includes("additionalCess"))
       ) {
         return {
           ...mi,

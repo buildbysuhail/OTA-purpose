@@ -83,7 +83,7 @@ export const TransactionMasterInitialData: TransactionMaster = {
   inventoryLedgerID: 0,
   ledgerID: 0,
   partyName: "",
-  displayName:"",
+  displayName: "",
   referalAgentID: 0,
   tableId: 0,
   seatNumber: "",
@@ -182,11 +182,11 @@ export const TransactionMasterInitialData: TransactionMaster = {
   hasCashPaid: false,
   hasroundOff: false,
   supplyType: "",
-  other: TransactionMaster3InitialData,
   prevTransDate: "",
   oldLedgerID: 0,
   dueDays: 0,
-  gRNMasterID: 0
+  gRNMasterID: 0,
+  master3: TransactionMaster3InitialData
 }
 export const initialTransactionDetailData: TransactionDetail = {
   slNo: "",

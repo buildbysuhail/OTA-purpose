@@ -710,6 +710,12 @@ useEffect(() => {
                     ? applicationSettings.inventorySettings?.defaultSalesAcc
                     : applicationSettings.inventorySettings?.defaultPurchaseAcc,
               ledgerID: applicationSettings.accountsSettings?.defaultCashAcc,
+              customerType:formType?.toUpperCase() === "IMPORT" ? "IMPORT" : formType?.toUpperCase() === "INTERSTATE" ? "Interstate" :
+                        formType?.toUpperCase() === "INT"        ? "Int" :
+                        ["WHOLESALE", "B2B"].includes(formType?.toUpperCase()??"") 
+                                                                ? "B2B" :
+                        formType !== "BT"                       ? "B2C" :
+                                                                  ""
             },
           },
           formElements: {
@@ -778,7 +784,15 @@ useEffect(() => {
         title:
           (formType == undefined || formType.trim() == ""
             ? t(title)
-            : t(title) + "[" + formType + "]") ?? "",
+            : clientSession.isAppGlobal ?  
+             formType.toUpperCase() === "INTERSTATE" ? `${title}[${formType}][Ctrl+F2]` :
+              formType.toUpperCase() === "INT"        ? `${title}[${formType}][Ctrl+F2]` :
+              ["WHOLESALE", "B2B"].includes(formType.toUpperCase()) 
+                                                      ? `${title}[${formType}][B2B][F2]` :
+              formType !== "BT" && formType !== "IMPORT"  ? `${title}[${formType}][B2C][F3]` :
+                                                        `${title}[${formType}]`
+             :
+              t(title) + "[" + formType + "]") ?? "",
       };
 
       _formState.gridColumns?.forEach((x: any) => {
@@ -902,6 +916,35 @@ useEffect(() => {
         data: formState.transaction.details[0],
         rowIndex: 0,
       }
+      if(_formState.formElements.cbDebitAccount??{})
+      if(_formState.transaction.master.voucherForm == "PI-IND") {
+        _formState.transaction.master.customerType = "B2B";
+        const accountKey = applicationSettings.accountsSettings.defaultIndirectExpenseAccount as keyof typeof LedgerType;
+          _formState = {
+            ..._formState,
+            formElements: {
+              ...formState.formElements,
+              cbDebitAccount: {
+                ...formState.formElements.cbDebitAccount,
+                accLedgerType: LedgerType[accountKey]
+              }
+            }
+          };
+      }
+      else if(_formState.transaction.master.voucherForm == "PI-ASST") {
+        _formState.transaction.master.customerType = "B2B";
+        const accountKey = applicationSettings.accountsSettings.defaultPurchaseAssetsAccount as keyof typeof LedgerType;
+          _formState = {
+            ..._formState,
+            formElements: {
+              ...formState.formElements,
+              cbDebitAccount: {
+                ...formState.formElements.cbDebitAccount,
+                accLedgerType: LedgerType[accountKey]
+              }
+            }
+          };
+      }
       // debugger;
       // _formState = await loadLedgerData(_formState) as any;
       // _formState.isInitialLedger = true;
@@ -927,7 +970,7 @@ useEffect(() => {
       setTemplateLoad(false);
     }
   }, []);
-  const onProcessSelected = useCallback(async (masterIds: string, loadType: string = "GRN") => {
+  const onProcessSelected = useCallback(async (masterIds: string, loadType: string = "GRN",voucherType: string) => {
     if (masterIds.length > 0) {
 
       dispatch(formStateHandleFieldChange({ fields: { loading: { isLoading: true, text: `${loadType == "GRN" ? 'Please wait while loading GRN Items' : 'Please wait while loading Order Items'}` } } }));
@@ -935,7 +978,7 @@ useEffect(() => {
       if (PendingTransDetails && PendingTransDetails.details && PendingTransDetails.details.length > 0) {
 
         const calculatedDetails: TransactionDetail[] = [];
-        const refactoredDetails = refactorDetails(PendingTransDetails.details, loadType, { result: {} }, formState.transaction.master.voucherForm);
+        const refactoredDetails = refactorDetails(PendingTransDetails.details,loadType, voucherType, { result: {} }, formState.transaction.master.voucherForm);
         for (let index = 0; index < refactoredDetails.length; index++) {
           const element = refactoredDetails[index];
           const calculated = calculateRowAmount(
@@ -1585,7 +1628,7 @@ useEffect(() => {
                       {t(formState.title)}
                       {!formState.formElements.lblPosted.visible && (
                         <div title={t("posted_transaction")}>
-                          <Info className="text-[#ef4444] w-4 h-4" />
+                          {/* <Info className="text-[#ef4444] w-4 h-4" /> */}
                         </div>
                       )}
                     </h6>

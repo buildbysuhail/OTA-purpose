@@ -162,6 +162,8 @@ const createStore = async (
 };
 
 const createBatchStore = async (productID: string, batchDataUrl?: string) => {
+  console.log(productID,"Hellllllllllllllllllllllllllo");
+  debugger;
   return new CustomStore({
     key: "productBatchID",
     async load(loadOptions: any) {
@@ -628,7 +630,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     }, [inputRef]);
 
     const handleGridKeyDown = useCallback(
-      async (e: any) => {
+      async (e: any) => {     
         
         const key = e.event?.key;
         if (!key) return;
@@ -924,20 +926,27 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     }, []);
 
 
+    const [productInitialized, setProductInitialized] = useState(false);
+
     const handleProductGridContentReady = useCallback((e: any) => {
+      
       const gridInstance = e.component;
       const visibleRows = gridInstance.getVisibleRows();
       const hasValidData =
         visibleRows.length > 0 && visibleRows[0].data?.productID;
-
       setProductGridReady(hasValidData);
-
-      if (hasValidData) {
-        // Set initial focus
+      if (hasValidData && !productInitialized) {
+        const firstRowKey = gridInstance.getKeyByRowIndex(0);
         gridInstance.option("focusedRowIndex", 0);
-        gridInstance.navigateToRow(gridInstance.getKeyByRowIndex(0));
+        gridInstance.selectRows([firstRowKey], false);
+        gridInstance.navigateToRow(firstRowKey);
+        gridInstance.focus();
+
+        setProductInitialized(true);
       }
-    }, []);
+    }, [productInitialized]);
+
+
 
     useEffect(() => {
       const style = document.createElement("style");
@@ -1013,6 +1022,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
                       }}
                       focusedRowEnabled={true}
                       onFocusedRowChanged={handleProductFocusedRowChanged}
+                      onContentReady={handleProductGridContentReady}
                       onKeyDown={handleGridKeyDown}
                       tabIndex={0}
                       width="100%"

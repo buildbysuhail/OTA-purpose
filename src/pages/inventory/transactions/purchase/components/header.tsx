@@ -33,7 +33,7 @@ interface HeaderProps extends VoucherElementProps {
   isHistorySidebarOpen: boolean;
   phone?: boolean;
   setIsPrintModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  onProcessSelected: ((masterIds: string, loadType: string) => void) | undefined;
+  onProcessSelected: ((masterIds: string, loadType: string,voucherType: string,) => void) | undefined;
   downloadImportTemplateHeadersOnly: any;
   importFromExcel: any;
 }

@@ -12,7 +12,7 @@ import { UserConfig } from "./transaction-types";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
-import { UserCog, ChevronRight, Settings, Palette, Layout, Building2, RotateCcw, Grid, Mouse } from "lucide-react";
+import { UserCog, ChevronRight, Settings, Palette, Layout, Building2, RotateCcw, Grid, Mouse, Undo } from "lucide-react";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import { AppState, inputBox } from "../../../../redux/slices/app/types";
 import InputBoxStyling from "../../../../components/ERPComponents/erp-inputboxStyle-preference";
@@ -28,6 +28,10 @@ const api = new APIClient();
 interface TransactionUserConfigProps {
   phone?: boolean;
   transactionType: string;
+  undoEditMode?: (
+    isEdit: boolean,
+    transactionMasterId: number
+  ) => void;
 }
 
 interface SectionProps {
@@ -64,7 +68,7 @@ const CollapsibleSection: React.FC<SectionProps> = ({ title, children, defaultEx
   );
 };
 
-export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ phone = false, transactionType }) => {
+export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ phone = false, transactionType, undoEditMode }) => {
   const formState = useAppSelector((state: RootState) => state.InventoryTransaction);
   const dispatch = useDispatch();
   const { t } = useTranslation("transaction");
@@ -84,7 +88,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
   };
 
   const handleStockUpdateChange = (value: boolean) => {
-      dispatch(formStateMasterHandleFieldChange({ fields: { stockUpdate: value } }));
+    dispatch(formStateMasterHandleFieldChange({ fields: { stockUpdate: value } }));
   };
 
   const handleInputBoxChange = (field: keyof inputBox, value: any) => {
@@ -97,6 +101,10 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
     };
     // dispatch(formStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }));
   };
+
+  const handleUndoClick = () => {
+    undoEditMode?.(formState.transaction.master.invTransactionMasterID > 0, formState.transaction.master.invTransactionMasterID);
+  }
 
   useEffect(() => { }, []);
 
@@ -258,7 +266,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
 
             {/* Main Configuration Options - All checkboxes in one section */}
             <CollapsibleSection title={t("configuration_options")} defaultExpanded={true} icon={<Settings className="w-4 h-4 text-[#2563eb] dark:text-[#60a5fa]" />}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6 relative">
                 <div className="space-y-2">
                   <ERPCheckbox
                     id="useBarcode"
@@ -294,6 +302,13 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                     data={formState.userConfig}
                     checked={formState?.userConfig?.useSupplierProductCode}
                     onChangeData={(e) => handleFieldChange("useSupplierProductCode", e.useSupplierProductCode)}
+                  />
+                  <ERPCheckbox
+                    id="enableVoucherPrefix"
+                    label={t("enable_voucher_prefix")}
+                    data={formState.userConfig}
+                    checked={formState.userConfig?.enableVoucherPrefix}
+                    onChangeData={(e) => handleFieldChange("enableVoucherPrefix", e.enableVoucherPrefix)}
                   />
                 </div>
 
@@ -373,7 +388,19 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                   />
                 </div>
               </div>
+              <div className="absolute top-[200px] right-[30px]">
+                {formState.transaction.master.invTransactionMasterID > 0 && (
+                  <button
+                    className="w-10 h-10 rounded-full flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-md transition-all duration-200 ease-in-out hover:scale-105 active:scale-95"
+                    onClick={handleUndoClick}
+                    title="undo"
+                  >
+                    <Undo className="w-4 h-4 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200" />
+                  </button>
+                )}
+              </div>
             </CollapsibleSection>
+
 
             {/* Cost Center Settings */}
             <CollapsibleSection title={t("cost_center_settings")} defaultExpanded={false} icon={<Building2 className="w-4 h-4 text-[#7c3aed] dark:text-[#a78bfa]" />}>

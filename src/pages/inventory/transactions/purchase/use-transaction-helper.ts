@@ -30,6 +30,7 @@ import {
   initialTransactionDetails2,
   transactionInitialData,
   TransactionMaster3InitialData,
+  TransactionMasterInitialData,
 } from "./transaction-type-data";
 import { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import { useDispatch } from "react-redux";
@@ -256,7 +257,7 @@ export const useTransactionHelper = (transactionType: string) => {
 
     const billDisc = master.billDiscount;
     const additionalAmt = master.adjustmentAmount;
-
+debugger;
     if (!result.transaction) {
       result.transaction = { master: {} };
     }
@@ -1101,9 +1102,13 @@ debugger;
           try {
             // Calculate the summary value
             const calculatedValue = calculateSummaryValue(details, config);
+            let _columnKey = (config.showInColumn ||
+              config.column);
+            if(_columnKey.startsWith("details2.")) {
 
-            const columnKey = (config.showInColumn ||
-              config.column) as keyof SummaryItems;
+              _columnKey = _columnKey.substring("details2.".length);
+            }
+            const columnKey = _columnKey as keyof SummaryItems;
             if ((config.showInColumn || config.column) == "vatAmount") {
               (result.summary as any)[columnKey] = round(
                 calculatedValue,
@@ -1137,6 +1142,7 @@ debugger;
     const refactorDetails = (
       _details: any[],
       formType: string,
+      voucherType: string,
       commonParams: CommonParams,
       loadType?: string
     ): TransactionDetail[] => {
@@ -1264,7 +1270,13 @@ debugger;
           Number(row.schemeDiscAmt || 0)
         );
         // VAT handling based on form type
-        if (formType === "VAT") {
+       if (
+            !clientSession.isAppGlobal && (
+              voucherType === "PO" ||
+            voucherType === "PE" ||
+            (formType === "VAT" && voucherType !== "PO" && voucherType !== "PE")
+            )
+          ) {
           detail.vatPerc = row.vatPercentage;
           detail.vatAmount = getFormattedValueIgnoreRoundingToNumber(
             Number(row.totalVatAmount || 0)
@@ -1596,7 +1608,8 @@ let detail  = sanitizeDataAdvanced({...rowDetail}, initialTransactionDetailData)
       master.stockUpdate = master.stockUpdate
       master.supplyType = master.supplyType == undefined || master.supplyType == null ? "" : master.supplyType.toString()
 
-      return master;
+      let _master  = sanitizeDataAdvanced({...master}, TransactionMasterInitialData)
+      return _master;
     };
     const applyDiscountsToItems = (): void => {
 

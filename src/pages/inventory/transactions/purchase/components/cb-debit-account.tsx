@@ -71,7 +71,8 @@ const DebitAccount = React.forwardRef<HTMLInputElement, DebitAccountProps>(({
             id: "inventoryLedgerID",
             valueKey: "id",
             labelKey: "name",
-            getListUrl: `${Urls.inv_transaction_base}${transactionType}/Data/AccLedgers/?ledgerType=${LedgerType.All}`,
+            getListUrl: `${Urls.inv_transaction_base}${transactionType}/Data/AccLedgers/`,
+            params:`ledgerType=${formState?.formElements?.cbDebitAccount.accLedgerType??LedgerType.All}`
           }}
           disabled={
             formState.formElements.cbDebitAccount.disabled ||

@@ -1066,7 +1066,6 @@ export const remToPx = (rem: number) =>
 
   // Handle objects
   const sanitized: any = {};
-  
   for (const key in data) {
     if (data.hasOwnProperty(key)) {
       const value = data[key];
@@ -1078,8 +1077,13 @@ if(key == "qty") {
       if (opts.convertEmptyStrings && value === "" && typeof initialValue === "number") {
         sanitized[key] = opts.defaultNumber;
       }
+      else if (Number.isNaN(value) && typeof initialValue === "number") {
+        sanitized[key] = opts.defaultNumber;
+      }
       // Recursively sanitize nested structures
       else if (typeof value === 'object' && value !== null) {
+        
+  debugger;
         sanitized[key] = sanitizeDataAdvanced(value, initialValue, opts);
       }
       // Handle primitive values

@@ -542,6 +542,7 @@ export const useTransaction = (
       details: refactorDetails(
         vch.details,
         formType ?? vch.master.voucherForm,
+        voucherType ?? vch.master.voucherType,
         { result: {} },
         loadVType
       ),
@@ -2754,9 +2755,10 @@ export const useTransaction = (
           const { voucherType, voucherForm } = formState.transaction.master;
 
           if (
+            !clientSession.isAppGlobal && (
             voucherType === "PO" ||
             voucherType === "PE" ||
-            (voucherForm === "VAT" && voucherType !== "PO" && voucherType !== "PE")
+            (voucherForm === "VAT" && voucherType !== "PO" && voucherType !== "PE"))
           ) {
             outDetail.vatPerc = Number(product.pVatPerc || 0);
             outDetail.cstPerc = Number(product.purchaseExciseTaxPerc || 0);

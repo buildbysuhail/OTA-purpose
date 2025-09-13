@@ -506,9 +506,6 @@
   "load_all_multi_foc": "تحميل كل Multi FOC",
   "please_select_any_group": "الرجاء تحديد أي مجموعة...!",
   "is_group": "هل هي مجموعة",
-  "sales_price": "سعر البيع",
-  "unit_name": "اسم الوحدة",
-  "group_price": "سعر المجموعة",
   "multi_foc_scheme": "خطة Multi FOC",
   "confirm_delete_row": "تأكيد حذف الصف",
   "failed_to_load_slabs": "فشل في تحميل الشرائح",
@@ -517,5 +514,8 @@
   "invalid_qty_range": "نطاق كمية غير صالح",
   "no_data_to_save": "لا توجد بيانات للحفظ",
   "no_rows_selected": "لم يتم تحديد أي صفوف",
-  "yes_delete": "نعم، احذف"
+  "yes_delete": "نعم، احذف",
+  "brand_id": "معرّف العلامة التجارية",
+  "p_price": "سعر الشراء",
+  "s_price": "سعر البيع"
 }

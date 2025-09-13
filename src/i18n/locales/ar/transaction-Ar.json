@@ -732,5 +732,8 @@
   "sl": "SL",
   "header_row_height": "ارتفاع صف الرأس",
   "clearing_transaction_question": "هل أنت متأكد أنك تريد مسح هذه المعاملة؟",
-  "once_clearing_this_transaction_cannot_be_recovered": "بمجرد مسح هذه المعاملة لا يمكن استعادتها"
+  "once_clearing_this_transaction_cannot_be_recovered": "بمجرد مسح هذه المعاملة لا يمكن استعادتها",
+  "sq_2": "SQ2",
+  "sq_3": "SQ3",
+  "name": "الاسم"
 }

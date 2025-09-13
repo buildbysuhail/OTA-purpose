@@ -49,7 +49,16 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,
   const storeTemplate = useSelector((state: RootState) => state.Template?.activeTemplate);
   const templateData = template ?? storeTemplate;
     const [stableTemplateProps, setStableTemplateProps] = useState<any>(null);
-  const [loadingStableProps, setLoadingStableProps] = useState<boolean>(false);
+    const [designTabs, setDesignTabs] = useState<DesignSectionType[]>([]);
+  const [currentSection, setCurrentSection] = useState<DesignSectionType | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [templateImages, setTemplateImages] = useState<TemplateImagesTypes>({
+    signature_image: null,
+    background_image: null,
+    background_image_header: null,
+    background_image_footer: null,
+  });
+  const [maxHeight, setMaxHeight] = useState<number>(500);
   // Add ref for preview container
   const previewContainerRef = useRef<HTMLDivElement>(null);
 
@@ -85,26 +94,14 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,
     templateData.propertiesState?.padding?.top,
 
   ]);
-  const [designTabs, setDesignTabs] = useState<DesignSectionType[]>([]);
-  const [currentSection, setCurrentSection] = useState<DesignSectionType | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [templateImages, setTemplateImages] = useState<TemplateImagesTypes>({
-    signature_image: null,
-    background_image: null,
-    background_image_header: null,
-    background_image_footer: null,
-  });
-  const [maxHeight, setMaxHeight] = useState<number>(500);
-  useEffect(() => {
-    console.log("userSession", userSession, "currentBranch", currentBranch,);
 
-  }, []);
+
 
   // Stabilize props for PDFViewer
  useEffect(() => {
     const load = async () => {
       try {
-        setLoadingStableProps(true);
+        setLoading(true);
          let data = DummyVoucherData;
         if (MasterIDParam) {
           data = (await loadPrintData(
@@ -143,7 +140,7 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,
         // handle/log error if you want
          setStableTemplateProps(null);
       } finally {
-        setLoadingStableProps(false);
+        setLoading(false);
       }
     };
 
@@ -201,6 +198,7 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,
   const getPDFTemplateData = useCallback(async () => {
     if (id !== "new") {
       try {
+        setLoading(true)
         const res = await api.getAsync(`${Urls.templates}${id || ""}`);
         const cc: TemplateState<unknown> = customJsonParse(res.content);
         const template: TemplateDto = {
@@ -223,6 +221,8 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,
       } catch (error) {
         console.error("Error fetching template data:", error);
         ERPToast.show(t("failed_to_fetch_template"));
+      }finally {
+        setLoading(false);
       }
     }
   }, [id, dispatch, t]);
@@ -284,7 +284,6 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,
       };
 
       dispatch(setTemplate(activeTemplate));
-      setLoading(true);
 
       try {
         const res = await api.postAsync(Urls.templates, activeTemplate);
@@ -294,9 +293,7 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,
       } catch (error) {
         console.error("Error saving template:", error);
         ERPToast.show(t("failed_to_save_template"));
-      } finally {
-        setLoading(false);
-      }
+      } 
     },
     [templateData, templateGroup, templateKind, dispatch, navigate, t]
   );
@@ -317,7 +314,9 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,
     } catch (error) {
       console.error("Error saving template:", error);
       ERPToast.show(t("failed_to_save_template"));
-      setLoading(false);
+    }
+    finally {
+        setLoading(false);
     }
   }, [id, templateData, capturePreviewAsImage, handleSave, t]);
 

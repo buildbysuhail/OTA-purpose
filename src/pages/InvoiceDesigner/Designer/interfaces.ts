@@ -66,6 +66,10 @@ export interface CustomElementType {
  height?: number;
  elements: PlacedComponent[];
  thumbImage:string
+ background_image?: string;
+ bg_image_position?:string;
+ background_color?: string;
+ bg_image_objectFit?:string;
  }
 export interface LabelState {
   columnsPerRow?: number;
@@ -74,8 +78,7 @@ export interface LabelState {
   labelWidth: number;
   background_image?: string;
   bg_image_position?:string;
-
-
+  bg_image_objectFit?:string;
   orientation?:"landscape"|"portrait"
 }
 export interface BarcodeState {
@@ -103,6 +106,8 @@ export interface PlacedComponent {
   fontSize: number;
   fontStyle: "normal" | "italic";
   font: string;
+  fontColor?:string;
+  fontWeight?:string;
   width: number;
   height: number;
   rotate:number;
@@ -128,7 +133,7 @@ export interface PlacedComponent {
     textMargin: number;
     fontStyle: "normal" | "bold" | "italic";
   };
- tableProps: {
+  tableProps: {
     showBorder: boolean;
     columns: tableColumns[]
   };

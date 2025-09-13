@@ -67,6 +67,7 @@ import ERPCheckbox from "../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../components/ERPComponents/erp-button";
 import { ResizableBox } from "react-resizable";
 import {
+  CustomElementType,
   DesignerElementType,
   HistoryComponent,
   initialBacodeTemplateState,
@@ -103,6 +104,7 @@ import { AccessPrinterList } from "../InvoiceDesigner/utils/get_printers";
 import { renderBarcode } from "../../utilities/barcode";
 import { ERPScrollArea } from "../../components/ERPComponents/erp-scrollbar";
 import { initialPrintMasterDto } from "../use-print-type-data";
+import { designSections } from "../InvoiceDesigner/LandingFolder/designSection";
 
 interface SaveDialogProps {
   isOpen: boolean;
@@ -252,7 +254,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const canvasRef = useRef<HTMLDivElement>(null);
   const barcodeRefs = useRef<(HTMLCanvasElement | null)[]>([]);
-  const [activeTab, setActiveTab] = useState("page");
+  const [activeTab, setActiveTab] = useState(forCustomRows?"element":"page");
   const [isAddColumnModalOpen, setIsAddColumnModalOpen] = useState(false);
   const [sidebarWidth, setSidebarWidth] = useState(300);
   const [editingColumnData, setEditingColumnData] = useState<
@@ -269,6 +271,14 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
   const [templateData, setTemplateData] = useState<TemplateState<unknown>>(
     initialBacodeTemplateState<unknown>().data || {}
   );
+
+  const [designerData,setDesignerData] = useState({
+                                                        background_image: "",
+                                                        bg_image_position:"",
+                                                        background_color: "",
+                                                         bg_image_objectFit:""
+                                                    })
+
   const [historyData, setHistoryData] = useState<HistoryComponent[]>([]);
   const [historyIndex, setHistoryIndex] = useState<number>(-1);
   const pxToPoint = (px: number) => px * (72 / 96);
@@ -800,7 +810,10 @@ const handleQRCodePropertyChange = (
             payload: {
               elements: templateData.barcodeState?.placedComponents || [],
               height: templateData.barcodeState?.labelState?.labelHeight,
-              thumbImage:dataUrl??""
+              thumbImage:dataUrl??"",
+              background_image: designerData?.background_image,
+              bg_image_position:designerData?.bg_image_position,
+              background_color: designerData?.background_color,
             },
             field: customTemplate,
           })
@@ -913,11 +926,10 @@ const handleQRCodePropertyChange = (
   }
   };
 
-  const handlePagePropsChange = (
+  const handlePagePropsChange = async(
     property: keyof PropertiesState,
-    value: any
+    value: any,
   ) => {
-    debugger
     setTemplateData((prev: TemplateState<unknown>) => ({
       ...prev,
       propertiesState: { ...prev.propertiesState, [property]: value },
@@ -933,6 +945,25 @@ const handleQRCodePropertyChange = (
      forCustomRows? handlePropertyChange(property,imageData ?? ''):
     handleLabelPropsChange(property, imageData ?? null);
   };
+
+  const handleDesignerChange =  async (property: any, value: any,isImg:boolean=false) => {
+      let data = value
+      if(isImg){
+        data = await convertFileToBase64(value);
+      }
+       setDesignerData((prev) => ({
+      ...prev,
+      [property]: value ,
+    }));
+
+  }
+
+  const handleRemoveDesignerImg =()=>{
+    handleDesignerChange("background_image","")
+       if (inputFile.current) {
+      inputFile.current.value = "";
+    }
+  }
   const handleRemoveBgImage = () => {
     handleImagePropsChange("background_image", "");
     if (inputFile.current) {
@@ -1107,7 +1138,7 @@ const handleRemoveImage =()=>{
   ) => {
     if (selectedComponent) {
       {
-        if (isUndoOrRedo == undefined || isUndoOrRedo == false)
+        if ( isUndoOrRedo == undefined || isUndoOrRedo == false)
           setHistoryData((prevHistory) => {
             const isDuplicate = prevHistory.some((entry) => entry.id === id);
             const updHistory = prevHistory.slice(0, historyIndex + 1);
@@ -1820,6 +1851,7 @@ padding: `${
             <Tabs value={activeTab} onChange={handleTabChange}>
               {!forCustomRows && <Tab label="Page" value="page" />}
               <Tab label="Element" value="element" />
+              {forCustomRows && <Tab label="Designer" value="designer"/>}
               {templateGroup === "barcode" && !forCustomRows && (
                 <Tab label="Label" value="label" />
               )}
@@ -3196,38 +3228,62 @@ padding: `${
                         >
                           Remove
                         </div>
-                        <div className="font-light text-sm">Image Position</div>
-                        <ERPDataCombobox
-                          noLabel
-                          id="bg_image_position"
-                          data={templateData?.barcodeState?.labelState}
-                          defaultValue={
-                            templateData?.barcodeState?.labelState
-                              ?.labelHeight ?? "top left"
-                          }
-                          onChange={(e) =>
-                            handleLabelPropsChange("bg_image_position", e.value)
-                          }
-                          field={{
-                            id: "bg_image_position",
-                            valueKey: "value",
-                            labelKey: "label",
-                          }}
-                          options={[
-                            { label: "Top Left", value: "top left" },
-                            { label: "Top Center", value: "top center" },
-                            { label: "Top Right", value: "top right" },
-                            { label: "Center Left", value: "center left" },
-                            { label: "Center Center", value: "center center" },
-                            { label: "Center Right", value: "center right" },
-                            { label: "Bottom Left", value: "bottom left" },
-                            { label: "Bottom Center", value: "bottom center" },
-                            { label: "Bottom Right", value: "bottom right" },
-                            { label: "Stretch", value: "stretch" },
-                            { label: "Contain", value: "contain" },
-                            { label: "Cover", value: "cover" },
-                          ]}
-                        />
+                                                <div className="font-light text-sm">Image Fit</div>
+                              <ERPDataCombobox
+                                   
+                                      noLabel
+                                      id="bg_image_objectFit"
+                                      field={{
+                                        id: "bg_image_objectFit",
+                                       
+                                        valueKey: "value",
+                                        labelKey: "label",
+                                      }}
+                                         data={templateData?.barcodeState?.labelState}
+                                      defaultValue={ "contain"
+                                      }
+                                      onChange={(e) =>
+                                        handleLabelPropsChange("bg_image_objectFit", e.value)
+                                      }
+                                      options={[
+                                        { label: "fill", value: "fill" },
+                                        { label: "contain", value: "contain" },
+                                        { label: "cover", value: "cover" },
+                                        { label: "scale-down", value: "scale-down" },
+                                        { label: "none", value: "none" },
+                        
+                                      ]}
+                                    />
+                             <div className="font-light text-sm">Image Position</div>
+                                  <ERPDataCombobox
+                                      noLabel
+                                      id="bg_image_position"
+                                      data={templateData?.barcodeState?.labelState}
+                                      defaultValue={
+                                        templateData?.barcodeState?.labelState
+                                          ?.labelHeight ?? "top left"
+                                      }
+                                      onChange={(e) =>
+                                        handleLabelPropsChange("bg_image_position", e.value)
+                                      }
+                                      field={{
+                                        id: "bg_image_position",
+                                        valueKey: "value",
+                                        labelKey: "label",
+                                      }}
+                                      options={[
+                                        { label: "Top left", value: "top left" },
+                                        { label: "Center left", value: "top center" },
+                                        { label: "Bottom left", value: "top right" },
+                                        { label: "Top center", value: "center left" },
+                                        { label: "Center", value: "center" },
+                                        { label: "Bottom center", value: "center right" },
+                                        { label: "Top right", value: "bottom left" },
+                                        { label: "Center right", value: "bottom center" },
+                                        { label: "Bottom right", value: "bottom right" },
+                                      ]}
+                                    />
+
                       </>
                     )}
                   </div>
@@ -3243,7 +3299,7 @@ padding: `${
                     spaceY: 2,
                   }}
                   className="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 overflow-auto pr-1"
-         hidden={activeTab !== "page" || forCustomRows}>
+                  hidden={activeTab !== "page" || forCustomRows}>
               <Box sx={{ spaceY: 2 }}>
                 <Box sx={{ mb: 1 }}>
                   <ERPInput
@@ -3436,6 +3492,147 @@ padding: `${
           
   
          </Box>   
+         {forCustomRows &&
+             <Box 
+            hidden={activeTab !== "designer"}
+            >
+                <Box sx={{ mb: 1 }}>
+                  <div className="flex flex-col gap-3">
+                    <div className="text-xs">Background Image</div>
+                    <ERPInput
+                      id="background_image"
+                      type="file"
+                      ref={inputFile}
+                      onChange={(e: any) => {
+                        if (e.target.files[0].size > 2097152) {
+                          ERPToast.showWith(
+                            "Maximum file size allowed is 2 MB, please try with different file.",
+                            "warning"
+                          );
+                        } else {
+                          handleDesignerChange(
+                            "background_image",
+                            e.target.files[0],
+                            true
+                          );
+                        }
+                      }}
+                      className={"hidden"}
+                      accept="image/png,image/jpeg"
+                      label="Image"
+                      placeholder=" "
+                    />
+                    <label htmlFor="background_image">
+                      <div
+                        onClick={() => inputFile?.current?.click()}
+                        className={`text-xs border rounded px-1 py-2 text-center bg-[#F1F5F9] cursor-pointer ${
+                          designerData?.background_image
+                            ? "hidden"
+                            : ""
+                        }`}
+                      >
+                        Choose from Desktop
+                      </div>
+                    </label>
+
+                    {designerData?.background_image && (
+                      <>
+                        <div className="text-xs bg-[#FEF4EA] px-2 py-2 rounded">
+                          Click Save to apply the selected background image
+                        </div>
+                        {designerData?.background_image && (
+                          <img
+                            draggable={false}
+                            src={designerData?.background_image}
+                            alt="background_image"
+                            height={100}
+                            width={100}
+                            className="size-5"
+                          />
+                        )}
+                        <div
+                          className="text-accent text-xs cursor-pointer  max-w-min"
+                          onClick={handleRemoveDesignerImg}
+                        >
+                          Remove
+                        </div>
+                        <div className="font-light text-sm">Image Fit</div>
+                              <ERPDataCombobox
+                                   
+                                      noLabel
+                                      id="bg_image_objectFit"
+                                      field={{
+                                        id: "bg_image_objectFit",
+                                       
+                                        valueKey: "value",
+                                        labelKey: "label",
+                                      }}
+                                      value={designerData?.bg_image_objectFit ?? "fill"}
+                                      defaultValue={ "fill"}
+                                     onChange={(e) =>
+                                        handleDesignerChange("bg_image_objectFit", e.value)
+                                      }
+                                      options={[
+                                        { label: "fill", value: "fill" },
+                                        { label: "contain", value: "contain" },
+                                        { label: "cover", value: "cover" },
+                                        { label: "scale-down", value: "scale-down" },
+                                        { label: "none", value: "none" },
+                        
+                                      ]}
+                                    />
+                          <div className="font-light text-sm">Image Position</div>
+                                  <ERPDataCombobox
+                                      noLabel
+                                      id="bg_image_position"
+                                      field={{
+                                        id: "bg_image_position",
+         
+                                        valueKey: "value",
+                                        labelKey: "label",
+                                      }}
+                                       value={designerData?.bg_image_position ?? "center"}
+                                       defaultValue={ "center" }
+                                      onChange={(e) =>
+                                        handleDesignerChange("bg_image_position", e.value)
+                                      }
+                                      options={[
+                                        { label: "Top left", value: "top left" },
+                                        { label: "Center left", value: "top center" },
+                                        { label: "Bottom left", value: "top right" },
+                                        { label: "Top center", value: "center left" },
+                                        { label: "Center", value: "center" },
+                                        { label: "Bottom center", value: "center right" },
+                                        { label: "Top right", value: "bottom left" },
+                                        { label: "Center right", value: "bottom center" },
+                                        { label: "Bottom right", value: "bottom right" },
+                                      ]}
+                                    />
+
+
+                        
+                        
+   
+                      </>
+                    )}
+                  </div>
+                </Box>  
+                <Box sx={{ mb: 1 }}>
+                    <ERPInput
+                        value={designerData?.background_color}
+                          onChange={(e) =>
+                            handleDesignerChange("background_color", e.target?.value )
+                          }                        
+                        label={t("color")}
+                        id="bg_color"
+                        type="color"
+                        customSize="md"
+                        placeholder=""
+                      />    
+                </Box>      
+            </Box>       
+         }
+ 
 
           </Box>
         </div>

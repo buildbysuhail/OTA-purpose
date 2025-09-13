@@ -339,7 +339,7 @@ export interface TransactionDetail {
   unit2: string;
   unit3: string;
   btnPrintBarcodeStd: string;
-  isValid?: boolean;  
+  isValid?: boolean;
   hsnCode: string;
   details2?: TransactionDetails2
 }
@@ -546,7 +546,7 @@ export interface TransactionFormState {
   loading?: loadingResult;
   dataWarranty: [];
   dataBrands: [];
-  isPopupVisible: boolean;
+  headerMorePop: boolean;
   showGridTheme: boolean;
   // stockUpdate: boolean;
   batchGridShowKey?: number;

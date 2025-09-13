@@ -344,7 +344,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
           </div>
         }
         footer={
-          <div className="absolute -bottom-0 h-[42px] pt-[4px] pb-[2px] left-0 w-full flex justify-end space-x-2 dark:!border-dark-border dark:!bg-dark-bg bg-white border-t z-10 pr-[10px] rounded-b-md">
+          <div className="absolute -bottom-0 h-[42px] pt-[4px] pb-[2px] left-0 w-full flex justify-end gap-2 dark:!border-dark-border dark:!bg-dark-bg bg-white border-t z-10 pr-[10px] rounded-b-md">
             <ERPSubmitButton
               type="reset"
               onClick={() => setIsOpen(false)}

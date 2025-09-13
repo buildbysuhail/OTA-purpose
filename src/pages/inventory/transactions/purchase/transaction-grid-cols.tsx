@@ -92,7 +92,7 @@ export const purchaseGridCol = (
       {
         dataField: "brandID",
         field: { valueKey: "id", labelKey: "name" },
-        caption: t("brandID"),
+        caption: t("brand_id"),
         dataType: "number",
         width: 100,
         readOnly: false,
@@ -677,7 +677,7 @@ export const purchaseGridCol = (
       },
       {
         dataField: "unit2StickerQty",
-        caption: t("sq2"),
+        caption: t("sq_2"),
         dataType: "number",
         visible: false,
         width: 200,
@@ -734,7 +734,7 @@ export const purchaseGridCol = (
       },
       {
         dataField: "unit3StickerQty",
-        caption: t("sq3"),
+        caption: t("sq_3"),
         dataType: "number",
         visible: false,
         width: 180,

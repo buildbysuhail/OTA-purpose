@@ -162,8 +162,6 @@ const createStore = async (
 };
 
 const createBatchStore = async (productID: string, batchDataUrl?: string) => {
-  console.log(productID,"Hellllllllllllllllllllllllllo");
-  debugger;
   return new CustomStore({
     key: "productBatchID",
     async load(loadOptions: any) {
@@ -275,7 +273,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
         },
         {
           dataField: "productID",
-          caption: t("productID"),
+          caption: t("product_id"),
           dataType: "number",
           visible: false,
           allowSorting: true,
@@ -398,7 +396,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
         },
         {
           dataField: "brandID",
-          caption: t("brandID"),
+          caption: t("brand_id"),
           dataType: "number",
           minWidth: 100,
           allowSorting: true,
@@ -630,8 +628,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     }, [inputRef]);
 
     const handleGridKeyDown = useCallback(
-      async (e: any) => {     
-        
+      async (e: any) => {
+
         const key = e.event?.key;
         if (!key) return;
 
@@ -929,7 +927,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     const [productInitialized, setProductInitialized] = useState(false);
 
     const handleProductGridContentReady = useCallback((e: any) => {
-      
+
       const gridInstance = e.component;
       const visibleRows = gridInstance.getVisibleRows();
       const hasValidData =

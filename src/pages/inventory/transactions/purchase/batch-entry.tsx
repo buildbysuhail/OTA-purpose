@@ -108,7 +108,7 @@ const BatchEntryModal: React.FC<BatchEntryModalProps> = ({ isOpen, onClose, t, r
       closeModal={onClose}
       title={t("batch_entry")}
       width={800}
-      height={390}
+      height={350}
       content={
         <div className="w-full modal-content">
           <div className="flex flex-col gap-1">
@@ -122,7 +122,7 @@ const BatchEntryModal: React.FC<BatchEntryModalProps> = ({ isOpen, onClose, t, r
                     onChange={(e) => handleFieldChange('batchEnabled', e.target.checked)}
                   />
                 </div>
-                <div className={`flex flex-col gap-2 border border-dashed p-2 border-black rounded-md h-[200px] ${!batchData.batchEnabled ? "opacity-50 pointer-events-none" : ""}`}>
+                <div className={`flex flex-col gap-2 border border-dashed p-2 border-black rounded-md h-[170px] ${batchData.batchEnabled === false ? "opacity-50 pointer-events-none" : ""}`}>
                   {/* Batch No */}
                   <div className="flex flex-col sm:flex-row sm:items-center">
                     <label className="w-full sm:w-20 text-xs mb-1 sm:mb-0">
@@ -209,7 +209,7 @@ const BatchEntryModal: React.FC<BatchEntryModalProps> = ({ isOpen, onClose, t, r
                       />
                     </div>
                   </div>
-                  <div className={`flex flex-col gap-2 border border-dashed p-2 border-black rounded-md h-[200px] ${!batchData.unit2Enabled ? "opacity-50 pointer-events-none" : ""}`}>
+                  <div className={`flex flex-col gap-2 border border-dashed p-2 border-black rounded-md h-[170px] ${!batchData.unit2Enabled ? "opacity-50 pointer-events-none" : ""}`}>
                     {/* Unit 2 Dropdown */}
                     <div className="flex flex-col sm:flex-row sm:items-center">
                       <label className="w-full sm:w-24 text-xs mb-1 sm:mb-0">
@@ -262,7 +262,7 @@ const BatchEntryModal: React.FC<BatchEntryModalProps> = ({ isOpen, onClose, t, r
                       />
                     </div>
                     {/* Unit 2 MRP */}
-                    <div className="flex flex-col sm:flex-row sm:items-center">
+                    {/* <div className="flex flex-col sm:flex-row sm:items-center">
                       <label className="w-full sm:w-24 text-xs mb-1 sm:mb-0">
                         {t("mrp")} :
                       </label>
@@ -274,7 +274,7 @@ const BatchEntryModal: React.FC<BatchEntryModalProps> = ({ isOpen, onClose, t, r
                         onChange={(e) => handleFieldChange('unit2MRP', e.target.value)}
                         disabled={true}
                       />
-                    </div>
+                    </div> */}
                     {/* Unit 2 MBarcode */}
                     <div className="flex flex-col sm:flex-row sm:items-center">
                       <label className="w-full sm:w-24 text-xs mb-1 sm:mb-0">
@@ -319,7 +319,7 @@ const BatchEntryModal: React.FC<BatchEntryModalProps> = ({ isOpen, onClose, t, r
                     />
                   </div>
                 </div>
-                <div className={`flex flex-col gap-2 border border-dashed p-2 border-black rounded-md h-[200px] ${!batchData.unit3Enabled ? "opacity-50 pointer-events-none" : ""}`}>
+                <div className={`flex flex-col gap-2 border border-dashed p-2 border-black rounded-md h-[170px] ${!batchData.unit3Enabled ? "opacity-50 pointer-events-none" : ""}`}>
                   {/* Unit 3 Dropdown */}
                   <div className="flex flex-col sm:flex-row sm:items-center">
                     <label className="w-full sm:w-24 text-xs mb-1 sm:mb-0">
@@ -372,7 +372,7 @@ const BatchEntryModal: React.FC<BatchEntryModalProps> = ({ isOpen, onClose, t, r
                     />
                   </div>
                   {/* Unit 3 MRP */}
-                  <div className="flex flex-col sm:flex-row sm:items-center">
+                  {/* <div className="flex flex-col sm:flex-row sm:items-center">
                     <label className="w-full sm:w-24 text-xs mb-1 sm:mb-0">
                       {t("mrp")} :
                     </label>
@@ -384,7 +384,7 @@ const BatchEntryModal: React.FC<BatchEntryModalProps> = ({ isOpen, onClose, t, r
                       onChange={(e) => handleFieldChange('unit3MRP', e.target.value)}
                       disabled={true}
                     />
-                  </div>
+                  </div> */}
                   {/* Unit 3 MBarcode */}
                   <div className="flex flex-col sm:flex-row sm:items-center">
                     <label className="w-full sm:w-24 text-xs mb-1 sm:mb-0">

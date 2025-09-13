@@ -1,6 +1,7 @@
 import React from "react";
 import { VoucherElementProps } from "../../purchase/transaction-types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
+import { useAppState } from "../../../../../utilities/hooks/useAppState";
 
 interface VatAmountLabelProps extends VoucherElementProps {
   taxData: any[];
@@ -8,6 +9,8 @@ interface VatAmountLabelProps extends VoucherElementProps {
 
 const VatAmountLabel: React.FC<VatAmountLabelProps> = ({ formState, t, taxData, }) => {
   const { getFormattedValue } = useNumberFormat();
+  const { appState } = useAppState();
+    const isRtl = appState.locale.rtl;
   return (
     // <ERPLabel
     //   id="vatAmount"
@@ -21,7 +24,7 @@ const VatAmountLabel: React.FC<VatAmountLabelProps> = ({ formState, t, taxData, 
     <div className="flex items-center">
       <span className="text-xs dark:text-dark-text text-gray-600 font-medium w-20">{t(formState.formElements.totTax.label)}</span>
       <span className="text-xs dark:text-dark-text text-gray-600 mr-2">:</span>
-      <span className="text-sm font-semibold dark:text-dark-text text-gray-900 flex-1 text-right">{getFormattedValue(formState.transaction.master.vatAmount ?? 0)}</span>
+      <span className={`text-sm font-semibold dark:text-dark-text text-gray-900 flex-1 ${isRtl ? "text-left" : "text-right"}`}>{getFormattedValue(formState.transaction.master.vatAmount ?? 0)}</span>
     </div>
   );
 };

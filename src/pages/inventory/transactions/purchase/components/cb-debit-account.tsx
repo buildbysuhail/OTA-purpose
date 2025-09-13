@@ -6,17 +6,15 @@ import Urls from "../../../../../redux/urls";
 import { LedgerType } from "../../../../../enums/ledger-types";
 import { formStateHandleFieldChange, formStateMasterHandleFieldChange } from "../reducer";
 import VoucherType from "../../../../../enums/voucher-types";
+import { useAppState } from "../../../../../utilities/hooks/useAppState";
 
 interface DebitAccountProps extends VoucherElementProps {
   handleFieldKeyDown: (field: string, key: string) => void;
   transactionType: string
 }
-const DebitAccount = React.forwardRef<HTMLInputElement, DebitAccountProps>(({
-  formState,
-  dispatch,
-  transactionType,
-  t,
-}, ref) => {
+const DebitAccount = React.forwardRef<HTMLInputElement, DebitAccountProps>(({ formState, dispatch, transactionType, t, }, ref) => {
+  const { appState } = useAppState();
+  const isRtl = appState.locale.rtl;
   return (
     <div className="xl:w-[170px] lg:w-[250px]">
       {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
@@ -25,7 +23,7 @@ const DebitAccount = React.forwardRef<HTMLInputElement, DebitAccountProps>(({
             <ERPCheckbox
               localInputBox={formState?.userConfig?.inputBoxStyle}
               id="enableDebitAccount"
-              className="text-left"
+              className={`${isRtl ? "text-right" : "text-left"}`}
               label={t(formState.formElements.chkDebitAccount.label)}
               checked={formState.enableDebitAccount}
               onChange={(e) => {
@@ -72,7 +70,7 @@ const DebitAccount = React.forwardRef<HTMLInputElement, DebitAccountProps>(({
             valueKey: "id",
             labelKey: "name",
             getListUrl: `${Urls.inv_transaction_base}${transactionType}/Data/AccLedgers/`,
-            params:`ledgerType=${formState?.formElements?.cbDebitAccount.accLedgerType??LedgerType.All}`
+            params: `ledgerType=${formState?.formElements?.cbDebitAccount.accLedgerType ?? LedgerType.All}`
           }}
           disabled={
             formState.formElements.cbDebitAccount.disabled ||

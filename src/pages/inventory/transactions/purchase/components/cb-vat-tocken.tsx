@@ -3,19 +3,22 @@ import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import { VoucherElementProps } from "../transaction-types";
 import { formStateHandleFieldChange, formStateMasterHandleFieldChange } from "../reducer";
+import { useAppState } from "../../../../../utilities/hooks/useAppState";
 
 interface VatTokenInputProps extends VoucherElementProps {
   handleFieldKeyDown: (field: string, key: string) => void;
 }
 
 const VatTokenInput = React.forwardRef<HTMLInputElement, VatTokenInputProps>(({ formState, dispatch, t, handleFieldKeyDown, handleKeyDown }, ref) => {
+  const { appState } = useAppState();
+  const isRtl = appState.locale.rtl;
   return (
     <div ref={ref}>
       {formState.formElements.chkVat?.visible && (
         <ERPCheckbox
           localInputBox={formState?.userConfig?.inputBoxStyle}
           id="enableTaxNumber"
-          className="text-left dark:text-dark-text"
+          className={`${isRtl ? "text-right" : "text-left"} dark:text-dark-text`}
           label={t(formState.formElements.chkVat.label)}
           checked={formState.enableTaxNumber}
           onChange={(e) => {

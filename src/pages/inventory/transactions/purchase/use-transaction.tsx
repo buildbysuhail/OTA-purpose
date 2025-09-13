@@ -271,8 +271,8 @@ export const useTransaction = (
       );
       localStorage.setItem("utInvc", base64);
       // Decode the base64 back to JSON string      
-        const _userConfig = safeBase64Decode(base64 ?? "");;
-      const userConfig: UserConfig = customJsonParse(_userConfig??"{}");
+      const _userConfig = safeBase64Decode(base64 ?? "");;
+      const userConfig: UserConfig = customJsonParse(_userConfig ?? "{}");
 
       return userConfig;
     } catch (error) {
@@ -383,9 +383,9 @@ export const useTransaction = (
     const Utc = localStorage.getItem("utInvc");
     let userConfig: UserConfig | undefined;
     if (Utc) {
-      
-        const _userConfig = safeBase64Decode(Utc ?? "");;
-      userConfig = customJsonParse(_userConfig??"{}");
+
+      const _userConfig = safeBase64Decode(Utc ?? "");;
+      userConfig = customJsonParse(_userConfig ?? "{}");
     } else {
       userConfig = await fetchUserConfig();
     }
@@ -1103,11 +1103,11 @@ export const useTransaction = (
     isEdit: boolean,
     transactionMasterID?: number
   ) => {
-    if(transactionMasterID??0 > 0) {
-    await undoEditMode(isEdit, transactionMasterID??0);
-    
-  }
-  const vNo = await getNextVoucherNumber(
+    if (transactionMasterID ?? 0 > 0) {
+      await undoEditMode(isEdit, transactionMasterID ?? 0);
+
+    }
+    const vNo = await getNextVoucherNumber(
       formState.transaction.master.voucherForm,
       formState.transaction.master.voucherType,
       formState.transaction.master.voucherPrefix,
@@ -2728,20 +2728,20 @@ export const useTransaction = (
           outDetail.hsnCode = product.hsnCode || "";
           outDetail.details2 = { ...outDetail.details2 ?? initialTransactionDetails2 }
           // if (formState.transaction.master.voucherType !== "PI") {
-            outDetail.details2!.cgstPerc = Number(product.p_CGSTPerc || 0);
-            outDetail.details2!.sgstPerc = Number(product.p_SGSTPerc || 0);
-            outDetail.details2!.igstPerc = 0;
+          outDetail.details2!.cgstPerc = Number(product.p_CGSTPerc || 0);
+          outDetail.details2!.sgstPerc = Number(product.p_SGSTPerc || 0);
+          outDetail.details2!.igstPerc = 0;
 
-            if (
-              formState.transaction.master.voucherForm.toLowerCase() === "interstate" ||              formState.transaction.master.voucherForm.toLowerCase() === "import"
-            ) {
-              outDetail.details2!.cgstPerc = 0;
-              outDetail.details2!.sgstPerc = 0;
-              outDetail.details2!.igstPerc = Number(product.p_IGSTPerc || 0);
-            }
+          if (
+            formState.transaction.master.voucherForm.toLowerCase() === "interstate" || formState.transaction.master.voucherForm.toLowerCase() === "import"
+          ) {
+            outDetail.details2!.cgstPerc = 0;
+            outDetail.details2!.sgstPerc = 0;
+            outDetail.details2!.igstPerc = Number(product.p_IGSTPerc || 0);
+          }
 
-            outDetail.details2!.cessPerc = Number(product.p_CessPerc || 0);
-            outDetail.details2!.additionalCessPerc = Number(product.p_AdditionalCessPerc || 0);
+          outDetail.details2!.cessPerc = Number(product.p_CessPerc || 0);
+          outDetail.details2!.additionalCessPerc = Number(product.p_AdditionalCessPerc || 0);
           // } else {
           //   outDetail.details2!.cgstPerc = 0;
           //   outDetail.details2!.sgstPerc = 0;
@@ -2751,14 +2751,14 @@ export const useTransaction = (
           // }
         } else {
           debugger;
-         
+
           const { voucherType, voucherForm } = formState.transaction.master;
 
           if (
             !clientSession.isAppGlobal && (
-            voucherType === "PO" ||
-            voucherType === "PE" ||
-            (voucherForm === "VAT" && voucherType !== "PO" && voucherType !== "PE"))
+              voucherType === "PO" ||
+              voucherType === "PE" ||
+              (voucherForm === "VAT" && voucherType !== "PO" && voucherType !== "PE"))
           ) {
             outDetail.vatPerc = Number(product.pVatPerc || 0);
             outDetail.cstPerc = Number(product.purchaseExciseTaxPerc || 0);
@@ -3393,7 +3393,26 @@ export const useTransaction = (
                 updateOnlyGivenDetailsColumns: true,
               })
             );
-          } else if (columnName == "grossConvert") {
+          }
+          else if (columnName == "memoEditor") {
+            const data: TransactionDetail = formState.transaction.details[rowIndex];
+            const memoDetails = {
+              memo: data.memo || "",
+            };
+            dispatch(
+              commonParams.formStateHandleFieldChangeKeysOnly({
+                fields: {
+                  memoEditor: {
+                    visible: true,
+                    data: JSON.stringify(memoDetails),
+                    rowIndex,
+                  },
+                },
+                updateOnlyGivenDetailsColumns: true,
+              })
+            );
+          }
+          else if (columnName == "grossConvert") {
             changeGrossToUnitRate(rowIndex, columnName);
           } else if (columnName == "serial") {
             const rowData: TransactionDetail =

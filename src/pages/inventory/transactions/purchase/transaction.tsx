@@ -98,6 +98,7 @@ import GridTheme from "./grid-theme";
 import { purchaseGridCol } from "./transaction-grid-cols";
 import SavingOverlay from "../transaction-saving";
 import { BusinessType } from "../../../../enums/business-types";
+import MemoEditorModal from "./memo-editor";
 interface BilledItem {
   id?: number;
   name: string;
@@ -781,7 +782,7 @@ const customerType = formType?.toUpperCase() === "PI-IND" ? "B2B"
             hasroundOff:
               formType == "Import"
                 ? true
-                : _formState.transaction.master.hasroundOff,  
+                : _formState.transaction.master.hasroundOff,
                 customerType: customerType
           },
         },
@@ -830,9 +831,19 @@ const customerType = formType?.toUpperCase() === "PI-IND" ? "B2B"
               ? true
               : _formState.formElements.grandTotalFc.visible,
         },
-        cbDebitAccount: {
-          ...initialFormElements.cbDebitAccount,
-          accLedgerType: accountKey
+        chkDebitAccount: {
+          ...initialFormElements.chkDebitAccount,
+          label:
+            voucherType == "PR"
+              ? "credit_account"
+              : initialFormElements.chkDebitAccount?.label,
+        },
+        hasCashPaid: {
+          ...initialFormElements.hasCashPaid,
+          label:
+            voucherType == "PR"
+              ? "cash_received"
+              : initialFormElements.hasCashPaid?.label,
         },
         cbCostCentre: {
           ...initialFormElements.cbCostCentre,
@@ -933,7 +944,7 @@ const customerType = formType?.toUpperCase() === "PI-IND" ? "B2B"
         rowIndex: 0,
       }
       if(_formState.formElements.cbDebitAccount??{})
-        
+      
       
       // 
       // _formState = await loadLedgerData(_formState) as any;
@@ -1652,7 +1663,7 @@ const customerType = formType?.toUpperCase() === "PI-IND" ? "B2B"
                     onProcessSelected={onProcessSelected}
                     downloadImportTemplateHeadersOnly={downloadImportTemplateHeadersOnly}
                     importFromExcel={importFromExcel}
-                    headerMorePop={formState.headerMorePop}
+                    undoEditMode={undoEditMode}
                   />
                 </div>
               </div>
@@ -1861,7 +1872,7 @@ const customerType = formType?.toUpperCase() === "PI-IND" ? "B2B"
                       onProcessSelected={onProcessSelected}
                       downloadImportTemplateHeadersOnly={downloadImportTemplateHeadersOnly}
                       importFromExcel={importFromExcel}
-                      headerMorePop={formState.headerMorePop}
+                      undoEditMode={undoEditMode}
                     />
                   </div>
                 </div>
@@ -2363,6 +2374,22 @@ const customerType = formType?.toUpperCase() === "PI-IND" ? "B2B"
             savingCompleted: undefined, saving: false
           },
         })}
+        />
+      )}
+      {formState.memoEditor && formState.memoEditor.visible && (
+        <MemoEditorModal
+          data={formState.memoEditor.data}
+          isOpen={formState.memoEditor.visible}
+          onClose={() =>
+            dispatch(
+              formStateHandleFieldChangeKeysOnly({
+                fields: { memoEditor: { visible: false, data: "" } },
+                updateOnlyGivenDetailsColumns: true,
+              })
+            )
+          }
+          rowIndex={formState.memoEditor.rowIndex}
+          t={t}
         />
       )}
     </>

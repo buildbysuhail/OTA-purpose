@@ -17,7 +17,7 @@ interface PendingOrderListProps {
   formType?: string;
   closeModal: () => void;
   t: any;
-  onProcessSelected?: (masterIds: string, loadType: string) => void;
+  onProcessSelected?: (masterIds: string, loadType: string, voucherType: string,) => void;
 }
 
 interface ProcessSelectedData {
@@ -275,7 +275,7 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
     };
 
     // Call the callback function to pass data back to parent
-    onProcessSelected?.(processData.masterIDs, voucherType);
+    onProcessSelected?.(processData.masterIDs, voucherType, formState.transaction.master.voucherType);
     closeModal?.();
   }, [selectedRows, voucherType, onProcessSelected, closeModal]);
 

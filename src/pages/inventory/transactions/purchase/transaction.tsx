@@ -1585,7 +1585,7 @@ useEffect(() => {
                       {t(formState.title)}
                       {!formState.formElements.lblPosted.visible && (
                         <div title={t("posted_transaction")}>
-                          <Info className="text-[#ef4444] w-4 h-4" />
+                          {/* <Info className="text-[#ef4444] w-4 h-4" /> */}
                         </div>
                       )}
                     </h6>

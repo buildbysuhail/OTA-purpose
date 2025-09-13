@@ -120,7 +120,7 @@ const TransactionAnalysisReport = lazy(() => import("../../../pages/inventory/re
 
 interface ContentProps { }
 const loading = (
-  <div className="w-full h-full bg-transparent flex items-center justify-center">
+  <div className="w-full h-screen bg-transparent flex items-center justify-center">
     <div className="h-6 w-6 rounded-full bg-blue-700 animate-ping"></div>
   </div>
 );

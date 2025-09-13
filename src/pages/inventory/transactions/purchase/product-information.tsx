@@ -13,6 +13,7 @@ import ERPDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
+import { styled } from "@mui/system";
 
 interface ProductInformationSidebarProps {
   setIsOpen?: Dispatch<SetStateAction<boolean>>;
@@ -290,6 +291,35 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
     setActiveTab(index);
   };
 
+  const LoadingBar = styled("div")`
+    height: 10px;
+    width: ${(props) => `${Math.floor(Math.random() * 50) + 40}%`}; // Random width 40–90%
+    border-radius: 3px;
+    background: #e8e8e8;
+    overflow: hidden;
+    position: relative;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      transform: translate3d(-100%, 0, 0);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      animation: loading 0.8s infinite linear;
+    }
+
+    @keyframes loading {
+      100% {
+        transform: translate3d(100%, 0, 0);
+      }
+    }
+  `;
+
+  
+
   const renderItemDetailsTab = () => (
     <div className="space-y-2">
       {/* Basic Information */}
@@ -300,35 +330,35 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
         <div className="flex flex-col gap-2 px-3 py-2 dark:bg-dark-bg-card dark:border-dark-border">
           <div className="flex justify-between items-center group">
             <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("product_name")}:</span>
-            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out text-right">{productInfo?.productName || '-'}</span>
+            {loading? <LoadingBar />:<span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out text-right">{productInfo?.productName || '-'}</span>}
           </div>
           <div className="flex justify-between items-center group">
             <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("product_code")}:</span>
-            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.productCode || '-'}</span>
+            {loading? <LoadingBar />:<span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.productCode || '-'}</span>}
           </div>
           <div className="flex justify-between items-center group">
             <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("group")}:</span>
-            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.groupName || '-'}</span>
+            {loading? <LoadingBar />:<span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.groupName || '-'}</span>}
           </div>
           <div className="flex justify-between items-center group">
             <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("category")}:</span>
-            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.productCategoryName || '-'}</span>
+            {loading? <LoadingBar />:<span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.productCategoryName || '-'}</span>}
           </div>
           <div className="flex justify-between items-center group">
             <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("unit")}:</span>
-            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.unitName || '-'}</span>
+            {loading? <LoadingBar />:<span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.unitName || '-'}</span>}
           </div>
           <div className="flex justify-between items-center group">
             <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("item_type")}:</span>
-            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.itemType || '-'}</span>
+            {loading? <LoadingBar />:<span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.itemType || '-'}</span>}
           </div>
           <div className="flex justify-between items-center group">
             <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("brand")}:</span>
-            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.brandName || '-'}</span>
+            {loading? <LoadingBar />:<span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.brandName || '-'}</span>}
           </div>
           <div className="flex justify-between items-center group">
             <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("barcode")}:</span>
-            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.autoBarcode || '-'}</span>
+            {loading? <LoadingBar />:<span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.autoBarcode || '-'}</span>}
           </div>
         </div>
       </div>
@@ -341,11 +371,11 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
         <div className="flex flex-col gap-2 px-3 py-2 dark:bg-dark-bg-card dark:border-dark-border">
           <div className="flex justify-between items-center group">
             <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("std_sales_price")}:</span>
-            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.stdSalesPrice || 0}</span>
+            {loading? <LoadingBar />:<span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.stdSalesPrice || 0}</span>}
           </div>
           <div className="flex justify-between items-center group">
             <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("min_sale_price")}:</span>
-            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.minSalePrice || 0}</span>
+            {loading? <LoadingBar />:<span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.minSalePrice || 0}</span>}
           </div>
         </div>
       </div>
@@ -358,7 +388,7 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
         <div className="flex flex-col gap-2 px-3 py-2 dark:bg-dark-bg-card dark:border-dark-border">
           <div className="flex justify-between items-center group">
             <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("std_purchase_price")}:</span>
-            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.stdPurchasePrice || 0}</span>
+            {loading? <LoadingBar />:<span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.stdPurchasePrice || 0}</span>}
           </div>
         </div>
       </div>
@@ -371,19 +401,19 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
         <div className="flex flex-col gap-2 px-3 py-2 dark:bg-dark-bg-card dark:border-dark-border">
           <div className="flex justify-between items-center group">
             <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("current_stock")}:</span>
-            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.stock || '-'}</span>
+            {loading? <LoadingBar />:<span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.stock || '-'}</span>}
           </div>
           <div className="flex justify-between items-center group">
             <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("min_stock")}:</span>
-            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.stockMin || '-'}</span>
+            {loading? <LoadingBar />:<span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.stockMin || '-'}</span>}
           </div>
           <div className="flex justify-between items-center group">
             <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("max_stock")}:</span>
-            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.stockMax || '-'}</span>
+            {loading? <LoadingBar />:<span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.stockMax || '-'}</span>}
           </div>
           <div className="flex justify-between items-center group">
             <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("warehouse")}:</span>
-            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.warehouseName || '-'}</span>
+            {loading? <LoadingBar />:<span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.warehouseName || '-'}</span>}
           </div>
         </div>
       </div>
@@ -396,15 +426,15 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
         <div className="flex flex-col gap-2 px-3 py-2 dark:bg-dark-bg-card dark:border-dark-border">
           <div className="flex justify-between items-center group">
             <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("manufacturing_date")}:</span>
-            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.mfgDate || 'dd-mm-yyyy'}</span>
+            {loading? <LoadingBar />:<span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.mfgDate || 'dd-mm-yyyy'}</span>}
           </div>
           <div className="flex justify-between items-center group">
             <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("expiry_date")}:</span>
-            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.expiryDate || '-'}</span>
+            {loading? <LoadingBar />:<span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.expiryDate || '-'}</span>}
           </div>
           <div className="flex justify-between items-center group">
             <span className="dark:text-dark-text-secondary text-gray-600 text-xs font-medium group-hover:font-bold transition-all duration-300 ease-in-out min-w-[120px]">{t("batch_no")}:</span>
-            <span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.batchNo || '-'}</span>
+            {loading? <LoadingBar />:<span className="dark:text-dark-text text-xs font-mono group-hover:font-bold transition-all duration-300 ease-in-out">{productInfo?.batchNo || '-'}</span>}
           </div>
         </div>
       </div>
@@ -482,15 +512,17 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
                 <div className="product-image w-[60px] h-[60px] bg-slate-200">
                   <img src={productInfo?.image ? productInfo.image : "https://loremipsum.imgix.net/4Yp1F82NF8yN9gUHXMphNz/c254302efb588196d9a607832cb24e28/lorem-picsum-1280x720.jpg?w=1920&q=60&auto=format,compress"} className="w-full h-full object-cover object-center" />
                 </div>
-                <div className="flex flex-col gap-1">
+                <div className={`flex flex-col ${loading ? "gap-2" : "gap-1"}`}>
                   <h5 className="font-bold text-sm leading-tight dark:text-dark-text text-gray-900">
-                    {productInfo?.productName || "Product Name"}
+                    {loading?<LoadingBar/>:productInfo?.productName || "Product Name"}
                   </h5>
                   <p className="text-xs font-medium dark:text-dark-text-secondary dark:bg-dark-bg text-gray-600">
-                    {productInfo?.productCode || 'Product Code'}
+                    {loading?<LoadingBar/>:productInfo?.productCode || 'Product Code'}
                   </p>
                   <p className="text-xs font-medium dark:text-dark-text-secondary dark:bg-dark-bg text-gray-600">
-                    {productInfo?.unitName || 'Unit Name'}
+                    {loading?<LoadingBar/>:productInfo?.unitName || 'Unit Name'}
+                    <span className="text-transparent">Data is not available</span>
+                    
                   </p>
                 </div>
               </div>

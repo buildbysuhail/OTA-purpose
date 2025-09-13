@@ -1,4 +1,4 @@
-// storage-utils.ts
+// storage-utils.t
 import localforage from "localforage";
 import LZString from "lz-string";
 

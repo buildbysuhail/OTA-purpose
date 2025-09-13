@@ -12,6 +12,7 @@ import PendingOrderList from "../pending-order-list";
 import ERPFileUploadButton from "../../../../../components/ERPComponents/erp-file-upload-button";
 import VoucherType from "../../../../../enums/voucher-types";
 import { useAppState } from "../../../../../utilities/hooks/useAppState";
+import { u } from "framer-motion/dist/types.d-6pKw1mTI";
 
 interface HeaderProps extends VoucherElementProps {
   loadTemporaryRows: () => Promise<void>;
@@ -34,10 +35,14 @@ interface HeaderProps extends VoucherElementProps {
   isHistorySidebarOpen: boolean;
   phone?: boolean;
   setIsPrintModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  onProcessSelected: ((masterIds: string, loadType: string,voucherType: string,) => void) | undefined;
+  onProcessSelected: ((masterIds: string, loadType: string, voucherType: string,) => void) | undefined;
   downloadImportTemplateHeadersOnly: any;
   importFromExcel: any;
-  headerMorePop: any;
+
+  undoEditMode: (
+    isEdit: boolean,
+    transactionMasterId: number
+  ) => void;
 }
 
 const useMediaQuery = (query: string) => {
@@ -80,9 +85,9 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
       onProcessSelected,
       downloadImportTemplateHeadersOnly,
       importFromExcel,
-      headerMorePop
+      undoEditMode
     }, ref) => {
-    // const [isPopupVisible, setIsPopupVisible] = useState(false);
+    const [isPopupVisible, setIsPopupVisible] = useState(false);
     const { appState } = useAppState();
     const isRtl = appState.locale.rtl;
     const popupRef = useRef<HTMLDivElement | null>(null);
@@ -105,26 +110,23 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
       setIsLoadMultiModalOpen(true);
     };
 
+    const closePopupVisible = () => {
+      setIsPopupVisible(false);
+    };
+
     const togglePopupVisible = () => {
-      dispatch(
-        formStateHandleFieldChange({
-          fields: {
-            headerMorePop: true
-          },
-        })
-      );
+      setIsPopupVisible(!isPopupVisible);
     };
 
     useEffect(() => {
       function handleClickOutside(event: MouseEvent) {
-        if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
-          dispatch(
-            formStateHandleFieldChange({
-              fields: {
-                headerMorePop: false
-              },
-            })
-          );
+        if (
+          popupRef.current &&
+          !popupRef.current.contains(event.target as Node) &&
+          buttonRef.current &&
+          !buttonRef.current.contains(event.target as Node)
+        ) {
+          closePopupVisible();
         }
       }
       document.addEventListener("mousedown", handleClickOutside);
@@ -244,7 +246,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
 
           {/* Settings Button */}
           <div>
-            {phone ? (<TransactionUserConfig phone={true} transactionType={transactionType ?? ""} />) : (<TransactionUserConfig transactionType={transactionType ?? ""} />)}
+            {phone ? (<TransactionUserConfig phone={true} transactionType={transactionType ?? ""} undoEditMode={undoEditMode} />) : (<TransactionUserConfig transactionType={transactionType ?? ""} undoEditMode={undoEditMode} />)}
           </div>
 
           {/* Popup Menu */}
@@ -257,7 +259,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
               <EllipsisVertical className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
             </button>
 
-            {formState.headerMorePop && (
+            {isPopupVisible && (
               <div
                 ref={popupRef}
                 className="absolute rounded-lg bg-white dark:bg-[#1f2937] text-black dark:text-[#f3f4f6] shadow-xl border border-[#e5e7eb] dark:border-[#374151] p-2 z-50 backdrop-blur-sm"
@@ -295,17 +297,17 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                       <li>
                         <div className="px-3 py-[5px] hover:bg-[#f5f3ff] hover:text-[#7e22ce] dark:hover:bg-[#581c874d] dark:hover:text-[#d8b4fe] transition-all duration-200 rounded-md group">
                           <div className="w-full flex items-center gap-3">
-                          <div className="w-8 h-8 bg-[#f3e8ff] dark:bg-[#7c3aed4d] rounded-full flex items-center justify-center group-hover:bg-[#e9d5ff] dark:group-hover:bg-[#7c3aed99] group-hover:scale-110 transition-all duration-200">
-                            <DollarSign className="h-4 w-4 text-[#7c3aed] dark:text-[#f3e8ff]" />
-                          </div>
-                          <ERPCheckbox
-                            id="foreignCurrency"
-                            label={formState.formElements.foreignCurrency.label}
-                            className="flex-1"
-                            checked={formState.foreignCurrency}
-                            onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { foreignCurrency: e.target.checked, }, }))}
-                            disabled={formState.formElements.foreignCurrency?.disabled || formState.formElements.pnlMasters?.disabled}
-                          />
+                            <div className="w-8 h-8 bg-[#f3e8ff] dark:bg-[#7c3aed4d] rounded-full flex items-center justify-center group-hover:bg-[#e9d5ff] dark:group-hover:bg-[#7c3aed99] group-hover:scale-110 transition-all duration-200">
+                              <DollarSign className="h-4 w-4 text-[#7c3aed] dark:text-[#f3e8ff]" />
+                            </div>
+                            <ERPCheckbox
+                              id="foreignCurrency"
+                              label={formState.formElements.foreignCurrency.label}
+                              className="flex-1"
+                              checked={formState.foreignCurrency}
+                              onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { foreignCurrency: e.target.checked, }, }))}
+                              disabled={formState.formElements.foreignCurrency?.disabled || formState.formElements.pnlMasters?.disabled}
+                            />
                           </div>
                         </div>
                       </li>
@@ -324,46 +326,50 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                       <li>
                         <div className="px-3 py-[5px] hover:bg-[#eef2ff] hover:text-[#4338ca] dark:hover:bg-[#312e814d] dark:hover:text-[#c7d2fe] transition-all duration-200 rounded-md group">
                           <div className="w-full flex items-center gap-3">
-                          <div className="w-8 h-8 bg-[#eef2ff] dark:bg-[#312e81] rounded-full flex items-center justify-center group-hover:bg-[#c7d2fe] dark:group-hover:bg-[#312e81cc] group-hover:scale-110 transition-all duration-200">
-                            <Printer className="h-4 w-4 text-[#4338ca] dark:text-[#c7d2fe]" />
-                          </div>
-                          <ERPCheckbox
-                            localInputBox={formState?.userConfig?.inputBoxStyle}
-                            id="printPreview"
-                            className="flex-1"
-                            label={t(formState.formElements.printPreview.label)}
-                            checked={formState.printPreview}
-                            onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { printPreview: e.target.checked, }, }))}
-                            disabled={formState.formElements.printPreview?.disabled}
-                          />
+                            <div className="w-8 h-8 bg-[#eef2ff] dark:bg-[#312e81] rounded-full flex items-center justify-center group-hover:bg-[#c7d2fe] dark:group-hover:bg-[#312e81cc] group-hover:scale-110 transition-all duration-200">
+                              <Printer className="h-4 w-4 text-[#4338ca] dark:text-[#c7d2fe]" />
+                            </div>
+                            <ERPCheckbox
+                              localInputBox={formState?.userConfig?.inputBoxStyle}
+                              id="printPreview"
+                              className="flex-1"
+                              label={t(formState.formElements.printPreview.label)}
+                              checked={formState.printPreview}
+                              onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { printPreview: e.target.checked, }, }))}
+                              disabled={formState.formElements.printPreview?.disabled}
+                            />
                           </div>
                         </div>
                       </li>
                     )}
 
-                    <li>
-                      <button
-                        className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fff1f2] hover:text-[#be123c] dark:hover:bg-[#8813374d] dark:hover:text-[#fda4af] transition-all duration-200 rounded-md group text-left"
-                        onClick={(e) => setIsPendingOrderOpen({ open: true, type: "PO" })}>
-                        <div className="w-8 h-8 bg-[#ffe4e6] dark:bg-[#8813374d] rounded-full flex items-center justify-center group-hover:bg-[#fecdd3] dark:group-hover:bg-[#88133799] group-hover:scale-110 transition-all duration-200">
-                          <ShoppingCart className="h-4 w-4 text-[#be123c] dark:text-[#fda4af]" />
-                        </div>
-                        <span className="font-medium">{t('pending_purchase_order_list')}</span>
-                      </button>
-                    </li>
-
-                    {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+                    {formState.transaction.master.voucherType !== 'PR' && (
                       <li>
                         <button
-                          className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fefce8] hover:text-[#a16207] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047] transition-all duration-200 rounded-md group text-left"
-                          onClick={(e) => setIsPendingOrderOpen({ open: true, type: "GRN" })}>
-                          <div className="w-8 h-8 bg-[#fef3c7] dark:bg-[#78350f4d] rounded-full flex items-center justify-center group-hover:bg-[#fde68a] dark:group-hover:bg-[#78350fcc] group-hover:scale-110 transition-all duration-200">
-                            <Package className="h-4 w-4 text-[#a16207] dark:text-[#fde047]" />
+                          className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fff1f2] hover:text-[#be123c] dark:hover:bg-[#8813374d] dark:hover:text-[#fda4af] transition-all duration-200 rounded-md group text-left"
+                          onClick={(e) => { setIsPendingOrderOpen({ open: true, type: "PO" }); setIsPopupVisible(false); }}>
+                          <div className="w-8 h-8 bg-[#ffe4e6] dark:bg-[#8813374d] rounded-full flex items-center justify-center group-hover:bg-[#fecdd3] dark:group-hover:bg-[#88133799] group-hover:scale-110 transition-all duration-200">
+                            <ShoppingCart className="h-4 w-4 text-[#be123c] dark:text-[#fda4af]" />
                           </div>
-                          <span className="font-medium">{t('pending_goods_receipt_list')}</span>
+                          <span className="font-medium">{t('pending_purchase_order_list')}</span>
                         </button>
                       </li>
                     )}
+
+                    {formState.transaction.master.voucherType !== 'PR' &&
+                      formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+                        <li>
+                          <button
+                            className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fefce8] hover:text-[#a16207] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047] transition-all duration-200 rounded-md group text-left"
+                            onClick={(e) => setIsPendingOrderOpen({ open: true, type: "GRN" })}>
+                            <div className="w-8 h-8 bg-[#fef3c7] dark:bg-[#78350f4d] rounded-full flex items-center justify-center group-hover:bg-[#fde68a] dark:group-hover:bg-[#78350fcc] group-hover:scale-110 transition-all duration-200">
+                              <Package className="h-4 w-4 text-[#a16207] dark:text-[#fde047]" />
+                            </div>
+                            <span className="font-medium">{t('pending_goods_receipt_list')}</span>
+                          </button>
+                        </li>
+                      )}
+
 
                     <li>
                       <button
@@ -387,7 +393,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                           buttonText={t("import_from_excel")}
                           handleFileChange={onSelectExcel}
                           hideIcon={true}
-                            buttonClassName="font-medium bg-transparent border-none p-0 hover:bg-transparent"
+                          buttonClassName="font-medium bg-transparent border-none p-0 hover:bg-transparent"
                         />
                       </button>
                     </li>
@@ -395,7 +401,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                     <li>
                       <button
                         className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-lime-50 hover:text-lime-800 dark:hover:bg-lime-900/30 dark:hover:text-lime-300 transition-all duration-200 rounded-md group text-left"
-                        onClick={() => {/* Add your print barcode handler here */}}>
+                        onClick={() => {/* Add your print barcode handler here */ }}>
                         <div className="w-8 h-8 bg-lime-100 dark:bg-lime-900/30 rounded-full flex items-center justify-center group-hover:bg-lime-200 dark:group-hover:bg-lime-900/50 group-hover:scale-110 transition-all duration-200">
                           <Printer className="h-4 w-4 text-lime-800 dark:text-lime-300" />
                         </div>
@@ -403,18 +409,20 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                       </button>
                     </li>
 
-                    <li>
-                      <button
-                        className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f5f3ff] hover:text-[#6d28d9] dark:hover:bg-[#4c1d954d] dark:hover:text-[#ddd6fe] transition-all duration-200 rounded-md group text-left"
-                        // onClick={handlePrint}
-                        disabled={formState.transactionLoading}
-                      >
-                        <div className="w-8 h-8 bg-[#ede9fe] dark:bg-[#4c1d954d] rounded-full flex items-center justify-center group-hover:bg-[#ddd6fe] dark:group-hover:bg-[#4c1d9599] group-hover:scale-110 transition-all duration-200">
-                          <Printer className="h-4 w-4 text-[#6d28d9] dark:text-[#ddd6fe]" />
-                        </div>
-                        <span className="font-medium">{t("grn_print")}</span>
-                      </button>
-                    </li>
+                    {formState.transaction.master.voucherType === 'PI' && (
+                      <li>
+                        <button
+                          className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f5f3ff] hover:text-[#6d28d9] dark:hover:bg-[#4c1d954d] dark:hover:text-[#ddd6fe] transition-all duration-200 rounded-md group text-left"
+                          // onClick={handlePrint}
+                          disabled={formState.transactionLoading}
+                        >
+                          <div className="w-8 h-8 bg-[#ede9fe] dark:bg-[#4c1d954d] rounded-full flex items-center justify-center group-hover:bg-[#ddd6fe] dark:group-hover:bg-[#4c1d9599] group-hover:scale-110 transition-all duration-200">
+                            <Printer className="h-4 w-4 text-[#6d28d9] dark:text-[#ddd6fe]" />
+                          </div>
+                          <span className="font-medium">{t("grn_print")}</span>
+                        </button>
+                      </li>
+                    )}
 
                     {!isAbove768 && (
                       <>

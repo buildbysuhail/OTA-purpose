@@ -407,6 +407,7 @@ export interface UserConfig {
   gridHeaderRowHeight?: number;
   gridFooterBg?: string;
   gridFooterFontColor?: string;
+  enableVoucherPrefix?: boolean;
 }
 
 export type FormElementsState = {
@@ -555,6 +556,7 @@ export interface TransactionFormState {
   currentTheme?: any
   themeChangeCountdown?: number
   isInitialLedger?: boolean;
+  memoEditor: { visible: boolean; data: string; rowIndex: number };
 }
 interface loadingResult {
   isLoading: boolean;

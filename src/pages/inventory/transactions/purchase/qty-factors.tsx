@@ -88,6 +88,7 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t, r
       setGridData(updatedGridData);
       resetForm();
     } else {
+      debugger;
       if (qtyFactors.width > 0 && qtyFactors.height > 0 && qtyFactors.nos > 0) {
         const total = calculateTotal(qtyFactors.width, qtyFactors.height);
         const newRow: GridQtyFactors = {
@@ -99,6 +100,12 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t, r
           total: total
         };
 
+        if(!qtyFactors.multipleRows) {
+         dispatch(formStateHandleFieldChangeKeysOnly({
+        fields: { quantityFactorData: JSON.stringify({ rowIndex: rowIndex, data: [newRow] }) }
+      }));
+      return;
+      }
         setGridData(prev => {
           const newData = [...prev, newRow];
           return newData;

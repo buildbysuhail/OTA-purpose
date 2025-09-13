@@ -743,7 +743,7 @@ useEffect(() => {
           transactionMasterID
         )) as TransactionFormState;
       }
-debugger;
+
       _formState.dataWarranty = dataWarranty;
       _formState.dataBrands = dataBrands;
 
@@ -933,9 +933,9 @@ const customerType = formType?.toUpperCase() === "PI-IND" ? "B2B"
         rowIndex: 0,
       }
       if(_formState.formElements.cbDebitAccount??{})
-        debugger;
+        
       
-      // debugger;
+      // 
       // _formState = await loadLedgerData(_formState) as any;
       // _formState.isInitialLedger = true;
       setTransVoucher(_formState, true);
@@ -1269,7 +1269,7 @@ const customerType = formType?.toUpperCase() === "PI-IND" ? "B2B"
               "product",
               "barCode",
             ]);
-            debugger;
+            
             dispatch(
               formStateHandleFieldChangeKeysOnly({
                 fields: {
@@ -1291,7 +1291,7 @@ const customerType = formType?.toUpperCase() === "PI-IND" ? "B2B"
                 itemsToAddToDetails: addDetails,
               })
             );
-            debugger;
+            
 
           }
         }
@@ -1305,6 +1305,7 @@ const customerType = formType?.toUpperCase() === "PI-IND" ? "B2B"
 
   useEffect(() => {
     if (formState.quantityFactorData != "") {
+      
       const data = JSON.parse(formState.quantityFactorData);
       const rowIndex = data.rowIndex;
       const quantityFactor = data.data;
@@ -1318,7 +1319,7 @@ const customerType = formType?.toUpperCase() === "PI-IND" ? "B2B"
         if (index == 0) {
           const rowData = { ...baseRowData, qty: value.total };
           currentDetails[rowIndex] = rowData;
-          res = calculateRowAmount(rowData, "qty", { result: {} }, true);
+          res = calculateRowAmount(rowData, "qty", { result: {transaction: {details:[{qty: value.total, slNo:baseRowData.slNo}]} }}, true);
           res!.transaction!.details![0]!.productDescription = `${value.width} X ${value.height} X ${value.nos}`;
         } else {
           const rowData = {
@@ -1327,7 +1328,7 @@ const customerType = formType?.toUpperCase() === "PI-IND" ? "B2B"
             slNo: generateUniqueKey(),
             productDescription: `${value.width} X ${value.height} X ${value.nos}`,
           };
-          res = calculateRowAmount(rowData, "qty", { result: {} }, true);
+          res = calculateRowAmount(rowData, "qty", { result: {transaction: {details:[rowData]} }}, true);
           if (
             res?.transaction?.details &&
             res?.transaction?.details.length > 0
@@ -1470,7 +1471,7 @@ const customerType = formType?.toUpperCase() === "PI-IND" ? "B2B"
   const handleChange = (selectedOption: { value: string; label: string }) => { };
 
   const goToPreviousPage = () => {
-    debugger;
+    
     if (window.history.length <= 1) {
       // No history to go back to, attempt to close the tab
       window.close();

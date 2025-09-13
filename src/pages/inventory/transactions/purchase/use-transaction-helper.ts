@@ -257,7 +257,7 @@ export const useTransactionHelper = (transactionType: string) => {
 
     const billDisc = master.billDiscount;
     const additionalAmt = master.adjustmentAmount;
-debugger;
+
     if (!result.transaction) {
       result.transaction = { master: {} };
     }
@@ -578,7 +578,7 @@ debugger;
         detail.details2.cessAmt = round(detail.details2!.cessAmt);
         detail.details2.cessPerc = round(detail.details2!.cessPerc);
       }
-debugger;
+
       let vat = round((netValue * vatPerc) / 100, 4);
       // Calculate net value per unit for cost calculation
       let netVal = rate - (rate * discPerc) / 100;
@@ -1398,7 +1398,7 @@ debugger;
 
 let detail  = sanitizeDataAdvanced({...rowDetail}, initialTransactionDetailData)
         let outputRow: any = { ...detail };
-        debugger;
+        
         // Core transaction fields
         outputRow.bulkRowInserted = false;
         outputRow.productBatchID = detail.productBatchID;

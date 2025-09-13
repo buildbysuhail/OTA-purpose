@@ -30,9 +30,6 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
       templateImages,
       setTemplateImages,
       maxHeight,
-      currentBranch,
-      userSession,
-      clientSession,
       templateData,
       stableTemplateProps,
       manageSaveAccTemplate,
@@ -139,6 +136,7 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
             <div className="flex justify-center"  >
               <div className="relative">
                 {/* Preview Container with Modern Styling */}
+
                 <div
                   ref={previewContainerRef}
                   className="shadow-lg   border border-gray-200 overflow-hidden"
@@ -148,13 +146,17 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
       
                   }}
                 >
-                  {/* Paper Effect */}
-                  {/* <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900" /> */}
-
-                  {/* Template Content */}
-                  <div className="relative h-full   w-full ">
+                {loading ? (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                  </div>
+                ):(
+                <div className="relative h-full   w-full ">
                     {React.cloneElement(templateComponent,  stableTemplateProps)}
                   </div>
+
+                )}
+      
                 </div>
 
                 {/* Drop Shadow Effect */}

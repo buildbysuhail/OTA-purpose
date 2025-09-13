@@ -5,18 +5,14 @@ import SharedPrvFooter from "./Footer_Prv";
 import FontRegistration from "../../../LabelDesigner/fontRegister";
 import { TemplateState } from "../../Designer/interfaces";
 import { useEffect } from "react";
+import { PrintResponse } from "../../../use-print-type";
 
 export interface AccountTransactionProps {
-  data?: any;
+  data?: PrintResponse;
   template?: TemplateState<unknown>
-  currentBranch?: any;
-  userSession?: any;
-  clientSession?: any;
-  currency?: string;
-  bindingDemoData?: any;
 }
 
-const SharedTemplatePreview = ({ data, template, currentBranch, userSession, clientSession, bindingDemoData }: AccountTransactionProps) => {
+const SharedTemplatePreview = ({ data, template}: AccountTransactionProps) => {
 
    const headerState = template?.headerState;
   const totalState = template?.totalState;
@@ -58,7 +54,7 @@ const SharedTemplatePreview = ({ data, template, currentBranch, userSession, cli
           
 
           {/* Table Section - Allow to break across pages */}
-          <SharedPrvTable data={data} template={template} />
+          <SharedPrvTable data={data?.details??[]} template={template} />
         </div>
 
         {/* Footer */}

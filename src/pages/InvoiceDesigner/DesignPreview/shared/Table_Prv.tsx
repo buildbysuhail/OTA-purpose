@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import type { CSSProperties } from "react";
 import type { TableColumn, TemplateState } from "../../Designer/interfaces";
+import { PrintDetailDto } from "../../../use-print-type";
 
 const DEFAULT_COLUMN_WIDTH = "10%";
 
@@ -23,7 +24,7 @@ const getCellStyle = (base: CSSProperties, width?: string | number): CSSProperti
 };
 
 type AccPrvTableProps = {
-  data: any[];
+  data: PrintDetailDto[];
   template?: TemplateState<unknown>;
 };
 
@@ -31,7 +32,7 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
   const accTableState = (template as any)?.tableState as TableColumn<unknown>[] | undefined;
   const tableMasterState = (template as any)?.itemTableMasterState;
   const propertiesState = (template as any)?.propertiesState;
-
+ 
   // label font preferences from propertiesState
   const labelStylesBase: CSSProperties = {
     fontWeight: propertiesState?.label_font_weight ?? undefined,
@@ -177,7 +178,7 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
 
     return (
       <div style={styles.tbody}>
-        {data.map((row: any, rowIndex: number) => (
+        {data.slice(0, 3).map((row: any, rowIndex: number) => (
           <div key={rowIndex} style={styles.tr}>
             {visibleColumns.map((col) => (
               <div
@@ -192,6 +193,7 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
             ))}
           </div>
         ))}
+        <span>{``}</span>
       </div>
     );
   };

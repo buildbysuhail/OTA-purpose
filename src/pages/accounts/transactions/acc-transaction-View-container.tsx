@@ -55,46 +55,13 @@ import {
   Trash2,
 } from "lucide-react";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
-import StandardPreviewWrapper from "../../InvoiceDesigner/DesignPreview/StandardPreview";
-import { PDFViewer } from "@react-pdf/renderer";
-import { renderSelectedTemplate } from "./acc-renderSelected-template";
 import useCurrentBranch from "../../../utilities/hooks/use-current-branch";
 import { useSearch } from "./search-context.tsx";
 import { useAccPrint } from "./use-print";
-import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
 import { useAccTransaction } from "./use-acc-transaction";
 import { templateConfig } from "../../InvoiceDesigner/LandingFolder/designSection";
-import { ERPScrollArea } from "../../../components/ERPComponents/erp-scrollbar";
-import { TransactionFormState } from "../../inventory/transactions/purchase/transaction-types";
 
-const invoices = [
-  {
-    id: 1,
-    customer: "xcvcxc",
-    number: "INV-000003",
-    date: "20/01/2025",
-    amount: 255,
-    status: "DRAFT",
-  },
-  {
-    id: 2,
-    customer: "xcvcxc",
-    number: "INV-000002",
-    date: "20/01/2025",
-    amount: 255,
-    status: "DRAFT",
-  },
-  {
-    id: 3,
-    customer: "xcvcxc",
-    number: "INV-000001",
-    date: "09/12/2024",
-    amount: 255,
-    status: "PAID",
-  },
-];
 
-const api = new APIClient();
 
 const AccTransactionFormContainerView: React.FC<AccTransactionProps> = (
   props
@@ -177,7 +144,6 @@ useEffect(() => {
   const [template,setTemplate]= useState<any>(null)
   const { t } = useTranslation("transaction");
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
-  const userSession = useAppSelector((state: RootState) => state.UserSession);
 
   const navigate = useNavigate();
    const location = useLocation();
@@ -192,11 +158,6 @@ useEffect(() => {
       navigate(-1);
     }
   };
-  // const goBack = () => {
-  //   navigate(-1); // Goes back to the previous page
-  // };
-
-
 
 
   const [selectedRow, setSelectedRow] = useState<any>(null);
@@ -255,16 +216,7 @@ const newUrl = `/accounts/transactions/CashPayment/${vchno}${queryString ? `?${q
     []
   );
 
-  const selectedInvoice = invoices[0];
-  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
-  //  const { t } = useTranslation("transaction");
-  // const formState = useAppSelector((state: RootState) => state.AccTransaction);
-
-  // useEffect(() => {
-  //       console.log("searchQuery acc v t" );
-  //       console.log({ searchQuery });
-  //   }, []);
 
   const columns: DevGridColumn[] = useMemo(
     () => [
@@ -407,7 +359,6 @@ const newUrl = `/accounts/transactions/CashPayment/${vchno}${queryString ? `?${q
     },
   ];
   const phone = window.innerWidth <= 600;
-  const currentBranch = useCurrentBranch();
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const popupRef = useRef<HTMLDivElement | null>(null);
@@ -431,9 +382,7 @@ const newUrl = `/accounts/transactions/CashPayment/${vchno}${queryString ? `?${q
     };
   }, []);
 
-  const {loadAccTransVoucher} = useAccTransaction(input.transactionType??"",
-    undefined,
-    undefined)
+
   useEffect(() => {
     const fetchTemplate = async () => {
       const result = await getTemplate(input?.voucherType, formState);
@@ -453,8 +402,9 @@ const newUrl = `/accounts/transactions/CashPayment/${vchno}${queryString ? `?${q
      
   const {
     stableTemplateProps,
+    loading,
     templateStyleProperties
-    } = useTemplateDesigner({ templateGroup:groupKey, templateKind: kindKey, designerType:typeKey,template
+    } = useTemplateDesigner({ templateGroup:groupKey, templateKind: kindKey, designerType:typeKey
     ,MasterIDParam:input.transactionMasterID,transactionType:input.transactionType
     })
 
@@ -725,14 +675,19 @@ const MemoizedGrid = useMemo(() => {
 
                               }}
                               >
-                        {templateToRender?.PreviewComponent && template ? (
-                          React.cloneElement(templateToRender.PreviewComponent, {
-                            ...stableTemplateProps,
-                            template,
-                          })
-                        ) : (
-                          <div>Loading...</div>
-                        )}
+                            {loading || !template ? (
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                              </div>
+                            ) : (
+                              templateToRender?.PreviewComponent && template
+                                ? React.cloneElement(templateToRender.PreviewComponent, {...stableTemplateProps,template})
+                                : (
+                                    <div className="flex items-center justify-center h-full text-gray-500 italic">
+                                     ...still finding
+                                    </div>
+                                  )
+                            )}
 
 
                               </div>

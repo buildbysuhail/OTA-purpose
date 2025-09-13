@@ -743,7 +743,7 @@ useEffect(() => {
           transactionMasterID
         )) as TransactionFormState;
       }
-
+debugger;
       _formState.dataWarranty = dataWarranty;
       _formState.dataBrands = dataBrands;
 
@@ -758,7 +758,18 @@ useEffect(() => {
         }
       }
       const _gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new APIClient()))
-
+      const accountKey = 
+          formType == "PI-IND" ? applicationSettings.accountsSettings.defaultIndirectExpenseAccount as keyof typeof LedgerType
+      :formType == "PI-ASST" ? applicationSettings.accountsSettings.defaultPurchaseAssetsAccount as keyof typeof LedgerType : LedgerType.All;
+const customerType = formType?.toUpperCase() === "PI-IND" ? "B2B" 
+                : formType?.toUpperCase() === "PI-ASST" ? "B2B" 
+                :formType?.toUpperCase() === "IMPORT" ? "IMPORT" 
+                : formType?.toUpperCase() === "INTERSTATE" ? "Interstate" :
+                        formType?.toUpperCase() === "INT"        ? "Int" :
+                        ["WHOLESALE", "B2B"].includes(formType?.toUpperCase()??"") 
+                                                                ? "B2B" :
+                        formType !== "BT"                       ? "B2C" :
+                                                                  ""
       _formState = {
         ..._formState,
         isInv: true,
@@ -770,7 +781,8 @@ useEffect(() => {
             hasroundOff:
               formType == "Import"
                 ? true
-                : _formState.transaction.master.hasroundOff,
+                : _formState.transaction.master.hasroundOff,  
+                customerType: customerType
           },
         },
         gridColumns: _gridCols.columnPreferences,
@@ -817,6 +829,10 @@ useEffect(() => {
             formType == "Import"
               ? true
               : _formState.formElements.grandTotalFc.visible,
+        },
+        cbDebitAccount: {
+          ...initialFormElements.cbDebitAccount,
+          accLedgerType: accountKey
         },
         cbCostCentre: {
           ...initialFormElements.cbCostCentre,
@@ -917,34 +933,8 @@ useEffect(() => {
         rowIndex: 0,
       }
       if(_formState.formElements.cbDebitAccount??{})
-      if(_formState.transaction.master.voucherForm == "PI-IND") {
-        _formState.transaction.master.customerType = "B2B";
-        const accountKey = applicationSettings.accountsSettings.defaultIndirectExpenseAccount as keyof typeof LedgerType;
-          _formState = {
-            ..._formState,
-            formElements: {
-              ...formState.formElements,
-              cbDebitAccount: {
-                ...formState.formElements.cbDebitAccount,
-                accLedgerType: LedgerType[accountKey]
-              }
-            }
-          };
-      }
-      else if(_formState.transaction.master.voucherForm == "PI-ASST") {
-        _formState.transaction.master.customerType = "B2B";
-        const accountKey = applicationSettings.accountsSettings.defaultPurchaseAssetsAccount as keyof typeof LedgerType;
-          _formState = {
-            ..._formState,
-            formElements: {
-              ...formState.formElements,
-              cbDebitAccount: {
-                ...formState.formElements.cbDebitAccount,
-                accLedgerType: LedgerType[accountKey]
-              }
-            }
-          };
-      }
+        debugger;
+      
       // debugger;
       // _formState = await loadLedgerData(_formState) as any;
       // _formState.isInitialLedger = true;

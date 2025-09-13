@@ -489,6 +489,12 @@ export const isChooseVoucherEnabled = (title: string, userSession: UserModel) =>
     { title: TransactionTitles.DebitNote, countries: [Countries.Saudi] },
     { title: TransactionTitles.CreditNote, countries: [Countries.Saudi] },
     { title: TransactionTitles.PurchaseInvoice, countries: [Countries.India] },
+    { title: TransactionTitles.PurchaseReturn, countries: [Countries.India] },
+    { title: TransactionTitles.PurchaseOrder, countries: [Countries.India] },
+    { title: TransactionTitles.PurchaseEstimate, countries: [Countries.India] },
+    { title: TransactionTitles.PurchaseQuotation, countries: [Countries.India] },
+    { title: TransactionTitles.PurchaseImport, countries: [Countries.India] },
+    { title: TransactionTitles.PurchaseReturn, countries: [Countries.Saudi] },
     {
       title: TransactionTitles.MultiJournalEntry,
       countries: [Countries.Saudi],

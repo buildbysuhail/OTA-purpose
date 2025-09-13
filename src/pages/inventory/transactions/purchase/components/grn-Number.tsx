@@ -40,11 +40,9 @@ const GrnNumber = React.forwardRef<HTMLInputElement, GrnNumberProps>(
       formType: "",
       vPrefix: "",
       vNumber: "",
-      vType: purchaseVoucherTypes.includes(
-        formState.transaction.master.voucherType as VoucherType
-      )
+      vType: formState.transaction.master.voucherType == "PI"
         ? "GRN"
-        : "GRN",
+        : "GRR",
     });
     
     const handleLoadByRefNo = useCallback(async () => {

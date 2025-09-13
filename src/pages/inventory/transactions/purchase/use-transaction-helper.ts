@@ -366,6 +366,9 @@ debugger;
       let cessPerc = Number(transactionDetail.details2?.cessPerc || 0);
       let cess = Number(transactionDetail.details2?.cessAmt || 0);
 
+      if (clientSession.isAppGlobal) {
+        vatPerc = cgstPerc + sgstPerc+ igstPerc + addnlCessPerc + cessPerc
+      }
       detail.unitPrice = transactionDetail.unitPrice;
       // Handle RatePlusTax visibility and calculation
       if (

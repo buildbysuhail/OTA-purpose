@@ -317,7 +317,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   handleFieldKeyDown={handleFieldKeyDown}
                 />
 
-                <div className="mr-3">
+                <div className={`${isRtl ? "mr-0 ml-3" : "mr-3 ml-0"}`}>
                   <DebitAccount
                     dispatch={dispatch}
                     transactionType={transactionType}
@@ -526,6 +526,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                         formState={formState}
                         dispatch={dispatch}
                         handleFieldChange={handleFieldChange}
+                        transactionType={transactionType}
                         t={t}
                       />
                     }
@@ -822,6 +823,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       dispatch={dispatch}
                       handleFieldChange={handleFieldChange}
                       loadAndSetTransVoucher={loadAndSetTransVoucher}
+                      transactionType={transactionType}
                       t={t}
                     />
                   }

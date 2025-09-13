@@ -1661,6 +1661,7 @@ useEffect(() => {
                     onProcessSelected={onProcessSelected}
                     downloadImportTemplateHeadersOnly={downloadImportTemplateHeadersOnly}
                     importFromExcel={importFromExcel}
+                    headerMorePop={formState.headerMorePop}
                   />
                 </div>
               </div>
@@ -1780,6 +1781,7 @@ useEffect(() => {
                         isDropUpOpen={isDropUpOpen}
                         toggleDropup={toggleFooterDropup}
                         footerLayout={"vertical"}
+                        applicationSettings={applicationSettings}
                       />
                     )}
                 </div>
@@ -1868,6 +1870,7 @@ useEffect(() => {
                       onProcessSelected={onProcessSelected}
                       downloadImportTemplateHeadersOnly={downloadImportTemplateHeadersOnly}
                       importFromExcel={importFromExcel}
+                      headerMorePop={formState.headerMorePop}
                     />
                   </div>
                 </div>
@@ -1961,6 +1964,7 @@ useEffect(() => {
                   selectAttachment={selectAttachment}
                   isDropUpOpen={isDropUpOpen}
                   toggleDropup={toggleFooterDropup}
+                  applicationSettings={applicationSettings}
                   footerLayout={
                     ((formState.transactionLoading
                       ? _st.footerPosition
@@ -2013,6 +2017,7 @@ useEffect(() => {
                 toggleDropup={toggleFooterDropup}
                 footerLayout={"horizontal"}
                 applyDiscountsToItems={applyDiscountsToItems}
+                applicationSettings={applicationSettings}
               />
             ))}
         {/* footer ends here */}

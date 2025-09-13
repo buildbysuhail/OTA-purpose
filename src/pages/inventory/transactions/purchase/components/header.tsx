@@ -11,6 +11,7 @@ import { RootState } from "../../../../../redux/store";
 import PendingOrderList from "../pending-order-list";
 import ERPFileUploadButton from "../../../../../components/ERPComponents/erp-file-upload-button";
 import VoucherType from "../../../../../enums/voucher-types";
+import { useAppState } from "../../../../../utilities/hooks/useAppState";
 
 interface HeaderProps extends VoucherElementProps {
   loadTemporaryRows: () => Promise<void>;
@@ -36,6 +37,7 @@ interface HeaderProps extends VoucherElementProps {
   onProcessSelected: ((masterIds: string, loadType: string,voucherType: string,) => void) | undefined;
   downloadImportTemplateHeadersOnly: any;
   importFromExcel: any;
+  headerMorePop: any;
 }
 
 const useMediaQuery = (query: string) => {
@@ -77,14 +79,23 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
       setIsPrintModalOpen,
       onProcessSelected,
       downloadImportTemplateHeadersOnly,
-      importFromExcel
+      importFromExcel,
+      headerMorePop
     }, ref) => {
-    const [isPopupVisible, setIsPopupVisible] = useState(false);
+    // const [isPopupVisible, setIsPopupVisible] = useState(false);
+    const { appState } = useAppState();
+    const isRtl = appState.locale.rtl;
     const popupRef = useRef<HTMLDivElement | null>(null);
     const buttonRef = useRef<HTMLButtonElement | null>(null);
     const [isLoadMultiModalOpen, setIsLoadMultiModalOpen] = useState(false);
     const [isPendingOrderOpen, setIsPendingOrderOpen] = useState({ open: false, type: "PO" });
     const [isImportExcelOpen, setIsImportExcelOpen] = useState(false)
+
+    const popupStyle = {
+      top: "45px",
+      [isRtl ? "right" : "left"]: "-231px",
+      width: "273px",
+    };
 
     const openExcelImport = () => {
       setIsImportExcelOpen(true)
@@ -94,23 +105,26 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
       setIsLoadMultiModalOpen(true);
     };
 
-    const closePopupVisible = () => {
-      setIsPopupVisible(false);
-    };
-
     const togglePopupVisible = () => {
-      setIsPopupVisible(!isPopupVisible);
+      dispatch(
+        formStateHandleFieldChange({
+          fields: {
+            headerMorePop: true
+          },
+        })
+      );
     };
 
     useEffect(() => {
       function handleClickOutside(event: MouseEvent) {
-        if (
-          popupRef.current &&
-          !popupRef.current.contains(event.target as Node) &&
-          buttonRef.current &&
-          !buttonRef.current.contains(event.target as Node)
-        ) {
-          closePopupVisible();
+        if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+          dispatch(
+            formStateHandleFieldChange({
+              fields: {
+                headerMorePop: false
+              },
+            })
+          );
         }
       }
       document.addEventListener("mousedown", handleClickOutside);
@@ -243,11 +257,11 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
               <EllipsisVertical className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
             </button>
 
-            {isPopupVisible && (
+            {formState.headerMorePop && (
               <div
                 ref={popupRef}
                 className="absolute rounded-lg bg-white dark:bg-[#1f2937] text-black dark:text-[#f3f4f6] shadow-xl border border-[#e5e7eb] dark:border-[#374151] p-2 z-50 backdrop-blur-sm"
-                style={{ top: "45px", left: "-231px", width: "273px", }}>
+                style={popupStyle}>
                 <nav className="w-full">
                   <ul className="space-y-1 max-h-80 overflow-y-auto scrollbar-thin">
                     {formState.formElements.lnkUnlockVoucher?.visible && (
@@ -281,17 +295,17 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                       <li>
                         <div className="px-3 py-[5px] hover:bg-[#f5f3ff] hover:text-[#7e22ce] dark:hover:bg-[#581c874d] dark:hover:text-[#d8b4fe] transition-all duration-200 rounded-md group">
                           <div className="w-full flex items-center gap-3">
-                            <div className="w-8 h-8 bg-[#f3e8ff] dark:bg-[#7c3aed4d] rounded-full flex items-center justify-center group-hover:bg-[#e9d5ff] dark:group-hover:bg-[#7c3aed99] group-hover:scale-110 transition-all duration-200">
-                              <DollarSign className="h-4 w-4 text-[#7c3aed] dark:text-[#f3e8ff]" />
-                            </div>
-                            <ERPCheckbox
-                              id="foreignCurrency"
-                              label={formState.formElements.foreignCurrency.label}
-                              className="flex-1"
-                              checked={formState.foreignCurrency}
-                              onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { foreignCurrency: e.target.checked, }, }))}
-                              disabled={formState.formElements.foreignCurrency?.disabled || formState.formElements.pnlMasters?.disabled}
-                            />
+                          <div className="w-8 h-8 bg-[#f3e8ff] dark:bg-[#7c3aed4d] rounded-full flex items-center justify-center group-hover:bg-[#e9d5ff] dark:group-hover:bg-[#7c3aed99] group-hover:scale-110 transition-all duration-200">
+                            <DollarSign className="h-4 w-4 text-[#7c3aed] dark:text-[#f3e8ff]" />
+                          </div>
+                          <ERPCheckbox
+                            id="foreignCurrency"
+                            label={formState.formElements.foreignCurrency.label}
+                            className="flex-1"
+                            checked={formState.foreignCurrency}
+                            onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { foreignCurrency: e.target.checked, }, }))}
+                            disabled={formState.formElements.foreignCurrency?.disabled || formState.formElements.pnlMasters?.disabled}
+                          />
                           </div>
                         </div>
                       </li>
@@ -310,18 +324,18 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                       <li>
                         <div className="px-3 py-[5px] hover:bg-[#eef2ff] hover:text-[#4338ca] dark:hover:bg-[#312e814d] dark:hover:text-[#c7d2fe] transition-all duration-200 rounded-md group">
                           <div className="w-full flex items-center gap-3">
-                            <div className="w-8 h-8 bg-[#eef2ff] dark:bg-[#312e81] rounded-full flex items-center justify-center group-hover:bg-[#c7d2fe] dark:group-hover:bg-[#312e81cc] group-hover:scale-110 transition-all duration-200">
-                              <Printer className="h-4 w-4 text-[#4338ca] dark:text-[#c7d2fe]" />
-                            </div>
-                            <ERPCheckbox
-                              localInputBox={formState?.userConfig?.inputBoxStyle}
-                              id="printPreview"
-                              className="flex-1"
-                              label={t(formState.formElements.printPreview.label)}
-                              checked={formState.printPreview}
-                              onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { printPreview: e.target.checked, }, }))}
-                              disabled={formState.formElements.printPreview?.disabled}
-                            />
+                          <div className="w-8 h-8 bg-[#eef2ff] dark:bg-[#312e81] rounded-full flex items-center justify-center group-hover:bg-[#c7d2fe] dark:group-hover:bg-[#312e81cc] group-hover:scale-110 transition-all duration-200">
+                            <Printer className="h-4 w-4 text-[#4338ca] dark:text-[#c7d2fe]" />
+                          </div>
+                          <ERPCheckbox
+                            localInputBox={formState?.userConfig?.inputBoxStyle}
+                            id="printPreview"
+                            className="flex-1"
+                            label={t(formState.formElements.printPreview.label)}
+                            checked={formState.printPreview}
+                            onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { printPreview: e.target.checked, }, }))}
+                            disabled={formState.formElements.printPreview?.disabled}
+                          />
                           </div>
                         </div>
                       </li>
@@ -363,32 +377,30 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                     </li>
 
                     <li>
-                      <div className="px-3 py-[5px] hover:bg-[#ecfdf5] hover:text-[#047857] dark:hover:bg-[#064e3b4d] dark:hover:text-[#6ee7b7] transition-all duration-200 rounded-md group">
-                        <div className="w-full flex items-center gap-3">
-                          <div className="w-8 h-8 bg-[#d1fae5] dark:bg-[#065f46]/30 rounded-full flex items-center justify-center group-hover:bg-[#a7f3d0] dark:group-hover:bg-[#065f46]/50 group-hover:scale-110 transition-all duration-200">
-                            <Upload className="h-4 w-4 text-[#065f46] dark:text-[#6ee7b7]" />
-                          </div>
-                          <ERPFileUploadButton
-                          buttonText={t("import_from_excel")}
-                            handleFileChange={onSelectExcel}
-                            hideIcon={true}
-                            buttonClassName="font-medium bg-transparent border-none p-0 hover:bg-transparent text-left flex-1"
-                          />
+                      <button
+                        className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#ecfdf5] hover:text-[#047857] dark:hover:bg-[#064e3b4d] dark:hover:text-[#6ee7b7] transition-all duration-200 rounded-md group text-left">
+                        <div className="w-8 h-8 bg-[#d1fae5] dark:bg-[#065f46]/30 rounded-full flex items-center justify-center group-hover:bg-[#a7f3d0] dark:group-hover:bg-[#065f46]/50 group-hover:scale-110 transition-all duration-200">
+                          <Upload className="h-4 w-4 text-[#065f46] dark:text-[#6ee7b7]" />
                         </div>
-                      </div>
+                        {/* <span className="font-medium">{t("import_from_excel")}</span> */}
+                        <ERPFileUploadButton
+                          buttonText={t("import_from_excel")}
+                          handleFileChange={onSelectExcel}
+                          hideIcon={true}
+                            buttonClassName="font-medium bg-transparent border-none p-0 hover:bg-transparent"
+                        />
+                      </button>
                     </li>
 
                     <li>
-                      <div className="px-3 py-[5px] hover:bg-lime-50 hover:text-lime-800 dark:hover:bg-lime-900/30 dark:hover:text-lime-300 transition-all duration-200 rounded-md group">
-                        <div className="w-full flex items-center gap-3">
-                          <div className="w-8 h-8 bg-lime-100 dark:bg-lime-900/30 rounded-full flex items-center justify-center group-hover:bg-lime-200 dark:group-hover:bg-lime-900/50 group-hover:scale-110 transition-all duration-200">
-                            <Printer className="h-4 w-4 text-lime-800 dark:text-lime-300" />
-                          </div>
-                          <button className="font-medium bg-transparent border-none p-0 hover:bg-transparent text-left flex-1">
-                            {t("print_barcode")}
-                          </button>
+                      <button
+                        className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-lime-50 hover:text-lime-800 dark:hover:bg-lime-900/30 dark:hover:text-lime-300 transition-all duration-200 rounded-md group text-left"
+                        onClick={() => {/* Add your print barcode handler here */}}>
+                        <div className="w-8 h-8 bg-lime-100 dark:bg-lime-900/30 rounded-full flex items-center justify-center group-hover:bg-lime-200 dark:group-hover:bg-lime-900/50 group-hover:scale-110 transition-all duration-200">
+                          <Printer className="h-4 w-4 text-lime-800 dark:text-lime-300" />
                         </div>
-                      </div>
+                        <span className="font-medium">{t("print_barcode")}</span>
+                      </button>
                     </li>
 
                     <li>

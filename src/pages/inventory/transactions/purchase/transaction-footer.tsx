@@ -44,6 +44,7 @@ interface TransactionFooterProps {
   footerLayout: "horizontal" | "vertical";
   applyDiscountsToItems: any;
   calculateTotal: any
+  applicationSettings: any;
 }
 
 interface Confetti {
@@ -170,6 +171,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   footerLayout,
   calculateTotal,
   applyDiscountsToItems,
+  applicationSettings,
 }) => {
   const [hasAnimated, setHasAnimated] = useState(false);
   const [isOpentwo, setIsOpentwo] = useState(false);
@@ -249,32 +251,24 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
     const handleResize = () => {
       const width = window.innerWidth;
       setIsSmallHeight(window.innerHeight <= 650);
-      if (isNewFooter) {
-        if (isSidebar) {
-          setShowAttachmentOutside(width >= 1540);
-          setShowCheckboxesOutside(width >= 1500);
-          setShowAdjustmentOutside(width >= 1400);
-          setShowCostCentreOutside(width >= 1400);
-          setShowWarehouseOutside(width >= 1400);
-        } else {
-          setShowAttachmentOutside(width >= 1300);
-          setShowCheckboxesOutside(width >= 1250);
-          setShowAdjustmentOutside(width >= 1200);
-          setShowCostCentreOutside(width >= 1200);
-          setShowWarehouseOutside(width >= 1200);
-        }
+      if (isSidebar) {
+        setShowAttachmentOutside(width >= 1540);
+        setShowCheckboxesOutside(width >= 1500);
+        setShowAdjustmentOutside(width >= 1400);
+        setShowCostCentreOutside(width >= 1400);
+        setShowWarehouseOutside(width >= 1400);
       } else {
-        setShowWarehouseOutside(false);
-        setShowCostCentreOutside(false);
-        setShowAdjustmentOutside(false);
-        setShowCheckboxesOutside(false);
-        setShowAttachmentOutside(false);
+        setShowAttachmentOutside(width >= 1300);
+        setShowCheckboxesOutside(width >= 1250);
+        setShowAdjustmentOutside(width >= 1200);
+        setShowCostCentreOutside(width >= 1200);
+        setShowWarehouseOutside(width >= 1200);
       }
     };
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [isSidebar, isNewFooter]);
+  }, [isSidebar]);
 
   useEffect(() => {
     calculateTotal(formState.transaction.master, formState.summary, formState.formElements, { result: {}, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly })
@@ -386,28 +380,38 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   );
 
   const attachmentComponent = (
-    <button className="text-[#2563eb] dark:text-[#60a5fa] w-full text-left">
-      <span className="hover:underline text-[#0ea5e9] dark:text-[#60a5fa] capitalize" onClick={selectAttachment}>
-        {t("attachment")}
-      </span>
-    </button>
+    applicationSettings.branchSettings.fileAttachmentMethod === 'No' && (
+      <button className="text-[#2563eb] dark:text-[#60a5fa] w-full text-left">
+        <span className="hover:underline text-[#0ea5e9] dark:text-[#60a5fa] capitalize" onClick={selectAttachment}>
+          {t("attachment")}
+        </span>
+      </button>
+    )
   );
 
-  const outsideComponents = isNewFooter ? (
-    <div className="flex flex-col gap-1 pr-4 ps-[6px]">
+  const outsideComponents = (
+    <div className="flex flex-col gap-1 pr-4">
       {showCheckboxesOutside ? (
         <>
           <div className="flex flex-wrap items-end gap-1">
             {showWarehouseOutside && warehouseComponent}
             {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
-              <>{showAdjustmentOutside && adjustmentComponent}</>
+              <>
+                {showAdjustmentOutside && adjustmentComponent}
+              </>
             )}
           </div>
           <div className="flex items-end gap-1">
             {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
-              <>{showCostCentreOutside && costCentreComponent}</>
+              <>
+                {showCostCentreOutside && costCentreComponent}
+              </>
             )}
-            {showAttachmentOutside && attachmentComponent}
+            {
+              (applicationSettings.branchSettings.fileAttachmentMethod === 'No' && showAttachmentOutside) && (
+                attachmentComponent
+              )
+            }
           </div>
         </>
       ) : (
@@ -422,7 +426,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         </>
       )}
     </div>
-  ) : null;
+  );
 
   const toggleFooterPosition = () => {
     const newPosition: "bottom" | "right" = formState.userConfig?.footerPosition === "bottom" ? "right" : "bottom";
@@ -491,9 +495,11 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 </li>
                 <li>
                   <button className="text-[#2563eb]">
-                    <span className="hover:underline text-[#0ea5e9] capitalize" onClick={selectAttachment}>
-                      {t("attachment")}
-                    </span>
+                    {applicationSettings.branchSettings.fileAttachmentMethod === 'No' && (
+                      <span className="hover:underline text-[#0ea5e9] capitalize" onClick={selectAttachment}>
+                        {t("attachment")}
+                      </span>
+                    )}
                   </button>
                 </li>
                 <li>
@@ -710,22 +716,22 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
       {isNewFooter ? (
         <div className="flex items-end gap-2 flex-wrap">
           {/* <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
-            <PriceCategoryCombobox
-              formState={formState}
-              dispatch={dispatch}
-              t={t}
-              handleKeyDown={handleKeyDown}
-              handleFieldKeyDown={handleFieldKeyDown}
-            />
-          </div>
+          <PriceCategoryCombobox
+            formState={formState}
+            dispatch={dispatch}
+            t={t}
+            handleKeyDown={handleKeyDown}
+            handleFieldKeyDown={handleFieldKeyDown}
+          />
+        </div>
           <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
-            <SupplyTypeCombobox
-              formState={formState}
-              dispatch={dispatch}
-              t={t}
-              handleKeyDown={handleKeyDown}
-              handleFieldKeyDown={handleFieldKeyDown}
-            />
+          <SupplyTypeCombobox
+            formState={formState}
+            dispatch={dispatch}
+            t={t}
+            handleKeyDown={handleKeyDown}
+            handleFieldKeyDown={handleFieldKeyDown}
+          />
           </div> */}
           {!showWarehouseOutside && (
             <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
@@ -750,7 +756,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               )}
             </>
           )}
-          {!showAttachmentOutside && (
+          {applicationSettings.branchSettings.fileAttachmentMethod === 'No' && !showAttachmentOutside && (
             <div className="w-full mb-2 sm:mb-0 sm:w-auto">
               {attachmentComponent}
             </div>
@@ -883,11 +889,13 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             </div>
           </div>
           <div className="w-full sm:w-auto">
-            <button className="text-[#2563eb] dark:text-[#60a5fa] w-full text-left sm:text-center">
-              <span className="hover:underline text-[#0ea5e9] dark:text-[#60a5fa] capitalize" onClick={selectAttachment}>
-                {t("attachment")}
-              </span>
-            </button>
+            {applicationSettings.branchSettings.fileAttachmentMethod === 'No' && (
+              <button className="text-[#2563eb] dark:text-[#60a5fa] w-full text-left sm:text-center">
+                <span className="hover:underline text-[#0ea5e9] dark:text-[#60a5fa] capitalize" onClick={selectAttachment}>
+                  {t("attachment")}
+                </span>
+              </button>
+            )}
           </div>
         </div>
       )}
@@ -1027,10 +1035,10 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 {/* <div className="hidden sm:block mr-2">
                   <h6 className="font-semibold whitespace-nowrap text-[18px] sm:text-[20px] dark:text-dark-text">
                     <span className="!font-medium dark:!text-dark-text !text-gray-600 text-sm sm:text-base">
-                      {t("total")}:{" "}
-                    </span>
-                    {getFormattedValue(formState.transaction.master?.roundAmount ?? 0)}
-                  </h6>
+                        {t("total")}:{" "}
+                      </span>
+                      {getFormattedValue(formState.transaction.master?.roundAmount ?? 0)}
+                    </h6>
                 </div> */}
                 <div className="fixed bottom-0 left-0 w-full dark:bg-dark-bg-card bg-[#f8f8ff] flex flex-col py-2 z-10">
                   <div>

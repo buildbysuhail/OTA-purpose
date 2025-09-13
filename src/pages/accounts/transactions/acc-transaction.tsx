@@ -192,6 +192,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const sidebarWidth = isMinimized ? "90px" : "250px";
   const isLargeScreen = window.innerWidth >= 1000;
   const headerLeft = isLargeScreen ? sidebarWidth : "0";
+  const isRtl = appState.locale.rtl;
+  const headerStyle = {
+    left: isRtl ? "0" : headerLeft,
+    right: isRtl ? headerLeft : "0",
+  };
 
   const groupKey = formState?.template?.templateGroup ?? (voucherType || "");
   const typeKey = formState?.template?.templateType?.toUpperCase() ?? "STANDARD";
@@ -200,7 +205,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     return templateConfig?.[groupKey]?.[typeKey]?.[kindKey] ?? null;
   }, [groupKey, typeKey, kindKey]);
 
-    
+
 const {
   stableTemplateProps,
   templateStyleProperties
@@ -1854,7 +1859,7 @@ const {
               {formState.isEdit}
               <div className="flex items-center p-0 border dark:border-dark-border border-gray-300 rounded-b-sm mb-2 dark:bg-dark-bg bg-[#f4f4f5] me-[1px]">
                 <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
-                  <h6 className="absolute text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis transition-all duration-300" style={{ left: headerLeft }}>
+                  <h6 className="absolute text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis transition-all duration-300 flex items-center gap-2" style={headerStyle}>
                     {t(formState.title)}
                     {/* - {t(formState.row.ledgerCode)}-  {t(formState.transaction.master.voucherType)}- {t(formState.formElements.masterAccount.visible.toString())} */}
                   </h6>
@@ -3329,29 +3334,29 @@ const {
           //     style={{ padding: "10px" }}
           //   >
           // {renderSelectedTemplate({ template: formState.template, data: formState.transaction, })}
- 
+
           //   </PDFViewer>
              <div className="flex justify-center"  >
                         <div className="relative">
                           {/* Preview Container with Modern Styling */}
                           <div
-                            
+
                             className="shadow-lg   border border-gray-200 overflow-hidden"
                             style={{
                               width: `${templateStyleProperties.previewWidth??500}pt`,
                               height: `${templateStyleProperties.previewHeight??500}pt`,
-                
+
                             }}
                           >
                             {/* Paper Effect */}
                             {/* <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900" /> */}
-          
+
                             {/* Template Content */}
                             <div className="relative h-full   w-full ">
                               {React.cloneElement(templateToRender.PreviewComponent,  stableTemplateProps)}
                             </div>
                           </div>
-          
+
                           {/* Drop Shadow Effect */}
                           <div
                             className="absolute -bottom-2 -right-2 bg-gray-400/20 dark:bg-gray-600/20 rounded-lg -z-10"
@@ -3359,7 +3364,7 @@ const {
                               width: `${templateStyleProperties.previewWidth}pt`,
                               height: `${templateStyleProperties.previewHeight}pt`,
                               minHeight: "400px",
-                              
+
                             }}
                           />
                         </div>

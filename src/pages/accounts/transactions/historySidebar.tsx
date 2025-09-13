@@ -17,16 +17,9 @@ interface HistorySidebarProps {
   // data: any;
 }
 
-const HistorySidebar: React.FC<HistorySidebarProps> = ({
-  setIsOpen,
-  isOpen,
-  onClose,
-  transactionType
-  // data,
-}) => {
+const HistorySidebar: React.FC<HistorySidebarProps> = ({ setIsOpen, isOpen, onClose, transactionType }) => {
   const { t } = useTranslation("transaction");
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
-
   const columns: DevGridColumn[] = useMemo(
     () => [
       {
@@ -39,12 +32,13 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
         width: 100,
         cellRender: (cellElement: any) => {
           return (
-            <div className="bg-white p-4 hover:bg-[#0f0f0f83] shadow-md transition-transform transform duration-300 ease-in-out hover:scale-105 hover:bg-gradient-to-r hover:from-[#dfe7f9] hover:to-[#f1f7ff] hover:ring-2 hover:ring-blue-300">
+            <div className="bg-gradient-to-br from-white to-gray-50/80 p-3 border border-gray-100/60 shadow-sm hover:shadow-xl transition-all duration-300 ease-out hover:scale-[1.02] hover:bg-gradient-to-br hover:from-blue-50/90 hover:to-indigo-50/80 hover:border-blue-200/40 backdrop-blur-sm group !w-full">
               <div className="w-full flex flex-row">
-                <div className="w-1/2  flex items-center ">
-                  <CalendarDays className="mr-1 w-4 h-4 text-gray-500 font-semibold !text-[10px]" />
-                  <p className="text-gray-600 font-medium !text-[12px]">
-                    {/* <CalendarDays /> */}
+                <div className="w-1/2 flex items-center gap-2">
+                  <div className="p-1.5 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg group-hover:from-blue-200 group-hover:to-blue-300 transition-all duration-300">
+                    <CalendarDays className="w-3.5 h-3.5 text-blue-600 group-hover:text-blue-700 transition-colors duration-300" />
+                  </div>
+                  <p className="text-gray-700 font-medium text-xs tracking-wide group-hover:text-gray-900 transition-colors duration-300">
                     {new Date(
                       cellElement.data?.transactionDate
                     ).toLocaleDateString("en-GB", {
@@ -54,14 +48,16 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
                     })}
                   </p>
                 </div>
-                <div className="w-1/2  flex items-center justify-end ">
-                  <p className="text-gray-800 font-medium">
-                    {cellElement.data?.amount}
-                  </p>
+                <div className="w-1/2 flex items-center justify-end">
+                  <div className="px-2.5 py-1 bg-gradient-to-r from-emerald-50 to-green-50 rounded-lg border border-emerald-100 group-hover:from-emerald-100 group-hover:to-green-100 group-hover:border-emerald-200 transition-all duration-300">
+                    <p className="text-emerald-700 font-semibold text-sm group-hover:text-emerald-800 transition-colors duration-300">
+                      {cellElement.data?.amount}
+                    </p>
+                  </div>
                 </div>
               </div>
-              <div className="pt-2">
-                <p className="text-gray-600 font-normal  overflow-hidden text-ellipsis whitespace-nowrap ">
+              <div className="pt-3 mt-2 border-t border-gray-100/80 group-hover:border-blue-200/60 transition-colors duration-300">
+                <p className="text-gray-600 font-normal text-sm leading-relaxed overflow-hidden text-ellipsis whitespace-nowrap group-hover:text-gray-800 transition-colors duration-300">
                   {cellElement.data?.particulars}
                 </p>
               </div>
@@ -69,49 +65,54 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
           );
         },
       },
-    ],
-    [t] // Dependency for columns
+    ], [t]
   );
 
   return (
     <ERPResizableSidebar isOpen={isOpen} setIsOpen={onClose} minWidth={400}>
-      <div className="py-3 bg-gray-50 h-[94vh] ">
+      <div className="py-4 bg-gradient-to-br from-gray-50/95 to-white/98 h-[94vh] backdrop-blur-sm">
         {/* Header */}
-        <div className="flex justify-between items-center mb-1 px-4">
-          <h6 className=" font-semibold text-gray-800">Transaction History</h6>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 transition-colors"
-          >
-            <X className="w-[22px] h-[22px] p-1 rounded-full text-[12px] hover:shadow-lg transition-all duration-300 ease-in-out" />
+        <div className="flex justify-between items-center mb-4 px-6">
+          <div className="flex items-center gap-2">
+            <div className="p-2 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg">
+              <Banknote className="w-5 h-5 text-white" />
+            </div>
+            <h6 className="text-xl font-bold bg-gradient-to-r from-gray-800 to-gray-700 bg-clip-text text-transparent tracking-tight">
+              {t('transaction_history')}
+            </h6>
+          </div>
+          <button onClick={onClose} className="p-2 text-gray-400 hover:text-gray-600 bg-white/80 hover:bg-gray-100/90 rounded-full border border-gray-200/60 hover:border-gray-300/80 shadow-sm hover:shadow-md transition-all duration-300 ease-out hover:scale-105 backdrop-blur-sm group">
+            <X className="w-5 h-5 group-hover:rotate-90 transition-transform duration-300 ease-out" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="space-y-4">
+        <div className="px-2">
           {/* {isOpen && */}
-          <ERPDevGrid 
-            columns={columns}
-            dataUrl={`${urls.acc_transaction_base}${transactionType}/List/`}
-            method={ActionType.GET}
-            // postData={{voucherType: voucherType, transactionType: transactionType}}
-            gridHeader={t("transactions")}
-            gridId="transaction-grid"
-            remoteOperations={{ paging: true, filtering: true, sorting: true }}
-            gridAddButtonIcon="ri-add-line"
-            pageSize={40}
-            allowExport={true}
-            hideDefaultExportButton={true}
-            // showFilterRow ={false}
-            hideDefaultSearchPanel={false}
-            allowSearching={false}
-            hideGridAddButton={true}
-            hideGridHeader={true}
-            showColumnHeaders={false}
-            className="HistorySidebarcustom "
-            ShowGridPreferenceChooser={false}
-          />
-{/* } */}
+          <div className="bg-white/70 backdrop-blur-md rounded-2xl border border-gray-200/50 shadow-lg overflow-hidden">
+            <ERPDevGrid
+              columns={columns}
+              dataUrl={`${urls.acc_transaction_base}${transactionType}/List/`}
+              method={ActionType.GET}
+              // postData={{voucherType: voucherType, transactionType: transactionType}}
+              gridHeader={t("transactions")}
+              gridId="transaction-grid"
+              remoteOperations={{ paging: true, filtering: true, sorting: true }}
+              gridAddButtonIcon="ri-add-line"
+              pageSize={40}
+              allowExport={true}
+              hideDefaultExportButton={true}
+              // showFilterRow ={false}
+              hideDefaultSearchPanel={false}
+              allowSearching={false}
+              hideGridAddButton={true}
+              hideGridHeader={true}
+              showColumnHeaders={false}
+              className="HistorySidebarcustom"
+              ShowGridPreferenceChooser={false}
+            />
+          </div>
+          {/* } */}
           {/* Transaction Date */}
         </div>
       </div>

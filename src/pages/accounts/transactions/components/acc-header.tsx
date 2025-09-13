@@ -1,32 +1,13 @@
-import { APIClient } from "../../../../helpers/api-client";
-import ERPInput from "../../../../components/ERPComponents/erp-input";
 import { AccTransactionFormState, AccUserConfig, AccVoucherElementProps } from "../acc-transaction-types";
-import { accFormStateHandleFieldChange, accFormStateTransactionMasterHandleFieldChange } from "../reducer";
+import { accFormStateHandleFieldChange } from "../reducer";
 import { useEffect, useRef, useState } from "react";
 import React from "react";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
-import { userSession } from "../../../../redux/slices/user-session/thunk";
 import AccExcelImport from "../acc-Excel-Import";
 import { AccTransactionUserConfig } from "../acc-transaction-user-config";
-import HistorySidebar from "../historySidebar";
-import {
-  Ellipsis,
-  EllipsisVertical,
-  KeyRound,
-  Pencil,
-  Printer,
-  RefreshCw,
-  Trash2,
-  ChevronUp,
-  BadgePlusIcon,
-  Eraser,
-  X,
-  FileUp,
-  History,
-  Search,
-  AlignHorizontalSpaceBetween,
-} from "lucide-react";
+import { EllipsisVertical, KeyRound, Pencil, Printer, RefreshCw, Trash2, ChevronUp, BadgePlusIcon, Eraser, X, FileUp, History, AlignHorizontalSpaceBetween, } from "lucide-react";
+import { useAppState } from "../../../../utilities/hooks/useAppState";
 
 interface AccHeaderProps extends AccVoucherElementProps {
   loadTemporaryRows: () => Promise<void>;
@@ -34,7 +15,7 @@ interface AccHeaderProps extends AccVoucherElementProps {
   handleRefresh: () => void;
   createNewVoucher: () => void;
   handleEdit: () => void;
-  printVoucher: (masterID: number,transactionType: string,voucherType?: any, transDate?: string) => void;
+  printVoucher: (masterID: number, transactionType: string, voucherType?: any, transDate?: string) => void;
   handleClearControls: () => void;
   handleHistoryClick: () => void;
   setIsHistorySidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -81,12 +62,16 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
     },
     ref
   ) => {
-    
+    const { appState } = useAppState();
+    const isRtl = appState.locale.rtl;
     const [isPopupVisible, setIsPopupVisible] = useState(false);
-    
-
     const popupRef = useRef<HTMLDivElement | null>(null);
     const buttonRef = useRef<HTMLButtonElement | null>(null);
+    const popupStyle = {
+      top: "44px",
+      [isRtl ? "right" : "left"]: "-211px",
+      width: "251px",
+    };
     useEffect(() => {
       function handleClickOutside(event: MouseEvent) {
         // Check if the click is outside the popup AND not on the button
@@ -105,14 +90,14 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
         document.removeEventListener("mousedown", handleClickOutside);
       };
     }, []);
-    
-  const handleFieldChange = (field: keyof AccUserConfig, value: any) => {
-    const updatedUserConfig = {
-      ...formState.userConfig,
-      [field]: value,
+
+    const handleFieldChange = (field: keyof AccUserConfig, value: any) => {
+      const updatedUserConfig = {
+        ...formState.userConfig,
+        [field]: value,
+      };
+      dispatch(accFormStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }));
     };
-    dispatch(accFormStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }));
-  };
     return (
       <div className={`!overflow-visible flex items-center ${phone ? 'justify-evenly' : 'justify-end'}  space-x-2 p-1 w-full overflow-x-auto ${phone ? 'bg-[#f9fafb]' : ''} ${phone ? '' : ''} ${phone ? '' : ''}`}>
         {/* Load Temp Rows */}
@@ -175,7 +160,7 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
           <button
             disabled={formState.transaction.master.accTransactionMasterID < 1 || (formState.transaction.master.accTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
             className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`}
-            onClick={() => printVoucher(formState.transaction.master.accTransactionMasterID,transactionType??"",voucherType,formState.transaction.master.transactionDate)}
+            onClick={() => printVoucher(formState.transaction.master.accTransactionMasterID, transactionType ?? "", voucherType, formState.transaction.master.transactionDate)}
           >
             <Printer className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
           </button>
@@ -202,7 +187,7 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
         </div>
 
         {/* History Sidebar */}
-       
+
 
         {/* Settings Button */}
         <div>
@@ -211,35 +196,16 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
 
         {/* Popup Menu */}
         <div className="relative">
-          <button
-            ref={buttonRef}
-            onClick={() => setIsPopupVisible((prev: any) => !prev)}
-            className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'}  rounded-md hover:bg-gray-200 transition-colors`}
-            title={t("previous_page")}
-          >
+          <button ref={buttonRef} onClick={() => setIsPopupVisible((prev: any) => !prev)} className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'}  rounded-md hover:bg-gray-200 transition-colors`} title={t("previous_page")}>
             <EllipsisVertical className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
           </button>
 
           {isPopupVisible && (
-            <div
-              ref={popupRef}
-              className="absolute rounded-sm dark:bg-dark-bg dark:text-dark-text bg-gray-100 shadow-lg p-4 z-50"
-              style={{
-                top: "100%",
-                left: "-180px",
-                width: "251px",
-                marginTop: "8px",
-              }}
-            >
+            <div ref={popupRef} className="absolute rounded-md dark:bg-dark-bg dark:text-dark-text bg-gray-100 shadow-md border border-gray-300 p-4 z-50" style={popupStyle}>
               <nav className="w-full dark:bg-dark-bg dark:text-dark-text bg-gray-100 text-black">
                 <ul className="space-y-1">
                   <li>
-                    <button
-                      className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-400 hover:text-black transition-colors rounded-sm"
-                      onClick={(e) => {
-                        printPaymentReceiptAdvice(formState, voucherType);
-                      }}
-                    >
+                    <button className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-400 hover:text-black transition-colors rounded-sm" onClick={(e) => { printPaymentReceiptAdvice(formState, voucherType); }}>
                       <Printer className="h-4 w-4" />
                       <span>{t("print_payment_advise")}</span>
                     </button>
@@ -247,12 +213,7 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
 
                   {formState.formElements.lnkUnlockVoucher.visible && (
                     <li>
-                      <button
-                        className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                        onClick={(e) => {
-                          unlockVoucher();
-                        }}
-                      >
+                      <button className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm" onClick={(e) => { unlockVoucher(); }} >
                         <KeyRound className="h-4 w-4" />
                         <span>{t("unlock_voucher")}</span>
                       </button>
@@ -261,10 +222,7 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
 
                   {formState.transaction.master.voucherType === "MJV" && userSession.dbIdValue === "ABCO" && (
                     <li>
-                      <button
-                        className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                        onClick={() => setShowValidation(true)}
-                      >
+                      <button className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm" onClick={() => setShowValidation(true)}>
                         <FileUp className="h-4 w-4" />
                         <span>{t("MJV_excel_import")}</span>
                       </button>
@@ -291,15 +249,14 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
                       />
                     </li>
                   )}
+
                   <li>
-                    <button
-                      onClick={selectTemplates}
-                      className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                    >
+                    <button onClick={selectTemplates} className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm">
                       <AlignHorizontalSpaceBetween className="h-4 w-4" />
                       {t("change_template")}
                     </button>
                   </li>
+
                   {formState.formElements.printPreview.visible && (
                     <li>
                       <ERPCheckbox
@@ -311,7 +268,6 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
                         onChange={(e) => handleFieldChange("printPreview", e.target.checked)}
                         disabled={formState.formElements.printPreview?.disabled}
                       />
-                      
                     </li>
                   )}
                 </ul>
@@ -331,17 +287,13 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
               isFullHeight={true}
               closeModal={() => setShowValidation(false)}
               content={<AccExcelImport />}
-            ></ERPModal>
+            />
           )}
         </div>
 
         {/* Previous Page Button */}
         {!phone && (
-          <button
-            onClick={goToPreviousPage}
-            className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
-            title={t("previous_page")}
-          >
+          <button onClick={goToPreviousPage} className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors" title={t("previous_page")}>
             <X className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
           </button>
         )}

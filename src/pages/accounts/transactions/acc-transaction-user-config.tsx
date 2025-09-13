@@ -19,22 +19,24 @@ import InputBoxStyling from "../../../components/ERPComponents/erp-inputboxStyle
 import { hexToRgb } from "../../../components/common/switcher/switcherdata/switcherdata";
 import { useTranslation } from "react-i18next";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
+import { useAppState } from "../../../utilities/hooks/useAppState";
 
 const api = new APIClient();
 interface pageBgColor {
   pageBgColor: string;
 }
-interface AccTransactionUserConfigProps{
+interface AccTransactionUserConfigProps {
   phone?: boolean;
 }
 
 export const AccTransactionUserConfig: React.FC<AccTransactionUserConfigProps> = ({ phone = false }) => {
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
+  const { appState } = useAppState();
   const dispatch = useDispatch();
   const { t } = useTranslation("transaction");
   const [isExpanded, setIsExpanded] = useState<boolean>(formState.userConfig?.isExpanded || false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
+  const isRtl = appState.locale.rtl;
   const [isLoading, setIsLoading] = useState(false);
 
   const handleToggle = () => {
@@ -67,7 +69,7 @@ export const AccTransactionUserConfig: React.FC<AccTransactionUserConfigProps> =
   const postUserConfig = async () => {
     try {
       setIsLoading(true);
-       const response = await api.post(`${Urls.acc_transaction_base}${formState.transactionType}/UpdateLocalSettings`, formState.userConfig);
+      const response = await api.post(`${Urls.acc_transaction_base}${formState.transactionType}/UpdateLocalSettings`, formState.userConfig);
       handleResponse(response, () => {
         const base64 = modelToBase64(formState.userConfig);
         localStorage.setItem("utc", base64);
@@ -117,10 +119,10 @@ export const AccTransactionUserConfig: React.FC<AccTransactionUserConfigProps> =
   return (
     <>
       <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("settings")}>
-          <button className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`} onClick={() => setIsOpen(true)}>
-            <Settings className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-          </button>
-        </div>
+        <button className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`} onClick={() => setIsOpen(true)}>
+          <Settings className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+        </button>
+      </div>
       <ERPModal
         isOpen={isOpen}
         title={t("user_config")}
@@ -131,7 +133,7 @@ export const AccTransactionUserConfig: React.FC<AccTransactionUserConfigProps> =
         content={
           <>
             <div className="flex items-center justify-end">
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center gap-2">
                 <span className="text-gray-700 font-medium">
                   {isExpanded ? t("expanded_view") : t("compact_view")}
                 </span>
@@ -144,7 +146,7 @@ export const AccTransactionUserConfig: React.FC<AccTransactionUserConfigProps> =
                     onChange={handleToggle}
                   />
                   <label htmlFor="toggle-view" className="block cursor-pointer bg-gray-300 rounded-full p-1 transition-colors duration-300 ease-in-out peer-checked:bg-[#3b82f6]">
-                    <div className={`w-6 h-6 bg-white rounded-full shadow-md transform transition-transform duration-300 ${isExpanded ? "translate-x-6" : "translate-x-0"}`}></div>
+                    <div className={`w-6 h-6 bg-white rounded-full shadow-md transform transition-transform duration-300 ${isExpanded ? isRtl ? "translate-x-[-1.5rem]" : "translate-x-6" : "translate-x-0"}`} />
                   </label>
                 </div>
               </div>
@@ -190,20 +192,20 @@ export const AccTransactionUserConfig: React.FC<AccTransactionUserConfigProps> =
                 checked={formState?.userConfig?.printPreview}
                 onChangeData={(e) => handleFieldChange("printPreview", e.printPreview)}
               />
-                <ERPCheckbox
+              <ERPCheckbox
                 id="printOnSave"
-                label={t("print_onSave")}
+                label={t("print_on_save")}
                 data={formState.userConfig}
                 checked={formState?.userConfig?.printOnSave}
                 onChangeData={(e) => handleFieldChange("printOnSave", e.printOnSave)}
               />
-                <ERPCheckbox
+              <ERPCheckbox
                 id="printCheque"
                 label={t("print_cheque")}
                 data={formState.userConfig}
                 checked={formState?.userConfig?.printCheque}
                 onChangeData={(e) => handleFieldChange("printCheque", e.printCheque)}
-               />
+              />
 
               <ERPDataCombobox
                 id="presetCostenterId"
@@ -253,19 +255,17 @@ export const AccTransactionUserConfig: React.FC<AccTransactionUserConfigProps> =
                 />
               </div>
 
-              <div>
+              <div className="flex items-center gap-2">
                 <ERPButton
                   title={t("left")}
                   variant={formState?.userConfig?.alignment === "left" ? "primary" : "secondary"}
                   onClick={() => handleFieldChange("alignment", "left")}
-                  className="mr-2"
                 />
 
                 <ERPButton
                   title={t("center")}
                   variant={formState?.userConfig?.alignment === "center" ? "primary" : "secondary"}
                   onClick={() => handleFieldChange("alignment", "center")}
-                  className="mr-2"
                 />
 
                 <ERPButton
@@ -277,7 +277,7 @@ export const AccTransactionUserConfig: React.FC<AccTransactionUserConfigProps> =
             </div>
 
             <div className="grid grid-cols-2 gap-6 p-4 my-2">
-              <div className="flex items-center">
+              <div className="flex items-center gap-2">
                 <label htmlFor="outerPageBg" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
                   {t("page_background_color")}
                 </label>
@@ -299,7 +299,7 @@ export const AccTransactionUserConfig: React.FC<AccTransactionUserConfigProps> =
                 </div>
               </div>
 
-              <div className="flex items-center">
+              <div className="flex items-center gap-2">
                 <label htmlFor="innerPageBg" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
                   {t("form_background_color")}
                 </label>
@@ -334,9 +334,19 @@ export const AccTransactionUserConfig: React.FC<AccTransactionUserConfigProps> =
         }
 
         footer={
-          <div className="h-[42px] pt-[4px] pb-[2px] w-full flex justify-end space-x-2 dark:!border-dark-border dark:!bg-dark-bg bg-white border-t z-10 pr-[10px] rounded-b-md">
-            <ERPButton title={t("reset")} onClick={resetThemeChange} type="reset" />
-            <ERPButton title={t("save_changes")} onClick={postUserConfig} loading={isLoading} disabled={isLoading} variant="primary" />
+          <div className="h-[42px] w-full flex justify-end gap-2 dark:!border-dark-border dark:!bg-dark-bg bg-white z-10 rounded-b-md">
+            <ERPButton
+              title={t("reset")}
+              onClick={resetThemeChange}
+              type="reset"
+            />
+            <ERPButton
+              title={t("save_changes")}
+              onClick={postUserConfig}
+              loading={isLoading}
+              disabled={isLoading}
+              variant="primary"
+            />
           </div>
         }
       />

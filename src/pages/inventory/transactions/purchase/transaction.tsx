@@ -856,13 +856,13 @@ const customerType = formType?.toUpperCase() === "PI-IND" ? "B2B"
           visible: applicationSettings.inventorySettings?.maintainWarehouse,
           disabled: _formState.userConfig?.presetWarehouseId ?? 0 > 0 ? true : initialFormElements.cbWarehouse.disabled
         },
-        cbEmployee: {
-          ...initialFormElements.cbEmployee,
-          employeeType: _formState.userConfig
-            ?.showPurchaserOnly
-            ? EmployeeType.Purchaser
-            : _formState.formElements.cbEmployee.employeeType
-        },
+        // cbEmployee: {
+        //   ...initialFormElements.cbEmployee,
+        //   employeeType: _formState.userConfig
+        //     ?.showPurchaserOnly
+        //     ? EmployeeType.Purchaser
+        //     : _formState.formElements.cbEmployee.employeeType
+        // },
         ledgerID: {
           ...initialFormElements.ledgerID,
           accLedgerType:

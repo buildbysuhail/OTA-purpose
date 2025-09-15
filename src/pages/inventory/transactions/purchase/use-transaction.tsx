@@ -338,12 +338,7 @@ export const useTransaction = (
 
     _formState.formElements = {
       ..._formState.formElements,
-      cbEmployee: {
-        ..._formState.formElements.cbEmployee,
-        employeeType: _formState.userConfig?.showPurchaserOnly
-          ? EmployeeType.Purchaser
-          : _formState.formElements.cbEmployee.employeeType,
-      },
+      
       btnAdd: {
         ..._formState.formElements.btnAdd,
         label: t("add"),

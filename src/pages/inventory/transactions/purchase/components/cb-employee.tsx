@@ -1,6 +1,6 @@
 import React from "react";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
-import { VoucherElementProps } from "../../purchase/transaction-types";
+import { EmployeeType, VoucherElementProps } from "../../purchase/transaction-types";
 import { formStateMasterHandleFieldChange } from "../reducer";
 import Urls from "../../../../../redux/urls";
 
@@ -46,7 +46,10 @@ const Employee = React.forwardRef<HTMLInputElement, CostCentreProps>(({
             valueKey: "id",
             labelKey: "name",
             getListUrl: Urls.data_employees,
-            params:`employeeType=${formState.formElements.cbEmployee.employeeType}`
+            params:`employeeType=${formState.userConfig
+                ?.showPurchaserOnly
+                ? EmployeeType.Purchaser
+                : EmployeeType.All}`
           }}
           disabled={
             (formState.userConfig?.presetCostenterId ?? 0) > 0 ||

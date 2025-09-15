@@ -649,7 +649,7 @@ export const useTransaction = (
     isVoucherPrefix = isVoucherPrefix ? isVoucherPrefix : false
     isVoucherPrefix = !clientSession.isAppGlobal && voucherType == VoucherType.PurchaseReturn ? true :  isVoucherPrefix
     const response = await api.getAsync(
-      `${Urls.inv_transaction_base}${formState.transactionType}/GetNextVoucherNumber/`,
+      `${Urls.inv_transaction_base}${transactionType}/GetNextVoucherNumber/`,
       `formType=${formType ? formType : ""}&voucherType=${voucherType ? voucherType : ""
       }&voucherPrefix=${voucherPrefix ? voucherPrefix : ""}&isVoucherPrefix=${isVoucherPrefix ? isVoucherPrefix : false
       }`

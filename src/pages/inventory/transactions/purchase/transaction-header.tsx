@@ -465,7 +465,16 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   />
                 }
 
-                {formState.formElements.orderApprovalStatus.visible && (formState.formElements.orderApprovalStatus.label)}
+                {formState.transaction.master.voucherType == VoucherType.PurchaseOrder && formState.transaction.master.gatePassNo == "Approved" && formState.formElements.orderApprovalStatus.visible && (formState.formElements.orderApprovalStatus.label)}
+                {formState.transaction.master.voucherType == VoucherType.PurchaseOrder && formState.transaction.master.gatePassNo != "Approved" && (
+                  <div>
+                    <ERPButton
+                      title={t('order_status_update')}
+                      variant="secondary"
+                      onClick={() => setUpdateTriggered(true)}
+                    />
+                  </div>
+                )}
 
                 {formState.transaction.master.voucherType === VoucherType.PurchaseOrder &&
                   <div>
@@ -533,7 +542,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     }
                   />
                 )}
-
+{formState.transaction.master.voucherType != VoucherType.PurchaseOrder &&
                 <div>
                   <ERPButton
                     title={t("more")}
@@ -543,7 +552,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
                   />
                 </div>
-
+}
                 {isMoreModalOpen && (
                   <ERPModal
                     isOpen={isMoreModalOpen}
@@ -813,6 +822,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   disabled={formState.transactionLoading}
                 />
 
+                 {formState.transaction.master.voucherType !=
+                  VoucherType.PurchaseOrder && (
                 <ERPButton
                   title={t("more")}
                   variant="secondary"
@@ -820,6 +831,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   className=" dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
                   disabled={formState.transactionLoading}
                 />
+                  )
+                  }
               </div>
 
               {/* Modals */}

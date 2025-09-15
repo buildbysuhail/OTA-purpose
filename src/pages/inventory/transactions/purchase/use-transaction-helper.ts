@@ -1609,6 +1609,7 @@ let detail  = sanitizeDataAdvanced({...rowDetail}, initialTransactionDetailData)
       master.fromWarehouseID = master.fromWarehouseID > 0 ? master.fromWarehouseID :
         master.voucherType == VoucherType.PurchaseReturn ? 0 : 1;
       master.stockUpdate = master.stockUpdate
+      master.ledgerID = isNullOrUndefinedOrZero(master.ledgerID) ? 0: master.ledgerID
       master.supplyType = master.supplyType == undefined || master.supplyType == null ? "" : master.supplyType.toString()
 
       let _master  = sanitizeDataAdvanced({...master}, TransactionMasterInitialData)

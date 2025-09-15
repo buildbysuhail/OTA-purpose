@@ -1053,7 +1053,7 @@ const VirtualRow = React.memo(
                 if (fieldKey === "warranty") {
                   options = formState.dataWarranty ?? [];
                 }
-                if (fieldKey === "brandID") {
+                if (fieldKey === "brand") {
                   options = formState.dataBrands ?? [];
                 }
                 const cellId = `${gridId}_${column.dataField}_${index}`;

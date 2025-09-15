@@ -1016,7 +1016,7 @@ export const purchaseGridCol = (
           voucherType == VoucherType.PurchaseReturn &&
           ![
             "mrp",
-            "hsnCodse",
+            "hsnCode",
             "cgst",
             "cgstPerc",
             "sgstPerc",

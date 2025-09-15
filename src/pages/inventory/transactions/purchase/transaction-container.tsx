@@ -13,6 +13,7 @@ import TransactionForm from "./transaction";
 import VoucherSelector from "../../../transaction-base/voucher-selector";
 import { useNavigate } from "react-router-dom";
 import { useUnsavedChangesWarning } from "../../../use-unsaved-changes-warning";
+import VoucherType from "../../../../enums/voucher-types";
 
 const api = new APIClient();
 const TransactionFormContainer: React.FC<TransactionProps> = (props) => {
@@ -63,6 +64,7 @@ const TransactionFormContainer: React.FC<TransactionProps> = (props) => {
   const { t } = useTranslation("transaction");
   const formState = useAppSelector((state: RootState) => state.InventoryTransaction);
   const userSession = useAppSelector((state: RootState) => state.UserSession);
+  const clientSession = useAppSelector((state: RootState) => state.ClientSession);
   const [openVoucherSelector, setOpenVoucherSelector] = useState<boolean>(false);
   const [store, setStore] = useState<{ data: any; totalCount: number }>();
   const navigate = useNavigate();
@@ -133,10 +135,17 @@ const TransactionFormContainer: React.FC<TransactionProps> = (props) => {
     if (isChooseVoucherEnabled(_input.title ?? "", userSession) && (_input.voucherNo ==  undefined ||  _input.voucherNo <= 0)) {
       const fetchData = async () => {
         try {
-          const res = await api.getAsync(
+          let res;
+          if(clientSession.isAppGlobal) {
+           res = await api.getAsync(
             `${Urls.voucher_selector}${_input.voucherType}`
           );
-
+          } else if(input.voucherType == VoucherType.PurchaseReturn && input.formType != "VAT") {
+             res = await api.getAsync(
+            `${Urls.inv_transaction_base}${_input.transactionType}/PrefixForms/?voucherType=${_input.voucherType}&formType=${_input.formType}`
+          );
+          }
+          
           
           if (
             res == undefined ||

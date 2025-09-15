@@ -885,9 +885,9 @@ const customerType = formType?.toUpperCase() === "PI-IND" ? "B2B"
           ...initialFormElements.orderApprovalStatus,
           visible: _formState.transaction.master.voucherType == VoucherType.PurchaseOrder,
           label: _formState.transaction.master.voucherType == VoucherType.PurchaseOrder && _formState.transaction.master.gatePassNo == "Approved"
-            ? "PO Approved"
+            ? t("po_approved")
             : _formState.transaction.master.voucherType == VoucherType.PurchaseOrder && _formState.transaction.master.gatePassNo != "Approved"
-              ? "PO Not Approved"
+              ? t("po_not_approved")
               : ""
         }
       } as any;

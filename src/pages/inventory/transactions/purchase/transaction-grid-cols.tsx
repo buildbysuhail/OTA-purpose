@@ -422,7 +422,7 @@ export const purchaseGridCol = (
       },
       {
         dataField: "mR",
-        caption: t("MR"),
+        caption: t("mr"),
         dataType: "number",
         width: 100,
         visible: false,
@@ -910,7 +910,7 @@ export const purchaseGridCol = (
       },
       {
         dataField: "itemType",
-        caption: "item_type",
+        caption: t("item_type"),
         dataType: "string",
         width: 55,
         visible: false,
@@ -918,7 +918,7 @@ export const purchaseGridCol = (
       },
       {
         dataField: "refBranchID",
-        caption: "ref_branch_id",
+        caption: t("ref_branch_id"),
         dataType: "string",
         width: 55,
         visible: false,
@@ -926,7 +926,7 @@ export const purchaseGridCol = (
       },
       {
         dataField: "employeeCode",
-        caption: "sm_code",
+        caption: t("sm_code"),
         dataType: "string",
         width: 55,
         visible: false,
@@ -934,7 +934,7 @@ export const purchaseGridCol = (
       },
       {
         dataField: "employeeName",
-        caption: "sales_man",
+        caption: t("sales_man"),
         dataType: "string",
         width: 55,
         visible: false,
@@ -942,7 +942,7 @@ export const purchaseGridCol = (
       },
       {
         dataField: "stdPurchasePrice",
-        caption: "purchase_price",
+        caption: t("purchase_price"),
         dataType: "number",
         width: 55,
         visible: false,
@@ -951,7 +951,7 @@ export const purchaseGridCol = (
       },
       {
         dataField: "refTransDtailId",
-        caption: "refTransDtailId",
+        caption: t("ref_trans_detail_id"),
         dataType: "number",
         width: 55,
         visible: false,

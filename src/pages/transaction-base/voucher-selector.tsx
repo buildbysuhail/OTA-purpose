@@ -1,34 +1,27 @@
-import { Fragment, useCallback, useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
+import { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useRootState } from "../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../components/types/dev-grid-column";
 import ErpDevGrid from "../../components/ERPComponents/erp-dev-grid";
-import Urls from "../../redux/urls";
-import { ActionType } from "../../redux/types";
 import { toggleCostCentrePopup } from "../../redux/slices/popup-reducer";
 import { APIClient } from "../../helpers/api-client";
 
 interface VoucherSelectorProps {
-  data: any;  
-  onRowDblClick?: (e: any) => void; 
+  data: any;
+  onRowDblClick?: (e: any) => void;
   isMaximized?: boolean;
-  modalHeight?: any;   
+  modalHeight?: any;
 }
 const api = new APIClient();
 const VoucherSelector: React.FC<VoucherSelectorProps> = ({ data, onRowDblClick, isMaximized, modalHeight, }) => {
-  const { t } = useTranslation();
-  const [gridHeight, setGridHeight] = useState<{
-    mobile: number;
-    windows: number;
-  }>({ mobile: 500, windows: 500 });
+  const { t } = useTranslation('transaction');
+  const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
 
   useEffect(() => {
     let gridHeightMobile = modalHeight - 50;
     let gridHeightWindows = modalHeight - 90;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, [isMaximized, modalHeight]);
+
   const columns: DevGridColumn[] = [
     {
       dataField: "formType",
@@ -74,25 +67,25 @@ const VoucherSelector: React.FC<VoucherSelectorProps> = ({ data, onRowDblClick, 
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-              <div className="grid grid-cols-1 gap-3">
-                <ErpDevGrid
-                  columns={columns}
-                  onRowDblClick={onRowDblClick}
-                  heightToAdjustOnWindowsInModal={gridHeight.windows}
-                  gridHeader={t("")}
-                  data={data}
-                  gridId="grd_cost_centre"
-                  popupAction={toggleCostCentrePopup}
-                  remoteOperations={{paging: false,filtering: false,  sorting: false}}
-                  hideGridAddButton={true}
-                  reload={true}
-                  showTotalCount={false}
-                ></ErpDevGrid>
-              </div>
-            </div>
+          <div className="grid grid-cols-1 gap-3">
+            <ErpDevGrid
+              columns={columns}
+              onRowDblClick={onRowDblClick}
+              heightToAdjustOnWindowsInModal={gridHeight.windows}
+              gridHeader={t("")}
+              data={data}
+              gridId="grd_cost_centre"
+              popupAction={toggleCostCentrePopup}
+              remoteOperations={{ paging: false, filtering: false, sorting: false }}
+              hideGridAddButton={true}
+              reload={true}
+              showTotalCount={false}
+            />
           </div>
-     
-      
+        </div>
+      </div>
+
+
     </Fragment>
   );
 };

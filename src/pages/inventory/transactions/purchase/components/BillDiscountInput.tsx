@@ -7,10 +7,7 @@ import { ChevronUp } from "lucide-react";
 import VoucherType from "../../../../../enums/voucher-types";
 
 interface BillDiscountInputProps extends VoucherElementProps {
-  handleKeyDown?: (
-    e: React.KeyboardEvent<HTMLInputElement>,
-    field: string
-  ) => void;
+  handleKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>, field: string) => void;
   dispatch: any;
   footerLayout?: "horizontal" | "vertical";
   applyDiscountsToItems?: () => void; // Add this line

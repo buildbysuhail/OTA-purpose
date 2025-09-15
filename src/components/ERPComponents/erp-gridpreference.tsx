@@ -11,6 +11,7 @@ import Urls from "../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { Ellipsis } from "lucide-react";
 import ERPToast from "./erp-toast";
+import { useAppState } from "../../utilities/hooks/useAppState";
 
 interface GridPreferenceChooserProps {
   gridId: string;
@@ -29,6 +30,8 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { t } = useTranslation("main");
   const [isSaving, setIsSaving] = useState(false);
+  const { appState } = useAppState();
+  const isRtl = appState.locale.rtl;
 
   const onChange = (e: any) => {
     onApplyPreferences(e);
@@ -199,7 +202,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
         <button
           onClick={(e) => { e.stopPropagation(); setIsOpen(true); }}
           onTouchEnd={() => setIsOpen(true)}
-          className={`${eclipseClass !== "" ? eclipseClass : "mt-[0px] absolute ms-[20px] left-0 z-10 pointer-events-auto"}`}
+          className={eclipseClass !== "" ? eclipseClass : `mt-[0px] absolute ms-[20px] ${isRtl ? "right-0" : "left-0"} z-10 pointer-events-auto`}
           style={{ zIndex: 10 }}>
           <Ellipsis className="text-[#0ea5e9] mjtestnow" />
         </button>

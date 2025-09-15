@@ -200,18 +200,18 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
   const groupKey = formState?.template?.templateGroup ?? (voucherType || "");
   const typeKey = formState?.template?.templateType?.toUpperCase() ?? "STANDARD";
-  const kindKey = formState?.template?.templateKind??"" ;
+  const kindKey = formState?.template?.templateKind ?? "";
   const templateToRender = useMemo(() => {
     return templateConfig?.[groupKey]?.[typeKey]?.[kindKey] ?? null;
   }, [groupKey, typeKey, kindKey]);
 
-
-const {
-  stableTemplateProps,
-  templateStyleProperties
-  } = useTemplateDesigner({ templateGroup:groupKey, templateKind: kindKey, designerType:typeKey,template:formState?.template
-  ,MasterIDParam:transactionMasterID,isInvTrans: false,dbIdValue: userSession.dbIdValue,isAppGlobal: clientSession.isAppGlobal,printCopies:1,transactionType:transactionType,voucherType:voucherType,
-  transDate:formState.transaction?.master?.transactionDate
+  const {
+    stableTemplateProps,
+    templateStyleProperties
+  } = useTemplateDesigner({
+    templateGroup: groupKey, templateKind: kindKey, designerType: typeKey, template: formState?.template
+    , MasterIDParam: transactionMasterID, isInvTrans: false, dbIdValue: userSession.dbIdValue, isAppGlobal: clientSession.isAppGlobal, printCopies: 1, transactionType: transactionType, voucherType: voucherType,
+    transDate: formState.transaction?.master?.transactionDate
   })
   const [showValidation, setShowValidation] = useState(false);
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
@@ -3267,7 +3267,7 @@ const {
         </div>
 
         {/* </div> */}
-        <div className="hidden md:block mr-2">
+        <div className={`hidden md:block ${isRtl ? "ml-2" : "mr-2"}`}>
           <h6 className="font-semibold whitespace-nowrap text-[20px] ">
             {" "}
             <span className="!font-medium !text-gray-600">{t("total")}: </span>
@@ -3327,50 +3327,50 @@ const {
             );
           }}
           content={
-          //   <PDFViewer
-          //     className="pdf-viewer"
-          //     width="100%"
-          //     height={700}
-          //     style={{ padding: "10px" }}
-          //   >
-          // {renderSelectedTemplate({ template: formState.template, data: formState.transaction, })}
+            //   <PDFViewer
+            //     className="pdf-viewer"
+            //     width="100%"
+            //     height={700}
+            //     style={{ padding: "10px" }}
+            //   >
+            // {renderSelectedTemplate({ template: formState.template, data: formState.transaction, })}
 
-          //   </PDFViewer>
-             <div className="flex justify-center"  >
-                        <div className="relative">
-                          {/* Preview Container with Modern Styling */}
-                          <div
+            //   </PDFViewer>
+            <div className="flex justify-center"  >
+              <div className="relative">
+                {/* Preview Container with Modern Styling */}
+                <div
 
-                            className="shadow-lg   border border-gray-200 overflow-hidden"
-                            style={{
-                              width: `${templateStyleProperties.previewWidth??500}pt`,
-                              height: `${templateStyleProperties.previewHeight??500}pt`,
+                  className="shadow-lg   border border-gray-200 overflow-hidden"
+                  style={{
+                    width: `${templateStyleProperties.previewWidth ?? 500}pt`,
+                    height: `${templateStyleProperties.previewHeight ?? 500}pt`,
 
-                            }}
-                          >
-                            {/* Paper Effect */}
-                            {/* <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900" /> */}
+                  }}
+                >
+                  {/* Paper Effect */}
+                  {/* <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900" /> */}
 
-                            {/* Template Content */}
-                            <div className="relative h-full   w-full ">
-                              {React.cloneElement(templateToRender.PreviewComponent,  stableTemplateProps)}
-                            </div>
-                          </div>
+                  {/* Template Content */}
+                  <div className="relative h-full   w-full ">
+                    {React.cloneElement(templateToRender.PreviewComponent, stableTemplateProps)}
+                  </div>
+                </div>
 
-                          {/* Drop Shadow Effect */}
-                          <div
-                            className="absolute -bottom-2 -right-2 bg-gray-400/20 dark:bg-gray-600/20 rounded-lg -z-10"
-                            style={{
-                              width: `${templateStyleProperties.previewWidth}pt`,
-                              height: `${templateStyleProperties.previewHeight}pt`,
-                              minHeight: "400px",
+                {/* Drop Shadow Effect */}
+                <div
+                  className="absolute -bottom-2 -right-2 bg-gray-400/20 dark:bg-gray-600/20 rounded-lg -z-10"
+                  style={{
+                    width: `${templateStyleProperties.previewWidth}pt`,
+                    height: `${templateStyleProperties.previewHeight}pt`,
+                    minHeight: "400px",
 
-                            }}
-                          />
-                        </div>
-                      </div>
+                  }}
+                />
+              </div>
+            </div>
           }
-        ></ERPModal>
+        />
       )}
       {isPartyDetailsOpen && (
         <CustomerDetailsSidebar
@@ -3384,19 +3384,19 @@ const {
         isOpen={isTemplateOpen}
         setIsOpen={setIsTemplateOpen}
         children={<TemplatesView setIsOpen={setIsTemplateOpen} />}
-      ></ERPResizableSidebar>
+      />
       <ERPResizableSidebar
         minWidth={350}
         isOpen={isAttachmentOpen}
         setIsOpen={setIsAttachmentOpen}
         children={<ERPAttachment setIsOpen={setIsAttachmentOpen} />}
-      ></ERPResizableSidebar>
+      />
       <ERPResizableSidebar
         minWidth={350}
         isOpen={isHistoryOpen}
         setIsOpen={setIsHistoryOpen}
         children={<ERPAttachment setIsOpen={setIsHistoryOpen} />}
-      ></ERPResizableSidebar>
+      />
       {formState.openUnsavedPrompt == true && (
         <UnsavedChangesModal
           isOpen={formState.openUnsavedPrompt == true}

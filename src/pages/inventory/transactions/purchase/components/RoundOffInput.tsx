@@ -5,6 +5,7 @@ import { VoucherElementProps } from "../../purchase/transaction-types";
 import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
 import { formStateMasterHandleFieldChange } from "../reducer";
 import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
+import { useAppState } from "../../../../../utilities/hooks/useAppState";
 
 interface RoundOffInputProps extends VoucherElementProps {
   handleKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>, field: string) => void;
@@ -12,15 +13,10 @@ interface RoundOffInputProps extends VoucherElementProps {
   focusAmount: () => void;
 }
 
-const RoundOffInput: React.FC<RoundOffInputProps> = ({
-  formState,
-  t,
-  handleKeyDown,
-  focusDiscount,
-  focusAmount,
-}) => {
+const RoundOffInput: React.FC<RoundOffInputProps> = ({ formState, t, handleKeyDown, focusDiscount, focusAmount, }) => {
   const dispatch = useAppDispatch();
-
+  const { appState } = useAppState();
+  const isRtl = appState.locale.rtl;
   const { value, onChange } = useDebouncedInput(
     formState.transaction.master.roundAmount || '',
     (debouncedValue) => {
@@ -29,8 +25,7 @@ const RoundOffInput: React.FC<RoundOffInputProps> = ({
           fields: { roundAmount: debouncedValue },
         })
       );
-    },
-    300
+    }, 300
   );
 
   return (
@@ -38,7 +33,7 @@ const RoundOffInput: React.FC<RoundOffInputProps> = ({
       <ERPCheckbox
         localInputBox={formState?.userConfig?.inputBoxStyle}
         id="hasroundOff"
-        className="text-left"
+        className={isRtl ? "text-right" : "text-left"}
         label={t(formState.formElements.roundOff.label)}
         checked={formState.transaction.master.hasroundOff}
         onChange={(e) => {

@@ -604,8 +604,9 @@ export const useTransaction = (
         voucher.transaction
       );
     }
-    voucher = await loadLedgerData(voucher) as any;
+    debugger;
     voucher.isInitialLedger = true;
+    voucher = await loadLedgerData(voucher) as any;
     return voucher;
   };
   const refactorAttachments = (transaction: TransactionData) => {
@@ -3808,7 +3809,7 @@ export const useTransaction = (
             `${Urls.inv_transaction_base}${transactionType}/LedgerDetails?LedgerId=${ledgerID}`
           ),
         ]);
-
+debugger;
         const ret = {
           ..._formState,
           formElements: {
@@ -3832,7 +3833,8 @@ export const useTransaction = (
               ledgerID: ledgerID,
               partyName: ledgerData?.partyName ?? "",
               displayName: ledgerData?.displayName ?? "",
-              address1: ledgerData?.address1 ?? "", address4: ledgerData?.mobileNumber ?? "",
+              address1: ledgerData?.address1 ?? "", 
+              address4: _formState.isInitialLedger ? _formState.transaction?.master?.address4: ledgerData?.mobileNumber ?? "",
               address3: ledgerData?.address3 ?? "",
             }
           }

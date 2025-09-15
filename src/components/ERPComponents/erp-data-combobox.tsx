@@ -453,6 +453,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     const [activeIndex, setActiveIndex] = useState(-1);
     const [inputValue, setInputValue] = useState(initialInputValue);
     const comboboxRef = useRef<HTMLDivElement>(null);
+    const [isTyping, setIsTyping] = useState(false);
     const listRef = useRef<List>(null);
     const componentRef = useRef<HTMLDivElement>(null);
     const appState = useAppSelector(
@@ -962,96 +963,123 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     );
 
     useEffect(() => {
-      const fieldKey = field?.id?.replaceAll("_id", "");
-      const defaultValueKey = getNestedValue(
-        defaultData?.[fieldKey ?? ""],
-        field?.valueKey ?? ""
-      );
-      let final: Option | null = null;
-      // Handle value == -2 by selecting the first item if items are loaded
+  // Don't interfere if user is typing
+  if (isTyping) {
+    return;
+  }
 
-        const x = getListUrl;
-        const y = `${field?.getListUrl??""}${field?.params??""}`;
+  const fieldKey = field?.id?.replaceAll("_id", "");
+  const defaultValueKey = getNestedValue(
+    defaultData?.[fieldKey ?? ""],
+    field?.valueKey ?? ""
+  );
+  let final: Option | null = null;
 
-        if(field?.dataNameField != undefined && field?.dataNameField != "") {
-          const dataNameFieldValue = data[field.dataNameField]
-          if(isNullOrUndefinedOrEmpty(dataNameFieldValue)) {
-            const dfo = items.find(x => x.value == value); // Select first item
-            if(dfo) {
-              handleItemClick(dfo);
-              return;
-            }
-          }
-        }
-        if (value === -2 && x== y) {
-          if(items.length == 0) {
-            return;
-          }
-          final = items[0]; // Select first item
-          handleItemClick(final);
-        } else  {
-          const _default = items?.find(
-            (option) => option.value === defaultValueKey
-          );
-          const _selected = items?.find(
-            (option) => option.value === (value ? value : data?.[field?.id ?? ""])
-          );
-          const _exceptional =
-            (defaultData && fieldKey === "payment_terms" && items[0]) ||
-            fieldKey === "currency";
-          final = _selected || _default || _exceptional || initialValue || null;
-        }
+  const x = getListUrl;
+  const y = `${field?.getListUrl ?? ""}${field?.params ?? ""}`;
 
-        const dfdf = inputValue;
-        if (
-          (value === undefined || value === null) &&
-          (data?.[field?.id ?? ""] === undefined || data?.[field?.id ?? ""] === null) &&
-          value !== -2
-        ) {
-          setInitial(null);
-          if (value === null) {
-            handleItemClick({ value: "", label: "" });
-            setInputValue("");
-          }
-          setDisplayValue("");
-        } else if (final !== initial && value !== -2) {
-          setInitial(final);
-          setInputValue(final?.label || "");
-          setDisplayValue(final?.label ? truncateText(final.label, ref as React.RefObject<HTMLInputElement>) : "");
-        }
+  // Handle dataNameField logic
+  if (field?.dataNameField != undefined && field?.dataNameField != "") {
+    const dataNameFieldValue = data[field.dataNameField];
+    if (isNullOrUndefinedOrEmpty(dataNameFieldValue)) {
+      const dfo = items.find(x => x.value == value);
+      if (dfo) {
+        handleItemClick(dfo);
+        return;
+      }
+    }
+  }
 
-        // Set activeIndex for keyboard navigation
-        setActiveIndex(
-          final != null
-            ? filteredItems?.findIndex((item) => item.value === final.value)
-            : -1
-        );
-      }, [
-        memoizedItems,
-        memoizedData,
-        memoizedField,
-        memoizedFilteredItems,
-        value,
-        // initial, // Added to check for changes
-        // ref,
-        // triggerEffect
-      ]);
+  // Handle value === -2 (select first item)
+  if (value === -2 && x == y) {
+    if (items.length == 0) {
+      return;
+    }
+    final = items[0];
+    handleItemClick(final);
+    return;
+  }
+
+  // Handle null/undefined value
+  if (
+    (value === undefined || value === null) &&
+    (data?.[field?.id ?? ""] === undefined || data?.[field?.id ?? ""] === null) &&
+    value !== -2
+  ) {
+    // Only clear if we haven't already cleared
+    if (initial !== null) {
+      setInitial(null);
+      setDisplayValue("");
+      setInputValue("");
+    }
+    return;
+  }
+
+  // Find the appropriate option to select
+  const _default = items?.find(
+    (option) => option.value === defaultValueKey
+  );
+  const _selected = items?.find(
+    (option) => option.value === (value ? value : data?.[field?.id ?? ""])
+  );
+  const _exceptional =
+    (defaultData && fieldKey === "payment_terms" && items[0]) ||
+    fieldKey === "currency";
+  
+  final = _selected || _default || _exceptional || initialValue || null;
+
+  // Only update if there's an actual change
+  if (final !== initial) {
+    setInitial(final);
+    setInputValue(final?.label || "");
+    setDisplayValue(
+      final?.label 
+        ? truncateText(final.label, ref as React.RefObject<HTMLInputElement>) 
+        : ""
+    );
+  }
+
+  // Set activeIndex for keyboard navigation
+  setActiveIndex(
+    final != null
+      ? filteredItems?.findIndex((item) => item.value === final.value)
+      : -1
+  );
+}, [
+  memoizedItems,
+  memoizedData,
+  memoizedField,
+  memoizedFilteredItems,
+  value,
+  isTyping, // Add this dependency
+]);
     const clearSelection = (e?: React.MouseEvent) => {
-      handleItemClick({
-        label: "",
-        value: undefined,
-        is_active: false,
-        name: "",
-      });
-    };
+  e?.stopPropagation();
+  setInitial(null);
+  setInputValue("");
+  setDisplayValue("");
+  setQuery("");
+  setIsTyping(false); // Reset typing flag
+  setFilteredItems(items);
+   setActiveIndex(0);
+  
+  // Notify parent of the cleared value
+  handleItemClick({
+    label: "",
+    value: undefined,
+    is_active: false,
+    name: "",
+  });
+};
 
     const handleItemClick = (value: Option) => {
-      setInitial(value);
-      setIsOpen(false);
-      setQuery("");
-      setInputValue(value.label);
-      setDisplayValue("");
-      setFilteredItems(items); // Reset filtered items to original list
+       setInitial(value);
+  setIsOpen(false);
+  setQuery("");
+  setInputValue(value.label);
+  setDisplayValue("");
+  setIsTyping(false); // Reset typing flag when selecting
+  setFilteredItems(items);
       onChange?.(value);
       if (onChangeData) {
         const updatedData = { ...data };
@@ -1081,15 +1109,16 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     };
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const value = event.target.value;
-      setInputValue(value);
-      setQuery(value);
-      setIsOpen(true);
-      if (!value.trim()) {
-        setFilteredItems(items);
-      }
-      onTextChange && onTextChange(value);
-    };
+  const value = event.target.value;
+  setInputValue(value);
+  setQuery(value);
+  setIsOpen(true);
+  setIsTyping(true); // Mark as typing
+  if (!value.trim()) {
+    setFilteredItems(items);
+  }
+  onTextChange && onTextChange(value);
+};
 
     const moveToNextInputField = (event: React.KeyboardEvent<any>) => {
       const formInputs = Array.from(
@@ -1193,9 +1222,10 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
 
       switch (event.key) {
         case "ArrowDown":
+          debugger;
           event.preventDefault();
           setActiveIndex((prev) =>
-            prev < filteredItems.length - 1 ? prev + 1 : prev
+            prev < filteredItems.length - 1 ? prev + 1 : 0
           );
           if (listRef.current) {
             listRef.current.scrollToItem(

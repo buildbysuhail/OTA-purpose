@@ -177,8 +177,8 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({ formS
                     className="flex-1 h-6 text-xs w-full sm:max-w-36"
                     field={{
                       id: "driverID",
-                      valueKey: "id",
-                      labelKey: "name",
+                      valueKey: "EmployeeID",
+                      labelKey: "EmployeeName",
                       getListUrl: Urls.data_driver
                     }}
                     onSelectItem={(data) => dispatch(formStateMasterHandleFieldChange({ fields: { driverID: data.value } }))}

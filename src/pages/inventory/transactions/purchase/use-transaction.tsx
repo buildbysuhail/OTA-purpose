@@ -2557,6 +2557,7 @@ export const useTransaction = (
         );
       } else if (res?.products?.length === 1) {
         let product = res.products[0];
+        product.productName = product.productName.replace(/^\s+/, m => "\u00A0".repeat(m.length));
         const _index =
           forImport != true
             ? formState.transaction.details.findIndex(

@@ -1591,10 +1591,7 @@ let detail  = sanitizeDataAdvanced({...rowDetail}, initialTransactionDetailData)
 
     const attachMaster = (formState: TransactionFormState) => {
       const master: TransactionMaster = {
-        ...formState.transaction.master,
-        address2: "",
-        address3: "",
-        address4: "",
+        ...formState.transaction.master
       };
       master.partyName = !isNullOrUndefinedOrEmpty(master.displayName) ? master.displayName : master.partyName
       master.invTransactionMasterID = formState.isEdit

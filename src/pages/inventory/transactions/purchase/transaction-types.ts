@@ -196,11 +196,6 @@ export interface TransactionMaster {
   pdtVerified: string;
   pdtRemarks: string;
   counterName: string;
-  creditCardDetails: string;
-  cashTip: number;
-  cardTip: number;
-  notes1: string;
-  notes2: string;
   particulars: string; //new
   lb: boolean; //new
   hasCashPaid: boolean; //new
@@ -210,6 +205,7 @@ export interface TransactionMaster {
   prevTransDate: string;
   oldLedgerID: number;
   dueDays: number;
+  master2: TransactionMaster2
   master3: TransactionMaster3
 }
 
@@ -234,7 +230,14 @@ export interface TransactionMaster3 {
   shipLocation: string;
   shipStateCode: number;
 }
-
+export interface TransactionMaster2 {
+  invTransactionMasterID: number;
+  creditCardDetails: string;
+  cashTip: number;
+  cardTip: number;
+  notes1: string;
+  notes2: string;
+}
 export interface TransactionMaster3Validations {}
 export interface TransactionMasterValidations {}
 export interface CommonParams {

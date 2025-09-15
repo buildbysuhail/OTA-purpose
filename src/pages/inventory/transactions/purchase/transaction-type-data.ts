@@ -3,7 +3,7 @@ import { Dispatch } from "react";
 import { AnyAction } from "redux";
 import { inputBox } from "../../../../redux/slices/app/types";
 import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
-import { TransactionMaster, TransactionValidationsData, TransactionDetail, TransactionMaster3, FormElementState, TransactionFormState, SummaryItems, TransactionData, BarcodeLabel, ProductDisplayDto, EmployeeType, TransactionDetails2 } from "./transaction-types";
+import { TransactionMaster, TransactionValidationsData, TransactionDetail, TransactionMaster3, FormElementState, TransactionFormState, SummaryItems, TransactionData, BarcodeLabel, ProductDisplayDto, EmployeeType, TransactionDetails2, TransactionMaster2 } from "./transaction-types";
 import { generateUniqueKey } from "../../../../utilities/Utils";
 
 
@@ -72,6 +72,14 @@ export const initialTransactionDetails2: TransactionDetails2 = {
   calamityCess: 0,
   additionalCessPerc: 0,
   additionalCess: 0,
+};
+export const initialInvTransactionMaster2: TransactionMaster2 = {
+  invTransactionMasterID: 0,
+  creditCardDetails: "",
+  cashTip: 0,
+  cardTip: 0,
+  notes1: "",
+  notes2: "",
 };
 export const TransactionMasterInitialData: TransactionMaster = {
   invTransactionMasterID: 0,
@@ -170,11 +178,6 @@ export const TransactionMasterInitialData: TransactionMaster = {
   pdtVerified: "",
   pdtRemarks: "0",
   counterName: "",
-  creditCardDetails: "",
-  cashTip: 0.0,
-  cardTip: 0.0,
-  notes1: "",
-  notes2: "",
   // referenceDate: new Date().toISOString(),
   // referenceNumber: "",
   particulars: "",
@@ -186,6 +189,7 @@ export const TransactionMasterInitialData: TransactionMaster = {
   oldLedgerID: 0,
   dueDays: 0,
   gRNMasterID: 0,
+  master2: initialInvTransactionMaster2,
   master3: TransactionMaster3InitialData
 }
 export const initialTransactionDetailData: TransactionDetail = {
@@ -639,7 +643,12 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   dataBrands: [],
   gridColumns: [],
   showGridTheme: false,
-  headerMorePop: false
+  headerMorePop: false,
+  memoEditor: {
+    visible: false,
+    data: "",
+    rowIndex: 0
+  }
 }
 
 export const initialProductData: BarcodeLabel = {

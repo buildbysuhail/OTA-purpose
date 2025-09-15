@@ -581,7 +581,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             <div className={`hidden md:flex ${footerLayout === "vertical" ? "flex-col items-start w-full" : "flex-col items-start w-full md:w-auto"}`}>
               <div className={`flex ${footerLayout === "vertical" ? "flex-col items-start" : "items-end"} gap-2 mb-2`}>
                 <div className={`flex items-center w-full ${footerLayout === "vertical" ? "justify-between" : "gap-2"}`}>
-                  {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+                    {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && formState.transaction.master.voucherType !== VoucherType.PurchaseEstimate && (
                     <CashPaidSection
                       formState={formState}
                       dispatch={dispatch}
@@ -590,7 +590,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                       focusAmount={focusAmount}
                     />
                   )}
-                  {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+                  {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && formState.transaction.master.voucherType !== VoucherType.PurchaseEstimate && (
                     <RoundOffInput
                       formState={formState}
                       dispatch={dispatch}
@@ -780,7 +780,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           <div className="flex md:hidden flex-col w-full max-w-full">
             <div className="flex flex-col gap-2 mb-2">
               <div className="flex flex-wrap items-end gap-2 w-full">
-                {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+                  {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && formState.transaction.master.voucherType !== VoucherType.PurchaseEstimate && (
                   <CashPaidSection
                     formState={formState}
                     dispatch={dispatch}
@@ -789,7 +789,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     focusAmount={focusAmount}
                   />
                 )}
-                {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+                  {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && formState.transaction.master.voucherType !== VoucherType.PurchaseEstimate && (
                   <RoundOffInput
                     formState={formState}
                     dispatch={dispatch}

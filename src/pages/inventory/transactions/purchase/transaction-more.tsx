@@ -3,7 +3,7 @@ import { useDebouncedInput } from "../../../../utilities/hooks/useDebounce";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
-import { formStateMasterHandleFieldChange } from "./reducer";
+import { formStateHandleFieldChangeKeysOnly, formStateMasterHandleFieldChange } from "./reducer";
 import { useTranslation } from "react-i18next";
 import { Ellipsis } from "lucide-react";
 import Urls from "../../../../redux/urls";
@@ -106,11 +106,11 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({ formS
   );
 
   const { value: notes1Value, onChange: onNotes1Change } = useDebouncedInput(
-    formState.transaction.master.notes1 || '',
+    formState.transaction.master.master2.notes1 || '',
     (debouncedValue) => {
       dispatch(
-        formStateMasterHandleFieldChange({
-          fields: { notes1: debouncedValue },
+        formStateHandleFieldChangeKeysOnly({
+          fields: { transaction:{master:{master2:{notes1: debouncedValue}}} },
         })
       );
     },
@@ -118,11 +118,11 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({ formS
   );
 
   const { value: notes2Value, onChange: onNotes2Change } = useDebouncedInput(
-    formState.transaction.master.notes2 || '',
+    formState.transaction.master.master2.notes2 || '',
     (debouncedValue) => {
       dispatch(
-        formStateMasterHandleFieldChange({
-          fields: { notes2: debouncedValue },
+        formStateHandleFieldChangeKeysOnly({
+          fields: { transaction:{master:{master2:{notes2: debouncedValue}}} },
         })
       );
     },

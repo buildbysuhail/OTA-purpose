@@ -200,7 +200,10 @@ interface RowData {
   gridIsBold: boolean;
   rowHeight: number;
   dir: "ltr" | "rtl";
-  columnWidths: number[];
+  columnWidths: {
+    width: number;
+    field: string;
+}[];
   gridBorderColor?: string;
   formState: TransactionFormState;
   appState: AppState;
@@ -721,9 +724,6 @@ const VirtualRow = React.memo(
 
     const rowBg = `${appState.mode === "dark" ? index % 2 === 0 ? "bg-[#333333]" : "bg-[#444444]" : index % 2 === 0 ? "bg-white" : "bg-[#f9f9f9]"} ${appState.mode === "dark" ? "hover:bg-[#555555]" : "hover:bg-gradient-to-r hover:from-[#eff6ff66] hover:to-[#eef2ff4d]"}`;
 
-    const totalGridWidth = useMemo(() => {
-      return columnWidths.reduce((sum, width) => sum + width, 0);
-    }, [columnWidths]);
 
     const [itemName, setItemName] = useState('');
     const [quantity, setQuantity] = useState('');
@@ -1066,9 +1066,9 @@ const VirtualRow = React.memo(
                   <div
                     key={`${column.dataField}`}
                     style={{
-                      width: `${columnWidths[colIndex]}px`,
-                      minWidth: `${columnWidths[colIndex]}px`,
-                      maxWidth: `${columnWidths[colIndex]}px`,
+                      width: `${columnWidths?.find(x => x.field == column.dataField)?.width}px`,
+                      minWidth: `${columnWidths?.find(x => x.field == column.dataField)?.width}px`,
+                      maxWidth: `${columnWidths?.find(x => x.field == column.dataField)?.width}px`,
                       borderRight: isFirstColumn ? `2px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.2)" : `rgba(${gridBorderColor || "226,232,240"})`}`
                         : isLastColumn ? "none" : showBorder ? `0.2px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.1)" : `rgba(${gridBorderColor || "226,232,240"}, 0.8)`}` : "none",
                       borderLeft: isLastColumn ? `2px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.2)" : `rgba(${gridBorderColor || "226,232,240"})`}` : "none",
@@ -1168,7 +1168,7 @@ const VirtualRow = React.memo(
                           />
                         </svg>
                       </button>
-                    ) : column.dataField === "removeCol" ? (
+                    ) : column.dataField === "actionCol" ? (
                       <div className="flex items-center justify-center gap-1"
                         style={{
                           border: `solid 1px ${borderColor}`
@@ -1181,7 +1181,7 @@ const VirtualRow = React.memo(
                         </button>
                         <button
                           disabled={formState.formElements.pnlMasters?.disabled}
-                          onClick={() => onKeyDown(item.slNo, { key: "Enter" } as any, "removeCol", index)}
+                          onClick={() => onKeyDown(item.slNo, { key: "Enter" } as any, "actionCol", index)}
                           className={`group relative flex items-center justify-center w-7 h-7 transition-all duration-500 ease-out hover:rounded-full hover:scale-105 hover:shadow-lg hover:border ${appState.mode === "dark" ? "hover:bg-red-900 hover:border-red-700" : "hover:bg-red-50 hover:border-red-200"}`}>
                           <Trash2 className={`w-4 h-4 transition-all duration-300 ${appState.mode === "dark" ? "text-red-400 group-hover:text-red-300" : "text-red-600 group-hover:text-red-700"}`} />
                         </button>
@@ -1382,7 +1382,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
     const virtualContainerRef = useRef<HTMLDivElement>(null);
 
     const totalGridWidth = useMemo(() => {
-      return columnWidths.reduce((sum, width) => sum + width, 0);
+      return columnWidths.reduce((sum, widthItems) => sum + widthItems.width, 0);
     }, [columnWidths]);
 
     const handleShowGridTheme = () => {
@@ -1405,14 +1405,15 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       }
     }, [gridId, _columns]);
 
-    const columns = useMemo(() => {
+    const columns: ColumnModel[]  = useMemo(() => {
       const visibleColumns =
         formState.gridColumns?.filter((x) => x.visible !== false) ?? [];
 
       if (columnOrder.length > 0 && visibleColumns?.length > 0) {
-        return columnOrder
-          .map((index) => visibleColumns[index])
+        const vc: ColumnModel[] = columnOrder
+          .map((or) => visibleColumns.find(x => x.dataField == or.field))
           .filter((col) => col !== undefined);
+          return vc;
       }
       return visibleColumns;
     }, [columnOrder, formState.gridColumns]);
@@ -1431,11 +1432,15 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
         formState.gridColumns?.filter((col) => col.visible !== false) ?? [];
 
       if (columnOrder.length === 0) {
-        setColumnOrder(visibleColumns.map((_, index) => index));
+        setColumnOrder(visibleColumns.map((_, index) => {
+          return {field: _.dataField??"", index: index}
+        }));
       }
 
       if (columnWidths.length === 0) {
-        setColumnWidths(visibleColumns.map((col) => col.width ?? 0));
+        setColumnWidths(visibleColumns.map((col) => {
+          return { field: col.dataField??"", width:col.width ?? 0}
+        }));
       }
     }, [
       formState.gridColumns,
@@ -1465,9 +1470,11 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
         const handleMouseDown = (e: Event) => {
           const mouseEvent = e as MouseEvent;
           if (containerRef.current) {
+            const field = (handle as HTMLElement).getAttribute("data-field") ?? "";
             startResize(
               mouseEvent,
               isRTL ? index - 1 : index,
+              field,
               containerRef.current,
               columnWidths
             );
@@ -2154,9 +2161,9 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                         onDragOver={(e) => handleDragOver(e, index)}
                         onDrop={(e) => handleDrop(e, index)}
                         style={{
-                          width: `${columnWidths[index]}px`,
-                          minWidth: `${columnWidths[index]}px`,
-                          maxWidth: `${columnWidths[index]}px`,
+                          width: `${columnWidths?.find(x => x.field == column.dataField)?.width}px`,
+                          minWidth: `${columnWidths?.find(x => x.field == column.dataField)?.width}px`,
+                          maxWidth: `${columnWidths?.find(x => x.field == column.dataField)?.width}px`,
                           padding: "8px 12px",
                           borderRight: isFirstColumn ? `2px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.2)" : `rgba(${gridBorderColor || "226,232,240"})`}`
                             : isLastColumn ? "none" : showBorder ? `0.2px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.1)" : `rgba(${gridBorderColor || "226,232,240"}, 0.8)`}` : "none",
@@ -2176,7 +2183,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                           zIndex: isFixed ? 110 : 100,
                         }}
                       >
-                        {index === 0 ? (
+                        {column.dataField === "slNo" ? (
                           <>
                             <div className="absolute top-[3px] left-[3px]">
                               <button
@@ -2198,9 +2205,10 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                             {column.caption}
                           </>
                         )}
-                        {index < columns.length - 1 && (
+                        {column.dataField === "actionCol" && (
                           <div
                             data-resize-handle
+                            data-field={column.dataField}
                             style={{
                               position: "absolute",
                               right: "-2px",
@@ -2239,6 +2247,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                   formState.transaction.details.length === 0 ? (
                   <></>
                 ) : (
+                  
                   visibleItems.map(({ index, top }) => (
                     <VirtualRow
                       t={t}
@@ -2326,9 +2335,9 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                     <div
                       key={`footer-${column.dataField}`}
                       style={{
-                        width: `${columnWidths[colIndex]}px`,
-                        minWidth: `${columnWidths[colIndex]}px`,
-                        maxWidth: `${columnWidths[colIndex]}px`,
+                        width: `${columnWidths?.find(x => x.field == column.dataField)?.width}px`,
+                        minWidth: `${columnWidths?.find(x => x.field == column.dataField)?.width}px`,
+                        maxWidth: `${columnWidths?.find(x => x.field == column.dataField)?.width}px`,
                         padding: "8px 12px",
                         borderRight: isFirstColumn ? `2px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.2)" : `rgba(${gridBorderColor || "226,232,240"})`}`
                           : isLastColumn ? "none" : showBorder ? `0.2px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.1)" : `rgba(${gridBorderColor || "226,232,240"}, 0.8)`}` : "none",

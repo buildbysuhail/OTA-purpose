@@ -28,6 +28,7 @@ import { generateUniqueKey } from "../../../../utilities/Utils";
 import moment from "moment";
 import { modelToBase64Unicode } from "../../../../utilities/jsonConverter";
 import { setTransactionForHistory } from "../../../../helpers/transaction-modified-util";
+import _ from "lodash";
 
 const InvTransactionSlice = createSlice({
   name: "invTransaction",
@@ -715,7 +716,7 @@ const InvTransactionSlice = createSlice({
                   }
 
                   // Batch assign instead of individual property updates
-                  Object.assign(state.transaction.details[toIndex], detailItem);
+                  _.merge(state.transaction.details[toIndex], detailItem);
                 } else {
                   // Replace the entire row
                   (state as any).transaction.details[toIndex] = {

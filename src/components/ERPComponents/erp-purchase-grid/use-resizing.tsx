@@ -17,13 +17,13 @@ import {
 export const useTableResizeAndReorder = (gridID: string, onApplyPreferences: any) => {
   const isResizing = useRef(false);
   const isDragging = useRef(false);
-  const currentColumnIndex = useRef<number>(-1);
+  const currentColumnIndex = useRef<{index: number, field: string}>({index:-1, field:""});
   const dragStartIndex = useRef<number>(-1);
   const startX = useRef(0);
   const startWidth = useRef(0);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [columnWidths, setColumnWidths] = useState<number[]>([]);
-  const [columnOrder, setColumnOrder] = useState<number[]>([]);
+  const [columnWidths, setColumnWidths] = useState<{width: number, field: string}[]>([]);
+  const [columnOrder, setColumnOrder] = useState<{index: number, field: string}[]>([]);
   const [dragOverIndex, setDragOverIndex] = useState<number>(-1);
   const formState = useSelector(
     (state: RootState) => state.InventoryTransaction
@@ -36,16 +36,18 @@ export const useTableResizeAndReorder = (gridID: string, onApplyPreferences: any
   const startResize = (
     e: MouseEvent,
     columnIndex: number,
+    field: string,
     container: HTMLDivElement,
-    initialWidths: number[]
+    initialWidths: {width:number, field: string}[]
   ) => {
     e.preventDefault();
     e.stopPropagation();
     isResizing.current = true;
-    currentColumnIndex.current = columnIndex;
+    currentColumnIndex.current.index = columnIndex;
+    currentColumnIndex.current.field = field;
     startX.current = e.clientX;
     containerRef.current = container;
-    startWidth.current = initialWidths[columnIndex];
+    startWidth.current = initialWidths?.find(x => x.field == field)?.width??0;
 
     document.body.style.cursor = "col-resize";
     document.body.style.userSelect = "none";
@@ -61,34 +63,24 @@ export const useTableResizeAndReorder = (gridID: string, onApplyPreferences: any
     columnWidthsRef.current = columnWidths;
   }, [columnWidths]);
   const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (!isResizing.current || !containerRef.current || currentColumnIndex.current === -1) return;
+    if (!isResizing.current || !containerRef.current || currentColumnIndex.current.index === -1) return;
 
     const isRTL = getComputedStyle(containerRef.current).direction === 'rtl';
 
     const diff = e.clientX - startX.current;
     const adjustedDiff = isRTL ? -diff : diff;
     const newWidth = Math.max(50, startWidth.current + adjustedDiff);
-    const columnIndex = currentColumnIndex.current;
+    const columnIndex = currentColumnIndex.current.index;
 
     setColumnWidths((prevWidths) => {
       const newWidths = [...prevWidths];
-      newWidths[columnIndex] = newWidth;
-      console.log(newWidths);
-      return newWidths;
-    });
-
-    // Batch state update
-    // Batch state update
-    setColumnWidths((prevWidths) => {
-      const newWidths = [...prevWidths];
-      newWidths[columnIndex] = newWidth;
-      console.log(newWidths);
-
-      // Store current widths in ref for stopResize to access
+      if(newWidths.find(x => x.field == currentColumnIndex.current.field)) {
+      newWidths.find(x => x.field == currentColumnIndex.current.field)!.width = newWidth;
+      }
       columnWidthsRef.current = newWidths;
-
       return newWidths;
     });
+
 
     // Direct DOM manipulation for immediate visual feedback
     const headerCells = containerRef.current!.querySelectorAll(`
@@ -106,9 +98,7 @@ export const useTableResizeAndReorder = (gridID: string, onApplyPreferences: any
   }, []);
 
   const stopResize = useCallback(() => {
-    const column = formState.gridColumns?.filter((x) => x.visible != false)![
-      currentColumnIndex.current
-    ];
+    const column = formState.gridColumns?.find((x) => x.visible != false && x.dataField == currentColumnIndex.current.field);
 
     const currentWidths = columnWidthsRef.current;
     console.log(currentWidths);
@@ -118,8 +108,8 @@ export const useTableResizeAndReorder = (gridID: string, onApplyPreferences: any
         fields: {
           gridColumns: [
             {
-              dataField: column.dataField,
-              width: currentWidths[currentColumnIndex.current],
+              dataField: column?.dataField,
+              width: currentWidths?.find(x => x.field == column?.dataField),
             },
           ],
         },
@@ -148,19 +138,20 @@ export const useTableResizeAndReorder = (gridID: string, onApplyPreferences: any
     };
 
     const ind = (parsedPreferences.columnPreferences as Array<ColumnPreference>).findIndex(
-      (x) => x.dataField == column.dataField
+      (x) => x.dataField == column?.dataField
     );
     if (ind > -1) {
       parsedPreferences.columnPreferences[ind] = {
         ...parsedPreferences.columnPreferences[ind],
-        width: currentWidths[currentColumnIndex.current]
+        width: currentWidths?.find(x => x.field == currentColumnIndex.current?.field)?.width
       };
 
       const preference = JSON.stringify(parsedPreferences);
       localStorage.setItem(`gridPreferences_${gridID}`, preference);
     }
     isResizing.current = false;
-    currentColumnIndex.current = -1;
+    currentColumnIndex.current.index = -1;
+    currentColumnIndex.current.field = "";
     containerRef.current = null;
     document.body.style.cursor = "";
     document.body.style.userSelect = "";

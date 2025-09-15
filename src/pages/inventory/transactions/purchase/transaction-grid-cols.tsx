@@ -967,7 +967,7 @@ export const purchaseGridCol = (
       //   alignment: "left",
       // },
       {
-        dataField: "removeCol",
+        dataField: "actionCol",
         caption: "",
         dataType: "boolean",
         width: 55,

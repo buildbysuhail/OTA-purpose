@@ -165,6 +165,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
   const handleResetGrid = async () => {
     localStorage.removeItem(`gridPreferences_${gridId}`)
     if (isSaving) return;
+    debugger;
     setIsSaving(true);
     try {
       await api.postAsync(Urls.grid_preference_reset, gridId);

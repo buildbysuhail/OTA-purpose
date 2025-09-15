@@ -294,7 +294,7 @@ export interface TransactionDetail {
   btnPrintBarcode: string;
   barcodePrinted: boolean;
   batchCreated: boolean;
-  removeCol: boolean;
+  actionCol: boolean;
   productDescription: string;
   serial: string;
   minSalePrice: number;
@@ -335,7 +335,7 @@ export interface TransactionDetail {
   sortOrder: number;
   profitPercentage: number;
   schemeDiscount: number;
-  memo: string;
+  moreDetails: {memo: string}
   memoEditor: string;
   rowNumber: number;
   actualSalesPrice: number;

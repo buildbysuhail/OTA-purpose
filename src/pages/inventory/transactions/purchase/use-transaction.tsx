@@ -3154,7 +3154,7 @@ export const useTransaction = (
 
         case "Enter":
           let data = { ...formState.transaction.details[rowIndex] };
-          if (columnName == "removeCol") {
+          if (columnName == "actionCol") {
             if (!isNullOrUndefinedOrEmpty(value)) {
               handleRemoveItem(value)
             } else {
@@ -3398,7 +3398,7 @@ export const useTransaction = (
           else if (columnName == "memoEditor") {
             const data: TransactionDetail = formState.transaction.details[rowIndex];
             const memoDetails = {
-              memo: data.memo || "",
+              memo: data.moreDetails.memo || "",
             };
             dispatch(
               commonParams.formStateHandleFieldChangeKeysOnly({

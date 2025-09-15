@@ -45,7 +45,6 @@ const AccVoucherPrefix = React.forwardRef<
 
     return (
       <>
-        {formState.userConfig?.enableVoucherPrefix}
         {formState.formElements.voucherPrefix.visible && (
           <ERPInput
             localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -59,7 +58,7 @@ const AccVoucherPrefix = React.forwardRef<
             onKeyDown={(e) => handleKeyDown && handleKeyDown(e, "voucherPrefix")}
             disabled={
               !formState.userConfig?.enableVoucherPrefix ||
-              formState.formElements.voucherPrefix?.disabled ||
+              // formState.formElements.voucherPrefix?.disabled ||
               formState.formElements.pnlMasters?.disabled
             }
             ref={ref}

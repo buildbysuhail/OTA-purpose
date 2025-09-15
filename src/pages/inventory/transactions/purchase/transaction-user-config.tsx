@@ -275,13 +275,13 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                     checked={formState?.userConfig?.useBarcode}
                     onChangeData={(e) => handleFieldChange("useBarcode", e.useBarcode)}
                   />
-                  <ERPCheckbox
+                  {/* <ERPCheckbox
                     id="resizeGrid"
                     label={t("resize_grid")}
                     data={formState.userConfig}
                     checked={formState?.userConfig?.resizeGrid}
                     onChangeData={(e) => handleFieldChange("resizeGrid", e.resizeGrid)}
-                  />
+                  /> */}
                   <ERPCheckbox
                     id="showProductInfoPopup"
                     label={t("show_product_info_popup")}

@@ -532,7 +532,9 @@ export const useTransaction = (
       ...(vch || {}),
       master: {
         ...(vch?.master || {}),
-        hasroundOff: vch?.master?.roundAmount != 0
+        hasroundOff: vch?.master?.roundAmount != 0,
+        cashReceived: vch?.master?.cashAmt,
+        hasCashPaid: vch?.master?.cashAmt != 0
       },
       details: refactorDetails(
         vch.details,
@@ -2770,9 +2772,9 @@ export const useTransaction = (
         }
 
         // Handle empty form type
-        if (formState.transaction.master.voucherForm == "") {
-          outDetail.vatPerc = 0;
-        }
+        // if (formState.transaction.master.voucherForm == "") {
+        //   outDetail.vatPerc = 0;
+        // }
 
         // Set row header
         outDetail.unitPriceTag = outDetail.unitPrice;

@@ -380,7 +380,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   );
 
   const attachmentComponent = (
-    applicationSettings.branchSettings.fileAttachmentMethod === 'No' && (
+    applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && (
       <button className="text-[#2563eb] dark:text-[#60a5fa] w-full text-left">
         <span className="hover:underline text-[#0ea5e9] dark:text-[#60a5fa] capitalize" onClick={selectAttachment}>
           {t("attachment")}
@@ -408,7 +408,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               </>
             )}
             {
-              (applicationSettings.branchSettings.fileAttachmentMethod === 'No' && showAttachmentOutside) && (
+              (applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && showAttachmentOutside) && (
                 attachmentComponent
               )
             }
@@ -495,7 +495,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 </li>
                 <li>
                   <button className="text-[#2563eb]">
-                    {applicationSettings.branchSettings.fileAttachmentMethod === 'No' && (
+                    {applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && (
                       <span className="hover:underline text-[#0ea5e9] capitalize" onClick={selectAttachment}>
                         {t("attachment")}
                       </span>
@@ -756,7 +756,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               )}
             </>
           )}
-          {applicationSettings.branchSettings.fileAttachmentMethod === 'No' && !showAttachmentOutside && (
+          {applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && !showAttachmentOutside && (
             <div className="w-full mb-2 sm:mb-0 sm:w-auto">
               {attachmentComponent}
             </div>
@@ -889,7 +889,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             </div>
           </div>
           <div className="w-full sm:w-auto">
-            {applicationSettings.branchSettings.fileAttachmentMethod === 'No' && (
+            {applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && (
               <button className="text-[#2563eb] dark:text-[#60a5fa] w-full text-left sm:text-center">
                 <span className="hover:underline text-[#0ea5e9] dark:text-[#60a5fa] capitalize" onClick={selectAttachment}>
                   {t("attachment")}

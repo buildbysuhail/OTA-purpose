@@ -127,7 +127,7 @@ const gridThemes = [
     showColumnBorder: true,
     activeRowBg: "240,249,255",
     gridRowHeight: 33,
-    activeCellBg: "252,254,255", // Softer light blue
+    activeCellBg: "252,254,255",
     colors: ["#f8fafc", "#e2e8f0", "#cbd5e1"]
   },
   {
@@ -145,7 +145,7 @@ const gridThemes = [
     showColumnBorder: true,
     activeRowBg: "219,234,254",
     gridRowHeight: 40,
-    activeCellBg: "242,248,255", // Brighter sky tint
+    activeCellBg: "242,248,255",
     colors: ["#2563eb", "#3b82f6", "#dbeafe"]
   },
   {
@@ -163,7 +163,7 @@ const gridThemes = [
     showColumnBorder: false,
     activeRowBg: "209,250,229",
     gridRowHeight: 40,
-    activeCellBg: "237,252,245", // Gentle mint glow
+    activeCellBg: "237,252,245",
     colors: ["#059669", "#10b981", "#d1fae5"]
   },
   {
@@ -181,7 +181,7 @@ const gridThemes = [
     showColumnBorder: true,
     activeRowBg: "204,251,241",
     gridRowHeight: 36,
-    activeCellBg: "232,254,249", // Aqua tint, brighter
+    activeCellBg: "232,254,249",
     colors: ["#0d9488", "#14b8a6", "#ccfbf1"]
   },
   {
@@ -199,7 +199,7 @@ const gridThemes = [
     showColumnBorder: false,
     activeRowBg: "237,233,254",
     gridRowHeight: 42,
-    activeCellBg: "249,247,255", // Soft lilac glow
+    activeCellBg: "249,247,255",
     colors: ["#6d28d9", "#7c3aed", "#ede9fe"]
   },
   {
@@ -217,7 +217,7 @@ const gridThemes = [
     showColumnBorder: true,
     activeRowBg: "255,228,230",
     gridRowHeight: 36,
-    activeCellBg: "255,245,247", // Bright blush tone
+    activeCellBg: "255,245,247",
     colors: ["#be123c", "#e11d48", "#ffe4e6"]
   },
   {
@@ -235,7 +235,7 @@ const gridThemes = [
     showColumnBorder: true,
     activeRowBg: "224,231,255",
     gridRowHeight: 38,
-    activeCellBg: "244,248,255", // Gentle indigo fade
+    activeCellBg: "244,248,255",
     colors: ["#4338ca", "#6366f1", "#e0e7ff"]
   },
   {
@@ -253,7 +253,7 @@ const gridThemes = [
     showColumnBorder: true,
     activeRowBg: "226,232,240",
     gridRowHeight: 36,
-    activeCellBg: "244,246,250", // Softer gray
+    activeCellBg: "244,246,250",
     colors: ["#334155", "#475569", "#e2e8f0"]
   },
   {
@@ -271,7 +271,7 @@ const gridThemes = [
     showColumnBorder: true,
     activeRowBg: "243,244,246",
     gridRowHeight: 36,
-    activeCellBg: "252,252,252", // Crisp white
+    activeCellBg: "252,252,252",
     colors: ["#111827", "#374151", "#f3f4f6"]
   },
   {
@@ -289,7 +289,7 @@ const gridThemes = [
     showColumnBorder: false,
     activeRowBg: "220,252,231",
     gridRowHeight: 38,
-    activeCellBg: "240,254,248", // Subtle mint white
+    activeCellBg: "240,254,248",
     colors: ["#22c55e", "#4ade80", "#dcfce7"]
   },
   {
@@ -307,7 +307,7 @@ const gridThemes = [
     showColumnBorder: true,
     activeRowBg: "224,242,254",
     gridRowHeight: 38,
-    activeCellBg: "246,251,255", // Very light blue
+    activeCellBg: "246,251,255",
     colors: ["#0ea5e9", "#38bdf8", "#e0f2fe"]
   },
   {
@@ -325,7 +325,7 @@ const gridThemes = [
     showColumnBorder: true,
     activeRowBg: "243,244,246",
     gridRowHeight: 36,
-    activeCellBg: "252,252,252", // Clean white-gray
+    activeCellBg: "252,252,252",
     colors: ["#4b5563", "#6b7280", "#f3f4f6"]
   },
   {
@@ -343,7 +343,7 @@ const gridThemes = [
     showColumnBorder: true,
     activeRowBg: "255,237,213",
     gridRowHeight: 38,
-    activeCellBg: "255,248,240", // Peach white
+    activeCellBg: "255,248,240",
     colors: ["#f97316", "#fb923c", "#fed7aa"]
   },
   {
@@ -361,7 +361,7 @@ const gridThemes = [
     showColumnBorder: true,
     activeRowBg: "219,234,254",
     gridRowHeight: 38,
-    activeCellBg: "242,248,255", // Polished light blue
+    activeCellBg: "242,248,255",
     colors: ["#1d4ed8", "#3b82f6", "#dbeafe"]
   },
   {
@@ -379,16 +379,14 @@ const gridThemes = [
     showColumnBorder: true,
     activeRowBg: "226,232,240",
     gridRowHeight: 36,
-    activeCellBg: "246,248,252", // Subtle lighter tone
+    activeCellBg: "246,248,252",
     colors: ["#64748b", "#94a3b8", "#e2e8f0"]
   },
 ];
 
 const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, transactionType, onClearThemeChangeInterval }) => {
   const dispatch = useDispatch();
-  const formState = useSelector(
-    (state: RootState) => state.InventoryTransaction
-  );
+  const formState = useSelector(  (state: RootState) => state.InventoryTransaction);
   const onResetTheme = () => {
     dispatch(formStateHandleFieldChangeKeysOnly(
       {

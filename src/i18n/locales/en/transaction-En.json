@@ -767,5 +767,6 @@
   "sm_code": "SM Code",
   "sales_man": "Sales Man",
   "purchase_price": "Purchase Price",
-  "ref_trans_detail_id": "Ref Trans Detail ID"
+  "ref_trans_detail_id": "Ref Trans Detail ID",
+  "enable_voucher_prefix": "Enable Voucher Prefix"
 }

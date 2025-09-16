@@ -183,8 +183,29 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
           setUpdateTriggered(false);
         }
       };
-
       fetchData();
+    }
+  }, [updateTriggered]);
+
+  useEffect(() => {
+    if (updateTriggered) {
+      const updatePurchaseStatus = async () => {
+        try {
+          const response = await axios.post(Urls.purchase_approved, {
+            params: {
+              voucherNumber: formState.transaction.master.voucherNumber,
+              voucherForm: formState.transaction.master.voucherForm,
+              voucherType: formState.transaction.master.voucherType,
+              voucherPrefix: formState.transaction.master.voucherPrefix,
+              status: formState.orderStatus,
+            },
+          });
+          console.log('Purchase Approved API Response:', response.data);
+        } catch (error) {
+          console.error('Error updating purchase approval status:', error);
+        }
+      };
+      updatePurchaseStatus();
     }
   }, [updateTriggered]);
 
@@ -465,7 +486,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   />
                 }
 
-                {formState.transaction.master.voucherType == VoucherType.PurchaseOrder && formState.transaction.master.gatePassNo == "Approved" && formState.formElements.orderApprovalStatus.visible && (formState.formElements.orderApprovalStatus.label)}
+                {formState.transaction.master.voucherType == VoucherType.PurchaseOrder && formState.transaction.master.gatePassNo == "Approved" && formState.formElements.orderApprovalStatus.visible && (t("po_approved"))}
                 {formState.transaction.master.voucherType == VoucherType.PurchaseOrder && formState.transaction.master.gatePassNo != "Approved" && (
                   <div>
                     <ERPButton
@@ -542,17 +563,17 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     }
                   />
                 )}
-{formState.transaction.master.voucherType != VoucherType.PurchaseOrder &&
-                <div>
-                  <ERPButton
-                    title={t("more")}
-                    variant="secondary"
-                    onClick={handleMoreButtonClick}
-                    disabled={formState.transactionLoading}
-                    className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
-                  />
-                </div>
-}
+                {formState.transaction.master.voucherType != VoucherType.PurchaseOrder &&
+                  <div>
+                    <ERPButton
+                      title={t("more")}
+                      variant="secondary"
+                      onClick={handleMoreButtonClick}
+                      disabled={formState.transactionLoading}
+                      className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+                    />
+                  </div>
+                }
                 {isMoreModalOpen && (
                   <ERPModal
                     isOpen={isMoreModalOpen}
@@ -822,17 +843,17 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   disabled={formState.transactionLoading}
                 />
 
-                 {formState.transaction.master.voucherType !=
+                {formState.transaction.master.voucherType !=
                   VoucherType.PurchaseOrder && (
-                <ERPButton
-                  title={t("more")}
-                  variant="secondary"
-                  onClick={handleMoreButtonClick}
-                  className=" dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
-                  disabled={formState.transactionLoading}
-                />
+                    <ERPButton
+                      title={t("more")}
+                      variant="secondary"
+                      onClick={handleMoreButtonClick}
+                      className=" dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+                      disabled={formState.transactionLoading}
+                    />
                   )
-                  }
+                }
               </div>
 
               {/* Modals */}

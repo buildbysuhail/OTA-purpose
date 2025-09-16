@@ -278,19 +278,22 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const handleResetTheme = () => {
     setTempTheme(null);
   };
-  const [countdown, setCountdown] = useState(8);
-  const timerRef = useRef<NodeJS.Timeout | undefined>(undefined);
-  const onClearThemeChangeInterval = () => {
-    clearInterval(timerRef.current);
-  }
-
-  // javascript// Add a new state to track when countdown should start
+  const [countdown, setCountdown] = useState<number | null>(null);
   const [startCountdown, setStartCountdown] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const onClearThemeChangeInterval = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  };
 
   useEffect(() => {
     if (formState.selectedTheme && formState.selectedTheme.isInitial !== true) {
       console.log('Theme selected, triggering countdown');
       setStartCountdown(true);
+      setCountdown(8);
 
       // Apply the preview theme
       dispatch(formStateHandleFieldChangeKeysOnly({
@@ -302,47 +305,45 @@ const TransactionForm: React.FC<TransactionProps> = ({
     }
   }, [formState.selectedTheme]);
 
-
-  // Separate effect for countdown - not dependent on selectedTheme
   useEffect(() => {
     if (!startCountdown) return;
     console.log('⏰ Starting countdown timer');
-    let countdown = 8;
+    timerRef.current = setInterval(() => {
+      setCountdown((prevCountdown) => {
+        if (prevCountdown === null) return null;
 
-    const interval = setInterval(() => {
-      countdown -= 1;
-      console.log('⏱️ Tick - countdown:', countdown);
-      dispatch(formStateHandleFieldChangeKeysOnly({
-        fields: { themeChangeCountdown: countdown }
-      }));
-      debugger
-      if (formState.themeChangeCountdown === undefined) {
-        clearInterval(interval);
-        setStartCountdown(false);
-        return
-      }
+        const newCountdown = prevCountdown - 1;
+        console.log('⏱️ Tick - countdown:', newCountdown);
 
-      if (countdown <= 0) {
         dispatch(formStateHandleFieldChangeKeysOnly({
-          fields: {
-            userConfig: { ...formState.currentTheme },
-            selectedTheme: formState.currentTheme,
-            themeChangeCountdown: 0
-          }
+          fields: { themeChangeCountdown: newCountdown }
         }));
 
-        console.log('🛑 Countdown complete');
-        clearInterval(interval);
-        setStartCountdown(false);
-        // Revert to original theme
-      }
+        if (newCountdown <= 0) {
+          console.log('🛑 Countdown complete');
+
+          dispatch(formStateHandleFieldChangeKeysOnly({
+            fields: {
+              userConfig: { ...formState.currentTheme },
+              selectedTheme: formState.currentTheme,
+              themeChangeCountdown: 0
+            }
+          }));
+
+          setStartCountdown(false);
+          onClearThemeChangeInterval();
+          return 0;
+        }
+
+        return newCountdown;
+      });
     }, 1000);
 
     return () => {
       console.log('Cleanup countdown timer');
-      clearInterval(interval);
+      onClearThemeChangeInterval();
     };
-  }, [startCountdown, formState.currentTheme, formState.userConfig?.themeName, formState.themeChangeCountdown]);
+  }, [startCountdown]);
 
   // Add this to monitor when selectedTheme changes
   useEffect(() => {
@@ -713,7 +714,7 @@ useEffect(() => {
               ledgerID: applicationSettings.accountsSettings?.defaultCashAcc,
               customerType:formType?.toUpperCase() === "IMPORT" ? "IMPORT" : formType?.toUpperCase() === "INTERSTATE" ? "Interstate" :
                         formType?.toUpperCase() === "INT"        ? "Int" :
-                        ["WHOLESALE", "B2B"].includes(formType?.toUpperCase()??"") 
+                        ["WHOLESALE", "B2B"].includes(formType?.toUpperCase()??"")
                                                                 ? "B2B" :
                         formType !== "BT"                       ? "B2C" :
                                                                   ""
@@ -759,15 +760,15 @@ useEffect(() => {
         }
       }
       const _gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new APIClient()))
-      const accountKey = 
+      const accountKey =
           formType == "PI-IND" ? applicationSettings.accountsSettings.defaultIndirectExpenseAccount as keyof typeof LedgerType
       :formType == "PI-ASST" ? applicationSettings.accountsSettings.defaultPurchaseAssetsAccount as keyof typeof LedgerType : LedgerType.All;
-const customerType = formType?.toUpperCase() === "PI-IND" ? "B2B" 
-                : formType?.toUpperCase() === "PI-ASST" ? "B2B" 
-                :formType?.toUpperCase() === "IMPORT" ? "IMPORT" 
+const customerType = formType?.toUpperCase() === "PI-IND" ? "B2B"
+                : formType?.toUpperCase() === "PI-ASST" ? "B2B"
+                :formType?.toUpperCase() === "IMPORT" ? "IMPORT"
                 : formType?.toUpperCase() === "INTERSTATE" ? "Interstate" :
                         formType?.toUpperCase() === "INT"        ? "Int" :
-                        ["WHOLESALE", "B2B"].includes(formType?.toUpperCase()??"") 
+                        ["WHOLESALE", "B2B"].includes(formType?.toUpperCase()??"")
                                                                 ? "B2B" :
                         formType !== "BT"                       ? "B2C" :
                                                                   ""
@@ -797,10 +798,10 @@ const customerType = formType?.toUpperCase() === "PI-IND" ? "B2B"
         title:
           (formType == undefined || formType.trim() == ""
             ? t(title)
-            : clientSession.isAppGlobal ?  
+            : clientSession.isAppGlobal ?
              formType.toUpperCase() === "INTERSTATE" ? `${title}[${formType}][Ctrl+F2]` :
               formType.toUpperCase() === "INT"        ? `${title}[${formType}][Ctrl+F2]` :
-              ["WHOLESALE", "B2B"].includes(formType.toUpperCase()) 
+              ["WHOLESALE", "B2B"].includes(formType.toUpperCase())
                                                       ? `${title}[${formType}][B2B][F2]` :
               formType !== "BT" && formType !== "IMPORT"  ? `${title}[${formType}][B2C][F3]` :
                                                         `${title}[${formType}]`
@@ -944,9 +945,9 @@ const customerType = formType?.toUpperCase() === "PI-IND" ? "B2B"
         rowIndex: 0,
       }
       if(_formState.formElements.cbDebitAccount??{})
-      
-      
-      // 
+
+
+      //
       // _formState = await loadLedgerData(_formState) as any;
       // _formState.isInitialLedger = true;
       setTransVoucher(_formState, true);
@@ -1280,7 +1281,7 @@ const customerType = formType?.toUpperCase() === "PI-IND" ? "B2B"
               "product",
               "barCode",
             ]);
-            
+
             dispatch(
               formStateHandleFieldChangeKeysOnly({
                 fields: {
@@ -1302,7 +1303,7 @@ const customerType = formType?.toUpperCase() === "PI-IND" ? "B2B"
                 itemsToAddToDetails: addDetails,
               })
             );
-            
+
 
           }
         }
@@ -1316,7 +1317,7 @@ const customerType = formType?.toUpperCase() === "PI-IND" ? "B2B"
 
   useEffect(() => {
     if (formState.quantityFactorData != "") {
-      
+
       const data = JSON.parse(formState.quantityFactorData);
       const rowIndex = data.rowIndex;
       const quantityFactor = data.data;
@@ -1482,7 +1483,7 @@ const customerType = formType?.toUpperCase() === "PI-IND" ? "B2B"
   const handleChange = (selectedOption: { value: string; label: string }) => { };
 
   const goToPreviousPage = () => {
-    
+
     if (window.history.length <= 1) {
       // No history to go back to, attempt to close the tab
       window.close();

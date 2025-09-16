@@ -560,6 +560,7 @@ const Urls = {
   purchase_return_gst_adv_register_format:"/Inventory/RptGSTReport/PurchaseReturnTaxAdvRegisterFormatReport",
   data_order_status:'/Inventory/PurchaseOrder/Status/',
   update_order_status:'/Inventory/PurchaseOrder/UpdateInvoiceStatus/',
+  purchase_approved:'/Inventory/PurchaseOrder/UpdatePOApproved/',
 
   sales_gst_sales_and_return:"/Inventory/RptGSTReport/SalesTaxSalesAndSalesReturn",
 

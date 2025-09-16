@@ -183,27 +183,19 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
           setUpdateTriggered(false);
         }
       };
-
-      const updatePurchaseApproval = async () => {
-        try {
-          const response = await axios.post(Urls.purchase_approved, {
-            params: {
-              voucherNumber: formState.transaction.master.voucherNumber,
-              voucherForm: formState.transaction.master.voucherForm,
-              voucherType: formState.transaction.master.voucherType,
-              voucherPrefix: formState.transaction.master.voucherPrefix,
-              status: formState.orderStatus,
-            },
-          });
-          console.log('Purchase Approved API Response:', response.data);
-        } catch (error) {
-          console.error('Error updating purchase approval status:', error);
-        }
-      };
       updateOrderStatus();
+
     }
   }, [updateTriggered]);
 
+  const updatePurchaseApproval = async () => {
+    try {
+      const response = await axios.post(`${Urls.purchase_approved}${formState.transaction.master.invTransactionMasterID}`, {});
+      console.log('Purchase Approved API Response:', response.data);
+    } catch (error) {
+      console.error('Error updating purchase approval status:', error);
+    }
+  };
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
   const conditionalFooterComponents =
     footerLayout === "vertical" && isSmallHeight ? (
@@ -486,7 +478,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     <ERPButton
                       title={t('approve')}
                       variant="secondary"
-                      onClick={() => setUpdateTriggered(true)}
+                      onClick={() => updatePurchaseApproval()}
                     />
                   </div>
                 )}

@@ -1,4 +1,4 @@
-import { VoucherElementProps, } from "../../purchase/transaction-types";
+import { VoucherElementProps } from "../../purchase/transaction-types";
 import { formStateHandleFieldChange } from "../../purchase/reducer";
 import { useEffect, useRef, useState } from "react";
 import React from "react";
@@ -12,7 +12,6 @@ import PendingOrderList from "../pending-order-list";
 import ERPFileUploadButton from "../../../../../components/ERPComponents/erp-file-upload-button";
 import VoucherType from "../../../../../enums/voucher-types";
 import { useAppState } from "../../../../../utilities/hooks/useAppState";
-import { u } from "framer-motion/dist/types.d-6pKw1mTI";
 
 interface HeaderProps extends VoucherElementProps {
   loadTemporaryRows: () => Promise<void>;
@@ -35,14 +34,11 @@ interface HeaderProps extends VoucherElementProps {
   isHistorySidebarOpen: boolean;
   phone?: boolean;
   setIsPrintModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  onProcessSelected: ((masterIds: string, loadType: string, voucherType: string,) => void) | undefined;
+  onProcessSelected: ((masterIds: string, loadType: string, voucherType: string) => void) | undefined;
   downloadImportTemplateHeadersOnly: any;
   importFromExcel: any;
-
-  undoEditMode: (
-    isEdit: boolean,
-    transactionMasterId: number
-  ) => void;
+  undoEditMode: (isEdit: boolean, transactionMasterId: number) => void;
+  headerMorePop: any;
 }
 
 const useMediaQuery = (query: string) => {
@@ -51,8 +47,8 @@ const useMediaQuery = (query: string) => {
     const mediaQuery = window.matchMedia(query);
     setMatches(mediaQuery.matches);
     const handler = (event: MediaQueryListEvent) => setMatches(event.matches);
-    mediaQuery.addEventListener('change', handler);
-    return () => mediaQuery.removeEventListener('change', handler);
+    mediaQuery.addEventListener("change", handler);
+    return () => mediaQuery.removeEventListener("change", handler);
   }, [query]);
   return matches;
 };
@@ -85,17 +81,18 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
       onProcessSelected,
       downloadImportTemplateHeadersOnly,
       importFromExcel,
-      undoEditMode
-    }, ref) => {
-    const [isPopupVisible, setIsPopupVisible] = useState(false);
+      undoEditMode,
+      headerMorePop,
+    },
+    ref
+  ) => {
     const { appState } = useAppState();
     const isRtl = appState.locale.rtl;
     const popupRef = useRef<HTMLDivElement | null>(null);
     const buttonRef = useRef<HTMLButtonElement | null>(null);
     const [isLoadMultiModalOpen, setIsLoadMultiModalOpen] = useState(false);
     const [isPendingOrderOpen, setIsPendingOrderOpen] = useState({ open: false, type: "PO" });
-    const [isImportExcelOpen, setIsImportExcelOpen] = useState(false)
-
+    const [isImportExcelOpen, setIsImportExcelOpen] = useState(false);
     const popupStyle = {
       top: "45px",
       [isRtl ? "right" : "left"]: "-231px",
@@ -103,30 +100,33 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
     };
 
     const openExcelImport = () => {
-      setIsImportExcelOpen(true)
-    }
+      setIsImportExcelOpen(true);
+    };
 
     const openLoadMultiModal = () => {
       setIsLoadMultiModalOpen(true);
     };
 
-    const closePopupVisible = () => {
-      setIsPopupVisible(false);
-    };
-
     const togglePopupVisible = () => {
-      setIsPopupVisible(!isPopupVisible);
+      dispatch(
+        formStateHandleFieldChange({
+          fields: {
+            headerMorePop: true,
+          },
+        })
+      );
     };
 
     useEffect(() => {
       function handleClickOutside(event: MouseEvent) {
-        if (
-          popupRef.current &&
-          !popupRef.current.contains(event.target as Node) &&
-          buttonRef.current &&
-          !buttonRef.current.contains(event.target as Node)
-        ) {
-          closePopupVisible();
+        if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+          dispatch(
+            formStateHandleFieldChange({
+              fields: {
+                headerMorePop: false,
+              },
+            })
+          );
         }
       }
       document.addEventListener("mousedown", handleClickOutside);
@@ -136,141 +136,196 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
     }, []);
 
     const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
-    const onChooseTemplate = async () => { downloadImportTemplateHeadersOnly && downloadImportTemplateHeadersOnly() }
-    const onSelectExcel = async (event: React.ChangeEvent<HTMLInputElement>) => { importFromExcel && importFromExcel(event) };
-    const isAbove768 = useMediaQuery('(min-width: 768px)');
-    const isAbove640 = useMediaQuery('(min-width: 640px)');
-    const isAbove480 = useMediaQuery('(min-width: 480px)');
+
+    const onChooseTemplate = async () => {
+      downloadImportTemplateHeadersOnly && downloadImportTemplateHeadersOnly();
+    };
+
+    const onSelectExcel = async (event: React.ChangeEvent<HTMLInputElement>) => {
+      importFromExcel && importFromExcel(event);
+    };
+
+    const isAbove768 = useMediaQuery("(min-width: 768px)");
+    const isAbove640 = useMediaQuery("(min-width: 640px)");
+    const isAbove480 = useMediaQuery("(min-width: 480px)");
 
     return (
       <>
         <div className={`!overflow-visible flex items-center justify-evenly md:justify-end space-x-2 p-1 w-full overflow-x-auto bg-[#f9fafb] md:bg-transparent`}>
           {/* Load Temp Rows */}
           <div className="group relative inline-flex flex-col items-center ps-[5px]" title="Load Details">
-            <button disabled={formState.formElements.pnlMasters?.disabled}
+            <button
+              disabled={formState.formElements.pnlMasters?.disabled}
               className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
-              onClick={loadTemporaryRows}>
+              onClick={loadTemporaryRows}
+            >
               <ChevronUp className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
             </button>
           </div>
-
           {/* Delete Button */}
           {isAbove480 && (
             <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("delete")}>
               <button
-                disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master?.invTransactionMasterID > 0 && formState.formElements?.pnlMasters?.disabled !== true)}
+                disabled={
+                  formState.transaction.master.invTransactionMasterID < 1 ||
+                  (formState.transaction.master?.invTransactionMasterID > 0 && formState.formElements?.pnlMasters?.disabled !== true)
+                }
                 className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
-                onClick={deleteTransVoucher}>
+                onClick={deleteTransVoucher}
+              >
                 <Trash2 className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
               </button>
             </div>
           )}
-
           {/* Refresh Button */}
           <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("refresh")}>
-            <button className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`} onClick={handleRefresh}>
+            <button
+              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
+              onClick={handleRefresh}
+            >
               <RefreshCw className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
             </button>
           </div>
-
           {/* Create New Voucher */}
           <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("clone")}>
-            <button className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`} onClick={createNewVoucher} >
+            <button
+              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
+              onClick={createNewVoucher}
+            >
               <BadgePlusIcon className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
             </button>
           </div>
-
           {/* Edit Button */}
           {formState.formElements.lnkUnlockVoucher?.visible !== true && isAbove480 && (
             <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("edit")}>
               <button
-                disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master.invTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
+                disabled={
+                  formState.transaction.master.invTransactionMasterID < 1 ||
+                  (formState.transaction.master.invTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)
+                }
                 className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
-                onClick={handleEdit}>
+                onClick={handleEdit}
+              >
                 <Pencil className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
               </button>
             </div>
           )}
-
           {/* Print Button */}
           {isAbove640 && (
             <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("print")}>
               <button
-                disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master.invTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
+                disabled={
+                  formState.transaction.master.invTransactionMasterID < 1 ||
+                  (formState.transaction.master.invTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)
+                }
                 className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
-                onClick={() => printVoucher(setIsPrintModalOpen, voucherType)}>
+                onClick={() => printVoucher(setIsPrintModalOpen, voucherType)}
+              >
                 <Printer className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
               </button>
             </div>
           )}
-
           {/* Clear Button */}
           {isAbove640 && (
             <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("clear")}>
-              <button className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`} onClick={handleClearControls}>
+              <button
+                className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
+                onClick={handleClearControls}
+              >
                 <Eraser className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
               </button>
             </div>
           )}
-
           {/* Product Summary */}
           {formState.formElements.btnProductSummary.visible == true && isAbove768 && (
             <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("product_summary")}>
               <button
                 className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
-                onClick={() => dispatch(formStateHandleFieldChange({ fields: { isProductSummaryOpen: true }, }))}>
+                onClick={() =>
+                  dispatch(
+                    formStateHandleFieldChange({
+                      fields: {
+                        isProductSummaryOpen: true,
+                      },
+                    })
+                  )
+                }
+              >
                 <Boxes className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
               </button>
             </div>
           )}
-
-          {/* partywise summary */}
+          {/* Partywise Summary */}
           {isAbove768 && (
             <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("party_wise_summary")}>
               <button
                 className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
-                onClick={() => dispatch(formStateHandleFieldChange({ fields: { isPartyWiseSummaryOpen: true }, }))}>
+                onClick={() =>
+                  dispatch(
+                    formStateHandleFieldChange({
+                      fields: {
+                        isPartyWiseSummaryOpen: true,
+                      },
+                    })
+                  )
+                }
+              >
                 <Group className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
               </button>
             </div>
           )}
-
           {/* History Button */}
           {isAbove768 && (
             <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("history")}>
-              <button className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`} onClick={handleHistoryClick}>
+              <button
+                className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
+                onClick={handleHistoryClick}
+              >
                 <History className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
               </button>
             </div>
           )}
-
           {/* Settings Button */}
           <div>
-            {phone ? (<TransactionUserConfig phone={true} transactionType={transactionType ?? ""} undoEditMode={undoEditMode} />) : (<TransactionUserConfig transactionType={transactionType ?? ""} undoEditMode={undoEditMode} />)}
+            {phone ? (
+              <TransactionUserConfig phone={true} transactionType={transactionType ?? ""} undoEditMode={undoEditMode} />
+            ) : (
+              <TransactionUserConfig transactionType={transactionType ?? ""} undoEditMode={undoEditMode} />
+            )}
           </div>
-
           {/* Popup Menu */}
           <div className="relative">
             <button
               ref={buttonRef}
               onClick={togglePopupVisible}
-              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3  rounded-md hover:bg-gray-200 transition-colors`}
-              title={t("more")}>
+              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
+              title={t("more")}
+            >
               <EllipsisVertical className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
             </button>
-
-            {isPopupVisible && (
+            {formState.headerMorePop && (
               <div
                 ref={popupRef}
                 className="absolute rounded-lg bg-white dark:bg-[#1f2937] text-black dark:text-[#f3f4f6] shadow-xl border border-[#e5e7eb] dark:border-[#374151] p-2 z-50 backdrop-blur-sm"
-                style={popupStyle}>
+                style={popupStyle}
+              >
                 <nav className="w-full">
                   <ul className="space-y-1 max-h-80 overflow-y-auto scrollbar-thin">
                     {formState.formElements.lnkUnlockVoucher?.visible && (
                       <li>
                         <button
                           className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#eff6ff] hover:text-[#1d4ed8] dark:hover:bg-[#1e3a8a4d] dark:hover:text-[#93c5fd] transition-all duration-200 rounded-md group text-left"
-                          onClick={unlockVoucher}>
+                          onClick={(e) => {
+                            dispatch(
+                              formStateHandleFieldChange({
+                                fields: {
+                                  headerMorePop: false,
+                                },
+                              })
+                            );
+                            unlockVoucher();
+                          }}
+                        >
                           <div className="w-8 h-8 bg-[#dbeafe] dark:bg-[#1e40af4d] rounded-full flex items-center justify-center group-hover:bg-[#bfdbfe] dark:group-hover:bg-[#1e3a8a4d] group-hover:scale-110 transition-all duration-200">
                             <KeyRound className="h-4 w-4 text-[#1e40af] dark:text-[#93c5fd]" />
                           </div>
@@ -278,21 +333,28 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         </button>
                       </li>
                     )}
-
-                    {formState.transaction.master.voucherType === "MJV" &&
-                      userSession.dbIdValue === "ABCO" && (
-                        <li>
-                          <button
-                            className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f0fdf4] hover:text-[#15803d] dark:hover:bg-[#14532d4d] dark:hover:text-[#86efac] transition-all duration-200 rounded-md group text-left"
-                            onClick={() => setShowValidation(true)}>
-                            <div className="w-8 h-8 bg-[#bbf7d0] dark:bg-[#1665344d] rounded-full flex items-center justify-center group-hover:bg-[#86efac] dark:group-hover:bg-[#16653499] group-hover:scale-110 transition-all duration-200">
-                              <FileUp className="h-4 w-4 text-[#166534] dark:text-[#bbf7d0]" />
-                            </div>
-                            <span className="font-medium">{t("MJV_excel_import")}</span>
-                          </button>
-                        </li>
-                      )}
-
+                    {formState.transaction.master.voucherType === "MJV" && userSession.dbIdValue === "ABCO" && (
+                      <li>
+                        <button
+                          className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f0fdf4] hover:text-[#15803d] dark:hover:bg-[#14532d4d] dark:hover:text-[#86efac] transition-all duration-200 rounded-md group text-left"
+                          onClick={(e) => {
+                            dispatch(
+                              formStateHandleFieldChange({
+                                fields: {
+                                  headerMorePop: false,
+                                },
+                              })
+                            );
+                            setShowValidation(true);
+                          }}
+                        >
+                          <div className="w-8 h-8 bg-[#bbf7d0] dark:bg-[#164e344d] rounded-full flex items-center justify-center group-hover:bg-[#86efac] dark:group-hover:bg-[#164e3499] group-hover:scale-110 transition-all duration-200">
+                            <FileUp className="h-4 w-4 text-[#166534] dark:text-[#bbf7d0]" />
+                          </div>
+                          <span className="font-medium">{t("MJV_excel_import")}</span>
+                        </button>
+                      </li>
+                    )}
                     {formState.formElements.foreignCurrency?.visible && (
                       <li>
                         <div className="px-3 py-[5px] hover:bg-[#f5f3ff] hover:text-[#7e22ce] dark:hover:bg-[#581c874d] dark:hover:text-[#d8b4fe] transition-all duration-200 rounded-md group">
@@ -305,23 +367,41 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                               label={formState.formElements.foreignCurrency.label}
                               className="flex-1"
                               checked={formState.foreignCurrency}
-                              onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { foreignCurrency: e.target.checked, }, }))}
+                              onChange={(e) => {
+                                dispatch(
+                                  formStateHandleFieldChange({
+                                    fields: {
+                                      foreignCurrency: e.target.checked,
+                                    },
+                                  })
+                                );
+                              }}
                               disabled={formState.formElements.foreignCurrency?.disabled || formState.formElements.pnlMasters?.disabled}
                             />
                           </div>
                         </div>
                       </li>
                     )}
-
                     <li>
-                      <button onClick={selectTemplates} className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fff7ed] hover:text-[#c2410c] dark:hover:bg-[#7c2d124d] dark:hover:text-[#fdba74] transition-all duration-200 rounded-md group text-left">
+                      <button
+                        className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fff7ed] hover:text-[#c2410c] dark:hover:bg-[#7c2d124d] dark:hover:text-[#fdba74] transition-all duration-200 rounded-md group text-left"
+                        onClick={(e) => {
+                          dispatch(
+                            formStateHandleFieldChange({
+                              fields: {
+                                headerMorePop: false,
+                              },
+                            })
+                          );
+                          selectTemplates();
+                        }}
+                      >
                         <div className="w-8 h-8 bg-[#ffedd5] dark:bg-[#7c2d124d] rounded-full flex items-center justify-center group-hover:bg-[#fed7aa] dark:group-hover:bg-[#7c2d1299] group-hover:scale-110 transition-all duration-200">
                           <AlignHorizontalSpaceBetween className="h-4 w-4 text-[#ea580c] dark:text-[#ffedd5]" />
                         </div>
                         <span className="font-medium">{t("change_template")}</span>
                       </button>
                     </li>
-
                     {formState.formElements.printPreview?.visible && (
                       <li>
                         <div className="px-3 py-[5px] hover:bg-[#eef2ff] hover:text-[#4338ca] dark:hover:bg-[#312e814d] dark:hover:text-[#c7d2fe] transition-all duration-200 rounded-md group">
@@ -335,60 +415,102 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                               className="flex-1"
                               label={t(formState.formElements.printPreview.label)}
                               checked={formState.printPreview}
-                              onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { printPreview: e.target.checked, }, }))}
+                              onChange={(e) => {
+                                dispatch(
+                                  formStateHandleFieldChange({
+                                    fields: {
+                                      printPreview: e.target.checked,
+                                    },
+                                  })
+                                );
+                              }}
                               disabled={formState.formElements.printPreview?.disabled}
                             />
                           </div>
                         </div>
                       </li>
                     )}
-
-                    {formState.transaction.master.voucherType !== 'PR' && (
+                    {formState.transaction.master.voucherType !== "PR" && (
                       <li>
                         <button
                           className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fff1f2] hover:text-[#be123c] dark:hover:bg-[#8813374d] dark:hover:text-[#fda4af] transition-all duration-200 rounded-md group text-left"
-                          onClick={(e) => { setIsPendingOrderOpen({ open: true, type: "PO" }); setIsPopupVisible(false); }}>
+                          onClick={(e) => {
+                            dispatch(
+                              formStateHandleFieldChange({
+                                fields: {
+                                  headerMorePop: false,
+                                },
+                              })
+                            );
+                            setIsPendingOrderOpen({ open: true, type: "PO" });
+                          }}
+                        >
                           <div className="w-8 h-8 bg-[#ffe4e6] dark:bg-[#8813374d] rounded-full flex items-center justify-center group-hover:bg-[#fecdd3] dark:group-hover:bg-[#88133799] group-hover:scale-110 transition-all duration-200">
                             <ShoppingCart className="h-4 w-4 text-[#be123c] dark:text-[#fda4af]" />
                           </div>
-                          <span className="font-medium">{t('pending_purchase_order_list')}</span>
+                          <span className="font-medium">{t("pending_purchase_order_list")}</span>
                         </button>
                       </li>
                     )}
-
-                    {formState.transaction.master.voucherType !== 'PR' &&
+                    {formState.transaction.master.voucherType !== "PR" &&
                       formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
                         <li>
                           <button
                             className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fefce8] hover:text-[#a16207] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047] transition-all duration-200 rounded-md group text-left"
-                            onClick={(e) => setIsPendingOrderOpen({ open: true, type: "GRN" })}>
+                            onClick={(e) => {
+                              dispatch(
+                                formStateHandleFieldChange({
+                                  fields: {
+                                    headerMorePop: false,
+                                  },
+                                })
+                              );
+                              setIsPendingOrderOpen({ open: true, type: "GRN" });
+                            }}
+                          >
                             <div className="w-8 h-8 bg-[#fef3c7] dark:bg-[#78350f4d] rounded-full flex items-center justify-center group-hover:bg-[#fde68a] dark:group-hover:bg-[#78350fcc] group-hover:scale-110 transition-all duration-200">
                               <Package className="h-4 w-4 text-[#a16207] dark:text-[#fde047]" />
                             </div>
-                            <span className="font-medium">{t('pending_goods_receipt_list')}</span>
+                            <span className="font-medium">{t("pending_goods_receipt_list")}</span>
                           </button>
                         </li>
                       )}
-
-
                     <li>
                       <button
                         className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#ecfeff] hover:text-[#0e7490] dark:hover:bg-[#164e634d] dark:hover:text-[#67e8f9] transition-all duration-200 rounded-md group text-left"
-                        onClick={onChooseTemplate}>
+                        onClick={(e) => {
+                          dispatch(
+                            formStateHandleFieldChange({
+                              fields: {
+                                headerMorePop: false,
+                              },
+                            })
+                          );
+                          onChooseTemplate();
+                        }}
+                      >
                         <div className="w-8 h-8 bg-[#cffafe] dark:bg-[#164e634d] rounded-full flex items-center justify-center group-hover:bg-[#a5f3fc] dark:group-hover:bg-[#164e6399] group-hover:scale-110 transition-all duration-200">
                           <Download className="h-4 w-4 text-[#0e7490] dark:text-[#67e8f9]" />
                         </div>
                         <span className="font-medium">{t("download_excel_template")}</span>
                       </button>
                     </li>
-
                     <li>
                       <button
-                        className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#ecfdf5] hover:text-[#047857] dark:hover:bg-[#064e3b4d] dark:hover:text-[#6ee7b7] transition-all duration-200 rounded-md group text-left">
+                        className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#ecfdf5] hover:text-[#047857] dark:hover:bg-[#064e3b4d] dark:hover:text-[#6ee7b7] transition-all duration-200 rounded-md group text-left"
+                        onClick={(e) => {
+                          dispatch(
+                            formStateHandleFieldChange({
+                              fields: {
+                                headerMorePop: false,
+                              },
+                            })
+                          );
+                        }}
+                      >
                         <div className="w-8 h-8 bg-[#d1fae5] dark:bg-[#065f46]/30 rounded-full flex items-center justify-center group-hover:bg-[#a7f3d0] dark:group-hover:bg-[#065f46]/50 group-hover:scale-110 transition-all duration-200">
                           <Upload className="h-4 w-4 text-[#065f46] dark:text-[#6ee7b7]" />
                         </div>
-                        {/* <span className="font-medium">{t("import_from_excel")}</span> */}
                         <ERPFileUploadButton
                           buttonText={t("import_from_excel")}
                           handleFileChange={onSelectExcel}
@@ -397,24 +519,39 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         />
                       </button>
                     </li>
-
                     <li>
                       <button
                         className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-lime-50 hover:text-lime-800 dark:hover:bg-lime-900/30 dark:hover:text-lime-300 transition-all duration-200 rounded-md group text-left"
-                        onClick={() => {/* Add your print barcode handler here */ }}>
+                        onClick={(e) => {
+                          dispatch(
+                            formStateHandleFieldChange({
+                              fields: {
+                                headerMorePop: false,
+                              },
+                            })
+                          );
+                        }}
+                      >
                         <div className="w-8 h-8 bg-lime-100 dark:bg-lime-900/30 rounded-full flex items-center justify-center group-hover:bg-lime-200 dark:group-hover:bg-lime-900/50 group-hover:scale-110 transition-all duration-200">
                           <Printer className="h-4 w-4 text-lime-800 dark:text-lime-300" />
                         </div>
                         <span className="font-medium">{t("print_barcode")}</span>
                       </button>
                     </li>
-
-                    {formState.transaction.master.voucherType === 'PI' && (
+                    {formState.transaction.master.voucherType === "PI" && (
                       <li>
                         <button
                           className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f5f3ff] hover:text-[#6d28d9] dark:hover:bg-[#4c1d954d] dark:hover:text-[#ddd6fe] transition-all duration-200 rounded-md group text-left"
-                          // onClick={handlePrint}
                           disabled={formState.transactionLoading}
+                          onClick={(e) => {
+                            dispatch(
+                              formStateHandleFieldChange({
+                                fields: {
+                                  headerMorePop: false,
+                                },
+                              })
+                            );
+                          }}
                         >
                           <div className="w-8 h-8 bg-[#ede9fe] dark:bg-[#4c1d954d] rounded-full flex items-center justify-center group-hover:bg-[#ddd6fe] dark:group-hover:bg-[#4c1d9599] group-hover:scale-110 transition-all duration-200">
                             <Printer className="h-4 w-4 text-[#6d28d9] dark:text-[#ddd6fe]" />
@@ -423,14 +560,23 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         </button>
                       </li>
                     )}
-
                     {!isAbove768 && (
                       <>
                         {formState.formElements.btnProductSummary.visible == true && (
                           <li>
                             <button
                               className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#ecfeff] hover:text-[#0e7490] dark:hover:bg-[#164e634d] dark:hover:text-[#67e8f9] transition-all duration-200 rounded-md group text-left"
-                              onClick={() => dispatch(formStateHandleFieldChange({ fields: { isProductSummaryOpen: true }, }))}>
+                              onClick={(e) => {
+                                dispatch(
+                                  formStateHandleFieldChange({
+                                    fields: {
+                                      headerMorePop: false,
+                                      isProductSummaryOpen: true,
+                                    },
+                                  })
+                                );
+                              }}
+                            >
                               <div className="w-8 h-8 bg-[#cffafe] dark:bg-[#164e634d] rounded-full flex items-center justify-center group-hover:bg-[#a5f3fc] dark:group-hover:bg-[#164e6399] group-hover:scale-110 transition-all duration-200">
                                 <Boxes className="h-4 w-4 text-[#0e7490] dark:text-[#67e8f9]" />
                               </div>
@@ -441,7 +587,17 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         <li>
                           <button
                             className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#ecfdf5] hover:text-[#047857] dark:hover:bg-[#064e3b4d] dark:hover:text-[#6ee7b7] transition-all duration-200 rounded-md group text-left"
-                            onClick={() => dispatch(formStateHandleFieldChange({ fields: { isPartyWiseSummaryOpen: true }, }))}>
+                            onClick={(e) => {
+                              dispatch(
+                                formStateHandleFieldChange({
+                                  fields: {
+                                    headerMorePop: false,
+                                    isPartyWiseSummaryOpen: true,
+                                  },
+                                })
+                              );
+                            }}
+                          >
                             <div className="w-8 h-8 bg-[#d1fae5] dark:bg-[#064e3b4d] rounded-full flex items-center justify-center group-hover:bg-[#a7f3d0] dark:group-hover:bg-[#064e3b99] group-hover:scale-110 transition-all duration-200">
                               <Group className="h-4 w-4 text-[#065f46] dark:text-[#6ee7b7]" />
                             </div>
@@ -451,7 +607,17 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         <li>
                           <button
                             className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fefce8] hover:text-[#a16207] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047] transition-all duration-200 rounded-md group text-left"
-                            onClick={handleHistoryClick}>
+                            onClick={(e) => {
+                              dispatch(
+                                formStateHandleFieldChange({
+                                  fields: {
+                                    headerMorePop: false,
+                                  },
+                                })
+                              );
+                              handleHistoryClick();
+                            }}
+                          >
                             <div className="w-8 h-8 bg-[#fef3c7] dark:bg-[#78350f4d] rounded-full flex items-center justify-center group-hover:bg-[#fde68a] dark:group-hover:bg-[#78350fcc] group-hover:scale-110 transition-all duration-200">
                               <History className="h-4 w-4 text-[#a16207] dark:text-[#fde047]" />
                             </div>
@@ -460,13 +626,22 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         </li>
                       </>
                     )}
-
                     {!isAbove640 && (
                       <>
                         <li>
                           <button
                             className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fff7ed] hover:text-[#c2410c] dark:hover:bg-[#7c2d124d] dark:hover:text-[#fdba74] transition-all duration-200 rounded-md group text-left"
-                            onClick={handleClearControls}>
+                            onClick={(e) => {
+                              dispatch(
+                                formStateHandleFieldChange({
+                                  fields: {
+                                    headerMorePop: false,
+                                  },
+                                })
+                              );
+                              handleClearControls();
+                            }}
+                          >
                             <div className="w-8 h-8 bg-[#ffedd5] dark:bg-[#7c2d124d] rounded-full flex items-center justify-center group-hover:bg-[#fed7aa] dark:group-hover:bg-[#7c2d1299] group-hover:scale-110 transition-all duration-200">
                               <Eraser className="h-4 w-4 text-[#ea580c] dark:text-[#ffedd5]" />
                             </div>
@@ -475,9 +650,23 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         </li>
                         <li>
                           <button
-                            disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master.invTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
+                            disabled={
+                              formState.transaction.master.invTransactionMasterID < 1 ||
+                              (formState.transaction.master.invTransactionMasterID > 0 &&
+                                formState.formElements.pnlMasters.disabled !== true)
+                            }
                             className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f5f3ff] hover:text-[#6d28d9] dark:hover:bg-[#4c1d954d] dark:hover:text-[#ddd6fe] transition-all duration-200 rounded-md group text-left"
-                            onClick={() => printVoucher(setIsPrintModalOpen, voucherType)}>
+                            onClick={(e) => {
+                              dispatch(
+                                formStateHandleFieldChange({
+                                  fields: {
+                                    headerMorePop: false,
+                                  },
+                                })
+                              );
+                              printVoucher(setIsPrintModalOpen, voucherType);
+                            }}
+                          >
                             <div className="w-8 h-8 bg-[#ede9fe] dark:bg-[#4c1d954d] rounded-full flex items-center justify-center group-hover:bg-[#ddd6fe] dark:group-hover:bg-[#4c1d9599] group-hover:scale-110 transition-all duration-200">
                               <Printer className="h-4 w-4 text-[#6d28d9] dark:text-[#ddd6fe]" />
                             </div>
@@ -486,14 +675,27 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         </li>
                       </>
                     )}
-
                     {!isAbove480 && (
                       <>
                         <li>
                           <button
-                            disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master?.invTransactionMasterID > 0 && formState.formElements?.pnlMasters?.disabled !== true)}
+                            disabled={
+                              formState.transaction.master.invTransactionMasterID < 1 ||
+                              (formState.transaction.master?.invTransactionMasterID > 0 &&
+                                formState.formElements?.pnlMasters?.disabled !== true)
+                            }
                             className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fff1f2] hover:text-[#be123c] dark:hover:bg-[#8813374d] dark:hover:text-[#fda4af] transition-all duration-200 rounded-md group text-left"
-                            onClick={deleteTransVoucher}>
+                            onClick={(e) => {
+                              dispatch(
+                                formStateHandleFieldChange({
+                                  fields: {
+                                    headerMorePop: false,
+                                  },
+                                })
+                              );
+                              deleteTransVoucher();
+                            }}
+                          >
                             <div className="w-8 h-8 bg-[#ffe4e6] dark:bg-[#8813374d] rounded-full flex items-center justify-center group-hover:bg-[#fecdd3] dark:group-hover:bg-[#88133799] group-hover:scale-110 transition-all duration-200">
                               <Trash2 className="h-4 w-4 text-[#be123c] dark:text-[#fda4af]" />
                             </div>
@@ -503,9 +705,23 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         {formState.formElements.lnkUnlockVoucher?.visible !== true && (
                           <li>
                             <button
-                              disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master.invTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
+                              disabled={
+                                formState.transaction.master.invTransactionMasterID < 1 ||
+                                (formState.transaction.master.invTransactionMasterID > 0 &&
+                                  formState.formElements.pnlMasters.disabled !== true)
+                              }
                               className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#eef2ff] hover:text-[#4338ca] dark:hover:bg-[#312e814d] dark:hover:text-[#c7d2fe] transition-all duration-200 rounded-md group text-left"
-                              onClick={handleEdit}>
+                              onClick={(e) => {
+                                dispatch(
+                                  formStateHandleFieldChange({
+                                    fields: {
+                                      headerMorePop: false,
+                                    },
+                                  })
+                                );
+                                handleEdit();
+                              }}
+                            >
                               <div className="w-8 h-8 bg-[#eef2ff] dark:bg-[#312e814d] rounded-full flex items-center justify-center group-hover:bg-[#c7d2fe] dark:group-hover:bg-[#312e81cc] group-hover:scale-110 transition-all duration-200">
                                 <Pencil className="h-4 w-4 text-[#4338ca] dark:text-[#c7d2fe]" />
                               </div>
@@ -517,9 +733,8 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                     )}
                   </ul>
                 </nav>
-
                 {/* Modals */}
-                {isPendingOrderOpen && isPendingOrderOpen.open &&
+                {isPendingOrderOpen.open && (
                   <ERPModal
                     isOpen={isPendingOrderOpen.open}
                     closeModal={() => setIsPendingOrderOpen({ open: false, type: "PO" })}
@@ -535,18 +750,21 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                       />
                     }
                   />
-                }
+                )}
               </div>
             )}
           </div>
-
           {/* Previous Page Button */}
           {!phone && (
             <div className="relative">
               <button
-                onClick={(e) => { debugger; e.preventDefault(); goToPreviousPage() }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  goToPreviousPage();
+                }}
                 className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
-                title={t("previous_page")}>
+                title={t("previous_page")}
+              >
                 <X className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
               </button>
             </div>

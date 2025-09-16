@@ -673,11 +673,12 @@ export const useTransaction = (
     const details = formState.transaction.details;
 
     // Stock update restriction
-    if (!formState.transaction.master.stockUpdate && formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote) {
+    if (!formState.transaction.master.stockUpdate && (formState.transaction.master.voucherType === "PI" || formState.transaction.master.voucherType === "PR")) {
+      const voucherType = formState.transaction.master.voucherType;
       const confirm = await ERPAlert.show({
         icon: "info",
         title: t("stock_update_warning"),
-        text: t("stock_already_updated_warning"),
+        text: voucherType === "PI" ? "Stock cannot be updated in this invoice.In goods Receipt voucher stock already updated. Do you want to continue?" : voucherType === "PR" ? "Stock cannot be updated in this invoice.In Goods Receipt Return voucher stock already updated. Do you want to continue?" : "",
         confirmButtonText: t("yes"),
         cancelButtonText: t("no"),
         showCancelButton: true,

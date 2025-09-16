@@ -764,5 +764,6 @@
   "sm_code": "رمز SM",
   "sales_man": "مندوب المبيعات",
   "purchase_price": "سعر الشراء",
-  "ref_trans_detail_id": "معرّف تفاصيل المعاملة المرجعية"
+  "ref_trans_detail_id": "معرّف تفاصيل المعاملة المرجعية",
+  "enable_voucher_prefix": "تمكين بادئة القسيمة"
 }

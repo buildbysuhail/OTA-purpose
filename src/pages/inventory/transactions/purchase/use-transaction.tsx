@@ -631,7 +631,7 @@ export const useTransaction = (
     if (isEdit) {
       try {
         const result = await updateTransactionEditMode(
-          "A", // Action type
+          "I", // Action type
           transactionMasterId,
           ""
         );

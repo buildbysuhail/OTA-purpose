@@ -258,6 +258,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
           caption: t("product_name"),
           dataType: "string",
           minWidth: 150,
+          width:400,
           allowSorting: true,
           allowSearch: true,
           allowFiltering: true,

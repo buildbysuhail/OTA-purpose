@@ -472,7 +472,11 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   />
                 }
 
-                {formState.transaction.master.voucherType == VoucherType.PurchaseOrder && formState.transaction.master.gatePassNo == "Approved" && formState.formElements.orderApprovalStatus.visible && (formState.formElements.orderApprovalStatus.label)}
+                {formState.transaction.master.voucherType == VoucherType.PurchaseOrder && formState.transaction.master.gatePassNo == "Approved" && formState.formElements.orderApprovalStatus.visible && (
+                  <span className="bg-danger p-2 rounded-xl text-white font-medium">
+                    {(formState.formElements.orderApprovalStatus.label)}
+                  </span>
+                )}
                 {formState.transaction.master.voucherType == VoucherType.PurchaseOrder && formState.transaction.master.gatePassNo != "Approved" && (
                   <div>
                     <ERPButton

@@ -1311,7 +1311,7 @@ export const useTransactionHelper = (transactionType: string) => {
         detail.unit3SalesRate = row.unit3SalesPrice;
         detail.unit3MRP = row.unit3MRP;
 
-        detail.memo = row.memo;
+        // detail.moreDetails.memo = row.memo;
         detail.actualSalesPrice = row.actualSalesPrice;
 
         // Optional fields with error handling

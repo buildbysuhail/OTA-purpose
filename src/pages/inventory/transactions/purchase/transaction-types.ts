@@ -335,7 +335,7 @@ export interface TransactionDetail {
   sortOrder: number;
   profitPercentage: number;
   schemeDiscount: number;
-  moreDetails: {memo: string}
+  moreDetails: TransactionDetailsMore;
   memoEditor: string;
   rowNumber: number;
   actualSalesPrice: number;
@@ -347,6 +347,9 @@ export interface TransactionDetail {
   details2?: TransactionDetails2
 }
 
+export interface TransactionDetailsMore {
+  memo?: string
+}
 export interface TransactionDetails2 {
   invTransactionDetailID: number;
   branchID: number;

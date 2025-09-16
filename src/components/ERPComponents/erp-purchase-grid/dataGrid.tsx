@@ -45,6 +45,7 @@ import type {
   TransactionDetail,
   TransactionDetailKeys,
   TransactionDetails2,
+  TransactionDetailsMore,
   TransactionFormState,
 } from "../../../pages/inventory/transactions/purchase/transaction-types";
 import {
@@ -66,7 +67,7 @@ import { saveAs } from "file-saver";
 import { useTableResizeAndReorder } from "./use-resizing";
 import { useUltraFastVirtualScrolling } from "./use-virtual-scrolling";
 import { ApplicationSettingsType } from "../../../pages/settings/system/application-settings-types/application-settings-types";
-import { initialTransactionDetailData, initialTransactionDetails2 } from "../../../pages/inventory/transactions/purchase/transaction-type-data";
+import { initialTransactionDetailData, initialTransactionDetails2, transactionInitialMoreDetails } from "../../../pages/inventory/transactions/purchase/transaction-type-data";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import moment from "moment";
@@ -393,6 +394,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
           <ERPDataCombobox
             options={options ?? []}
             onChange={(e) => {
+              debugger;
               onChange(
                 e.value,
                 column.dataField as keyof TransactionDetail,
@@ -1031,13 +1033,14 @@ const VirtualRow = React.memo(
               {columns.map((column, colIndex) => {
                 // TransactionDetails2
                 const isDetails2 = Object.keys(initialTransactionDetails2).includes(column.dataField as keyof TransactionDetails2)
-                if (isDetails2) {
-                  //
+                const isMoreDetails = Object.keys(transactionInitialMoreDetails).includes(column.dataField as keyof TransactionDetailsMore)
+                if (column.dataField == "memo" && item.productID > 0) {
+                  debugger;
                 }
                 const fieldKey = column.dataField as TransactionDetailKeys;
                 const idField = column.idField as keyof TransactionDetail;
                 const productId = item.productID;
-                const cellValue = ((isDetails2 ? item.details2?.[fieldKey as keyof TransactionDetails2] : item[fieldKey as keyof TransactionDetail]) ?? "") as string | boolean;
+                const cellValue = ((isDetails2 ? item.details2?.[fieldKey as keyof TransactionDetails2] : isMoreDetails ? item.moreDetails?.[fieldKey as keyof TransactionDetailsMore]  : item[fieldKey as keyof TransactionDetail]) ?? "") as string | boolean;
                 const idValue = item[idField];
                 const isFirstColumn = colIndex === 0;
                 const isLastColumn = colIndex === columns.length - 1;
@@ -1382,6 +1385,8 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
     const virtualContainerRef = useRef<HTMLDivElement>(null);
 
     const totalGridWidth = useMemo(() => {
+      console.log(columnWidths);
+      
       return columnWidths.reduce((sum, widthItems) => sum + widthItems.width, 0);
     }, [columnWidths]);
 

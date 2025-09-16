@@ -3,7 +3,7 @@ import { Dispatch } from "react";
 import { AnyAction } from "redux";
 import { inputBox } from "../../../../redux/slices/app/types";
 import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
-import { TransactionMaster, TransactionValidationsData, TransactionDetail, TransactionMaster3, FormElementState, TransactionFormState, SummaryItems, TransactionData, BarcodeLabel, ProductDisplayDto, EmployeeType, TransactionDetails2, TransactionMaster2 } from "./transaction-types";
+import { TransactionMaster, TransactionValidationsData, TransactionDetail, TransactionMaster3, FormElementState, TransactionFormState, SummaryItems, TransactionData, BarcodeLabel, ProductDisplayDto, EmployeeType, TransactionDetails2, TransactionMaster2, TransactionDetailsMore } from "./transaction-types";
 import { generateUniqueKey } from "../../../../utilities/Utils";
 
 
@@ -73,6 +73,9 @@ export const initialTransactionDetails2: TransactionDetails2 = {
   additionalCessPerc: 0,
   additionalCess: 0,
 };
+export const transactionInitialMoreDetails: TransactionDetailsMore = {
+  memo:""
+}
 export const initialInvTransactionMaster2: TransactionMaster2 = {
   invTransactionMasterID: 0,
   creditCardDetails: "",
@@ -273,7 +276,7 @@ export const initialTransactionDetailData: TransactionDetail = {
   sortOrder: 0,
   profitPercentage: 0,
   schemeDiscount: 0,
-  moreDetails: {memo:""},
+  moreDetails: transactionInitialMoreDetails,
   memoEditor: '',
   rowNumber: 0,
   actualSalesPrice: 0,

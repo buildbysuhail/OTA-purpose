@@ -80,6 +80,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   const [isMoreModalOpen, setIsMoreModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
+  const [updateTriggered, setUpdateTriggered] = useState(false);
   const [isSmallHeight, setIsSmallHeight] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const ledgerIdRef = useRef<any>(null);
@@ -161,11 +162,9 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
     return () => clearTimeout(timer);
   }, []);
 
-  const [updateTriggered, setUpdateTriggered] = useState(false);
-
   useEffect(() => {
     if (updateTriggered) {
-      const fetchData = async () => {
+      const updateOrderStatus = async () => {
         try {
           const response = await axios.post(Urls.update_order_status, {
             params: {
@@ -176,41 +175,28 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
               status: formState.orderStatus,
             },
           });
-          console.log('API Response:', response.data);
+          console.log('Order API Response:', response.data);
+          await updatePurchaseApproval();
         } catch (error) {
           console.error('Error updating order status:', error);
         } finally {
           setUpdateTriggered(false);
         }
       };
-      fetchData();
+      updateOrderStatus();
+
     }
   }, [updateTriggered]);
 
-  useEffect(() => {
-    if (updateTriggered) {
-      const updatePurchaseStatus = async () => {
-        try {
-          const response = await axios.post(Urls.purchase_approved, {
-            params: {
-              voucherNumber: formState.transaction.master.voucherNumber,
-              voucherForm: formState.transaction.master.voucherForm,
-              voucherType: formState.transaction.master.voucherType,
-              voucherPrefix: formState.transaction.master.voucherPrefix,
-              status: formState.orderStatus,
-            },
-          });
-          console.log('Purchase Approved API Response:', response.data);
-        } catch (error) {
-          console.error('Error updating purchase approval status:', error);
-        }
-      };
-      updatePurchaseStatus();
+  const updatePurchaseApproval = async () => {
+    try {
+      const response = await axios.post(`${Urls.purchase_approved}${formState.transaction.master.invTransactionMasterID}`, {});
+      console.log('Purchase Approved API Response:', response.data);
+    } catch (error) {
+      console.error('Error updating purchase approval status:', error);
     }
-  }, [updateTriggered]);
-
+  };
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
-
   const conditionalFooterComponents =
     footerLayout === "vertical" && isSmallHeight ? (
       <>
@@ -486,13 +472,17 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   />
                 }
 
-                {formState.transaction.master.voucherType == VoucherType.PurchaseOrder && formState.transaction.master.gatePassNo == "Approved" && formState.formElements.orderApprovalStatus.visible && (t("po_approved"))}
+                {formState.transaction.master.voucherType == VoucherType.PurchaseOrder && formState.transaction.master.gatePassNo == "Approved" && formState.formElements.orderApprovalStatus.visible && (
+                  <span className="bg-danger p-2 rounded-xl text-white font-medium">
+                    {(formState.formElements.orderApprovalStatus.label)}
+                  </span>
+                )}
                 {formState.transaction.master.voucherType == VoucherType.PurchaseOrder && formState.transaction.master.gatePassNo != "Approved" && (
                   <div>
                     <ERPButton
-                      title={t('order_status_update')}
+                      title={t('approve')}
                       variant="secondary"
-                      onClick={() => setUpdateTriggered(true)}
+                      onClick={() => updatePurchaseApproval()}
                     />
                   </div>
                 )}
@@ -500,7 +490,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 {formState.transaction.master.voucherType === VoucherType.PurchaseOrder &&
                   <div>
                     <ERPButton
-                      title={t('order_status_update')}
+                      title={t('update_status')}
                       variant="secondary"
                       onClick={() => setUpdateTriggered(true)}
                     />
@@ -679,6 +669,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
               t={t}
               setIsPartyDetailsOpen={() => { setIsPartyDetailsOpen((prev: any) => { return !prev; }); }}
             />
+
             {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
               <ReferenceNumber
                 formState={formState}
@@ -785,15 +776,29 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   disabled={formState.formElements.pnlMasters?.disabled}
                 />
 
-                <ERPInput
-                  localInputBox={formState?.userConfig?.inputBoxStyle}
-                  id="address2"
-                  label={t('address_2')}
-                  value={formState.transaction.master.address2}
-                  className="max-w-full"
-                  onChange={(e) => dispatch(formStateMasterHandleFieldChange({ fields: { address2: e.target?.value }, }))}
-                  disabled={formState.formElements.pnlMasters?.disabled}
-                />
+                {formState.transaction.master.voucherType !== VoucherType.PurchaseReturn && (
+                  <ERPInput
+                    localInputBox={formState?.userConfig?.inputBoxStyle}
+                    id="address2"
+                    label={t('address_2')}
+                    value={formState.transaction.master.address2}
+                    className="max-w-full"
+                    onChange={(e) => dispatch(formStateMasterHandleFieldChange({ fields: { address2: e.target?.value }, }))}
+                    disabled={formState.formElements.pnlMasters?.disabled}
+                  />
+                )}
+
+                {formState.transaction.master.voucherType === VoucherType.PurchaseReturn && (
+                  <ERPInput
+                    localInputBox={formState?.userConfig?.inputBoxStyle}
+                    id="address4"
+                    label={t('mobile_number')}
+                    value={formState.transaction.master.address4}
+                    className="max-w-full"
+                    onChange={(e) => dispatch(formStateMasterHandleFieldChange({ fields: { address4: e.target?.value }, }))}
+                    disabled={formState.formElements.pnlMasters?.disabled}
+                  />
+                )}
               </div>
 
               <div className="flex flex-wrap items-end gap-2">
@@ -831,6 +836,60 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     onChange={(e) => { dispatch(formStateHandleFieldChange({ fields: { inSearch: e.target.checked }, })); }}
                     disabled={formState.formElements.pnlMasters?.disabled}
                   />
+                )}
+                {formState.transaction.master.voucherType === VoucherType.PurchaseOrder && userSession.dbIdValue === "572054329920" && (
+                  <ERPDataCombobox
+                    localInputBox={formState?.userConfig?.inputBoxStyle}
+                    enableClearOption={false}
+                    fetching={formState.transactionLoading}
+                    id="orderStatus"
+                    className="min-w-[180px] !m-0 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text"
+                    label={t(formState.formElements.orderStatus.label)}
+                    data={formState.transaction.master}
+                    field={{
+                      valueKey: "id",
+                      labelKey: "name",
+                      getListUrl: Urls.data_order_status,
+                    }}
+                    disabled={formState.formElements.cbLabelDesign.disabled || formState.formElements.pnlMasters?.disabled}
+                    disableEnterNavigation
+                    onKeyDown={(e: any) => { handleKeyDown && handleKeyDown(e, "labelDesign"); }}
+                  />
+                )}
+                {formState.transaction.master.voucherType === VoucherType.PurchaseOrder && formState.transaction.master.gatePassNo === "Approved" && formState.formElements.orderApprovalStatus.visible && (
+                  <span>{t(formState.formElements.orderApprovalStatus.label)}</span>
+                )}
+                {formState.transaction.master.voucherType === VoucherType.PurchaseOrder && formState.transaction.master.gatePassNo !== "Approved" && (
+                  <div>
+                    <ERPButton
+                      title={t('update_status')}
+                      variant="secondary"
+                      onClick={() => setUpdateTriggered(true)}
+                    />
+                  </div>
+                )}
+                {formState.transaction.master.voucherType === VoucherType.PurchaseOrder && (
+                  <div>
+                    <ERPButton
+                      title={t('update_status')}
+                      variant="secondary"
+                      onClick={() => setUpdateTriggered(true)}
+                    />
+                  </div>
+                )}
+                {formState.transaction.master.voucherType === VoucherType.PurchaseReturn && (
+                  <ERPCheckbox
+                    localInputBox={formState?.userConfig?.inputBoxStyle}
+                    id="inventoryUpdate"
+                    className="text-left !m-0 dark:text-dark-text"
+                    label={t("inventory_update")}
+                    checked={formState.transaction.master.stockUpdate}
+                    onChange={(e) => { dispatch(formStateMasterHandleFieldChange({ fields: { stockUpdate: e.target.checked }, })); }}
+                    disabled={formState.formElements.pnlMasters?.disabled}
+                  />
+                )}
+                {formState.transaction.master.voucherType === VoucherType.PurchaseReturn && (
+                  <span className="text-xs dark:text-dark-text text-[#191155] font-bold px-4 py-1">{t(formState.transaction.master.customerType)}</span>
                 )}
               </div>
 
@@ -921,10 +980,9 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                           onKeyDown={(e: any) => { handleKeyDown && handleKeyDown(e, "currency"); }}
                         />
                       </div>
-                    )
-                    }
+                    )}
 
-                    < div className="w-full">
+                    <div className="w-full">
                       <ERPInput
                         localInputBox={formState?.userConfig?.inputBoxStyle}
                         id="exchangeRate"

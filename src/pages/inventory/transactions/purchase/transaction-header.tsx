@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronDown, Search } from "lucide-react";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
@@ -188,14 +188,15 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
     }
   }, [updateTriggered]);
 
-  const updatePurchaseApproval = async () => {
+  const updatePurchaseApproval = useCallback(async () => {
     try {
       const response = await axios.post(`${Urls.purchase_approved}${formState.transaction.master.invTransactionMasterID}`, {});
       console.log('Purchase Approved API Response:', response.data);
     } catch (error) {
       console.error('Error updating purchase approval status:', error);
     }
-  };
+  }, [formState.transaction.master.invTransactionMasterID]);
+
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
   const conditionalFooterComponents =
     footerLayout === "vertical" && isSmallHeight ? (
@@ -360,7 +361,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   transactionType={transactionType}
                   t={t}
                 />
-                {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+                {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && formState.transaction.master.voucherType !== VoucherType.PurchaseEstimate && (
                   <VatTokenInput
                     formState={formState}
                     dispatch={dispatch}
@@ -527,7 +528,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
 
                 <div>
                   <ERPButton
-                    title={t(formState.transaction.master.voucherType == "PR" ? "grr_number" : "grn_number")}
+                    title={t(formState.transaction.master.voucherType === "PR" ? "grr_number" : formState.transaction.master.voucherType === 'GRN' ? "PO" : "grn_number")}
                     onClick={handleButtonClick}
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     className="!m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
@@ -816,7 +817,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   transactionType={transactionType}
                   t={t}
                 />
-                {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+                {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && formState.transaction.master.voucherType !== VoucherType.PurchaseEstimate && (
                   <VatTokenInput
                     formState={formState}
                     dispatch={dispatch}

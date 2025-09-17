@@ -1,9 +1,23 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState, forwardRef, Fragment, } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  forwardRef,
+  Fragment,
+} from "react";
 import { createPortal } from "react-dom";
 import { APIClient } from "../../helpers/api-client";
 import debounce from "lodash/debounce";
 import { DataGrid } from "devextreme-react";
-import { Column, KeyboardNavigation, Paging, Scrolling, Selection, } from "devextreme-react/cjs/data-grid";
+import {
+  Column,
+  KeyboardNavigation,
+  Paging,
+  Scrolling,
+  Selection,
+} from "devextreme-react/cjs/data-grid";
 import { useTranslation } from "react-i18next";
 import CustomStore from "devextreme/data/custom_store";
 import ERPInput from "../../components/ERPComponents/erp-input";
@@ -93,13 +107,12 @@ const createStore = async (
     field: string;
     value: any;
     operation: FilterOperation;
-  }>,
+  }>
 ) => {
   let isInitialLoad = true; // Track initial load
   return new CustomStore({
     key: "productID",
     async load(loadOptions: any) {
-
       if (
         !loadOptions.sort ||
         (Array.isArray(loadOptions.sort) && loadOptions.sort.length === 0)
@@ -145,15 +158,15 @@ const createStore = async (
         const result = response;
         return result !== undefined && result !== null
           ? {
-            data: result.data,
-            totalCount: result.totalCount,
-          }
+              data: result.data,
+              totalCount: result.totalCount,
+            }
           : {
-            data: [],
-            totalCount: 0,
-            summary: {},
-            groupCount: 0,
-          };
+              data: [],
+              totalCount: 0,
+              summary: {},
+              groupCount: 0,
+            };
       } catch (err) {
         throw new Error("Data Loading Error");
       }
@@ -162,6 +175,7 @@ const createStore = async (
 };
 
 const createBatchStore = async (productID: string, batchDataUrl?: string) => {
+  
   return new CustomStore({
     key: "productBatchID",
     async load(loadOptions: any) {
@@ -195,15 +209,15 @@ const createBatchStore = async (productID: string, batchDataUrl?: string) => {
         const result = response;
         return result !== undefined && result !== null
           ? {
-            data: result.data,
-            totalCount: result.totalCount,
-          }
+              data: result.data,
+              totalCount: result.totalCount,
+            }
           : {
-            data: [],
-            totalCount: 0,
-            summary: {},
-            groupCount: 0,
-          };
+              data: [],
+              totalCount: 0,
+              summary: {},
+              groupCount: 0,
+            };
       } catch (err) {
         throw new Error("Batch Data Loading Error");
       }
@@ -258,7 +272,6 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
           caption: t("product_name"),
           dataType: "string",
           minWidth: 150,
-          width:400,
           allowSorting: true,
           allowSearch: true,
           allowFiltering: true,
@@ -274,7 +287,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
         },
         {
           dataField: "productID",
-          caption: t("product_id"),
+          caption: t("productID"),
           dataType: "number",
           visible: false,
           allowSorting: true,
@@ -397,7 +410,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
         },
         {
           dataField: "brandID",
-          caption: t("brand_id"),
+          caption: t("brandID"),
           dataType: "number",
           minWidth: 100,
           allowSorting: true,
@@ -444,15 +457,26 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       (state: RootState) => state?.AppState?.appState
     );
     // Use the hook for product grid preferences
-    const { onApplyPreferences: onApplyProductPreferences, gridCols: productGridCol } = usePreferenceData(productColumns, productGridId);
+    const {
+      onApplyPreferences: onApplyProductPreferences,
+      gridCols: productGridCol,
+    } = usePreferenceData(productColumns, productGridId);
 
     // Use the hook for batch grid preferences
-    const { onApplyPreferences: onApplyBatchPreferences, gridCols: batchGridCol } = usePreferenceData(batchColumns, batchGridId);
+    const {
+      onApplyPreferences: onApplyBatchPreferences,
+      gridCols: batchGridCol,
+    } = usePreferenceData(batchColumns, batchGridId);
     const preferenceChooserRef = useRef<{
       handleDragStart: (e: React.DragEvent<HTMLElement>) => void;
       handleDragEnd: (e: React.DragEvent<HTMLElement>) => void;
       handleDropping: (eFromDataGrid?: boolean) => void;
-      handleColumnPreferenceChange: (dataField: string, key: string, value: any, eFromDataGrid?: boolean) => void;
+      handleColumnPreferenceChange: (
+        dataField: string,
+        key: string,
+        value: any,
+        eFromDataGrid?: boolean
+      ) => void;
     }>(null);
     // Initialize portal container
     useEffect(() => {
@@ -467,32 +491,31 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     }, []);
 
     useEffect(() => {
-
-
       if (showBatchGrid == false) {
         productIDRef.current = undefined;
       }
     }, [showBatchGrid]);
 
     useEffect(() => {
-
       const loadLedgerData = async () => {
         if ((formState.batchGridShowKey ?? 0) > 0) {
           productIDRef.current = formState.batchGridShowKey;
           setShowBatchGrid(true);
-          dispatch(formStateHandleFieldChangeKeysOnly(
-            {
+          dispatch(
+            formStateHandleFieldChangeKeysOnly({
               fields: {
                 batchGridShowKey: 0,
-              }
-            }
-          ));
-          const batchStore = await createBatchStore((formState.batchGridShowKey ?? 0).toString(), batchDataUrl);
+              },
+            })
+          );
+          const batchStore = await createBatchStore(
+            (formState.batchGridShowKey ?? 0).toString(),
+            batchDataUrl
+          );
           setProductDetailStore(batchStore);
         }
-      }
+      };
       loadLedgerData();
-
     }, [formState.batchGridShowKey]);
     useEffect(() => {
       setInputValue((prev) => ({
@@ -518,6 +541,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
           right: window.innerWidth - (containerRect.right + window.scrollX),
           width: containerRect.width, // Match container width
         };
+        
       }
       return { top: 0, left: 0, width: "100%" };
     }, [inputRef]);
@@ -572,14 +596,16 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
               payload.productName = value;
             }
 
-            const store = await createStore(value, payload, productDataUrl,
-              [
-                {
-                  selector: formState.formElements.productSearchPopupWindow.data.searchCriteria == "product" ? "productCode" : "productCode",
-                  desc: true
-                }
-              ]);
-
+            const store = await createStore(value, payload, productDataUrl, [
+              {
+                selector:
+                  formState.formElements.productSearchPopupWindow.data
+                    .searchCriteria == "product"
+                    ? "productCode"
+                    : "productCode",
+                desc: true,
+              },
+            ]);
             setStore(store);
             setShowProductGrid(true);
           }
@@ -588,8 +614,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     );
 
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-
       const value = e.target.value;
+      setProductGridReady(false)
       setInputValue((prev) => ({
         ...prev,
         searchValue: value,
@@ -601,6 +627,15 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       if (value.length >= 1) {
         if (searchType !== "modal") {
           await debouncedFetch(value, inputValue.searchByCode);
+
+          setShowProductGrid(false);
+          setProductInitialized(false); // Check It
+          if (inputRef && "current" in inputRef && inputRef.current) {
+            inputRef.current.focus();
+
+            const val = inputRef.current.value;
+            inputRef.current.setSelectionRange(val.length, val.length);
+          }
         }
       } else {
         setStore({
@@ -630,51 +665,40 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
 
     const handleGridKeyDown = useCallback(
       async (e: any) => {
-
         const key = e.event?.key;
-        if (!key) return;
+        if (!key) {
+          return;
+        }
 
         if (key === "Enter" || key === "NumpadEnter") {
           try {
             const gridInstance = dataGridRef.current.instance();
-            // read selected rows (returns Promise)
-            const selectedRows = await gridInstance.getSelectedRowsData();
-            let rowData = selectedRows && selectedRows.length > 0 ? selectedRows[0] : null;
 
-            // fallback: if no selection (very rare), try to get focused row safely
+            // Get the data of the currently focused row
+            const focusedRowKey = gridInstance.option("focusedRowKey");
+            const focusedRowData = gridInstance
+              .getDataSource()
+              .items()
+              .find((row: any) => row.productID === focusedRowKey);
+
+            let rowData = focusedRowData;
+
             if (!rowData) {
-              const focusedRowIndex = gridInstance.option("focusedRowIndex");
-              if (focusedRowIndex == null || focusedRowIndex < 0) return;
-              const visibleRows = gridInstance.getVisibleRows() || [];
-              const firstVisibleIndex = visibleRows[0]?.rowIndex ?? 0;
-              const localIndex = focusedRowIndex - firstVisibleIndex;
-              if (localIndex >= 0 && localIndex < visibleRows.length) {
-                // safe local offset
-                rowData = visibleRows[localIndex]?.data;
-              } else {
-                // last resort: read key via cellValue (may throw for virtual remote)
-                try {
-                  const key = gridInstance.cellValue(focusedRowIndex, "productID");
-                  if (key !== undefined) {
-                    const ds = gridInstance.getDataSource?.();
-                    const items = ds?.items ? ds.items() : null;
-                    if (Array.isArray(items)) {
-                      rowData = items.find((it: any) => it.productID === key) ?? null;
-                    } else {
-                      rowData = { productID: key };
-                    }
-                  }
-                } catch (err) {
-                  /* ignore */
-                }
-              }
+              const selectedRows = await gridInstance.getSelectedRowsData();
+              rowData =
+                selectedRows && selectedRows.length > 0
+                  ? selectedRows[0]
+                  : null;
             }
 
-            if (rowData.productID > 0) {
+            if (rowData && rowData.productID > 0) {
               if (onProductSelected) onProductSelected(rowData);
 
               if (!isNullOrUndefinedOrEmpty(batchDataUrl)) {
-                const batchStore = await createBatchStore(rowData.productID, batchDataUrl);
+                const batchStore = await createBatchStore(
+                  rowData.productID,
+                  batchDataUrl
+                );
                 setProductDetailStore(batchStore);
                 setShowBatchGrid(true);
                 setShowProductGrid(false);
@@ -686,7 +710,6 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
               }
             }
           } catch (err) {
-            // general fail-safe: close grid + focus input
             setShowProductGrid(false);
             if (inputRef && "current" in inputRef && inputRef.current) {
               inputRef.current.focus();
@@ -694,15 +717,29 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
           }
         } else if (key === "Escape") {
           setShowProductGrid(false);
+          setProductInitialized(false);
           if (inputRef && "current" in inputRef && inputRef.current) {
             inputRef.current.focus();
+            const val = inputRef.current.value;
+            inputRef.current.setSelectionRange(val.length, val.length);
           }
-          e.event.preventDefault();
+        } else {
+          if (
+            !["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(key)
+          ) {
+            setShowProductGrid(false);
+            setProductInitialized(false);
+
+            if (inputRef && "current" in inputRef && inputRef.current) {
+              inputRef.current.focus();
+              const val = inputRef.current.value;
+              inputRef.current.setSelectionRange(val.length, val.length);
+            }
+          }
         }
       },
       [batchDataUrl, onProductSelected, inputRef]
     );
-
 
     const handleBatchGridKeyDown = useCallback(
       async (e: any) => {
@@ -761,7 +798,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     const handleBatchFocusedRowChanged = useCallback((e: any) => {
       // whenever focus moves (via arrow keys), select that row
       if (!e.row) {
-        return
+        return;
       }
       e.component.selectRows([e.row.key], false);
     }, []);
@@ -769,7 +806,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     const handleInputKeyDown = useCallback(
       async (e: React.KeyboardEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value;
-        // console.log(`Input key: ${e.key}`);
+        console.log(`Input key: ${value}`);
         if (
           [
             "ArrowLeft",
@@ -785,8 +822,9 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
           if (e.key === "ArrowDown") {
             const grid: any = dataGridRef.current.instance();
             const rows = grid.getVisibleRows();
-            if (rows.length > 0) {
+            if (rows.length > 0 && productGridReady) {
               grid.selectRowsByIndexes([0]);
+
               grid.navigateToRow(grid.getKeyByRowIndex(0));
               grid.focus();
               e.preventDefault();
@@ -916,36 +954,32 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       );
     }, []);
 
-    const [productGridReady, setProductGridReady] = useState<any>();
+    const [productGridReady, setProductGridReady] = useState<any>(false);
     const handleProductFocusedRowChanged = useCallback((e: any) => {
-      // whenever focus moves (keyboard arrow), select that row
+      const gridInstance = e.component;
       if (e?.row?.key !== undefined) {
-        e.component.selectRows([e.row.key], false);
+        // console.log("focused row changed")
+        gridInstance.selectRows([e.row.key], false);
       }
     }, []);
 
-
     const [productInitialized, setProductInitialized] = useState(false);
 
-    const handleProductGridContentReady = useCallback((e: any) => {
-
-      const gridInstance = e.component;
-      const visibleRows = gridInstance.getVisibleRows();
-      const hasValidData =
-        visibleRows.length > 0 && visibleRows[0].data?.productID;
-      setProductGridReady(hasValidData);
-      if (hasValidData && !productInitialized) {
-        const firstRowKey = gridInstance.getKeyByRowIndex(0);
-        gridInstance.option("focusedRowIndex", 0);
-        gridInstance.selectRows([firstRowKey], false);
-        gridInstance.navigateToRow(firstRowKey);
-        gridInstance.focus();
-
-        setProductInitialized(true);
-      }
-    }, [productInitialized]);
-
-
+    const handleProductGridContentReady = useCallback(
+      (e: any) => {
+        const gridInstance = e.component;
+        const visibleRows = gridInstance.getVisibleRows();
+        const hasValidData = visibleRows.length > 0 && visibleRows[0].data?.productID;
+        setProductGridReady(true);
+        if (hasValidData && !productInitialized) {
+          gridInstance.option("focusedRowIndex", 0);
+          gridInstance.focus();
+          
+          setProductInitialized(true);
+        }
+      },
+      [productInitialized]
+    );
 
     useEffect(() => {
       const style = document.createElement("style");
@@ -984,9 +1018,11 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
             <>
               {showProductGrid && (
                 <Fragment>
+                  {/* {productGridReady.toString}safvan */}
                   <div
                     className="absolute mt-0 z-50 bg-white dark:bg-dark-bg shadow-lg"
                     style={positionStyle}
+                    
                   >
                     <GridPreferenceChooser
                       ref={preferenceChooserRef}
@@ -994,7 +1030,9 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
                       gridId={productGridId}
                       onApplyPreferences={onApplyProductPreferences}
                       showChooserOnGridHead={true}
-                      eclipseClass={"absolute z-10 top-[-5px] left-[2px] pointer-events-auto"}
+                      eclipseClass={
+                        "absolute z-10 top-[-5px] left-[2px] pointer-events-auto"
+                      }
                     />
                     <DataGrid
                       id={productGridId}
@@ -1020,13 +1058,12 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
                         groupPaging: false,
                       }}
                       focusedRowEnabled={true}
-                      onFocusedRowChanged={handleProductFocusedRowChanged}
+                      // onFocusedRowChanged={handleProductFocusedRowChanged}
                       onContentReady={handleProductGridContentReady}
                       onKeyDown={handleGridKeyDown}
                       tabIndex={0}
                       width="100%"
                     >
-
                       <Selection mode="single" />
                       <Paging pageSize={30} />
                       <Scrolling mode="virtual" />
@@ -1079,7 +1116,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
                       groupPaging: false,
                     }}
                     paging={{}}
-                    focusedRowEnabled={true}
+                    // focusedRowEnabled={true}
                     onContentReady={handleBatchContentReady}
                     onFocusedRowChanged={handleBatchFocusedRowChanged}
                     onKeyDown={handleBatchGridKeyDown}

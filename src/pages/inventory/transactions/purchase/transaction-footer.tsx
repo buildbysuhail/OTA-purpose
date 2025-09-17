@@ -364,20 +364,20 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
     </div>
   );
 
-  const checkboxesComponent = (
-    <div className="flex items-center gap-2 w-full justify-start sm:justify-center">
-      <AutoCalculationCheckbox
-        formState={formState}
-        dispatch={dispatch}
-        t={t}
-      />
-      <IsLockedCheckbox
-        formState={formState}
-        dispatch={dispatch}
-        t={t}
-      />
-    </div>
-  );
+  // const checkboxesComponent = (
+  //   <div className="flex items-center gap-2 w-full justify-start sm:justify-center">
+  //     <AutoCalculationCheckbox
+  //       formState={formState}
+  //       dispatch={dispatch}
+  //       t={t}
+  //     />
+  //     <IsLockedCheckbox
+  //       formState={formState}
+  //       dispatch={dispatch}
+  //       t={t}
+  //     />
+  //   </div>
+  // );
 
   const attachmentComponent = (
     applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && (
@@ -479,7 +479,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     />
                   )}
                 </li>
-                <li>
+                {/* <li>
                   <AutoCalculationCheckbox
                     formState={formState}
                     dispatch={dispatch}
@@ -492,7 +492,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     dispatch={dispatch}
                     t={t}
                   />
-                </li>
+                </li> */}
                 <li>
                   <button className="text-[#2563eb]">
                     {applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && (
@@ -581,7 +581,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             <div className={`hidden md:flex ${footerLayout === "vertical" ? "flex-col items-start w-full" : "flex-col items-start w-full md:w-auto"}`}>
               <div className={`flex ${footerLayout === "vertical" ? "flex-col items-start" : "items-end"} gap-2 mb-2`}>
                 <div className={`flex items-center w-full ${footerLayout === "vertical" ? "justify-between" : "gap-2"}`}>
-                    {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && formState.transaction.master.voucherType !== VoucherType.PurchaseEstimate && (
+                  {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && formState.transaction.master.voucherType !== VoucherType.PurchaseEstimate && (
                     <CashPaidSection
                       formState={formState}
                       dispatch={dispatch}
@@ -590,16 +590,14 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                       focusAmount={focusAmount}
                     />
                   )}
-                  {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && formState.transaction.master.voucherType !== VoucherType.PurchaseEstimate && (
-                    <RoundOffInput
-                      formState={formState}
-                      dispatch={dispatch}
-                      t={t}
-                      handleKeyDown={handleKeyDown}
-                      focusDiscount={() => document.getElementById("discountID")?.focus()}
-                      focusAmount={() => document.getElementById("amountID")?.focus()}
-                    />
-                  )}
+                  <RoundOffInput
+                    formState={formState}
+                    dispatch={dispatch}
+                    t={t}
+                    handleKeyDown={handleKeyDown}
+                    focusDiscount={() => document.getElementById("discountID")?.focus()}
+                    focusAmount={() => document.getElementById("amountID")?.focus()}
+                  />
                 </div>
                 <div className="flex flex-col w-full">
                   <BillDiscountInput
@@ -780,7 +778,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           <div className="flex md:hidden flex-col w-full max-w-full">
             <div className="flex flex-col gap-2 mb-2">
               <div className="flex flex-wrap items-end gap-2 w-full">
-                  {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && formState.transaction.master.voucherType !== VoucherType.PurchaseEstimate && (
+                {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && formState.transaction.master.voucherType !== VoucherType.PurchaseEstimate && (
                   <CashPaidSection
                     formState={formState}
                     dispatch={dispatch}
@@ -789,16 +787,14 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     focusAmount={focusAmount}
                   />
                 )}
-                  {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && formState.transaction.master.voucherType !== VoucherType.PurchaseEstimate && (
-                  <RoundOffInput
-                    formState={formState}
-                    dispatch={dispatch}
-                    t={t}
-                    handleKeyDown={handleKeyDown}
-                    focusDiscount={() => document.getElementById("discountID")?.focus()}
-                    focusAmount={() => document.getElementById("amountID")?.focus()}
-                  />
-                )}
+                <RoundOffInput
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  handleKeyDown={handleKeyDown}
+                  focusDiscount={() => document.getElementById("discountID")?.focus()}
+                  focusAmount={() => document.getElementById("amountID")?.focus()}
+                />
                 <BillDiscountInput
                   formState={formState}
                   dispatch={dispatch}
@@ -879,14 +875,18 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 className="dark:text-dark-text"
               />
             )}
-            <div className="flex gap-2 flex-wrap">
+            {/* <div className="flex gap-2 flex-wrap">
               <AutoCalculationCheckbox
                 formState={formState}
                 dispatch={dispatch}
                 t={t}
               />
-              <IsLockedCheckbox formState={formState} dispatch={dispatch} t={t} />
-            </div>
+              <IsLockedCheckbox
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+              />
+            </div> */}
           </div>
           <div className="w-full sm:w-auto">
             {applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && (

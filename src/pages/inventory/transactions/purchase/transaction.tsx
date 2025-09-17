@@ -68,6 +68,7 @@ import {
   TransactionFormStateInitialData,
   initialFormElements,
   initialInventoryTotals,
+  initialUserConfig,
 } from "./transaction-type-data";
 import ErpPurchaseGrid, {
   SummaryConfig,
@@ -99,6 +100,7 @@ import { purchaseGridCol } from "./transaction-grid-cols";
 import SavingOverlay from "../transaction-saving";
 import { BusinessType } from "../../../../enums/business-types";
 import MemoEditorModal from "./memo-editor";
+import { getStorageString } from "../../../../utilities/storage-utils";
 interface BilledItem {
   id?: number;
   name: string;
@@ -133,9 +135,19 @@ const TransactionForm: React.FC<TransactionProps> = ({
   isTeller = false,
   // localInputBox,
 }) => {
-  const Utc = localStorage.getItem("utInvc");
-  const st = safeBase64Decode(Utc ?? "");
-  const _st: UserConfig = customJsonParse(st??"{}");
+const [_st, setSt] = useState<UserConfig>(initialUserConfig);
+
+   useEffect(() => {
+    const fetchData = async () => {
+      const storedUtc = await getStorageString("utInvc"); // use get, not set
+      if (storedUtc) {
+        const decoded = safeBase64Decode(storedUtc)??"{}";
+        setSt(customJsonParse(decoded));
+      }
+    };
+
+    fetchData();
+  },[]);
 
   const [triggerEffect, setTriggerEffect] = useState(false);
   // const handleClearControls = () => {

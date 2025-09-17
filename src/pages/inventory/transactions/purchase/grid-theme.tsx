@@ -10,6 +10,7 @@ import { modelToBase64 } from "../../../../utilities/jsonConverter";
 import Urls from "../../../../redux/urls";
 import { APIClient } from "../../../../helpers/api-client";
 import { RootState } from "../../../../redux/store";
+import { setStorageString } from "../../../../utilities/storage-utils";
 
 interface GridThemeProps {
   isOpen: boolean;
@@ -451,18 +452,15 @@ const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, transactionTy
     }
   };
 
-  const handleSave = async () => {
+ const handleSave = async () => {
     try {
+      debugger;
       if (!formState.selectedTheme) return;
       const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, { ...formState?.userConfig, ...formState.selectedTheme });
-      handleResponse(response, () => {
+      handleResponse(response, async() => {
         const base64 = modelToBase64({ ...formState?.userConfig, ...formState.selectedTheme });
-        localStorage.setItem("utInvc", base64);
-        dispatch(
-          formStateHandleFieldChangeKeysOnly({
-            fields: { selectedTheme: null, themeChangeCountdown: undefined },
-          })
-        );
+        await setStorageString("utInvc", base64)
+        dispatch(formStateHandleFieldChangeKeysOnly({ fields: { selectedTheme: null, themeChangeCountdown: undefined } }))
         onClearThemeChangeInterval && onClearThemeChangeInterval();
         onClose();
       });
@@ -470,6 +468,7 @@ const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, transactionTy
       console.log("error in save table theme", error);
     }
   };
+
   return (
     <ERPResizableSidebar isOpen={isOpen} setIsOpen={onClose} minWidth={450} overlayNeeded={false}>
       <div ref={sidebarRef} className="flex flex-col h-[94vh] dark:bg-dark-bg bg-gray-50">

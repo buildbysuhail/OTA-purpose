@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import ERPResizableSidebar from "../../../../components/ERPComponents/erp-resizable-sidebar";
 import { X, Check, Palette } from "lucide-react";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
@@ -128,7 +128,7 @@ const gridThemes = [
     activeRowBg: "240,249,255",
     gridRowHeight: 33,
     activeCellBg: "252,254,255",
-    colors: ["#f8fafc", "#e2e8f0", "#cbd5e1"]
+    colors: ["#f8fafc", "#e2e8f0", "#cbd5e1"],
   },
   {
     themeName: "Modern Blue",
@@ -146,7 +146,7 @@ const gridThemes = [
     activeRowBg: "219,234,254",
     gridRowHeight: 40,
     activeCellBg: "242,248,255",
-    colors: ["#2563eb", "#3b82f6", "#dbeafe"]
+    colors: ["#2563eb", "#3b82f6", "#dbeafe"],
   },
   {
     themeName: "Emerald Green",
@@ -164,7 +164,7 @@ const gridThemes = [
     activeRowBg: "209,250,229",
     gridRowHeight: 40,
     activeCellBg: "237,252,245",
-    colors: ["#059669", "#10b981", "#d1fae5"]
+    colors: ["#059669", "#10b981", "#d1fae5"],
   },
   {
     themeName: "Teal Ocean",
@@ -182,7 +182,7 @@ const gridThemes = [
     activeRowBg: "204,251,241",
     gridRowHeight: 36,
     activeCellBg: "232,254,249",
-    colors: ["#0d9488", "#14b8a6", "#ccfbf1"]
+    colors: ["#0d9488", "#14b8a6", "#ccfbf1"],
   },
   {
     themeName: "Purple Luxury",
@@ -200,7 +200,7 @@ const gridThemes = [
     activeRowBg: "237,233,254",
     gridRowHeight: 42,
     activeCellBg: "249,247,255",
-    colors: ["#6d28d9", "#7c3aed", "#ede9fe"]
+    colors: ["#6d28d9", "#7c3aed", "#ede9fe"],
   },
   {
     themeName: "Rose Elegance",
@@ -218,7 +218,7 @@ const gridThemes = [
     activeRowBg: "255,228,230",
     gridRowHeight: 36,
     activeCellBg: "255,245,247",
-    colors: ["#be123c", "#e11d48", "#ffe4e6"]
+    colors: ["#be123c", "#e11d48", "#ffe4e6"],
   },
   {
     themeName: "Indigo Tech",
@@ -236,7 +236,7 @@ const gridThemes = [
     activeRowBg: "224,231,255",
     gridRowHeight: 38,
     activeCellBg: "244,248,255",
-    colors: ["#4338ca", "#6366f1", "#e0e7ff"]
+    colors: ["#4338ca", "#6366f1", "#e0e7ff"],
   },
   {
     themeName: "Slate Professional",
@@ -254,7 +254,7 @@ const gridThemes = [
     activeRowBg: "226,232,240",
     gridRowHeight: 36,
     activeCellBg: "244,246,250",
-    colors: ["#334155", "#475569", "#e2e8f0"]
+    colors: ["#334155", "#475569", "#e2e8f0"],
   },
   {
     themeName: "Monochrome Pro",
@@ -272,7 +272,7 @@ const gridThemes = [
     activeRowBg: "243,244,246",
     gridRowHeight: 36,
     activeCellBg: "252,252,252",
-    colors: ["#111827", "#374151", "#f3f4f6"]
+    colors: ["#111827", "#374151", "#f3f4f6"],
   },
   {
     themeName: "Pastel Mint",
@@ -290,7 +290,7 @@ const gridThemes = [
     activeRowBg: "220,252,231",
     gridRowHeight: 38,
     activeCellBg: "240,254,248",
-    colors: ["#22c55e", "#4ade80", "#dcfce7"]
+    colors: ["#22c55e", "#4ade80", "#dcfce7"],
   },
   {
     themeName: "Soft Sky",
@@ -308,7 +308,7 @@ const gridThemes = [
     activeRowBg: "224,242,254",
     gridRowHeight: 38,
     activeCellBg: "246,251,255",
-    colors: ["#0ea5e9", "#38bdf8", "#e0f2fe"]
+    colors: ["#0ea5e9", "#38bdf8", "#e0f2fe"],
   },
   {
     themeName: "Neutral Gray",
@@ -326,7 +326,7 @@ const gridThemes = [
     activeRowBg: "243,244,246",
     gridRowHeight: 36,
     activeCellBg: "252,252,252",
-    colors: ["#4b5563", "#6b7280", "#f3f4f6"]
+    colors: ["#4b5563", "#6b7280", "#f3f4f6"],
   },
   {
     themeName: "Blush Peach",
@@ -344,7 +344,7 @@ const gridThemes = [
     activeRowBg: "255,237,213",
     gridRowHeight: 38,
     activeCellBg: "255,248,240",
-    colors: ["#f97316", "#fb923c", "#fed7aa"]
+    colors: ["#f97316", "#fb923c", "#fed7aa"],
   },
   {
     themeName: "Ocean Blue Gradient",
@@ -362,7 +362,7 @@ const gridThemes = [
     activeRowBg: "219,234,254",
     gridRowHeight: 38,
     activeCellBg: "242,248,255",
-    colors: ["#1d4ed8", "#3b82f6", "#dbeafe"]
+    colors: ["#1d4ed8", "#3b82f6", "#dbeafe"],
   },
   {
     themeName: "Custom",
@@ -380,23 +380,42 @@ const gridThemes = [
     activeRowBg: "226,232,240",
     gridRowHeight: 36,
     activeCellBg: "246,248,252",
-    colors: ["#64748b", "#94a3b8", "#e2e8f0"]
+    colors: ["#64748b", "#94a3b8", "#e2e8f0"],
   },
 ];
 
 const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, transactionType, onClearThemeChangeInterval }) => {
   const dispatch = useDispatch();
-  const formState = useSelector(  (state: RootState) => state.InventoryTransaction);
+  const formState = useSelector((state: RootState) => state.InventoryTransaction);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen, onClose]);
+
   const onResetTheme = () => {
-    dispatch(formStateHandleFieldChangeKeysOnly(
-      {
+    dispatch(
+      formStateHandleFieldChangeKeysOnly({
         fields: {
           userConfig: {
             ...formState.currentTheme
           }
         }
       }
-    ))
+      ))
   }
 
   // useEffect(() => {
@@ -415,30 +434,35 @@ const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, transactionTy
 
   const handleSelectTheme = (theme: any) => {
     if (formState.selectedTheme?.themeName !== theme.themeName) {
-      dispatch(formStateHandleFieldChangeKeysOnly({
-        fields: {
-          selectedTheme: { ...theme, isInitial: false },
-          userConfig: {
-            ...formState.userConfig,
-            inputBoxStyle: {
-              ...formState.userConfig?.inputBoxStyle,
-              focusBgColor: theme.activeCellBg
-            }
-          }
-        }
-      }));
+      dispatch(
+        formStateHandleFieldChangeKeysOnly({
+          fields: {
+            selectedTheme: { ...theme, isInitial: false },
+            userConfig: {
+              ...formState.userConfig,
+              inputBoxStyle: {
+                ...formState.userConfig?.inputBoxStyle,
+                focusBgColor: theme.activeCellBg,
+              },
+            },
+          },
+        })
+      );
     }
   };
 
   const handleSave = async () => {
     try {
-      debugger;
       if (!formState.selectedTheme) return;
       const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, { ...formState?.userConfig, ...formState.selectedTheme });
       handleResponse(response, () => {
         const base64 = modelToBase64({ ...formState?.userConfig, ...formState.selectedTheme });
         localStorage.setItem("utInvc", base64);
-        dispatch(formStateHandleFieldChangeKeysOnly({ fields: { selectedTheme: null, themeChangeCountdown: undefined } }))
+        dispatch(
+          formStateHandleFieldChangeKeysOnly({
+            fields: { selectedTheme: null, themeChangeCountdown: undefined },
+          })
+        );
         onClearThemeChangeInterval && onClearThemeChangeInterval();
         onClose();
       });
@@ -448,7 +472,7 @@ const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, transactionTy
   };
   return (
     <ERPResizableSidebar isOpen={isOpen} setIsOpen={onClose} minWidth={450} overlayNeeded={false}>
-      <div className="flex flex-col h-[94vh] dark:bg-dark-bg bg-gray-50">
+      <div ref={sidebarRef} className="flex flex-col h-[94vh] dark:bg-dark-bg bg-gray-50">
         {/* Header */}
         <div className="flex justify-between items-center mb-6 px-4 pt-4">
           <div className="flex items-center gap-3">

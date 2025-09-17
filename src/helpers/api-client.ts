@@ -25,7 +25,7 @@ axios.defaults.headers.post["X-Custom-Header"] = new Date().toISOString();
 const getToken = async()=>{
   return await getStorageString("token")
 }
-const token = getToken()
+const token = await getToken()
 
 if (token) axios.defaults.headers.common["Authorization"] = "Bearer " + token;
 

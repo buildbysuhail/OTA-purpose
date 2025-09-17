@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useRef } from 'react';
+import React, { useCallback, useState, useRef, useEffect } from "react";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
@@ -6,11 +6,11 @@ import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { Edit, Trash2 } from "lucide-react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import { useDispatch, useSelector } from 'react-redux';
-import { formStateHandleFieldChangeKeysOnly } from './reducer';
-import { RootState } from '../../../../redux/store';
-import { GridQtyFactors } from './transaction-types';
-import { toast } from 'react-toastify';
+import { useDispatch, useSelector } from "react-redux";
+import { formStateHandleFieldChangeKeysOnly } from "./reducer";
+import { RootState } from "../../../../redux/store";
+import { GridQtyFactors } from "./transaction-types";
+import { toast } from "react-toastify";
 
 interface QtyFactors {
   width: number;
@@ -26,9 +26,15 @@ interface QtyFactorsModalProps {
   t: (key: string) => string;
 }
 
-const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t, rowIndex }) => {
+const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({
+  isOpen,
+  onClose,
+  t,
+  rowIndex,
+}) => {
   const dispatch = useDispatch();
   const widthInputRef = useRef<HTMLInputElement>(null);
+
 
   const [qtyFactors, setQtyFactors] = useState<QtyFactors>({
     width: 0,
@@ -41,16 +47,32 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t, r
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [editingRowId, setEditingRowId] = useState<string | null>(null);
 
-  const handleQtyFactors = (field: keyof QtyFactors, value: number | boolean) => {
-    setQtyFactors(prev => ({
+  const handleQtyFactors = (
+    field: keyof QtyFactors,
+    value: number | boolean
+  ) => {
+    setQtyFactors((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
   const calculateTotal = (width: number, height: number): number => {
     return width * height;
   };
+
+  useEffect(() => {
+    console.log("useEffect triggered, isOpen:", isOpen);
+    if (isOpen && widthInputRef.current) {
+      console.log("Focusing input:", widthInputRef.current);
+      // Use setTimeout to ensure the modal is fully rendered
+      setTimeout(() => {
+        widthInputRef.current?.focus();
+      }, 0);
+    }
+  }, [isOpen]); 
+
+  debugger;
 
   const resetForm = () => {
     setQtyFactors({
@@ -64,6 +86,7 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t, r
 
     setTimeout(() => {
       if (widthInputRef.current) {
+        console.log("Useeeect2");
         widthInputRef.current.focus();
       }
     }, 0);
@@ -71,7 +94,7 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t, r
 
   const handleClick = () => {
     if (isEditMode && editingRowId !== null) {
-      const updatedGridData = gridData.map(row => {
+      const updatedGridData = gridData.map((row) => {
         if (row.id === editingRowId) {
           const total = calculateTotal(qtyFactors.width, qtyFactors.height);
           return {
@@ -79,7 +102,7 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t, r
             width: qtyFactors.width,
             height: qtyFactors.height,
             nos: qtyFactors.nos,
-            total: total
+            total: total,
           };
         }
         return row;
@@ -88,7 +111,6 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t, r
       setGridData(updatedGridData);
       resetForm();
     } else {
-      debugger;
       if (qtyFactors.width > 0 && qtyFactors.height > 0 && qtyFactors.nos > 0) {
         const total = calculateTotal(qtyFactors.width, qtyFactors.height);
         const newRow: GridQtyFactors = {
@@ -97,16 +119,10 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t, r
           width: qtyFactors.width,
           height: qtyFactors.height,
           nos: qtyFactors.nos,
-          total: total
+          total: total,
         };
 
-        if(!qtyFactors.multipleRows) {
-         dispatch(formStateHandleFieldChangeKeysOnly({
-        fields: { quantityFactorData: JSON.stringify({ rowIndex: rowIndex, data: [newRow] }) }
-      }));
-      return;
-      }
-        setGridData(prev => {
+        setGridData((prev) => {
           const newData = [...prev, newRow];
           return newData;
         });
@@ -120,15 +136,15 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t, r
       width: rowData.width,
       height: rowData.height,
       nos: rowData.nos,
-      multipleRows: qtyFactors.multipleRows
+      multipleRows: qtyFactors.multipleRows,
     });
     setIsEditMode(true);
     setEditingRowId(rowData.id);
   };
 
   const handleDelete = (rowData: GridQtyFactors) => {
-    setGridData(prev => {
-      const newData = prev.filter(item => item.id !== rowData.id);
+    setGridData((prev) => {
+      const newData = prev.filter((item) => item.id !== rowData.id);
       return newData.map((item, index) => ({ ...item, slNo: index + 1 }));
     });
     if (editingRowId === rowData.id) {
@@ -136,12 +152,21 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t, r
     }
   };
 
-  const formState = useSelector((state: RootState) => state.InventoryTransaction);
+  const formState = useSelector(
+    (state: RootState) => state.InventoryTransaction
+  );
   const handleApplyClick = useCallback(() => {
     if (gridData && gridData.length > 0) {
-      dispatch(formStateHandleFieldChangeKeysOnly({
-        fields: { quantityFactorData: JSON.stringify({ rowIndex: rowIndex, data: gridData }) }
-      }));
+      dispatch(
+        formStateHandleFieldChangeKeysOnly({
+          fields: {
+            quantityFactorData: JSON.stringify({
+              rowIndex: rowIndex,
+              data: gridData,
+            }),
+          },
+        })
+      );
     } else {
       toast.warning("Please add at least one item before applying.");
     }
@@ -156,7 +181,7 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t, r
       allowSearch: true,
       allowFiltering: true,
       width: 45,
-      alignment: 'left'
+      alignment: "left",
     },
     {
       dataField: "width",
@@ -165,7 +190,7 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t, r
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 45
+      width: 45,
     },
     {
       dataField: "height",
@@ -174,7 +199,7 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t, r
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 45
+      width: 45,
     },
     {
       dataField: "nos",
@@ -183,7 +208,7 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t, r
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 45
+      width: 45,
     },
     {
       dataField: "total",
@@ -192,13 +217,13 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t, r
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 45
+      width: 45,
     },
     {
       dataField: "x",
-      caption: 'X',
+      caption: "X",
       dataType: "string",
-      alignment: 'right',
+      alignment: "right",
       width: 80,
       cellRender: (params: any) => {
         return (
@@ -218,8 +243,8 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t, r
               <Trash2 size={16} className="text-[#DC2626]" />
             </button>
           </div>
-        )
-      }
+        );
+      },
     },
   ];
 
@@ -238,32 +263,46 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t, r
               id="width"
               type="number"
               label={t("width")}
-              className='w-28'
+              className="w-28"
               autoFocus={true}
+              // onFocus={(e) => {
+              //   console.log("Focused on ERPProductSearch input");
+              //   if (rest.onFocus) {
+              //     rest.onFocus(e);
+              //   }
+              // }}
               value={qtyFactors.width}
-              onChange={(e) => handleQtyFactors('width', parseFloat(e.target.value) || 0)}
+              onChange={(e) =>
+                handleQtyFactors("width", parseFloat(e.target.value) || 0)
+              }
             />
             <ERPInput
               id="height"
               type="number"
               label={t("height")}
-              className='w-28'
+              className="w-28"
               value={qtyFactors.height}
-              onChange={(e) => handleQtyFactors('height', parseFloat(e.target.value) || 0)}
+              onChange={(e) =>
+                handleQtyFactors("height", parseFloat(e.target.value) || 0)
+              }
             />
             <ERPInput
               id="nos"
               type="number"
               label={t("nos")}
-              className='w-28'
+              className="w-28"
               value={qtyFactors.nos}
-              onChange={(e) => handleQtyFactors('nos', parseFloat(e.target.value) || 0)}
+              onChange={(e) =>
+                handleQtyFactors("nos", parseFloat(e.target.value) || 0)
+              }
             />
             <ERPCheckbox
               id="multipleRows"
               label={t("multiple_rows")}
               checked={qtyFactors.multipleRows}
-              onChange={(e) => handleQtyFactors('multipleRows', e.target.checked)}
+              onChange={(e) =>
+                handleQtyFactors("multipleRows", e.target.checked)
+              }
             />
             <ERPButton
               variant="primary"
@@ -288,16 +327,18 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({ isOpen, onClose, t, r
             ShowGridPreferenceChooser={false}
             showPrintButton={false}
           />
-          <div className='flex items-center justify-end gap-2 mt-2'>
+          <div className="flex items-center justify-end gap-2 mt-2">
             <ERPButton
-              title={t('cancel')}
-              variant='secondary'
+              title={t("cancel")}
+              variant="secondary"
               onClick={onClose}
             />
             <ERPButton
-              title={t('apply')}
-              onClick={() => { handleApplyClick() }}
-              variant='primary'
+              title={t("apply")}
+              onClick={() => {
+                handleApplyClick();
+              }}
+              variant="primary"
             />
           </div>
         </>

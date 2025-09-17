@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState }
 import ERPResizableSidebar from "../../../../components/ERPComponents/erp-resizable-sidebar";
 import ERPTab from "../../../../components/ERPComponents/erp-tab";
 import { useTranslation } from "react-i18next";
-import { X, Menu } from "lucide-react";
+import { X, Menu, ImageIcon } from "lucide-react";
 import { ProductDisplayDto, TransactionFormState } from "./transaction-types";
 import { APIClient } from "../../../../helpers/api-client";
 import Urls from "../../../../redux/urls";
@@ -510,7 +510,18 @@ const ProductInformationSidebar: React.FC<ProductInformationSidebarProps> = ({ i
             <div className="dark:bg-dark-bg-card dark:border-dark-border p-4 bg-slate-200">
               <div className="flex items-stretch gap-2">
                 <div className="product-image w-[60px] h-[60px] bg-slate-200">
-                  <img src={productInfo?.image ? productInfo.image : "https://loremipsum.imgix.net/4Yp1F82NF8yN9gUHXMphNz/c254302efb588196d9a607832cb24e28/lorem-picsum-1280x720.jpg?w=1920&q=60&auto=format,compress"} className="w-full h-full object-cover object-center" />
+                  {productInfo?.image ? (
+                  <img
+                    src={productInfo.image}
+                    alt="Product"
+                    className="w-full h-full object-cover object-center"
+                  />
+                ) : (
+                  <div className="flex items-center justify-center w-full h-full bg-gray-100 rounded-md">
+                    <ImageIcon size={56} className="text-gray-400" />
+                  </div>
+                )}
+                  {/* <img src={productInfo?.image ? productInfo.image : "https://loremipsum.imgix.net/4Yp1F82NF8yN9gUHXMphNz/c254302efb588196d9a607832cb24e28/lorem-picsum-1280x720.jpg?w=1920&q=60&auto=format,compress"} className="w-full h-full object-cover object-center" /> */}
                 </div>
                 <div className={`flex flex-col ${loading ? "gap-2" : "gap-1"}`}>
                   <h5 className="font-bold text-sm leading-tight dark:text-dark-text text-gray-900">

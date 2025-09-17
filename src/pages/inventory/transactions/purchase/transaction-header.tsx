@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { ChevronDown, Search } from "lucide-react";
+import { ChevronDown, Search, X } from "lucide-react";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
@@ -34,6 +34,7 @@ import LedgerDetails from "./ledger-details";
 import { isEnterKey, loadTemplateById } from "../../../../utilities/Utils";
 import VoucherType from "../../../../enums/voucher-types";
 import axios from "axios";
+import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 
 interface TransactionHeaderProps {
   formState: TransactionFormState;
@@ -131,6 +132,33 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
       })
     );
   };
+
+  const handleApproveClick = async () => {
+    const result: any = await ERPAlert.show({
+      title: t("are_you_sure_to_approve_purchase_order"),
+      text: t("approving_this_purchase_order_is_a_permanent_action_and_cannot_be_reversed"),
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: t("yes"),
+      cancelButtonText: t("no"),
+    });
+
+    if (result?.isConfirmed || result === true || result?.value === true) {
+      updatePurchaseApproval();
+    }
+  };
+
+  const getGRNTitle = (voucherType: string) => {
+    switch (voucherType) {
+      case "PR":
+        return "grr_number";
+      case "GRN":
+        return "PO";
+      default:
+        return "grn_number";
+    }
+  };
+
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -474,8 +502,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 }
 
                 {formState.transaction.master.voucherType === VoucherType.PurchaseOrder && formState.transaction.master.gatePassNo === "Approved" && (
-                  <span className="bg-danger p-2 rounded-xl text-white font-medium">
-                    {(formState.formElements.orderApprovalStatus.label)}
+                  <span className="bg-gradient-to-r from-green-400 to-green-600 p-2 rounded-xl text-white font-medium shadow-lg">
+                    {t("approved")}
                   </span>
                 )}
 
@@ -484,7 +512,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     <ERPButton
                       title={t('approve')}
                       variant="secondary"
-                      onClick={() => updatePurchaseApproval()}
+                      onClick={handleApproveClick}
                     />
                   </div>
                 )}
@@ -527,15 +555,17 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   <span className="text-xs dark:text-dark-text text-[#191155] font-bold px-4 py-1">{t(formState.transaction.master.customerType)}</span>
                 )}
 
-                <div>
-                  <ERPButton
-                    title={t(formState.transaction.master.voucherType === "PR" ? "grr_number" : formState.transaction.master.voucherType === 'GRN' ? "PO" : "grn_number")}
-                    onClick={handleButtonClick}
-                    localInputBox={formState?.userConfig?.inputBoxStyle}
-                    className="!m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
-                    disabled={formState.transactionLoading}
-                  />
-                </div>
+                {formState.transaction.master.voucherType !== VoucherType.PurchaseQuotation && (
+                  <div>
+                    <ERPButton
+                      title={t(getGRNTitle(formState.transaction.master.voucherType))}
+                      onClick={handleButtonClick}
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                      className="!m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+                      disabled={formState.transactionLoading}
+                    />
+                  </div>
+                )}
 
                 {isModalOpen && (
                   <ERPModal
@@ -861,8 +891,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 )}
 
                 {formState.transaction.master.voucherType === VoucherType.PurchaseOrder && formState.transaction.master.gatePassNo === "Approved" && (
-                  <span className="bg-danger p-2 rounded-xl text-white font-medium">
-                    {(formState.formElements.orderApprovalStatus.label)}
+                  <span className="bg-gradient-to-r from-green-400 to-green-600 p-2 rounded-xl text-white font-medium shadow-lg">
+                    {t("approved")}
                   </span>
                 )}
 
@@ -871,7 +901,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     <ERPButton
                       title={t('approve')}
                       variant="secondary"
-                      onClick={() => setUpdateTriggered(true)}
+                      onClick={handleApproveClick}
                     />
                   </div>
                 )}
@@ -903,13 +933,17 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
               </div>
 
               <div className="flex items-center gap-2 mt-2">
-                <ERPButton
-                  title={t(formState.transaction.master.voucherType === "PR" ? "grr_number" : formState.transaction.master.voucherType === 'GRN' ? "PO" : "grn_number")}
-                  onClick={handleButtonClick}
-                  localInputBox={formState?.userConfig?.inputBoxStyle}
-                  className="!m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
-                  disabled={formState.transactionLoading}
-                />
+                {formState.transaction.master.voucherType !== VoucherType.PurchaseQuotation && (
+                  <div>
+                    <ERPButton
+                      title={t(getGRNTitle(formState.transaction.master.voucherType))}
+                      onClick={handleButtonClick}
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                      className="!m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+                      disabled={formState.transactionLoading}
+                    />
+                  </div>
+                )}
 
                 {formState.transaction.master.voucherType !=
                   VoucherType.PurchaseOrder && (

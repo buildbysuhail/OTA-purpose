@@ -563,6 +563,7 @@ export interface TransactionFormState {
   themeChangeCountdown?: number
   isInitialLedger?: boolean;
   memoEditor: { visible: boolean; data: string; rowIndex: number };
+  gridMenuPop:boolean;
 }
 interface loadingResult {
   isLoading: boolean;

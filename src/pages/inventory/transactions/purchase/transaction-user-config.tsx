@@ -300,13 +300,15 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                     checked={formState?.userConfig?.useSupplierProductCode}
                     onChangeData={(e) => handleFieldChange("useSupplierProductCode", e.useSupplierProductCode)}
                   />
-                  <ERPCheckbox
-                    id="enableVoucherPrefix"
-                    label={t("enable_voucher_prefix")}
-                    data={formState.userConfig}
-                    checked={formState.userConfig?.enableVoucherPrefix}
-                    onChangeData={(e) => handleFieldChange("enableVoucherPrefix", e.enableVoucherPrefix)}
-                  />
+                  {formState.transaction.master.voucherType === 'PR' && (
+                    <ERPCheckbox
+                      id="enableVoucherPrefix"
+                      label={t("enable_voucher_prefix")}
+                      data={formState.userConfig}
+                      checked={formState.userConfig?.enableVoucherPrefix}
+                      onChangeData={(e) => handleFieldChange("enableVoucherPrefix", e.enableVoucherPrefix)}
+                    />
+                  )}
                 </div>
 
                 <div className="space-y-2">

@@ -44,7 +44,6 @@ const ReportList = () => {
         (state: RootState) => state.ApplicationSettings
       );
   const [settingsRoutes, setSettingRoutes] = useState(getFilteredReports(ReportsMenuItems, clientSession,applicationSettings, hasRight) as any);
-  let sds = jwtHelper.getLoggedInUserRole();
   const preloadComponents = () => {};
 
   useEffect(() => {

@@ -8,13 +8,14 @@ import { UserRight } from "../settings/userManagement/data";
 import { setUserRights, UserTypeRights } from "../../redux/slices/user-rights/reducer";
 import { setUserBranches } from "../../redux/slices/user-session/user-branches-reducer";
 import { ClientSessionModel, setClientSession } from "../../redux/slices/client-session/reducer";
+import { removeStorageString, setStorageString } from "../../utilities/storage-utils";
 export const setLanguage = async (dispatch: AppDispatch, locale: Locale) => {
   dispatch(setDirection(locale.rtl ? "rtl" : "ltr"));
   
   dispatch(setLocale(locale));
 
-  localStorage.setItem("ynexltr", locale.rtl ? "rtl" : "ltr");
-  localStorage.removeItem(locale.rtl ? "ynexltr" : "ynexrtl");
+  await setStorageString("ynexltr", locale.rtl ? "rtl" : "ltr");
+  await removeStorageString(locale.rtl ? "ynexltr" : "ynexrtl");
 
 }
 export const syncAppStates = async (dispatch: AppDispatch, res: AppState, clientSession: ClientSessionModel, userSession: UserModel,  userRights: UserTypeRights[], locale: Locale) => {
@@ -25,7 +26,7 @@ export const syncAppStates = async (dispatch: AppDispatch, res: AppState, client
   dispatch(setUserRights(userRights));
   dispatch(setClientSession(clientSession));
 
-  setLanguage(dispatch, locale);
+  await setLanguage(dispatch, locale);
 
   dispatch(setInputBox(res.inputBox));
   dispatch(setScrollbarWidth(res.scrollbarWidth));
@@ -34,49 +35,49 @@ export const syncAppStates = async (dispatch: AppDispatch, res: AppState, client
   dispatch(setMode(res.mode ?? "light"));
   if (res.mode == "light") {
     dispatch(setMode(res.mode ?? "light"));
-    localStorage.setItem("ynexlighttheme", "light");
-    localStorage.removeItem("ynexdarktheme");
-    localStorage.removeItem("Light");
-    localStorage.removeItem("bodyBgRGB");
-    localStorage.removeItem("darkBgRGB");
+    await setStorageString("ynexlighttheme", "light");
+    await removeStorageString("ynexdarktheme");
+    await removeStorageString("Light");
+    await removeStorageString("bodyBgRGB");
+    await removeStorageString("darkBgRGB");
   } else {
-    localStorage.setItem("ynexdarktheme", "dark");
-    localStorage.removeItem("ynexlighttheme");
-    localStorage.removeItem("ynexlighttheme");
-    localStorage.removeItem("darkBgRGB");
+    await setStorageString("ynexdarktheme", "dark");
+    await removeStorageString("ynexlighttheme");
+    await removeStorageString("ynexlighttheme");
+    await removeStorageString("darkBgRGB");
   }
 
   dispatch(setColorPrimaryRgb(res.colorPrimaryRgb));
   dispatch(setColorPrimary(res.colorPrimaryRgb));
-  localStorage.setItem("primaryRGB", res.colorPrimaryRgb);
-  localStorage.setItem("primaryRGB1", res.colorPrimaryRgb);
+  await setStorageString("primaryRGB", res.colorPrimaryRgb);
+  await setStorageString("primaryRGB1", res.colorPrimaryRgb);
 
 
   switch (res.dataMenuStyles) {
     case "dark":
       dispatch(setDataMenuStyles("dark"));
-      localStorage.setItem("ynexMenu", "dark");
-      localStorage.removeItem("light");
+      await setStorageString("ynexMenu", "dark");
+      await removeStorageString("light");
       break;
     case "light":
       dispatch(setDataMenuStyles("light"));
-      localStorage.setItem("ynexMenu", "light");
-      localStorage.removeItem("light");
+      await setStorageString("ynexMenu", "light");
+      await removeStorageString("light");
       break;
     case "color":
       dispatch(setDataMenuStyles("color"));
-      localStorage.setItem("ynexMenu", "color");
-      localStorage.removeItem("gradient");
+      await setStorageString("ynexMenu", "color");
+      await removeStorageString("gradient");
       break;
     case "gradient":
       dispatch(setDataMenuStyles("gradient"));
-      localStorage.setItem("ynexMenu", "gradient");
-      localStorage.removeItem("color");
+      await setStorageString("ynexMenu", "gradient");
+      await removeStorageString("color");
       break;
     case "transparent":
       dispatch(setDataMenuStyles("transparent"));
-      localStorage.setItem("ynexMenu", "transparent");
-      localStorage.removeItem("gradient");
+      await setStorageString("ynexMenu", "transparent");
+      await removeStorageString("gradient");
       break;
     default:
       break;
@@ -84,28 +85,28 @@ export const syncAppStates = async (dispatch: AppDispatch, res: AppState, client
   switch (res.dataHeaderStyles) {
     case "dark":
       dispatch(setDataHeaderStyles("dark"));
-      localStorage.setItem("ynexHeader", "dark");
-      localStorage.removeItem("light");
+      await setStorageString("ynexHeader", "dark");
+      await removeStorageString("light");
       break;
     case "light":
       dispatch(setDataHeaderStyles("light"));
-      localStorage.setItem("ynexHeader", "light");
-      localStorage.removeItem("dark");
+      await setStorageString("ynexHeader", "light");
+      await removeStorageString("dark");
       break;
     case "color":
       dispatch(setDataHeaderStyles("color"));
-      localStorage.setItem("ynexHeader", "color");
-      localStorage.removeItem("dark");
+      await setStorageString("ynexHeader", "color");
+      await removeStorageString("dark");
       break;
     case "gradient":
       dispatch(setDataHeaderStyles("gradient"));
-      localStorage.setItem("ynexHeader", "gradient");
-      localStorage.removeItem("transparent");
+      await setStorageString("ynexHeader", "gradient");
+      await removeStorageString("transparent");
       break;
     case "transparent":
       dispatch(setDataHeaderStyles("transparent"));
-      localStorage.removeItem("gradient");
-      localStorage.setItem("ynexHeader", "transparent");
+      await removeStorageString("gradient");
+      await setStorageString("ynexHeader", "transparent");
       break;
     default:
       break;
@@ -113,21 +114,21 @@ export const syncAppStates = async (dispatch: AppDispatch, res: AppState, client
   switch (res.dataPageStyle) {
     case "regular":
       dispatch(setDataPageStyle("regular"));
-      localStorage.setItem("ynexregular", "Regular");
-      localStorage.removeItem("ynexclassic");
-      localStorage.removeItem("ynexmodern");
+      await setStorageString("ynexregular", "Regular");
+      await removeStorageString("ynexclassic");
+      await removeStorageString("ynexmodern");
       break;
     case "classic":
       dispatch(setDataPageStyle("classic"));
-      localStorage.setItem("ynexclassic", "Classic");
-      localStorage.removeItem("ynexregular");
-      localStorage.removeItem("ynexmodern");
+      await setStorageString("ynexclassic", "Classic");
+      await removeStorageString("ynexregular");
+      await removeStorageString("ynexmodern");
       break;
     case "modern":
       dispatch(setDataPageStyle("modern"));
-      localStorage.setItem("ynexmodern", "Modern");
-      localStorage.removeItem("ynexregular");
-      localStorage.removeItem("ynexclassic");
+      await setStorageString("ynexmodern", "Modern");
+      await removeStorageString("ynexregular");
+      await removeStorageString("ynexclassic");
       break;
     default:
       break;
@@ -139,8 +140,8 @@ export const syncAppStates = async (dispatch: AppDispatch, res: AppState, client
       dispatch(setDataNavLayout("vertical"));
       dispatch(setToggled(""));
       dispatch(setDataNavStyle(""));
-      localStorage.removeItem("ynexnavstyles");
-      localStorage.setItem("ynexverticalstyles", "default");
+      await removeStorageString("ynexnavstyles");
+      await setStorageString("ynexverticalstyles", "default");
       var icon = document.getElementById(
         "switcher-default-menu"
       ) as HTMLInputElement;
@@ -153,16 +154,16 @@ export const syncAppStates = async (dispatch: AppDispatch, res: AppState, client
       dispatch(setDataVerticalStyle("closed"));
       dispatch(setToggled("close-menu-close"));
       dispatch(setDataNavStyle(""));
-      localStorage.setItem("ynexverticalstyles", "closed");
-      localStorage.removeItem("ynexnavstyles");
+      await setStorageString("ynexverticalstyles", "closed");
+      await removeStorageString("ynexnavstyles");
       break;
     case "iconTextfn":
       dispatch(setDataNavLayout("vertical"));
       dispatch(setDataVerticalStyle("icontext"));
       dispatch(setToggled("icon-text-close"));
       dispatch(setDataNavStyle(""));
-      localStorage.setItem("ynexverticalstyles", "icontext");
-      localStorage.removeItem("ynexnavstyles");
+      await setStorageString("ynexverticalstyles", "icontext");
+      await removeStorageString("ynexnavstyles");
 
       const MainContent = document.querySelector(".main-content");
       const appSidebar = document.querySelector(".app-sidebar");
@@ -179,8 +180,8 @@ export const syncAppStates = async (dispatch: AppDispatch, res: AppState, client
       dispatch(setDataVerticalStyle("overlay"));
       dispatch(setToggled("icon-overlay-close"));
       dispatch(setDataNavStyle(""));
-      localStorage.setItem("ynexverticalstyles", "overlay");
-      localStorage.removeItem("ynexnavstyles");
+      await setStorageString("ynexverticalstyles", "overlay");
+      await removeStorageString("ynexnavstyles");
       var icon = document.getElementById(
         "switcher-icon-overlay"
       ) as HTMLInputElement;
@@ -201,8 +202,8 @@ export const syncAppStates = async (dispatch: AppDispatch, res: AppState, client
       dispatch(setDataVerticalStyle("detached"));
       dispatch(setToggled("detached-open"));
       dispatch(setDataNavStyle(""));
-      localStorage.setItem("ynexverticalstyles", "detached");
-      localStorage.removeItem("ynexnavstyles");
+      await setStorageString("ynexverticalstyles", "detached");
+      await removeStorageString("ynexnavstyles");
 
       const __MainContent = document.querySelector(".main-content");
       const __appSidebar = document.querySelector(".app-sidebar");
@@ -219,8 +220,8 @@ export const syncAppStates = async (dispatch: AppDispatch, res: AppState, client
       dispatch(setDataVerticalStyle("doublemenu"));
       dispatch(setToggled("double-menu-open"));
       dispatch(setDataNavStyle(""));
-      localStorage.setItem("ynexverticalstyles", "doublemenu");
-      localStorage.removeItem("ynexnavstyles");
+      await setStorageString("ynexverticalstyles", "doublemenu");
+      await removeStorageString("ynexnavstyles");
       break;
     default:
       break;

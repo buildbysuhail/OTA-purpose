@@ -20,6 +20,7 @@ import { hexToRgb } from "../../../components/common/switcher/switcherdata/switc
 import { useTranslation } from "react-i18next";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
 import { useAppState } from "../../../utilities/hooks/useAppState";
+import { setStorageString } from "../../../utilities/storage-utils";
 
 const api = new APIClient();
 interface pageBgColor {
@@ -63,16 +64,16 @@ export const AccTransactionUserConfig: React.FC<AccTransactionUserConfigProps> =
   useEffect(() => { }, []);
   const postUserConfigOnOk = async (response: any) => {
     const base64 = modelToBase64(response);
-    localStorage.setItem("utc", base64);
+     await setStorageString("utc", base64);
   };
 
   const postUserConfig = async () => {
     try {
       setIsLoading(true);
       const response = await api.post(`${Urls.acc_transaction_base}${formState.transactionType}/UpdateLocalSettings`, formState.userConfig);
-      handleResponse(response, () => {
+      handleResponse(response, async() => {
         const base64 = modelToBase64(formState.userConfig);
-        localStorage.setItem("utc", base64);
+         await setStorageString("utc", base64);
       });
     } catch (error) {
       console.error("Error post System Code settings:", error);
@@ -103,9 +104,9 @@ export const AccTransactionUserConfig: React.FC<AccTransactionUserConfigProps> =
         cancelButtonText: t("cancel"),
         onConfirm: async (result: any) => {
           const res = await api.postAsync(`${Urls.acc_transaction_base}${formState.transactionType}/ResetLocalSettings`, formState.userConfig);
-          handleResponse(res, () => {
+          handleResponse(res, async() => {
             const st = atob(res.item);
-            localStorage.setItem("utc", res.item);
+             await setStorageString("utc", res.item);
             const _st: any = customJsonParse(st);
             dispatch(accFormStateHandleFieldChange({ fields: { userConfig: _st } }));
           });

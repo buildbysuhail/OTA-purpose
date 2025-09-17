@@ -16,6 +16,7 @@ import { generateTableColumns } from "../../../utilities/Utils";
 import { initialPrintDetailDto } from "../../use-print-type-data";
 import SharedDownloadTemplate from "../DownloadPreview/Shared";
 import SharedTemplatePreview from "../DesignPreview/shared";
+import VoucherType from "../../../enums/voucher-types";
 
 export  interface DesignSectionType {
   id: number;
@@ -37,7 +38,7 @@ export interface DesignerConfig {
 
 // Map: templateGroup -> templateType -> templateKind
 export type DesignerConfigMap = Record<
-  string,
+  VoucherType | string,
   Record<
     string,
     Record<string, DesignerConfig>
@@ -70,6 +71,31 @@ export const templateConfig: DesignerConfigMap = {
       },
     },
   },
+  PI:{
+      STANDARD: {
+      standard: {
+        downloadComponent: <SharedDownloadTemplate />,
+        PreviewComponent: <SharedTemplatePreview />,
+        sections: {},
+      },
+    },
+    PREMIUM: {
+      premium: {
+        downloadComponent: <SharedDownloadTemplate />,
+        PreviewComponent:  <SharedTemplatePreview />,
+        sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
+        tableState: generateTableColumns(initialPrintDetailDto)
+      }),footer: () => null },
+      },
+    },
+    UNIVERSAL: {
+      universal: {
+        downloadComponent: <SharedDownloadTemplate />,
+        PreviewComponent: <SharedTemplatePreview />,
+        sections: {},
+      },
+    },
+  }
     // ADVANCE: {
     //   advice: {
     //     downloadComponent: <AdviceTemplate />,

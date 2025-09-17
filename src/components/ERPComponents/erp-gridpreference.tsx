@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 import { Ellipsis } from "lucide-react";
 import ERPToast from "./erp-toast";
 import { useAppState } from "../../utilities/hooks/useAppState";
-
+import { removeStorageString, setStorageString } from "../../utilities/storage-utils";
 interface GridPreferenceChooserProps {
   gridId: string;
   columns: DevGridColumn[];
@@ -149,7 +149,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
     setIsSaving(true);
     try {
       const preference = JSON.stringify(preferences);
-      localStorage.setItem(`gridPreferences_${gridId}`, preference);
+      await setStorageString(`gridPreferences_${gridId}`, preference)
       await api.postAsync(Urls.grid_preference, { GridID: gridId, Design: preference, });
       setIsOpen(false);
       onChange(preferences);
@@ -163,7 +163,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
   };
 
   const handleResetGrid = async () => {
-    localStorage.removeItem(`gridPreferences_${gridId}`)
+    await removeStorageString(`gridPreferences_${gridId}`)
     if (isSaving) return;
     debugger;
     setIsSaving(true);

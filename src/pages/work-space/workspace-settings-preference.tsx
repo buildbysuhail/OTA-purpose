@@ -222,8 +222,8 @@ const userTheme = () => {
                               id="switcher-light-theme"
                               
                               checked={theme.mode === "light"}
-                              onChange={(e) => {if(e.target.checked == true) { 
-                                switcherdata.Light(updateAppState,appState);
+                              onChange={async(e) => {if(e.target.checked == true) { 
+                                await switcherdata.Light(updateAppState,appState);
                                 setTheme((prevTheme) => ({
                                 ...prevTheme,
                                 mode: 'light',
@@ -247,8 +247,9 @@ const userTheme = () => {
                               id="switcher-dark-theme"
                               defaultChecked={theme.mode === "dark"}
                               
-                              onChange={(e) => {if(e.target.checked == true) { 
-                                switcherdata.Dark(updateAppState,appState); setTheme((prevTheme) => ({
+                              onChange={async(e) => {if(e.target.checked == true) { 
+                                await switcherdata.Dark(updateAppState,appState); 
+                                setTheme((prevTheme) => ({
                                 ...prevTheme,
                                 mode: 'dark',
                               }));}
@@ -275,8 +276,8 @@ const userTheme = () => {
                               id="switcher-ltr"
                               checked={theme.direction != "rtl"}
                               onChange={() => {}}
-                              onClick={() => {
-                                switcherdata.Ltr(updateAppState,appState); ; setTheme((prevTheme) => ({
+                              onClick={async() => {
+                               await switcherdata.Ltr(updateAppState,appState); ; setTheme((prevTheme) => ({
                                   ...prevTheme,
                                   direction: 'ltr',
                                 }));}
@@ -297,10 +298,11 @@ const userTheme = () => {
                               id="switcher-rtl"
                               checked={theme.direction == "rtl"}
                               onChange={() => {}}
-                              onClick={() => {
+                              onClick={async() => {
                                 
                                 if(true == true) { 
-                                switcherdata.Rtl(updateAppState,appState);; setTheme((prevTheme) => ({
+                                await switcherdata.Rtl(updateAppState,appState); 
+                                setTheme((prevTheme) => ({
                                   ...prevTheme,
                                   direction: 'rtl',
                                 }));}
@@ -327,8 +329,8 @@ const userTheme = () => {
                               checked={theme.colorPrimaryRgb == "58, 88, 146"}
                               id="switcher-primary"
                               onClick={
-                                () => {
-                                  switcherdata.primaryColor1(updateAppState,appState);
+                               async () => {
+                                 await switcherdata.primaryColor1(updateAppState,appState);
                                   setTheme((prevTheme) => ({
                                   ...prevTheme,
                                   colorPrimaryRgb: '58, 88, 146',
@@ -345,8 +347,8 @@ const userTheme = () => {
                               onChange={(_e) => {}}
                               id="switcher-primary1"
                               onClick={
-                                () => {
-                                  switcherdata.primaryColor2(updateAppState,appState);
+                                async() => {
+                                 await switcherdata.primaryColor2(updateAppState,appState);
                                   setTheme((prevTheme) => ({
                                   ...prevTheme,
                                   colorPrimaryRgb: '92, 144 ,163',
@@ -363,8 +365,8 @@ const userTheme = () => {
                               onChange={(_e) => {}}
                               id="switcher-primary2"
                               onClick={
-                                () => {
-                                  switcherdata.primaryColor3(updateAppState,appState);
+                               async () => {
+                                await  switcherdata.primaryColor3(updateAppState,appState);
                                   setTheme((prevTheme) => ({
                                   ...prevTheme,
                                   colorPrimaryRgb: '161, 90 ,223',
@@ -382,8 +384,8 @@ const userTheme = () => {
                               onChange={(_e) => {}}
                               id="switcher-primary3"
                               onClick={
-                                () => {
-                                  switcherdata.primaryColor4(updateAppState,appState);
+                                async() => {
+                                 await switcherdata.primaryColor4(updateAppState,appState);
                                   setTheme((prevTheme) => ({
                                   ...prevTheme,
                                   colorPrimaryRgb: '78, 172, 76',
@@ -400,8 +402,8 @@ const userTheme = () => {
                               onChange={(_e) => {}}
                               id="switcher-primary4"
                               onClick={
-                                () => {
-                                  switcherdata.primaryColor5(updateAppState,appState);
+                                async() => {
+                                await  switcherdata.primaryColor5(updateAppState,appState);
                                   setTheme((prevTheme) => ({
                                   ...prevTheme,
                                   colorPrimaryRgb: '223, 90, 90',
@@ -424,17 +426,17 @@ const userTheme = () => {
                                   }}
                                 >
                                   <div className="Themeprimarycolor theme-container-primary pickr-container-primary">
-                                    <ColorPicker onChange={(e: any) => {
+                                    <ColorPicker onChange={async(e: any) => {
                                 const rgb = hexToRgb(e.target?.value);
 
                                 if (rgb !== null) {
                                     const { r, g, b } = rgb;
-                                    switcherdata.primaryColorCustom(updateAppState,appState,  `${r},  ${g},  ${b}`);
+                                  await  switcherdata.primaryColorCustom(updateAppState,appState,  `${r},  ${g},  ${b}`);
                                     setTheme((prevTheme) => ({
                                       ...prevTheme,
                                       colorPrimaryRgb: `${r},  ${g},  ${b}`,
                                     }))
-                                    // localStorage.setItem("dynamiccolor", `${r}, ${g} ,${b}`);
+                                  
                                 }
                             }} value={"#FFFFFF"} />
                                 </div>

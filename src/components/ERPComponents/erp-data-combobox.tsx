@@ -48,7 +48,7 @@ import localData from "../../enums/local-datas";
 import CachedUrls from "../../redux/cached-urls";
 import ERPButton from "./erp-button";
 import ERPModal from "./erp-modal";
-
+import { getStorageString, setStorageString } from "../../utilities/storage-utils";
 interface Option {
   value: any;
   label: string;
@@ -442,7 +442,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     const { t } = useTranslation("main");
     const [isOpen, setIsOpen] = useState(false);
     // const [lcct, setLcct] = useState<string>("");
-    const lcct = useRef(localStorage.getItem("lcct") ?? "");
+    const lcct = useRef<string | null>(null);
+    // const lcct = useRef(localStorage.getItem("lcct") ?? "");
     const [getListUrl, setGetListUrl] = useState<string>("");
     const [query, setQuery] = useState("");
     const [items, setItems] = useState<Option[]>([]);
@@ -490,10 +491,22 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       set_reload(reload);
     }, [reload]);
 
+       const featchLcct =async()=>{
+     const lcct =  await getStorageString("lcct")
+     return lcct
+   }
+
+useEffect(() => {
+  const init = async () => {
+    lcct.current = await featchLcct();
+  };
+  init();
+}, [isOpen]);
+
     useEffect(() => {
       const run = async () => {
         if (isOpen) {
-          const _lcct = localStorage.getItem("lcct") ?? "";
+           const _lcct =  await featchLcct();
           if (lcct.current !== _lcct) {
             await loadData();
           }
@@ -859,7 +872,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
           const res = await api.getWithCacheAsync(url, params);
           const _CachedUrls = CachedUrls;
           if (_CachedUrls.some((cachedUrl) => url.toLocaleLowerCase().includes(cachedUrl.toLocaleLowerCase()))) {
-            localStorage.setItem(btoa(url), JSON.stringify(res));
+           await setStorageString(btoa(url), JSON.stringify(res))
             return filterLedgers(res, params);
           }
           return res;
@@ -892,7 +905,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
           reload != true
         ) {
           fetchWithCache = true;
-          const _lcl = getApLocalData(btoa(url));
+          const _lcl =await getApLocalData(btoa(url));
           if (_lcl != null) {
             _items = await filterLedgers(_lcl, field?.params || "");
             _continue = false;
@@ -925,7 +938,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       } finally {
         // setLcct(localStorage.getItem("lcct")??"")
 
-      lcct.current = localStorage.getItem("lcct") ?? "";
+      lcct.current =  await featchLcct () ?? "";
         if (_reload === true) {
           changeReload && changeReload(false);
         }

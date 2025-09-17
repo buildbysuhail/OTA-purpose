@@ -79,6 +79,7 @@ import { useTransactionHelper } from "./use-transaction-helper";
 import { DeepPartial } from "redux";
 import ExcelJS from "exceljs";
 import { sanitizeDataAdvanced } from "../../../../utilities/Utils";
+import { getStorageString, setStorageString } from "../../../../utilities/storage-utils";
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;
 //   clearDetailsAfterSaveAccounts: boolean;
@@ -269,10 +270,11 @@ export const useTransaction = (
       const base64 = await api.get(
         `${Urls.inv_transaction_base}${transactionType}/GetLocalSettings`
       );
-      localStorage.setItem("utInvc", base64);
+      await setStorageString("utInvc", base64);
       // Decode the base64 back to JSON string      
-      const _userConfig = safeBase64Decode(base64 ?? "");;
-      const userConfig: UserConfig = customJsonParse(_userConfig ?? "{}");
+        const _userConfig = safeBase64Decode(base64 ?? "");;
+      const userConfig: UserConfig = customJsonParse(_userConfig??"{}");
+
 
       return userConfig;
     } catch (error) {
@@ -368,19 +370,21 @@ export const useTransaction = (
             : _formState.formElements.btnSave.disabled,
       },
     };
-    setTransVoucher(_formState);
+    await setTransVoucher(_formState);
     return true;
   };
   const setTransVoucher = async (
     _formState: TransactionFormState,
     loadUserConfig: boolean = false
   ) => {
-    const Utc = localStorage.getItem("utInvc");
+
+      
+
+    const Utc = await getStorageString("utInvc");
     let userConfig: UserConfig | undefined;
     if (Utc) {
-
-      const _userConfig = safeBase64Decode(Utc ?? "");;
-      userConfig = customJsonParse(_userConfig ?? "{}");
+      const decoded = safeBase64Decode(Utc)??"{}";
+      userConfig = customJsonParse(decoded ?? "{}");
     } else {
       userConfig = await fetchUserConfig();
     }
@@ -1255,6 +1259,10 @@ export const useTransaction = (
     const editableColumn = formState.gridColumns?.find(
       (col) => col.visible !== false && col.dataField != null && col.allowEditing == true && col.readOnly !== true
     );
+     await setStorageString(
+          `${formState.transaction.master.voucherType}${formState.transaction.master.voucherForm}`,
+          JSON.stringify(details)
+        );
     if (calculateSummary && calculateTotal && formState && dispatch && formStateHandleFieldChangeKeysOnly) {
       const summaryRes = calculateSummary(details, formState, {
         result: {},
@@ -1702,7 +1710,7 @@ export const useTransaction = (
     // }
   };
 
-  const handleGridKeyDown = (
+  const handleGridKeyDown = async(
     key: any,
     gridRef: any,
     applicationSettings?: ApplicationSettingsType
@@ -1718,11 +1726,11 @@ export const useTransaction = (
         text: t("you_want_to_delete"),
         icon: "warning",
         confirmButtonText: t("delete_it"),
-        onConfirm: () => {
+        onConfirm: async() => {
           const dataGridInstance = gridRef.current.instance(); // Access DataGrid instance
           const focusedRowIndex = dataGridInstance.option("focusedRowIndex");
           const rowData = dataGridInstance.getVisibleRows()[focusedRowIndex]?.data;
-          handleRemoveItem(rowData.slNo)
+          await handleRemoveItem(rowData.slNo)
         },
       });
     }
@@ -1900,7 +1908,7 @@ export const useTransaction = (
   const loadTemporaryRows = async () => {
 
     let details: Array<TransactionDetail> = [];
-    const tmp = localStorage.getItem(
+    const tmp = await getStorageString(
       `${formState.transaction.master.voucherType}${formState.transaction.master.voucherForm}`
     );
     if (tmp != undefined && tmp != null && tmp != "") {
@@ -2489,9 +2497,9 @@ export const useTransaction = (
           warehouseId = detailWarehouseId ?? 0;
         }
       }
-      const _lastSelectedWarehouseIDOfItemPopupsSearch = (() => {
+      const _lastSelectedWarehouseIDOfItemPopupsSearch = (async() => {
         try {
-          const stored = localStorage.getItem(
+           const stored = await getStorageString(
             "lastSelectedWarehouseIDOfItemPopupsSearch"
           );
           return stored ? Number(stored) || 0 : 0;
@@ -2518,7 +2526,7 @@ export const useTransaction = (
           (x) => x.dataField == "stockDetails"
         )?.visible,
         lastSelectedWareHouseIdOfItemPopUpsSearch:
-          _lastSelectedWarehouseIDOfItemPopupsSearch,
+          await _lastSelectedWarehouseIDOfItemPopupsSearch,
       };
       const queryParams = new URLSearchParams();
       Object.entries(payload).forEach(([key, value]) => {
@@ -3157,7 +3165,7 @@ export const useTransaction = (
           let data = { ...formState.transaction.details[rowIndex] };
           if (columnName == "actionCol") {
             if (!isNullOrUndefinedOrEmpty(value)) {
-              handleRemoveItem(value)
+              await handleRemoveItem(value)
             } else {
               // const res = focusToNextColumn(rowIndex, columnName);
               // setCurrentCell(res, data);

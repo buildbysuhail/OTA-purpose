@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IdTextDto, IdTextLogoDto } from "../../../base/id-text-is-default-dto";
 import Cookies from "js-cookie";
 import { customJsonParse, modelToBase64 } from "../../../utilities/jsonConverter";
+import { getStorageString } from "../../../utilities/storage-utils";
 
 export interface UserTypeRights {
   formCode: string;
@@ -12,7 +13,8 @@ export interface UserTypeRights {
   formCode: string;
   userRights: string;
 }
-let ass = localStorage.getItem("up");
+
+let ass =await getStorageString("up");
   
     export const up: UserTypeRights[] = ass != undefined && ass != null && ass != "" 
     ? customJsonParse(atob(ass)) : initialState;

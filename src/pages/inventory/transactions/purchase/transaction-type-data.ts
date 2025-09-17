@@ -3,7 +3,7 @@ import { Dispatch } from "react";
 import { AnyAction } from "redux";
 import { inputBox } from "../../../../redux/slices/app/types";
 import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
-import { TransactionMaster, TransactionValidationsData, TransactionDetail, TransactionMaster3, FormElementState, TransactionFormState, SummaryItems, TransactionData, BarcodeLabel, ProductDisplayDto, EmployeeType, TransactionDetails2, TransactionMaster2, TransactionDetailsMore } from "./transaction-types";
+import { TransactionMaster, TransactionValidationsData, TransactionDetail, TransactionMaster3, FormElementState, TransactionFormState, SummaryItems, TransactionData, BarcodeLabel, ProductDisplayDto, EmployeeType, TransactionDetails2, TransactionMaster2, TransactionDetailsMore, UserConfig } from "./transaction-types";
 import { generateUniqueKey } from "../../../../utilities/Utils";
 
 
@@ -406,28 +406,7 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   orderStatus: { visible: false, disabled: false, label: "order_status" },
   orderApprovalStatus: { visible: false, disabled: false, label: "" },
 
-};
-export const TransactionFormStateInitialData: TransactionFormState = {
-  formCode: "",
-  isEntryControl: false,
-  isEdit: false,
-  dtLedgerCodes: [],
-  showSaveDialog: false,
-  isInvoker: false,
-  title: "",
-  rowProcessing: false,
-  transactionProcessing: false,
-  transactionLoading: true,
-  transaction: transactionInitialData,
-  printOnSave: false,
-  printPreview: false,
-  printCheque: false,
-  amountInWords: 'Zero Only',
-  openUnsavedPrompt: false,
-  priceCategory: "",
-  summary: initialInventoryTotals,
-  remarks: "",
-  userConfig: {
+};export const initialUserConfig: UserConfig = {
     clearDetailsAfterSaveAccounts: true,
     keepNarrationForJV: true,
     mnuShowConfirmationForEditOnAccounts: true,
@@ -475,7 +454,28 @@ export const TransactionFormStateInitialData: TransactionFormState = {
       focusBgColor: "255, 255, 255",
       bold: true
     },
-  },
+  }
+export const TransactionFormStateInitialData: TransactionFormState = {
+  formCode: "",
+  isEntryControl: false,
+  isEdit: false,
+  dtLedgerCodes: [],
+  showSaveDialog: false,
+  isInvoker: false,
+  title: "",
+  rowProcessing: false,
+  transactionProcessing: false,
+  transactionLoading: true,
+  transaction: transactionInitialData,
+  printOnSave: false,
+  printPreview: false,
+  printCheque: false,
+  amountInWords: 'Zero Only',
+  openUnsavedPrompt: false,
+  priceCategory: "",
+  summary: initialInventoryTotals,
+  remarks: "",
+  userConfig: initialUserConfig,
   unlocking: false,
   total: 0,
   isRowEdit: false,

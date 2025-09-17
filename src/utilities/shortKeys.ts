@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { TransactionRoute, transactionRoutes } from "../components/common/content/transaction-routes";
+import { getStorageString, setStorageString } from "./storage-utils";
 
 interface ShortcutConfig {
   event: string;
@@ -138,12 +139,12 @@ const shortKeys: ShortcutConfig[] = [
   }),
 ];
 
-const getStoredShortcuts = (): ShortcutConfig[] => {
-  const stored = localStorage.getItem("keyboard-shortcuts");
+const getStoredShortcuts = async (): Promise<ShortcutConfig[]> => {
+  const stored = await getStorageString("keyboard-shortcuts");
 
   // If no stored shortcuts, return the current shortKeys
   if (!stored) {
-    localStorage.setItem("keyboard-shortcuts", JSON.stringify(shortKeys));
+    await setStorageString("keyboard-shortcuts", JSON.stringify(shortKeys));
     return shortKeys;
   }
 
@@ -167,15 +168,15 @@ const getStoredShortcuts = (): ShortcutConfig[] => {
       : defaultShortcut;
   });
 
-  // Save the updated shortcuts back to localStorage
-  localStorage.setItem("keyboard-shortcuts", JSON.stringify(updatedShortcuts));
+  // Save the updated shortcuts back to localStorages
+  await setStorageString("keyboard-shortcuts", JSON.stringify(updatedShortcuts));
 
   return updatedShortcuts;
 };
 
-let currentShortcuts = getStoredShortcuts();
+// let currentShortcuts = getStoredShortcuts();
 
-const handleKeyPress = (event: KeyboardEvent) => {
+const handleKeyPress = async(event: KeyboardEvent) => {
   if (
     event.target instanceof HTMLInputElement ||
     event.target instanceof HTMLTextAreaElement ||
@@ -187,8 +188,8 @@ const handleKeyPress = (event: KeyboardEvent) => {
   const navigate = (path: string) => {
     window.location.href = path;
   };
-
-  const shortcut = currentShortcuts.find((s) => {
+ const shortcuts = await getStoredShortcuts();
+  const shortcut = shortcuts.find((s) => {
     const modifiers = s.key.split("+");
     const matchedModifiers = modifiers.filter((modifier) => {
       switch (modifier) {

@@ -26,17 +26,7 @@ const loading = (
   </div>
 );
 const TemplateDesignerLayout: FC<LayoutProps> = ({  }) => {
-  // const Bodyclickk = () => {
-  //   if (localStorage.getItem("ynexverticalstyles") == "icontext") {
-  //     setMyClass("");
-  //   }
-  //   if (window.innerWidth > 992) {
-  //     let html = document.documentElement;
-  //     if (html.getAttribute("icon-overlay") === "open") {
-  //       html.setAttribute("icon-overlay", "");
-  //     }
-  //   }
-  // };
+
   return (
     <>
       <div className="w-full h-full absolute top-0 left-0 z-50">

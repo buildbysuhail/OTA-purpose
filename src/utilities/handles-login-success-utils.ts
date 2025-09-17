@@ -8,6 +8,7 @@ import { UserTypeRights } from "../redux/slices/user-rights/reducer";
 import { UserModel } from "../redux/slices/user-session/reducer";
 import { customJsonParse } from "./jsonConverter";
 import usFlag from "../assets/images/flags/us_flag.png";
+import { getStorageString, removeStorageString, setStorageString } from "./storage-utils";
 
 
 export const handleLoginSuccess = async (
@@ -17,14 +18,14 @@ export const handleLoginSuccess = async (
   setIsLoggedToBranch: (v: boolean) => void,
   setHasToChooseBranch: (v: boolean) => void
 ) => {
-  let ass = localStorage.getItem("as");
+  let ass =await getStorageString("as");
 
-  localStorage.removeItem("_token");
-  localStorage.setItem("token", login.item.token);
-  localStorage.setItem("up", login.item.userProfileDetails);
-  localStorage.setItem("cs", login.item.clientSessions);
-  localStorage.setItem("ut", login.item.userThemes);
-  localStorage.setItem("ur", login.item.userRights);
+  await removeStorageString("_token");
+  await setStorageString("token", login.item.token);
+  await setStorageString("up", login.item.userProfileDetails);
+  await setStorageString("cs", login.item.clientSessions);
+  await setStorageString("ut", login.item.userThemes);
+  await setStorageString("ur", login.item.userRights);
 
   const userProfileDetails: UserModel = customJsonParse(atob(login.item.userProfileDetails));
   const clientSession: ClientSessionModel = customJsonParse(login.item.clientSessions);
@@ -38,7 +39,7 @@ export const handleLoginSuccess = async (
     rtl: false,
   };
 
-  syncAppStates(dispatch, userThemes, clientSession, userProfileDetails, userRights, locale);
+  await syncAppStates(dispatch, userThemes, clientSession, userProfileDetails, userRights, locale);
 
   if (ass) {
     const appSettings: ApplicationSettingsType = customJsonParse(atob(ass));

@@ -345,10 +345,7 @@ const accTransactionSlice = createSlice({
         action.payload.applicationSettings.accountsSettings?.defaultCostCenterID
       );
 
-      localStorage.setItem(
-        `${state.transaction.master.voucherType}${state.transaction.master.formType}`,
-        JSON.stringify(state.transaction.details)
-      );
+      
       state.row.billwiseDetails = "";
     },
 
@@ -404,10 +401,7 @@ const accTransactionSlice = createSlice({
           })
         );
 
-        localStorage.setItem(
-          `${state.transaction.master.voucherType}${state.transaction.master.formType}`,
-          JSON.stringify(state.transaction.details)
-        );
+        
       }
     },
 
@@ -417,10 +411,8 @@ const accTransactionSlice = createSlice({
     },
 
     // Remove a specific row from the transaction details by index
-    loadTempRows: (state) => {
-      const tmp = localStorage.getItem(
-        `${state.transaction.master.voucherType}${state.transaction.master.formType}`
-      );
+    loadTempRows: (state,action: PayloadAction<any>) => {
+ const tmp = action.payload;
       if (tmp != undefined && tmp != null && tmp != "") {
         const tmpRows = JSON.parse(tmp) as Array<AccTransactionRow>;
         if (tmpRows.length > 0) {

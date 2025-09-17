@@ -23,3 +23,25 @@ export async function getStorageString(key: string): Promise<string | null> {
     return null;
   }
 }
+//remove a string 
+export async function removeStorageString(key: string): Promise<boolean> {
+  try {
+    await localforage.removeItem(key);
+    return true;
+  } catch (error) {
+    console.error("removeStorageString error:", error);
+    return false;
+  }
+}
+
+// Clear all storage
+export async function clearStorage(): Promise<boolean> {
+  try {
+    await localforage.clear();
+    return true;
+  } catch (error) {
+    console.error("clearStorage error:", error);
+    return false;
+  }
+}
+

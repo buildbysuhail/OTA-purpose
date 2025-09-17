@@ -3,6 +3,7 @@ import { setBranch, userSession } from "./thunk";
 import { IdTextDto, IdTextLogoDto } from "../../../base/id-text-is-default-dto";
 import Cookies from "js-cookie";
 import { customJsonParse, modelToBase64 } from "../../../utilities/jsonConverter";
+import { getStorageString } from "../../../utilities/storage-utils";
 export interface BranchSelectDto {
   id: number;
   name?: string;
@@ -217,7 +218,8 @@ export const initialUserSessionData: UserModel = {
   currentCompanyDetails: initialCompanyDetails,
   currentBranchDetails: initialBranchDetails
 };
-let ass = localStorage.getItem("up");
+
+let ass = await getStorageString("up");
   
     export const up: UserModel = ass != undefined && ass != null && ass != "" 
     ? customJsonParse(atob(ass)) : initialUserSessionData;
@@ -238,21 +240,21 @@ const userSessionSlice = createSlice({
   state[action.payload.key] = action.payload.value;
 },
   },
-  extraReducers: (builder) => {
-    builder.addCase(userSession?.fulfilled, (state, action) => {
-      if (action.payload.isOk) {
+  // extraReducers: (builder) => {
+  //   builder.addCase(userSession?.fulfilled, (state, action) => {
+  //     if (action.payload.isOk) {
         
-        localStorage.setItem("up", modelToBase64(action.payload.item));
-        return action.payload.item;
-      }
-    });
-    builder.addCase(setBranch.fulfilled, (state, action) => {
-      if (action.payload.isOk) {
-        // localStorage.setItem("up", modelToBase64(action.payload.item));
-        // return  action.payload.item;
-      }
-    });
-  },
+  //       localStorage.setItem("up", modelToBase64(action.payload.item));
+  //       return action.payload.item;
+  //     }
+  //   });
+  //   builder.addCase(setBranch.fulfilled, (state, action) => {
+  //     if (action.payload.isOk) {
+  //       // localStorage.setItem("up", modelToBase64(action.payload.item));
+  //       // return  action.payload.item;
+  //     }
+  //   });
+  // },
 });
 
 export const { setUserSession, setUserSessionItem } = userSessionSlice.actions;

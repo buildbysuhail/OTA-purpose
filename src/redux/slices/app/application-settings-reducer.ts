@@ -5,7 +5,8 @@ import { ApplicationSettingsInitialState } from './application-settings-types';
 import { ApplicationSettingsType } from '../../../pages/settings/system/application-settings-types/application-settings-types';
 import { ApplicationMainSettings } from '../../../pages/settings/system/application-settings-types/application-settings-types-main';
 import { customJsonParse } from '../../../utilities/jsonConverter';
- let ass = localStorage.getItem("as");
+ import { getStorageString } from '../../../utilities/storage-utils';
+ let ass = await getStorageString("as");
   
     export const appSettings: ApplicationSettingsType = ass != undefined && ass != null && ass != "" 
     ? customJsonParse(atob(ass)) : ApplicationSettingsInitialState;

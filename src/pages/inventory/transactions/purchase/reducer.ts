@@ -381,10 +381,7 @@ const InvTransactionSlice = createSlice({
           })
         );
 
-        localStorage.setItem(
-          `${state.transaction.master.voucherType}${state.transaction.master.voucherForm}`,
-          JSON.stringify(state.transaction.details)
-        );
+       
       }
     },
 
@@ -399,25 +396,6 @@ const InvTransactionSlice = createSlice({
       state.transaction.details[index] = initialTransactionDetailData;
     },
 
-    // Remove a specific row from the transaction details by index
-  //   loadTempRows: (state,
-  //      action: PayloadAction<{
-  //       details: TransactionDetail[];
-  //     }>
-  //   ) => {
-  //     const tmp = localStorage.getItem(
-  //       `${state.transaction.master.voucherType}${state.transaction.master.voucherForm}`
-  //     );
-  //     if (tmp != undefined && tmp != null && tmp != "") {
-  //       const tmpRows = JSON.parse(tmp) as Array<TransactionDetail>;
-  //       if (tmpRows.length > 0) {
-  //         state.transaction.details = [...tmpRows,...Array.from({ length: 30 }, (_, index) => ({
-  //   ...initialTransactionDetailData,
-  //   slNo: generateUniqueKey()
-  // }))];
-    //     }
-    //   }
-    // },
 
     // Handle changes for the "row" property in the state
     formStateMasterHandleFieldChange: (

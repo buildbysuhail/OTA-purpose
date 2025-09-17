@@ -12,10 +12,15 @@ interface SwitcherProps { }
 const Switcher: FC<SwitcherProps> = () => {
   const { appState, updateAppState } = useAppState();
   const local_varaiable = appState;
-  useEffect(() => {
-    switcherdata.LocalStorageBackup(updateAppState, appState);
 
-  }, []);
+  useEffect(() => {
+  const runBackup = async () => {
+    await switcherdata.LocalStorageBackup(updateAppState, appState);
+  };
+
+  runBackup();
+}, []);
+
   const customStyles: any = `${local_varaiable?.colorPrimaryRgb != '' ? `--primary-rgb: ${local_varaiable?.colorPrimaryRgb}` : ''};
   ${local_varaiable?.colorPrimary != '' ? `--primary: ${local_varaiable?.colorPrimary}` : ''};
   ${local_varaiable?.darkBg != '' ? `--dark-bg: ${local_varaiable?.darkBg};` : ''}
@@ -83,13 +88,13 @@ const Switcher: FC<SwitcherProps> = () => {
                 <div className="flex items-center">
                   <input type="radio" name="theme-style" className="ti-form-radio" id="switcher-light-theme"
                     checked={local_varaiable?.class != "dark"} onChange={_e => { }}
-                    onClick={() => switcherdata.Light(updateAppState,appState)} />
+                    onClick={async() =>await switcherdata.Light(updateAppState,appState)} />
                   <label htmlFor="switcher-light-theme"
                     className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">Light</label>
                 </div>
                 <div className="flex items-center">
                   <input type="radio" name="theme-style" className="ti-form-radio" id="switcher-dark-theme" checked={local_varaiable?.class == "dark"} onChange={_e => { }}
-                    onClick={() => switcherdata.Dark(updateAppState,appState)} />
+                    onClick={async() =>await switcherdata.Dark(updateAppState,appState)} />
                   <label htmlFor="switcher-dark-theme"
                     className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">Dark</label>
                 </div>
@@ -100,12 +105,12 @@ const Switcher: FC<SwitcherProps> = () => {
               <div className="grid grid-cols-3  switcher-style">
                 <div className="flex items-center">
                   <input type="radio" name="direction" className="ti-form-radio" id="switcher-ltr" checked={local_varaiable?.dir == "ltr"} onChange={_e => { }}
-                    onClick={() => { switcherdata.Ltr(updateAppState,appState); }} />
+                    onClick={async() => {await switcherdata.Ltr(updateAppState,appState); }} />
                   <label htmlFor="switcher-ltr" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">LTR</label>
                 </div>
                 <div className="flex items-center">
                   <input type="radio" name="direction" className="ti-form-radio" id="switcher-rtl" checked={local_varaiable?.dir == "rtl"} onChange={_e => { }}
-                    onClick={() => { switcherdata.Rtl(updateAppState,appState); }} />
+                    onClick={async() => {await switcherdata.Rtl(updateAppState,appState); }} />
                   <label htmlFor="switcher-rtl" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">RTL</label>
                 </div>
               </div>
@@ -115,13 +120,13 @@ const Switcher: FC<SwitcherProps> = () => {
               <div className="grid grid-cols-3  switcher-style">
                 <div className="flex items-center">
                   <input type="radio" name="navigation-style" className="ti-form-radio" id="switcher-vertical" checked={local_varaiable?.dataNavLayout == "vertical"} onChange={_e => { }}
-                    onClick={() => switcherdata.Vertical(updateAppState,appState)} />
+                    onClick={async() =>await switcherdata.Vertical(updateAppState,appState)} />
                   <label htmlFor="switcher-vertical"
                     className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">Vertical</label>
                 </div>
                 <div className="flex items-center">
                   <input type="radio" name="navigation-style" className="ti-form-radio" id="switcher-horizontal" checked={local_varaiable?.dataNavLayout == "horizontal"} onChange={_e => { }}
-                    onClick={() => switcherdata.HorizontalClick(updateAppState,appState)} />
+                    onClick={async() =>await switcherdata.HorizontalClick(updateAppState,appState)} />
                   <label htmlFor="switcher-horizontal"
                     className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">Horizontal</label>
                 </div>
@@ -133,26 +138,26 @@ const Switcher: FC<SwitcherProps> = () => {
                 <div className="flex">
                   <input type="radio" name="navigation-data-menu-styles" className="ti-form-radio" id="switcher-menu-click"
                     checked={local_varaiable?.dataNavStyle == "menu-click"} onChange={_e => { }}
-                    onClick={() => switcherdata.Menuclick(updateAppState,appState)} />
+                    onClick={async() =>await switcherdata.Menuclick(updateAppState,appState)} />
                   <label htmlFor="switcher-menu-click" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">Menu
                     Click</label>
                 </div>
                 <div className="flex">
                   <input type="radio" name="navigation-data-menu-styles" className="ti-form-radio" id="switcher-menu-hover" checked={local_varaiable?.dataNavStyle == "menu-hover"} onChange={_e => { }}
-                    onClick={() => switcherdata.MenuHover(updateAppState,appState)} />
+                    onClick={async() =>await  switcherdata.MenuHover(updateAppState,appState)} />
                   <label htmlFor="switcher-menu-hover" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">Menu
                     Hover</label>
                 </div>
                 <div className="flex">
                   <input type="radio" name="navigation-data-menu-styles" className="ti-form-radio" id="switcher-icon-click" checked={local_varaiable?.dataNavStyle == "icon-click"} onChange={_e => { }}
-                    onClick={() => switcherdata.IconClick(updateAppState,appState)} />
+                    onClick={async() =>await switcherdata.IconClick(updateAppState,appState)} />
                   <label htmlFor="switcher-icon-click" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">Icon
                     Click</label>
                 </div>
                 <div className="flex">
                   <input type="radio" name="navigation-data-menu-styles" className="ti-form-radio" id="switcher-icon-hover"
                     checked={local_varaiable?.dataNavStyle == "icon-hover"} onChange={_e => { }}
-                    onClick={() => switcherdata.IconHover(updateAppState,appState)} />
+                    onClick={async() =>await switcherdata.IconHover(updateAppState,appState)} />
                   <label htmlFor="switcher-icon-hover" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">Icon
                     Hover</label>
                 </div>
@@ -168,39 +173,39 @@ const Switcher: FC<SwitcherProps> = () => {
                   <input type="radio" name="sidemenu-layout-styles" className="ti-form-radio" id="switcher-default-menu" 
                   defaultChecked
                      onChange={_e => { }}
-                    onClick={() => switcherdata.Defaultmenu(updateAppState,appState)} />
+                    onClick={async() =>await switcherdata.Defaultmenu(updateAppState,appState)} />
                   <label htmlFor="switcher-default-menu"
                     className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold ">Default
                     Menu</label>
                 </div>
                 <div className="flex">
                   <input type="radio" name="sidemenu-layout-styles" className="ti-form-radio" id="switcher-closed-menu" checked={local_varaiable?.dataVerticalStyle == "closed"} onChange={_e => { }}
-                    onClick={() => switcherdata.Closedmenu(updateAppState,appState)} />
+                    onClick={async() =>await switcherdata.Closedmenu(updateAppState,appState)} />
                   <label htmlFor="switcher-closed-menu" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold ">
                     Closed
                     Menu</label>
                 </div>
                 <div className="flex">
                   <input type="radio" name="sidemenu-layout-styles" className="ti-form-radio" id="switcher-icontext-menu" checked={local_varaiable?.dataVerticalStyle == "icontext"} onChange={_e => { }}
-                    onClick={() => switcherdata.iconTextfn(updateAppState,appState)} />
+                    onClick={async() =>await switcherdata.iconTextfn(updateAppState,appState)} />
                   <label htmlFor="switcher-icontext-menu" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold ">Icon
                     Text</label>
                 </div>
                 <div className="flex">
                   <input type="radio" name="sidemenu-layout-styles" className="ti-form-radio" id="switcher-icon-overlay"
-                    onClick={() => switcherdata.iconOverayFn(updateAppState,appState)} />
+                    onClick={async() =>await switcherdata.iconOverayFn(updateAppState,appState)} />
                   <label htmlFor="switcher-icon-overlay" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold ">Icon
                     Overlay</label>
                 </div>
                 <div className="flex">
                   <input type="radio" name="sidemenu-layout-styles" className="ti-form-radio" id="switcher-detached" checked={local_varaiable?.dataVerticalStyle == "detached"} onChange={_e => { }}
-                    onClick={() => switcherdata.DetachedFn(updateAppState,appState)} />
+                    onClick={async() =>await switcherdata.DetachedFn(updateAppState,appState)} />
                   <label htmlFor="switcher-detached"
                     className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold ">Detached</label>
                 </div>
                 <div className="flex">
                   <input type="radio" name="sidemenu-layout-styles" className="ti-form-radio" id="switcher-double-menu" checked={local_varaiable?.dataVerticalStyle == "doublemenu"} onChange={_e => { }}
-                    onClick={() => switcherdata.DoubletFn(updateAppState,appState)} />
+                    onClick={async() =>await switcherdata.DoubletFn(updateAppState,appState)} />
                   <label htmlFor="switcher-double-menu" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">Double
                     Menu</label>
                 </div>
@@ -213,18 +218,18 @@ const Switcher: FC<SwitcherProps> = () => {
               <div className="grid grid-cols-3  switcher-style">
                 <div className="flex">
                   <input type="radio" name="data-page-styles" className="ti-form-radio" id="switcher-regular" checked={local_varaiable?.dataPageStyle == "regular"} onChange={_e => { }}
-                    onClick={() => switcherdata.Regular(updateAppState,appState)} />
+                    onClick={async() =>await switcherdata.Regular(updateAppState,appState)} />
                   <label htmlFor="switcher-regular"
                     className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">Regular</label>
                 </div>
                 <div className="flex">
                   <input type="radio" name="data-page-styles" className="ti-form-radio" id="switcher-classic" checked={local_varaiable?.dataPageStyle == "classic"} onChange={_e => { }}
-                    onClick={() => switcherdata.Classic(updateAppState,appState)} />
+                    onClick={async() =>await switcherdata.Classic(updateAppState,appState)} />
                   <label htmlFor="switcher-classic"
                     className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">Classic</label>
                 </div>
                 <div className="flex">
-                  <input type="radio" name="data-page-styles" className="ti-form-radio" id="switcher-modern" checked={local_varaiable?.dataPageStyle == "modern"} onChange={_e => { }} onClick={() => switcherdata.Modern(updateAppState,appState)} />
+                  <input type="radio" name="data-page-styles" className="ti-form-radio" id="switcher-modern" checked={local_varaiable?.dataPageStyle == "modern"} onChange={_e => { }} onClick={async() =>await switcherdata.Modern(updateAppState,appState)} />
                   <label htmlFor="switcher-modern"
                     className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"> Modern</label>
                 </div>
@@ -235,13 +240,13 @@ const Switcher: FC<SwitcherProps> = () => {
               <div className="grid grid-cols-3 switcher-style">
                 <div className="flex">
                   <input type="radio" name="layout-width" className="ti-form-radio" id="switcher-full-width" checked={local_varaiable?.dataWidth == "fullwidth"} onChange={_e => { }}
-                    onClick={() => switcherdata.Fullwidth(updateAppState,appState)} />
+                    onClick={async() =>await switcherdata.Fullwidth(updateAppState,appState)} />
                   <label htmlFor="switcher-full-width"
                     className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">FullWidth</label>
                 </div>
                 <div className="flex">
                   <input type="radio" name="layout-width" className="ti-form-radio" id="switcher-boxed" checked={local_varaiable?.dataWidth == "boxed"} onChange={_e => { }}
-                    onClick={() => switcherdata.Boxed(updateAppState,appState)} />
+                    onClick={async() =>await switcherdata.Boxed(updateAppState,appState)} />
                   <label htmlFor="switcher-boxed" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">Boxed</label>
                 </div>
               </div>
@@ -252,13 +257,13 @@ const Switcher: FC<SwitcherProps> = () => {
                 <div className="flex">
                   <input type="radio" name="data-menu-positions" className="ti-form-radio" id="switcher-menu-fixed"
                     checked={local_varaiable?.dataMenuPosition == "fixed"} onChange={_e => { }}
-                    onClick={() => switcherdata.FixedMenu(updateAppState,appState)} />
+                    onClick={async() =>await switcherdata.FixedMenu(updateAppState,appState)} />
                   <label htmlFor="switcher-menu-fixed"
                     className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">Fixed</label>
                 </div>
                 <div className="flex">
                   <input type="radio" name="data-menu-positions" className="ti-form-radio" id="switcher-menu-scroll" checked={local_varaiable?.dataMenuPosition == "scrollable"} onChange={_e => { }}
-                    onClick={() => switcherdata.scrollMenu(updateAppState,appState)} />
+                    onClick={async() =>await switcherdata.scrollMenu(updateAppState,appState)} />
                   <label htmlFor="switcher-menu-scroll"
                     className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">Scrollable </label>
                 </div>
@@ -269,13 +274,13 @@ const Switcher: FC<SwitcherProps> = () => {
               <div className="grid grid-cols-3 switcher-style">
                 <div className="flex">
                   <input type="radio" name="data-header-positions" className="ti-form-radio" id="switcher-header-fixed" checked={local_varaiable?.dataHeaderPosition == "fixed"} onChange={_e => { }}
-                    onClick={() => switcherdata.Headerpostionfixed(updateAppState,appState)} />
+                    onClick={async() =>await switcherdata.Headerpostionfixed(updateAppState,appState)} />
                   <label htmlFor="switcher-header-fixed" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">
                     Fixed</label>
                 </div>
                 <div className="flex">
                   <input type="radio" name="data-header-positions" className="ti-form-radio" id="switcher-header-scroll" checked={local_varaiable?.dataHeaderPosition == "scrollable"} onChange={_e => { }}
-                    onClick={() => switcherdata.Headerpostionscroll(updateAppState,appState)} />
+                    onClick={async() =>await switcherdata.Headerpostionscroll(updateAppState,appState)} />
                   <label htmlFor="switcher-header-scroll"
                     className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">Scrollable
                   </label>
@@ -290,7 +295,7 @@ const Switcher: FC<SwitcherProps> = () => {
                 <div className="hs-tooltip ti-main-tooltip ti-form-radio switch-select ">
                   <input className="hs-tooltip-toggle ti-form-radio color-input color-white" type="radio" name="menu-colors"
                     checked={local_varaiable?.dataMenuStyles == "light"} onChange={_e => { }}
-                    id="switcher-menu-light" onClick={() => switcherdata.lightMenu(updateAppState,appState)} />
+                    id="switcher-menu-light" onClick={async() =>await switcherdata.lightMenu(updateAppState,appState)} />
                   <span
                     className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
                     role="tooltip">
@@ -300,7 +305,7 @@ const Switcher: FC<SwitcherProps> = () => {
                 <div className="hs-tooltip ti-main-tooltip ti-form-radio switch-select ">
                   <input className="hs-tooltip-toggle ti-form-radio color-input color-dark" type="radio" name="menu-colors"
                     checked={local_varaiable?.dataMenuStyles == "dark"} onChange={_e => { }}
-                    id="switcher-menu-dark" onClick={() => switcherdata.darkMenu(updateAppState,appState)} />
+                    id="switcher-menu-dark" onClick={async() =>await switcherdata.darkMenu(updateAppState,appState)} />
                   <span
                     className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
                     role="tooltip">
@@ -310,7 +315,7 @@ const Switcher: FC<SwitcherProps> = () => {
                 <div className="hs-tooltip ti-main-tooltip ti-form-radio switch-select ">
                   <input className="hs-tooltip-toggle ti-form-radio color-input color-primary" type="radio" name="menu-colors"
                     checked={local_varaiable?.dataMenuStyles == "color"} onChange={_e => { }}
-                    id="switcher-menu-primary" onClick={() => switcherdata.colorMenu(updateAppState,appState)} />
+                    id="switcher-menu-primary" onClick={async() =>await switcherdata.colorMenu(updateAppState,appState)} />
                   <span
                     className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
                     role="tooltip">
@@ -320,7 +325,7 @@ const Switcher: FC<SwitcherProps> = () => {
                 <div className="hs-tooltip ti-main-tooltip ti-form-radio switch-select ">
                   <input className="hs-tooltip-toggle ti-form-radio color-input color-gradient" type="radio" name="menu-colors"
                     checked={local_varaiable?.dataMenuStyles == "gradient"} onChange={_e => { }}
-                    id="switcher-menu-gradient" onClick={() => switcherdata.gradientMenu(updateAppState,appState)} />
+                    id="switcher-menu-gradient" onClick={async() =>await switcherdata.gradientMenu(updateAppState,appState)} />
                   <span
                     className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
                     role="tooltip">
@@ -330,7 +335,7 @@ const Switcher: FC<SwitcherProps> = () => {
                 <div className="hs-tooltip ti-main-tooltip ti-form-radio switch-select ">
                   <input className="hs-tooltip-toggle ti-form-radio color-input color-transparent" type="radio" name="menu-colors"
                     checked={local_varaiable?.dataMenuStyles == "transparent"} onChange={_e => { }}
-                    id="switcher-menu-transparent" onClick={() => switcherdata.transparentMenu(updateAppState,appState)} />
+                    id="switcher-menu-transparent" onClick={async() =>await switcherdata.transparentMenu(updateAppState,appState)} />
                   <span
                     className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
                     role="tooltip">
@@ -348,7 +353,7 @@ const Switcher: FC<SwitcherProps> = () => {
                 <div className="hs-tooltip ti-main-tooltip ti-form-radio switch-select ">
                   <input className="hs-tooltip-toggle ti-form-radio color-input color-white !border" type="radio" name="header-colors"
                     checked={local_varaiable?.dataHeaderStyles == "light"} onChange={_e => { }}
-                    id="switcher-header-light" onClick={() => switcherdata.lightHeader(updateAppState,appState)} />
+                    id="switcher-header-light" onClick={async() =>await switcherdata.lightHeader(updateAppState,appState)} />
                   <span
                     className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
                     role="tooltip">
@@ -358,7 +363,7 @@ const Switcher: FC<SwitcherProps> = () => {
                 <div className="hs-tooltip ti-main-tooltip ti-form-radio switch-select ">
                   <input className="hs-tooltip-toggle ti-form-radio color-input color-dark" type="radio" name="header-colors"
                     checked={local_varaiable?.dataHeaderStyles == "dark"} onChange={_e => { }}
-                    id="switcher-header-dark" onClick={() => switcherdata.darkHeader(updateAppState,appState)} />
+                    id="switcher-header-dark" onClick={async() =>await switcherdata.darkHeader(updateAppState,appState)} />
                   <span
                     className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
                     role="tooltip">
@@ -368,7 +373,7 @@ const Switcher: FC<SwitcherProps> = () => {
                 <div className="hs-tooltip ti-main-tooltip ti-form-radio switch-select ">
                   <input className="hs-tooltip-toggle ti-form-radio color-input color-primary" type="radio" name="header-colors"
                     checked={local_varaiable?.dataHeaderStyles == "color"} onChange={_e => { }}
-                    id="switcher-header-primary" onClick={() => switcherdata.colorHeader(updateAppState,appState)} />
+                    id="switcher-header-primary" onClick={async() =>await switcherdata.colorHeader(updateAppState,appState)} />
                   <span
                     className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
                     role="tooltip">
@@ -378,7 +383,7 @@ const Switcher: FC<SwitcherProps> = () => {
                 <div className="hs-tooltip ti-main-tooltip ti-form-radio switch-select ">
                   <input className="hs-tooltip-toggle ti-form-radio color-input color-gradient" type="radio" name="header-colors"
                     checked={local_varaiable?.dataHeaderStyles == "gradient"} onChange={_e => { }}
-                    id="switcher-header-gradient" onClick={() => switcherdata.gradientHeader(updateAppState,appState)} />
+                    id="switcher-header-gradient" onClick={async() =>await switcherdata.gradientHeader(updateAppState,appState)} />
                   <span
                     className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
                     role="tooltip">
@@ -388,7 +393,7 @@ const Switcher: FC<SwitcherProps> = () => {
                 <div className="hs-tooltip ti-main-tooltip ti-form-radio switch-select ">
                   <input className="hs-tooltip-toggle ti-form-radio color-input color-transparent" type="radio"
                     checked={local_varaiable?.dataHeaderStyles == "transparent"} onChange={_e => { }}
-                    name="header-colors" id="switcher-header-transparent" onClick={() => switcherdata.transparentHeader(updateAppState,appState)} />
+                    name="header-colors" id="switcher-header-transparent" onClick={async() =>await switcherdata.transparentHeader(updateAppState,appState)} />
                   <span
                     className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
                     role="tooltip">
@@ -406,27 +411,27 @@ const Switcher: FC<SwitcherProps> = () => {
                 <div className="ti-form-radio switch-select">
                   <input className="ti-form-radio color-input color-primary-1" type="radio" name="theme-primary"
                     checked={local_varaiable?.colorPrimaryRgb == '58, 88, 146'} onChange={(_e) => { }}
-                    id="switcher-primary" onClick={() => switcherdata.primaryColor1(updateAppState,appState)} />
+                    id="switcher-primary" onClick={async() =>await switcherdata.primaryColor1(updateAppState,appState)} />
                 </div>
                 <div className="ti-form-radio switch-select">
                   <input className="ti-form-radio color-input color-primary-2" type="radio" name="theme-primary"
                     checked={local_varaiable?.colorPrimaryRgb == '92, 144 ,163'} onChange={(_e) => { }}
-                    id="switcher-primary1" onClick={() => switcherdata.primaryColor2(updateAppState,appState)} />
+                    id="switcher-primary1" onClick={async() =>await switcherdata.primaryColor2(updateAppState,appState)} />
                 </div>
                 <div className="ti-form-radio switch-select">
                   <input className="ti-form-radio color-input color-primary-3" type="radio" name="theme-primary"
                     checked={local_varaiable?.colorPrimaryRgb == '161, 90 ,223'} onChange={(_e) => { }}
-                    id="switcher-primary2" onClick={() => switcherdata.primaryColor3(updateAppState,appState)} />
+                    id="switcher-primary2" onClick={async() =>await switcherdata.primaryColor3(updateAppState,appState)} />
                 </div>
                 <div className="ti-form-radio switch-select">
                   <input className="ti-form-radio color-input color-primary-4" type="radio" name="theme-primary"
                     checked={local_varaiable?.colorPrimaryRgb == '78, 172, 76'} onChange={(_e) => { }}
-                    id="switcher-primary3" onClick={() => switcherdata.primaryColor4(updateAppState,appState)} />
+                    id="switcher-primary3" onClick={async() =>await switcherdata.primaryColor4(updateAppState,appState)} />
                 </div>
                 <div className="ti-form-radio switch-select">
                   <input className="ti-form-radio color-input color-primary-5" type="radio" name="theme-primary"
                     checked={local_varaiable?.colorPrimaryRgb == '223, 90, 90'} onChange={(_e) => { }}
-                    id="switcher-primary4" onClick={() => switcherdata.primaryColor5(updateAppState,appState)} />
+                    id="switcher-primary4" onClick={async() =>await switcherdata.primaryColor5(updateAppState,appState)} />
                 </div>
                 <div className="ti-form-radio switch-select ps-0 mt-1 color-primary-light">
                   <div className='theme-container-primary'>
@@ -453,27 +458,27 @@ const Switcher: FC<SwitcherProps> = () => {
                 <div className="ti-form-radio switch-select">
                   <input className="ti-form-radio color-input color-bg-1" type="radio" name="theme-background"
                     checked={local_varaiable?.bodyBg == '34 44 110'} onChange={(_e) => { }}
-                    id="switcher-background" onClick={() => switcherdata.backgroundColor1(updateAppState,appState)} />
+                    id="switcher-background" onClick={async() =>await switcherdata.backgroundColor1(updateAppState,appState)} />
                 </div>
                 <div className="ti-form-radio switch-select">
                   <input className="ti-form-radio color-input color-bg-2" type="radio" name="theme-background"
                     checked={local_varaiable?.bodyBg == '22 92 129'} onChange={(_e) => { }}
-                    id="switcher-background1" onClick={() => switcherdata.backgroundColor2(updateAppState,appState)} />
+                    id="switcher-background1" onClick={async() =>await switcherdata.backgroundColor2(updateAppState,appState)} />
                 </div>
                 <div className="ti-form-radio switch-select">
                   <input className="ti-form-radio color-input color-bg-3" type="radio" name="theme-background"
                     checked={local_varaiable?.bodyBg == '104 51 149'} onChange={(_e) => { }}
-                    id="switcher-background2" onClick={() => switcherdata.backgroundColor3(updateAppState,appState)} />
+                    id="switcher-background2" onClick={async() =>await switcherdata.backgroundColor3(updateAppState,appState)} />
                 </div>
                 <div className="ti-form-radio switch-select">
                   <input className="ti-form-radio color-input color-bg-4" type="radio" name="theme-background"
                     checked={local_varaiable?.bodyBg == '29 106 56'} onChange={(_e) => { }}
-                    id="switcher-background3" onClick={() => switcherdata.backgroundColor4(updateAppState,appState)} />
+                    id="switcher-background3" onClick={async() =>await switcherdata.backgroundColor4(updateAppState,appState)} />
                 </div>
                 <div className="ti-form-radio switch-select">
                   <input className="ti-form-radio color-input color-bg-5" type="radio" name="theme-background"
                     checked={local_varaiable?.bodyBg == '134 80 34'} onChange={(_e) => { }}
-                    id="switcher-background4" onClick={() => switcherdata.backgroundColor5(updateAppState,appState)} />
+                    id="switcher-background4" onClick={async() =>await switcherdata.backgroundColor5(updateAppState,appState)} />
                 </div>
                 <div className="ti-form-radio switch-select ps-0 mt-1 color-bg-transparent">
                   <div className='theme-container-background' >
@@ -498,26 +503,26 @@ const Switcher: FC<SwitcherProps> = () => {
               <p className="switcher-style-head">Menu With Background Image:</p>
               <div className="flex switcher-style space-x-3 rtl:space-x-reverse flex-wrap gap-3">
                 <div className="ti-form-radio switch-select">
-                  <input className="ti-form-radio bgimage-input bg-img1" type="radio" name="theme-images" id="switcher-bg-img" onClick={() => switcherdata.bgImage1(updateAppState,appState)} />
+                  <input className="ti-form-radio bgimage-input bg-img1" type="radio" name="theme-images" id="switcher-bg-img" onClick={async() =>await switcherdata.bgImage1(updateAppState,appState)} />
                 </div>
                 <div className="ti-form-radio switch-select">
-                  <input className="ti-form-radio bgimage-input bg-img2" type="radio" name="theme-images" id="switcher-bg-img1" onClick={() => switcherdata.bgImage2(updateAppState,appState)} />
+                  <input className="ti-form-radio bgimage-input bg-img2" type="radio" name="theme-images" id="switcher-bg-img1" onClick={async() =>await switcherdata.bgImage2(updateAppState,appState)} />
                 </div>
                 <div className="ti-form-radio switch-select">
-                  <input className="ti-form-radio bgimage-input bg-img3" type="radio" name="theme-images" id="switcher-bg-img2" onClick={() => switcherdata.bgImage3(updateAppState,appState)} />
+                  <input className="ti-form-radio bgimage-input bg-img3" type="radio" name="theme-images" id="switcher-bg-img2" onClick={async() =>await switcherdata.bgImage3(updateAppState,appState)} />
                 </div>
                 <div className="ti-form-radio switch-select">
-                  <input className="ti-form-radio bgimage-input bg-img4" type="radio" name="theme-images" id="switcher-bg-img3" onClick={() => switcherdata.bgImage4(updateAppState,appState)} />
+                  <input className="ti-form-radio bgimage-input bg-img4" type="radio" name="theme-images" id="switcher-bg-img3" onClick={async() =>await switcherdata.bgImage4(updateAppState,appState)} />
                 </div>
                 <div className="ti-form-radio switch-select">
-                  <input className="ti-form-radio bgimage-input bg-img5" type="radio" name="theme-images" id="switcher-bg-img4" onClick={() => switcherdata.bgImage5(updateAppState,appState)} />
+                  <input className="ti-form-radio bgimage-input bg-img5" type="radio" name="theme-images" id="switcher-bg-img4" onClick={async() =>await switcherdata.bgImage5(updateAppState,appState)} />
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div className="ti-offcanvas-footer sm:flex justify-between">
-          <Link to="#" onClick={() => switcherdata.Reset(updateAppState,appState)} id="reset-all" className="w-full ti-btn ti-btn-danger-full m-1">Reset</Link> </div>
+          <Link to="#" onClick={async() =>await switcherdata.Reset(updateAppState,appState)} id="reset-all" className="w-full ti-btn ti-btn-danger-full m-1">Reset</Link> </div>
       </div>
     </Fragment>
   );

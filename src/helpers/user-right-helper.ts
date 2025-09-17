@@ -1,8 +1,10 @@
+import { useEffect, useState } from "react";
 import { UserTypeRights } from "../redux/slices/user-rights/reducer";
 import { UserModel } from "../redux/slices/user-session/reducer";
 import { RootState } from "../redux/store";
 import { getUserSessionData } from "../session-data";
 import { useAppSelector } from "../utilities/hooks/useAppDispatch";
+import { a } from "framer-motion/dist/types.d-6pKw1mTI";
 export enum UserAction {
   Add = "A",
   Edit = "E",
@@ -19,10 +21,11 @@ export const useUserRights = () => {
   const _clientSession = useAppSelector(
     (state: RootState) => state.ClientSession
   );
-  let __userSession = _userSession;
-    let __userRights = _userRights;
-    let __clientSession = _clientSession;
-
+   const [__userSession,setUserSession]=useState(_userSession)
+   const [__userRights,setUserRights]=useState(_userRights)
+   const [__clientSession,setClientSession]=useState(_clientSession)
+ 
+   const featchUsersession = async()=>{
     if (__userSession.userId == 0 ||__clientSession.planFormCodes == "" || __userRights ==  undefined || __userRights.length == 0) {
       const {
         token,
@@ -31,12 +34,18 @@ export const useUserRights = () => {
         userProfileDetails,
         userRights,
         locale,
-      } = getUserSessionData();
+      } =await getUserSessionData();
 
-      __userSession = userProfileDetails;
-      __userRights = userRights;
-      __clientSession = clientSession;
+      setUserSession(userProfileDetails);
+      setUserRights(userRights);
+      setClientSession(clientSession) 
     }
+   }
+
+  useEffect(()=>{
+    featchUsersession()
+  },[])
+
 
   const hasRight = (formCode: string, action: UserAction): boolean => {
     let result = false;
@@ -121,7 +130,7 @@ export const useUserRights = () => {
     formCodes: string[],
     action: UserAction
   ): string[] => {
-    const userTypeCode = __userSession.userTypeCode;
+    const userTypeCode = __userSession?.userTypeCode;
 
     const planRights = __clientSession.planFormCodes?.split(",");
 

@@ -61,6 +61,7 @@ import localData from "../../../enums/local-datas";
 import { formStateHandleFieldChange } from "../../inventory/transactions/purchase/reducer";
 import { isDirtyTransaction, setTransactionForHistory } from "../../../helpers/transaction-modified-util";
 import { Countries, UserModel } from "../../../redux/slices/user-session/reducer";
+import { getStorageString, setStorageString } from "../../../utilities/storage-utils";
 
 
 interface FormElementState {
@@ -220,7 +221,7 @@ export const useAccTransaction = (
   const fetchUserConfig = async () => {
     try {
       const base64 = await api.get(`${Urls.acc_transaction_base}${formState.transactionType}/GetLocalSettings`);
-      localStorage.setItem("utc", base64);
+      await setStorageString("utc", base64);
       // Decode the base64 back to JSON string
       const _userConfig = atob(base64);
       const userConfig: AccUserConfig = customJsonParse(_userConfig);
@@ -331,7 +332,7 @@ export const useAccTransaction = (
     _formState: AccTransactionFormState,
     loadUserConfig: boolean = false
   ) => {
-    const Utc = localStorage.getItem("utc");
+    const Utc = await getStorageString("utc");
     let userConfig: AccUserConfig | undefined;
     if (Utc) {
       const _userConfig = atob(Utc);
@@ -340,7 +341,7 @@ export const useAccTransaction = (
       userConfig = await fetchUserConfig();
     }
     if (userConfig) {
-      // If userConfig is available in localStorage, use it
+      // If userConfig is available in localStorages, use it
 
       _formState.row.costCentreID =
         (userConfig?.presetCostenterId ?? 0 > 0
@@ -373,9 +374,9 @@ export const useAccTransaction = (
             ? userSession.counterwiseCashLedgerId
             : applicationSettings.accountsSettings.defaultCashAcc;
       }
-
+        let _ledger = await getApLocalData(localData.ledgers)
       // Fetch Ledger ID
-      let id = getApLocalData(localData.ledgers)?.find(
+      let id =  _ledger?.find(
         (x: any) => x.alias == _formState.row.ledgerCode
       )?.id;
       if (!(id > 0)) {
@@ -1116,25 +1117,26 @@ if (
     }
     return updatedDetails;
   };
-  const attachMaster = (): AccTransactionMaster => {
+const attachMaster = async (): Promise<AccTransactionMaster> => {
     
     const { firstDebitLedgerID, firstCreditLedgerID } =
       getFirstDebitCreditLedgerIDs(formState.transaction);
+      const ledgers = await getApLocalData(localData.ledgers);
     const master = {
       ...formState.transaction.master,
       particulars:
         formState.transaction.master.voucherType != "MJV" &&
         formState.transaction.master.voucherType != "OB"
-          ? getApLocalData(localData.ledgers)?.find(
+          ?  ledgers?.find(
               (x: any) => x.id == formState.masterAccountID
             )?.name ?? ""
           : formState.transaction.master.voucherType == "OB"
-          ? getApLocalData(localData.ledgers)?.find(
+          ? ledgers?.find(
               (x: any) =>
                 x.id == applicationSettings.accountsSettings.defaultSuspenseAcc
             )?.name ?? ""
           : formState.transaction.master.voucherType == "MJV"
-          ? getApLocalData(localData.ledgers)?.find((x: any) => x.id == firstCreditLedgerID)
+          ? ledgers?.find((x: any) => x.id == firstCreditLedgerID)
               ?.name ?? ""
           : "",
     };
@@ -1212,7 +1214,7 @@ if (
     const valid = validate();
 
     if (valid == true) {
-      const master = attachMaster();
+      const master = await attachMaster();
       const attachments = formState.transaction.attachments
         ?.filter((x) => x.id > 0)
         ?.map((x) => ({
@@ -1405,6 +1407,11 @@ if (
         applicationSettings: applicationSettings,
       })
     );
+           const details = formState.transaction.details.splice(index,1)
+          await setStorageString(
+          `${formState.transaction.master.voucherType}${formState.transaction.master.formType}`,
+          JSON.stringify(details)
+        );
   };
   const addOrEditRow = async (
     billwiseDetails?: string,
@@ -1582,10 +1589,11 @@ if (
       };
     }
     formState.formElements.btnAdd;
-
+   let _costCenters = await getApLocalData(localData.costCenters);
+   let _ledgers = await getApLocalData(localData.ledgers);
     const costCentreName =
       formState.row.costCentreID ?? 0 > 0
-        ? getApLocalData(localData.costCenters)?.find(
+        ? _costCenters?.find(
             (x: any) => x.id == formState.row.costCentreID
           )?.name
         : "";
@@ -1598,7 +1606,7 @@ if (
             formState.row.ledgerName == undefined ||
             formState.row.ledgerName == null ||
             formState.row.ledgerName == ""
-              ? getApLocalData(localData.ledgers)?.find(
+              ? _ledgers?.find(
                   (x: any) => x.id == formState.row.ledgerID
                 )?.name
               : formState.row.ledgerName,
@@ -1614,7 +1622,10 @@ if (
         userSession: userSession,
       })
     );
-
+await setStorageString(
+        `${formState.transaction.master.voucherType}${formState.transaction.master.formType}`,
+        JSON.stringify(formState.transaction.details)
+      );
     // Conditionally update costCentreID if needed
     if (formState.userConfig?.presetCostenterId ?? 0 > 0) {
       updatedFields.costCentreID = {
@@ -1887,7 +1898,7 @@ if (
         text: t("you_want_to_delete"),
         icon: "warning",
         confirmButtonText: t("delete_it"),
-        onConfirm: () => {
+        onConfirm: async() => {
           const dataGridInstance = gridRef.current.instance(); // Access DataGrid instance
           const focusedRowIndex = dataGridInstance.option("focusedRowIndex");
           dispatch(
@@ -1896,6 +1907,11 @@ if (
               index: focusedRowIndex,
             })
           );
+           const details = formState.transaction.details.splice(focusedRowIndex,1)
+          await setStorageString(
+          `${formState.transaction.master.voucherType}${formState.transaction.master.formType}`,
+          JSON.stringify(details)
+        );
         },
       });
     }
@@ -2076,7 +2092,10 @@ if (
   };
 
   const loadTemporaryRows = async () => {
-    dispatch(loadTempRows());
+         const tmp =await getStorageString(
+        `${formState.transaction.master.voucherType}${formState.transaction.master.formType}`
+      ); 
+    dispatch(loadTempRows(tmp));
   };
 const setUserRight = (
       formElements: FormElementsState, userSession: UserModel,formCode: string,detailsLength: number,

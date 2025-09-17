@@ -11,7 +11,7 @@ export const projectName = import.meta.env.VITE_PROJECT_NAME;
 
 const CachedUrls: string[] = [
   Urls.data_acc_ledgers,Urls.data_costcentres, 
-  ...transactionRoutes.map((x: any) => `${x.transactionBase == TransactionBase.Accounts ? "Accounts" :  "Inventory"}/${x.transactionType}/Data/AccLedgers/`)
+  ...transactionRoutes.map((x: any) => `/${x.transactionBase == TransactionBase.Accounts ? "Accounts" :  "Inventory"}/${x.transactionType}/Data/AccLedgers/`)
 ]
 
 export default CachedUrls;

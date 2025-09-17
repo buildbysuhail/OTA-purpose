@@ -1,6 +1,7 @@
 import Cookies from "js-cookie";
 import ERPToast from "../components/ERPComponents/erp-toast";
 import HttpCodeMessages from "./HttpCodeMessages";
+import { removeStorageString } from "./storage-utils";
 
 const ErrorManager = {
   
@@ -111,8 +112,8 @@ const ErrorManager = {
       return;
     }
   },
-  logOut() {
-    localStorage.removeItem("token");
+  async logOut() {
+   await  removeStorageString("token");
   },
 };
 

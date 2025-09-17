@@ -21,6 +21,7 @@ import InputBoxStyling from "../../components/ERPComponents/erp-inputboxStyle-pr
 import ERPAlert from "../../components/ERPComponents/erp-sweet-alert";
 import { changeLanguage } from "../../utilities/languageUtils";
 import { useTranslation } from "react-i18next";
+import { setStorageString } from "../../utilities/storage-utils";
 
 interface AccountSettingsProps { }
 interface UserLanguage {
@@ -72,7 +73,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
       const response = await dispatch(
         userLanguageAction({ data: { language }, params: "userId=123" }) as any
       ).unwrap();
-      handleResponse(response, () => { changeLanguage(response.item, dispatch, i18n) });
+      handleResponse(response, async() => {await changeLanguage(response.item, dispatch, i18n) });
     } catch (error) {
       console.error("Error updating language:", error);
     }
@@ -185,9 +186,9 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
     const res = await api.postAsync(Urls.updateUserThemes, {
       userThemes: btoa(JSON.stringify(appState)),
     });
-    localStorage.setItem("ut", btoa(JSON.stringify(appState)));
-    handleResponse(res, () => {
-      localStorage.setItem("ut", btoa(JSON.stringify(appState)));
+    await setStorageString("ut", btoa(JSON.stringify(appState)));
+    handleResponse(res, async() => {
+      await setStorageString("ut", btoa(JSON.stringify(appState)));
     });}
     finally{
       setIsSaving(false);
@@ -203,11 +204,11 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
         cancelButtonText: t("cancel"),
         onConfirm: async (result: any) => {
           const res = await api.postAsync(Urls.reset_user_theme, {});
-          handleResponse(res, () => {
+          handleResponse(res,async () => {
             const theme = atob(res.item);
             // dispatch(setInputBox(res.inputBox));
             const _theme: AppState = customJsonParse(theme);
-            localStorage.setItem("ut", res.item);
+            await setStorageString("ut", res.item);
             updateAppState(_theme);
           });
         },
@@ -307,7 +308,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 className="ti-form-radio"
                                 id="switcher-light-theme"
                                 checked={appState.mode === "light"}
-                                onChange={() => { switcherdata.Light(updateAppState, appState); }}
+                                onChange={async() => {await switcherdata.Light(updateAppState, appState); }}
                               />
                               <label htmlFor="switcher-light-theme" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">
                                 {t("light")}
@@ -321,7 +322,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 className="ti-form-radio"
                                 id="switcher-dark-theme"
                                 checked={appState.mode === "dark"}
-                                onChange={() => { switcherdata.Dark(updateAppState, appState); }}
+                                onChange={async() => {await  switcherdata.Dark(updateAppState, appState); }}
                               />
                               <label htmlFor="switcher-dark-theme" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold" >
                                 {t("dark")}
@@ -341,7 +342,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 id="switcher-ltr"
                                 checked={appState.dir != "rtl"}
                                 onChange={(e) => { }}
-                                onClick={(e) => { switcherdata.Ltr(updateAppState, appState); }}
+                                onClick={async() => {await  switcherdata.Ltr(updateAppState, appState); }}
                               />
                               <label htmlFor="switcher-ltr" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">
                                 {t("ltr")}
@@ -356,7 +357,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 id="switcher-rtl"
                                 checked={appState.dir == "rtl"}
                                 onChange={(e) => { }}
-                                onClick={(e) => { switcherdata.Rtl(updateAppState, appState); }}
+                                onClick={ async() => { await  switcherdata.Rtl(updateAppState, appState); }}
                               />
                               <label htmlFor="switcher-rtl" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">
                                 {t("rtl")}
@@ -378,7 +379,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 id="switcher-default-menu"
                                 checked={appState.dataMenuStyles == "defaultmenu"}
                                 onChange={(_e) => { }}
-                                onClick={() => { switcherdata.Defaultmenu(updateAppState, appState); }}
+                                onClick={async() => { await switcherdata.Defaultmenu(updateAppState, appState); }}
                               />
                               <label htmlFor="switcher-default-menu" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold ">
                                 {t("default_menu")}
@@ -393,7 +394,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 id="switcher-closed-menu"
                                 checked={appState.dataMenuStyles == "closedmenu"}
                                 onChange={(_e) => { }}
-                                onClick={() => { switcherdata.Closedmenu(updateAppState, appState); }}
+                                onClick={async() => { await switcherdata.Closedmenu(updateAppState, appState); }}
                               />
                               <label htmlFor="switcher-closed-menu" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold ">
                                 {t("closed_menu")}
@@ -408,7 +409,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 id="switcher-icontext-menu"
                                 checked={appState.dataMenuStyles == "iconTextfn"}
                                 onChange={(_e) => { }}
-                                onClick={() => { switcherdata.iconTextfn(updateAppState, appState); }}
+                                onClick={async() => { await switcherdata.iconTextfn(updateAppState, appState); }}
                               />
                               <label htmlFor="switcher-icontext-menu" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold ">
                                 {t("icon_text")}
@@ -422,7 +423,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 className="ti-form-radio"
                                 id="switcher-icon-overlay"
                                 checked={appState.dataMenuStyles == "iconOverayFn"}
-                                onClick={() => { switcherdata.iconOverayFn(updateAppState, appState); }}
+                                onClick={async() => { await switcherdata.iconOverayFn(updateAppState, appState); }}
                               />
                               <label htmlFor="switcher-icon-overlay" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold ">
                                 {t("icon_overlay")}
@@ -437,7 +438,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 id="switcher-detached"
                                 checked={appState.dataMenuStyles == "detachedFn"}
                                 onChange={(_e) => { }}
-                                onClick={() => { switcherdata.DetachedFn(updateAppState, appState); }}
+                                onClick={async() => {await  switcherdata.DetachedFn(updateAppState, appState); }}
                               />
                               <label htmlFor="switcher-detached" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold ">
                                 {t("detached")}
@@ -452,7 +453,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 id="switcher-double-menu"
                                 checked={appState.dataMenuStyles == "doubletFn"}
                                 onChange={(_e) => { }}
-                                onClick={() => { switcherdata.DoubletFn(updateAppState, appState); }}
+                                onClick={async() => {await  switcherdata.DoubletFn(updateAppState, appState); }}
                               />
                               <label htmlFor="switcher-double-menu" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold" >
                                 {t("double_menu")}
@@ -477,9 +478,9 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 id="switcher-regular"
                                 checked={appState.dataPageStyle == "regular"}
                                 onChange={(_e) => { }}
-                                onClick={(e) => {
+                                onClick={async(e) => {
                                   if (true == true) {
-                                    switcherdata.Regular(
+                                     await switcherdata.Regular(
                                       updateAppState,
                                       appState
                                     );
@@ -499,7 +500,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 id="switcher-classic"
                                 checked={appState.dataPageStyle == "classic"}
                                 onChange={(_e) => { }}
-                                onClick={(e) => { switcherdata.Classic(updateAppState, appState); }}
+                                onClick={async() => {await switcherdata.Classic(updateAppState, appState); }}
                               />
                               <label htmlFor="switcher-classic" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">
                                 {t("classic")}
@@ -514,7 +515,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 id="switcher-modern"
                                 checked={appState.dataPageStyle == "modern"}
                                 onChange={(_e) => { }}
-                                onClick={(e) => { switcherdata.Modern(updateAppState, appState); }}
+                                onClick={async() => {await switcherdata.Modern(updateAppState, appState); }}
                               />
                               <label htmlFor="switcher-modern" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">
                                 {t("modern")}
@@ -568,7 +569,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               checked={appState.dataMenuStyles == "light"}
                               onChange={(_e) => { }}
                               id="switcher-menu-light"
-                              onClick={() => { switcherdata.lightMenu(updateAppState, appState); }}
+                              onClick={async() => {await switcherdata.lightMenu(updateAppState, appState); }}
                             />
                             <span className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black" role="tooltip">
                               {t("light_menu")}
@@ -583,7 +584,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               checked={appState.dataMenuStyles == "dark"}
                               onChange={(_e) => { }}
                               id="switcher-menu-dark"
-                              onClick={() => { switcherdata.darkMenu(updateAppState, appState); }}
+                              onClick={async() => {await switcherdata.darkMenu(updateAppState, appState); }}
                             />
                             <span className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black" role="tooltip">
                               {t("dark_menu")}
@@ -598,7 +599,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               checked={appState.dataMenuStyles == "color"}
                               onChange={(_e) => { }}
                               id="switcher-menu-primary"
-                              onClick={() => { switcherdata.colorMenu(updateAppState, appState); }}
+                              onClick={async() => {await switcherdata.colorMenu(updateAppState, appState); }}
                             />
                             <span className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black" role="tooltip">
                               {t("color_menu")}
@@ -613,7 +614,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               checked={appState.dataMenuStyles == "gradient"}
                               onChange={(_e) => { }}
                               id="switcher-menu-gradient"
-                              onClick={() => { switcherdata.gradientMenu(updateAppState, appState); }}
+                              onClick={async() => {await switcherdata.gradientMenu(updateAppState, appState); }}
                             />
                             <span className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black" role="tooltip">
                               {t("gradient_menu")}
@@ -628,7 +629,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               checked={appState.dataMenuStyles == "transparent"}
                               onChange={(_e) => { }}
                               id="switcher-menu-transparent"
-                              onClick={() => { switcherdata.transparentMenu(updateAppState, appState); }}
+                              onClick={async() => {await switcherdata.transparentMenu(updateAppState, appState); }}
                             />
                             <span className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black" role="tooltip"  >
                               {t("transparent_menu")}
@@ -653,7 +654,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               checked={appState.dataHeaderStyles == "light"}
                               onChange={(_e) => { }}
                               id="switcher-header-light"
-                              onClick={() => { switcherdata.lightHeader(updateAppState, appState); }}
+                              onClick={async() => {await switcherdata.lightHeader(updateAppState, appState); }}
                             />
                             <span className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black" role="tooltip">
                               {t("light_header")}
@@ -668,7 +669,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               checked={appState.dataHeaderStyles == "dark"}
                               onChange={(_e) => { }}
                               id="switcher-header-dark"
-                              onClick={() => { switcherdata.darkHeader(updateAppState, appState); }}
+                              onClick={async() => {await switcherdata.darkHeader(updateAppState, appState); }}
                             />
                             <span className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black" role="tooltip">
                               {t("dark_header")}
@@ -683,7 +684,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               checked={appState.dataHeaderStyles == "color"}
                               onChange={(_e) => { }}
                               id="switcher-header-primary"
-                              onClick={() => { switcherdata.colorHeader(updateAppState, appState); }}
+                              onClick={async() => {await switcherdata.colorHeader(updateAppState, appState); }}
                             />
                             <span className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black" role="tooltip">
                               {t("color_header")}
@@ -698,7 +699,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               checked={appState.dataHeaderStyles == "gradient"}
                               onChange={(_e) => { }}
                               id="switcher-header-gradient"
-                              onClick={() => { switcherdata.gradientHeader(updateAppState, appState); }}
+                              onClick={async() => {await switcherdata.gradientHeader(updateAppState, appState); }}
                             />
                             <span className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black" role="tooltip">
                               {t("gradient_header")}
@@ -715,7 +716,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               onChange={(_e) => { }}
                               name="header-colors"
                               id="switcher-header-transparent"
-                              onClick={() => { switcherdata.transparentHeader(updateAppState, appState); }}
+                              onClick={async() => {await switcherdata.transparentHeader(updateAppState, appState); }}
                             />
                             <span className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black" role="tooltip" >
                               {t("transparent_header")}
@@ -739,7 +740,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               name="theme-primary"
                               checked={appState.colorPrimaryRgb == "58, 88, 146"}
                               id="switcher-primary"
-                              onClick={() => { switcherdata.primaryColor1(updateAppState, appState); }}
+                              onClick={async() => {await switcherdata.primaryColor1(updateAppState, appState); }}
                             />
                           </div>
 
@@ -751,7 +752,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               checked={appState.colorPrimaryRgb == "92, 144 ,163"}
                               onChange={(_e) => { }}
                               id="switcher-primary1"
-                              onClick={() => { switcherdata.primaryColor2(updateAppState, appState); }}
+                              onClick={async() => {await switcherdata.primaryColor2(updateAppState, appState); }}
                             />
                           </div>
 
@@ -763,7 +764,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               checked={appState.colorPrimaryRgb == "161, 90 ,223"}
                               onChange={(_e) => { }}
                               id="switcher-primary2"
-                              onClick={() => { switcherdata.primaryColor3(updateAppState, appState); }}
+                              onClick={async() => {await switcherdata.primaryColor3(updateAppState, appState); }}
                             />
                           </div>
 
@@ -775,7 +776,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               checked={appState.colorPrimaryRgb == "78, 172, 76"}
                               onChange={(_e) => { }}
                               id="switcher-primary3"
-                              onClick={() => { switcherdata.primaryColor4(updateAppState, appState); }}
+                              onClick={async() => {await switcherdata.primaryColor4(updateAppState, appState); }}
                             />
                           </div>
 
@@ -787,7 +788,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               checked={appState.colorPrimaryRgb == "223, 90, 90"}
                               onChange={(_e) => { }}
                               id="switcher-primary4"
-                              onClick={() => { switcherdata.primaryColor5(updateAppState, appState); }}
+                              onClick={async() => {await switcherdata.primaryColor5(updateAppState, appState); }}
                             />
                           </div>
 
@@ -809,11 +810,11 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
 
                                   <div className="Themeprimarycolor theme-container-primary pickr-container-primary">
                                     <ColorPicker
-                                      onChange={(e: any) => {
+                                      onChange={async(e: any) => {
                                         const rgb = hexToRgb(e.target?.value);
                                         if (rgb !== null) {
                                           const { r, g, b } = rgb;
-                                          switcherdata.primaryColorCustom(
+                                          await switcherdata.primaryColorCustom(
                                             updateAppState,
                                             appState,
                                             `${r},  ${g},  ${b}`

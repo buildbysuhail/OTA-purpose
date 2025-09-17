@@ -71,6 +71,7 @@ import { initialTransactionDetailData, initialTransactionDetails2, transactionIn
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import moment from "moment";
+import { setStorageString } from "../../../utilities/storage-utils";
 
 type DataItem = Record<string, any>;
 export interface SummaryConfig<T = any> {
@@ -1919,6 +1920,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       setCurrentCell(formState.currentCell);
     }, [formState.currentCell]);
     useEffect(() => {
+      const runEffect = async () => {
       if (
         currentCell &&
         currentCell.column !== "" &&
@@ -1955,7 +1957,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       if (prevCell !== currentCell?.rowIndex) {
         const data = formState.transaction.details.filter((x) => x.productID > 0);
         if (data?.length > 0) {
-          localStorage.setItem(
+          await setStorageString(
             `${formState.transaction.master.voucherType}${formState.transaction.master.voucherForm}`,
             JSON.stringify(data)
           )
@@ -1971,6 +1973,9 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
           formStateTransactionDetailsRowsAdd(rows)
         );
       }
+      };
+
+  runEffect();
     }, [currentCell, currentCell?.rowIndex]);
     React.useImperativeHandle(ref, () => ({
       focusCell,

@@ -1,5 +1,6 @@
 import { Keyboard, RefreshCw, AlertTriangle, Edit2, CheckCircle } from "lucide-react";
 import React, { useState, useEffect } from "react";
+import { getStorageString, setStorageString } from "../../../utilities/storage-utils";
 
 interface ShortcutConfig {
   event: string;
@@ -23,28 +24,41 @@ const ShortcutSettings: React.FC<ShortcutSettingsProps> = ({
   defaultShortcuts,
   onShortcutsChange,
 }) => {
-  const [shortcuts, setShortcuts] = useState<EditableShortcut[]>(() => {
-    const savedShortcuts = localStorage.getItem("keyboard-shortcuts");
+
+  const [shortcuts, setShortcuts] = useState<EditableShortcut[]>(() =>
+  defaultShortcuts.map(({ event, key, description }) => ({
+    event,
+    key,
+    description,
+  }))
+);
+
+useEffect(() => {
+  const fetchShortcuts = async () => {
+    const savedShortcuts = await getStorageString("keyboard-shortcuts");
     if (savedShortcuts) {
-      const parsed = JSON.parse(savedShortcuts);
-      if (
-        Array.isArray(parsed) &&
-        parsed.every(
-          (s) =>
-            typeof s.event === "string" &&
-            typeof s.key === "string" &&
-            typeof s.description === "string"
-        )
-      ) {
-        return parsed;
+      try {
+        const parsed = JSON.parse(savedShortcuts);
+        if (
+          Array.isArray(parsed) &&
+          parsed.every(
+            (s) =>
+              typeof s.event === "string" &&
+              typeof s.key === "string" &&
+              typeof s.description === "string"
+          )
+        ) {
+          setShortcuts(parsed);
+        }
+      } catch (err) {
+        console.error("Failed to parse shortcuts:", err);
       }
     }
-    return defaultShortcuts.map(({ event, key, description }) => ({
-      event,
-      key,
-      description,
-    }));
-  });
+  };
+
+  fetchShortcuts();
+}, []);
+
 
   const [editingKey, setEditingKey] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -107,16 +121,20 @@ const ShortcutSettings: React.FC<ShortcutSettingsProps> = ({
     setSerialNumbers(newSerialNumbers);
   };
 
+
   useEffect(() => {
+  const saveShortcuts = async () => {
     try {
       if (error) return;
 
-      localStorage.setItem("keyboard-shortcuts", JSON.stringify(shortcuts));
+      await setStorageString("keyboard-shortcuts", JSON.stringify(shortcuts));
+
       window.dispatchEvent(
         new CustomEvent("shortcuts-updated", {
           detail: { shortcuts },
         })
       );
+
       onShortcutsChange?.(
         defaultShortcuts.map((shortcut) => {
           const updatedShortcut = shortcuts.find(
@@ -143,10 +161,14 @@ const ShortcutSettings: React.FC<ShortcutSettingsProps> = ({
         clearTimeout(showTimer);
         clearTimeout(removeTimer);
       };
-    } catch (error) {
-      console.error("Failed to save shortcuts:", error);
+    } catch (err) {
+      console.error("Failed to save shortcuts:", err);
     }
-  }, [shortcuts, defaultShortcuts, onShortcutsChange, error]);
+  };
+
+  saveShortcuts();
+}, [shortcuts, defaultShortcuts, onShortcutsChange, error]);
+
 
   const resetToDefaults = () => {
     setShortcuts(

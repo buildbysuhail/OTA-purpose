@@ -3,16 +3,18 @@ import Header from '../header/header';
 import Sidebar from '../sidebar/sidebar';
 import Footer from '../footer/footer';
 import Content from '../content/content';
+import { getStorageString } from '../../../utilities/storage-utils';
 
 interface LayoutProps { 
   setMyClass: Dispatch<SetStateAction<string>>;
 }
 
 const WorkspaceSettingsLayout: FC<LayoutProps> = ({setMyClass}) => {
-  const Bodyclickk = () => {
-    if (localStorage.getItem("ynexverticalstyles") == "icontext") {
-      setMyClass("");
-    }
+  const Bodyclickk = async() => {
+       let isChecked = await getStorageString("ynexverticalstyles")
+        if (isChecked== "icontext") {
+          setMyClass("");
+        }
     if (window.innerWidth > 992) {
       let html = document.documentElement;
       if (html.getAttribute('icon-overlay') === 'open') {

@@ -6,6 +6,7 @@ import { customJsonParse, modelToBase64, modelToBase64Unicode } from "./jsonConv
 import { initialUserSessionData, UserModel } from "../redux/slices/user-session/reducer";
 import { initialThemeData, Locale, Theme, languagesData } from "../redux/slices/app/types";
 import usFlag from "../assets/images/flags/us_flag.png";
+import { getStorageString, setStorageString } from "./storage-utils";
 
 /**
  * Changes the language of the application.
@@ -13,7 +14,7 @@ import usFlag from "../assets/images/flags/us_flag.png";
  * @param dispatch - Redux dispatch function.
  * @param i18nInstance - i18next instance.
  */
-export const changeLanguage = (currentData: string, dispatch: Dispatch, i18nInstance: i18n) => {
+export const changeLanguage = async(currentData: string, dispatch: Dispatch, i18nInstance: i18n) => {
   const locale = languagesData.find((l) => l.code === currentData) ?? {
     code: "en",
     name: "English",
@@ -21,18 +22,18 @@ export const changeLanguage = (currentData: string, dispatch: Dispatch, i18nInst
     rtl: false,
   };
 
-  setLocaleInStorage(locale);
+ await  setLocaleInStorage(locale);
   i18nInstance.changeLanguage(locale?.code);
-  setLanguage(dispatch, locale);
+  await setLanguage(dispatch, locale);
 };
 
 /**
  * Saves the selected locale in local storage.
  * @param locale - The selected language locale object.
  */
-export const setLocaleInStorage = (locale: Locale) => {
-  let upt = localStorage.getItem("up");
-  let utt = localStorage.getItem("ut");
+export const setLocaleInStorage = async(locale: Locale) => {
+  let upt =  await getStorageString("up");
+  let utt =await getStorageString("ut");
 
   let userProfileDetails: UserModel = initialUserSessionData;
   try {
@@ -55,6 +56,6 @@ export const setLocaleInStorage = (locale: Locale) => {
   userProfileDetails.language = locale.code;
   userThemes.direction = locale.rtl ? "rtl" : "ltr";
 
-  localStorage.setItem("up", modelToBase64Unicode(userProfileDetails));
-  localStorage.setItem("ut", modelToBase64Unicode(userThemes));
+  await setStorageString("up", modelToBase64Unicode(userProfileDetails));
+  await setStorageString("ut", modelToBase64Unicode(userThemes));
 };

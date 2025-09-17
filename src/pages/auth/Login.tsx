@@ -23,6 +23,7 @@ import polo from "../../assets/images/brand-logos/polo_logo.png";
 import loginBg from "../../assets/images/login.jpg";
 import ConfettiEffect from "./confetti-effect";
 import { handleLoginSuccess } from "../../utilities/handles-login-success-utils";
+import { getStorageString, setStorageString } from "../../utilities/storage-utils";
 
 const api = new APIClient()
 const Login = () => {
@@ -50,7 +51,7 @@ const Login = () => {
 
   const load = async () => {
     const settings = await api.getAsync(Urls.application_setting);
-    localStorage.setItem('as', modelToBase64(settings))
+    await setStorageString('as', modelToBase64(settings))
     dispatch(setApplicationSettings(
       {
         ...settings,
@@ -63,6 +64,7 @@ const Login = () => {
     if (data?.userName && data?.password) {
       setError(null);
       const login = await dispatch(loginUser(data)).unwrap();
+      // const login = await api.postAsync('/Subscription/Auth/Login',data)
       setError("");
       if (login.isOk == true) {
         api.clearInFlightRequests()
@@ -77,7 +79,7 @@ const Login = () => {
         
       } else {
         if (login.item.hasToSetCounter) {
-          localStorage.setItem("_token", login.item.token);
+           await setStorageString("_token", login.item.token);
           setCounterSettings({ show: true, token: login.item.token });
         } else {
           setError(login.message);
@@ -98,13 +100,19 @@ const Login = () => {
     }
   }, [hasToChooseBranch, isLoggedToBranch]);
 
+
   useEffect(() => {
-    const hasVisited = localStorage.getItem('hasVisitedLogin');
+  const checkVisited = async () => {
+    const hasVisited = await getStorageString("hasVisitedLogin");
     if (!hasVisited) {
       setShowConfetti(true);
-      localStorage.setItem('hasVisitedLogin', 'true');
+      await setStorageString("hasVisitedLogin", "true");
     }
-  }, []);
+  };
+
+  checkVisited();
+}, []);
+
 
   return (
     <div className="bg-white dark:bg-dark-bg">
@@ -125,10 +133,10 @@ const Login = () => {
           <div className="!absolute top-[7px] right-[26px]">
             {/* <span className="mr-2">{appState.mode === 'dark' ? 'Dark' : 'Light'} Mode</span> */}
             <Button
-              onClick={() => {
+              onClick={async() => {
                 appState.mode === "light"
-                  ? switcherdata.Dark(updateAppState, appState)
-                  : switcherdata.Light(updateAppState, appState);
+                  ? await switcherdata.Dark(updateAppState, appState)
+                  :await switcherdata.Light(updateAppState, appState);
               }}
               variant="ghost"
               size="icon">

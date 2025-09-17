@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 
 import usFlag from "../assets/images/flags/us_flag.png";
-import { useNavigate } from "react-router-dom";
+import { Await, useNavigate } from "react-router-dom";
 import { BuildingOfficeIcon, LinkIcon } from "@heroicons/react/24/outline";
 import { handleResponse } from "../utilities/HandleResponse";
 import { setBranch, userSession } from "../redux/slices/user-session/thunk";
@@ -23,6 +23,7 @@ import Urls from "../redux/urls";
 import ERPModal from "../components/ERPComponents/erp-modal";
 import CounterSettings from "./settings/system/counter-settings";
 import { ClientSessionModel } from "../redux/slices/client-session/reducer";
+import { removeStorageString, setStorageString } from "../utilities/storage-utils";
 
 interface ChildComponentProps {
   onLoadingChange: (isLoading: boolean) => void;
@@ -62,11 +63,11 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
     onLoadingChange(false);
     if (response.isOk == true) {   
      
-      localStorage.setItem("token", response.item.token); 
-      localStorage.setItem("up", response.item.userProfileDetails); 
-      localStorage.setItem("cs", response.item.clientSessions);
-      localStorage.setItem("ut", response.item.userThemes); 
-      localStorage.setItem("ur", response.item.userRights);
+      await setStorageString("token", response.item.token); 
+      await setStorageString("up", response.item.userProfileDetails); 
+      await setStorageString("cs", response.item.clientSessions);
+      await setStorageString("ut", response.item.userThemes); 
+      await setStorageString("ur", response.item.userRights);
       const _userRights = atob(response.item.userRights);
       const userRights: UserTypeRights[] = customJsonParse(_userRights);
       const _userProfileDetails = atob(response.item.userProfileDetails);
@@ -76,9 +77,9 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
       let locale = (languagesData.find((l) => l.code == userProfileDetails.language))??{ code: 'en', name: 'English', flag: usFlag, rtl: false };
         const clientSession: ClientSessionModel = 
                 customJsonParse(response.item.clientSessions);
-      syncAppStates(dispatch,userThemes,clientSession, userProfileDetails,userRights, locale);  
+       await syncAppStates(dispatch,userThemes,clientSession, userProfileDetails,userRights, locale);  
       const settings = await api.getAsync(Urls.application_setting);
-          localStorage.setItem('as', modelToBase64(settings))
+          await setStorageString('as', modelToBase64(settings))
       dispatch(setApplicationSettings(
         {
           ...settings,
@@ -87,8 +88,8 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
     }
     else {
       if (response.item.hasToSetCounter) {
-        localStorage.removeItem("_token");
-        localStorage.setItem("_token", response.item.token);
+        await removeStorageString("_token");
+        await setStorageString("_token", response.item.token);
         setCounterSettings({ show: true, token: response.item.token });
       } else {
         setError(response.message);

@@ -17,7 +17,7 @@ interface CustomDesignerButtonProps {
 
 // Create the component with forwardRef
 const CustomDesignerButton = forwardRef<HTMLButtonElement, CustomDesignerButtonProps>(
-  ({ Label,dispatch,customFieldMaster,className}) => {
+   ({ Label, dispatch, customFieldMaster, className }, ref) => {
 
     return (
       <div className="relative">

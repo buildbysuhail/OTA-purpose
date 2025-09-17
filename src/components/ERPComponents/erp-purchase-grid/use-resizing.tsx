@@ -12,6 +12,7 @@ import {
   GridPreference,
   initialGridPreference,
 } from "../../types/dev-grid-column";
+import { getStorageString, setStorageString } from "../../../utilities/storage-utils";
 
 // Enhanced resize and reorder hook
 export const useTableResizeAndReorder = (gridID: string, onApplyPreferences: any) => {
@@ -97,7 +98,7 @@ export const useTableResizeAndReorder = (gridID: string, onApplyPreferences: any
     // });
   }, []);
 
-  const stopResize = useCallback(() => {
+    const stopResize = useCallback(async() => {
     const column = formState.gridColumns?.find((x) => x.visible != false && x.dataField == currentColumnIndex.current.field);
 
     const currentWidths = columnWidthsRef.current;
@@ -116,7 +117,7 @@ export const useTableResizeAndReorder = (gridID: string, onApplyPreferences: any
         updateOnlyGivenDetailsColumns: true,
       })
     );
-    const savedPreferences = localStorage.getItem(`gridPreferences_${gridID}`);
+    const savedPreferences = await getStorageString(`gridPreferences_${gridID}`);
 
     let _parsedPreferences: GridPreference;
     if (
@@ -147,7 +148,7 @@ export const useTableResizeAndReorder = (gridID: string, onApplyPreferences: any
       };
 
       const preference = JSON.stringify(parsedPreferences);
-      localStorage.setItem(`gridPreferences_${gridID}`, preference);
+      await setStorageString(`gridPreferences_${gridID}`, preference);
     }
     isResizing.current = false;
     currentColumnIndex.current.index = -1;
@@ -193,7 +194,7 @@ export const useTableResizeAndReorder = (gridID: string, onApplyPreferences: any
     setDragOverIndex(index);
   };
 
-  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+  const handleDrop = async(e: React.DragEvent, dropIndex: number) => {
     e.preventDefault();
     
     if(dragOverIndex == 0 || dragOverIndex == columnWidths.length-1) {
@@ -225,7 +226,7 @@ export const useTableResizeAndReorder = (gridID: string, onApplyPreferences: any
         toBefore: toColumn.dataField ?? "",
       })
     );
-    const savedPreferences = localStorage.getItem(`gridPreferences_${gridID}`);
+    const savedPreferences = await getStorageString(`gridPreferences_${gridID}`);
 
     let parsedPreferences: GridPreference;
     if (
@@ -244,7 +245,7 @@ export const useTableResizeAndReorder = (gridID: string, onApplyPreferences: any
     if (parsedPreferences && parsedPreferences.columnPreferences?.length > 0) {
       parsedPreferences.columnPreferences = moveArrayElement(parsedPreferences.columnPreferences, _fromColumn, _toColumn)
       const preference = JSON.stringify(parsedPreferences);
-      localStorage.setItem(`gridPreferences_${gridID}`, preference);
+      await setStorageString(`gridPreferences_${gridID}`, preference);
       onApplyPreferences && onApplyPreferences(preference);
       setColumnWidths((prev:any) => {
         return [

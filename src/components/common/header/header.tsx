@@ -27,6 +27,8 @@ import { menuClose, toggleSidebar } from "./toggle-sidebar";
 import CachedUrls from "../../../redux/cached-urls";
 import config from "../../../config";
 import { APIClient } from "../../../helpers/api-client";
+import { removeStorageString, setStorageString } from "../../../utilities/storage-utils";
+import localforage from "localforage";
 const api = new APIClient();
 
 interface HeaderProps { }
@@ -52,18 +54,14 @@ const Header: FC<HeaderProps> = () => {
   const handleFullscreenChange = () => {
     setFullScreen(!!document.fullscreenElement);
   };
-  // useEffect(() => {
-  //   const token = localStorage.getItem("token");
-  //   if (token) syncAppStates();
-  //   else navigate("/login");
-  // }, []);
+
   useEffect(() => {
     document.addEventListener("fullscreenchange", handleFullscreenChange);
     return () => {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
     };
   }, []);
-  let profile_image = localStorage?.getItem("profile_image");
+  
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const handleToggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -215,29 +213,7 @@ const Header: FC<HeaderProps> = () => {
     };
   };
 
-  const ToggleDark = () => {
-    const theme = updateAppStateValues(appState);
-    updateAppState(theme);
 
-    if (theme.mode != "dark") {
-      updateAppState({
-        ...theme,
-        bodyBg: "",
-        Light: "",
-        darkBg: "",
-        inputBorder: "",
-      });
-      localStorage.setItem("ynexlighttheme", "light");
-      localStorage.removeItem("ynexdarktheme");
-      localStorage.removeItem("ynexMenu");
-      localStorage.removeItem("ynexHeader");
-    } else {
-      localStorage.setItem("ynexdarktheme", "dark");
-      localStorage.removeItem("ynexlighttheme");
-      localStorage.removeItem("ynexMenu");
-      localStorage.removeItem("ynexHeader");
-    }
-  };
 
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
 
@@ -246,8 +222,7 @@ const Header: FC<HeaderProps> = () => {
     try {
       api.clearInFlightRequests();
       CachedUrls.forEach(async (x) => {
-        await api.getWithCacheAsync(x, "", true)
-        localStorage.setItem("lcct", new Date().toISOString());
+        await removeStorageString(btoa(x))
       })
 
     } catch (error) {
@@ -536,10 +511,10 @@ const Header: FC<HeaderProps> = () => {
               <div className="flex items-center">
                 {/* <span className="mr-2">{appState.mode === 'dark' ? 'Dark' : 'Light'} Mode</span> */}
                 <Button
-                  onClick={() => {
+                  onClick={async() => {
                     appState.mode === "light"
-                      ? switcherdata.Dark(updateAppState, appState)
-                      : switcherdata.Light(updateAppState, appState);
+                      ? await switcherdata.Dark(updateAppState, appState)
+                      :await switcherdata.Light(updateAppState, appState);
                   }}
                   variant="ghost"
                   size="icon">

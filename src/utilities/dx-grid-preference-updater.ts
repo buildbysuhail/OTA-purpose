@@ -3,6 +3,7 @@
 import { ColumnPreference, DevGridColumn, GridPreference, initialGridPreference } from "../components/types/dev-grid-column";
 import { APIClient } from "../helpers/api-client";
 import Urls from "../redux/urls";
+import { getStorageString, setStorageString } from "./storage-utils";
 import { capitalizeAndAddSpace, removeSpacesAndCapitalize } from "./Utils";
 
 export function applyGridColumnPreferences(columns: DevGridColumn[], preferences?: GridPreference): DevGridColumn[] {
@@ -63,7 +64,7 @@ export const getInitialPreference = async(gridId: any, columns: any, api: APICli
   if(gridId == "grd_inv_transaction_PI") {
     
   }
-    const savedPreferences = localStorage.getItem(`gridPreferences_${gridId}`);
+     const savedPreferences =await getStorageString(`gridPreferences_${gridId}`);
     
     let updatedPreferences: GridPreference;
 
@@ -73,12 +74,12 @@ export const getInitialPreference = async(gridId: any, columns: any, api: APICli
       parsedPreferences = JSON.parse(savedPreferences) as GridPreference;
     } else {
       const res = await api.getAsync(`${Urls.grid_preference}/${gridId}`);
-      parsedPreferences = res && res as GridPreference;
+       await setStorageString(`gridPreferences_${gridId}`,JSON.stringify(res));
+     parsedPreferences = res && res as GridPreference;
     }
   debugger;
     if(parsedPreferences) {    
       
-      localStorage.setItem(`gridPreferences_${gridId}`,JSON.stringify(parsedPreferences));
        parsedPreferences.columnPreferences = parsedPreferences.columnPreferences.map((pref, index) =>  {
         return {
           ...pref,

@@ -5,16 +5,18 @@ import Footer from '../footer/footer';
 import Content from '../content/content';
 import RPosContent from '../content/rpos-content';
 import RPosHeader from '../header/rpos-header';
+import { getStorageString } from '../../../utilities/storage-utils';
 
 interface RPosProps { 
   setMyClass: Dispatch<SetStateAction<string>>;
 }
 
 const RPosLayout: FC<RPosProps> = ({setMyClass}) => {
-  const Bodyclickk = () => {
-    if (localStorage.getItem("ynexverticalstyles") == "icontext") {
-      setMyClass("");
-    }
+  const Bodyclickk = async() => {
+        let isChecked = await getStorageString("ynexverticalstyles")
+        if (isChecked == "icontext") {
+         setMyClass("");
+        }
     if (window.innerWidth > 992) {
       let html = document.documentElement;
       if (html.getAttribute('icon-overlay') === 'open') {

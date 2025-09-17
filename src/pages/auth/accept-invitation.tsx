@@ -10,6 +10,7 @@ import { setApplicationSettings } from "../../redux/slices/app/application-setti
 import ERPModal from "../../components/ERPComponents/erp-modal";
 import CounterSettings from "../settings/system/counter-settings";
 import { useTranslation } from "react-i18next";
+import { setStorageString } from "../../utilities/storage-utils";
 
 const api = new APIClient();
 const AcceptInvitation: React.FC = () => {
@@ -69,7 +70,7 @@ const AcceptInvitation: React.FC = () => {
           );
         } else {
           if (response.item.hasToSetCounter) {
-            localStorage.setItem("_token", response.item.token);
+            await setStorageString("_token", response.item.token);
             setCounterSettings({ show: true, token: response.item.token });
           } else {
             setError(response.message);
@@ -92,7 +93,7 @@ const AcceptInvitation: React.FC = () => {
   const dispatch = useAppDispatch();
   const load = async () => {
     const settings = await api.getAsync(Urls.application_setting);
-    localStorage.setItem("as", modelToBase64(settings));
+    await setStorageString("as", modelToBase64(settings));
     dispatch(
       setApplicationSettings({
         ...settings,

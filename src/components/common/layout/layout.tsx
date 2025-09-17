@@ -12,6 +12,7 @@ import Footer from "../footer/footer";
 import Content from "../content/content";
 import { ERPScrollArea } from "../../ERPComponents/erp-scrollbar";
 import ERPAttachment from "../../ERPComponents/erp-attachment";
+import { getStorageString } from "../../../utilities/storage-utils";
 
 interface LayoutProps {
   setMyClass: Dispatch<SetStateAction<string>>;
@@ -31,10 +32,11 @@ const Layout: FC<LayoutProps> = ({ setMyClass }) => {
     // };
   }, []);
 
-  const Bodyclickk = () => {
-    if (localStorage.getItem("ynexverticalstyles") == "icontext") {
-      setMyClass("");
-    }
+  const Bodyclickk = async() => {
+     let isCheck = await getStorageString("ynexverticalstyles")
+        if (isCheck== "icontext") {
+        setMyClass("");
+       }
     if (window.innerWidth > 992) {
       let html = document.documentElement;
       if (html.getAttribute("icon-overlay") === "open") {

@@ -26,10 +26,10 @@ const LanguageSwitcher: FC<HeaderProps> = ({className}) => {
   const { appState, updateAppState } = useAppState();
   let dispatch = useAppDispatch();
 
-  const handleLanguageSelect = (language: Locale) => {
+  const handleLanguageSelect = async(language: Locale) => {
     
-    language.rtl ? switcherdata.Rtl(updateAppState, appState): switcherdata.Ltr(updateAppState, appState);
-    changeLanguage(language.code, dispatch, i18n);
+    language.rtl ?await switcherdata.Rtl(updateAppState, appState):await switcherdata.Ltr(updateAppState, appState);
+     await changeLanguage(language.code, dispatch, i18n);
     navigate(0);
   };
 

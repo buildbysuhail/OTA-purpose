@@ -13,6 +13,7 @@ import PDFBarcodeDesigner from "../../LabelDesigner/label_designer";
 import { DesignerConfigMap, templateConfig } from "./designSection";
 import { RootState } from "../../../redux/store";
 import SharedTemplatePreview from "../DesignPreview/shared";
+import VoucherType from "../../../enums/voucher-types";
 
 
 export interface TemplateImagesTypes {
@@ -33,7 +34,9 @@ const InvoiceDesigner = () => {
   const dispatch = useDispatch();
   const templateData = useSelector((state: RootState) => state.Template);
   const rootState = useRootState();
-  const templateGroup = searchParams.get("template_group") || "";
+  const tg = searchParams.get("template_group");
+
+  const templateGroup = tg && Object.values(VoucherType).includes(tg as VoucherType)? (tg as VoucherType): ""; 
   const { templateKind,templateType} = (location.state as LocationState) || {};
 
   const groupKey = templateGroup;

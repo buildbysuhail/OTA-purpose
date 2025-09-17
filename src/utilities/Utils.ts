@@ -16,6 +16,7 @@ import { Currencies } from "./number-to-words";
 import { BranchDetails, CompanyDetails, HeaderFooter, UserModel } from "../redux/slices/user-session/reducer";
 import { PrintResponse, PrintMasterDto, PrintDetailDto, CompanyDetailsForPrint } from "../pages/use-print-type";
 import { getCommonValues } from "../pages/use-print";
+import { getStorageString } from "./storage-utils";
 const api = new APIClient();
 export function capitalizeFirstLetter(text: string) {
   return text.charAt(0)?.toUpperCase() + text.slice(1);
@@ -836,8 +837,8 @@ if (!subtleCrypto) throw new Error("Web Crypto API not available");
 
   return new TextDecoder().decode(decryptedBuffer);
 }
-export const getApLocalData = (key: string) => {
-  const df = localStorage.getItem(key);
+export const getApLocalData = async(key: string) => {
+  const df = await getStorageString(key);
   if(df == null || df == undefined || df == "undefined") {
     return null;
   }

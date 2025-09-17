@@ -16,6 +16,7 @@ import {
 } from "../../redux/slices/app/application-settings-reducer";
 import { ApplicationSettingsInitialState } from "../../redux/slices/app/application-settings-types";
 import { modelToBase64 } from "../jsonConverter";
+import { setStorageString } from "../storage-utils";
 
 const api = new APIClient();
 export const useApplicationSetting = (): UseApplicationSettingReturnType => {
@@ -197,9 +198,10 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
         
         handleResponse(
           response,
-          () => {
+          async() => {
             const strSet = JSON.stringify(applicationSettings);
-            localStorage.setItem('as', modelToBase64(applicationSettings))
+            
+           await setStorageString('as', modelToBase64(applicationSettings))
             setSettingsPrev(JSON.parse(strSet));
           },
           () => {

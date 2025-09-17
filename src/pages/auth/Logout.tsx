@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { initialUserSessionData, setUserSession } from "../../redux/slices/user-session/reducer";
 import { setUserBranches } from "../../redux/slices/user-session/user-branches-reducer";
 import { setUserRights } from "../../redux/slices/user-rights/reducer";
+import { clearStorage, getStorageString } from "../../utilities/storage-utils";
 
 const Logout = () => {
   const { t } = useTranslation();
@@ -25,16 +26,12 @@ const Logout = () => {
     handleLogout();
   }, []);
   const handleLogout = async () => {
+    let _systemId =  await getStorageString("systemId")
     const logout = await dispatch(
-      logoutUser({ systemId: localStorage.getItem("systemId") ?? "" })
+      logoutUser({ systemId: _systemId ?? "" })
     ).unwrap();
-localStorage.clear();
-    // localStorage.removeItem("token");
-    // localStorage.removeItem("ut");
-    // localStorage.removeItem("up");
-    // localStorage.removeItem("as");
-    // localStorage.removeItem("ur");
-    // localStorage.removeItem("utc");
+      await clearStorage();
+
     dispatch(setUserSession(initialUserSessionData));
       dispatch(setUserBranches([]));
       dispatch(setUserRights([]));

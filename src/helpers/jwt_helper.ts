@@ -1,11 +1,10 @@
 import Cookies from "js-cookie";
 import * as jwt_decode from "jwt-decode";
 import { IUserSession } from "../redux/slices/auth/login/reducer";
+import { getStorageString } from "../utilities/storage-utils";
 const jwtHelper = {
-  getLoggedInUser: () => {
-    
-
-    const user = localStorage.getItem("token");
+  getLoggedInUser: async() => {
+    const user = await getStorageString("token");
     if (!user) {
       return null;
     } else {
@@ -13,20 +12,19 @@ const jwtHelper = {
       return decodedToken as any;
     }
   },
-  getLoggedInUserToken: () => {
+  getLoggedInUserToken: async() => {
     
-
-    const user = localStorage.getItem("token");
+    const user = await getStorageString("token");
     if (!user) {
       return null;
     } else {
       return user;
     }
   },
-  getLoggedInUserRole: () => {
-    
 
-    const user = localStorage.getItem("token");
+  getLoggedInUserRole:async () => {
+
+    const user = await getStorageString("token");
     if (!user) {
       return null;
     } else {
@@ -34,8 +32,8 @@ const jwtHelper = {
       return ((decodedToken as any)['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']) as string;
     }
   },
-  isUserCustomer: () => {
-    const user = localStorage.getItem("token");
+  isUserCustomer: async() => {
+    const user = await getStorageString("token");
     if (!user) {
       return false;
     } else {
@@ -44,9 +42,10 @@ const jwtHelper = {
       return ((decodedToken as any)['CustomerId']) !== undefined && ((decodedToken as any)['CustomerId']) !== null && ((decodedToken as any)['CustomerId']) !== '0';
     }
   },
-  getCurrency: () => {
+
+  getCurrency: async() => {
     
-    const user = localStorage.getItem("token");
+    const user = await getStorageString("token");
     if (!user) {
       return 'USD';
     } else {
@@ -54,8 +53,8 @@ const jwtHelper = {
       return ((decodedToken as any)['CurrencyCode']) !== undefined && ((decodedToken as any)['CurrencyCode']) !== null && ((decodedToken as any)['CurrencyCode']) !== '' ? ((decodedToken as any)['CurrencyCode']) : 'USD';
     }
   },
-  getLocale: () => {
-    const user = localStorage.getItem("token");
+  getLocale: async() => {
+    const user = await getStorageString("token");
     if (!user) {
       return 'en-US';
     } else {

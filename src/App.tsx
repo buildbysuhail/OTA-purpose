@@ -45,6 +45,8 @@ import { getUserSessionData } from "./session-data";
 import { useRootState } from "./utilities/hooks/useRootState";
 import ERPModal from "./components/ERPComponents/erp-modal";
 import { AccessPrinterList } from "./pages/InvoiceDesigner/utils/get_printers";
+import { getStorageString, setStorageString } from "./utilities/storage-utils";
+import { de } from "date-fns/locale";
 // import ERPModal from "./components/ERPComponents/erp-modal";
 // import 'devextreme/dist/css/dx.dark.css';  
 
@@ -87,17 +89,17 @@ useEffect(() => {
   }, []);
 
   useEffect(() => {
+    debugger;
     if(!isOnline) {return}
     const fetchSettings = async () => {
       try {
         const settings = await api.getAsync(Urls.application_setting);
-        const token =localStorage.getItem("token");
-        
+        const token =   await getStorageString("token");
         if(token) {
           
           console.log(token);
-          
-        localStorage.setItem("as", modelToBase64(settings));
+          await setStorageString("as", modelToBase64(settings))
+    
         dispatch(setApplicationSettings({ ...settings, apiLoaded: true }));
         }
       } catch (error) {
@@ -154,22 +156,28 @@ useEffect(() => {
 
     initializeApp();
   }, []);
-  useEffect(() => {
-    if(!isOnline) {return}
-    const {
-  token,
-  userThemes,
-  clientSession,
-  userProfileDetails,
-  userRights,
-  locale,
-} = getUserSessionData();
-    syncAppStates(dispatch, userThemes, clientSession, userProfileDetails, userRights, locale);
-    const language = userProfileDetails?.language;
 
-    if (!token && ["/login","/shared-view","accept-user-invitation"].includes(pathname)) {
+
+
+useEffect(() => {
+  if (!isOnline) return;
+
+  const fetchSession = async () => {
+    const {
+      token,
+      userThemes,
+      clientSession,
+      userProfileDetails,
+      userRights,
+      locale,
+    } = await getUserSessionData();
+
+    await syncAppStates(dispatch, userThemes, clientSession, userProfileDetails, userRights, locale);
+
+    const language = userProfileDetails?.language;
+debugger;
+    if (!token && !["/login", "/shared-view", "accept-user-invitation"].includes(pathname)) {
       navigate("/login");
-    } else {
     }
 
     if (locale && i18n && typeof i18n.changeLanguage === "function") {
@@ -177,9 +185,10 @@ useEffect(() => {
     } else {
       console.error("i18n is not properly initialized:", i18n);
     }
-  }, [isOnline]);
+  };
 
-
+  fetchSession();
+}, [isOnline]);
 
   // useEffect(() => {
   //   if (locale && i18n && typeof i18n.changeLanguage === "function") {
@@ -194,8 +203,9 @@ useEffect(() => {
   //   } else {
   //   }
   // }, [token]);
-  const Bodyclickk = () => {
-    if (localStorage.getItem("ynexverticalstyles") == "icontext") {
+  const Bodyclickk = async() => {
+      let isCheck = await getStorageString("ynexverticalstyles")
+    if (isCheck == "icontext") {
       setMyClass("");
     }
     if (window.innerWidth > 992) {

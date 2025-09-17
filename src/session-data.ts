@@ -6,19 +6,25 @@ import { UserTypeRights } from "./redux/slices/user-rights/reducer";
 import { customJsonParse } from "./utilities/jsonConverter";
 import usFlag from "./assets/images/flags/us_flag.png";
 import { initialUserSessionData, UserModel, } from "./redux/slices/user-session/reducer";
-export function getUserSessionData(): {
+import { getStorageString } from "./utilities/storage-utils";
+import localforage from "localforage";
+
+export async function getUserSessionData(): Promise<{
   token: string | null;
   userThemes: AppState;
   clientSession: ClientSessionModel;
   userProfileDetails: UserModel;
   userRights: UserTypeRights[];
   locale: { code: string; name: string; flag: string; rtl: boolean };
-} {
-  const token = localStorage.getItem("token");
-  const upt = localStorage.getItem("up");
-  const urr = localStorage.getItem("ur");
-  const utt = localStorage.getItem("ut");
-  const css = localStorage.getItem("cs");
+}> {
+  console.log(await localforage.keys());
+  console.log(await getStorageString("token"));
+  
+  const token = await getStorageString("token");
+  const upt = await getStorageString("up");
+  const urr = await getStorageString("ur");
+  const utt = await getStorageString("ut");
+  const css = await getStorageString("cs");
 
   let userRights: UserTypeRights[] = [];
   try {

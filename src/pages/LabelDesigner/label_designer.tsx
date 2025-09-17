@@ -953,7 +953,7 @@ const handleQRCodePropertyChange = (
       }
        setDesignerData((prev) => ({
       ...prev,
-      [property]: value ,
+      [property]: data ,
     }));
 
   }
@@ -1588,6 +1588,17 @@ const handleRemoveImage =()=>{
     ? accountsFields
     : inventoryFields;
 };
+const bgImage = forCustomRows
+  ? designerData?.background_image
+  : templateData?.barcodeState?.labelState?.background_image;
+
+const bgPosition = forCustomRows
+  ? designerData?.bg_image_position
+  : templateData?.barcodeState?.labelState?.bg_image_position;
+
+const bgSize = forCustomRows
+  ? designerData?.bg_image_objectFit
+  : templateData?.barcodeState?.labelState?.bg_image_objectFit;
   return (
     <div
       className={`flex h-dvh max-h-dvh bg-gray-100 overflow-hidden w-full
@@ -1781,30 +1792,11 @@ padding: `${
                 transform: `scale(${zoom / 100})`,
                 transformOrigin: "top center",
                 border: "2px dashed #ccc",
-                
-                backgroundImage: templateData?.barcodeState?.labelState
-                  ?.background_image
-                  ? `url(${templateData?.barcodeState?.labelState?.background_image})`
-                  : "none",
-                backgroundPosition: ["cover", "contain", "stretch"].includes(
-                  templateData?.barcodeState?.labelState?.bg_image_position ??
-                    ""
-                )
-                  ? "center"
-                  : templateData?.barcodeState?.labelState?.bg_image_position ??
-                    "center",
-                backgroundSize:
-                  templateData?.barcodeState?.labelState?.bg_image_position ===
-                  "cover"
-                    ? "cover"
-                    : templateData?.barcodeState?.labelState
-                        ?.bg_image_position === "contain"
-                    ? "contain"
-                    : templateData?.barcodeState?.labelState
-                        ?.bg_image_position === "stretch"
-                    ? "100% 100%"
-                    : "auto",
+                backgroundImage: bgImage ? `url(${bgImage})` : "none",
+                backgroundPosition: bgPosition || "center", // fallback default
+                backgroundSize: bgSize || "cover",   
                 backgroundRepeat: "no-repeat",
+                backgroundColor: forCustomRows?designerData?.background_color??"#fff": "#fff",
               }}
             >
               {templateData?.barcodeState?.placedComponents?.map(

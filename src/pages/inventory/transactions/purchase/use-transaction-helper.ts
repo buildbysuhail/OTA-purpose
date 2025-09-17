@@ -1527,7 +1527,6 @@ let detail  = sanitizeDataAdvanced({...rowDetail}, initialTransactionDetailData)
             );
           }
         }
-
         // Memo and random key
         outputRow.memo = detail.memo;
         outputRow.randomKey = 0;

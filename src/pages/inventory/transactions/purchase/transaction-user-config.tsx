@@ -22,6 +22,7 @@ import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import useDebounce from "./use-debounce";
 import { useAppState } from "../../../../utilities/hooks/useAppState";
 import { ERPScrollArea } from "../../../../components/ERPComponents/erp-scrollbar";
+import { setStorageString } from "../../../../utilities/storage-utils";
 
 const api = new APIClient();
 
@@ -106,19 +107,15 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
     undoEditMode?.(formState.transaction.master.invTransactionMasterID > 0, formState.transaction.master.invTransactionMasterID);
   }
 
-  useEffect(() => { }, []);
 
-  const postUserConfigOnOk = async (response: any) => {
-    const base64 = modelToBase64(response);
-    localStorage.setItem("utInvc", base64);
-  };
+
 
   const postUserConfig = async () => {
     try {
       const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, { ...formState.userConfig, themeName: 'Custom' });
-      handleResponse(response, () => {
+      handleResponse(response, async() => {
         const base64 = modelToBase64(formState.userConfig);
-        localStorage.setItem("utInvc", base64);
+        await setStorageString("utInvc", base64);
         dispatch(
           formStateHandleFieldChangeKeysOnly({
             fields: {
@@ -164,9 +161,9 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
         showCancelButton: true,
         onConfirm: async (result: any) => {
           const res = await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/ResetLocalSettings`, {});
-          handleResponse(res, () => {
+          handleResponse(res, async() => {
             const st = atob(res.item);
-            localStorage.setItem("utInvc", res.item);
+            await setStorageString("utInvc", res.item);
             const _st: any = customJsonParse(st);
             dispatch(formStateHandleFieldChange({ fields: { userConfig: _st } }));
           });

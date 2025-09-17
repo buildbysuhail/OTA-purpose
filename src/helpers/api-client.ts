@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import { setData } from "../redux/slices/data/reducer";
 const { api } = config;
 import {decryptAES} from '../utilities/Utils'
+import { getStorageString, setStorageString } from "../utilities/storage-utils";
 
 //  const formState = useAppSelector((state: RootState) => state.AccTransaction);
 // default
@@ -21,7 +22,11 @@ axios.defaults.headers.post["Content-Type"] = "application/json";
 axios.defaults.headers.post["X-Custom-Header"] = new Date().toISOString();
 
 // content type
-const token = localStorage.getItem("token");
+const getToken = async()=>{
+  return await getStorageString("token")
+}
+const token = getToken()
+
 if (token) axios.defaults.headers.common["Authorization"] = "Bearer " + token;
 
 // intercepting to capture errors
@@ -38,9 +43,9 @@ axios.interceptors.response.use(
  * Sets the default authorization
  * @param {*} token
  */
-const setAuthorization = (token?: string) => {
-  const _token = token ?? localStorage.getItem("token") ?? "";
-  const __token = token ?? localStorage.getItem("_token") ?? "";
+const setAuthorization = async(token?: string) => {
+  const _token = token ??await getStorageString("token") ?? "";
+  const __token = token ??await getStorageString("_token") ?? "";
   if (__token) {
     axios.defaults.headers.common["Authorization"] = "Bearer " + __token;
   } else if (_token) {
@@ -62,8 +67,8 @@ class APIClient {
 clearInFlightRequests = () => {
   inFlightRequests.clear();
 };
-  get = (url: string, queryString: string = ""): Promise<any> => {
-    setAuthorization();
+  get = async(url: string, queryString: string = ""): Promise<any> => {
+    await setAuthorization();
     let response: Promise<any>;
     response =
       queryString !== ""
@@ -80,7 +85,7 @@ clearInFlightRequests = () => {
   ): Promise<any> => {
     try {
       
-      setAuthorization(token);
+      await setAuthorization(token);
       // Construct a stable cache key (you could change the delimiter if needed)
       const cacheKey = `${url}`;
       
@@ -100,7 +105,7 @@ clearInFlightRequests = () => {
         resData = response
       }      
       inFlightRequests.set(cacheKey, resData);      
-      localStorage.setItem(btoa(url), JSON.stringify(resData))
+      await setStorageString(btoa(url), JSON.stringify(resData))
       return resData
     
     } catch (error) {
@@ -111,7 +116,7 @@ clearInFlightRequests = () => {
 
   getAsync = async (url: string, queryString: string = "", config:any = undefined, token?: string): Promise<any> => {
     try {
-      setAuthorization(token);
+     await setAuthorization(token);
       const fullUrl = queryString !== "" ? `${url}?${queryString}` : url;
       const response = config != undefined ? await axios.get(fullUrl,config) : await axios.get(fullUrl);
       if (response?.status != undefined && response?.status != null) {
@@ -150,7 +155,7 @@ clearInFlightRequests = () => {
     config: any = undefined
   ): Promise<any> => {
     try {
-      setAuthorization();
+    await  setAuthorization();
       const fullUrl = queryString !== "" ? `${url}?${queryString}` : url;
       const response =
         config != undefined
@@ -187,8 +192,9 @@ clearInFlightRequests = () => {
   /**
    * Posts the given data to the URL
    */
-  post = (url: string, data: any, headers?: any, onUploadProgress?: any): Promise<any> => {
-    setAuthorization();
+  post = async(url: string, data: any, headers?: any, onUploadProgress?: any): Promise<any> => {
+    debugger;
+    await setAuthorization();
     return headers
       ? (onUploadProgress 
           ? axios.post(url, data, { headers: headers, onUploadProgress: onUploadProgress })
@@ -203,7 +209,7 @@ clearInFlightRequests = () => {
     params?: any,
     config: any = undefined
   ): Promise<any> => {
-    setAuthorization();
+   await  setAuthorization();
 
     const response = params
       ? await axios.post(`${url}?${params}`, data, config)
@@ -221,8 +227,8 @@ clearInFlightRequests = () => {
   /**
    * Updates data
    */
-  patch = (url: string, data: any): Promise<AxiosResponse> => {
-    setAuthorization();
+  patch = async(url: string, data: any): Promise<AxiosResponse> => {
+    await setAuthorization();
     return axios.patch(url, data);
   };
 
@@ -231,22 +237,22 @@ clearInFlightRequests = () => {
     data: any,
     token?: string
   ): Promise<AxiosResponse> => {
-    setAuthorization(token);
+   await setAuthorization(token);
     return await axios.put(url, data);
   };
-  put = (url: string, data: any, token?: string): Promise<AxiosResponse> => {
-    setAuthorization(token);
+  put = async(url: string, data: any, token?: string): Promise<AxiosResponse> => {
+   await setAuthorization(token);
     return axios.put(url, data);
   };
 
   /**
    * Deletes data
    */
-  delete = (
+  delete = async(
     url: string,
     config?: AxiosRequestConfig
   ): Promise<AxiosResponse> => {
-    setAuthorization();
+   await setAuthorization();
     return axios.delete(url, { ...config });
   };
 }

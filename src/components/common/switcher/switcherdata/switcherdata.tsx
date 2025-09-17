@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { MENUITEMS } from '../../sidebar/sidemenu/sidemenu';
+import { clearStorage, getStorageString, removeStorageString, setStorageString } from '../../../../utilities/storage-utils';
 
-export function Dark(actionfunction: any, appState: any) {
+export async function Dark(actionfunction: any, appState: any) {
     actionfunction({
         ...appState,
         "class": "dark",
@@ -13,14 +14,14 @@ export function Dark(actionfunction: any, appState: any) {
         "inputBorder": "",
         "Light": "",
     });
-    localStorage.setItem("ynexdarktheme", "dark");
-    localStorage.removeItem("ynexlighttheme");
-    localStorage.removeItem("ynexlighttheme");
-    localStorage.removeItem('darkBgRGB');
+    await setStorageString("ynexdarktheme", "dark");
+    await removeStorageString("ynexlighttheme");
+    await removeStorageString("ynexlighttheme");
+    await removeStorageString('darkBgRGB');
 
 
 }
-export function Light(actionfunction: any, appState: any) {
+export async function Light(actionfunction: any, appState: any) {
     actionfunction({
         ...appState,
         "class": "light",
@@ -33,22 +34,22 @@ export function Light(actionfunction: any, appState: any) {
         "dataMenuStyles": appState?.dataNavLayout == 'horizontal' ? 'light' : "dark"
 
     });
-    localStorage.setItem("ynexlighttheme", "light");
-    localStorage.removeItem("ynexdarktheme");
-    localStorage.removeItem('Light');
-    localStorage.removeItem('bodyBgRGB');
-    localStorage.removeItem('darkBgRGB');
+    await setStorageString("ynexlighttheme", "light");
+    await removeStorageString("ynexdarktheme");
+    await removeStorageString('Light');
+    await removeStorageString('bodyBgRGB');
+    await removeStorageString('darkBgRGB');
 }
-export function Ltr(actionfunction: any, appState: any) {
+export async function Ltr(actionfunction: any, appState: any) {
     actionfunction({ ...appState, dir: "ltr" });
-    localStorage.setItem("ynexltr", "ltr");
-    localStorage.removeItem("ynexrtl");
+    await setStorageString("ynexltr", "ltr");
+    await removeStorageString("ynexrtl");
 }
-export function Rtl(actionfunction: any, appState: any) {
+export async function Rtl(actionfunction: any, appState: any) {
     
     actionfunction({ ...appState, dir: "rtl" });
-    localStorage.setItem("ynexrtl", "rtl");
-    localStorage.removeItem("ynexltr");
+    await setStorageString("ynexrtl", "rtl");
+    await removeStorageString("ynexltr");
 }
 
 function closeMenuFn() {
@@ -61,22 +62,24 @@ function closeMenuFn() {
     };
     closeMenuRecursively(MENUITEMS);
 }
-export const HorizontalClick = (actionfunction: any, appState: any) => {
+
+export  const HorizontalClick = async(actionfunction: any, appState: any) => {
+   const isGetinLocal = await getStorageString("ynexnavstyles");
     actionfunction({
         ...appState,
         "dataNavLayout": "horizontal",
         "dataVerticalStyle": "",
-        "dataNavStyle": localStorage.ynexnavstyles ? localStorage.ynexnavstyles : "menu-click"
+        "dataNavStyle":isGetinLocal  ? isGetinLocal : "menu-click"
     });
-    localStorage.setItem("ynexlayout", "horizontal");
-    localStorage.removeItem("ynexverticalstyles");
+    await setStorageString("ynexlayout", "horizontal");
+    await removeStorageString("ynexverticalstyles");
     closeMenuFn();
     const Sidebar:any =  document.querySelector(".main-menu");
     if(Sidebar){
     Sidebar.style.marginInline = "0px";
     }
 };
-export const Vertical = (actionfunction: any, appState: any) => {
+export  const Vertical = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataNavLayout": "vertical",
@@ -85,26 +88,26 @@ export const Vertical = (actionfunction: any, appState: any) => {
         "toggled": "",
         "dataNavStyle": ''
     });
-    localStorage.setItem("ynexlayout", "vertical");
-    localStorage.removeItem("ynexnavstyles");
+    await setStorageString("ynexlayout", "vertical");
+    await removeStorageString("ynexnavstyles");
 
 };
 
-export const Menuclick = (actionfunction: any, appState: any) => {
+export  const Menuclick = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataNavStyle": "menu-click",
         "dataVerticalStyle": "",
         "toggled": "menu-click-closed",
     });
-    localStorage.setItem("ynexnavstyles", "menu-click");
-    localStorage.removeItem("ynexverticalstyles");
+    await setStorageString("ynexnavstyles", "menu-click");
+    await removeStorageString("ynexverticalstyles");
     const Sidebar: any = document.querySelector(".main-menu");
     if(Sidebar){
     Sidebar.style.marginInline = "0px";
     }
 };
-export const MenuHover = (actionfunction: any, appState: any) => {
+export const MenuHover = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataNavStyle": "menu-hover",
@@ -112,148 +115,148 @@ export const MenuHover = (actionfunction: any, appState: any) => {
         "toggled": "menu-hover-closed",
         "horStyle": ""
     });
-    localStorage.setItem("ynexnavstyles", "menu-hover");
-    localStorage.removeItem("ynexverticalstyles");
+    await setStorageString("ynexnavstyles", "menu-hover");
+    await removeStorageString("ynexverticalstyles");
     const Sidebar: any = document.querySelector(".main-menu");
     if(Sidebar){
     Sidebar.style.marginInline = "0px";
     }
 };
-export const IconClick = (actionfunction: any, appState: any) => {
+export const IconClick = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataNavStyle": "icon-click",
         "dataVerticalStyle": "",
         "toggled": "icon-click-closed",
     });
-    localStorage.setItem("ynexnavstyles", "icon-click");
-    localStorage.removeItem("ynexverticalstyles");
+    await setStorageString("ynexnavstyles", "icon-click");
+    await removeStorageString("ynexverticalstyles");
     const Sidebar: any = document.querySelector(".main-menu");
     if(Sidebar){
          Sidebar.style.marginInline = "0px";
      }
 };
 
-export const IconHover = (actionfunction: any, appState: any) => {
+export const IconHover = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataNavStyle": "icon-hover",
         "dataVerticalStyle": "",
         "toggled": "icon-hover-closed"
     });
-    localStorage.setItem("ynexnavstyles", "icon-hover");
-    localStorage.removeItem("ynexverticalstyles");
+    await setStorageString("ynexnavstyles", "icon-hover");
+    await removeStorageString("ynexverticalstyles");
     const Sidebar: any = document.querySelector(".main-menu");
     if(Sidebar){
     Sidebar.style.marginInline = "0px";
     }
     closeMenuFn();
 };
-export const Fullwidth = (actionfunction: any, appState: any) => {
+export const Fullwidth = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataWidth": "fullwidth",
     });
-    localStorage.setItem("ynexfullwidth", "Fullwidth");
-    localStorage.removeItem("ynexboxed");
+    await setStorageString("ynexfullwidth", "Fullwidth");
+    await removeStorageString("ynexboxed");
 
 };
-export const Boxed = (actionfunction: any, appState: any) => {
+export const Boxed = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataWidth": "boxed",
     });
-    localStorage.setItem("ynexboxed", "Boxed");
-    localStorage.removeItem("ynexfullwidth");
+    await setStorageString("ynexboxed", "Boxed");
+    await removeStorageString("ynexfullwidth");
 };
-export const FixedMenu = (actionfunction: any, appState: any) => {
+export const FixedMenu = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataMenuPosition": "fixed",
     });
-    localStorage.setItem("ynexmenufixed", "MenuFixed");
-    localStorage.removeItem("ynexmenuscrollable");
+    await setStorageString("ynexmenufixed", "MenuFixed");
+    await removeStorageString("ynexmenuscrollable");
 };
-export const scrollMenu = (actionfunction: any, appState: any) => {
+export const scrollMenu = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataMenuPosition": "scrollable",
     });
-    localStorage.setItem("ynexmenuscrollable", "Menuscrolled");
-    localStorage.removeItem("ynexmenufixed");
+    await setStorageString("ynexmenuscrollable", "Menuscrolled");
+    await removeStorageString("ynexmenufixed");
 };
-export const Headerpostionfixed = (actionfunction: any, appState: any) => {
+export const Headerpostionfixed = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataHeaderPosition": "fixed",
     });
-    localStorage.setItem("ynexheaderfixed", 'FixedHeader');
-    localStorage.removeItem("ynexheaderscrollable");
+    await setStorageString("ynexheaderfixed", 'FixedHeader');
+    await removeStorageString("ynexheaderscrollable");
 };
-export const Headerpostionscroll = (actionfunction: any, appState: any) => {
+export const Headerpostionscroll = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataHeaderPosition": "scrollable",
     });
-    localStorage.setItem("ynexheaderscrollable", "ScrollableHeader");
-    localStorage.removeItem("ynexheaderfixed");
+    await setStorageString("ynexheaderscrollable", "ScrollableHeader");
+    await removeStorageString("ynexheaderfixed");
 };
-export const Regular = (actionfunction: any, appState: any) => {
+export const Regular = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataPageStyle": "regular"
     });
-    localStorage.setItem("ynexregular", "Regular");
-    localStorage.removeItem("ynexclassic");
-    localStorage.removeItem("ynexmodern");
+    await setStorageString("ynexregular", "Regular");
+    await removeStorageString("ynexclassic");
+    await removeStorageString("ynexmodern");
 };
-export const Classic = (actionfunction: any, appState: any) => {
+export const Classic = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataPageStyle": "classic",
     });
-    localStorage.setItem("ynexclassic", "Classic");
-    localStorage.removeItem("ynexregular");
-    localStorage.removeItem("ynexmodern");
+    await setStorageString("ynexclassic", "Classic");
+    await removeStorageString("ynexregular");
+    await removeStorageString("ynexmodern");
 };
-export const Modern = (actionfunction: any, appState: any) => {
+export const Modern = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataPageStyle": "modern",
     });
-    localStorage.setItem("ynexmodern", "Modern");
-    localStorage.removeItem("ynexregular");
-    localStorage.removeItem("ynexclassic");
+    await setStorageString("ynexmodern", "Modern");
+    await removeStorageString("ynexregular");
+    await removeStorageString("ynexclassic");
 };
-export const Thick = (actionfunction: any, appState: any) => {
+export const Thick = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataScrollbarWidth": "lg",
     });
-    localStorage.setItem("ynexmodern", "Thick");
-    localStorage.removeItem("ynexregular");
-    localStorage.removeItem("ynexclassic");
+    await setStorageString("ynexmodern", "Thick");
+    await removeStorageString("ynexregular");
+    await removeStorageString("ynexclassic");
 };
-export const Medium = (actionfunction: any, appState: any) => {
+export const Medium = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataScrollbarWidth": "md",
     });
-    localStorage.setItem("ynexmodern", "Medium");
-    localStorage.removeItem("ynexregular");
-    localStorage.removeItem("ynexclassic");
+    await setStorageString("ynexmodern", "Medium");
+    await removeStorageString("ynexregular");
+    await removeStorageString("ynexclassic");
 };
-export const Thin = (actionfunction: any, appState: any) => {
+export const Thin = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataScrollbarWidth": "sm",
     });
-    localStorage.setItem("ynexmodern", "Thin");
-    localStorage.removeItem("ynexregular");
-    localStorage.removeItem("ynexclassic");
+    await setStorageString("ynexmodern", "Thin");
+    await removeStorageString("ynexregular");
+    await removeStorageString("ynexclassic");
 };
 
-export const Defaultmenu = (actionfunction: any, appState: any) => {
+export const Defaultmenu = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataVerticalStyle": "overlay",
@@ -261,15 +264,15 @@ export const Defaultmenu = (actionfunction: any, appState: any) => {
         'toggled': '',
         "dataNavStyle": "",
     });
-    localStorage.removeItem("ynexnavstyles");
-    localStorage.setItem("ynexverticalstyles", "default");
+    await removeStorageString("ynexnavstyles");
+    await setStorageString("ynexverticalstyles", "default");
     var icon =document.getElementById("switcher-default-menu") as HTMLInputElement;
     if(icon){
         icon.checked=true
     }
 
 };
-export const Closedmenu = (actionfunction: any, appState: any) => {
+export const Closedmenu = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataNavLayout": "vertical",
@@ -277,12 +280,12 @@ export const Closedmenu = (actionfunction: any, appState: any) => {
         "toggled": "close-menu-close",
         "dataNavStyle": "",
     });
-    localStorage.setItem("ynexverticalstyles", "closed");
-    localStorage.removeItem("ynexnavstyles");
+    await setStorageString("ynexverticalstyles", "closed");
+    await removeStorageString("ynexnavstyles");
 
 };
 
-export function icontextOpenFn() {
+export  function icontextOpenFn() {
     let html = document.documentElement;
     if (html.getAttribute('data-toggled') === 'icon-text-close') {
         html.setAttribute('icon-text', 'open');
@@ -294,7 +297,7 @@ export function icontextCloseFn() {
         html.removeAttribute('icon-text');
     }
 }
-export const iconTextfn = (actionfunction: any, appState: any) => {
+export const iconTextfn = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataNavLayout": "vertical",
@@ -302,8 +305,8 @@ export const iconTextfn = (actionfunction: any, appState: any) => {
         "toggled": "icon-text-close",
         "dataNavStyle": "",
     });
-    localStorage.setItem("ynexverticalstyles", "icontext");
-    localStorage.removeItem("ynexnavstyles");
+    await setStorageString("ynexverticalstyles", "icontext");
+    await removeStorageString("ynexnavstyles");
 
     const MainContent = document.querySelector(".main-content");
     const appSidebar = document.querySelector('.app-sidebar');
@@ -315,7 +318,7 @@ export const iconTextfn = (actionfunction: any, appState: any) => {
         icontextCloseFn();
     });
 };
-export const iconOverayFn = (actionfunction: any, appState: any) => {
+export const iconOverayFn = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataNavLayout": "vertical",
@@ -323,8 +326,8 @@ export const iconOverayFn = (actionfunction: any, appState: any) => {
         "toggled": "icon-overlay-close",
         "dataNavStyle": "",
     });
-    localStorage.setItem("ynexverticalstyles", "overlay");
-    localStorage.removeItem("ynexnavstyles");
+    await setStorageString("ynexverticalstyles", "overlay");
+    await removeStorageString("ynexnavstyles");
     var icon =document.getElementById("switcher-icon-overlay") as HTMLInputElement;
     if(icon){
         icon.checked=true
@@ -358,7 +361,7 @@ export function DetachedCloseFn() {
     }
 }
 
-export const DetachedFn = (actionfunction: any, appState: any) => {
+export const DetachedFn = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataNavLayout": "vertical",
@@ -366,8 +369,8 @@ export const DetachedFn = (actionfunction: any, appState: any) => {
         "toggled": "detached-open",
         "dataNavStyle": "",
     });
-    localStorage.setItem("ynexverticalstyles", "detached");
-    localStorage.removeItem("ynexnavstyles");
+    await setStorageString("ynexverticalstyles", "detached");
+    await removeStorageString("ynexnavstyles");
 
     const MainContent = document.querySelector(".main-content");
     const appSidebar = document.querySelector('.app-sidebar');
@@ -381,7 +384,7 @@ export const DetachedFn = (actionfunction: any, appState: any) => {
 };
 
 
-export const DoubletFn = (actionfunction: any, appState: any) => {
+export const DoubletFn = async(actionfunction: any, appState: any) => {
 
     actionfunction({
         ...appState,
@@ -390,210 +393,210 @@ export const DoubletFn = (actionfunction: any, appState: any) => {
         "toggled": "double-menu-open",
         "dataNavStyle": "",
     });
-    localStorage.setItem("ynexverticalstyles", "doublemenu");
-    localStorage.removeItem("ynexnavstyles");
+    await setStorageString("ynexverticalstyles", "doublemenu");
+    await removeStorageString("ynexnavstyles");
 
 };
-export const bgImage1 = (actionfunction: any, appState: any) => {
+export const bgImage1 = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "bgImg": "bgimg1"
     });
-    localStorage.setItem("bgimage1", "bgimg1");
-    localStorage.removeItem("bgimage2");
-    localStorage.removeItem("bgimage3");
-    localStorage.removeItem("bgimage4");
-    localStorage.removeItem("bgimage5");
+    await setStorageString("bgimage1", "bgimg1");
+    await removeStorageString("bgimage2");
+    await removeStorageString("bgimage3");
+    await removeStorageString("bgimage4");
+    await removeStorageString("bgimage5");
 };
-export const bgImage2 = (actionfunction: any, appState: any) => {
+export const bgImage2 = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "bgImg": "bgimg2"
     });
-    localStorage.setItem("bgimage2", "bgimg2");
-    localStorage.removeItem("bgimage1");
-    localStorage.removeItem("bgimage3");
-    localStorage.removeItem("bgimage4");
-    localStorage.removeItem("bgimage5");
+    await setStorageString("bgimage2", "bgimg2");
+    await removeStorageString("bgimage1");
+    await removeStorageString("bgimage3");
+    await removeStorageString("bgimage4");
+    await removeStorageString("bgimage5");
 };
-export const bgImage3 = (actionfunction: any, appState: any) => {
+export const bgImage3 = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "bgImg": "bgimg3"
     });
-    localStorage.setItem("bgimage3", "bgimg3");
-    localStorage.removeItem("bgimage1");
-    localStorage.removeItem("bgimage2");
-    localStorage.removeItem("bgimage4");
-    localStorage.removeItem("bgimage5");
+    await setStorageString("bgimage3", "bgimg3");
+    await removeStorageString("bgimage1");
+    await removeStorageString("bgimage2");
+    await removeStorageString("bgimage4");
+    await removeStorageString("bgimage5");
 };
-export const bgImage4 = (actionfunction: any, appState: any) => {
+export const bgImage4 = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "bgImg": "bgimg4"
     });
-    localStorage.setItem("bgimage4", "bgimg4");
-    localStorage.removeItem("bgimage1");
-    localStorage.removeItem("bgimage2");
-    localStorage.removeItem("bgimage3");
-    localStorage.removeItem("bgimage5");
+    await setStorageString("bgimage4", "bgimg4");
+    await removeStorageString("bgimage1");
+    await removeStorageString("bgimage2");
+    await removeStorageString("bgimage3");
+    await removeStorageString("bgimage5");
 };
-export const bgImage5 = (actionfunction: any, appState: any) => {
+export const bgImage5 = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "bgImg": "bgimg5"
     });
-    localStorage.setItem("bgimage5", "bgimg5");
-    localStorage.removeItem("bgimage1");
-    localStorage.removeItem("bgimage2");
-    localStorage.removeItem("bgimage3");
-    localStorage.removeItem("bgimage4");
+    await setStorageString("bgimage5", "bgimg5");
+    await removeStorageString("bgimage1");
+    await removeStorageString("bgimage2");
+    await removeStorageString("bgimage3");
+    await removeStorageString("bgimage4");
 };
 
-export const colorMenu = (actionfunction: any, appState: any) => {
+export const colorMenu = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataMenuStyles": "color",
     });
-    localStorage.setItem("ynexMenu", "color");
-    localStorage.removeItem("gradient");
+    await setStorageString("ynexMenu", "color");
+    await removeStorageString("gradient");
 };
 
-export const lightMenu = (actionfunction: any, appState: any) => {
+export const lightMenu = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataMenuStyles": "light",
     });
-    localStorage.setItem("ynexMenu", "light");
-    localStorage.removeItem("light");
+    await setStorageString("ynexMenu", "light");
+    await removeStorageString("light");
 };
 
-export const darkMenu = (actionfunction: any, appState: any) => {
+export const darkMenu = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataMenuStyles": "dark",
     });
-    localStorage.setItem("ynexMenu", "dark");
-    localStorage.removeItem("light");
+    await setStorageString("ynexMenu", "dark");
+    await removeStorageString("light");
 };
 
-export const gradientMenu = (actionfunction: any, appState: any) => {
+export const gradientMenu =async (actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataMenuStyles": "gradient",
     });
-    localStorage.setItem("ynexMenu", "gradient");
-    localStorage.removeItem("color");
+    await setStorageString("ynexMenu", "gradient");
+    await removeStorageString("color");
 };
-export const transparentMenu = (actionfunction: any, appState: any) => {
+export const transparentMenu =async (actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataMenuStyles": "transparent",
     });
-    localStorage.setItem("ynexMenu", "transparent");
-    localStorage.removeItem("gradient");
+    await setStorageString("ynexMenu", "transparent");
+    await removeStorageString("gradient");
 };
 
-export const lightHeader = (actionfunction: any, appState: any) => {
+export const lightHeader =async (actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataHeaderStyles": "light",
     });
-    localStorage.setItem("ynexHeader", "light");
-    localStorage.removeItem("dark");
+    await setStorageString("ynexHeader", "light");
+    await removeStorageString("dark");
 };
-export const darkHeader = (actionfunction: any, appState: any) => {
+export const darkHeader = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataHeaderStyles": "dark",
     });
-    localStorage.setItem("ynexHeader", "dark");
-    localStorage.removeItem("light");
+    await setStorageString("ynexHeader", "dark");
+    await removeStorageString("light");
 };
-export const colorHeader = (actionfunction: any, appState: any) => {
+export const colorHeader =async (actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataHeaderStyles": "color",
     });
-    localStorage.setItem("ynexHeader", "color");
-    localStorage.removeItem("dark");
+    await setStorageString("ynexHeader", "color");
+    await removeStorageString("dark");
 };
-export const gradientHeader = (actionfunction: any, appState: any) => {
+export const gradientHeader = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataHeaderStyles": "gradient",
 
     });
-    localStorage.setItem("ynexHeader", "gradient");
-    localStorage.removeItem("transparent");
+    await setStorageString("ynexHeader", "gradient");
+    await removeStorageString("transparent");
 };
-export const transparentHeader = (actionfunction: any, appState: any) => {
+export const transparentHeader = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "dataHeaderStyles": "transparent",
     });
-    localStorage.removeItem("gradient");
-    localStorage.setItem("ynexHeader", "transparent");
+    await removeStorageString("gradient");
+    await setStorageString("ynexHeader", "transparent");
 };
 
-export const primaryColorCustom = (actionfunction: any, appState: any, rgb: string) => {
+export const primaryColorCustom = async(actionfunction: any, appState: any, rgb: string) => {
     actionfunction({
         ...appState,
         "colorPrimaryRgb": rgb,
         "colorPrimary": rgb
     });
-    localStorage.setItem("primaryRGB", rgb);
-    localStorage.setItem("primaryRGB1", rgb);
+    await setStorageString("primaryRGB", rgb);
+    await setStorageString("primaryRGB1", rgb);
 };
-export const primaryColor1 = (actionfunction: any, appState: any) => {
+export const primaryColor1 = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "colorPrimaryRgb": "58, 88, 146",
         "colorPrimary": "58 88 146"
 
     });
-    localStorage.setItem("primaryRGB", "58, 88, 146");
-    localStorage.setItem("primaryRGB1", "58 88 146");
+    await setStorageString("primaryRGB", "58, 88, 146");
+    await setStorageString("primaryRGB1", "58 88 146");
 
 };
-export const primaryColor2 = (actionfunction: any, appState: any) => {
+export const primaryColor2 = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "colorPrimaryRgb": "92, 144 ,163",
         "colorPrimary": "92 144 163"
     });
-    localStorage.setItem("primaryRGB", "92, 144, 163");
-    localStorage.setItem("primaryRGB1", "92 144 163");
+    await setStorageString("primaryRGB", "92, 144, 163");
+    await setStorageString("primaryRGB1", "92 144 163");
 };
-export const primaryColor3 = (actionfunction: any, appState: any) => {
+export const primaryColor3 = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "colorPrimaryRgb": "161, 90 ,223",
         "colorPrimary": "161 90 223"
     });
-    localStorage.setItem("primaryRGB", "161, 90, 223");
-    localStorage.setItem("primaryRGB1", "161 90 223");
+    await setStorageString("primaryRGB", "161, 90, 223");
+    await setStorageString("primaryRGB1", "161 90 223");
 };
-export const primaryColor4 = (actionfunction: any, appState: any) => {
+export const primaryColor4 = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "colorPrimaryRgb": "78, 172, 76",
         "colorPrimary": "78 172 76"
     });
-    localStorage.setItem("primaryRGB", "78, 172, 76");
-    localStorage.setItem("primaryRGB1", "78 172 76");
+    await setStorageString("primaryRGB", "78, 172, 76");
+    await setStorageString("primaryRGB1", "78 172 76");
 };
-export const primaryColor5 = (actionfunction: any, appState: any) => {
+export const primaryColor5 =async (actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "colorPrimaryRgb": "223, 90, 90",
         "colorPrimary": "223 90 90"
     });
-    localStorage.setItem("primaryRGB", "223, 90, 90");
-    localStorage.setItem("primaryRGB1", "223 90 90");
+    await setStorageString("primaryRGB", "223, 90, 90");
+    await setStorageString("primaryRGB1", "223 90 90");
 };
 
-export const backgroundColor1 = (actionfunction: any, appState: any) => {
+export const backgroundColor1 = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "bodyBg": "34 44 110",
@@ -604,12 +607,12 @@ export const backgroundColor1 = (actionfunction: any, appState: any) => {
         "dataMenuStyles": "dark",
         "dataHeaderStyles": "dark"
     });
-    localStorage.setItem('darkBgRGB', "20 30 96");
-    localStorage.setItem('bodyBgRGB', "34 44 110");
-    localStorage.setItem('Light', "25 35 102");
+    await setStorageString('darkBgRGB', "20 30 96");
+    await setStorageString('bodyBgRGB', "34 44 110");
+    await setStorageString('Light', "25 35 102");
 
 };
-export const backgroundColor2 = (actionfunction: any, appState: any) => {
+export const backgroundColor2 = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "bodyBg": "22 92 129",
@@ -620,11 +623,11 @@ export const backgroundColor2 = (actionfunction: any, appState: any) => {
         "dataMenuStyles": "dark",
         "dataHeaderStyles": "dark"
     });
-    localStorage.setItem('darkBgRGB', "8 78 115");
-    localStorage.setItem('bodyBgRGB', "22 92 129");
-    localStorage.setItem('Light', "13 83 120",);
+    await setStorageString('darkBgRGB', "8 78 115");
+    await setStorageString('bodyBgRGB', "22 92 129");
+    await setStorageString('Light', "13 83 120",);
 };
-export const backgroundColor3 = (actionfunction: any, appState: any) => {
+export const backgroundColor3 = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "bodyBg": "104 51 149",
@@ -635,11 +638,11 @@ export const backgroundColor3 = (actionfunction: any, appState: any) => {
         "dataMenuStyles": "dark",
         "dataHeaderStyles": "dark"
     });
-    localStorage.setItem('darkBgRGB', "90 37 135");
-    localStorage.setItem('bodyBgRGB', "104 51 149");
-    localStorage.setItem('Light', "95 42 140");
+    await setStorageString('darkBgRGB', "90 37 135");
+    await setStorageString('bodyBgRGB', "104 51 149");
+    await setStorageString('Light', "95 42 140");
 };
-export const backgroundColor4 = (actionfunction: any, appState: any) => {
+export const backgroundColor4 = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "Light": "29 106 56",
@@ -650,11 +653,11 @@ export const backgroundColor4 = (actionfunction: any, appState: any) => {
         "dataMenuStyles": "dark",
         "dataHeaderStyles": "dark"
     });
-    localStorage.setItem('darkBgRGB', "24 101 51");
-    localStorage.setItem('bodyBgRGB', "38 115 64");
-    localStorage.setItem('Light', "29 106 56");
+    await setStorageString('darkBgRGB', "24 101 51");
+    await setStorageString('bodyBgRGB', "38 115 64");
+    await setStorageString('Light', "29 106 56");
 };
-export const backgroundColor5 = (actionfunction: any, appState: any) => {
+export const backgroundColor5 = async(actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
         "bodyBg": " 134 80 34",
@@ -665,9 +668,9 @@ export const backgroundColor5 = (actionfunction: any, appState: any) => {
         "dataMenuStyles": "dark",
         "dataHeaderStyles": "dark"
     });
-    localStorage.setItem('darkBgRGB', "120 66 20");
-    localStorage.setItem('bodyBgRGB', "134 80 34");
-    localStorage.setItem('Light', "125 71 25");
+    await setStorageString('darkBgRGB', "120 66 20");
+    await setStorageString('bodyBgRGB', "134 80 34");
+    await setStorageString('Light', "125 71 25");
 };
 
 export const ColorPicker = (props: any) => {
@@ -691,7 +694,7 @@ const Themeprimarycolor: React.FC<actionfunctionProps> = ({ actionfunction, appS
     
     const [state, updateState] = useState("#FFFFFF");
 
-    const handleInput = (e: any) => {
+    const handleInput = async(e: any) => {
         const rgb = hexToRgb(e.target?.value);
 
         if (rgb !== null) {
@@ -702,7 +705,7 @@ const Themeprimarycolor: React.FC<actionfunctionProps> = ({ actionfunction, appS
                 "colorPrimaryRgb": `${r},  ${g},  ${b}`,
                 "colorPrimary": `${r} ${g} ${b}`
             });
-            localStorage.setItem("dynamiccolor", `${r}, ${g} ,${b}`);
+            await setStorageString("dynamiccolor", `${r}, ${g} ,${b}`);
         }
     };
 
@@ -723,7 +726,7 @@ interface actionfunctionProps {
 export const Themebackgroundcolor : React.FC<actionfunctionProps> = ({ actionfunction, appState }) => {
     
     const [state, updateState] = useState("#FFFFFF");
-    const handleInput = (e: any) => {
+    const handleInput = async(e: any) => {
         const { r, g, b }: any = hexToRgb(e.target?.value);
         updateState(e.target?.value);
         actionfunction({
@@ -735,11 +738,11 @@ export const Themebackgroundcolor : React.FC<actionfunctionProps> = ({ actionfun
             "class": "dark",
             "dataHeaderStyles": "dark"
         });
-        localStorage.setItem("darkBgRGB", `${r - 14} ${g - 14} ${b - 14}`);
-        localStorage.setItem("Light", `${r - 9} ${g - 9} ${b - 9}`);
-        localStorage.setItem("bodyBgRGB", `${r} ${g} ${b}`);
-        localStorage.removeItem("ynexMenu");
-        localStorage.removeItem("ynexHeader");
+        await setStorageString("darkBgRGB", `${r - 14} ${g - 14} ${b - 14}`);
+        await setStorageString("Light", `${r - 9} ${g - 9} ${b - 9}`);
+        await setStorageString("bodyBgRGB", `${r} ${g} ${b}`);
+        await removeStorageString("ynexMenu");
+        await removeStorageString("ynexHeader");
 
     };
     return (
@@ -749,7 +752,7 @@ export const Themebackgroundcolor : React.FC<actionfunctionProps> = ({ actionfun
     );
 };
 
-export const Reset = (actionfunction: any, appState: any) => {
+export const Reset = async(actionfunction: any, appState: any) => {
     
     
     Vertical(actionfunction, appState);
@@ -784,13 +787,13 @@ export const Reset = (actionfunction: any, appState: any) => {
             class: ""
         }
     });
-    localStorage.clear();
+    await clearStorage();;
     var icon =document.getElementById("switcher-default-menu") as HTMLInputElement;
     if(icon){
         icon.checked=true
     }
 };
-export const Reset1 = (actionfunction: any, appState: any) => {
+export  const Reset1 =async (actionfunction: any, appState: any) => {
     
     
     Vertical(actionfunction, appState);
@@ -817,54 +820,72 @@ export const Reset1 = (actionfunction: any, appState: any) => {
             class: ""
         }
     });
-    localStorage.clear();
+    await clearStorage();
     var icon =document.getElementById("switcher-default-menu") as HTMLInputElement;
     if(icon){
         icon.checked=true
     }
 };
-export const LocalStorageBackup = (actionfunction: any, appState: any) => {
+export const LocalStorageBackup = async(actionfunction: any, appState: any) => {
 
-    (localStorage.ynexltr) ? Ltr(actionfunction, appState) : "";
-    (localStorage.ynexrtl) ? Rtl(actionfunction, appState) : "";
-    (localStorage.ynexdarktheme) ? Dark(actionfunction, appState) : "";
-    (localStorage.ynexlighttheme) ? Light(actionfunction, appState) : "";
-    (localStorage.ynexregular) ? Regular(actionfunction, appState) : "";
-    (localStorage.ynexclassic) ? Classic(actionfunction, appState) : "";
-    (localStorage.ynexmodern) ? Modern(actionfunction, appState) : "";
-    (localStorage.ynexfullwidth) ? Fullwidth(actionfunction, appState) : "";
-    (localStorage.ynexboxed) ? Boxed(actionfunction, appState) : "";
-    (localStorage.ynexmenufixed) ? FixedMenu(actionfunction, appState) : "";
-    (localStorage.ynexmenuscrollable) ? scrollMenu(actionfunction, appState) : "";
-    (localStorage.ynexheaderfixed) ? Headerpostionfixed(actionfunction, appState) : "";
-    (localStorage.ynexheaderscrollable) ? Headerpostionscroll(actionfunction, appState) : "";
+  // Layout direction
+  if (await getStorageString("ynexltr")) await Ltr(actionfunction, appState);
+  if (await getStorageString("ynexrtl")) await Rtl(actionfunction, appState);
 
+  // Theme
+  if (await getStorageString("ynexdarktheme")) await Dark(actionfunction, appState);
+  if (await getStorageString("ynexlighttheme")) await Light(actionfunction, appState);
 
-    (localStorage.ynexnavstyles === "menu-click") ? Menuclick(actionfunction, appState) : '';
-    (localStorage.ynexnavstyles === "menu-hover") ? MenuHover(actionfunction, appState) : '';
-    (localStorage.ynexnavstyles === "icon-click") ? IconClick(actionfunction, appState) : '';
-    (localStorage.ynexnavstyles === "icon-hover") ? IconHover(actionfunction, appState) : '';
+  // Styles
+  if (await getStorageString("ynexregular")) await Regular(actionfunction, appState);
+  if (await getStorageString("ynexclassic")) await Classic(actionfunction, appState);
+  if (await getStorageString("ynexmodern")) await Modern(actionfunction, appState);
 
-    (localStorage.bgimage1) ? bgImage1(actionfunction, appState) : '';
-    (localStorage.bgimage2) ? bgImage2(actionfunction, appState) : '';
-    (localStorage.bgimage3) ? bgImage3(actionfunction, appState) : '';
-    (localStorage.bgimage4) ? bgImage4(actionfunction, appState) : '';
-    (localStorage.bgimage5) ? bgImage5(actionfunction, appState) : '';
-    (localStorage.ynexlayout == 'horizontal') && HorizontalClick(actionfunction, appState);
-    (localStorage.ynexlayout == 'vertical') && Vertical(actionfunction, appState);
+  // Width
+  if (await getStorageString("ynexfullwidth")) await Fullwidth(actionfunction, appState);
+  if (await getStorageString("ynexboxed")) await Boxed(actionfunction, appState);
+
+  // Menu position
+  if (await getStorageString("ynexmenufixed")) await FixedMenu(actionfunction, appState);
+  if (await getStorageString("ynexmenuscrollable")) await scrollMenu(actionfunction, appState);
+
+  // Header position
+  if (await getStorageString("ynexheaderfixed")) await Headerpostionfixed(actionfunction, appState);
+  if (await getStorageString("ynexheaderscrollable")) await Headerpostionscroll(actionfunction, appState);
+
+  // Nav styles (need value check)
+  const navStyle = await getStorageString("ynexnavstyles");
+  if (navStyle === "menu-click") await Menuclick(actionfunction, appState);
+  if (navStyle === "menu-hover") await MenuHover(actionfunction, appState);
+  if (navStyle === "icon-click") await IconClick(actionfunction, appState);
+  if (navStyle === "icon-hover") await IconHover(actionfunction, appState);
+
+  // Background images
+  if (await getStorageString("bgimage1")) await bgImage1(actionfunction, appState);
+  if (await getStorageString("bgimage2")) await bgImage2(actionfunction, appState);
+  if (await getStorageString("bgimage3")) await bgImage3(actionfunction, appState);
+  if (await getStorageString("bgimage4")) await bgImage4(actionfunction, appState);
+  if (await getStorageString("bgimage5")) await bgImage5(actionfunction, appState);
+
+  // Layout mode
+  const layout = await getStorageString("ynexlayout");
+  if (layout === "horizontal") await HorizontalClick(actionfunction, appState);
+  if (layout === "vertical") await Vertical(actionfunction, appState);
     //primitive 
+    const _ltr = await getStorageString("ynexltr");
+    const _rtl = await getStorageString("ynexrtl");
     if (
-        localStorage.getItem("ynexltr") == null ||
-        localStorage.getItem("ynexltr") == "ltr"
+        _ltr == null || _ltr == "ltr"
     )
-        if (localStorage.getItem("ynexrtl") == "rtl") {
+        if (_rtl == "rtl") {
             document.querySelector("body")?.classList.add("rtl");
             document.querySelector("html[lang=en]")?.setAttribute("dir", "rtl");
         }
     //
 
     // Theme Primary: Colors: Start
-    switch (localStorage.primaryRGB) {
+    const _primaryRGB = await getStorageString("primaryRGB");
+    switch (_primaryRGB) {
         case '58, 88,146':
             primaryColor1(actionfunction, appState);
 
@@ -889,8 +910,8 @@ export const LocalStorageBackup = (actionfunction: any, appState: any) => {
             break;
     }
     // Theme Primary: Colors: End
-
-    switch (localStorage.darkBgRGB) {
+ const _darkBgRGB = await getStorageString("darkBgRGB");
+    switch (_darkBgRGB) {
         case '20 30 96':
             backgroundColor1(actionfunction, appState);
 
@@ -916,10 +937,10 @@ export const LocalStorageBackup = (actionfunction: any, appState: any) => {
     }
 
     //layout
-    if (localStorage.ynexverticalstyles) {
-        const verticalStyles = localStorage.getItem("ynexverticalstyles");
+    const _ynexverticalstyles = await getStorageString("ynexverticalstyles");
+    if (_ynexverticalstyles) {
 
-        switch (verticalStyles) {
+        switch (_ynexverticalstyles) {
             case "default":
                 Defaultmenu(actionfunction, appState);
                 break;
@@ -942,22 +963,26 @@ export const LocalStorageBackup = (actionfunction: any, appState: any) => {
     }
 
     //Theme Primary:
-    if (localStorage.dynamiccolor) {
+    const _dynamiccolor = await getStorageString("dynamiccolor");
+    if (_dynamiccolor) {
         
         actionfunction({
             ...appState,
-            "colorPrimaryRgb": localStorage.dynamiccolor,
-            "colorPrimary": localStorage.dynamiccolor
+            "colorPrimaryRgb": _dynamiccolor,
+            "colorPrimary": _dynamiccolor
         });
     }
     //Theme BAckground:
-    if (localStorage.darkBgRGB) {
-        
+
+    if (_darkBgRGB) {
+        let bodyBg = await getStorageString("bodyBgRGB");
+        let Light = await getStorageString("Light");
+        let darkBgRGB = _darkBgRGB
         actionfunction({
             ...appState,
-            "bodyBg": localStorage.bodyBgRGB,
-            "Light": localStorage.Light,
-            "darkBg": localStorage.darkBgRGB,
+            "bodyBg": bodyBg,
+            "Light": Light,
+            "darkBg": darkBgRGB,
             "class": "dark",
             "dataHeaderStyles": "dark",
             "dataMenuStyles": "dark",
@@ -965,7 +990,8 @@ export const LocalStorageBackup = (actionfunction: any, appState: any) => {
         // Dark(actionfunction, appState);
     }
     // ThemeColor MenuColor Start
-    switch (localStorage.ynexMenu) {
+    const _ynexMenu = await getStorageString("ynexMenu");
+    switch (_ynexMenu) {
         case 'light':
             lightMenu(actionfunction, appState);
             break;
@@ -989,7 +1015,8 @@ export const LocalStorageBackup = (actionfunction: any, appState: any) => {
             break;
     }
     // ThemeColor Header Colors: start
-    switch (localStorage.ynexHeader) {
+    const _ynexHeader = await getStorageString("ynexHeader");
+    switch (_ynexHeader) {
         case 'light':
             lightHeader(actionfunction, appState);
 

@@ -17,7 +17,6 @@ const PartyLedger = React.forwardRef<HTMLInputElement, LedgerProps>(
     const { getFormattedValue } = useNumberFormat();
     console.log("mj23");
     console.log({ formState: formState.transactionLoading });
-
     return (
       <>
         {formState.formElements.ledgerID.visible && (
@@ -46,7 +45,6 @@ const PartyLedger = React.forwardRef<HTMLInputElement, LedgerProps>(
                 handleKeyDown && handleKeyDown(e, "ledgerID");
               }}
               onSelectItem={(e) => {
-
                 dispatch(
                   formStateMasterHandleFieldChange({
                     fields: { ledgerID: e.value, partyName: e.label },
@@ -71,7 +69,7 @@ const PartyLedger = React.forwardRef<HTMLInputElement, LedgerProps>(
                     {formState.formElements.pnlMasters?.disabled == true ? null : (
                       <div>
                         <span className="text-primary" >
-                          <a type="popup" onClick={setIsPartyDetailsOpen} className="hover:underline text-[#0ea5e9] capitalize ml-1 pe-3 cursor-pointer">details</a>
+                          <a type="popup" onClick={setIsPartyDetailsOpen} className="hover:underline text-[#0ea5e9] capitalize ml-1 pe-3 cursor-pointer">{t('details')}</a>
                           {t("bal")}:{" "}
                           {`${getFormattedValue(
                             formState.ledgerBalance < 0

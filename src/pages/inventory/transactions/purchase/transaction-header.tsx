@@ -473,12 +473,13 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   />
                 }
 
-                {formState.transaction.master.voucherType == VoucherType.PurchaseOrder && formState.transaction.master.gatePassNo == "Approved" && formState.formElements.orderApprovalStatus.visible && (
+                {formState.transaction.master.voucherType === VoucherType.PurchaseOrder && formState.transaction.master.gatePassNo === "Approved" && (
                   <span className="bg-danger p-2 rounded-xl text-white font-medium">
                     {(formState.formElements.orderApprovalStatus.label)}
                   </span>
                 )}
-                {formState.transaction.master.voucherType == VoucherType.PurchaseOrder && formState.transaction.master.gatePassNo != "Approved" && (
+
+                {formState.transaction.master.voucherType === VoucherType.PurchaseOrder && formState.transaction.master.gatePassNo !== "Approved" && (
                   <div>
                     <ERPButton
                       title={t('approve')}
@@ -539,9 +540,9 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 {isModalOpen && (
                   <ERPModal
                     isOpen={isModalOpen}
-                    title={t("grn_number")}
+                    title={formState.transaction.master.voucherType === "GRN" ? t("purchase_order_number") : t("grn_number")}
                     width={600}
-                    height={280}
+                    height={190}
                     closeModal={closeModal}
                     content={
                       <GrnNumber
@@ -554,6 +555,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     }
                   />
                 )}
+
                 {formState.transaction.master.voucherType != VoucherType.PurchaseOrder &&
                   <div>
                     <ERPButton
@@ -857,19 +859,24 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     onKeyDown={(e: any) => { handleKeyDown && handleKeyDown(e, "labelDesign"); }}
                   />
                 )}
-                {formState.transaction.master.voucherType === VoucherType.PurchaseOrder && formState.transaction.master.gatePassNo === "Approved" && formState.formElements.orderApprovalStatus.visible && (
-                  <span>{t(formState.formElements.orderApprovalStatus.label)}</span>
+
+                {formState.transaction.master.voucherType === VoucherType.PurchaseOrder && formState.transaction.master.gatePassNo === "Approved" && (
+                  <span className="bg-danger p-2 rounded-xl text-white font-medium">
+                    {(formState.formElements.orderApprovalStatus.label)}
+                  </span>
                 )}
+
                 {formState.transaction.master.voucherType === VoucherType.PurchaseOrder && formState.transaction.master.gatePassNo !== "Approved" && (
                   <div>
                     <ERPButton
-                      title={t('update_status')}
+                      title={t('approve')}
                       variant="secondary"
                       onClick={() => setUpdateTriggered(true)}
                     />
                   </div>
                 )}
-                {formState.transaction.master.voucherType === VoucherType.PurchaseOrder && (
+
+                {formState.transaction.master.voucherType === VoucherType.PurchaseOrder &&
                   <div>
                     <ERPButton
                       title={t('update_status')}
@@ -877,7 +884,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       onClick={() => setUpdateTriggered(true)}
                     />
                   </div>
-                )}
+                }
+
                 {formState.transaction.master.voucherType === VoucherType.PurchaseReturn && (
                   <ERPCheckbox
                     localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -896,10 +904,10 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
 
               <div className="flex items-center gap-2 mt-2">
                 <ERPButton
-                  title={t("grn_number")}
+                  title={t(formState.transaction.master.voucherType === "PR" ? "grr_number" : formState.transaction.master.voucherType === 'GRN' ? "PO" : "grn_number")}
                   onClick={handleButtonClick}
                   localInputBox={formState?.userConfig?.inputBoxStyle}
-                  className="!m-0  dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+                  className="!m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
                   disabled={formState.transactionLoading}
                 />
 
@@ -920,17 +928,17 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
               {isModalOpen && (
                 <ERPModal
                   isOpen={isModalOpen}
-                  title={t("grn_number")}
+                  title={formState.transaction.master.voucherType === "GRN" ? t("purchase_order_number") : t("grn_number")}
                   width={600}
-                  height={300}
+                  height={280}
                   closeModal={closeModal}
                   content={
                     <GrnNumber
                       dispatch={dispatch}
                       formState={formState}
+                      closeModal={closeModal}
                       t={t}
                       loadAndSetTransVoucher={loadAndSetTransVoucher}
-                      closeModal={closeModal}
                     />
                   }
                 />

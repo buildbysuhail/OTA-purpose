@@ -6,6 +6,7 @@ import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import {
   getPurchasePriceCode,
   isNullOrUndefinedOrEmpty,
+  sanitizeDataAdvanced,
 } from "../../../../utilities/Utils";
 import { printCheque_AccTransaction } from "./print-trans-service";
 import {
@@ -224,11 +225,11 @@ export const usePrint = () => {
             mrp: row?.mrp,
             shelfID: 1,
             brandID: row?.brandID,
-            mfgDate: isNullOrUndefinedOrEmpty(row?.mfdDate)?new Date():row?.mfdDate,
-            expiryDate:  isNullOrUndefinedOrEmpty(row?.expDate)?new Date():row?.expDate,
+            mfgDate: isNullOrUndefinedOrEmpty(row?.mfdDate)?new Date().toISOString():row?.mfdDate,
+            expiryDate:  isNullOrUndefinedOrEmpty(row?.expDate)?new Date().toISOString():row?.expDate,
             batchNo: row?.batchNo,
             mannualBarcode: row?.manualBarcode,
-            openingDate: new Date(),
+            openingDate: new Date().toISOString(),
             warrantyPeriod: row?.warranty,
             partNumber: row?.colour,
             location: row?.location,
@@ -242,7 +243,32 @@ export const usePrint = () => {
         const res = await api.postAsync(
           `${Urls.inv_transaction_base}${formState.transactionType}/CreateBatch`,
           {
-            items: data,
+            items: sanitizeDataAdvanced(data,
+              {
+                productID: 0,
+                stdPurchasePrice: 0,
+                stdSalesPrice: 0,
+                minSalePrice: 0,
+                unitID: 0,
+                selectedUnit: 0,
+                prevProductBatchID: 0,
+                productBatchID: 0,
+                mrp: 0,
+                shelfID: 1,
+                brandID: 0,
+                mfgDate: new Date(),
+                expiryDate: new Date(),
+                batchNo: '',
+                mannualBarcode: '',
+                openingDate: new Date(),
+                warrantyPeriod: '',
+                partNumber: '',
+                location: '',
+                isActive: true,
+                specification: '',
+                slNo: ''
+              }
+            ),
             partyLedgerId: partyLedgerId,
             wareHouseId: wareHouseId,
             IsDummayBill: isDummyBill,

@@ -174,7 +174,7 @@ const createStore = async (
   });
 };
 
-const createBatchStore = async (productID: string, batchDataUrl?: string) => {
+const createBatchStore = async (productID: string, warehouseId: number, batchDataUrl?: string) => {
   
   return new CustomStore({
     key: "productBatchID",
@@ -200,7 +200,7 @@ const createBatchStore = async (productID: string, batchDataUrl?: string) => {
         .join("&");
 
       try {
-        const url = `${batchDataUrl}${productID}` || "";
+        const url = `${batchDataUrl}${productID}/${warehouseId??1}` || "";
         const response = await api.getAsync(
           queryString && queryString !== ""
             ? `${url}?${queryString}`
@@ -510,6 +510,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
           );
           const batchStore = await createBatchStore(
             (formState.batchGridShowKey ?? 0).toString(),
+            formState.transaction.master.fromWarehouseID,
             batchDataUrl
           );
           setProductDetailStore(batchStore);
@@ -697,6 +698,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
               if (!isNullOrUndefinedOrEmpty(batchDataUrl)) {
                 const batchStore = await createBatchStore(
                   rowData.productID,
+                  formState.transaction.master.fromWarehouseID,
                   batchDataUrl
                 );
                 setProductDetailStore(batchStore);

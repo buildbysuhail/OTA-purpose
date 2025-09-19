@@ -62,17 +62,15 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({
   };
 
   useEffect(() => {
-    console.log("useEffect triggered, isOpen:", isOpen);
-    if (isOpen && widthInputRef.current) {
-      console.log("Focusing input:", widthInputRef.current);
-      // Use setTimeout to ensure the modal is fully rendered
-      setTimeout(() => {
-        widthInputRef.current?.focus();
-      }, 0);
-    }
-  }, [isOpen]); 
+  if (isOpen) {
+    setTimeout(() => {  
+      if (widthInputRef.current) {
+        widthInputRef.current.focus();
+      }
+    }, 500);
+  }
+}, [isOpen]);
 
-  debugger;
 
   const resetForm = () => {
     setQtyFactors({
@@ -86,7 +84,6 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({
 
     setTimeout(() => {
       if (widthInputRef.current) {
-        console.log("Useeeect2");
         widthInputRef.current.focus();
       }
     }, 0);
@@ -255,6 +252,7 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({
       title={t("qty_factors")}
       width={550}
       height={660}
+      
       content={
         <>
           <div className="flex items-end gap-2">
@@ -265,12 +263,6 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({
               label={t("width")}
               className="w-28"
               autoFocus={true}
-              // onFocus={(e) => {
-              //   console.log("Focused on ERPProductSearch input");
-              //   if (rest.onFocus) {
-              //     rest.onFocus(e);
-              //   }
-              // }}
               value={qtyFactors.width}
               onChange={(e) =>
                 handleQtyFactors("width", parseFloat(e.target.value) || 0)

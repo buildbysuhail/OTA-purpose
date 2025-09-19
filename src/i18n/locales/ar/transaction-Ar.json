@@ -773,6 +773,7 @@
   "approved": "تمت الموافقة",
   "grid_footer_background_color": "لون خلفية تذييل الجدول",
   "grid_footer_font_color": "لون خط تذييل الجدول",
-  "are_you_sure_to_approve_purchase_order": "هل أنت متأكد من الموافقة على أمر الشراء؟",
-  "approving_this_purchase_order_is_a_permanent_action_and_cannot_be_reversed": "الموافقة على أمر الشراء هذا هو إجراء دائم ولا يمكن التراجع عنه"
+  "confirm_po_approval": "هل أنت متأكد من الموافقة على أمر الشراء؟",
+  "po_approval_final": "الموافقة على أمر الشراء هذا هو إجراء دائم ولا يمكن التراجع عنه",
+  "template": "قالب"
 }

@@ -135,8 +135,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
 
   const handleApproveClick = async () => {
     const result: any = await ERPAlert.show({
-      title: t("are_you_sure_to_approve_purchase_order"),
-      text: t("approving_this_purchase_order_is_a_permanent_action_and_cannot_be_reversed"),
+      title: t("confirm_po_approval"),
+      text: t("po_approval_final"),
       icon: "question",
       showCancelButton: true,
       confirmButtonText: t("yes"),
@@ -1076,7 +1076,11 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
         width={600}
         height={610}
         closeModal={closeLedgerDetailsModal}
-        content={<LedgerDetails closeModal={closeLedgerDetailsModal} t={t} />}
+        content={
+          <LedgerDetails
+            t={t}
+            closeModal={closeLedgerDetailsModal}
+          />}
       />
     </div>
   );

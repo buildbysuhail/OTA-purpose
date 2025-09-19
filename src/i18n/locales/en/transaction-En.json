@@ -776,6 +776,7 @@
   "approved": "Approved",
   "grid_footer_background_color":"Grid footer background color",
   "grid_footer_font_color":"Grid footer font color",
-  "are_you_sure_to_approve_purchase_order":"Are you sure to approve purchase order?",
-  "approving_this_purchase_order_is_a_permanent_action_and_cannot_be_reversed":"Approving this purchase order is a permanent action and cannot be reversed"
+  "confirm_po_approval": "Are you sure to approve purchase order?",
+  "po_approval_final": "Approving this purchase order is a permanent action and cannot be reversed",
+  "template":"Template"
 }

@@ -4,7 +4,7 @@ import { IUserSession } from "../redux/slices/auth/login/reducer";
 import { getStorageString } from "../utilities/storage-utils";
 const jwtHelper = {
   getLoggedInUser: async() => {
-    const user = await getStorageString("token");
+    const user = localStorage.getItem("token");
     if (!user) {
       return null;
     } else {
@@ -14,7 +14,7 @@ const jwtHelper = {
   },
   getLoggedInUserToken: async() => {
     
-    const user = await getStorageString("token");
+    const user = localStorage.getItem("token");
     if (!user) {
       return null;
     } else {
@@ -24,7 +24,7 @@ const jwtHelper = {
 
   getLoggedInUserRole:async () => {
 
-    const user = await getStorageString("token");
+    const user = localStorage.getItem("token");
     if (!user) {
       return null;
     } else {
@@ -33,7 +33,7 @@ const jwtHelper = {
     }
   },
   isUserCustomer: async() => {
-    const user = await getStorageString("token");
+    const user = localStorage.getItem("token");
     if (!user) {
       return false;
     } else {
@@ -45,7 +45,7 @@ const jwtHelper = {
 
   getCurrency: async() => {
     
-    const user = await getStorageString("token");
+    const user = localStorage.getItem("token");
     if (!user) {
       return 'USD';
     } else {
@@ -54,7 +54,7 @@ const jwtHelper = {
     }
   },
   getLocale: async() => {
-    const user = await getStorageString("token");
+    const user = localStorage.getItem("token");
     if (!user) {
       return 'en-US';
     } else {

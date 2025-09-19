@@ -17,11 +17,11 @@ export async function getUserSessionData(): Promise<{
   userRights: UserTypeRights[];
   locale: { code: string; name: string; flag: string; rtl: boolean };
 }> {
-  console.log(await localforage.keys());
-  console.log(await getStorageString("token"));
   
-  const token = await getStorageString("token");
-  const upt = await getStorageString("up");
+  // const token = await getStorageString("token");
+  const token = localStorage.getItem("token");
+  // const upt = await getStorageString("up");
+  const upt = localStorage.getItem("up");
   const urr = await getStorageString("ur");
   const utt = await getStorageString("ut");
   const css = await getStorageString("cs");

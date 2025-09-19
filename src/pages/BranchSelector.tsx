@@ -63,8 +63,11 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
     onLoadingChange(false);
     if (response.isOk == true) {   
      
-      await setStorageString("token", response.item.token); 
-      await setStorageString("up", response.item.userProfileDetails); 
+      // await setStorageString("token", response.item.token); 
+      localStorage.setItem("token", response.item.token)
+      // await setStorageString("up", response.item.userProfileDetails); 
+      localStorage.setItem("up", response.item.userProfileDetails); 
+
       await setStorageString("cs", response.item.clientSessions);
       await setStorageString("ut", response.item.userThemes); 
       await setStorageString("ur", response.item.userRights);

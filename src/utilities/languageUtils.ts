@@ -32,7 +32,8 @@ export const changeLanguage = async(currentData: string, dispatch: Dispatch, i18
  * @param locale - The selected language locale object.
  */
 export const setLocaleInStorage = async(locale: Locale) => {
-  let upt =  await getStorageString("up");
+  // let upt =  await getStorageString("up");
+  let upt =  localStorage.getItem("up");
   let utt =await getStorageString("ut");
 
   let userProfileDetails: UserModel = initialUserSessionData;
@@ -56,6 +57,7 @@ export const setLocaleInStorage = async(locale: Locale) => {
   userProfileDetails.language = locale.code;
   userThemes.direction = locale.rtl ? "rtl" : "ltr";
 
-  await setStorageString("up", modelToBase64Unicode(userProfileDetails));
+  // await setStorageString("up", modelToBase64Unicode(userProfileDetails));
+  localStorage.setItem("up", modelToBase64Unicode(userProfileDetails));
   await setStorageString("ut", modelToBase64Unicode(userThemes));
 };

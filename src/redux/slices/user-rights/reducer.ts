@@ -9,12 +9,10 @@ export interface UserTypeRights {
   userRights: string;
 }
 export const initialState: UserTypeRights[] = new Array<UserTypeRights>();
-export interface UserTypeRights {
-  formCode: string;
-  userRights: string;
-}
 
-let ass =await getStorageString("up");
+
+// let ass =await getStorageString("up");
+let ass = localStorage.getItem("up");
   
     export const up: UserTypeRights[] = ass != undefined && ass != null && ass != "" 
     ? customJsonParse(atob(ass)) : initialState;
@@ -31,3 +29,16 @@ const userRightsSlice = createSlice({
 export const { setUserRights } = userRightsSlice.actions;
 
 export default userRightsSlice.reducer;
+
+// export const createUserRightsSlice = (preloadedData: UserTypeRights[]) => {
+//   return createSlice({
+//     name: "userRights",
+//     initialState: preloadedData, // 🟢 REAL DATA AS INITIAL STATE
+//     reducers: {
+//       setUserRights: (state, action: PayloadAction<UserTypeRights[]>) => {
+//         return action.payload;
+//       },
+//     },
+//     // 🟢 NO extraReducers needed - data is already loaded!
+//   });
+// };

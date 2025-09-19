@@ -21,11 +21,8 @@ axios.defaults.headers.post["Content-Type"] = "application/json";
 
 axios.defaults.headers.post["X-Custom-Header"] = new Date().toISOString();
 
-// content type
-const getToken = async()=>{
-  return await getStorageString("token")
-}
-const token = await getToken()
+
+ const token = localStorage.getItem("token");
 
 if (token) axios.defaults.headers.common["Authorization"] = "Bearer " + token;
 
@@ -44,7 +41,7 @@ axios.interceptors.response.use(
  * @param {*} token
  */
 const setAuthorization = async(token?: string) => {
-  const _token = token ??await getStorageString("token") ?? "";
+  const _token = token ??localStorage.getItem("token") ?? "";
   const __token = token ??await getStorageString("_token") ?? "";
   if (__token) {
     axios.defaults.headers.common["Authorization"] = "Bearer " + __token;

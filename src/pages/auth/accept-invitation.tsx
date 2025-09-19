@@ -93,7 +93,8 @@ const AcceptInvitation: React.FC = () => {
   const dispatch = useAppDispatch();
   const load = async () => {
     const settings = await api.getAsync(Urls.application_setting);
-    await setStorageString("as", modelToBase64(settings));
+    localStorage.setItem("as", modelToBase64(settings))
+    // await setStorageString("as", modelToBase64(settings));
     dispatch(
       setApplicationSettings({
         ...settings,

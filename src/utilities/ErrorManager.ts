@@ -113,7 +113,8 @@ const ErrorManager = {
     }
   },
   async logOut() {
-   await  removeStorageString("token");
+  //  await  removeStorageString("token");
+  localStorage.removeItem("token");
   },
 };
 

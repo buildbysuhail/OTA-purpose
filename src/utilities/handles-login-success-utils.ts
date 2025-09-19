@@ -18,11 +18,15 @@ export const handleLoginSuccess = async (
   setIsLoggedToBranch: (v: boolean) => void,
   setHasToChooseBranch: (v: boolean) => void
 ) => {
-  let ass =await getStorageString("as");
+  // let ass =await getStorageString("as");
+  let ass = localStorage.getItem("as");
 
   await removeStorageString("_token");
-  await setStorageString("token", login.item.token);
-  await setStorageString("up", login.item.userProfileDetails);
+  // await setStorageString("token", login.item.token);
+  localStorage.setItem("token", login.item.token);
+  // await setStorageString("up", login.item.userProfileDetails);
+  localStorage.setItem("up", login.item.userProfileDetails);
+
   await setStorageString("cs", login.item.clientSessions);
   await setStorageString("ut", login.item.userThemes);
   await setStorageString("ur", login.item.userRights);

@@ -62,10 +62,6 @@ export const LoadingAnimation = () => {
 function App() {
    const [isOnline, setIsOnline] = useState(navigator.onLine);
    const location = useLocation();
-    useEffect(() => {
-    console.log(`[App.tsx] URL changed to mj2323: ${window.location.href}`);
-  }, [location]); 
-  console.log(import.meta.env.BASE_URL);
 
 useEffect(() => {
   const handleOnline = () => setIsOnline(true);
@@ -94,11 +90,13 @@ useEffect(() => {
     const fetchSettings = async () => {
       try {
         const settings = await api.getAsync(Urls.application_setting);
-        const token =   await getStorageString("token");
+        // const token =   await getStorageString("token");
+        const token = localStorage.getItem("token")
         if(token) {
           
           console.log(token);
-          await setStorageString("as", modelToBase64(settings))
+          localStorage.setItem("as", modelToBase64(settings))
+          // await setStorageString("as", modelToBase64(settings))
     
         dispatch(setApplicationSettings({ ...settings, apiLoaded: true }));
         }

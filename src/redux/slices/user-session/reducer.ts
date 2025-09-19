@@ -219,8 +219,8 @@ export const initialUserSessionData: UserModel = {
   currentBranchDetails: initialBranchDetails
 };
 
-let ass = await getStorageString("up");
-  
+  // let ass =await getStorageString("up");
+let ass = localStorage.getItem("up");
     export const up: UserModel = ass != undefined && ass != null && ass != "" 
     ? customJsonParse(atob(ass)) : initialUserSessionData;
 // export const initialState : login  =  {loading: false, token: ""};
@@ -240,23 +240,27 @@ const userSessionSlice = createSlice({
   state[action.payload.key] = action.payload.value;
 },
   },
-  // extraReducers: (builder) => {
-  //   builder.addCase(userSession?.fulfilled, (state, action) => {
-  //     if (action.payload.isOk) {
-        
-  //       localStorage.setItem("up", modelToBase64(action.payload.item));
-  //       return action.payload.item;
-  //     }
-  //   });
-  //   builder.addCase(setBranch.fulfilled, (state, action) => {
-  //     if (action.payload.isOk) {
-  //       // localStorage.setItem("up", modelToBase64(action.payload.item));
-  //       // return  action.payload.item;
-  //     }
-  //   });
-  // },
+
 });
 
 export const { setUserSession, setUserSessionItem } = userSessionSlice.actions;
 
 export default userSessionSlice.reducer;
+// export const createUserSessionSlice = (preloadedData: UserModel) => {
+//   return createSlice({
+//     name: "userSession",
+//     initialState: preloadedData, // 🟢 REAL DATA AS INITIAL STATE
+//     reducers: {
+//       setUserSession: (state, action: PayloadAction<UserModel>) => {
+//         return action.payload;
+//       },
+//       setUserSessionItem: <K extends keyof UserModel>(
+//         state: UserModel,
+//         action: PayloadAction<{ key: K; value: UserModel[K] }>
+//       ) => {
+//         state[action.payload.key] = action.payload.value;
+//       },
+//     },
+//     // 🟢 NO extraReducers needed - data is already loaded!
+//   });
+// };

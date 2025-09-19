@@ -6,7 +6,7 @@ import { ApplicationSettingsType } from '../../../pages/settings/system/applicat
 import { ApplicationMainSettings } from '../../../pages/settings/system/application-settings-types/application-settings-types-main';
 import { customJsonParse } from '../../../utilities/jsonConverter';
  import { getStorageString } from '../../../utilities/storage-utils';
- let ass = await getStorageString("as");
+ let ass =  localStorage.getItem("as");
   
     export const appSettings: ApplicationSettingsType = ass != undefined && ass != null && ass != "" 
     ? customJsonParse(atob(ass)) : ApplicationSettingsInitialState;
@@ -53,3 +53,35 @@ const applicationSettingsSlice = createSlice({
 
 export const { setApplicationSettings, setApplicationMainSettings, setApplicationSettingsWithType } = applicationSettingsSlice.actions;
 export default applicationSettingsSlice.reducer;
+// export const createApplicationSettingsSlice = (preloadedData: ApplicationSettingsType) => {
+//   return createSlice({
+//     name: 'applicationSettings',
+//     initialState: preloadedData, // 🟢 REAL DATA AS INITIAL STATE
+//     reducers: {
+//       setApplicationSettings: (state, action: PayloadAction<ApplicationSettingsType>) => {
+//         return action.payload;
+//       },
+//       setApplicationSettingsWithType: <T extends keyof ApplicationSettingsType>(
+//         state: ApplicationSettingsType,
+//         action: PayloadAction<{
+//           type: T;
+//           settingName: keyof ApplicationSettingsType[T];
+//           value: any;
+//         }>
+//       ) => {
+//         const { type, settingName, value } = action.payload;
+//         if (state[type]) {
+//           state[type][settingName] = value;
+//         }
+//       },
+//       setApplicationMainSettings: (state, action: PayloadAction<{
+//         key: keyof ApplicationMainSettings;
+//         value: ApplicationMainSettings[keyof ApplicationMainSettings];
+//       }>) => {
+//         const { key, value } = action.payload;
+//         (state.mainSettings[key] as typeof value) = value;
+//       },
+//     },
+//     // 🟢 NO extraReducers needed - data is already loaded!
+//   });
+// };

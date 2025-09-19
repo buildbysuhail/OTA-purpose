@@ -444,7 +444,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     const gridContainerRef = useRef<HTMLDivElement>(null);
     const internalRef = useRef<HTMLInputElement>(null);
     const inputRef = ref || internalRef;
-
+    
     const dispatch = useDispatch();
     const portalContainerRef = useRef<HTMLElement | null>(null);
     const formState = useSelector(
@@ -614,7 +614,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       [productDataUrl, searchType]
     );
 
-    const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {    
       const value = e.target.value;
       setProductGridReady(false)
       setInputValue((prev) => ({
@@ -625,7 +625,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
         return;
       }
       setShowBatchGrid(false);
-      if (value.length >= 1) {
+      if (value.length >= 1) {      
         if (searchType !== "modal") {
           await debouncedFetch(value, inputValue.searchByCode);
 
@@ -647,7 +647,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
         });
         setShowBatchGrid(false);
       }
-      if (onChange) onChange(e);
+      if (onChange) onChange(e);    
     };
 
     useEffect(
@@ -957,18 +957,17 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     }, []);
 
     const [productGridReady, setProductGridReady] = useState<any>(false);
-    const handleProductFocusedRowChanged = useCallback((e: any) => {
-      const gridInstance = e.component;
-      if (e?.row?.key !== undefined) {
-        // console.log("focused row changed")
-        gridInstance.selectRows([e.row.key], false);
-      }
-    }, []);
+    // const handleProductFocusedRowChanged = useCallback((e: any) => {
+    //   const gridInstance = e.component;
+    //   if (e?.row?.key !== undefined) {
+    //     gridInstance.selectRows([e.row.key], false);
+    //   }
+    // }, []);
 
     const [productInitialized, setProductInitialized] = useState(false);
+    const [isGridInitializing, setIsGridInitializing] = useState(true);
 
-    const handleProductGridContentReady = useCallback(
-      (e: any) => {
+    const handleProductGridContentReady = useCallback((e: any) => {
         const gridInstance = e.component;
         const visibleRows = gridInstance.getVisibleRows();
         const hasValidData = visibleRows.length > 0 && visibleRows[0].data?.productID;
@@ -976,12 +975,22 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
         if (hasValidData && !productInitialized) {
           gridInstance.option("focusedRowIndex", 0);
           gridInstance.focus();
-          
+
           setProductInitialized(true);
         }
       },
       [productInitialized]
     );
+      // It will helps to fix the product grid moving isSecureContext, check it 
+        useEffect(() => {
+          const handleKeyDown = (e:any) => {
+            if (isGridInitializing && e.key === "ArrowDown") {
+              e.preventDefault(); 
+            }
+          };
+          window.addEventListener("keydown", handleKeyDown);
+          return () => window.removeEventListener("keydown", handleKeyDown);
+        }, []);    
 
     useEffect(() => {
       const style = document.createElement("style");
@@ -1081,7 +1090,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
                   </div>
                 </Fragment>
               )}
-              {showBatchGrid && !isNullOrUndefinedOrEmpty(batchDataUrl) && (
+              {showBatchGrid && !isNullOrUndefinedOrEmpty(batchDataUrl) && (             
                 <div
                   className="absolute mt-1 !z-[100] bg-white dark:bg-dark-bg shadow-lg"
                   style={positionStyle}
@@ -1144,7 +1153,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
                       <Column key={col.dataField} {...col} />
                     ))}
                   </DataGrid>
-                </div>
+                </div>              
               )}
             </>
           )}

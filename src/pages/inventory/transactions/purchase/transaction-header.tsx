@@ -349,6 +349,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   dispatch={dispatch}
                   formState={formState}
                   t={t}
+                  transactionType={transactionType}
                   handleKeyDown={handleKeyDown}
                   handleFieldKeyDown={handleFieldKeyDown}
                 />
@@ -750,6 +751,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   dispatch={dispatch}
                   formState={formState}
                   t={t}
+                  transactionType={transactionType}
                   handleKeyDown={handleKeyDown}
                   handleFieldKeyDown={handleFieldKeyDown}
                 />

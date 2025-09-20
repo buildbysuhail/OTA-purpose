@@ -43,7 +43,6 @@ import {
   FormElementsState,
 } from "./acc-transaction-types";
 import {
-  getApLocalData,
   isEnterKey,
   isNullOrUndefinedOrEmpty,
   isNullOrUndefinedOrZero,
@@ -62,6 +61,7 @@ import { formStateHandleFieldChange } from "../../inventory/transactions/purchas
 import { isDirtyTransaction, setTransactionForHistory } from "../../../helpers/transaction-modified-util";
 import { Countries, UserModel } from "../../../redux/slices/user-session/reducer";
 import { getStorageString, setStorageString } from "../../../utilities/storage-utils";
+import CachedUrls, { getApLocalData } from "../../../redux/cached-urls";
 
 
 interface FormElementState {
@@ -374,7 +374,7 @@ export const useAccTransaction = (
             ? userSession.counterwiseCashLedgerId
             : applicationSettings.accountsSettings.defaultCashAcc;
       }
-        let _ledger = await getApLocalData(localData.ledgers)
+        let _ledger = await getApLocalData("AccLedgers")
       // Fetch Ledger ID
       let id =  _ledger?.find(
         (x: any) => x.alias == _formState.row.ledgerCode
@@ -1121,7 +1121,7 @@ const attachMaster = async (): Promise<AccTransactionMaster> => {
     
     const { firstDebitLedgerID, firstCreditLedgerID } =
       getFirstDebitCreditLedgerIDs(formState.transaction);
-      const ledgers = await getApLocalData(localData.ledgers);
+      const ledgers = await getApLocalData("AccLedgers");
     const master = {
       ...formState.transaction.master,
       particulars:
@@ -1589,8 +1589,8 @@ const attachMaster = async (): Promise<AccTransactionMaster> => {
       };
     }
     formState.formElements.btnAdd;
-   let _costCenters = await getApLocalData(localData.costCenters);
-   let _ledgers = await getApLocalData(localData.ledgers);
+   let _costCenters = await getApLocalData("CostCentres");
+   let _ledgers = await getApLocalData("AccLedgers");
     const costCentreName =
       formState.row.costCentreID ?? 0 > 0
         ? _costCenters?.find(

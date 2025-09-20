@@ -248,13 +248,15 @@ export const useTransaction = (
 
   const setCurrentCell = (
     input: { column: string; rowIndex: number } | null,
-    data: TransactionDetail
+    data: TransactionDetail,
+    reCenterRow: boolean
   ) => {
     if (input) {
       dispatch(
         formStateHandleFieldChange({
           fields: {
             currentCell: {
+              reCenterRow: reCenterRow,
               column: input?.column,
               data: data,
               rowIndex: input?.rowIndex,
@@ -1241,7 +1243,7 @@ export const useTransaction = (
 
     if (editableColumns && editableColumns.length > 0) {
       const res = focusColumn(0, editableColumns[0].dataField ?? "")
-      setCurrentCell(res, formState.transaction.details[0] as TransactionDetail);
+      setCurrentCell(res, formState.transaction.details[0] as TransactionDetail, true);
     }
   };
   const handleRemoveItem = async (slNo: string) => {
@@ -1285,6 +1287,7 @@ export const useTransaction = (
         totalRes.transaction.details = [];
         totalRes.loading = { isLoading: false, text: '' }
         totalRes.currentCell = {
+          reCenterRow: false,
           column: editableColumn?.dataField ?? "",
           data: data ?? initialTransactionDetailData,
           rowIndex: rowIndex ?? 0,
@@ -2605,6 +2608,7 @@ export const useTransaction = (
               pld.currentCell = {
                 ...res,
                 data: formState.transaction.details[_index],
+                reCenterRow: false
               };
             }
             dispatch(
@@ -2890,7 +2894,7 @@ export const useTransaction = (
           ]);
           setCurrentCell(
             res,
-            result.transaction!.details[0] as TransactionDetail
+            result.transaction!.details[0] as TransactionDetail, false
           );
         }
 
@@ -2910,7 +2914,7 @@ export const useTransaction = (
           "product",
           "barCode",
         ]);
-        setCurrentCell(res, data.detail as TransactionDetail);
+        setCurrentCell(res, data.detail as TransactionDetail, false);
       }
 
       return result;
@@ -3192,7 +3196,7 @@ export const useTransaction = (
               );
             } else {
               const res = focusToNextColumn(rowIndex, columnName);
-              setCurrentCell(res, data);
+              setCurrentCell(res, data, false);
             }
           } else if (columnName == "barCode") {
             data.barCode = value;
@@ -3214,7 +3218,7 @@ export const useTransaction = (
               );
             } else {
               const res = focusToNextColumn(rowIndex, columnName);
-              setCurrentCell(res, data);
+              setCurrentCell(res, data, rowIndex != res?.rowIndex);
             }
           }
           // else if (columnName == "unitPrice") {
@@ -3251,11 +3255,11 @@ export const useTransaction = (
               });
               if (confirm) {
                 const res = focusToNextColumn(rowIndex, columnName);
-                setCurrentCell(res, data);
+                setCurrentCell(res, data, rowIndex != res?.rowIndex);
                 break;
               } else {
                 const res = focusCurrentColumn(rowIndex, columnName);
-                setCurrentCell(res, data);
+                setCurrentCell(res, data, false);
               }
             }
           } else if (columnName == "margin" || columnName == "salesPrice") {
@@ -3295,11 +3299,11 @@ export const useTransaction = (
                 });
                 if (confirm) {
                   const res = focusToNextColumn(rowIndex, columnName);
-                  setCurrentCell(res, data);
+                  setCurrentCell(res, data, rowIndex != res?.rowIndex);
                   break;
                 } else {
                   const res = focusCurrentColumn(rowIndex, columnName);
-                  setCurrentCell(res, data);
+                  setCurrentCell(res, data, false);
                 }
               }
             } else if (
@@ -3309,7 +3313,7 @@ export const useTransaction = (
             ) {
               if (data.unitPrice > data.salesPrice) {
                 const res = focusCurrentColumn(rowIndex, columnName);
-                setCurrentCell(res, data);
+                setCurrentCell(res, data, false);
               }
             }
           } else if (columnName == "btnPrintBarcode") {
@@ -3441,7 +3445,7 @@ export const useTransaction = (
             );
           } else {
             const res = focusToNextColumn(rowIndex, columnName);
-            setCurrentCell(res, data);
+            setCurrentCell(res, data, rowIndex != res?.rowIndex);
           }
           break;
         default:

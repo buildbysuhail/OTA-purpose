@@ -12,6 +12,7 @@ import { setData } from "../redux/slices/data/reducer";
 const { api } = config;
 import {decryptAES} from '../utilities/Utils'
 import { getStorageString, setStorageString } from "../utilities/storage-utils";
+import { getCacheStoreKey } from "../redux/cached-urls";
 
 //  const formState = useAppSelector((state: RootState) => state.AccTransaction);
 // default
@@ -84,7 +85,7 @@ clearInFlightRequests = () => {
       
       await setAuthorization(token);
       // Construct a stable cache key (you could change the delimiter if needed)
-      const cacheKey = `${url}`;
+      const cacheKey = `${getCacheStoreKey(url)}`;
       
       // Check if a request is already in-flight
       if (inFlightRequests.has(cacheKey) && !ignoreCach) {
@@ -102,7 +103,7 @@ clearInFlightRequests = () => {
         resData = response
       }      
       inFlightRequests.set(cacheKey, resData);      
-      await setStorageString(btoa(url), JSON.stringify(resData))
+      await setStorageString(cacheKey, JSON.stringify(resData))
       return resData
     
     } catch (error) {

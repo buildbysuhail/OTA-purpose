@@ -19,7 +19,6 @@ import { useTranslation } from "react-i18next";
 import { FixedSizeList as List } from "react-window";
 import { APIClient } from "../../helpers/api-client";
 import {
-  getApLocalData,
   isNullOrUndefinedOrEmpty,
   isNullOrUndefinedOrZero,
   setFgAccordingToBgPrimary,
@@ -45,10 +44,18 @@ import { inputBox } from "../../redux/slices/app/types";
 import { useDispatch } from "react-redux";
 import { setData } from "../../redux/slices/data/reducer";
 import localData from "../../enums/local-datas";
-import CachedUrls from "../../redux/cached-urls";
+import CachedUrls, {
+  existsInCache,
+  getApLocalData,
+  getApLocalDataByUrl,
+  getCacheStoreKey,
+} from "../../redux/cached-urls";
 import ERPButton from "./erp-button";
 import ERPModal from "./erp-modal";
-import { getStorageString, setStorageString } from "../../utilities/storage-utils";
+import {
+  getStorageString,
+  setStorageString,
+} from "../../utilities/storage-utils";
 interface Option {
   value: any;
   label: string;
@@ -99,7 +106,7 @@ interface ERPDataComboboxProps {
   labelInfoProps?: any;
   noLabel?: boolean;
   noPlaceholder?: boolean;
-  noBorder?:boolean;
+  noBorder?: boolean;
   noXMarkIcon?: boolean;
   triggerEffect?: boolean;
   multiple?: boolean;
@@ -120,15 +127,15 @@ interface ERPDataComboboxProps {
   variant?: "filled" | "outlined" | "standard" | "normal";
   localInputBox?: inputBox; // Local styling preferences
   name?: any;
-  addNewOption?:boolean;
-  addNewOptionCobonent?:{
-    popupAction?:any;
+  addNewOption?: boolean;
+  addNewOptionCobonent?: {
+    popupAction?: any;
     isOpen: boolean;
     title: string;
     width?: number;
-    height?:number;
-    id?:number;
-    name?:string;
+    height?: number;
+    id?: number;
+    name?: string;
     isForm?: boolean;
     closeModal: () => void;
     content?: any;
@@ -164,7 +171,8 @@ const LoadingContainer = styled("div")`
 
 const LoadingBar = styled("div")`
   height: 10px;
-  width: ${(props) => `${Math.floor(Math.random() * 50) + 40}%`}; // Random width 40–90%
+  width: ${(props) =>
+    `${Math.floor(Math.random() * 50) + 40}%`}; // Random width 40–90%
   border-radius: 3px;
   background: #e8e8e8;
   overflow: hidden;
@@ -178,7 +186,12 @@ const LoadingBar = styled("div")`
     width: 100%;
     height: 100%;
     transform: translate3d(-100%, 0, 0);
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent
+    );
     animation: loading 0.8s infinite linear;
   }
 
@@ -202,12 +215,12 @@ const mapItemsToOptions = (
 ): Option[] => {
   if (!items) return [];
   const itemsArray = Array.isArray(items) ? items : Object.values(items);
-return itemsArray.map((item: any) => ({
-  label: getNestedValue(item, labelKey) || "",
-  value: getNestedValue(item, valueKey) ?? "",
-  name: getNestedValue(item, nameKey) || "",
-  is_active: item?.is_active,
-}));
+  return itemsArray.map((item: any) => ({
+    label: getNestedValue(item, labelKey) || "",
+    value: getNestedValue(item, valueKey) ?? "",
+    name: getNestedValue(item, nameKey) || "",
+    is_active: item?.is_active,
+  }));
 };
 
 const getSizeClasses = (
@@ -249,7 +262,9 @@ const getSizeClasses = (
         options: "text-xs",
         icons: "h-5 w-5",
         buttonPadding: "p-[0.3rem]",
-        buttonBorderRadius: `rounded-[${appState?.inputBox?.borderRadius ?? 5}px]`,
+        buttonBorderRadius: `rounded-[${
+          appState?.inputBox?.borderRadius ?? 5
+        }px]`,
       };
     default:
       return {
@@ -293,7 +308,7 @@ const Row = ({
         return `relative cursor-pointer select-none w-full rounded-sm
                 ${hoverBgClass} ${hoverTextClass}
                 ${
-                   isActive
+                  isActive
                     ? "bg-primary text-white"
                     : item.is_active === false
                     ? "bg-gray-200 text-gray-400"
@@ -378,7 +393,6 @@ const ComboboxList = React.forwardRef<
 ComboboxList.displayName = "ComboboxList";
 const logProps = (props: ERPDataComboboxProps, label: string) => {};
 
-
 // Cache map for API requests
 
 const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
@@ -404,7 +418,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       value,
       noLabel,
       noPlaceholder,
-      noBorder=false,
+      noBorder = false,
       noXMarkIcon,
       required,
       excludeOptions,
@@ -468,7 +482,9 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     const [_customSize, setCustomSize] = useState(
       customSize ? customSize : inputBoxState?.inputSize
     );
-    const [_useMUI, set_useMUI] = useState<boolean | undefined>(useMUI ?? false);
+    const [_useMUI, set_useMUI] = useState<boolean | undefined>(
+      useMUI ?? false
+    );
     const [_variant, set_variant] = useState<
       "filled" | "outlined" | "standard" | undefined
     >(variant === "normal" ? undefined : variant);
@@ -491,22 +507,22 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       set_reload(reload);
     }, [reload]);
 
-       const featchLcct =async()=>{
-     const lcct =  await getStorageString("lcct")
-     return lcct
-   }
+    const featchLcct = async () => {
+      const lcct = await getStorageString("lcct");
+      return lcct;
+    };
 
-useEffect(() => {
-  const init = async () => {
-    lcct.current = await featchLcct();
-  };
-  init();
-}, [isOpen]);
+    useEffect(() => {
+      const init = async () => {
+        lcct.current = await featchLcct();
+      };
+      init();
+    }, [isOpen]);
 
     useEffect(() => {
       const run = async () => {
         if (isOpen) {
-           const _lcct =  await featchLcct();
+          const _lcct = await featchLcct();
           if (lcct.current !== _lcct) {
             await loadData();
           }
@@ -688,31 +704,35 @@ useEffect(() => {
         : `${isFocused ? `rgb(${inputBoxState?.focusBgColor})` : ``} `
     );
 
-    const [foreColor,setForeColor]=useState<string>(
-      appState.mode=='dark'
-      ?isFocused==true
-      ? "#ffffff"
+    const [foreColor, setForeColor] = useState<string>(
+      appState.mode == "dark"
+        ? isFocused == true
+          ? "#ffffff"
           : "#ffffff1a"
-      :`${isFocused?`rgb(${inputBoxState?.focusForeColor})`:``}`
-    )
+        : `${isFocused ? `rgb(${inputBoxState?.focusForeColor})` : ``}`
+    );
 
     useEffect(() => {
-      let border, bgCol,bgFor;
+      let border, bgCol, bgFor;
       if (appState?.mode === "dark") {
         border = isFocused || isHovered ? "#ffffff" : "#ffffff1a";
         bgCol = isFocused ? "#313334" : "#ffffff1a";
-        bgFor = isFocused?"#fff" :'#ccc';
+        bgFor = isFocused ? "#fff" : "#ccc";
       } else {
         border =
           isFocused || isHovered
             ? `rgb(${inputBoxState?.borderFocus})`
             : `rgb(${inputBoxState?.borderColor})`;
         bgCol = isFocused
-          ? `rgb(${inputBoxState?.focusBgColor})`: inputBoxState?.inputBgColor
-          ? `rgb(${inputBoxState?.inputBgColor})`: "";
-          bgFor =isFocused
-          ? `rgb(${inputBoxState?.focusForeColor})`:inputBoxState?.fontColor
-          ?`rgb(${inputBoxState?.fontColor})`:'';
+          ? `rgb(${inputBoxState?.focusBgColor})`
+          : inputBoxState?.inputBgColor
+          ? `rgb(${inputBoxState?.inputBgColor})`
+          : "";
+        bgFor = isFocused
+          ? `rgb(${inputBoxState?.focusForeColor})`
+          : inputBoxState?.fontColor
+          ? `rgb(${inputBoxState?.fontColor})`
+          : "";
       }
       setBorderStyles(border);
       setBgColor(bgCol);
@@ -771,11 +791,11 @@ useEffect(() => {
       _reload,
       disabledApiCall,
       options,
-      fetching
+      fetching,
       // reduxState.costCentres,
       // reduxState.ledgers,
     ]);
-// New useEffect to handle new item from modal
+    // New useEffect to handle new item from modal
     useEffect(() => {
       if (
         addNewOption &&
@@ -790,7 +810,7 @@ useEffect(() => {
           name: addNewOptionCobonent.name,
         };
 
-    // Check if the item already exists to avoid duplicates
+        // Check if the item already exists to avoid duplicates
         if (!items.some((item) => item.value === newItem.value)) {
           setItems((prevItems) => [...prevItems, newItem]);
           setFilteredItems((prevItems) => [...prevItems, newItem]);
@@ -806,7 +826,10 @@ useEffect(() => {
       addNewOptionCobonent?.isOpen,
     ]);
 
-    const filterLedgers = async (ledgers: any[], queryString: string): Promise<any[]> => {
+    const filterLedgers = async (
+      ledgers: any[],
+      queryString: string
+    ): Promise<any[]> => {
       const decryptedLedgers = await Promise.all(
         ledgers.map(async (x) => ({
           ...x,
@@ -865,14 +888,16 @@ useEffect(() => {
         ) {
           params = new URLSearchParams(field?.params).toString();
         }
-        
+        debugger;
+
         const url = field?.getListUrlDynamic?.(data) || field?.getListUrl || "";
         if (cacheEnabled) {
-
           const res = await api.getWithCacheAsync(url, params);
-          const _CachedUrls = CachedUrls;
-          if (_CachedUrls.some((cachedUrl) => url.toLocaleLowerCase().includes(cachedUrl.toLocaleLowerCase()))) {
-           await setStorageString(btoa(url), JSON.stringify(res))
+          if (existsInCache(url)) {
+            const key = getCacheStoreKey(url);
+            if (key) {
+              await setStorageString(key, JSON.stringify(res));
+            }
             return filterLedgers(res, params);
           }
           return res;
@@ -897,15 +922,14 @@ useEffect(() => {
 
         // Check if data is available in Redux
         let _continue = true;
-        
+
         let fetchWithCache = false;
         const url = field?.getListUrlDynamic?.(data) || field?.getListUrl || "";
-        if (
-          CachedUrls.some((cachedUrl) => url?.toLocaleLowerCase().includes(cachedUrl.toLocaleLowerCase())) &&
-          reload != true
-        ) {
+        debugger;
+        const _existsInCache = existsInCache(url)
+        if (_existsInCache && reload != true) {
           fetchWithCache = true;
-          const _lcl =await getApLocalData(btoa(url));
+          const _lcl = await getApLocalDataByUrl(url);
           if (_lcl != null) {
             _items = await filterLedgers(_lcl, field?.params || "");
             _continue = false;
@@ -938,7 +962,7 @@ useEffect(() => {
       } finally {
         // setLcct(localStorage.getItem("lcct")??"")
 
-      lcct.current =  await featchLcct () ?? "";
+        lcct.current = (await featchLcct()) ?? "";
         if (_reload === true) {
           changeReload && changeReload(false);
         }
@@ -976,123 +1000,127 @@ useEffect(() => {
     );
 
     useEffect(() => {
-  // Don't interfere if user is typing
-  if (isTyping) {
-    return;
-  }
-
-  const fieldKey = field?.id?.replaceAll("_id", "");
-  const defaultValueKey = getNestedValue(
-    defaultData?.[fieldKey ?? ""],
-    field?.valueKey ?? ""
-  );
-  let final: Option | null = null;
-
-  const x = getListUrl;
-  const y = `${field?.getListUrl ?? ""}${field?.params ?? ""}`;
-
-  // Handle dataNameField logic
-  if (field?.dataNameField != undefined && field?.dataNameField != "") {
-    const dataNameFieldValue = data[field.dataNameField];
-    if (isNullOrUndefinedOrEmpty(dataNameFieldValue)) {
-      const dfo = items.find(x => x.value == value);
-      if (dfo) {
-        handleItemClick(dfo);
+      // Don't interfere if user is typing
+      if (isTyping) {
         return;
       }
-    }
-  }
 
-  // Handle value === -2 (select first item)
-  if (value === -2 && x == y) {
-    if (items.length == 0) {
-      return;
-    }
-    final = items[0];
-    handleItemClick(final);
-    return;
-  }
+      const fieldKey = field?.id?.replaceAll("_id", "");
+      const defaultValueKey = getNestedValue(
+        defaultData?.[fieldKey ?? ""],
+        field?.valueKey ?? ""
+      );
+      let final: Option | null = null;
 
-  // Handle null/undefined value
-  if (
-    (value === undefined || value === null) &&
-    (data?.[field?.id ?? ""] === undefined || data?.[field?.id ?? ""] === null) &&
-    value !== -2
-  ) {
-    // Only clear if we haven't already cleared
-    if (initial !== null) {
-      setInitial(null);
-      setDisplayValue("");
-      setInputValue("");
-    }
-    return;
-  }
+      const x = getListUrl;
+      const y = `${field?.getListUrl ?? ""}${field?.params ?? ""}`;
 
-  // Find the appropriate option to select
-  const _default = items?.find(
-    (option) => option.value === defaultValueKey
-  );
-  const _selected = items?.find(
-    (option) => option.value === (value ? value : data?.[field?.id ?? ""])
-  );
-  const _exceptional =
-    (defaultData && fieldKey === "payment_terms" && items[0]) ||
-    fieldKey === "currency";
-  
-  final = _selected || _default || _exceptional || initialValue || null;
+      // Handle dataNameField logic
+      if (field?.dataNameField != undefined && field?.dataNameField != "") {
+        const dataNameFieldValue = data[field.dataNameField];
+        if (isNullOrUndefinedOrEmpty(dataNameFieldValue)) {
+          const dfo = items.find((x) => x.value == value);
+          if (dfo) {
+            handleItemClick(dfo);
+            return;
+          }
+        }
+      }
 
-  // Only update if there's an actual change
-  if (final !== initial) {
-    setInitial(final);
-    setInputValue(final?.label || "");
-    setDisplayValue(
-      final?.label 
-        ? truncateText(final.label, ref as React.RefObject<HTMLInputElement>) 
-        : ""
-    );
-  }
+      // Handle value === -2 (select first item)
+      if (value === -2 && x == y) {
+        if (items.length == 0) {
+          return;
+        }
+        final = items[0];
+        handleItemClick(final);
+        return;
+      }
 
-  // Set activeIndex for keyboard navigation
-  setActiveIndex(
-    final != null
-      ? filteredItems?.findIndex((item) => item.value === final.value)
-      : -1
-  );
-}, [
-  memoizedItems,
-  memoizedData,
-  memoizedField,
-  memoizedFilteredItems,
-  value,
-  isTyping, // Add this dependency
-]);
+      // Handle null/undefined value
+      if (
+        (value === undefined || value === null) &&
+        (data?.[field?.id ?? ""] === undefined ||
+          data?.[field?.id ?? ""] === null) &&
+        value !== -2
+      ) {
+        // Only clear if we haven't already cleared
+        if (initial !== null) {
+          setInitial(null);
+          setDisplayValue("");
+          setInputValue("");
+        }
+        return;
+      }
+
+      // Find the appropriate option to select
+      const _default = items?.find(
+        (option) => option.value === defaultValueKey
+      );
+      const _selected = items?.find(
+        (option) => option.value === (value ? value : data?.[field?.id ?? ""])
+      );
+      const _exceptional =
+        (defaultData && fieldKey === "payment_terms" && items[0]) ||
+        fieldKey === "currency";
+
+      final = _selected || _default || _exceptional || initialValue || null;
+
+      // Only update if there's an actual change
+      if (final !== initial) {
+        setInitial(final);
+        setInputValue(final?.label || "");
+        setDisplayValue(
+          final?.label
+            ? truncateText(
+                final.label,
+                ref as React.RefObject<HTMLInputElement>
+              )
+            : ""
+        );
+      }
+
+      // Set activeIndex for keyboard navigation
+      setActiveIndex(
+        final != null
+          ? filteredItems?.findIndex((item) => item.value === final.value)
+          : -1
+      );
+    }, [
+      memoizedItems,
+      memoizedData,
+      memoizedField,
+      memoizedFilteredItems,
+      value,
+      isTyping, // Add this dependency
+    ]);
     const clearSelection = (e?: React.MouseEvent) => {
-  e?.stopPropagation();
-  setInitial(null);
-  setInputValue("");
-  setDisplayValue("");
-  setQuery("");
-  setIsTyping(false); // Reset typing flag
-  setFilteredItems(items);
-   setActiveIndex(0);
-  
-  // Notify parent of the cleared value
-  handleItemClick({
-    label: "",
-    value: undefined,
-    is_active: false,
-    name: "",
-  });
-};
+      e?.stopPropagation();
+      setInitial(null);
+      setInputValue("");
+      setDisplayValue("");
+      setQuery("");
+      setIsTyping(false); // Reset typing flag
+      setFilteredItems(items);
+      setActiveIndex(0);
+
+      // Notify parent of the cleared value
+      handleItemClick({
+        label: "",
+        value: undefined,
+        is_active: false,
+        name: "",
+      });
+    };
 
     const handleItemClick = (value: Option) => {
-       setInitial(value);
-  setIsOpen(false);
-  setQuery("");
-  setInputValue(value.label);
-  setDisplayValue("");
-  setIsTyping(false); // Reset typing flag when selecting
-  setFilteredItems(items);
+      setInitial(value);
+      setIsOpen(false);
+      setQuery("");
+      setInputValue(value.label);
+      setDisplayValue("");
+      setIsTyping(false); // Reset typing flag when selecting
+      setFilteredItems(items);
       onChange?.(value);
       if (onChangeData) {
         const updatedData = { ...data };
@@ -1122,16 +1150,16 @@ useEffect(() => {
     };
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  const value = event.target.value;
-  setInputValue(value);
-  setQuery(value);
-  setIsOpen(true);
-  setIsTyping(true); // Mark as typing
-  if (!value.trim()) {
-    setFilteredItems(items);
-  }
-  onTextChange && onTextChange(value);
-};
+      const value = event.target.value;
+      setInputValue(value);
+      setQuery(value);
+      setIsOpen(true);
+      setIsTyping(true); // Mark as typing
+      if (!value.trim()) {
+        setFilteredItems(items);
+      }
+      onTextChange && onTextChange(value);
+    };
 
     const moveToNextInputField = (event: React.KeyboardEvent<any>) => {
       const formInputs = Array.from(
@@ -1205,9 +1233,9 @@ useEffect(() => {
 
     const handleKeyDown = (event: React.KeyboardEvent<any>) => {
       if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
-          onKeyDown && onKeyDown(event)
-          return;
-        }
+        onKeyDown && onKeyDown(event);
+        return;
+      }
       if (!isOpen) {
         if (event.key === "ArrowDown" || event.key === "ArrowUp") {
           setIsOpen(true);
@@ -1836,14 +1864,14 @@ useEffect(() => {
           <Combobox as="div" className="relative">
             <div className="flex" ref={comboboxRef}>
               <Combobox.Input
-              id={id}
+                id={id}
                 ref={ref}
                 style={{
                   height,
                   fontSize,
                   fontWeight: inputBoxState?.bold ? 700 : fontWeight,
-                  color:foreColor,
-                  borderColor:noBorder?undefined: borderStyles,
+                  color: foreColor,
+                  borderColor: noBorder ? undefined : borderStyles,
                   outline: "none",
                   transition: "border-color 0.2s ease-in-out",
                   borderRadius: `${inputBoxState?.borderRadius}px`,
@@ -1878,10 +1906,13 @@ useEffect(() => {
                   handleKeyDown(e);
                 }}
                 onKeyUp={onKeyUp}
-                  placeholder={
+                placeholder={
                   noPlaceholder
                     ? ""
-                    : fetching || (initial && initial.value && !isNullOrUndefinedOrEmpty(initial.value))
+                    : fetching ||
+                      (initial &&
+                        initial.value &&
+                        !isNullOrUndefinedOrEmpty(initial.value))
                     ? ""
                     : t("select") + " " + (label || id?.replaceAll("_", " "))
                 }
@@ -1901,117 +1932,126 @@ useEffect(() => {
                     inputValue || "",
                     ref as React.RefObject<HTMLInputElement>
                   )
-                    // inputValue
-                    // :
-                    // truncateText(
-                    //     initial?.label || "",
-                    //     ref as React.RefObject<HTMLInputElement>
-                    //   )
+                  // inputValue
+                  // :
+                  // truncateText(
+                  //     initial?.label || "",
+                  //     ref as React.RefObject<HTMLInputElement>
+                  //   )
                 }
                 readOnly={disabled}
                 disabled={disabled}
               />
-            {fetching && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  backgroundColor: "rgba(255, 255, 255, 0.7)", // Optional overlay for visibility
-                  zIndex: 20, // Higher z-index to ensure visibility
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <LoadingContainer>
-                  <LoadingBar />
-                </LoadingContainer>
-              </div>
-            )}
-            {!fetching && (
-              <div
-                className={`absolute inset-y-0 ltr:right-0 dark:!bg-dark-combo-dd rtl:left-0 flex items-center m-[2px] pr-1`}
-                style={{
-                  // background:
-                  //   initial?.value !== undefined &&
-                  //   initial?.value !== null &&
-                  //   initial?.value !== ""
-                  //     ? `rgb(${inputBoxState?.selectColor})`
-                  //     : "#f9f9f9",
-                      background: initial ? `rgb(${inputBoxState?.selectColor})` : "#f9f9f9",
-                  ...(document.documentElement.dir === "rtl"
-                    ? {
-                        borderTopLeftRadius: `${
-                          inputBoxState?.borderRadius ?? 5
-                        }px`,
-                        borderBottomLeftRadius: `${
-                          inputBoxState?.borderRadius ?? 5
-                        }px`,
-                      }
-                    : {
-                        borderTopRightRadius: `${
-                          inputBoxState?.borderRadius ?? 5
-                        }px`,
-                        borderBottomRightRadius: `${
-                          inputBoxState?.borderRadius ?? 5
-                        }px`,
-                      }),
-                }}
-              >
-                {enableClearOption &&
-                  (initial && !isNullOrUndefinedOrZero(initial.value)) &&
-                  !noXMarkIcon && (
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        if (disabled) return;
-                        clearSelection();
-                        setIsOpen(false);
-                      }}
-                      className="h-full flex items-center justify-center"
-                      aria-label="Clear selection"
-                    >
-                      <div
-                        className={`h-full flex items-center justify-center ${sizeClasses.buttonPadding} ${sizeClasses.buttonBorderRadius} ${
-                          !disabled ? "hover:bg-[rgba(0,0,0,0.44)]" : ""
-                        }`}
-                      >
-                        <XMarkIcon
-                          className={`${sizeClasses?.icons} text-gray-400 ${
-                            !disabled ? "hover:text-gray-500" : ""
-                          } transition-transform duration-200 ${isOpen ? "transform rotate-180" : ""}`}
-                          aria-hidden="true"
-                        />
-                      </div>
-                    </button>
-                  )}
-                <Combobox.Button
-                  className="h-full flex items-center justify-center"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    !disabled && setIsOpen(!isOpen);
+              {fetching && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: "rgba(255, 255, 255, 0.7)", // Optional overlay for visibility
+                    zIndex: 20, // Higher z-index to ensure visibility
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
                 >
-                   <div
-                        className={`h-full flex items-center justify-center ${sizeClasses.buttonPadding} ${sizeClasses.buttonBorderRadius} ${
-                          !disabled ? "hover:bg-[rgba(0,0,0,0.44)]" : ""
-                        }`}
+                  <LoadingContainer>
+                    <LoadingBar />
+                  </LoadingContainer>
+                </div>
+              )}
+              {!fetching && (
+                <div
+                  className={`absolute inset-y-0 ltr:right-0 dark:!bg-dark-combo-dd rtl:left-0 flex items-center m-[2px] pr-1`}
+                  style={{
+                    // background:
+                    //   initial?.value !== undefined &&
+                    //   initial?.value !== null &&
+                    //   initial?.value !== ""
+                    //     ? `rgb(${inputBoxState?.selectColor})`
+                    //     : "#f9f9f9",
+                    background: initial
+                      ? `rgb(${inputBoxState?.selectColor})`
+                      : "#f9f9f9",
+                    ...(document.documentElement.dir === "rtl"
+                      ? {
+                          borderTopLeftRadius: `${
+                            inputBoxState?.borderRadius ?? 5
+                          }px`,
+                          borderBottomLeftRadius: `${
+                            inputBoxState?.borderRadius ?? 5
+                          }px`,
+                        }
+                      : {
+                          borderTopRightRadius: `${
+                            inputBoxState?.borderRadius ?? 5
+                          }px`,
+                          borderBottomRightRadius: `${
+                            inputBoxState?.borderRadius ?? 5
+                          }px`,
+                        }),
+                  }}
+                >
+                  {enableClearOption &&
+                    initial &&
+                    !isNullOrUndefinedOrZero(initial.value) &&
+                    !noXMarkIcon && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          if (disabled) return;
+                          clearSelection();
+                          setIsOpen(false);
+                        }}
+                        className="h-full flex items-center justify-center"
+                        aria-label="Clear selection"
                       >
-                  <ChevronDownIcon
-                    className={`${sizeClasses?.icons} text-gray-400 ${
-                      !disabled ? "hover:text-gray-500" : ""
-                    } transition-transform duration-200 ${
-                      isOpen ? "transform rotate-180" : ""
-                    }`}
-                    aria-hidden="true"
-                  />
-                  </div>
-                </Combobox.Button>
-              </div>
-            )}
+                        <div
+                          className={`h-full flex items-center justify-center ${
+                            sizeClasses.buttonPadding
+                          } ${sizeClasses.buttonBorderRadius} ${
+                            !disabled ? "hover:bg-[rgba(0,0,0,0.44)]" : ""
+                          }`}
+                        >
+                          <XMarkIcon
+                            className={`${sizeClasses?.icons} text-gray-400 ${
+                              !disabled ? "hover:text-gray-500" : ""
+                            } transition-transform duration-200 ${
+                              isOpen ? "transform rotate-180" : ""
+                            }`}
+                            aria-hidden="true"
+                          />
+                        </div>
+                      </button>
+                    )}
+                  <Combobox.Button
+                    className="h-full flex items-center justify-center"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      !disabled && setIsOpen(!isOpen);
+                    }}
+                  >
+                    <div
+                      className={`h-full flex items-center justify-center ${
+                        sizeClasses.buttonPadding
+                      } ${sizeClasses.buttonBorderRadius} ${
+                        !disabled ? "hover:bg-[rgba(0,0,0,0.44)]" : ""
+                      }`}
+                    >
+                      <ChevronDownIcon
+                        className={`${sizeClasses?.icons} text-gray-400 ${
+                          !disabled ? "hover:text-gray-500" : ""
+                        } transition-transform duration-200 ${
+                          isOpen ? "transform rotate-180" : ""
+                        }`}
+                        aria-hidden="true"
+                      />
+                    </div>
+                  </Combobox.Button>
+                </div>
+              )}
             </div>
             {isOpen &&
               createPortal(
@@ -2046,18 +2086,18 @@ useEffect(() => {
                     </div>
                   ) : (
                     <>
-                    <ComboboxList
-                      key={initial?.value || "default"}
-                      ref={listRef}
-                      items={filteredItems}
-                      selectedValue={initial}
-                      onSelect={handleItemClick}
-                      activeIndex={activeIndex}
-                      customSize={_customSize}
-                      appState={appState.dir}
-                    />
+                      <ComboboxList
+                        key={initial?.value || "default"}
+                        ref={listRef}
+                        items={filteredItems}
+                        selectedValue={initial}
+                        onSelect={handleItemClick}
+                        activeIndex={activeIndex}
+                        customSize={_customSize}
+                        appState={appState.dir}
+                      />
 
-                     {addNewOption && (
+                      {addNewOption && (
                         <div className="p-2 border-t">
                           <button
                             type="button"
@@ -2068,17 +2108,11 @@ useEffect(() => {
                           </button>
                         </div>
                       )}
-
-                  </>
-
+                    </>
                   )}
-
-
                 </div>,
                 document.body // Render to body to escape parent constraints
               )}
-
-
           </Combobox>
           {info != undefined && info != null && info != "" && (
             <div className="text-[#374151] text-xs font-medium ">
@@ -2090,25 +2124,23 @@ useEffect(() => {
             validation != "" && (
               <ERPElementValidationMessage validation={validation} />
             )}
-              {addNewOption &&
-              addNewOptionCobonent &&
-              addNewOptionCobonent.isOpen &&
-              (
-                <ERPModal
-                  isOpen={addNewOptionCobonent.isOpen}
-                  title={addNewOptionCobonent.title}
-                  width={addNewOptionCobonent.width || 600}
-                  height={addNewOptionCobonent.height || 350}
-                  isForm={true}
-                  closeModal={() => {
-                    if (addNewOptionCobonent.closeModal) {
-                      addNewOptionCobonent.closeModal();
-                    }
-                  }}
-                  content={addNewOptionCobonent.content}
-                />
-
-              )}
+          {addNewOption &&
+            addNewOptionCobonent &&
+            addNewOptionCobonent.isOpen && (
+              <ERPModal
+                isOpen={addNewOptionCobonent.isOpen}
+                title={addNewOptionCobonent.title}
+                width={addNewOptionCobonent.width || 600}
+                height={addNewOptionCobonent.height || 350}
+                isForm={true}
+                closeModal={() => {
+                  if (addNewOptionCobonent.closeModal) {
+                    addNewOptionCobonent.closeModal();
+                  }
+                }}
+                content={addNewOptionCobonent.content}
+              />
+            )}
         </div>
       );
     }
@@ -2233,7 +2265,7 @@ const safeCompare = (obj1: any, obj2: any): boolean => {
   if (typeof obj1 !== typeof obj2) return false;
 
   // Handle primitives
-  if (typeof obj1 !== 'object') return obj1 === obj2;
+  if (typeof obj1 !== "object") return obj1 === obj2;
 
   // Handle arrays
   if (Array.isArray(obj1) && Array.isArray(obj2)) {
@@ -2245,17 +2277,21 @@ const safeCompare = (obj1: any, obj2: any): boolean => {
   }
 
   // Simple check for React elements - just check the type and key
-  if (obj1?.$$typeof === Symbol.for('react.element') &&
-      obj2?.$$typeof === Symbol.for('react.element')) {
+  if (
+    obj1?.$$typeof === Symbol.for("react.element") &&
+    obj2?.$$typeof === Symbol.for("react.element")
+  ) {
     return obj1.type === obj2.type && obj1.key === obj2.key;
   }
 
   // Handle DOM nodes or anything with circular references - assume they're equal
   // if they're not objects or we've already handled their specific cases
-  if (typeof obj1 === 'object' && (
-      obj1 instanceof Node ||
+  if (
+    typeof obj1 === "object" &&
+    (obj1 instanceof Node ||
       obj1 instanceof Window ||
-      obj1?.constructor?.name?.includes('Fiber'))) {
+      obj1?.constructor?.name?.includes("Fiber"))
+  ) {
     return true; // Skip complex DOM/React internal objects
   }
 
@@ -2265,12 +2301,14 @@ const safeCompare = (obj1: any, obj2: any): boolean => {
   if (keys1.length !== keys2.length) return false;
 
   // Check if all keys in obj1 exist in obj2 with the same values
-  return keys1.every(key => {
+  return keys1.every((key) => {
     // Skip known problematic properties
-    if (key.startsWith('__react') ||
-        key === 'ref' ||
-        key === 'children' ||
-        key === '_owner') {
+    if (
+      key.startsWith("__react") ||
+      key === "ref" ||
+      key === "children" ||
+      key === "_owner"
+    ) {
       return true;
     }
     return obj2.hasOwnProperty(key) && safeCompare(obj1[key], obj2[key]);
@@ -2285,14 +2323,14 @@ const propsAreEqual = (
   // Skip 'data' prop comparison
   const keysToCompare = Array.from(
     new Set([...Object.keys(prevProps), ...Object.keys(nextProps)])
-  ).filter(key => !propNames.includes(key));
+  ).filter((key) => !propNames.includes(key));
 
   for (const key of keysToCompare) {
     const prevValue = prevProps[key as keyof ERPDataComboboxProps];
     const nextValue = nextProps[key as keyof ERPDataComboboxProps];
 
     // Skip ref objects comparison
-    if (key === 'ref') continue;
+    if (key === "ref") continue;
 
     // Handle function comparisons - compare references
     if (typeof prevValue === "function" && typeof nextValue === "function") {

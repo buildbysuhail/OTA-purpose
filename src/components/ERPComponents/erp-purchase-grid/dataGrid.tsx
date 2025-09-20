@@ -1917,8 +1917,60 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       formState.currentCell?.rowIndex ?? -1
     );
     useEffect(() => {
+      console.log('focusCell');
+      
       setCurrentCell(formState.currentCell);
     }, [formState.currentCell]);
+   const scrollToCenter = useCallback((rowIndex: number, duration: number = 300) => {
+  // Validate row index
+  if (rowIndex < 0 || rowIndex >= formState.transaction.details.length) {
+    console.warn('Invalid row index:', rowIndex);
+    return false;
+  }
+
+  if (!containerRef.current) {
+    return false;
+  }
+
+  const container = containerRef.current;
+  const currentScrollTop = container.scrollTop;
+  
+  // Calculate target scroll position
+  const rowTop = rowIndex * ITEM_HEIGHT;
+  const containerCenter = height / 2;
+  const targetScrollTop = rowTop - containerCenter + (ITEM_HEIGHT / 2);
+  
+  // Apply bounds
+  const totalContentHeight = formState.transaction.details.length * ITEM_HEIGHT;
+  const maxScrollTop = Math.max(0, totalContentHeight - height);
+  const finalScrollTop = Math.max(0, Math.min(targetScrollTop, maxScrollTop));
+  
+  // Animate the scroll
+  const startTime = performance.now();
+  const scrollDistance = finalScrollTop - currentScrollTop;
+  
+  const animateScroll = (currentTime: number) => {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    
+    // Easing function (ease-out)
+    const easeOut = 1 - Math.pow(1 - progress, 3);
+    
+    const newScrollTop = currentScrollTop + (scrollDistance * easeOut);
+    
+    // Update both container and virtual scrolling state
+    container.scrollTop = newScrollTop;
+    updateScroll(newScrollTop);
+    
+    if (progress < 1) {
+      requestAnimationFrame(animateScroll);
+    }
+  };
+  
+  requestAnimationFrame(animateScroll);
+  return true;
+}, [ITEM_HEIGHT, height, updateScroll, formState.transaction.details.length]);
+
     useEffect(() => {
       const runEffect = async () => {
       if (
@@ -1952,7 +2004,9 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
           if (input) input.select();
         }
       }
-
+      if(currentCell?.reCenterRow) {
+        scrollToCenter(currentCell.rowIndex);
+      }
       setPrevCell(currentCell?.rowIndex ?? -1);
       if (prevCell !== currentCell?.rowIndex) {
         const data = formState.transaction.details.filter((x) => x.productID > 0);
@@ -1973,6 +2027,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
           formStateTransactionDetailsRowsAdd(rows)
         );
       }
+      
       };
 
   runEffect();

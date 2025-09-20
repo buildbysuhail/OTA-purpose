@@ -570,6 +570,7 @@ interface loadingResult {
   text: string;
 }
 export interface CurrentCell {
+  reCenterRow?: boolean
   column: string;
   rowIndex: number;
   data: TransactionDetail;

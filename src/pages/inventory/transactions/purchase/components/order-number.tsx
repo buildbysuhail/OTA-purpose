@@ -64,7 +64,7 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
       undefined,undefined,
       (loadData.vNumber??0).toString(),
       undefined, undefined,
-      false, false,
+      true, false,
       "PO",
       loadData.formType??"",
       loadData.vPrefix??""

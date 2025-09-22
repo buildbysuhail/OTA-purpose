@@ -416,6 +416,26 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({ formS
                     onChange={(e) => onSalesManIncentiveChange(e.target.value)}
                   />
                 </div>
+                 {formState.transaction.master.voucherType == "PI" && 
+                 <div className="flex flex-col sm:flex-row sm:items-center flex-1 min-w-[200px]">
+                  <label className="w-full sm:w-32 text-xs mb-1 sm:mb-0">
+                    {t("sch_disc_posting_a/c")} :
+                  </label>
+                  <ERPDataCombobox
+                    id="tableId"
+                    noLabel={true}
+                    value={formState.transaction.master.tableID}
+                    className="flex-1 h-6 text-xs w-full sm:max-w-36"
+                    field={{
+                      id: "tableID",
+                      valueKey: "id",
+                      labelKey: "name",
+                      getListUrl: Urls.data_acc_ledgers,
+                    }}
+                    onSelectItem={(data) => dispatch(formStateMasterHandleFieldChange({ fields: { tableID: data.value } }))}
+                  />
+                </div>
+                }
               </div>
             </div>
 
@@ -449,24 +469,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({ formS
                     onChange={(e) => onNotes2Change(e.target.value)}
                   />
                 </div>
-                <div className="flex flex-col sm:flex-row sm:items-center flex-1 min-w-[200px]">
-                  <label className="w-full sm:w-32 text-xs mb-1 sm:mb-0">
-                    {t("sch_disc_posting_a/c")} :
-                  </label>
-                  <ERPDataCombobox
-                    id="tableId"
-                    noLabel={true}
-                    value={formState.transaction.master.tableId}
-                    className="flex-1 h-6 text-xs w-full sm:max-w-36"
-                    field={{
-                      id: "tableId",
-                      valueKey: "id",
-                      labelKey: "name",
-                      getListUrl: Urls.data_acc_ledgers,
-                    }}
-                    onSelectItem={(data) => dispatch(formStateMasterHandleFieldChange({ fields: { tableId: data.value } }))}
-                  />
-                </div>
+               
               </div>
             </div>
           </div>

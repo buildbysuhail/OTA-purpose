@@ -10,25 +10,12 @@ export const firebaseConfig = {
   measurementId: "G-LDT01JMLWP",
 };
 
-// export const firebaseConfig = {
-//   apiKey: "AIzaSyB8Y3mfWUGyxznD1USlKaQIt2JZKDvjtCs",
-//   authDomain: "tttt-c6029.firebaseapp.com",
-//   projectId: "tttt-c6029",
-//   storageBucket: "tttt-c6029.firebasestorage.app",
-//   messagingSenderId: "185898721418",
-//   appId: "1:185898721418:web:9b555d98737ac42fbe8d73",
-//   measurementId: "YOUR_MEASUREMENT_ID",
-// };
-
 
 
 export const VAPID_KEY = "BHTFUhjeaCEZgOx2tMPJQFROxkwqWgHLJtIe28GkGR1pzda2JPfd-BiSTLyhxMO81CZWtXhT5xhVZqlIli_ksxM";
 
-// export const VAPID_KEY = "BH46urs9QuJ3lomJG4BrMI238KffkO37LeHhrhvhkK9JufIv2LKJP3eSJWwSlWNv_HEKZZvzrJLZsWD67g12OKg";
-
 export const app = initializeApp(firebaseConfig);
 
-// Always enable FCM (no isWeb skip for perfect FCM in web and Wails)
 let messagingInstance: any = null;
 
 export const getFcmMessaging = async () => {
@@ -39,17 +26,26 @@ export const getFcmMessaging = async () => {
 
   try {
     console.log('🔧 Setting up Firebase messaging...');
+    console.log('User Agent:', navigator.userAgent);
     
     const isLocalhost = window.location.hostname === 'localhost' || 
                        window.location.hostname === '127.0.0.1' ||
                        window.location.hostname === '0.0.0.0';
+    const isWails = navigator.userAgent.includes('wv') || !!window.go?.main?.App;
 
-    if (isLocalhost) {
-      console.log('🏠 Running on localhost - using direct messaging setup');
-      const { getMessaging } = await import("firebase/messaging");
-      messagingInstance = getMessaging(app);
-      console.log('✅ Firebase messaging initialized (localhost mode)');
-      return messagingInstance;
+    if (isLocalhost || isWails) {
+      console.log(isLocalhost ? '🏠 Running on localhost' : '🖥️ Running in Wails WebView');
+      console.log('Using direct messaging setup (no service worker)');
+      try {
+        const { getMessaging } = await import("firebase/messaging");
+        messagingInstance = getMessaging(app);
+        console.log('✅ Firebase messaging initialized (direct mode)');
+        return messagingInstance;
+      } catch (error) {
+        console.error('❌ Direct messaging setup failed:', error);
+        messagingInstance = null;
+        return null;
+      }
     }
 
     console.log('🌐 Production mode - setting up service worker...');
@@ -79,7 +75,7 @@ export const getFcmMessaging = async () => {
     // Initialize messaging
     console.log('🚀 Initializing Firebase messaging...');
     const { getMessaging } = await import("firebase/messaging");
-    messagingInstance = getMessaging(app); // Removed invalid serviceWorkerRegistration
+    messagingInstance = getMessaging(app);
     
     console.log('✅ Firebase messaging initialized');
     return messagingInstance;

@@ -5,8 +5,9 @@ import React, { useCallback, useState } from "react";
 import Urls from "../../../../../redux/urls";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import { RootState } from "../../../../../redux/store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { formStateHandleFieldChangeKeysOnly } from "../reducer";
 
 interface GrnNumberProps extends VoucherElementProps {
   loadAndSetTransVoucher: (
@@ -32,6 +33,7 @@ const VoucherLoader = React.forwardRef<HTMLInputElement, GrnNumberProps>((props,
   const formState = useSelector((state: RootState) => state.InventoryTransaction);
   const [showLoadData, setShowLoadData] = useState<boolean>(false);
   const { t } = useTranslation('transaction');
+  const dispatch = useDispatch();
   const [loadData, setLoadData] = useState<{
     vPrefixId: any;
     vFormTypeId: any;
@@ -44,7 +46,7 @@ const VoucherLoader = React.forwardRef<HTMLInputElement, GrnNumberProps>((props,
     vPrefixId: -2,
     formType: "",
     vPrefix: "",
-    vNumber: "",
+    vNumber: formState.transaction.master.deliveryNoteNumber,
     vType: props.fromVoucherType??""
   });
 
@@ -55,7 +57,7 @@ const VoucherLoader = React.forwardRef<HTMLInputElement, GrnNumberProps>((props,
       undefined,
       undefined,
       undefined,undefined,
-      loadData.vNumber,
+      formState.transaction.master.deliveryNoteNumber,
       undefined, undefined,
       false, false,
       loadData.vType??"",
@@ -136,14 +138,10 @@ const VoucherLoader = React.forwardRef<HTMLInputElement, GrnNumberProps>((props,
             type="number"
             className="w-[80px]"
             // value={orderNumberValue}
-            value={loadData.vNumber}
+            value={formState.transaction.master.deliveryNoteNumber}
             onChange={(e) =>
-              setLoadData((prev: any) => {
-                return {
-                  ...prev,
-                  vNumber: e.target?.value,
-                };
-              })
+              dispatch(formStateHandleFieldChangeKeysOnly({fields:{transaction:{master:{deliveryNoteNumber: e.target?.value}}}}))
+             
             }
             ref={ref}
           />

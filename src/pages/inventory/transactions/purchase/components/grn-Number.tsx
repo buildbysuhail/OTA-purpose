@@ -9,11 +9,26 @@ import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 
 interface GrnNumberProps extends VoucherElementProps {
-  loadAndSetTransVoucher: any;
-  closeModal: any
+  loadAndSetTransVoucher: (
+    usingManualInvNumber: boolean ,
+    voucherNumber?: number,
+    voucherPrefix?: string,
+    voucherType?: string,
+    formType?: string,
+    manualInvoiceNumber?: string,
+    transactionMasterID?: number,
+    mode?: "increment" | "decrement" | undefined,
+    skipPrompt?: boolean | false,
+    setVoucherNo?: boolean | false,
+    loadVType?: string,
+    loadFType?: string,
+    loadPrefix?: string,
+  ) => any;
+  closeModal: any;
+  fromVoucherType: string;
 }
 
-const GrnNumber = React.forwardRef<HTMLInputElement, GrnNumberProps>((props, ref) => {
+const VoucherLoader = React.forwardRef<HTMLInputElement, GrnNumberProps>((props, ref) => {
   const formState = useSelector((state: RootState) => state.InventoryTransaction);
   const [showLoadData, setShowLoadData] = useState<boolean>(false);
   const { t } = useTranslation('transaction');
@@ -30,28 +45,28 @@ const GrnNumber = React.forwardRef<HTMLInputElement, GrnNumberProps>((props, ref
     formType: "",
     vPrefix: "",
     vNumber: "",
-    vType: formState.transaction.master.voucherType === "PI" ? "GRN" : formState.transaction.master.voucherType === "GRN" ? "PO" : "GRR"
+    vType: formState.transaction.master.voucherType
   });
 
   const handleLoadByRefNo = useCallback(async () => {
+    debugger;
     await props.loadAndSetTransVoucher(
       true,
       undefined,
-      loadData.vPrefix,
-      loadData.vType,
-      loadData.formType,
+      undefined,
+      undefined,undefined,
       loadData.vNumber,
-      undefined,
-      undefined,
-      true,
-      false,
-      formState.transaction.master.voucherType === "PI" ? "GRN" : formState.transaction.master.voucherType === "GRN" ? "PO" : "GRR"
+      undefined, undefined,
+      false, false,
+      loadData.vType??"",
+      loadData.formType??"",
+      loadData.vPrefix??""
     );
     props.closeModal();
   }, [
     formState.transaction.master.voucherNumber,
     loadData.vPrefix,
-    formState.transaction.master.voucherType,
+    props.fromVoucherType,
     loadData.formType,
     loadData.vNumber,
   ]);
@@ -153,4 +168,4 @@ const GrnNumber = React.forwardRef<HTMLInputElement, GrnNumberProps>((props, ref
 }
 );
 
-export default React.memo(GrnNumber);
+export default React.memo(VoucherLoader);

@@ -14,16 +14,19 @@ interface AccVoucherNoProps {
 
 interface VoucherNoPrefixProps extends VoucherElementProps, AccVoucherNoProps {
   loadAndSetTransVoucher: (
-    usingManualInvNumber?: boolean,
+    usingManualInvNumber: boolean,
     voucherNumber?: number,
     voucherPrefix?: string,
     voucherType?: string,
     formType?: string,
     manualInvoiceNumber?: string,
-    accTransactionMasterID?: number,
+    transactionMasterID?: number,
     mode?: "increment" | "decrement" | undefined,
     skipPrompt?: boolean | false,
-    setVoucherNo?: boolean | false
+    setVoucherNo?: boolean | false,    
+    loadVType?: string,
+    loadFType?: string,
+    loadPrefix?: string,
   ) => Promise<boolean>;
 }
 
@@ -54,6 +57,7 @@ const AccVoucherNo = React.forwardRef<HTMLInputElement, VoucherNoPrefixProps>(
             localInputBox={formState?.userConfig?.inputBoxStyle}
             onKeyUp={async(e) => {
               if(e.key == "Enter") {
+                debugger;
                 const ret = await loadAndSetTransVoucher(
                   false,
                   parseFloat(e.target?.value),
@@ -67,7 +71,7 @@ const AccVoucherNo = React.forwardRef<HTMLInputElement, VoucherNoPrefixProps>(
                     : e.mode == "up"
                     ? "increment"
                     : undefined,
-                  false
+                  false,false,"","",""
                 );
               }
               handleKeyDown && handleKeyDown(e, "voucherNumber");
@@ -89,6 +93,7 @@ const AccVoucherNo = React.forwardRef<HTMLInputElement, VoucherNoPrefixProps>(
             numberChangerStyle="horizontal" // or "vertical"
             className="w-full max-w-[150px]"
             onChange={async (e: any) => {
+              debugger;
               if (e.isCustomNumberChangerEvent == true) {
                 const ret = await loadAndSetTransVoucher(
                   false,
@@ -103,7 +108,7 @@ const AccVoucherNo = React.forwardRef<HTMLInputElement, VoucherNoPrefixProps>(
                     : e.mode == "up"
                     ? "increment"
                     : undefined,
-                  false
+                  false,false,"","",""
                 );
               } else {
                 onChange(e.target.value);

@@ -12,7 +12,19 @@ import { formStateMasterHandleFieldChange } from "../reducer";
 import VoucherType, { purchaseVoucherTypes, } from "../../../../../enums/voucher-types";
 
 interface LoadByOrderNoProps extends VoucherElementProps {
-  loadAndSetTransVoucher: any;
+  loadAndSetTransVoucher: (usingManualInvNumber: boolean,
+    voucherNumber?: number,
+    voucherPrefix?: string,
+    voucherType?: string,
+    formType?: string,
+    manualInvoiceNumber?: string,
+    transactionMasterID?: number,
+    mode?: "increment" | "decrement" | undefined,
+    skipPrompt?: boolean | false,
+    setVoucherNo?: boolean | false,    
+    loadVType?: string,
+    loadFType?: string,
+    loadPrefix?: string) => any;
 }
 
 const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
@@ -47,16 +59,16 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
     const handleLoadByRefNo = useCallback(async () => {
       await props.loadAndSetTransVoucher(
         true,
-        undefined,
-        loadData.vPrefix,
-        loadData.vType,
-        loadData.formType,
-        loadData.vNumber,
-        undefined,
-        undefined,
-        true,
-        false,
-        "PO"
+      undefined,
+      undefined,
+      undefined,undefined,
+      (loadData.vNumber??0).toString(),
+      undefined, undefined,
+      false, false,
+      "PO",
+      loadData.formType??"",
+      loadData.vPrefix??""
+        
       );
       setShowLoadData(false);
     }, [
@@ -110,9 +122,11 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
               className="flex-1 h-6 text-xs max-w-none sm:max-w-28"
               onChange={(e) => onOrderNumberChange(e.target.value)}
             />
-            <button className="bg-gray-300 p-2 rounded-md hover:shadow-md transition duration-300 flex-shrink-0" onClick={showLoadByRefNo}>
+            {formState.transaction.master.voucherType == "PI" &&
+              <button className="bg-gray-300 p-2 rounded-md hover:shadow-md transition duration-300 flex-shrink-0" onClick={showLoadByRefNo}>
               <Ellipsis className="w-4 h-4" />
             </button>
+            }
           </div>
         ) : (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">

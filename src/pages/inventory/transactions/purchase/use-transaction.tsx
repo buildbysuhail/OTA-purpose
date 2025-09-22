@@ -293,8 +293,10 @@ export const useTransaction = (
     transactionMasterID?: number,
     mode?: "increment" | "decrement" | undefined,
     skipPrompt?: boolean | false,
-    setVoucherNo?: boolean | false,
-    loadVType?: string
+    setVoucherNo?: boolean | false,    
+    loadVType?: string,
+    loadFType?: string,
+    loadPrefix?: string,
   ) => {
     debugger;
     const _s_isDirty = isDirtyTransaction(
@@ -334,7 +336,9 @@ export const useTransaction = (
       formType,
       manualInvoiceNumber,
       transactionMasterID,
-      loadVType
+      loadVType,
+      loadFType,
+      loadPrefix
     );
     if (typeof _formState == "boolean") {
       return;
@@ -436,6 +440,8 @@ export const useTransaction = (
     manualInvoiceNumber?: any,
     transactionMasterID?: number,
     loadVType?: string,
+    loadFType?: string,
+    loadPrefix?: string,
     pDTInvTransMasterID?: number
   ) => {
     loadVType = loadVType ?? "PI";
@@ -447,20 +453,44 @@ export const useTransaction = (
     );
     debugger;
     let url = `${Urls.inv_transaction_base}${transactionType}`;
+    
     let _voucherNumber =
       voucherNumber ?? (formState.transaction?.master?.voucherNumber || 0);
     let out_voucherNumber =
       voucherNumber ?? (formState.transaction?.master?.voucherNumber || 0);
+    let out_voucherType =
+      voucherType ?? (formState.transaction?.master?.voucherType || "");
+    let out_voucherForm =
+      formType ?? (formState.transaction?.master?.voucherForm || "");
+    let out_voucherPrefix =
+      voucherPrefix ?? (formState.transaction?.master?.voucherPrefix || "");
+
     if (loadVType == "PO") {
       out_voucherNumber = manualInvoiceNumber ?? 0;
-      voucherType = loadVType;
-      formType = "";
+      out_voucherType = loadVType;
+      out_voucherForm = loadFType??"";
+      out_voucherPrefix = loadPrefix??"";
     }
     if (loadVType == "GRN") {
       out_voucherNumber = manualInvoiceNumber ?? 0;
-      voucherType = loadVType;
-      formType = "";
+      out_voucherType = loadVType;
+      out_voucherForm = loadFType??"";
+      out_voucherPrefix = loadPrefix??"";
       url = url + "/ByGRN";
+    }
+    if (loadVType == "GRR") {
+      out_voucherNumber = manualInvoiceNumber ?? 0;
+      out_voucherType = loadVType;
+      out_voucherForm = loadFType??"";
+      out_voucherPrefix = loadPrefix??"";
+      url = url + "/ByGRN";
+    }
+    if (loadVType == "PI_Ref") {
+      out_voucherNumber = manualInvoiceNumber ?? 0;
+      out_voucherType = loadVType;
+      out_voucherForm = loadFType??"";
+      out_voucherPrefix = loadPrefix??"";
+      url = url + "/ByReferenceNo";
     }
 
     if (_voucherNumber == undefined || _voucherNumber <= 0) {
@@ -469,15 +499,16 @@ export const useTransaction = (
     const params: Record<any, any> = {
       VoucherNumber: out_voucherNumber, // Ensuring it's always a string
       voucherPrefix:
-        voucherPrefix ?? (formState.transaction?.master?.voucherPrefix || ""),
+        out_voucherPrefix,
       voucherType:
-        voucherType ?? (formState.transaction?.master?.voucherType || ""),
+        out_voucherType,
       voucherForm:
-        formType ?? (formState.transaction?.master?.voucherForm || ""),
-      manualInvoiceNumber: manualInvoiceNumber ?? "", // Convert undefined to an empty string or appropriate string value
+        out_voucherForm,
       isUsingManualInvNo: usingManualInvNumber, // Convert boolean to string
-      isActualPriceVisible: formState.gridColumns.find(x => x.dataField == "actualSalesPrice")?.visible ?? false
+      isActualPriceVisible: formState.gridColumns.find(x => x.dataField == "actualSalesPrice")?.visible ?? false,
+      referenceNumber: loadVType == "PI_Ref" ? out_voucherNumber : null
     };
+
 
     // ByGRN
     let vch = await api.getAsync(url, new URLSearchParams(params).toString());
@@ -526,11 +557,15 @@ export const useTransaction = (
       formState.isEdit,
       transactionMasterID ?? formState.transaction.master.invTransactionMasterID
     );
+    voucher.transaction.master.inventoryLedgerID =
+      loadVType == "PR" || loadVType == "DNS"
+        ? vch.master.inventoryLedgerID
+        : formState.transaction.master.inventoryLedgerID;
     voucher.transaction.master.orderNumber =
-      loadVType == "PO" || loadVType == "GRN"
-        ? undefined
-        : voucher.transaction.master.orderNumber;
-    if (loadVType == "GRN") {
+      loadVType !== "PO" && loadVType !== "GRN"
+        ? voucher.transaction.master.orderNumber
+        : undefined;
+    if (loadVType == "GRN" && voucherType == "PI") {
       voucher.transaction.master.gRNMasterID =
         voucher.transaction.master.invTransactionMasterID;
     }
@@ -1884,29 +1919,7 @@ export const useTransaction = (
   // };
 
   // Voucher number navigation handlers
-  const handleVoucherNumberKeyUp = async (e: any) => {
-    const currentNumber = Number(formState.transaction.master.voucherNumber);
-
-    if (e == "ArrowDown" || e == "ArrowUp" || e == "Enter") {
-      if (currentNumber > 0) {
-        await loadAndSetTransVoucher(
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          e == "ArrowDown"
-            ? "decrement"
-            : e == "ArrowUp"
-              ? "increment"
-              : undefined,
-          true
-        );
-      }
-    }
-  };
+ 
 
   const loadTemporaryRows = async () => {
 
@@ -2228,7 +2241,7 @@ export const useTransaction = (
         formState.transaction.master.purchaseInvoiceNumber,
         undefined,
         undefined,
-        true
+        true,false, "PO","",formState.transaction.master.voucherPrefix
       );
     }
   }, [formState.transaction.master?.purchaseInvoiceNumber]);

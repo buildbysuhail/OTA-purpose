@@ -1274,6 +1274,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   closeModal={closeModal}
                  content={
                         <VoucherLoader
+                        updateDeliveryNoteNumber = {["GRN", "GRR"].includes(isModalOpen.type)}
                           fromVoucherType={
                             isModalOpen.type == "PI_Ref"
                               ? VoucherType.PurchaseInvoice

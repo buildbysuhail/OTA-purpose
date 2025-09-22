@@ -27,6 +27,7 @@ interface GrnNumberProps extends VoucherElementProps {
   ) => any;
   closeModal: any;
   fromVoucherType: string;
+  updateDeliveryNoteNumber?: boolean;
 }
 
 const VoucherLoader = React.forwardRef<HTMLInputElement, GrnNumberProps>((props, ref) => {
@@ -46,7 +47,7 @@ const VoucherLoader = React.forwardRef<HTMLInputElement, GrnNumberProps>((props,
     vPrefixId: -2,
     formType: "",
     vPrefix: "",
-    vNumber: formState.transaction.master.deliveryNoteNumber,
+    vNumber: props.updateDeliveryNoteNumber ? formState.transaction.master.deliveryNoteNumber : "",
     vType: props.fromVoucherType??""
   });
 
@@ -57,7 +58,7 @@ const VoucherLoader = React.forwardRef<HTMLInputElement, GrnNumberProps>((props,
       undefined,
       undefined,
       undefined,undefined,
-      formState.transaction.master.deliveryNoteNumber,
+      props.updateDeliveryNoteNumber ? formState.transaction.master.deliveryNoteNumber: loadData.vNumber,
       undefined, undefined,
       false, false,
       loadData.vType??"",
@@ -138,11 +139,21 @@ const VoucherLoader = React.forwardRef<HTMLInputElement, GrnNumberProps>((props,
             type="number"
             className="w-[80px]"
             // value={orderNumberValue}
-            value={formState.transaction.master.deliveryNoteNumber}
-            onChange={(e) =>
+            value={props.updateDeliveryNoteNumber ? formState.transaction.master.deliveryNoteNumber: loadData.vNumber}
+            onChange={(e) => {
+              if(props.updateDeliveryNoteNumber) {
               dispatch(formStateHandleFieldChangeKeysOnly({fields:{transaction:{master:{deliveryNoteNumber: e.target?.value}}}}))
+              } else {
+                 setLoadData((prev: any) => {
+                return {
+                  ...prev,
+                  vNumber: e.target?.value,
+                };
+              })
+              }
              
             }
+          }
             ref={ref}
           />
         </div>

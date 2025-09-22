@@ -37,3 +37,5 @@
 // Duplicate serial
 // price_category_name
 // grr_number
+// Consolidated all branch PurchaseOrder list
+// Pending Purchase Quotation List

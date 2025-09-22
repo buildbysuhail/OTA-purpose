@@ -63,6 +63,7 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
     (state: RootState) => state.InventoryTransaction
   );
   const [toDate] = useState(() => new Date().toISOString().split("T")[0]);
+  const [fromDate] = useState(() => new Date().toISOString().split("T")[0]);
   const [selectedMaster, setSelectedMaster] = useState<{ masterID: number; branchID: number }>({ masterID: 0, branchID: 0 });
   const [selectedRows, setSelectedRows] = useState<PendingOrderRow[]>([]);
   const [isProcessButtonVisible, setIsProcessButtonVisible] = useState(false);
@@ -302,7 +303,28 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
 
       {/* Main Grid - Pending Orders */}
       <div className="mb-4">
-        <ErpDevGrid
+        {voucherType == "POC" ?
+        (<ErpDevGrid
+          ref={gridRef}
+          columns={mainGridColumns}
+          dataUrl={`${Urls.inv_transaction_base}${formState.transactionType}/ConsolidatedOtherBranchPurchaseOrders/`}
+          postData={{ voucherType: "PO", ledgerID: formState.transaction.master.ledgerID, fromDate, toDate}}
+          method={ActionType.GET}
+          gridId="grd_pending_orders"
+          height={300}
+          hideGridAddButton={true}
+          enableScrollButton={false}
+          selectionMode="multiple"
+          initialSort={[{ selector: "voucherNumber", desc: true }]}
+          // gridHeader={t("pending_goods_receipt")}
+          onRowClick={handleMainGridRowClick}
+          // onSelectionChanged={handleSelectionChange}
+          showPrintButton={false}
+          allowExport={false}
+          allowSearching={false}
+          hideToolbar={true}
+        />) : (
+<ErpDevGrid
           ref={gridRef}
           columns={mainGridColumns}
           dataUrl={`${Urls.inv_transaction_base}${formState.transactionType}/PendingTransactionMaster/`}
@@ -322,6 +344,8 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
           allowSearching={false}
           hideToolbar={true}
         />
+        )
+      }
       </div>
 
       {/* Detail Grid - Order Details */}

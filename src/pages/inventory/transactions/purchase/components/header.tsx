@@ -343,7 +343,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                       </li>
                     )}
 
-                    {formState.transaction.master.voucherType !== 'PR' && (
+                    {   ["PR","GRN"].includes(formState.transaction.master.voucherType) && (
                       <li>
                         <button
                           className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fff1f2] hover:text-[#be123c] dark:hover:bg-[#8813374d] dark:hover:text-[#fda4af] transition-all duration-200 rounded-md group text-left"
@@ -356,8 +356,9 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                       </li>
                     )}
 
-                    {formState.transaction.master.voucherType !== 'PR' &&
-                      formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+                    {
+                    formState.transaction.master.voucherType == 'PI' &&
+                      (
                         <li>
                           <button
                             className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fefce8] hover:text-[#a16207] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047] transition-all duration-200 rounded-md group text-left"
@@ -371,6 +372,34 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                       )}
 
 
+
+                    {
+                    ["PO",VoucherType.PurchaseQuotation].includes(formState.transaction.master.voucherType) && 
+                      (
+                        <li>
+                          <button
+                            className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fefce8] hover:text-[#a16207] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047] transition-all duration-200 rounded-md group text-left"
+                            onClick={(e) => setIsPendingOrderOpen({ open: true, type: "POC" })}>
+                            <div className="w-8 h-8 bg-[#fef3c7] dark:bg-[#78350f4d] rounded-full flex items-center justify-center group-hover:bg-[#fde68a] dark:group-hover:bg-[#78350fcc] group-hover:scale-110 transition-all duration-200">
+                              <Package className="h-4 w-4 text-[#a16207] dark:text-[#fde047]" />
+                            </div>
+                            <span className="font-medium">{t('Consolidated all branch PurchaseOrder list')}</span>
+                          </button>
+                        </li>
+                      )}
+                    {["PO"].includes(formState.transaction.master.voucherType) && 
+                      (
+                        <li>
+                          <button
+                            className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fefce8] hover:text-[#a16207] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047] transition-all duration-200 rounded-md group text-left"
+                            onClick={(e) => setIsPendingOrderOpen({ open: true, type: "PQ" })}>
+                            <div className="w-8 h-8 bg-[#fef3c7] dark:bg-[#78350f4d] rounded-full flex items-center justify-center group-hover:bg-[#fde68a] dark:group-hover:bg-[#78350fcc] group-hover:scale-110 transition-all duration-200">
+                              <Package className="h-4 w-4 text-[#a16207] dark:text-[#fde047]" />
+                            </div>
+                            <span className="font-medium">{t('Pending Purchase Quotation List')}</span>
+                          </button>
+                        </li>
+                      )}
                     <li>
                       <button
                         className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#ecfeff] hover:text-[#0e7490] dark:hover:bg-[#164e634d] dark:hover:text-[#67e8f9] transition-all duration-200 rounded-md group text-left"
@@ -522,13 +551,13 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                 {isPendingOrderOpen && isPendingOrderOpen.open &&
                   <ERPModal
                     isOpen={isPendingOrderOpen.open}
-                    closeModal={() => setIsPendingOrderOpen({ open: false, type: "PO" })}
+                    closeModal={() => setIsPendingOrderOpen({ open: false, type: "" })}
                     title={t("pending_order")}
                     width={800}
                     height={780}
                     content={
                       <PendingOrderList
-                        closeModal={() => setIsPendingOrderOpen({ open: false, type: "PO" })}
+                        closeModal={() => setIsPendingOrderOpen({ open: false, type: "" })}
                         t={t}
                         voucherType={isPendingOrderOpen.type}
                         onProcessSelected={onProcessSelected}

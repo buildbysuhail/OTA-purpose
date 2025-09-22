@@ -7,6 +7,7 @@ import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import VoucherType from "../../../../enums/voucher-types";
 import { APIClient } from "../../../../helpers/api-client";
+import { merge } from 'lodash';
 import {
   useUserRights,
   UserAction,
@@ -93,6 +94,21 @@ interface FormElementState {
   disabled: boolean;
   label: string;
 }
+export type LoadAndSetTransVoucherFn = (
+  usingManualInvNumber?: boolean,
+  voucherNumber?: number,
+  voucherPrefix?: string,
+  voucherType?: string,
+  formType?: string,
+  manualInvoiceNumber?: string,
+  transactionMasterID?: number,
+  mode?: "increment" | "decrement" | undefined,
+  skipPrompt?: boolean | false,
+  setVoucherNo?: boolean | false,    
+  loadVType?: string,
+  loadFType?: string,
+  loadPrefix?: string,
+) => Promise<boolean | undefined>; // ✅ fix return type
 
 const api = new APIClient();
 export const useTransaction = (
@@ -283,21 +299,22 @@ export const useTransaction = (
       console.error("Error fetching user config:", error);
     }
   };
-  const loadAndSetTransVoucher = async (
-    usingManualInvNumber: boolean = false,
-    voucherNumber?: number,
-    voucherPrefix?: string,
-    voucherType?: string,
-    formType?: string,
-    manualInvoiceNumber?: string,
-    transactionMasterID?: number,
-    mode?: "increment" | "decrement" | undefined,
-    skipPrompt?: boolean | false,
-    setVoucherNo?: boolean | false,    
-    loadVType?: string,
-    loadFType?: string,
-    loadPrefix?: string,
-  ) => {
+
+  const loadAndSetTransVoucher: LoadAndSetTransVoucherFn = async (
+  usingManualInvNumber = false,
+  voucherNumber,
+  voucherPrefix,
+  voucherType,
+  formType,
+  manualInvoiceNumber,
+  transactionMasterID,
+  mode,
+  skipPrompt = false,
+  setVoucherNo = false,
+  loadVType,
+  loadFType,
+  loadPrefix,
+) => {
     debugger;
     const _s_isDirty = isDirtyTransaction(
       formState.prev,
@@ -340,10 +357,14 @@ export const useTransaction = (
       loadFType,
       loadPrefix
     );
+    debugger;
+    if (loadVType == "GRN" || loadVType == "GRR") {
+       _formState = merge({}, _formState, {transaction:{master:{deliveryNoteNumber: manualInvoiceNumber}}} );
+    }
+
     if (typeof _formState == "boolean") {
       return;
     }
-
     _formState.formElements = {
       ..._formState.formElements,
       

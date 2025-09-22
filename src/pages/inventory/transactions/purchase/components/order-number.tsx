@@ -10,21 +10,10 @@ import { Ellipsis } from "lucide-react";
 import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
 import { formStateMasterHandleFieldChange } from "../reducer";
 import VoucherType, { purchaseVoucherTypes, } from "../../../../../enums/voucher-types";
+import { LoadAndSetTransVoucherFn } from "../use-transaction";
 
 interface LoadByOrderNoProps extends VoucherElementProps {
-  loadAndSetTransVoucher: (usingManualInvNumber: boolean,
-    voucherNumber?: number,
-    voucherPrefix?: string,
-    voucherType?: string,
-    formType?: string,
-    manualInvoiceNumber?: string,
-    transactionMasterID?: number,
-    mode?: "increment" | "decrement" | undefined,
-    skipPrompt?: boolean | false,
-    setVoucherNo?: boolean | false,    
-    loadVType?: string,
-    loadFType?: string,
-    loadPrefix?: string) => any;
+  loadAndSetTransVoucher: LoadAndSetTransVoucherFn
 }
 
 const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
@@ -122,7 +111,7 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
               className="flex-1 h-6 text-xs max-w-none sm:max-w-28"
               onChange={(e) => onOrderNumberChange(e.target.value)}
             />
-            {formState.transaction.master.voucherType == "PI" &&
+            {(formState.transaction.master.voucherType == "PI" || formState.transaction.master.voucherType == "GRN") &&
               <button className="bg-gray-300 p-2 rounded-md hover:shadow-md transition duration-300 flex-shrink-0" onClick={showLoadByRefNo}>
               <Ellipsis className="w-4 h-4" />
             </button>

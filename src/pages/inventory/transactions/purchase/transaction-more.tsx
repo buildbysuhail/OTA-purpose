@@ -9,10 +9,11 @@ import { Ellipsis } from "lucide-react";
 import Urls from "../../../../redux/urls";
 import { TransactionFormState } from "./transaction-types";
 import OrderNo from "./components/order-number";
+import { LoadAndSetTransVoucherFn } from "./use-transaction";
 
 interface MoreOptionsModalContentProps {
   formState: TransactionFormState;
-  loadAndSetTransVoucher: any;
+  loadAndSetTransVoucher: LoadAndSetTransVoucherFn
   dispatch: any;
   handleFieldChange: any;
   t: any;

@@ -4,22 +4,12 @@ import { VoucherElementProps } from "../transaction-types";
 import { formStateMasterHandleFieldChange } from "../reducer";
 import React from "react";
 import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
+import { LoadAndSetTransVoucherFn } from "../use-transaction";
 
 const api = new APIClient();
 
 interface VoucherNoPrefixProps extends VoucherElementProps {
-  loadAndSetTransVoucher: (
-    usingManualInvNumber?: boolean,
-    voucherNumber?: number,
-    voucherPrefix?: string,
-    voucherType?: string,
-    formType?: string,
-    manualInvoiceNumber?: string,
-    accTransactionMasterID?: number,
-    mode?: "increment" | "decrement" | undefined,
-    skipPrompt?: boolean | false,
-    setVoucherNo?: boolean | false
-  ) => Promise<boolean>;
+  loadAndSetTransVoucher: LoadAndSetTransVoucherFn
   phone?: boolean;
 }
 

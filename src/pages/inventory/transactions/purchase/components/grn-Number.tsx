@@ -8,23 +8,10 @@ import { RootState } from "../../../../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { formStateHandleFieldChangeKeysOnly } from "../reducer";
+import { LoadAndSetTransVoucherFn } from "../use-transaction";
 
 interface GrnNumberProps extends VoucherElementProps {
-  loadAndSetTransVoucher: (
-    usingManualInvNumber: boolean ,
-    voucherNumber?: number,
-    voucherPrefix?: string,
-    voucherType?: string,
-    formType?: string,
-    manualInvoiceNumber?: string,
-    transactionMasterID?: number,
-    mode?: "increment" | "decrement" | undefined,
-    skipPrompt?: boolean | false,
-    setVoucherNo?: boolean | false,
-    loadVType?: string,
-    loadFType?: string,
-    loadPrefix?: string,
-  ) => any;
+  loadAndSetTransVoucher: LoadAndSetTransVoucherFn
   closeModal: any;
   fromVoucherType: string;
   updateDeliveryNoteNumber?: boolean;

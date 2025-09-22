@@ -5,6 +5,7 @@ import { formStateMasterHandleFieldChange } from "../reducer";
 import VoucherNumberDetailsSidebar from "../../../../transaction-base/Voucher-number-details";
 import React from "react";
 import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
+import { LoadAndSetTransVoucherFn } from "../use-transaction";
 
 const api = new APIClient();
 
@@ -13,21 +14,7 @@ interface AccVoucherNoProps {
 }
 
 interface VoucherNoPrefixProps extends VoucherElementProps, AccVoucherNoProps {
-  loadAndSetTransVoucher: (
-    usingManualInvNumber: boolean,
-    voucherNumber?: number,
-    voucherPrefix?: string,
-    voucherType?: string,
-    formType?: string,
-    manualInvoiceNumber?: string,
-    transactionMasterID?: number,
-    mode?: "increment" | "decrement" | undefined,
-    skipPrompt?: boolean | false,
-    setVoucherNo?: boolean | false,    
-    loadVType?: string,
-    loadFType?: string,
-    loadPrefix?: string,
-  ) => Promise<boolean>;
+  loadAndSetTransVoucher: LoadAndSetTransVoucherFn
 }
 
 const AccVoucherNo = React.forwardRef<HTMLInputElement, VoucherNoPrefixProps>(

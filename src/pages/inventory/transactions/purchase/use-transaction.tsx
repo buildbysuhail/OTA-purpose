@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { usePrint } from "./use-print";
 import moment from "moment";
@@ -143,7 +143,9 @@ export const useTransaction = (
   refNoRef?: any,
   discountRef?: any,
   chequeStatusRef?: any,
-  handleKeyDown?: (e: any, field: string, rowIndex: number) => void
+  handleKeyDown?: (e: any, field: string, rowIndex: number) => void,
+  formStateRef?: any,
+  purchaseGridRef?: any,
 ) => {
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
@@ -176,27 +178,62 @@ export const useTransaction = (
     (state: RootState) => state.ClientSession
   );
   const { printBarcode, printVoucher } = usePrint();
+  const formState = useAppSelector(
+    (state: RootState) => state.InventoryTransaction
+  );
 
   useEffect(() => {
-    const handleGlobalKeyDown = (event: KeyboardEvent) => {
-      if (event.ctrlKey && event.key.toLowerCase() === "l") {
-        event.preventDefault();
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.ctrlKey) {
+        const currentRowIndex = formState.currentCell?.rowIndex ?? -1;
+        const currentProduct = formState.transaction.details[currentRowIndex]?.product ?? "";
+
+        if (currentProduct.trim() !== "") {
+          dispatch(
+            formStateHandleFieldChangeKeysOnly({
+              fields: { ShowProductBatchUnitDetails: true },
+            })
+          );
+        }
+      }
+    };
+    const handleKeyUp = (event: KeyboardEvent) => {
+      if (event.key === "Control") {
         dispatch(
-          formStateHandleFieldChange({
-            fields: {
-              ledgerDetails: true,
-            },
+          formStateHandleFieldChangeKeysOnly({
+            fields: { ShowProductBatchUnitDetails: false },
           })
         );
       }
     };
-    //  Party Search ☝
-
-    window.addEventListener("keydown", handleGlobalKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
     return () => {
-      window.removeEventListener("keydown", handleGlobalKeyDown);
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [dispatch]);
+  }, [dispatch, formState.currentCell, formState.transaction.details]);
+
+  // useEffect(() => {
+  //   const handleGlobalKeyDown = (event: KeyboardEvent) => {
+  //     if (event.ctrlKey && event.key.toLowerCase() === "l") {
+  //       event.preventDefault();
+  //       dispatch(
+  //         formStateHandleFieldChange({
+  //           fields: {
+  //             ledgerDetails: true,
+  //           },
+  //         })
+  //       );
+  //     }
+  //   };
+  //   //  Party Search ☝
+
+  //   window.addEventListener("keydown", handleGlobalKeyDown);
+  //   return () => {
+  //     window.removeEventListener("keydown", handleGlobalKeyDown);
+  //   };
+  // }, [dispatch]);
 
   // const clearControlForNew = async () => {
 
@@ -290,7 +327,7 @@ export const useTransaction = (
       );
       await setStorageString("utInvc", base64);
       // Decode the base64 back to JSON string      
-        const _userConfig = safeBase64Decode(base64 ?? "");;
+      const _userConfig = safeBase64Decode(base64 ?? "");;
       const userConfig: UserConfig = customJsonParse(_userConfig??"{}");
 
 
@@ -314,7 +351,7 @@ export const useTransaction = (
   loadVType,
   loadFType,
   loadPrefix,
-) => {
+  ) => {
     debugger;
     const _s_isDirty = isDirtyTransaction(
       formState.prev,
@@ -370,7 +407,7 @@ export const useTransaction = (
     }
     _formState.formElements = {
       ..._formState.formElements,
-      
+
       btnAdd: {
         ..._formState.formElements.btnAdd,
         label: t("add"),
@@ -408,7 +445,7 @@ export const useTransaction = (
     loadUserConfig: boolean = false
   ) => {
 
-      
+
 
     const Utc = await getStorageString("utInvc");
     let userConfig: UserConfig | undefined;
@@ -686,9 +723,9 @@ export const useTransaction = (
     });
   };
 
-  const formState = useAppSelector(
-    (state: RootState) => state.InventoryTransaction
-  );
+  // const formState = useAppSelector(
+  //   (state: RootState) => state.InventoryTransaction
+  // );
   async function undoEditMode(
     isEdit: boolean,
     transactionMasterId: number
@@ -1320,10 +1357,10 @@ export const useTransaction = (
     const editableColumn = formState.gridColumns?.find(
       (col) => col.visible !== false && col.dataField != null && col.allowEditing == true && col.readOnly !== true
     );
-     await setStorageString(
-          `${formState.transaction.master.voucherType}${formState.transaction.master.voucherForm}`,
-          JSON.stringify(details)
-        );
+    await setStorageString(
+      `${formState.transaction.master.voucherType}${formState.transaction.master.voucherForm}`,
+      JSON.stringify(details)
+    );
     if (calculateSummary && calculateTotal && formState && dispatch && formStateHandleFieldChangeKeysOnly) {
       const summaryRes = calculateSummary(details, formState, {
         result: {},
@@ -2539,7 +2576,7 @@ export const useTransaction = (
       }
       const _lastSelectedWarehouseIDOfItemPopupsSearch = (async() => {
         try {
-           const stored = await getStorageString(
+          const stored = await getStorageString(
             "lastSelectedWarehouseIDOfItemPopupsSearch"
           );
           return stored ? Number(stored) || 0 : 0;
@@ -3091,7 +3128,83 @@ export const useTransaction = (
       const key = event.key;
       const isShiftPressed = event.shiftKey;
       const isCtrlPressed = event.ctrlKey;
-
+      if (columnName === "global") {
+        if (event.shiftKey && event.key === "F") {
+          event.preventDefault();
+          if (voucherNumberRef.current) {
+            voucherNumberRef.current.focus();
+          }
+        }
+        // Focus Voucher Number ☝
+        if (event.shiftKey && event.key === "D") {
+          event.preventDefault();
+          dispatch(
+            formStateHandleFieldChange({
+              fields: { documentModal: true }
+            })
+          )
+        }
+        // Document Properties ☝
+        // if (event.shiftKey && event.key === "F2") {
+        //   event.preventDefault();
+        //   dispatch(
+        //     formStateHandleFieldChange({
+        //       fields: { ledgerDetails: true },
+        //     })
+        //   );
+        //   return { handled: false }
+        // }
+        // ledger details ☝
+        if (event.ctrlKey && event.key.toLowerCase() === "g") {
+          event.preventDefault();
+          const currentFormState = formStateRef.current;
+          if (
+            currentFormState.transaction.details.length > 0 &&
+            purchaseGridRef.current
+          ) {
+            const visibleColumns =
+              currentFormState.gridColumns?.filter(
+                (col: any) => col.visible !== false && col.dataField != null
+              ) || [];
+            const firstEditableColumn = visibleColumns.find(
+              (col: any) => col.allowEditing == true && !col.readOnly
+            );
+            if (firstEditableColumn) {
+              const columnIndex = visibleColumns.indexOf(firstEditableColumn);
+              const res = purchaseGridRef.current.focusCell(0, columnIndex);
+              if (res) {
+                const data =
+                  formState.transaction.details[res.rowIndex];
+                dispatch(
+                  formStateHandleFieldChange({
+                    fields: {
+                      currentCell: {
+                        column: res.column,
+                        rowIndex: res.rowIndex,
+                        data: data,
+                      },
+                    },
+                  })
+                );
+              }
+            }
+          }
+        }
+        // Focus Inventory Grid ☝
+        if (event.shiftKey && event.key.toUpperCase() === "F5") {
+          event.preventDefault();
+          const currentFormState = formStateRef.current;
+          if (
+            !currentFormState.formElements.pnlMasters?.disabled &&
+            currentFormState.transaction.details != null &&
+            currentFormState.transaction.details.length > 0
+          ) {
+            save();
+          }
+        }
+        // Save Document ☝
+        return { handled: true }
+      }
       if (!result.formElements) {
         result.formElements = {};
       }
@@ -3120,17 +3233,17 @@ export const useTransaction = (
           }
           break;
 
-        case "b":
-        case "B":
-          if (isCtrlPressed) {
-            dispatch(
-              commonParams.formStateHandleFieldChangeKeysOnly({
-                fields: { ShowProductBatchUnitDetails: true },
-              })
-            );
-            return { handled: true };
-          }
-          break;
+        // case "M":
+        // case "m":
+        //   if (isCtrlPressed) {
+        //     dispatch(
+        //       commonParams.formStateHandleFieldChangeKeysOnly({
+        //         fields: { ShowProductBatchUnitDetails: true },
+        //       })
+        //     );
+        //     return { handled: true };
+        //   }
+        //   break;
 
         case "i":
         case "I":
@@ -3147,6 +3260,20 @@ export const useTransaction = (
           }
           break;
         // Product Information ☝
+
+        case "b":
+        case "B":
+          if (isCtrlPressed) {
+            dispatch(
+              commonParams.formStateHandleFieldChangeKeysOnly({
+                fields: {
+                  ledgerDetails: true
+                }
+              })
+            )
+            return { handled: true };
+          }
+        //  Party Search ☝
 
         case " ": {
           // Space key
@@ -3860,7 +3987,7 @@ export const useTransaction = (
             `${Urls.inv_transaction_base}${transactionType}/LedgerDetails?LedgerId=${ledgerID}`
           ),
         ]);
-debugger;
+        debugger;
         const ret = {
           ..._formState,
           formElements: {
@@ -3884,7 +4011,7 @@ debugger;
               ledgerID: ledgerID,
               partyName: ledgerData?.partyName ?? "",
               displayName: ledgerData?.displayName ?? "",
-              address1: ledgerData?.address1 ?? "", 
+              address1: ledgerData?.address1 ?? "",
               address4: _formState.isInitialLedger ? _formState.transaction?.master?.address4: ledgerData?.mobileNumber ?? "",
               address3: ledgerData?.address3 ?? "",
             }

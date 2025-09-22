@@ -564,6 +564,7 @@ export interface TransactionFormState {
   isInitialLedger?: boolean;
   memoEditor: { visible: boolean; data: string; rowIndex: number };
   gridMenuPop:boolean;
+  documentModal:boolean;
 }
 interface loadingResult {
   isLoading: boolean;

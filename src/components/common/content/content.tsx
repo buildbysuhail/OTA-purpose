@@ -60,6 +60,7 @@ const Test = lazy(() => import("../../../pages/test"));
 const TotalSummary = lazy(() => import("../../../pages/total-summary"));
 const ShortkeysSettings = lazy(() => import("../../../pages/settings/Integration/shortkeysSettings"));
 const TestInputButton = lazy(() => import("../../../pages/test-input-button"));
+const FcmPushNotificationTest = lazy(() => import("../../../pages/settings/Integration/fcm-push-notification-test"));
 const AccTransactionGrid = lazy(() => import("../../../pages/accounts/transactions/acc-transacton-grid"));
 const TransactionGrid = lazy(() => import("../../../pages/inventory/transactions/purchase/transacton-grid"));
 
@@ -178,6 +179,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/integration/total-summary" element={<TotalSummary />} />
         <Route path="/integration/shortkeys_settings" element={<ShortkeysSettings defaultShortcuts={[]} />} />
         <Route path="/integration/test-input-button" element={<TestInputButton />} />
+        <Route path="/integration/fcm_push_notification_test" element={<FcmPushNotificationTest />} />
         {/* Integration End */}
 
         {/* Templates starts */}

@@ -221,9 +221,10 @@ const Header: FC<HeaderProps> = () => {
 
     try {
       api.clearInFlightRequests();
-      CachedUrls.forEach(async (x) => {
-        await removeStorageString(btoa(x))
-      })
+      const keys = Object.keys(CachedUrls);
+
+      // OR Parallel (Promise.all)
+      await Promise.all(keys.map(key => removeStorageString(btoa(key))));
 
     } catch (error) {
       console.error("Error refreshing cache:", error);

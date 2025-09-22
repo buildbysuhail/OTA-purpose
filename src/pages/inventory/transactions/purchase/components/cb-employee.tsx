@@ -6,6 +6,7 @@ import Urls from "../../../../../redux/urls";
 
 interface CostCentreProps extends VoucherElementProps {
   handleFieldKeyDown: (field: string, key: string) => void;
+  transactionType: string;
 }
 
 const Employee = React.forwardRef<HTMLInputElement, CostCentreProps>(({
@@ -14,6 +15,7 @@ const Employee = React.forwardRef<HTMLInputElement, CostCentreProps>(({
   t,
   handleFieldKeyDown,
   handleKeyDown,
+  transactionType
 }, ref) => {
 
   return (
@@ -45,7 +47,7 @@ const Employee = React.forwardRef<HTMLInputElement, CostCentreProps>(({
             id: "employeeID",
             valueKey: "id",
             labelKey: "name",
-            getListUrl: Urls.data_employees,
+            getListUrl: `${Urls.inv_transaction_base}${transactionType}/Data/Employee/`,
             params:`employeeType=${formState.userConfig
                 ?.showPurchaserOnly
                 ? EmployeeType.Purchaser

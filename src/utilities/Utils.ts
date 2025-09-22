@@ -17,7 +17,7 @@ import { BranchDetails, CompanyDetails, HeaderFooter, UserModel } from "../redux
 import { PrintResponse, PrintMasterDto, PrintDetailDto, CompanyDetailsForPrint } from "../pages/use-print-type";
 import { getCommonValues } from "../pages/use-print";
 import { getStorageString } from "./storage-utils";
-const api = new APIClient();
+
 export function capitalizeFirstLetter(text: string) {
   return text.charAt(0)?.toUpperCase() + text.slice(1);
 }
@@ -837,13 +837,7 @@ if (!subtleCrypto) throw new Error("Web Crypto API not available");
 
   return new TextDecoder().decode(decryptedBuffer);
 }
-export const getApLocalData = async(key: string) => {
-  const df = await getStorageString(key);
-  if(df == null || df == undefined || df == "undefined") {
-    return null;
-  }
-  return JSON.parse(df);
-}
+
 export const calculateMarkup = (purPrice: number, salesPrice: number, salesTaxPercentage: number, showRateBeforeTax: boolean, getFormattedValue: (val: number, ignoreNullOrZero?: boolean, decimalPoint?: number | undefined) => string ) =>{
   
   try {
@@ -951,6 +945,7 @@ export interface LoadTemplateParams {
 export const loadTemplateById = async <T>(templateId: LoadTemplateParams) => {
   
   try {
+    const api = new APIClient();
     const res = await api.getAsync(`${Urls.templates}${templateId}`);
         let cc: TemplateState<T> = customJsonParse(res.content);
         const _template = {

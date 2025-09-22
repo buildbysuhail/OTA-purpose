@@ -8,9 +8,7 @@ import React, {
   useMemo,
   Ref,
 } from "react";
-import {
-  FixedSizeList as List,
-} from "react-window";
+import { FixedSizeList as List } from "react-window";
 import {
   useAppDispatch,
   useAppSelector,
@@ -34,9 +32,7 @@ import type {
 } from "../../types/dev-grid-column";
 import ERPProductSearch from "../erp-searchbox";
 import Urls from "../../../redux/urls";
-import {
-  applyGridColumnPreferences,
-} from "../../../utilities/dx-grid-preference-updater";
+import { applyGridColumnPreferences } from "../../../utilities/dx-grid-preference-updater";
 import type {
   ColumnModel,
   CurrentCell,
@@ -54,7 +50,11 @@ import {
   formStateTransactionDetailsRowsAdd,
 } from "../../../pages/inventory/transactions/purchase/reducer";
 import useDebounce from "../../../pages/inventory/transactions/purchase/use-debounce";
-import { generateUniqueKey, isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from "../../../utilities/Utils";
+import {
+  generateUniqueKey,
+  isNullOrUndefinedOrEmpty,
+  isNullOrUndefinedOrZero,
+} from "../../../utilities/Utils";
 import "../../../assets/css/loader-style.css";
 import { ERPSimpleComboboxRef } from "../../ERPComponents/erp-simple-combobox";
 import { AppState, inputBox } from "../../../redux/slices/app/types";
@@ -67,7 +67,11 @@ import { saveAs } from "file-saver";
 import { useTableResizeAndReorder } from "./use-resizing";
 import { useUltraFastVirtualScrolling } from "./use-virtual-scrolling";
 import { ApplicationSettingsType } from "../../../pages/settings/system/application-settings-types/application-settings-types";
-import { initialTransactionDetailData, initialTransactionDetails2, transactionInitialMoreDetails } from "../../../pages/inventory/transactions/purchase/transaction-type-data";
+import {
+  initialTransactionDetailData,
+  initialTransactionDetails2,
+  transactionInitialMoreDetails,
+} from "../../../pages/inventory/transactions/purchase/transaction-type-data";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import moment from "moment";
@@ -205,13 +209,13 @@ interface RowData {
   columnWidths: {
     width: number;
     field: string;
-}[];
+  }[];
   gridBorderColor?: string;
   formState: TransactionFormState;
   appState: AppState;
   applicationSettings: ApplicationSettingsType;
-  isMobileGridRow?: boolean
-  isMobileEditRow?: boolean
+  isMobileGridRow?: boolean;
+  isMobileEditRow?: boolean;
 }
 
 const EditableCell: React.FC<EditableCellProps> = React.memo(
@@ -269,12 +273,22 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
       defaultBgColor: editCellComboBox?.defaultBgColor,
       bold: editCellComboBox?.bold,
     };
-    const { round } = useNumberFormat()
+    const { round } = useNumberFormat();
     const [localValue, setLocalValue] = useState<string>(
       productId > 0 ? value?.toString() : ""
     );
-    const [bgColor, setBgColor] = useState<string>(appState.mode === "dark" ? document.activeElement === inputRef.current ? "#444444" : "#333333" : `rgb(${mergedInputBox?.defaultBgColor || "255,255,255"})`);
-    const [foreColor, setForeColor] = useState<string>(appState.mode === "dark" ? "#e0e0e0" : `rgb(${mergedInputBox?.fontColor || "0,0,0"})`);
+    const [bgColor, setBgColor] = useState<string>(
+      appState.mode === "dark"
+        ? document.activeElement === inputRef.current
+          ? "#444444"
+          : "#333333"
+        : `rgb(${mergedInputBox?.defaultBgColor || "255,255,255"})`
+    );
+    const [foreColor, setForeColor] = useState<string>(
+      appState.mode === "dark"
+        ? "#e0e0e0"
+        : `rgb(${mergedInputBox?.fontColor || "0,0,0"})`
+    );
 
     useEffect(() => {
       if (appState.mode === "dark") {
@@ -284,28 +298,39 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
         setForeColor("#e0e0e0");
       } else {
         setBgColor(
-          document.activeElement === inputRef.current ? `rgb(${mergedInputBox?.focusBgColor || "240,248,255"})` : `rgb(${mergedInputBox?.defaultBgColor || "255,255,255"})`
+          document.activeElement === inputRef.current
+            ? `rgb(${mergedInputBox?.focusBgColor || "240,248,255"})`
+            : `rgb(${mergedInputBox?.defaultBgColor || "255,255,255"})`
         );
         setForeColor(`rgb(${mergedInputBox?.fontColor || "0,0,0"})`);
       }
-    }, [appState.mode, document.activeElement, inputRef.current, mergedInputBox?.focusBgColor, mergedInputBox?.defaultBgColor, mergedInputBox?.fontColor,]);
+    }, [
+      appState.mode,
+      document.activeElement,
+      inputRef.current,
+      mergedInputBox?.focusBgColor,
+      mergedInputBox?.defaultBgColor,
+      mergedInputBox?.fontColor,
+    ]);
 
     useEffect(() => {
       setLocalValue(value?.toString());
     }, [value]);
 
-    const validateNumberInput = (value: string, _blockUnitOnDecimalPoint: boolean) => {
-
+    const validateNumberInput = (
+      value: string,
+      _blockUnitOnDecimalPoint: boolean
+    ) => {
       if (value === "") return true;
       const parts = value.split(".");
       if (parts.length > 2) return false;
       if (parts.length == 2) {
-        debugger
+        debugger;
       }
       if (parts[0] && !/^-?\d*$/.test(parts[0])) return false;
       if (parts.length === 2) {
         if (_blockUnitOnDecimalPoint) {
-          return false
+          return false;
         }
         if (parts[1].length > decimalLimit) return false;
         if (!/^\d*$/.test(parts[1])) return false;
@@ -313,17 +338,24 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
       return true;
     };
     const debounceCellChange = useDebounce(
-      (value: any, key: keyof TransactionDetail, index: number, decimalPoint?: number) => {
-        let final = value
+      (
+        value: any,
+        key: keyof TransactionDetail,
+        index: number,
+        decimalPoint?: number
+      ) => {
+        let final = value;
         if (decimalPoint) {
           console.log(decimalPoint);
 
           final =
-            column.decimalPoint && value !== "" ? (() => {
-              const num = parseFloat(value as any);
-              if (isNaN(num)) return ""; // return empty if not a valid number
-              return round(num, column.decimalPoint);
-            })() : value;
+            column.decimalPoint && value !== ""
+              ? (() => {
+                  const num = parseFloat(value as any);
+                  if (isNaN(num)) return ""; // return empty if not a valid number
+                  return round(num, column.decimalPoint);
+                })()
+              : value;
         }
         onChange && onChange(final, key, rowIndex);
       },
@@ -347,12 +379,18 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
           e.currentTarget.value = inputValue;
         }
       }
-      if (column.dataType === "number" && !validateNumberInput(inputValue, (column.dataField == "qty" && blockUnitOnDecimalPoint))) {
+      if (
+        column.dataType === "number" &&
+        !validateNumberInput(
+          inputValue,
+          column.dataField == "qty" && blockUnitOnDecimalPoint
+        )
+      ) {
         e.currentTarget.value = localValue;
         return;
       }
       setLocalValue(inputValue);
-      console.log('inputValue');
+      console.log("inputValue");
 
       console.log(inputValue);
 
@@ -475,62 +513,98 @@ const SummaryRow: React.FC<{
   gridBorderColor,
   appState,
 }) => {
-    const formState = useAppSelector(
-      (state: RootState) => state.InventoryTransaction
-    );
-    const showBorder = formState.userConfig?.showColumnBorder ?? true;
+  const formState = useAppSelector(
+    (state: RootState) => state.InventoryTransaction
+  );
+  const showBorder = formState.userConfig?.showColumnBorder ?? true;
 
-    return (
-      <tr
-        className={`flex ${appState.mode === "dark" ? "bg-gradient-to-r from-[#444444] via-[#555555] to-[#444444]" : "bg-gradient-to-r from-slate-100/80 via-gray-100/60 to-slate-100/80"}`}
-        style={{
-          width: `${tableWidth}px`,
-          height: `${rowHeight}px`,
-          minHeight: `${rowHeight}px`,
-          maxHeight: `${rowHeight}px`,
-          boxSizing: "border-box",
-          borderBottom: `0.5px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.1)" : `rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`}`,
-        }}
-      >
-        {columns
-          .filter((col) => col.visible !== false && col.dataField != null)
-          .map((column, columnIndex) => {
-            const summary = summaryConfig.find(
-              (s) =>
-                s.showInColumn === column.dataField ||
-                s.column === column.dataField
-            );
-            const value = summary
-              ? summaryValues[summary.column as string]
-              : null;
-            const formattedValue = summary?.customizeText
-              ? summary.customizeText({ value })
-              : value;
-            const isFirstColumn = columnIndex === 0;
-            const isLastColumn = columnIndex === columns.length - 1;
-            return (
-              <td
-                key={`summary_${column.dataField}`}
-                className={`flex items-center justify-end px-1 py-1 font-semibold ${appState.mode === "dark" ? "bg-[#555555] text-[#e0e0e0]" : "bg-slate-200 text-gray-700"}`}
-                style={{
-                  fontSize: `${gridFontSize}px`,
-                  fontWeight: gridIsBold ? "bold" : "600",
-                  width: column.width ? `${column.width}px` : "150px",
-                  minWidth: column.width ? `${column.width}px` : "150px",
-                  textAlign: summary?.alignment || column.alignment || (column.dataType === "number" ? "right" : "left"),
-                  boxSizing: "border-box",
-                  borderRight: isFirstColumn ? `2px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.2)" : `rgba(${gridBorderColor || "226,232,240"})`}`
-                    : isLastColumn ? "none" : showBorder ? `0.2px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.1)" : `rgba(${gridBorderColor || "226,232,240"}, 0.8)`}` : "none",
-                  borderLeft: isLastColumn ? `2px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.2)" : `rgba(${gridBorderColor || "226,232,240"})`}` : "none",
-                }}
-              >
-                {summary ? formattedValue : ""}
-              </td>
-            );
-          })}
-      </tr>
-    );
-  };
+  return (
+    <tr
+      className={`flex ${
+        appState.mode === "dark"
+          ? "bg-gradient-to-r from-[#444444] via-[#555555] to-[#444444]"
+          : "bg-gradient-to-r from-slate-100/80 via-gray-100/60 to-slate-100/80"
+      }`}
+      style={{
+        width: `${tableWidth}px`,
+        height: `${rowHeight}px`,
+        minHeight: `${rowHeight}px`,
+        maxHeight: `${rowHeight}px`,
+        boxSizing: "border-box",
+        borderBottom: `0.5px solid ${
+          appState.mode === "dark"
+            ? "rgba(255,255,255,0.1)"
+            : `rgba(${
+                formState.userConfig?.gridBorderColor || "203,213,225"
+              }, 0.3)`
+        }`,
+      }}
+    >
+      {columns
+        .filter((col) => col.visible !== false && col.dataField != null)
+        .map((column, columnIndex) => {
+          const summary = summaryConfig.find(
+            (s) =>
+              s.showInColumn === column.dataField ||
+              s.column === column.dataField
+          );
+          const value = summary
+            ? summaryValues[summary.column as string]
+            : null;
+          const formattedValue = summary?.customizeText
+            ? summary.customizeText({ value })
+            : value;
+          const isFirstColumn = columnIndex === 0;
+          const isLastColumn = columnIndex === columns.length - 1;
+          return (
+            <td
+              key={`summary_${column.dataField}`}
+              className={`flex items-center justify-end px-1 py-1 font-semibold ${
+                appState.mode === "dark"
+                  ? "bg-[#555555] text-[#e0e0e0]"
+                  : "bg-slate-200 text-gray-700"
+              }`}
+              style={{
+                fontSize: `${gridFontSize}px`,
+                fontWeight: gridIsBold ? "bold" : "600",
+                width: column.width ? `${column.width}px` : "150px",
+                minWidth: column.width ? `${column.width}px` : "150px",
+                textAlign:
+                  summary?.alignment ||
+                  column.alignment ||
+                  (column.dataType === "number" ? "right" : "left"),
+                boxSizing: "border-box",
+                borderRight: isFirstColumn
+                  ? `2px solid ${
+                      appState.mode === "dark"
+                        ? "rgba(255,255,255,0.2)"
+                        : `rgba(${gridBorderColor || "226,232,240"})`
+                    }`
+                  : isLastColumn
+                  ? "none"
+                  : showBorder
+                  ? `0.2px solid ${
+                      appState.mode === "dark"
+                        ? "rgba(255,255,255,0.1)"
+                        : `rgba(${gridBorderColor || "226,232,240"}, 0.8)`
+                    }`
+                  : "none",
+                borderLeft: isLastColumn
+                  ? `2px solid ${
+                      appState.mode === "dark"
+                        ? "rgba(255,255,255,0.2)"
+                        : `rgba(${gridBorderColor || "226,232,240"})`
+                    }`
+                  : "none",
+              }}
+            >
+              {summary ? formattedValue : ""}
+            </td>
+          );
+        })}
+    </tr>
+  );
+};
 
 const VirtualRow = React.memo(
   ({
@@ -566,15 +640,20 @@ const VirtualRow = React.memo(
     appState,
     applicationSettings,
     isMobileGridRow = false,
-    isMobileEditRow = false
+    isMobileEditRow = false,
   }: RowData) => {
     const [focusedColumn, setFocusedColumn] = useState<string | null>(null);
     const item = details[index];
     const rowRef = useRef<HTMLTableRowElement>(null);
     const dispatch = useAppDispatch();
-    const handleFocus = useCallback((columnKey: string) => { setFocusedColumn(columnKey); }, [index]);
+    const handleFocus = useCallback(
+      (columnKey: string) => {
+        setFocusedColumn(columnKey);
+      },
+      [index]
+    );
     const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
-    const { round, getFormattedValue } = useNumberFormat()
+    const { round, getFormattedValue } = useNumberFormat();
     const handleBlur = useCallback(() => {
       if (document.activeElement?.closest(".dx-datagrid")) return;
       setFocusedColumn(null);
@@ -589,7 +668,12 @@ const VirtualRow = React.memo(
       lineHeight: "normal",
       display: "flex",
       alignItems: "center",
-      justifyContent: column.alignment === "left" ? "flex-start" : column.alignment === "right" ? "flex-end" : "center",
+      justifyContent:
+        column.alignment === "left"
+          ? "flex-start"
+          : column.alignment === "right"
+          ? "flex-end"
+          : "center",
       textAlign: column.alignment || "center",
       whiteSpace: "nowrap" as const,
       overflow: "hidden",
@@ -621,7 +705,6 @@ const VirtualRow = React.memo(
         column: ColumnModel,
         rowIndex: number
       ) => {
-
         const target = e.target as HTMLElement;
         const visibleColumns = columns.filter(
           (col) => col.visible !== false && col.dataField != null
@@ -725,17 +808,28 @@ const VirtualRow = React.memo(
       );
     };
 
-    const rowBg = `${appState.mode === "dark" ? index % 2 === 0 ? "bg-[#333333]" : "bg-[#444444]" : index % 2 === 0 ? "bg-white" : "bg-[#f9f9f9]"} ${appState.mode === "dark" ? "hover:bg-[#555555]" : "hover:bg-gradient-to-r hover:from-[#eff6ff66] hover:to-[#eef2ff4d]"}`;
+    const rowBg = `${
+      appState.mode === "dark"
+        ? index % 2 === 0
+          ? "bg-[#333333]"
+          : "bg-[#444444]"
+        : index % 2 === 0
+        ? "bg-white"
+        : "bg-[#f9f9f9]"
+    } ${
+      appState.mode === "dark"
+        ? "hover:bg-[#555555]"
+        : "hover:bg-gradient-to-r hover:from-[#eff6ff66] hover:to-[#eef2ff4d]"
+    }`;
 
-
-    const [itemName, setItemName] = useState('');
-    const [quantity, setQuantity] = useState('');
-    const [rate, setRate] = useState('');
-    const [unit, setUnit] = useState('Bag');
-    const [taxType, setTaxType] = useState('With Tax');
-    const [discount, setDiscount] = useState('0');
-    const [discountType, setDiscountType] = useState('₹');
-    const [taxPercentage, setTaxPercentage] = useState('None');
+    const [itemName, setItemName] = useState("");
+    const [quantity, setQuantity] = useState("");
+    const [rate, setRate] = useState("");
+    const [unit, setUnit] = useState("Bag");
+    const [taxType, setTaxType] = useState("With Tax");
+    const [discount, setDiscount] = useState("0");
+    const [discountType, setDiscountType] = useState("₹");
+    const [taxPercentage, setTaxPercentage] = useState("None");
 
     const calculateSubtotal = () => {
       const qty = parseFloat(quantity) || 0;
@@ -745,7 +839,7 @@ const VirtualRow = React.memo(
 
     const calculateDiscount = () => {
       const discountValue = parseFloat(discount) || 0;
-      if (discountType === '%') {
+      if (discountType === "%") {
         return (calculateSubtotal() * discountValue) / 100;
       }
       return discountValue;
@@ -762,80 +856,120 @@ const VirtualRow = React.memo(
             <div
               className={`py-0 ${rowBg} transition-all duration-300 ease-in-out group`}
               style={{
-                position: 'absolute',
+                position: "absolute",
                 top: `${top}px`,
                 left: 0,
                 height: `${rowHeight}px`,
                 width: "100%",
                 display: "flex",
-                flexDirection: 'row',
+                flexDirection: "row",
                 // borderBottom: `0.5px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.1)" : `rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`}`,
                 backgroundColor: appState.mode === "dark" ? "#333333" : "#fff",
                 // marginTop: index === 0 ? '8px' : '0',
-                paddingBottom: index === details.length - 1 ? '0.5rem' : '0'
+                paddingBottom: index === details.length - 1 ? "0.5rem" : "0",
               }}
             >
               <div className="p-1 w-full">
                 <div
-                  className={`rounded-lg shadow-sm w-full max-w-[730px] mx-auto ${appState.mode === "dark" ? "bg-[#2d2d2d] border border-[#444444]" : "bg-[#f8f8f8] border border-[#e4e3e8]"}`}
+                  className={`rounded-lg shadow-sm w-full max-w-[730px] mx-auto ${
+                    appState.mode === "dark"
+                      ? "bg-[#2d2d2d] border border-[#444444]"
+                      : "bg-[#f8f8f8] border border-[#e4e3e8]"
+                  }`}
                 >
                   <div className="flex flex-col md:flex-row sm:flex-row xs:flex-row xs:items-center xs:justify-between p-2 xs:p-3 sm:p-4 !pb-0 gap-2 xs:gap-3">
                     <div className="flex items-center justify-between gap-2 xs:gap-3 min-w-0 flex-1">
                       <div className="flex items-center gap-2 min-w-0">
                         <span
-                          className={`rounded-sm p-1 text-xs xs:text-sm font-medium whitespace-nowrap ${appState.mode === "dark" ? "bg-[#444444] text-[#e0e0e0]" : "bg-white text-gray-500"}`}
+                          className={`rounded-sm p-1 text-xs xs:text-sm font-medium whitespace-nowrap ${
+                            appState.mode === "dark"
+                              ? "bg-[#444444] text-[#e0e0e0]"
+                              : "bg-white text-gray-500"
+                          }`}
                         >
                           #{index + 1}
                         </span>
                         <span
-                          className={`font-medium text-sm xs:text-base truncate ${appState.mode === "dark" ? "text-[#e0e0e0]" : "text-gray-900"}`}
+                          className={`font-medium text-sm xs:text-base truncate ${
+                            appState.mode === "dark"
+                              ? "text-[#e0e0e0]"
+                              : "text-gray-900"
+                          }`}
                           title={item.product}
                         >
-                          {item.product || 'Product'}
+                          {item.product || "Product"}
                         </span>
                       </div>
                       <span
-                        className={`font-medium text-sm xs:text-base whitespace-nowrap self-end xs:self-auto ${appState.mode === "dark" ? "text-[#e0e0e0]" : "text-gray-900"}`}
+                        className={`font-medium text-sm xs:text-base whitespace-nowrap self-end xs:self-auto ${
+                          appState.mode === "dark"
+                            ? "text-[#e0e0e0]"
+                            : "text-gray-900"
+                        }`}
                       >
-                        ₹ {item.unitPrice || 'Price'}
+                        ₹ {item.unitPrice || "Price"}
                       </span>
                     </div>
                   </div>
                   <div className="p-2 xs:p-3 sm:p-4 !pt-1 space-y-2 xs:space-y-3">
                     <div className="flex items-start xs:items-center justify-between gap-2">
                       <span
-                        className={`text-xs xs:text-sm whitespace-nowrap ${appState.mode === "dark" ? "text-[#a0a0a0]" : "text-gray-600"}`}
+                        className={`text-xs xs:text-sm whitespace-nowrap ${
+                          appState.mode === "dark"
+                            ? "text-[#a0a0a0]"
+                            : "text-gray-600"
+                        }`}
                       >
                         Item Subtotal
                       </span>
                       <span
-                        className={`text-xs xs:text-sm text-right ${appState.mode === "dark" ? "text-[#a0a0a0]" : "text-gray-600"}`}
+                        className={`text-xs xs:text-sm text-right ${
+                          appState.mode === "dark"
+                            ? "text-[#a0a0a0]"
+                            : "text-gray-600"
+                        }`}
                       >
-                        1 X ₹ 0 = ₹ {item.total || 'Sub Total'}
+                        1 X ₹ 0 = ₹ {item.total || "Sub Total"}
                       </span>
                     </div>
                     <div className="flex items-start xs:items-center justify-between gap-2">
                       <span
-                        className={`text-xs xs:text-sm whitespace-nowrap ${appState.mode === "dark" ? "text-[#ffa726]" : "text-orange-400"}`}
+                        className={`text-xs xs:text-sm whitespace-nowrap ${
+                          appState.mode === "dark"
+                            ? "text-[#ffa726]"
+                            : "text-orange-400"
+                        }`}
                       >
-                        Discount (%): {item.discPerc || 'Discount'}%
+                        Discount (%): {item.discPerc || "Discount"}%
                       </span>
                       <span
-                        className={`text-xs xs:text-sm text-right whitespace-nowrap ${appState.mode === "dark" ? "text-[#ffa726]" : "text-orange-400"}`}
+                        className={`text-xs xs:text-sm text-right whitespace-nowrap ${
+                          appState.mode === "dark"
+                            ? "text-[#ffa726]"
+                            : "text-orange-400"
+                        }`}
                       >
-                        ₹ {item.discount || 'Discount'}
+                        ₹ {item.discount || "Discount"}
                       </span>
                     </div>
                     <div className="flex items-start xs:items-center justify-between gap-2">
                       <span
-                        className={`text-xs xs:text-sm whitespace-nowrap ${appState.mode === "dark" ? "text-[#a0a0a0]" : "text-gray-600"}`}
+                        className={`text-xs xs:text-sm whitespace-nowrap ${
+                          appState.mode === "dark"
+                            ? "text-[#a0a0a0]"
+                            : "text-gray-600"
+                        }`}
                       >
-                        Tax: {item.vatPerc || 'Tax'}%
+                        Tax: {item.vatPerc || "Tax"}%
                       </span>
                       <span
-                        className={`text-xs xs:text-sm text-right whitespace-nowrap ${appState.mode === "dark" ? "text-[#a0a0a0]" : "text-gray-600"}`}
+                        className={`text-xs xs:text-sm text-right whitespace-nowrap ${
+                          appState.mode === "dark"
+                            ? "text-[#a0a0a0]"
+                            : "text-gray-600"
+                        }`}
                       >
-                        ₹ {item.totalAddExpense || 'Tax'}
+                        ₹ {item.totalAddExpense || "Tax"}
                       </span>
                     </div>
                   </div>
@@ -845,16 +979,24 @@ const VirtualRow = React.memo(
             {index === details.length - 19 && (
               <button
                 onClick={() => setIsMobileModalOpen(true)}
-                className={`flex-1 w-full flex items-center justify-center gap-2 px-4 py-3 font-medium transition-all duration-200 shadow-md hover:shadow-lg ${appState.mode === "dark" ? "bg-[#444444] text-white hover:bg-[#555555] active:bg-[#666666] border border-[#555555]" : "bg-[#0084ff] text-white hover:bg-blue-700 active:bg-blue-800 border border-blue-600"}`}
+                className={`flex-1 w-full flex items-center justify-center gap-2 px-4 py-3 font-medium transition-all duration-200 shadow-md hover:shadow-lg ${
+                  appState.mode === "dark"
+                    ? "bg-[#444444] text-white hover:bg-[#555555] active:bg-[#666666] border border-[#555555]"
+                    : "bg-[#0084ff] text-white hover:bg-blue-700 active:bg-blue-800 border border-blue-600"
+                }`}
               >
                 <CirclePlus className="w-5 h-5" />
-                {t('add_items')}
+                {t("add_items")}
               </button>
             )}
             {isMobileModalOpen && (
               <div className="fixed top-0 h-full inset-0 z-50 flex items-center justify-center bg-black/50">
                 <div
-                  className={`relative w-full h-full overflow-y-hidden ${appState.mode === "dark" ? "bg-[#2d2d2d] text-[#e0e0e0]" : "bg-white dark:bg-dark-bg-card"}`}
+                  className={`relative w-full h-full overflow-y-hidden ${
+                    appState.mode === "dark"
+                      ? "bg-[#2d2d2d] text-[#e0e0e0]"
+                      : "bg-white dark:bg-dark-bg-card"
+                  }`}
                 >
                   {/* Close Button */}
                   <button
@@ -923,21 +1065,35 @@ const VirtualRow = React.memo(
                     {/* Totals & Taxes Section */}
                     <div className="border-t pt-4 border-[#444444]">
                       <h3
-                        className={`text-sm font-medium mb-4 ${appState.mode === "dark" ? "text-[#e0e0e0]" : "text-gray-700"}`}
+                        className={`text-sm font-medium mb-4 ${
+                          appState.mode === "dark"
+                            ? "text-[#e0e0e0]"
+                            : "text-gray-700"
+                        }`}
                       >
                         Totals & Taxes
                       </h3>
                       <div className="flex justify-between items-center mb-3">
                         <span
-                          className={`text-sm ${appState.mode === "dark" ? "text-[#a0a0a0]" : "text-gray-600"}`}
+                          className={`text-sm ${
+                            appState.mode === "dark"
+                              ? "text-[#a0a0a0]"
+                              : "text-gray-600"
+                          }`}
                         >
                           Subtotal (Rate x Qty)
                         </span>
-                        <span className="font-medium">₹ {calculateSubtotal().toFixed(2)}</span>
+                        <span className="font-medium">
+                          ₹ {calculateSubtotal().toFixed(2)}
+                        </span>
                       </div>
                       <div className="flex items-center justify-between mb-3">
                         <span
-                          className={`text-sm ${appState.mode === "dark" ? "text-[#a0a0a0]" : "text-gray-600"}`}
+                          className={`text-sm ${
+                            appState.mode === "dark"
+                              ? "text-[#a0a0a0]"
+                              : "text-gray-600"
+                          }`}
                         >
                           Discount
                         </span>
@@ -952,28 +1108,54 @@ const VirtualRow = React.memo(
                             localInputBox={formState?.userConfig?.inputBoxStyle}
                           />
                           <div
-                            className={`flex rounded ${appState.mode === "dark" ? "bg-[#444444]" : "bg-gray-100"}`}
+                            className={`flex rounded ${
+                              appState.mode === "dark"
+                                ? "bg-[#444444]"
+                                : "bg-gray-100"
+                            }`}
                           >
                             <button
-                              onClick={() => setDiscountType('₹')}
-                              className={`px-2 py-1 text-xs rounded-l ${discountType === '₹' ? (appState.mode === "dark" ? "bg-[#ffa726] text-[#2d2d2d]" : "bg-orange-200 text-orange-800") : (appState.mode === "dark" ? "text-[#a0a0a0]" : "text-gray-600")}`}
+                              onClick={() => setDiscountType("₹")}
+                              className={`px-2 py-1 text-xs rounded-l ${
+                                discountType === "₹"
+                                  ? appState.mode === "dark"
+                                    ? "bg-[#ffa726] text-[#2d2d2d]"
+                                    : "bg-orange-200 text-orange-800"
+                                  : appState.mode === "dark"
+                                  ? "text-[#a0a0a0]"
+                                  : "text-gray-600"
+                              }`}
                             >
                               ₹
                             </button>
                             <button
-                              onClick={() => setDiscountType('%')}
-                              className={`px-2 py-1 text-xs rounded-r ${discountType === '%' ? (appState.mode === "dark" ? "bg-[#ffa726] text-[#2d2d2d]" : "bg-orange-200 text-orange-800") : (appState.mode === "dark" ? "text-[#a0a0a0]" : "text-gray-600")}`}
+                              onClick={() => setDiscountType("%")}
+                              className={`px-2 py-1 text-xs rounded-r ${
+                                discountType === "%"
+                                  ? appState.mode === "dark"
+                                    ? "bg-[#ffa726] text-[#2d2d2d]"
+                                    : "bg-orange-200 text-orange-800"
+                                  : appState.mode === "dark"
+                                  ? "text-[#a0a0a0]"
+                                  : "text-gray-600"
+                              }`}
                             >
                               %
                             </button>
                           </div>
-                          <span className="font-medium w-12 text-right">₹ {calculateDiscount().toFixed(2)}</span>
+                          <span className="font-medium w-12 text-right">
+                            ₹ {calculateDiscount().toFixed(2)}
+                          </span>
                         </div>
                       </div>
                       {/* Tax */}
                       <div className="flex items-center justify-between mb-4">
                         <span
-                          className={`text-sm ${appState.mode === "dark" ? "text-[#a0a0a0]" : "text-gray-600"}`}
+                          className={`text-sm ${
+                            appState.mode === "dark"
+                              ? "text-[#a0a0a0]"
+                              : "text-gray-600"
+                          }`}
                         >
                           Tax %
                         </span>
@@ -987,25 +1169,33 @@ const VirtualRow = React.memo(
                             localInputBox={formState?.userConfig?.inputBoxStyle}
                             onChange={(e) => setTaxPercentage(e.target.value)}
                             options={[
-                              { label: 'None', value: 'none' },
-                              { label: '5%', value: '5' },
-                              { label: '12%', value: '12' },
-                              { label: '18%', value: '18' },
-                              { label: '28%', value: '28' },
+                              { label: "None", value: "none" },
+                              { label: "5%", value: "5" },
+                              { label: "12%", value: "12" },
+                              { label: "18%", value: "18" },
+                              { label: "28%", value: "28" },
                             ]}
                           />
-                          <span className="font-medium w-12 text-right">₹ 0.00</span>
+                          <span className="font-medium w-12 text-right">
+                            ₹ 0.00
+                          </span>
                         </div>
                       </div>
                       {/* Total Amount */}
                       <div className="border-t pt-3 border-[#444444]">
                         <div className="flex justify-between items-center">
                           <span
-                            className={`font-semibold ${appState.mode === "dark" ? "text-[#e0e0e0]" : "text-gray-800"}`}
+                            className={`font-semibold ${
+                              appState.mode === "dark"
+                                ? "text-[#e0e0e0]"
+                                : "text-gray-800"
+                            }`}
                           >
                             Total Amount:
                           </span>
-                          <span className="font-bold text-lg">₹ {calculatedTotal().toFixed(2)}</span>
+                          <span className="font-bold text-lg">
+                            ₹ {calculatedTotal().toFixed(2)}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -1014,301 +1204,481 @@ const VirtualRow = React.memo(
               </div>
             )}
           </>
-        ) :
-          (
-            <div
-              className={`py-0 ${rowBg} transition-all duration-300 ease-in-out group`}
-              style={{
-                position: isMobileEditRow ? 'static' : 'absolute',
-                top: isMobileEditRow ? '' : `${top}px`,
-                left: isMobileEditRow ? '' : 0,
-                height: isMobileEditRow ? '' : `${rowHeight}px`,
-                width: "100%",
-                display: "flex",
-                flexDirection: 'row',
-                borderBottom: `0.5px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.1)" : `rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`}`,
-                backgroundColor: currentCell?.rowIndex === index ? appState.mode === "dark" ? "#444444" : formState.userConfig?.activeRowBg ? `rgb(${formState.userConfig.activeRowBg})` : "#e3f2fd"
-                  : index % 2 === 0 ? appState.mode === "dark" ? "#333333" : "#fff" : appState.mode === "dark" ? "#444444" : "#f9f9f9",
-              }}
-            >
-              {columns.map((column, colIndex) => {
-                // TransactionDetails2
-                const isDetails2 = Object.keys(initialTransactionDetails2).includes(column.dataField as keyof TransactionDetails2)
-                const isMoreDetails = Object.keys(transactionInitialMoreDetails).includes(column.dataField as keyof TransactionDetailsMore)
-                if (column.dataField == "memo" && item.productID > 0) {
-                  debugger;
-                }
-                const fieldKey = column.dataField as TransactionDetailKeys;
-                const idField = column.idField as keyof TransactionDetail;
-                const productId = item.productID;
-                const cellValue = ((isDetails2 ? item.details2?.[fieldKey as keyof TransactionDetails2] : isMoreDetails ? item.moreDetails?.[fieldKey as keyof TransactionDetailsMore]  : item[fieldKey as keyof TransactionDetail]) ?? "") as string | boolean;
-                const idValue = item[idField];
-                const isFirstColumn = colIndex === 0;
-                const isLastColumn = colIndex === columns.length - 1;
-                const isFixed = isFirstColumn || isLastColumn;
-                const showBorder = formState.userConfig?.showColumnBorder ?? true;
-                let options: any[] = [];
-                if (fieldKey === "unit") {
-                  options =
-                    formState.batchesUnits?.filter(
-                      (x) => x.productBatchID === item.productBatchID
-                    ) ?? [];
-                }
-                if (fieldKey === "warranty") {
-                  options = formState.dataWarranty ?? [];
-                }
-                if (fieldKey === "brand") {
-                  options = formState.dataBrands ?? [];
-                }
-                const cellId = `${gridId}_${column.dataField}_${index}`;
-                const borderColor = `${(column.readOnly || column.allowEditing == false ||
+        ) : (
+          <div
+            className={`py-0 ${rowBg} transition-all duration-300 ease-in-out group`}
+            style={{
+              position: isMobileEditRow ? "static" : "absolute",
+              top: isMobileEditRow ? "" : `${top}px`,
+              left: isMobileEditRow ? "" : 0,
+              height: isMobileEditRow ? "" : `${rowHeight}px`,
+              width: "100%",
+              display: "flex",
+              flexDirection: "row",
+              borderBottom: `0.5px solid ${
+                appState.mode === "dark"
+                  ? "rgba(255,255,255,0.1)"
+                  : `rgba(${
+                      formState.userConfig?.gridBorderColor || "203,213,225"
+                    }, 0.3)`
+              }`,
+              backgroundColor:
+                currentCell?.rowIndex === index
+                  ? appState.mode === "dark"
+                    ? "#444444"
+                    : formState.userConfig?.activeRowBg
+                    ? `rgb(${formState.userConfig.activeRowBg})`
+                    : "#e3f2fd"
+                  : index % 2 === 0
+                  ? appState.mode === "dark"
+                    ? "#333333"
+                    : "#fff"
+                  : appState.mode === "dark"
+                  ? "#444444"
+                  : "#f9f9f9",
+            }}
+          >
+            {columns.map((column, colIndex) => {
+              // TransactionDetails2
+              const isDetails2 = Object.keys(
+                initialTransactionDetails2
+              ).includes(column.dataField as keyof TransactionDetails2);
+              const isMoreDetails = Object.keys(
+                transactionInitialMoreDetails
+              ).includes(column.dataField as keyof TransactionDetailsMore);
+              if (column.dataField == "memo" && item.productID > 0) {
+                debugger;
+              }
+              const fieldKey = column.dataField as TransactionDetailKeys;
+              const idField = column.idField as keyof TransactionDetail;
+              const productId = item.productID;
+              const cellValue = ((isDetails2
+                ? item.details2?.[fieldKey as keyof TransactionDetails2]
+                : isMoreDetails
+                ? item.moreDetails?.[fieldKey as keyof TransactionDetailsMore]
+                : item[fieldKey as keyof TransactionDetail]) ?? "") as
+                | string
+                | boolean;
+              const idValue = item[idField];
+              const isFirstColumn = colIndex === 0;
+              const isLastColumn = colIndex === columns.length - 1;
+              const isFixed = isFirstColumn || isLastColumn;
+              const showBorder = formState.userConfig?.showColumnBorder ?? true;
+              let options: any[] = [];
+              if (fieldKey === "unit") {
+                options =
+                  formState.batchesUnits?.filter(
+                    (x) => x.productBatchID === item.productBatchID
+                  ) ?? [];
+              }
+              if (fieldKey === "warranty") {
+                options = formState.dataWarranty ?? [];
+              }
+              if (fieldKey === "brand") {
+                options = formState.dataBrands ?? [];
+              }
+              const cellId = `${gridId}_${column.dataField}_${index}`;
+              const borderColor = `${
+                (column.readOnly ||
+                  column.allowEditing == false ||
                   formState.formElements.pnlMasters?.disabled !== true) &&
-                  currentCell?.column === column.dataField &&
-                  currentCell?.rowIndex === index ? appState.mode === "dark" ? "#444444" : formState.userConfig?.inputBoxStyle?.focusBgColor ? `rgb(${formState.userConfig?.inputBoxStyle?.focusBgColor})` : "#e3f2fd" : undefined}`;
+                currentCell?.column === column.dataField &&
+                currentCell?.rowIndex === index
+                  ? appState.mode === "dark"
+                    ? "#444444"
+                    : formState.userConfig?.inputBoxStyle?.focusBgColor
+                    ? `rgb(${formState.userConfig?.inputBoxStyle?.focusBgColor})`
+                    : "#e3f2fd"
+                  : undefined
+              }`;
 
-                return (
-                  <div
-                    key={`${column.dataField}`}
-                    style={{
-                      width: `${columnWidths?.find(x => x.field == column.dataField)?.width}px`,
-                      minWidth: `${columnWidths?.find(x => x.field == column.dataField)?.width}px`,
-                      maxWidth: `${columnWidths?.find(x => x.field == column.dataField)?.width}px`,
-                      borderRight: isFirstColumn ? `2px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.2)" : `rgba(${gridBorderColor || "226,232,240"})`}`
-                        : isLastColumn ? "none" : showBorder ? `0.2px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.1)" : `rgba(${gridBorderColor || "226,232,240"}, 0.8)`}` : "none",
-                      borderLeft: isLastColumn ? `2px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.2)" : `rgba(${gridBorderColor || "226,232,240"})`}` : "none",
-                      fontSize: `${gridFontSize}px`,
-                      textAlign: column.dataField === "slNo" ? "center" : ["qty"].includes(column.dataField ?? "") ? "right" : "left",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: 'center',
-                      backgroundColor: (currentCell?.rowIndex === index && currentCell?.column === column.dataField)
-                        ? (appState.mode === "dark" ? "#555555" : formState.userConfig?.inputBoxStyle?.focusBgColor ? `rgb(${formState.userConfig.inputBoxStyle.focusBgColor})` : "#bfdbfe")
+              return (
+                <div
+                  key={`${column.dataField}`}
+                  style={{
+                    width: `${
+                      columnWidths?.find((x) => x.field == column.dataField)
+                        ?.width
+                    }px`,
+                    minWidth: `${
+                      columnWidths?.find((x) => x.field == column.dataField)
+                        ?.width
+                    }px`,
+                    maxWidth: `${
+                      columnWidths?.find((x) => x.field == column.dataField)
+                        ?.width
+                    }px`,
+                    borderRight: isFirstColumn
+                      ? `2px solid ${
+                          appState.mode === "dark"
+                            ? "rgba(255,255,255,0.2)"
+                            : `rgba(${gridBorderColor || "226,232,240"})`
+                        }`
+                      : isLastColumn
+                      ? "none"
+                      : showBorder
+                      ? `0.2px solid ${
+                          appState.mode === "dark"
+                            ? "rgba(255,255,255,0.1)"
+                            : `rgba(${gridBorderColor || "226,232,240"}, 0.8)`
+                        }`
+                      : "none",
+                    borderLeft: isLastColumn
+                      ? `2px solid ${
+                          appState.mode === "dark"
+                            ? "rgba(255,255,255,0.2)"
+                            : `rgba(${gridBorderColor || "226,232,240"})`
+                        }`
+                      : "none",
+                    fontSize: `${gridFontSize}px`,
+                    textAlign:
+                      column.dataField === "slNo"
+                        ? "center"
+                        : ["qty"].includes(column.dataField ?? "")
+                        ? "right"
+                        : "left",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor:
+                      currentCell?.rowIndex === index &&
+                      currentCell?.column === column.dataField
+                        ? appState.mode === "dark"
+                          ? "#555555"
+                          : formState.userConfig?.inputBoxStyle?.focusBgColor
+                          ? `rgb(${formState.userConfig.inputBoxStyle.focusBgColor})`
+                          : "#bfdbfe"
                         : currentCell?.rowIndex === index
-                          ? (appState.mode === "dark" ? "#444444" : formState.userConfig?.activeRowBg ? `rgb(${formState.userConfig.activeRowBg})` : "#e3f2fd")
-                          : index % 2 === 0
-                            ? (appState.mode === "dark" ? "#333333" : "#fff")
-                            : (appState.mode === "dark" ? "#444444" : "#f9f9f9"),
-                      position: isFixed ? "sticky" : "relative",
-                      left: isFirstColumn ? "0px" : "auto",
-                      right: isLastColumn ? "0px" : "auto",
-                      zIndex: isFixed ? 50 : 1,
-                      gap: isLastColumn ? "8px" : "0",
-                    }}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setCurrentCell({
-                        column: column.dataField ?? "",
-                        data: item,
-                        rowIndex: index,
-                      });
-                    }}
-                  >
-                    {formState.transactionLoading ? (
+                        ? appState.mode === "dark"
+                          ? "#444444"
+                          : formState.userConfig?.activeRowBg
+                          ? `rgb(${formState.userConfig.activeRowBg})`
+                          : "#e3f2fd"
+                        : index % 2 === 0
+                        ? appState.mode === "dark"
+                          ? "#333333"
+                          : "#fff"
+                        : appState.mode === "dark"
+                        ? "#444444"
+                        : "#f9f9f9",
+                    position: isFixed ? "sticky" : "relative",
+                    left: isFirstColumn ? "0px" : "auto",
+                    right: isLastColumn ? "0px" : "auto",
+                    zIndex: isFixed ? 50 : 1,
+                    gap: isLastColumn ? "8px" : "0",
+                  }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setCurrentCell({
+                      column: column.dataField ?? "",
+                      data: item,
+                      rowIndex: index,
+                    });
+                  }}
+                >
+                  {formState.transactionLoading ? (
+                    <div
+                      className="parent-selector-loading"
+                      style={{
+                        width: "100%",
+                        margin: "3px 0",
+                        height: `${rowHeight}px`,
+                      }}
+                    >
                       <div
-                        className="parent-selector-loading"
+                        className="card_description loading"
                         style={{
-                          width: "100%",
-                          margin: "3px 0",
-                          height: `${rowHeight}px`,
-                        }}
-                      >
-                        <div
-                          className="card_description loading"
-                          style={{
-                            width: `${Math.floor(Math.random() * 50) + 40}%`,
-                            height: `${Math.min(rowHeight - 6, 16)}px`,
-                          }}
-                        />
-                      </div>
-                    ) : column.dataField === "slNo" ? (
-                      <div style={getCellContentStyle(column)} id={cellId}>
-                        {index + 1}
-                      </div>
-                    ) : column.dataType === "chk" ? (
-                      <input
-                        disabled={formState.formElements.pnlMasters?.disabled}
-                        type="checkbox"
-                        checked={
-                          cellValue == true ? true : false
-                        }
-                        onChange={(e) => {
-                          onChange(
-                            e.target.checked,
-                            column.dataField as keyof TransactionDetail,
-                            index
-                          );
+                          width: `${Math.floor(Math.random() * 50) + 40}%`,
+                          height: `${Math.min(rowHeight - 6, 16)}px`,
                         }}
                       />
-                    ) : column.dataType === "btn" ? (
+                    </div>
+                  ) : column.dataField === "slNo" ? (
+                    <div style={getCellContentStyle(column)} id={cellId}>
+                      {index + 1}
+                    </div>
+                  ) : column.dataType === "chk" ? (
+                    <input
+                      disabled={formState.formElements.pnlMasters?.disabled}
+                      type="checkbox"
+                      checked={cellValue == true ? true : false}
+                      onChange={(e) => {
+                        onChange(
+                          e.target.checked,
+                          column.dataField as keyof TransactionDetail,
+                          index
+                        );
+                      }}
+                    />
+                  ) : column.dataType === "btn" ? (
+                    <button
+                      disabled={formState.formElements.pnlMasters?.disabled}
+                      onClick={() =>
+                        handleKeyDown(
+                          cellValue,
+                          { key: "Enter" } as any,
+                          column as any,
+                          index
+                        )
+                      }
+                      className={`px-2 py-1 border rounded shadow-sm hover:shadow text-xs transition-all ${
+                        appState.mode === "dark"
+                          ? "bg-[#444444] text-[#e0e0e0] border-[#555555] hover:bg-[#555555]"
+                          : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50"
+                      }`}
+                      aria-label="Action button"
+                    >
+                      <svg
+                        className="w-3 h-3"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 12 12"
+                      >
+                        <rect
+                          x="1"
+                          y="3"
+                          width="10"
+                          height="6"
+                          rx="1"
+                          strokeWidth="1.5"
+                        />
+                      </svg>
+                    </button>
+                  ) : column.dataField === "actionCol" ? (
+                    <div
+                      className="flex items-center justify-center gap-1"
+                      style={{
+                        border: `solid 1px ${borderColor}`,
+                      }}
+                    >
+                      <button
+                        onClick={() => handleInfoClick(index)}
+                        className={`group relative flex items-center justify-center w-7 h-7 transition-all duration-500 ease-out hover:rounded-full hover:scale-105 hover:shadow-lg hover:border ${
+                          appState.mode === "dark"
+                            ? "hover:bg-blue-900 hover:border-blue-700"
+                            : "hover:bg-blue-50 hover:border-blue-200"
+                        }`}
+                      >
+                        <Info
+                          className={`w-4 h-4 transition-all duration-300 ${
+                            appState.mode === "dark"
+                              ? "text-blue-400 group-hover:text-blue-300"
+                              : "text-blue-600 group-hover:text-blue-700"
+                          }`}
+                        />
+                      </button>
                       <button
                         disabled={formState.formElements.pnlMasters?.disabled}
                         onClick={() =>
-                          handleKeyDown(
-                            cellValue,
+                          onKeyDown(
+                            item.slNo,
                             { key: "Enter" } as any,
-                            column as any,
+                            "actionCol",
                             index
                           )
                         }
-                        className={`px-2 py-1 border rounded shadow-sm hover:shadow text-xs transition-all ${appState.mode === "dark" ? "bg-[#444444] text-[#e0e0e0] border-[#555555] hover:bg-[#555555]" : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50"}`}
-                        aria-label="Action button"
+                        className={`group relative flex items-center justify-center w-7 h-7 transition-all duration-500 ease-out hover:rounded-full hover:scale-105 hover:shadow-lg hover:border ${
+                          appState.mode === "dark"
+                            ? "hover:bg-red-900 hover:border-red-700"
+                            : "hover:bg-red-50 hover:border-red-200"
+                        }`}
                       >
-                        <svg
-                          className="w-3 h-3"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 12 12"
-                        >
-                          <rect
-                            x="1"
-                            y="3"
-                            width="10"
-                            height="6"
-                            rx="1"
-                            strokeWidth="1.5"
-                          />
-                        </svg>
+                        <Trash2
+                          className={`w-4 h-4 transition-all duration-300 ${
+                            appState.mode === "dark"
+                              ? "text-red-400 group-hover:text-red-300"
+                              : "text-red-600 group-hover:text-red-700"
+                          }`}
+                        />
                       </button>
-                    ) : column.dataField === "actionCol" ? (
-                      <div className="flex items-center justify-center gap-1"
-                        style={{
-                          border: `solid 1px ${borderColor}`
-                        }}
-                      >
-                        <button
-                          onClick={() => handleInfoClick(index)}
-                          className={`group relative flex items-center justify-center w-7 h-7 transition-all duration-500 ease-out hover:rounded-full hover:scale-105 hover:shadow-lg hover:border ${appState.mode === "dark" ? "hover:bg-blue-900 hover:border-blue-700" : "hover:bg-blue-50 hover:border-blue-200"}`}>
-                          <Info className={`w-4 h-4 transition-all duration-300 ${appState.mode === "dark" ? "text-blue-400 group-hover:text-blue-300" : "text-blue-600 group-hover:text-blue-700"}`} />
-                        </button>
-                        <button
-                          disabled={formState.formElements.pnlMasters?.disabled}
-                          onClick={() => onKeyDown(item.slNo, { key: "Enter" } as any, "actionCol", index)}
-                          className={`group relative flex items-center justify-center w-7 h-7 transition-all duration-500 ease-out hover:rounded-full hover:scale-105 hover:shadow-lg hover:border ${appState.mode === "dark" ? "hover:bg-red-900 hover:border-red-700" : "hover:bg-red-50 hover:border-red-200"}`}>
-                          <Trash2 className={`w-4 h-4 transition-all duration-300 ${appState.mode === "dark" ? "text-red-400 group-hover:text-red-300" : "text-red-600 group-hover:text-red-700"}`} />
-                        </button>
-                      </div>
-                    ) : (column.dataField === "product" ||
+                    </div>
+                  ) : (column.dataField === "product" ||
                       column.dataField === "pCode" ||
                       column.dataField === "barCode") &&
-                      !column.readOnly &&
-                      formState.formElements.pnlMasters?.disabled !== true &&
-                      currentCell?.column === column.dataField &&
-                      currentCell?.rowIndex === index ? (
-                      <ERPProductSearch
-                        customStyle={customStyle}
-                        appState={appState}
-                        textAlign={column.alignment === "right" ? "right" : "left"}
-                        rowIndex={index}
-                        id={cellId}
-                        inputId={`${gridId}_${column.dataField}_${index}`}
-                        searchType={applicationSettings?.productsSettings?.usePopupWindowForItemSearch ? "modal" : "grid"}
-                        noLabel={true}
-                        showCheckBox={false}
-                        contextClassNametwo={`!text-sm !px-1 !py-0 !border-none !bg-transparent`}
-                        value={(cellValue as string) || ""}
-                        productDataUrl={`${Urls.inv_transaction_base}${transactionType}/products`}
-                        batchDataUrl={`${Urls.inv_transaction_base}${transactionType}/batches/`}
-                        className="h-[22px] text-sm"
-                        onFocus={() => handleFocus(column.dataField!)}
-                        onBlur={handleBlur}
-                        onKeyDown={(value, e) => { handleKeyDown(value, e, column, index) }}
-                        searchKey={column.dataField}
-                        advancedProductSearching={advancedProductSearching}
-                        useInSearch={useInSearch}
-                        searchByCodeAndName={searchByCodeAndName}
-                        onNextCellFind={nextCellFind}
-                        onRowSelected={(data: any, rowValue?: string) => {
-                          const res = {
-                            slNo: item.slNo,
-                            rowIndex: index,
-                            productBatchID: data.productBatchID,
-                            autoBarcode: data.autoBarcode,
-                            productCode: data.productCode,
-                            useProductCode: column.dataField === "pCode",
-                            searchText: rowValue,
-                            key: generateUniqueKey(),
-                          };
-                          dispatch(formStateHandleFieldChange({ fields: { batchSelectionData: JSON.stringify(res) }, }));
-                        }}
-                      />
-                    ) : column.dataField === "product" && !column.readOnly ? (
-                      <div
-                        style={{ ...getCellContentStyle(column), border: `solid 1px ${borderColor}` }}
-                        id={cellId}
-                        tabIndex={0}
-                        onFocus={() => handleFocus(column.dataField!)}
-                        onBlur={handleBlur}
-                        onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}>
-                        {productId > 0 ? cellValue ?? "" : ""}
-                      </div>
-                    ) : column.dataField === "status" ? (
-                      <div
-                        style={{
-                          ...getCellContentStyle(column),
-                          justifyContent: "center",
-                          border: `solid 1px ${borderColor}`
-                        }}
-                        id={cellId}
-                        tabIndex={0}
-                        className={`inline-flex px-2 py-1 font-medium rounded-full cursor-default ${cellValue === "Active" ? appState.mode === "dark" ? "bg-[#2d6a4f] text-[#b7e1cd]" : "bg-[#dcfce7] text-[#166534]" : ""}
-                    ${cellValue === "Inactive" ? appState.mode === "dark" ? "bg-[#7b2e2e] text-[#f4a8a8]" : "bg-[#fee2e2] text-[#991b1b]" : ""}
-                    ${cellValue === "Pending" ? appState.mode === "dark" ? "bg-[#6b4e31] text-[#fce5a8]" : "bg-[#fef9c3] text-[#854d0e]" : ""}`}
-                        onFocus={() => handleFocus(column.dataField!)}
-                        onBlur={handleBlur}
-                        onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}>
-                        {productId > 0 ? cellValue ?? "" : ""}
-                      </div>
-                    ) : column.allowEditing == true &&
-                      !column.readOnly &&
-                      formState.formElements.pnlMasters?.disabled !== true &&
-                      txtData.visible === true &&
-                      currentCell?.column === column.dataField &&
-                      currentCell?.rowIndex === index ? (
-                      <EditableCell
-                        appState={appState}
-                        type={column.dataType === "cb" ? "cb" : "any"}
-                        productId={productId}
-                        onChange={onChange}
-                        blockUnitOnDecimalPoint={blockUnitOnDecimalPoint}
-                        decimalLimit={2}
-                        rowIndex={index}
-                        column={column}
-                        value={column.dataType === "cb" ? (idValue as string | number) : (cellValue as string | number)}
-                        options={options}
-                        onFocus={() => handleFocus(column.dataField!)}
-                        onBlur={handleBlur}
-                        gridId={gridId}
-                        onKeyDown={(e) => handleKeyDown(cellValue, e, column, index)}
-                        gridFontSize={gridFontSize}
-                        gridIsBold={gridIsBold}
-                        formState={formState}
-                        rowHeight={rowHeight}
-                      />
-                    ) : (
-                      <div
-                        style={currentCell?.column === column.dataField &&
-                          currentCell?.rowIndex === index ? { ...getCellContentStyle(column), border: `solid 3px rgb(${formState.userConfig?.inputBoxStyle?.focusBgColor})`, background: '#fff' } : { ...getCellContentStyle(column) }}
-                        id={cellId}
-                        tabIndex={0}
-                        className="px-1 cursor-default"
-                        onFocus={() => handleFocus(column.dataField!)}
-                        onBlur={handleBlur}
-                        onKeyDown={(e) => handleKeyDown(cellValue ?? "", e, column, index)}>
-                        {productId > 0 ? column.decimalPoint ? getFormattedValue(cellValue as any, false, column.decimalPoint) :
-                          column.dataType == "date" && !isNullOrUndefinedOrEmpty(column.format) ? moment(cellValue as any).format(column.format) : cellValue ?? "" : ""}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          )
-        }
+                    !column.readOnly &&
+                    formState.formElements.pnlMasters?.disabled !== true &&
+                    currentCell?.column === column.dataField &&
+                    currentCell?.rowIndex === index ? (
+                    <ERPProductSearch
+                      customStyle={customStyle}
+                      appState={appState}
+                      textAlign={
+                        column.alignment === "right" ? "right" : "left"
+                      }
+                      rowIndex={index}
+                      id={cellId}
+                      inputId={`${gridId}_${column.dataField}_${index}`}
+                      searchType={
+                        applicationSettings?.productsSettings
+                          ?.usePopupWindowForItemSearch
+                          ? "modal"
+                          : "grid"
+                      }
+                      noLabel={true}
+                      showCheckBox={false}
+                      contextClassNametwo={`!text-sm !px-1 !py-0 !border-none !bg-transparent`}
+                      value={(cellValue as string) || ""}
+                      productDataUrl={`${Urls.inv_transaction_base}${transactionType}/products`}
+                      batchDataUrl={`${Urls.inv_transaction_base}${transactionType}/batches/`}
+                      className="h-[22px] text-sm"
+                      onFocus={() => handleFocus(column.dataField!)}
+                      onBlur={handleBlur}
+                      onKeyDown={(value, e) => {
+                        handleKeyDown(value, e, column, index);
+                      }}
+                      searchKey={column.dataField}
+                      advancedProductSearching={advancedProductSearching}
+                      useInSearch={useInSearch}
+                      searchByCodeAndName={searchByCodeAndName}
+                      onNextCellFind={nextCellFind}
+                      onRowSelected={(data: any, rowValue?: string) => {
+                        const res = {
+                          slNo: item.slNo,
+                          rowIndex: index,
+                          productBatchID: data.productBatchID,
+                          autoBarcode: data.autoBarcode,
+                          productCode: data.productCode,
+                          useProductCode: column.dataField === "pCode",
+                          searchText: rowValue,
+                          key: generateUniqueKey(),
+                        };
+                        dispatch(
+                          formStateHandleFieldChange({
+                            fields: { batchSelectionData: JSON.stringify(res) },
+                          })
+                        );
+                      }}
+                    />
+                  ) : column.dataField === "product" && !column.readOnly ? (
+                    <div
+                      style={{
+                        ...getCellContentStyle(column),
+                        border: `solid 1px ${borderColor}`,
+                      }}
+                      id={cellId}
+                      tabIndex={0}
+                      onFocus={() => handleFocus(column.dataField!)}
+                      onBlur={handleBlur}
+                      onKeyDown={(e) =>
+                        handleKeyDown(cellValue, e, column, index)
+                      }
+                    >
+                      {productId > 0 ? cellValue ?? "" : ""}
+                    </div>
+                  ) : column.dataField === "status" ? (
+                    <div
+                      style={{
+                        ...getCellContentStyle(column),
+                        justifyContent: "center",
+                        border: `solid 1px ${borderColor}`,
+                      }}
+                      id={cellId}
+                      tabIndex={0}
+                      className={`inline-flex px-2 py-1 font-medium rounded-full cursor-default ${
+                        cellValue === "Active"
+                          ? appState.mode === "dark"
+                            ? "bg-[#2d6a4f] text-[#b7e1cd]"
+                            : "bg-[#dcfce7] text-[#166534]"
+                          : ""
+                      }
+                    ${
+                      cellValue === "Inactive"
+                        ? appState.mode === "dark"
+                          ? "bg-[#7b2e2e] text-[#f4a8a8]"
+                          : "bg-[#fee2e2] text-[#991b1b]"
+                        : ""
+                    }
+                    ${
+                      cellValue === "Pending"
+                        ? appState.mode === "dark"
+                          ? "bg-[#6b4e31] text-[#fce5a8]"
+                          : "bg-[#fef9c3] text-[#854d0e]"
+                        : ""
+                    }`}
+                      onFocus={() => handleFocus(column.dataField!)}
+                      onBlur={handleBlur}
+                      onKeyDown={(e) =>
+                        handleKeyDown(cellValue, e, column, index)
+                      }
+                    >
+                      {productId > 0 ? cellValue ?? "" : ""}
+                    </div>
+                  ) : column.allowEditing == true &&
+                    !column.readOnly &&
+                    formState.formElements.pnlMasters?.disabled !== true &&
+                    txtData.visible === true &&
+                    currentCell?.column === column.dataField &&
+                    currentCell?.rowIndex === index ? (
+                    <EditableCell
+                      appState={appState}
+                      type={column.dataType === "cb" ? "cb" : "any"}
+                      productId={productId}
+                      onChange={onChange}
+                      blockUnitOnDecimalPoint={blockUnitOnDecimalPoint}
+                      decimalLimit={2}
+                      rowIndex={index}
+                      column={column}
+                      value={
+                        column.dataType === "cb"
+                          ? (idValue as string | number)
+                          : (cellValue as string | number)
+                      }
+                      options={options}
+                      onFocus={() => handleFocus(column.dataField!)}
+                      onBlur={handleBlur}
+                      gridId={gridId}
+                      onKeyDown={(e) =>
+                        handleKeyDown(cellValue, e, column, index)
+                      }
+                      gridFontSize={gridFontSize}
+                      gridIsBold={gridIsBold}
+                      formState={formState}
+                      rowHeight={rowHeight}
+                    />
+                  ) : (
+                    <div
+                      style={
+                        currentCell?.column === column.dataField &&
+                        currentCell?.rowIndex === index
+                          ? {
+                              ...getCellContentStyle(column),
+                              border: `solid 3px rgb(${formState.userConfig?.inputBoxStyle?.focusBgColor})`,
+                              background: "#fff",
+                            }
+                          : { ...getCellContentStyle(column) }
+                      }
+                      id={cellId}
+                      tabIndex={0}
+                      className="px-1 cursor-default"
+                      onFocus={() => handleFocus(column.dataField!)}
+                      onBlur={handleBlur}
+                      onKeyDown={(e) =>
+                        handleKeyDown(cellValue ?? "", e, column, index)
+                      }
+                    >
+                      {productId > 0
+                        ? column.decimalPoint
+                          ? getFormattedValue(
+                              cellValue as any,
+                              false,
+                              column.decimalPoint
+                            )
+                          : column.dataType == "date" &&
+                            !isNullOrUndefinedOrEmpty(column.format)
+                          ? moment(cellValue as any).format(column.format)
+                          : cellValue ?? ""
+                        : ""}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
       </>
-
     );
   }
 );
@@ -1340,7 +1710,9 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
     ref: Ref<any>
   ) {
     const dispatch = useAppDispatch();
-    const formState = useAppSelector((state: RootState) => state.InventoryTransaction);
+    const formState = useAppSelector(
+      (state: RootState) => state.InventoryTransaction
+    );
     const onApplyPreferences = useCallback(
       (pref: GridPreference) => {
         const updated = applyGridColumnPreferences(
@@ -1369,8 +1741,12 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       dragOverIndex,
     } = useTableResizeAndReorder(gridId, onApplyPreferences);
     const [__columns, setColumns] = useState(_columns);
-    const appState = useAppSelector((state: RootState) => state.AppState?.appState);
-    const applicationState = useAppSelector((state: RootState) => state.ApplicationSettings);
+    const appState = useAppSelector(
+      (state: RootState) => state.AppState?.appState
+    );
+    const applicationState = useAppSelector(
+      (state: RootState) => state.ApplicationSettings
+    );
     const preferenceChooserRef = useRef<{
       handleDragStart: (e: React.DragEvent<HTMLElement>) => void;
       handleDragEnd: (e: React.DragEvent<HTMLElement>) => void;
@@ -1387,19 +1763,22 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
 
     const totalGridWidth = useMemo(() => {
       console.log(columnWidths);
-      
-      return columnWidths.reduce((sum, widthItems) => sum + widthItems.width, 0);
+
+      return columnWidths.reduce(
+        (sum, widthItems) => sum + widthItems.width,
+        0
+      );
     }, [columnWidths]);
 
     const handleShowGridTheme = () => {
       dispatch(
         formStateHandleFieldChange({
           fields: {
-            showGridTheme: true
-          }
+            showGridTheme: true,
+          },
         })
-      )
-    }
+      );
+    };
 
     useEffect(() => {
       const fetchPreferences = async () => {
@@ -1411,20 +1790,25 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       }
     }, [gridId, _columns]);
 
-    const columns: ColumnModel[]  = useMemo(() => {
+    const columns: ColumnModel[] = useMemo(() => {
       const visibleColumns =
         formState.gridColumns?.filter((x) => x.visible !== false) ?? [];
 
       if (columnOrder.length > 0 && visibleColumns?.length > 0) {
         const vc: ColumnModel[] = columnOrder
-          .map((or) => visibleColumns.find(x => x.dataField == or.field))
+          .map((or) => visibleColumns.find((x) => x.dataField == or.field))
           .filter((col) => col !== undefined);
-          return vc;
+        return vc;
       }
       return visibleColumns;
     }, [columnOrder, formState.gridColumns]);
 
-    const ITEM_HEIGHT = window.innerWidth < 480 ? 125 : window.innerWidth <= 768 ? 140 : formState.userConfig?.gridRowHeight ?? 32;
+    const ITEM_HEIGHT =
+      window.innerWidth < 480
+        ? 125
+        : window.innerWidth <= 768
+        ? 140
+        : formState.userConfig?.gridRowHeight ?? 32;
 
     const { scrollTop, updateScroll, visibleItems, totalHeight } =
       useUltraFastVirtualScrolling(
@@ -1438,15 +1822,19 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
         formState.gridColumns?.filter((col) => col.visible !== false) ?? [];
 
       if (columnOrder.length === 0) {
-        setColumnOrder(visibleColumns.map((_, index) => {
-          return {field: _.dataField??"", index: index}
-        }));
+        setColumnOrder(
+          visibleColumns.map((_, index) => {
+            return { field: _.dataField ?? "", index: index };
+          })
+        );
       }
 
       if (columnWidths.length === 0) {
-        setColumnWidths(visibleColumns.map((col) => {
-          return { field: col.dataField??"", width:col.width ?? 0}
-        }));
+        setColumnWidths(
+          visibleColumns.map((col) => {
+            return { field: col.dataField ?? "", width: col.width ?? 0 };
+          })
+        );
       }
     }, [
       formState.gridColumns,
@@ -1476,7 +1864,8 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
         const handleMouseDown = (e: Event) => {
           const mouseEvent = e as MouseEvent;
           if (containerRef.current) {
-            const field = (handle as HTMLElement).getAttribute("data-field") ?? "";
+            const field =
+              (handle as HTMLElement).getAttribute("data-field") ?? "";
             startResize(
               mouseEvent,
               isRTL ? index - 1 : index,
@@ -1519,7 +1908,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
         const worksheet = workbook.addWorksheet("Grid Data", {
           pageSetup: {
             paperSize: 9,
-            orientation: 'landscape',
+            orientation: "landscape",
             fitToPage: true,
             fitToHeight: 1,
             fitToWidth: 1,
@@ -1529,26 +1918,26 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
               top: 0.75,
               bottom: 0.75,
               header: 0.3,
-              footer: 0.3
-            }
-          }
+              footer: 0.3,
+            },
+          },
         });
 
         const excelColumns = exportVisibleColumns
           ? formState.gridColumns?.filter(
-            (col) => col.visible !== false && col.dataField != null
-          )
+              (col) => col.visible !== false && col.dataField != null
+            )
           : formState.gridColumns;
 
         const colors = {
-          headerBg: 'FFF8F9FA',
-          headerText: 'FF495057',
-          background: 'FFFFFFFF',
-          alternateRow: 'FFF8F9FA',
-          border: 'FFDEE2E6',
-          text: 'FF212529',
-          summaryBg: 'FFF1F3F4',
-          summaryBorder: 'FFADB5BD'
+          headerBg: "FFF8F9FA",
+          headerText: "FF495057",
+          background: "FFFFFFFF",
+          alternateRow: "FFF8F9FA",
+          border: "FFDEE2E6",
+          text: "FF212529",
+          summaryBg: "FFF1F3F4",
+          summaryBorder: "FFADB5BD",
         };
 
         worksheet.columns = (excelColumns ?? []).map((col) => ({
@@ -1561,54 +1950,56 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
         worksheet.mergeCells(1, 1, 1, excelColumns?.length || 1);
 
         titleRow.getCell(1).font = {
-          name: 'Segoe UI',
+          name: "Segoe UI",
           size: 16,
           bold: true,
-          color: { argb: colors.text }
+          color: { argb: colors.text },
         };
         titleRow.getCell(1).alignment = {
-          vertical: 'middle',
-          horizontal: 'center'
+          vertical: "middle",
+          horizontal: "center",
         };
         titleRow.height = 35;
 
-        const dateRow = worksheet.insertRow(2, [`Generated on: ${new Date().toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        })}`]);
+        const dateRow = worksheet.insertRow(2, [
+          `Generated on: ${new Date().toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          })}`,
+        ]);
         worksheet.mergeCells(2, 1, 2, excelColumns?.length || 1);
 
         dateRow.getCell(1).font = {
-          name: 'Segoe UI',
+          name: "Segoe UI",
           size: 10,
-          color: { argb: colors.headerText }
+          color: { argb: colors.headerText },
         };
         dateRow.getCell(1).alignment = {
-          vertical: 'middle',
-          horizontal: 'center'
+          vertical: "middle",
+          horizontal: "center",
         };
         dateRow.height = 25;
 
         const headerRow = worksheet.getRow(3);
         headerRow.height = 30;
         headerRow.font = {
-          name: 'Segoe UI',
+          name: "Segoe UI",
           size: 11,
           bold: true,
-          color: { argb: colors.headerText }
+          color: { argb: colors.headerText },
         };
         headerRow.alignment = {
-          vertical: 'middle',
-          horizontal: 'center',
-          wrapText: true
+          vertical: "middle",
+          horizontal: "center",
+          wrapText: true,
         };
         headerRow.fill = {
-          type: 'pattern',
-          pattern: 'solid',
-          fgColor: { argb: colors.headerBg }
+          type: "pattern",
+          pattern: "solid",
+          fgColor: { argb: colors.headerBg },
         };
 
         formState.transaction?.details.forEach((item, index) => {
@@ -1627,20 +2018,20 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
 
           if (index % 2 === 1) {
             addedRow.fill = {
-              type: 'pattern',
-              pattern: 'solid',
-              fgColor: { argb: colors.alternateRow }
+              type: "pattern",
+              pattern: "solid",
+              fgColor: { argb: colors.alternateRow },
             };
           }
 
           addedRow.font = {
-            name: 'Segoe UI',
+            name: "Segoe UI",
             size: 10,
-            color: { argb: colors.text }
+            color: { argb: colors.text },
           };
           addedRow.alignment = {
-            vertical: 'middle',
-            horizontal: 'left'
+            vertical: "middle",
+            horizontal: "left",
           };
         });
 
@@ -1654,7 +2045,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
             if (summary && col.dataField !== undefined) {
               const value =
                 formState.summary[
-                summary.column as keyof typeof formState.summary
+                  summary.column as keyof typeof formState.summary
                 ];
               summaryRow[col.dataField] = summary.customizeText
                 ? summary.customizeText({ value })
@@ -1669,19 +2060,19 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
           const addedSummaryRow = worksheet.addRow(summaryRow);
           addedSummaryRow.height = 25;
           addedSummaryRow.font = {
-            name: 'Segoe UI',
+            name: "Segoe UI",
             size: 10,
             bold: true,
-            color: { argb: colors.text }
+            color: { argb: colors.text },
           };
           addedSummaryRow.alignment = {
-            vertical: 'middle',
-            horizontal: 'left'
+            vertical: "middle",
+            horizontal: "left",
           };
           addedSummaryRow.fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: { argb: colors.summaryBg }
+            type: "pattern",
+            pattern: "solid",
+            fgColor: { argb: colors.summaryBg },
           };
         }
 
@@ -1693,10 +2084,10 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
           for (let col = 1; col <= dataEndCol; col++) {
             const cell = worksheet.getCell(row, col);
             cell.border = {
-              top: { style: 'thin', color: { argb: colors.border } },
-              left: { style: 'thin', color: { argb: colors.border } },
-              bottom: { style: 'thin', color: { argb: colors.border } },
-              right: { style: 'thin', color: { argb: colors.border } }
+              top: { style: "thin", color: { argb: colors.border } },
+              left: { style: "thin", color: { argb: colors.border } },
+              bottom: { style: "thin", color: { argb: colors.border } },
+              right: { style: "thin", color: { argb: colors.border } },
             };
           }
         }
@@ -1708,7 +2099,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
           worksheet.eachRow((row, rowNumber) => {
             if (rowNumber >= dataStartRow) {
               const cell = row.getCell(index + 1);
-              const cellValue = cell.value ? cell.value.toString() : '';
+              const cellValue = cell.value ? cell.value.toString() : "";
               maxLength = Math.max(maxLength, cellValue.length);
             }
           });
@@ -1719,28 +2110,32 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
           }
         });
 
-        worksheet.views = [{
-          state: 'frozen',
-          xSplit: 0,
-          ySplit: 3,
-          topLeftCell: 'A4',
-          activeCell: 'A4'
-        }];
+        worksheet.views = [
+          {
+            state: "frozen",
+            xSplit: 0,
+            ySplit: 3,
+            topLeftCell: "A4",
+            activeCell: "A4",
+          },
+        ];
 
         const buffer = await workbook.xlsx.writeBuffer();
         const blob = new Blob([buffer], {
           type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         });
 
-        const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+        const timestamp = new Date()
+          .toISOString()
+          .slice(0, 19)
+          .replace(/:/g, "-");
         const filename = `${gridId}_export_${timestamp}.xlsx`;
 
         saveAs(blob, filename);
 
-        console.log('Excel export completed successfully!');
-
+        console.log("Excel export completed successfully!");
       } catch (error) {
-        console.error('Error exporting to Excel:', error);
+        console.error("Error exporting to Excel:", error);
       }
     };
     const focusCell = useCallback(
@@ -1861,34 +2256,34 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
           ) {
             const nextEditable = excludedColumns
               ? (() => {
-                for (
-                  let i = currentEditableIndex + 1;
-                  i < editableColumns.length;
-                  i++
-                ) {
-                  const column = editableColumns[i];
-                  if (
-                    column.dataField &&
-                    !excludedColumns.includes(
-                      column.dataField as keyof TransactionDetail
-                    )
+                  for (
+                    let i = currentEditableIndex + 1;
+                    i < editableColumns.length;
+                    i++
                   ) {
-                    return column;
+                    const column = editableColumns[i];
+                    if (
+                      column.dataField &&
+                      !excludedColumns.includes(
+                        column.dataField as keyof TransactionDetail
+                      )
+                    ) {
+                      return column;
+                    }
                   }
-                }
-                for (let i = 0; i <= currentEditableIndex; i++) {
-                  const column = editableColumns[i];
-                  if (
-                    column.dataField &&
-                    !excludedColumns.includes(
-                      column.dataField as keyof TransactionDetail
-                    )
-                  ) {
-                    return column;
+                  for (let i = 0; i <= currentEditableIndex; i++) {
+                    const column = editableColumns[i];
+                    if (
+                      column.dataField &&
+                      !excludedColumns.includes(
+                        column.dataField as keyof TransactionDetail
+                      )
+                    ) {
+                      return column;
+                    }
                   }
-                }
-                return null;
-              })()
+                  return null;
+                })()
               : editableColumns[currentEditableIndex + 1];
             targetColumnIndex = visibleColumns.findIndex(
               (col) => col.dataField === nextEditable?.dataField
@@ -1917,65 +2312,197 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       formState.currentCell?.rowIndex ?? -1
     );
     useEffect(() => {
+      console.log("focusCell");
+
       setCurrentCell(formState.currentCell);
     }, [formState.currentCell]);
+    const scrollToCenter = useCallback(
+      (rowIndex: number, column?: string, duration: number = 300) => {
+        if (rowIndex < 0 || rowIndex >= formState.transaction.details.length) {
+          console.warn("Invalid row index:", rowIndex);
+          return false;
+        }
+
+        if (!containerRef.current) {
+          return false;
+        }
+        const visibleColumns = formState.gridColumns?.filter(
+          (col) => col.visible !== false && col.dataField != null
+        );
+        const columnIndex = visibleColumns.findIndex(
+          (x) => x.dataField == column
+        );
+        const container = containerRef.current;
+        const currentVerticalScrollTop = container.scrollTop;
+        const currentHorizontalScrollLeft = container.scrollLeft;
+
+        // Calculate target vertical position
+        const rowTop = rowIndex * ITEM_HEIGHT;
+        const containerCenter = height / 2;
+        const targetVerticalScrollTop =
+          rowTop - containerCenter + ITEM_HEIGHT / 2;
+
+        const totalContentHeight =
+          formState.transaction.details.length * ITEM_HEIGHT;
+        const maxVerticalScrollTop = Math.max(0, totalContentHeight - height);
+        const finalVerticalScrollTop = Math.max(
+          0,
+          Math.min(targetVerticalScrollTop, maxVerticalScrollTop)
+        );
+
+        // Calculate target horizontal position
+        let finalHorizontalScrollLeft = currentHorizontalScrollLeft;
+
+        if (
+          columnIndex !== undefined &&
+          columns &&
+          columnIndex >= 0 &&
+          columnIndex < columns.length
+        ) {
+          let columnLeft = 0;
+          for (let i = 0; i < columnIndex; i++) {
+            const colWidth =
+              columnWidths?.find((x) => x.field === columns[i].dataField)
+                ?.width || 150;
+            columnLeft += colWidth;
+          }
+
+          const currentColumn = columns[columnIndex];
+          const columnWidth =
+            columnWidths?.find((x) => x.field === currentColumn.dataField)
+              ?.width || 150;
+
+          const containerWidth = container.clientWidth;
+          const containerHorizontalCenter = containerWidth / 2;
+          const totalGridCenter = totalGridWidth / 2;
+          const columnCenter = columnLeft + columnWidth / 2;
+
+          if (columnCenter < totalGridCenter) {
+            finalHorizontalScrollLeft = 0;
+          } else {
+            const targetHorizontalScrollLeft =
+              columnLeft - containerHorizontalCenter + columnWidth / 2;
+            const maxHorizontalScrollLeft = Math.max(
+              0,
+              totalGridWidth - containerWidth
+            );
+            finalHorizontalScrollLeft = Math.max(
+              0,
+              Math.min(targetHorizontalScrollLeft, maxHorizontalScrollLeft)
+            );
+          }
+        }
+
+        // Animate both scrolling
+        const startTime = performance.now();
+        const verticalDistance =
+          finalVerticalScrollTop - currentVerticalScrollTop;
+        const horizontalDistance =
+          finalHorizontalScrollLeft - currentHorizontalScrollLeft;
+
+        const animateScroll = (currentTime: number) => {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+
+          // Easing function (ease-out)
+          const easeOut = 1 - Math.pow(1 - progress, 3);
+
+          const newVerticalScrollTop =
+            currentVerticalScrollTop + verticalDistance * easeOut;
+          const newHorizontalScrollLeft =
+            currentHorizontalScrollLeft + horizontalDistance * easeOut;
+
+          container.scrollTop = newVerticalScrollTop;
+          container.scrollLeft = newHorizontalScrollLeft;
+          updateScroll(newVerticalScrollTop);
+
+          if (progress < 1) {
+            requestAnimationFrame(animateScroll);
+          }
+        };
+
+        requestAnimationFrame(animateScroll);
+        return true;
+      },
+      [
+        ITEM_HEIGHT,
+        height,
+        updateScroll,
+        formState.transaction.details.length,
+        columns,
+        columnWidths,
+        totalGridWidth,
+      ]
+    );
+
     useEffect(() => {
       const runEffect = async () => {
-      if (
-        currentCell &&
-        currentCell.column !== "" &&
-        currentCell.rowIndex > -1
-      ) {
-        const targetCellId = `${gridId}_${currentCell.column}_${currentCell.rowIndex}`;
-        const targetCell = document.getElementById(
-          targetCellId
-        ) as HTMLElement | null;
-        if (targetCell) {
-          if (
-            currentCell.column === "product" ||
-            currentCell.column === "pCode"
-          ) {
-            const erpSearchInput = targetCell.querySelector(
-              `input[id="${targetCellId}"]`
-            ) as HTMLInputElement | null;
-            if (erpSearchInput) {
-              erpSearchInput.focus();
-              erpSearchInput.select();
-              return;
+        if (
+          currentCell &&
+          currentCell.column !== "" &&
+          currentCell.rowIndex > -1
+        ) {
+          const targetCellId = `${gridId}_${currentCell.column}_${currentCell.rowIndex}`;
+          const targetCell = document.getElementById(
+            targetCellId
+          ) as HTMLElement | null;
+          if (targetCell) {
+            if (
+              currentCell.column === "product" ||
+              currentCell.column === "pCode"
+            ) {
+              const erpSearchInput = targetCell.querySelector(
+                `input[id="${targetCellId}"]`
+              ) as HTMLInputElement | null;
+              if (erpSearchInput) {
+                erpSearchInput.focus();
+                erpSearchInput.select();
+                return;
+              }
             }
+            targetCell.focus();
+            const input =
+              targetCell.tagName === "INPUT"
+                ? (targetCell as HTMLInputElement)
+                : (targetCell.querySelector(
+                    "input"
+                  ) as HTMLInputElement | null);
+            if (input) input.select();
           }
-          targetCell.focus();
-          const input =
-            targetCell.tagName === "INPUT"
-              ? (targetCell as HTMLInputElement)
-              : (targetCell.querySelector("input") as HTMLInputElement | null);
-          if (input) input.select();
         }
-      }
-
-      setPrevCell(currentCell?.rowIndex ?? -1);
-      if (prevCell !== currentCell?.rowIndex) {
-        const data = formState.transaction.details.filter((x) => x.productID > 0);
-        if (data?.length > 0) {
-          await setStorageString(
-            `${formState.transaction.master.voucherType}${formState.transaction.master.voucherForm}`,
-            JSON.stringify(data)
-          )
+        if (currentCell?.reCenterRow) {
+          scrollToCenter(currentCell.rowIndex, currentCell.column);
         }
-      }
-      if (prevCell !== currentCell?.rowIndex && isNullOrUndefinedOrZero(currentCell?.data.productID)) {
-        const rc = 20 - formState.transaction.details.filter((x: any) => isNullOrUndefinedOrZero(x.productID)).length
-        const rows = Array.from({ length: rc }, (_, index) => ({
-          ...initialTransactionDetailData,
-          slNo: generateUniqueKey()
-        }));
-        dispatch(
-          formStateTransactionDetailsRowsAdd(rows)
-        );
-      }
+        setPrevCell(currentCell?.rowIndex ?? -1);
+        if (prevCell !== currentCell?.rowIndex) {
+          const data = formState.transaction.details.filter(
+            (x) => x.productID > 0
+          );
+          if (data?.length > 0) {
+            await setStorageString(
+              `${formState.transaction.master.voucherType}${formState.transaction.master.voucherForm}`,
+              JSON.stringify(data)
+            );
+          }
+        }
+        if (
+          prevCell !== currentCell?.rowIndex &&
+          isNullOrUndefinedOrZero(currentCell?.data.productID)
+        ) {
+          const rc =
+            20 -
+            formState.transaction.details.filter((x: any) =>
+              isNullOrUndefinedOrZero(x.productID)
+            ).length;
+          const rows = Array.from({ length: rc }, (_, index) => ({
+            ...initialTransactionDetailData,
+            slNo: generateUniqueKey(),
+          }));
+          dispatch(formStateTransactionDetailsRowsAdd(rows));
+        }
       };
 
-  runEffect();
+      runEffect();
     }, [currentCell, currentCell?.rowIndex]);
     React.useImperativeHandle(ref, () => ({
       focusCell,
@@ -2027,40 +2554,76 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
     return (
       <div
         style={{
-          position: isMobile ? 'relative' : 'static',
-          marginTop: isMobile ? '22px' : '',
+          position: isMobile ? "relative" : "static",
+          marginTop: isMobile ? "22px" : "",
           maxWidth: "100%",
           width: "100%",
           overflowX: "auto",
           overflowY: "hidden",
           boxSizing: "border-box",
-          border: `0.5px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.1)" : `rgba(${gridBorderColor || "203,213,225"}, 0.4)`}`,
-          borderRadius: formState.userConfig?.gridBorderRadius ? `${formState.userConfig.gridBorderRadius}px` : "0px",
-          boxShadow: "0 4px 25px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.6)",
-          background: appState.mode === "dark" ? "linear-gradient(to bottom right, #1a1a1a, #2d2d2d)" : "linear-gradient(to bottom right, rgba(248,250,252,0.8), white, rgba(239,246,255,0.3))",
+          border: `0.5px solid ${
+            appState.mode === "dark"
+              ? "rgba(255,255,255,0.1)"
+              : `rgba(${gridBorderColor || "203,213,225"}, 0.4)`
+          }`,
+          borderRadius: formState.userConfig?.gridBorderRadius
+            ? `${formState.userConfig.gridBorderRadius}px`
+            : "0px",
+          boxShadow:
+            "0 4px 25px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.6)",
+          background:
+            appState.mode === "dark"
+              ? "linear-gradient(to bottom right, #1a1a1a, #2d2d2d)"
+              : "linear-gradient(to bottom right, rgba(248,250,252,0.8), white, rgba(239,246,255,0.3))",
         }}
-        className="rounded-2xl shadow-xl backdrop-blur-sm">
+        className="rounded-2xl shadow-xl backdrop-blur-sm"
+      >
         <div className={`relative ${className} w-full`}>
           {isGridMenuOpen && (
             <div
               ref={popupRef}
-              className={`fixed top-[33px] w-[251px] rounded-lg shadow-xl border p-2 z-[51] backdrop-blur-sm ${appState.mode === "dark" ? "bg-[#1f2937] text-[#f3f4f6] border-[#374151]" : "bg-white text-black border-[#e5e7eb]"}`}
-              style={headerStyle}>
+              className={`fixed top-[33px] w-[251px] rounded-lg shadow-xl border p-2 z-[51] backdrop-blur-sm ${
+                appState.mode === "dark"
+                  ? "bg-[#1f2937] text-[#f3f4f6] border-[#374151]"
+                  : "bg-white text-black border-[#e5e7eb]"
+              }`}
+              style={headerStyle}
+            >
               <nav className="w-full">
                 <ul className="space-y-1">
                   {/* Grid Preferences */}
                   <li>
-                    <button className={`w-full flex items-center gap-3 px-3 py-[5px] rounded-md group text-left cursor-pointer transition-all duration-200 ${appState.mode === "dark" ? "hover:bg-[#4c1d954d] hover:text-[#d8b4fe]" : "hover:bg-[#f3e8ff] hover:text-[#7c3aed]"}`}>
-                      <div className={`p-[9px] rounded-full flex items-center justify-center group-hover:scale-110 transition-all duration-200 ${appState.mode === "dark" ? "bg-[#4c1d954d] group-hover:bg-[#6b21a899]" : "bg-[#ede9fe] group-hover:bg-[#e9d5ff]"}`}>
-                        <Settings className={`h-4 w-4 ${appState.mode === "dark" ? "text-[#d8b4fe]" : "text-[#7c3aed]"}`} />
+                    <button
+                      className={`w-full flex items-center gap-3 px-3 py-[5px] rounded-md group text-left cursor-pointer transition-all duration-200 ${
+                        appState.mode === "dark"
+                          ? "hover:bg-[#4c1d954d] hover:text-[#d8b4fe]"
+                          : "hover:bg-[#f3e8ff] hover:text-[#7c3aed]"
+                      }`}
+                    >
+                      <div
+                        className={`p-[9px] rounded-full flex items-center justify-center group-hover:scale-110 transition-all duration-200 ${
+                          appState.mode === "dark"
+                            ? "bg-[#4c1d954d] group-hover:bg-[#6b21a899]"
+                            : "bg-[#ede9fe] group-hover:bg-[#e9d5ff]"
+                        }`}
+                      >
+                        <Settings
+                          className={`h-4 w-4 ${
+                            appState.mode === "dark"
+                              ? "text-[#d8b4fe]"
+                              : "text-[#7c3aed]"
+                          }`}
+                        />
                       </div>
                       <GridPreferenceChooser
                         ref={preferenceChooserRef}
                         gridId={gridId}
-                        columns={(formState.gridColumns ?? []) as DevGridColumn[]}
+                        columns={
+                          (formState.gridColumns ?? []) as DevGridColumn[]
+                        }
                         onApplyPreferences={onApplyPreferences}
                         showChooserName={true}
-                      // buttonClassName="font-medium flex-1 text-left"
+                        // buttonClassName="font-medium flex-1 text-left"
                       />
                     </button>
                   </li>
@@ -2069,9 +2632,26 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                   <li>
                     <button
                       onClick={openExcelMenu}
-                      className={`w-full flex items-center gap-3 px-3 py-[5px] rounded-md group text-left transition-all duration-200 ${appState.mode === "dark" ? "hover:bg-[#14532d4d] hover:text-[#86efac]" : "hover:bg-[#f0fdf4] hover:text-[#15803d]"}`}>
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center group-hover:scale-110 transition-all duration-200 ${appState.mode === "dark" ? "bg-[#14532d4d] group-hover:bg-[#16653499]" : "bg-[#bbf7d0] group-hover:bg-[#86efac]"}`}>
-                        <FileUp className={`h-4 w-4 ${appState.mode === "dark" ? "text-[#86efac]" : "text-[#166534]"}`} />
+                      className={`w-full flex items-center gap-3 px-3 py-[5px] rounded-md group text-left transition-all duration-200 ${
+                        appState.mode === "dark"
+                          ? "hover:bg-[#14532d4d] hover:text-[#86efac]"
+                          : "hover:bg-[#f0fdf4] hover:text-[#15803d]"
+                      }`}
+                    >
+                      <div
+                        className={`w-8 h-8 rounded-full flex items-center justify-center group-hover:scale-110 transition-all duration-200 ${
+                          appState.mode === "dark"
+                            ? "bg-[#14532d4d] group-hover:bg-[#16653499]"
+                            : "bg-[#bbf7d0] group-hover:bg-[#86efac]"
+                        }`}
+                      >
+                        <FileUp
+                          className={`h-4 w-4 ${
+                            appState.mode === "dark"
+                              ? "text-[#86efac]"
+                              : "text-[#166534]"
+                          }`}
+                        />
                       </div>
                       <span className="font-medium">
                         {t("export_to_excel")}
@@ -2083,11 +2663,30 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                   <li>
                     <button
                       onClick={handleShowGridTheme}
-                      className={`w-full flex items-center gap-3 px-3 py-[5px] rounded-md group text-left transition-all duration-200 ${appState.mode === "dark" ? "hover:bg-[#1e3a8a4d] hover:text-[#93c5fd]" : "hover:bg-[#eff6ff] hover:text-[#1d4ed8]"}`}>
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center group-hover:scale-110 transition-all duration-200 ${appState.mode === "dark" ? "bg-[#1e3a8a4d] group-hover:bg-[#1e3a8a99]" : "bg-[#dbeafe] group-hover:bg-[#bfdbfe]"}`} >
-                        <Paintbrush className={`h-4 w-4 ${appState.mode === "dark" ? "text-[#93c5fd]" : "text-[#1e40af]"}`} />
+                      className={`w-full flex items-center gap-3 px-3 py-[5px] rounded-md group text-left transition-all duration-200 ${
+                        appState.mode === "dark"
+                          ? "hover:bg-[#1e3a8a4d] hover:text-[#93c5fd]"
+                          : "hover:bg-[#eff6ff] hover:text-[#1d4ed8]"
+                      }`}
+                    >
+                      <div
+                        className={`w-8 h-8 rounded-full flex items-center justify-center group-hover:scale-110 transition-all duration-200 ${
+                          appState.mode === "dark"
+                            ? "bg-[#1e3a8a4d] group-hover:bg-[#1e3a8a99]"
+                            : "bg-[#dbeafe] group-hover:bg-[#bfdbfe]"
+                        }`}
+                      >
+                        <Paintbrush
+                          className={`h-4 w-4 ${
+                            appState.mode === "dark"
+                              ? "text-[#93c5fd]"
+                              : "text-[#1e40af]"
+                          }`}
+                        />
                       </div>
-                      <span className="font-medium">{t("change_grid_theme")}</span>
+                      <span className="font-medium">
+                        {t("change_grid_theme")}
+                      </span>
                     </button>
                   </li>
                 </ul>
@@ -2131,26 +2730,40 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
               overflowX: "auto",
               position: "relative",
               scrollbarWidth: "auto",
-              paddingTop: isMobile ? '8px' : '',
-              scrollbarColor: appState.mode === "dark" ? "#555 #333" : "#ddd #f1f1f1",
+              paddingTop: isMobile ? "8px" : "",
+              scrollbarColor:
+                appState.mode === "dark" ? "#555 #333" : "#ddd #f1f1f1",
             }}
-            onScroll={(e) => { handleScroll(e); }}
+            onScroll={(e) => {
+              handleScroll(e);
+            }}
           >
             <div
               style={{
-                width: `${!isMobile ? `${totalGridWidth}px` : '100%'}`,
+                width: `${!isMobile ? `${totalGridWidth}px` : "100%"}`,
                 minWidth: `${!isMobile ? totalGridWidth : 50}px`,
                 height: `${!isMobile ? totalHeight + 80 : totalHeight + 10}px`,
-                borderRadius: formState.userConfig?.gridBorderRadius ? `${formState.userConfig.gridBorderRadius}px` : "0px",
+                borderRadius: formState.userConfig?.gridBorderRadius
+                  ? `${formState.userConfig.gridBorderRadius}px`
+                  : "0px",
               }}
             >
-              {!isMobile &&
+              {!isMobile && (
                 <div
                   className="table-header"
                   style={{
-                    display: isMobile ? 'none' : 'flex',
-                    background: appState.mode === "dark" ? "linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 30%, #222222 70%, #2d2d2d 100%)" : gridHeaderBg ? `rgb(${gridHeaderBg})` : "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f1f5f9 70%, #f8fafc 100%)",
-                    borderBottom: `0.5px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.1)" : `rgba(${gridBorderColor || "203,213,225"}, 0.4)`}`,
+                    display: isMobile ? "none" : "flex",
+                    background:
+                      appState.mode === "dark"
+                        ? "linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 30%, #222222 70%, #2d2d2d 100%)"
+                        : gridHeaderBg
+                        ? `rgb(${gridHeaderBg})`
+                        : "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f1f5f9 70%, #f8fafc 100%)",
+                    borderBottom: `0.5px solid ${
+                      appState.mode === "dark"
+                        ? "rgba(255,255,255,0.1)"
+                        : `rgba(${gridBorderColor || "203,213,225"}, 0.4)`
+                    }`,
                     position: "sticky",
                     top: 0,
                     zIndex: 100,
@@ -2161,7 +2774,8 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                     const isFirstColumn = index === 0;
                     const isLastColumn = index === columns.length - 1;
                     const isFixed = isFirstColumn || isLastColumn;
-                    const showBorder = formState.userConfig?.showColumnBorder ?? true;
+                    const showBorder =
+                      formState.userConfig?.showColumnBorder ?? true;
                     return (
                       <div
                         key={`${column.dataField}-${index}`}
@@ -2171,22 +2785,69 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                         onDragOver={(e) => handleDragOver(e, index)}
                         onDrop={(e) => handleDrop(e, index)}
                         style={{
-                          width: `${columnWidths?.find(x => x.field == column.dataField)?.width}px`,
-                          minWidth: `${columnWidths?.find(x => x.field == column.dataField)?.width}px`,
-                          maxWidth: `${columnWidths?.find(x => x.field == column.dataField)?.width}px`,
+                          width: `${
+                            columnWidths?.find(
+                              (x) => x.field == column.dataField
+                            )?.width
+                          }px`,
+                          minWidth: `${
+                            columnWidths?.find(
+                              (x) => x.field == column.dataField
+                            )?.width
+                          }px`,
+                          maxWidth: `${
+                            columnWidths?.find(
+                              (x) => x.field == column.dataField
+                            )?.width
+                          }px`,
                           padding: "8px 12px",
-                          borderRight: isFirstColumn ? `2px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.2)" : `rgba(${gridBorderColor || "226,232,240"})`}`
-                            : isLastColumn ? "none" : showBorder ? `0.2px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.1)" : `rgba(${gridBorderColor || "226,232,240"}, 0.8)`}` : "none",
-                          borderLeft: isLastColumn ? `2px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.2)" : `rgba(${gridBorderColor || "226,232,240"})`}` : "none",
+                          borderRight: isFirstColumn
+                            ? `2px solid ${
+                                appState.mode === "dark"
+                                  ? "rgba(255,255,255,0.2)"
+                                  : `rgba(${gridBorderColor || "226,232,240"})`
+                              }`
+                            : isLastColumn
+                            ? "none"
+                            : showBorder
+                            ? `0.2px solid ${
+                                appState.mode === "dark"
+                                  ? "rgba(255,255,255,0.1)"
+                                  : `rgba(${
+                                      gridBorderColor || "226,232,240"
+                                    }, 0.8)`
+                              }`
+                            : "none",
+                          borderLeft: isLastColumn
+                            ? `2px solid ${
+                                appState.mode === "dark"
+                                  ? "rgba(255,255,255,0.2)"
+                                  : `rgba(${gridBorderColor || "226,232,240"})`
+                              }`
+                            : "none",
                           fontWeight: gridIsBold ? 700 : 500,
                           fontSize: gridFontSize ?? 14,
-                          background: dragOverIndex === index ? appState.mode === "dark" ? "#444444" : "#e3f2fd" : appState.mode === "dark" ? "linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 30%, #222222 70%, #2d2d2d 100%)" : gridHeaderBg ? `rgb(${gridHeaderBg})` : "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f1f5f9 70%, #f8fafc 100%)",
+                          background:
+                            dragOverIndex === index
+                              ? appState.mode === "dark"
+                                ? "#444444"
+                                : "#e3f2fd"
+                              : appState.mode === "dark"
+                              ? "linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 30%, #222222 70%, #2d2d2d 100%)"
+                              : gridHeaderBg
+                              ? `rgb(${gridHeaderBg})`
+                              : "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f1f5f9 70%, #f8fafc 100%)",
                           userSelect: "none",
                           display: "flex",
                           alignItems: "center",
                           cursor: "move",
                           transition: "background-color 0.1s ease",
-                          color: appState.mode === "dark" ? "#e0e0e0" : gridHeaderFontColor ? `rgb(${gridHeaderFontColor})` : "#1f2937",
+                          color:
+                            appState.mode === "dark"
+                              ? "#e0e0e0"
+                              : gridHeaderFontColor
+                              ? `rgb(${gridHeaderFontColor})`
+                              : "#1f2937",
                           position: isFixed ? "sticky" : "relative",
                           left: isFirstColumn ? "0px" : "auto",
                           right: isLastColumn ? "0px" : "auto",
@@ -2202,7 +2863,11 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                                   e.stopPropagation();
                                   setIsGridMenuOpen((prev) => !prev);
                                 }}
-                                className={`flex items-center rounded-full p-2 mr-2 transition-colors ${appState.mode === "dark" ? "bg-[#333333] hover:bg-[#444444] text-[#e0e0e0]" : "bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-800"}`}
+                                className={`flex items-center rounded-full p-2 mr-2 transition-colors ${
+                                  appState.mode === "dark"
+                                    ? "bg-[#333333] hover:bg-[#444444] text-[#e0e0e0]"
+                                    : "bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-800"
+                                }`}
                               >
                                 <EllipsisVertical className="w-4 h-4" />
                               </button>
@@ -2211,7 +2876,9 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                           </>
                         ) : (
                           <>
-                            <span style={{ marginRight: "8px", opacity: 0.6 }}>⋮⋮</span>
+                            <span style={{ marginRight: "8px", opacity: 0.6 }}>
+                              ⋮⋮
+                            </span>
                             {column.caption}
                           </>
                         )}
@@ -2231,7 +2898,9 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                             }}
                             onMouseEnter={(e) => {
                               (e.target as HTMLElement).style.backgroundColor =
-                                appState.mode === "dark" ? "#e0e0e0" : "#007bff";
+                                appState.mode === "dark"
+                                  ? "#e0e0e0"
+                                  : "#007bff";
                             }}
                             onMouseLeave={(e) => {
                               (e.target as HTMLElement).style.backgroundColor =
@@ -2243,7 +2912,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                     );
                   })}
                 </div>
-              }
+              )}
               <div
                 style={{
                   position: "relative",
@@ -2251,13 +2920,12 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                 }}
               >
                 {formState.transactionLoading ||
-                  !columns ||
-                  columns.length === 0 ||
-                  !formState.transaction.details ||
-                  formState.transaction.details.length === 0 ? (
+                !columns ||
+                columns.length === 0 ||
+                !formState.transaction.details ||
+                formState.transaction.details.length === 0 ? (
                   <></>
                 ) : (
-                  
                   visibleItems.map(({ index, top }) => (
                     <VirtualRow
                       t={t}
@@ -2278,12 +2946,23 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                       listRef={containerRef as any}
                       itemCount={formState.transaction.details.length}
                       gridRef={containerRef as any}
-                      onKeyDown={(value, e, column, rowIndex) => { onKeyDown(value, e, column, rowIndex); }}
-                      onChange={(value, column, rowIndex) => { onChange(value, column, rowIndex); }}
-                      searchByCodeAndName={formState.userConfig?.enableItemCodeSearchInNameColumn}
+                      onKeyDown={(value, e, column, rowIndex) => {
+                        onKeyDown(value, e, column, rowIndex);
+                      }}
+                      onChange={(value, column, rowIndex) => {
+                        onChange(value, column, rowIndex);
+                      }}
+                      searchByCodeAndName={
+                        formState.userConfig?.enableItemCodeSearchInNameColumn
+                      }
                       advancedProductSearching={false}
-                      transactionType={transactionType ?? formState.transactionType}
-                      blockUnitOnDecimalPoint={applicationState.inventorySettings.blockUnitOnDecimalPoint}
+                      transactionType={
+                        transactionType ?? formState.transactionType
+                      }
+                      blockUnitOnDecimalPoint={
+                        applicationState.inventorySettings
+                          .blockUnitOnDecimalPoint
+                      }
                       focusCell={focusCell}
                       nextCellFind={nextCellFind}
                       currentCell={currentCell}
@@ -2299,11 +2978,20 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
               <div
                 className="table-footer"
                 style={{
-                  display: isMobile ? 'none' : 'flex',
+                  display: isMobile ? "none" : "flex",
                   width: `${totalGridWidth}px`,
                   minWidth: `${totalGridWidth}px`,
-                  backgroundColor: appState.mode === "dark" ? "linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 30%, #222222 70%, #2d2d2d 100%)" : gridFooterBg ? `rgb(${gridFooterBg})` : "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f1f5f9 70%, #f8fafc 100%)",
-                  borderTop: `0.1px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.1)" : `rgba(${gridBorderColor || "226,232,240"}, 0.3)`}`,
+                  backgroundColor:
+                    appState.mode === "dark"
+                      ? "linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 30%, #222222 70%, #2d2d2d 100%)"
+                      : gridFooterBg
+                      ? `rgb(${gridFooterBg})`
+                      : "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f1f5f9 70%, #f8fafc 100%)",
+                  borderTop: `0.1px solid ${
+                    appState.mode === "dark"
+                      ? "rgba(255,255,255,0.1)"
+                      : `rgba(${gridBorderColor || "226,232,240"}, 0.3)`
+                  }`,
                   position: "sticky",
                   bottom: 0,
                   zIndex: 100,
@@ -2311,33 +2999,37 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                 }}
               >
                 {columns?.map((column, colIndex) => {
-
                   const isFirstColumn = colIndex === 0;
                   const isLastColumn = colIndex === columns.length - 1;
                   const isFixed = isFirstColumn || isLastColumn;
-                  const showBorder = formState.userConfig?.showColumnBorder ?? true;
-                  const value = formState.summary?.[
-                    column.dataField as keyof SummaryItems
-                  ] ?? "";
+                  const showBorder =
+                    formState.userConfig?.showColumnBorder ?? true;
+                  const value =
+                    formState.summary?.[
+                      column.dataField as keyof SummaryItems
+                    ] ?? "";
 
                   const final =
                     column.dataType === "number" && value !== ""
                       ? (() => {
+                          const num = parseFloat(value as any);
+                          console.log("Raw value:", value);
+                          console.log("Parsed num:", num);
 
-                        const num = parseFloat(value as any);
-                        console.log("Raw value:", value);
-                        console.log("Parsed num:", num);
+                          if (isNaN(num)) {
+                            console.log("Result: empty string (NaN case)");
+                            return "";
+                          }
 
-                        if (isNaN(num)) {
-                          console.log("Result: empty string (NaN case)");
-                          return "";
-                        }
+                          const rounded = getFormattedValue(
+                            num,
+                            false,
+                            applicationState.mainSettings.decimalPoints ?? 2
+                          );
+                          console.log("Rounded:", rounded);
 
-                        const rounded = getFormattedValue(num, false, applicationState.mainSettings.decimalPoints ?? 2);
-                        console.log("Rounded:", rounded);
-
-                        return rounded;
-                      })()
+                          return rounded;
+                        })()
                       : value;
 
                   console.log("Final:", final);
@@ -2345,18 +3037,58 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                     <div
                       key={`footer-${column.dataField}`}
                       style={{
-                        width: `${columnWidths?.find(x => x.field == column.dataField)?.width}px`,
-                        minWidth: `${columnWidths?.find(x => x.field == column.dataField)?.width}px`,
-                        maxWidth: `${columnWidths?.find(x => x.field == column.dataField)?.width}px`,
+                        width: `${
+                          columnWidths?.find((x) => x.field == column.dataField)
+                            ?.width
+                        }px`,
+                        minWidth: `${
+                          columnWidths?.find((x) => x.field == column.dataField)
+                            ?.width
+                        }px`,
+                        maxWidth: `${
+                          columnWidths?.find((x) => x.field == column.dataField)
+                            ?.width
+                        }px`,
                         padding: "8px 12px",
-                        borderRight: isFirstColumn ? `2px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.2)" : `rgba(${gridBorderColor || "226,232,240"})`}`
-                          : isLastColumn ? "none" : showBorder ? `0.2px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.1)" : `rgba(${gridBorderColor || "226,232,240"}, 0.8)`}` : "none",
-                        borderLeft: isLastColumn ? `2px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.2)" : `rgba(${gridBorderColor || "226,232,240"})`}` : "none",
+                        borderRight: isFirstColumn
+                          ? `2px solid ${
+                              appState.mode === "dark"
+                                ? "rgba(255,255,255,0.2)"
+                                : `rgba(${gridBorderColor || "226,232,240"})`
+                            }`
+                          : isLastColumn
+                          ? "none"
+                          : showBorder
+                          ? `0.2px solid ${
+                              appState.mode === "dark"
+                                ? "rgba(255,255,255,0.1)"
+                                : `rgba(${
+                                    gridBorderColor || "226,232,240"
+                                  }, 0.8)`
+                            }`
+                          : "none",
+                        borderLeft: isLastColumn
+                          ? `2px solid ${
+                              appState.mode === "dark"
+                                ? "rgba(255,255,255,0.2)"
+                                : `rgba(${gridBorderColor || "226,232,240"})`
+                            }`
+                          : "none",
                         fontSize: `${gridFontSize}px`,
                         fontWeight: gridIsBold ? "bold" : "600",
                         textAlign: column.alignment,
-                        background: appState.mode === "dark" ? "linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 30%, #222222 70%, #2d2d2d 100%)" : gridFooterBg ? `rgb(${gridFooterBg})` : "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f1f5f9 70%, #f8fafc 100%)",
-                        color: appState.mode === "dark" ? "#e0e0e0" : gridFooterFontColor ? `rgb(${gridFooterFontColor})` : "#1f2937",
+                        background:
+                          appState.mode === "dark"
+                            ? "linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 30%, #222222 70%, #2d2d2d 100%)"
+                            : gridFooterBg
+                            ? `rgb(${gridFooterBg})`
+                            : "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f1f5f9 70%, #f8fafc 100%)",
+                        color:
+                          appState.mode === "dark"
+                            ? "#e0e0e0"
+                            : gridFooterFontColor
+                            ? `rgb(${gridFooterFontColor})`
+                            : "#1f2937",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
                         whiteSpace: "nowrap",
@@ -2365,7 +3097,14 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                         left: isFirstColumn ? "0px" : "auto",
                         right: isLastColumn ? "0px" : "auto",
                         display: "flex",
-                        justifyContent: isFirstColumn || isLastColumn ? "center" : column.alignment === "center" ? "center" : column.alignment === "right" ? "flex-end" : "flex-start",
+                        justifyContent:
+                          isFirstColumn || isLastColumn
+                            ? "center"
+                            : column.alignment === "center"
+                            ? "center"
+                            : column.alignment === "right"
+                            ? "flex-end"
+                            : "flex-start",
                         zIndex: isFixed ? 110 : 100,
                       }}
                     >

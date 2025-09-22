@@ -101,6 +101,7 @@ import SavingOverlay from "../transaction-saving";
 import { BusinessType } from "../../../../enums/business-types";
 import MemoEditorModal from "./memo-editor";
 import { getStorageString } from "../../../../utilities/storage-utils";
+import { getApLocalData, getApLocalDataByUrl } from "../../../../redux/cached-urls";
 interface BilledItem {
   id?: number;
   name: string;
@@ -509,6 +510,7 @@ const [_st, setSt] = useState<UserConfig>(initialUserConfig);
                 formStateHandleFieldChange({
                   fields: {
                     currentCell: {
+                    reCenterRow: true,
                       column: res.column,
                       rowIndex: res.rowIndex,
                       data: data,
@@ -703,8 +705,12 @@ const [_st, setSt] = useState<UserConfig>(initialUserConfig);
           voucherPrefix ?? "",
           false
         );
-
-        employeeID = userSession.employeeId ?? -2;
+debugger;
+        employeeID = userSession.employeeId ?? 0;
+        if(voucherType == VoucherType.PurchaseReturn) {
+          const emps = await getApLocalDataByUrl(`${Urls.inv_transaction_base}${transactionType}/Data/Employee/`);
+          employeeID = emps && emps.length > 0 ? emps[0].id : employeeID;
+        }
       }
 
       const templates = formState.templates;
@@ -963,6 +969,7 @@ const [_st, setSt] = useState<UserConfig>(initialUserConfig);
         column: editableColumn?.dataField ?? "",
         data: formState.transaction.details[0],
         rowIndex: 0,
+        reCenterRow: false
       }
       if(_formState.formElements.cbDebitAccount??{})
 
@@ -1313,6 +1320,7 @@ const [_st, setSt] = useState<UserConfig>(initialUserConfig);
                     details: res.transaction?.details,
                   },
                   currentCell: {
+                    reCenterRow: data.rowIndex!=rowIndex + addDetails.length,
                     column: resw?.column,
                     data: addDetails.length == 0 ? rowIndex : addDetails[addDetails.length - 1],
                     rowIndex: rowIndex + addDetails.length,

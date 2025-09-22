@@ -361,6 +361,9 @@ export const useTransaction = (
     if (loadVType == "GRN" || loadVType == "GRR") {
        _formState = merge({}, _formState, {transaction:{master:{deliveryNoteNumber: manualInvoiceNumber}}} );
     }
+    else if (loadVType == "PO" && (formState.transaction.master.voucherType == "GRN" || formState.transaction.master.voucherType == "PI")) {
+       _formState = merge({}, _formState, {transaction:{master:{orderNumber: manualInvoiceNumber}}} );
+    }
 
     if (typeof _formState == "boolean") {
       return;

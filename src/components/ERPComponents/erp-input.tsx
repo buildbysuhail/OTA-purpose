@@ -39,6 +39,7 @@ interface ERPInputProps extends ERPInputBaseProps {
   onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   required?: boolean;
+  focused?: boolean;
   minLength?: number;
   maxLength?: number;
   min?: number | string;
@@ -134,6 +135,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       onKeyDown,
       onEnterKeyDown,
       onKeyUp,
+      focused,
       data,
       type = "text",
       customSize,
@@ -212,7 +214,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     const handleMouseEnter = () => setIsHovered(true);
     const handleMouseLeave = () => setIsHovered(false);
     const [initial, setInitial] = useState<Option | null>(initialValue);
-
+  
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const ds = min != undefined ? parseFloat(min.toString()) : undefined;
       const sd = parseFloat(e.target?.value);
@@ -239,10 +241,10 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
 
     const [borderStyles, setBorderStyles] = useState<string>(
       appState.mode == "dark"
-        ? isFocused == true || isHovered == true
+        ? isFocused == true || isHovered == true || focused
           ? "#ffffff"
           : "#ffffff1a"
-        : `${isFocused || isHovered
+        : `${isFocused || isHovered || focused
           ? `rgb(${inputBoxState?.borderFocus})`
           : `rgb(${inputBoxState?.borderColor})`
         } `
@@ -250,10 +252,10 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
 
     const [bgColor, setBgColor] = useState<string>(
       appState.mode == "dark"
-        ? isFocused == true
+        ? isFocused == true || focused
           ? "#ffffff"
           : "#ffffff1a"
-        : `${isFocused ? `rgb(${inputBoxState?.focusBgColor})` : ``} `
+        : `${isFocused || focused ? `rgb(${inputBoxState?.focusBgColor})` : ``} `
     );
 
     const [foreColor,setForeColor]=useState<string>(
@@ -261,25 +263,25 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       isFocused==true
       ? "#ffffff"
       : "#ffffff1a"
-      : `${isFocused?`rgb (${inputBoxState?.focusForeColor})`: ``}`
+      : `${isFocused  || focused?`rgb (${inputBoxState?.focusForeColor})`: ``}`
     )
 
     useEffect(() => {
       let border, bgCol, bgFor;
       if (appState?.mode === "dark") {
-        border = isFocused || isHovered ? "#ffffff" : "#ffffff1a";
-        bgCol = isFocused ? "#ffffff" : "#ffffff1a";
-        bgFor = isFocused ? "#fff" : "#ccc";
+        border = isFocused || focused || isHovered ? "#ffffff" : "#ffffff1a";
+        bgCol = isFocused || focused ? "#ffffff" : "#ffffff1a";
+        bgFor = isFocused || focused ? "#fff" : "#ccc";
       } else {
-        border = isFocused || isHovered
+        border = isFocused || focused || isHovered
           ? `rgb(${inputBoxState?.borderFocus})`
           : `rgb(${inputBoxState?.borderColor})`;
-        bgCol = isFocused
+        bgCol = isFocused || focused
           ? `rgb(${inputBoxState?.focusBgColor})`
           : inputBoxState?.inputBgColor
           ? `rgb(${inputBoxState?.inputBgColor})`
           : "";
-        bgFor = isFocused
+        bgFor = isFocused || focused
           ? `rgb(${inputBoxState?.focusForeColor})`
           : inputBoxState?.fontColor
           ? `rgb(${inputBoxState?.fontColor})`
@@ -288,7 +290,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       setBorderStyles(border);
       setBgColor(bgCol);
       setForeColor(bgFor);
-    }, [appState.mode, isFocused, isHovered, inputBoxState]);
+    }, [appState.mode, isFocused, focused, isHovered, inputBoxState]);
 
     useEffect(() => {
       if (inputBoxState?.inputStyle !== "normal" && useMUI === undefined) {
@@ -1068,7 +1070,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                   dark:bg-dark-combo-dd dark:hover:bg-dark-hover-bg bg-[#f9f9f9] hover:bg-gray-100
                   ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-100'}`}
                 onClick={() => {
-                  if (disabled) return;
+                   if (disabled) return;
                 setTimeout(() => {
                   const currentValue = parseFloat(value as string) || 0;
                   const newValue = currentValue + (step ? parseFloat(step.toString()) : 1);
@@ -1209,7 +1211,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                   fontSize,
                   borderColor: borderStyles,
                   color,
-                  backgroundColor: isFocused
+                  backgroundColor: (isFocused || focused)
                     ? `rgb(${inputBoxState?.focusBgColor})`
                     : `rgb(${inputBoxState?.defaultBgColor})`,
                 }}>

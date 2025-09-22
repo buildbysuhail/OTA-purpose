@@ -275,6 +275,12 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
           allowSorting: true,
           allowSearch: true,
           allowFiltering: true,
+          cellRender: (cellElement: any, cellInfo: any) => {
+            const modified = cellElement?.data?.productName.replace(/^\s+/, (m: any) => "\u00A0".repeat(m.length))
+            return (
+              <>{modified}</>
+            );
+          },
         },
         {
           dataField: "productCode",
@@ -437,14 +443,14 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       searchValue: value,
       searchByCode: false,
     });
-
+    
     const dataGridRef = useRef<any>(null);
     const batchGridRef = useRef<any>(null);
     const productIDRef = useRef<number | undefined>(undefined);
     const gridContainerRef = useRef<HTMLDivElement>(null);
     const internalRef = useRef<HTMLInputElement>(null);
     const inputRef = ref || internalRef;
-    
+
     const dispatch = useDispatch();
     const portalContainerRef = useRef<HTMLElement | null>(null);
     const formState = useSelector(
@@ -673,7 +679,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
 
         if (key === "Enter" || key === "NumpadEnter") {
           try {
-            const gridInstance = dataGridRef.current.instance();
+            const gridInstance = dataGridRef.current.instance(); 
 
             // Get the data of the currently focused row
             const focusedRowKey = gridInstance.option("focusedRowKey");
@@ -745,7 +751,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
 
     const handleBatchGridKeyDown = useCallback(
       async (e: any) => {
-        console.log(`Batch grid key: ${e.event.key}`);
+    console.log(`Batch grid key: ${e.event.key}`);
         if (e.event.key === "Enter") {
           const gridInstance = batchGridRef.current.instance();
           const allSelected = await gridInstance.getSelectedRowsData();
@@ -957,17 +963,18 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     }, []);
 
     const [productGridReady, setProductGridReady] = useState<any>(false);
-    // const handleProductFocusedRowChanged = useCallback((e: any) => {
-    //   const gridInstance = e.component;
-    //   if (e?.row?.key !== undefined) {
-    //     gridInstance.selectRows([e.row.key], false);
-    //   }
-    // }, []);
+    const handleProductFocusedRowChanged = useCallback((e: any) => {
+      const gridInstance = e.component;
+      if (e?.row?.key !== undefined) {
+        gridInstance.selectRows([e.row.key], false);
+      }
+    }, []);
 
     const [productInitialized, setProductInitialized] = useState(false);
     const [isGridInitializing, setIsGridInitializing] = useState(true);
 
     const handleProductGridContentReady = useCallback((e: any) => {
+         console.log("handleProductGridContentReady called")
         const gridInstance = e.component;
         const visibleRows = gridInstance.getVisibleRows();
         const hasValidData = visibleRows.length > 0 && visibleRows[0].data?.productID;
@@ -1069,7 +1076,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
                         groupPaging: false,
                       }}
                       focusedRowEnabled={true}
-                      // onFocusedRowChanged={handleProductFocusedRowChanged}
+                      onFocusedRowChanged={handleProductFocusedRowChanged}
                       onContentReady={handleProductGridContentReady}
                       onKeyDown={handleGridKeyDown}
                       tabIndex={0}
@@ -1077,7 +1084,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
                     >
                       <Selection mode="single" />
                       <Paging pageSize={30} />
-                      <Scrolling mode="virtual" />
+                      <Scrolling mode="virtual" showScrollbar="always" />
                       <KeyboardNavigation
                         enabled={true}
                         editOnKeyPress={false}
@@ -1126,8 +1133,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
                       summary: false,
                       groupPaging: false,
                     }}
-                    paging={{}}
-                    // focusedRowEnabled={true}
+                    // paging={{}}
+                    focusedRowEnabled={true}
                     onContentReady={handleBatchContentReady}
                     onFocusedRowChanged={handleBatchFocusedRowChanged}
                     onKeyDown={handleBatchGridKeyDown}
@@ -1197,7 +1204,14 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
                   rest.onBlur(e);
                 }
               }}
+              focused={showProductGrid } // || batchInitialized
             />
+            {productInitialized &&(
+              <div className="absolute inset-0 flex items-center px-3 pointer-events-none">
+                <span className="invisible">{inputValue.searchValue}</span>
+                <span className="animate-blink text-black">|</span>
+              </div>
+              )}
           </div>
           {showCheckBox && (
             <ERPCheckbox

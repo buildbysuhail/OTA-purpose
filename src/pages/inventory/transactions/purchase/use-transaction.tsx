@@ -574,8 +574,8 @@ export const useTransaction = (
       master: {
         ...(vch?.master || {}),
         hasroundOff: vch?.master?.roundAmount != 0,
-        cashReceived: vch?.master?.cashAmt,
-        hasCashPaid: vch?.master?.cashAmt != 0
+        cashReceived: vch?.master?.cashReceived,
+        hasCashPaid: vch?.master?.cashReceived != 0
       },
       details: refactorDetails(
         vch.details,

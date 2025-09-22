@@ -424,7 +424,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({ formS
                   <ERPDataCombobox
                     id="tableId"
                     noLabel={true}
-                    value={formState.transaction.master.tableID}
+                    value={formState.transaction.master.tableId}
                     className="flex-1 h-6 text-xs w-full sm:max-w-36"
                     field={{
                       id: "tableID",
@@ -432,7 +432,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({ formS
                       labelKey: "name",
                       getListUrl: Urls.data_acc_ledgers,
                     }}
-                    onSelectItem={(data) => dispatch(formStateMasterHandleFieldChange({ fields: { tableID: data.value } }))}
+                    onSelectItem={(data) => dispatch(formStateMasterHandleFieldChange({ fields: { tableId: data.value } }))}
                   />
                 </div>
                 }

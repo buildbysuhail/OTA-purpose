@@ -112,7 +112,7 @@ export interface TransactionMaster {
   partyName: string;
   displayName: string;
   referalAgentID: number;
-  tableID: number;
+  tableId: number;
   seatNumber: string;
   tokenNumber: string;
   kotMasterID: number;

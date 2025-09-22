@@ -59,6 +59,7 @@ enum VoucherType {
 export default VoucherType;
 
 export const purchaseVoucherTypes=[
+  VoucherType.GoodsReceiptNote,
   VoucherType.PurchaseInvoice,VoucherType.PurchaseOrder,VoucherType.PurchaseQuotation,VoucherType.PurchaseEstimate,VoucherType.PurchaseReturn,VoucherType.PurchaseReturnEstimate,VoucherType.PurchaseOrderTransist
 ]
 export const salesVoucherTypes=[

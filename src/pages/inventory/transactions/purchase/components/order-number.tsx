@@ -165,7 +165,7 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
                     id="Vprefix"
                     className="min-w-[120px]"
                     label=""
-                    value={loadData.vPrefixId}
+                    value={loadData.vPrefix}
                     data={loadData}
                     onSelectItem={(e) =>
                       setLoadData((prev) => {

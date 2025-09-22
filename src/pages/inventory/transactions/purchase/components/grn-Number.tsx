@@ -45,7 +45,7 @@ const VoucherLoader = React.forwardRef<HTMLInputElement, GrnNumberProps>((props,
     formType: "",
     vPrefix: "",
     vNumber: "",
-    vType: formState.transaction.master.voucherType
+    vType: props.fromVoucherType??""
   });
 
   const handleLoadByRefNo = useCallback(async () => {

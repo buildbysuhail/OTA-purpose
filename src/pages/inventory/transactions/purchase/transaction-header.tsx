@@ -1219,8 +1219,10 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
               </div>
 
               <div className="flex items-center gap-2 mt-2">
-                {formState.transaction.master.voucherType !==
-                  VoucherType.PurchaseQuotation && (
+                {(formState.transaction.master.voucherType ===
+                  VoucherType.PurchaseInvoice || formState.transaction.master.voucherType ===
+                  VoucherType.PurchaseReturn || formState.transaction.master.voucherType ===
+                  VoucherType.GoodsReceiptNote) && (
                   <div>
                     <ERPButton
                       title={t(

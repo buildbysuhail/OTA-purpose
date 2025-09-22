@@ -141,6 +141,7 @@ const VoucherLoader = React.forwardRef<HTMLInputElement, GrnNumberProps>((props,
             // value={orderNumberValue}
             value={props.updateDeliveryNoteNumber ? formState.transaction.master.deliveryNoteNumber: loadData.vNumber}
             onChange={(e) => {
+              debugger;
               if(props.updateDeliveryNoteNumber) {
               dispatch(formStateHandleFieldChangeKeysOnly({fields:{transaction:{master:{deliveryNoteNumber: e.target?.value}}}}))
               } else {

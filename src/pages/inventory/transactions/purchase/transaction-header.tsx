@@ -720,6 +720,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       closeModal={closeModal}
                       content={
                         <VoucherLoader
+                        updateDeliveryNoteNumber = {["GRN", "GRR"].includes(isModalOpen.type)}
                           fromVoucherType={
                             isModalOpen.type == "PI_Ref"
                               ? VoucherType.PurchaseInvoice
@@ -1268,7 +1269,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
               {isModalOpen && isModalOpen.visible && (
                 <ERPModal
                   isOpen={isModalOpen.visible}
-                  title={getGRNTitle(isModalOpen.type)}
+                  title={isModalOpen.type}
                   width={600}
                   height={280}
                   closeModal={closeModal}

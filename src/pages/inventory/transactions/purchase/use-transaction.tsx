@@ -1110,6 +1110,7 @@ export const useTransaction = (
         details: dtRes.outputDetails,
         attachments: attachments,
         invAccTransactions: formState.transaction.invAccTransactions,
+        pendingOrdListMasterIDs: formState.pendingOrdListMasterIDs
       };
 
       params = sanitizeDataAdvanced(params, transactionInitialData)

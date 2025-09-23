@@ -971,7 +971,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
             summaryRes ? summaryRes.summary as SummaryItems : initialInventoryTotals,
             formState.formElements,
             {
-              result: {transaction:{master:{remarks: voucherNumbers}}},
+              result: {pendingOrdListMasterIDs: masterIds,transaction:{master:{remarks: voucherNumbers}}},
             }
           );
 

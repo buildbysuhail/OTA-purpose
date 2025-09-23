@@ -565,6 +565,7 @@ export interface TransactionFormState {
   memoEditor: { visible: boolean; data: string; rowIndex: number };
   gridMenuPop:boolean;
   documentModal:boolean;
+  pendingOrdListMasterIDs?:string;
 }
 interface loadingResult {
   isLoading: boolean;

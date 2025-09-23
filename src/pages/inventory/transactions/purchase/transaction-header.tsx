@@ -694,16 +694,19 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 )}
                 {formState.transaction.master.voucherType ===
                   VoucherType.PurchaseReturn && (
-                  <div>
+                 
                       <OrderNo
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
                                           formState={formState}
                                           dispatch={dispatch}
                                           t={t}
                                           type="PI_Ref"
+
+                                          label="PI_Ref"
                                           loadAndSetTransVoucher={loadAndSetTransVoucher}
                                         />
                    
-                  </div>
+                
                 )}
 
                 {isModalOpen &&

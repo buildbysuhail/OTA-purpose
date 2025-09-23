@@ -17,6 +17,8 @@ import { LoadAndSetTransVoucherFn } from "../use-transaction";
 interface LoadByOrderNoProps extends VoucherElementProps {
   loadAndSetTransVoucher: LoadAndSetTransVoucherFn;
   type?: string;
+  localInputBox?: any
+  label?: any
 }
 
 const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
@@ -130,9 +132,12 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
         {!showLoadData ? (
           <div className="flex items-center gap-1">
             <ERPInput
+            localInputBox={props.localInputBox}
               id="orderNumber"
-              noLabel={true}
+              label={ props.label  }
+              noLabel={props.label == undefined}
               value={orderNumberValue}
+              labelDirection="horizontal"
               className="flex-1 h-6 text-xs max-w-none sm:max-w-28"
               onChange={(e) => onOrderNumberChange(e.target.value)}
             />

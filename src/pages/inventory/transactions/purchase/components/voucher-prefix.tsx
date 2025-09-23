@@ -47,7 +47,7 @@ const AccVoucherPrefix = React.forwardRef<
             onChange={(e) => onChange(e.target.value)}
             onKeyDown={(e) => handleKeyDown && handleKeyDown(e, "voucherPrefix")}
             disabled={
-              !formState.userConfig?.enableVoucherPrefix ||
+              !formState.userConfig?.enableVoucherPrefix || (formState.userConfig?.enableVoucherPrefix && formState.transaction.master.voucherType == "PR") ||
               // formState.formElements.voucherPrefix?.disabled ||
               formState.formElements.pnlMasters?.disabled
             }

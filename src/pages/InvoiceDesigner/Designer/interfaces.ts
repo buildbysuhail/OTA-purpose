@@ -94,6 +94,7 @@ export enum DesignerElementType {
   image = 6,
   qrCode=7,
   area=8,
+  container=9,
 }
 
 export interface PlacedComponent {
@@ -118,6 +119,18 @@ export interface PlacedComponent {
   imgFit?:string;
   imgPosition?:string;
   imgFromDevice?:boolean;
+  containerId?: number; // ID of parent container if element is inside a container
+  children?: PlacedComponent[]; // Child elements if this is a container
+  containerProps?: {
+    backgroundColor?: string;
+    borderColor?: string;
+    borderWidth?: number;
+    borderStyle?: "solid" | "dashed" | "dotted" | "none";
+    padding?: number;
+    autoResize?: boolean; // Enable auto-resize based on content
+    minHeight?: number;
+    maxHeight?: number;
+  };
   barcodeProps?: {
     format: string;
     field:string;

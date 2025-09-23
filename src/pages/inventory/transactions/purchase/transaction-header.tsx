@@ -112,6 +112,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   }, []);
 
   const handleButtonClick = (type: string) => {
+    debugger;
     setIsModalOpen({ visible: true, type: type });
   };
 
@@ -719,8 +720,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       height={190}
                       closeModal={closeModal}
                       content={
-                        <VoucherLoader
-                        updateDeliveryNoteNumber = {["GRN", "GRR"].includes(isModalOpen.type)}
+                       <VoucherLoader
+                        updateDeliveryNoteNumber = {["PI", "PR"].includes(isModalOpen.type)}
                           fromVoucherType={
                             isModalOpen.type == "PI_Ref"
                               ? VoucherType.PurchaseInvoice
@@ -1275,7 +1276,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   closeModal={closeModal}
                  content={
                         <VoucherLoader
-                        updateDeliveryNoteNumber = {["GRN", "GRR"].includes(isModalOpen.type)}
+                        updateDeliveryNoteNumber = {["PI", "PR"].includes(isModalOpen.type)}
                           fromVoucherType={
                             isModalOpen.type == "PI_Ref"
                               ? VoucherType.PurchaseInvoice

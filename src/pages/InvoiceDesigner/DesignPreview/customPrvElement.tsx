@@ -24,13 +24,36 @@ export const RenderPreviewComponent: React.FC<Props> = ({
   convertAmountToArabic
 }) => {
   const baseStyle: React.CSSProperties = {
-    position: "absolute",
+    position: component.containerId ? "relative" : "absolute",
     left: `${component.x}pt`,
     top: `${component.y}pt`,
     transform: `rotate(${component.rotate || 0}deg)`,
     height: `${component.height || 50}pt`,
     width: `${component.width || 50}pt`,
   };
+  
+  // Calculate dynamic height for containers
+  const calculateContainerHeight = () => {
+    if (component.type !== DesignerElementType.container || !component.containerProps?.autoResize || !component.children?.length) {
+      return component.height;
+    }
+    
+    let maxBottom = 0;
+    component.children.forEach(child => {
+      const childBottom = child.y + child.height;
+      if (childBottom > maxBottom) {
+        maxBottom = childBottom;
+      }
+    });
+    
+    const padding = component.containerProps.padding || 0;
+    const calculatedHeight = maxBottom + padding * 2;
+    const minHeight = component.containerProps.minHeight || 50;
+    const maxHeight = component.containerProps.maxHeight || 500;
+    
+    return Math.min(Math.max(calculatedHeight, minHeight), maxHeight);
+  };
+  
   switch (component.type) {
     case DesignerElementType.text:
       return (
@@ -126,6 +149,36 @@ export const RenderPreviewComponent: React.FC<Props> = ({
           />
         </div>
       ) : null;
+
+    case DesignerElementType.container:
+      const containerHeight = calculateContainerHeight();
+      return (
+        <div
+          key={component.id}
+          style={{
+            ...baseStyle,
+            height: `${containerHeight}pt`,
+            backgroundColor: component.containerProps?.backgroundColor || "#f5f5f5",
+            border: `${component.containerProps?.borderWidth || 1}pt ${component.containerProps?.borderStyle || "solid"} ${component.containerProps?.borderColor || "#cccccc"}`,
+            padding: `${component.containerProps?.padding || 10}pt`,
+            boxSizing: "border-box",
+            position: "relative",
+            overflow: "visible",
+          }}
+        >
+          {/* Render children elements */}
+          {component.children?.map((child) => (
+            <RenderPreviewComponent
+              key={child.id}
+              component={child}
+              data={data}
+              qrCodeImages={qrCodeImages}
+              convertAmountToEnglish={convertAmountToEnglish}
+              convertAmountToArabic={convertAmountToArabic}
+            />
+          ))}
+        </div>
+      );
 
     default:
       console.warn(`Unsupported component type: ${component.type}`);

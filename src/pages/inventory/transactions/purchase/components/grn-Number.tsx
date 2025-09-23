@@ -18,6 +18,7 @@ interface GrnNumberProps extends VoucherElementProps {
 }
 
 const VoucherLoader = React.forwardRef<HTMLInputElement, GrnNumberProps>((props, ref) => {
+  debugger;
   const formState = useSelector((state: RootState) => state.InventoryTransaction);
   const [showLoadData, setShowLoadData] = useState<boolean>(false);
   const { t } = useTranslation('transaction');

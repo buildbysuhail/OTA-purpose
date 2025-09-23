@@ -16,6 +16,7 @@ import {
   SquareDashed,
   QrCode as QrCodeIcon,
   EllipsisVertical,
+  Package,
 } from "lucide-react";
 // Import the images
 
@@ -392,6 +393,12 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
       icon: <QrCodeIcon className="w-4 h-4" />,
       defaultContent: "QrCode",
     },
+    {
+      id: DesignerElementType.container,
+      label: "Container",
+      icon: <Package className="w-4 h-4" />,
+      defaultContent: "",
+    },
     // {
     //   id: DesignerElementType.area,
     //   label: "Area",
@@ -407,6 +414,110 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
     e.dataTransfer.setData("componentType", componentType.toString());
   };
 
+  const handleDropIntoContainer = (e: React.DragEvent<HTMLDivElement>, container: PlacedComponent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const componentType = parseInt(
+      e.dataTransfer.getData("componentType")
+    ) as DesignerElementType;
+    
+    // Don't allow containers inside containers
+    if (componentType === DesignerElementType.container) {
+      return;
+    }
+    
+    const containerRect = e.currentTarget.getBoundingClientRect();
+    const containerElement = e.currentTarget;
+    const computedStyle = window.getComputedStyle(containerElement);
+    const paddingLeft = parseFloat(computedStyle.paddingLeft) || 0;
+    const paddingTop = parseFloat(computedStyle.paddingTop) || 0;
+    
+    if (containerRect) {
+      // Account for container padding when calculating drop position
+      const x = pxToPoint(e.clientX - containerRect.left - paddingLeft);
+      const y = pxToPoint(e.clientY - containerRect.top - paddingTop);
+      
+      const component = components.find((c) => c.id === componentType);
+      if (component) {
+        const newComponent: PlacedComponent = {
+          id: nextId,
+          type: componentType,
+          content: component.defaultContent,
+          x: x,
+          y: y,
+          rotate: 0,
+          containerId: container.id,
+          textAlign: "center",
+          fontSize: 12,
+          font: "Roboto",
+          fontStyle: "normal",
+          width: 100,
+          height: 30,
+          lineThickness: "1",
+          lineColor: "#000000",
+          lineType: "solid",
+          ...(componentType === DesignerElementType.barcode && {
+            barcodeProps: {
+              format: "CODE128",
+              barWidth: 2,
+              height: 75,
+              margin: 0,
+              field: "",
+              background: "#FFFFFF",
+              lineColor: "#000000",
+              showText: true,
+              textAlign: "center",
+              font: "Roboto",
+              fontSize: 21,
+              textMargin: 3,
+              fontStyle: "normal",
+            },
+          }),
+          tableProps: {
+            showBorder: true,
+            columns: [],
+          },
+          qrCodeProps: {
+            value: "https://example.com",
+            width: 150,
+            height: 150,
+            level: "M",
+            type: "svg",
+            margin: 10,
+          },
+          areaProps: {
+            bgColor: "#FFFFFF",
+            isRepeat: true,
+            width: 300,
+            height: 300,
+          },
+        };
+        
+        // Add to container's children
+        const updatedComponents = (templateData?.barcodeState?.placedComponents || []).map(comp => {
+          if (comp.id === container.id) {
+            return {
+              ...comp,
+              children: [...(comp.children || []), newComponent],
+            };
+          }
+          return comp;
+        });
+        
+        dispatch(
+          setTemplateCustomElements({
+            field: "barcodeState.placedComponents",
+            payload: updatedComponents as any,
+          })
+        );
+        
+        setNextId(nextId + 1);
+        setSelectedComponent(newComponent);
+      }
+    }
+  };
+
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     const componentType = parseInt(
@@ -420,6 +531,25 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
       // const y = e.clientY - canvasRect.top;
       const x = pxToPoint(e.clientX - canvasRect.left);
       const y = pxToPoint(e.clientY - canvasRect.top);
+      
+      // Check if dropping into a container
+      const placedComponents = templateData?.barcodeState?.placedComponents || [];
+      let targetContainer: PlacedComponent | null = null;
+      
+      for (const comp of placedComponents) {
+        if (comp.type === DesignerElementType.container) {
+          // Check if drop position is within container bounds
+          if (
+            x >= comp.x &&
+            x <= comp.x + comp.width &&
+            y >= comp.y &&
+            y <= comp.y + comp.height
+          ) {
+            targetContainer = comp;
+            break;
+          }
+        }
+      }
 
       const component = components.find((c) => c.id === componentType);
       if (component) {
@@ -496,17 +626,64 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
             width: 300,
             height: 300,
           },
+          containerProps: {
+            backgroundColor: "#f5f5f5",
+            borderColor: "#cccccc",
+            borderWidth: 1,
+            borderStyle: "solid",
+            padding: 10,
+            autoResize: true,
+            minHeight: 50,
+            maxHeight: 500,
+          },
+          ...(componentType === DesignerElementType.container && {
+            children: [],
+            width: 200,
+            height: 150,
+          }),
         };
 
-        const placedComponents = [
-          ...(templateData?.barcodeState?.placedComponents || []),
-          newComponent,
-        ];
+        // If dropping into a container, add as child and adjust position
+        if (targetContainer && componentType !== DesignerElementType.container) {
+          newComponent.containerId = targetContainer.id;
+          // Adjust position to be relative to container (accounting for padding)
+          const containerPadding = targetContainer.containerProps?.padding || 10;
+          newComponent.x = x - targetContainer.x - containerPadding;
+          newComponent.y = y - targetContainer.y - containerPadding;
+          
+          // Ensure the element stays within container bounds
+          newComponent.x = Math.max(0, newComponent.x);
+          newComponent.y = Math.max(0, newComponent.y);
+        }
+
+        // Update components list and container's children if applicable
+        let placedComponents;
+        if (targetContainer && componentType !== DesignerElementType.container) {
+          // Update the container's children array
+          placedComponents = (templateData?.barcodeState?.placedComponents || []).map(comp => {
+            if (comp.id === targetContainer.id) {
+              return {
+                ...comp,
+                children: [...(comp.children || []), newComponent],
+              };
+            }
+            return comp;
+          });
+          // Also add the component to the main list for easier access
+          placedComponents.push(newComponent);
+        } else {
+          // Just add to the main components list
+          placedComponents = [
+            ...(templateData?.barcodeState?.placedComponents || []),
+            newComponent,
+          ];
+        }
+        
         setTemplateData((prev: TemplateState<unknown>) => ({
           ...prev,
           barcodeState: {
             ...prev.barcodeState,
-            placedComponents: placedComponents, // Ensure the name matches the interface
+            placedComponents: placedComponents,
           },
         }));
         setNextId(nextId + 1);
@@ -514,10 +691,16 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
     }
   };
 
-  const handleComponentClick = (e: React.MouseEvent,component: PlacedComponent) => {
-      e.preventDefault()
-    e.stopPropagation()
-    setSelectedComponent(component);
+  const handleComponentClick = (e: React.MouseEvent, component: PlacedComponent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Get the full component data from the main list
+    const fullComponent = templateData?.barcodeState?.placedComponents?.find(
+      c => c.id === component.id
+    );
+    
+    setSelectedComponent(fullComponent || component);
     setActiveTab("element");
   };
 
@@ -758,13 +941,18 @@ const handleQRCodePropertyChange = (
   };
 
   const handleMouseDown = (e: React.MouseEvent, component: PlacedComponent) => {
-     e.preventDefault()
-    e.stopPropagation()
+    e.preventDefault();
+    e.stopPropagation();
     const canvasRect = canvasRef.current?.getBoundingClientRect();
     if (canvasRect) {
-      setDraggingComponent(component);
-      const offsetX = e.clientX - canvasRect.left - component.x;
-      const offsetY = e.clientY - canvasRect.top - component.y;
+      // Find the complete component with children if it's a container
+      const fullComponent = templateData?.barcodeState?.placedComponents?.find(
+        c => c.id === component.id
+      ) || component;
+      
+      setDraggingComponent(fullComponent);
+      const offsetX = pxToPoint(e.clientX - canvasRect.left) - component.x;
+      const offsetY = pxToPoint(e.clientY - canvasRect.top) - component.y;
       setDragOffset({ x: offsetX, y: offsetY });
     }
   };
@@ -772,24 +960,52 @@ const handleQRCodePropertyChange = (
   const handleMouseMove = (e: React.MouseEvent) => {
     if (draggingComponent && canvasRef.current) {
       const canvasRect = canvasRef.current.getBoundingClientRect();
-      const newX = e.clientX - canvasRect.left - dragOffset.x;
-      const newY = e.clientY - canvasRect.top - dragOffset.y;
+      const newX = pxToPoint(e.clientX - canvasRect.left) - dragOffset.x;
+      const newY = pxToPoint(e.clientY - canvasRect.top) - dragOffset.y;
+
+      // Calculate the movement delta for moving children
+      const deltaX = newX - draggingComponent.x;
+      const deltaY = newY - draggingComponent.y;
 
       const updatedComponents =
-        templateData?.barcodeState?.placedComponents?.map((comp) =>
-          comp.id === draggingComponent.id
-            ? { ...comp, x: newX, y: newY }
-            : comp
-        );
+        templateData?.barcodeState?.placedComponents?.map((comp) => {
+          if (comp.id === draggingComponent.id) {
+            // Move the dragged component
+            return { 
+              ...comp, 
+              x: newX, 
+              y: newY,
+              // If it's a container, move children with it
+              children: comp.children?.map(child => ({
+                ...child,
+                // Children maintain relative position
+              }))
+            };
+          } 
+          // If this component is a child of the dragging container
+          else if (draggingComponent.type === DesignerElementType.container && 
+                   comp.containerId === draggingComponent.id) {
+            // Move children that are stored as top-level components
+            return { ...comp, x: comp.x + deltaX, y: comp.y + deltaY };
+          }
+          return comp;
+        });
+        
       setTemplateData((prev: TemplateState<unknown>) => ({
         ...prev,
         barcodeState: {
           ...prev.barcodeState,
-          placedComponents: updatedComponents || [], // Use an empty array if undefined
+          placedComponents: updatedComponents || [],
         },
       }));
+      
       if (selectedComponent?.id === draggingComponent.id) {
-        setSelectedComponent({ ...draggingComponent, x: newX, y: newY });
+        setSelectedComponent({ 
+          ...draggingComponent, 
+          x: newX, 
+          y: newY,
+          children: draggingComponent.children 
+        });
       }
     }
   };
@@ -1130,6 +1346,43 @@ const handleRemoveImage =()=>{
     }
   }, []);
 
+  const handleContainerPropertyChange = (
+    property: string,
+    value: any
+  ) => {
+    if (selectedComponent && selectedComponent.type === DesignerElementType.container) {
+      const updatedComponents = (templateData?.barcodeState?.placedComponents || []).map(
+        (comp) => {
+          if (comp.id === selectedComponent.id) {
+            return {
+              ...comp,
+              containerProps: {
+                ...comp.containerProps,
+                [property]: value,
+              },
+            };
+          }
+          return comp;
+        }
+      );
+
+      dispatch(
+        setTemplateCustomElements({
+          field: "barcodeState.placedComponents",
+          payload: updatedComponents as any,
+        })
+      );
+
+      setSelectedComponent((prev) => ({
+        ...prev!,
+        containerProps: {
+          ...prev?.containerProps,
+          [property]: value,
+        },
+      }));
+    }
+  };
+
   const handlePropertyChange = (
     property: keyof PlacedComponent,
     value: string | number | boolean,
@@ -1246,28 +1499,50 @@ const handleRemoveImage =()=>{
   }, [templateData?.barcodeState?.placedComponents, barcodeErrors]);
 
   const handleDelete = (componentId: number) => {
-    setTemplateData((prev: TemplateState<unknown>) => ({
-      ...prev,
-      barcodeState: {
-        ...prev.barcodeState,
-        placedComponents:
-          prev.barcodeState?.placedComponents.filter(
-            (comp: PlacedComponent) => comp.id !== componentId
-          ) || [],
-      },
-    }));
+    setTemplateData((prev: TemplateState<unknown>) => {
+      const updatedComponents = prev.barcodeState?.placedComponents?.map((comp: PlacedComponent) => {
+        // If this is a container, check if it contains the deleted component
+        if (comp.type === DesignerElementType.container && comp.children) {
+          return {
+            ...comp,
+            children: comp.children.filter(child => child.id !== componentId)
+          };
+        }
+        return comp;
+      });
+      
+      // Also remove from main list
+      const finalComponents = updatedComponents?.filter(
+        (comp: PlacedComponent) => comp.id !== componentId
+      ) || [];
+      
+      return {
+        ...prev,
+        barcodeState: {
+          ...prev.barcodeState,
+          placedComponents: finalComponents,
+        },
+      };
+    });
     setSelectedComponent(null);
   };
 
-  const renderComponent = (component: PlacedComponent) => {
+  const renderComponent = (component: PlacedComponent, isChild: boolean = false) => {
     const isSelected = selectedComponent?.id === component.id;
+    
+    // For container component, don't apply standard styles as ResizableBox handles positioning
+    if (component.type === DesignerElementType.container && !isChild) {
+      // Container rendering is handled separately with ResizableBox
+      // Just call the switch statement directly
+    }
+    
     const  style: React.CSSProperties = {
       position: "absolute",
       left: `${component.x}pt`,
       top: `${component.y}pt`,
       padding: "0pt",
-       boxSizing: "border-box", 
-       zIndex:1,
+      boxSizing: "border-box", 
+      zIndex: isChild ? 2 : 1,
       alignContent: "center",
       width:
         component.type == DesignerElementType.barcode
@@ -1572,6 +1847,127 @@ const handleRemoveImage =()=>{
             />
           </div>
         );
+      case DesignerElementType.container:
+        // Get all children for this container
+        const containerChildren = templateData?.barcodeState?.placedComponents
+          ?.filter(comp => comp.containerId === component.id) || [];
+        
+        // Calculate dynamic height based on children content
+        const calculateContainerHeight = () => {
+          if (!component.containerProps?.autoResize || containerChildren.length === 0) {
+            return component.height;
+          }
+          
+          let maxBottom = 0;
+          containerChildren.forEach(child => {
+            const childBottom = child.y + child.height;
+            if (childBottom > maxBottom) {
+              maxBottom = childBottom;
+            }
+          });
+          
+          const padding = component.containerProps.padding || 0;
+          const calculatedHeight = maxBottom + padding;
+          const minHeight = component.containerProps.minHeight || 50;
+          const maxHeight = component.containerProps.maxHeight || 500;
+          
+          return Math.min(Math.max(calculatedHeight, minHeight), maxHeight);
+        };
+        
+        const containerHeight = calculateContainerHeight();
+        
+        return (
+          <ResizableBox
+            key={component.id}
+            width={component.width}
+            height={containerHeight}
+            minConstraints={[50, 50]}
+            maxConstraints={[800, 600]}
+            resizeHandles={isSelected ? ['se', 'sw', 'ne', 'nw', 'n', 's', 'e', 'w'] : []}
+            onResize={(e, { size }) => {
+              const updatedComponents = templateData?.barcodeState?.placedComponents?.map((comp) => {
+                if (comp.id === component.id) {
+                  return {
+                    ...comp,
+                    width: size.width,
+                    height: size.height,
+                  };
+                }
+                return comp;
+              });
+              setTemplateData((prev: TemplateState<unknown>) => ({
+                ...prev,
+                barcodeState: {
+                  ...prev.barcodeState,
+                  placedComponents: updatedComponents,
+                },
+              }));
+              if (selectedComponent?.id === component.id) {
+                setSelectedComponent((prev) => ({
+                  ...prev!,
+                  width: size.width,
+                  height: size.height,
+                }));
+              }
+            }}
+            className="container-component"
+            style={{
+              position: "absolute",
+              left: `${component.x}pt`,
+              top: `${component.y}pt`,
+              transform: `rotate(${component.rotate || 0}deg)`,
+              transformOrigin: "center",
+            }}
+          >
+            <div
+              id={`component-${component.id}`}
+              style={{
+                width: "100%",
+                height: "100%",
+                backgroundColor: component.containerProps?.backgroundColor || "#ffffff",
+                border: isSelected 
+                  ? "2px solid #2196f3" 
+                  : `${component.containerProps?.borderWidth || 1}px ${component.containerProps?.borderStyle || "solid"} ${component.containerProps?.borderColor || "#cccccc"}`,
+                padding: `${component.containerProps?.padding || 10}pt`,
+                boxSizing: "border-box",
+                position: "relative",
+                overflow: component.containerProps?.autoResize ? "visible" : "hidden",
+                cursor: "move",
+              }}
+              onClick={(e) => {
+                // Only select container if clicking on empty space
+                if (e.target === e.currentTarget) {
+                  handleComponentClick(e, component);
+                }
+              }}
+              onMouseDown={(e) => {
+                // Only start dragging container if clicking on container itself
+                if (e.target === e.currentTarget) {
+                  handleMouseDown(e, component);
+                }
+              }}
+              onDrop={(e) => handleDropIntoContainer(e, component)}
+              onDragOver={(e) => e.preventDefault()}
+            >
+              {/* Render children elements */}
+              {containerChildren.map((child) => {
+                // Create a modified child with proper positioning
+                const childWithRelativePos = {
+                  ...child,
+                  // Ensure child positions are relative to container
+                  x: child.x,
+                  y: child.y
+                };
+                return renderComponent(childWithRelativePos, true);
+              })}
+              <DeleteButton
+                id={component.id}
+                isSelected={isSelected}
+                handleDelete={handleDelete}
+              />
+            </div>
+          </ResizableBox>
+        );
     }
   };
   const pointToPx = (pt: number) => pt * (96 / 72);
@@ -1799,9 +2195,10 @@ padding: `${
                 backgroundColor: forCustomRows?designerData?.background_color??"#fff": "#fff",
               }}
             >
-              {templateData?.barcodeState?.placedComponents?.map(
-                renderComponent
-              )}
+              {/* Only render top-level components (not inside containers) */}
+              {templateData?.barcodeState?.placedComponents
+                ?.filter(comp => !comp.containerId)
+                ?.map((comp) => renderComponent(comp, false))}
             </div>
           </ResizableBox>
 
@@ -1865,10 +2262,101 @@ padding: `${
                   className="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 overflow-auto pr-1"
                   // className="max-h-[calc(100vh-8rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 pr-1 "
                 >
+                  {selectedComponent.type === DesignerElementType.container && (
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                        Container Properties
+                      </Typography>
+                      <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                        <ERPInput
+                          id="containerBgColor"
+                          label="Background Color"
+                          type="color"
+                          value={selectedComponent.containerProps?.backgroundColor || "#f5f5f5"}
+                          onChange={(e) =>
+                            handleContainerPropertyChange("backgroundColor", e.target.value)
+                          }
+                        />
+                        <ERPInput
+                          id="containerBorderColor"
+                          label="Border Color"
+                          type="color"
+                          value={selectedComponent.containerProps?.borderColor || "#cccccc"}
+                          onChange={(e) =>
+                            handleContainerPropertyChange("borderColor", e.target.value)
+                          }
+                        />
+                        <ERPInput
+                          id="containerBorderWidth"
+                          label="Border Width"
+                          type="number"
+                          value={selectedComponent.containerProps?.borderWidth || 1}
+                          onChange={(e) =>
+                            handleContainerPropertyChange("borderWidth", parseInt(e.target.value))
+                          }
+                        />
+                        <ERPDataCombobox
+                          id="containerBorderStyle"
+                          label="Border Style"
+                          options={[
+                            { value: "solid", label: "Solid" },
+                            { value: "dashed", label: "Dashed" },
+                            { value: "dotted", label: "Dotted" },
+                            { value: "none", label: "None" },
+                          ]}
+                          value={selectedComponent.containerProps?.borderStyle || "solid"}
+                          onChange={(e) =>
+                            handleContainerPropertyChange("borderStyle", e.value)
+                          }
+                        />
+                        <ERPInput
+                          id="containerPadding"
+                          label="Padding"
+                          type="number"
+                          value={selectedComponent.containerProps?.padding || 10}
+                          onChange={(e) =>
+                            handleContainerPropertyChange("padding", parseInt(e.target.value))
+                          }
+                        />
+                        <ERPCheckbox
+                          id="containerAutoResize"
+                          label="Auto-resize based on content"
+                          checked={selectedComponent.containerProps?.autoResize ?? true}
+                          onChange={(e) =>
+                            handleContainerPropertyChange("autoResize", e.target.checked)
+                          }
+                        />
+                        {selectedComponent.containerProps?.autoResize && (
+                          <>
+                            <ERPInput
+                              id="containerMinHeight"
+                              label="Min Height"
+                              type="number"
+                              value={selectedComponent.containerProps?.minHeight || 50}
+                              onChange={(e) =>
+                                handleContainerPropertyChange("minHeight", parseInt(e.target.value))
+                              }
+                            />
+                            <ERPInput
+                              id="containerMaxHeight"
+                              label="Max Height"
+                              type="number"
+                              value={selectedComponent.containerProps?.maxHeight || 500}
+                              onChange={(e) =>
+                                handleContainerPropertyChange("maxHeight", parseInt(e.target.value))
+                              }
+                            />
+                          </>
+                        )}
+                      </Box>
+                    </Box>
+                  )}
+
                   {selectedComponent.type !== DesignerElementType.table &&
                     selectedComponent.type !== DesignerElementType.line &&
                     selectedComponent.type !== DesignerElementType.area &&
-                    selectedComponent.type !== DesignerElementType.image && (
+                    selectedComponent.type !== DesignerElementType.image &&
+                    selectedComponent.type !== DesignerElementType.container && (
                       <Box sx={{ mb: 1 }}>
                         {selectedComponent.type ===
                         DesignerElementType.field ? (

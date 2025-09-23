@@ -136,19 +136,19 @@ const TransactionForm: React.FC<TransactionProps> = ({
   isTeller = false,
   // localInputBox,
 }) => {
-const [_st, setSt] = useState<UserConfig>(initialUserConfig);
+  const [_st, setSt] = useState<UserConfig>(initialUserConfig);
 
-   useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       const storedUtc = await getStorageString("utInvc"); // use get, not set
       if (storedUtc) {
-        const decoded = safeBase64Decode(storedUtc)??"{}";
+        const decoded = safeBase64Decode(storedUtc) ?? "{}";
         setSt(customJsonParse(decoded));
       }
     };
 
     fetchData();
-  },[]);
+  }, []);
 
   const [triggerEffect, setTriggerEffect] = useState(false);
   // const handleClearControls = () => {
@@ -299,7 +299,7 @@ const [_st, setSt] = useState<UserConfig>(initialUserConfig);
   useEffect(() => {
     if (formState.selectedTheme && formState.selectedTheme.isInitial !== true) {
       console.log('Theme selected, triggering countdown');
-      setCountdown(8); 
+      setCountdown(8);
       setStartCountdown(true);
 
       // Apply the preview theme
@@ -423,7 +423,6 @@ const [_st, setSt] = useState<UserConfig>(initialUserConfig);
 
   const [isPartyDetailsOpen, setIsPartyDetailsOpen] = useState(false);
   const [showValidation, setShowValidation] = useState(false);
-  const [isDocumentModalOpen, setIsDocumentModalOpen] = useState(false);
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
   const focusTaxNoField = () => {
     setTimeout(() => {
@@ -458,12 +457,12 @@ const [_st, setSt] = useState<UserConfig>(initialUserConfig);
     }
   };
 
-  const handleDocumentModalClick = () => {
-    setIsDocumentModalOpen(true);
-  };
-
   const closeDocumentModal = () => {
-    setIsDocumentModalOpen(false);
+    dispatch(
+      formStateHandleFieldChange({
+        fields: { documentModal: false }
+      })
+    )
   };
 
   const handleKeyDown = (e: any, field: string, rowIndex: number) => { };
@@ -474,67 +473,7 @@ const [_st, setSt] = useState<UserConfig>(initialUserConfig);
 
   useEffect(() => {
     const handleGlobalKeyDown = (event: KeyboardEvent) => {
-      if (event.shiftKey && event.key === "F") {
-        event.preventDefault();
-        if (voucherNumberRef.current) {
-          voucherNumberRef.current.focus();
-        }
-      }
-      // Focus Voucher Number ☝
-      if (event.shiftKey && event.key === "D") {
-        event.preventDefault();
-        handleDocumentModalClick();
-      }
-      // Document Properties ☝
-      if (event.ctrlKey && event.key.toLowerCase() === "g") {
-        event.preventDefault();
-        const currentFormState = formStateRef.current;
-        if (
-          currentFormState.transaction.details.length > 0 &&
-          purchaseGridRef.current
-        ) {
-          const visibleColumns =
-            currentFormState.gridColumns?.filter(
-              (col) => col.visible !== false && col.dataField != null
-            ) || [];
-          const firstEditableColumn = visibleColumns.find(
-            (col) => col.allowEditing == true && !col.readOnly
-          );
-          if (firstEditableColumn) {
-            const columnIndex = visibleColumns.indexOf(firstEditableColumn);
-            const res = purchaseGridRef.current.focusCell(0, columnIndex);
-            if (res) {
-              const data =
-                formState.transaction.details[res.rowIndex];
-              dispatch(
-                formStateHandleFieldChange({
-                  fields: {
-                    currentCell: {
-                    reCenterRow: true,
-                      column: res.column,
-                      rowIndex: res.rowIndex,
-                      data: data,
-                    },
-                  },
-                })
-              );
-            }
-          }
-        }
-      }
-      // Focus Inventory Grid ☝
-      if (event.shiftKey && event.key.toUpperCase() === "F5") {
-        event.preventDefault();
-        const currentFormState = formStateRef.current;
-        if (
-          !currentFormState.formElements.pnlMasters?.disabled &&
-          currentFormState.transaction.details != null &&
-          currentFormState.transaction.details.length > 0
-        ) {
-          save();
-        }
-      }
-      // Save Document ☝
+      handleTextDataKeyDown("", event, "global", -1, { result: {} })
     };
 
     document.addEventListener("keydown", handleGlobalKeyDown);
@@ -619,6 +558,8 @@ const [_st, setSt] = useState<UserConfig>(initialUserConfig);
     discountRef,
     chequeStatusRef,
     handleKeyDown,
+    formStateRef,
+    purchaseGridRef,
   );
 
   const applicationSettings = useAppSelector(
@@ -705,9 +646,9 @@ const [_st, setSt] = useState<UserConfig>(initialUserConfig);
           voucherPrefix ?? "",
           false
         );
-debugger;
+        debugger;
         employeeID = userSession.employeeId ?? 0;
-        if(voucherType == VoucherType.PurchaseReturn) {
+        if (voucherType == VoucherType.PurchaseReturn) {
           const emps = await getApLocalDataByUrl(`${Urls.inv_transaction_base}${transactionType}/Data/Employee/`);
           employeeID = emps && emps.length > 0 ? emps[0].id : employeeID;
         }
@@ -738,11 +679,11 @@ debugger;
                     ? applicationSettings.inventorySettings?.defaultSalesAcc
                     : applicationSettings.inventorySettings?.defaultPurchaseAcc,
               ledgerID: applicationSettings.accountsSettings?.defaultCashAcc,
-              customerType:formType?.toUpperCase() === "IMPORT" ? "IMPORT" : formType?.toUpperCase() === "INTERSTATE" ? "Interstate" :
-                        formType?.toUpperCase() === "INT"        ? "Int" :
-                        ["WHOLESALE", "B2B"].includes(formType?.toUpperCase()??"")
+              customerType: formType?.toUpperCase() === "IMPORT" ? "IMPORT" : formType?.toUpperCase() === "INTERSTATE" ? "Interstate" :
+                formType?.toUpperCase() === "INT" ? "Int" :
+                  ["WHOLESALE", "B2B"].includes(formType?.toUpperCase() ?? "")
                     ? "B2B" :
-                        formType !== "BT"                       ? "B2C" :
+                    formType !== "BT" ? "B2C" :
                       ""
             },
           },
@@ -788,15 +729,15 @@ debugger;
       const _gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new APIClient()))
       const accountKey =
         formType == "PI-IND" ? applicationSettings.accountsSettings.defaultIndirectExpenseAccount as keyof typeof LedgerType
-      :formType == "PI-ASST" ? applicationSettings.accountsSettings.defaultPurchaseAssetsAccount as keyof typeof LedgerType : LedgerType.All;
+          : formType == "PI-ASST" ? applicationSettings.accountsSettings.defaultPurchaseAssetsAccount as keyof typeof LedgerType : LedgerType.All;
       const customerType = formType?.toUpperCase() === "PI-IND" ? "B2B"
         : formType?.toUpperCase() === "PI-ASST" ? "B2B"
-                :formType?.toUpperCase() === "IMPORT" ? "IMPORT"
+          : formType?.toUpperCase() === "IMPORT" ? "IMPORT"
             : formType?.toUpperCase() === "INTERSTATE" ? "Interstate" :
-                        formType?.toUpperCase() === "INT"        ? "Int" :
-                        ["WHOLESALE", "B2B"].includes(formType?.toUpperCase()??"")
+              formType?.toUpperCase() === "INT" ? "Int" :
+                ["WHOLESALE", "B2B"].includes(formType?.toUpperCase() ?? "")
                   ? "B2B" :
-                        formType !== "BT"                       ? "B2C" :
+                  formType !== "BT" ? "B2C" :
                     ""
       _formState = {
         ..._formState,
@@ -825,12 +766,12 @@ debugger;
           (formType == undefined || formType.trim() == ""
             ? t(title)
             : clientSession.isAppGlobal ?
-              formType.toUpperCase() === "INTERSTATE" ? `${title}[${formType}][Ctrl+F2]` :
-              formType.toUpperCase() === "INT"        ? `${title}[${formType}][Ctrl+F2]` :
+              formType.toUpperCase() === "INTERSTATE" ? `${t(title)}[${formType}][Ctrl+F2]` :
+                formType.toUpperCase() === "INT" ? `${t(title)}[${formType}][Ctrl+F2]` :
                   ["WHOLESALE", "B2B"].includes(formType.toUpperCase())
-                    ? `${title}[${formType}][B2B][F2]` :
-              formType !== "BT" && formType !== "IMPORT"  ? `${title}[${formType}][B2C][F3]` :
-                      `${title}[${formType}]`
+                    ? `${t(title)}[${formType}][B2B][F2]` :
+                    formType !== "BT" && formType !== "IMPORT" ? `${t(title)}[${formType}][B2C][F3]` :
+                      `${t(title)}[${formType}]`
               :
               t(title) + "[" + formType + "]") ?? "",
       };
@@ -971,7 +912,7 @@ debugger;
         rowIndex: 0,
         reCenterRow: false
       }
-      if(_formState.formElements.cbDebitAccount??{})
+      if (_formState.formElements.cbDebitAccount ?? {})
 
 
         //
@@ -999,7 +940,7 @@ debugger;
       setTemplateLoad(false);
     }
   }, []);
-  const onProcessSelected = useCallback(async (masterIds: string, loadType: string = "GRN",voucherType: string) => {
+  const onProcessSelected = useCallback(async (masterIds: string, loadType: string = "GRN", voucherType: string) => {
     if (masterIds.length > 0) {
 
       dispatch(formStateHandleFieldChange({ fields: { loading: { isLoading: true, text: `${loadType == "GRN" ? 'Please wait while loading GRN Items' : 'Please wait while loading Order Items'}` } } }));
@@ -1007,7 +948,7 @@ debugger;
       if (PendingTransDetails && PendingTransDetails.details && PendingTransDetails.details.length > 0) {
 
         const calculatedDetails: TransactionDetail[] = [];
-        const refactoredDetails = refactorDetails(PendingTransDetails.details,loadType, voucherType, { result: {} }, formState.transaction.master.voucherForm);
+        const refactoredDetails = refactorDetails(PendingTransDetails.details, loadType, voucherType, { result: {} }, formState.transaction.master.voucherForm);
         for (let index = 0; index < refactoredDetails.length; index++) {
           const element = refactoredDetails[index];
           const calculated = calculateRowAmount(
@@ -1320,7 +1261,7 @@ debugger;
                     details: res.transaction?.details,
                   },
                   currentCell: {
-                    reCenterRow: data.rowIndex!=rowIndex + addDetails.length,
+                    reCenterRow: data.rowIndex != rowIndex + addDetails.length,
                     column: resw?.column,
                     data: addDetails.length == 0 ? rowIndex : addDetails[addDetails.length - 1],
                     rowIndex: rowIndex + addDetails.length,
@@ -1359,7 +1300,7 @@ debugger;
         if (index == 0) {
           const rowData = { ...baseRowData, qty: value.total };
           currentDetails[rowIndex] = rowData;
-          res = calculateRowAmount(rowData, "qty", { result: {transaction: {details:[{qty: value.total, slNo:baseRowData.slNo}]} }}, true);
+          res = calculateRowAmount(rowData, "qty", { result: { transaction: { details: [{ qty: value.total, slNo: baseRowData.slNo }] } } }, true);
           res!.transaction!.details![0]!.productDescription = `${value.width} X ${value.height} X ${value.nos}`;
         } else {
           const rowData = {
@@ -1368,7 +1309,7 @@ debugger;
             slNo: generateUniqueKey(),
             productDescription: `${value.width} X ${value.height} X ${value.nos}`,
           };
-          res = calculateRowAmount(rowData, "qty", { result: {transaction: {details:[rowData]} }}, true);
+          res = calculateRowAmount(rowData, "qty", { result: { transaction: { details: [rowData] } } }, true);
           if (
             res?.transaction?.details &&
             res?.transaction?.details.length > 0
@@ -2056,7 +1997,7 @@ debugger;
         {formState.transaction && formState.template && (
           <ERPModal
             isOpen={formState.printPreview && isPrintModalOpen}
-            title={t("Template")}
+            title={t("template")}
             width={1000}
             height={700}
             isForm={true}
@@ -2384,13 +2325,13 @@ debugger;
             onClearThemeChangeInterval={onClearThemeChangeInterval}
           />
         )}
-        {isDocumentModalOpen && (
+        {formState.documentModal && (
           <ERPModal
-            isOpen={isDocumentModalOpen}
+            isOpen={formState.documentModal}
+            closeModal={closeDocumentModal}
             title={t("document_properties")}
             width={700}
             height={620}
-            closeModal={closeDocumentModal}
             content={
               <DocumentProperties closeModal={closeDocumentModal} t={t} />
             }

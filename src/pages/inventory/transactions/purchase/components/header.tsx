@@ -343,7 +343,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                       </li>
                     )}
 
-                    {   ["PR","GRN"].includes(formState.transaction.master.voucherType) && (
+                    {   ["PI","GRN"].includes(formState.transaction.master.voucherType) && (
                       <li>
                         <button
                           className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fff1f2] hover:text-[#be123c] dark:hover:bg-[#8813374d] dark:hover:text-[#fda4af] transition-all duration-200 rounded-md group text-left"

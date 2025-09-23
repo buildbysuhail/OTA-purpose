@@ -396,7 +396,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
     {
       id: DesignerElementType.container,
       label: "Container",
-      icon: <Package className="w-4 h-4" />,
+      icon: <Package className="w-4 h-4 text-blue-600" />,
       defaultContent: "",
     },
     // {
@@ -440,12 +440,17 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
       
       const component = components.find((c) => c.id === componentType);
       if (component) {
+        // Adjust position for container padding
+        const containerPadding = container.containerProps?.padding || 10;
+        const adjustedX = Math.max(0, x - containerPadding);
+        const adjustedY = Math.max(0, y - containerPadding);
+        
         const newComponent: PlacedComponent = {
           id: nextId,
           type: componentType,
-          content: component.defaultContent,
-          x: x,
-          y: y,
+          content: component.defaultContent || component.label,
+          x: adjustedX,
+          y: adjustedY,
           rotate: 0,
           containerId: container.id,
           textAlign: "center",
@@ -494,7 +499,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
           },
         };
         
-        // Add to container's children
+        // Add to both container's children and main components list
         const updatedComponents = (templateData?.barcodeState?.placedComponents || []).map(comp => {
           if (comp.id === container.id) {
             return {
@@ -505,12 +510,17 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
           return comp;
         });
         
-        dispatch(
-          setTemplateCustomElements({
-            field: "barcodeState.placedComponents",
-            payload: updatedComponents as any,
-          })
-        );
+        // Also add the new component to the main list
+        updatedComponents.push(newComponent);
+        
+        // Update state directly for immediate visibility
+        setTemplateData((prev: TemplateState<unknown>) => ({
+          ...prev,
+          barcodeState: {
+            ...prev.barcodeState,
+            placedComponents: updatedComponents,
+          },
+        }));
         
         setNextId(nextId + 1);
         setSelectedComponent(newComponent);
@@ -626,28 +636,31 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
             width: 300,
             height: 300,
           },
-          containerProps: {
-            backgroundColor: "#f5f5f5",
-            borderColor: "#cccccc",
-            borderWidth: 1,
-            borderStyle: "solid",
-            padding: 10,
-            autoResize: true,
-            minHeight: 50,
-            maxHeight: 500,
-          },
-          ...(componentType === DesignerElementType.container && {
-            children: [],
-            width: 200,
-            height: 150,
-          }),
         };
+        
+        // Add default container props
+        if (componentType === DesignerElementType.container) {
+          newComponent.width = 250;
+          newComponent.height = 200;
+          newComponent.children = []; // Initialize empty children array
+          newComponent.containerProps = {
+            backgroundColor: "#fafafa", // Very light gray background
+            borderColor: "#d0d0d0",
+            borderWidth: 1,
+            borderStyle: "dashed",
+            padding: 10,
+            autoResize: false,
+            minHeight: 100,
+            maxHeight: 500,
+          };
+        }
 
         // If dropping into a container, add as child and adjust position
         if (targetContainer && componentType !== DesignerElementType.container) {
           newComponent.containerId = targetContainer.id;
           // Adjust position to be relative to container (accounting for padding)
           const containerPadding = targetContainer.containerProps?.padding || 10;
+          // Position relative to container (padding is in pt)
           newComponent.x = x - targetContainer.x - containerPadding;
           newComponent.y = y - targetContainer.y - containerPadding;
           
@@ -695,12 +708,27 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
     e.preventDefault();
     e.stopPropagation();
     
-    // Get the full component data from the main list
+    // Don't trigger any state changes if clicking the already selected component
+    if (selectedComponent?.id === component.id) {
+      return;
+    }
+    
+    // Get the full component data from the main list to ensure we have the latest data
     const fullComponent = templateData?.barcodeState?.placedComponents?.find(
       c => c.id === component.id
     );
     
-    setSelectedComponent(fullComponent || component);
+    if (fullComponent) {
+      // Preserve the exact position and containerId from the current state
+      setSelectedComponent({
+        ...fullComponent,
+        x: fullComponent.x,
+        y: fullComponent.y,
+        containerId: fullComponent.containerId,
+      });
+    } else {
+      setSelectedComponent(component);
+    }
     setActiveTab("element");
   };
 
@@ -945,14 +973,36 @@ const handleQRCodePropertyChange = (
     e.stopPropagation();
     const canvasRect = canvasRef.current?.getBoundingClientRect();
     if (canvasRect) {
-      // Find the complete component with children if it's a container
+      // Find the complete component data from the main list
       const fullComponent = templateData?.barcodeState?.placedComponents?.find(
         c => c.id === component.id
-      ) || component;
+      );
+      
+      if (!fullComponent) {
+        console.error('Component not found in main list:', component.id);
+        return;
+      }
       
       setDraggingComponent(fullComponent);
-      const offsetX = pxToPoint(e.clientX - canvasRect.left) - component.x;
-      const offsetY = pxToPoint(e.clientY - canvasRect.top) - component.y;
+      
+      // Calculate offset based on whether component is in a container
+      let actualX = fullComponent.x;
+      let actualY = fullComponent.y;
+      
+      if (fullComponent.containerId) {
+        const parentContainer = templateData?.barcodeState?.placedComponents?.find(
+          c => c.id === fullComponent.containerId
+        );
+        if (parentContainer) {
+          const containerPadding = parentContainer.containerProps?.padding || 10;
+          // Child positions are already relative to container, so we need to calculate absolute position
+          actualX = parentContainer.x + fullComponent.x + containerPadding;
+          actualY = parentContainer.y + fullComponent.y + containerPadding;
+        }
+      }
+      
+      const offsetX = pxToPoint(e.clientX - canvasRect.left) - actualX;
+      const offsetY = pxToPoint(e.clientY - canvasRect.top) - actualY;
       setDragOffset({ x: offsetX, y: offsetY });
     }
   };
@@ -960,12 +1010,27 @@ const handleQRCodePropertyChange = (
   const handleMouseMove = (e: React.MouseEvent) => {
     if (draggingComponent && canvasRef.current) {
       const canvasRect = canvasRef.current.getBoundingClientRect();
-      const newX = pxToPoint(e.clientX - canvasRect.left) - dragOffset.x;
-      const newY = pxToPoint(e.clientY - canvasRect.top) - dragOffset.y;
+      let newX = pxToPoint(e.clientX - canvasRect.left) - dragOffset.x;
+      let newY = pxToPoint(e.clientY - canvasRect.top) - dragOffset.y;
 
-      // Calculate the movement delta for moving children
-      const deltaX = newX - draggingComponent.x;
-      const deltaY = newY - draggingComponent.y;
+      // If dragging element is inside a container, calculate position relative to container
+      if (draggingComponent.containerId) {
+        const parentContainer = templateData?.barcodeState?.placedComponents?.find(
+          c => c.id === draggingComponent.containerId
+        );
+        if (parentContainer) {
+          // Position relative to container (accounting for padding)
+          const containerPadding = parentContainer.containerProps?.padding || 10;
+          newX = newX - parentContainer.x - containerPadding;
+          newY = newY - parentContainer.y - containerPadding;
+          
+          // Keep element within container bounds
+          const maxX = parentContainer.width - (containerPadding * 2) - draggingComponent.width;
+          const maxY = parentContainer.height - (containerPadding * 2) - draggingComponent.height;
+          newX = Math.max(0, Math.min(newX, maxX));
+          newY = Math.max(0, Math.min(newY, maxY));
+        }
+      }
 
       const updatedComponents =
         templateData?.barcodeState?.placedComponents?.map((comp) => {
@@ -975,19 +1040,10 @@ const handleQRCodePropertyChange = (
               ...comp, 
               x: newX, 
               y: newY,
-              // If it's a container, move children with it
-              children: comp.children?.map(child => ({
-                ...child,
-                // Children maintain relative position
-              }))
             };
-          } 
-          // If this component is a child of the dragging container
-          else if (draggingComponent.type === DesignerElementType.container && 
-                   comp.containerId === draggingComponent.id) {
-            // Move children that are stored as top-level components
-            return { ...comp, x: comp.x + deltaX, y: comp.y + deltaY };
           }
+          // Children of containers don't need to be moved - their positions are relative to the container
+          // The container's new position will automatically move them visually
           return comp;
         });
         
@@ -1019,12 +1075,14 @@ const handleQRCodePropertyChange = (
     setLoading(true);
 
     try {
+      // Consolidate container children before saving
+      const consolidatedComponents = consolidateContainerChildren();
       
       if (forCustomRows) {
         dispatch(
           setTemplateCustomElements({
             payload: {
-              elements: templateData.barcodeState?.placedComponents || [],
+              elements: consolidatedComponents,
               height: templateData.barcodeState?.labelState?.labelHeight,
               thumbImage:dataUrl??"",
               background_image: designerData?.background_image,
@@ -1044,14 +1102,23 @@ const handleQRCodePropertyChange = (
           template_group: templateGroup,
         },
       };
+      // Update template with consolidated components before saving
+      const templateToSave = {
+        ...tmpTemplate,
+        barcodeState: {
+          ...tmpTemplate.barcodeState,
+          placedComponents: consolidatedComponents,
+        },
+      };
+      
       const activeTemplate: TemplateDto = {
         id: id == "new" ? 0 : id, //temparary fix
-        templateType: tmpTemplate.propertiesState.template_type ?? "standard",
-        templateKind: tmpTemplate.propertiesState.template_kind ?? "standard",
-        templateGroup: tmpTemplate.propertiesState.template_group ?? "",
-        templateName: tmpTemplate.propertiesState?.templateName ?? "",
+        templateType: templateToSave.propertiesState.template_type ?? "standard",
+        templateKind: templateToSave.propertiesState.template_kind ?? "standard",
+        templateGroup: templateToSave.propertiesState.template_group ?? "",
+        templateName: templateToSave.propertiesState?.templateName ?? "",
         thumbImage: dataUrl,
-        content: JSON.stringify(tmpTemplate),
+        content: JSON.stringify(templateToSave),
         isCurrent: false,
         backgroundImage: tmpTemplate.background_image ?? "",
         backgroundImageHeader: tmpTemplate.background_image_header ?? "",
@@ -1072,6 +1139,9 @@ const handleQRCodePropertyChange = (
 
   const manageSaveTemplate = async () => {
     try {
+    // Before saving, ensure containers have their children properly stored
+    const consolidatedComponents = consolidateContainerChildren();
+    
     const node = document.getElementById("teplate-container");
     if (!node) {
       ERPToast.show("Template container not found", "error");
@@ -1500,27 +1570,41 @@ const handleRemoveImage =()=>{
 
   const handleDelete = (componentId: number) => {
     setTemplateData((prev: TemplateState<unknown>) => {
-      const updatedComponents = prev.barcodeState?.placedComponents?.map((comp: PlacedComponent) => {
-        // If this is a container, check if it contains the deleted component
-        if (comp.type === DesignerElementType.container && comp.children) {
-          return {
-            ...comp,
-            children: comp.children.filter(child => child.id !== componentId)
-          };
-        }
-        return comp;
-      });
+      const componentToDelete = prev.barcodeState?.placedComponents?.find(
+        comp => comp.id === componentId
+      );
       
-      // Also remove from main list
-      const finalComponents = updatedComponents?.filter(
-        (comp: PlacedComponent) => comp.id !== componentId
-      ) || [];
+      let updatedComponents = prev.barcodeState?.placedComponents || [];
+      
+      // If deleting a container, also remove all its children
+      if (componentToDelete?.type === DesignerElementType.container) {
+        // Remove all children that belong to this container
+        updatedComponents = updatedComponents.filter(
+          comp => comp.containerId !== componentId && comp.id !== componentId
+        );
+      } else {
+        // If deleting a regular component, just remove it
+        updatedComponents = updatedComponents.filter(
+          comp => comp.id !== componentId
+        );
+        
+        // Also remove from any container's children array
+        updatedComponents = updatedComponents.map((comp: PlacedComponent) => {
+          if (comp.type === DesignerElementType.container && comp.children) {
+            return {
+              ...comp,
+              children: comp.children.filter(child => child.id !== componentId)
+            };
+          }
+          return comp;
+        });
+      }
       
       return {
         ...prev,
         barcodeState: {
           ...prev.barcodeState,
-          placedComponents: finalComponents,
+          placedComponents: updatedComponents,
         },
       };
     });
@@ -1542,7 +1626,7 @@ const handleRemoveImage =()=>{
       top: `${component.y}pt`,
       padding: "0pt",
       boxSizing: "border-box", 
-      zIndex: isChild ? 2 : 1,
+      zIndex: isChild ? 10 : 1,
       alignContent: "center",
       width:
         component.type == DesignerElementType.barcode
@@ -1848,7 +1932,8 @@ const handleRemoveImage =()=>{
           </div>
         );
       case DesignerElementType.container:
-        // Get all children for this container
+        // Get all children for this container from the main components list
+        // Make sure we're using fresh data from the state
         const containerChildren = templateData?.barcodeState?.placedComponents
           ?.filter(comp => comp.containerId === component.id) || [];
         
@@ -1894,7 +1979,7 @@ const handleRemoveImage =()=>{
                   };
                 }
                 return comp;
-              });
+              }) || [];
               setTemplateData((prev: TemplateState<unknown>) => ({
                 ...prev,
                 barcodeState: {
@@ -1917,6 +2002,7 @@ const handleRemoveImage =()=>{
               top: `${component.y}pt`,
               transform: `rotate(${component.rotate || 0}deg)`,
               transformOrigin: "center",
+              zIndex: 1,
             }}
           >
             <div
@@ -1924,14 +2010,14 @@ const handleRemoveImage =()=>{
               style={{
                 width: "100%",
                 height: "100%",
-                backgroundColor: component.containerProps?.backgroundColor || "#ffffff",
+                backgroundColor: component.containerProps?.backgroundColor || "#fafafa",
                 border: isSelected 
                   ? "2px solid #2196f3" 
                   : `${component.containerProps?.borderWidth || 1}px ${component.containerProps?.borderStyle || "solid"} ${component.containerProps?.borderColor || "#cccccc"}`,
                 padding: `${component.containerProps?.padding || 10}pt`,
                 boxSizing: "border-box",
                 position: "relative",
-                overflow: component.containerProps?.autoResize ? "visible" : "hidden",
+                overflow: "visible", // Always visible to show children
                 cursor: "move",
               }}
               onClick={(e) => {
@@ -1950,15 +2036,149 @@ const handleRemoveImage =()=>{
               onDragOver={(e) => e.preventDefault()}
             >
               {/* Render children elements */}
-              {containerChildren.map((child) => {
-                // Create a modified child with proper positioning
-                const childWithRelativePos = {
-                  ...child,
-                  // Ensure child positions are relative to container
-                  x: child.x,
-                  y: child.y
+              {containerChildren.length === 0 ? (
+                <div style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  color: '#999',
+                  fontSize: '12px',
+                  pointerEvents: 'none',
+                }}>
+                  Drop elements here
+                </div>
+              ) : null}
+              {containerChildren.map((child, index) => {
+                // Use the actual child data from the state, not a copy
+                const actualChild = templateData?.barcodeState?.placedComponents?.find(
+                  comp => comp.id === child.id
+                ) || child;
+                
+                // Render child elements with proper styling
+                const childStyle: React.CSSProperties = {
+                  position: "absolute",
+                  left: `${actualChild.x}pt`,
+                  top: `${actualChild.y}pt`,
+                  width: `${actualChild.width || 100}pt`,
+                  height: actualChild.type === DesignerElementType.barcode ? "auto" : `${actualChild.height || 50}pt`,
+                  zIndex: 10 + index,
+                  cursor: "move",
+                  transform: `rotate(${actualChild.rotate || 0}deg)`,
+                  transformOrigin: "center",
+                  pointerEvents: 'auto',
                 };
-                return renderComponent(childWithRelativePos, true);
+                
+                // Return a simplified version for child elements
+                return (
+                  <div
+                    key={`child-${actualChild.id}-${index}`}
+                    id={`child-${actualChild.id}`}
+                    style={childStyle}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      // Pass the actual child data
+                      handleComponentClick(e, actualChild);
+                    }}
+                    onMouseDown={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      // Pass the actual child data
+                      handleMouseDown(e, actualChild);
+                    }}
+                  >
+                    {/* Render content based on type */}
+                    {actualChild.type === DesignerElementType.text || actualChild.type === DesignerElementType.field ? (
+                      <div
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          backgroundColor: "white",
+                          border: selectedComponent?.id === actualChild.id ? "2px solid #2196f3" : "1px dashed #ccc",
+                          padding: "4px",
+                          boxSizing: "border-box",
+                          fontSize: `${actualChild.fontSize || 12}pt`,
+                          fontFamily: actualChild.font || "Roboto",
+                          fontStyle: actualChild.fontStyle || "normal",
+                          textAlign: actualChild.textAlign || "center",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: actualChild.textAlign || "center",
+                          overflow: "hidden",
+                        }}
+                      >
+                        {actualChild.content || "Text"}
+                      </div>
+                    ) : actualChild.type === DesignerElementType.image ? (
+                      <img
+                        src={actualChild.content || "https://via.placeholder.com/100x50"}
+                        alt="Child Image"
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: (actualChild.imgFit as React.CSSProperties["objectFit"]) || "cover",
+                          border: selectedComponent?.id === actualChild.id ? "2px solid #2196f3" : "1px solid #ddd",
+                        }}
+                      />
+                    ) : actualChild.type === DesignerElementType.line ? (
+                      <div
+                        style={{
+                          width: `${actualChild.lineWidth || actualChild.width}pt`,
+                          borderTop: `${actualChild.lineThickness || 1}px ${actualChild.lineType || "solid"} ${actualChild.lineColor || "black"}`,
+                        }}
+                      />
+                    ) : actualChild.type === DesignerElementType.barcode ? (
+                      // For barcode, render a placeholder or use the full renderComponent
+                      <div style={{
+                        width: "100%",
+                        height: "100%",
+                        backgroundColor: "#f0f0f0",
+                        border: selectedComponent?.id === actualChild.id ? "2px solid #2196f3" : "1px solid #999",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: "10pt",
+                      }}>
+                        Barcode: {actualChild.content}
+                      </div>
+                    ) : actualChild.type === DesignerElementType.qrCode ? (
+                      // For QR code, render a placeholder
+                      <div style={{
+                        width: "100%",
+                        height: "100%",
+                        backgroundColor: "#f0f0f0",
+                        border: selectedComponent?.id === actualChild.id ? "2px solid #2196f3" : "1px solid #999",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: "10pt",
+                      }}>
+                        QR: {actualChild.content}
+                      </div>
+                    ) : (
+                      // Default fallback
+                      <div style={{
+                        width: "100%",
+                        height: "100%",
+                        backgroundColor: "white",
+                        border: selectedComponent?.id === actualChild.id ? "2px solid #2196f3" : "1px dashed #ccc",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}>
+                        {actualChild.content}
+                      </div>
+                    )}
+                    {selectedComponent?.id === actualChild.id && (
+                      <DeleteButton
+                        id={actualChild.id}
+                        isSelected={true}
+                        handleDelete={handleDelete}
+                      />
+                    )}
+                  </div>
+                );
               })}
               <DeleteButton
                 id={component.id}
@@ -1978,6 +2198,27 @@ const handleRemoveImage =()=>{
   const labelWidthPx = pointToPx(labelWidthPt);
   const labelHeightPx = pointToPx(labelHeightPt);
 
+  // Helper function to consolidate container children before saving
+  const consolidateContainerChildren = () => {
+    const components = templateData?.barcodeState?.placedComponents || [];
+    return components.map(comp => {
+      if (comp.type === DesignerElementType.container) {
+        // Find all children for this container
+        const children = components.filter(c => c.containerId === comp.id);
+        return {
+          ...comp,
+          children: children.map(child => ({
+            ...child,
+            // Store relative positions
+            x: child.x,
+            y: child.y,
+          }))
+        };
+      }
+      return comp;
+    });
+  };
+  
   const getFieldContent = () => {
   if (!forCustomRows) return barCodeField;
   return accountsVoucherTypes.includes(templateGroup as VoucherType)
@@ -2050,7 +2291,15 @@ const bgSize = forCustomRows
                   key={component.id}
                   draggable
                   onDragStart={(e) => handleDragStart(e, component.id)}
-                  className="flex items-center p-2 rounded hover:bg-gray-100 cursor-move"
+                  className={`flex items-center p-2 rounded hover:bg-gray-100 cursor-move ${
+                    component.id === DesignerElementType.container 
+                      ? 'border-2 border-dashed border-gray-300 bg-gray-50' 
+                      : ''
+                  }`}
+                  title={component.id === DesignerElementType.container 
+                    ? 'Container - Drop elements inside to group them' 
+                    : component.label
+                  }
                 >
                   {component.icon}
                   <span className="text-sm ml-2">{component.label}</span>

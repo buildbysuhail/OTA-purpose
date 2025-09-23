@@ -152,25 +152,35 @@ export const RenderPreviewComponent: React.FC<Props> = ({
 
     case DesignerElementType.container:
       const containerHeight = calculateContainerHeight();
+      // For preview, we need to get children from the data structure
+      // In the designer, children might be stored separately with containerId
+      const containerChildren = component.children || [];
+      
       return (
         <div
           key={component.id}
           style={{
-            ...baseStyle,
+            position: component.containerId ? "absolute" : "absolute",
+            left: `${component.x}pt`,
+            top: `${component.y}pt`,
+            width: `${component.width}pt`,
             height: `${containerHeight}pt`,
-            backgroundColor: component.containerProps?.backgroundColor || "#f5f5f5",
+            backgroundColor: component.containerProps?.backgroundColor || "#ffffff",
             border: `${component.containerProps?.borderWidth || 1}pt ${component.containerProps?.borderStyle || "solid"} ${component.containerProps?.borderColor || "#cccccc"}`,
             padding: `${component.containerProps?.padding || 10}pt`,
             boxSizing: "border-box",
-            position: "relative",
-            overflow: "visible",
+            transform: `rotate(${component.rotate || 0}deg)`,
+            overflow: component.containerProps?.autoResize ? "visible" : "hidden",
           }}
         >
-          {/* Render children elements */}
-          {component.children?.map((child) => (
+          {/* Render children elements with relative positioning */}
+          {containerChildren.map((child) => (
             <RenderPreviewComponent
               key={child.id}
-              component={child}
+              component={{
+                ...child,
+                containerId: component.id, // Mark as child for proper positioning
+              }}
               data={data}
               qrCodeImages={qrCodeImages}
               convertAmountToEnglish={convertAmountToEnglish}

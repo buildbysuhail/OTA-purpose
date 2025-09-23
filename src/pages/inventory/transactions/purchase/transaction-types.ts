@@ -566,6 +566,7 @@ export interface TransactionFormState {
   gridMenuPop:boolean;
   documentModal:boolean;
   pendingOrdListMasterIDs?:string;
+  pendingOrdListBranchIDs?:string;
 }
 interface loadingResult {
   isLoading: boolean;

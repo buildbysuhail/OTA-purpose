@@ -102,14 +102,6 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
       width: "273px",
     };
 
-    const openExcelImport = () => {
-      setIsImportExcelOpen(true)
-    }
-
-    const openLoadMultiModal = () => {
-      setIsLoadMultiModalOpen(true);
-    };
-
     const closePopupVisible = () => {
       setIsPopupVisible(false);
     };
@@ -547,7 +539,11 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                   </ul>
                 </nav>
 
-                {/* Modals */}
+               
+              </div>
+            )}
+          </div>
+ {/* Modals */}
                 {isPendingOrderOpen && isPendingOrderOpen.open &&
                   <ERPModal
                     isOpen={isPendingOrderOpen.open}
@@ -569,10 +565,6 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                     }
                   />
                 }
-              </div>
-            )}
-          </div>
-
           {/* Previous Page Button */}
           {!phone && (
             <div className="relative">

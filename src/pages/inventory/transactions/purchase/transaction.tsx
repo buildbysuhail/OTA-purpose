@@ -2362,6 +2362,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           t={t}
         />
       )}
+      
     </>
   );
 };

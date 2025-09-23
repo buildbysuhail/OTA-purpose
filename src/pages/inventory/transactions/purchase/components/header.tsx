@@ -35,7 +35,7 @@ interface HeaderProps extends VoucherElementProps {
   isHistorySidebarOpen: boolean;
   phone?: boolean;
   setIsPrintModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  onProcessSelected: ((masterIds: string, loadType: string, voucherType: string,) => void) | undefined;
+  onProcessSelected: ((masterIds: string, branchIDs: string, voucherNumbers: string, referenceNumber: string,loadType: string, voucherType: string) => void) | undefined;
   downloadImportTemplateHeadersOnly: any;
   importFromExcel: any;
 
@@ -557,6 +557,10 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                     height={780}
                     content={
                       <PendingOrderList
+                      partyLedgerID={formState.transaction.master.ledgerID}
+                      branchID={formState.transaction.master.fromWarehouseID}
+                      formType={formState.transaction.master.voucherForm??""}
+
                         closeModal={() => setIsPendingOrderOpen({ open: false, type: "" })}
                         t={t}
                         voucherType={isPendingOrderOpen.type}

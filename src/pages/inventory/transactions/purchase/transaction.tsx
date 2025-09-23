@@ -940,7 +940,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
       setTemplateLoad(false);
     }
   }, []);
-  const onProcessSelected = useCallback(async (masterIds: string, loadType: string = "GRN", voucherType: string) => {
+  const onProcessSelected = useCallback(async (masterIds: string, branchIDs: string, voucherNumbers: string, referenceNumber: string,loadType: string = "GRN", voucherType: string) => {
     if (masterIds.length > 0) {
 
       dispatch(formStateHandleFieldChange({ fields: { loading: { isLoading: true, text: `${loadType == "GRN" ? 'Please wait while loading GRN Items' : 'Please wait while loading Order Items'}` } } }));
@@ -971,7 +971,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
             summaryRes ? summaryRes.summary as SummaryItems : initialInventoryTotals,
             formState.formElements,
             {
-              result: {},
+              result: {transaction:{master:{remarks: voucherNumbers}}},
             }
           );
 

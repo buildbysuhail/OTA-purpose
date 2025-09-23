@@ -674,8 +674,10 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   </span>
                 )}
 
-                {formState.transaction.master.voucherType !==
-                  VoucherType.PurchaseQuotation && (
+                {(formState.transaction.master.voucherType ===
+                  VoucherType.PurchaseInvoice || formState.transaction.master.voucherType ===
+                  VoucherType.PurchaseReturn || formState.transaction.master.voucherType ===
+                  VoucherType.GoodsReceiptNote) && (
                   <div>
                     <ERPButton
                       title={t(
@@ -1248,16 +1250,21 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 )}
                 {formState.transaction.master.voucherType ===
                   VoucherType.PurchaseReturn && (
-                  <div>
-                    <ERPButton
-                      title={t(getGRNTitle("PI_Ref"))}
-                      onClick={() => handleButtonClick("PI_Ref")}
+                 
+                      <OrderNo
                       localInputBox={formState?.userConfig?.inputBoxStyle}
-                      className="!m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
-                      disabled={formState.transactionLoading}
-                    />
-                  </div>
+                                          formState={formState}
+                                          dispatch={dispatch}
+                                          t={t}
+                                          type="PI_Ref"
+
+                                          label="PI_Ref"
+                                          loadAndSetTransVoucher={loadAndSetTransVoucher}
+                                        />
+                   
+                
                 )}
+
 
                 {formState.transaction.master.voucherType !=
                   VoucherType.PurchaseOrder && (

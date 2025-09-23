@@ -618,7 +618,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     </div>
                   )}
 
-                {formState.transaction.master.voucherType ===
+                {/* {formState.transaction.master.voucherType ===
                   VoucherType.PurchaseOrder && (
                   <div>
                     <ERPButton
@@ -627,7 +627,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       onClick={() => setUpdateTriggered(true)}
                     />
                   </div>
-                )}
+                )} */}
 
                 {formState.formElements.inSearch?.visible && (
                   <ERPCheckbox
@@ -1183,7 +1183,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     </div>
                   )}
 
-                {formState.transaction.master.voucherType ===
+                {/* {formState.transaction.master.voucherType ===
                   VoucherType.PurchaseOrder && (
                   <div>
                     <ERPButton
@@ -1192,7 +1192,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       onClick={() => setUpdateTriggered(true)}
                     />
                   </div>
-                )}
+                )} */}
 
                 {formState.transaction.master.voucherType ===
                   VoucherType.PurchaseReturn && (

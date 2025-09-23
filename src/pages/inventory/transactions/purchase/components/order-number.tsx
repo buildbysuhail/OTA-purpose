@@ -9,16 +9,21 @@ import { useSelector } from "react-redux";
 import { Ellipsis } from "lucide-react";
 import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
 import { formStateMasterHandleFieldChange } from "../reducer";
-import VoucherType, { purchaseVoucherTypes, } from "../../../../../enums/voucher-types";
+import VoucherType, {
+  purchaseVoucherTypes,
+} from "../../../../../enums/voucher-types";
 import { LoadAndSetTransVoucherFn } from "../use-transaction";
 
 interface LoadByOrderNoProps extends VoucherElementProps {
-  loadAndSetTransVoucher: LoadAndSetTransVoucherFn
+  loadAndSetTransVoucher: LoadAndSetTransVoucherFn;
+  type?: string;
 }
 
 const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
   (props, ref) => {
-    const formState = useSelector((state: RootState) => state.InventoryTransaction);
+    const formState = useSelector(
+      (state: RootState) => state.InventoryTransaction
+    );
     const [showLoadData, setShowLoadData] = useState<boolean>(false);
     const [loadData, setLoadData] = useState<{
       vPrefixId: any;
@@ -39,34 +44,6 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
         ? "PO"
         : "SO",
     });
-    const showLoadByRefNo = useCallback(async () => {
-      if (formState.transaction.master.orderNumber) {
-        setShowLoadData(true);
-      }
-    }, [formState.transaction.master.orderNumber]);
-
-    const handleLoadByRefNo = useCallback(async () => {
-      await props.loadAndSetTransVoucher(
-        true,
-      undefined,
-      undefined,
-      undefined,undefined,
-      (loadData.vNumber??0).toString(),
-      undefined, undefined,
-      true, false,
-      "PO",
-      loadData.formType??"",
-      loadData.vPrefix??""
-        
-      );
-      setShowLoadData(false);
-    }, [
-      formState.transaction.master.voucherNumber,
-      loadData.vPrefix,
-      formState.transaction.master.voucherType,
-      loadData.formType,
-      loadData.vNumber,
-    ]);
     const { value: orderNumberValue, onChange: onOrderNumberChange } =
       useDebouncedInput(
         formState.transaction.master.orderNumber || "",
@@ -79,8 +56,56 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
         },
         300
       );
-    useEffect(() => {
+    const showLoadByRefNo = useCallback(async () => {
+      if (props.type == "PI_Ref") {
+        await props.loadAndSetTransVoucher(
+        true,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        orderNumberValue.toString(),
+        undefined,
+        undefined,
+        true,
+        false,
+        "PI",
+        "",
+        ""
+      );
+      } else {
+        if (formState.transaction.master.orderNumber) {
+          setShowLoadData(true);
+        }
+      }
+    }, [formState.transaction.master.orderNumber]);
 
+    const handleLoadByRefNo = useCallback(async () => {
+      await props.loadAndSetTransVoucher(
+        true,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        (loadData.vNumber ?? 0).toString(),
+        undefined,
+        undefined,
+        true,
+        false,
+        "PO",
+        loadData.formType ?? "",
+        loadData.vPrefix ?? ""
+      );
+      setShowLoadData(false);
+    }, [
+      formState.transaction.master.voucherNumber,
+      loadData.vPrefix,
+      formState.transaction.master.voucherType,
+      loadData.formType,
+      loadData.vNumber,
+    ]);
+    
+    useEffect(() => {
       if (showLoadData) {
         setLoadData((prev: any) => {
           return {
@@ -111,11 +136,15 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
               className="flex-1 h-6 text-xs max-w-none sm:max-w-28"
               onChange={(e) => onOrderNumberChange(e.target.value)}
             />
-            {(formState.transaction.master.voucherType == "PI" || formState.transaction.master.voucherType == "GRN") &&
-              <button className="bg-gray-300 p-2 rounded-md hover:shadow-md transition duration-300 flex-shrink-0" onClick={showLoadByRefNo}>
-              <Ellipsis className="w-4 h-4" />
-            </button>
-            }
+            {(formState.transaction.master.voucherType == "PI" ||
+              formState.transaction.master.voucherType == "GRN" || props.type == "PI_Ref") && (
+              <button
+                className="bg-gray-300 p-2 rounded-md hover:shadow-md transition duration-300 flex-shrink-0"
+                onClick={showLoadByRefNo}
+              >
+                <Ellipsis className="w-4 h-4" />
+              </button>
+            )}
           </div>
         ) : (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
@@ -123,9 +152,23 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
               {/* Modal Header */}
               <div className="flex items-center justify-between mb-6 border-b pb-4">
                 <h2 className="text-xl font-semibold text-gray-800">&nbsp;</h2>
-                <button onClick={() => setShowLoadData(false)} className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-gray-100" aria-label="Close modal">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <button
+                  onClick={() => setShowLoadData(false)}
+                  className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-gray-100"
+                  aria-label="Close modal"
+                >
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               </div>
@@ -146,7 +189,7 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
                         return {
                           ...prev,
                           formType: e.label,
-                          vFormTypeId: e.value
+                          vFormTypeId: e.value,
                         };
                       })
                     }
@@ -216,7 +259,10 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
                   title={props.t("Load")}
                   className="h-10"
                 />
-                <button onClick={() => setShowLoadData(false)} className="px-4 py-2 text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors">
+                <button
+                  onClick={() => setShowLoadData(false)}
+                  className="px-4 py-2 text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
+                >
                   {props.t("Cancel") || "Cancel"}
                 </button>
               </div>

@@ -38,6 +38,7 @@ import { isEnterKey, loadTemplateById } from "../../../../utilities/Utils";
 import VoucherType from "../../../../enums/voucher-types";
 import axios from "axios";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
+import OrderNo from "./components/order-number";
 
 interface TransactionHeaderProps {
   formState: TransactionFormState;
@@ -694,13 +695,14 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 {formState.transaction.master.voucherType ===
                   VoucherType.PurchaseReturn && (
                   <div>
-                    <ERPButton
-                      title={t(getGRNTitle("PI_Ref"))}
-                      onClick={() => handleButtonClick("PI_Ref")}
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      className="!m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
-                      disabled={formState.transactionLoading}
-                    />
+                      <OrderNo
+                                          formState={formState}
+                                          dispatch={dispatch}
+                                          t={t}
+                                          type="PI_Ref"
+                                          loadAndSetTransVoucher={loadAndSetTransVoucher}
+                                        />
+                   
                   </div>
                 )}
 
@@ -744,7 +746,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                         />
                       }
                     />
-                  )}
+                )}
 
                 {formState.transaction.master.voucherType !=
                   VoucherType.PurchaseOrder && (

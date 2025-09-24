@@ -64,7 +64,7 @@ const PartyLedger = React.forwardRef<HTMLInputElement, LedgerProps>(
                 formState.formElements.pnlMasters?.disabled
               }
               labelInfo={
-                formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+                formState.transaction.master.voucherType === VoucherType.PurchaseInvoice && (
                   <>
                     {formState.formElements.pnlMasters?.disabled == true ? null : (
                       <div>

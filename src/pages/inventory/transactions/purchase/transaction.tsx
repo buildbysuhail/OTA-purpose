@@ -951,12 +951,18 @@ const TransactionForm: React.FC<TransactionProps> = ({
         const refactoredDetails = refactorDetails(PendingTransDetails.details, loadType, voucherType, { result: {} }, formState.transaction.master.voucherForm);
         for (let index = 0; index < refactoredDetails.length; index++) {
             const _element = {...refactoredDetails[index]};
-          const element = {..._element,
-            gRTransDetailID:loadType == "GRN" ? _element.invTransactionDetailID??0 : 0,
-            pOTransDetailID:applicationSettings.inventorySettings.carryForwardPurchaseOrderQtyToPurchase ? _element.invTransactionDetailID??0 : 0,
-            pO_PITransDetailIDs:0,
-            pO_PITransDetailQtys:0
-          };
+          const element = {..._element};
+           element.gRTransDetailID = loadType == "GRN" ? _element.grTransDetailsID??0 : 0;
+           if(applicationSettings.inventorySettings.carryForwardPurchaseOrderQtyToPurchase) {
+            element.pOTransDetailID = _element.poTransDetailsID
+           }else {
+            element.pO_PITransDetailIDs = _element.poTransDetailsID
+            try {
+              element.pO_PITransDetailQtys = _element.poTransDetailsIDTag
+            } catch (error) {
+              
+            }
+           }
           const calculated = calculateRowAmount(
             element,
             "barCode",

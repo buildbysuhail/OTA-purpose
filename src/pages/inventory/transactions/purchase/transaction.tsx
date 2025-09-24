@@ -953,12 +953,13 @@ const TransactionForm: React.FC<TransactionProps> = ({
         const refactoredDetails = refactorDetails(PendingTransDetails.details, loadType, voucherType, { result: {} }, formState.transaction.master.voucherForm);
         for (let index = 0; index < refactoredDetails.length; index++) {
             const _element = {...refactoredDetails[index]};
+            debugger;
           const element = {..._element};
-           element.gRTransDetailID = loadType == "GRN" ? _element.grTransDetailsID??0 : 0;
+           element.gRTransDetailID = loadType == "GRN" ? _element.invTransactionDetailID??0 : 0;
            if(applicationSettings.inventorySettings.carryForwardPurchaseOrderQtyToPurchase) {
-            element.pOTransDetailID = _element.poTransDetailsID
+            element.pOTransDetailID = _element.invTransactionDetailID??0
            }else {
-            element.pO_PITransDetailIDs = _element.poTransDetailsID
+            element.pO_PITransDetailIDs = _element.invTransactionDetailID??0
             try {
               element.pO_PITransDetailQtys = _element.poTransDetailsIDTag
             } catch (error) {

@@ -1111,8 +1111,8 @@ debugger;
         details: dtRes.outputDetails,
         attachments: attachments,
         invAccTransactions: formState.transaction.invAccTransactions,
-        pendingOrdListMasterIDs: formState.pendingOrdListMasterIDs,
-        PendingOrdListBranchIDs: formState.pendingOrdListBranchIDs
+        pendingOrderListMasterIDs: formState.pendingOrdListMasterIDs,
+        PendingOrderListBranchIDs: formState.pendingOrdListBranchIDs
       };
 
       params = sanitizeDataAdvanced(params, transactionInitialData)

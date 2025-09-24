@@ -1362,7 +1362,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   }, [formState.quantityFactorData]);
 
 
-
+debugger;
   const _purchaseGridCol: ColumnModel[] = purchaseGridCol(applicationSettings, userSession
     , voucherType ?? formState.transaction.master.voucherType
     , formType ?? formState.transaction.master.voucherForm, t, formState) ?? []

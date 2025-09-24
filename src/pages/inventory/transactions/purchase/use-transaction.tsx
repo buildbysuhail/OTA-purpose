@@ -550,7 +550,7 @@ debugger;
     if (loadVType == "PI_Ref") {
       out_voucherNumber = manualInvoiceNumber ?? 0;
       out_voucherType = "PI";
-      out_voucherForm = loadFType??"";
+      out_voucherForm = "VAT";
       out_voucherPrefix = loadPrefix??"";
       url = url + "/ByReferenceNo";
     }

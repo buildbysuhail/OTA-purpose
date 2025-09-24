@@ -2770,7 +2770,6 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                     height: `${headerRowHeight}px`,
                   }}
                 >
-                  {columns.length}
                   {columns?.map((column, index) => {
                     const isFirstColumn = index === 0;
                     const isLastColumn = index === columns.length - 1;

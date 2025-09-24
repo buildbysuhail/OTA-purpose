@@ -646,13 +646,14 @@ const TransactionForm: React.FC<TransactionProps> = ({
           voucherPrefix ?? "",
           false
         );
-        debugger;
+        
         employeeID = userSession.employeeId ?? 0;
         if (["PR","PQ","PO"].includes(voucherType as any)  && employeeID <= 0) {
           const emps = await getApLocalDataByUrl(`${Urls.inv_transaction_base}${transactionType}/Data/Employee/`);
           employeeID = emps && emps.length > 0 ? emps[0].id : employeeID;
         }
       }
+      
 
       const templates = formState.templates;
       const templatesData = formState.templatesData;
@@ -725,7 +726,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
         if (isInvoker && formType == "IMPORT") {
           _formState.userRightsFormCode = "PIIMPORT"
         }
-      }
+      }debugger;
+      
       const _gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new APIClient()))
       const accountKey =
         formType == "PI-IND" ? applicationSettings.accountsSettings.defaultIndirectExpenseAccount as keyof typeof LedgerType

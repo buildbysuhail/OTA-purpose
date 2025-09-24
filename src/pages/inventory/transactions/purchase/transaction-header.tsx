@@ -113,7 +113,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   }, []);
 
   const handleButtonClick = (type: string) => {
-    debugger;
+    
     setIsModalOpen({ visible: true, type: type });
   };
 

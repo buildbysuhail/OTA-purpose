@@ -325,7 +325,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
       const parts = value.split(".");
       if (parts.length > 2) return false;
       if (parts.length == 2) {
-        debugger;
+        
       }
       if (parts[0] && !/^-?\d*$/.test(parts[0])) return false;
       if (parts.length === 2) {
@@ -433,7 +433,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
           <ERPDataCombobox
             options={options ?? []}
             onChange={(e) => {
-              debugger;
+              
               onChange(
                 e.value,
                 column.dataField as keyof TransactionDetail,
@@ -1247,7 +1247,7 @@ const VirtualRow = React.memo(
                 transactionInitialMoreDetails
               ).includes(column.dataField as keyof TransactionDetailsMore);
               if (column.dataField == "memo" && item.productID > 0) {
-                debugger;
+                
               }
               const fieldKey = column.dataField as TransactionDetailKeys;
               const idField = column.idField as keyof TransactionDetail;
@@ -2770,6 +2770,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                     height: `${headerRowHeight}px`,
                   }}
                 >
+                  {columns.length}
                   {columns?.map((column, index) => {
                     const isFirstColumn = index === 0;
                     const isLastColumn = index === columns.length - 1;

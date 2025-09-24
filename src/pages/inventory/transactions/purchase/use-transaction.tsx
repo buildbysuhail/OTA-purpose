@@ -353,7 +353,7 @@ export const useTransaction = (
   loadFType,
   loadPrefix,
   ) => {
-    debugger;
+    
     const _s_isDirty = isDirtyTransaction(
       formState.prev,
       {
@@ -382,7 +382,7 @@ export const useTransaction = (
         })
       );
     }
-
+debugger;
     let _formState = await loadTransVoucher(
       usingManualInvNumber,
       voucherNumber,
@@ -395,7 +395,7 @@ export const useTransaction = (
       loadFType,
       loadPrefix
     );
-    debugger;
+    
     if (loadVType == "GRN" || loadVType == "GRR") {
        _formState = merge({}, _formState, {transaction:{master:{deliveryNoteNumber: manualInvoiceNumber}}} );
     }
@@ -513,7 +513,7 @@ export const useTransaction = (
         openUnsavedPrompt: false,
       })
     );
-    debugger;
+    
     let url = `${Urls.inv_transaction_base}${transactionType}`;
     
     let _voucherNumber =
@@ -599,7 +599,7 @@ export const useTransaction = (
         },
       };
     }
-    debugger;
+    
 
     if (usingManualInvNumber) {
       vch.master = {
@@ -707,7 +707,7 @@ export const useTransaction = (
         voucher.transaction
       );
     }
-    debugger;
+    
     voucher.isInitialLedger = true;
     voucher = await loadLedgerData(voucher) as any;
     return voucher;
@@ -2250,7 +2250,7 @@ export const useTransaction = (
             });
             clearControls(false)
           } else {
-            debugger;
+            
             ERPAlert.show({
               title: t("delete_operation_failed"),
               text: deleteResult?.message,
@@ -2846,7 +2846,7 @@ export const useTransaction = (
           //   outDetail.details2!.additionalCessPerc = 0;
           // }
         } else {
-          debugger;
+          
 
           const { voucherType, voucherForm } = formState.transaction.master;
 
@@ -3489,7 +3489,7 @@ export const useTransaction = (
               }
             }
           } else if (columnName == "btnPrintBarcode") {
-            debugger;
+            
             if ((formState.transaction.details[rowIndex].qty + formState.transaction.details[rowIndex].stickerQty) <= 0) {
               break
             }
@@ -3995,7 +3995,7 @@ export const useTransaction = (
             `${Urls.inv_transaction_base}${transactionType}/LedgerDetails?LedgerId=${ledgerID}`
           ),
         ]);
-        debugger;
+        
         const ret = {
           ..._formState,
           formElements: {

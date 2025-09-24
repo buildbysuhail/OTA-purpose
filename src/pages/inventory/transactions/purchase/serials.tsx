@@ -132,7 +132,7 @@ const Serials: React.FC<SerialsProps> = ({ data, isOpen, productId, onClose, row
         if (originalKeyDown) {
           originalKeyDown(event);
         }
-        debugger;
+        
         if (["Enter", "ArrowUp", "ArrowDown"].includes(event.event.key) && event.component) {
           const currentValue = event.component.option('text');
           

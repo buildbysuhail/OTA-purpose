@@ -71,7 +71,7 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
         undefined,
         true,
         false,
-        "PI",
+        "PI_Ref",
         "",
         ""
       );

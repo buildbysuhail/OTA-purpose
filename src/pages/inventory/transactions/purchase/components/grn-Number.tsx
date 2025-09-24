@@ -18,7 +18,7 @@ interface GrnNumberProps extends VoucherElementProps {
 }
 
 const VoucherLoader = React.forwardRef<HTMLInputElement, GrnNumberProps>((props, ref) => {
-  debugger;
+  
   const formState = useSelector((state: RootState) => state.InventoryTransaction);
   const [showLoadData, setShowLoadData] = useState<boolean>(false);
   const { t } = useTranslation('transaction');
@@ -40,7 +40,7 @@ const VoucherLoader = React.forwardRef<HTMLInputElement, GrnNumberProps>((props,
   });
 
   const handleLoadByRefNo = useCallback(async () => {
-    debugger;
+    
     await props.loadAndSetTransVoucher(
       true,
       undefined,
@@ -129,7 +129,7 @@ const VoucherLoader = React.forwardRef<HTMLInputElement, GrnNumberProps>((props,
             // value={orderNumberValue}
             value={props.updateDeliveryNoteNumber ? formState.transaction.master.deliveryNoteNumber: loadData.vNumber}
             onChange={(e) => {
-              debugger;
+              
               if(props.updateDeliveryNoteNumber) {
               dispatch(formStateHandleFieldChangeKeysOnly({fields:{transaction:{master:{deliveryNoteNumber: e.target?.value}}}}))
               } else {

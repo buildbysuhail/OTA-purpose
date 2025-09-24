@@ -77,7 +77,7 @@ export const getInitialPreference = async(gridId: any, columns: any, api: APICli
        await setStorageString(`gridPreferences_${gridId}`,JSON.stringify(res));
      parsedPreferences = res && res as GridPreference;
     }
-  debugger;
+  
     if(parsedPreferences) {    
       
        parsedPreferences.columnPreferences = parsedPreferences.columnPreferences.map((pref, index) =>  {

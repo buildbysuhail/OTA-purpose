@@ -289,7 +289,11 @@ export const initialTransactionDetailData: TransactionDetail = {
   unitDecimalPoint: 0,
   multiFactor: 0,
   details2: initialTransactionDetails2,
-  hsnCode: ""
+  hsnCode: "",
+  gRTransDetailID: 0,
+  pOTransDetailID: 0,
+  pO_PITransDetailIDs: 0,
+  pO_PITransDetailQtys: 0
 };
 export const transactionInitialData: TransactionData = {
   master: TransactionMasterInitialData, details: Array.from({ length: 30 }, (_, index) => ({
@@ -652,7 +656,8 @@ export const TransactionFormStateInitialData: TransactionFormState = {
     data: "",
     rowIndex: 0
   },
-  gridMenuPop:false
+  gridMenuPop: false,
+  documentModal: false
 }
 
 export const initialProductData: BarcodeLabel = {

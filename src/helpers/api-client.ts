@@ -191,7 +191,7 @@ clearInFlightRequests = () => {
    * Posts the given data to the URL
    */
   post = async(url: string, data: any, headers?: any, onUploadProgress?: any): Promise<any> => {
-    debugger;
+    
     await setAuthorization();
     return headers
       ? (onUploadProgress 

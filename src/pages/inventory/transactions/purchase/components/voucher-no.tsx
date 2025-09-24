@@ -44,7 +44,7 @@ const AccVoucherNo = React.forwardRef<HTMLInputElement, VoucherNoPrefixProps>(
             localInputBox={formState?.userConfig?.inputBoxStyle}
             onKeyUp={async(e) => {
               if(e.key == "Enter") {
-                debugger;
+                
                 const ret = await loadAndSetTransVoucher(
                   false,
                   parseFloat(e.target?.value),
@@ -80,7 +80,7 @@ const AccVoucherNo = React.forwardRef<HTMLInputElement, VoucherNoPrefixProps>(
             numberChangerStyle="horizontal" // or "vertical"
             className="w-full max-w-[150px]"
             onChange={async (e: any) => {
-              debugger;
+              
               if (e.isCustomNumberChangerEvent == true) {
                 const ret = await loadAndSetTransVoucher(
                   false,

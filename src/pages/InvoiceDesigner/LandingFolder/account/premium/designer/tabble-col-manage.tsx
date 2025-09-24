@@ -48,7 +48,7 @@ export const TableManagerContent = withGenericMemo(<T,>({ currentTableState}: Ta
             // label={t(item.label)}
             checked={item.show}
             onChange={(e) =>{
-                debugger;
+                
                 handleChange(item.field as keyof T, { show: e.target.checked })
             }}     
            />

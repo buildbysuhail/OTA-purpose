@@ -648,7 +648,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         );
         debugger;
         employeeID = userSession.employeeId ?? 0;
-        if (voucherType == VoucherType.PurchaseReturn) {
+        if (["PR","PQ","PO"].includes(voucherType as any)  && employeeID <= 0) {
           const emps = await getApLocalDataByUrl(`${Urls.inv_transaction_base}${transactionType}/Data/Employee/`);
           employeeID = emps && emps.length > 0 ? emps[0].id : employeeID;
         }
@@ -950,7 +950,13 @@ const TransactionForm: React.FC<TransactionProps> = ({
         const calculatedDetails: TransactionDetail[] = [];
         const refactoredDetails = refactorDetails(PendingTransDetails.details, loadType, voucherType, { result: {} }, formState.transaction.master.voucherForm);
         for (let index = 0; index < refactoredDetails.length; index++) {
-          const element = refactoredDetails[index];
+            const _element = {...refactoredDetails[index]};
+          const element = {..._element,
+            gRTransDetailID:loadType == "GRN" ? _element.invTransactionDetailID??0 : 0,
+            pOTransDetailID:applicationSettings.inventorySettings.carryForwardPurchaseOrderQtyToPurchase ? _element.invTransactionDetailID??0 : 0,
+            pO_PITransDetailIDs:0,
+            pO_PITransDetailQtys:0
+          };
           const calculated = calculateRowAmount(
             element,
             "barCode",

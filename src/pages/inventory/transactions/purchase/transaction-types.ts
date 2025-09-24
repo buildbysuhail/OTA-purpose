@@ -246,6 +246,7 @@ export interface CommonParams {
 }
 
 export interface TransactionDetail {
+  invTransactionDetailID?: number;
   slNo: string;
   pCode: string;
   mrp: number;
@@ -344,7 +345,11 @@ export interface TransactionDetail {
   btnPrintBarcodeStd: string;
   isValid?: boolean;
   hsnCode: string;
-  details2?: TransactionDetails2
+  details2?: TransactionDetails2;
+  gRTransDetailID: number;
+  pOTransDetailID: number;
+  pO_PITransDetailIDs: number;
+  pO_PITransDetailQtys: number;
 }
 
 export interface TransactionDetailsMore {

@@ -81,6 +81,7 @@ import { DeepPartial } from "redux";
 import ExcelJS from "exceljs";
 import { sanitizeDataAdvanced } from "../../../../utilities/Utils";
 import { getStorageString, setStorageString } from "../../../../utilities/storage-utils";
+import { getApLocalDataByUrl } from "../../../../redux/cached-urls";
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;
 //   clearDetailsAfterSaveAccounts: boolean;
@@ -1218,6 +1219,11 @@ export const useTransaction = (
       formState.transaction.master.voucherPrefix,
       false
     );
+    let employeeID = userSession.employeeId ?? 0;
+            if (["PR","PQ","PO"].includes(formState.transaction.master.voucherType ?? "" as any)  && employeeID <= 0) {
+              const emps = await getApLocalDataByUrl(`${Urls.inv_transaction_base}${transactionType}/Data/Employee/`);
+              employeeID = emps && emps.length > 0 ? emps[0].id : employeeID;
+            }
     const master: TransactionMaster = {
       ...TransactionMasterInitialData,
       voucherType: formState.transaction.master.voucherType ?? "",
@@ -1225,7 +1231,7 @@ export const useTransaction = (
       voucherForm: formState.transaction.master.voucherForm ?? "",
       transactionDate: moment(softwareDate, "DD/MM/YYYY").local().toISOString(),
       purchaseInvoiceDate: moment().local().toISOString(),
-      employeeID: userSession.employeeId > 0 ? userSession.employeeId : 0,
+      employeeID: employeeID,
       voucherNumber: vNo ?? 0,
       inventoryLedgerID:
         formState.transaction.master.voucherType == VoucherType.PurchaseReturn ? applicationSettings.inventorySettings?.defaultPurchaseReturnAcc

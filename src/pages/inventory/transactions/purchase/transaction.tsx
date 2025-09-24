@@ -948,9 +948,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
       dispatch(formStateHandleFieldChange({ fields: { loading: { isLoading: true, text: `${loadType == "GRN" ? 'Please wait while loading GRN Items' : 'Please wait while loading Order Items'}` } } }));
       const PendingTransDetails: any = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/PendingTransactionsByMasterIds`, `masterIDs=${masterIds}`)
       if (PendingTransDetails && PendingTransDetails.details && PendingTransDetails.details.length > 0) {
-
+        debugger;
         const calculatedDetails: TransactionDetail[] = [];
-        const refactoredDetails = refactorDetails(PendingTransDetails.details, loadType, voucherType, { result: {} }, formState.transaction.master.voucherForm);
+        const refactoredDetails = refactorDetails(PendingTransDetails.details, formState.transaction.master.voucherForm , voucherType, { result: {} },loadType);
         for (let index = 0; index < refactoredDetails.length; index++) {
             const _element = {...refactoredDetails[index]};
             debugger;

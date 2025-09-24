@@ -1199,8 +1199,9 @@ export const useTransactionHelper = (transactionType: string) => {
             Number(row.quantity || 0)
           );
           detail.grTransDetailsID = row.invTransactionDetailID
-          detail.grTransDetailsIDTag = row.PendingQty
+          detail.grTransDetailsIDTag = row.pendingQty
         }
+        
         // Special handling for GRN type
         if (loadType === "PO") {
           detail.poTransDetailsID = row.invTransactionDetailID

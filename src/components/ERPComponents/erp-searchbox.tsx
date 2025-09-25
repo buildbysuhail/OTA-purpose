@@ -1189,7 +1189,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
             <ERPInput
               localInputBox={customStyle}
               textAlignStyle={textAlign}
-              ignoreRandomId={true}
+              ignoreRandomId={false}
               noLabel={noLabel}
               label={label}
               type="text"

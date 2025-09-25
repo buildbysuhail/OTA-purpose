@@ -19,10 +19,7 @@ import Project from "./components/cb-project";
 import InvoiceValue from "./components/invoice-value";
 import VoucherLoader from "./components/grn-Number";
 import Urls from "../../../../redux/urls";
-import {
-  formStateHandleFieldChange,
-  formStateMasterHandleFieldChange,
-} from "./reducer";
+import { formStateHandleFieldChange, formStateMasterHandleFieldChange, } from "./reducer";
 import MoreOptionsModalContent from "./transaction-more";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
@@ -702,12 +699,9 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       dispatch={dispatch}
                       t={t}
                       type="PI_Ref"
-
-                      label="PI_Ref"
+                      label={t("pi_ref")}
                       loadAndSetTransVoucher={loadAndSetTransVoucher}
                     />
-
-
                   )}
 
                 {isModalOpen &&
@@ -876,10 +870,10 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
               >
                 <ChevronDown
                   className={`mx-2 transition-transform duration-500 dark:text-dark-text ${isDropDownOpen
-                      ? "transform rotate-180"
-                      : hasAnimated
-                        ? ""
-                        : "animate-[bounce_2s_1]"
+                    ? "transform rotate-180"
+                    : hasAnimated
+                      ? ""
+                      : "animate-[bounce_2s_1]"
                     }`}
                   size={24}
                 />
@@ -927,8 +921,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
           <div
             ref={dropdownRef}
             className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropDownOpen
-                ? "max-h-[50vh] overflow-y-auto overflow-x-hidden"
-                : "max-h-0 overflow-hidden"
+              ? "max-h-[50vh] overflow-y-auto overflow-x-hidden"
+              : "max-h-0 overflow-hidden"
               }`}
             style={{ width: "100%", boxSizing: "border-box" }}
           >
@@ -1253,14 +1247,10 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       dispatch={dispatch}
                       t={t}
                       type="PI_Ref"
-
-                      label="PI_Ref"
+                      label={t("pi_ref")}
                       loadAndSetTransVoucher={loadAndSetTransVoucher}
                     />
-
-
                   )}
-
 
                 {formState.transaction.master.voucherType !=
                   VoucherType.PurchaseOrder && (
@@ -1428,10 +1418,10 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
               >
                 <ChevronDown
                   className={`mx-2 transition-transform duration-500 dark:text-dark-text ${isDropDownOpen
-                      ? "transform rotate-180"
-                      : hasAnimated
-                        ? ""
-                        : "animate-[bounce_2s_1]"
+                    ? "transform rotate-180"
+                    : hasAnimated
+                      ? ""
+                      : "animate-[bounce_2s_1]"
                     }`}
                   size={24}
                 />

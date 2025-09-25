@@ -780,5 +780,9 @@
   "show_view": "عرض",
   "unit_code": "رمز الوحدة",
   "po": "أمر الشراء",
-  "pi": "فاتورة الشراء"
+  "pi": "فاتورة الشراء",
+  "transaction_already_invoiced_warning": "تم إصدار فاتورة لهذه المعاملة بالفعل، لا يمكن حذفها أو تعديلها، هل تريد المتابعة؟",
+  "deleting_transaction_question": "هل أنت متأكد أنك تريد حذف هذه المعاملة؟",
+  "once_deleting_this_transaction_cannot_be_recovered": "بمجرد حذف هذه المعاملة لا يمكن استعادتها",
+  "pi_ref": "مرجع فاتورة الشراء"
 }

@@ -783,5 +783,9 @@
   "show_view": "Show view",
   "unit_code": "Unit Code",
   "po": "PO",
-  "pi": "PI"
+  "pi": "PI",
+  "transaction_already_invoiced_warning": "Transaction already invoiced cannot delete or edit do you want to proceed",
+  "deleting_transaction_question": "Are you sure you want to delete this transaction?",
+  "once_deleting_this_transaction_cannot_be_recovered": "Once deleting this transaction cannot be recovered",
+  "pi_ref": "PI Ref"
 }

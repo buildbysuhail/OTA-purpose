@@ -2158,7 +2158,7 @@ debugger;
     if (formState.transaction.master.isInvoiced === true) {
       const invoicedConfirmResult = await ERPAlert.show({
         title: t("warning"),
-        text: t("transaction_already_invoiced_cannot_delete_or_edit_do_you_want_to_proceed"),
+        text: t("transaction_already_invoiced_warning"),
         icon: "warning",
         confirmButtonText: t("ok"),
       });
@@ -2220,8 +2220,8 @@ debugger;
 
       // Show delete confirmation dialog
       const deleteConfirmResult = await ERPAlert.show({
-        title: t("delete_transaction_question"),
-        text: t("once_deleted_this_transaction_cannot_be_recovered"),
+        title: t("deleting_transaction_question"),
+        text: t("once_deleting_this_transaction_cannot_be_recovered"),
         icon: "question",
         showCancelButton: true,
         confirmButtonText: t("yes"),

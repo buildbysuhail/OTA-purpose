@@ -18,7 +18,7 @@ interface GrnNumberProps extends VoucherElementProps {
 }
 
 const VoucherLoader = React.forwardRef<HTMLInputElement, GrnNumberProps>((props, ref) => {
-  
+
   const formState = useSelector((state: RootState) => state.InventoryTransaction);
   const [showLoadData, setShowLoadData] = useState<boolean>(false);
   const { t } = useTranslation('transaction');
@@ -36,22 +36,21 @@ const VoucherLoader = React.forwardRef<HTMLInputElement, GrnNumberProps>((props,
     formType: "",
     vPrefix: "",
     vNumber: props.updateDeliveryNoteNumber ? formState.transaction.master.deliveryNoteNumber : "",
-    vType: props.fromVoucherType??""
+    vType: props.fromVoucherType ?? ""
   });
 
   const handleLoadByRefNo = useCallback(async () => {
-    
     await props.loadAndSetTransVoucher(
       true,
       undefined,
       undefined,
-      undefined,undefined,
-      props.updateDeliveryNoteNumber ? formState.transaction.master.deliveryNoteNumber: loadData.vNumber,
+      undefined, undefined,
+      props.updateDeliveryNoteNumber ? formState.transaction.master.deliveryNoteNumber : loadData.vNumber,
       undefined, undefined,
       false, false,
-      loadData.vType??"",
-      loadData.formType??"",
-      loadData.vPrefix??""
+      loadData.vType ?? "",
+      loadData.formType ?? "",
+      loadData.vPrefix ?? ""
     );
     props.closeModal();
   }, [
@@ -127,36 +126,33 @@ const VoucherLoader = React.forwardRef<HTMLInputElement, GrnNumberProps>((props,
             type="number"
             className="w-[80px]"
             // value={orderNumberValue}
-            value={props.updateDeliveryNoteNumber ? formState.transaction.master.deliveryNoteNumber: loadData.vNumber}
+            value={props.updateDeliveryNoteNumber ? formState.transaction.master.deliveryNoteNumber : loadData.vNumber}
             onChange={(e) => {
-              
-              if(props.updateDeliveryNoteNumber) {
-              dispatch(formStateHandleFieldChangeKeysOnly({fields:{transaction:{master:{deliveryNoteNumber: e.target?.value}}}}))
+              if (props.updateDeliveryNoteNumber) {
+                dispatch(formStateHandleFieldChangeKeysOnly({ fields: { transaction: { master: { deliveryNoteNumber: e.target?.value } } } }))
               } else {
-                 setLoadData((prev: any) => {
-                return {
-                  ...prev,
-                  vNumber: e.target?.value,
-                };
-              })
+                setLoadData((prev: any) => {
+                  return {
+                    ...prev,
+                    vNumber: e.target?.value,
+                  };
+                })
               }
-             
-            }
-          }
+            }}
             ref={ref}
           />
         </div>
       </div>
 
       {/* Modal Footer (Optional) */}
-      <div className="flex justify-end gap-3 pt-4">
+      <div className="flex justify-end gap-2">
         <ERPButton
           onClick={handleLoadByRefNo}
-          title={props.t("load")}
+          title={t("load")}
           variant="primary"
         />
         <ERPButton
-          onClick={() => setShowLoadData(false)}
+          onClick={props.closeModal}
           title={t("cancel")}
           variant="secondary"
         />

@@ -5,14 +5,13 @@ import React from "react";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import ERPModal from "../../../../../components/ERPComponents/erp-modal";
 import { TransactionUserConfig } from "../../purchase/transaction-user-config";
-import { EllipsisVertical, KeyRound, Pencil, Printer, RefreshCw, Trash2, ChevronUp, BadgePlusIcon, Eraser, X, FileUp, History, AlignHorizontalSpaceBetween, Boxes, Group, ListPlus, DollarSign, Download, Package, ShoppingCart, Upload, } from "lucide-react";
+import { EllipsisVertical, KeyRound, Pencil, Printer, RefreshCw, Trash2, ChevronUp, BadgePlusIcon, Eraser, X, FileUp, History, AlignHorizontalSpaceBetween, Boxes, Group, DollarSign, Download, Package, ShoppingCart, Upload, } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import PendingOrderList from "../pending-order-list";
 import ERPFileUploadButton from "../../../../../components/ERPComponents/erp-file-upload-button";
 import VoucherType from "../../../../../enums/voucher-types";
 import { useAppState } from "../../../../../utilities/hooks/useAppState";
-import { u } from "framer-motion/dist/types.d-6pKw1mTI";
 import Urls from "../../../../../redux/urls";
 import { APIClient } from "../../../../../helpers/api-client";
 
@@ -37,7 +36,7 @@ interface HeaderProps extends VoucherElementProps {
   isHistorySidebarOpen: boolean;
   phone?: boolean;
   setIsPrintModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  onProcessSelected: ((masterIds: string, branchIDs: string, voucherNumbers: string, referenceNumber: string,loadType: string, voucherType: string) => void) | undefined;
+  onProcessSelected: ((masterIds: string, branchIDs: string, voucherNumbers: string, referenceNumber: string, loadType: string, voucherType: string) => void) | undefined;
   downloadImportTemplateHeadersOnly: any;
   importFromExcel: any;
 
@@ -91,9 +90,8 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
       importFromExcel,
       undoEditMode
     }, ref) => {
-    const [isPopupVisible, setIsPopupVisible] = useState(false);
     const { appState } = useAppState();
-    const  applicationSettings  = useSelector((state: RootState) => state.ApplicationSettings);
+    const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
     const isRtl = appState.locale.rtl;
     const popupRef = useRef<HTMLDivElement | null>(null);
     const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -107,13 +105,14 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
       width: "273px",
     };
 
-    const closePopupVisible = () => {
-      setIsPopupVisible(false);
+    const closeMenuPopup = () => {
+      dispatch(formStateHandleFieldChange({ fields: { headerMenuOpen: false }, }));
     };
 
-    const togglePopupVisible = () => {
-      setIsPopupVisible(!isPopupVisible);
+    const openMenuPopup = () => {
+      dispatch(formStateHandleFieldChange({ fields: { headerMenuOpen: true }, }));
     };
+
     const handleBillwiseClick = useCallback(async () => {
       try {
         // 1. Check if ledger is billwise applicable
@@ -161,6 +160,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
         console.error("Error in Billwise Click", err);
       }
     }, [formState, dispatch]);
+
     useEffect(() => {
       function handleClickOutside(event: MouseEvent) {
         if (
@@ -169,7 +169,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
           buttonRef.current &&
           !buttonRef.current.contains(event.target as Node)
         ) {
-          closePopupVisible();
+          closeMenuPopup();
         }
       }
       document.addEventListener("mousedown", handleClickOutside);
@@ -296,13 +296,13 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
           <div className="relative">
             <button
               ref={buttonRef}
-              onClick={togglePopupVisible}
+              onClick={openMenuPopup}
               className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3  rounded-md hover:bg-gray-200 transition-colors`}
               title={t("more")}>
               <EllipsisVertical className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
             </button>
 
-            {isPopupVisible && (
+            {formState.headerMenuOpen && (
               <div
                 ref={popupRef}
                 className="absolute rounded-lg bg-white dark:bg-[#1f2937] text-black dark:text-[#f3f4f6] shadow-xl border border-[#e5e7eb] dark:border-[#374151] p-2 z-50 backdrop-blur-sm"
@@ -386,11 +386,14 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                       </li>
                     )}
 
-                    {   ["PI","GRN"].includes(formState.transaction.master.voucherType) && (
+                    {["PI", "GRN"].includes(formState.transaction.master.voucherType) && (
                       <li>
                         <button
                           className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fff1f2] hover:text-[#be123c] dark:hover:bg-[#8813374d] dark:hover:text-[#fda4af] transition-all duration-200 rounded-md group text-left"
-                          onClick={(e) => { setIsPendingOrderOpen({ open: true, type: "PO" })}}>
+                          onClick={(e) => {
+                            closeMenuPopup();
+                            setIsPendingOrderOpen({ open: true, type: "PO" })
+                          }}>
                           <div className="w-8 h-8 bg-[#ffe4e6] dark:bg-[#8813374d] rounded-full flex items-center justify-center group-hover:bg-[#fecdd3] dark:group-hover:bg-[#88133799] group-hover:scale-110 transition-all duration-200">
                             <ShoppingCart className="h-4 w-4 text-[#be123c] dark:text-[#fda4af]" />
                           </div>
@@ -400,12 +403,15 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                     )}
 
                     {
-                    formState.transaction.master.voucherType == 'PI' &&
+                      formState.transaction.master.voucherType == 'PI' &&
                       (
                         <li>
                           <button
                             className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fefce8] hover:text-[#a16207] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047] transition-all duration-200 rounded-md group text-left"
-                            onClick={(e) => setIsPendingOrderOpen({ open: true, type: "GRN" })}>
+                            onClick={(e) => {
+                              closeMenuPopup();
+                              setIsPendingOrderOpen({ open: true, type: "GRN" })
+                            }}>
                             <div className="w-8 h-8 bg-[#fef3c7] dark:bg-[#78350f4d] rounded-full flex items-center justify-center group-hover:bg-[#fde68a] dark:group-hover:bg-[#78350fcc] group-hover:scale-110 transition-all duration-200">
                               <Package className="h-4 w-4 text-[#a16207] dark:text-[#fde047]" />
                             </div>
@@ -417,12 +423,15 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
 
 
                     {
-                    ["PO",VoucherType.PurchaseQuotation].includes(formState.transaction.master.voucherType) && 
+                      ["PO", VoucherType.PurchaseQuotation].includes(formState.transaction.master.voucherType) &&
                       (
                         <li>
                           <button
                             className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fefce8] hover:text-[#a16207] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047] transition-all duration-200 rounded-md group text-left"
-                            onClick={(e) => setIsPendingOrderOpen({ open: true, type: "POC" })}>
+                            onClick={(e) => {
+                              closeMenuPopup();
+                              setIsPendingOrderOpen({ open: true, type: "POC" })
+                            }}>
                             <div className="w-8 h-8 bg-[#fef3c7] dark:bg-[#78350f4d] rounded-full flex items-center justify-center group-hover:bg-[#fde68a] dark:group-hover:bg-[#78350fcc] group-hover:scale-110 transition-all duration-200">
                               <Package className="h-4 w-4 text-[#a16207] dark:text-[#fde047]" />
                             </div>
@@ -430,12 +439,15 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                           </button>
                         </li>
                       )}
-                    {["PO"].includes(formState.transaction.master.voucherType) && 
+                    {["PO"].includes(formState.transaction.master.voucherType) &&
                       (
                         <li>
                           <button
                             className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fefce8] hover:text-[#a16207] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047] transition-all duration-200 rounded-md group text-left"
-                            onClick={(e) => setIsPendingOrderOpen({ open: true, type: "PQ" })}>
+                            onClick={(e) => {
+                              closeMenuPopup();
+                              setIsPendingOrderOpen({ open: true, type: "PQ" })
+                            }}>
                             <div className="w-8 h-8 bg-[#fef3c7] dark:bg-[#78350f4d] rounded-full flex items-center justify-center group-hover:bg-[#fde68a] dark:group-hover:bg-[#78350fcc] group-hover:scale-110 transition-all duration-200">
                               <Package className="h-4 w-4 text-[#a16207] dark:text-[#fde047]" />
                             </div>
@@ -446,7 +458,10 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                     <li>
                       <button
                         className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#ecfeff] hover:text-[#0e7490] dark:hover:bg-[#164e634d] dark:hover:text-[#67e8f9] transition-all duration-200 rounded-md group text-left"
-                        onClick={onChooseTemplate}>
+                        onClick={(e) => {
+                          closeMenuPopup()
+                          onChooseTemplate()
+                        }}>
                         <div className="w-8 h-8 bg-[#cffafe] dark:bg-[#164e634d] rounded-full flex items-center justify-center group-hover:bg-[#a5f3fc] dark:group-hover:bg-[#164e6399] group-hover:scale-110 transition-all duration-200">
                           <Download className="h-4 w-4 text-[#0e7490] dark:text-[#67e8f9]" />
                         </div>
@@ -456,7 +471,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
 
                     <li>
                       <button
-                        className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#ecfdf5] hover:text-[#047857] dark:hover:bg-[#064e3b4d] dark:hover:text-[#6ee7b7] transition-all duration-200 rounded-md group text-left">
+                        className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#ecfdf5] hover:text-[#047857] dark:hover:bg-[#064e3b4d] dark:hover:text-[#6ee7b7] transition-all duration-200 rounded-md group text-left" onClick={(e) => { closeMenuPopup(); }}>
                         <div className="w-8 h-8 bg-[#d1fae5] dark:bg-[#065f46]/30 rounded-full flex items-center justify-center group-hover:bg-[#a7f3d0] dark:group-hover:bg-[#065f46]/50 group-hover:scale-110 transition-all duration-200">
                           <Upload className="h-4 w-4 text-[#065f46] dark:text-[#6ee7b7]" />
                         </div>
@@ -473,7 +488,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                     <li>
                       <button
                         className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-lime-50 hover:text-lime-800 dark:hover:bg-lime-900/30 dark:hover:text-lime-300 transition-all duration-200 rounded-md group text-left"
-                        onClick={() => {/* Add your print barcode handler here */ }}>
+                        onClick={() => { closeMenuPopup() }}>
                         <div className="w-8 h-8 bg-lime-100 dark:bg-lime-900/30 rounded-full flex items-center justify-center group-hover:bg-lime-200 dark:group-hover:bg-lime-900/50 group-hover:scale-110 transition-all duration-200">
                           <Printer className="h-4 w-4 text-lime-800 dark:text-lime-300" />
                         </div>
@@ -485,7 +500,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                       <li>
                         <button
                           className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f5f3ff] hover:text-[#6d28d9] dark:hover:bg-[#4c1d954d] dark:hover:text-[#ddd6fe] transition-all duration-200 rounded-md group text-left"
-                          // onClick={handlePrint}
+                          onClick={() => { closeMenuPopup() }}
                           disabled={formState.transactionLoading}
                         >
                           <div className="w-8 h-8 bg-[#ede9fe] dark:bg-[#4c1d954d] rounded-full flex items-center justify-center group-hover:bg-[#ddd6fe] dark:group-hover:bg-[#4c1d9599] group-hover:scale-110 transition-all duration-200">
@@ -499,7 +514,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                       <li>
                         <button
                           className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f5f3ff] hover:text-[#6d28d9] dark:hover:bg-[#4c1d954d] dark:hover:text-[#ddd6fe] transition-all duration-200 rounded-md group text-left"
-                          onClick={handleBillwiseClick}
+                          onClick={() => { closeMenuPopup(); handleBillwiseClick() }}
                           disabled={formState.transactionLoading}
                         >
                           <div className="w-8 h-8 bg-[#ede9fe] dark:bg-[#4c1d954d] rounded-full flex items-center justify-center group-hover:bg-[#ddd6fe] dark:group-hover:bg-[#4c1d9599] group-hover:scale-110 transition-all duration-200">
@@ -604,37 +619,37 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                   </ul>
                 </nav>
 
-               
+
               </div>
             )}
           </div>
- {/* Modals */}
-                {isPendingOrderOpen && isPendingOrderOpen.open &&
-                  <ERPModal
-                    isOpen={isPendingOrderOpen.open}
-                    closeModal={() => setIsPendingOrderOpen({ open: false, type: "" })}
-                    title={t("pending_order")}
-                    width={800}
-                    height={780}
-                    content={
-                      <PendingOrderList
-                      partyLedgerID={formState.transaction.master.ledgerID}
-                      branchID={formState.transaction.master.fromWarehouseID}
-                      formType={formState.transaction.master.voucherForm??""}
+          {/* Modals */}
+          {isPendingOrderOpen && isPendingOrderOpen.open &&
+            <ERPModal
+              isOpen={isPendingOrderOpen.open}
+              closeModal={() => setIsPendingOrderOpen({ open: false, type: "" })}
+              title={t("pending_order")}
+              width={800}
+              height={780}
+              content={
+                <PendingOrderList
+                  partyLedgerID={formState.transaction.master.ledgerID}
+                  branchID={formState.transaction.master.fromWarehouseID}
+                  formType={formState.transaction.master.voucherForm ?? ""}
 
-                        closeModal={() => setIsPendingOrderOpen({ open: false, type: "" })}
-                        t={t}
-                        voucherType={isPendingOrderOpen.type}
-                        onProcessSelected={onProcessSelected}
-                      />
-                    }
-                  />
-                }
+                  closeModal={() => setIsPendingOrderOpen({ open: false, type: "" })}
+                  t={t}
+                  voucherType={isPendingOrderOpen.type}
+                  onProcessSelected={onProcessSelected}
+                />
+              }
+            />
+          }
           {/* Previous Page Button */}
           {!phone && (
             <div className="relative">
               <button
-                onClick={(e) => {  e.preventDefault(); goToPreviousPage() }}
+                onClick={(e) => { e.preventDefault(); goToPreviousPage() }}
                 className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
                 title={t("previous_page")}>
                 <X className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />

@@ -53,8 +53,7 @@ export interface TransactionData {
   masterValidations?: TransactionValidationsData;
   details: TransactionDetail[];
   invAccTransactions: InvAccTransaction[];
-  attachments: any[];
-  billWiseString:string;
+  attachments: any[]
 }
 
 export interface InvAccTransaction {
@@ -206,6 +205,8 @@ export interface TransactionMaster {
   prevTransDate: string;
   oldLedgerID: number;
   dueDays: number;
+  billWiseString: string;
+  accTransactionDetailIDForBillwise:number;
   master2: TransactionMaster2
   master3: TransactionMaster3
 }

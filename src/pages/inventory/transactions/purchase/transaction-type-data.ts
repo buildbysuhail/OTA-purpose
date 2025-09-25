@@ -192,6 +192,8 @@ export const TransactionMasterInitialData: TransactionMaster = {
   oldLedgerID: 0,
   dueDays: 0,
   gRNMasterID: 0,
+  billWiseString:"",
+  accTransactionDetailIDForBillwise:0,
   master2: initialInvTransactionMaster2,
   master3: TransactionMaster3InitialData
 }
@@ -302,8 +304,7 @@ export const transactionInitialData: TransactionData = {
   })),
   attachments: [],
   masterValidations: initialTransactionMasterValidations,
-  invAccTransactions: [],
-  billWiseString:''
+  invAccTransactions: []
 };
 
 export const initialFormElements: { [key: string]: FormElementState } = {

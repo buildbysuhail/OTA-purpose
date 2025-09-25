@@ -46,7 +46,7 @@ import ERPPreviousUrlButton from "../../../components/ERPComponents/erp-previous
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useAccTransaction } from "./use-acc-transaction";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
-import BillWisePopup from "./billwise-popup";
+import BillWisePopup from "../../transaction-base/billwise-popup";
 import CustomerDetailsSidebar from "../../transaction-base/customer-details";
 import { isNullOrUndefinedOrZero } from "../../../utilities/Utils";
 import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";

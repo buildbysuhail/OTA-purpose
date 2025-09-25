@@ -574,6 +574,10 @@ export interface TransactionFormState {
   documentModal:boolean;
   pendingOrdListMasterIDs?:string;
   pendingOrdListBranchIDs?:string;
+  billwiseData?: BillwiseData[];
+    billwiseDrCr?: string;
+    showbillwise?: boolean;
+    ledgerBillWiseLoading?: boolean;
 }
 interface loadingResult {
   isLoading: boolean;
@@ -824,4 +828,25 @@ export interface UnitByBatchDetailsDto {
   multiFactor?: string;
   unitDescription?: string;
   decimalPoints?: number;
+}
+export interface BillwiseData {
+  accTransactionDetailID: number;
+  adjustedAmount: number;
+  amount: number;
+  balance: number;
+  balanceAfter: number;
+  billWiseMasterID: number;
+  billwiseAmount: number;
+  drCr: "Dr" | "Cr"; // Enum-like string values for debit or credit
+  financialYearID: number;
+  formType: string;
+  ledgerID: number;
+  partyName: string;
+  referenceDate: string; // ISO date string
+  referenceNumber: string;
+  slNo: number;
+  transactionDate: string; // ISO date string
+  voucherNumber: number;
+  voucherPrefix: string;
+  voucherType: string;
 }

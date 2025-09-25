@@ -102,6 +102,7 @@ import { BusinessType } from "../../../../enums/business-types";
 import MemoEditorModal from "./memo-editor";
 import { getStorageString } from "../../../../utilities/storage-utils";
 import { getApLocalData, getApLocalDataByUrl } from "../../../../redux/cached-urls";
+import BillWisePopup from "../../../transaction-base/billwise-popup";
 interface BilledItem {
   id?: number;
   name: string;
@@ -2377,7 +2378,49 @@ debugger;
           t={t}
         />
       )}
-      
+      {formState.showbillwise == true &&
+        formState.billwiseData != undefined &&
+        formState.billwiseData != null &&
+        formState.billwiseData.length > 0 &&
+        formState.billwiseDrCr != undefined &&
+        formState.billwiseDrCr != null &&
+        formState.billwiseDrCr != "" && (
+          <ERPModal
+            isOpen={formState.showbillwise ?? false}
+            title={t("billwise")}
+            initialMaximize={
+              formState?.userConfig?.maximizeBillwiseScreenInitially
+            }
+            closeModal={() => {
+              dispatch(
+                formStateHandleFieldChange({
+                  fields: { showbillwise: false, billwiseData: [] },
+                })
+              );
+            }}
+            isForm={true}
+            width={1200}
+            height={800}
+            content={
+              <BillWisePopup
+                drCr={formState.billwiseDrCr}
+                onSave={(
+                  billwiseDetails: string,
+                  totalAmount: number,
+                  vrNumbers: string,
+                  fromAutoPost: boolean
+                ) => {
+                  if (
+                    applicationSettings.accountsSettings?.billwiseMandatory &&
+                    billwiseDetails != ""
+                  ) {
+                   
+                }
+                }}
+              />
+            }
+          />
+        )}
     </>
   );
 };

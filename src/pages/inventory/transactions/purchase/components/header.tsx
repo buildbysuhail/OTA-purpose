@@ -1,6 +1,6 @@
-import { VoucherElementProps, } from "../../purchase/transaction-types";
+import { BillwiseData, VoucherElementProps, } from "../../purchase/transaction-types";
 import { formStateHandleFieldChange } from "../../purchase/reducer";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import React from "react";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import ERPModal from "../../../../../components/ERPComponents/erp-modal";
@@ -13,6 +13,8 @@ import ERPFileUploadButton from "../../../../../components/ERPComponents/erp-fil
 import VoucherType from "../../../../../enums/voucher-types";
 import { useAppState } from "../../../../../utilities/hooks/useAppState";
 import { u } from "framer-motion/dist/types.d-6pKw1mTI";
+import Urls from "../../../../../redux/urls";
+import { APIClient } from "../../../../../helpers/api-client";
 
 interface HeaderProps extends VoucherElementProps {
   loadTemporaryRows: () => Promise<void>;
@@ -57,6 +59,8 @@ const useMediaQuery = (query: string) => {
   return matches;
 };
 
+
+
 const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
   (
     {
@@ -89,6 +93,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
     }, ref) => {
     const [isPopupVisible, setIsPopupVisible] = useState(false);
     const { appState } = useAppState();
+    const  applicationSettings  = useSelector((state: RootState) => state.ApplicationSettings);
     const isRtl = appState.locale.rtl;
     const popupRef = useRef<HTMLDivElement | null>(null);
     const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -109,7 +114,53 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
     const togglePopupVisible = () => {
       setIsPopupVisible(!isPopupVisible);
     };
+    const handleBillwiseClick = useCallback(async () => {
+      try {
+        // 1. Check if ledger is billwise applicable
+        const isBillwise = formState.ledgerData.billwiseApplicable;
 
+        if (isBillwise) {
+          let billwiseStr = formState.transaction.master.billWiseString;
+
+          // 2. Fetch transaction details for billwise
+          const accTransactionDetailId =
+            formState.transaction.master.accTransactionDetailIDForBillwise;
+
+          try {
+            const api = new APIClient();
+            const billwise = await api.getAsync(
+              `${Urls.inv_transaction_base}BillwiseMaster/?LedgerId=${formState.transaction.master.ledgerID}&DrCr=Dr&AccTransactionDetailID=${accTransactionDetailId}`
+            );
+
+            if (accTransactionDetailId > 0) {
+              billwise.map((x: BillwiseData) => ({
+                ...x,
+                balanceAfter: x.balance - x.billwiseAmount,
+              }));
+            }
+
+            setTimeout(() => {
+              dispatch(
+                formStateHandleFieldChange({
+                  fields: {
+                    billwiseData: billwise,
+                    ledgerBillWiseLoading: false,
+                    showbillwise: true,
+                    billwiseDrCr: "Dr",
+                  },
+                })
+              );
+            }, 0);
+          } catch (err) {
+            console.error("Error opening Billwise form", err);
+          }
+        } else {
+          alert("Please check selected party is bill wise or not.");
+        }
+      } catch (err) {
+        console.error("Error in Billwise Click", err);
+      }
+    }, [formState, dispatch]);
     useEffect(() => {
       function handleClickOutside(event: MouseEvent) {
         if (
@@ -441,6 +492,20 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                             <Printer className="h-4 w-4 text-[#6d28d9] dark:text-[#ddd6fe]" />
                           </div>
                           <span className="font-medium">{t("grn_print")}</span>
+                        </button>
+                      </li>
+                    )}
+                    {formState.transaction.master.voucherType === 'PR' && applicationSettings.accountsSettings.maintainBillwiseAccount && (
+                      <li>
+                        <button
+                          className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f5f3ff] hover:text-[#6d28d9] dark:hover:bg-[#4c1d954d] dark:hover:text-[#ddd6fe] transition-all duration-200 rounded-md group text-left"
+                          onClick={handleBillwiseClick}
+                          disabled={formState.transactionLoading}
+                        >
+                          <div className="w-8 h-8 bg-[#ede9fe] dark:bg-[#4c1d954d] rounded-full flex items-center justify-center group-hover:bg-[#ddd6fe] dark:group-hover:bg-[#4c1d9599] group-hover:scale-110 transition-all duration-200">
+                            <Printer className="h-4 w-4 text-[#6d28d9] dark:text-[#ddd6fe]" />
+                          </div>
+                          <span className="font-medium">{t("bill_wise")}</span>
                         </button>
                       </li>
                     )}

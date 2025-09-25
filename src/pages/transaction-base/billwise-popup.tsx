@@ -1,24 +1,24 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Toolbar } from "devextreme-react";
 import { Item } from "devextreme-react/cjs/data-grid";
-import { RootState } from "../../../redux/store";
-import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
+import { RootState } from "../../redux/store";
+import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { useDispatch } from "react-redux";
 import _cloneDeep from "lodash/cloneDeep";
-import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
+import ERPCheckbox from "../../components/ERPComponents/erp-checkbox";
 import { CheckCircle2 } from "lucide-react";
-import ERPButton from "../../../components/ERPComponents/erp-button";
-import ERPDevGrid, { SummaryConfig } from "../../../components/ERPComponents/erp-dev-grid";
+import ERPButton from "../../components/ERPComponents/erp-button";
+import ERPDevGrid, { SummaryConfig } from "../../components/ERPComponents/erp-dev-grid";
 import { Card, CardContent } from "@mui/material";
-import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
-import { accFormStateHandleFieldChange, accFormStateRowHandleFieldChange, accFormStateTransactionMasterHandleFieldChange } from "./reducer";
-import VoucherType from "../../../enums/voucher-types";
-import { isNullOrUndefinedOrEmpty } from "../../../utilities/Utils";
-import { APIClient } from "../../../helpers/api-client";
-import profile from "../../../assets/images/faces/profile-circle.512x512.png";
-import { BillwiseData } from "./acc-transaction-types";
-import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
-import { DevGridColumn } from "../../../components/types/dev-grid-column";
+import ERPAlert from "../../components/ERPComponents/erp-sweet-alert";
+import { accFormStateHandleFieldChange, accFormStateRowHandleFieldChange, accFormStateTransactionMasterHandleFieldChange } from "../accounts/transactions/reducer";
+import VoucherType from "../../enums/voucher-types";
+import { isNullOrUndefinedOrEmpty } from "../../utilities/Utils";
+import { APIClient } from "../../helpers/api-client";
+import profile from "../../../../assets/images/faces/profile-circle.512x512.png";
+import { BillwiseData } from "../accounts/transactions/acc-transaction-types";
+import { useNumberFormat } from "../../utilities/hooks/use-number-format";
+import { DevGridColumn } from "../../components/types/dev-grid-column";
 import { useTranslation } from "react-i18next";
 
 interface BillwiseProps {

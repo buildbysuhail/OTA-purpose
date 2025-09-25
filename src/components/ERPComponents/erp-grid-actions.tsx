@@ -23,6 +23,7 @@ type DeleteActionType = {
   confirmationMessage?: string;
   action?: () => void;
   onSuccess?: () => void;
+  postData?: any;
 };
 
 const defaultActionType: ActionType = {
@@ -68,7 +69,13 @@ const ERPGridActions: React.FC<ERPGridActionsProps> = ({
       if (deleteAction.action) {
          deleteAction.action();
       } else if (deleteAction.url) {
-        let res = await api.delete(`${deleteAction.url}${deleteAction.key || itemId}`);
+        let res;
+        if((deleteAction.postData)){
+                 res = await api.delete(`${deleteAction.url}`,{data: deleteAction.postData});
+        }else{
+               res = await api.delete(`${deleteAction.url}${deleteAction.key || itemId}`);
+        }
+  
         handleResponse(res, () => { deleteAction.onSuccess && deleteAction.onSuccess() });
       }
     } catch (error) {

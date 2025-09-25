@@ -664,8 +664,13 @@ const TransactionGrid: React.FC<{
                 confirmationRequired: true,
                 confirmationMessage:
                   "Are you sure you want to delete this transaction?",
-                url: `/Accounts/${transactionType}/`,
+                url: `${urls.inv_transaction_base}${transactionType}/`,
                 key: cellElement?.data?.invTransactionMasterID,
+                postData:{
+                invTransactionMasterID:
+                  cellElement?.data?.invTransactionMasterID,
+                transactionType: transactionType,
+              }
               }}
             />
           );

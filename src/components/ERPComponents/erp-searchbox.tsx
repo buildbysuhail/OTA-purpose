@@ -77,6 +77,7 @@ interface InputProps {
   ) => void;
   customStyle?: inputBox;
   appState?: any;
+  showInputSymbol?:boolean;
 }
 
 interface LoadResult {
@@ -225,11 +226,10 @@ const createBatchStore = async (productID: string, warehouseId: number, batchDat
     },
   });
 };
-export type ERPProductSearchHandle = {
-  focus: () => void;
-  clear: () => void;
-};
-const ERPProductSearch = forwardRef<ERPProductSearchHandle, InputProps>(
+
+
+
+const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
   (
     {
       className,
@@ -264,6 +264,7 @@ const ERPProductSearch = forwardRef<ERPProductSearchHandle, InputProps>(
       textAlign,
       customStyle,
       appState,
+      showInputSymbol = true,
       ...rest
     },
     ref
@@ -452,12 +453,8 @@ const ERPProductSearch = forwardRef<ERPProductSearchHandle, InputProps>(
     const batchGridRef = useRef<any>(null);
     const productIDRef = useRef<number | undefined>(undefined);
     const gridContainerRef = useRef<HTMLDivElement>(null);
-    const inputRef = useRef<HTMLInputElement>(null);
-    
-     useImperativeHandle(ref, () => ({
-      focus: () => inputRef.current?.focus(),
-      clear: () => { if (inputRef.current) inputRef.current.value = ""; },
-    }));
+    const internalRef = useRef<HTMLInputElement>(null);
+    const inputRef = ref || internalRef;
 
     const dispatch = useDispatch();
     const portalContainerRef = useRef<HTMLElement | null>(null);
@@ -475,14 +472,6 @@ const ERPProductSearch = forwardRef<ERPProductSearchHandle, InputProps>(
       onApplyPreferences: onApplyProductPreferences,
       gridCols: productGridCol,
     } = usePreferenceData(productColumns, productGridId);
-
-// const stableProductColumns = useMemo(() => computeColumns(), []);
-// const stableGridId = useMemo(() => computeGridId(), []);
-
-// const { onApplyPreferences: onApplyProductPreferences, gridCols: productGridCol } =
-//   usePreferenceData(stableProductColumns, stableGridId);
-
-
 
     // Use the hook for batch grid preferences
     const {
@@ -568,7 +557,6 @@ const ERPProductSearch = forwardRef<ERPProductSearchHandle, InputProps>(
       }
       return { top: 0, left: 0, width: "100%" };
     }, [inputRef]);
-
     const debouncedFetch = useMemo(
       () =>
         debounce(async (value: string, byCode: boolean) => {
@@ -1046,6 +1034,7 @@ const ERPProductSearch = forwardRef<ERPProductSearchHandle, InputProps>(
         maxWidth: "800px",
         minHeight: "200px",
         maxHeight: "400px",
+        zIndex: 9999,
         // conditionally assign left or right
         ...(direction === "rtl"
           ? { right: `${right}px`, left: undefined }
@@ -1227,12 +1216,12 @@ const ERPProductSearch = forwardRef<ERPProductSearchHandle, InputProps>(
               }}
               focused={showProductGrid } // || batchInitialized
             />
-            {productInitialized &&(
+              {productInitialized && showInputSymbol &&(
               <div className="absolute inset-0 flex items-center px-3 pointer-events-none">
                 <span className="invisible">{inputValue.searchValue}</span>
-                <span className="animate-blink text-black">|</span>
+                <span className="animate-blink text-black">|A</span>
               </div>
-              )}
+              )}                   
           </div>
           {showCheckBox && (
             <ERPCheckbox

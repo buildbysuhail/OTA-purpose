@@ -15,7 +15,7 @@ import { accFormStateHandleFieldChange, accFormStateRowHandleFieldChange, accFor
 import VoucherType from "../../enums/voucher-types";
 import { isNullOrUndefinedOrEmpty } from "../../utilities/Utils";
 import { APIClient } from "../../helpers/api-client";
-import profile from "../../../../assets/images/faces/profile-circle.512x512.png";
+import profile from "../../assets//images/faces/profile-circle.512x512.png";
 import { BillwiseData } from "../accounts/transactions/acc-transaction-types";
 import { useNumberFormat } from "../../utilities/hooks/use-number-format";
 import { DevGridColumn } from "../../components/types/dev-grid-column";

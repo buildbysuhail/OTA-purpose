@@ -1203,8 +1203,11 @@ export const useTransactionHelper = (transactionType: string) => {
         }
         
         // Special handling for GRN type
-        if (loadType === "PO") {
+        if (loadType === "PO" ) {
           detail.poTransDetailsID = row.invTransactionDetailID
+          detail.poTransDetailsIDTag = row.pendingQty
+        }
+        if (loadType === "PO") {
           detail.poTransDetailsIDTag = row.pendingQty
         }
 

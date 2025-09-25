@@ -769,7 +769,7 @@ console.log(itemInfo);
               </div>
               <div>
                 <div className="text-sm font-medium text-gray-900">
-                  {formState.ledgerData.partyName}
+                  {formState.ledgerData?.partyName}
                 </div>
                 <div className="flex items-center gap-1">
                   <span className="font-medium">

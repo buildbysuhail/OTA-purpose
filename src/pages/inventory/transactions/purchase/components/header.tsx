@@ -129,7 +129,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
           try {
             const api = new APIClient();
             const billwise = await api.getAsync(
-              `${Urls.inv_transaction_base}BillwiseMaster/?LedgerId=${formState.transaction.master.ledgerID}&DrCr=Dr&AccTransactionDetailID=${accTransactionDetailId}`
+              `${Urls.inv_transaction_base}${formState.transactionType}/BillwiseMaster/?LedgerId=${formState.transaction.master.ledgerID}&DrCr=Dr&AccTransactionDetailID=${accTransactionDetailId}`
             );
 
             if (accTransactionDetailId > 0) {

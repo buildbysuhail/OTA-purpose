@@ -20,7 +20,7 @@ import { ProductMultiUnitsIndiaRef } from "./product-multi-units-india";
 import { toggleProductCategory, toggleProductGroup, toggleTaxCategoryIndia, toggleUnitOfMeasure, } from "../../../../../redux/slices/popup-reducer";
 import { useRootState } from "../../../../../utilities/hooks/useRootState";
 import { ProductGroupManage } from "../../product-group/product-group-manage";
-import ERPProductSearch from "../../../../../components/ERPComponents/erp-searchbox";
+import ERPProductSearch, { ERPProductSearchHandle } from "../../../../../components/ERPComponents/erp-searchbox";
 import { UnitOfMeasureManage } from "../../unit-of-meassure/unit-of-measure-manage";
 import { TaxCategoryManageIndia } from "../../tax-category-india/tax-category-manage-india";
 import { ProductCategoryManage } from "../../product-category/product-category-manage";
@@ -58,8 +58,9 @@ export const ProductManageIndia: React.FC<{
     const salesPriceRef = useRef<HTMLInputElement>(null);
     const mrpRef = useRef<HTMLInputElement>(null);
     const markupRef = useRef<HTMLInputElement>(null);
-    const productSearchRef = useRef<HTMLInputElement>(null);
     const productCategoryRef = useRef<HTMLInputElement>(null);
+    const productSearchRef = useRef<ERPProductSearchHandle>(null);
+
     useEffect(() => {
       const fetchData = async () => {
         const prev = getFieldProps("*");

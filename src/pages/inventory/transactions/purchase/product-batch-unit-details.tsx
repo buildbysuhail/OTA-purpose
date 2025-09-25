@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import Urls from "../../../../redux/urls";
@@ -7,18 +7,15 @@ import { RootState } from "../../../../redux/store";
 import { ActionType } from "../../../../redux/types";
 import { useAppState } from "../../../../utilities/hooks/useAppState";
 import { Maximize2, Minimize2, X } from "lucide-react";
+import { APIClient } from "../../../../helpers/api-client";
 
 interface ProductBatchUnitDetailsProps {
   isOpen: boolean;
   onClose: () => void;
   t: (key: string) => string;
 }
-
-const ProductBatchUnitDetails: React.FC<ProductBatchUnitDetailsProps> = ({
-  isOpen,
-  onClose,
-  t,
-}) => {
+const api = new APIClient()
+const ProductBatchUnitDetails: React.FC<ProductBatchUnitDetailsProps> = ({ isOpen, onClose, t, }) => {
   // const [showSelectedPartyOnly, setShowSelectedPartyOnly] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const formState = useSelector((state: RootState) => state.InventoryTransaction);
@@ -28,21 +25,11 @@ const ProductBatchUnitDetails: React.FC<ProductBatchUnitDetailsProps> = ({
   const isLargeScreen = window.innerWidth >= 1000;
   const headerLeft = isLargeScreen ? sidebarWidth : "0";
   const gridHeight = isExpanded ? "750px" : "290px";
-
   const batchUnitColumns: DevGridColumn[] = [
-    {
-      dataField: "cost",
-      caption: t('cost_lc'),
-      dataType: "number",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 57,
-    },
     {
       dataField: "autoBarcode",
       caption: t("auto_barcode"),
-      dataType: "string",
+      dataType: "number",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -50,59 +37,13 @@ const ProductBatchUnitDetails: React.FC<ProductBatchUnitDetailsProps> = ({
       width: 100,
     },
     {
-      dataField: "unit",
-      caption: t("unit"),
-      dataType: "string",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 52,
-    },
-    {
-      dataField: "dealing",
-      caption: t("dealing"),
+      dataField: "unitCode",
+      caption: t("unit_code"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
       width: 60,
-    },
-    {
-      dataField: "salesPrice",
-      caption: t("sales_price"),
-      dataType: "number",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 70,
-    },
-    {
-      dataField: "convFac2",
-      caption: t("conv_fac2"),
-      dataType: "number",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 66,
-    },
-    {
-      dataField: "convFac",
-      caption: t("conv_fac"),
-      dataType: "number",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 66,
-    },
-    {
-      dataField: "minPrice",
-      caption: t("min_price"),
-      dataType: "number",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      visible: false,
-      width: 100,
     },
     {
       dataField: "unitName",
@@ -115,9 +56,76 @@ const ProductBatchUnitDetails: React.FC<ProductBatchUnitDetailsProps> = ({
       width: 100,
     },
     {
+      dataField: "convFac",
+      caption: t("conv_fac"),
+      dataType: "number",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 70,
+    },
+    {
+      dataField: "salesPrice",
+      caption: t("sales_price"),
+      dataType: "number",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 70,
+    },
+    {
+      dataField: "minPrice",
+      caption: t("min_price"),
+      dataType: "number",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      visible: false,
+      width: 100,
+    },
+    {
+      dataField: "cost",
+      caption: t('cost'),
+      dataType: "number",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 70,
+    },
+    {
+      dataField: "lpr",
+      caption: t("lpr"),
+      dataType: "number",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      visible: false,
+      width: 70,
+    },
+    {
+      dataField: "lpc",
+      caption: t("lpc"),
+      dataType: "number",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      visible: false,
+      width: 70,
+    },
+    {
       dataField: "unitRemarks",
       caption: t("unit_remarks"),
       dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      visible: false,
+      width: 70,
+    },
+    {
+      dataField: "convFac2",
+      caption: t("conv_fac2"),
+      dataType: "number",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -131,19 +139,20 @@ const ProductBatchUnitDetails: React.FC<ProductBatchUnitDetailsProps> = ({
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      visible: false,
-      width: 72,
-    },
-    {
-      dataField: "lpr",
-      caption: t("lpr"),
-      dataType: "number",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 70,
+      width: 100,
     },
   ];
+  
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      if (formState.currentCell?.data?.productBatchID) {
+        const res = await api.getAsync(`${Urls.inv_transaction_base}${formState.transactionType}/UnitPriceDetails/?productBatchId=${formState.currentCell?.data?.productBatchID}&isUnitDetails=true`);
+        setData(res);
+      }
+    };
+    fetchData();
+  }, [formState.currentCell?.data?.productBatchID]);
 
   if (!isOpen) return null;
 
@@ -197,14 +206,12 @@ const ProductBatchUnitDetails: React.FC<ProductBatchUnitDetailsProps> = ({
           <div style={scrollAreaStyle}>
             <div className="mt-4" style={{ height: gridHeight }}>
               <ErpDevGrid
-                key={`batch-unit-grid-${isExpanded}`}
+                // key={`batch-unit-grid-${isExpanded}`}
                 columns={batchUnitColumns}
-                dataUrl={`${Urls.inv_transaction_base}${formState.transactionType}/UnitPriceDetails/`}
+                data={data}
                 method={ActionType.GET}
-                postData={{
-                  productBatchId: formState.currentCell?.data?.productBatchID,
-                  isUnitDetails: true,
-                }}
+
+
                 gridId="batchUnitDetailsGrid"
                 height={gridHeight}
                 hideGridAddButton={true}
@@ -215,7 +222,7 @@ const ProductBatchUnitDetails: React.FC<ProductBatchUnitDetailsProps> = ({
                 allowExport={false}
                 hideGridHeader={true}
                 enablefilter={false}
-                remoteOperations={false}
+                remoteOperations={{ paging: false, filtering: false, sorting: false, grouping: false, summary: false }}
                 enableScrollButton={false}
                 ShowGridPreferenceChooser={false}
                 showPrintButton={false}

@@ -25,9 +25,9 @@ type LeafDotKeys<T, D extends number = 5> =
   [D] extends [never] ? never :
   {
     [K in Extract<keyof T, string>]:
-      NonNullable<T[K]> extends object
-        ? `${K}` | `${K}.${LeafDotKeys<NonNullable<T[K]>, Prev[D]>}`
-        : `${K}`;
+    NonNullable<T[K]> extends object
+    ? `${K}` | `${K}.${LeafDotKeys<NonNullable<T[K]>, Prev[D]>}`
+    : `${K}`;
   }[Extract<keyof T, string>];
 
 export type TransactionDetailKeys = LeafDotKeys<TransactionDetail>;
@@ -206,7 +206,7 @@ export interface TransactionMaster {
   oldLedgerID: number;
   dueDays: number;
   billWiseString: string;
-  accTransactionDetailIDForBillwise:number;
+  accTransactionDetailIDForBillwise: number;
   master2: TransactionMaster2
   master3: TransactionMaster3
 }
@@ -240,8 +240,8 @@ export interface TransactionMaster2 {
   notes1: string;
   notes2: string;
 }
-export interface TransactionMaster3Validations {}
-export interface TransactionMasterValidations {}
+export interface TransactionMaster3Validations { }
+export interface TransactionMasterValidations { }
 export interface CommonParams {
   result: DeepPartial<TransactionFormState>;
   formStateHandleFieldChangeKeysOnly?: any;
@@ -570,14 +570,15 @@ export interface TransactionFormState {
   themeChangeCountdown?: number
   isInitialLedger?: boolean;
   memoEditor: { visible: boolean; data: string; rowIndex: number };
-  gridMenuPop:boolean;
-  documentModal:boolean;
-  pendingOrdListMasterIDs?:string;
-  pendingOrdListBranchIDs?:string;
+  headerMenuOpen: boolean;
+  documentModal: boolean;
+  pendingOrdListMasterIDs?: string;
+  pendingOrdListBranchIDs?: string;
+  gridMenuOpen: boolean;
   billwiseData?: BillwiseData[];
-    billwiseDrCr?: string;
-    showbillwise?: boolean;
-    ledgerBillWiseLoading?: boolean;
+  billwiseDrCr?: string;
+  showbillwise?: boolean;
+  ledgerBillWiseLoading?: boolean;
 }
 interface loadingResult {
   isLoading: boolean;

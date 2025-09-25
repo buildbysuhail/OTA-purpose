@@ -302,7 +302,8 @@ export const transactionInitialData: TransactionData = {
   })),
   attachments: [],
   masterValidations: initialTransactionMasterValidations,
-  invAccTransactions: []
+  invAccTransactions: [],
+  billWiseString:''
 };
 
 export const initialFormElements: { [key: string]: FormElementState } = {

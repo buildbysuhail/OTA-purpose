@@ -54,6 +54,7 @@ export interface TransactionData {
   details: TransactionDetail[];
   invAccTransactions: InvAccTransaction[];
   attachments: any[];
+  billWiseString:string;
 }
 
 export interface InvAccTransaction {

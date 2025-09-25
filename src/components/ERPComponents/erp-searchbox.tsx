@@ -6,6 +6,7 @@ import React, {
   useState,
   forwardRef,
   Fragment,
+  useImperativeHandle,
 } from "react";
 import { createPortal } from "react-dom";
 import { APIClient } from "../../helpers/api-client";
@@ -224,8 +225,11 @@ const createBatchStore = async (productID: string, warehouseId: number, batchDat
     },
   });
 };
-
-const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
+export type ERPProductSearchHandle = {
+  focus: () => void;
+  clear: () => void;
+};
+const ERPProductSearch = forwardRef<ERPProductSearchHandle, InputProps>(
   (
     {
       className,
@@ -448,8 +452,12 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     const batchGridRef = useRef<any>(null);
     const productIDRef = useRef<number | undefined>(undefined);
     const gridContainerRef = useRef<HTMLDivElement>(null);
-    const internalRef = useRef<HTMLInputElement>(null);
-    const inputRef = ref || internalRef;
+    const inputRef = useRef<HTMLInputElement>(null);
+    
+     useImperativeHandle(ref, () => ({
+      focus: () => inputRef.current?.focus(),
+      clear: () => { if (inputRef.current) inputRef.current.value = ""; },
+    }));
 
     const dispatch = useDispatch();
     const portalContainerRef = useRef<HTMLElement | null>(null);
@@ -467,6 +475,14 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       onApplyPreferences: onApplyProductPreferences,
       gridCols: productGridCol,
     } = usePreferenceData(productColumns, productGridId);
+
+// const stableProductColumns = useMemo(() => computeColumns(), []);
+// const stableGridId = useMemo(() => computeGridId(), []);
+
+// const { onApplyPreferences: onApplyProductPreferences, gridCols: productGridCol } =
+//   usePreferenceData(stableProductColumns, stableGridId);
+
+
 
     // Use the hook for batch grid preferences
     const {
@@ -675,6 +691,11 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
         const key = e.event?.key;
         if (!key) {
           return;
+        }
+        if (key === "ArrowLeft" || key === "ArrowRight") {
+          e.event.preventDefault();
+          e.event.propagation();
+          return
         }
 
         if (key === "Enter" || key === "NumpadEnter") {
@@ -1076,7 +1097,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
                         groupPaging: false,
                       }}
                       focusedRowEnabled={true}
-                      onFocusedRowChanged={handleProductFocusedRowChanged}
+                      // onFocusedRowChanged={handleProductFocusedRowChanged}
                       onContentReady={handleProductGridContentReady}
                       onKeyDown={handleGridKeyDown}
                       tabIndex={0}

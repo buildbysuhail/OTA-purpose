@@ -142,7 +142,7 @@ const ProductBatchUnitDetails: React.FC<ProductBatchUnitDetailsProps> = ({ isOpe
       width: 100,
     },
   ];
-  
+
   const [data, setData] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
@@ -186,7 +186,6 @@ const ProductBatchUnitDetails: React.FC<ProductBatchUnitDetailsProps> = ({ isOpe
             <h2 className="text-lg font-semibold text-gray-800">
               {t("batch_unit_details")}
             </h2>
-
             <div className="flex items-center gap-2">
               {isExpanded ? (
                 <button onClick={() => setIsExpanded(false)} className="p-2 hover:bg-gray-200 transition-all duration-300 ease-in-out rounded-md" title={t("minimize")}>
@@ -210,8 +209,6 @@ const ProductBatchUnitDetails: React.FC<ProductBatchUnitDetailsProps> = ({ isOpe
                 columns={batchUnitColumns}
                 data={data}
                 method={ActionType.GET}
-
-
                 gridId="batchUnitDetailsGrid"
                 height={gridHeight}
                 hideGridAddButton={true}

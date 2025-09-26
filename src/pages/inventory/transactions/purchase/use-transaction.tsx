@@ -774,7 +774,7 @@ debugger;
   async function validate(): Promise<boolean> {
     const master = formState.transaction.master;
     const details = formState.transaction.details;
-
+debugger;
     // Stock update restriction
     if (!formState.transaction.master.stockUpdate && (formState.transaction.master.voucherType === "PI" || formState.transaction.master.voucherType === "PR")) {
       const voucherType = formState.transaction.master.voucherType;
@@ -785,9 +785,7 @@ debugger;
         confirmButtonText: t("yes"),
         cancelButtonText: t("no"),
         showCancelButton: true,
-        onCancel: () => {
-          return false;
-        },
+       
       });
       if (!confirm) {
         return false;
@@ -1072,7 +1070,7 @@ debugger;
     );
 
     const valid = await validate();
-
+debugger;
     if (valid == true) {
       const master = attachMaster(formState);
       const attachments = formState.transaction.attachments
@@ -1186,6 +1184,15 @@ debugger;
         });
       }
 
+    }
+    else{
+       dispatch(
+      formStateHandleFieldChange({
+        fields: {
+          saving: false,
+        },
+      })
+    );
     }
   };
   const clearRow = async (isEdit: boolean, transactionMasterID: number) => {

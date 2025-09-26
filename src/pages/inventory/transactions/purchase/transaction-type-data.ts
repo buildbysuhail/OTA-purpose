@@ -658,8 +658,9 @@ export const TransactionFormStateInitialData: TransactionFormState = {
     data: "",
     rowIndex: 0
   },
-  gridMenuPop: false,
-  documentModal: false
+  documentModal: false,
+  headerMenuOpen: false,
+  gridMenuOpen: false
 }
 
 export const initialProductData: BarcodeLabel = {

@@ -438,7 +438,7 @@ debugger;
             "",
             fromAutoPost ?? false,
             updatedBills?.map(x => {return {
-              billwiseAdjAmt:x.adjustedAmount,
+              billwiseAdjAmt:x.billwiseAmount,
               adjustedTransDetailID:x.accTransactionDetailID
              }})
           );

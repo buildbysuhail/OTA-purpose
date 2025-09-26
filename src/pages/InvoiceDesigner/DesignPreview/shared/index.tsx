@@ -13,7 +13,7 @@ export interface AccountTransactionProps {
 }
 
 const SharedTemplatePreview = ({ data, template}: AccountTransactionProps) => {
-
+ 
    const headerState = template?.headerState;
   const totalState = template?.totalState;
   const propertiesState = template?.propertiesState;
@@ -27,29 +27,35 @@ const SharedTemplatePreview = ({ data, template}: AccountTransactionProps) => {
         
         {/* Main Content Container */}
         <div
-        className="z-10 relative  flex flex-col flex-grow-1 h-full w-full"
+        className=" relative  flex flex-col flex-grow-1 h-full w-full"
           style={{
             // display: "flex",
             // flexDirection: "column",
           backgroundColor: template?.propertiesState?.bg_color || "#fff",
+          //  backgroundColor: `rgb(${footerState?.customElements?.background_color ?? "255,255,255"})`,
           paddingTop: `${propertiesState?.padding?.top ?? 0}pt`,
           paddingRight: `${propertiesState?.padding?.right ?? 0}pt`,
           paddingBottom: `${propertiesState?.padding?.bottom ?? 0}pt`,
           paddingLeft: `${propertiesState?.padding?.left ?? 0}pt`,
+          backgroundImage: template?.background_image ? `url(${template?.background_image})` : "none",
+          backgroundPosition: propertiesState?.bg_image_position ?? "center", // fallback default
+          backgroundSize: propertiesState?.bg_image_objectFit ?? "fill",   
+          backgroundRepeat: "no-repeat",
+             
             // flexGrow: 1,
           }}>
           {/* Background Image */}
-          {template?.background_image && (
+          {/* {template?.background_image && (
             <img
               src={template.background_image}
                alt="Background"
-               className="absolute inset-0 w-full h-full -z-10"
+               className="absolute inset-0 w-full h-full"
               style={{
                       objectPosition: (propertiesState?.bg_image_position ?? "center") as React.CSSProperties["objectPosition"],
                       objectFit: (propertiesState?.bg_image_objectFit ?? "fill") as React.CSSProperties["objectFit"],
                     }}
             />
-          )}
+          )} */}
           {/* Content Section */}
           
 

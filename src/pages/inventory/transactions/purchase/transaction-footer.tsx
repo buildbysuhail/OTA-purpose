@@ -711,7 +711,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
 
   const dropdownContent = (
     <div className="p-2 dark:bg-dark-bg-card bg-white border border-gray-300 dark:border md:border-t md:border-r md:border-l md:border-b-0 md:rounded-t-lg rounded-lg md:rounded-none">
-      {isNewFooter ? (
+      {isNewFooter && (
         <div className="flex items-end gap-2 flex-wrap">
           {/* <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
           <PriceCategoryCombobox
@@ -814,88 +814,6 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 className={`dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text ${isNewFooter ? "h-[42px]" : ""} w-full`}
               />
             </div>
-          </div>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 items-end">
-          <div className="w-full">
-            <WarehouseID
-              formState={formState}
-              dispatch={dispatch}
-              t={t}
-              handleKeyDown={handleKeyDown}
-              handleFieldKeyDown={handleFieldKeyDown}
-            />
-          </div>
-          <div className="w-full">
-            <PriceCategoryCombobox
-              formState={formState}
-              dispatch={dispatch}
-              t={t}
-              handleKeyDown={handleKeyDown}
-              handleFieldKeyDown={handleFieldKeyDown}
-            />
-          </div>
-          <div className="w-full">
-            <CostCentreCombobox
-              formState={formState}
-              dispatch={dispatch}
-              t={t}
-              handleKeyDown={handleKeyDown}
-              handleFieldKeyDown={handleFieldKeyDown}
-            />
-          </div>
-          <div className="w-full">
-            <SupplyTypeCombobox
-              formState={formState}
-              dispatch={dispatch}
-              t={t}
-              handleKeyDown={handleKeyDown}
-              handleFieldKeyDown={handleFieldKeyDown}
-            />
-          </div>
-          <div className="w-full">
-            <AdjustmentAmountInput
-              transactionType={transactionType}
-              formState={formState}
-              dispatch={dispatch}
-              t={t}
-              handleKeyDown={handleKeyDown}
-            />
-          </div>
-          <div className="flex items-center justify-between w-full sm:flex-col sm:items-start sm:gap-2">
-            {formState.formElements.printOnSave.visible && (
-              <ERPCheckbox
-                localInputBox={formState?.userConfig?.inputBoxStyle}
-                id="printOnSave"
-                label={t(formState.formElements.printOnSave.label)}
-                checked={formState.printOnSave}
-                onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { printOnSave: e.target.checked }, }))}
-                disabled={formState.formElements.printOnSave?.disabled}
-                className="dark:text-dark-text"
-              />
-            )}
-            {/* <div className="flex gap-2 flex-wrap">
-              <AutoCalculationCheckbox
-                formState={formState}
-                dispatch={dispatch}
-                t={t}
-              />
-              <IsLockedCheckbox
-                formState={formState}
-                dispatch={dispatch}
-                t={t}
-              />
-            </div> */}
-          </div>
-          <div className="w-full sm:w-auto">
-            {applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && (
-              <button className="text-[#2563eb] dark:text-[#60a5fa] w-full text-left sm:text-center">
-                <span className="hover:underline text-[#0ea5e9] dark:text-[#60a5fa] capitalize" onClick={selectAttachment}>
-                  {t("attachment")}
-                </span>
-              </button>
-            )}
           </div>
         </div>
       )}

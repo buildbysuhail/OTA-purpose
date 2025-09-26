@@ -888,7 +888,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
         ) {
           params = new URLSearchParams(field?.params).toString();
         }
-        debugger;
+        
 
         const url = field?.getListUrlDynamic?.(data) || field?.getListUrl || "";
         if (cacheEnabled) {
@@ -925,7 +925,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
 
         let fetchWithCache = false;
         const url = field?.getListUrlDynamic?.(data) || field?.getListUrl || "";
-        debugger;
+        
         const _existsInCache = existsInCache(url)
         if (_existsInCache && reload != true) {
           fetchWithCache = true;
@@ -1263,7 +1263,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
 
       switch (event.key) {
         case "ArrowDown":
-          debugger;
+          
           event.preventDefault();
           setActiveIndex((prev) =>
             prev < filteredItems.length - 1 ? prev + 1 : 0

@@ -25,9 +25,9 @@ type LeafDotKeys<T, D extends number = 5> =
   [D] extends [never] ? never :
   {
     [K in Extract<keyof T, string>]:
-      NonNullable<T[K]> extends object
-        ? `${K}` | `${K}.${LeafDotKeys<NonNullable<T[K]>, Prev[D]>}`
-        : `${K}`;
+    NonNullable<T[K]> extends object
+    ? `${K}` | `${K}.${LeafDotKeys<NonNullable<T[K]>, Prev[D]>}`
+    : `${K}`;
   }[Extract<keyof T, string>];
 
 export type TransactionDetailKeys = LeafDotKeys<TransactionDetail>;
@@ -53,7 +53,7 @@ export interface TransactionData {
   masterValidations?: TransactionValidationsData;
   details: TransactionDetail[];
   invAccTransactions: InvAccTransaction[];
-  attachments: any[];
+  attachments: any[]
 }
 
 export interface InvAccTransaction {
@@ -205,6 +205,8 @@ export interface TransactionMaster {
   prevTransDate: string;
   oldLedgerID: number;
   dueDays: number;
+  billWiseString: string;
+  accTransactionDetailIDForBillwise: number;
   master2: TransactionMaster2
   master3: TransactionMaster3
 }
@@ -238,14 +240,15 @@ export interface TransactionMaster2 {
   notes1: string;
   notes2: string;
 }
-export interface TransactionMaster3Validations {}
-export interface TransactionMasterValidations {}
+export interface TransactionMaster3Validations { }
+export interface TransactionMasterValidations { }
 export interface CommonParams {
   result: DeepPartial<TransactionFormState>;
   formStateHandleFieldChangeKeysOnly?: any;
 }
 
 export interface TransactionDetail {
+  invTransactionDetailID?: number;
   slNo: string;
   pCode: string;
   mrp: number;
@@ -344,7 +347,11 @@ export interface TransactionDetail {
   btnPrintBarcodeStd: string;
   isValid?: boolean;
   hsnCode: string;
-  details2?: TransactionDetails2
+  details2?: TransactionDetails2;
+  gRTransDetailID: number;
+  pOTransDetailID: number;
+  pO_PITransDetailIDs: number;
+  pO_PITransDetailQtys: number;
 }
 
 export interface TransactionDetailsMore {
@@ -563,8 +570,16 @@ export interface TransactionFormState {
   themeChangeCountdown?: number
   isInitialLedger?: boolean;
   memoEditor: { visible: boolean; data: string; rowIndex: number };
-  gridMenuPop:boolean;
-  documentModal:boolean;
+  headerMenuOpen: boolean;
+  documentModal: boolean;
+  pendingOrdListMasterIDs?: string;
+  pendingOrdListBranchIDs?: string;
+  gridMenuOpen: boolean;
+  billwiseData?: BillwiseData[];
+  billwiseDrCr?: string;
+  billwiseDetails?: string;
+  showbillwise?: boolean;
+  ledgerBillWiseLoading?: boolean;
 }
 interface loadingResult {
   isLoading: boolean;
@@ -815,4 +830,25 @@ export interface UnitByBatchDetailsDto {
   multiFactor?: string;
   unitDescription?: string;
   decimalPoints?: number;
+}
+export interface BillwiseData {
+  accTransactionDetailID: number;
+  adjustedAmount: number;
+  amount: number;
+  balance: number;
+  balanceAfter: number;
+  billWiseMasterID: number;
+  billwiseAmount: number;
+  drCr: "Dr" | "Cr"; // Enum-like string values for debit or credit
+  financialYearID: number;
+  formType: string;
+  ledgerID: number;
+  partyName: string;
+  referenceDate: string; // ISO date string
+  referenceNumber: string;
+  slNo: number;
+  transactionDate: string; // ISO date string
+  voucherNumber: number;
+  voucherPrefix: string;
+  voucherType: string;
 }

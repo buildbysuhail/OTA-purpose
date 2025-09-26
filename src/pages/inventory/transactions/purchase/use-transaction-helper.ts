@@ -1199,12 +1199,16 @@ export const useTransactionHelper = (transactionType: string) => {
             Number(row.quantity || 0)
           );
           detail.grTransDetailsID = row.invTransactionDetailID
-          detail.grTransDetailsIDTag = row.PendingQty
+          detail.grTransDetailsIDTag = row.pendingQty
         }
+        
         // Special handling for GRN type
-        if (loadType === "PO") {
+        if (loadType === "PO" ) {
           detail.poTransDetailsID = row.invTransactionDetailID
-          detail.poTransDetailsIDTag = row.PendingQty
+          detail.poTransDetailsIDTag = row.pendingQty
+        }
+        if (loadType === "PO") {
+          detail.poTransDetailsIDTag = row.pendingQty
         }
 
         // Cost calculations
@@ -1506,27 +1510,27 @@ let detail  = sanitizeDataAdvanced({...rowDetail}, initialTransactionDetailData)
         // Supplier reference
         outputRow.supplierProductReferenceCode =
           detail.supplierReferenceProductCode;
-
+debugger
         // GR Transaction details
-        outputRow.grTransDetailId = detail.grTransDetailsID;
+        // outputRow.gRTransDetailID = detail.grTransDetailsID;
 
         // Purchase Order handling
-        if (
-          applicationSettings?.inventorySettings
-            ?.carryForwardPurchaseOrderQtyToPurchase
-        ) {
-          outputRow.poTransDetailId = detail.poTransDetailsID;
-        } else {
-          outputRow.poPiTransDetailIds = detail.poTransDetailsID;
-          try {
-            outputRow.poPiTransDetailQtys = detail.poTransDetailsIDTag;
-          } catch (error) {
-            hasError = true;
-            errors.push(
-              `Row ${rowNumber}, PO Detail Quantities Column: Error setting PO detail quantities - ${error}`
-            );
-          }
-        }
+        // if (
+        //   applicationSettings?.inventorySettings
+        //     ?.carryForwardPurchaseOrderQtyToPurchase
+        // ) {
+        //   outputRow.pOTransDetailID = detail.poTransDetailsID;
+        // } else {
+        //   outputRow.pO_PITransDetailIDs = detail.poTransDetailsID as string;
+        //   try {
+        //     outputRow.pO_PITransDetailQtys = detail.poTransDetailsIDTag as string;
+        //   } catch (error) {
+        //     hasError = true;
+        //     errors.push(
+        //       `Row ${rowNumber}, PO Detail Quantities Column: Error setting PO detail quantities - ${error}`
+        //     );
+        //   }
+        // }
         // Memo and random key
         outputRow.memo = detail.memo;
         outputRow.randomKey = 0;

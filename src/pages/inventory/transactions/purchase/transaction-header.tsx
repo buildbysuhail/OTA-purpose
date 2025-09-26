@@ -19,10 +19,7 @@ import Project from "./components/cb-project";
 import InvoiceValue from "./components/invoice-value";
 import VoucherLoader from "./components/grn-Number";
 import Urls from "../../../../redux/urls";
-import {
-  formStateHandleFieldChange,
-  formStateMasterHandleFieldChange,
-} from "./reducer";
+import { formStateHandleFieldChange, formStateMasterHandleFieldChange, } from "./reducer";
 import MoreOptionsModalContent from "./transaction-more";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
@@ -38,6 +35,7 @@ import { isEnterKey, loadTemplateById } from "../../../../utilities/Utils";
 import VoucherType from "../../../../enums/voucher-types";
 import axios from "axios";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
+import OrderNo from "./components/order-number";
 
 interface TransactionHeaderProps {
   formState: TransactionFormState;
@@ -112,7 +110,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   }, []);
 
   const handleButtonClick = (type: string) => {
-    debugger;
+
     setIsModalOpen({ visible: true, type: type });
   };
 
@@ -162,13 +160,13 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   const getGRNTitle = (voucherType: string) => {
     switch (voucherType) {
       case "PR":
-        return "grr_number";
+        return t("grr_number");
       case "GRN":
-        return "PO";
+        return t("po");
       case "PI_Ref":
-        return "PI";
+        return t("pi");
       default:
-        return "grn_number";
+        return t("grn_number");
     }
   };
 
@@ -347,14 +345,14 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
 
             {formState.transaction.master.voucherType !==
               VoucherType.GoodsReceiptNote && (
-              <ReferenceNumber
-                formState={formState}
-                dispatch={dispatch}
-                handleLoadByRefNo={handleLoadByRefNo}
-                ref={refNoRef}
-                t={t}
-              />
-            )}
+                <ReferenceNumber
+                  formState={formState}
+                  dispatch={dispatch}
+                  handleLoadByRefNo={handleLoadByRefNo}
+                  ref={refNoRef}
+                  t={t}
+                />
+              )}
 
             <ReferenceDate
               dispatch={dispatch}
@@ -384,9 +382,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
           {/* Dropdown content */}
           <div
             ref={dropdownRef}
-            className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${
-              isDropDownOpen ? "max-h-[50vh]" : "max-h-0"
-            }`}
+            className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropDownOpen ? "max-h-[50vh]" : "max-h-0"
+              }`}
           >
             <div className="p-4 md:p-2 dark:bg-dark-bg-card bg-white border-t dark:border-dark-border border-gray-300 shadow-lg">
               <div className="flex flex-wrap !items-end gap-1">
@@ -412,14 +409,14 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
 
                 {formState.transaction.master.voucherType !==
                   VoucherType.GoodsReceiptNote && (
-                  <Project
-                    dispatch={dispatch}
-                    formState={formState}
-                    t={t}
-                    handleKeyDown={handleKeyDown}
-                    handleFieldKeyDown={handleFieldKeyDown}
-                  />
-                )}
+                    <Project
+                      dispatch={dispatch}
+                      formState={formState}
+                      t={t}
+                      handleKeyDown={handleKeyDown}
+                      handleFieldKeyDown={handleFieldKeyDown}
+                    />
+                  )}
 
                 <InvoiceValue
                   dispatch={dispatch}
@@ -439,7 +436,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 {formState.transaction.master.voucherType !==
                   VoucherType.GoodsReceiptNote &&
                   formState.transaction.master.voucherType !==
-                    VoucherType.PurchaseEstimate && (
+                  VoucherType.PurchaseEstimate && (
                     <VatTokenInput
                       formState={formState}
                       dispatch={dispatch}
@@ -526,41 +523,41 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
 
                 {formState.transaction.master.voucherType !==
                   VoucherType.PurchaseReturn && (
-                  <ERPInput
-                    localInputBox={formState?.userConfig?.inputBoxStyle}
-                    id="address2"
-                    label={t("address_2")}
-                    value={formState.transaction.master.address2}
-                    className="max-w-full"
-                    onChange={(e) =>
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: { address2: e.target?.value },
-                        })
-                      )
-                    }
-                    disabled={formState.formElements.pnlMasters?.disabled}
-                  />
-                )}
+                    <ERPInput
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                      id="address2"
+                      label={t("address_2")}
+                      value={formState.transaction.master.address2}
+                      className="max-w-full"
+                      onChange={(e) =>
+                        dispatch(
+                          formStateMasterHandleFieldChange({
+                            fields: { address2: e.target?.value },
+                          })
+                        )
+                      }
+                      disabled={formState.formElements.pnlMasters?.disabled}
+                    />
+                  )}
 
                 {formState.transaction.master.voucherType ===
                   VoucherType.PurchaseReturn && (
-                  <ERPInput
-                    localInputBox={formState?.userConfig?.inputBoxStyle}
-                    id="address4"
-                    label={t("mobile_number")}
-                    value={formState.transaction.master.address4}
-                    className="max-w-full"
-                    onChange={(e) =>
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: { address4: e.target?.value },
-                        })
-                      )
-                    }
-                    disabled={formState.formElements.pnlMasters?.disabled}
-                  />
-                )}
+                    <ERPInput
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                      id="address4"
+                      label={t("mobile_number")}
+                      value={formState.transaction.master.address4}
+                      className="max-w-full"
+                      onChange={(e) =>
+                        dispatch(
+                          formStateMasterHandleFieldChange({
+                            fields: { address4: e.target?.value },
+                          })
+                        )
+                      }
+                      disabled={formState.formElements.pnlMasters?.disabled}
+                    />
+                  )}
 
                 {formState.transaction.master.voucherType ===
                   VoucherType.PurchaseOrder &&
@@ -618,7 +615,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     </div>
                   )}
 
-                {formState.transaction.master.voucherType ===
+                {/* {formState.transaction.master.voucherType ===
                   VoucherType.PurchaseOrder && (
                   <div>
                     <ERPButton
@@ -627,7 +624,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       onClick={() => setUpdateTriggered(true)}
                     />
                   </div>
-                )}
+                )} */}
 
                 {formState.formElements.inSearch?.visible && (
                   <ERPCheckbox
@@ -649,60 +646,63 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
 
                 {formState.transaction.master.voucherType ===
                   VoucherType.PurchaseReturn && (
-                  <ERPCheckbox
-                    localInputBox={formState?.userConfig?.inputBoxStyle}
-                    id="inventoryUpdate"
-                    className="text-left !m-0 dark:text-dark-text"
-                    label={t("inventory_update")}
-                    checked={formState.transaction.master.stockUpdate}
-                    onChange={(e) => {
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: { stockUpdate: e.target.checked },
-                        })
-                      );
-                    }}
-                    disabled={formState.formElements.pnlMasters?.disabled}
-                  />
-                )}
+                    <ERPCheckbox
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                      id="inventoryUpdate"
+                      className="text-left !m-0 dark:text-dark-text"
+                      label={t("inventory_update")}
+                      checked={formState.transaction.master.stockUpdate}
+                      onChange={(e) => {
+                        dispatch(
+                          formStateMasterHandleFieldChange({
+                            fields: { stockUpdate: e.target.checked },
+                          })
+                        );
+                      }}
+                      disabled={formState.formElements.pnlMasters?.disabled}
+                    />
+                  )}
 
                 {formState.transaction.master.voucherType ===
                   VoucherType.PurchaseReturn && (
-                  <span className="text-xs dark:text-dark-text text-[#191155] font-bold px-4 py-1">
-                    {t(formState.transaction.master.customerType)}
-                  </span>
-                )}
+                    <span className="text-xs dark:text-dark-text text-[#191155] font-bold px-4 py-1">
+                      {t(formState.transaction.master.customerType)}
+                    </span>
+                  )}
 
-                {formState.transaction.master.voucherType !==
-                  VoucherType.PurchaseQuotation && (
-                  <div>
-                    <ERPButton
-                      title={t(
-                        getGRNTitle(formState.transaction.master.voucherType)
-                      )}
-                      onClick={() =>
-                        handleButtonClick(
-                          formState.transaction.master.voucherType
-                        )
-                      }
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      className="!m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
-                      disabled={formState.transactionLoading}
-                    />
-                  </div>
-                )}
+                {(formState.transaction.master.voucherType ===
+                  VoucherType.PurchaseInvoice || formState.transaction.master.voucherType ===
+                  VoucherType.PurchaseReturn || formState.transaction.master.voucherType ===
+                  VoucherType.GoodsReceiptNote) && (
+                    <div>
+                      <ERPButton
+                        title={t(
+                          getGRNTitle(formState.transaction.master.voucherType)
+                        )}
+                        onClick={() =>
+                          handleButtonClick(
+                            formState.transaction.master.voucherType
+                          )
+                        }
+                        localInputBox={formState?.userConfig?.inputBoxStyle}
+                        className="!m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+                        disabled={formState.transactionLoading || formState.formElements.pnlMasters?.disabled}
+                      />
+                    </div>
+                  )}
                 {formState.transaction.master.voucherType ===
                   VoucherType.PurchaseReturn && (
-                  <div>
-                    <ERPButton
-                      title={t(getGRNTitle("PI_Ref"))}
-                      onClick={() => handleButtonClick("PI_Ref")}
+
+                    <OrderNo
                       localInputBox={formState?.userConfig?.inputBoxStyle}
-                      className="!m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
-                      disabled={formState.transactionLoading}
+                      formState={formState}
+                      dispatch={dispatch}
+                      t={t}
+                      type="PI_Ref"
+                      label={t("pi_ref")}
+                      loadAndSetTransVoucher={loadAndSetTransVoucher}
                     />
-                  </div>
-                )}
+                  )}
 
                 {isModalOpen &&
                   isModalOpen.visible &&
@@ -717,24 +717,24 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       isOpen={isModalOpen.visible}
                       title={getGRNTitle(isModalOpen.type)}
                       width={600}
-                      height={190}
+                      height={175}
                       closeModal={closeModal}
                       content={
-                       <VoucherLoader
-                        updateDeliveryNoteNumber = {["PI", "PR"].includes(isModalOpen.type)}
+                        <VoucherLoader
+                          updateDeliveryNoteNumber={["PI", "PR"].includes(isModalOpen.type)}
                           fromVoucherType={
                             isModalOpen.type == "PI_Ref"
                               ? VoucherType.PurchaseInvoice
                               : formState.transaction.master.voucherType ===
                                 VoucherType.PurchaseInvoice
-                              ? VoucherType.GoodsReceiptNote
-                              : formState.transaction.master.voucherType ===
-                                VoucherType.GoodsReceiptNote
-                              ? VoucherType.PurchaseOrder
-                              : formState.transaction.master.voucherType ===
-                                VoucherType.PurchaseReturn
-                              ? VoucherType.GoodsReceiptReturn
-                              : ""
+                                ? VoucherType.GoodsReceiptNote
+                                : formState.transaction.master.voucherType ===
+                                  VoucherType.GoodsReceiptNote
+                                  ? VoucherType.PurchaseOrder
+                                  : formState.transaction.master.voucherType ===
+                                    VoucherType.PurchaseReturn
+                                    ? VoucherType.GoodsReceiptReturn
+                                    : ""
                           }
                           dispatch={dispatch}
                           formState={formState}
@@ -748,16 +748,16 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
 
                 {formState.transaction.master.voucherType !=
                   VoucherType.PurchaseOrder && (
-                  <div>
-                    <ERPButton
-                      title={t("more")}
-                      variant="secondary"
-                      onClick={handleMoreButtonClick}
-                      disabled={formState.transactionLoading}
-                      className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
-                    />
-                  </div>
-                )}
+                    <div>
+                      <ERPButton
+                        title={t("more")}
+                        variant="secondary"
+                        onClick={handleMoreButtonClick}
+                        disabled={formState.transactionLoading}
+                        className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+                      />
+                    </div>
+                  )}
                 {isMoreModalOpen && (
                   <ERPModal
                     isOpen={isMoreModalOpen}
@@ -861,22 +861,20 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
             <div className="absolute left-1/2 transform -translate-x-1/2 top-[-8px]">
               <button
                 onClick={toggleDropdown}
-                className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-white rounded-b-full border border-l-0 border-r-0 border-t-0 border-gray-300 transition-all duration-500 ${
-                  isDropDownOpen ? "dark:bg-dark-hover-bg bg-gray-100" : ""
-                }`}
+                className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-white rounded-b-full border border-l-0 border-r-0 border-t-0 border-gray-300 transition-all duration-500 ${isDropDownOpen ? "dark:bg-dark-hover-bg bg-gray-100" : ""
+                  }`}
                 style={{
                   transform: isDropDownOpen ? "translateY(0)" : "translateY(0)",
                   transition: "transform 0.5s ease-in-out",
                 }}
               >
                 <ChevronDown
-                  className={`mx-2 transition-transform duration-500 dark:text-dark-text ${
-                    isDropDownOpen
-                      ? "transform rotate-180"
-                      : hasAnimated
+                  className={`mx-2 transition-transform duration-500 dark:text-dark-text ${isDropDownOpen
+                    ? "transform rotate-180"
+                    : hasAnimated
                       ? ""
                       : "animate-[bounce_2s_1]"
-                  }`}
+                    }`}
                   size={24}
                 />
               </button>
@@ -909,24 +907,23 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
 
             {formState.transaction.master.voucherType !==
               VoucherType.GoodsReceiptNote && (
-              <ReferenceNumber
-                formState={formState}
-                dispatch={dispatch}
-                handleLoadByRefNo={handleLoadByRefNo}
-                ref={refNoRef}
-                t={t}
-              />
-            )}
+                <ReferenceNumber
+                  formState={formState}
+                  dispatch={dispatch}
+                  handleLoadByRefNo={handleLoadByRefNo}
+                  ref={refNoRef}
+                  t={t}
+                />
+              )}
           </div>
 
           {/* Collapsible Dropdown Section */}
           <div
             ref={dropdownRef}
-            className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${
-              isDropDownOpen
-                ? "max-h-[50vh] overflow-y-auto overflow-x-hidden"
-                : "max-h-0 overflow-hidden"
-            }`}
+            className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropDownOpen
+              ? "max-h-[50vh] overflow-y-auto overflow-x-hidden"
+              : "max-h-0 overflow-hidden"
+              }`}
             style={{ width: "100%", boxSizing: "border-box" }}
           >
             <div className="p-2 dark:bg-dark-bg-card bg-white shadow-lg">
@@ -977,14 +974,14 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 />
                 {formState.transaction.master.voucherType !==
                   VoucherType.GoodsReceiptNote && (
-                  <Project
-                    dispatch={dispatch}
-                    formState={formState}
-                    t={t}
-                    handleKeyDown={handleKeyDown}
-                    handleFieldKeyDown={handleFieldKeyDown}
-                  />
-                )}
+                    <Project
+                      dispatch={dispatch}
+                      formState={formState}
+                      t={t}
+                      handleKeyDown={handleKeyDown}
+                      handleFieldKeyDown={handleFieldKeyDown}
+                    />
+                  )}
 
                 {formState.formElements.cbLabelDesign?.visible && (
                   <ERPDataCombobox
@@ -1054,41 +1051,41 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
 
                 {formState.transaction.master.voucherType !==
                   VoucherType.PurchaseReturn && (
-                  <ERPInput
-                    localInputBox={formState?.userConfig?.inputBoxStyle}
-                    id="address2"
-                    label={t("address_2")}
-                    value={formState.transaction.master.address2}
-                    className="max-w-full"
-                    onChange={(e) =>
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: { address2: e.target?.value },
-                        })
-                      )
-                    }
-                    disabled={formState.formElements.pnlMasters?.disabled}
-                  />
-                )}
+                    <ERPInput
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                      id="address2"
+                      label={t("address_2")}
+                      value={formState.transaction.master.address2}
+                      className="max-w-full"
+                      onChange={(e) =>
+                        dispatch(
+                          formStateMasterHandleFieldChange({
+                            fields: { address2: e.target?.value },
+                          })
+                        )
+                      }
+                      disabled={formState.formElements.pnlMasters?.disabled}
+                    />
+                  )}
 
                 {formState.transaction.master.voucherType ===
                   VoucherType.PurchaseReturn && (
-                  <ERPInput
-                    localInputBox={formState?.userConfig?.inputBoxStyle}
-                    id="address4"
-                    label={t("mobile_number")}
-                    value={formState.transaction.master.address4}
-                    className="max-w-full"
-                    onChange={(e) =>
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: { address4: e.target?.value },
-                        })
-                      )
-                    }
-                    disabled={formState.formElements.pnlMasters?.disabled}
-                  />
-                )}
+                    <ERPInput
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                      id="address4"
+                      label={t("mobile_number")}
+                      value={formState.transaction.master.address4}
+                      className="max-w-full"
+                      onChange={(e) =>
+                        dispatch(
+                          formStateMasterHandleFieldChange({
+                            fields: { address4: e.target?.value },
+                          })
+                        )
+                      }
+                      disabled={formState.formElements.pnlMasters?.disabled}
+                    />
+                  )}
               </div>
 
               <div className="flex flex-wrap items-end gap-2">
@@ -1109,7 +1106,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 {formState.transaction.master.voucherType !==
                   VoucherType.GoodsReceiptNote &&
                   formState.transaction.master.voucherType !==
-                    VoucherType.PurchaseEstimate && (
+                  VoucherType.PurchaseEstimate && (
                     <VatTokenInput
                       formState={formState}
                       dispatch={dispatch}
@@ -1183,7 +1180,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     </div>
                   )}
 
-                {formState.transaction.master.voucherType ===
+                {/* {formState.transaction.master.voucherType ===
                   VoucherType.PurchaseOrder && (
                   <div>
                     <ERPButton
@@ -1192,32 +1189,32 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       onClick={() => setUpdateTriggered(true)}
                     />
                   </div>
-                )}
+                )} */}
 
                 {formState.transaction.master.voucherType ===
                   VoucherType.PurchaseReturn && (
-                  <ERPCheckbox
-                    localInputBox={formState?.userConfig?.inputBoxStyle}
-                    id="inventoryUpdate"
-                    className="text-left !m-0 dark:text-dark-text"
-                    label={t("inventory_update")}
-                    checked={formState.transaction.master.stockUpdate}
-                    onChange={(e) => {
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: { stockUpdate: e.target.checked },
-                        })
-                      );
-                    }}
-                    disabled={formState.formElements.pnlMasters?.disabled}
-                  />
-                )}
+                    <ERPCheckbox
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                      id="inventoryUpdate"
+                      className="text-left !m-0 dark:text-dark-text"
+                      label={t("inventory_update")}
+                      checked={formState.transaction.master.stockUpdate}
+                      onChange={(e) => {
+                        dispatch(
+                          formStateMasterHandleFieldChange({
+                            fields: { stockUpdate: e.target.checked },
+                          })
+                        );
+                      }}
+                      disabled={formState.formElements.pnlMasters?.disabled}
+                    />
+                  )}
                 {formState.transaction.master.voucherType ===
                   VoucherType.PurchaseReturn && (
-                  <span className="text-xs dark:text-dark-text text-[#191155] font-bold px-4 py-1">
-                    {t(formState.transaction.master.customerType)}
-                  </span>
-                )}
+                    <span className="text-xs dark:text-dark-text text-[#191155] font-bold px-4 py-1">
+                      {t(formState.transaction.master.customerType)}
+                    </span>
+                  )}
               </div>
 
               <div className="flex items-center gap-2 mt-2">
@@ -1225,45 +1222,46 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   VoucherType.PurchaseInvoice || formState.transaction.master.voucherType ===
                   VoucherType.PurchaseReturn || formState.transaction.master.voucherType ===
                   VoucherType.GoodsReceiptNote) && (
-                  <div>
-                    <ERPButton
-                      title={t(
-                        getGRNTitle(formState.transaction.master.voucherType)
-                      )}
-                      onClick={() =>
-                        handleButtonClick(
-                          formState.transaction.master.voucherType
-                        )
-                      }
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      className="!m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
-                      disabled={formState.transactionLoading}
-                    />
-                  </div>
-                )}
+                    <div>
+                      <ERPButton
+                        title={t(
+                          getGRNTitle(formState.transaction.master.voucherType)
+                        )}
+                        onClick={() =>
+                          handleButtonClick(
+                            formState.transaction.master.voucherType
+                          )
+                        }
+                        localInputBox={formState?.userConfig?.inputBoxStyle}
+                        className="!m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+                        disabled={formState.transactionLoading}
+                      />
+                    </div>
+                  )}
                 {formState.transaction.master.voucherType ===
                   VoucherType.PurchaseReturn && (
-                  <div>
-                    <ERPButton
-                      title={t(getGRNTitle("PI_Ref"))}
-                      onClick={() => handleButtonClick("PI_Ref")}
+
+                    <OrderNo
                       localInputBox={formState?.userConfig?.inputBoxStyle}
-                      className="!m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
-                      disabled={formState.transactionLoading}
+                      formState={formState}
+                      dispatch={dispatch}
+                      t={t}
+                      type="PI_Ref"
+                      label={t("pi_ref")}
+                      loadAndSetTransVoucher={loadAndSetTransVoucher}
                     />
-                  </div>
-                )}
+                  )}
 
                 {formState.transaction.master.voucherType !=
                   VoucherType.PurchaseOrder && (
-                  <ERPButton
-                    title={t("more")}
-                    variant="secondary"
-                    onClick={handleMoreButtonClick}
-                    className=" dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
-                    disabled={formState.transactionLoading}
-                  />
-                )}
+                    <ERPButton
+                      title={t("more")}
+                      variant="secondary"
+                      onClick={handleMoreButtonClick}
+                      className=" dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+                      disabled={formState.transactionLoading}
+                    />
+                  )}
               </div>
 
               {/* Modals */}
@@ -1274,30 +1272,30 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   width={600}
                   height={280}
                   closeModal={closeModal}
-                 content={
-                        <VoucherLoader
-                        updateDeliveryNoteNumber = {["PI", "PR"].includes(isModalOpen.type)}
-                          fromVoucherType={
-                            isModalOpen.type == "PI_Ref"
-                              ? VoucherType.PurchaseInvoice
-                              : formState.transaction.master.voucherType ===
-                                VoucherType.PurchaseInvoice
-                              ? VoucherType.GoodsReceiptNote
-                              : formState.transaction.master.voucherType ===
-                                VoucherType.GoodsReceiptNote
+                  content={
+                    <VoucherLoader
+                      updateDeliveryNoteNumber={["PI", "PR"].includes(isModalOpen.type)}
+                      fromVoucherType={
+                        isModalOpen.type == "PI_Ref"
+                          ? VoucherType.PurchaseInvoice
+                          : formState.transaction.master.voucherType ===
+                            VoucherType.PurchaseInvoice
+                            ? VoucherType.GoodsReceiptNote
+                            : formState.transaction.master.voucherType ===
+                              VoucherType.GoodsReceiptNote
                               ? VoucherType.PurchaseOrder
                               : formState.transaction.master.voucherType ===
                                 VoucherType.PurchaseReturn
-                              ? VoucherType.GoodsReceiptReturn
-                              : ""
-                          }
-                          dispatch={dispatch}
-                          formState={formState}
-                          closeModal={closeModal}
-                          t={t}
-                          loadAndSetTransVoucher={loadAndSetTransVoucher}
-                        />
+                                ? VoucherType.GoodsReceiptReturn
+                                : ""
                       }
+                      dispatch={dispatch}
+                      formState={formState}
+                      closeModal={closeModal}
+                      t={t}
+                      loadAndSetTransVoucher={loadAndSetTransVoucher}
+                    />
+                  }
                 />
               )}
 
@@ -1410,9 +1408,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
             <div className="absolute left-1/2 transform -translate-x-1/2 top-0">
               <button
                 onClick={toggleDropdown}
-                className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-white rounded-b-lg border border-t-0 border-gray-300 transition-all duration-500 ${
-                  isDropDownOpen ? "dark:bg-dark-hover-bg bg-gray-100" : ""
-                }`}
+                className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-white rounded-b-lg border border-t-0 border-gray-300 transition-all duration-500 ${isDropDownOpen ? "dark:bg-dark-hover-bg bg-gray-100" : ""
+                  }`}
                 style={{
                   boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
                   transform: isDropDownOpen ? "translateY(0)" : "translateY(0)",
@@ -1420,13 +1417,12 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 }}
               >
                 <ChevronDown
-                  className={`mx-2 transition-transform duration-500 dark:text-dark-text ${
-                    isDropDownOpen
-                      ? "transform rotate-180"
-                      : hasAnimated
+                  className={`mx-2 transition-transform duration-500 dark:text-dark-text ${isDropDownOpen
+                    ? "transform rotate-180"
+                    : hasAnimated
                       ? ""
                       : "animate-[bounce_2s_1]"
-                  }`}
+                    }`}
                   size={24}
                 />
               </button>

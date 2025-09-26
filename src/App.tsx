@@ -85,7 +85,7 @@ useEffect(() => {
   }, []);
 
   useEffect(() => {
-    debugger;
+    
     if(!isOnline) {return}
     const fetchSettings = async () => {
       try {
@@ -173,7 +173,7 @@ useEffect(() => {
     await syncAppStates(dispatch, userThemes, clientSession, userProfileDetails, userRights, locale);
 
     const language = userProfileDetails?.language;
-debugger;
+
     if (!token && !["/login", "/shared-view", "accept-user-invitation"].includes(pathname)) {
       navigate("/login");
     }

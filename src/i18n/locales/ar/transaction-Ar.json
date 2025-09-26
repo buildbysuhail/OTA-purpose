@@ -775,5 +775,16 @@
   "grid_footer_font_color": "لون خط تذييل الجدول",
   "confirm_po_approval": "هل أنت متأكد من الموافقة على أمر الشراء؟",
   "po_approval_final": "الموافقة على أمر الشراء هذا هو إجراء دائم ولا يمكن التراجع عنه",
-  "template": "قالب"
+  "template": "قالب",
+
+  "show_view": "عرض",
+  "unit_code": "رمز الوحدة",
+  "po": "أمر الشراء",
+  "pi": "فاتورة الشراء",
+  "transaction_already_invoiced_warning": "تم إصدار فاتورة لهذه المعاملة بالفعل، لا يمكن حذفها أو تعديلها، هل تريد المتابعة؟",
+  "deleting_transaction_question": "هل أنت متأكد أنك تريد حذف هذه المعاملة؟",
+  "once_deleting_this_transaction_cannot_be_recovered": "بمجرد حذف هذه المعاملة لا يمكن استعادتها",
+  "pi_ref": "مرجع فاتورة الشراء",
+  "zero_rate_or_qty": "السعر أو الكمية صفر",
+  "zero_rate_or_qty_entered_in_row": "تم إدخال السعر أو الكمية صفر في الصف:"
 }

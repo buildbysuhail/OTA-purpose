@@ -456,6 +456,7 @@ export const SpecialPrice: React.FC = () => {
                 </div>
                 <div className="flex-1">
                   <ERPProductSearch
+                    showInputSymbol={false}
                     noLabel={true}
                     // isGridCell={false}
                     onChange={(e) => console.log("Input changed:", e.target.value)}

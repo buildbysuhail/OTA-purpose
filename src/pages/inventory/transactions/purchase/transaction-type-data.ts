@@ -192,6 +192,8 @@ export const TransactionMasterInitialData: TransactionMaster = {
   oldLedgerID: 0,
   dueDays: 0,
   gRNMasterID: 0,
+  billWiseString:"",
+  accTransactionDetailIDForBillwise:0,
   master2: initialInvTransactionMaster2,
   master3: TransactionMaster3InitialData
 }
@@ -289,7 +291,11 @@ export const initialTransactionDetailData: TransactionDetail = {
   unitDecimalPoint: 0,
   multiFactor: 0,
   details2: initialTransactionDetails2,
-  hsnCode: ""
+  hsnCode: "",
+  gRTransDetailID: 0,
+  pOTransDetailID: 0,
+  pO_PITransDetailIDs: 0,
+  pO_PITransDetailQtys: 0
 };
 export const transactionInitialData: TransactionData = {
   master: TransactionMasterInitialData, details: Array.from({ length: 30 }, (_, index) => ({
@@ -652,7 +658,9 @@ export const TransactionFormStateInitialData: TransactionFormState = {
     data: "",
     rowIndex: 0
   },
-  gridMenuPop:false
+  documentModal: false,
+  headerMenuOpen: false,
+  gridMenuOpen: false
 }
 
 export const initialProductData: BarcodeLabel = {

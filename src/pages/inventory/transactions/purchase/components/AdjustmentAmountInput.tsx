@@ -66,6 +66,7 @@ const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
 
   return (
     <>
+    {!formState.transactionLoading && formState.formElements.pnlMasters?.disabled !==true &&(
       <a
         href="#"
         type="popup"
@@ -77,13 +78,15 @@ const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
       >
         {t(formState.formElements.adjustmentAmount.label)}
       </a>
+    )}
       <ERPInput
         localInputBox={formState?.userConfig?.inputBoxStyle}
         fetching={formState.transactionLoading}
         id="adjustmentAmount"
         type="number"
         className="!m-0"
-        noLabel={true}
+        noLabel={!formState.transactionLoading && formState.formElements.pnlMasters?.disabled !==true}
+        label={t(formState.formElements.adjustmentAmount.label)}
         readOnly
         value={adjustmentAmountValue}
         disableEnterNavigation={true}

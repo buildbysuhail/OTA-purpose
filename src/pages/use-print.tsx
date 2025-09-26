@@ -325,7 +325,7 @@ export const loadPrintData = async (MasterIDParam: number, voucherTypeParam: str
                                             console.log(printData);
     if(isNullOrUndefinedOrEmpty(printData?.master)) 
       return printData;
-       debugger;                                     
+                                            
     returnData = merge({}, returnData, printData);
     returnData.custom = returnData.custom ?? initialPrintCustomFields;
     const isKitchenPrint = !isNullOrUndefinedOrZero(kitchenIDParam) || !isNullOrUndefinedOrZero(commonKitchenProductGroupIDParam) ||
@@ -1624,13 +1624,13 @@ export function bindDataForPrint(field: string, printData: PrintResponse,
   const group = splitData[0] as any;
   const key = splitData[1];
   if(field == "custom___transactionBarcode"){
-    debugger;
+    
   }
   if(isNullOrUndefinedOrEmpty(printData?.master)) 
     return "";
   const master = printData?.master
   const details = printData?.details
-  debugger;
+  
   if (group == "master") {
     return master[key as (keyof PrintMasterDto)]
   }

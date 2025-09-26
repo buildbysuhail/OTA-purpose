@@ -6,6 +6,7 @@ import React, {
   useState,
   forwardRef,
   Fragment,
+  useImperativeHandle,
 } from "react";
 import { createPortal } from "react-dom";
 import { APIClient } from "../../helpers/api-client";
@@ -76,6 +77,7 @@ interface InputProps {
   ) => void;
   customStyle?: inputBox;
   appState?: any;
+  showInputSymbol?:boolean;
 }
 
 interface LoadResult {
@@ -225,6 +227,8 @@ const createBatchStore = async (productID: string, warehouseId: number, batchDat
   });
 };
 
+
+
 const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
   (
     {
@@ -260,6 +264,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       textAlign,
       customStyle,
       appState,
+      showInputSymbol = true,
       ...rest
     },
     ref
@@ -552,7 +557,6 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       }
       return { top: 0, left: 0, width: "100%" };
     }, [inputRef]);
-
     const debouncedFetch = useMemo(
       () =>
         debounce(async (value: string, byCode: boolean) => {
@@ -676,6 +680,11 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
         if (!key) {
           return;
         }
+        if (key === "ArrowLeft" || key === "ArrowRight") {
+          e.event.preventDefault();
+          e.event.propagation();
+          return
+        }
 
         if (key === "Enter" || key === "NumpadEnter") {
           try {
@@ -751,7 +760,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
 
     const handleBatchGridKeyDown = useCallback(
       async (e: any) => {
-    console.log(`Batch grid key: ${e.event.key}`);
+    console.log(`Batch grid key: ${e.event.key}`); 
         if (e.event.key === "Enter") {
           const gridInstance = batchGridRef.current.instance();
           const allSelected = await gridInstance.getSelectedRowsData();
@@ -788,19 +797,18 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
 
     const [batchInitialized, setBatchInitialized] = useState(false);
 
-    const handleBatchContentReady = useCallback(
-      (e: any) => {
-        if (!batchInitialized) {
-          const grid = e.component;
-          // focus and select row 0 on first open
-          grid.option("focusedRowIndex", 0);
-          grid.selectRows([grid.getKeyByRowIndex(0)]);
-          grid.navigateToRow(grid.getKeyByRowIndex(0));
-          grid.focus();
-          setBatchInitialized(true);
-        }
-      },
-      [batchInitialized]
+    const handleBatchContentReady = useCallback((e: any) => {
+    if (!batchInitialized) {
+      const grid = e.component;
+      // focus and select row 0 on first open
+      const key = grid.getKeyByRowIndex(0);
+      grid.selectRows([key], false);
+      grid.option("focusedRowIndex", 0);
+      grid.focus();
+      setBatchInitialized(true);
+     }
+    },
+   [batchInitialized]
     );
 
     const handleBatchFocusedRowChanged = useCallback((e: any) => {
@@ -808,7 +816,9 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       if (!e.row) {
         return;
       }
-      e.component.selectRows([e.row.key], false);
+      setTimeout(() => {
+        e.component.selectRows([e.row.key], false);
+      }, 0);
     }, []);
 
     const handleInputKeyDown = useCallback(
@@ -1025,6 +1035,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
         maxWidth: "800px",
         minHeight: "200px",
         maxHeight: "400px",
+        zIndex: 9999,
         // conditionally assign left or right
         ...(direction === "rtl"
           ? { right: `${right}px`, left: undefined }
@@ -1179,7 +1190,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
             <ERPInput
               localInputBox={customStyle}
               textAlignStyle={textAlign}
-              ignoreRandomId={true}
+              ignoreRandomId={false}
               noLabel={noLabel}
               label={label}
               type="text"
@@ -1206,12 +1217,12 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
               }}
               focused={showProductGrid } // || batchInitialized
             />
-            {productInitialized &&(
+              {productInitialized && showInputSymbol &&(
               <div className="absolute inset-0 flex items-center px-3 pointer-events-none">
                 <span className="invisible">{inputValue.searchValue}</span>
-                <span className="animate-blink text-black">|</span>
+                <span className="animate-blink text-black">|A</span>
               </div>
-              )}
+              )}                   
           </div>
           {showCheckBox && (
             <ERPCheckbox

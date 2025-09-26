@@ -836,7 +836,22 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
           }
         },
       },
-
+  {
+        dataField: "counterName",
+        caption: t("counter_name"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+        {
+        dataField: "systemDateTime",
+        caption: t("system_date_time"),
+        dataType: "datetime",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
       //in 1050 shown only on summary calculation
 
       {
@@ -967,11 +982,14 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
       .filter((column) => {
         if (
           column.dataField == "salesAmount" ||
-          column.dataField == "totalProfit"
+          column.dataField == "totalProfit" ||
+          column.dataField == "counterName" ||
+          column.dataField == "systemDateTime" 
         ) {
           return userSession.dbIdValue == "489995732270";
         }
-        if (column.dataField == "upi" || column.dataField == "cardAmt") {
+        if (column.dataField == "upi" || column.dataField == "cardAmt"
+        ) {
           return applicationSettings.accountsSettings.allowMultiPayments;
         }
         if (column.dataField == "printCount") {

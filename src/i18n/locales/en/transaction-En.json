@@ -774,9 +774,20 @@
   "purchase_order_number": "Purchase Order Number",
   "enter_voucher_number": "Enter Voucher Number",
   "approved": "Approved",
-  "grid_footer_background_color":"Grid footer background color",
-  "grid_footer_font_color":"Grid footer font color",
+  "grid_footer_background_color": "Grid footer background color",
+  "grid_footer_font_color": "Grid footer font color",
   "confirm_po_approval": "Are you sure to approve purchase order?",
   "po_approval_final": "Approving this purchase order is a permanent action and cannot be reversed",
-  "template":"Template"
+  "template": "Template",
+
+  "show_view": "Show view",
+  "unit_code": "Unit Code",
+  "po": "PO",
+  "pi": "PI",
+  "transaction_already_invoiced_warning": "Transaction already invoiced cannot delete or edit do you want to proceed",
+  "deleting_transaction_question": "Are you sure you want to delete this transaction?",
+  "once_deleting_this_transaction_cannot_be_recovered": "Once deleting this transaction cannot be recovered",
+  "pi_ref": "PI Ref",
+  "zero_rate_or_qty": "Zero Rate or Quantity",
+  "zero_rate_or_qty_entered_in_row": "Zero rate or quantity entered in row:"
 }

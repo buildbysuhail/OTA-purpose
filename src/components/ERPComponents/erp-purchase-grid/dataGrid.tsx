@@ -325,7 +325,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
       const parts = value.split(".");
       if (parts.length > 2) return false;
       if (parts.length == 2) {
-        debugger;
+        
       }
       if (parts[0] && !/^-?\d*$/.test(parts[0])) return false;
       if (parts.length === 2) {
@@ -433,7 +433,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
           <ERPDataCombobox
             options={options ?? []}
             onChange={(e) => {
-              debugger;
+              
               onChange(
                 e.value,
                 column.dataField as keyof TransactionDetail,
@@ -1247,7 +1247,7 @@ const VirtualRow = React.memo(
                 transactionInitialMoreDetails
               ).includes(column.dataField as keyof TransactionDetailsMore);
               if (column.dataField == "memo" && item.productID > 0) {
-                debugger;
+                
               }
               const fieldKey = column.dataField as TransactionDetailKeys;
               const idField = column.idField as keyof TransactionDetail;
@@ -1503,6 +1503,7 @@ const VirtualRow = React.memo(
                     currentCell?.column === column.dataField &&
                     currentCell?.rowIndex === index ? (
                     <ERPProductSearch
+                      showInputSymbol={false}
                       customStyle={customStyle}
                       appState={appState}
                       textAlign={
@@ -1753,7 +1754,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       handleDropping: (eFromDataGrid?: boolean) => void;
     }>(null);
     const { t } = useTranslation("transaction");
-    const [isGridMenuOpen, setIsGridMenuOpen] = useState(false);
+    // const [isGridMenuOpen, setIsGridMenuOpen] = useState(false);
     const [isExcelMenuOpen, setIsExcelMenuOpen] = useState(false);
     const [exportVisibleColumns, setExportVisibleColumns] = useState(true);
     const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -2525,11 +2526,23 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
     };
 
     const closeGridMenu = () => {
-      setIsGridMenuOpen(false);
+      dispatch(
+        formStateHandleFieldChange({
+          fields: { gridMenuOpen: false },
+        })
+      );
     };
 
+    const openGridMenu = () => {
+      dispatch(
+        formStateHandleFieldChange({
+          fields: { gridMenuOpen: true },
+        })
+      );
+    }
+
     useEffect(() => {
-      const handleClickOutside = (event: MouseEvent) => {
+      function handleClickOutside(event: MouseEvent) {
         if (
           popupRef.current &&
           !popupRef.current.contains(event.target as Node) &&
@@ -2538,18 +2551,12 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
         ) {
           closeGridMenu();
         }
-      };
-
-      if (isGridMenuOpen) {
-        document.addEventListener("mousedown", handleClickOutside);
-      } else {
-        document.removeEventListener("mousedown", handleClickOutside);
       }
-
+      document.addEventListener("mousedown", handleClickOutside);
       return () => {
         document.removeEventListener("mousedown", handleClickOutside);
       };
-    }, [isGridMenuOpen]);
+    }, []);
 
     return (
       <div
@@ -2579,7 +2586,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
         className="rounded-2xl shadow-xl backdrop-blur-sm"
       >
         <div className={`relative ${className} w-full`}>
-          {isGridMenuOpen && (
+          {formState.gridMenuOpen && (
             <div
               ref={popupRef}
               className={`fixed top-[33px] w-[251px] rounded-lg shadow-xl border p-2 z-[51] backdrop-blur-sm ${
@@ -2592,30 +2599,8 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
               <nav className="w-full">
                 <ul className="space-y-1">
                   {/* Grid Preferences */}
-                  <li>
-                    <button
-                      className={`w-full flex items-center gap-3 px-3 py-[5px] rounded-md group text-left cursor-pointer transition-all duration-200 ${
-                        appState.mode === "dark"
-                          ? "hover:bg-[#4c1d954d] hover:text-[#d8b4fe]"
-                          : "hover:bg-[#f3e8ff] hover:text-[#7c3aed]"
-                      }`}
-                    >
-                      <div
-                        className={`p-[9px] rounded-full flex items-center justify-center group-hover:scale-110 transition-all duration-200 ${
-                          appState.mode === "dark"
-                            ? "bg-[#4c1d954d] group-hover:bg-[#6b21a899]"
-                            : "bg-[#ede9fe] group-hover:bg-[#e9d5ff]"
-                        }`}
-                      >
-                        <Settings
-                          className={`h-4 w-4 ${
-                            appState.mode === "dark"
-                              ? "text-[#d8b4fe]"
-                              : "text-[#7c3aed]"
-                          }`}
-                        />
-                      </div>
-                      <GridPreferenceChooser
+                  <li> 
+                        <GridPreferenceChooser
                         ref={preferenceChooserRef}
                         gridId={gridId}
                         columns={
@@ -2623,15 +2608,16 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                         }
                         onApplyPreferences={onApplyPreferences}
                         showChooserName={true}
-                        // buttonClassName="font-medium flex-1 text-left"
                       />
-                    </button>
-                  </li>
+                 </li>
 
                   {/* Export to Excel */}
                   <li>
                     <button
-                      onClick={openExcelMenu}
+                      onClick={() => {
+                        closeGridMenu();
+                        openExcelMenu();
+                      }}
                       className={`w-full flex items-center gap-3 px-3 py-[5px] rounded-md group text-left transition-all duration-200 ${
                         appState.mode === "dark"
                           ? "hover:bg-[#14532d4d] hover:text-[#86efac]"
@@ -2662,7 +2648,10 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                   {/* Change Grid Theme */}
                   <li>
                     <button
-                      onClick={handleShowGridTheme}
+                      onClick={()=>{
+                        closeGridMenu();
+                        handleShowGridTheme();
+                      }}
                       className={`w-full flex items-center gap-3 px-3 py-[5px] rounded-md group text-left transition-all duration-200 ${
                         appState.mode === "dark"
                           ? "hover:bg-[#1e3a8a4d] hover:text-[#93c5fd]"
@@ -2715,7 +2704,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                   <ERPButton
                     variant="primary"
                     title={t("export")}
-                    onClick={exportToExcel}
+                    onClick={() => { exportToExcel(); closeExcelMenu(); }}
                   />
                 </div>
               }
@@ -2861,7 +2850,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                                 ref={buttonRef}
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  setIsGridMenuOpen((prev) => !prev);
+                                  openGridMenu();
                                 }}
                                 className={`flex items-center rounded-full p-2 mr-2 transition-colors ${
                                   appState.mode === "dark"

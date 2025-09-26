@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import Urls from "../../../../redux/urls";
-import { useSelector } from "react-redux/es/exports";
+import { useDispatch, useSelector } from "react-redux/es/exports";
 import { RootState } from "../../../../redux/store";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
+import { formStateMasterHandleFieldChange } from "./reducer";
 
 interface LedgerDetailsProps {
   closeModal: () => void;
@@ -16,6 +17,8 @@ const LedgerDetails: React.FC<LedgerDetailsProps> = ({ closeModal, t }) => {
   const formState = useSelector((state: RootState) => state.InventoryTransaction);
   const [salesRoute, setSalesRoute] = useState(false);
   const [mainSalesRoute, setMainSalesRoute] = useState<any>();
+  const [ledgerInitialized, setLedgerInitialized] = useState(false);
+  const dispatch = useDispatch()
   const gridColumns: DevGridColumn[] = [
     {
       dataField: "partyCode",
@@ -45,6 +48,44 @@ const LedgerDetails: React.FC<LedgerDetailsProps> = ({ closeModal, t }) => {
       width: 250,
     },
   ];
+
+  const handleLedgerContentReady = useCallback(
+    (e: any) => {
+      const gridInstance = e.component;
+      const visibleRows = gridInstance.getVisibleRows();
+      if (!ledgerInitialized && visibleRows.length > 0) {
+        gridInstance.option("focusedRowIndex", 0);
+        gridInstance.selectRows([visibleRows[0].key], false);
+        setLedgerInitialized(true);
+        setTimeout(() => {
+          gridInstance.focus();
+        }, 0);
+      }
+    },
+    [ledgerInitialized]
+  );
+
+  const handleRowClick = useCallback((e: any) => {
+    const grid = e.component;
+    const key = e.key;
+    grid.selectRows([key], false);
+    grid.option("focusedRowKey", key);
+    grid.focus();
+  }, []);
+
+  const handleKeyDown = useCallback((e: any) => {
+    const key = e.event?.key;
+    if (key === "Enter") {
+      const grid = e.component;
+      const focusedRowKey = grid.option("focusedRowKey");
+      dispatch(
+        formStateMasterHandleFieldChange({
+          fields: { ledgerID: focusedRowKey.ledgerID },
+        })
+      );
+      closeModal();
+    }
+  }, []);
 
   return (
     <>
@@ -92,6 +133,17 @@ const LedgerDetails: React.FC<LedgerDetailsProps> = ({ closeModal, t }) => {
           enableScrollButton={false}
           ShowGridPreferenceChooser={false}
           showPrintButton={false}
+          focusedRowEnabled={true}
+          tabIndex={0}
+          onContentReady={handleLedgerContentReady}
+          onRowClick={handleRowClick}
+          onKeyDown={handleKeyDown}
+          selectionMode="single"
+          keyboardNavigation={{
+            editOnKeyPress: false,
+            enabled: true,
+            enterKeyDirection: "row",
+          }}
         />
       </div>
     </>

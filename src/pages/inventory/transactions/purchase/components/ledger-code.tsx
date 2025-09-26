@@ -34,7 +34,7 @@ const LedgerCode = React.forwardRef<HTMLInputElement, LedgerCodeProps>(({ formSt
           label={t(formState.formElements.partyCode.label)}
           data={formState.transaction.master}
           onSelectItem={(e) => {
-            debugger;
+            
             dispatch(
               formStateHandleFieldChangeKeysOnly({
                 fields: {

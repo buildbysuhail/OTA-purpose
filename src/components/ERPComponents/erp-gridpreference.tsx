@@ -9,10 +9,12 @@ import { getInitialPreference } from "../../utilities/dx-grid-preference-updater
 import { APIClient } from "../../helpers/api-client";
 import Urls from "../../redux/urls";
 import { useTranslation } from "react-i18next";
-import { Ellipsis } from "lucide-react";
+import { Ellipsis, Settings } from "lucide-react";
 import ERPToast from "./erp-toast";
 import { useAppState } from "../../utilities/hooks/useAppState";
 import { removeStorageString, setStorageString } from "../../utilities/storage-utils";
+import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
+import { formStateHandleFieldChange } from "../../pages/inventory/transactions/purchase/reducer";
 interface GridPreferenceChooserProps {
   gridId: string;
   columns: DevGridColumn[];
@@ -27,11 +29,12 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
   const dragItem = useRef<string | null>(null);
   const dragOverItem = useRef<string | null>(null);
   const [searchCols, setSearchCols] = useState<string>("");
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean | null>(null);
   const { t } = useTranslation("main");
   const [isSaving, setIsSaving] = useState(false);
   const { appState } = useAppState();
   const isRtl = appState.locale.rtl;
+  const dispatch = useAppDispatch();
 
   const onChange = (e: any) => {
     onApplyPreferences(e);
@@ -165,7 +168,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
   const handleResetGrid = async () => {
     await removeStorageString(`gridPreferences_${gridId}`)
     if (isSaving) return;
-    debugger;
+
     setIsSaving(true);
     try {
       await api.postAsync(Urls.grid_preference_reset, gridId);
@@ -197,6 +200,14 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
     // }),
   }));
 
+  const closeGridMenu = () => {
+    dispatch(
+      formStateHandleFieldChange({
+        fields: { gridMenuOpen: false },
+      })
+    );
+  };
+
   return (
     <Fragment>
       {showChooserOnGridHead ? (
@@ -209,10 +220,13 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
         </button>
       ) : showChooserName ? (
         <button
+          className="!w-full flex items-center gap-3 px-3 py-[5px] hover:bg-purple-50 hover:text-purple-800 dark:hover:bg-purple-900/30 dark:hover:text-purple-300 transition-all duration-200 rounded-md group text-left"
           onClick={(e) => { e.stopPropagation(); setIsOpen(true); }}
-          onTouchEnd={() => setIsOpen(true)}
-          className="text-xs font-medium hover:text-gray-700 transition-all duration-300 ease-in-out whitespace-nowrap">
-          {t('grid_preference_chooser')}
+        >
+          <div className="w-8 h-8 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center group-hover:bg-purple-200 dark:group-hover:bg-purple-900/50 group-hover:scale-110 transition-all duration-200">
+            <Settings className="h-4 w-4 text-purple-800 dark:text-purple-300" />
+          </div>
+          <span className="font-medium">{t('grid_preference_chooser')}</span>
         </button>
       ) : (
         <button onClick={() => setIsOpen(true)} className="ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px]">
@@ -223,13 +237,13 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
       <ERPModal
         isForm
         isFullHeight={true}
-        isOpen={isOpen}
+        isOpen={isOpen === true}
         hasSubmit={false}
         closeTitle={t("close")}
         title={t("customize_columns")}
         width={800}
         height={600}
-        closeModal={() => setIsOpen(false)}
+        closeModal={() => { setIsOpen(false); closeGridMenu(); }}
         content={
           <div className="flex flex-col gap-1">
             <ERPInput
@@ -350,14 +364,14 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
         footer={
           <div className="absolute -bottom-0 h-[42px] pt-[4px] pb-[2px] left-0 w-full flex justify-end gap-2 dark:!border-dark-border dark:!bg-dark-bg bg-white border-t z-10 pr-[10px] rounded-b-md">
             <ERPSubmitButton
-              type="reset"
-              onClick={() => setIsOpen(false)}
+              type="button"
+              onClick={() => { setIsOpen(false); closeGridMenu(); }}
               className="dark:text-dark-hover-text w-28 bg-[#808080] text-[#404040] max-w-[115px]">
               {t("cancel")}
             </ERPSubmitButton>
 
             <ERPSubmitButton
-              type="button"
+              type="reset"
               className="max-w-[115px]"
               variant="secondary"
               onClick={handleResetGrid}
@@ -366,7 +380,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
             </ERPSubmitButton>
 
             <ERPSubmitButton
-              type="button"
+              type="submit"
               className="max-w-[115px]"
               variant="primary"
               onClick={handleApplyPreferences}

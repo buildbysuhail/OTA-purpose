@@ -102,6 +102,7 @@ import { BusinessType } from "../../../../enums/business-types";
 import MemoEditorModal from "./memo-editor";
 import { getStorageString } from "../../../../utilities/storage-utils";
 import { getApLocalData, getApLocalDataByUrl } from "../../../../redux/cached-urls";
+import BillWisePopup from "../../../transaction-base/billwise-popup";
 interface BilledItem {
   id?: number;
   name: string;
@@ -534,7 +535,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
     applyDiscountsToItems,
     downloadImportTemplateHeadersOnly,
     importFromExcel,
-    loadLedgerData
+    loadLedgerData,
+    postBillWiseDetails
   } = useTransaction(
     transactionType ?? "",
     btnSaveRef,
@@ -560,6 +562,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     handleKeyDown,
     formStateRef,
     purchaseGridRef,
+    
   );
 
   const applicationSettings = useAppSelector(
@@ -578,7 +581,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     ) {
       height = window.innerHeight - 303;
     } else {
-      height = window.innerHeight - 510;
+      height = window.innerHeight - 500;
     }
 
     console.log('Max safe integer:', Number.MAX_SAFE_INTEGER);
@@ -646,13 +649,14 @@ const TransactionForm: React.FC<TransactionProps> = ({
           voucherPrefix ?? "",
           false
         );
-        debugger;
+        
         employeeID = userSession.employeeId ?? 0;
-        if (voucherType == VoucherType.PurchaseReturn) {
+        if (["PR","PQ","PO"].includes(voucherType as any)  && employeeID <= 0) {
           const emps = await getApLocalDataByUrl(`${Urls.inv_transaction_base}${transactionType}/Data/Employee/`);
           employeeID = emps && emps.length > 0 ? emps[0].id : employeeID;
         }
       }
+      
 
       const templates = formState.templates;
       const templatesData = formState.templatesData;
@@ -725,7 +729,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
         if (isInvoker && formType == "IMPORT") {
           _formState.userRightsFormCode = "PIIMPORT"
         }
-      }
+      }debugger;
+      
       const _gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new APIClient()))
       const accountKey =
         formType == "PI-IND" ? applicationSettings.accountsSettings.defaultIndirectExpenseAccount as keyof typeof LedgerType
@@ -946,11 +951,24 @@ const TransactionForm: React.FC<TransactionProps> = ({
       dispatch(formStateHandleFieldChange({ fields: { loading: { isLoading: true, text: `${loadType == "GRN" ? 'Please wait while loading GRN Items' : 'Please wait while loading Order Items'}` } } }));
       const PendingTransDetails: any = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/PendingTransactionsByMasterIds`, `masterIDs=${masterIds}`)
       if (PendingTransDetails && PendingTransDetails.details && PendingTransDetails.details.length > 0) {
-
+        debugger;
         const calculatedDetails: TransactionDetail[] = [];
-        const refactoredDetails = refactorDetails(PendingTransDetails.details, loadType, voucherType, { result: {} }, formState.transaction.master.voucherForm);
+        const refactoredDetails = refactorDetails(PendingTransDetails.details, formState.transaction.master.voucherForm , voucherType, { result: {} },loadType);
         for (let index = 0; index < refactoredDetails.length; index++) {
-          const element = refactoredDetails[index];
+            const _element = {...refactoredDetails[index]};
+            debugger;
+          const element = {..._element};
+           element.gRTransDetailID = loadType == "GRN" ? _element.invTransactionDetailID??0 : 0;
+           if(applicationSettings.inventorySettings.carryForwardPurchaseOrderQtyToPurchase) {
+            element.pOTransDetailID = _element.invTransactionDetailID??0
+           }else {
+            element.pO_PITransDetailIDs = _element.invTransactionDetailID??0
+            try {
+              element.pO_PITransDetailQtys = _element.poTransDetailsIDTag
+            } catch (error) {
+              
+            }
+           }
           const calculated = calculateRowAmount(
             element,
             "barCode",
@@ -971,14 +989,14 @@ const TransactionForm: React.FC<TransactionProps> = ({
             summaryRes ? summaryRes.summary as SummaryItems : initialInventoryTotals,
             formState.formElements,
             {
-              result: {transaction:{master:{remarks: voucherNumbers}}},
+              result: {pendingOrdListMasterIDs: masterIds,pendingOrdListBranchIDs: branchIDs,transaction:{master:{remarks: voucherNumbers}}},
             }
           );
 
           if (totalRes) {
             totalRes.summary = summaryRes.summary;
             totalRes.transaction = totalRes.transaction ?? {};
-            totalRes.transaction.master = { ...totalRes.transaction.master };
+            totalRes.transaction.master = { ...totalRes.transaction.master, stockUpdate: (loadType == "GRN" || loadType == "GRR") ? false : true };
             totalRes.transaction.details = [];
             totalRes.batchesUnits = PendingTransDetails.batchesUnits;
             totalRes.loading = { isLoading: false, text: '' }
@@ -1348,7 +1366,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   }, [formState.quantityFactorData]);
 
 
-
+debugger;
   const _purchaseGridCol: ColumnModel[] = purchaseGridCol(applicationSettings, userSession
     , voucherType ?? formState.transaction.master.voucherType
     , formType ?? formState.transaction.master.voucherForm, t, formState) ?? []
@@ -2362,6 +2380,50 @@ const TransactionForm: React.FC<TransactionProps> = ({
           t={t}
         />
       )}
+      {formState.showbillwise == true &&
+        formState.billwiseData != undefined &&
+        formState.billwiseData != null &&
+        formState.billwiseData.length > 0 &&
+        formState.billwiseDrCr != undefined &&
+        formState.billwiseDrCr != null &&
+        formState.billwiseDrCr != "" && (
+          <ERPModal
+            isOpen={formState.showbillwise ?? false}
+            title={t("billwise")}
+            initialMaximize={
+              formState?.userConfig?.maximizeBillwiseScreenInitially
+            }
+            closeModal={() => {
+              dispatch(
+                formStateHandleFieldChange({
+                  fields: { showbillwise: false, billwiseData: [] },
+                })
+              );
+            }}
+            isForm={true}
+            width={1200}
+            height={800}
+            content={
+              <BillWisePopup
+              isInv ={true}
+                drCr={formState.billwiseDrCr}
+                onSave={(
+                  billwiseDetails: string,
+                  totalAmount: number,
+                  vrNumbers: string,
+                  fromAutoPost: boolean,
+                  bills?: any[]
+                ) => {
+                  if (
+                    applicationSettings.accountsSettings?.maintainBillwiseAccount
+                  ) {
+                   postBillWiseDetails({accTransactionDetailID:formState.transaction.master.accTransactionDetailIDForBillwise, billWiseDetails:bills??[]})
+                }
+                }}
+              />
+            }
+          />
+        )}
     </>
   );
 };

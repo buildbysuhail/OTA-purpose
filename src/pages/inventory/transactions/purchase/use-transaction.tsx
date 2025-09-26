@@ -81,6 +81,7 @@ import { DeepPartial } from "redux";
 import ExcelJS from "exceljs";
 import { sanitizeDataAdvanced } from "../../../../utilities/Utils";
 import { getStorageString, setStorageString } from "../../../../utilities/storage-utils";
+import { getApLocalDataByUrl } from "../../../../redux/cached-urls";
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;
 //   clearDetailsAfterSaveAccounts: boolean;
@@ -352,7 +353,7 @@ export const useTransaction = (
   loadFType,
   loadPrefix,
   ) => {
-    debugger;
+    
     const _s_isDirty = isDirtyTransaction(
       formState.prev,
       {
@@ -381,7 +382,7 @@ export const useTransaction = (
         })
       );
     }
-
+debugger;
     let _formState = await loadTransVoucher(
       usingManualInvNumber,
       voucherNumber,
@@ -394,7 +395,7 @@ export const useTransaction = (
       loadFType,
       loadPrefix
     );
-    debugger;
+    
     if (loadVType == "GRN" || loadVType == "GRR") {
        _formState = merge({}, _formState, {transaction:{master:{deliveryNoteNumber: manualInvoiceNumber}}} );
     }
@@ -512,7 +513,7 @@ export const useTransaction = (
         openUnsavedPrompt: false,
       })
     );
-    debugger;
+    
     let url = `${Urls.inv_transaction_base}${transactionType}`;
     
     let _voucherNumber =
@@ -548,8 +549,8 @@ export const useTransaction = (
     }
     if (loadVType == "PI_Ref") {
       out_voucherNumber = manualInvoiceNumber ?? 0;
-      out_voucherType = loadVType;
-      out_voucherForm = loadFType??"";
+      out_voucherType = "PI";
+      out_voucherForm = "VAT";
       out_voucherPrefix = loadPrefix??"";
       url = url + "/ByReferenceNo";
     }
@@ -598,7 +599,7 @@ export const useTransaction = (
         },
       };
     }
-    debugger;
+    
 
     if (usingManualInvNumber) {
       vch.master = {
@@ -706,7 +707,7 @@ export const useTransaction = (
         voucher.transaction
       );
     }
-    debugger;
+    
     voucher.isInitialLedger = true;
     voucher = await loadLedgerData(voucher) as any;
     return voucher;
@@ -773,7 +774,7 @@ export const useTransaction = (
   async function validate(): Promise<boolean> {
     const master = formState.transaction.master;
     const details = formState.transaction.details;
-
+debugger;
     // Stock update restriction
     if (!formState.transaction.master.stockUpdate && (formState.transaction.master.voucherType === "PI" || formState.transaction.master.voucherType === "PR")) {
       const voucherType = formState.transaction.master.voucherType;
@@ -784,9 +785,7 @@ export const useTransaction = (
         confirmButtonText: t("yes"),
         cancelButtonText: t("no"),
         showCancelButton: true,
-        onCancel: () => {
-          return false;
-        },
+       
       });
       if (!confirm) {
         return false;
@@ -946,23 +945,26 @@ export const useTransaction = (
     // }
 
     // Gross amount zero validation
-    // for (let i = 0; i < details.length; i++) {
-    //   const row = details[i];
-    //   if (row.gross === 0) {
-    //     const confirm = await ERPAlert.show({
-    //       icon: "question",
-    //       title: t("zero_value"),
-    //       text: t("zero_qty_in_row", { row: i + 1 }),
-    //       confirmButtonText: t("yes"),
-    //       cancelButtonText: t("no"),
-    //       showCancelButton: true,
-    //     });
-    //     if (!confirm) {
-    //       // optionally set focus logic here
-    //       return false;
-    //     }
-    //   }
-    // }
+    for (let i = 0; i < details.length; i++) {
+      const row = details[i];
+      if (row.gross === 0 && row.productID > 0) {
+        const confirm = await ERPAlert.show({
+          icon: "question",
+          title: t("zero_rate_or_qty"),
+          text: `${t('zero_rate_or_qty_entered_in_row')} row: ${i + 1}`,
+          confirmButtonText: t("yes"),
+          cancelButtonText: t("no"),
+          showCancelButton: true,
+        });
+        if (!confirm) {
+          const rowIndex = details.findIndex(x => x.slNo == row.slNo);
+          const res = focusColumn(rowIndex, "qty");
+          setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
+          return false
+          
+        }
+      }
+    }
 
     // Check no items after blank rows
     // const firstFreeIndex = details.findIndex((x) => !x.productId);
@@ -1071,7 +1073,7 @@ export const useTransaction = (
     );
 
     const valid = await validate();
-
+debugger;
     if (valid == true) {
       const master = attachMaster(formState);
       const attachments = formState.transaction.attachments
@@ -1110,6 +1112,8 @@ export const useTransaction = (
         details: dtRes.outputDetails,
         attachments: attachments,
         invAccTransactions: formState.transaction.invAccTransactions,
+        pendingOrderListMasterIDs: formState.pendingOrdListMasterIDs,
+        PendingOrderListBranchIDs: formState.pendingOrdListBranchIDs
       };
 
       params = sanitizeDataAdvanced(params, transactionInitialData)
@@ -1184,6 +1188,15 @@ export const useTransaction = (
       }
 
     }
+    else{
+       dispatch(
+      formStateHandleFieldChange({
+        fields: {
+          saving: false,
+        },
+      })
+    );
+    }
   };
   const clearRow = async (isEdit: boolean, transactionMasterID: number) => {
     await undoEditMode(isEdit, transactionMasterID);
@@ -1216,6 +1229,11 @@ export const useTransaction = (
       formState.transaction.master.voucherPrefix,
       false
     );
+    let employeeID = userSession.employeeId ?? 0;
+            if (["PR","PQ","PO"].includes(formState.transaction.master.voucherType ?? "" as any)  && employeeID <= 0) {
+              const emps = await getApLocalDataByUrl(`${Urls.inv_transaction_base}${transactionType}/Data/Employee/`);
+              employeeID = emps && emps.length > 0 ? emps[0].id : employeeID;
+            }
     const master: TransactionMaster = {
       ...TransactionMasterInitialData,
       voucherType: formState.transaction.master.voucherType ?? "",
@@ -1223,7 +1241,7 @@ export const useTransaction = (
       voucherForm: formState.transaction.master.voucherForm ?? "",
       transactionDate: moment(softwareDate, "DD/MM/YYYY").local().toISOString(),
       purchaseInvoiceDate: moment().local().toISOString(),
-      employeeID: userSession.employeeId > 0 ? userSession.employeeId : 0,
+      employeeID: employeeID,
       voucherNumber: vNo ?? 0,
       inventoryLedgerID:
         formState.transaction.master.voucherType == VoucherType.PurchaseReturn ? applicationSettings.inventorySettings?.defaultPurchaseReturnAcc
@@ -2147,10 +2165,10 @@ export const useTransaction = (
     //   return;
     // }
 
-    if (formState.transaction.master.isInvoiced === true) {
+    if (formState.transaction.master.isInvoiced === true && (formState.transaction.master.voucherType == "GRN" )) {
       const invoicedConfirmResult = await ERPAlert.show({
         title: t("warning"),
-        text: t("transaction_already_invoiced_cannot_delete_or_edit_do_you_want_to_proceed"),
+        text: t("transaction_already_invoiced_warning"),
         icon: "warning",
         confirmButtonText: t("ok"),
       });
@@ -2212,8 +2230,8 @@ export const useTransaction = (
 
       // Show delete confirmation dialog
       const deleteConfirmResult = await ERPAlert.show({
-        title: t("delete_transaction_question"),
-        text: t("once_deleted_this_transaction_cannot_be_recovered"),
+        title: t("deleting_transaction_question"),
+        text: t("once_deleting_this_transaction_cannot_be_recovered"),
         icon: "question",
         showCancelButton: true,
         confirmButtonText: t("yes"),
@@ -2242,7 +2260,7 @@ export const useTransaction = (
             });
             clearControls(false)
           } else {
-            debugger;
+            
             ERPAlert.show({
               title: t("delete_operation_failed"),
               text: deleteResult?.message,
@@ -2838,7 +2856,7 @@ export const useTransaction = (
           //   outDetail.details2!.additionalCessPerc = 0;
           // }
         } else {
-          debugger;
+          
 
           const { voucherType, voucherForm } = formState.transaction.master;
 
@@ -3481,7 +3499,7 @@ export const useTransaction = (
               }
             }
           } else if (columnName == "btnPrintBarcode") {
-            debugger;
+            
             if ((formState.transaction.details[rowIndex].qty + formState.transaction.details[rowIndex].stickerQty) <= 0) {
               break
             }
@@ -3987,7 +4005,7 @@ export const useTransaction = (
             `${Urls.inv_transaction_base}${transactionType}/LedgerDetails?LedgerId=${ledgerID}`
           ),
         ]);
-        debugger;
+        
         const ret = {
           ..._formState,
           formElements: {
@@ -4064,7 +4082,30 @@ export const useTransaction = (
     );
     return {}
   };
+  interface BillWiseDetail {
+  accTransDetailID: number;
+  billWiseAdjAmt: number;
+  adjustedTransDetailID: number;
+}
 
+interface BillWiseRequest {
+  accTransactionDetailID: number;
+  billWiseDetails: BillWiseDetail[];
+}
+async function postBillWiseDetails(
+  data: BillWiseRequest
+): Promise<any> {
+  try {
+    const response = await api.postAsync(
+      `${Urls.inv_transaction_base}${transactionType}/BillWiseDetail`,
+      data
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error("Error posting BillWiseDetails:", error);
+    throw error;
+  }
+}
   return {
     downloadImportTemplateHeadersOnly,
     importFromExcel,
@@ -4106,6 +4147,7 @@ export const useTransaction = (
     calculateTotal,
     applyDiscountsToItems,
     handlePrintBarcode,
-    loadLedgerData
+    loadLedgerData,
+    postBillWiseDetails
   };
 };

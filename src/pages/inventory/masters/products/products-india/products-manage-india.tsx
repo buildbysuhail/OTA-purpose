@@ -58,8 +58,9 @@ export const ProductManageIndia: React.FC<{
     const salesPriceRef = useRef<HTMLInputElement>(null);
     const mrpRef = useRef<HTMLInputElement>(null);
     const markupRef = useRef<HTMLInputElement>(null);
-    const productSearchRef = useRef<HTMLInputElement>(null);
     const productCategoryRef = useRef<HTMLInputElement>(null);
+    const productSearchRef = useRef<HTMLInputElement>(null);
+
     useEffect(() => {
       const fetchData = async () => {
         const prev = getFieldProps("*");
@@ -249,6 +250,7 @@ export const ProductManageIndia: React.FC<{
               {/* {getFieldProps("product.productId").value} */}
 
               <ERPProductSearch
+                showInputSymbol={false}
                 label={t("product_name")}
                 placeholder={t("product_name")}
                 showCheckBox={false}

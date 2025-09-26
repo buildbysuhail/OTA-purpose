@@ -143,6 +143,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                 formStateHandleFieldChange({
                   fields: {
                     billwiseData: billwise,
+                    billwiseDetails: formState.transaction.master.billWiseString,
                     ledgerBillWiseLoading: false,
                     showbillwise: true,
                     billwiseDrCr: "Dr",

@@ -41,3 +41,4 @@
 // Pending Purchase Quotation List
 // PI_Ref
 //bill_wise
+//zero_qty_in_row

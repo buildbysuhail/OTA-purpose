@@ -577,6 +577,7 @@ export interface TransactionFormState {
   gridMenuOpen: boolean;
   billwiseData?: BillwiseData[];
   billwiseDrCr?: string;
+  billwiseDetails?: string;
   showbillwise?: boolean;
   ledgerBillWiseLoading?: boolean;
 }

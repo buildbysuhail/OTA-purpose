@@ -947,23 +947,23 @@ debugger;
     // }
 
     // Gross amount zero validation
-    // for (let i = 0; i < details.length; i++) {
-    //   const row = details[i];
-    //   if (row.gross === 0) {
-    //     const confirm = await ERPAlert.show({
-    //       icon: "question",
-    //       title: t("zero_value"),
-    //       text: t("zero_qty_in_row", { row: i + 1 }),
-    //       confirmButtonText: t("yes"),
-    //       cancelButtonText: t("no"),
-    //       showCancelButton: true,
-    //     });
-    //     if (!confirm) {
-    //       // optionally set focus logic here
-    //       return false;
-    //     }
-    //   }
-    // }
+    for (let i = 0; i < details.length; i++) {
+      const row = details[i];
+      if (row.gross === 0) {
+        const confirm = await ERPAlert.show({
+          icon: "question",
+          title: t("zero_value"),
+          text: t("zero_qty_in_row", { row: i + 1 }),
+          confirmButtonText: t("yes"),
+          cancelButtonText: t("no"),
+          showCancelButton: true,
+        });
+        if (!confirm) {
+          // optionally set focus logic here
+          return false;
+        }
+      }
+    }
 
     // Check no items after blank rows
     // const firstFreeIndex = details.findIndex((x) => !x.productId);
@@ -2155,7 +2155,7 @@ debugger;
     //   return;
     // }
 
-    if (formState.transaction.master.isInvoiced === true) {
+    if (formState.transaction.master.isInvoiced === true && (formState.transaction.master.voucherType == "GRN" )) {
       const invoicedConfirmResult = await ERPAlert.show({
         title: t("warning"),
         text: t("transaction_already_invoiced_warning"),

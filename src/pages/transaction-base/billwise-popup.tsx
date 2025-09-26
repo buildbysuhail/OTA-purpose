@@ -16,17 +16,19 @@ import VoucherType from "../../enums/voucher-types";
 import { isNullOrUndefinedOrEmpty } from "../../utilities/Utils";
 import { APIClient } from "../../helpers/api-client";
 import profile from "../../assets//images/faces/profile-circle.512x512.png";
-import { BillwiseData } from "../accounts/transactions/acc-transaction-types";
+import { AccTransactionFormState, BillwiseData } from "../accounts/transactions/acc-transaction-types";
 import { useNumberFormat } from "../../utilities/hooks/use-number-format";
 import { DevGridColumn } from "../../components/types/dev-grid-column";
 import { useTranslation } from "react-i18next";
+import { TransactionFormState } from "../inventory/transactions/purchase/transaction-types";
 
 interface BillwiseProps {
   onSave?: (
     billwiseDetails: string,
     totalAmount: number,
     vrNumbers: string,
-    fromAutoPost: boolean
+    fromAutoPost: boolean,
+    bills?: any[]
   ) => void;
   onAutoPost?: (
     billwiseDetails: string,
@@ -38,6 +40,7 @@ interface BillwiseProps {
   modalHeight?: any;
   onMaximizeChange?: (maximized: boolean) => void;
   drCr: string;
+  isInv?: boolean;
 }
 const api = new APIClient();
 const BillwiseComponent = ({
@@ -47,12 +50,27 @@ const BillwiseComponent = ({
   isMaximized,
   modalHeight,
   onMaximizeChange,
-  drCr
+  drCr,
+  isInv
 }: BillwiseProps) => {
   const dispatch = useDispatch();
   const { t } = useTranslation('transaction');
   const { round } = useNumberFormat();
-  const formState = useAppSelector((state: RootState) => state.AccTransaction);
+  const formState = isInv ? useAppSelector((state: RootState) => state.InventoryTransaction) : useAppSelector((state: RootState) => state.AccTransaction);
+
+  function isAccTransactionFormState(
+  state: AccTransactionFormState | TransactionFormState
+): state is AccTransactionFormState {
+  return !isInv;
+}
+
+function isTransactionFormState(
+  state: AccTransactionFormState | TransactionFormState
+): state is TransactionFormState {
+  return isInv == true;
+}
+
+
   const [showAllTransactions, setShowAllTransactions] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [netAdjustment, setNetAdjustment] = useState(0);
@@ -90,10 +108,16 @@ const BillwiseComponent = ({
 
   }, []);
   useEffect(() => {
+debugger;
+    let  billwiseDetails: string | undefined =  undefined;
+    if(isAccTransactionFormState(formState)) {
+      billwiseDetails = formState.row.billwiseDetails;
+    } else if (isTransactionFormState(formState)) {
+      billwiseDetails = formState.billwiseDetails;
 
-    
-    if (!isNullOrUndefinedOrEmpty(formState.row.billwiseDetails)) {
-      generateGridFromBillwiseString(formState.row.billwiseDetails);
+    }
+    if ( !isNullOrUndefinedOrEmpty(billwiseDetails)) {
+      generateGridFromBillwiseString(billwiseDetails??"");
     } else {
       
       let obj = JSON.parse(JSON.stringify(formState.billwiseData));
@@ -342,17 +366,19 @@ const BillwiseComponent = ({
       //   dataGridRef.current.instance.saveEditData();
       // }
       updatedBills = updatedBills ?? store;
-      if (updatedBills?.find(x => x.billwiseAmount < 0) != undefined) {
+      if(isAccTransactionFormState(formState)) {
+      
+        const billwiseString = getBillwiseString(updatedBills);
+        const amtAdjusted = getTotalAmountToSet(updatedBills ?? []);
+      if (isFromAccTrans) {
+        if (updatedBills?.find(x => x.billwiseAmount < 0) != undefined) {
         ERPAlert.show({
           title: t("failed"),
           text: t("invalid_adjustment_negative_value"),
         });
         return;
       }
-      if (isFromAccTrans) {
         if (!validate()) return;
-        const billwiseString = getBillwiseString(updatedBills);
-        const amtAdjusted = getTotalAmountToSet(updatedBills ?? []);
         dispatch(
           accFormStateRowHandleFieldChange({
             fields: {
@@ -389,7 +415,7 @@ const BillwiseComponent = ({
             },
           })
         );
-
+      }
         onSave &&
           onSave(
             billwiseString.billwiseString,
@@ -397,7 +423,8 @@ const BillwiseComponent = ({
               ? amtAdjusted
               : formState.row.amount ?? 0,
             billwiseString.vrNumbers,
-            fromAutoPost ?? false
+            fromAutoPost ?? false,
+            updatedBills
           );
         closeBillwise();
       } else if (isFromCashTender) {
@@ -424,14 +451,14 @@ const BillwiseComponent = ({
       options.totalValue = round(options.totalValue); // Apply custom rounding at the end
     }
   };
-  const calculateNetAdjustment = () => {
-    return store.reduce((total: any, row: any) => {
-      const amt = parseFloat(row.billwiseAmount) || 0;
-      return (
-        total + (row.drCr === formState.transaction.master.drCr ? -amt : amt)
-      );
-    }, 0);
-  };
+  // const calculateNetAdjustment = () => {
+  //   return store.reduce((total: any, row: any) => {
+  //     const amt = parseFloat(row.billwiseAmount) || 0;
+  //     return (
+  //       total + (row.drCr === formState.transaction.master.drCr ? -amt : amt)
+  //     );
+  //   }, 0);
+  // };
   const handleRowPrepared = (e: any) => {
     if (e.rowType === "data") {
 
@@ -448,7 +475,7 @@ const BillwiseComponent = ({
   const handleAutoPost = () => {
 
     let remainingAmount: number = parseFloat(
-      (formState.row.amount ?? 0).toString()
+      (isAccTransactionFormState(formState) ? formState.row.amount ?? 0 : formState.transaction.master.grandTotal ?? 0).toString()
     );
     let i = 0;
     const updatedBills: BillwiseData[] = JSON.parse(JSON.stringify(store));
@@ -484,7 +511,7 @@ const BillwiseComponent = ({
     const amtAdjusted = getTotalAmountToSet(updatedBills);
     
     // Check if the adjusted amount exceeds the original amount
-    if (round(amtAdjusted) > round(formState.row.amount ?? 0)) {
+    if (round(amtAdjusted) > round( isAccTransactionFormState(formState) ? formState.row.amount ?? 0 : formState.transaction.master.grandTotal ?? 0)) { 
       ERPAlert.show({
         title: t("auto_post"),
         text: t("excess_adjustment"),
@@ -782,7 +809,7 @@ console.log(itemInfo);
           </Item>
           <Item location="after">
             <ERPCheckbox
-              label={`Show ${formState.transaction.master.drCr === "Dr" ? "Debit" : "Credit"
+              label={`Show ${drCr === "Dr" ? "Debit" : "Credit"
                 } Transactions also`}
               className="text-[12px] font-medium p-3"
               id={""}
@@ -792,7 +819,7 @@ console.log(itemInfo);
           </Item>
           <Item location="after">
             <p className="text-[12px] font-medium p-3 mx-2">
-              {t("amount_to_adjust")} : {formState.row.amount}
+              {t("amount_to_adjust")} : {isAccTransactionFormState(formState) ? formState.row.amount ?? 0 : formState.transaction.master.grandTotal ?? 0}
             </p>
           </Item>
         </Toolbar>

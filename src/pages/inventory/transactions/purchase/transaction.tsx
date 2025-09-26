@@ -2403,16 +2403,17 @@ debugger;
             height={800}
             content={
               <BillWisePopup
+              isInv ={true}
                 drCr={formState.billwiseDrCr}
                 onSave={(
                   billwiseDetails: string,
                   totalAmount: number,
                   vrNumbers: string,
-                  fromAutoPost: boolean
+                  fromAutoPost: boolean,
+                  bills?: any[]
                 ) => {
                   if (
-                    applicationSettings.accountsSettings?.billwiseMandatory &&
-                    billwiseDetails != ""
+                    applicationSettings.accountsSettings?.maintainBillwiseAccount
                   ) {
                    
                 }

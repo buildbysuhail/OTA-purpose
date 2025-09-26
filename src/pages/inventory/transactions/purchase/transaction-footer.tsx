@@ -437,13 +437,12 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
     dispatch(formStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }));
   };
 
-  const hasDropupContent = isNewFooter
-    ? !showWarehouseOutside ||
+  const hasDropupContent = isNewFooter &&
+    !showWarehouseOutside ||
     !showCostCentreOutside ||
     !showAdjustmentOutside ||
     !showAttachmentOutside ||
     formState.formElements.printOnSave.visible
-    : true;
 
   const renderSecondFooter = () => (
     <div
@@ -711,8 +710,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
 
   const dropdownContent = (
     <div className="p-2 dark:bg-dark-bg-card bg-white border border-gray-300 dark:border md:border-t md:border-r md:border-l md:border-b-0 md:rounded-t-lg rounded-lg md:rounded-none">
-      {isNewFooter && (
-        <div className="flex items-end gap-2 flex-wrap">
+      <div className="flex items-end gap-2 flex-wrap">
           {/* <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
           <PriceCategoryCombobox
             formState={formState}
@@ -731,92 +729,91 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             handleFieldKeyDown={handleFieldKeyDown}
           />
           </div> */}
-          {!showWarehouseOutside && (
-            <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
-              {warehouseComponent}
-            </div>
-          )}
-          {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
-            <>
-              {!showCostCentreOutside && (
-                <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
-                  {costCentreComponent}
-                </div>
-              )}
+        {!showWarehouseOutside && (
+          <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
+            {warehouseComponent}
+          </div>
+        )}
+        {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+          <>
+            {!showCostCentreOutside && (
+              <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
+                {costCentreComponent}
+              </div>
+            )}
             </>
           )}
           {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
             <>
-              {!showAdjustmentOutside && (
-                <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
-                  {adjustmentComponent}
-                </div>
-              )}
-            </>
-          )}
-          {applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && !showAttachmentOutside && (
-            <div className="w-full mb-2 sm:mb-0 sm:w-auto">
-              {attachmentComponent}
-            </div>
-          )}
+            {!showAdjustmentOutside && (
+              <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
+                {adjustmentComponent}
+              </div>
+            )}
+          </>
+        )}
+        {applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && !showAttachmentOutside && (
+          <div className="w-full mb-2 sm:mb-0 sm:w-auto">
+            {attachmentComponent}
+          </div>
+        )}
           {/* <div className="w-full mb-2 sm:mb-0 sm:w-auto">
             {checkboxesComponent}
           </div> */}
-          <div className="flex items-center justify-between w-full">
-            {formState.formElements.printOnSave.visible && (
-              <ERPCheckbox
-                localInputBox={formState?.userConfig?.inputBoxStyle}
-                id="printOnSave"
-                label={t(formState.formElements.printOnSave.label)}
-                checked={formState.printOnSave}
-                onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { printOnSave: e.target.checked }, }))}
-                disabled={formState.formElements.printOnSave?.disabled}
-                className="dark:text-dark-text"
+        <div className="flex items-center justify-between w-full">
+          {formState.formElements.printOnSave.visible && (
+            <ERPCheckbox
+              localInputBox={formState?.userConfig?.inputBoxStyle}
+              id="printOnSave"
+              label={t(formState.formElements.printOnSave.label)}
+              checked={formState.printOnSave}
+              onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { printOnSave: e.target.checked }, }))}
+              disabled={formState.formElements.printOnSave?.disabled}
+              className="dark:text-dark-text"
+            />
+          )}
+        </div>
+        <div className="flex md:hidden flex-col w-full max-w-full">
+          <div className="flex flex-col gap-2 mb-2">
+            <div className="flex flex-wrap items-end gap-2 w-full">
+              {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && formState.transaction.master.voucherType !== VoucherType.PurchaseEstimate && (
+                <CashPaidSection
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  focusDiscount={focusDiscount}
+                  focusAmount={focusAmount}
+                />
+              )}
+              <RoundOffInput
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                handleKeyDown={handleKeyDown}
+                focusDiscount={() => document.getElementById("discountID")?.focus()}
+                focusAmount={() => document.getElementById("amountID")?.focus()}
               />
-            )}
-          </div>
-          <div className="flex md:hidden flex-col w-full max-w-full">
-            <div className="flex flex-col gap-2 mb-2">
-              <div className="flex flex-wrap items-end gap-2 w-full">
-                {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && formState.transaction.master.voucherType !== VoucherType.PurchaseEstimate && (
-                  <CashPaidSection
-                    formState={formState}
-                    dispatch={dispatch}
-                    t={t}
-                    focusDiscount={focusDiscount}
-                    focusAmount={focusAmount}
-                  />
-                )}
-                <RoundOffInput
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                  handleKeyDown={handleKeyDown}
-                  focusDiscount={() => document.getElementById("discountID")?.focus()}
-                  focusAmount={() => document.getElementById("amountID")?.focus()}
-                />
-                <BillDiscountInput
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                  handleKeyDown={handleKeyDown}
-                  applyDiscountsToItems={applyDiscountsToItems}
-                />
-              </div>
-              <ERPTextarea
-                id="remarks"
-                required={true}
-                localInputBox={formState?.userConfig?.inputBoxStyle}
-                label={t(formState.formElements.remarks.label)}
-                value={formState.transaction.master.remarks}
-                onChange={(e) => dispatch(formStateTransactionMasterHandleFieldChange({ fields: { remarks: e.target?.value }, }))}
-                disabled={formState.formElements.remarks?.disabled || formState.formElements.pnlMasters?.disabled}
-                className={`dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text ${isNewFooter ? "h-[42px]" : ""} w-full`}
+              <BillDiscountInput
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                handleKeyDown={handleKeyDown}
+                applyDiscountsToItems={applyDiscountsToItems}
               />
             </div>
+            <ERPTextarea
+              id="remarks"
+              required={true}
+              localInputBox={formState?.userConfig?.inputBoxStyle}
+              label={t(formState.formElements.remarks.label)}
+              value={formState.transaction.master.remarks}
+              onChange={(e) => dispatch(formStateTransactionMasterHandleFieldChange({ fields: { remarks: e.target?.value }, }))}
+              disabled={formState.formElements.remarks?.disabled || formState.formElements.pnlMasters?.disabled}
+              className={`dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text ${isNewFooter ? "h-[42px]" : ""} w-full`}
+            />
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 

@@ -521,7 +521,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                           <div className="w-8 h-8 bg-[#ede9fe] dark:bg-[#4c1d954d] rounded-full flex items-center justify-center group-hover:bg-[#ddd6fe] dark:group-hover:bg-[#4c1d9599] group-hover:scale-110 transition-all duration-200">
                             <Printer className="h-4 w-4 text-[#6d28d9] dark:text-[#ddd6fe]" />
                           </div>
-                          <span className="font-medium">{t("bill_wise")}</span>
+                          <span className="font-medium">{t("billwise")}</span>
                         </button>
                       </li>
                     )}

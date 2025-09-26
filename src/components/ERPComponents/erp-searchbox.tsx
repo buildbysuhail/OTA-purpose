@@ -760,7 +760,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
 
     const handleBatchGridKeyDown = useCallback(
       async (e: any) => {
-    console.log(`Batch grid key: ${e.event.key}`);
+    console.log(`Batch grid key: ${e.event.key}`); 
         if (e.event.key === "Enter") {
           const gridInstance = batchGridRef.current.instance();
           const allSelected = await gridInstance.getSelectedRowsData();
@@ -797,19 +797,18 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
 
     const [batchInitialized, setBatchInitialized] = useState(false);
 
-    const handleBatchContentReady = useCallback(
-      (e: any) => {
-        if (!batchInitialized) {
-          const grid = e.component;
-          // focus and select row 0 on first open
-          grid.option("focusedRowIndex", 0);
-          grid.selectRows([grid.getKeyByRowIndex(0)]);
-          grid.navigateToRow(grid.getKeyByRowIndex(0));
-          grid.focus();
-          setBatchInitialized(true);
-        }
-      },
-      [batchInitialized]
+    const handleBatchContentReady = useCallback((e: any) => {
+    if (!batchInitialized) {
+      const grid = e.component;
+      // focus and select row 0 on first open
+      const key = grid.getKeyByRowIndex(0);
+      grid.selectRows([key], false);
+      grid.option("focusedRowIndex", 0);
+      grid.focus();
+      setBatchInitialized(true);
+     }
+    },
+   [batchInitialized]
     );
 
     const handleBatchFocusedRowChanged = useCallback((e: any) => {
@@ -817,7 +816,9 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       if (!e.row) {
         return;
       }
-      e.component.selectRows([e.row.key], false);
+      setTimeout(() => {
+        e.component.selectRows([e.row.key], false);
+      }, 0);
     }, []);
 
     const handleInputKeyDown = useCallback(
@@ -1086,7 +1087,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
                         groupPaging: false,
                       }}
                       focusedRowEnabled={true}
-                      // onFocusedRowChanged={handleProductFocusedRowChanged}
+                      onFocusedRowChanged={handleProductFocusedRowChanged}
                       onContentReady={handleProductGridContentReady}
                       onKeyDown={handleGridKeyDown}
                       tabIndex={0}

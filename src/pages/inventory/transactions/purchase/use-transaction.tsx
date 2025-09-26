@@ -774,7 +774,7 @@ debugger;
   async function validate(): Promise<boolean> {
     const master = formState.transaction.master;
     const details = formState.transaction.details;
-
+debugger;
     // Stock update restriction
     if (!formState.transaction.master.stockUpdate && (formState.transaction.master.voucherType === "PI" || formState.transaction.master.voucherType === "PR")) {
       const voucherType = formState.transaction.master.voucherType;
@@ -785,9 +785,7 @@ debugger;
         confirmButtonText: t("yes"),
         cancelButtonText: t("no"),
         showCancelButton: true,
-        onCancel: () => {
-          return false;
-        },
+       
       });
       if (!confirm) {
         return false;
@@ -949,18 +947,21 @@ debugger;
     // Gross amount zero validation
     for (let i = 0; i < details.length; i++) {
       const row = details[i];
-      if (row.gross === 0) {
+      if (row.gross === 0 && row.productID > 0) {
         const confirm = await ERPAlert.show({
           icon: "question",
           title: t("zero_value"),
-          text: t("zero_qty_in_row", { row: i + 1 }),
+          text: `${t('zero_qty_in_row')} row: ${i + 1}`,
           confirmButtonText: t("yes"),
           cancelButtonText: t("no"),
           showCancelButton: true,
         });
         if (!confirm) {
-          // optionally set focus logic here
-          return false;
+          const rowIndex = details.findIndex(x => x.slNo == row.slNo);
+          const res = focusColumn(rowIndex, "qty");
+          setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
+          return false
+          
         }
       }
     }
@@ -1072,7 +1073,7 @@ debugger;
     );
 
     const valid = await validate();
-
+debugger;
     if (valid == true) {
       const master = attachMaster(formState);
       const attachments = formState.transaction.attachments
@@ -1186,6 +1187,15 @@ debugger;
         });
       }
 
+    }
+    else{
+       dispatch(
+      formStateHandleFieldChange({
+        fields: {
+          saving: false,
+        },
+      })
+    );
     }
   };
   const clearRow = async (isEdit: boolean, transactionMasterID: number) => {
@@ -4072,7 +4082,30 @@ debugger;
     );
     return {}
   };
+  interface BillWiseDetail {
+  accTransDetailID: number;
+  billWiseAdjAmt: number;
+  adjustedTransDetailID: number;
+}
 
+interface BillWiseRequest {
+  accTransactionDetailID: number;
+  billWiseDetails: BillWiseDetail[];
+}
+async function postBillWiseDetails(
+  data: BillWiseRequest
+): Promise<any> {
+  try {
+    const response = await api.postAsync(
+      `${Urls.inv_transaction_base}${transactionType}/BillWiseDetails`,
+      data
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error("Error posting BillWiseDetails:", error);
+    throw error;
+  }
+}
   return {
     downloadImportTemplateHeadersOnly,
     importFromExcel,
@@ -4114,6 +4147,7 @@ debugger;
     calculateTotal,
     applyDiscountsToItems,
     handlePrintBarcode,
-    loadLedgerData
+    loadLedgerData,
+    postBillWiseDetails
   };
 };

@@ -535,7 +535,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
     applyDiscountsToItems,
     downloadImportTemplateHeadersOnly,
     importFromExcel,
-    loadLedgerData
+    loadLedgerData,
+    postBillWiseDetails
   } = useTransaction(
     transactionType ?? "",
     btnSaveRef,
@@ -561,6 +562,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     handleKeyDown,
     formStateRef,
     purchaseGridRef,
+    
   );
 
   const applicationSettings = useAppSelector(
@@ -994,7 +996,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           if (totalRes) {
             totalRes.summary = summaryRes.summary;
             totalRes.transaction = totalRes.transaction ?? {};
-            totalRes.transaction.master = { ...totalRes.transaction.master };
+            totalRes.transaction.master = { ...totalRes.transaction.master, stockUpdate: (loadType == "GRN" || loadType == "GRR") ? false : true };
             totalRes.transaction.details = [];
             totalRes.batchesUnits = PendingTransDetails.batchesUnits;
             totalRes.loading = { isLoading: false, text: '' }
@@ -2415,7 +2417,7 @@ debugger;
                   if (
                     applicationSettings.accountsSettings?.maintainBillwiseAccount
                   ) {
-                   
+                   postBillWiseDetails({accTransactionDetailID:0, billWiseDetails:[]})
                 }
                 }}
               />

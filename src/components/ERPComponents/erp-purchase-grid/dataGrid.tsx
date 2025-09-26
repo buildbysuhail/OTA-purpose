@@ -2704,7 +2704,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                   <ERPButton
                     variant="primary"
                     title={t("export")}
-                    onClick={exportToExcel}
+                    onClick={() => { exportToExcel(); closeExcelMenu(); }}
                   />
                 </div>
               }

@@ -787,5 +787,7 @@
   "transaction_already_invoiced_warning": "Transaction already invoiced cannot delete or edit do you want to proceed",
   "deleting_transaction_question": "Are you sure you want to delete this transaction?",
   "once_deleting_this_transaction_cannot_be_recovered": "Once deleting this transaction cannot be recovered",
-  "pi_ref": "PI Ref"
+  "pi_ref": "PI Ref",
+  "zero_rate_or_qty": "Zero Rate or Quantity",
+  "zero_rate_or_qty_entered_in_row": "Zero rate or quantity entered in row:"
 }

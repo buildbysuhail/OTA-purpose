@@ -37,13 +37,13 @@ export interface DesignerConfig {
 }
 
 // Map: templateGroup -> templateType -> templateKind
-export type DesignerConfigMap = Record<
-  VoucherType | string,
+export type DesignerConfigMap = Partial<
   Record<
-    string,
-    Record<string, DesignerConfig>
+    VoucherType,
+    Record<string, Record<string, DesignerConfig>>
   >
 >;
+
 export const templateConfig: DesignerConfigMap = {
  
   CP:{
@@ -95,6 +95,27 @@ export const templateConfig: DesignerConfigMap = {
         sections: {},
       },
     },
+     SPREDSHEET:{
+       spreadsheet:{
+        downloadComponent: <SharedDownloadTemplate />,
+        PreviewComponent: <SharedTemplatePreview />,
+        sections: {},
+    }
+    },
+
+    RETAIL: {
+      "retail-standard": {
+        downloadComponent: <SharedDownloadTemplate />,
+        PreviewComponent: <SharedTemplatePreview />,
+        sections: {},
+      },
+      "2inch": {
+        downloadComponent: <SharedDownloadTemplate />,
+        PreviewComponent: <SharedTemplatePreview />,
+        sections: {},
+      },
+    },
+
   }
     // ADVANCE: {
     //   advice: {

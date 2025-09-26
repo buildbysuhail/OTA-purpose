@@ -39,11 +39,15 @@ const InvoiceDesigner = () => {
   const templateGroup = tg && Object.values(VoucherType).includes(tg as VoucherType)? (tg as VoucherType): ""; 
   const { templateKind,templateType} = (location.state as LocationState) || {};
 
-  const groupKey = templateGroup;
-  const typeKey = templateType?.toUpperCase() ?? "STANDARD";
-  const kindsForMap = templateConfig[groupKey]?.[typeKey] || {};
-  const kindKey = templateKind ?? Object.keys(kindsForMap)[0];
-  const config = templateConfig[groupKey]?.[typeKey]?.[kindKey]
+  // const groupKey = templateGroup;
+ const groupKey = templateGroup && Object.values(VoucherType).includes(templateGroup as VoucherType) 
+  ? (templateGroup as VoucherType) 
+  : undefined;
+
+const typeKey = templateType?.toUpperCase() ?? "STANDARD";
+const kindsForMap = groupKey ? templateConfig[groupKey]?.[typeKey] || {} : {};
+const kindKey = templateKind ?? Object.keys(kindsForMap)[0];
+const config = groupKey ? templateConfig[groupKey]?.[typeKey]?.[kindKey] : undefined;
   
   
   if (!config) {

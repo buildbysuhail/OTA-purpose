@@ -6,21 +6,17 @@ import { useSelector } from "react-redux/es/exports";
 import { RootState } from "../../../../redux/store";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
+import { ActionType } from "../../../../redux/types";
+import voucherPrefix from "./components/voucher-prefix";
 
 interface DocumentPropertiesProps {
   closeModal: () => void;
   t: any;
 }
 
-const DocumentProperties: React.FC<DocumentPropertiesProps> = ({
-  closeModal,
-  t,
-}) => {
-  const formState = useSelector(
-    (state: RootState) => state.InventoryTransaction
-  );
+const DocumentProperties: React.FC<DocumentPropertiesProps> = ({ closeModal, t, }) => {
+  const formState = useSelector((state: RootState) => state.InventoryTransaction);
   const [showViewAction, setShowViewAction] = useState(false);
-
   const gridColumns: DevGridColumn[] = [
     {
       dataField: "userName",
@@ -29,7 +25,8 @@ const DocumentProperties: React.FC<DocumentPropertiesProps> = ({
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 120,
+      allowResizing: true,
+      width: 80,
     },
     {
       dataField: "actionPerformed",
@@ -38,7 +35,8 @@ const DocumentProperties: React.FC<DocumentPropertiesProps> = ({
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 300,
+      allowResizing: true,
+      width: 250,
     },
     {
       dataField: "dateTimeOfAction",
@@ -47,6 +45,7 @@ const DocumentProperties: React.FC<DocumentPropertiesProps> = ({
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
+      allowResizing: true,
       width: 150,
       format: "dd/MM/yyyy HH:mm",
     },
@@ -57,6 +56,7 @@ const DocumentProperties: React.FC<DocumentPropertiesProps> = ({
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
+      allowResizing: true,
       width: 100,
     },
     {
@@ -66,10 +66,10 @@ const DocumentProperties: React.FC<DocumentPropertiesProps> = ({
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
+      allowResizing: true,
       width: 120,
     },
   ];
-
   return (
     <>
       <div className="flex items-end justify-end gap-2 mb-4">
@@ -79,12 +79,24 @@ const DocumentProperties: React.FC<DocumentPropertiesProps> = ({
           checked={showViewAction}
           onChange={() => setShowViewAction(!showViewAction)}
         />
-        <ERPButton title={t("show")} variant="primary" onClick={() => {}} />
+        {/* <ERPButton
+          title={t("show")}
+          variant="primary"
+          onClick={() => { }}
+        /> */}
       </div>
       <div className="mt-4">
         <ErpDevGrid
           columns={gridColumns}
-          // dataUrl={`${Urls.inv_transaction_base}${formState.transactionType}/DocumentProperties/${formState.id || 0}?showViewAction=${showViewAction}`}
+          dataUrl={`${Urls.inv_transaction_base}${formState.transactionType}/TransactionActions`}
+          method={ActionType.POST}
+          postData={{
+            voucherPrefix: formState.transaction.master.voucherPrefix,
+            voucherType: formState.transaction.master.voucherType,
+            voucherNumber: formState.transaction.master.voucherNumber,
+            showView: showViewAction,
+            voucherForm: formState.transaction.master.voucherForm,
+          }}
           gridId="documentPropertiesGrid"
           height={450}
           hideGridAddButton={true}

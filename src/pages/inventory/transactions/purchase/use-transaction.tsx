@@ -951,7 +951,7 @@ debugger;
         const confirm = await ERPAlert.show({
           icon: "question",
           title: t("zero_value"),
-          text: t("zero_qty_in_row", { row: i + 1 }),
+          text: `${t('zero_qty_in_row')} row: ${i + 1}`,
           confirmButtonText: t("yes"),
           cancelButtonText: t("no"),
           showCancelButton: true,

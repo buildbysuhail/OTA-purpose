@@ -950,8 +950,8 @@ debugger;
       if (row.gross === 0 && row.productID > 0) {
         const confirm = await ERPAlert.show({
           icon: "question",
-          title: t("zero_value"),
-          text: `${t('zero_qty_in_row')} row: ${i + 1}`,
+          title: t("zero_rate_or_qty"),
+          text: `${t('zero_rate_or_qty_entered_in_row')} row: ${i + 1}`,
           confirmButtonText: t("yes"),
           cancelButtonText: t("no"),
           showCancelButton: true,

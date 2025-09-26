@@ -686,7 +686,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                         }
                         localInputBox={formState?.userConfig?.inputBoxStyle}
                         className="!m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
-                        disabled={formState.transactionLoading}
+                        disabled={formState.transactionLoading || formState.formElements.pnlMasters?.disabled}
                       />
                     </div>
                   )}

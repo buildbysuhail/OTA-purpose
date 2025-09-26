@@ -535,7 +535,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
     applyDiscountsToItems,
     downloadImportTemplateHeadersOnly,
     importFromExcel,
-    loadLedgerData
+    loadLedgerData,
+    postBillWiseDetails
   } = useTransaction(
     transactionType ?? "",
     btnSaveRef,
@@ -561,6 +562,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     handleKeyDown,
     formStateRef,
     purchaseGridRef,
+    
   );
 
   const applicationSettings = useAppSelector(
@@ -2415,7 +2417,7 @@ debugger;
                   if (
                     applicationSettings.accountsSettings?.maintainBillwiseAccount
                   ) {
-                   
+                   postBillWiseDetails(
                 }
                 }}
               />

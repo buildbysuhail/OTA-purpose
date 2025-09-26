@@ -4097,7 +4097,7 @@ async function postBillWiseDetails(
 ): Promise<any> {
   try {
     const response = await api.postAsync(
-      `${Urls.inv_transaction_base}${transactionType}/BillWiseDetails`,
+      `${Urls.inv_transaction_base}${transactionType}/BillWiseDetail`,
       data
     );
     return response.data;

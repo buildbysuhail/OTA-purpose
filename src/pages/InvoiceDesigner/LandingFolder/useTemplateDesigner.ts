@@ -74,9 +74,8 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,
     );
 
     const orientedDimensions = getOrientedDimensions(selectedPageSize, pageOrientation);
-    const scale = 0.9; // You can adjust this or make it dynamic
-    const previewWidth = orientedDimensions.width * scale;
-    const previewHeight = orientedDimensions.height * scale;
+    const previewWidth = orientedDimensions.width;
+    const previewHeight = orientedDimensions.height;
 
     return {
       previewWidth,

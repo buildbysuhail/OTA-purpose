@@ -13,7 +13,6 @@ export interface AccountTransactionProps {
 
   
 }
-
 const SharedDownloadTemplate = ({ data, template}: AccountTransactionProps) => {
   const pageOrientation = template?.propertiesState?.orientation === "landscape" ? "landscape" : "portrait"
   const paddingLeft = template?.propertiesState?.padding?.left || 10

@@ -2,6 +2,8 @@ import React, { useEffect, useRef } from "react";
 import QRCodeStyling, { Options as QROptions } from "qr-code-styling";
 import { PlacedComponent, DesignerElementType } from "../InvoiceDesigner/Designer/interfaces";
 import { DeleteButton } from "./label_designer";
+import { ResizableBox } from "react-resizable";
+import "react-resizable/css/styles.css";
 
 interface QRCodeComponentProps {
   component: PlacedComponent;
@@ -9,8 +11,12 @@ interface QRCodeComponentProps {
   style: React.CSSProperties;
   handleComponentClick: (e: React.MouseEvent, component: PlacedComponent) => void;
   handleMouseDown: (e: React.MouseEvent, component: PlacedComponent) => void;
-  handleDelete: (id: number) => void;
-  qrCodeRefs: React.MutableRefObject<{ [key: number]: HTMLDivElement | null }>;
+  handleDelete: (id: string) => void;
+  qrCodeRefs:React.MutableRefObject<Record<string, HTMLDivElement | null>>;
+  templateData?: any;
+  setTemplateData?: (updater: (prev: any) => any) => void;
+  selectedComponent?: PlacedComponent | null;
+  setSelectedComponent?: (updater: (prev: PlacedComponent | null) => PlacedComponent | null) => void;
 }
 
 export const QRCodeComponent: React.FC<QRCodeComponentProps> = ({
@@ -21,16 +27,17 @@ export const QRCodeComponent: React.FC<QRCodeComponentProps> = ({
   handleMouseDown,
   handleDelete,
   qrCodeRefs,
+  templateData,
+  setTemplateData,
+  selectedComponent,
+  setSelectedComponent,
 }) => {
   // 1) Change this ref to point at a DIV, not a CANVAS
-  const containerRef = (el: HTMLDivElement | null) => {
-    qrCodeRefs.current[component.id] = el;
-  };
   const props = component.qrCodeProps;
   useEffect(() => {
     
     const container = qrCodeRefs.current[component.id];
-    if (!container || !component.qrCodeProps) return;
+    if (!container || !props) return;
    
       const qrCode = new QRCodeStyling({
       width: props.width ||128,
@@ -89,39 +96,99 @@ export const QRCodeComponent: React.FC<QRCodeComponentProps> = ({
     };
   }, [
     component.id,
-    component.qrCodeProps,
+    props,
     qrCodeRefs,
   ]);
 
-  // 5) Render a DIV container instead of a canvas tag
+  // 5) Render a ResizableBox container
  return (
-    <div
-      id={`component-${component.id}`}
-      style={{
-        ...style,
-        boxSizing: "border-box", // Ensure padding and border are included in width/height
-        height: (component.qrCodeProps?.height || 128),
-        width: (component.qrCodeProps?.width || 128) ,
-        border: isSelected ? "2px solid #2196f3" : "none",
-        zIndex: 1, // Ensure parent is above other elements
+    <ResizableBox
+      width={props.width || 200}
+      height={props.height || 200}
+      minConstraints={[20, 20]}
+      maxConstraints={[800, 600]}
+      resizeHandles={isSelected ? ['se', 'sw', 'ne', 'nw', 'n', 's', 'e', 'w'] : []}
+      onResize={(e, { size }) => {
+        if (setTemplateData && templateData) {
+          const updatedComponents = templateData?.barcodeState?.placedComponents?.map((comp: PlacedComponent) => {
+            if (comp.id === component.id) {
+              return {
+                ...comp,
+                qrCodeProps: {
+                  ...comp.qrCodeProps,
+                  width: size.width,
+                  height: size.height,
+                },
+              };
+            }
+            return comp;
+          }) || [];
+          setTemplateData((prev: any) => ({
+            ...prev,
+            barcodeState: {
+              ...prev.barcodeState,
+              placedComponents: updatedComponents,
+            },
+          }));
+        }
+        if (setSelectedComponent && selectedComponent?.id === component.id) {
+          setSelectedComponent((prev) => ({
+            ...prev!,
+            qrCodeProps: {
+              ...prev?.qrCodeProps,
+              width: size.width,
+              height: size.height,
+              value: prev?.qrCodeProps?.value || "",
+            },
+          }));
+        }
       }}
-      onClick={(e) => handleComponentClick(e, component)}
-      onMouseDown={(e) => handleMouseDown(e, component)}
+      style={{
+        position: "absolute",
+        left: `${component.x}pt`,
+        top: `${component.y}pt`,
+        transform: `rotate(${component.rotate || 0}deg)`,
+        transformOrigin: "center",
+        zIndex: 1,
+      }}
     >
       <div
-        ref={containerRef}
+        id={`component-${component.id}`}
         style={{
           width: "100%",
           height: "100%",
-          overflow: "hidden", 
-          zIndex: 2, 
+          boxSizing: "border-box",
+          border: isSelected ? "2px solid #2196f3" : "none",
+          overflow: "hidden",
         }}
-      />
+        onClick={(e) => {
+          e.stopPropagation();
+          handleComponentClick(e, component);
+        }}
+        onMouseDown={(e) => {
+          e.stopPropagation();
+          handleMouseDown(e, component);
+        }}
+      >
+
+           <div
+             ref={(el) => {
+              qrCodeRefs.current[component.id] = el; 
+             }}
+          style={{
+            width: "100%",
+            height: "100%",
+            overflow: "hidden", 
+            zIndex: 2,
+            pointerEvents: 'none',
+          }}
+        />
+      </div>
       <DeleteButton
         id={component.id}
         isSelected={isSelected}
         handleDelete={handleDelete}
       />
-    </div>
+    </ResizableBox>
   );
 };

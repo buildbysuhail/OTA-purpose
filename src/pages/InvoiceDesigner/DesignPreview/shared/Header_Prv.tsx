@@ -5,27 +5,6 @@ import { generateQRCodeDataUrl } from "../../utils/qrSvgToImg";
 import { RenderPreviewComponent } from "../customPrvElement";
 import { useNumberToWords } from "../../../../utilities/number-to-words";
 
-const styles = StyleSheet.create({
-
-
-
-
-  otherInfo: {
-    display: "flex",
-    flexDirection: "row",
-    gap: 2,
-    justifyContent: "flex-start",
-  },
-
-  headerTop: {
-    width: "100%",
-    position: "relative",
-  },
-  headerBottom: {
-    width: "100%",
-    position: "relative",
-  },
-});
 
 const ShardPrevHeader = ({
   data,
@@ -34,8 +13,10 @@ const ShardPrevHeader = ({
   data: any;
   template?: TemplateState<unknown>
 }) => {
+
   const { convertAmountToEnglish, convertAmountToArabic } = useNumberToWords();
   const [qrCodeImages, setQrCodeImages] = useState<{ [key: string]: string }>({});
+
   useEffect(() => {
     const generateQRCodes = async () => {
       const images: { [key: string]: string } = {};
@@ -57,11 +38,13 @@ const ShardPrevHeader = ({
   const headerState = template?.headerState;
   const customElements = headerState?.customElements?.elements ?? [];
   const customTopHeight = headerState?.customElements?.height ?? 0;
+  const bgImage = headerState?.customElements?.background_image
   const fontFamily = template?.propertiesState?.font_family || "Roboto";
   const fontSize = template?.propertiesState?.font_size || 12;
   const color = template?.propertiesState?.font_color || "#000";
   const fontWeight = template?.propertiesState?.font_weight || 400;
   const fontStyle = template?.propertiesState?.fontStyle || "normal";
+
 
 
   const fontStyles = {
@@ -92,10 +75,13 @@ const ShardPrevHeader = ({
                 style={{
                 minHeight: `${customTopHeight}pt`, height:`${customTopHeight}pt`,
                 width: "100%",
-                // position: "relative",
-                }
-
-                }
+                backgroundImage: bgImage ? `url(${bgImage})` : "none",
+                backgroundPosition: headerState?.customElements?.bg_image_position || "center", // fallback default
+                backgroundSize: headerState?.customElements?.bg_image_objectFit || "cover",   
+                backgroundRepeat: "no-repeat",
+                backgroundColor: `rgb(${headerState?.customElements?.background_color ?? "255,255,255"})`,
+                position: "relative",
+                }}
               >
                 {customElements.map((component) => (
                     <RenderPreviewComponent

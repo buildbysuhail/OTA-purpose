@@ -70,7 +70,7 @@ const HeaderDesigner = ({}: FooterDesignerProps) => {
         </div>
 
         <div className="px-4 py-2  bg-slate-50 border-t border-slate-400 rounded-b-md min-h-[20%] overflow-hidden">
-                     <CustomDesignerButton 
+                  <CustomDesignerButton 
                     Label="Add Header"
                     customFieldMaster={"headerState"}
                     dispatch={dispatch}

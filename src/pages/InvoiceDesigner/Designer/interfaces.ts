@@ -89,16 +89,14 @@ export enum DesignerElementType {
   text = 1,
   barcode = 2,
   field = 3,
-  table= 4,
-  line = 5,
-  image = 6,
-  qrCode=7,
-  area=8,
-  container=9,
+  line = 4,
+  image = 5,
+  qrCode=6,
+  container=7,
 }
 
 export interface PlacedComponent {
-  id: number;
+  id: string;
   type: DesignerElementType;
   content: string;
   x: number;
@@ -119,7 +117,7 @@ export interface PlacedComponent {
   imgFit?:string;
   imgPosition?:string;
   imgFromDevice?:boolean;
-  containerId?: number; // ID of parent container if element is inside a container
+  containerId?: string; // ID of parent container if element is inside a container
   children?: PlacedComponent[]; // Child elements if this is a container
   containerProps?: {
     backgroundColor?: string;
@@ -146,12 +144,9 @@ export interface PlacedComponent {
     textMargin: number;
     fontStyle: "normal" | "bold" | "italic";
   };
-  tableProps: {
-    showBorder: boolean;
-    columns: tableColumns[]
-  };
+
   qrCodeProps: QRCodeProps;
-  areaProps:AreaProps;
+
 }
 export type QRCodeProps = {
   // Core data

@@ -5,27 +5,7 @@ import { generateQRCodeDataUrl } from "../../utils/qrSvgToImg";
 import { RenderPreviewComponent } from "../customPrvElement";
 import { useNumberToWords } from "../../../../utilities/number-to-words";
 
-const styles = StyleSheet.create({
 
-
-
-
-  otherInfo: {
-    display: "flex",
-    flexDirection: "row",
-    gap: 2,
-    justifyContent: "flex-start",
-  },
-
-  headerTop: {
-    width: "100%",
-    position: "relative",
-  },
-  headerBottom: {
-    width: "100%",
-    position: "relative",
-  },
-});
 
 const ShardPrevFooter = ({
   data,
@@ -61,18 +41,25 @@ const ShardPrevFooter = ({
   const footerState = template?.footerState;
   const customElements = footerState?.customElements?.elements ?? [];
   const customTopHeight = footerState?.customElements?.height ?? 0;
-
-
+const bgImage = footerState?.customElements?.background_image 
+console.log(
+"bgimag",bgImage,"bgPosi",footerState?.customElements?.bg_image_position,"bgFit",footerState?.customElements?.bg_image_objectFit, "bgcolour",footerState?.customElements?.background_color
+);
   return (
     <div
-    className="w-full h-auto relative flex flex-col flex-wrap z-10" >
+    className="w-full h-auto relative flex flex-col flex-wrap " >
 
 
- {Array.isArray(customElements) && customElements.length > 0 && (
+ {Array.isArray(customElements) && (
               <div
                 style={{
                 minHeight: `${customTopHeight}pt`, height:`${customTopHeight}pt`,
                 width: "100%",
+                backgroundImage: bgImage ? `url(${bgImage})` : "none",
+                backgroundPosition: footerState?.customElements?.bg_image_position || "center", // fallback default
+                backgroundSize: footerState?.customElements?.bg_image_objectFit || "cover",   
+                backgroundRepeat: "no-repeat",
+                backgroundColor: `rgb(${footerState?.customElements?.background_color ?? "255,255,255"})`,
                 // position: "relative",
                 }
 

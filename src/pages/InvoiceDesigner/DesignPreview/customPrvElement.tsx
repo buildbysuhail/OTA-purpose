@@ -47,13 +47,13 @@ export const RenderPreviewComponent: React.FC<Props> = ({
     });
     
     const padding = component.containerProps.padding || 0;
-    const calculatedHeight = maxBottom + padding * 2;
+    const calculatedHeight = maxBottom + padding ;
     const minHeight = component.containerProps.minHeight || 50;
     const maxHeight = component.containerProps.maxHeight || 500;
     
     return Math.min(Math.max(calculatedHeight, minHeight), maxHeight);
   };
-  
+
   switch (component.type) {
     case DesignerElementType.text:
       return (
@@ -65,7 +65,8 @@ export const RenderPreviewComponent: React.FC<Props> = ({
               fontStyle: component.fontStyle || "normal",
               textAlign: (component.textAlign as any) || "center",
               margin: 0,
-               textDecoration:"underline"
+             
+               whiteSpace: "pre-wrap",
             }}
           >
             {component.content}
@@ -102,7 +103,7 @@ export const RenderPreviewComponent: React.FC<Props> = ({
               minHeight: `${component.height || 50}pt`,
               width: `${component.width || 50}pt`,
               margin: 0,
-              textDecoration:"underline"
+       
             }}
           >
             {bindDataForPrint(component.content, data,convertAmountToEnglish,convertAmountToArabic)|| "N\A"} 
@@ -150,45 +151,55 @@ export const RenderPreviewComponent: React.FC<Props> = ({
         </div>
       ) : null;
 
-    case DesignerElementType.container:
-      const containerHeight = calculateContainerHeight();
-      // For preview, we need to get children from the data structure
-      // In the designer, children might be stored separately with containerId
-      const containerChildren = component.children || [];
-      
-      return (
-        <div
-          key={component.id}
-          style={{
-            position: component.containerId ? "absolute" : "absolute",
-            left: `${component.x}pt`,
-            top: `${component.y}pt`,
-            width: `${component.width}pt`,
-            height: `${containerHeight}pt`,
-            backgroundColor: component.containerProps?.backgroundColor || "#ffffff",
-            border: `${component.containerProps?.borderWidth || 1}pt ${component.containerProps?.borderStyle || "solid"} ${component.containerProps?.borderColor || "#cccccc"}`,
-            padding: `${component.containerProps?.padding || 10}pt`,
-            boxSizing: "border-box",
-            transform: `rotate(${component.rotate || 0}deg)`,
-            overflow: component.containerProps?.autoResize ? "visible" : "hidden",
+  
+
+      case DesignerElementType.container:
+  const containerHeight = calculateContainerHeight();
+  const containerChildren = component.children || [];
+  const containerProps = component.containerProps || {
+    backgroundColor: "#fafafa",
+    borderColor: "#d0d0d0",
+    borderWidth: 1,
+    borderStyle: "dashed",
+    padding: 0,
+    autoResize: false,
+    minHeight: 100,
+    maxHeight: 500,
+  };
+
+  return (
+    <div
+      key={component.id}
+      style={{
+        position: "relative",
+        left: `${component.x}pt`,
+        top: `${component.y}pt`,
+        width: component.width,
+        height: containerHeight,
+        backgroundColor: containerProps.backgroundColor,
+        border: `${containerProps.borderWidth}pt ${containerProps.borderStyle} ${containerProps.borderColor}`,
+        padding: `${containerProps.padding}pt`,
+        boxSizing: "border-box",
+        transform: `rotate(${component.rotate || 0}deg)`,
+         overflow: containerProps.autoResize ? "visible" : "hidden",
+      }}
+    >
+      {containerChildren.map((child) => (
+        <RenderPreviewComponent
+          key={child.id}
+          component={{
+            ...child,
+            containerId: component.id,
           }}
-        >
-          {/* Render children elements with relative positioning */}
-          {containerChildren.map((child) => (
-            <RenderPreviewComponent
-              key={child.id}
-              component={{
-                ...child,
-                containerId: component.id, // Mark as child for proper positioning
-              }}
-              data={data}
-              qrCodeImages={qrCodeImages}
-              convertAmountToEnglish={convertAmountToEnglish}
-              convertAmountToArabic={convertAmountToArabic}
-            />
-          ))}
-        </div>
-      );
+          data={data}
+          qrCodeImages={qrCodeImages}
+          convertAmountToEnglish={convertAmountToEnglish}
+          convertAmountToArabic={convertAmountToArabic}
+        />
+      ))}
+    </div>
+  );
+
 
     default:
       console.warn(`Unsupported component type: ${component.type}`);

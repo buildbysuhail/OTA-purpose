@@ -994,7 +994,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           if (totalRes) {
             totalRes.summary = summaryRes.summary;
             totalRes.transaction = totalRes.transaction ?? {};
-            totalRes.transaction.master = { ...totalRes.transaction.master, stockUpdate: loadType == "GRN" ? false : true };
+            totalRes.transaction.master = { ...totalRes.transaction.master, stockUpdate: (loadType == "GRN" || loadType == "GRR") ? false : true };
             totalRes.transaction.details = [];
             totalRes.batchesUnits = PendingTransDetails.batchesUnits;
             totalRes.loading = { isLoading: false, text: '' }

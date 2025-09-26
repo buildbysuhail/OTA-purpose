@@ -360,7 +360,7 @@ debugger;
     updatedBills?: BillwiseData[] | undefined,
     fromAutoPost?: boolean | false
   ) => {
-    try {
+    try {debugger;
 
       // if (dataGridRef.current?.instance) {
       //   dataGridRef.current.instance.saveEditData();
@@ -416,6 +416,7 @@ debugger;
           })
         );
       }
+      debugger;
         onSave &&
           onSave(
             billwiseString.billwiseString,
@@ -430,6 +431,18 @@ debugger;
       } else if (isFromCashTender) {
         if (!validate()) return;
       } else {
+          onSave &&
+          onSave(
+           "",
+            0,
+            "",
+            fromAutoPost ?? false,
+            updatedBills?.map(x => {return {
+              billwiseAdjAmt:x.adjustedAmount,
+              adjustedTransDetailID:x.accTransactionDetailID
+             }})
+          );
+        closeBillwise();
       }
     } catch (error: any) {
       ERPAlert.show({

@@ -2417,7 +2417,7 @@ debugger;
                   if (
                     applicationSettings.accountsSettings?.maintainBillwiseAccount
                   ) {
-                   postBillWiseDetails({accTransactionDetailID:0, billWiseDetails:[]})
+                   postBillWiseDetails({accTransactionDetailID:formState.transaction.master.accTransactionDetailIDForBillwise, billWiseDetails:bills??[]})
                 }
                 }}
               />

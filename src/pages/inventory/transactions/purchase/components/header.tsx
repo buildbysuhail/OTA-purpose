@@ -511,7 +511,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         </button>
                       </li>
                     )}
-                    {formState.transaction.master.voucherType === 'PR' && applicationSettings.accountsSettings.maintainBillwiseAccount && (
+                    {formState.transaction.master.invTransactionMasterID > 0 && formState.transaction.master.voucherType === 'PR' && applicationSettings.accountsSettings.maintainBillwiseAccount && (
                       <li>
                         <button
                           className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f5f3ff] hover:text-[#6d28d9] dark:hover:bg-[#4c1d954d] dark:hover:text-[#ddd6fe] transition-all duration-200 rounded-md group text-left"

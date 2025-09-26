@@ -947,7 +947,7 @@ debugger;
     // Gross amount zero validation
     for (let i = 0; i < details.length; i++) {
       const row = details[i];
-      if (row.gross === 0) {
+      if (row.gross === 0 && row.productID > 0) {
         const confirm = await ERPAlert.show({
           icon: "question",
           title: t("zero_value"),
@@ -4079,7 +4079,30 @@ debugger;
     );
     return {}
   };
+  interface BillWiseDetail {
+  accTransDetailID: number;
+  billWiseAdjAmt: number;
+  adjustedTransDetailID: number;
+}
 
+interface BillWiseRequest {
+  accTransactionDetailID: number;
+  billWiseDetails: BillWiseDetail[];
+}
+async function postBillWiseDetails(
+  data: BillWiseRequest
+): Promise<any> {
+  try {
+    const response = await api.postAsync(
+      `${Urls.inv_transaction_base}${transactionType}/BillWiseDetails`,
+      data
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error("Error posting BillWiseDetails:", error);
+    throw error;
+  }
+}
   return {
     downloadImportTemplateHeadersOnly,
     importFromExcel,
@@ -4121,6 +4144,7 @@ debugger;
     calculateTotal,
     applyDiscountsToItems,
     handlePrintBarcode,
-    loadLedgerData
+    loadLedgerData,
+    postBillWiseDetails
   };
 };

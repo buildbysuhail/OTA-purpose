@@ -958,10 +958,9 @@ debugger;
         });
         if (!confirm) {
           const rowIndex = details.findIndex(x => x.slNo == row.slNo);
-          debugger;
           const res = focusColumn(rowIndex, "qty");
           setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
-          
+          return false
           
         }
       }

@@ -581,7 +581,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     ) {
       height = window.innerHeight - 303;
     } else {
-      height = window.innerHeight - 510;
+      height = window.innerHeight - 500;
     }
 
     console.log('Max safe integer:', Number.MAX_SAFE_INTEGER);

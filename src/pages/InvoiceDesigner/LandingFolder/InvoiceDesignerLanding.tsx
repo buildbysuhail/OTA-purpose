@@ -69,7 +69,7 @@ const config = groupKey ? templateConfig[groupKey]?.[typeKey]?.[kindKey] : undef
         isOpen={rootState.PopupData.CustomDesignerPopup.isOpen ?? false}
         title={t("custom_designer")}
         closeModal={() => dispatch(toggleCustomDesignerPopup({ isOpen: false }))}
-        width={5000}
+        width={2000}
         height={5000}
         content={
           <PDFBarcodeDesigner

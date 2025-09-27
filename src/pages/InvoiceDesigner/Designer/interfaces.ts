@@ -102,6 +102,7 @@ export interface PlacedComponent {
   x: number;
   y: number;
   textAlign?: "left" | "center" | "right";
+  textUnderLine?:boolean;
   fontSize: number;
   fontStyle: "normal" | "italic";
   font: string;
@@ -117,12 +118,13 @@ export interface PlacedComponent {
   imgFit?:string;
   imgPosition?:string;
   imgFromDevice?:boolean;
-  containerId?: string; // ID of parent container if element is inside a container
-  children?: PlacedComponent[]; // Child elements if this is a container
+  containerId?: string; 
+  children?: PlacedComponent[]; 
   containerProps?: {
     backgroundColor?: string;
     borderColor?: string;
     borderWidth?: number;
+    borderRound?:number;
     borderStyle?: "solid" | "dashed" | "dotted" | "none";
     padding?: number;
     autoResize?: boolean; // Enable auto-resize based on content

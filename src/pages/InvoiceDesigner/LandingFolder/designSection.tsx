@@ -117,27 +117,6 @@ export const templateConfig: DesignerConfigMap = {
     },
 
   }
-    // ADVANCE: {
-    //   advice: {
-    //     downloadComponent: <AdviceTemplate />,
-    //     PreviewComponent: <AdviceTemplate />,
-    //     sections: { transactions: AdviceTableDesigner, total: () => null, others: () => null },
-    //   },
-    // },
-    // CHEQUE: {
-    //   cheque: {
-    //     downloadComponent: <ChequeTemplate />,
-    //     PreviewComponent: <ChequeTemplate />,
-    //     sections: { transactions: () => null, total: () => null, others: () => null },
-    //   },
-    // },
-    // CUSTOMERBALANCE: {
-    //   customerBalance: {
-    //     downloadComponent: <CustomerBalanceTemplateDesigner />,
-    //     PreviewComponent: <CustomerBalanceTemplateDesigner />,
-    //     sections: { transactions: () => null, total: () => null, others: () => null },
-    //   },
-    // },
 };
 
 export const designSections: DesignSectionType[] = [

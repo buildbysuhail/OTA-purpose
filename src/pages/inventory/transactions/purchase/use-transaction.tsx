@@ -4100,6 +4100,13 @@ async function postBillWiseDetails(
       `${Urls.inv_transaction_base}${transactionType}/BillWiseDetail`,
       data
     );
+    dispatch(
+      formStateHandleFieldChange({
+        fields: {
+          showbillwise: false,
+        },
+      })
+    )
     return response.data;
   } catch (error: any) {
     console.error("Error posting BillWiseDetails:", error);

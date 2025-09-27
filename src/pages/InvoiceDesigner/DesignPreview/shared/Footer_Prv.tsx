@@ -41,10 +41,7 @@ const ShardPrevFooter = ({
   const footerState = template?.footerState;
   const customElements = footerState?.customElements?.elements ?? [];
   const customTopHeight = footerState?.customElements?.height ?? 0;
-const bgImage = footerState?.customElements?.background_image 
-console.log(
-"bgimag",bgImage,"bgPosi",footerState?.customElements?.bg_image_position,"bgFit",footerState?.customElements?.bg_image_objectFit, "bgcolour",footerState?.customElements?.background_color
-);
+  const bgImage = footerState?.customElements?.background_image 
   return (
     <div
     className="w-full h-auto relative flex flex-col flex-wrap " >

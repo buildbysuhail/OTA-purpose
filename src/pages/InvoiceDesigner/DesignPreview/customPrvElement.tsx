@@ -24,12 +24,13 @@ export const RenderPreviewComponent: React.FC<Props> = ({
   convertAmountToArabic
 }) => {
   const baseStyle: React.CSSProperties = {
-    position: component.containerId ? "relative" : "absolute",
+    position: "absolute",
     left: `${component.x}pt`,
     top: `${component.y}pt`,
     transform: `rotate(${component.rotate || 0}deg)`,
     height: `${component.height || 50}pt`,
     width: `${component.width || 50}pt`,
+    zIndex:  component.containerId ? 10 : 1,
   };
   
   // Calculate dynamic height for containers
@@ -64,6 +65,7 @@ export const RenderPreviewComponent: React.FC<Props> = ({
               fontSize: `${component.fontSize || 12}pt`,
               fontStyle: component.fontStyle || "normal",
               textAlign: (component.textAlign as any) || "center",
+              
               margin: 0,
              
                whiteSpace: "pre-wrap",
@@ -199,8 +201,6 @@ export const RenderPreviewComponent: React.FC<Props> = ({
       ))}
     </div>
   );
-
-
     default:
       console.warn(`Unsupported component type: ${component.type}`);
       return null;

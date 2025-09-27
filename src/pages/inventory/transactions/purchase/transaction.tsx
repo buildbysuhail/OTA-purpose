@@ -2081,7 +2081,7 @@ debugger;
                 })
               )
             }
-            content={<ProductSummaryMaster productID={formState.currentCell?.data.productID} productBatchID={formState.currentCell?.data.productBatchID} />}
+            content={<ProductSummaryMaster productID={formState.currentCell?.data.productID} productBatchID={formState.currentCell?.data.productBatchID} warehouseID={formState.transaction.master.fromWarehouseID} />}
           />
         )}
         {formState.userConfig?.barCodePrev && (

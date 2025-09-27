@@ -789,5 +789,7 @@
   "zero_rate_or_qty_entered_in_row": "تم إدخال السعر أو الكمية صفر في الصف:",
 
   "branch_name": "اسم الفرع",
-  "to": "إلى"
+  "to": "إلى",
+  "consolidated_all_branch_purchase_order_list": "قائمة أوامر الشراء الموحدة لجميع الفروع",
+  "pending_purchase_quotation_list": "قائمة عروض أسعار المشتريات المعلقة"
 }

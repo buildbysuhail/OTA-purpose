@@ -2407,7 +2407,7 @@ debugger;
               <BillWisePopup
               isInv ={true}
                 drCr={formState.billwiseDrCr}
-                onSave={(
+                onSave={async (
                   billwiseDetails: string,
                   totalAmount: number,
                   vrNumbers: string,
@@ -2417,7 +2417,7 @@ debugger;
                   if (
                     applicationSettings.accountsSettings?.maintainBillwiseAccount
                   ) {
-                   postBillWiseDetails({accTransactionDetailID:formState.transaction.master.accTransactionDetailIDForBillwise, billWiseDetails:bills??[]})
+                   await postBillWiseDetails({accTransactionDetailID:formState.transaction.master.accTransactionDetailIDForBillwise, billWiseDetails:bills??[]})
                 }
                 }}
               />

@@ -32,7 +32,7 @@ export interface ProductSummaryFilter {
 
 export interface ProductSummaryRef { reloadData: () => void; }
 const api = new APIClient();
-const ProductSummaryMaster = ({productID, productBatchID}: any) => {
+const ProductSummaryMaster = ({ productID, productBatchID, warehouseID }: any) => {
   const childRef = useRef<ProductSummaryRef>(null);
   const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
   const dispatch = useAppDispatch();
@@ -47,7 +47,7 @@ const ProductSummaryMaster = ({productID, productBatchID}: any) => {
       productBatchID: productBatchID ? productBatchID : 0,
       voucherType: "PI",
       productCode: "",
-      warehouseID: 0,
+      warehouseID: warehouseID,
       showBatchWise: true,
     },
   });
@@ -59,7 +59,7 @@ const ProductSummaryMaster = ({productID, productBatchID}: any) => {
       productBatchID: productBatchID ? productBatchID : 0,
       voucherType: "PI",
       productCode: "",
-      warehouseID: 0,
+      warehouseID: warehouseID,
       showBatchWise: false,
     },
   });
@@ -74,11 +74,10 @@ const ProductSummaryMaster = ({productID, productBatchID}: any) => {
     }
     setActiveTab(newValue);
   };
-useEffect(() => {
-  if(productID > 0) {setReload(true)}
-  if(productBatchID > 0) {setReload2(true)}
-
-}, [])
+  useEffect(() => {
+    if (productID > 0) { setReload(true) }
+    if (productBatchID > 0) { setReload2(true) }
+  }, [])
 
   const popupData = useSelector((state: RootState) => state.PopupData);
   // const onKeyChange = (id: any) => {
@@ -149,7 +148,6 @@ useEffect(() => {
                       },
                     }))
                   }
-
                   onEnterKeyDown={async (e: any) => {
                     console.log("Enter key pressed", e.target.value);
 

@@ -36,6 +36,7 @@ import VoucherType from "../../../../enums/voucher-types";
 import axios from "axios";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import OrderNo from "./components/order-number";
+import ERPToast from "../../../../components/ERPComponents/erp-toast";
 
 interface TransactionHeaderProps {
   formState: TransactionFormState;
@@ -153,7 +154,17 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
     });
 
     if (result?.isConfirmed || result === true || result?.value === true) {
-      updatePurchaseApproval();
+      try {
+        await updatePurchaseApproval();
+        dispatch(
+          formStateMasterHandleFieldChange({
+            fields: { gatePassNo: "Approved" },
+          })
+        );
+        ERPToast.show("Approved Successfully", "success");
+      } catch (error) {
+        ERPToast.show("Failed to approve", "error");
+      }
     }
   };
 

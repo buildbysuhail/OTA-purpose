@@ -6,6 +6,7 @@ import Urls from "../../../../redux/urls";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import { ActionType } from "../../../../redux/types";
+import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 
 // Type definitions
 type FormType = "VAT" | "";
@@ -120,21 +121,28 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
     return objForm;
   }, [objForm, objFrmGSTsales, objfrmGd, frmGRN, objFrmsalestax]);
 
+  const [clickShowBtn, setClickShowBTn] = useState(false)
+  const handleClickShow = useCallback(() => {
+      setClickShowBTn(true);
+  }, []); 
 
   // Determine API endpoint based on voucher type and special conditions
   const getApiEndpoint = useCallback(() => {
    
-    
-    if (voucherType === "POC") {
-      return `${Urls.inv_transaction_base}${formState.transactionType}/ConsolidatedOtherBranchPurchaseOrders/`;
+    if (voucherType === "POC" && clickShowBtn) {
+      return `${Urls.inv_transaction_base}${formState.transactionType}/ConsolidatedOtherBranchPurchaseOrders/?fromDate=${selectedDate.FromDate}&toDate=${selectedDate.ToDate}&`;
+      
     }
     
     if (branchID && (voucherType === "GR" || (voucherType === "GR" && toVoucherType === "BTO"))) {
       return `${Urls.inv_transaction_base}${formState.transactionType}/PendingTransDetailsForGR/`;
     }
+    if(voucherType !=="POC"){
+       return `${Urls.inv_transaction_base}${formState.transactionType}/PendingTransactionMaster/`;
+    }
     
-    return `${Urls.inv_transaction_base}${formState.transactionType}/PendingTransactionMaster/`;
-  }, [ voucherType, toVoucherType, branchID, formState.transactionType]);
+    
+  }, [ voucherType, toVoucherType, branchID, formState.transactionType, clickShowBtn]);
 
   // Determine detail API endpoint
   const getDetailApiEndpoint = useCallback(() => {
@@ -209,29 +217,71 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
         allowFiltering: true,
         width: 150,
       },
-      {
-        dataField: "voucherForm",
-        caption: t("voucher_form"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 150,
-      },
-      {
-        dataField: "party",
-        caption: t("party"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 200,
-      },
+      
     ];
 
-    // Conditionally add columns based on voucher type
-    if (!(voucherType === "GR" && toVoucherType === "BTO")) {
+    if ((voucherType === "POC")) {
       baseColumns.push(
+        {
+          dataField: "branchName",
+          caption: t("branch_name"),
+          dataType: "string",
+          allowSorting: true,
+          allowSearch: false,
+          allowFiltering: true,
+          width: 120,
+        },
+        {
+          dataField: "partyName",
+          caption: t("party_name"),
+          dataType: "string",
+          allowSorting: true,
+          allowSearch: false,
+          allowFiltering: true,
+          width: 120,
+        },
+        {
+          dataField: "grandTotal",
+          caption: t("grand_total"),
+          dataType: "number",
+          allowSorting: true,
+          allowSearch: false,
+          allowFiltering: true,
+          width: 120,
+        },
+        {
+          dataField: "remarks",
+          caption: t("remarks"),
+          dataType: "string",
+          allowSorting: true,
+          allowSearch: false,
+          allowFiltering: true,
+          width: 120,
+        }
+      );
+    }
+
+    // Conditionally add columns based on voucher type
+    else if (!(voucherType === "GR" && toVoucherType === "BTO" )) {
+      baseColumns.push(
+          {
+          dataField: "voucherForm",
+          caption: t("voucher_form"),
+          dataType: "string",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          width: 150,
+        },
+        {
+          dataField: "party",
+          caption: t("party"),
+          dataType: "string",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          width: 200,
+        },
         {
           dataField: "orderAmount",
           caption: t("order_amount"),
@@ -346,6 +396,16 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
 
     return baseColumns;
   }, [voucherType, toVoucherType, t]);
+
+  const [selectedDate, setSelectedDate] = useState<any>({
+      FromDate: new Date().toISOString(),
+      ToDate: new Date().toISOString(),
+    });
+
+  const handleDateChange = (field: "FromDate" | "ToDate", value: string) => { 
+    setSelectedDate((prev:any) => ({ ...prev, [field]: value }));
+    setClickShowBTn(false)
+   };
 
   // Handle row selection in main grid
   const handleMainGridRowClick = useCallback((e: any) => {
@@ -475,6 +535,31 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
 
   return (
     <div className="pending-order-list-container">
+      <div className="flex justify-between">
+        {voucherType==="POC"
+        ?<div className="flex flex-row justify-center items-center gap-2 mb-4 w-fit">
+        <ERPDateInput
+            id=""
+            // label={t("FromDate")}
+            onChange={(e) => handleDateChange("FromDate", e.target.value)}
+            value={selectedDate.FromDate}
+            className="w-full sm:w-40"
+          />
+          <div>{t("to")}</div>
+          <ERPDateInput
+            id=""
+            // label={t("ToDate")}
+            onChange={(e) => handleDateChange("ToDate", e.target.value)}
+            value={selectedDate.ToDate}
+            className="w-full sm:w-40"
+          />
+          <ERPButton
+            variant="primary"
+            onClick={handleClickShow}
+            title="Show"
+          />
+      </div>
+        :<div></div>}
       {/* Process Selected Button */}
       {isProcessButtonVisible && (
         <div className="flex justify-end mb-4">
@@ -486,6 +571,7 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
           />
         </div>
       )}
+      </div>
 
       {/* Main Grid - Pending Orders */}
       <div className="mb-4">

@@ -1118,7 +1118,6 @@ const handleRemoveImage =()=>{
             lineColor: component.barcodeProps?.lineColor || "#000000",
             fontSize:component.barcodeProps?.fontSize,
             font:component.barcodeProps.font || "Roboto",
-
             displayValue: component.barcodeProps.showText,
             valid: (valid: boolean) => {
               if (!valid) {
@@ -1447,22 +1446,20 @@ const handleRemoveImage =()=>{
       boxSizing: "border-box", 
       zIndex: isChild ? 10 : 1,
       alignContent: "center",
-      width:
-        component.type == DesignerElementType.barcode
-          ? `${component.width}pt`
-          : `${component.width}pt`,
+      width:`${component.width}pt`,
       height:
         component.type == DesignerElementType.barcode
           ? `auto`
           : `${component.height}pt`,
-      border:
-        selectedComponent?.id === component.id
-          ? "2px solid #2196f3"
-          : component.type == DesignerElementType.barcode
-          ? ""
-          : "1px dashed #ccc",
+      // border:
+      //   selectedComponent?.id === component.id
+      //     ? "2px solid #2196f3"
+      //     : component.type == DesignerElementType.barcode
+      //     ? ""
+      //     : "1px dashed #ccc",
+      border: isSelected ? "2px solid #2196f3" :  component.type == DesignerElementType.barcode? "" :"none",
       cursor: "move",
-      backgroundColor: "white",
+      backgroundColor:isSelected?"#f6f6f7ff" : "inherit",
       userSelect: "none",
       transform: `rotate(${component.rotate || 0}deg)`,
       transformOrigin: "center",
@@ -1478,8 +1475,9 @@ const handleRemoveImage =()=>{
         component.type !== DesignerElementType.barcode
           ? component.fontStyle
           : undefined,
-      fontFamily:
-        component.type == DesignerElementType.barcode ? "" : component.font,
+      fontFamily: component.type == DesignerElementType.barcode ? "" : component.font,
+      color: component.type == DesignerElementType.barcode ? "" : component.fontColor,
+      fontWeight: component.type == DesignerElementType.barcode ? "" : component.fontWeight,
     };
 
     switch (component.type) {
@@ -1571,7 +1569,7 @@ const handleRemoveImage =()=>{
               top: `${component.y}pt`,
               transform: `rotate(${component.rotate || 0}deg)`,
               transformOrigin: "center",
-              zIndex: 1,
+              zIndex: isChild ? 10 : 1,
             }}
           >
             <div
@@ -1584,13 +1582,15 @@ const handleRemoveImage =()=>{
                 boxSizing: "border-box",
                 fontSize: `${component.fontSize || 12}pt`,
                 fontFamily: component.font || "Roboto",
+                fontWeight:component.fontWeight ?? "400",
                 fontStyle: component.fontStyle || "normal",
                 textAlign: component.textAlign || "center",
+                color:`rgb(${component.fontColor})`,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: component.textAlign || "center",
                 overflow: "hidden",
-                backgroundColor: "white",
+                backgroundColor:isSelected ? "#ffffffff" : "inherit", 
                 pointerEvents: 'auto',
                 userSelect: 'none',
                 cursor: "move",
@@ -1703,7 +1703,7 @@ const handleRemoveImage =()=>{
               top: `${component.y}pt`,
               transform: `rotate(${component.rotate || 0}deg)`,
               transformOrigin: "center",
-              zIndex: 1,
+             zIndex: isChild ? 10 : 1,
             }}
           >
             <div
@@ -1844,15 +1844,16 @@ const handleRemoveImage =()=>{
               style={{
                 width: "100%",
                 height: "100%",
-                backgroundColor: component.containerProps?.backgroundColor || "#fafafa",
+                backgroundColor: component.containerProps?.backgroundColor || "inherit",
                 border: isSelected 
                   ? "2px solid #2196f3" 
-                  : `${component.containerProps?.borderWidth || 1}px ${component.containerProps?.borderStyle || "solid"} ${component.containerProps?.borderColor || "#cccccc"}`,
+                  : `${component.containerProps?.borderWidth || 1}pt ${component.containerProps?.borderStyle || "solid"} ${component.containerProps?.borderColor || "#cccccc"}`,
                 padding: `${component.containerProps?.padding || 0}pt`,
                 boxSizing: "border-box",
                 position: "relative",
                 overflow: component.containerProps?.autoResize ? "visible" : "hidden",
                 cursor: "move",
+                borderRadius: `${component.containerProps?.borderRound || 1}pt`
               }}
               onClick={(e) => {
                 // Only select container if clicking on empty space (not on child elements)
@@ -1996,14 +1997,16 @@ const handleRemoveImage =()=>{
                             style={{
                               width: "100%",
                               height: "100%",
-                              backgroundColor: "white",
-                              border: selectedComponent?.id === actualChild.id ? "2px solid #2196f3" : "1px dashed #ccc",
+                              backgroundColor: isSelected ?"white":"inherit",
+                              border: selectedComponent?.id === actualChild.id ? "2px solid #2196f3" : "none",
                               padding: "4px",
                               boxSizing: "border-box",
                               fontSize: `${actualChild.fontSize || 12}pt`,
                               fontFamily: actualChild.font || "Roboto",
                               fontStyle: actualChild.fontStyle || "normal",
                               textAlign: actualChild.textAlign || "center",
+                              color:`rgb(${actualChild.fontColor})`,
+                              fontWeight:actualChild.fontWeight || "400",
                               display: "flex",
                               alignItems: "center",
                               justifyContent: actualChild.textAlign || "center",
@@ -2212,6 +2215,7 @@ const handleRemoveImage =()=>{
     : inventoryFields;
 };
   const debouncedHandleAreaPropetFieldChange=useDebounce(handleDesignerChange, 300);
+   const debouncedHandlePropetFieldChange=useDebounce(handlePropertyChange, 300);
 const bgImage = forCustomRows
   ? designerData?.background_image
   : templateData?.barcodeState?.labelState?.background_image;
@@ -2536,6 +2540,15 @@ const bgSize = forCustomRows
                             handleContainerPropertyChange("borderColor", e.target.value)
                           }
                         />
+                       <ERPInput
+                          id="containerBorderRound"
+                          label="Border Round"
+                          type="number"
+                          value={selectedComponent.containerProps?.borderRound || 1}
+                          onChange={(e) =>
+                            handleContainerPropertyChange("borderRound", e.target.value)
+                          }
+                        />                        
                         <ERPInput
                           id="containerBorderWidth"
                           label="Border Width"
@@ -3237,7 +3250,114 @@ const bgSize = forCustomRows
                             }
                           />
                         </Box>
-                        <Box>
+
+                     <Box
+                        sx={{ mb: 1 }}
+                        className="flex justify-start gap-2 items-center"
+                      >
+                        <Box className="basis-2/3">
+                          <ERPSlider
+                            label="Font Weight"
+                            value={selectedComponent.fontWeight}
+                            onChange={(e) =>
+                              handlePropertyChange(
+                                "fontWeight",
+                                e.target.valueAsNumber
+                              )
+                            }
+                            min={300}
+                            max={700}
+                            step={100}
+                          />                        
+                        </Box>
+
+                        <Box className="basis-1/3">
+                          <ERPInput
+                            id="fontWeight"
+                            
+                            noLabel
+                            value={selectedComponent.fontWeight}
+                            data={selectedComponent}
+                            onChange={(e) =>
+                              handlePropertyChange(
+                                "fontWeight",
+                                e.target.valueAsNumber
+                              )
+                            }
+                            min={300}
+                            max={700}
+                            step={100}
+                          />
+                        </Box>
+                      </Box>
+
+                     <Box
+                        sx={{ mb: 1 }}
+                        className="flex justify-start gap-2 items-center"
+                      >
+                        <Box className="basis-2/3">
+                          <ERPSlider
+                            label="Font Size"
+                            value={selectedComponent.fontSize}
+                            onChange={(e) =>
+                              handlePropertyChange(
+                                "fontSize",
+                                e.target.valueAsNumber
+                              )
+                            }
+                            min={0}
+                            max={50}
+                          />                        
+                        </Box>
+
+                        <Box className="basis-1/3">
+                          <ERPInput
+                            id="fontSize"
+                            type="number"
+                            noLabel
+                            value={selectedComponent.fontSize}
+                            data={selectedComponent}
+                            onChange={(e) =>
+                              handlePropertyChange(
+                                "fontSize",
+                                e.target.valueAsNumber
+                              )
+                            }
+                          />
+                        </Box>
+                      </Box>   
+                        <Box sx={{ mb: 1 }}>
+                                  
+                            <div className="flex items-center gap-2">
+                              <div
+                                className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
+                                style={{ backgroundColor: `rgb(${selectedComponent?.fontColor})`}}>
+                                <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
+                                <input
+                                  type="color"
+                                  value={selectedComponent?.fontColor}
+                                  onChange={(e) => {
+                                    const rgb = hexToRgb(e.target?.value);
+                                    if (rgb) {
+                                      debouncedHandlePropetFieldChange("fontColor", `${rgb.r},${rgb.g},${rgb.b}`);
+                                    }
+                                  }}
+                                  className="opacity-0 w-full h-full cursor-pointer"
+                                />
+                              </div>
+                              <div className="flex-1">
+                                <label className="text-xs font-semibold text-gray-700 dark:text-dark-text block mb-1">
+                                  {t("font_color")}
+                                </label>
+                                <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
+                                  rgb({selectedComponent?.fontColor})
+                                </div>
+                              </div>
+                            </div>
+                                          
+                        </Box>  
+
+                        <Box sx={{mb:1}}>
                           <InputLabel
                             sx={{
                               textTransform: "capitalize",
@@ -3290,20 +3410,6 @@ const bgSize = forCustomRows
                               Right
                             </button>
                           </div>
-                        </Box>
-                        <Box>
-                          <ERPSlider
-                            label="Font Size"
-                            value={selectedComponent.fontSize}
-                            onChange={(e) =>
-                              handlePropertyChange(
-                                "fontSize",
-                                e.target.valueAsNumber
-                              )
-                            }
-                            min={0}
-                            max={50}
-                          />
                         </Box>
 
                         <Box>

@@ -2081,7 +2081,7 @@ debugger;
                 })
               )
             }
-            content={<ProductSummaryMaster productID={formState.currentCell?.data.productID} productBatchID={formState.currentCell?.data.productBatchID} />}
+            content={<ProductSummaryMaster productID={formState.currentCell?.data.productID} productBatchID={formState.currentCell?.data.productBatchID} warehouseID={formState.transaction.master.fromWarehouseID} />}
           />
         )}
         {formState.userConfig?.barCodePrev && (
@@ -2407,7 +2407,7 @@ debugger;
               <BillWisePopup
               isInv ={true}
                 drCr={formState.billwiseDrCr}
-                onSave={(
+                onSave={async (
                   billwiseDetails: string,
                   totalAmount: number,
                   vrNumbers: string,
@@ -2417,7 +2417,7 @@ debugger;
                   if (
                     applicationSettings.accountsSettings?.maintainBillwiseAccount
                   ) {
-                   postBillWiseDetails({accTransactionDetailID:formState.transaction.master.accTransactionDetailIDForBillwise, billWiseDetails:bills??[]})
+                   await postBillWiseDetails({accTransactionDetailID:formState.transaction.master.accTransactionDetailIDForBillwise, billWiseDetails:bills??[]})
                 }
                 }}
               />

@@ -789,5 +789,10 @@
   "once_deleting_this_transaction_cannot_be_recovered": "Once deleting this transaction cannot be recovered",
   "pi_ref": "PI Ref",
   "zero_rate_or_qty": "Zero Rate or Quantity",
-  "zero_rate_or_qty_entered_in_row": "Zero rate or quantity entered in row:"
+  "zero_rate_or_qty_entered_in_row": "Zero rate or quantity entered in row:",
+
+  "branch_name": "Branch Name",
+  "to": "To",
+  "consolidated_all_branch_purchase_order_list": "Consolidated all branch PurchaseOrder list",
+  "pending_purchase_quotation_list": "Pending Purchase Quotation List"
 }

@@ -63,6 +63,7 @@ const TestInputButton = lazy(() => import("../../../pages/test-input-button"));
 const FcmPushNotificationTest = lazy(() => import("../../../pages/settings/Integration/fcm-push-notification-test"));
 const AccTransactionGrid = lazy(() => import("../../../pages/accounts/transactions/acc-transacton-grid"));
 const TransactionGrid = lazy(() => import("../../../pages/inventory/transactions/purchase/transacton-grid"));
+const SalesTransactionGrid = lazy(() => import("../../../pages/inventory/transactions/sales/transacton-grid"));
 
 // Inventory Masters
 const Products = lazy(() => import("../../../pages/inventory/masters/products/products"));
@@ -93,15 +94,9 @@ import { UserAction } from "../../../helpers/user-right-helper";
 import { TransactionBase, transactionRoutes } from "./transaction-routes";
 import AccTransactionFormContainer from "../../../pages/accounts/transactions/acc-transaction-container";
 import BankReconciliation from "../../../pages/accounts/transactions/acc-bank-reconciliation";
-// import StockTransfer from "../../../pages/inventory/reports/stock-transfer-report/stock-transfer";
-// import DamageStock from "../../../pages/inventory/reports/damage-stock-report/damage-stock";
-// import ExcessStock from "../../../pages/inventory/reports/excess-stock-report/excess-stock";
-// import ShortageStock from "../../../pages/inventory/reports/shortage-stock-report/shortage-stock";
-// import BranchTransferOut from "../../../pages/inventory/reports/branch-transfer-out-report/branch-tranfer-out";
 import TransactionFormContainer from "../../../pages/inventory/transactions/purchase/transaction-container";
-// import BranchTransferIn from "../../../pages/inventory/reports/branch-transfer-in-report/branch-tranfer-in";
-// import BranchTransferSummaryOut from "../../../pages/inventory/reports/branch-transfer-summary-out-report/branch-tranfer-summary-out";
-// import BranchTransferSummaryIn from "../../../pages/inventory/reports/branch-transfer-summary-in-report/branch-tranfer-summary-in";
+import SalesTransactionFormContainer from "../../../pages/inventory/transactions/sales/transaction-container";
+
 import AccTransactionFormContainerView from "../../../pages/accounts/transactions/acc-transaction-View-container";
 import { SearchProvider } from "../../../pages/accounts/transactions/search-context.tsx";
 import { ReportsMenuItems } from "../sidebar/sidemenu/reports-routes";
@@ -354,6 +349,80 @@ const Content: FC<ContentProps> = () => {
                   element={
                     <RouteGuard formCode={route.formCode} action={route.action}>
                       <TransactionGrid
+                        voucherType={route.voucherType}
+                        transactionType={route.transactionType}
+                        title={route.listTitle}
+                        addTitle={route.title}
+                      />
+                    </RouteGuard>
+                  }
+                />
+                <Route
+                  key={index}
+                  path={`${route.transactionBase}/${route.transactionType}/:voucherNo`}
+                  element={
+                    <RouteGuard formCode={route.formCode} action={route.action}>
+                      <SearchProvider>
+                      <AccTransactionFormContainerView ///abc
+                        voucherType={route.voucherType}
+                        transactionType={route.transactionType}
+                        formCode={route.formCode}
+                        voucherPrefix={""}
+                        formType={route.formType}
+                        title={route.title}
+                        drCr={route.drCr}
+                        voucherNo={0}
+                      />
+                      </SearchProvider>
+                    </RouteGuard>
+                  }
+                />
+                {/* <Route
+                  key={index}
+                  path={`${route.transactionBase}/${route.transactionType}/:voucherNo/edit`}
+                  element={
+                    <RouteGuard formCode={route.formCode} action={route.action}>
+                      <TransactionFormContainer
+                        voucherType={route.voucherType}
+                        transactionType={route.transactionType}
+                        formCode={route.formCode}
+                        voucherPrefix={""}
+                        formType={route.formType}
+                        title={route.title}
+                        drCr={route.drCr}
+                        voucherNo={0}
+                      />
+                    </RouteGuard>
+                  }
+                /> */}
+              </>
+            )}
+            {route.transactionBase == TransactionBase.Sales && (
+              <>
+                <Route
+                  key={`${index}-${route.transactionBase}-${route.transactionType}-`}
+                  path={`${route.transactionBase}/${route.transactionType}`}
+                  element={
+                    <RouteGuard formCode={route.formCode} action={route.action}>
+                      <SalesTransactionFormContainer
+                        voucherType={route.voucherType}
+                        transactionType={route.transactionType}
+                        formCode={route.formCode}
+                        voucherPrefix={""}
+                        formType={route.formType}
+                        title={route.title}
+                        drCr={route.drCr}
+                        voucherNo={0}
+                      />
+                    </RouteGuard>
+                  }
+                />
+                <Route
+                  key={index}
+                  path={`${route.transactionBase}/${route.transactionType}List`}
+                  element={
+                    <RouteGuard formCode={route.formCode} action={route.action}>
+                      <SalesTransactionGrid
                         voucherType={route.voucherType}
                         transactionType={route.transactionType}
                         title={route.listTitle}

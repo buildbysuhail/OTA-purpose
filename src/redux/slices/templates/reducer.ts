@@ -141,23 +141,59 @@ const templateSlice = createSlice({
     setTemplateFooterState: (state, action: PayloadAction<FooterState>) => {
       state.activeTemplate.footerState = action.payload;
     },
-
-    setTemplateCustomElements: (
+setTemplateHeaderCustomElements: (
       state,
-      action: PayloadAction<{ payload: CustomElementType; field: string}>
+      action: PayloadAction<{ payload: CustomElementType;}>
     ) => {
-      const { payload, field } = action.payload;
-      const fieldPath = field.split(".");
-
+      const { payload} = action.payload;
+debugger;
       // Navigate to the nested object using the split field path
-      let target: any = state.activeTemplate;
-      for (let i = 0; i < fieldPath.length - 1; i++) {
-        target = target[fieldPath[i]];
-      }
+      
 
       // Set the value at the final property
-      target[fieldPath[fieldPath.length - 1]] = payload;
+      state.activeTemplate.headerState.customElements = payload;
     },
+   setTemplateCustomElements: (
+  state,
+  action: PayloadAction<{ payload: CustomElementType; field: string }>
+) => {
+  const { payload, field } = action.payload;
+  const fieldPath = field.split(".");
+
+  console.group("setTemplateCustomElements Debug");
+  console.log("🔹 Field:", field);
+  console.log("🔹 FieldPath:", fieldPath);
+  console.log("🔹 Initial State.activeTemplate:", state.activeTemplate);
+
+  // Navigate to the nested object using the split field path
+  let target: any = state.activeTemplate;
+  for (let i = 0; i < fieldPath.length - 1; i++) {
+    const key = fieldPath[i];
+    console.log(`➡️ Step ${i} - Accessing key:`, key, "on target:", target);
+
+    target = target?.[key];
+
+    if (target === undefined) {
+      console.warn(`⚠️ Key "${key}" is undefined at step ${i}.`);
+       target[key] = {};
+      break;
+    }
+  }
+
+  const finalKey = fieldPath[fieldPath.length - 1];
+  console.log("🎯 Final target before assignment:", target);
+  console.log("🎯 Final key:", finalKey);
+  console.log("🎯 Payload to assign:", payload);
+
+  if (target) {
+    target[finalKey] = payload;
+    console.log("✅ Assigned successfully:", target[finalKey]);
+  } else {
+    console.error("❌ Cannot assign because target is undefined.");
+  }
+
+  console.groupEnd();
+},
 
   },
 });
@@ -268,7 +304,8 @@ export const {
   setTemplateTotalState,
   setTemplateFooterState,
   setTemplateCustomElements,
-  setTemplateTableMasterState
+  setTemplateTableMasterState,
+  setTemplateHeaderCustomElements
 } = templateSlice.actions;
 
 export default templateSlice.reducer;

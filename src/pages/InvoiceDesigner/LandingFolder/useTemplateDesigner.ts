@@ -13,7 +13,7 @@ import { debounce } from "lodash";
 import { DummyVoucherData } from "../constants/DummyData";
 import useCurrentBranch from "../../../utilities/hooks/use-current-branch";
 import { RootState } from "../../../redux/store";
-import { TemplateReducerState } from "../../../redux/reducers/TemplateReducer";
+import { templateInitialState, TemplateReducerState } from "../../../redux/reducers/TemplateReducer";
 import { designerSectionsConfig, designSections, DesignSectionType } from "./designSection";
 import { TemplateImagesTypes } from "./InvoiceDesignerLanding";
 import VoucherType from "../../../enums/voucher-types";
@@ -26,6 +26,7 @@ import { APIClient } from "../../../helpers/api-client";
 import { getOrientedDimensions, getPageDimensions } from "../utils/pdf-util";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { loadPrintData } from "../../use-print";
+import { merge } from 'lodash';
 
 const api = new APIClient();
 
@@ -198,6 +199,8 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,
     if (id !== "new") {
       try {
         setLoading(true)
+        
+        debugger;
         const res = await api.getAsync(`${Urls.templates}${id || ""}`);
         const cc: TemplateState<unknown> = customJsonParse(res.content);
         const template: TemplateDto = {
@@ -216,7 +219,10 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,
           backgroundImageFooter: res?.payload?.data?.background_image_footer,
           signatureImage: res?.payload?.data?.signature_image,
         };
-        dispatch(setTemplate(template));
+        const initial = templateInitialState().activeTemplate;
+        const _returnData = merge({}, initial, template);
+        debugger;
+        dispatch(setTemplate(_returnData));
       } catch (error) {
         console.error("Error fetching template data:", error);
         ERPToast.show(t("failed_to_fetch_template"));
@@ -281,11 +287,12 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,
         branchId: 0,
         id: templateData?.id ?? 0,
       };
-
-      dispatch(setTemplate(activeTemplate));
+         const initial = templateInitialState().activeTemplate;
+        const _returnData = merge({}, initial, activeTemplate);
+      dispatch(setTemplate(_returnData));
 
       try {
-        const res = await api.postAsync(Urls.templates, activeTemplate);
+        const res = await api.postAsync(Urls.templates, _returnData);
         handleResponse(res, () => {
           navigate(`/templates?template_group=${templateGroup}`);
         });

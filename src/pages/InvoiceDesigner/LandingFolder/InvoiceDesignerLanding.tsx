@@ -33,6 +33,7 @@ const InvoiceDesigner = () => {
   const { t } = useTranslation("system");
   const dispatch = useDispatch();
   const templateData = useSelector((state: RootState) => state.Template);
+  debugger;
   const rootState = useRootState();
   const tg = searchParams.get("template_group");
 

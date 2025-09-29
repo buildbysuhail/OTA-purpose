@@ -1273,7 +1273,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 fields: {
                   ...totalRes,
                   summary: summaryRes.summary,
-                  showQuantityFactors: { visible: false, rowIndex: -1 },
+                  showQuantityFactors: { visible: false, rowIndex: -1 , qtyDesc: ""  },
                   transaction: {
                     ...totalRes.transaction,
                     details: res.transaction?.details,
@@ -1351,7 +1351,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           fields: {
             ...totalRes,
             summary: summaryRes.summary,
-            showQuantityFactors: { visible: false, rowIndex: -1 },
+            showQuantityFactors: { visible: false, rowIndex: -1, qtyDesc: "" },
             transaction: {
               ...totalRes.transaction,
               details: res.transaction?.details,
@@ -2228,6 +2228,7 @@ debugger;
         )}
         {formState.showQuantityFactors.visible && (
           <QtyFactorsModal
+            qtyDesc={formState.showQuantityFactors.qtyDesc}
             isOpen={formState.showQuantityFactors.visible}
             rowIndex={formState.showQuantityFactors.rowIndex}
             onClose={() =>

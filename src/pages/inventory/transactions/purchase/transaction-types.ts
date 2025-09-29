@@ -541,7 +541,7 @@ export interface TransactionFormState {
   isPostedTransaction: boolean;
   isInv: boolean;
   summaryConfig: SummaryConfig<TransactionDetail>[];
-  showQuantityFactors: { visible: boolean; rowIndex: number };
+  showQuantityFactors: { visible: boolean; rowIndex: number, qtyDesc:string };
   showPcode: boolean;
   batchEntryData: { visible: boolean; data: string; rowIndex: number };
   serialNoEntryData: { visible: boolean; data: string; rowIndex: number };

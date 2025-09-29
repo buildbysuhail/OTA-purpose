@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../../../../redux/urls";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
@@ -47,6 +47,7 @@ export interface AmountModalTransaction {
 }
 export const AdjustmentAmountManager=({formState,transactionType,t,handleKeyDown,closeModal,modalHeight, isMaximized}:AdjustmentAmountInputProps)=>{
       const dispatch = useAppDispatch();
+      const ledCodeInputRef = useRef<HTMLInputElement>(null);
       const [editingIndex, setEditingIndex] = useState<number | null>(null);
       const [amountModal, setAmountModal] = useState<AmountModalTransaction>({
         ledCode: "",
@@ -55,7 +56,7 @@ export const AdjustmentAmountManager=({formState,transactionType,t,handleKeyDown
         amount: 0,
         remarks: "",
         isIncome: false,
-        showAllList: false,
+        showAllList: true,
         debitCredit: "debit",
         amountFc: 0, //CP
       });
@@ -80,6 +81,14 @@ export const AdjustmentAmountManager=({formState,transactionType,t,handleKeyDown
       let gridHeightWindows = modalHeight - 250;
       setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
     }, [isMaximized, modalHeight]);
+
+    useEffect(() => {
+        setTimeout(() => {  
+          if (ledCodeInputRef.current) {
+            ledCodeInputRef.current.focus();
+          }
+        }, 500);
+    }, []);
     
 const handleAmountModal = (
     field: keyof AmountModalTransaction,
@@ -365,6 +374,7 @@ const handleAmountModal = (
                   <ERPInput
                     id="ledCode"
                     noLabel={true}
+                    ref={ledCodeInputRef}
                     value={amountModal.ledCode}
                     autoFocus={true}
                     className="!max-w-[200px]"
@@ -393,7 +403,7 @@ const handleAmountModal = (
                       id: "ledgerID",
                       valueKey: "id",
                       labelKey: "name",
-                                      getListUrl: `${Urls.inv_transaction_base}${transactionType}/Data/AccLedgers/?ledgerType=${amountModal.showAllList? LedgerType.All: LedgerType.Liabilities_Expenses}`,
+                      getListUrl: `${Urls.inv_transaction_base}${transactionType}/Data/AccLedgers/?ledgerType=${amountModal.showAllList? LedgerType.All: LedgerType.Liabilities_Expenses}`,
                     }}
                     noLabel={true}
                     enableClearOption={false}

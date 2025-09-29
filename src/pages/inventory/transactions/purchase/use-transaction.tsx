@@ -2949,7 +2949,7 @@ debugger;
           result = {
             ...totalRes,
             summary: summaryRes.summary,
-            showQuantityFactors: { visible: false, rowIndex: -1 },
+            showQuantityFactors: { visible: false, rowIndex: -1 , qtyDesc: "" },
             transaction: {
               ...totalRes.transaction,
               details: [final],
@@ -3241,10 +3241,12 @@ debugger;
         case "q":
         case "Q":
           if (columnName === "qty") {
+            const data: TransactionDetail =
+              formState.transaction.details[rowIndex];
             dispatch(
               commonParams.formStateHandleFieldChangeKeysOnly({
                 fields: {
-                  showQuantityFactors: { visible: true, rowIndex: rowIndex },
+                  showQuantityFactors: { visible: true, rowIndex: rowIndex, qtyDesc:data.productDescription },
                 },
               })
             );

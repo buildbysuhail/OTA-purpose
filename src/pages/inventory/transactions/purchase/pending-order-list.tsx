@@ -532,6 +532,8 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
 
     return baseData;
   }, [selectedMaster, voucherType, toVoucherType, branchID]);
+  const memoDataUrl = useMemo(() => getApiEndpoint(), [voucherType]);
+  const memoPostData = useMemo(() => getMainGridPostData(), [voucherType]);
 
   return (
     <div className="pending-order-list-container">
@@ -578,8 +580,8 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
         <ErpDevGrid
           ref={gridRef}
           columns={mainGridColumns}
-          dataUrl={getApiEndpoint()}
-          postData={getMainGridPostData()}
+          dataUrl={memoDataUrl}
+          postData={memoPostData}
           method={ActionType.GET}
           gridId={`grd_pending_orders_${voucherType}`}
           height={300}
@@ -587,7 +589,7 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
           enableScrollButton={false}
           selectionMode="multiple"
           initialSort={[{ selector: "voucherNumber", desc: true }]}
-          // gridHeader={t(`pending_${voucherType.toLowerCase()}_list`)}
+          // gridHeader={t(`pending_${voucherType.toLowerCase()}_list`)}  
           onRowClick={handleMainGridRowClick}
           // onSelectionChanged={handleSelectionChanged}
           showPrintButton={false}

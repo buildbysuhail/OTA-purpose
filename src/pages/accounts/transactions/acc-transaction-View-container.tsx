@@ -60,6 +60,7 @@ import { useSearch } from "./search-context.tsx";
 import { useAccPrint } from "./use-print";
 import { useAccTransaction } from "./use-acc-transaction";
 import { templateConfig } from "../../InvoiceDesigner/LandingFolder/designSection";
+import VoucherType from "../../../enums/voucher-types";
 
 
 
@@ -392,7 +393,7 @@ const newUrl = `/accounts/transactions/CashPayment/${vchno}${queryString ? `?${q
     fetchTemplate();
   }, [input, formState]); 
 
-    const groupKey =input?.voucherType || "";
+    const groupKey = (input?.voucherType ?? "") as VoucherType;
     const typeKey = template?.templateType?.toUpperCase() ?? "STANDARD";
     const kindKey = template?.templateKind ;
     const templateToRender = useMemo(() => {

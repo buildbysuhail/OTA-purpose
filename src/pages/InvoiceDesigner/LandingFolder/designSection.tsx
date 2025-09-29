@@ -51,7 +51,9 @@ export const templateConfig: DesignerConfigMap = {
       standard: {
         downloadComponent: <SharedDownloadTemplate />,
         PreviewComponent: <SharedTemplatePreview />,
-        sections: {},
+        sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
+        tableState: generateTableColumns(initialPrintDetailDto)
+        })},
       },
     },
     PREMIUM: {
@@ -60,14 +62,16 @@ export const templateConfig: DesignerConfigMap = {
         PreviewComponent:  <SharedTemplatePreview />,
         sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
         tableState: generateTableColumns(initialPrintDetailDto)
-      }),footer: () => null },
+        })},
       },
     },
     UNIVERSAL: {
       universal: {
         downloadComponent: <SharedDownloadTemplate />,
         PreviewComponent: <SharedTemplatePreview />,
-        sections: {},
+        sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
+        tableState: generateTableColumns(initialPrintDetailDto)
+        })},
       },
     },
   },
@@ -76,7 +80,9 @@ export const templateConfig: DesignerConfigMap = {
       standard: {
         downloadComponent: <SharedDownloadTemplate />,
         PreviewComponent: <SharedTemplatePreview />,
-        sections: {},
+        sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
+        tableState: generateTableColumns(initialPrintDetailDto)
+        })},
       },
     },
     PREMIUM: {
@@ -85,21 +91,25 @@ export const templateConfig: DesignerConfigMap = {
         PreviewComponent:  <SharedTemplatePreview />,
         sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
         tableState: generateTableColumns(initialPrintDetailDto)
-      }),footer: () => null },
+      })},
       },
     },
     UNIVERSAL: {
       universal: {
         downloadComponent: <SharedDownloadTemplate />,
         PreviewComponent: <SharedTemplatePreview />,
-        sections: {},
+        sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
+        tableState: generateTableColumns(initialPrintDetailDto)
+        })},
       },
     },
      SPREDSHEET:{
        spreadsheet:{
         downloadComponent: <SharedDownloadTemplate />,
         PreviewComponent: <SharedTemplatePreview />,
-        sections: {},
+        sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
+        tableState: generateTableColumns(initialPrintDetailDto)
+        })},
     }
     },
 
@@ -107,12 +117,16 @@ export const templateConfig: DesignerConfigMap = {
       "retail-standard": {
         downloadComponent: <SharedDownloadTemplate />,
         PreviewComponent: <SharedTemplatePreview />,
-        sections: {},
+        sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
+        tableState: generateTableColumns(initialPrintDetailDto)
+        })},
       },
       "2inch": {
         downloadComponent: <SharedDownloadTemplate />,
         PreviewComponent: <SharedTemplatePreview />,
-        sections: {},
+        sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
+        tableState: generateTableColumns(initialPrintDetailDto)
+        })},
       },
     },
 
@@ -161,26 +175,26 @@ export const designSections: DesignSectionType[] = [
 // Now nested by templateType -> templateKind -> section types
 export const designerSectionsConfig: Record<string, Record<string, string[]>> = {
   STANDARD: {
-    standard: ["properties", "header", "transactions", "footer"],
+    standard: ["properties", "header",  "table", "footer", ],
   },
   PREMIUM: {
     premium: ["properties", "header",  "table", "footer", ],
   },
   UNIVERSAL: {
-    universal: ["properties", "header", "transactions", "others"],
+    universal: ["properties", "header",  "table", "footer", ],
   },
   RETAIL: {
-    "retail-standard": ["properties", "header", "transactions", "table", "footer"],
-    "2inch": ["properties", "header", "transksactions", "table", "footer"],
+    "retail-standard": ["properties", "header",  "table", "footer", ],
+    "2inch":["properties", "header",  "table", "footer", ],
   },
   ADVANCE: {
-    advice: ["properties", "header", "transactions", "footer"],
+    advice: ["properties", "header",  "table", "footer", ],
   },
   CHEQUE: {
-    cheque: ["properties", "header", "transactions", "footer"],
+    cheque: ["properties", "header",  "table", "footer", ],
   },
   CUSTOMERBALANCE: {
-    customerBalance: ["properties", "header", "transactions", "footer"],
+    customerBalance: ["properties", "header",  "table", "footer", ],
   },
 };
 

@@ -2,11 +2,12 @@ import React from "react";
 import { AccountTransactionProps } from "../../InvoiceDesigner/DownloadPreview/Shared";
 import { templateConfig } from "../../InvoiceDesigner/LandingFolder/designSection";
 import { DocumentProps,Document  } from "@react-pdf/renderer";
+import VoucherType from "../../../enums/voucher-types";
 
 
 export const renderSelectedTemplate = (props: AccountTransactionProps) : React.ReactElement<DocumentProps> => {
   const { template, data } = props;
-  const groupKey = template?.templateGroup ?? "";
+  const groupKey = (template?.templateGroup ?? "") as VoucherType;
   const typeKey = template?.templateType?.toUpperCase() ?? "STANDARD";
   const kindKey = template?.templateKind ?? "";
 

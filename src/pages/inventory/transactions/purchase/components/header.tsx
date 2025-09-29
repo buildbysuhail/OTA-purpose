@@ -191,7 +191,8 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
         <div className={`!overflow-visible flex items-center justify-evenly md:justify-end space-x-2 p-1 w-full overflow-x-auto bg-[#f9fafb] md:bg-transparent`}>
           {/* Load Temp Rows */}
           <div className="group relative inline-flex flex-col items-center ps-[5px]" title="Load Details">
-            <button disabled={formState.formElements.pnlMasters?.disabled}
+            <button
+              disabled={formState.formElements.pnlMasters?.disabled}
               className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
               onClick={loadTemporaryRows}>
               <ChevronUp className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
@@ -212,14 +213,18 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
 
           {/* Refresh Button */}
           <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("refresh")}>
-            <button className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`} onClick={handleRefresh}>
+            <button
+              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
+              onClick={handleRefresh}>
               <RefreshCw className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
             </button>
           </div>
 
           {/* Create New Voucher */}
           <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("clone")}>
-            <button className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`} onClick={createNewVoucher} >
+            <button
+              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
+              onClick={createNewVoucher}>
               <BadgePlusIcon className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
             </button>
           </div>
@@ -251,7 +256,10 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
           {/* Clear Button */}
           {isAbove640 && (
             <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("clear")}>
-              <button className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`} onClick={handleClearControls}>
+              <button
+                disabled={formState.transactionLoading}
+                className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
+                onClick={handleClearControls}>
                 <Eraser className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
               </button>
             </div>
@@ -261,6 +269,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
           {formState.formElements.btnProductSummary.visible == true && isAbove768 && (
             <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("product_summary")}>
               <button
+                disabled={formState.transactionLoading}
                 className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
                 onClick={() => dispatch(formStateHandleFieldChange({ fields: { isProductSummaryOpen: true }, }))}>
                 <Boxes className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
@@ -272,6 +281,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
           {isAbove768 && (
             <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("party_wise_summary")}>
               <button
+                disabled={formState.transactionLoading}
                 className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
                 onClick={() => dispatch(formStateHandleFieldChange({ fields: { isPartyWiseSummaryOpen: true }, }))}>
                 <Group className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
@@ -282,22 +292,26 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
           {/* History Button */}
           {isAbove768 && (
             <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("history")}>
-              <button className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`} onClick={handleHistoryClick}>
+              <button
+                disabled={formState.transactionLoading}
+                className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
+                onClick={handleHistoryClick}>
                 <History className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
               </button>
             </div>
           )}
 
           {/* Settings Button */}
-          <div>
+          <button disabled={formState.transactionLoading} >
             {phone ? (<TransactionUserConfig phone={true} transactionType={transactionType ?? ""} undoEditMode={undoEditMode} />) : (<TransactionUserConfig transactionType={transactionType ?? ""} undoEditMode={undoEditMode} />)}
-          </div>
+          </button>
 
           {/* Popup Menu */}
           <div className="relative">
             <button
               ref={buttonRef}
               onClick={openMenuPopup}
+              disabled={formState.transactionLoading}
               className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3  rounded-md hover:bg-gray-200 transition-colors`}
               title={t("more")}>
               <EllipsisVertical className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
@@ -309,7 +323,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                 className="absolute rounded-lg bg-white dark:bg-[#1f2937] text-black dark:text-[#f3f4f6] shadow-xl border border-[#e5e7eb] dark:border-[#374151] p-2 z-50 backdrop-blur-sm"
                 style={popupStyle}>
                 <nav className="w-full">
-                  <ul className="space-y-1 max-h-80 overflow-y-auto scrollbar-thin">
+                  <ul className={`space-y-1 max-h-80 overflow-y-auto scrollbar-thin ${formState.transactionLoading ? 'pointer-events-none blur-sm' : ''}`}>
                     {formState.formElements.lnkUnlockVoucher?.visible && (
                       <li>
                         <button
@@ -358,9 +372,12 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                     )}
 
                     <li>
-                      <button onClick={selectTemplates} className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fff7ed] hover:text-[#c2410c] dark:hover:bg-[#7c2d124d] dark:hover:text-[#fdba74] transition-all duration-200 rounded-md group text-left">
-                        <div className="w-8 h-8 bg-[#ffedd5] dark:bg-[#7c2d124d] rounded-full flex items-center justify-center group-hover:bg-[#fed7aa] dark:group-hover:bg-[#7c2d1299] group-hover:scale-110 transition-all duration-200">
-                          <AlignHorizontalSpaceBetween className="h-4 w-4 text-[#ea580c] dark:text-[#ffedd5]" />
+                      <button
+                        onClick={selectTemplates}
+                        disabled={formState.formElements?.pnlMasters?.disabled}
+                        className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left  ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#fff7ed] hover:text-[#c2410c] dark:hover:bg-[#7c2d124d] dark:hover:text-[#fdba74]'}`}>
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200   ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#ffedd5] dark:bg-[#7c2d124d] group-hover:bg-[#fed7aa] dark:group-hover:bg-[#7c2d1299] group-hover:scale-110'}`}>
+                          <AlignHorizontalSpaceBetween className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#ea580c] dark:text-[#ffedd5]'}`} />
                         </div>
                         <span className="font-medium">{t("change_template")}</span>
                       </button>
@@ -390,13 +407,14 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                     {["PI", "GRN"].includes(formState.transaction.master.voucherType) && (
                       <li>
                         <button
-                          className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fff1f2] hover:text-[#be123c] dark:hover:bg-[#8813374d] dark:hover:text-[#fda4af] transition-all duration-200 rounded-md group text-left"
+                          disabled={formState.formElements?.pnlMasters?.disabled}
                           onClick={(e) => {
                             closeMenuPopup();
-                            setIsPendingOrderOpen({ open: true, type: "PO" })
-                          }}>
-                          <div className="w-8 h-8 bg-[#ffe4e6] dark:bg-[#8813374d] rounded-full flex items-center justify-center group-hover:bg-[#fecdd3] dark:group-hover:bg-[#88133799] group-hover:scale-110 transition-all duration-200">
-                            <ShoppingCart className="h-4 w-4 text-[#be123c] dark:text-[#fda4af]" />
+                            setIsPendingOrderOpen({ open: true, type: "PO" });
+                          }}
+                          className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#fff1f2] hover:text-[#be123c] dark:hover:bg-[#8813374d] dark:hover:text-[#fda4af]'}`}>
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#ffe4e6] dark:bg-[#8813374d] group-hover:bg-[#fecdd3] dark:group-hover:bg-[#88133799] group-hover:scale-110'}`} >
+                            <ShoppingCart className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#be123c] dark:text-[#fda4af]'}`} />
                           </div>
                           <span className="font-medium">{t('pending_purchase_order_list')}</span>
                         </button>
@@ -408,63 +426,71 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                       (
                         <li>
                           <button
-                            className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fefce8] hover:text-[#a16207] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047] transition-all duration-200 rounded-md group text-left"
+                            disabled={formState.formElements?.pnlMasters?.disabled}
                             onClick={(e) => {
                               closeMenuPopup();
-                              setIsPendingOrderOpen({ open: true, type: "GRN" })
-                            }}>
-                            <div className="w-8 h-8 bg-[#fef3c7] dark:bg-[#78350f4d] rounded-full flex items-center justify-center group-hover:bg-[#fde68a] dark:group-hover:bg-[#78350fcc] group-hover:scale-110 transition-all duration-200">
-                              <Package className="h-4 w-4 text-[#a16207] dark:text-[#fde047]" />
+                              setIsPendingOrderOpen({ open: true, type: "GRN" });
+                            }}
+                            className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#fefce8] hover:text-[#a16207] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047]'}`}>
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#fef3c7] dark:bg-[#78350f4d] group-hover:bg-[#fde68a] dark:group-hover:bg-[#78350fcc] group-hover:scale-110'}`} >
+                              <Package className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#a16207] dark:text-[#fde047]'}`} />
                             </div>
                             <span className="font-medium">{t('pending_goods_receipt_list')}</span>
                           </button>
                         </li>
-                      )}
-
-
+                      )
+                    }
 
                     {
                       ["PO", VoucherType.PurchaseQuotation].includes(formState.transaction.master.voucherType) &&
                       (
                         <li>
                           <button
-                            className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fefce8] hover:text-[#a16207] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047] transition-all duration-200 rounded-md group text-left"
+                            disabled={formState.formElements?.pnlMasters?.disabled}
                             onClick={(e) => {
                               closeMenuPopup();
-                              setIsPendingOrderOpen({ open: true, type: "POC" })
-                            }}>
-                            <div className="w-8 h-8 bg-[#fef3c7] dark:bg-[#78350f4d] rounded-full flex items-center justify-center group-hover:bg-[#fde68a] dark:group-hover:bg-[#78350fcc] group-hover:scale-110 transition-all duration-200">
-                              <Package className="h-4 w-4 text-[#a16207] dark:text-[#fde047]" />
+                              setIsPendingOrderOpen({ open: true, type: "POC" });
+                            }}
+                            className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#fefce8] hover:text-[#a16207] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047]'}`}>
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#fef3c7] dark:bg-[#78350f4d] group-hover:bg-[#fde68a] dark:group-hover:bg-[#78350fcc] group-hover:scale-110'}`} >
+                              <Package className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#a16207] dark:text-[#fde047]'}`} />
                             </div>
-                            <span className="font-medium">{t('Consolidated all branch PurchaseOrder list')}</span>
+                            <span className="font-medium">{t('consolidated_all_branch_purchase_order_list')}</span>
                           </button>
                         </li>
-                      )}
-                    {["PO"].includes(formState.transaction.master.voucherType) &&
+                      )
+                    }
+
+                    {
+                      ["PO"].includes(formState.transaction.master.voucherType) &&
                       (
                         <li>
                           <button
-                            className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fefce8] hover:text-[#a16207] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047] transition-all duration-200 rounded-md group text-left"
+                            disabled={formState.formElements?.pnlMasters?.disabled}
                             onClick={(e) => {
                               closeMenuPopup();
-                              setIsPendingOrderOpen({ open: true, type: "PQ" })
-                            }}>
-                            <div className="w-8 h-8 bg-[#fef3c7] dark:bg-[#78350f4d] rounded-full flex items-center justify-center group-hover:bg-[#fde68a] dark:group-hover:bg-[#78350fcc] group-hover:scale-110 transition-all duration-200">
-                              <Package className="h-4 w-4 text-[#a16207] dark:text-[#fde047]" />
+                              setIsPendingOrderOpen({ open: true, type: "PQ" });
+                            }}
+                            className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#fefce8] hover:text-[#a16207] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047]'}`}   >
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#fef3c7] dark:bg-[#78350f4d] group-hover:bg-[#fde68a] dark:group-hover:bg-[#78350fcc] group-hover:scale-110'}`}>
+                              <Package className={`h-4 w-4  ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#a16207] dark:text-[#fde047]'}`} />
                             </div>
-                            <span className="font-medium">{t('Pending Purchase Quotation List')}</span>
+                            <span className="font-medium">{t('pending_purchase_quotation_list')}</span>
                           </button>
                         </li>
-                      )}
+                      )
+                    }
+
                     <li>
                       <button
-                        className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#ecfeff] hover:text-[#0e7490] dark:hover:bg-[#164e634d] dark:hover:text-[#67e8f9] transition-all duration-200 rounded-md group text-left"
+                        disabled={formState.formElements?.pnlMasters?.disabled}
                         onClick={(e) => {
-                          closeMenuPopup()
-                          onChooseTemplate()
-                        }}>
-                        <div className="w-8 h-8 bg-[#cffafe] dark:bg-[#164e634d] rounded-full flex items-center justify-center group-hover:bg-[#a5f3fc] dark:group-hover:bg-[#164e6399] group-hover:scale-110 transition-all duration-200">
-                          <Download className="h-4 w-4 text-[#0e7490] dark:text-[#67e8f9]" />
+                          closeMenuPopup();
+                          onChooseTemplate();
+                        }}
+                        className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#ecfeff] hover:text-[#0e7490] dark:hover:bg-[#164e634d] dark:hover:text-[#67e8f9]'}`}>
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#cffafe] dark:bg-[#164e634d] group-hover:bg-[#a5f3fc] dark:group-hover:bg-[#164e6399] group-hover:scale-110'}`}>
+                          <Download className={`h-4 w-4  ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#0e7490] dark:text-[#67e8f9]'}`} />
                         </div>
                         <span className="font-medium">{t("download_excel_template")}</span>
                       </button>
@@ -472,16 +498,20 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
 
                     <li>
                       <button
-                        className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#ecfdf5] hover:text-[#047857] dark:hover:bg-[#064e3b4d] dark:hover:text-[#6ee7b7] transition-all duration-200 rounded-md group text-left" onClick={(e) => { closeMenuPopup(); }}>
-                        <div className="w-8 h-8 bg-[#d1fae5] dark:bg-[#065f46]/30 rounded-full flex items-center justify-center group-hover:bg-[#a7f3d0] dark:group-hover:bg-[#065f46]/50 group-hover:scale-110 transition-all duration-200">
-                          <Upload className="h-4 w-4 text-[#065f46] dark:text-[#6ee7b7]" />
+                        disabled={formState.formElements?.pnlMasters?.disabled}
+                        onClick={(e) => {
+                          closeMenuPopup();
+                        }}
+                        className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#ecfdf5] hover:text-[#047857] dark:hover:bg-[#064e3b4d] dark:hover:text-[#6ee7b7]'}`}   >
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200  ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#d1fae5] dark:bg-[#065f46]/30 group-hover:bg-[#a7f3d0] dark:group-hover:bg-[#065f46]/50 group-hover:scale-110'}`}        >
+                          <Upload className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#065f46] dark:text-[#6ee7b7]'}`} />
                         </div>
-                        {/* <span className="font-medium">{t("import_from_excel")}</span> */}
                         <ERPFileUploadButton
                           buttonText={t("import_from_excel")}
                           handleFileChange={onSelectExcel}
                           hideIcon={true}
-                          buttonClassName="font-medium bg-transparent border-none p-0 hover:bg-transparent"
+                          buttonClassName={`font-medium bg-transparent border-none p-0 hover:bg-transparent ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500 cursor-not-allowed' : ''}`}
+                          disabled={formState.formElements?.pnlMasters?.disabled}
                         />
                       </button>
                     </li>
@@ -650,6 +680,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
           {!phone && (
             <div className="relative">
               <button
+                disabled={formState.transactionLoading}
                 onClick={(e) => { e.preventDefault(); goToPreviousPage() }}
                 className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
                 title={t("previous_page")}>

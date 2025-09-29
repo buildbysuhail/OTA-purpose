@@ -982,9 +982,9 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
       .filter((column) => {
         if (
           column.dataField == "salesAmount" ||
-          column.dataField == "totalProfit" ||
-          column.dataField == "counterName" ||
-          column.dataField == "systemDateTime" 
+          column.dataField == "totalProfit" 
+          // column.dataField == "counterName" ||
+          // column.dataField == "systemDateTime" 
         ) {
           return userSession.dbIdValue == "489995732270";
         }
@@ -1258,7 +1258,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
                 //         lblReportTitle.Text = lblReportTitle.Text + " of Card/Bank:";
                 //         this.Text = this.Text + lblReportTitle.Text;
                 //     }
-                filterText="of {voucherForm!=''&& Voucher Form : [voucherForm]} {salesRouteID > 0 && , Route Name : [routeName]} {counterID > 0 && , Counter : [counterName]} {salesmanID > 0 && , Sales Man : [salesMan]} From Date : {fromDate} To Date : {toDate} {isTimeBased == true && , Time between : [fromTime] And [toTime]}"
+                filterText="of {voucherForm!=''&& Voucher Form : [voucherForm]} {salesRouteID > 0 &&  Route Name : [routeName]} {counterID > 0 &&  Counter : [counterName]} {salesmanID > 0 &&  Sales Man : [salesMan]} From Date : {fromDate} To Date : {toDate} {isTimeBased == true &&  Time between : [fromTime] And [toTime]}"
                 gridHeader={t(gridHeader)}
                 dataUrl={dataUrl}
                 hideGridAddButton={true}

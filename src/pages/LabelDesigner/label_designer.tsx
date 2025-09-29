@@ -90,6 +90,7 @@ import ERPPreviousUrlButton from "../../components/ERPComponents/erp-previous-ui
 import {
   handleSetTemplateBarcodeLabelBackgroundImage,
   setTemplateCustomElements,
+  setTemplateHeaderCustomElements,
 } from "../../redux/slices/templates/reducer";
 import { convertFileToBase64 } from "../../utilities/file-utils";
 // import { TemplateGroupTypes } from "../InvoiceDesigner/constants/TemplateCategories";
@@ -876,14 +877,27 @@ const handleQRCodePropertyChange = (
 
   const handleSave = async (dataUrl?: string) => {
     setLoading(true);
-
+     debugger;
     try {
            // Consolidate container children before saving
       const consolidatedComponents = consolidateContainerChildren();
-      
+      debugger;
       if (forCustomRows) {
+        // dispatch(
+        //   setTemplateCustomElements({
+        //     payload: {
+        //       elements: consolidatedComponents,
+        //       height: templateData.barcodeState?.labelState?.labelHeight,
+        //       thumbImage:dataUrl??"",
+        //       background_image: designerData?.background_image,
+        //       bg_image_position:designerData?.bg_image_position,
+        //       background_color: designerData?.background_color,
+        //     },
+        //     field: customTemplate,
+        //   })
+        // );
         dispatch(
-          setTemplateCustomElements({
+          setTemplateHeaderCustomElements({
             payload: {
               elements: consolidatedComponents,
               height: templateData.barcodeState?.labelState?.labelHeight,
@@ -891,8 +905,7 @@ const handleQRCodePropertyChange = (
               background_image: designerData?.background_image,
               bg_image_position:designerData?.bg_image_position,
               background_color: designerData?.background_color,
-            },
-            field: customTemplate,
+            }
           })
         );
         onSuccess?.();
@@ -1997,7 +2010,7 @@ const handleRemoveImage =()=>{
                             style={{
                               width: "100%",
                               height: "100%",
-                              backgroundColor: isSelected ?"white":"inherit",
+                              backgroundColor: selectedComponent?.id === actualChild.id?"white":"inherit",
                               border: selectedComponent?.id === actualChild.id ? "2px solid #2196f3" : "none",
                               padding: "4px",
                               boxSizing: "border-box",

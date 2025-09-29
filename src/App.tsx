@@ -47,6 +47,8 @@ import ERPModal from "./components/ERPComponents/erp-modal";
 import { AccessPrinterList } from "./pages/InvoiceDesigner/utils/get_printers";
 import { getStorageString, setStorageString } from "./utilities/storage-utils";
 import { de } from "date-fns/locale";
+import { setLightStatusBar } from "./Android/lib/statusBar";
+import { registerPush } from "./Android/lib/push";
 // import ERPModal from "./components/ERPComponents/erp-modal";
 // import 'devextreme/dist/css/dx.dark.css';  
 
@@ -62,6 +64,18 @@ export const LoadingAnimation = () => {
 function App() {
    const [isOnline, setIsOnline] = useState(navigator.onLine);
    const location = useLocation();
+
+    useEffect(() => {
+    // Example: default UI is light background
+    setLightStatusBar();
+  }, []);
+
+   useEffect(() => {
+    registerPush((token) => {
+      // Send token to backend for targeting
+      console.log('Device token:', token);
+    });
+  }, []);
 
 useEffect(() => {
   const handleOnline = () => setIsOnline(true);

@@ -24,6 +24,7 @@ interface QtyFactorsModalProps {
   onClose: () => void;
   rowIndex: number;
   t: (key: string) => string;
+  qtyDesc: string
 }
 
 const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({
@@ -31,6 +32,7 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({
   onClose,
   t,
   rowIndex,
+  qtyDesc,
 }) => {
   const dispatch = useDispatch();
   const widthInputRef = useRef<HTMLInputElement>(null);
@@ -39,13 +41,14 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({
   const [qtyFactors, setQtyFactors] = useState<QtyFactors>({
     width: 0,
     height: 0,
-    nos: 0,
+    nos: 1,
     multipleRows: false,
   });
 
   const [gridData, setGridData] = useState<GridQtyFactors[]>([]);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [editingRowId, setEditingRowId] = useState<string | null>(null);
+  const [isShowGrid, setIsShowGrid] = useState<boolean>(false);
 
   const handleQtyFactors = (
     field: keyof QtyFactors,
@@ -57,8 +60,23 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({
     }));
   };
 
-  const calculateTotal = (width: number, height: number): number => {
-    return width * height;
+ useEffect(() => {
+   
+ if(qtyDesc){
+    // const parts = qtyDesc.split('/ X |\/');
+    const parts = qtyDesc.split(/\s*X\s*|\s*\/\s*/).map(p => p.trim());
+        setQtyFactors((prev) => ({
+      ...prev,
+      width: Number(parts[0]),
+      height: Number(parts[1]),
+      nos: Number(parts[2])
+    }));
+    setIsEditMode(true)
+  }
+ }, [])
+ 
+  const calculateTotal = (width: number, height: number, nos: number): number => {
+    return width * height * nos;
   };
 
   useEffect(() => {
@@ -76,8 +94,8 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({
     setQtyFactors({
       width: 0,
       height: 0,
-      nos: 0,
-      multipleRows: false,
+      nos: qtyFactors.nos,
+      multipleRows: true,  //check it
     });
     setIsEditMode(false);
     setEditingRowId(null);
@@ -93,7 +111,7 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({
     if (isEditMode && editingRowId !== null) {
       const updatedGridData = gridData.map((row) => {
         if (row.id === editingRowId) {
-          const total = calculateTotal(qtyFactors.width, qtyFactors.height);
+          const total = calculateTotal(qtyFactors.width, qtyFactors.height, qtyFactors.nos);
           return {
             ...row,
             width: qtyFactors.width,
@@ -109,7 +127,7 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({
       resetForm();
     } else {
       if (qtyFactors.width > 0 && qtyFactors.height > 0 && qtyFactors.nos > 0) {
-        const total = calculateTotal(qtyFactors.width, qtyFactors.height);
+        const total = calculateTotal(qtyFactors.width, qtyFactors.height, qtyFactors.nos);
         const newRow: GridQtyFactors = {
           id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
           slNo: gridData.length + 1,
@@ -118,7 +136,12 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({
           nos: qtyFactors.nos,
           total: total,
         };
-
+    if(!qtyFactors.multipleRows) {
+            dispatch(formStateHandleFieldChangeKeysOnly({
+            fields: { quantityFactorData: JSON.stringify({ rowIndex: rowIndex, data: [newRow] }) }
+          }));
+          return;
+          }
         setGridData((prev) => {
           const newData = [...prev, newRow];
           return newData;
@@ -251,7 +274,7 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({
       closeModal={onClose}
       title={t("qty_factors")}
       width={550}
-      height={660}
+      height={qtyFactors.multipleRows ? 680 : 150}
       
       content={
         <>
@@ -293,7 +316,10 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({
               label={t("multiple_rows")}
               checked={qtyFactors.multipleRows}
               onChange={(e) =>
+              {
+                setIsShowGrid(e.target.checked)
                 handleQtyFactors("multipleRows", e.target.checked)
+              }  
               }
             />
             <ERPButton
@@ -302,6 +328,9 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({
               onClick={handleClick}
             />
           </div>
+          <div className="mt-2">{t("total")} : {qtyFactors.width*qtyFactors.height*qtyFactors.nos}</div>
+          {isShowGrid?
+          <div className="">
           <ErpDevGrid
             columns={gridColumns}
             data={gridData}
@@ -333,6 +362,8 @@ const QtyFactorsModal: React.FC<QtyFactorsModalProps> = ({
               variant="primary"
             />
           </div>
+          </div>
+          :""}
         </>
       }
     />

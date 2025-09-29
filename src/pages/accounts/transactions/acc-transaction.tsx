@@ -198,7 +198,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     right: isRtl ? headerLeft : "0",
   };
 
-  const groupKey = formState?.template?.templateGroup ?? (voucherType || "");
+
+
+  const groupKey = (formState?.template?.templateGroup ?? "") as VoucherType;
   const typeKey = formState?.template?.templateType?.toUpperCase() ?? "STANDARD";
   const kindKey = formState?.template?.templateKind ?? "";
   const templateToRender = useMemo(() => {
@@ -3353,7 +3355,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
                   {/* Template Content */}
                   <div className="relative h-full   w-full ">
-                    {React.cloneElement(templateToRender.PreviewComponent, stableTemplateProps)}
+                    {templateToRender && React.cloneElement(templateToRender.PreviewComponent, stableTemplateProps)}
                   </div>
                 </div>
 

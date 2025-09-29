@@ -87,11 +87,7 @@ import { getDetailAction } from "../../redux/slices/app-thunks";
 import { RootState } from "../../redux/store";
 import { useAppState } from "../../utilities/hooks/useAppState";
 import ERPPreviousUrlButton from "../../components/ERPComponents/erp-previous-uirl-button";
-import {
-  handleSetTemplateBarcodeLabelBackgroundImage,
-  setTemplateCustomElements,
-  setTemplateHeaderCustomElements,
-} from "../../redux/slices/templates/reducer";
+import {setTemplateCustomElements,} from "../../redux/slices/templates/reducer";
 import { convertFileToBase64 } from "../../utilities/file-utils";
 // import { TemplateGroupTypes } from "../InvoiceDesigner/constants/TemplateCategories";
 import { EditButton } from "./edit-button";
@@ -883,21 +879,8 @@ const handleQRCodePropertyChange = (
       const consolidatedComponents = consolidateContainerChildren();
       debugger;
       if (forCustomRows) {
-        // dispatch(
-        //   setTemplateCustomElements({
-        //     payload: {
-        //       elements: consolidatedComponents,
-        //       height: templateData.barcodeState?.labelState?.labelHeight,
-        //       thumbImage:dataUrl??"",
-        //       background_image: designerData?.background_image,
-        //       bg_image_position:designerData?.bg_image_position,
-        //       background_color: designerData?.background_color,
-        //     },
-        //     field: customTemplate,
-        //   })
-        // );
         dispatch(
-          setTemplateHeaderCustomElements({
+          setTemplateCustomElements({
             payload: {
               elements: consolidatedComponents,
               height: templateData.barcodeState?.labelState?.labelHeight,
@@ -905,7 +888,8 @@ const handleQRCodePropertyChange = (
               background_image: designerData?.background_image,
               bg_image_position:designerData?.bg_image_position,
               background_color: designerData?.background_color,
-            }
+            },
+            field: customTemplate,
           })
         );
         onSuccess?.();

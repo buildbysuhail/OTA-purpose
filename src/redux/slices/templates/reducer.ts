@@ -141,18 +141,7 @@ const templateSlice = createSlice({
     setTemplateFooterState: (state, action: PayloadAction<FooterState>) => {
       state.activeTemplate.footerState = action.payload;
     },
-setTemplateHeaderCustomElements: (
-      state,
-      action: PayloadAction<{ payload: CustomElementType;}>
-    ) => {
-      const { payload} = action.payload;
-debugger;
-      // Navigate to the nested object using the split field path
-      
 
-      // Set the value at the final property
-      state.activeTemplate.headerState.customElements = payload;
-    },
    setTemplateCustomElements: (
   state,
   action: PayloadAction<{ payload: CustomElementType; field: string }>
@@ -305,7 +294,6 @@ export const {
   setTemplateFooterState,
   setTemplateCustomElements,
   setTemplateTableMasterState,
-  setTemplateHeaderCustomElements
 } = templateSlice.actions;
 
 export default templateSlice.reducer;

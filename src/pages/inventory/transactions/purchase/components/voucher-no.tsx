@@ -1,4 +1,3 @@
-import { APIClient } from "../../../../../helpers/api-client";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import { VoucherElementProps } from "../transaction-types";
 import { formStateMasterHandleFieldChange } from "../reducer";
@@ -6,8 +5,6 @@ import VoucherNumberDetailsSidebar from "../../../../transaction-base/Voucher-nu
 import React from "react";
 import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
 import { LoadAndSetTransVoucherFn } from "../use-transaction";
-
-const api = new APIClient();
 
 interface AccVoucherNoProps {
   phone?: boolean;
@@ -25,11 +22,15 @@ const AccVoucherNo = React.forwardRef<HTMLInputElement, VoucherNoPrefixProps>(
     const { value, onChange } = useDebouncedInput(
       formState.transaction.master.voucherNumber || '',
       (debouncedValue) => {
-        dispatch(
-          formStateMasterHandleFieldChange({
-            fields: { voucherNumber: debouncedValue },
-          })
-        );
+        // Only update if the value is numeric or empty
+        const strValue = String(debouncedValue);
+        if (strValue === '' || /^\d+$/.test(strValue)) {
+          dispatch(
+            formStateMasterHandleFieldChange({
+              fields: { voucherNumber: strValue },
+            })
+          );
+        }
       },
       300
     );
@@ -44,8 +45,7 @@ const AccVoucherNo = React.forwardRef<HTMLInputElement, VoucherNoPrefixProps>(
             localInputBox={formState?.userConfig?.inputBoxStyle}
             onKeyUp={async(e) => {
               if(e.key == "Enter") {
-                
-                const ret = await loadAndSetTransVoucher(
+                await loadAndSetTransVoucher(
                   false,
                   parseFloat(e.target?.value),
                   undefined,
@@ -80,7 +80,6 @@ const AccVoucherNo = React.forwardRef<HTMLInputElement, VoucherNoPrefixProps>(
             numberChangerStyle="horizontal" // or "vertical"
             className="w-full max-w-[150px]"
             onChange={async (e: any) => {
-              
               if (e.isCustomNumberChangerEvent == true) {
                 const ret = await loadAndSetTransVoucher(
                   false,
@@ -98,7 +97,11 @@ const AccVoucherNo = React.forwardRef<HTMLInputElement, VoucherNoPrefixProps>(
                   false,false,"","",""
                 );
               } else {
-                onChange(e.target.value);
+                // Only update if the value is numeric or empty
+                const newValue = e.target.value;
+                if (newValue === '' || /^\d+$/.test(newValue)) {
+                  onChange(newValue);
+                }
               }
             }}
             disabled={formState.formElements.voucherNumber?.disabled}

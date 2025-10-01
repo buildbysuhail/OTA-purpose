@@ -1,11 +1,4 @@
-import React, {
-  Fragment,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState, } from "react";
 import { useTranslation } from "react-i18next";
 import { APIClient } from "../../helpers/api-client";
 import ErpDevGrid from "../../components/ERPComponents/erp-dev-grid";
@@ -17,7 +10,7 @@ import { generateUniqueKey } from "../../utilities/Utils";
 import ERPCheckbox from "./erp-checkbox";
 import Urls from "../../redux/urls";
 
-const isNotEmpty = (value: any) =>value !== undefined && value !== null && value !== "";
+const isNotEmpty = (value: any) => value !== undefined && value !== null && value !== "";
 const api = new APIClient();
 
 // ----------------------------------------------------------------------------
@@ -31,7 +24,7 @@ interface RelatedInfoCheckboxesProps {
   onChange: (key: any, val: boolean) => void;
 }
 
- const RelatedInfoCheckboxes = React.memo<RelatedInfoCheckboxesProps>(
+const RelatedInfoCheckboxes = React.memo<RelatedInfoCheckboxesProps>(
   ({ relatedInfo, onChange }) => {
     const { t } = useTranslation("inventory");
     return (
@@ -91,7 +84,6 @@ const GridContainer = React.memo(({
       pageSize={30}
       columns={columns}
       heightToAdjustOnWindowsInModal={gridHeight}
-      gridHeader="Item Search"
       dataUrl={`${popupSearchUrl}/${warehouseId}/true/true`}
       gridId="grd_acc_group"
       gridAddButtonType="popup"
@@ -102,22 +94,21 @@ const GridContainer = React.memo(({
       initialFilters={
         searchCriteria == "pCode"
           ? [
-              {
-                field: "productCode",
-                value: searchCriteria == "pCode" ? searchText : "",
-                operation: "startswith",
-                initialFocus: searchCriteria == "pCode" ? true : false,
-              },
-            ]
-          : [
-              {
-                field: "productName",
-                value: searchCriteria == "product" ? searchText : "",
-                operation: "startswith",
-                initialFocus:
-                  searchCriteria == "product" ? true : false,
-              },
-            ]
+            {
+              field: "productCode",
+              value: searchCriteria == "pCode" ? searchText : "",
+              operation: "startswith",
+              initialFocus: searchCriteria == "pCode" ? true : false,
+            },
+          ] : [
+            {
+              field: "productName",
+              value: searchCriteria == "product" ? searchText : "",
+              operation: "startswith",
+              initialFocus:
+                searchCriteria == "product" ? true : false,
+            },
+          ]
       }
     />
   );
@@ -162,39 +153,29 @@ const ProductModalGrid = ({
   const dispatch = useDispatch();
   const gridRef = useRef<any>(null);
 
-  const [gridHeight, setGridHeight] = useState<{
-    mobile: number;
-    windows: number;
-  }>({ mobile: 500, windows: 500 });
+  const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
+  const [relatedGridHeight, setRelatedGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
+  // Keep checkbox state here
+  const [relatedInfo, setRelatedInfo] = useState({ showStockDetails: true, allWarehouseProducts: false });
 
-const [relatedGridHeight, setRelatedGridHeight] = useState<{
-    mobile: number;
-    windows: number;
-  }>({ mobile: 500, windows: 500 });
-    // Keep checkbox state here
-  const [relatedInfo,setRelatedInfo] = useState({
-    showStockDetails: true,
-    allWarehouseProducts: false,
-  });
- 
   useEffect(() => {
     let gridHeightMobile = modalHeight - 700;
-    let gridHeightWindows =  modalHeight - 750;
+    let gridHeightWindows = modalHeight - 750;
     setRelatedGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, [isMaximized, modalHeight]);
 
   useEffect(() => {
     let gridHeightMobile = modalHeight - 50;
-    let gridHeightWindows = relatedInfo.showStockDetails ?modalHeight-300 : modalHeight - 160;
+    let gridHeightWindows = relatedInfo.showStockDetails ? modalHeight - 300 : modalHeight - 160;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
-  }, [isMaximized, modalHeight,relatedInfo.showStockDetails]);
+  }, [isMaximized, modalHeight, relatedInfo.showStockDetails]);
 
   const handleEnterKeyDown = (e: any) => {
     if (e.event.key === "Enter") {
       e.event?.preventDefault();
       const gridInstance = gridRef.current?.instance();
       if (gridInstance) {
-        
+
         const selectedRowsData = gridInstance.getSelectedRowsData();
         if (selectedRowsData.length > 0) {
           const res = {
@@ -203,7 +184,6 @@ const [relatedGridHeight, setRelatedGridHeight] = useState<{
             rowIndex,
             searchColumn: searchCriteria
           };
-
           dispatch(
             formStateHandleFieldChange({
               fields: { popupSearchSelectionData: JSON.stringify(res) },
@@ -229,21 +209,20 @@ const [relatedGridHeight, setRelatedGridHeight] = useState<{
       },
       {
         dataField: "productID",
-        caption: t("productID"),
+        caption: t("product_id"),
         dataType: "number",
         visible: false,
         allowFiltering: false,
       },
       {
         dataField: "productName",
-        caption: t("ProductName"),
+        caption: t("product_name"),
         dataType: "string",
         minWidth: 150,
         allowFiltering: true,
         selectedFilterOperation: "startswith",
       },
-    ],
-    [t]
+    ], [t]
   );
 
   const stockDetails: DevGridColumn[] = useMemo(
@@ -253,26 +232,23 @@ const [relatedGridHeight, setRelatedGridHeight] = useState<{
         caption: t("warehouse_name"),
         dataType: "string",
         minWidth: 150,
-       
       },
-   
       {
         dataField: "stockDetails",
         caption: t("stock_details"),
         dataType: "string",
         width: 100,
       },
-         {
+      {
         dataField: "stock",
         caption: t("stock"),
         dataType: "number",
         width: 100,
-     
       },
-    ],
-    [t]
+    ], [t]
   );
-    const unitPrice: DevGridColumn[] = useMemo(
+
+  const unitPrice: DevGridColumn[] = useMemo(
     () => [
       {
         dataField: "productCode",
@@ -283,117 +259,116 @@ const [relatedGridHeight, setRelatedGridHeight] = useState<{
       },
       {
         dataField: "productID",
-        caption: t("productID"),
+        caption: t("product_id"),
         dataType: "number",
         visible: false,
         allowFiltering: false,
       },
       {
         dataField: "productName",
-        caption: t("ProductName"),
+        caption: t("product_name"),
         dataType: "string",
         minWidth: 150,
         allowFiltering: true,
         selectedFilterOperation: "startswith",
       },
-    ],
-    [t]
+    ], [t]
   );
+
   const handleRelatedInfoChange = useCallback(
-    async(key: keyof typeof relatedInfo, value: boolean) => {
-      if(key == "allWarehouseProducts") {
+    async (key: keyof typeof relatedInfo, value: boolean) => {
+      if (key == "allWarehouseProducts") {
         const updatedUserConfig = {
-                            ...userConfig,
-                            allWarehouseProducts: value,
-                          };
-                          await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, updatedUserConfig);
-                          dispatch(
-                            formStateHandleFieldChangeKeysOnly({
-                              fields: { userConfig: { allWarehouseProducts: value} },
-                            })
-                          );
-                          setRelatedInfo(prev => ({ ...prev, [key]: value }));
+          ...userConfig,
+          allWarehouseProducts: value,
+        };
+        await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, updatedUserConfig);
+        dispatch(
+          formStateHandleFieldChangeKeysOnly({
+            fields: { userConfig: { allWarehouseProducts: value } },
+          })
+        );
+        setRelatedInfo(prev => ({ ...prev, [key]: value }));
       }
       else {
         setRelatedInfo(prev => ({ ...prev, [key]: value }));
       }
-    },
-    []
+    }, []
   );
 
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-        <RelatedInfoCheckboxes relatedInfo={{...relatedInfo,allWarehouseProducts: userConfig.allWarehouseProducts}} onChange={handleRelatedInfoChange} />
+          <RelatedInfoCheckboxes relatedInfo={{ ...relatedInfo, allWarehouseProducts: userConfig.allWarehouseProducts }} onChange={handleRelatedInfoChange} />
           <div className="grid grid-cols-1 gap-3">
-       <GridContainer
-        columns={columns}
-        gridHeight={gridHeight.windows}
-        popupSearchUrl={popupSearchUrl}
-        warehouseId={warehouseId}
-        searchCriteria={searchCriteria}
-        searchText={searchText}
-        gridRef={gridRef}
-        handleEnter={handleEnterKeyDown}
-        searchColumn={searchColumn}
-        rowIndex={rowIndex}
-        onNextCellFind={onNextCellFind}
-        onClose={onClose}
-        />
+            <GridContainer
+              columns={columns}
+              gridHeight={gridHeight.windows}
+              popupSearchUrl={popupSearchUrl}
+              warehouseId={warehouseId}
+              searchCriteria={searchCriteria}
+              searchText={searchText}
+              gridRef={gridRef}
+              handleEnter={handleEnterKeyDown}
+              searchColumn={searchColumn}
+              rowIndex={rowIndex}
+              onNextCellFind={onNextCellFind}
+              onClose={onClose}
+            />
 
-        {relatedInfo.showStockDetails && 
-        <div className="flex justify-between items-start gap-5">
-           <div className="basis-1/2">
-            <ErpDevGrid
-              hideGridHeader
-              hideGridAddButton
-              hideDefaultExportButton
-              enableScrollButton={false}
-              ShowGridPreferenceChooser={false}
-              showPrintButton={false}
-              showChooserOnGridHead
-              chooserClass="absolute z-10 pointer-events-auto"
-              hideDefaultSearchPanel
-              allowSearching={false}
-              showFilterRow={false}
-              allowExport={false}
-              enablefilter={false}
-              remoteOperations={false}
-              columns={stockDetails}
-              heightToAdjustOnWindowsInModal={relatedGridHeight.windows}
-              gridId="grd_warehouse_products"
-              reload
-              gridAddButtonIcon="ri-add-line"
-             showTotalCount={false}
-            />
-           </div>
-           <div className="basis-1/2">
-            <ErpDevGrid
-              hideGridHeader
-              hideGridAddButton
-              hideDefaultExportButton
-              enableScrollButton={false}
-              ShowGridPreferenceChooser={false}
-              showPrintButton={false}
-              showChooserOnGridHead
-              chooserClass="absolute z-10 pointer-events-auto"
-              hideDefaultSearchPanel
-              allowSearching={false}
-              showFilterRow={false}
-              allowExport={false}
-              enablefilter={false}
-              remoteOperations={false}
-              columns={stockDetails}
-              heightToAdjustOnWindowsInModal={relatedGridHeight.windows}
-              gridId="grd_stock_details"
-              reload
-              showTotalCount={false}
-          
-            />
-           </div>
-        </div>
-        }
+            {relatedInfo.showStockDetails &&
+              <div className="flex justify-between items-start gap-5">
+                <div className="basis-1/2">
+                  <ErpDevGrid
+                    hideGridHeader
+                    hideGridAddButton
+                    hideDefaultExportButton
+                    enableScrollButton={false}
+                    ShowGridPreferenceChooser={false}
+                    showPrintButton={false}
+                    showChooserOnGridHead
+                    chooserClass="absolute z-10 pointer-events-auto"
+                    hideDefaultSearchPanel
+                    allowSearching={false}
+                    showFilterRow={false}
+                    allowExport={false}
+                    enablefilter={false}
+                    remoteOperations={false}
+                    columns={stockDetails}
+                    heightToAdjustOnWindowsInModal={relatedGridHeight.windows}
+                    gridId="grd_warehouse_products"
+                    reload
+                    gridAddButtonIcon="ri-add-line"
+                    showTotalCount={false}
+                  />
+                </div>
+
+                <div className="basis-1/2">
+                  <ErpDevGrid
+                    hideGridHeader
+                    hideGridAddButton
+                    hideDefaultExportButton
+                    enableScrollButton={false}
+                    ShowGridPreferenceChooser={false}
+                    showPrintButton={false}
+                    showChooserOnGridHead
+                    chooserClass="absolute z-10 pointer-events-auto"
+                    hideDefaultSearchPanel
+                    allowSearching={false}
+                    showFilterRow={false}
+                    allowExport={false}
+                    enablefilter={false}
+                    remoteOperations={false}
+                    columns={stockDetails}
+                    heightToAdjustOnWindowsInModal={relatedGridHeight.windows}
+                    gridId="grd_stock_details"
+                    reload
+                    showTotalCount={false}
+                  />
+                </div>
+              </div>
+            }
           </div>
         </div>
       </div>

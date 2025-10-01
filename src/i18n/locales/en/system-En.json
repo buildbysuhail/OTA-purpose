@@ -514,5 +514,15 @@
   "available": "available",
   "search_templates": "Search templates...",
   "no_templates_found": "No templates found",
-  "clear_search": "Clear Search"
+  "clear_search": "Clear Search",
+  "create_template": "Create Template",
+  "create_new_template": "Create new template",
+  "set_default": "Set Default",
+  "template_set_as_default_successfully": "Template set as default successfully!",
+  "failed_to_set_template_as_default": "Failed to set template as default!",
+  "default_template_cannot_be_deleted": "Default template cannot be deleted!",
+  "primary_template_cannot_be_deleted": "Primary template cannot be deleted!",
+  "confirm_delete_template": "Are you sure you want to delete this template? This action cannot be undone.",
+  "template_deleted_successfully": "Template deleted successfully!",
+  "failed_to_delete_template": "Failed to delete template!"
 }

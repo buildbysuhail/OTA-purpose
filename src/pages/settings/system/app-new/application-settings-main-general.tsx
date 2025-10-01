@@ -792,7 +792,7 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
                       : `${
                           gridClass ||
                           "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
-                        } gap-4 items-center justify-center`
+                        } gap-4 items-end justify-center`
                   }`}
                 >
                   {items?.map(

@@ -247,5 +247,6 @@
   "website": "الموقع الإلكتروني",
   "show": "عرض",
   "show_in_suppliers": "عرض في الموردين",
-  "show_in_customers": "عرض في العملاء"
+  "show_in_customers": "عرض في العملاء",
+  "project_job": "مشروع/وظيفة"
 }

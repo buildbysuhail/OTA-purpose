@@ -122,7 +122,7 @@
   "new_template": "New Template",
   "click_to_add": "Click to add a template from our gallery. You can customize the template title, columns, and headers in line item table.",
   "sales_invoice": "Sales Invoice",
-  "choose_a_template": "Choose A Template",
+  "choose_a_template": "Choose a template",
   "all": "All",
   "standard": "Standard",
   "use_this": "Use this",
@@ -503,10 +503,16 @@
   "email_template": "Email Template",
   "payment_advice": "Payment Advice",
   "receipt_advice": "Receipt Advice",
-  "show_header":"Show header",
-  "add_custom":"Add custom",
-  "custom_designer":"Custom Designer",
-  "unit_price_zero_do_you_want_to_continue":"Unit price zero, Do you want to continue?",
-  "yes":"Yes",
-  "no":"No"
+  "show_header": "Show header",
+  "add_custom": "Add custom",
+  "custom_designer": "Custom Designer",
+  "unit_price_zero_do_you_want_to_continue": "Unit price zero, Do you want to continue?",
+  "yes": "Yes",
+  "no": "No",
+
+  "template": "template",
+  "available": "available",
+  "search_templates": "Search templates...",
+  "no_templates_found": "No templates found",
+  "clear_search": "Clear Search"
 }

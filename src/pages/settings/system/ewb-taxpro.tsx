@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import { useFormManager } from '../../../utilities/hooks/useFormManagerOptions';
@@ -8,6 +8,7 @@ import { toggleEWayBillTaxPro } from '../../../redux/slices/popup-reducer';
 import ERPDateInput from '../../../components/ERPComponents/erp-date-input';
 import ERPButton from '../../../components/ERPComponents/erp-button';
 import { ActionType } from '../../../redux/types';
+import { useTranslation } from 'react-i18next';
 
 type EWBTaxProData = {
     ewbApiSetting: {
@@ -33,7 +34,7 @@ type EWBTaxProData = {
 };
 
 const initialEWBTaxProData = {
-    data:{
+    data: {
         ewbApiSetting: {
             gspName: '',
             aspUserId: '',
@@ -82,7 +83,7 @@ const initialEWBTaxProData = {
 const EWBTaxPro = () => {
     const rootState = useRootState();
     const dispatch = useDispatch();
-
+    const { t } = useTranslation('applicationSettings')
     const {
         handleSubmit,
         handleFieldChange,
@@ -90,7 +91,7 @@ const EWBTaxPro = () => {
     } = useFormManager<EWBTaxProData>({
         url: Urls.eWayBill,
         onSuccess: useCallback(
-            () => dispatch(toggleEWayBillTaxPro({ isOpen: false, key: null,reload: false })),
+            () => dispatch(toggleEWayBillTaxPro({ isOpen: false, key: null, reload: false })),
             [dispatch]
         ),
         loadDataRequired: true,
@@ -111,12 +112,12 @@ const EWBTaxPro = () => {
         <div className="w-full pt-2">
             <div className='flex align-center gap-3'>
                 <div className='w-2/4'>
-                    <h3 className="font-semibold text-sm mb-3 ml-2">E-WayBill API Setting</h3>
+                    <h3 className="font-semibold text-sm mb-3 ml-2">{t('e_way_bill_api_setting')}</h3>
                     <div className='border p-4 rounded-lg flex flex-col gap-5'>
                         <ERPInput
                             {...getFieldProps('ewbApiSetting.ewbClientId')}
-                            label="Client ID"
-                            placeholder="Enter Client ID"
+                            label={t('client_id')}
+                            placeholder={t('enter_client_id')}
                             //readOnly
                             style={{ color: 'black' }}
                             required={false}
@@ -124,8 +125,8 @@ const EWBTaxPro = () => {
                         />
                         <ERPInput
                             {...getFieldProps('ewbApiSetting.ewbClientSecret')}
-                            label="Client Secret"
-                            placeholder="Enter Client Secret"
+                            label={t('client_secret')}
+                            placeholder={t('enter_client_secret')}
                             //readOnly
                             style={{ color: 'black' }}
                             type="password"
@@ -133,16 +134,16 @@ const EWBTaxPro = () => {
                         />
                         <ERPInput
                             {...getFieldProps('ewbApiSetting.ewbgspUserID')}
-                            label="GSP User ID"
-                            placeholder="Enter GSP User ID"
+                            label={t('gsp_user_id')}
+                            placeholder={t('enter_gsp_user_id')}
                             //readOnly
                             style={{ color: 'black' }}
                             onChangeData={(data: any) => handleFieldChange('ewbApiSetting.ewbgspUserID', data?.ewbApiSetting?.ewbgspUserID)}
                         />
                         <ERPInput
                             {...getFieldProps('ewbApiSetting.gspName')}
-                            label="GSP Name"
-                            placeholder="Enter GSP Name"
+                            label={t('gsp_name')}
+                            placeholder={t('enter_gsp_name')}
                             //readOnly
                             style={{ color: 'black' }}
                             required
@@ -150,23 +151,23 @@ const EWBTaxPro = () => {
                         />
                         <ERPInput
                             {...getFieldProps('ewbApiSetting.aspUserId')}
-                            label="ASP User ID"
-                            placeholder="Enter ASP User ID"
+                            label={t('asp_user_id')}
+                            placeholder={t('enter_asp_user_id')}
                             required
                             onChangeData={(data: any) => handleFieldChange('ewbApiSetting.aspUserId', data.ewbApiSetting.aspUserId)}
                         />
                         <ERPInput
                             {...getFieldProps('ewbApiSetting.aspPassword')}
-                            label="ASP Password"
-                            placeholder="Enter ASP Password"
+                            label={t('asp_password')}
+                            placeholder={t('enter_asp_password')}
                             required
                             type="password"
                             onChangeData={(data: any) => handleFieldChange('ewbApiSetting.aspPassword', data.ewbApiSetting.aspPassword)}
                         />
                         <ERPInput
                             {...getFieldProps('ewbApiSetting.baseUrl')}
-                            label="Base URL"
-                            placeholder="Enter Base URL"
+                            label={t('base_url')}
+                            placeholder={t('enter_base_url')}
                             //readOnly
                             style={{ color: 'black' }}
                             required
@@ -175,58 +176,58 @@ const EWBTaxPro = () => {
                     </div>
                 </div>
                 <div className='w-2/4'>
-                    <h3 className="font-semibold text-sm mb-3 ml-2">E-WayBill API Setting</h3>
+                    <h3 className="font-semibold text-sm mb-3 ml-2">{t('e_way_bill_api_setting')}</h3>
                     <div className='border p-4 rounded-lg flex flex-col gap-5'>
                         <ERPInput
                             {...getFieldProps('ewbApiLoginDetails.ewbGstin')}
-                            label="GSTIN"
-                            placeholder="Enter GSTIN"
+                            label={t('gstin')}
+                            placeholder={t('enter_gstin')}
                             required
                             onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbGstin', data.ewbApiLoginDetails.ewbGstin)}
                         />
                         <ERPInput
                             {...getFieldProps('ewbApiLoginDetails.ewbUserID')}
-                            label="EWB User ID"
-                            placeholder="Enter EWB User ID"
+                            label={t('ewb_user_id')}
+                            placeholder={t('enter_ewb_user_id')}
                             required
                             onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbUserID', data.ewbApiLoginDetails.ewbUserID)}
                         />
                         <ERPInput
                             {...getFieldProps('ewbApiLoginDetails.ewbPassword')}
-                            label="EWB Password"
-                            placeholder="Enter EWB Password"
+                            label={t('ewb_password')}
+                            placeholder={t('enter_ewb_password')}
                             type="password"
                             required
                             onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbPassword', data.ewbApiLoginDetails.ewbPassword)}
                         />
                         <ERPInput
                             {...getFieldProps('ewbApiLoginDetails.ewbAppKey')}
-                            label="App Key"
-                            placeholder="Enter App Key"
+                            label={t("app_key")}
+                            placeholder={t("enter_app_key")}
                             //readOnly
                             style={{ color: 'black' }}
                             onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbAppKey', data?.ewbApiLoginDetails.ewbAppKey)}
                         />
                         <ERPInput
                             {...getFieldProps('ewbApiLoginDetails.ewbAuthToken')}
-                            label="Auth Token"
-                            placeholder="Enter Auth Token"
+                            label={t("auth_token")}
+                            placeholder={t("enter_auth_token")}
                             //readOnly
                             style={{ color: 'black' }}
                             onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbAuthToken', data?.ewbApiLoginDetails?.ewbAuthToken)}
                         />
                         <ERPDateInput
                             {...getFieldProps('ewbApiLoginDetails.ewbTokenExp')}
-                            label="Token Expiry"
+                            label={t("token_expiry")}
                             required={true}
-                            placeholder="Enter Token Expiry"
+                            placeholder={t("enter_token_expiry")}
                             readonly
                             onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbTokenExp', data?.ewbApiLoginDetails?.ewbTokenExp)}
                         />
                         <ERPInput
                             {...getFieldProps('ewbApiLoginDetails.ewbSEK')}
-                            label="SEK"
-                            placeholder="Enter SEK"
+                            label={t("sek")}
+                            placeholder={t("enter_sek")}
                             //readOnly
                             style={{ color: 'black' }}
                             onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbSEK', data?.ewbApiLoginDetails?.ewbSEK)}
@@ -234,14 +235,14 @@ const EWBTaxPro = () => {
                     </div>
                 </div>
             </div>
-            <div className='text-right mt-3'>
+            <div className='text-end mt-3'>
                 <ERPButton
                     className="justify-self-end"
                     type="button"
                     variant="primary"
                     onClick={handleSubmit}
-                    title="Save"
-                ></ERPButton>
+                    title={t("save")}
+                />
             </div>
         </div >
     );

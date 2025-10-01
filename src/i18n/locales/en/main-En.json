@@ -608,6 +608,7 @@
   "color_customization": "Color Customization",
   "size_options": "Size options",
   "grid_preference_chooser": "Grid Preference Chooser",
-  "file_upload":"File Upload",
-  "margins":"Margins"
+  "file_upload": "File Upload",
+  "margins": "Margins",
+  "my_favorites": "My Favorites"
 }

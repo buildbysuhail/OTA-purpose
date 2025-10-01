@@ -327,7 +327,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               label={t("ledger_name")}
               placeholder={t("ledger_name")}
               required={false}
-              disabled={true}
+              readOnly={true}
               onChangeData={(data: any) =>
                 handleFieldChange("ledger_name", data.ledgerName)
               }
@@ -355,14 +355,14 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 id: "accGroupID",
                 required: true,
                 getListUrl: Urls.data_acc_groups,
-                valueKey: "id",
-                labelKey: "name",
+                valueKey: "accGroupID",
+                labelKey: "accGroupName",
               }}
               onChangeData={(data: any) => {
                 handleFieldChange("accGroupID", data.accGroupID);
               }}
               label={t("acc_group")}
-              disabled={true}
+              // readonly={true}
             />
 
             <ERPInput

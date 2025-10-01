@@ -610,5 +610,7 @@
   "grid_preference_chooser": "مُختار تفضيلات الشبكة",
   "file_upload": "تحميل الملف",
   "margins": "الهوامش",
-  "my_favorites": "المفضلة لدي"
+  "my_favorites": "المفضلة لدي",
+  "general_master": "الأساسيات العامة",
+  "validation_error": "خطأ في التحقق من الصحة"
 }

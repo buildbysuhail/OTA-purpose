@@ -514,5 +514,15 @@
   "available": "متاح",
   "search_templates": "البحث في القوالب...",
   "no_templates_found": "لم يتم العثور على قوالب",
-  "clear_search": "مسح البحث"
+  "clear_search": "مسح البحث",
+  "create_template": "إنشاء قالب",
+  "create_new_template": "إنشاء قالب جديد",
+  "set_default": "تعيين كافتراضي",
+  "template_set_as_default_successfully": "تم تعيين القالب كافتراضي بنجاح!",
+  "failed_to_set_template_as_default": "فشل في تعيين القالب كافتراضي!",
+  "default_template_cannot_be_deleted": "لا يمكن حذف القالب الافتراضي!",
+  "primary_template_cannot_be_deleted": "لا يمكن حذف القالب الأساسي!",
+  "confirm_delete_template": "هل أنت متأكد أنك تريد حذف هذا القالب؟ لا يمكن التراجع عن هذا الإجراء.",
+  "template_deleted_successfully": "تم حذف القالب بنجاح!",
+  "failed_to_delete_template": "فشل في حذف القالب!"
 }

@@ -610,5 +610,7 @@
   "grid_preference_chooser": "Grid Preference Chooser",
   "file_upload": "File Upload",
   "margins": "Margins",
-  "my_favorites": "My Favorites"
+  "my_favorites": "My Favorites",
+  "general_master": "General Master",
+  "validation_error": "Validation Error"
 }

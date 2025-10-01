@@ -31,30 +31,31 @@ interface HeadersAndFootersInf {
   footer9: string;
   footer10: string;
 }
-const initialHeadersAndFooters= {
-data:{  branchID: 0,
-  headerFooterID: 0,
-  heading1: '',
-  heading2: '',
-  heading3: '',
-  heading4: '',
-  heading5: '',
-  heading6: '',
-  heading7: '',
-  heading8: '',
-  heading9: '',
-  heading10: '',
-  footer1: '',
-  footer2: '',
-  footer3: '',
-  footer4: '',
-  footer5: '',
-  footer6: '',
-  footer7: '',
-  footer8: '',
-  footer9: '',
-  footer10: ''
-}
+const initialHeadersAndFooters = {
+  data: {
+    branchID: 0,
+    headerFooterID: 0,
+    heading1: '',
+    heading2: '',
+    heading3: '',
+    heading4: '',
+    heading5: '',
+    heading6: '',
+    heading7: '',
+    heading8: '',
+    heading9: '',
+    heading10: '',
+    footer1: '',
+    footer2: '',
+    footer3: '',
+    footer4: '',
+    footer5: '',
+    footer6: '',
+    footer7: '',
+    footer8: '',
+    footer9: '',
+    footer10: ''
+  }
 };
 const HeadersAndFooters: React.FC = React.memo(() => {
   const dispatch = useDispatch();
@@ -79,11 +80,11 @@ const HeadersAndFooters: React.FC = React.memo(() => {
   const { t } = useTranslation("system");
 
   return (
-    <div className="w-full modal-content">
-      <div className='flex flex-col sm:flex-row justify-start items-center gap-4'>
+    <div>
+      <div className='grid grid-cols-2 gap-2'>
         <div className='flex flex-col gap-4'>
           <h4 className='font-medium text-gray-500 text-left'>{t("headers")}</h4>
-          <div className="grid grid-cols-1 sm:grid-cols-2  gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full">
             <ERPInput
               {...getFieldProps("heading1")}
               label={t("header_1")}
@@ -168,7 +169,7 @@ const HeadersAndFooters: React.FC = React.memo(() => {
 
         <div className='flex flex-col gap-4'>
           <h4 className='font-medium text-gray-500 text-left'>{t("footer")}</h4>
-          <div className="grid grid-cols-1 sm:grid-cols-2  gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <ERPInput
               {...getFieldProps("footer1")}
               label={t("footer_1")}

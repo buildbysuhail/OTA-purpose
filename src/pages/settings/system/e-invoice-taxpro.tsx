@@ -8,6 +8,7 @@ import { toggleEInvoiceGST } from '../../../redux/slices/popup-reducer';
 import ERPDateInput from '../../../components/ERPComponents/erp-date-input';
 import ERPButton from '../../../components/ERPComponents/erp-button';
 import { ActionType } from '../../../redux/types';
+import { useTranslation } from 'react-i18next';
 
 type EInvoiceTaxProData = {
     eInvApiSetting: {
@@ -33,7 +34,7 @@ type EInvoiceTaxProData = {
 };
 
 const initialEInvoiceTaxProData = {
-    data:{
+    data: {
         eInvApiSetting: {
             gspName: '',
             aspUserId: '',
@@ -82,6 +83,7 @@ const initialEInvoiceTaxProData = {
 const EInvoiceTaxPro = () => {
     const rootState = useRootState();
     const dispatch = useDispatch();
+    const { t } = useTranslation('applicationSettings')
 
     const {
         handleSubmit,
@@ -90,7 +92,7 @@ const EInvoiceTaxPro = () => {
     } = useFormManager<EInvoiceTaxProData>({
         url: Urls.eInvoiceGST,
         onSuccess: useCallback(
-            () => dispatch(toggleEInvoiceGST({ isOpen: false, key: null,reload: false })),
+            () => dispatch(toggleEInvoiceGST({ isOpen: false, key: null, reload: false })),
             [dispatch]
         ),
         loadDataRequired: true,
@@ -111,20 +113,20 @@ const EInvoiceTaxPro = () => {
         <div className="w-full pt-2">
             <div className='flex items-stretch gap-3'>
                 <div className="w-2/4">
-                    <h3 className="font-semibold text-sm mb-3 ml-2">E-Invoice API Setting</h3>
+                    <h3 className="font-semibold text-sm mb-3 ml-2">{t('e_invoice_api_setting')}</h3>
                     <div className='border p-4 rounded-lg flex flex-col gap-5 flex-grow'>
                         <ERPInput
                             {...getFieldProps('eInvApiSetting.client_id')}
-                            label="Client ID"
-                            placeholder="Enter Client ID"
+                            label={t('client_id')}
+                            placeholder={t('enter_client_id')}
                             //readOnly
                             style={{ color: 'black' }}
                             onChangeData={(data: any) => handleFieldChange('eInvApiSetting.client_id', data?.eInvApiSetting?.client_id)}
                         />
                         <ERPInput
                             {...getFieldProps('eInvApiSetting.client_secret')}
-                            label="Client Secret"
-                            placeholder="Enter Client Secret"
+                            label={t('client_secret')}
+                            placeholder={t('enter_client_secret')}
                             type="password"
                             //readOnly
                             style={{ color: 'black' }}
@@ -132,8 +134,8 @@ const EInvoiceTaxPro = () => {
                         />
                         <ERPInput
                             {...getFieldProps('eInvApiSetting.gspName')}
-                            label="GSP Name"
-                            placeholder="Enter GSP Name"
+                            label={t('gsp_name')}
+                            placeholder={t('enter_gsp_name')}
                             //readOnly
                             style={{ color: 'black' }}
                             required
@@ -141,23 +143,23 @@ const EInvoiceTaxPro = () => {
                         />
                         <ERPInput
                             {...getFieldProps('eInvApiSetting.aspUserId')}
-                            label="ASP User ID"
-                            placeholder="Enter ASP User ID"
+                            label={t('asp_user_id')}
+                            placeholder={t('enter_asp_user_id')}
                             required
                             onChangeData={(data: any) => handleFieldChange('eInvApiSetting.aspUserId', data.eInvApiSetting.aspUserId)}
                         />
                         <ERPInput
                             {...getFieldProps('eInvApiSetting.aspPassword')}
-                            label="ASP Password"
+                            label={t('asp_password')}
                             required
-                            placeholder="Enter ASP Password"
+                            placeholder={t('enter_asp_password')}
                             type="password"
                             onChangeData={(data: any) => handleFieldChange('eInvApiSetting.aspPassword', data.eInvApiSetting.aspPassword)}
                         />
                         <ERPInput
                             {...getFieldProps('eInvApiSetting.authUrl')}
-                            label="Auth URL"
-                            placeholder="Enter Auth URL"
+                            label={t('auth_url')}
+                            placeholder={t('enter_auth_url')}
                             //readOnly
                             style={{ color: 'black' }}
                             required
@@ -165,8 +167,8 @@ const EInvoiceTaxPro = () => {
                         />
                         <ERPInput
                             {...getFieldProps('eInvApiSetting.baseUrl')}
-                            label="Base URL"
-                            placeholder="Enter Base URL"
+                            label={t('base_url')}
+                            placeholder={t('enter_base_url')}
                             //readOnly
                             style={{ color: 'black' }}
                             required
@@ -174,8 +176,8 @@ const EInvoiceTaxPro = () => {
                         />
                         <ERPInput
                             {...getFieldProps('eInvApiSetting.ewbByIRN')}
-                            label="EWB URL"
-                            placeholder="Enter EWB URL"
+                            label={t('ewb_url')}
+                            placeholder={t('enter_ewb_url')}
                             //readOnly
                             style={{ color: 'black' }}
                             required
@@ -183,8 +185,8 @@ const EInvoiceTaxPro = () => {
                         />
                         <ERPInput
                             {...getFieldProps('eInvApiSetting.cancelEwbUrl')}
-                            label="Cancel EWB URL"
-                            placeholder="Enter Cancel EWB URL"
+                            label={t('cancel_ewb_url')}
+                            placeholder={t('enter_cancel_ewb_url')}
                             //readOnly
                             style={{ color: 'black' }}
                             onChangeData={(data: any) => handleFieldChange('eInvApiSetting.cancelEwbUrl', data?.eInvApiSetting?.cancelEwbUrl)}
@@ -192,34 +194,34 @@ const EInvoiceTaxPro = () => {
                     </div>
                 </div>
                 <div className='w-2/4'>
-                    <h3 className="font-semibold text-sm mb-3 ml-2">E-Invoice API Login Details</h3>
+                    <h3 className="font-semibold text-sm mb-3 ml-2">{t('e_invoice_api_login_details')}</h3>
                     <div className='border p-4 rounded-lg flex flex-col gap-5 flex-grow'>
                         <ERPInput
                             {...getFieldProps('eInvApiLoginDetails.userName')}
-                            label="Username"
-                            placeholder="Enter Username"
+                            label={t('username')}
+                            placeholder={t('enter_username')}
                             required
                             onChangeData={(data: any) => handleFieldChange('eInvApiLoginDetails.userName', data.eInvApiLoginDetails.userName)}
                         />
                         <ERPInput
                             {...getFieldProps('eInvApiLoginDetails.password')}
-                            label="Password"
-                            placeholder="Enter Password"
+                            label={t('password')}
+                            placeholder={t('enter_password')}
                             type="password"
                             required
                             onChangeData={(data: any) => handleFieldChange('eInvApiLoginDetails.password', data.eInvApiLoginDetails.password)}
                         />
                         <ERPInput
                             {...getFieldProps('eInvApiLoginDetails.gstin')}
-                            label="GSTIN"
-                            placeholder="Enter GSTIN"
+                            label={t('gstin')}
+                            placeholder={t('enter_gstin')}
                             required
                             onChangeData={(data: any) => handleFieldChange('eInvApiLoginDetails.gstin', data.eInvApiLoginDetails.gstin)}
                         />
                         <ERPInput
                             {...getFieldProps('eInvApiLoginDetails.appKey')}
-                            label="App Key"
-                            placeholder="Enter App Key"
+                            label={t('app_key')}
+                            placeholder={t('enter_app_key')}
                             //readOnly
                             style={{ color: 'black' }}
                             required
@@ -227,8 +229,8 @@ const EInvoiceTaxPro = () => {
                         />
                         <ERPInput
                             {...getFieldProps('eInvApiLoginDetails.authToken')}
-                            label="Auth Token"
-                            placeholder="Enter Auth Token"
+                            label={t('auth_token')}
+                            placeholder={t('enter_auth_token')}
                             //readOnly
                             style={{ color: 'black' }}
                             required
@@ -236,8 +238,8 @@ const EInvoiceTaxPro = () => {
                         />
                         <ERPInput
                             {...getFieldProps('eInvApiLoginDetails.sek')}
-                            label="SEK"
-                            placeholder="Enter SEK"
+                            label={t('sek')}
+                            placeholder={t('enter_sek')}
                             //readOnly
                             style={{ color: 'black' }}
                             required
@@ -245,23 +247,23 @@ const EInvoiceTaxPro = () => {
                         />
                         <ERPDateInput
                             {...getFieldProps('eInvApiLoginDetails.e_InvoiceTokenExp')}
-                            label="Token Expiry"
+                            label={t('token_expiry')}
                             required={true}
-                            placeholder="Enter Token Expiry"
+                            placeholder={t('enter_token_expiry')}
                             readonly
                             onChangeData={(data: any) => handleFieldChange('eInvApiLoginDetails.e_InvoiceTokenExp', data?.eInvApiLoginDetails?.e_InvoiceTokenExp)}
                         />
                     </div>
                 </div>
             </div>
-            <div className='text-right mt-3'>
+            <div className='text-end mt-3'>
                 <ERPButton
                     className="justify-self-end"
                     type="button"
                     variant="primary"
                     onClick={handleSubmit}
-                    title="Save"
-                ></ERPButton>
+                    title={t('save')}
+                />
             </div>
         </div >
     );

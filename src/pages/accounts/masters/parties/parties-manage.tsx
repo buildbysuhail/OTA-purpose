@@ -68,6 +68,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
           drCr: "Dr",
         },
       },
+      isMessages: true,
     });
 
     const [fileLoading, setFileLoading] = useState(false);
@@ -628,8 +629,9 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
           />
 
           <Tab
-            label="Project/Job"
+            label={t("project_job")}
             value="project_job"
+            className="dark:text-dark-text"
           />
 
           {userSession.countryId != Countries.India &&
@@ -1189,7 +1191,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                       }
                     />
 
-                    <div className="pt-2 text-right">
+                    <div className="flex items-end gap-2">
                         <ERPButton
                         type="button"
                         disabled={projectOnAction}

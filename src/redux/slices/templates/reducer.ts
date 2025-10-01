@@ -3,7 +3,6 @@ import {
   FooterState,
   HeaderState,
   // initialTemplateState,
-  ItemTableState,
   PropertiesState,
   TotalState,
   CustomElementType,
@@ -87,12 +86,7 @@ const templateSlice = createSlice({
     setTemplateHeaderState: (state, action: PayloadAction<HeaderState>) => {
       state.activeTemplate.headerState = action.payload;
     },
-    setTemplateItemTableState: (
-      state,
-      action: PayloadAction<ItemTableState>
-    ) => {
-      state.activeTemplate.itemTableState = action.payload;
-    },
+
 
     // setTemplateTableState: <T,>(state, action: PayloadAction<{key: keyof T, fields: DeepPartial<TableColumn<T>>}>) => {
     //   Object.keys in fields each _key, value
@@ -288,7 +282,6 @@ export const {
   setTemplateSignatureImage,
   setTemplatePropertiesState,
   setTemplateHeaderState,
-  setTemplateItemTableState,
   setTemplateTableState,
   setTemplateTotalState,
   setTemplateFooterState,

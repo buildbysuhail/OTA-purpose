@@ -404,16 +404,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
               { value: "italic", label: t("italic") },
             ]}
           />
-          {/* <ERPStepInput
-            value={propertiesState?.font_size}
-            onChange={(font_size) => onChange?.({ ...propertiesState, font_size })}
-            label={t("font_size")}
-            id="font_size"
-            placeholder=" "
-            min={8}
-            max={28}
-            step={1}
-          /> */}
+
            <div className="flex items-center space-x-3">
             <div className="basis-2/3 ">
               <ERPSlider

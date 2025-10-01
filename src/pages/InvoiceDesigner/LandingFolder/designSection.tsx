@@ -8,9 +8,6 @@ import {
 } from "@heroicons/react/20/solid";
 
 import TablePremiumDesigner from "./account/premium/designer/table-designer";
-import AccStandardTransaction from "./account/standard/designer/transactions-designer";
-import AccUniversalTransaction from "./account/universal/designer/transactions-designer";
-
 import { PrintDetailDto } from "../../use-print-type";
 import { generateTableColumns } from "../../../utilities/Utils";
 import { initialPrintDetailDto } from "../../use-print-type-data";

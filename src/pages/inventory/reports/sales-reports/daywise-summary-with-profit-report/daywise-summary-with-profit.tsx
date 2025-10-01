@@ -753,7 +753,7 @@ const DaywiseSummaryWithProfit = () => {
                   summary: false,
                 }}
                 columns={columns}
-                filterText="{showSalesReturn == true && Sales and Return  Summary with Profit Between} 
+                filterText="{showSalesReturn == true && Sales and Return  Summary with Profit Between :} 
                  {showSalesReturn == false && Sales Summary with Profit Between :} 
                   {fromDate} - {toDate}
                  {salesRouteID > 0 && ,: of Route : [routeName]} 

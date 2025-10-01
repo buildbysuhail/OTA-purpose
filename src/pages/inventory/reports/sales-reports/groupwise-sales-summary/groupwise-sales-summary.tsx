@@ -631,20 +631,20 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
     };
   }, [getFormattedValue]);
 
-  const customizeSummaryRowCalc = useMemo(() => {
-    return (itemInfo: { value: any }) => {
-      const value = itemInfo.value;
-      if (
-        value === null ||
-        value === undefined ||
-        value === "" ||
-        isNaN(value)
-      ) {
-        return "0";
-      }
-      return getFormattedValue(value) || "0";
-    };
-  }, [getFormattedValue]);
+  // const customizeSummaryRowCalc = useMemo(() => {
+  //   return (itemInfo: { value: any }) => {
+  //     const value = itemInfo.value;
+  //     if (
+  //       value === null ||
+  //       value === undefined ||
+  //       value === "" ||
+  //       isNaN(value)
+  //     ) {
+  //       return "0";
+  //     }
+  //     return getFormattedValue(value) || "0";
+  //   };
+  // }, [getFormattedValue]);
 
   const customizeSummaryRow100 = (itemInfo: any) => `100.00`;
   const summaryItems: SummaryConfig[] = [
@@ -751,14 +751,15 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
                 hideGridAddButton={true}
                 enablefilter={true}
                 showFilterInitially={true}
-                method={ActionType.POST} allowEditing={{
-                  allow: true,
-                  config: {
-                    edit: true,
-                    add: false,
-                    delete: false,
-                  },
-                }}
+                method={ActionType.POST}
+                //  allowEditing={{
+                //   allow: true,
+                //   config: {
+                //     edit: true,
+                //     add: false,
+                //     delete: false,
+                //   },
+                // }}
                 filterContent={<GroupwiseSalesSummaryFilter />}
                 filterWidth={790}
                 filterHeight={250}

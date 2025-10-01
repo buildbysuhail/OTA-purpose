@@ -49,8 +49,8 @@ const InventorySalesPOSFilterableComponents: React.FC<ApplicationSettingsProps> 
           field={{
             id: "defaultFormTypeForPOS",
             getListUrl: Urls.data_FormTypeBySI,
-            valueKey: "FormType",
-            labelKey: "FormType",
+            valueKey: "name",
+            labelKey: "name",
           }}
           data={settings?.gSTTaxesSettings}
           onChangeData={(data: any) =>
@@ -73,8 +73,8 @@ const InventorySalesPOSFilterableComponents: React.FC<ApplicationSettingsProps> 
           field={{
             id: "defaultPrefixForPOS",
             getListUrl: Urls.data_VPrefixForSI,
-            valueKey: "LastVoucherPrefix",
-            labelKey: "LastVoucherPrefix",
+            valueKey: "lastVoucherPrefix",
+            labelKey: "lastVoucherPrefix",
           }}
           data={settings?.gSTTaxesSettings}
           onChangeData={(data: any) =>
@@ -123,8 +123,8 @@ const InventorySalesPOSFilterableComponents: React.FC<ApplicationSettingsProps> 
           field={{
             id: "defaultSRPrefixForPOS",
             getListUrl: Urls.data_VPrefixForSR,
-            valueKey: "LastVoucherPrefix",
-            labelKey: "LastVoucherPrefix",
+            valueKey: "lastVoucherPrefix",
+            labelKey: "lastVoucherPrefix",
           }}
           onChangeData={(data: any) =>
             handleFieldChange(

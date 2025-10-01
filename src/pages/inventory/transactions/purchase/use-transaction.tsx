@@ -2394,11 +2394,12 @@ debugger;
           fields: {
             // voucherPrefix: lastPrefix,
             voucherNumber: getVoucherNumber,
+            purchaseInvoiceNumber:"",
             // transactionMasterID: 0,
             transactionDate: moment(
-              clientSession.softwareDate,
-              "DD/MM/YYYY"
-            ).local(),
+                    clientSession.softwareDate,
+                    "DD/MM/YYYY"
+                  ).local().toISOString(),
           },
         })
       );

@@ -11,6 +11,7 @@ import { useApplicationGstSettings } from "../../../../utilities/hooks/use-appli
 import EWBTaxPro from "../ewb-taxpro";
 import EInvoiceTaxPro from "../e-invoice-taxpro";
 import { useTranslation } from "react-i18next";
+import ERPModal from "../../../../components/ERPComponents/erp-modal";
 
 interface ApplicationSettingsProps {
   settings: any; // Replace `any` with the actual type if known
@@ -819,11 +820,15 @@ const InventoryGSTSettingsFilterableComponents: React.FC<ApplicationSettingsProp
             onClick={() => handleShowComponent("ewb")}
             disabled={!settings?.gSTTaxesSettings?.enableEWB}
           />
-          <PopupComponent
+
+          <ERPModal
             isOpen={showEWBPopup}
-            onClose={() => setShowEWBPopup(false)}>
-            <EWBTaxPro />
-          </PopupComponent>
+            closeModal={() => setShowEWBPopup(false)}
+            title={t("ewb_taxPro")}
+            content={<EWBTaxPro />}
+            width={800}
+            height={600}
+          />
         </div>
       ),
     },
@@ -847,17 +852,21 @@ const InventoryGSTSettingsFilterableComponents: React.FC<ApplicationSettingsProp
             }
           />
           <ERPButton
-            title={t("EInvoiceTaxPro")}
+            title={t("e_invoice_taxPro")}
             onClick={() => handleShowComponent("eInvoice")}
             disabled={
               !settings?.gSTTaxesSettings?.enableEInvoiceIndia
             }
           />
-          <PopupComponent
+
+          <ERPModal
             isOpen={showEInvoicePopup}
-            onClose={() => setShowEInvoicePopup(false)}>
-            <EInvoiceTaxPro />
-          </PopupComponent>
+            closeModal={() => setShowEInvoicePopup(false)}
+            title={t("e_invoice_taxPro")}
+            content={<EInvoiceTaxPro />}
+            width={800}
+            height={600}
+          />
         </div>
       ),
     },

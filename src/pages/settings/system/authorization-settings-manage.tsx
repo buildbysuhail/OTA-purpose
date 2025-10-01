@@ -199,7 +199,7 @@ const AuthorizationSettings = ({ modalHeight, isMaximized }: AuthorizationSettin
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div ref={formRef} className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div ref={formRef} className="flex items-center gap-2">
             <ERPDataCombobox
               data={postData}
               id="employeeID"
@@ -210,13 +210,11 @@ const AuthorizationSettings = ({ modalHeight, isMaximized }: AuthorizationSettin
                 valueKey: "id",
                 labelKey: "name",
               }}
+              className="w-[360px]"
               validation={postData.validations.employeeID}
               onChangeData={(data: any) => { setPostData((previous: any) => ({ ...previous, employeeID: data.employeeID, })); }}
               label={t("employee")}
             />
-          </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 ">
             <ERPInput
               id="password"
               data={postData}
@@ -224,6 +222,7 @@ const AuthorizationSettings = ({ modalHeight, isMaximized }: AuthorizationSettin
               label={t("password")}
               placeholder={t("password")}
               required={true}
+              className='max-w-36'
               onChangeData={(data: any) => { setPostData((previous: any) => ({ ...previous, password: data.password, })); }}
             />
             <ERPInput
@@ -233,11 +232,12 @@ const AuthorizationSettings = ({ modalHeight, isMaximized }: AuthorizationSettin
               label={t("confirm_password")}
               placeholder={t("confirm_password")}
               required={true}
+              className='max-w-36'
               onChangeData={(data: any) => { setPostData((previous: any) => ({ ...previous, confirmPassword: data.confirmPassword, })); }}
             />
           </div>
 
-          <div ref={buttonsRef} className="grid grid-cols-2 my-2 gap-3">
+          <div ref={buttonsRef} className="flex items-center justify-end gap-2 my-2">
             <ERPButton
               loading={postDataLoading}
               onClick={handleSubmit}
@@ -247,6 +247,7 @@ const AuthorizationSettings = ({ modalHeight, isMaximized }: AuthorizationSettin
             <ERPButton
               onClick={onClear}
               title={t("clear")}
+              variant="secondary"
             />
           </div>
 

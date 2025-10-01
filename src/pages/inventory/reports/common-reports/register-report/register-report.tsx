@@ -128,42 +128,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         visible: false,
         width: 100,
       },
-      {
-        dataField: "unitPrice",
-        caption: t("unit_price"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-        showInPdf: true,
-        cellRender: (
-          cellElement: any,
-          cellInfo: any,
-          filter: any,
-          exportCell: any
-        ) => {
-          if (exportCell != undefined) {
-            const value =
-              cellElement.data?.unitPrice == null
-                ? ""
-                : getFormattedValue(cellElement.data.unitPrice, false, 3);
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
-          } else {
-            return cellElement.data?.unitPrice == null
-              ? ""
-              : getFormattedValue(
-                  parseFloat(cellElement.data.unitPrice),
-                  false,
-                  3
-                );
-          }
-        },
-      },
+     
       //repeat from procedure
       {
         dataField: "batchNo",
@@ -296,6 +261,42 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+      },
+       {
+        dataField: "unitPrice",
+        caption: t("unit_price"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.unitPrice == null
+                ? ""
+                : getFormattedValue(cellElement.data.unitPrice, false, 3);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.unitPrice == null
+              ? ""
+              : getFormattedValue(
+                  parseFloat(cellElement.data.unitPrice),
+                  false,
+                  3
+                );
+          }
+        },
       },
       {
         dataField: "vat",

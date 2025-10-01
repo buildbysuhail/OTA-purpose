@@ -190,6 +190,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({
       caption: t("ref_date"),
       dataType: "date",
       allowSearch: true,
+      format:'dd-MMM-yyyy',
       allowFiltering: true,
       width: 100,
       showInPdf: true,

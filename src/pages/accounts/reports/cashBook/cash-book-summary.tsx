@@ -12,7 +12,7 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
 const CashBookSummary = () => {
   const dispatch = useAppDispatch();
-  const { getFormattedValue } = useNumberFormat()
+  const { getFormattedValue,getNumericFormat } = useNumberFormat()
   const [isOpenDetails, setIsOpenDetails] = useState<{ isOpen: boolean; key: number; groupName?: string }>({ isOpen: false, key: 0 });
   const [filter, setFilter] = useState<any>(CashBookReportFilterInitialState);
   const { t } = useTranslation('accountsReport');

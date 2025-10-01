@@ -112,8 +112,8 @@ export const AccountGroupManage: React.FC = React.memo(() => {
             id: "parentGroupID",
             required: true,
             getListUrl: Urls.data_acc_groups,
-            valueKey: "id",
-            labelKey: "name",
+            valueKey: "accGroupID",
+            labelKey: "accGroupName",
           }}
           onChangeData={(data: any) => { handleFieldChange("parentGroupID", data.parentGroupID); }}
           disabled={(formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 && formState?.data?.isEditable != true) || (rootState.PopupData.accountGroup.data != undefined && rootState.PopupData.accountGroup.data != null && rootState.PopupData.accountGroup.data.groupId != undefined && rootState.PopupData.accountGroup.data.groupId != null)}

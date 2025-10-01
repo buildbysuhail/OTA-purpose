@@ -328,8 +328,8 @@ const ERPSettingsFormGSTTaxes = () => {
                 id: "defaultPrefixForPOS",
                 // required: true,
                 getListUrl: Urls.data_VPrefixForSI,
-                valueKey: "LastVoucherPrefix",
-                labelKey: "LastVoucherPrefix",
+                valueKey: "lastVoucherPrefix",
+                labelKey: "lastVoucherPrefix",
               }}
               data={formState}
               onChangeData={(data: any) => handleFieldChange("defaultPrefixForPOS", data.defaultPrefixForPOS)}
@@ -358,8 +358,8 @@ const ERPSettingsFormGSTTaxes = () => {
                 id: "defaultSRPrefixForPOS",
                 // required: true,
                 getListUrl: Urls.data_VPrefixForSR,
-                valueKey: "LastVoucherPrefix",
-                labelKey: "LastVoucherPrefix",
+                valueKey: "lastVoucherPrefix",
+                labelKey: "lastVoucherPrefix",
               }}
               onChangeData={(data: any) => handleFieldChange("defaultSRPrefixForPOS", data.defaultSRPrefixForPOS)}
             />

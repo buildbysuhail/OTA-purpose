@@ -55,8 +55,8 @@ const PaymentReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
         field={{
           id: "accGroupID",
           getListUrl: Urls.data_acc_groups,
-          valueKey: "id",
-          labelKey: "name",
+          valueKey: "accGroupID",
+          labelKey: "accGroupName",
         }}
         onChangeData={(data) =>
           handleFieldChange({ accGroupID: data.accGroupID })

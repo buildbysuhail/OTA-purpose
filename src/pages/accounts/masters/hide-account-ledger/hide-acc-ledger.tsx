@@ -161,8 +161,8 @@ const HideAccountLedger = () => {
                     id: "groupId",
                     required: true,
                     getListUrl: Urls.data_acc_groups,
-                    valueKey: "id",
-                    labelKey: "name",
+                    valueKey: "accGroupID",
+                    labelKey: "accGroupName",
                   }}
                   onChangeData={(data: any) => { setPostData((prev) => ({ ...prev, groupId: data.groupId, })); }}
                   data={postData}

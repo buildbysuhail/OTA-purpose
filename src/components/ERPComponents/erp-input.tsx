@@ -214,7 +214,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     const handleMouseEnter = () => setIsHovered(true);
     const handleMouseLeave = () => setIsHovered(false);
     const [initial, setInitial] = useState<Option | null>(initialValue);
-  
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const ds = min != undefined ? parseFloat(min.toString()) : undefined;
       const sd = parseFloat(e.target?.value);
@@ -258,12 +258,12 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
         : `${isFocused || focused ? `rgb(${inputBoxState?.focusBgColor})` : ``} `
     );
 
-    const [foreColor,setForeColor]=useState<string>(
-      appState.mode=='dark'?
-      isFocused==true
-      ? "#ffffff"
-      : "#ffffff1a"
-      : `${isFocused  || focused?`rgb (${inputBoxState?.focusForeColor})`: ``}`
+    const [foreColor, setForeColor] = useState<string>(
+      appState.mode == 'dark' ?
+        isFocused == true
+          ? "#ffffff"
+          : "#ffffff1a"
+        : `${isFocused || focused ? `rgb (${inputBoxState?.focusForeColor})` : ``}`
     )
 
     useEffect(() => {
@@ -279,13 +279,13 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
         bgCol = isFocused || focused
           ? `rgb(${inputBoxState?.focusBgColor})`
           : inputBoxState?.inputBgColor
-          ? `rgb(${inputBoxState?.inputBgColor})`
-          : "";
+            ? `rgb(${inputBoxState?.inputBgColor})`
+            : "";
         bgFor = isFocused || focused
           ? `rgb(${inputBoxState?.focusForeColor})`
           : inputBoxState?.fontColor
-          ? `rgb(${inputBoxState?.fontColor})`
-          : "";
+            ? `rgb(${inputBoxState?.fontColor})`
+            : "";
       }
       setBorderStyles(border);
       setBgColor(bgCol);
@@ -589,21 +589,20 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       return sizeStyles.regular.height || '2rem';
     };
 
-    const remToPx = (rem: number) =>
-    {
+    const remToPx = (rem: number) => {
       const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize); // usually 16px
       return rem * rootFontSize;
     };
 
-  const rawRem = parseFloat(getInputHeight()); // removes "rem" from e.g., "2.1rem"
-  const inputHeight = remToPx(rawRem) - 2.1;
+    const rawRem = parseFloat(getInputHeight()); // removes "rem" from e.g., "2.1rem"
+    const inputHeight = remToPx(rawRem) - 2.1;
 
 
 
     const commonProps = {
       id: ignoreRandomId ? id : `${id}_${Math.random()}`,
       name: `input_${id}_${Math.random()}`,
-      value:  fetching ? "" : value === undefined ? "" : value,
+      value: fetching ? "" : value === undefined ? "" : value,
       defaultValue,
       onChange: handleChange,
       onFocus: (e: React.FocusEvent<HTMLInputElement, Element>) => {
@@ -664,13 +663,13 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                     // width: `max(calc(${inputHeight} / 2), 1rem)`,
                     ...(document.documentElement.dir === "rtl"
                       ? {
-                          borderTopLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-                          borderBottomLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-                        }
+                        borderTopLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                        borderBottomLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                      }
                       : {
-                          borderTopRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-                          borderBottomRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-                        }),
+                        borderTopRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                        borderBottomRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                      }),
                   }}
                 >
                   <button
@@ -695,11 +694,11 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                     style={{
                       ...(document.documentElement.dir === "rtl"
                         ? {
-                            borderTopLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-                          }
+                          borderTopLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                        }
                         : {
-                            borderTopRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-                          }),
+                          borderTopRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                        }),
                     }}
                   >
                     <ChevronUp
@@ -732,11 +731,11 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                     style={{
                       ...(document.documentElement.dir === "rtl"
                         ? {
-                            borderBottomLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-                          }
+                          borderBottomLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                        }
                         : {
-                            borderBottomRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-                          }),
+                          borderBottomRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                        }),
                     }}
                   >
                     <ChevronDown
@@ -777,25 +776,25 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             pattern: "[0-9]*\\.?[0-9]*",
           }),
         },
-       sx: {
-        ...sizeStyles.mui,
-        "& .MuiInputBase-input.Mui-disabled": {
-          "-webkit-text-fill-color": "#606060 !important",
-          color: "#606060 !important",
-        },
-        "& .Mui-disabled input": {
-          "-webkit-text-fill-color": "#606060 !important",
-          color: "#606060 !important",
-        },
-        ...(showCustomNumberChanger && {
-          "& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button": {
-            appearance: "none",
+        sx: {
+          ...sizeStyles.mui,
+          "& .MuiInputBase-input.Mui-disabled": {
+            "-webkit-text-fill-color": "#606060 !important",
+            color: "#606060 !important",
           },
-          "& input[type=number]": {
-            appearance: "textfield",
+          "& .Mui-disabled input": {
+            "-webkit-text-fill-color": "#606060 !important",
+            color: "#606060 !important",
           },
-        }),
-      },
+          ...(showCustomNumberChanger && {
+            "& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button": {
+              appearance: "none",
+            },
+            "& input[type=number]": {
+              appearance: "textfield",
+            },
+          }),
+        },
         onKeyDown: (e) =>
           disableEnterNavigation == true
             ? onKeyDown != undefined
@@ -843,7 +842,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             marginTop: `${inputBoxState?.marginTop ?? 0}px`,
           }}>
 
-            <div className="flex justify-between">
+          <div className="flex justify-between">
             {!noLabel && (
               <label
                 className={`capitalize text-left rtl:text-right dark:!text-dark-label ${appState?.mode == "dark"
@@ -878,34 +877,34 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                   {labelDirection === "horizontal" && ":"}
                 </span>
               </label>
-              )}
-              <label
-                className={`capitalize block text-right rtl:text-left ${appState?.mode == "dark" ? "form-label" : ""
-                  }`}
-                style={{
-                  fontSize: _customSize
-                    ? _customSize === "sm"
-                      ? "12px"
-                      : _customSize === "md"
-                        ? "13px"
-                        : _customSize === "lg"
-                          ? "14px"
-                          : `${inputBoxState?.labelFontSize}px`
-                    : "14px",
-                }} >
-                {labelInfo &&
-                  cloneElement(
-                    labelInfo,
-                    labelInfoProps ? { labelInfoProps: labelInfoProps } : {}
-                  )}
-              </label>
-            </div>
+            )}
+            <label
+              className={`capitalize block text-right rtl:text-left ${appState?.mode == "dark" ? "form-label" : ""
+                }`}
+              style={{
+                fontSize: _customSize
+                  ? _customSize === "sm"
+                    ? "12px"
+                    : _customSize === "md"
+                      ? "13px"
+                      : _customSize === "lg"
+                        ? "14px"
+                        : `${inputBoxState?.labelFontSize}px`
+                  : "14px",
+              }} >
+              {labelInfo &&
+                cloneElement(
+                  labelInfo,
+                  labelInfoProps ? { labelInfoProps: labelInfoProps } : {}
+                )}
+            </label>
+          </div>
 
           <div className={`flex ${labelDirection === "vertical" ? "" : "basis-2/3"}`}>
             {customButton && (
-            <div style={{ height, marginRight: "7px" }}>
-             {customButton}
-            </div>
+              <div style={{ height, marginRight: "7px" }}>
+                {customButton}
+              </div>
             )}
             {prefix && (
               <div
@@ -917,18 +916,18 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 {prefix}
               </div>
             )}
-            <div className="relative flex-1" style={{  backgroundColor: bgColor}}>
+            <div className="relative flex-1" style={{ backgroundColor: bgColor }}>
               <input
                 {...commonProps}
                 {...numberInputProps}
                 placeholder={fetching
-                ? "" : iPlaceholder}
+                  ? "" : iPlaceholder}
                 ref={ref}
                 autoComplete="off"
-      autoCorrect="off"
-      autoCapitalize="off"
-      spellCheck="false"
-      data-form-type="other"
+                autoCorrect="off"
+                autoCapitalize="off"
+                spellCheck="false"
+                data-form-type="other"
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
                 onFocus={(e) => {
@@ -944,11 +943,11 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                   onBlur && onBlur(e);
                 }}
                 style={{
-                  height:!inputClassName?height:"",
+                  height: !inputClassName ? height : "",
                   fontSize,
                   fontWeight: boldInput || inputBoxState?.bold ? 700 : fontWeight,
                   color: disabled ? "#606060" : foreColor,
-                  borderColor:!inputClassName?borderStyles:"",
+                  borderColor: !inputClassName ? borderStyles : "",
                   outline: "none",
                   transition: "border-color 0.2s ease-in-out",
                   borderTopLeftRadius: `${!prefix ? inputBoxState?.borderRadius : 0
@@ -964,7 +963,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                     : 0
                     }px`,
                   backgroundColor: bgColor,
-                  textAlign:inputTextAlign,
+                  textAlign: inputTextAlign,
                   paddingLeft: type === "number" && showCustomNumberChanger && numberChangerStyle === "horizontal" ? "28px" : undefined,
                   paddingRight: type === "number" && showCustomNumberChanger
                     ? numberChangerStyle === "horizontal"
@@ -976,19 +975,18 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                   width: "100%",
                   border: `1px solid ${borderStyles}`,
                   ...(type === "number" && {
-                        "-moz-appearance": "number-input", // Firefox
-                        "-webkit-appearance": "number-input", // WebKit (though limited effect)
+                    "-moz-appearance": "number-input", // Firefox
+                    "-webkit-appearance": "number-input", // WebKit (though limited effect)
                   }),
                   ...(!prefix &&
                     !suffix && {
-                      borderRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-                    }),
+                    borderRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                  }),
                 }}
-                className={`form-control !${contextClassName || ""} !${inputClassName}   dark:!bg-dark-bg-card placeholder:capitalize ${
-                  showCustomNumberChanger
-                    ? "[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                    : "number-input-spinner"
-                } ${disabled ? "border-dashed !#606060" : ""}`}
+                className={`form-control !${contextClassName || ""} !${inputClassName}   dark:!bg-dark-bg-card placeholder:capitalize ${showCustomNumberChanger
+                  ? "[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  : "number-input-spinner"
+                  } ${disabled ? "border-dashed !#606060" : ""}`}
                 onWheel={(e) => {
                   if (type === "number") {
                     e.preventDefault();
@@ -1025,102 +1023,102 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                   <LoadingBar />
                 </LoadingContainer>
               )}
-          {showCustomNumberChanger && numberChangerStyle === 'horizontal' ? (
-            <>
-              <button
-                type="button"
-                className={`absolute left-0 top-0 h-full flex items-center justify-center w-7 
+              {showCustomNumberChanger && numberChangerStyle === 'horizontal' ? (
+                <>
+                  <button
+                    type="button"
+                    className={`absolute left-0 top-0 h-full flex items-center justify-center w-7 
                   dark:bg-dark-combo-dd dark:hover:bg-dark-hover-bg  bg-[#f9f9f9] hover:bg-gray-100
                   ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-100'}`}
-                onClick={() => {
-                  if (disabled) return;
-                  setTimeout(() => {
-                  const currentValue = parseFloat(value as string) || 0;
-                  const newValue = currentValue - (step ? parseFloat(step.toString()) : 1);
-                  if (min === undefined || newValue >= parseFloat(min.toString())) {
-                    const event = {
-                      isCustomNumberChangerEvent: true,
-                      target: { value: newValue.toString() },
-                      mode: "down",
-                    } as any;
-                    handleChange(event);
-                  }
-                }, 200);
-                }}
-                style={{
-                  borderTop: `1px solid ${borderStyles}`,
-                  borderBottom: `1px solid ${borderStyles}`,
-                  borderLeft: `1px solid ${borderStyles}`,
-                  // backgroundColor: bgColor,
-                  borderTopLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-                  borderBottomLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-                }}
-              >
-                <ChevronLeft 
-                  className={`h-4 w-4 transition-colors duration-200 
-                    ${disabled 
-                      ? 'text-gray-400 dark:text-gray-600' 
-                      : 'text-gray-600 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300'
-                    }`}
-                />
-              </button>
-              <button
-                type="button"
-                className={`absolute right-0 top-0 h-full flex items-center justify-center w-7
+                    onClick={() => {
+                      if (disabled) return;
+                      setTimeout(() => {
+                        const currentValue = parseFloat(value as string) || 0;
+                        const newValue = currentValue - (step ? parseFloat(step.toString()) : 1);
+                        if (min === undefined || newValue >= parseFloat(min.toString())) {
+                          const event = {
+                            isCustomNumberChangerEvent: true,
+                            target: { value: newValue.toString() },
+                            mode: "down",
+                          } as any;
+                          handleChange(event);
+                        }
+                      }, 200);
+                    }}
+                    style={{
+                      borderTop: `1px solid ${borderStyles}`,
+                      borderBottom: `1px solid ${borderStyles}`,
+                      borderLeft: `1px solid ${borderStyles}`,
+                      // backgroundColor: bgColor,
+                      borderTopLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                      borderBottomLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                    }}
+                  >
+                    <ChevronLeft
+                      className={`h-4 w-4 transition-colors duration-200 
+                    ${disabled
+                          ? 'text-gray-400 dark:text-gray-600'
+                          : 'text-gray-600 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300'
+                        }`}
+                    />
+                  </button>
+                  <button
+                    type="button"
+                    className={`absolute right-0 top-0 h-full flex items-center justify-center w-7
                   dark:bg-dark-combo-dd dark:hover:bg-dark-hover-bg bg-[#f9f9f9] hover:bg-gray-100
                   ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-100'}`}
-                onClick={() => {
-                   if (disabled) return;
-                setTimeout(() => {
-                  const currentValue = parseFloat(value as string) || 0;
-                  const newValue = currentValue + (step ? parseFloat(step.toString()) : 1);
-                  if (max === undefined || newValue <= parseFloat(max.toString())) {
-                    const event = {
-                      isCustomNumberChangerEvent: true,
-                      target: { value: newValue.toString() },
-                      mode: "up",
-                    } as any;
-                    handleChange(event);
-                  }
-                }, 200);
-                }}
-                style={{
-                  borderTop: `1px solid ${borderStyles}`,
-                  borderBottom: `1px solid ${borderStyles}`,
-                  borderRight: `1px solid ${borderStyles}`,
-                  // backgroundColor: bgColor,
-                  borderTopRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-                  borderBottomRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-                }}
-              >
-                <ChevronRight 
-                  className={`h-4 w-4 transition-colors duration-200
-                    ${disabled 
-                      ? 'text-gray-400 dark:text-gray-600' 
-                      : 'text-gray-600 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300'
-                    }`}
-                />
-              </button>
-            </>
-          ) : showCustomNumberChanger ? (
+                    onClick={() => {
+                      if (disabled) return;
+                      setTimeout(() => {
+                        const currentValue = parseFloat(value as string) || 0;
+                        const newValue = currentValue + (step ? parseFloat(step.toString()) : 1);
+                        if (max === undefined || newValue <= parseFloat(max.toString())) {
+                          const event = {
+                            isCustomNumberChangerEvent: true,
+                            target: { value: newValue.toString() },
+                            mode: "up",
+                          } as any;
+                          handleChange(event);
+                        }
+                      }, 200);
+                    }}
+                    style={{
+                      borderTop: `1px solid ${borderStyles}`,
+                      borderBottom: `1px solid ${borderStyles}`,
+                      borderRight: `1px solid ${borderStyles}`,
+                      // backgroundColor: bgColor,
+                      borderTopRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                      borderBottomRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                    }}
+                  >
+                    <ChevronRight
+                      className={`h-4 w-4 transition-colors duration-200
+                    ${disabled
+                          ? 'text-gray-400 dark:text-gray-600'
+                          : 'text-gray-600 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300'
+                        }`}
+                    />
+                  </button>
+                </>
+              ) : showCustomNumberChanger ? (
                 <div
                   className="absolute right-0 top-0 flex flex-col border-l dark:border-dark-border border-gray-300 m-[2px]"
                   style={{
                     height: inputHeight,
                     marginTop: "1px",
-                    width:"13px",
+                    width: "13px",
                     marginInlineEnd: "1px",
                     // width: `max(calc(${inputHeight} / 2), 1rem)`,
                     // margin: `calc(${inputHeight} / 20)`,
                     ...(document.documentElement.dir === "rtl"
                       ? {
-                          borderTopLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-                          borderBottomLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-                        }
+                        borderTopLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                        borderBottomLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                      }
                       : {
-                          borderTopRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-                          borderBottomRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-                        }),
+                        borderTopRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                        borderBottomRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                      }),
                   }}
                 >
                   <button
@@ -1145,20 +1143,20 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                     style={{
                       ...(document.documentElement.dir === "rtl"
                         ? {
-                            borderTopLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-                          }
+                          borderTopLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                        }
                         : {
-                            borderTopRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-                          }),
+                          borderTopRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                        }),
                     }}
                   >
                     <ChevronUp
                       className="h-4 w-4 text-gray-600 dark:text-gray-400 hover:text-gray-700  dark:hover:text-gray-500 transition-colors"
-                      // style={{
-                      //   height: `max(calc(${inputHeight} * 0.3), 0.5rem)`,
-                      //   width: `max(calc(${inputHeight} * 0.3), 0.5rem)`,
-                      // }}
-                  />
+                    // style={{
+                    //   height: `max(calc(${inputHeight} * 0.3), 0.5rem)`,
+                    //   width: `max(calc(${inputHeight} * 0.3), 0.5rem)`,
+                    // }}
+                    />
                   </button>
                   <button
                     type="button"
@@ -1182,20 +1180,20 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                     style={{
                       ...(document.documentElement.dir === "rtl"
                         ? {
-                            borderBottomLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-                          }
+                          borderBottomLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                        }
                         : {
-                            borderBottomRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-                          }),
+                          borderBottomRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                        }),
                     }}
                   >
                     <ChevronDown
                       className="h-4 w-4 text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-500 transition-colors"
-                      // style={{
-                      //   height: `max(calc(${inputHeight} * 0.3), 0.5rem)`,
-                      //   width: `max(calc(${inputHeight} * 0.3), 0.5rem)`,
-                      // }}
-                  />
+                    // style={{
+                    //   height: `max(calc(${inputHeight} * 0.3), 0.5rem)`,
+                    //   width: `max(calc(${inputHeight} * 0.3), 0.5rem)`,
+                    // }}
+                    />
                   </button>
                 </div>
               ) : null}

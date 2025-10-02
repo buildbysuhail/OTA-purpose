@@ -393,8 +393,8 @@ export const SummaryFilterInitialState = {
   warehouseID: 0, //PRESETWAREHOUSEID>0 disable with that value
   partyCategoryID: 0,
   isTimeBased: false,
-  fromTime: moment().local().format("hh:mm"), // 12-hour format without seconds
-  toTime: moment().local().format("hh:mm"),
+  fromTime: moment().local().format("HH:mm"), // 12-hour format without seconds
+  toTime: moment().local().format("HH:mm"),
   reportOf: "",
   IsInactive: false, //true on in shortcut NPIR
 };

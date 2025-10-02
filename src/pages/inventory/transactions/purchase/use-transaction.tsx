@@ -3469,6 +3469,8 @@ debugger;
             ) {
               if (data.unitPrice > data.salesPrice) {
                 // event.preventDefault();
+                event.preventDefault();
+                event.stopPropagation(); 
                 const confirm = await ERPAlert.show({
                   icon: "info",
                   title: t("warning"),

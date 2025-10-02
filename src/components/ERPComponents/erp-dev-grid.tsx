@@ -910,7 +910,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             ) {
               return appFormatDate(data[innerPlaceholder]);
             }
-            return data[innerPlaceholder] ?? "N/A";
+            return data[innerPlaceholder] ?? "";
           }
         );
 
@@ -938,11 +938,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                   // If the placeholder is a date, format it
                   return rowData != undefined
                     ? appFormatDate(rowData[innerPlaceholder])
-                    : "N/A";
+                    : "";
                 }
                 return rowData != undefined
-                  ? rowData[innerPlaceholder] || "N/A"
-                  : "N/A"; // Return the value from formState, or "N/A" if not found
+                  ? rowData[innerPlaceholder] || ""
+                  : ""; // Return the value from formState, or "" if not found
               }
             )
             : "";
@@ -967,8 +967,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                   return appFormatDate(postData[innerPlaceholder]);
                 }
                 return postData != undefined
-                  ? postData[innerPlaceholder] || "N/A"
-                  : "N/A"; // Return the value from formState, or "N/A" if not found
+                  ? postData[innerPlaceholder] || ""
+                  : ""; // Return the value from formState, or "" if not found
               }
             )
             : "";
@@ -995,8 +995,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                   return appFormatDate(userSession[innerPlaceholder]);
                 }
                 return userSession != undefined
-                  ? userSession[innerPlaceholder] || "N/A"
-                  : "N/A"; // Return the value from formState, or "N/A" if not found
+                  ? userSession[innerPlaceholder] || ""
+                  : ""; // Return the value from formState, or "" if not found
               }
             )
             : "";
@@ -1014,11 +1014,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 // If the placeholder is a date, format it
                 return appFormatDate(formState[placeholder]);
               }
-              return formState[placeholder] || "N/A";
+              return formState[placeholder] || "";
             }
           }
         }
-        return "N/A";
+        return "";
       }).replace(/\s+/g, " ")   // collapse multiple spaces/newlines
   .trim();                // remove extra leading/trailing spaces
     };

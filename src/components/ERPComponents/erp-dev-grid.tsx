@@ -2556,7 +2556,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 //     ? column.Actionswidth + 44 // Add 15px to Actionswidth
                 //     : column.width
                 // }
-                minWidth={column.minWidth}
+                width={column.width}
                 fixed={column.fixed}
                 fixedPosition={column.fixedPosition}
                 cellRender={

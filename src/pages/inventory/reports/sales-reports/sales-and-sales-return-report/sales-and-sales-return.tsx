@@ -352,7 +352,7 @@ const SalesAndSalesReturn = () => {
                   method={ActionType.POST}
                   reload={true}
                   gridId="grd_sales_summary"
-                  extraParams={filterState}
+                  postData={filterState}
                   height={700}
                   // hideDefaultExportButton={true}
                   hideDefaultSearchPanel={true}

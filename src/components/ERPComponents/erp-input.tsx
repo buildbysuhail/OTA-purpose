@@ -9,7 +9,7 @@ import { inputBox } from "../../redux/slices/app/types";
 
 // Mocking the ERPElementValidationMessage component
 const ERPElementValidationMessage = ({ validation }: { validation?: string }) =>
-  validation != undefined && validation != null && validation != "" ? (<div className="text-red text-xs">{validation}</div>) : null;
+  validation != undefined && validation != null && validation != "" ? (<div className="text-red-600 text-xs">{validation}</div>) : null;
 
 type ERPInputBaseProps = Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
@@ -874,7 +874,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 }} >
                 <span style={{ whiteSpace: "nowrap" }}>
                   {`${iLabel}${labelDirection === "horizontal" ? "" : ""}`}
-                  {required && !noLabel && <span className="dark:text-red text-red">*</span>}
+                  {required && !noLabel && <span className="dark:text-red text-red-500">*</span>}
                   {labelDirection === "horizontal" && ":"}
                 </span>
               </label>

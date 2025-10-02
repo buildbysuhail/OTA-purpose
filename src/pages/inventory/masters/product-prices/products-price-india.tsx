@@ -14,6 +14,7 @@ import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPMultiSelect from "../../../../components/ERPComponents/erp-multi-select";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { APIClient } from "../../../../helpers/api-client";
+import { useNavigate } from "react-router-dom";
 
 interface OptionItem {
     id: string | number;
@@ -87,6 +88,15 @@ const ProductPricesIndia: React.FC = React.memo(() => {
         };
         fetchBranchOptions();
     }, []);
+
+    const navigate = useNavigate();
+    const goToPreviousPage = () => {
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            navigate("/");
+        }
+    };
 
     const clearAll = () => {
         handleClear();
@@ -522,6 +532,14 @@ const ProductPricesIndia: React.FC = React.memo(() => {
             <div className="fixed bottom-0 left-0 right-0 z-10 px-2 sm:px-4 py-2 bg-white dark:bg-dark-bg border-t dark:border-dark-border shadow-lg"
                 style={{ boxShadow: "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)" }}>
                 <div className="flex items-center justify-end">
+                    <ERPButton
+                        type="button"
+                        title={t("close")}
+                        variant="secondary"
+                        className="mr-2"
+                        onClick={goToPreviousPage}
+                    />
+
                     <ERPButton
                         type="button"
                         title={t("clear")}

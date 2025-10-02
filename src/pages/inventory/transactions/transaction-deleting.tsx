@@ -3,34 +3,33 @@ import { useDispatch } from 'react-redux';
 import ERPToast from '../../../components/ERPComponents/erp-toast';
 import { useTranslation } from 'react-i18next';
 
-interface SavingOverlayProps {
-  saving: boolean;
-  saveCompleted: boolean;
-  savingSwitchAction: any;
+interface DeletingOverlayProps {
+  deleting: boolean;
+  deleteCompleted: boolean;
+  deletingSwitchAction: any;
 }
 
-const SavingOverlay: React.FC<SavingOverlayProps> = ({
-  saving = false,
-  saveCompleted = false,
-  savingSwitchAction
+const DeletingOverlay: React.FC<DeletingOverlayProps> = ({
+  deleting = false,
+  deleteCompleted = false,
+  deletingSwitchAction
 }) => {
-  const showOverlay = saving || saveCompleted;
-  const showLoading = saving && !saveCompleted;
+  const showOverlay = deleting || deleteCompleted;
+  const showLoading = deleting && !deleteCompleted;
   const [showSuccess, setShowSuccess] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const { t } = useTranslation('transaction')
-
+  const { t } = useTranslation('transaction');
   useEffect(() => {
-    if (saveCompleted) {
+    if (deleteCompleted) {
       setShowSuccess(true);
-      if (savingSwitchAction) {
-        dispatch(savingSwitchAction);
-        ERPToast.show("Transaction Saved Successfully", "success");
+      if (deletingSwitchAction) {
+        dispatch(deletingSwitchAction);
+        ERPToast.show("Transaction Deleted Successfully", "success");
       }
     } else {
       setShowSuccess(false);
     }
-  }, [saveCompleted, dispatch, savingSwitchAction]);
+  }, [deleteCompleted, dispatch, deletingSwitchAction]);
 
   const overlayStyles: React.CSSProperties = {
     position: 'absolute',
@@ -38,9 +37,9 @@ const SavingOverlay: React.FC<SavingOverlayProps> = ({
     left: 0,
     right: 0,
     bottom: 0,
-    background: 'rgba(15, 23, 42, 0.4)', // Dark semi-transparent background
+    background: 'rgba(15, 23, 42, 0.4)',
     backdropFilter: 'blur(10px)',
-    WebkitBackdropFilter: 'blur(10px)', // Safari support
+    WebkitBackdropFilter: 'blur(10px)',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -78,15 +77,15 @@ const SavingOverlay: React.FC<SavingOverlayProps> = ({
   const loaderCircleStyles: React.CSSProperties = {
     width: '100%',
     height: '100%',
-    border: '3px solid #e2e8f0',
-    borderTopColor: '#6366f1',
-    borderRightColor: '#8b5cf6',
+    border: '3px solid #fee2e2',
+    borderTopColor: '#ef4444',
+    borderRightColor: '#dc2626',
     borderRadius: '50%',
     animation: 'spin 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite',
-    boxShadow: '0 4px 12px rgba(99, 102, 241, 0.2)',
+    boxShadow: '0 4px 12px rgba(239, 68, 68, 0.2)',
   };
 
-  const savingTextStyles: React.CSSProperties = {
+  const deletingTextStyles: React.CSSProperties = {
     color: '#374151',
     fontSize: '20px',
     fontWeight: '600',
@@ -96,7 +95,7 @@ const SavingOverlay: React.FC<SavingOverlayProps> = ({
     marginBottom: '8px',
   };
 
-  const savingSubtextStyles: React.CSSProperties = {
+  const deletingSubtextStyles: React.CSSProperties = {
     color: '#6b7280',
     fontSize: '14px',
     fontWeight: '400',
@@ -113,14 +112,14 @@ const SavingOverlay: React.FC<SavingOverlayProps> = ({
     width: '6px',
     height: '6px',
     borderRadius: '50%',
-    background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+    background: 'linear-gradient(135deg, #ef4444, #dc2626)',
     margin: '0 2px',
     animation: `dots 1.6s infinite ease-in-out both`,
     animationDelay: delay,
-    boxShadow: '0 2px 4px rgba(99, 102, 241, 0.3)',
+    boxShadow: '0 2px 4px rgba(239, 68, 68, 0.3)',
   });
 
-  const checkmarkContainerStyles: React.CSSProperties = {
+  const trashContainerStyles: React.CSSProperties = {
     width: '100px',
     height: '100px',
     marginBottom: '30px',
@@ -129,7 +128,7 @@ const SavingOverlay: React.FC<SavingOverlayProps> = ({
   };
 
   const successTextStyles: React.CSSProperties = {
-    color: '#059669',
+    color: '#dc2626',
     fontSize: '22px',
     fontWeight: '700',
     animation: showSuccess ? 'fade-in 0.5s ease 0.4s forwards' : 'none',
@@ -190,35 +189,35 @@ const SavingOverlay: React.FC<SavingOverlayProps> = ({
           }
         }
         
-        @keyframes pulse-glow {
-          0%, 100% { 
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
-          }
-          50% { 
-            box-shadow: 0 0 30px rgba(16, 185, 129, 0.6);
-          }
+        @keyframes trash-lid {
+          0%, 100% { transform: translateY(0) rotate(0deg); }
+          30% { transform: translateY(-5px) rotate(-15deg); }
+          60% { transform: translateY(-5px) rotate(15deg); }
         }
         
-        .checkmark-circle {
+        .trash-circle {
           stroke-dasharray: 166;
           stroke-dashoffset: 166;
           stroke-width: 2.5;
-          stroke: #10b981;
-          fill: rgba(16, 185, 129, 0.1);
+          stroke: #dc2626;
+          fill: rgba(220, 38, 38, 0.1);
           animation: stroke 0.8s cubic-bezier(0.65, 0, 0.45, 1) forwards;
-          filter: drop-shadow(0 4px 8px rgba(16, 185, 129, 0.3));
+          filter: drop-shadow(0 4px 8px rgba(220, 38, 38, 0.3));
         }
         
-        .checkmark-check {
+        .trash-icon {
           transform-origin: 50% 50%;
-          stroke-dasharray: 48;
-          stroke-dashoffset: 48;
-          stroke: #10b981;
-          stroke-width: 3;
+          stroke: #dc2626;
+          stroke-width: 2;
           fill: none;
           stroke-linecap: round;
           stroke-linejoin: round;
-          animation: stroke 0.4s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+          animation: fade-in 0.4s ease 0.8s forwards;
+          opacity: 0;
+        }
+        
+        .trash-lid {
+          animation: trash-lid 0.6s ease 1.2s;
         }
         
         .success-container {
@@ -233,15 +232,15 @@ const SavingOverlay: React.FC<SavingOverlayProps> = ({
               <div style={loaderStyles}>
                 <div style={loaderCircleStyles}></div>
               </div>
-              <div style={savingTextStyles}>
-                {t('saving_transaction')}
+              <div style={deletingTextStyles}>
+                {t('deleting_transaction')}
                 <div style={dotsContainerStyles}>
                   <span style={dotStyles('-0.4s')}></span>
                   <span style={dotStyles('-0.2s')}></span>
                   <span style={dotStyles('0s')}></span>
                 </div>
               </div>
-              <div style={savingSubtextStyles}>
+              <div style={deletingSubtextStyles}>
                 {t('please_wait_while_we_process_your_request')}
               </div>
             </div>
@@ -252,27 +251,35 @@ const SavingOverlay: React.FC<SavingOverlayProps> = ({
               className="success-container"
               style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
             >
-              <div style={checkmarkContainerStyles}>
+              <div style={trashContainerStyles}>
                 <svg
                   style={{ width: '100%', height: '100%' }}
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 52 52"
                 >
                   <circle
-                    className="checkmark-circle"
+                    className="trash-circle"
                     cx="26"
                     cy="26"
                     r="25"
                   />
-                  <path
-                    className="checkmark-check"
-                    d="M14.1 27.2l7.1 7.2 16.7-16.8"
-                  />
+                  <g className="trash-icon">
+                    {/* Trash can body */}
+                    <path d="M18 20 L18 36 C18 37.5 19 38 20 38 L32 38 C33 38 34 37.5 34 36 L34 20" />
+                    {/* Trash can lines */}
+                    <line x1="22" y1="24" x2="22" y2="34" />
+                    <line x1="26" y1="24" x2="26" y2="34" />
+                    <line x1="30" y1="24" x2="30" y2="34" />
+                    {/* Top rim */}
+                    <path d="M16 20 L36 20" strokeWidth="2.5" />
+                    {/* Lid */}
+                    <path className="trash-lid" d="M22 16 L22 14 C22 13 23 12 24 12 L28 12 C29 12 30 13 30 14 L30 16" />
+                  </g>
                 </svg>
               </div>
-              <div style={successTextStyles}>{t('transaction_saved')}</div>
+              <div style={successTextStyles}>{t('transaction_deleted')}</div>
               <div style={successSubtextStyles}>
-                {t('your_changes_have_been_saved_successfully')}
+                {t('the_transaction_has_been_removed_successfully')}
               </div>
             </div>
           )}
@@ -282,4 +289,4 @@ const SavingOverlay: React.FC<SavingOverlayProps> = ({
   );
 };
 
-export default SavingOverlay;
+export default DeletingOverlay;

@@ -8,13 +8,13 @@ const ERPElementValidationMessage = forwardRef<HTMLInputElement, ERPInputProps>(
   validation
 }: ERPInputProps, ref) => {
   return (
-   <>
-    {validation && (
-      <p className="text-danger font-light">
-      {validation}
-    </p>
-     )}
-   </>
+    <>
+      {validation && (
+        <p className="text-red-600 text-xs font-light">
+          {validation}
+        </p>
+      )}
+    </>
   );
 });
 

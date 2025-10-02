@@ -488,6 +488,8 @@ export interface TransactionFormState {
   ledgerDataLoading: boolean;
   saving: boolean;
   savingCompleted?: boolean;
+  deleting: boolean;
+  deletingCompleted?: boolean;
   ledgerBalanceLoading: boolean;
   ledgerBalance: number;
   ledgerData: any;

@@ -298,7 +298,7 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
               disabled={formState.transactionLoading}
               onClick={(e) => { e.preventDefault(); goToPreviousPage() }}
               className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
-              title={t("previous_page")}>
+              title={t("close")}>
               <X className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
             </button>
           </div>

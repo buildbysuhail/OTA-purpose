@@ -10,6 +10,7 @@ import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import { APIClient } from "../../../../helpers/api-client";
 import { handleResponse } from "../../../../utilities/HandleResponse";
+import { useNavigate } from "react-router-dom";
 
 export interface ProductPriceGCCData {
     slNo: string;
@@ -123,6 +124,15 @@ const ProductPricesGCC: React.FC = React.memo(() => {
     const clearAll = () => {
         setproductPform(initailProductPriceFormData);
         setGridData([]);
+    };
+
+    const navigate = useNavigate();
+    const goToPreviousPage = () => {
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            navigate("/");
+        }
     };
 
     const columns: DevGridColumn[] = useMemo(() => [
@@ -264,21 +274,21 @@ const ProductPricesGCC: React.FC = React.memo(() => {
                             <div className="p-4">
                                 <div className="flex flex-col gap-2">
                                     {
-                                        /* <ERPMultiSelect
-                                                label="Countries"
-                                                options={[
-                                                    { id: 1, name: "Urgent" },
-                                                    { id: 2, name: "Important" },
-                                                    { id: 3, name: "Review" },
-                                                    { id: 4, name: "Pending" },
-                                                    { id: 5, name: "Completed" },
-                                                ]}
-                                                selectedValues={getFieldProps("sdsd").value}
-                                                onChange={(data) => handleFieldChange("sdsd", data)}
-                                                placeholder="Select countries"
-                                                searchPlaceholder="Search countries..."
-                                                outputFormat="array"
-                                        /> */
+                                        // <ERPMultiSelect
+                                        //     label="Countries"
+                                        //     options={[
+                                        //         { id: 1, name: "Urgent" },
+                                        //         { id: 2, name: "Important" },
+                                        //         { id: 3, name: "Review" },
+                                        //         { id: 4, name: "Pending" },
+                                        //         { id: 5, name: "Completed" },
+                                        //     ]}
+                                        //     selectedValues={getFieldProps("sdsd").value}
+                                        //     onChange={(data) => handleFieldChange("sdsd", data)}
+                                        //     placeholder="Select countries"
+                                        //     searchPlaceholder="Search countries..."
+                                        //     outputFormat="array"
+                                        // />
                                     }
                                     <ERPCheckbox
                                         label={t("standard")}
@@ -402,6 +412,14 @@ const ProductPricesGCC: React.FC = React.memo(() => {
             <div className="fixed bottom-0 left-0 right-0 z-10 px-2 sm:px-4 py-2 bg-white dark:bg-dark-bg border-t dark:border-dark-border shadow-lg"
                 style={{ boxShadow: "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)" }}>
                 <div className="flex items-center justify-end">
+                    <ERPButton
+                        type="button"
+                        title={t("close")}
+                        variant="secondary"
+                        className="mr-2"
+                        onClick={goToPreviousPage}
+                    />
+
                     <ERPButton
                         type="button"
                         title={t("clear")}

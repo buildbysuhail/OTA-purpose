@@ -103,6 +103,7 @@ import MemoEditorModal from "./memo-editor";
 import { getStorageString } from "../../../../utilities/storage-utils";
 import { getApLocalData, getApLocalDataByUrl } from "../../../../redux/cached-urls";
 import BillWisePopup from "../../../transaction-base/billwise-popup";
+import DeletingOverlay from "../transaction-deleting";
 interface BilledItem {
   id?: number;
   name: string;
@@ -2362,6 +2363,12 @@ debugger;
           fields: {
             savingCompleted: undefined, saving: false
           },
+        })}
+        />
+      )}
+      {formState.deleting && (
+        <DeletingOverlay deleting={true} deleteCompleted={formState.deletingCompleted ?? false} deletingSwitchAction={formStateHandleFieldChange({
+          fields: { deletingCompleted: undefined, deleting: false },
         })}
         />
       )}

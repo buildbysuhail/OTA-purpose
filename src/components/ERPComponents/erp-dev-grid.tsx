@@ -1019,7 +1019,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           }
         }
         return "N/A";
-      });
+      }).replace(/\s+/g, " ")   // collapse multiple spaces/newlines
+  .trim();                // remove extra leading/trailing spaces
     };
 
     const header = useMemo(() => {

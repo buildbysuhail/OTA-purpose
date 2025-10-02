@@ -794,5 +794,14 @@
   "branch_name": "Branch Name",
   "to": "To",
   "consolidated_all_branch_purchase_order_list": "Consolidated all branch PurchaseOrder list",
-  "pending_purchase_quotation_list": "Pending Purchase Quotation List"
+  "pending_purchase_quotation_list": "Pending Purchase Quotation List",
+  "deleting_transaction": "Deleting transaction",
+  "please_wait_while_we_process_your_request": "Please wait while we process your request",
+  "transaction_deleted": "Transaction deleted",
+  "the_transaction_has_been_removed_successfully": "The transaction has been removed successfully",
+  "saving_transaction": "Saving transaction",
+  "transaction_saved": "Transaction saved",
+  "your_changes_have_been_saved_successfully": "Your changes have been saved successfully",
+  "refresh": "Refresh",
+  "history": "History"
 }

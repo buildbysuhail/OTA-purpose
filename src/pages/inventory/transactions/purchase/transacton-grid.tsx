@@ -8,11 +8,8 @@ import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import ERPDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import {
-  TransactionBase,
-  transactionRoutes,
-} from "../../../../components/common/content/transaction-routes";
-import { Link, useLocation } from "react-router-dom";
+import {  TransactionBase,  transactionRoutes,} from "../../../../components/common/content/transaction-routes";
+import { Link } from "react-router-dom";
 
 const toggleTransactionPopup = (payload: {
   isOpen: boolean;
@@ -32,7 +29,6 @@ const TransactionGrid: React.FC<{
   const dispatch = useAppDispatch();
   const { getFormattedValue } = useNumberFormat();
   const { t } = useTranslation("transaction");
-
   const [reload, setReload] = useState<boolean>(true);
   const columns: DevGridColumn[] = useMemo(
     () => [
@@ -59,9 +55,9 @@ const TransactionGrid: React.FC<{
         cellRender: (cellInfo: any) => {
           return cellInfo.data?.transactionDate
             ? formatDate(
-                new Date(cellInfo.data?.transactionDate),
-                "dd-MMM-yyyy"
-              )
+              new Date(cellInfo.data?.transactionDate),
+              "dd-MMM-yyyy"
+            )
             : "";
         },
       },
@@ -142,14 +138,14 @@ const TransactionGrid: React.FC<{
               drCr: tr?.drCr,
             };
           }
- // Convert object to query string
-    const queryString = new URLSearchParams(
-      Object.entries(transactionData).reduce((acc, [key, value]) => {
-        acc[key] = String(value ?? "");
-        return acc;
-      }, {} as Record<string, string>)
-    ).toString();
-    
+          // Convert object to query string
+          const queryString = new URLSearchParams(
+            Object.entries(transactionData).reduce((acc, [key, value]) => {
+              acc[key] = String(value ?? "");
+              return acc;
+            }, {} as Record<string, string>)
+          ).toString();
+
           return (
             <div style={{ textAlign: "center" }}>
               <Link
@@ -189,9 +185,9 @@ const TransactionGrid: React.FC<{
         cellRender: (cellInfo: any) => {
           return cellInfo?.data?.purchaseInvoiceDate
             ? formatDate(
-                new Date(cellInfo?.data?.purchaseInvoiceDate),
-                "dd-MMM-yyyy"
-              )
+              new Date(cellInfo?.data?.purchaseInvoiceDate),
+              "dd-MMM-yyyy"
+            )
             : "";
         },
       },
@@ -372,7 +368,7 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "right",
         visible: false,
-     cellRender: (cellInfo: any) =>
+        cellRender: (cellInfo: any) =>
           `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
       {
@@ -481,7 +477,7 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "right",
         visible: false,
-      cellRender: (cellInfo: any) =>
+        cellRender: (cellInfo: any) =>
           `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
       {
@@ -493,7 +489,7 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "right",
         visible: false,
-     cellRender: (cellInfo: any) =>
+        cellRender: (cellInfo: any) =>
           `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
       {
@@ -520,7 +516,7 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "right",
         visible: false,
-     cellRender: (cellInfo: any) =>
+        cellRender: (cellInfo: any) =>
           `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
       {
@@ -532,7 +528,7 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "right",
         visible: false,
-     cellRender: (cellInfo: any) =>
+        cellRender: (cellInfo: any) =>
           `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
       {
@@ -544,7 +540,7 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "right",
         visible: false,
-      cellRender: (cellInfo: any) =>
+        cellRender: (cellInfo: any) =>
           `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
       {
@@ -577,7 +573,7 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "right",
         visible: false,
-    cellRender: (cellInfo: any) =>
+        cellRender: (cellInfo: any) =>
           `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
 
@@ -586,6 +582,7 @@ const TransactionGrid: React.FC<{
         caption: t("Actions"),
         allowSearch: false,
         allowFiltering: false,
+        allowSorting: false,
         fixed: true,
         fixedPosition: "right",
         width: 100,
@@ -666,11 +663,11 @@ const TransactionGrid: React.FC<{
                   "Are you sure you want to delete this transaction?",
                 url: `${urls.inv_transaction_base}${transactionType}/`,
                 key: cellElement?.data?.invTransactionMasterID,
-                postData:{
-                invTransactionMasterID:
-                  cellElement?.data?.invTransactionMasterID,
-                transactionType: transactionType,
-              }
+                postData: {
+                  invTransactionMasterID:
+                    cellElement?.data?.invTransactionMasterID,
+                  transactionType: transactionType,
+                }
               }}
             />
           );
@@ -690,9 +687,8 @@ const TransactionGrid: React.FC<{
             <div className="grid grid-cols-1 gap-3">
               <ERPDevGrid
                 gridAddButtonType={"link"}
-                gridAddButtonLink={`${
-                  import.meta.env.BASE_URL
-                }inventory/transactions/${transactionType}`}
+                gridAddButtonLink={`${import.meta.env.BASE_URL
+                  }inventory/transactions/${transactionType}`}
                 columns={columns}
                 dataUrl={`${urls.inv_transaction_base}${transactionType}/List/`}
                 method={ActionType.GET}

@@ -102,6 +102,7 @@ interface DeleteButtonProps {
   id: string;
   isSelected: boolean;
   handleDelete: (id: string) => void;
+  depth?:number
 }
 
 interface PDFBarcodeDesignerProps {
@@ -133,14 +134,16 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
   id,
   isSelected,
   handleDelete,
+  depth=0
 }) =>
   isSelected ? (
     <button
-      className="absolute -top-2 -right-2 w-7 h-7 bg-white rounded-full 
+      className={`absolute -top-2 -right-2 w-7 h-7 bg-white rounded-full 
                  flex items-center justify-center 
                  hover:bg-[#ebb0ad] focus:outline-none focus:ring-2 focus:ring-[#e0655e] focus:ring-opacity-75
                  transition-colors duration-200 ease-in-out
-                 text-[#da514a] hover:text-[#ec5149]"
+                 text-[#da514a] hover:text-[#ec5149] `}
+      style={{ zIndex: 10 + depth }}           
       onClick={(e) => {
         e.stopPropagation();
         handleDelete(id);
@@ -466,9 +469,9 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
         if (componentType === DesignerElementType.container) {
           newComponent.containerProps = {
             backgroundColor: "#f0f0f0",
-            borderColor: "#999999",
+            borderColor: "#a5a4a4ff",
             borderWidth: 1,
-            borderStyle: "dashed",
+            borderStyle: "solid",
             padding: 10,
             autoResize: false,
             minHeight: 80,
@@ -1090,12 +1093,14 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
             }
           })}
 
-          <DeleteButton
-            id={container.id}
-            isSelected={isSelected}
-            handleDelete={handleDelete}
-          />
         </div>
+         {/* Delete button positioned outside the scrollable content */}
+        <DeleteButton
+          id={container.id}
+          isSelected={isSelected}
+          handleDelete={handleDelete}
+          depth={depth}
+        />
       </ResizableBox>
     );
   };
@@ -1239,7 +1244,6 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
                 width: "100%",
                 height: "100%",
                 border: isSelected ? "2px solid #2196f3" : "none",
-                padding: "4px",
                 boxSizing: "border-box",
                 fontSize: `${component.fontSize || 12}pt`,
                 fontFamily: component.font || "Roboto",
@@ -2945,15 +2949,15 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
                                  noLabel
                                  value={selectedComponent.fontWeight}
                                  data={selectedComponent}
-                                 onChange={(e) =>
-                                   handlePropertyChange(
-                                     "fontWeight",
-                                     e.target.valueAsNumber
-                                   )
-                                 }
-                                 min={300}
-                                 max={700}
-                                 step={100}
+                                //  onChange={(e) =>
+                                //    handlePropertyChange(
+                                //      "fontWeight",
+                                //      e.target.valueAsNumber
+                                //    )
+                                //  }
+                                //  min={300}
+                                //  max={700}
+                                //  step={100}
                                />
                              </Box>
                            </Box>

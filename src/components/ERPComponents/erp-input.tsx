@@ -213,32 +213,22 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     const [isFocused, setIsFocused] = useState(false);
     const handleMouseEnter = () => setIsHovered(true);
     const handleMouseLeave = () => setIsHovered(false);
+    const [initial, setInitial] = useState<Option | null>(initialValue);
+  
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const value = e.target.value;
       const ds = min != undefined ? parseFloat(min.toString()) : undefined;
+      const sd = parseFloat(e.target?.value);
 
       if (type === "number") {
-        // Handle backspace/delete to empty
-        if (value === "") {
-          onChangeData && data && onChangeData(setNestedValue(data, id, value));
-          onChange && onChange(e);
-          return;
-        }
-
-        // Accept valid numeric input including decimals
-        if (/^-?\d*\.?\d*$/.test(value)) {
-          const numValue = parseFloat(value) || 0;
-          // Check minimum value constraint only for complete numbers
-          if (ds !== undefined && ds >= 0 && !isNaN(numValue) && numValue < ds && value !== "-" && !value.endsWith('.')) {
-            return; // Ignore changes below minimum
-          }
+        const value = e.target.value;
+        // Allow empty string, decimal point, or valid numbers
+        if (value === "" || /^\d*\.?\d*$/.test(value)) {
+          if (ds !== undefined && ds >= 0 && sd < ds) return;
           onChangeData && data && onChangeData(setNestedValue(data, id, value));
           onChange && onChange(e);
         }
-        // Invalid input - do nothing to preserve previous value
-        return;
       } else {
-        onChangeData && data && onChangeData(setNestedValue(data, id, value));
+        onChangeData && data && onChangeData(setNestedValue(data, id, e.target?.value));
         onChange && onChange(e);
       }
     };
@@ -318,10 +308,9 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
         inputBoxState?.inputStyle !== "normal" &&
         (variant === undefined || variant === null)
       ) {
-        const style = inputBoxState?.inputStyle;
-        if (style === "filled" || style === "outlined" || style === "standard") {
-          set_variant(style);
-        }
+        set_variant(
+          inputBoxState?.inputStyle as "filled" | "outlined" | "standard"
+        );
       } else if (inputBoxState?.inputStyle === "normal") {
         set_variant(undefined);
       } else {
@@ -642,10 +631,9 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     };
 
     const numberInputProps = type === "number" ? {
-      type: "text", // Use text instead of number for better control
-      inputMode: "numeric" as const, // Shows numeric keyboard
-      pattern: "[0-9]*", // Only allow integers
-      // style: { textAlign: 'right' }, // Right align numbers
+      type: "number", // Use tel instead of number to have more control
+      inputMode: "decimal" as const, // Shows numeric keyboard with decimal support
+      pattern: "[0-9]*\\.?[0-9]*", // Allows numbers and decimal point
     } : {
       type: type === "text" || type === undefined ? "text" : type,
     };
@@ -783,10 +771,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
           "data-skip": skip,
           "data-jump-to": jumpTo,
           "data-jump-target": jumpTarget,
-          style: { 
-        appearance: "none",
-        textAlign: textAlignStyle || (type === "number" ? "right" : "left")
-      },
+          style: { appearance: "none" },
           ...(type === "number" && {
             inputMode: "decimal",
             pattern: "[0-9]*\\.?[0-9]*",
@@ -1016,7 +1001,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 accept={accept}
                 onKeyDown={(e) => {
                   const isEnter =
-                    e.key === "NumpadEnter" || e.key === "Enter";
+                    e.key === "NumpadEnter" || e.key === "Enter" || e.keyCode === 13 || e.which === 13;
 
                   if (disableEnterNavigation === true) {
                     if (isEnter && onEnterKeyDown) {

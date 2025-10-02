@@ -65,9 +65,8 @@ export const RenderPreviewComponent: React.FC<Props> = ({
               fontSize: `${component.fontSize || 12}pt`,
               fontStyle: component.fontStyle || "normal",
               textAlign: (component.textAlign as any) || "center",
-              
-              margin: 0,
-             
+              color:`rgb(${component.fontColor})`,
+              fontWeight:component.fontWeight,
                whiteSpace: "pre-wrap",
             }}
           >
@@ -103,6 +102,8 @@ export const RenderPreviewComponent: React.FC<Props> = ({
               fontStyle: component.fontStyle || "normal",
               textAlign: (component.textAlign as any) || "center",
               minHeight: `${component.height || 50}pt`,
+              color:`rgb(${component.fontColor})`,
+              fontWeight:component.fontWeight,
               width: `${component.width || 50}pt`,
               margin: 0,
        

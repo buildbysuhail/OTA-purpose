@@ -19,10 +19,10 @@ export const useNumberFormat = (): UseNumberFormatResult => {
   const clientSession = useAppSelector(
     (state: RootState) => state.ClientSession
   );
-  function getNumericFormat(): string {
-    const decimalPoint = applicationSettings.mainSettings?.decimalPoints;
+  function getNumericFormat(decimalPoint?: number): string {
+    const _decimalPoint = decimalPoint??applicationSettings.mainSettings?.decimalPoints;
   
-    switch (decimalPoint) {
+    switch (_decimalPoint) {
       case 0:
         return '#,#0';
       case 1:
@@ -40,6 +40,11 @@ export const useNumberFormat = (): UseNumberFormatResult => {
       default:
         return '#,#0.00';
     }
+  }
+  function formatNumberByDecimalPoint(value: number, decimalPoint?: number): string {
+    
+    const format = getNumericFormat(decimalPoint);    
+    return formatNumber(value,format);
   }
   function formatNumber(value: number, format: string): string {
     // Simple implementation - you might want to use a library like numeral.js for more complex formatting
@@ -370,7 +375,7 @@ export const useNumberFormat = (): UseNumberFormatResult => {
   return r;
 }
 
-  return { getNumericFormat, getFormattedValue, getTaxFormat, getFormattedValueToNumber, getAmountInWords, round, getFormattedValueIgnoreRoundingToNumber, getFormattedValueIgnoreRounding, posRoundAmount }
+  return { formatNumberByDecimalPoint,getNumericFormat, getFormattedValue, getTaxFormat, getFormattedValueToNumber, getAmountInWords, round, getFormattedValueIgnoreRoundingToNumber, getFormattedValueIgnoreRounding, posRoundAmount }
 };
 export interface UseNumberFormatResult {
   getNumericFormat: () => string;
@@ -388,6 +393,7 @@ export interface UseNumberFormatResult {
     cuttingPoint?: number,
     numberOfZero?: number
   ) => number;
+  formatNumberByDecimalPoint(value: number, decimalPoint: number): string ;
   getAmountInWords: (amount: number) => string;
   round: (value: number, decimalPoints?: number,taxFormatted?: boolean) => number;
   getFormattedValueIgnoreRoundingToNumber: (val: number) => number;

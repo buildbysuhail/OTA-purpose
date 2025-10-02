@@ -38,7 +38,7 @@ export interface UseFormManagerOptions {
   loadInitialData?: boolean;
   useApiClient?: boolean;
   initialData?: any;
-  isMessages?:boolean
+  isMessages?: boolean
 }
 
 export function useFormManager<T>({
@@ -53,11 +53,11 @@ export function useFormManager<T>({
   loadInitialData = true,
   useApiClient = false,
   initialData,
-  isMessages=false,
+  isMessages = false,
 }: UseFormManagerOptions) {
   const location = useLocation();
   const appDispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('main');
   const apiClient = new APIClient();
 
   const queryParams = new URLSearchParams(location.search);
@@ -218,8 +218,8 @@ export function useFormManager<T>({
       try {
         let response;
         let rawData = (useApiClient ? localFormState : reduxFormState)?.data
-        
-         const sanitizedData = sanitizeData(rawData, initialData?.data);
+
+        const sanitizedData = sanitizeData(rawData, initialData?.data);
         if (isEdit) {
           response = await apiClient.put(
             `${url}`,
@@ -250,11 +250,11 @@ export function useFormManager<T>({
             }));
             if (isMessages && response.messages && response.messages.length > 0) {
               ERPAlert.show({
-                title: t("Validation Error"),
+                title: t("validation_error"),
                 icon: "warning",
                 text: response.messages.join("\n"),
-                confirmButtonText: t("Ok"),
-                showCancelButton:false
+                confirmButtonText: t("ok"),
+                showCancelButton: false
               });
             }
             onError?.(response);
@@ -288,10 +288,10 @@ export function useFormManager<T>({
             });
             if (isMessages && response.messages && response.messages.length > 0) {
               ERPAlert.show({
-                title: t("Validation Error"),
+                title: t("validation_error"),
                 icon: "warning",
                 text: response.messages.join("\n"),
-                confirmButtonText: t("Ok"),
+                confirmButtonText: t("ok"),
               });
             }
             onError?.(response);
@@ -423,7 +423,7 @@ export function useFormManager<T>({
     if (useApiClient) {
       const sds =
         isEdit ||
-        (method != undefined && method == ActionType.POST && loadDataRequired)
+          (method != undefined && method == ActionType.POST && loadDataRequired)
           ? { ...initialData?.data, [keyField]: key }
           : { ...initialData.data };
       setLocalFormState((prevState: any) => ({

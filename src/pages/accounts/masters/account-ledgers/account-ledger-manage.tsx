@@ -113,8 +113,8 @@ export const AccountLedgerManage = () => {
             id: "accGroupID",
             required: true,
             getListUrl: Urls.data_acc_groups,
-            valueKey: "id",
-            labelKey: "name",
+            valueKey: "accGroupID",
+            labelKey: "accGroupName",
           }}
           onChangeData={(data: any) => { handleFieldChange("accGroupID", data.accGroupID); }}
           disabled={

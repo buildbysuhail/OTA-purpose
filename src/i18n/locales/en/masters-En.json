@@ -247,5 +247,6 @@
   "website": "Website",
   "show": "Show",
   "show_in_suppliers": "Show in suppliers",
-  "show_in_customers": "Show in customers"
+  "show_in_customers": "Show in customers",
+  "project_job": "Project/Job"
 }

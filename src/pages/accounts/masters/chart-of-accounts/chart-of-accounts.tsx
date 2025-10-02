@@ -25,6 +25,7 @@ const OptionsColumn = ({ data }: { data: any }) => {
   const { t } = useTranslation('masters');
   const toggleMenu = () => { setMenuVisible((prev) => !prev); };
   const closeMenu = () => setMenuVisible(false);
+
   const handleOutsideClick = (e: MouseEvent) => {
     if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
       closeMenu();
@@ -201,10 +202,12 @@ const ChartOfAccounts: React.FC = React.memo(() => {
                     keyExpr="keyField"
                     parentIdExpr="parentID"
                     height={720}
-                    scrolling={{ mode: "virtual", useNative: true }}
+                    scrolling={{ mode: "virtual", showScrollbar: "always", useNative: false }}
                     style={{ minWidth: "1200px", width: "100%" }}
                   >
-                    <Selection mode="single" />
+                    <Selection
+                      mode="single"
+                    />
 
                     <Column
                       dataField="accountGroup"

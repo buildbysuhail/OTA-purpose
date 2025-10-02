@@ -407,16 +407,21 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   handleFieldKeyDown={handleFieldKeyDown}
                 />
 
-                <div className={`${isRtl ? "mr-0 ml-3" : "mr-3 ml-0"}`}>
-                  <DebitAccount
-                    dispatch={dispatch}
-                    transactionType={transactionType}
-                    formState={formState}
-                    t={t}
-                    handleKeyDown={handleKeyDown}
-                    handleFieldKeyDown={handleFieldKeyDown}
-                  />
-                </div>
+                {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote &&
+                  formState.transaction.master.voucherType !== VoucherType.PurchaseEstimate &&
+                  formState.transaction.master.voucherType !== VoucherType.PurchaseQuotation &&
+                  formState.transaction.master.voucherType !== VoucherType.PurchaseOrder && (
+                    <div className={`${isRtl ? "mr-0 ml-3" : "mr-3 ml-0"}`}>
+                      <DebitAccount
+                        dispatch={dispatch}
+                        transactionType={transactionType}
+                        formState={formState}
+                        t={t}
+                        handleKeyDown={handleKeyDown}
+                        handleFieldKeyDown={handleFieldKeyDown}
+                      />
+                    </div>
+                  )}
 
                 {formState.transaction.master.voucherType !==
                   VoucherType.GoodsReceiptNote && (

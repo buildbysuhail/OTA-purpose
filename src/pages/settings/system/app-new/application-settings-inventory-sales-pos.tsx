@@ -243,7 +243,7 @@ const InventorySalesPOSFilterableComponents: React.FC<ApplicationSettingsProps> 
                     ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
                     : `${gridClass ||
                     "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
-                    } gap-4 items-center justify-center`
+                    } gap-4 items-end justify-center`
                     }`}
                 >
                   {items?.map(

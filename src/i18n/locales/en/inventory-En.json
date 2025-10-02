@@ -517,5 +517,8 @@
   "yes_delete": "Yes,Delete",
   "brand_id": "Brand ID",
   "p_price": "P Price",
-  "s_price": "S Price"
+  "s_price": "S Price",
+  "item_search": "Item Search",
+  "show_stock_details": "Show Stock Details",
+  "all_warehouse_products": "All Warehouse Products"
 }

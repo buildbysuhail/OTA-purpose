@@ -1242,7 +1242,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
           searchType === "modal" && (
             <ERPModal
               isOpen={formState.formElements.productSearchPopupWindow.visible}
-              title={t("privilege_card")}
+              title={t("item_search")}
               width={1000}
               height={900}
               isForm={true}

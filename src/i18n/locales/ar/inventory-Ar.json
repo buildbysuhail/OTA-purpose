@@ -517,5 +517,8 @@
   "yes_delete": "نعم، احذف",
   "brand_id": "معرّف العلامة التجارية",
   "p_price": "سعر الشراء",
-  "s_price": "سعر البيع"
+  "s_price": "سعر البيع",
+  "item_search": "البحث عن صنف",
+  "show_stock_details": "عرض تفاصيل المخزون",
+  "all_warehouse_products": "جميع منتجات المستودع"
 }

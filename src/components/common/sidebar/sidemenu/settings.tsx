@@ -73,7 +73,6 @@ export const SettingsMenuItems = [
       { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/group-category`, type: 'link', active: false, selected: false, title: 'group_category' },
       { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/general_master`, type: 'link', active: false, selected: false, title: 'general_master' },
       // { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/listed-product-prices`, type: 'link', active: false, selected: false, title: 'listed_product_prices' },
-      { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/test-page`, type: 'link', active: false, selected: false, title: 'test_page' },
     ]
   },
   {

@@ -309,16 +309,7 @@ const [reload, setReload] = useState<boolean>(true);
             label={t("print_line_between_rows")}
             id={""}
           />
-           <ERPDateInput
-            label={t("from_date")}
-            {...getFieldProps("fromDate")}
-            className="w-full"
-            onChangeData={(data: any) =>
-              handleFieldChange("fromDate", data.fromDate)
-            }
-          />
-          <ERPDateInput
-          
+          <ERPDateInput    
             value={filterState.dateFrom}
             label={t("date_from")}
             onChangeData={(data) =>

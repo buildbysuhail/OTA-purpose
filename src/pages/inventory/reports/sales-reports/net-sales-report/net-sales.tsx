@@ -51,7 +51,7 @@ const NetSalesReport: FC<NetSalesProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         allowSorting: true,
-        width: 75,
+        width: 110,
         showInPdf: true,
       },
       {
@@ -81,7 +81,7 @@ const NetSalesReport: FC<NetSalesProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         allowSorting: true,
-        width: 80,
+        width: 150,
         showInPdf: true,
         cellRender: (
           cellElement: any,
@@ -114,7 +114,7 @@ const NetSalesReport: FC<NetSalesProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         allowSorting: true,
-        width: 80,
+        width: 150,
         showInPdf: true,
         cellRender: (
           cellElement: any,
@@ -147,7 +147,7 @@ const NetSalesReport: FC<NetSalesProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         allowSorting: true,
-        width: 80,
+        width: 150,
         showInPdf: true,
         cellRender: (
           cellElement: any,
@@ -180,7 +180,7 @@ const NetSalesReport: FC<NetSalesProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         allowSorting: true,
-        width: 80,
+        width: 110,
         showInPdf: true,
         cellRender: (
           cellElement: any,
@@ -213,7 +213,7 @@ const NetSalesReport: FC<NetSalesProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowSearch: true,
         allowFiltering: true,
         allowSorting: true,
-        width: 100,
+        width: 110,
         showInPdf: true,
         cellRender: (
           cellElement: any,
@@ -305,15 +305,15 @@ const NetSalesReport: FC<NetSalesProps> = ({ gridHeader, dataUrl, gridId }) => {
           }
         },
       },
-      {
-        dataField: "createdDate",
-        caption: t("created_date"),
-        dataType: "date",
-        allowSearch: true,
-        allowFiltering: true,
-        allowSorting: true,
-        width: 100,
-      },
+      // {
+      //   dataField: "createdDate",
+      //   caption: t("created_date"),
+      //   dataType: "date",
+      //   allowSearch: true,
+      //   allowFiltering: true,
+      //   allowSorting: true,
+      //   width: 100,
+      // },
       {
         dataField: "grossValue",
         caption: t("gross_value"),
@@ -479,6 +479,30 @@ const NetSalesReport: FC<NetSalesProps> = ({ gridHeader, dataUrl, gridId }) => {
       },
       {
         column: "saleReturnAmt",
+        summaryType: "sum",
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
+      {
+        column: "balance",
+        summaryType: "sum",
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
+      {
+        column: "couponAmt",
+        summaryType: "sum",
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
+      {
+        column: "grossValue",
+        summaryType: "sum",
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
+      {
+        column: "vatAmount",
         summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,

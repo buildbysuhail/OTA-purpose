@@ -1,12 +1,10 @@
-import moment from "moment";
 import { Dispatch } from "react";
 import { AnyAction, DeepPartial } from "redux";
-import { inputBox } from "../../../../redux/slices/app/types";
-import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
+import { inputBox } from "../../../redux/slices/app/types";
+import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
 import { initialFormElements } from "./transaction-type-data";
-import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import { SummaryConfig } from "../../../../components/ERPComponents/erp-purchase-grid/dataGrid";
-import { PrintResponse } from "../../../use-print-type";
+import { SummaryConfig } from "../../../components/ERPComponents/erp-purchase-grid/dataGrid";
+import { PrintResponse } from "../../use-print-type";
 
 // primitives we don't recurse into
 type Primitive = string | number | boolean | bigint | symbol | null | undefined | Date;

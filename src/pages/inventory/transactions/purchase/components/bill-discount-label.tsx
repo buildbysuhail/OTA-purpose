@@ -1,8 +1,8 @@
 import React, { Dispatch } from "react";
-import { TransactionFormState } from "../../purchase/transaction-types";
 import { AnyAction } from "redux";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import { useAppState } from "../../../../../utilities/hooks/useAppState";
+import { TransactionFormState } from "../../transaction-types";
 
 export interface GrandTotalProps {
   formState: TransactionFormState;

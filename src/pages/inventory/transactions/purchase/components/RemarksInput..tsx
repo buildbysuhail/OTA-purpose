@@ -1,8 +1,8 @@
 import React from "react";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
-import { VoucherElementProps } from "../../purchase/transaction-types";
-import { formStateMasterHandleFieldChange } from "../reducer";
 import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
+import { formStateMasterHandleFieldChange } from "../../reducer";
+import { VoucherElementProps } from "../../transaction-types";
 
 interface RemarksInputProps extends VoucherElementProps {
   handleKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>, field: string) => void;

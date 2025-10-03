@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { ChevronDown, Search, X } from "lucide-react";
+import { ChevronDown, Search } from "lucide-react";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
@@ -19,13 +19,11 @@ import Project from "./components/cb-project";
 import InvoiceValue from "./components/invoice-value";
 import VoucherLoader from "./components/grn-Number";
 import Urls from "../../../../redux/urls";
-import { formStateHandleFieldChange, formStateMasterHandleFieldChange, } from "./reducer";
 import MoreOptionsModalContent from "./transaction-more";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import { useAppState } from "../../../../utilities/hooks/useAppState";
 import WarehouseID from "./components/warehouse-id ";
-import { TransactionDetail, TransactionFormState } from "./transaction-types";
 import AdjustmentAmountInput from "./components/AdjustmentAmountInput";
 import CostCentreCombobox from "./components/CostCentreCombobox";
 import PriceCategoryCombobox from "./components/PriceCategoryCombobox";
@@ -37,6 +35,8 @@ import axios from "axios";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import OrderNo from "./components/order-number";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
+import { formStateHandleFieldChange, formStateMasterHandleFieldChange } from "../reducer";
+import { TransactionFormState, TransactionDetail } from "../transaction-types";
 
 interface TransactionHeaderProps {
   formState: TransactionFormState;

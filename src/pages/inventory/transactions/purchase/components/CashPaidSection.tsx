@@ -1,10 +1,10 @@
 import React from "react";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
-import { VoucherElementProps } from "../../purchase/transaction-types";
-import { formStateMasterHandleFieldChange } from "../reducer";
 import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
 import { useAppState } from "../../../../../utilities/hooks/useAppState";
+import { formStateMasterHandleFieldChange } from "../../reducer";
+import { VoucherElementProps } from "../../transaction-types";
 
 interface CashPaidSectionProps extends VoucherElementProps {
   focusDiscount: () => void;

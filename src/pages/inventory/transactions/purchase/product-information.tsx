@@ -3,10 +3,8 @@ import ERPResizableSidebar from "../../../../components/ERPComponents/erp-resiza
 import ERPTab from "../../../../components/ERPComponents/erp-tab";
 import { useTranslation } from "react-i18next";
 import { X, Menu, ImageIcon } from "lucide-react";
-import { ProductDisplayDto, TransactionFormState } from "./transaction-types";
 import { APIClient } from "../../../../helpers/api-client";
 import Urls from "../../../../redux/urls";
-import { initialProductDisplayData } from "./transaction-type-data";
 import { ActionType } from "../../../../redux/types";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ERPDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
@@ -14,6 +12,8 @@ import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import { styled } from "@mui/system";
+import { ProductDisplayDto, TransactionFormState } from "../transaction-types";
+import { initialProductDisplayData } from "../transaction-type-data";
 
 interface ProductInformationSidebarProps {
   setIsOpen?: Dispatch<SetStateAction<boolean>>;

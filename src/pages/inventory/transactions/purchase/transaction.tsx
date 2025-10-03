@@ -1,58 +1,21 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import {
-  ColumnModel,
-  EmployeeType,
-  GridQtyFactors,
-  SummaryItems,
-  TransactionDetail,
-  TransactionProps,
-  UserConfig,
-} from "./transaction-types";
-import { TransactionData, TransactionFormState } from "./transaction-types";
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "../../../../utilities/hooks/useAppDispatch";
+import React, {  useCallback,  useEffect,  useMemo,  useRef,  useState,} from "react";
+import {  useAppDispatch,  useAppSelector,} from "../../../../utilities/hooks/useAppDispatch";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../../../redux/store";
-import {
-  formStateHandleFieldChange,
-  formStateHandleFieldChangeKeysOnly,
-  formStateMasterHandleFieldChange,
-  formStateSetDetails,
-  resetState,
-  themeChangeCountdownTick,
-  updateFormElement,
-} from "./reducer";
 import { useDispatch, useSelector } from "react-redux";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import { APIClient } from "../../../../helpers/api-client";
-import {
-  ApplicationMainSettings,
-  ApplicationMainSettingsInitialState,
-} from "../../../settings/system/application-settings-types/application-settings-types-main";
+import {  ApplicationMainSettings,  ApplicationMainSettingsInitialState,} from "../../../settings/system/application-settings-types/application-settings-types-main";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTransaction } from "./use-transaction";
-import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import CustomerDetailsSidebar from "../../../transaction-base/customer-details";
-import {
-  generateUniqueKey,
-  isNullOrUndefinedOrZero,
-  remToPx,
-} from "../../../../utilities/Utils";
+import {  generateUniqueKey,  remToPx,} from "../../../../utilities/Utils";
 import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
 import ERPResizableSidebar from "../../../../components/ERPComponents/erp-resizable-sidebar";
 import TemplatesView from "./templates";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { useUserRights } from "../../../../helpers/user-right-helper";
-import { Info, X } from "lucide-react";
-import { PDFViewer } from "@react-pdf/renderer";
+import { X } from "lucide-react";
 import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
 import moment from "moment";
 import ERPAttachment from "../../../../components/ERPComponents/erp-attachment";
@@ -63,16 +26,7 @@ import Urls from "../../../../redux/urls";
 import BottomSidebar from "../../../../components/ERPComponents/bottom-sidebar";
 import ProductSummaryMaster from "../../reports/other-inventory-reports/product-summary/product-summary-master";
 import PartySummaryMaster from "../../../accounts/reports/partywise-summary/party-summary-master";
-import {
-  transactionInitialData,
-  TransactionFormStateInitialData,
-  initialFormElements,
-  initialInventoryTotals,
-  initialUserConfig,
-} from "./transaction-type-data";
-import ErpPurchaseGrid, {
-  SummaryConfig,
-} from "../../../../components/ERPComponents/erp-purchase-grid/dataGrid";
+import ErpPurchaseGrid from "../../../../components/ERPComponents/erp-purchase-grid/dataGrid";
 import TransactionFooter from "./transaction-footer";
 import TransactionHeader from "./transaction-header";
 import { LedgerType } from "../../../../enums/ledger-types";
@@ -90,10 +44,7 @@ import ProductBatchUnitDetails from "./product-batch-unit-details";
 import DocumentProperties from "./document-properties";
 import ProductInformation from "./product-information";
 import DownloadBarcodePreview from "../../../LabelDesigner/download-preview-barcode";
-import { barCodeField } from "../../../LabelDesigner/fields";
-import { customJsonParse, modelToBase64, safeBase64Decode } from "../../../../utilities/jsonConverter";
-import { Countries } from "../../../../redux/slices/user-session/reducer";
-import BlurLoader from "../../../../components/ERPComponents/erp-loader";
+import { customJsonParse, safeBase64Decode } from "../../../../utilities/jsonConverter";
 import { getInitialPreference } from "../../../../utilities/dx-grid-preference-updater";
 import GridTheme from "./grid-theme";
 import { purchaseGridCol } from "./transaction-grid-cols";
@@ -101,9 +52,12 @@ import SavingOverlay from "../transaction-saving";
 import { BusinessType } from "../../../../enums/business-types";
 import MemoEditorModal from "./memo-editor";
 import { getStorageString } from "../../../../utilities/storage-utils";
-import { getApLocalData, getApLocalDataByUrl } from "../../../../redux/cached-urls";
+import { getApLocalDataByUrl } from "../../../../redux/cached-urls";
 import BillWisePopup from "../../../transaction-base/billwise-popup";
 import DeletingOverlay from "../transaction-deleting";
+import { formStateHandleFieldChangeKeysOnly, resetState, formStateHandleFieldChange, updateFormElement } from "../reducer";
+import { TransactionProps, UserConfig, TransactionDetail, TransactionFormState, TransactionData, SummaryItems, GridQtyFactors, ColumnModel } from "../transaction-types";
+import { initialUserConfig, transactionInitialData, TransactionFormStateInitialData, initialFormElements, initialInventoryTotals } from "../transaction-type-data";
 interface BilledItem {
   id?: number;
   name: string;

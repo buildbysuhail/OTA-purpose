@@ -2,7 +2,6 @@ import React, { useState, memo } from "react";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
-import { useTranslation } from "react-i18next";
 
 interface DocumentPropertiesProps {
   closeModal: () => void;

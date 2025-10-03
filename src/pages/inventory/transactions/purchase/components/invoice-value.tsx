@@ -1,8 +1,8 @@
 import React from "react";
-import { VoucherElementProps } from "../transaction-types";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
-import { formStateMasterHandleFieldChange } from "../reducer";
 import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
+import { formStateMasterHandleFieldChange } from "../../reducer";
+import { VoucherElementProps } from "../../transaction-types";
 
 interface InvoiceValueProps extends VoucherElementProps { }
 

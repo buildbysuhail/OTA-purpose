@@ -1,6 +1,5 @@
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
-import { VoucherElementProps } from "../../purchase/transaction-types";
 import React, { useCallback, useEffect, useState } from "react";
 import Urls from "../../../../../redux/urls";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
@@ -8,11 +7,12 @@ import { RootState } from "../../../../../redux/store";
 import { useSelector } from "react-redux";
 import { Ellipsis } from "lucide-react";
 import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
-import { formStateMasterHandleFieldChange } from "../reducer";
 import VoucherType, {
   purchaseVoucherTypes,
 } from "../../../../../enums/voucher-types";
 import { LoadAndSetTransVoucherFn } from "../use-transaction";
+import { VoucherElementProps } from "../../transaction-types";
+import { formStateMasterHandleFieldChange } from "../../reducer";
 
 interface LoadByOrderNoProps extends VoucherElementProps {
   loadAndSetTransVoucher: LoadAndSetTransVoucherFn;

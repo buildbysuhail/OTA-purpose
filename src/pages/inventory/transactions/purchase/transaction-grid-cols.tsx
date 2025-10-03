@@ -1,10 +1,7 @@
 import VoucherType from "../../../../enums/voucher-types";
-import {
-  Countries,
-  UserModel,
-} from "../../../../redux/slices/user-session/reducer";
+import { Countries, UserModel, } from "../../../../redux/slices/user-session/reducer";
 import { ApplicationSettingsType } from "../../../settings/system/application-settings-types/application-settings-types";
-import { ColumnModel, TransactionFormState } from "./transaction-types";
+import { ColumnModel, TransactionFormState } from "../transaction-types";
 // voucherType ?? formState.transaction.master.voucherType
 // formType ?? formState.transaction.master.voucherForm
 export const purchaseGridCol = (
@@ -977,202 +974,202 @@ export const purchaseGridCol = (
       },
     ] as ColumnModel[]
   )
-   .filter((gc: ColumnModel) => {
-  const field = gc.dataField ?? "";
+    .filter((gc: ColumnModel) => {
+      const field = gc.dataField ?? "";
 
-  // ---------------- PURCHASE INVOICE ----------------
-  if (
-    userSession.countryId != Countries.India &&
-    voucherType == VoucherType.PurchaseInvoice
-  ) {
-    return ![
-      "mrp", "hsnCode", "cgst", "cgstPerc", "sgstPerc", "sgst",
-      "igstPerc", "igst", "cessPerc", "cessAmt", "additionalCessPerc",
-      "additionalCess", "mR", "netRate", "itemType", "refBranchID",
-      "employeeCode", "employeeName", "stdPurchasePrice", "refTransDtailId",
-    ].includes(field);
-  } else if (
-    userSession.countryId == Countries.India &&
-    voucherType == VoucherType.PurchaseInvoice
-  ) {
-    return ![
-      "itemType", "employeeCode", "employeeName",
-      "stdPurchasePrice", "refTransDtailId",
-    ].includes(field);
-  }
+      // ---------------- PURCHASE INVOICE ----------------
+      if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.PurchaseInvoice
+      ) {
+        return ![
+          "mrp", "hsnCode", "cgst", "cgstPerc", "sgstPerc", "sgst",
+          "igstPerc", "igst", "cessPerc", "cessAmt", "additionalCessPerc",
+          "additionalCess", "mR", "netRate", "itemType", "refBranchID",
+          "employeeCode", "employeeName", "stdPurchasePrice", "refTransDtailId",
+        ].includes(field);
+      } else if (
+        userSession.countryId == Countries.India &&
+        voucherType == VoucherType.PurchaseInvoice
+      ) {
+        return ![
+          "itemType", "employeeCode", "employeeName",
+          "stdPurchasePrice", "refTransDtailId",
+        ].includes(field);
+      }
 
-  // ---------------- PURCHASE RETURN ----------------
-  else if (
-    userSession.countryId != Countries.India &&
-    voucherType == VoucherType.PurchaseReturn
-  ) {
-    return ![
-      "mrp", "hsnCode", "cgst", "cgstPerc", "sgstPerc", "sgst",
-      "igstPerc", "igst", "cessPerc", "cessAmt", "additionalCessPerc",
-      "additionalCess", "mR", "netRate", "refBranchID", "employeeCode",
-      "employeeName", "stdPurchasePrice", "refTransDtailId",
-      "free", "manualBarcode", "stockDetails", "lastPurchaseRate",
-      "lastPurchaseCost", "btnPrintBarcode", "expDate", "expDays",
-      "minSalePrice", "additionalExpense", "totalAddExpense", "grossConvert",
-      "unitID2", "unit2Qty", "unit2SalesRate", "unit2MRP", "unit2MBarcode",
-      "unit2StickerQty", "unitID3", "unit3Qty", "unit3SalesRate",
-      "unit3MRP", "unit3MBarcode", "unit3StickerQty", "tagQty",
-      "barcodeTagPrinted", "barcodeUnit2Printed", "barcodeUnit3Printed",
-      "location", "grTransDetailsID", "poTransDetailsID", "ratePlusTax",
-      "sortOrder", "profitPercentage", "schemeDiscount", "memo", "memoEditor",
-      "rowNumber", "actualSalesPrice", "unit2", "unit3", "mfdDate", "warranty",
-    ].includes(field);
-  } else if (
-    userSession.countryId == Countries.India &&
-    voucherType == VoucherType.PurchaseReturn
-  ) {
-    return ![
-      "refBranchID", "employeeCode", "employeeName",
-      "stdPurchasePrice", "refTransDtailId",
-      "mR", "netRate", "manualBarcode", "stockDetails", "lastPurchaseRate",
-      "lastPurchaseCost", "btnPrintBarcode", "expDate", "expDays",
-      "minSalePrice", "additionalExpense", "totalAddExpense", "grossConvert",
-      "unitID2", "unit2Qty", "unit2SalesRate", "unit2MRP", "unit2MBarcode",
-      "unit2StickerQty", "unitID3", "unit3Qty", "unit3SalesRate",
-      "unit3MRP", "unit3MBarcode", "unit3StickerQty", "tagQty",
-      "barcodeTagPrinted", "barcodeUnit2Printed", "barcodeUnit3Printed",
-      "location", "grTransDetailsID", "poTransDetailsID", "ratePlusTax",
-      "sortOrder", "profitPercentage", "schemeDiscount", "memo", "memoEditor",
-      "rowNumber", "actualSalesPrice", "unit2", "unit3", "serial",
-      "unitPriceFC", "grossFC", "mfdDate", "warranty",
-    ].includes(field);
-  }
+      // ---------------- PURCHASE RETURN ----------------
+      else if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.PurchaseReturn
+      ) {
+        return ![
+          "mrp", "hsnCode", "cgst", "cgstPerc", "sgstPerc", "sgst",
+          "igstPerc", "igst", "cessPerc", "cessAmt", "additionalCessPerc",
+          "additionalCess", "mR", "netRate", "refBranchID", "employeeCode",
+          "employeeName", "stdPurchasePrice", "refTransDtailId",
+          "free", "manualBarcode", "stockDetails", "lastPurchaseRate",
+          "lastPurchaseCost", "btnPrintBarcode", "expDate", "expDays",
+          "minSalePrice", "additionalExpense", "totalAddExpense", "grossConvert",
+          "unitID2", "unit2Qty", "unit2SalesRate", "unit2MRP", "unit2MBarcode",
+          "unit2StickerQty", "unitID3", "unit3Qty", "unit3SalesRate",
+          "unit3MRP", "unit3MBarcode", "unit3StickerQty", "tagQty",
+          "barcodeTagPrinted", "barcodeUnit2Printed", "barcodeUnit3Printed",
+          "location", "grTransDetailsID", "poTransDetailsID", "ratePlusTax",
+          "sortOrder", "profitPercentage", "schemeDiscount", "memo", "memoEditor",
+          "rowNumber", "actualSalesPrice", "unit2", "unit3", "mfdDate", "warranty",
+        ].includes(field);
+      } else if (
+        userSession.countryId == Countries.India &&
+        voucherType == VoucherType.PurchaseReturn
+      ) {
+        return ![
+          "refBranchID", "employeeCode", "employeeName",
+          "stdPurchasePrice", "refTransDtailId",
+          "mR", "netRate", "manualBarcode", "stockDetails", "lastPurchaseRate",
+          "lastPurchaseCost", "btnPrintBarcode", "expDate", "expDays",
+          "minSalePrice", "additionalExpense", "totalAddExpense", "grossConvert",
+          "unitID2", "unit2Qty", "unit2SalesRate", "unit2MRP", "unit2MBarcode",
+          "unit2StickerQty", "unitID3", "unit3Qty", "unit3SalesRate",
+          "unit3MRP", "unit3MBarcode", "unit3StickerQty", "tagQty",
+          "barcodeTagPrinted", "barcodeUnit2Printed", "barcodeUnit3Printed",
+          "location", "grTransDetailsID", "poTransDetailsID", "ratePlusTax",
+          "sortOrder", "profitPercentage", "schemeDiscount", "memo", "memoEditor",
+          "rowNumber", "actualSalesPrice", "unit2", "unit3", "serial",
+          "unitPriceFC", "grossFC", "mfdDate", "warranty",
+        ].includes(field);
+      }
 
-  // ---------------- PURCHASE ESTIMATE ----------------
-  else if (
-    userSession.countryId != Countries.India &&
-    voucherType == VoucherType.PurchaseEstimate
-  ) {
-    return ![
-      "mrp", "hsnCode", "cgst", "cgstPerc", "sgstPerc", "sgst",
-      "igstPerc", "igst", "cessPerc", "cessAmt", "additionalCessPerc",
-      "additionalCess", "mR", "netRate", "itemType", "refBranchID",
-      "employeeCode", "employeeName", "stdPurchasePrice", "refTransDtailId",
-      "free", "stock", "stockDetails", "lastPurchaseRate", "lastPurchaseCost",
-      "productDescription", "serial", "minSalePrice", "additionalExpense",
-      "unitPriceFC", "colour", "warranty", "nosQty", "totalAddExpense",
-      "grossConvert", "grossFC", "unitID2", "unit2Qty", "unit2SalesRate",
-      "unit2MRP", "unit2MBarcode", "unit2StickerQty", "unitID3", "unit3Qty",
-      "unit3SalesRate", "unit3MRP", "unit3MBarcode", "unit3StickerQty",
-      "tagQty", "barcodeTagPrinted", "barcodeUnit2Printed",
-      "barcodeUnit3Printed", "location", "grTransDetailsID", "arabicName",
-      "supplierReferenceProductCode", "poTransDetailsID", "ratePlusTax",
-      "warehouseID", "sortOrder", "profitPercentage", "schemeDiscount",
-      "memo", "memoEditor", "actualSalesPrice", "unit2", "unit3",
-    ].includes(field);
-  } else if (
-    userSession.countryId == Countries.India &&
-    voucherType == VoucherType.PurchaseEstimate
-  ) {
-    return ![
-      "hsnCode", "itemType", "refBranchID", "employeeCode", "employeeName",
-      "stdPurchasePrice", "refTransDtailId", "stock", "stockDetails",
-      "lastPurchaseRate", "lastPurchaseCost", "serial", "additionalExpense",
-      "unitPriceFC", "colour", "warranty", "nosQty", "totalAddExpense",
-      "grossConvert", "grossFC", "tagQty", "barcodeTagPrinted",
-      "barcodeUnit2Printed", "barcodeUnit3Printed", "location",
-      "grTransDetailsID", "arabicName", "supplierReferenceProductCode",
-      "poTransDetailsID", "ratePlusTax", "warehouseID", "sortOrder",
-      "profitPercentage", "schemeDiscount", "memo", "memoEditor",
-      "actualSalesPrice",
-    ].includes(field);
-  }
+      // ---------------- PURCHASE ESTIMATE ----------------
+      else if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.PurchaseEstimate
+      ) {
+        return ![
+          "mrp", "hsnCode", "cgst", "cgstPerc", "sgstPerc", "sgst",
+          "igstPerc", "igst", "cessPerc", "cessAmt", "additionalCessPerc",
+          "additionalCess", "mR", "netRate", "itemType", "refBranchID",
+          "employeeCode", "employeeName", "stdPurchasePrice", "refTransDtailId",
+          "free", "stock", "stockDetails", "lastPurchaseRate", "lastPurchaseCost",
+          "productDescription", "serial", "minSalePrice", "additionalExpense",
+          "unitPriceFC", "colour", "warranty", "nosQty", "totalAddExpense",
+          "grossConvert", "grossFC", "unitID2", "unit2Qty", "unit2SalesRate",
+          "unit2MRP", "unit2MBarcode", "unit2StickerQty", "unitID3", "unit3Qty",
+          "unit3SalesRate", "unit3MRP", "unit3MBarcode", "unit3StickerQty",
+          "tagQty", "barcodeTagPrinted", "barcodeUnit2Printed",
+          "barcodeUnit3Printed", "location", "grTransDetailsID", "arabicName",
+          "supplierReferenceProductCode", "poTransDetailsID", "ratePlusTax",
+          "warehouseID", "sortOrder", "profitPercentage", "schemeDiscount",
+          "memo", "memoEditor", "actualSalesPrice", "unit2", "unit3",
+        ].includes(field);
+      } else if (
+        userSession.countryId == Countries.India &&
+        voucherType == VoucherType.PurchaseEstimate
+      ) {
+        return ![
+          "hsnCode", "itemType", "refBranchID", "employeeCode", "employeeName",
+          "stdPurchasePrice", "refTransDtailId", "stock", "stockDetails",
+          "lastPurchaseRate", "lastPurchaseCost", "serial", "additionalExpense",
+          "unitPriceFC", "colour", "warranty", "nosQty", "totalAddExpense",
+          "grossConvert", "grossFC", "tagQty", "barcodeTagPrinted",
+          "barcodeUnit2Printed", "barcodeUnit3Printed", "location",
+          "grTransDetailsID", "arabicName", "supplierReferenceProductCode",
+          "poTransDetailsID", "ratePlusTax", "warehouseID", "sortOrder",
+          "profitPercentage", "schemeDiscount", "memo", "memoEditor",
+          "actualSalesPrice",
+        ].includes(field);
+      }
 
-  // ---------------- PURCHASE ORDER & QUOTATION ----------------
-  else if (
-    userSession.countryId != Countries.India &&
-    (voucherType == VoucherType.PurchaseOrder ||
-      voucherType == VoucherType.PurchaseQuotation)
-  ) {
-    return ![
-      "mrp", "hsnCode", "cgst", "cgstPerc", "sgstPerc", "sgst",
-      "igstPerc", "igst", "cessPerc", "cessAmt", "additionalCessPerc",
-      "additionalCess", "mR", "netRate", "itemType", "employeeCode",
-      "employeeName", "stdPurchasePrice", "refTransDtailId", "lastPurchaseRate",
-      "lastPurchaseCost", "bd", "btnPrintBarcode", "mfdDate", "expDate",
-      "expDays", "minSalePrice", "additionalExpense", "unitPriceFC",
-      "warranty", "nosQty", "totalAddExpense", "grossConvert", "grossFC",
-      "unitID2", "unit2Qty", "unit2SalesRate", "unit2MRP", "unit2MBarcode",
-      "unit2StickerQty", "unitID3", "unit3Qty", "unit3SalesRate",
-      "unit3MRP", "unit3MBarcode", "unit3StickerQty", "tagQty",
-      "barcodeTagPrinted", "barcodeUnit2Printed", "barcodeUnit3Printed",
-      "location", "grTransDetailsID", "ratePlusTax", "warehouseID",
-      "sortOrder", "profitPercentage", "schemeDiscount", "memo", "memoEditor",
-      "actualSalesPrice", "unit2", "unit3", "serial",
-    ].includes(field);
-  } else if (
-    userSession.countryId == Countries.India &&
-    (voucherType == VoucherType.PurchaseOrder ||
-      voucherType == VoucherType.PurchaseQuotation)
-  ) {
-    return ![
-      "mR", "netRate", "itemType", "employeeCode", "employeeName",
-      "stdPurchasePrice", "refTransDtailId", "lastPurchaseRate",
-      "lastPurchaseCost", "bd", "btnPrintBarcode", "mfdDate", "expDate",
-      "expDays", "minSalePrice", "additionalExpense", "unitPriceFC",
-      "warranty", "nosQty", "totalAddExpense", "grossConvert", "grossFC",
-      "unitID2", "unit2Qty", "unit2SalesRate", "unit2MRP", "unit2MBarcode",
-      "unit2StickerQty", "unitID3", "unit3Qty", "unit3SalesRate",
-      "unit3MRP", "unit3MBarcode", "unit3StickerQty", "tagQty",
-      "barcodeTagPrinted", "barcodeUnit2Printed", "barcodeUnit3Printed",
-      "location", "grTransDetailsID", "ratePlusTax", "warehouseID",
-      "sortOrder", "profitPercentage", "schemeDiscount", "memo", "memoEditor",
-      "actualSalesPrice", "unit2", "unit3", "serial",
-    ].includes(field);
-  }
+      // ---------------- PURCHASE ORDER & QUOTATION ----------------
+      else if (
+        userSession.countryId != Countries.India &&
+        (voucherType == VoucherType.PurchaseOrder ||
+          voucherType == VoucherType.PurchaseQuotation)
+      ) {
+        return ![
+          "mrp", "hsnCode", "cgst", "cgstPerc", "sgstPerc", "sgst",
+          "igstPerc", "igst", "cessPerc", "cessAmt", "additionalCessPerc",
+          "additionalCess", "mR", "netRate", "itemType", "employeeCode",
+          "employeeName", "stdPurchasePrice", "refTransDtailId", "lastPurchaseRate",
+          "lastPurchaseCost", "bd", "btnPrintBarcode", "mfdDate", "expDate",
+          "expDays", "minSalePrice", "additionalExpense", "unitPriceFC",
+          "warranty", "nosQty", "totalAddExpense", "grossConvert", "grossFC",
+          "unitID2", "unit2Qty", "unit2SalesRate", "unit2MRP", "unit2MBarcode",
+          "unit2StickerQty", "unitID3", "unit3Qty", "unit3SalesRate",
+          "unit3MRP", "unit3MBarcode", "unit3StickerQty", "tagQty",
+          "barcodeTagPrinted", "barcodeUnit2Printed", "barcodeUnit3Printed",
+          "location", "grTransDetailsID", "ratePlusTax", "warehouseID",
+          "sortOrder", "profitPercentage", "schemeDiscount", "memo", "memoEditor",
+          "actualSalesPrice", "unit2", "unit3", "serial",
+        ].includes(field);
+      } else if (
+        userSession.countryId == Countries.India &&
+        (voucherType == VoucherType.PurchaseOrder ||
+          voucherType == VoucherType.PurchaseQuotation)
+      ) {
+        return ![
+          "mR", "netRate", "itemType", "employeeCode", "employeeName",
+          "stdPurchasePrice", "refTransDtailId", "lastPurchaseRate",
+          "lastPurchaseCost", "bd", "btnPrintBarcode", "mfdDate", "expDate",
+          "expDays", "minSalePrice", "additionalExpense", "unitPriceFC",
+          "warranty", "nosQty", "totalAddExpense", "grossConvert", "grossFC",
+          "unitID2", "unit2Qty", "unit2SalesRate", "unit2MRP", "unit2MBarcode",
+          "unit2StickerQty", "unitID3", "unit3Qty", "unit3SalesRate",
+          "unit3MRP", "unit3MBarcode", "unit3StickerQty", "tagQty",
+          "barcodeTagPrinted", "barcodeUnit2Printed", "barcodeUnit3Printed",
+          "location", "grTransDetailsID", "ratePlusTax", "warehouseID",
+          "sortOrder", "profitPercentage", "schemeDiscount", "memo", "memoEditor",
+          "actualSalesPrice", "unit2", "unit3", "serial",
+        ].includes(field);
+      }
 
-  // ---------------- GOODS RECEIPT NOTE ----------------
-  else if (
-    userSession.countryId != Countries.India &&
-    voucherType == VoucherType.GoodsReceiptNote
-  ) {
-    return ![
-      "mrp", "hsnCode", "cgst", "cgstPerc", "sgstPerc", "sgst",
-      "igstPerc", "igst", "cessPerc", "cessAmt", "additionalCessPerc",
-      "additionalCess", "mR", "netRate", "itemType", "employeeCode",
-      "employeeName", "stdPurchasePrice", "refTransDtailId", "nosQty",
-      "totalAddExpense", "grossConvert", "grossFC", "unitID2", "unit2Qty",
-      "unit2SalesRate", "unit2MRP", "unit2MBarcode", "unit2StickerQty",
-      "unitID3", "unit3Qty", "unit3SalesRate", "unit3MRP", "unit3MBarcode",
-      "unit3StickerQty", "tagQty", "barcodeTagPrinted", "barcodeUnit2Printed",
-      "barcodeUnit3Printed", "grTransDetailsID", "ratePlusTax", "sortOrder",
-      "profitPercentage", "schemeDiscount", "memo", "memoEditor",
-      "actualSalesPrice", "unit2", "unit3",
-    ].includes(field);
-  }
+      // ---------------- GOODS RECEIPT NOTE ----------------
+      else if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.GoodsReceiptNote
+      ) {
+        return ![
+          "mrp", "hsnCode", "cgst", "cgstPerc", "sgstPerc", "sgst",
+          "igstPerc", "igst", "cessPerc", "cessAmt", "additionalCessPerc",
+          "additionalCess", "mR", "netRate", "itemType", "employeeCode",
+          "employeeName", "stdPurchasePrice", "refTransDtailId", "nosQty",
+          "totalAddExpense", "grossConvert", "grossFC", "unitID2", "unit2Qty",
+          "unit2SalesRate", "unit2MRP", "unit2MBarcode", "unit2StickerQty",
+          "unitID3", "unit3Qty", "unit3SalesRate", "unit3MRP", "unit3MBarcode",
+          "unit3StickerQty", "tagQty", "barcodeTagPrinted", "barcodeUnit2Printed",
+          "barcodeUnit3Printed", "grTransDetailsID", "ratePlusTax", "sortOrder",
+          "profitPercentage", "schemeDiscount", "memo", "memoEditor",
+          "actualSalesPrice", "unit2", "unit3",
+        ].includes(field);
+      }
 
-  // ---------------- GOODS RECEIPT RETURN ----------------
-  else if (
-    userSession.countryId != Countries.India &&
-    voucherType == VoucherType.GoodsReceiptReturn
-  ) {
-    return ![
-      "mrp", "hsnCode", "cgst", "cgstPerc", "sgstPerc", "sgst",
-      "igstPerc", "igst", "cessPerc", "cessAmt", "additionalCessPerc",
-      "additionalCess", "mR", "netRate", "itemType", "refBranchID",
-      "lastPurchaseRate", "lastPurchaseCost", "bd", "btnPrintBarcode",
-      "mfdDate", "expDate", "expDays", "additionalExpense", "unitPriceFC",
-      "colour", "warranty", "nosQty", "totalAddExpense", "grossConvert",
-      "grossFC", "unitID2", "unit2Qty", "unit2SalesRate", "unit2MRP",
-      "unit2MBarcode", "unit2StickerQty", "unitID3", "unit3Qty",
-      "unit3SalesRate", "unit3MRP", "unit3MBarcode", "unit3StickerQty",
-      "tagQty", "barcodeTagPrinted", "barcodeUnit2Printed",
-      "barcodeUnit3Printed", "location", "grTransDetailsID",
-      "poTransDetailsID", "ratePlusTax", "sortOrder", "profitPercentage",
-      "schemeDiscount", "memo", "memoEditor", "rowNumber",
-      "actualSalesPrice", "unit2", "unit3",
-    ].includes(field);
-  }
+      // ---------------- GOODS RECEIPT RETURN ----------------
+      else if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.GoodsReceiptReturn
+      ) {
+        return ![
+          "mrp", "hsnCode", "cgst", "cgstPerc", "sgstPerc", "sgst",
+          "igstPerc", "igst", "cessPerc", "cessAmt", "additionalCessPerc",
+          "additionalCess", "mR", "netRate", "itemType", "refBranchID",
+          "lastPurchaseRate", "lastPurchaseCost", "bd", "btnPrintBarcode",
+          "mfdDate", "expDate", "expDays", "additionalExpense", "unitPriceFC",
+          "colour", "warranty", "nosQty", "totalAddExpense", "grossConvert",
+          "grossFC", "unitID2", "unit2Qty", "unit2SalesRate", "unit2MRP",
+          "unit2MBarcode", "unit2StickerQty", "unitID3", "unit3Qty",
+          "unit3SalesRate", "unit3MRP", "unit3MBarcode", "unit3StickerQty",
+          "tagQty", "barcodeTagPrinted", "barcodeUnit2Printed",
+          "barcodeUnit3Printed", "location", "grTransDetailsID",
+          "poTransDetailsID", "ratePlusTax", "sortOrder", "profitPercentage",
+          "schemeDiscount", "memo", "memoEditor", "rowNumber",
+          "actualSalesPrice", "unit2", "unit3",
+        ].includes(field);
+      }
 
-  // ✅ Default: allow all if no case matches
-  return true;
-});
+      // ✅ Default: allow all if no case matches
+      return true;
+    });
 
- 
+
 
 // [formType, voucherType, formState.transaction.master.voucherType, formState.transaction.master.voucherForm]

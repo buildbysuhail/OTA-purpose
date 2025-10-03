@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Urls from "../../../../redux/urls";
 import { useSearchParams } from "react-router-dom";
-import { TransactionProps } from "./transaction-types";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../../../redux/store";
@@ -14,6 +13,7 @@ import VoucherSelector from "../../../transaction-base/voucher-selector";
 import { useNavigate } from "react-router-dom";
 import { useUnsavedChangesWarning } from "../../../use-unsaved-changes-warning";
 import VoucherType from "../../../../enums/voucher-types";
+import { TransactionProps } from "../transaction-types";
 
 const api = new APIClient();
 const TransactionFormContainer: React.FC<TransactionProps> = (props) => {

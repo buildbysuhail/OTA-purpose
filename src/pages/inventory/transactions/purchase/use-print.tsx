@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { APIClient } from "../../../../helpers/api-client";
 import { useUserRights } from "../../../../helpers/user-right-helper";
 import { RootState } from "../../../../redux/store";
@@ -8,46 +8,18 @@ import {
   isNullOrUndefinedOrEmpty,
   sanitizeDataAdvanced,
 } from "../../../../utilities/Utils";
-import { printCheque_AccTransaction } from "./print-trans-service";
-import {
-  BarcodeLabel,
-  TransactionData,
-  TransactionDetail,
-  TransactionFormState,
-} from "./transaction-types";
-import { logUserAction } from "../../../../redux/slices/user-action/thunk";
 import { useDispatch } from "react-redux";
-import {
-  formStateHandleFieldChange,
-  formStateHandleFieldChangeKeysOnly,
-  formStateMasterHandleFieldChange,
-  templatesData,
-} from "./reducer";
 import { DeepPartial } from "redux";
-import { pdf, BlobProvider } from "@react-pdf/renderer";
-import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
-import { DesignerElementType, TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
+import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
 import { customJsonParse } from "../../../../utilities/jsonConverter";
 import Urls from "../../../../redux/urls";
 import VoucherType from "../../../../enums/voucher-types";
-import AdviceTemplate from "../../../InvoiceDesigner/DownloadPreview/advice-template";
 import { useTranslation } from "react-i18next";
-import { initialProductData } from "./transaction-type-data";
-import DownloadBarcodePreview, { BarcodePDFDocument } from "../../../LabelDesigner/download-preview-barcode";
-import ERPModal from "../../../../components/ERPComponents/erp-modal";
-import { generateBarcodeDataUrl, generateBarcodePages } from "../../../../utilities/barcode";
-import {
-  JSPrintManager,
-  WSStatus,
-  ClientPrintJob,
-  InstalledPrinter,
-  DefaultPrinter,
-  PrintFilePDF,
-  FileSourceType
-} from "jsprintmanager";
-import { toggleSelectPrinterPopup } from "../../../../redux/slices/popup-reducer";
 import { useDirectPrint } from "../../../../utilities/hooks/use-direct-print";
+import { templatesData, formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly } from "../reducer";
+import { initialProductData } from "../transaction-type-data";
+import { TransactionFormState, TransactionDetail, BarcodeLabel } from "../transaction-types";
 
 const api = new APIClient();
 export const usePrint = () => {

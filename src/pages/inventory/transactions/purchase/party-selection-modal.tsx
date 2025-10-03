@@ -1,14 +1,12 @@
-import React, { Fragment, useCallback, useEffect, useMemo } from "react";
+import React, { Fragment, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import { toggleAccountGroupPopup } from "../../../../redux/slices/popup-reducer";
 import { RootState } from "../../../../redux/store";
 import Urls from "../../../../redux/urls";
 import { useAppDispatch, useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
-import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { ActionType } from "../../../../redux/types";
-import { formStateHandleFieldChange } from "./reducer";
+import { formStateHandleFieldChange } from "../reducer";
 
 interface PartySelectionProps {
   focusTaxNoField: () => void;

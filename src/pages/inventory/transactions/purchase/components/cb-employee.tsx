@@ -1,8 +1,8 @@
 import React from "react";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
-import { EmployeeType, VoucherElementProps } from "../../purchase/transaction-types";
-import { formStateMasterHandleFieldChange } from "../reducer";
 import Urls from "../../../../../redux/urls";
+import { formStateMasterHandleFieldChange } from "../../reducer";
+import { VoucherElementProps, EmployeeType } from "../../transaction-types";
 
 interface CostCentreProps extends VoucherElementProps {
   handleFieldKeyDown: (field: string, key: string) => void;

@@ -1,16 +1,11 @@
-import { APIClient } from "../../../../../helpers/api-client";
-import { VoucherElementProps } from "../transaction-types";
 import { useRef } from "react";
 import React from "react";
+import { VoucherElementProps } from "../../transaction-types";
 
 
 interface editProps extends VoucherElementProps { enableCombo: () => Promise<void>; }
 
-const AccEdit = React.forwardRef<HTMLInputElement, editProps>(({
-  formState,
-  enableCombo,
-  t
-}, ref) => {
+const AccEdit = React.forwardRef<HTMLInputElement, editProps>(({ formState, enableCombo, t }, ref) => {
   const voucherNumberRef = useRef<HTMLInputElement>(null); // Ref for voucherNumber
   return (
     <>

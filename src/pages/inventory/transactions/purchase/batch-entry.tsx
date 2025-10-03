@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../redux/store';
 import Urls from "../../../../redux/urls";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
-import { formStateHandleFieldChangeKeysOnly } from './reducer';
+import { formStateHandleFieldChangeKeysOnly } from '../reducer';
 
 interface BatchEntryModalProps {
   isOpen: boolean;

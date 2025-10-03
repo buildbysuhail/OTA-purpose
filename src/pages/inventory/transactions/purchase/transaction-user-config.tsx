@@ -5,10 +5,8 @@ import Urls from "../../../../redux/urls";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
 import { useDispatch } from "react-redux";
-import { formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly, formStateMasterHandleFieldChange } from "./reducer";
 import { handleResponse } from "../../../../utilities/HandleResponse";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
-import { UserConfig } from "./transaction-types";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
@@ -23,6 +21,8 @@ import useDebounce from "./use-debounce";
 import { useAppState } from "../../../../utilities/hooks/useAppState";
 import { ERPScrollArea } from "../../../../components/ERPComponents/erp-scrollbar";
 import { setStorageString } from "../../../../utilities/storage-utils";
+import { formStateHandleFieldChange, formStateMasterHandleFieldChange, formStateHandleFieldChangeKeysOnly } from "../reducer";
+import { UserConfig } from "../transaction-types";
 
 const api = new APIClient();
 

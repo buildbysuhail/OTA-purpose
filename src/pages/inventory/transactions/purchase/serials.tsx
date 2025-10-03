@@ -3,14 +3,11 @@ import { DataGrid } from "devextreme-react";
 import { Column, Editing, KeyboardNavigation, Paging, RemoteOperations, Scrolling } from "devextreme-react/data-grid";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import ERPSubmitButton from "../../../../components/ERPComponents/erp-submit-button";
-import { handleResponse } from "../../../../utilities/HandleResponse";
-import { APIClient } from "../../../../helpers/api-client";
-import Urls from "../../../../redux/urls";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
-import { formStateHandleFieldChangeKeysOnly } from "./reducer";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
+import { formStateHandleFieldChangeKeysOnly } from "../reducer";
 
 interface SerialItem {
   slNo: number;

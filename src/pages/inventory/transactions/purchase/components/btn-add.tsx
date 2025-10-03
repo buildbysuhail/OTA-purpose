@@ -1,20 +1,13 @@
-import React, { useRef } from "react";
+import React from "react";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
-import { VoucherElementProps } from "../transaction-types";
+import { VoucherElementProps } from "../../transaction-types";
 
 interface BtnAddProps extends VoucherElementProps {
   rowProcessing: boolean;
   addOrEditRow: () => void;
 }
 
-const BtnAdd = React.forwardRef<HTMLButtonElement, BtnAddProps>(({
-  formState,
-  dispatch,
-  t,
-  rowProcessing,
-  addOrEditRow
-}, ref) => {
-
+const BtnAdd = React.forwardRef<HTMLButtonElement, BtnAddProps>(({ formState, dispatch, t, rowProcessing, addOrEditRow }, ref) => {
   return (
     <>
       {formState.formElements.btnAdd.visible === true && (

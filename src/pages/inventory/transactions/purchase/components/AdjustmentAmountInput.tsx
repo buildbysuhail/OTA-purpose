@@ -1,21 +1,12 @@
 import React, { useState } from "react";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
-import { InvAccTransaction, VoucherElementProps } from "../../purchase/transaction-types";
 import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
-import { formStateMasterHandleFieldChange, formStateTransactionIvAccTransactionsRowsUpdate } from "../reducer";
 import ERPModal from "../../../../../components/ERPComponents/erp-modal";
-import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
-import Urls from "../../../../../redux/urls";
-import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
-import ERPButton from "../../../../../components/ERPComponents/erp-button";
-import ErpDevGrid, { SummaryConfig } from "../../../../../components/ERPComponents/erp-dev-grid";
-import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import { Pencil } from "lucide-react";
 import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
-import { isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from "../../../../../utilities/Utils";
-import ERPAlert from "../../../../../components/ERPComponents/erp-sweet-alert";
 import { AdjustmentAmountManager } from "./adjestAmount-manager";
 import VoucherType from "../../../../../enums/voucher-types";
+import { formStateMasterHandleFieldChange } from "../../reducer";
+import { VoucherElementProps } from "../../transaction-types";
 
 interface AdjustmentAmountInputProps extends VoucherElementProps {
   handleKeyDown?: (
@@ -25,9 +16,6 @@ interface AdjustmentAmountInputProps extends VoucherElementProps {
   transactionType: string
 }
 
-
-
-
 const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
   formState,
   t,
@@ -36,7 +24,6 @@ const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
 }) => {
   const dispatch = useAppDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const exchangeRate = formState.transaction.master.exchangeRate || 1;
   // For testing const isFcTrans = true, const exchangeRate = 2;
 
@@ -53,9 +40,7 @@ const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
       },
       300
     );
-
-
-
+    
   const openModal = () => {
     if (formState.transactionLoading) return;
     setIsModalOpen(true);

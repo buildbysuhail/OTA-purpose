@@ -58,7 +58,7 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      // width: 100,
       showInPdf: true,
       format:'dd-MMM-yyyy',
       cellRender: (
@@ -142,7 +142,7 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 200,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -174,7 +174,7 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 200,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -206,7 +206,7 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 250,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -234,7 +234,7 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({
     },
   ];
 
-  const { getFormattedValue ,formatNumberByDecimalPoint} = useNumberFormat();
+  const { getFormattedValue } = useNumberFormat();
   // const customizeSummaryRow = useMemo(() => {
   //   return (itemInfo: { value: any }) => {
   //     const value = itemInfo.value;
@@ -293,12 +293,13 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
-          formatNumberByDecimalPoint(
+          getFormattedValue(
             parseFloat(
               getFormattedValue(
                 isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value
               ).replace(/,/g, "") || "0"
             ),
+            false,
              4
           ) || "0"
         );

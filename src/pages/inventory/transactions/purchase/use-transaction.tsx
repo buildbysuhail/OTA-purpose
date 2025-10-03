@@ -105,7 +105,7 @@ export type LoadAndSetTransVoucherFn = (
   transactionMasterID?: number,
   mode?: "increment" | "decrement" | undefined,
   skipPrompt?: boolean | false,
-  setVoucherNo?: boolean | false,    
+  setVoucherNo?: boolean | false,
   loadVType?: string,
   loadFType?: string,
   loadPrefix?: string,
@@ -339,21 +339,21 @@ export const useTransaction = (
   };
 
   const loadAndSetTransVoucher: LoadAndSetTransVoucherFn = async (
-  usingManualInvNumber = false,
-  voucherNumber,
-  voucherPrefix,
-  voucherType,
-  formType,
-  manualInvoiceNumber,
-  transactionMasterID,
-  mode,
-  skipPrompt = false,
-  setVoucherNo = false,
-  loadVType,
-  loadFType,
-  loadPrefix,
+    usingManualInvNumber = false,
+    voucherNumber,
+    voucherPrefix,
+    voucherType,
+    formType,
+    manualInvoiceNumber,
+    transactionMasterID,
+    mode,
+    skipPrompt = false,
+    setVoucherNo = false,
+    loadVType,
+    loadFType,
+    loadPrefix,
   ) => {
-    
+
     const _s_isDirty = isDirtyTransaction(
       formState.prev,
       {
@@ -382,7 +382,7 @@ export const useTransaction = (
         })
       );
     }
-debugger;
+    debugger;
     let _formState = await loadTransVoucher(
       usingManualInvNumber,
       voucherNumber,
@@ -395,7 +395,7 @@ debugger;
       loadFType,
       loadPrefix
     );
-    
+
     if (loadVType == "GRN" || loadVType == "GRR") {
        _formState = merge({}, _formState, {transaction:{master:{deliveryNoteNumber: manualInvoiceNumber}}} );
     }
@@ -513,9 +513,9 @@ debugger;
         openUnsavedPrompt: false,
       })
     );
-    
+
     let url = `${Urls.inv_transaction_base}${transactionType}`;
-    
+
     let _voucherNumber =
       voucherNumber ?? (formState.transaction?.master?.voucherNumber || 0);
     let out_voucherNumber =
@@ -599,7 +599,7 @@ debugger;
         },
       };
     }
-    
+
 
     if (usingManualInvNumber) {
       vch.master = {
@@ -707,7 +707,7 @@ debugger;
         voucher.transaction
       );
     }
-    
+
     voucher.isInitialLedger = true;
     voucher = await loadLedgerData(voucher) as any;
     return voucher;
@@ -774,7 +774,7 @@ debugger;
   async function validate(): Promise<boolean> {
     const master = formState.transaction.master;
     const details = formState.transaction.details;
-debugger;
+    debugger;
     // Stock update restriction
     if (!formState.transaction.master.stockUpdate && (formState.transaction.master.voucherType === "PI" || formState.transaction.master.voucherType === "PR")) {
       const voucherType = formState.transaction.master.voucherType;
@@ -785,7 +785,7 @@ debugger;
         confirmButtonText: t("yes"),
         cancelButtonText: t("no"),
         showCancelButton: true,
-       
+
       });
       if (!confirm) {
         return false;
@@ -961,7 +961,7 @@ debugger;
           const res = focusColumn(rowIndex, "qty");
           setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
           return false
-          
+
         }
       }
     }
@@ -1073,7 +1073,7 @@ debugger;
     );
 
     const valid = await validate();
-debugger;
+    debugger;
     if (valid == true) {
       const master = attachMaster(formState);
       const attachments = formState.transaction.attachments
@@ -1189,13 +1189,13 @@ debugger;
 
     }
     else{
-       dispatch(
-      formStateHandleFieldChange({
-        fields: {
-          saving: false,
-        },
-      })
-    );
+      dispatch(
+        formStateHandleFieldChange({
+          fields: {
+            saving: false,
+          },
+        })
+      );
     }
   };
   const clearRow = async (isEdit: boolean, transactionMasterID: number) => {
@@ -1231,9 +1231,9 @@ debugger;
     );
     let employeeID = userSession.employeeId ?? 0;
             if (["PR","PQ","PO"].includes(formState.transaction.master.voucherType ?? "" as any)  && employeeID <= 0) {
-              const emps = await getApLocalDataByUrl(`${Urls.inv_transaction_base}${transactionType}/Data/Employee/`);
-              employeeID = emps && emps.length > 0 ? emps[0].id : employeeID;
-            }
+      const emps = await getApLocalDataByUrl(`${Urls.inv_transaction_base}${transactionType}/Data/Employee/`);
+      employeeID = emps && emps.length > 0 ? emps[0].id : employeeID;
+    }
     const master: TransactionMaster = {
       ...TransactionMasterInitialData,
       voucherType: formState.transaction.master.voucherType ?? "",
@@ -1998,7 +1998,7 @@ debugger;
   // };
 
   // Voucher number navigation handlers
- 
+
 
   const loadTemporaryRows = async () => {
 
@@ -2239,6 +2239,12 @@ debugger;
       });
 
       if (deleteConfirmResult) {
+        dispatch(
+          formStateHandleFieldChange({
+            fields: { deleting: true, deletingCompleted: false },
+          })
+        );
+
         try {
           // Begin transaction and delete
           const deleteResult = await api.delete(
@@ -2253,14 +2259,28 @@ debugger;
           ) as any;
 
           if (deleteResult && deleteResult?.isOk) {
+            dispatch(
+              formStateHandleFieldChange({
+                fields: { deletingCompleted: true },
+              })
+            );
+
             ERPAlert.show({
               title: t("success"),
               text: t("transaction_deleted_successfully"),
               icon: "success",
+              showCancelButton: false,
+              confirmButtonText: t("close")
             });
-            clearControls(false)
+
+            clearControls(false);
           } else {
-            
+            dispatch(
+              formStateHandleFieldChange({
+                fields: { deleting: false, deletingCompleted: false },
+              })
+            );
+
             ERPAlert.show({
               title: t("delete_operation_failed"),
               text: deleteResult?.message,
@@ -2284,6 +2304,12 @@ debugger;
           );
         } catch (deleteError) {
           console.error("Error during delete operation:", deleteError);
+          dispatch(
+            formStateHandleFieldChange({
+              fields: { deleting: false, deletingCompleted: false },
+            })
+          );
+
           ERPAlert.show({
             title: t("error"),
             text: t("delete_operation_failed"),
@@ -2302,6 +2328,12 @@ debugger;
       // }
     } catch (error) {
       console.error("Error handling delete:", error);
+      dispatch(
+        formStateHandleFieldChange({
+          fields: { deleting: false, deletingCompleted: false },
+        })
+      );
+
       ERPAlert.show({
         title: t("error"),
         text: t("server_busy_or_system_issue"),
@@ -2397,9 +2429,9 @@ debugger;
             purchaseInvoiceNumber:"",
             // transactionMasterID: 0,
             transactionDate: moment(
-                    clientSession.softwareDate,
-                    "DD/MM/YYYY"
-                  ).local().toISOString(),
+              clientSession.softwareDate,
+              "DD/MM/YYYY"
+            ).local().toISOString(),
           },
         })
       );
@@ -2857,7 +2889,7 @@ debugger;
           //   outDetail.details2!.additionalCessPerc = 0;
           // }
         } else {
-          
+
 
           const { voucherType, voucherForm } = formState.transaction.master;
 
@@ -3506,7 +3538,7 @@ debugger;
               }
             }
           } else if (columnName == "btnPrintBarcode") {
-            
+
             if ((formState.transaction.details[rowIndex].qty + formState.transaction.details[rowIndex].stickerQty) <= 0) {
               break
             }
@@ -4012,7 +4044,7 @@ debugger;
             `${Urls.inv_transaction_base}${transactionType}/LedgerDetails?LedgerId=${ledgerID}`
           ),
         ]);
-        
+
         const ret = {
           ..._formState,
           formElements: {
@@ -4090,36 +4122,36 @@ debugger;
     return {}
   };
   interface BillWiseDetail {
-  accTransDetailID: number;
-  billWiseAdjAmt: number;
-  adjustedTransDetailID: number;
-}
-
-interface BillWiseRequest {
-  accTransactionDetailID: number;
-  billWiseDetails: BillWiseDetail[];
-}
-async function postBillWiseDetails(
-  data: BillWiseRequest
-): Promise<any> {
-  try {
-    const response = await api.postAsync(
-      `${Urls.inv_transaction_base}${transactionType}/BillWiseDetail`,
-      data
-    );
-    dispatch(
-      formStateHandleFieldChange({
-        fields: {
-          showbillwise: false,
-        },
-      })
-    )
-    return response.data;
-  } catch (error: any) {
-    console.error("Error posting BillWiseDetails:", error);
-    throw error;
+    accTransDetailID: number;
+    billWiseAdjAmt: number;
+    adjustedTransDetailID: number;
   }
-}
+
+  interface BillWiseRequest {
+    accTransactionDetailID: number;
+    billWiseDetails: BillWiseDetail[];
+  }
+  async function postBillWiseDetails(
+    data: BillWiseRequest
+  ): Promise<any> {
+    try {
+      const response = await api.postAsync(
+        `${Urls.inv_transaction_base}${transactionType}/BillWiseDetail`,
+        data
+      );
+      dispatch(
+        formStateHandleFieldChange({
+          fields: {
+            showbillwise: false,
+          },
+        })
+      )
+      return response.data;
+    } catch (error: any) {
+      console.error("Error posting BillWiseDetails:", error);
+      throw error;
+    }
+  }
   return {
     downloadImportTemplateHeadersOnly,
     importFromExcel,

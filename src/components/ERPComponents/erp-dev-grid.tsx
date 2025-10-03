@@ -1096,14 +1096,17 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         currentY += 15;
       }
 
-      const pageWidth = doc.internal.pageSize.getWidth() - 80;
-      const wrappedTitleLines = doc.splitTextToSize(pageTitle, pageWidth);
+      const leftMargin = 40;
+      const rightMargin = 40;
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const usableWidth = pageWidth - leftMargin - rightMargin;
       doc.setFont("Amiri");
       doc.setFontSize(12);
-      doc.text(pageTitle, 40, currentY, { align: "left" });
-      doc.setFontSize(10);
+      // Use splitTextToSize on the joined headerString
+      const wrappedHeader = doc.splitTextToSize(pageTitle, usableWidth);
+      doc.text(wrappedHeader, leftMargin, currentY, { align: 'left' });
+      currentY += wrappedHeader.length * 14; // or adjust 14 -> 12 if you want even tighter vertical space
 
-      currentY += wrappedTitleLines.length * 7; // ~7 units per line height
       const originalColumnVisibility = gridInstance
         .getVisibleColumns()
         .map((column: any) => ({
@@ -1988,6 +1991,103 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       }
     };
 
+    const headerRef = useRef<HTMLDivElement>(null);
+    const [headerMaxWidth, setHeaderMaxWidth] = useState('50%');
+    const updateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const observerRef = useRef<MutationObserver | null>(null);
+
+    // Debounced update function to prevent multiple rapid calls
+    const updateHeaderWidth = useCallback(() => {
+      // Clear any pending updates
+      if (updateTimeoutRef.current) {
+        clearTimeout(updateTimeoutRef.current);
+      }
+
+      updateTimeoutRef.current = setTimeout(() => {
+        if (headerRef.current) {
+          try {
+            // Get the toolbar container
+            const toolbar = headerRef.current.closest('.dx-toolbar');
+            
+            if (toolbar) {
+              const toolbarWidth = toolbar.clientWidth;
+              
+              // Find all toolbar items on the right side (after items)
+              const afterItems = toolbar.querySelectorAll('.dx-toolbar-after .dx-toolbar-item');
+              
+              // Calculate total width of all right-side buttons
+              let rightSideWidth = 0;
+              afterItems.forEach((item) => {
+                rightSideWidth += (item as HTMLElement).offsetWidth;
+              });
+              
+              // Add padding/margin buffer
+              const buffer = 40;
+              
+              // Calculate available width for header
+              const availableWidth = toolbarWidth - rightSideWidth - buffer;
+              
+              setHeaderMaxWidth(`${Math.max(availableWidth, 150)}px`);
+            }
+          } catch (error) {
+            console.warn('Error updating header width:', error);
+          }
+        }
+      }, 150); // 150ms debounce delay
+    }, []);
+
+    useEffect(() => {
+      // Initial calculation with delay to ensure DOM is ready
+      const initialTimer = setTimeout(updateHeaderWidth, 400);
+      
+      // Listen to window resize events
+      window.addEventListener('resize', updateHeaderWidth);
+      
+      // Listen to sidebar transitions using MutationObserver on app-content
+      const appContent = document.querySelector('.app-content') || 
+                        document.querySelector('.main-content') ||
+                        document.querySelector('body');
+      
+      if (appContent) {
+        observerRef.current = new MutationObserver(() => {
+          updateHeaderWidth();
+        });
+        
+        observerRef.current.observe(appContent, {
+          attributes: true,
+          attributeFilter: ['class', 'style'],
+          subtree: false
+        });
+      }
+      
+      // Also listen for transitions on sidebar itself
+      const sidebar = document.querySelector('.app-sidebar') || 
+                      document.querySelector('.sidebar');
+      
+      const handleTransitionEnd = () => {
+        updateHeaderWidth();
+      };
+      
+      if (sidebar) {
+        sidebar.addEventListener('transitionend', handleTransitionEnd);
+      }
+      
+      // Cleanup function
+      return () => {
+        clearTimeout(initialTimer);
+        if (updateTimeoutRef.current) {
+          clearTimeout(updateTimeoutRef.current);
+        }
+        window.removeEventListener('resize', updateHeaderWidth);
+        if (observerRef.current) {
+          observerRef.current.disconnect();
+        }
+        if (sidebar) {
+          sidebar.removeEventListener('transitionend', handleTransitionEnd);
+        }
+      };
+    }, [updateHeaderWidth]);
+
     return (
       <Fragment>
         {showChooserOnGridHead && (
@@ -2149,29 +2249,58 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             {!hideToolbar && (
               <Toolbar>
                 {!hideGridHeader && (
-                  <Item location="before">
-                    <div className="flex flex-col">
-                      <div className="box-title !text-xs !font-medium">
-                        <span
-                          className="text-sm dark:!text-dark-text"
-                          title={gridHeader}
-                        >
-                          {gridHeader.length > 100
-                            ? `${gridHeader.slice(0, 100)}...`
-                            : gridHeader}
-                        </span>
-                        &nbsp;
-                        <span
-                          className="text-sm dark:!text-dark-text"
-                          title={header}
-                        >
-                          {header.length > 72
-                            ? `${header.slice(0, 72)}...`
-                            : header}
-                        </span>
-                      </div>
+                <Item location="before">
+                  <div 
+                    ref={headerRef}
+                    style={{ 
+                      maxWidth: headerMaxWidth,
+                      minWidth: 0,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      overflow: 'hidden'
+                    }}
+                  >
+                    <div 
+                      className="box-title !text-xs !font-medium" 
+                      style={{ 
+                        display: 'flex', 
+                        alignItems: 'center',
+                        minWidth: 0,
+                        width: '100%',
+                        overflow: 'hidden',
+                        gap: '4px'
+                      }}
+                    >
+                      <span
+                        className="text-sm dark:!text-dark-text"
+                        title={gridHeader}
+                        style={{ 
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                          flexShrink: 0,
+                          maxWidth: '45%'
+                        }}
+                      >
+                        {gridHeader}
+                      </span>
+                      <span
+                        className="text-sm dark:!text-dark-text"
+                        title={header}
+                        style={{ 
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                          minWidth: 0,
+                          flex: '1 1 auto',
+                          flexBasis: 0
+                        }}
+                      >
+                        {header}
+                      </span>
                     </div>
-                  </Item>
+                  </div>
+                </Item>
                 )}
 
                 <Item>

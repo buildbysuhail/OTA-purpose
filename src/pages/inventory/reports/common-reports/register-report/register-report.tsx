@@ -11,7 +11,9 @@ import moment from "moment";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import { useLocation } from "react-router-dom";
-import RegisterFilter, { RegisterFilterInitialState } from "./register-report-filter";
+import RegisterFilter, {
+  RegisterFilterInitialState,
+} from "./register-report-filter";
 
 interface RegisterProps {
   gridHeader: string;
@@ -75,7 +77,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowFiltering: true,
         width: 50,
         showInPdf: true,
-       cellRender: (cellElement: any, cellInfo: any) => {
+        cellRender: (cellElement: any, cellInfo: any) => {
           return (
             <DrillDownCellTemplate
               data={cellElement}
@@ -94,12 +96,21 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         showInPdf: true,
       },
       {
+        dataField: "partyCode",
+        caption: t("party_code"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 110,
+        showInPdf: true,
+      },
+      {
         dataField: "party",
         caption: t("party"),
         dataType: "string",
         allowSearch: true,
         allowFiltering: true,
-        width: 150,
+        // width: 150,
         showInPdf: true,
       },
       {
@@ -128,7 +139,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         visible: false,
         width: 100,
       },
-     
+
       //repeat from procedure
       {
         dataField: "batchNo",
@@ -262,7 +273,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowFiltering: true,
         width: 100,
       },
-       {
+      {
         dataField: "unitPrice",
         caption: t("unit_price"),
         dataType: "number",
@@ -1658,12 +1669,15 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         if (
           column.dataField == "vat" ||
           column.dataField == "baseUnitQuantity" ||
-          column.dataField == "referenceNumber" ||
-          column.dataField == "salesPrice" ||
+          // column.dataField == "referenceNumber" ||
+          // column.dataField == "salesPrice" ||
           column.dataField == "vatNumber" ||
           column.dataField == "exciseTax"
         ) {
           return !clientSession.isAppGlobal;
+        }
+        if(["referenceNumber"].includes(column.dataField??"")){//only for nahla
+          return userSession.dbIdValue == "543140180640";
         }
         if (
           [
@@ -1685,7 +1699,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
             "additionalCess",
             "gstNo",
             "priceCategoryID",
-            "referenceNumber",
+            "salesPrice"
           ].includes(column.dataField ?? "")
         ) {
           return clientSession.isAppGlobal;
@@ -1915,14 +1929,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 key={key}
-                filterText=" From : {fromDate} - {toDate} 
-                  {productID > 0 && , Product Name : [productName]}
-                  {productGroupID > 0 && , Group Name : [groupName]}
-                  {brandID > 0 && , Brand : [brand]}
-                  {salesRouteID > 0 && , Route Name : [routeName]} 
-                  {salesmanID > 0 && , Sales Man : [salesMan]} 
-                  {warehouseID > 0 && ,  Warehouse : [warehouse]} 
-                  {supplierID > 0 && , Supplier :[supplier]} "
+                filterText=" From : {fromDate} - {toDate} {productID > 0 && , Product Name : [productName]} {productGroupID > 0 && , Group Name : [groupName]}{brandID > 0 && , Brand : [brand]}{salesRouteID > 0 && , Route Name : [routeName]}  {salesmanID > 0 && , Sales Man : [salesMan]}  {warehouseID > 0 && ,  Warehouse : [warehouse]} {supplierID > 0 && , Supplier :[supplier]} "
                 summaryItems={summaryItems}
                 remoteOperations={{
                   filtering: false,
@@ -1949,13 +1956,13 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
                 onFilterChanged={(f: any) => setFilter(f)}
                 reload={true}
                 gridId={gridId}
-                 childPopupProps={{
-                    content: null,
-                    title: "",
-                    isForm: false,
-                    isTransactionScreen: true,
-                    drillDownCells: "vchNo,",
-                  }}
+                childPopupProps={{
+                  content: null,
+                  title: "",
+                  isForm: false,
+                  isTransactionScreen: true,
+                  drillDownCells: "vchNo,",
+                }}
               />
             </div>
           </div>

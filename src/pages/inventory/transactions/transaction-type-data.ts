@@ -1,10 +1,5 @@
-import moment from "moment";
-import { Dispatch } from "react";
-import { AnyAction } from "redux";
-import { inputBox } from "../../../../redux/slices/app/types";
-import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
 import { TransactionMaster, TransactionValidationsData, TransactionDetail, TransactionMaster3, FormElementState, TransactionFormState, SummaryItems, TransactionData, BarcodeLabel, ProductDisplayDto, EmployeeType, TransactionDetails2, TransactionMaster2, TransactionDetailsMore, UserConfig } from "./transaction-types";
-import { generateUniqueKey } from "../../../../utilities/Utils";
+import { generateUniqueKey } from "../../../utilities/Utils";
 
 
 // Initial object with default values
@@ -637,7 +632,7 @@ export const TransactionFormStateInitialData: TransactionFormState = {
       valueFormat: "currency",
     },
   ],
-  showQuantityFactors: { visible: false, rowIndex: 0, qtyDesc:"" },
+  showQuantityFactors: { visible: false, rowIndex: 0, qtyDesc: "" },
   batchSelectionData: "",
   popupSearchSelectionData: "",
   showPcode: false,
@@ -660,7 +655,8 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   },
   documentModal: false,
   headerMenuOpen: false,
-  gridMenuOpen: false
+  gridMenuOpen: false,
+  deleting: false
 }
 
 export const initialProductData: BarcodeLabel = {

@@ -14,20 +14,20 @@ import {
   UnitByBatchDetailsDto,
   ColumnModel,
 } from "./transaction-types";
-import ERPToast from "../../../../components/ERPComponents/erp-toast";
-import { UserAction } from "../../../../helpers/user-right-helper";
-import { UserModel } from "../../../../redux/slices/user-session/reducer";
-import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
-import { ApplicationSettingsType } from "../../../settings/system/application-settings-types/application-settings-types";
+import ERPToast from "../../../components/ERPComponents/erp-toast";
+import { UserAction } from "../../../helpers/user-right-helper";
+import { UserModel } from "../../../redux/slices/user-session/reducer";
+import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
+import { ApplicationSettingsType } from "../../settings/system/application-settings-types/application-settings-types";
 import {
   initialTransactionDetailData,
   TransactionFormStateInitialData,
   transactionInitialData,
 } from "./transaction-type-data";
-import { generateUniqueKey } from "../../../../utilities/Utils";
+import { generateUniqueKey } from "../../../utilities/Utils";
 import moment from "moment";
-import { modelToBase64Unicode } from "../../../../utilities/jsonConverter";
-import { setTransactionForHistory } from "../../../../helpers/transaction-modified-util";
+import { modelToBase64Unicode } from "../../../utilities/jsonConverter";
+import { setTransactionForHistory } from "../../../helpers/transaction-modified-util";
 import _ from "lodash";
 
 const InvTransactionSlice = createSlice({

@@ -1722,26 +1722,6 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         return column;
       });
   }, [t, filter, userSession.dbIdValue]);
-  // Filter columns based on the `visible` property
-  //   return baseColumns.filter((column) => {
-  //     if (column.dataField == "xRate") {
-  //       return filter.voucherForm == "Import";
-  //     }
-  //     if (column.dataField == "baseUnitQuantity") {
-  //       return userSession.dbIdValue == "543140180640";
-  //     }
-  //     if (column.dataField == "vat") {
-  //       return !clientSession.isAppGlobal;
-  //     }
-  //     if (["CGSTPerc", "CGST", "SGSTPerc", "SGST", "IGSTPerc", "IGST", "GSTPercent", "GSTAmt",
-  //       "HSNCode", "GSTIN", "SalesPrice", "Remarks", "CessPerc", "CessAmt", "AdditionalCessPerc",
-  //       "AdditionalCess", "TaxNo", "GSTNo", "Sl", "UnitName", "PriceCategoryID", "TotalProfitPercent",
-  //       "AvgPrice", "ReferenceNumber", "BaseUnitQuantity"].includes(column.dataField??"")) {
-  //      return false;
-  //  }
-  //     return true;
-  //   });
-  // }, [t, filter]);
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) => {

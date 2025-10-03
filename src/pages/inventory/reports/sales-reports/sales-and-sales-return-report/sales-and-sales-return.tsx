@@ -1,6 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { Fragment, useState } from "react";
-import ErpDevGrid, { SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import { useMemo } from "react";
@@ -25,9 +27,9 @@ const SalesAndSalesReturn = () => {
       [field]: value,
     }));
   };
-const [reload, setReload] = useState<boolean>(true);
+  const [reload, setReload] = useState<boolean>(true);
   const handleShow = () => {
-   setReload(true)
+    setReload(true);
   };
 
   const summaryColumns: DevGridColumn[] = [
@@ -309,7 +311,7 @@ const [reload, setReload] = useState<boolean>(true);
             label={t("print_line_between_rows")}
             id={""}
           />
-          <ERPDateInput    
+          <ERPDateInput
             value={filterState.dateFrom}
             label={t("date_from")}
             onChangeData={(data) =>
@@ -355,7 +357,6 @@ const [reload, setReload] = useState<boolean>(true);
                   gridId="grd_sales_summary"
                   postData={filterState}
                   height={700}
-                  
                   // hideDefaultExportButton={true}
                   hideDefaultSearchPanel={true}
                   hideGridHeader={true}
@@ -363,7 +364,7 @@ const [reload, setReload] = useState<boolean>(true);
                   // showPrintButton={false}
                   ShowGridPreferenceChooser={false}
                   allowSearching={false}
-                // allowExport={false}
+                  // allowExport={false}
                 />
               </div>
               <div className="grid grid-cols-1 gap-3">
@@ -393,7 +394,7 @@ const [reload, setReload] = useState<boolean>(true);
                   // showPrintButton={false}
                   ShowGridPreferenceChooser={false}
                   allowSearching={false}
-                // allowExport={false}
+                  // allowExport={false}
                 />
               </div>
             </div>

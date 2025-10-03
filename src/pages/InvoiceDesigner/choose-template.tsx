@@ -44,7 +44,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
     }
 
     const IconComponent = iconMap[templateType.toLowerCase()] || iconMap.default
-    return <IconComponent className="w-4 h-4 sm:w-5 sm:h-5" />
+    return <IconComponent className="w-4 h-4" />
   }
 
   // Enhanced color schemes with gradients
@@ -211,9 +211,9 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
 
     const state = template?.templateType
       ? {
-          templateKind: template?.templateKind,
-          templateType: template?.templateType,
-        }
+        templateKind: template?.templateKind,
+        templateType: template?.templateType,
+      }
       : {}
 
     templateGroup == "barcode"
@@ -259,7 +259,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
                 </span>
               )}
             </div>
-            <p className="text-sm text-slate-500 capitalize mb-2">{template?.templateType || "Standard"} Template</p>
+            <p className="text-sm text-slate-500 capitalize mb-2">{template?.templateType || "Standard"} {t('template')}</p>
           </div>
 
           <div className="relative flex items-center gap-2 w-full sm:w-auto justify-end sm:justify-end">
@@ -281,8 +281,8 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
           group relative w-full max-w-[200px] sm:max-w-[220px] md:max-w-[240px] lg:max-w-[200px] 
           h-[250px] xs:h-[260px] sm:h-[280px] md:h-[300px] lg:h-[280px] 
           aspect-[4/5] bg-white rounded-xl sm:rounded-2xl 
-          border border-slate-200 hover:border-slate-300 hover:shadow-xl 
-          transition-all duration-500 transform hover:scale-[1.02] hover:-translate-y-1 overflow-hidden 
+          border border-slate-200 hover:border-slate-300 hover:shadow-lg 
+          transition-all duration-500 transform hover:scale-[0.99] hover:-translate-y-1 overflow-hidden 
           mx-auto sm:mx-0
         "
       >
@@ -316,9 +316,9 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
           </div>
 
           {/* Action buttons overlay at the bottom */}
-          <div className="absolute bottom-0 left-0 right-0 h-24 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="absolute bottom-0 left-0 right-0 h-12 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <button
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
               onClick={(e) => {
                 e.stopPropagation()
                 e.preventDefault()
@@ -346,7 +346,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
             {isDefault && (
               <span className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-xs px-2 py-1 rounded-full font-medium border border-blue-200 flex items-center gap-1">
                 <StarIconSolid className="w-2.5 h-2.5" />
-                <span>Default</span>
+                <span>{t('default')}</span>
               </span>
             )}
           </div>
@@ -359,100 +359,238 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
     <div className="flex bg-gradient-to-br from-slate-50 to-blue-50/30 w-full">
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         {/* Enhanced Header - Matching Templates.tsx style */}
-        <div className="bg-white/80 backdrop-blur-xl shadow-sm border-b border-slate-200 px-4 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6">
-          <div className="flex flex-col gap-3 sm:gap-4">
-            {/* Top Row - Title and Close Button */}
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <h1 className="text-base sm:text-lg lg:text-xl font-bold text-slate-900 capitalize truncate">
-                      {t("choose_a_template")}
-                    </h1>
-                    <span className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-xs px-2 py-1 rounded-full font-medium flex-shrink-0">
-                      {filteredTemplates.length}
-                    </span>
-                  </div>
+        <div className="bg-white/80 backdrop-blur-xl shadow-sm border-b border-slate-200 p-2">
+          <div className="flex flex-col gap-3">
+            {/* Mobile Layout (< 640px) */}
+            <div className="sm:hidden">
+              {/* Title and Close Button */}
+              <div className="flex items-center justify-between gap-3 mb-3">
+                <div className="flex items-center gap-2 min-w-0 flex-1">
+                  <h1 className="text-base font-bold text-slate-900 capitalize truncate">
+                    {t("choose_a_template")}
+                  </h1>
+                  <span className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-xs w-6 h-6 rounded-full font-medium flex items-center justify-center flex-shrink-0">
+                    {filteredTemplates.length}
+                  </span>
                 </div>
-              </div>
-
-              {/* Close Button */}
-              <div className="flex-shrink-0">
                 <button
                   onClick={() => setShowTemplateListing(true)}
-                  className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-900 hover:to-black text-white rounded-lg font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-sm"
+                  className="w-8 h-8 bg-red-600 hover:bg-red-700 text-white rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-200 flex-shrink-0"
                 >
                   <XMarkIcon className="w-4 h-4" />
-                  <span className="hidden xs:inline">Close</span>
                 </button>
               </div>
-            </div>
 
-            {/* Bottom Row - Controls */}
-            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-              {/* Search - Full width on mobile */}
-              <div className="relative flex-1 min-w-0">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
-                <input
-                  type="text"
-                  placeholder="Search templates..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2.5 border border-slate-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-200"
-                />
-              </div>
-
-              {/* Controls Row */}
-              <div className="flex items-center gap-2 sm:gap-3">
-                {/* View Mode Toggle */}
+              {/* Search and View Toggle */}
+              <div className="flex items-center gap-2">
+                <div className="relative flex-1 min-w-0">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+                  <input
+                    type="text"
+                    placeholder={t("search_templates")}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-9 pr-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-200"
+                  />
+                </div>
                 <div className="flex bg-white/80 backdrop-blur-sm rounded-lg p-1 border border-slate-200 shadow-sm flex-shrink-0">
                   <button
                     type="button"
                     onClick={() => setViewMode("grid")}
-                    className={`p-2 rounded-md transition-all duration-200 ${
-                      viewMode === "grid"
-                        ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
-                        : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-                    }`}
+                    className={`p-2 rounded-md transition-all duration-200 ${viewMode === "grid"
+                      ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                      }`}
                   >
                     <Grid3X3 className="w-4 h-4" />
                   </button>
                   <button
                     type="button"
                     onClick={() => setViewMode("list")}
-                    className={`p-2 rounded-md transition-all duration-200 ${
-                      viewMode === "list"
-                        ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
-                        : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-                    }`}
+                    className={`p-2 rounded-md transition-all duration-200 ${viewMode === "list"
+                      ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                      }`}
                   >
                     <List className="w-4 h-4" />
                   </button>
                 </div>
               </div>
             </div>
+
+            {/* Tablet Layout (640px - 1024px) */}
+            <div className="hidden sm:flex lg:hidden flex-col gap-3">
+              {/* Title and Close Button */}
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2 min-w-0 flex-1">
+                  <h1 className="text-lg font-bold text-slate-900 capitalize truncate">
+                    {t("choose_a_template")}
+                  </h1>
+                  <span className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-xs w-6 h-6 rounded-full font-medium flex items-center justify-center flex-shrink-0">
+                    {filteredTemplates.length}
+                  </span>
+                </div>
+                <button
+                  onClick={() => setShowTemplateListing(true)}
+                  className="w-8 h-8 bg-red-600 hover:bg-red-700 text-white rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-200 flex-shrink-0"
+                >
+                  <XMarkIcon className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Search and View Toggle */}
+              <div className="flex items-center gap-3">
+                <div className="relative flex-1 min-w-0">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+                  <input
+                    type="text"
+                    placeholder={t("search_templates")}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-9 pr-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-200"
+                  />
+                </div>
+                <div className="flex bg-white/80 backdrop-blur-sm rounded-lg p-1 border border-slate-200 shadow-sm flex-shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setViewMode("grid")}
+                    className={`p-2 rounded-md transition-all duration-200 ${viewMode === "grid"
+                      ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                      }`}
+                  >
+                    <Grid3X3 className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setViewMode("list")}
+                    className={`p-2 rounded-md transition-all duration-200 ${viewMode === "list"
+                      ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                      }`}
+                  >
+                    <List className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Desktop Layout (>= 1024px) - Single Row */}
+            <div className="hidden lg:flex items-center justify-between gap-4">
+              {/* Title and Count */}
+              <div className="flex items-center gap-3 flex-shrink-0">
+                <h1 className="text-base font-bold text-slate-900 capitalize whitespace-nowrap">
+                  {t("choose_a_template")}
+                </h1>
+                <span className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-xs w-6 h-6 rounded-full font-medium flex items-center justify-center">
+                  {filteredTemplates.length}
+                </span>
+              </div>
+
+              {/* Right Side - Search, View Toggle and Close Button */}
+              <div className="flex items-center gap-3 flex-shrink-0">
+                {/* Search Bar */}
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none h-[38px]">
+                    <svg
+                      className="h-4 w-4 text-slate-400"
+                      fill="none"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </div>
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        // Search is handled by filtering below
+                        e.preventDefault();
+                      }
+                    }}
+                    placeholder={t("search_templates")}
+                    className="block w-full pl-10 pr-3 border border-slate-300 rounded-lg text-xs placeholder-slate-400 focus:outline-none transition-all duration-200 h-[38px]"
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={() => setSearchQuery('')}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    >
+                      <svg
+                        className="h-4 w-4 text-slate-400 hover:text-slate-600"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  )}
+                </div>
+
+                {/* View Toggle */}
+                <div className="flex bg-white/80 backdrop-blur-sm rounded-lg p-1 border border-slate-200 shadow-sm">
+                  <button
+                    type="button"
+                    onClick={() => setViewMode("grid")}
+                    className={`p-[6px] rounded-md transition-all duration-200 ${viewMode === "grid"
+                      ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                      }`}
+                  >
+                    <Grid3X3 className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setViewMode("list")}
+                    className={`p-[6px] rounded-md transition-all duration-200 ${viewMode === "list"
+                      ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                      }`}
+                  >
+                    <List className="w-4 h-4" />
+                  </button>
+                </div>
+
+                {/* Close Button */}
+                <button
+                  onClick={() => setShowTemplateListing(true)}
+                  className="w-8 h-8 bg-red-600 hover:bg-red-700 text-white rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-200"
+                >
+                  <XMarkIcon className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Enhanced Template Type Tabs - Matching Templates.tsx style */}
-        <div className="bg-white/80 backdrop-blur-xl shadow-sm border-b border-slate-200 px-4 sm:px-6 lg:px-8 py-3">
-          <div className="flex flex-wrap gap-2 sm:gap-3">
+        <div className="bg-white/80 backdrop-blur-xl shadow-sm border-b border-slate-200 p-2">
+          <div className="flex flex-wrap gap-2">
             {templateTypes.map((type) => {
               const colors = getTemplateTypeColor(type.key)
               return (
                 <button
                   key={type.key}
                   onClick={() => setActiveTab(type.key)}
-                  className={`px-3 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl font-medium text-xs sm:text-sm transition-all duration-300 whitespace-nowrap relative overflow-hidden ${
-                    activeTab === type.key
-                      ? `bg-gradient-to-r ${colors.gradient} text-white shadow-lg ${colors.shadow} transform scale-105`
-                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 hover:shadow-sm"
-                  }`}
+                  className={`p-2 rounded-md font-medium text-sm transition-all duration-300 whitespace-nowrap relative overflow-hidden ${activeTab === type.key
+                    ? `bg-gradient-to-r ${colors.gradient} text-white shadow-lg ${colors.shadow} transform scale-105`
+                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 hover:shadow-md"
+                    }`}
                 >
-                  <span className="relative z-10 flex items-center gap-1 sm:gap-2">
+                  <span className="relative z-10 flex items-center gap-1 sm:gap-2 text-[11px]">
                     {type.key !== "all" && getTemplateTypeIcon(type.key)}
                     <span className="hidden xs:inline">{type.label}</span>
-                    <span className="xs:hidden">{type.label}</span>({type.count})
+                    <span className="xs:hidden">{type.label}</span>( {type.count} )
                   </span>
                   {activeTab !== type.key && (
                     <div className="absolute inset-0 bg-gradient-to-r from-slate-100 to-slate-50 opacity-0 hover:opacity-100 transition-opacity duration-200" />
@@ -465,50 +603,54 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
 
         {/* Enhanced Content - Fixed for full width list view */}
         <div className="flex-1 overflow-auto bg-gradient-to-br from-slate-50/50 to-blue-50/30">
-          <div className="p-4 sm:p-6 lg:p-8 w-full">
+          <div className="p-2 w-full">
             {activeTab === "all" ? (
               // Render grouped templates for "All" tab
-              <div className="space-y-8 sm:space-y-12 w-full">
+              <div className="space-y-2 w-full">
                 {Object.entries(groupedTemplatesForAll).map(([templateType, templates]) => {
                   const colors = getTemplateTypeColor(templateType)
                   return (
                     <div key={templateType} className="w-full">
-                      <div className="mb-4 w-full">
-                        <div className="border rounded-xl p-4 bg-white shadow-md">
+                      <div className="mb-2 w-full">
+                        <div className="border rounded-md p-2 bg-white border-slate-200">
                           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                            <div className="flex items-center gap-4">
-                              <div className={`${colors.text} p-3 bg-gray-100 rounded-lg`}>
-                                {getTemplateTypeIcon(templateType)}
+                            {/* parent */}
+                            <div className="w-full">
+                              {/* header */}
+                              <div className="flex items-center gap-2 border-b pb-2 border-slate-200">
+                                <div className={`${colors.text} p-2 bg-gray-200 rounded-md`}>
+                                  {getTemplateTypeIcon(templateType)}
+                                </div>
+                                <div>
+                                  <h2 className="text-sm font-bold text-gray-800 uppercase">
+                                    {templateType} ( {(templates as TemplateState<unknown>[]).length} )
+                                  </h2>
+                                  {/* <p className="text-xs font-medium text-gray-500">
+                                    {(templates as TemplateState<unknown>[]).length} {t('template')}
+                                    {(templates as TemplateState<unknown>[]).length !== 1 ? "s" : ""} {t('available')}
+                                  </p> */}
+                                </div>
                               </div>
-                              <div>
-                                <h2 className="text-base sm:text-lg font-semibold text-gray-800 uppercase">
-                                  {templateType}
-                                </h2>
-                                <p className="text-sm text-gray-500">
-                                  {(templates as TemplateState<unknown>[]).length} template
-                                  {(templates as TemplateState<unknown>[]).length !== 1 ? "s" : ""} available
-                                </p>
+                              {/* child */}
+                              {/* Templates Grid/List for this type - Fixed container */}
+                              <div className="w-full mt-2">
+                                {viewMode === "grid" ? (
+                                  <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-7 gap-2 w-full">
+                                    {(templates as TemplateState<unknown>[]).map(
+                                      (template: TemplateState<unknown>, index: number) => renderTemplateCard(template, index),
+                                    )}
+                                  </div>
+                                ) : (
+                                  <div className="w-full space-y-4">
+                                    {(templates as TemplateState<unknown>[]).map(
+                                      (template: TemplateState<unknown>, index: number) => renderTemplateCard(template, index),
+                                    )}
+                                  </div>
+                                )}
                               </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-
-                      {/* Templates Grid/List for this type - Fixed container */}
-                      <div className="w-full mb-8 sm:mb-12">
-                        {viewMode === "grid" ? (
-                          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-7 gap-4 sm:gap-6 lg:gap-8 w-full">
-                            {(templates as TemplateState<unknown>[]).map(
-                              (template: TemplateState<unknown>, index: number) => renderTemplateCard(template, index),
-                            )}
-                          </div>
-                        ) : (
-                          <div className="w-full space-y-4">
-                            {(templates as TemplateState<unknown>[]).map(
-                              (template: TemplateState<unknown>, index: number) => renderTemplateCard(template, index),
-                            )}
-                          </div>
-                        )}
                       </div>
                     </div>
                   )
@@ -537,7 +679,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
             {filteredTemplates.length === 0 && (
               <div className="text-center py-16 sm:py-20 px-4 w-full">
                 <div className="text-4xl sm:text-6xl mb-4 sm:mb-6">🎨</div>
-                <h3 className="text-lg sm:text-2xl font-bold text-slate-900 mb-3">No templates found</h3>
+                <h3 className="text-lg sm:text-2xl font-bold text-slate-900 mb-3">{t('no_templates_found')}</h3>
                 <p className="text-slate-600 mb-6 text-sm sm:text-base max-w-sm mx-auto leading-relaxed">
                   {searchQuery
                     ? `We couldn't find any templates matching "${searchQuery}".`
@@ -549,7 +691,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
                       onClick={() => setSearchQuery("")}
                       className="w-full sm:w-auto bg-gradient-to-r from-slate-500 to-slate-600 hover:from-slate-600 hover:to-slate-700 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
                     >
-                      Clear Search
+                      {t('clear_search')}
                     </button>
                   )}
                 </div>

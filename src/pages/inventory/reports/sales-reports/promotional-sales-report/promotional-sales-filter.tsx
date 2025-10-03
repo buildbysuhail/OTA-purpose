@@ -198,6 +198,6 @@ export const PromotionalSalesReportFilterInitialState = {
     salesRouteID: 0,
     warehouseID: 0,
     voucherForm: "",
-    groupCategoryID: 0,
-    sectionID: 0,
+    groupCategoryID: -1,
+    sectionID: -1,
 };

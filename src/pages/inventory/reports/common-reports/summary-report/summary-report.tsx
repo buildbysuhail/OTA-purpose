@@ -1,6 +1,9 @@
 import { FC, Fragment, useEffect, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ErpDevGrid, { DrillDownCellTemplate, SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  DrillDownCellTemplate,
+  SummaryConfig,
+} from "../../../../../components/ERPComponents/erp-dev-grid";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../../redux/types";
@@ -22,7 +25,9 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
   const [filter, setFilter] = useState<any>(SummaryFilterInitialState);
   const userSession = useSelector((state: RootState) => state.UserSession);
   const clientSession = useSelector((state: RootState) => state.ClientSession);
-  const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
+  const applicationSettings = useSelector(
+    (state: RootState) => state.ApplicationSettings
+  );
   const columns: DevGridColumn[] = useMemo(() => {
     const baseColumns: DevGridColumn[] = [
       {
@@ -61,7 +66,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowFiltering: true,
         width: 50,
         showInPdf: true,
-         cellRender: (cellElement: any, cellInfo: any) => {
+        cellRender: (cellElement: any, cellInfo: any) => {
           return (
             <DrillDownCellTemplate
               data={cellElement}
@@ -613,7 +618,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         dataField: "refDate",
         caption: t("ref_date"),
         dataType: "date",
-          format: "dd-MMM-yyyy hh:mm a",
+        format: "dd-MMM-yyyy hh:mm a",
         allowSearch: true,
         allowFiltering: true,
         width: 100,
@@ -837,7 +842,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
           }
         },
       },
-  {
+      {
         dataField: "counterName",
         caption: t("counter_name"),
         dataType: "string",
@@ -845,7 +850,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         allowFiltering: true,
         width: 100,
       },
-        {
+      {
         dataField: "systemDateTime",
         caption: t("system_date_time"),
         dataType: "datetime",
@@ -983,14 +988,13 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
       .filter((column) => {
         if (
           column.dataField == "salesAmount" ||
-          column.dataField == "totalProfit" 
+          column.dataField == "totalProfit"
           // column.dataField == "counterName" ||
-          // column.dataField == "systemDateTime" 
+          // column.dataField == "systemDateTime"
         ) {
           return userSession.dbIdValue == "489995732270";
         }
-        if (column.dataField == "upi" || column.dataField == "cardAmt"
-        ) {
+        if (column.dataField == "upi" || column.dataField == "cardAmt") {
           return applicationSettings.accountsSettings.allowMultiPayments;
         }
         if (column.dataField == "printCount") {
@@ -1026,7 +1030,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
       });
   }, [t, filter, userSession.dbIdValue]);
 
-  const { getFormattedValue,formatNumberByDecimalPoint } = useNumberFormat();
+  const { getFormattedValue, formatNumberByDecimalPoint } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: any) => {
       console.log("itemInfo");
@@ -1042,7 +1046,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
       ) {
         return "0";
       }
-      return  getFormattedValue(value) || "0";
+      return getFormattedValue(value) || "0";
     };
   }, []);
 
@@ -1282,13 +1286,13 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
                 }}
                 reload={true}
                 gridId={gridId}
-                   childPopupProps={{
-                    content: null,
-                    title: "",
-                    isForm: false,
-                    isTransactionScreen: true,
-                    drillDownCells: "vchNo,",
-                  }}
+                childPopupProps={{
+                  content: null,
+                  title: "",
+                  isForm: false,
+                  isTransactionScreen: true,
+                  drillDownCells: "vchNo,",
+                }}
               />
             </div>
           </div>

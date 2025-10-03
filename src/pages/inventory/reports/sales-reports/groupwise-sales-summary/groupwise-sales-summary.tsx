@@ -106,7 +106,7 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
         allowSearch: true,
         allowFiltering: true,
         allowSorting: true,
-        width: 100,
+        width: 150,
         showInPdf: true,
         cellRender: (
           cellElement: any,
@@ -139,7 +139,7 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
         allowSearch: true,
         allowFiltering: true,
         allowSorting: true,
-        width: 100,
+        width: 200,
         showInPdf: true,
         cellRender: (
           cellElement: any,
@@ -172,7 +172,7 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
         allowSearch: true,
         allowFiltering: true,
         allowSorting: true,
-        width: 100,
+        width: 200,
         showInPdf: true,
         cellRender: (
           cellElement: any,
@@ -205,7 +205,7 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
         allowSearch: true,
         allowFiltering: true,
         allowSorting: true,
-        width: 100,
+        width: 150,
         showInPdf: true,
         cellRender: (
           cellElement: any,
@@ -238,7 +238,7 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
         allowSearch: true,
         allowFiltering: true,
         allowSorting: true,
-        width: 100,
+        width: 150,
         showInPdf: true,
         cellRender: (
           cellElement: any,
@@ -271,7 +271,7 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
         allowSearch: true,
         allowFiltering: true,
         allowSorting: true,
-        width: 100,
+        width: 150,
         showInPdf: true,
         cellRender: (
           cellElement: any,
@@ -304,7 +304,7 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
         allowSearch: true,
         allowFiltering: true,
         allowSorting: true,
-        width: 100,
+        width: 180,
         showInPdf: true,
         cellRender: (
           cellElement: any,
@@ -370,7 +370,7 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
         allowSearch: true,
         allowFiltering: true,
         allowSorting: true,
-        width: 100,
+        width: 150,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -408,7 +408,7 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
         allowSearch: true,
         allowFiltering: true,
         allowSorting: true,
-        width: 100,
+        width: 200,
       },
       {
         dataField: "netValue",
@@ -417,7 +417,7 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
         allowSearch: true,
         allowFiltering: true,
         allowSorting: true,
-        width: 100,
+        width: 150,
         showInPdf: true,
         cellRender: (
           cellElement: any,
@@ -450,7 +450,7 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
         allowSearch: true,
         allowFiltering: true,
         allowSorting: true,
-        width: 100,
+        width: 150,
         cellRender: (
           cellElement: any,
           cellInfo: any,

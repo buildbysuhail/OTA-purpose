@@ -3456,11 +3456,13 @@ debugger;
               result: {
                 transaction: {
                   details: [data],
-                },
+                }
+
               },
               formStateHandleFieldChangeKeysOnly:
                 formStateHandleFieldChangeKeysOnly,
-            });
+            },
+              false);
 
             if (
               applicationSettings.inventorySettings?.showRateWarning.toUpperCase() ==

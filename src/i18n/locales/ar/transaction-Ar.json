@@ -791,5 +791,14 @@
   "branch_name": "اسم الفرع",
   "to": "إلى",
   "consolidated_all_branch_purchase_order_list": "قائمة أوامر الشراء الموحدة لجميع الفروع",
-  "pending_purchase_quotation_list": "قائمة عروض أسعار المشتريات المعلقة"
+  "pending_purchase_quotation_list": "قائمة عروض أسعار المشتريات المعلقة",
+  "deleting_transaction": "حذف المعاملة",
+  "please_wait_while_we_process_your_request": "الرجاء الانتظار بينما نقوم بمعالجة طلبك",
+  "transaction_deleted": "تم حذف المعاملة",
+  "the_transaction_has_been_removed_successfully": "تمت إزالة المعاملة بنجاح",
+  "saving_transaction": "حفظ المعاملة",
+  "transaction_saved": "تم حفظ المعاملة",
+  "your_changes_have_been_saved_successfully": "تم حفظ التغييرات الخاصة بك بنجاح",
+  "refresh": "تحديث",
+  "history": "السجل"
 }

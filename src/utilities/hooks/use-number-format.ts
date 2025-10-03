@@ -41,11 +41,42 @@ export const useNumberFormat = (): UseNumberFormatResult => {
         return '#,#0.00';
     }
   }
-  function formatNumberByDecimalPoint(value: number, decimalPoint?: number): string {
+  function formatNumberByDecimalPoint(value: string, decimalPoint?: number): string {
     
     const format = getNumericFormat(decimalPoint);    
-    return formatNumber(value,format);
+    return formatNumber2(value,format);
   }
+  
+  function formatNumber2(value: string, format: string): string {
+    if (!value || value.trim() === "") {
+        return "";
+    }
+
+    // Remove commas from input
+    const sanitized = value.replace(/,/g, "");
+
+    // Convert to number
+    let num = parseFloat(sanitized);
+    if (isNaN(num)) {
+        return "";
+    }
+
+    const parts = format.split(".");
+    const integerPart = parts[0];
+    const decimalPart = parts[1];
+
+    // Apply decimal precision based on format
+    let result = num.toFixed(decimalPart ? decimalPart.length : 0);
+
+    // Add thousands separators if format includes them
+    if (integerPart.includes(",")) {
+        const [intPart, decPart] = result.split(".");
+        const formattedInt = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        result = decPart ? `${formattedInt}.${decPart}` : formattedInt;
+    }
+
+    return result;
+}
   function formatNumber(value: number, format: string): string {
     // Simple implementation - you might want to use a library like numeral.js for more complex formatting
     const parts = format.split('.');
@@ -138,7 +169,7 @@ export const useNumberFormat = (): UseNumberFormatResult => {
     if(cuttingPoint > 0) {
        formattedText =  formatDecimal(formattedText, cuttingPoint, numberOfZero);
     }
-    return formattedText;
+    return formatNumberByDecimalPoint(formattedText, _decimalPoint);
   }
   function formatDecimal(
   input: string,
@@ -393,7 +424,7 @@ export interface UseNumberFormatResult {
     cuttingPoint?: number,
     numberOfZero?: number
   ) => number;
-  formatNumberByDecimalPoint(value: number, decimalPoint: number): string ;
+  formatNumberByDecimalPoint(value: string, decimalPoint?: number): string ;
   getAmountInWords: (amount: number) => string;
   round: (value: number, decimalPoints?: number,taxFormatted?: boolean) => number;
   getFormattedValueIgnoreRoundingToNumber: (val: number) => number;

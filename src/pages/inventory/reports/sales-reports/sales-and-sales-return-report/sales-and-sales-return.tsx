@@ -25,9 +25,9 @@ const SalesAndSalesReturn = () => {
       [field]: value,
     }));
   };
-
+const [reload, setReload] = useState<boolean>(true);
   const handleShow = () => {
-    // Add refresh logic here
+   setReload(true)
   };
 
   const summaryColumns: DevGridColumn[] = [
@@ -309,7 +309,7 @@ const SalesAndSalesReturn = () => {
             label={t("print_line_between_rows")}
             id={""}
           />
-          <ERPDateInput
+          <ERPDateInput    
             value={filterState.dateFrom}
             label={t("date_from")}
             onChangeData={(data) =>
@@ -350,10 +350,12 @@ const SalesAndSalesReturn = () => {
                   enablefilter={false}
                   showFilterInitially={false}
                   method={ActionType.POST}
-                  reload={true}
+                  reload={reload}
+                  changeReload={(e) => setReload(false)}
                   gridId="grd_sales_summary"
-                  extraParams={filterState}
+                  postData={filterState}
                   height={700}
+                  
                   // hideDefaultExportButton={true}
                   hideDefaultSearchPanel={true}
                   hideGridHeader={true}
@@ -380,7 +382,7 @@ const SalesAndSalesReturn = () => {
                   enablefilter={false}
                   showFilterInitially={false}
                   method={ActionType.POST}
-                  reload={true}
+                  reload={reload}
                   gridId="grd_sales_detail"
                   extraParams={filterState}
                   height={700}

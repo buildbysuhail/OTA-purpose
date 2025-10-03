@@ -2,15 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
-import {
-  PlusIcon,
-  TrashIcon,
-  PencilIcon,
-  XMarkIcon,
-  Squares2X2Icon,
-  ListBulletIcon,
-  Bars3Icon,
-} from "@heroicons/react/24/outline"
+import { PlusIcon, TrashIcon, PencilIcon, XMarkIcon, Squares2X2Icon, ListBulletIcon, Bars3Icon, } from "@heroicons/react/24/outline"
 import { StarIcon as StarIconSolid } from "@heroicons/react/24/solid"
 import type { TemplateState } from "./Designer/interfaces"
 import { DummyVoucherData } from "./constants/DummyData"
@@ -88,33 +80,33 @@ const Templates = () => {
       })
       handleResponse(res, async () => {
         await getTemplates()
-        ERPToast.show("Template set as default successfully!", "success")
+        ERPToast.show(t("template_set_as_default_successfully"), "success")
       })
     } catch (error) {
       console.error("Error setting default template:", error)
-      ERPToast.show("Failed to set template as default", "error")
+      ERPToast.show(t("failed_to_set_template_as_default"), "error")
     }
   }
 
   const handleDeleteTemplate = async (temp: any) => {
     if (temp?.is_default || temp?.isCurrent) {
-      ERPToast.show("Default template cannot be deleted.", "warning")
+      ERPToast.show(t("default_template_cannot_be_deleted"), "warning")
     } else if (temp?.is_primary) {
-      ERPToast.show("Primary template cannot be deleted.", "warning")
+      ERPToast.show(t("primary_template_cannot_be_deleted"), "warning")
     } else {
       const confirmDelete = window.confirm(
-        "Are you sure you want to delete this template? This action cannot be undone.",
+        t("confirm_delete_template")
       )
       if (confirmDelete) {
         try {
           var res = await api.delete(`${Urls.templates}${temp?.id}`)
           handleResponse(res, () => {
             getTemplates()
-            ERPToast.show("Template deleted successfully!", "success")
+            ERPToast.show(t("template_deleted_successfully"), "success")
           })
         } catch (error) {
           console.error("Error deleting template:", error)
-          ERPToast.show("Failed to delete template", "error")
+          ERPToast.show(t("failed_to_delete_template"), "error")
         }
       }
     }
@@ -214,7 +206,7 @@ const Templates = () => {
                 {temp?.templateName}
               </h3>
             </div>
-            <p className="text-sm text-slate-500 capitalize mb-2">{temp?.templateType || "Standard"} Template</p>
+            <p className="text-sm text-slate-500 capitalize mb-2">{temp?.templateType || "Standard"} {t("template")}</p>
           </div>
           <div className="relative flex items-center gap-2 w-full sm:w-auto justify-end">
             <button
@@ -224,8 +216,8 @@ const Templates = () => {
                 templateGroup == "barcode"
                   ? navigate(`/label-designer/${temp?.id}?template_group=${templateGroup}`)
                   : navigate(`/invoice_designer/${temp?.id}?template_group=${templateGroup}`, {
-                      state: { templateKind: temp?.templateKind, templateType: temp?.templateType },
-                    })
+                    state: { templateKind: temp?.templateKind, templateType: temp?.templateType },
+                  })
               }
             >
               <PencilIcon className="w-4 h-4" />
@@ -242,7 +234,7 @@ const Templates = () => {
                 className="bg-gradient-to-r from-blue-100 to-indigo-200 hover:from-blue-500 hover:to-indigo-600 hover:text-white text-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 hover:shadow-lg hover:scale-105 whitespace-nowrap"
                 onClick={() => setDefaultTemplate(temp?.id)}
               >
-                Set Default
+                {t('set_default')}
               </button>
             )}
             {isDefault && (
@@ -260,8 +252,12 @@ const Templates = () => {
       <div
         key={`ti_${temp?.id}`}
         className="
-          group relative w-full aspect-[4/5] h-[40vw] max-h-[360px] min-h-[180px] bg-white rounded-xl sm:rounded-2xl border border-slate-200 hover:border-slate-300 
-          hover:shadow-xl transition-all duration-500 transform hover:scale-[1.02] hover:-translate-y-1 overflow-hidden sm:h-[280px] md:h-[320px] lg:h-[360px]
+          group relative w-full max-w-[200px] sm:max-w-[350px] md:max-w-[310px] lg:max-w-[270px] 
+          h-[250px] xs:h-[260px] sm:h-[280px] md:h-[300px] lg:h-[280px] 
+          aspect-[4/5] bg-white rounded-xl sm:rounded-2xl 
+          border border-slate-200 hover:border-slate-300 hover:shadow-lg 
+          transition-all duration-500 transform hover:scale-[0.99] hover:-translate-y-1 overflow-hidden 
+          mx-auto sm:mx-0
         "
       >
         {isPremium && (
@@ -299,8 +295,8 @@ const Templates = () => {
                   templateGroup == "barcode"
                     ? navigate(`/label-designer/${temp?.id}?template_group=${templateGroup}`)
                     : navigate(`/invoice_designer/${temp?.id}?template_group=${templateGroup}`, {
-                        state: { templateKind: temp?.templateKind, templateType: temp?.templateType },
-                      })
+                      state: { templateKind: temp?.templateKind, templateType: temp?.templateType },
+                    })
                 }}
               >
                 <PencilIcon className="w-4 h-4" />
@@ -331,7 +327,7 @@ const Templates = () => {
                     setDefaultTemplate(temp?.id)
                   }}
                 >
-                  Set Default
+                  {t('set_default')}
                 </button>
               )}
             </div>
@@ -354,7 +350,7 @@ const Templates = () => {
   }
 
   return (
-    <div className="flex h-[91vh] bg-gradient-to-br from-slate-50 to-blue-50/30">
+    <div className="flex h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 overflow-hidden">
       {showTemplateListing ? (
         <>
           {sidebarOpen && (
@@ -363,12 +359,13 @@ const Templates = () => {
             </div>
           )}
           <div
-            className={`fixed inset-y-0 left-0 z-40 w-72 sm:w-80 bg-white/95 backdrop-blur-xl border-r border-slate-200 transform ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 shadow-xl lg:shadow-none`}
+            className={`fixed inset-y-0 left-0 z-40 w-72 sm:w-80 bg-white/95 backdrop-blur-xl border-r border-slate-200 transform ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
+              } transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 shadow-xl lg:shadow-none h-full overflow-y-auto scrollbar-thin`}
           >
             <div className="flex flex-col h-full">
-              <div className="flex items-center justify-between flex-shrink-0 px-4 sm:px-6 py-4 sm:py-6 border-b border-slate-200">
+              <div className="flex items-center justify-between flex-shrink-0 px-2 py-[15px] border-b border-slate-200">
                 <div>
-                  <h1 className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
+                  <h1 className="text-base font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
                     {t("templates")}
                   </h1>
                 </div>
@@ -379,109 +376,335 @@ const Templates = () => {
                   <XMarkIcon className="w-5 h-5" />
                 </button>
               </div>
-              <div className="flex-1 overflow-y-auto py-4 sm:py-6 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-100">
-                <nav className="px-3 sm:px-4 space-y-1 sm:space-y-2">
-                  {TemplateTypes.map((template, index) => {
-                    const isActive = searchParams?.get("template_group") === template?.template_group_id
+              <div className="flex-1 overflow-y-auto p-2 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-100">
+                {/* Search Box */}
+                <div>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none h-[38px]">
+                      <svg
+                        className="h-4 w-4 text-slate-400"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                    </div>
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          // Search is handled by filtering below
+                          e.preventDefault();
+                        }
+                      }}
+                      placeholder={t("search_templates")}
+                      className="block w-full pl-10 pr-3 py-2 sm:py-2.5 border border-slate-300 rounded-lg text-xs placeholder-slate-400 transition-all duration-200 h-[38px]"
+                    />
+                    {searchQuery && (
+                      <button
+                        onClick={() => setSearchQuery('')}
+                        className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                      >
+                        <svg
+                          className="h-4 w-4 text-slate-400 hover:text-slate-600"
+                          fill="none"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Navigation */}
+                <nav className="p-2 space-y-1">
+                  {TemplateTypes.filter((template) => {
+                    if (!searchQuery) return true;
+                    return t(template.name).toLowerCase().includes(searchQuery.toLowerCase());
+                  }).map((template, index) => {
+                    const isActive = searchParams?.get("template_group") === template?.template_group_id;
                     return (
                       <button
                         key={`tt_${index}`}
                         onClick={() => {
-                          setSearchParams({ template_group: template?.template_group_id })
-                          setTemplateGroup(template?.template_group_id)
-                          setSidebarOpen(false)
+                          setSearchParams({ template_group: template?.template_group_id });
+                          setTemplateGroup(template?.template_group_id);
+                          setSidebarOpen(false);
                         }}
-                        className={`group w-full flex items-center justify-between px-3 sm:px-4 py-3 sm:py-4 text-sm font-medium rounded-xl sm:rounded-2xl transition-all duration-200 ${isActive ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25" : "text-slate-700 hover:text-slate-900 hover:bg-slate-100"}`}
+                        className={`group w-full flex items-center justify-between px-4 py-2 text-sm font-medium rounded-xl sm:rounded-2xl transition-all duration-200 ${isActive
+                          ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
+                          : "text-slate-700 hover:text-slate-900 hover:bg-slate-100"
+                          }`}
                       >
                         <span className="truncate text-xs sm:text-sm">{t(template.name)}</span>
                         {isActive && <div className="w-2 h-2 bg-white rounded-full opacity-75" />}
                       </button>
-                    )
+                    );
                   })}
+                  {TemplateTypes.filter((template) => {
+                    if (!searchQuery) return true;
+                    return t(template.name).toLowerCase().includes(searchQuery.toLowerCase());
+                  }).length === 0 && (
+                      <div className="text-center py-8 text-slate-500 text-sm">
+                        {t("no_templates_found")}
+                      </div>
+                    )}
                 </nav>
               </div>
             </div>
           </div>
-          <div className="flex-1 flex flex-col overflow-hidden min-w-0">
-            <div className="bg-white/80 backdrop-blur-xl shadow-sm border-b border-slate-200 px-4 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6">
-              <div className="flex flex-col gap-3 sm:gap-4">
-                <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
-                    <button
-                      className="lg:hidden p-2 text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors flex-shrink-0"
-                      onClick={() => setSidebarOpen(true)}
-                    >
-                      <Bars3Icon className="w-5 h-5" />
-                    </button>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <h1 className="text-base sm:text-lg lg:text-xl font-bold text-slate-900 capitalize truncate">
-                          {templateGroup?.replaceAll("_", " ")} {t("templates")}
-                        </h1>
-                        <span className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-xs px-2 py-1 rounded-full font-medium flex-shrink-0">
-                          {filteredAndSortedTemplates.length}
-                        </span>
-                      </div>
+
+          <div className="flex-1 flex flex-col overflow-hidden min-w-0 h-screen">
+            <div className="bg-white/80 backdrop-blur-xl border-b border-slate-200 p-2">
+              <div className="flex flex-col gap-3">
+                {/* Mobile Layout (< 640px) */}
+                <div className="sm:hidden">
+                  {/* Top Row - Hamburger, Title, Count, New Button */}
+                  <div className="flex items-center justify-between gap-2 mb-3">
+                    <div className="flex items-center gap-2 min-w-0 flex-1">
+                      <button
+                        className="p-2 text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors flex-shrink-0"
+                        onClick={() => setSidebarOpen(true)}
+                      >
+                        <Bars3Icon className="w-5 h-5" />
+                      </button>
+                      <h1 className="text-base font-bold text-slate-900 capitalize truncate">
+                        {templateGroup?.replaceAll("_", " ")} {t("templates")}
+                      </h1>
+                      <span className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-xs px-2 py-1 rounded-full font-medium flex-shrink-0">
+                        {filteredAndSortedTemplates.length}
+                      </span>
                     </div>
-                  </div>
-                  <div className="lg:hidden flex-shrink-0">
                     <button
                       onClick={() => setShowTemplateListing(false)}
-                      className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white rounded-lg font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-sm"
+                      className="flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white rounded-lg font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-sm flex-shrink-0"
                     >
                       <PlusIcon className="w-4 h-4" />
-                      <span className="hidden xs:inline">New</span>
+                      <span>{t('new')}</span>
                     </button>
                   </div>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-                  <div className="relative flex-1 min-w-0">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
-                    <input
-                      type="text"
-                      placeholder="Search templates..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-9 pr-4 py-2.5 border border-slate-200 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-200"
-                    />
-                  </div>
-                  <div className="flex items-center gap-2 sm:gap-3">
+
+                  {/* Bottom Row - Search and View Toggle */}
+                  <div className="flex items-center gap-2">
+                    <div className="relative flex-1 min-w-0">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+                      <input
+                        type="text"
+                        placeholder={t("search_templates")}
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-200"
+                      />
+                    </div>
                     <div className="flex bg-white/80 backdrop-blur-sm rounded-lg p-1 border border-slate-200 shadow-sm flex-shrink-0">
                       <button
                         type="button"
                         onClick={() => setViewMode("grid")}
-                        className={`p-2 rounded-md transition-all duration-200 ${viewMode === "grid" ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25" : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"}`}
+                        className={`p-2 rounded-md transition-all duration-200 ${viewMode === "grid"
+                          ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
+                          : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                          }`}
                       >
                         <Squares2X2Icon className="w-4 h-4" />
                       </button>
                       <button
                         type="button"
                         onClick={() => setViewMode("list")}
-                        className={`p-2 rounded-md transition-all duration-200 ${viewMode === "list" ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25" : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"}`}
+                        className={`p-2 rounded-md transition-all duration-200 ${viewMode === "list"
+                          ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
+                          : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                          }`}
                       >
                         <ListBulletIcon className="w-4 h-4" />
                       </button>
                     </div>
-                    <div className="hidden lg:block">
+                  </div>
+                </div>
+
+                {/* Tablet Layout (640px - 1024px) */}
+                <div className="hidden sm:flex lg:hidden flex-col gap-3">
+                  {/* Top Row - Hamburger, Title, Count, New Button */}
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3 min-w-0 flex-1">
                       <button
-                        onClick={() => setShowTemplateListing(false)}
-                        className="flex items-center gap-3 px-4 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white rounded-xl font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                        className="p-2 text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors flex-shrink-0"
+                        onClick={() => setSidebarOpen(true)}
                       >
-                        <PlusIcon className="w-4 h-4" />
-                        <span>New</span>
+                        <Bars3Icon className="w-5 h-5" />
+                      </button>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <h1 className="text-lg font-bold text-slate-900 capitalize truncate">
+                            {templateGroup?.replaceAll("_", " ")} {t("templates")}
+                          </h1>
+                          <span className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-xs px-2 py-1 rounded-full font-medium flex-shrink-0">
+                            {filteredAndSortedTemplates.length}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setShowTemplateListing(false)}
+                      className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white rounded-lg font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-sm flex-shrink-0"
+                    >
+                      <PlusIcon className="w-4 h-4" />
+                      <span>{t('new')}</span>
+                    </button>
+                  </div>
+
+                  {/* Bottom Row - Search and View Toggle */}
+                  <div className="flex items-center gap-3">
+                    <div className="relative flex-1 min-w-0">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+                      <input
+                        type="text"
+                        placeholder={t("search_templates")}
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full pl-9 pr-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-200"
+                      />
+                    </div>
+                    <div className="flex bg-white/80 backdrop-blur-sm rounded-lg p-1 border border-slate-200 shadow-sm flex-shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => setViewMode("grid")}
+                        className={`p-2 rounded-md transition-all duration-200 ${viewMode === "grid"
+                          ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
+                          : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                          }`}
+                      >
+                        <Squares2X2Icon className="w-4 h-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setViewMode("list")}
+                        className={`p-2 rounded-md transition-all duration-200 ${viewMode === "list"
+                          ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
+                          : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                          }`}
+                      >
+                        <ListBulletIcon className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
                 </div>
+
+                {/* Desktop Layout (>= 1024px) - Single Row */}
+                <div className="hidden lg:flex items-center justify-between gap-4">
+                  {/* Left Side - Hamburger (hidden on lg+), Title and Count */}
+                  <div className="flex items-center gap-3 flex-shrink-0">
+                    <h1 className="text-base font-bold text-slate-900 capitalize whitespace-nowrap">
+                      {templateGroup?.replaceAll("_", " ")} {t("templates")}
+                    </h1>
+                    <span className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-xs px-2 py-1 rounded-full font-medium">
+                      {filteredAndSortedTemplates.length}
+                    </span>
+                  </div>
+
+                  {/* Right Side - Search, View Toggle, and New Button */}
+                  <div className="flex items-center gap-3 flex-shrink-0">
+                    {/* Search Bar */}
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none h-[38px]">
+                        <svg
+                          className="h-4 w-4 text-slate-400"
+                          fill="none"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                      </div>
+                      <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            // Search is handled by filtering below
+                            e.preventDefault();
+                          }
+                        }}
+                        placeholder={t("search_templates")}
+                        className="block w-full pl-10 pr-3 py-2 sm:py-2.5 border border-slate-300 rounded-lg text-xs placeholder-slate-400 transition-all duration-200 h-[38px]"
+                      />
+                      {searchQuery && (
+                        <button
+                          onClick={() => setSearchQuery('')}
+                          className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                        >
+                          <svg
+                            className="h-4 w-4 text-slate-400 hover:text-slate-600"
+                            fill="none"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
+
+                    {/* View Toggle */}
+                    <div className="flex bg-white/80 backdrop-blur-sm rounded-lg p-1 border border-slate-200 shadow-sm">
+                      <button
+                        type="button"
+                        onClick={() => setViewMode("grid")}
+                        className={`p-[6px] rounded-md transition-all duration-200 ${viewMode === "grid"
+                          ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
+                          : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                          }`}
+                      >
+                        <Squares2X2Icon className="w-4 h-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setViewMode("list")}
+                        className={`p-[6px] rounded-md transition-all duration-200 ${viewMode === "list"
+                          ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
+                          : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                          }`}
+                      >
+                        <ListBulletIcon className="w-4 h-4" />
+                      </button>
+                    </div>
+
+                    {/* New Button */}
+                    <button
+                      onClick={() => setShowTemplateListing(false)}
+                      className="flex items-center gap-2 py-2 px-3 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white rounded-lg font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                    >
+                      <PlusIcon className="w-4 h-4" />
+                      <span>{t('new')}</span>
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="flex-1 overflow-auto bg-gradient-to-br from-slate-50/50 to-blue-50/30">
-              <div className="p-4 sm:p-6 lg:p-8">
+            <div className="flex-1 overflow-y-auto scrollbar-thin">
+              <div className="p-2 w-full">
                 {loading ? (
                   <div
                     className={
                       viewMode === "grid"
-                        ? "grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6 lg:gap-8"
+                        ? "grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 xxl:grid-cols-5 gap-2 w-full"
                         : "space-y-4"
                     }
                   >
@@ -501,20 +724,27 @@ const Templates = () => {
                     <div
                       className={
                         viewMode === "grid"
-                          ? "grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6 lg:gap-8"
+                          ? "grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 xxl:grid-cols-5 gap-2 w-full"
                           : "space-y-4"
                       }
                     >
                       {filteredAndSortedTemplates.map((temp: any) => renderTemplateCard(temp))}
                       {viewMode === "grid" ? (
-                        <div className="group relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-xl border-2 border-dashed border-blue-300 hover:border-blue-400 transition-all duration-300 cursor-pointer aspect-[4/5] overflow-hidden">
+                        <div className="
+          group relative w-full max-w-[200px] sm:max-w-[220px] md:max-w-[240px] lg:max-w-[270px] 
+          h-[250px] xs:h-[260px] sm:h-[280px] md:h-[300px] lg:h-[280px] 
+          aspect-[4/5] bg-white rounded-xl sm:rounded-2xl 
+          border border-slate-200 hover:border-slate-300 hover:shadow-lg 
+          transition-all duration-500 transform hover:scale-[0.99] hover:-translate-y-1 overflow-hidden 
+          mx-auto sm:mx-0
+        ">
                           <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                           <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
                             <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-4 rounded-xl group-hover:scale-110 transition-transform duration-300 shadow-lg">
                               <PlusIcon className="w-6 h-6" />
                             </div>
-                            <h3 className="font-bold text-slate-900 mt-3 mb-1 text-base sm:text-lg">New Template</h3>
-                            <p className="text-slate-600 text-sm sm:text-base">Create new template</p>
+                            <h3 className="font-bold text-slate-900 mt-3 mb-1 text-base sm:text-lg">{t('new_template')}</h3>
+                            <p className="text-slate-600 text-sm sm:text-base">{t('create_new_template')}</p>
                           </div>
                           <button
                             onClick={() => setShowTemplateListing(false)}
@@ -530,8 +760,8 @@ const Templates = () => {
                             </div>
                           </div>
                           <div className="relative flex-1 min-w-0">
-                            <h3 className="font-bold text-slate-900 text-base mb-1">New Template</h3>
-                            <p className="text-slate-600 text-sm">Create new template</p>
+                            <h3 className="font-bold text-slate-900 text-base mb-1">{t('new_template')}</h3>
+                            <p className="text-slate-600 text-sm">{t('create_new_template')}</p>
                           </div>
                           <button
                             onClick={() => setShowTemplateListing(false)}
@@ -543,7 +773,7 @@ const Templates = () => {
                     {filteredAndSortedTemplates.length === 0 && !loading && (
                       <div className="text-center py-16 sm:py-20 px-4">
                         <div className="text-4xl sm:text-6xl mb-4 sm:mb-6">🎨</div>
-                        <h3 className="text-lg sm:text-2xl font-bold text-slate-900 mb-3">No templates found</h3>
+                        <h3 className="text-lg sm:text-2xl font-bold text-slate-900 mb-3">{t('no_templates_found')}</h3>
                         <p className="text-slate-600 mb-6 text-sm sm:text-base max-w-sm mx-auto leading-relaxed">
                           {searchQuery
                             ? `We couldn't find any templates matching "${searchQuery}".`
@@ -555,14 +785,14 @@ const Templates = () => {
                               onClick={() => setSearchQuery("")}
                               className="w-full sm:w-auto bg-gradient-to-r from-slate-500 to-slate-600 hover:from-slate-600 hover:to-slate-700 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
                             >
-                              Clear Search
+                              {t('clear_search')}
                             </button>
                           )}
                           <button
                             onClick={() => setShowTemplateListing(false)}
                             className="w-full sm:w-auto bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
                           >
-                            Create Template
+                            {t('create_template')}
                           </button>
                         </div>
                       </div>

@@ -2543,7 +2543,19 @@ export const useTransaction = (
         calculateSummaryAndTotal = true;
       } else if (columnName === "margin") {
         outDetail.margin = value;
-        outState.transaction?.details?.push(outDetail);
+        outState = calculateRowAmount(
+          Object.assign(detail, outDetail),
+          columnName,
+          {
+            result: {
+              transaction: {
+                details: [outDetail],
+              },
+            },
+          },
+          true
+        );
+        calculateSummaryAndTotal = true;
       } else if (columnName === "salesPrice") {
         outDetail.salesPrice = value;
         const sp = Number(outDetail.salesPrice || 0);
@@ -2559,7 +2571,19 @@ export const useTransaction = (
         }
 
         outDetail.margin = round(marginPerc, 6);
-        outState.transaction!.details = [outDetail];
+        outState = calculateRowAmount(
+          Object.assign(detail, outDetail),
+          columnName,
+          {
+            result: {
+              transaction: {
+                details: [outDetail],
+              },
+            },
+          },
+          true
+        );
+        calculateSummaryAndTotal = true;
       }
 
       if (calculateSummaryAndTotal) {
@@ -3488,11 +3512,13 @@ export const useTransaction = (
               result: {
                 transaction: {
                   details: [data],
-                },
+                }
+
               },
               formStateHandleFieldChangeKeysOnly:
                 formStateHandleFieldChangeKeysOnly,
-            });
+            },
+              false);
 
             if (
               applicationSettings.inventorySettings?.showRateWarning.toUpperCase() ==

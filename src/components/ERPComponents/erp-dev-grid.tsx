@@ -2271,33 +2271,37 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                         gap: '4px'
                       }}
                     >
-                      <span
-                        className="text-sm dark:!text-dark-text"
-                        title={gridHeader}
-                        style={{ 
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
-                          flexShrink: 0,
-                          maxWidth: '45%'
-                        }}
-                      >
-                        {gridHeader}
-                      </span>
-                      <span
-                        className="text-sm dark:!text-dark-text"
-                        title={header}
-                        style={{ 
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
-                          minWidth: 0,
-                          flex: '1 1 auto',
-                          flexBasis: 0
-                        }}
-                      >
-                        {header}
-                      </span>
+                      {gridHeader && (
+                        <span
+                          className="text-sm dark:!text-dark-text"
+                          title={gridHeader}
+                          style={{ 
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            flexShrink: 0,
+                            maxWidth: gridHeader.length > 50 ? '45%' : 'auto'  // Dynamic max-width
+                          }}
+                        >
+                          {gridHeader}
+                        </span>
+                      )}
+                      {header && (
+                        <span
+                          className="text-sm dark:!text-dark-text"
+                          title={header}
+                          style={{ 
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            minWidth: 0,
+                            flex: gridHeader ? '1 1 auto' : 'none',  // Only flex if gridHeader exists
+                            flexBasis: 0
+                          }}
+                        >
+                          {header}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </Item>

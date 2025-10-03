@@ -207,7 +207,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 150,
         showInPdf: true,
         cellRender: (
           cellElement: any,
@@ -1026,7 +1026,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
       });
   }, [t, filter, userSession.dbIdValue]);
 
-  const { getFormattedValue } = useNumberFormat();
+  const { getFormattedValue,formatNumberByDecimalPoint } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: any) => {
       console.log("itemInfo");
@@ -1042,7 +1042,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
       ) {
         return "0";
       }
-      return getFormattedValue(value) || "0";
+      return  getFormattedValue(value) || "0";
     };
   }, []);
 

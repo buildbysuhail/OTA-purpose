@@ -1,12 +1,18 @@
-import { FC, Fragment, useCallback, useMemo, useState } from "react";
+import { FC, Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ErpDevGrid, { DrillDownCellTemplate, SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  DrillDownCellTemplate,
+  SummaryConfig,
+} from "../../../../../components/ERPComponents/erp-dev-grid";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import moment from "moment";
 import { isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
-import TaxReportDetailedFilter, { TaxReportDetailedFilterInitialState } from "./tax-report-detailed-filter";
+import TaxReportDetailedFilter, {
+  TaxReportDetailedFilterInitialState,
+} from "./tax-report-detailed-filter";
+import { useLocation } from "react-router-dom";
 
 interface TaxReportDetailedProps {
   gridHeader: string;
@@ -14,12 +20,21 @@ interface TaxReportDetailedProps {
   gridId: string;
 }
 
-const TaxReportDetailed: FC<TaxReportDetailedProps> = ({ gridHeader, dataUrl, gridId }) => {
+const TaxReportDetailed: FC<TaxReportDetailedProps> = ({
+  gridHeader,
+  dataUrl,
+  gridId,
+}) => {
   const { t } = useTranslation("accountsReport");
   const [showFilter, setShowFilter] = useState<boolean>(false);
-  const [filter, setFilter] = useState<any>(TaxReportDetailedFilterInitialState);
+  const [filter, setFilter] = useState<any>(
+    TaxReportDetailedFilterInitialState
+  );
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
-  const onApplyFilter = useCallback((_filter: any) => { setFilter({ ..._filter }); }, []);
+  const onApplyFilter = useCallback((_filter: any) => {
+    setFilter({ ..._filter });
+  }, []);
+  let location = useLocation();
   const onCloseFilter = useCallback(() => {
     if (filterShowCount === 0) {
       setFilter({});
@@ -28,71 +43,72 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({ gridHeader, dataUrl, gr
     setShowFilter(false);
   }, [filterShowCount]);
 
-  const columns: DevGridColumn[] = [
-    {
-      dataField: "id",
-      caption: t("id"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      visible: false,
-    },
-    {
-      dataField: "date",
-      caption: t("date"),
-      dataType: "date",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        return cellElement.data.date == null || cellElement.data.date == ""
-          ? ""
-          : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY"); // Ensures proper formatting
+  const columns: DevGridColumn[] = useMemo(() => {
+    const baseColumns: DevGridColumn[] = [
+      {
+        dataField: "id",
+        caption: t("id"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        visible: false,
       },
-    },
-    {
-      dataField: "party",
-      caption: t("party"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-    },
+      {
+        dataField: "date",
+        caption: t("date"),
+        dataType: "date",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          return cellElement.data.date == null || cellElement.data.date == ""
+            ? ""
+            : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY"); // Ensures proper formatting
+        },
+      },
+      {
+        dataField: "party",
+        caption: t("party"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+      },
 
-    {
-      dataField: "address1",
-      caption: t("address1"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-    },
-    {
-      dataField: "address2",
-      caption: t("address2"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-    {
-      dataField: "vchNo",
-      caption: t("voucher_no"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-      cellRender: (cellElement: any, cellInfo: any) => {
+      {
+        dataField: "address1",
+        caption: t("address1"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+      },
+      {
+        dataField: "address2",
+        caption: t("address2"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "vchNo",
+        caption: t("voucher_no"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+        cellRender: (cellElement: any, cellInfo: any) => {
           return (
             <DrillDownCellTemplate
               data={cellElement}
@@ -101,264 +117,243 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({ gridHeader, dataUrl, gr
           );
         },
       },
-    {
-      dataField: "taxCategory",
-      caption: t("tax_category"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.taxCategory == null
+      {
+        dataField: "taxCategory",
+        caption: t("tax_category"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.taxCategory == null
+                ? ""
+                : getFormattedValue(cellElement.data.taxCategory, false, 2);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.taxCategory == null
               ? ""
               : getFormattedValue(cellElement.data.taxCategory, false, 2);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.taxCategory == null
-            ? ""
-            : getFormattedValue(cellElement.data.taxCategory, false, 2);
-        }
+          }
+        },
       },
-    },
-    {
-      dataField: "form",
-      caption: t("form"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-    },
-    {
-      dataField: "vatPercentage",
-      caption: t("vat_%"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.vatPercentage == null
+      {
+        dataField: "form",
+        caption: t("form"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+      },
+      {
+        dataField: "vatPercentage",
+        caption: t("vat_%"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.vatPercentage == null
+                ? ""
+                : getFormattedValue(cellElement.data.vatPercentage, false, 2);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.vatPercentage == null
               ? ""
               : getFormattedValue(cellElement.data.vatPercentage, false, 2);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.vatPercentage == null
-            ? ""
-            : getFormattedValue(cellElement.data.vatPercentage, false, 2);
-        }
+          }
+        },
       },
-    },
-    {
-      dataField: "taxableValue",
-      caption: t("taxable_value"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.taxableValue == null
+      {
+        dataField: "taxableValue",
+        caption: t("taxable_value"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.taxableValue == null
+                ? ""
+                : getFormattedValue(cellElement.data.taxableValue, false, 4);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.taxableValue == null
               ? ""
               : getFormattedValue(cellElement.data.taxableValue, false, 4);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.taxableValue == null
-            ? ""
-            : getFormattedValue(cellElement.data.taxableValue, false, 4);
-        }
+          }
+        },
       },
-    },
-    {
-      dataField: "totalVAT",
-      caption: t("total_vat"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.totalVAT == null
+      {
+        dataField: "totalVAT",
+        caption: t("total_vat"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.totalVAT == null
+                ? ""
+                : getFormattedValue(cellElement.data.totalVAT, false, 4);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.totalVAT == null
               ? ""
               : getFormattedValue(cellElement.data.totalVAT, false, 4);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.totalVAT == null
-            ? ""
-            : getFormattedValue(cellElement.data.totalVAT, false, 4);
-        }
+          }
+        },
       },
-    },
-    {
-      dataField: "total",
-      caption: t("total"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.total == null
+      {
+        dataField: "total",
+        caption: t("total"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.total == null
+                ? ""
+                : getFormattedValue(cellElement.data.total, false, 4);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.total == null
               ? ""
               : getFormattedValue(cellElement.data.total, false, 4);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.total == null
+          }
+        },
+      },
+      {
+        dataField: "refNumber",
+        caption: t("ref_number"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+      },
+      {
+        dataField: "refDate",
+        caption: t("ref_date"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          return cellElement.data.refDate == null ||
+            cellElement.data.refDate == ""
             ? ""
-            : getFormattedValue(cellElement.data.total, false, 4);
-        }
+            : moment(cellElement.data.refDate, "DD-MM-YYYY").format(
+                "DD-MMM-YYYY"
+              ); // Ensures proper formatting
+        },
       },
-    },
-    {
-      dataField: "refNumber",
-      caption: t("ref_number"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-    },
-    {
-      dataField: "refDate",
-      caption: t("ref_date"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        return cellElement.data.refDate == null ||
-          cellElement.data.refDate == ""
-          ? ""
-          : moment(cellElement.data.refDate, "DD-MM-YYYY").format(
-            "DD-MMM-YYYY"
-          ); // Ensures proper formatting
+      {
+        dataField: "remarks",
+        caption: t("remarks"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
       },
-    },
-    {
-      dataField: "remarks",
-      caption: t("remarks"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-    {
-      dataField: "taxNumber",
-      caption: t("tax_number"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      showInPdf: true,
-    },
-    {
-      dataField: "refNo2",
-      caption: t("ref_no2"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-  ];
+      {
+        dataField: "taxNumber",
+        caption: t("tax_number"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+      },
+      {
+        dataField: "refNo2",
+        caption: t("ref_no2"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+    ];
+    return baseColumns.filter((column) => {
+      if (column.dataField == "taxNumber" || column.dataField == "refNo2") {
+        return location.pathname.includes(
+          "inventory/purchase_tax_report_detailed"
+        );
+      }
+      return true;
+    });
+  }, [t, filter]);
 
   const { getFormattedValue } = useNumberFormat();
-  const customizeDate = (itemInfo: any) => `TOTAL`;
-  const customizeSummaryRow = useMemo(() => {
-    return (itemInfo: { value: any }) => {
-      const value = itemInfo.value;
-      if (
-        value === null ||
-        value === undefined ||
-        value === "" ||
-        isNaN(value)
-      ) {
-        return "0";
-      }
-      return getFormattedValue(value, false, 4) || "0";
-    };
-  }, [getFormattedValue]);
-  const customizeSummaryRow2 = useMemo(() => {
-    return (itemInfo: { value: any }) => {
-      const value = itemInfo.value;
-      if (
-        value === null ||
-        value === undefined ||
-        value === "" ||
-        isNaN(value)
-      ) {
-        return "0";
-      }
-      return getFormattedValue(value, false, 2) || "0";
-    };
-  }, [getFormattedValue]);
-
   const summaryItems: SummaryConfig[] = [
     {
       column: "party",
@@ -366,31 +361,64 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({ gridHeader, dataUrl, gr
       // customizeText: customizeDate,
     },
     {
-        column: "taxableValue",
-        summaryType: "sum",
-        valueFormat: "currency",
-        customizeText: (itemInfo: { value: any })=>{
-          return getFormattedValue((parseFloat(getFormattedValue((isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value)).replace(/,/g, '') || "0")), false, 2) || "0"; 
-        },
+      column: "taxableValue",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: (itemInfo: { value: any }) => {
+        return (
+          getFormattedValue(
+            parseFloat(
+              getFormattedValue(
+                isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value
+              ).replace(/,/g, "") || "0"
+            ),
+            false,
+            2
+          ) || "0"
+        );
       },
-      {
-        column: "totalVAT",
-        summaryType: "sum",
-        valueFormat: "currency",
-          customizeText: (itemInfo: { value: any })=>{
-          return getFormattedValue((parseFloat(getFormattedValue((isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value)).replace(/,/g, '') || "0")), false, 4) || "0"; 
-        },
+    },
+    {
+      column: "totalVAT",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: (itemInfo: { value: any }) => {
+        return (
+          getFormattedValue(
+            parseFloat(
+              getFormattedValue(
+                isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value
+              ).replace(/,/g, "") || "0"
+            ),
+            false,
+            4
+          ) || "0"
+        );
       },
-      {
-        column: "total",
-        summaryType: "sum",
-        valueFormat: "currency",
-      customizeText: (itemInfo: { value: any })=>{
-          return getFormattedValue((parseFloat(getFormattedValue((isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value)).replace(/,/g, '') || "0")), false, 4) || "0"; 
-        },
+    },
+    {
+      column: "total",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: (itemInfo: { value: any }) => {
+        return (
+          getFormattedValue(
+            parseFloat(
+              getFormattedValue(
+                isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value
+              ).replace(/,/g, "") || "0"
+            ),
+            false,
+            4
+          ) || "0"
+        );
       },
+    },
   ];
-
+  const [key, setKey] = useState(1);
+  useEffect(() => {
+    setKey((prev: any) => prev + 1);
+  }, [location]);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -398,12 +426,13 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({ gridHeader, dataUrl, gr
           <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
+                key={key}
                 summaryItems={summaryItems}
                 remoteOperations={{
                   filtering: true,
                   paging: true,
                   sorting: false,
-                  summary: true
+                  summary: true,
                 }}
                 columns={columns}
                 moreOption
@@ -418,16 +447,18 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({ gridHeader, dataUrl, gr
                 filterHeight={210}
                 filterWidth={330}
                 filterInitialData={TaxReportDetailedFilterInitialState}
-                onFilterChanged={(f: any) => { setFilter(f); }}
+                onFilterChanged={(f: any) => {
+                  setFilter(f);
+                }}
                 reload={true}
                 gridId={gridId}
-                    childPopupProps={{
-                    content: null,
-                    title: "",
-                    isForm: false,
-                    isTransactionScreen: true,
-                    drillDownCells: "vchNo,",
-                  }}
+                childPopupProps={{
+                  content: null,
+                  title: "",
+                  isForm: false,
+                  isTransactionScreen: true,
+                  drillDownCells: "vchNo,",
+                }}
               />
             </div>
           </div>

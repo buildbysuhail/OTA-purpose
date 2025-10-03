@@ -110,7 +110,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         dataType: "string",
         allowSearch: true,
         allowFiltering: true,
-        width: 150,
+        // width: 150,
         showInPdf: true,
       },
       {

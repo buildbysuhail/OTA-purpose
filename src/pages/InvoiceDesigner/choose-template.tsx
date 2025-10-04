@@ -12,7 +12,7 @@ import { setTemplate } from "../../redux/slices/templates/reducer"
 import { APIClient } from "../../helpers/api-client"
 import { useTranslation } from "react-i18next"
 import type VoucherType from "../../enums/voucher-types"
-import { customJsonParse } from "../../utilities/jsonConverter"
+import { customJsonParse, parseTemplateContent } from "../../utilities/jsonConverter"
 import { Badge, FileSpreadsheet, Gem, LayoutList, ShoppingBag, Search, Sparkles, Grid3X3, List } from "lucide-react"
 import { useAppDispatch } from "../../utilities/hooks/useAppDispatch"
 
@@ -193,7 +193,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
   const handleChooseTemplate = async (template: TemplateState<unknown>) => {
     const length = tempData?.length || 0
     const res = await api.getAsync(`${Urls.crm_templates}${template.id}`)
-    const cc: TemplateState<unknown> = customJsonParse(res.content)
+    const cc: TemplateState<unknown> = parseTemplateContent(res.content)
 
     const propertiesState = {
       ...cc.propertiesState,

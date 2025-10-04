@@ -10,7 +10,7 @@ import dayjs from "dayjs";
 import { useNumberFormat } from "./hooks/use-number-format";
 import { TableColumn, TemplateState } from "../pages/InvoiceDesigner/Designer/interfaces";
 import Urls from "../redux/urls";
-import { customJsonParse } from "./jsonConverter";
+import { customJsonParse, parseTemplateContent } from "./jsonConverter";
 import { APIClient } from "../helpers/api-client";
 import { Currencies } from "./number-to-words";
 import { BranchDetails, CompanyDetails, HeaderFooter, UserModel } from "../redux/slices/user-session/reducer";
@@ -947,7 +947,7 @@ export const loadTemplateById = async <T>(templateId: LoadTemplateParams) => {
   try {
     const api = new APIClient();
     const res = await api.getAsync(`${Urls.templates}${templateId}`);
-        let cc: TemplateState<T> = customJsonParse(res.content);
+        let cc: TemplateState<T> = parseTemplateContent(res.content);
         const _template = {
           ...cc,
           id: res.id,

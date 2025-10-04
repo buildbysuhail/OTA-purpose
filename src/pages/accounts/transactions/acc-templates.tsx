@@ -12,7 +12,7 @@ import { useDispatch } from 'react-redux';
 import { accFormStateHandleFieldChange } from './reducer';
 import { handleResponse } from '../../../utilities/HandleResponse';
 import { TemplateState } from '../../InvoiceDesigner/Designer/interfaces';
-import { customJsonParse } from '../../../utilities/jsonConverter';
+import {  parseTemplateContent } from '../../../utilities/jsonConverter';
 
 interface TemplatesProps {
   setIsOpen: Dispatch<SetStateAction<boolean>>; 
@@ -27,7 +27,7 @@ const templates = useAppSelector((x:RootState) =>x?.AccTransaction?.templates)
 const loadTemplateId = useCallback(async(template: TemplateState<unknown>) => {
     try {
     const res = await api.getAsync(`${Urls.templates}${template.id}`);
-    let cc: TemplateState<unknown> = customJsonParse(res.content)
+    let cc: TemplateState<unknown> = parseTemplateContent(res.content)
     const _template = {
       ...cc,
       id: res.id,

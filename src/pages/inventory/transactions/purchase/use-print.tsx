@@ -12,7 +12,7 @@ import { useDispatch } from "react-redux";
 import { DeepPartial } from "redux";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
-import { customJsonParse } from "../../../../utilities/jsonConverter";
+import { customJsonParse, parseTemplateContent } from "../../../../utilities/jsonConverter";
 import Urls from "../../../../redux/urls";
 import VoucherType from "../../../../enums/voucher-types";
 import { useTranslation } from "react-i18next";
@@ -46,7 +46,7 @@ export const usePrint = () => {
       const res = await api.getAsync(
         `${Urls.default_template}?template_group=${voucherType}`
       );
-      const cc: TemplateState<unknown> = customJsonParse(res.content);
+      const cc: TemplateState<unknown> = parseTemplateContent(res.content);
       const _template = {
         ...cc,
         id: res.id,

@@ -105,7 +105,7 @@ export const useUnsavedChangesWarning = () => {
       )
         return false;
 
-      const base64 = await modelToBase64Unicode(
+      const base64 =  modelToBase64Unicode(
         setTransactionForHistory(
           currentStateCompare,
           _formState.isAcc ? "acc" : "inv"

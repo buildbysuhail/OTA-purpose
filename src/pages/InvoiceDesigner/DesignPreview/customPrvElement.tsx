@@ -174,11 +174,11 @@ export const RenderPreviewComponent: React.FC<Props> = ({
     <div
       key={component.id}
       style={{
-        position: "relative",
+        position: "absolute",
         left: `${component.x}pt`,
         top: `${component.y}pt`,
-        width: component.width,
-        height: containerHeight,
+    height: `${component.height || 50}pt`,
+    width: `${component.width || 50}pt`,
         backgroundColor: containerProps.backgroundColor,
         border: `${containerProps.borderWidth}pt ${containerProps.borderStyle} ${containerProps.borderColor}`,
         padding: `${containerProps.padding}pt`,

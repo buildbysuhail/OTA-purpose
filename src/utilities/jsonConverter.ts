@@ -22,6 +22,29 @@ export function customJsonParse<T>(jsonString: string): T {
     return {} as T;
   }
 }
+
+// New function specifically for template content parsing
+export function parseTemplateContent<T>(jsonString: string): T {
+  try {
+    // Direct JSON parse without UTF-8 re-encoding
+    // This preserves Arabic and other Unicode characters
+    return JSON.parse(jsonString, (key, value) => {
+      if (value && typeof value === "object" && !Array.isArray(value)) {
+        const newObj: { [key: string]: any } = {};
+        for (const k in value) {
+          if (Object.prototype.hasOwnProperty.call(value, k)) {
+            newObj[toCamelCase(k)] = value[k];
+          }
+        }
+        return newObj;
+      }
+      return value;
+    });
+  } catch (error) {
+    console.error("Error parsing template content:", error);
+    return {} as T;
+  }
+}
 export function modelToBase64<T>(model: T): string {
   try {
     // Convert the model to a JSON string

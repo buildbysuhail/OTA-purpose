@@ -35,33 +35,11 @@ const ShardPrevHeader = ({
     generateQRCodes();
   }, [template?.headerState?.customElements?.elements]);
 
+
   const headerState = template?.headerState;
   const customElements = headerState?.customElements?.elements ?? [];
   const customTopHeight = headerState?.customElements?.height ?? 0;
   const bgImage = headerState?.customElements?.background_image
-  const fontFamily = template?.propertiesState?.font_family || "Roboto";
-  const fontSize = template?.propertiesState?.font_size || 12;
-  const color = template?.propertiesState?.font_color || "#000";
-  const fontWeight = template?.propertiesState?.font_weight || 400;
-  const fontStyle = template?.propertiesState?.fontStyle || "normal";
-
-
-
-  const fontStyles = {
-    color,
-    fontSize,
-    fontWeight,
-    fontStyle,
-    fontFamily,
-  };
-
-  const labelStyles = {
-    color: template?.propertiesState?.label_font_color || "#000",
-    fontSize: template?.propertiesState?.label_font_size || 12,
-    fontWeight: template?.propertiesState?.label_font_weight || 400,
-    fontStyle: template?.propertiesState?.label_font_style || "normal",
-    fontFamily,
-  };
 
   return (
     <div

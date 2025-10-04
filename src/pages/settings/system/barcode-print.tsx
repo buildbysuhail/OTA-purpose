@@ -17,7 +17,7 @@ import SystemSettingsApi from "./system-apis";
 import DownloadBarcodePreview from "../../LabelDesigner/download-preview-barcode";
 import { APIClient } from "../../../helpers/api-client";
 import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
-import { customJsonParse } from "../../../utilities/jsonConverter";
+import { customJsonParse, parseTemplateContent } from "../../../utilities/jsonConverter";
 import { generateBarcodePages } from "../../../utilities/barcode";
 import { useDirectPrint } from "../../../utilities/hooks/use-direct-print";
 
@@ -217,7 +217,7 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
         setLoadingTemplate(true);
         setBarcodeDesc((prev: any) => ({ ...prev, data: { ...prev.data, labelDesign: data?.labelDesign } }));
         const res = data?.labelDesign != undefined ? await api.getAsync(`${Urls.templates}${data?.labelDesign}`) : [];
-         let cc: TemplateState<unknown> = customJsonParse(res.content);
+         let cc: TemplateState<unknown> = parseTemplateContent(res.content);
         const _template = {
         ...cc,
         id: res.id,

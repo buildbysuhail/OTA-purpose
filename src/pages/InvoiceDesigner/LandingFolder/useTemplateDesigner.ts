@@ -18,7 +18,7 @@ import { designerSectionsConfig, designSections, DesignSectionType } from "./des
 import { TemplateImagesTypes } from "./InvoiceDesignerLanding";
 import VoucherType from "../../../enums/voucher-types";
 import Urls from "../../../redux/urls";
-import { customJsonParse } from "../../../utilities/jsonConverter";
+import { customJsonParse, parseTemplateContent } from "../../../utilities/jsonConverter";
 import { setTemplate } from "../../../redux/slices/templates/reducer";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
 import { handleResponse } from "../../../utilities/HandleResponse";
@@ -202,12 +202,12 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,
         
         debugger;
         const res = await api.getAsync(`${Urls.templates}${id || ""}`);
-        const cc: TemplateState<unknown> = customJsonParse(res.content);
+        const cc: TemplateState<unknown> = parseTemplateContent(res.content);
         const template: TemplateDto = {
           ...cc,
           id: res.id,
           branchId: res.branchId,
-          // content: res.content,
+
           isCurrent: res.isCurrent,
           templateGroup: res.templateGroup,
           templateKind: res.templateKind,

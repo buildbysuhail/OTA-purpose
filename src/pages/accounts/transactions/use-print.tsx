@@ -12,7 +12,7 @@ import { renderSelectedTemplate } from "./acc-renderSelected-template"
 import useCurrentBranch from "../../../utilities/hooks/use-current-branch"
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert"
 import type { TemplateState } from "../../InvoiceDesigner/Designer/interfaces"
-import { customJsonParse } from "../../../utilities/jsonConverter"
+import { customJsonParse, parseTemplateContent } from "../../../utilities/jsonConverter"
 import Urls from "../../../redux/urls"
 import VoucherType from "../../../enums/voucher-types"
 
@@ -44,7 +44,7 @@ export const useAccPrint = () => {
   const fetchDefaultTemplates = async (voucherType: any) => {
     try {
       const res = await api.getAsync(`${Urls.default_template}?template_group=${voucherType}`)
-      const cc: TemplateState<unknown> = customJsonParse(res.content)
+      const cc: TemplateState<unknown> = parseTemplateContent(res.content)
       const _template = {
         ...cc,
         id: res.id,

@@ -94,7 +94,7 @@ import { EditButton } from "./edit-button";
 import { useTranslation } from "react-i18next";
 import VoucherType, {purchaseVoucherTypes, salesVoucherTypes, accountsVoucherTypes} from "../../enums/voucher-types";
 import {  accountsFields, inventoryFields, barCodeField } from "./fields";
-import { customJsonParse } from "../../utilities/jsonConverter";
+import { customJsonParse, parseTemplateContent } from "../../utilities/jsonConverter";
 import { getPageDimensions } from "../InvoiceDesigner/utils/pdf-util";
 import { QRCodeComponent } from "./QRCodeComponent";
 import GroupedComboBox from "../../components/ERPComponents/erp-grouped-combo";
@@ -1148,7 +1148,7 @@ const handleRemoveImage =()=>{
 
   const getPDFTemplateData = async () => {
     const res = await api.getAsync(`${Urls.templates}${id}`);
-    let cc: TemplateState<unknown> = customJsonParse(res.content);
+    let cc: TemplateState<unknown> = parseTemplateContent(res.content);
     const _template = {
       ...cc,
       id: res.id,

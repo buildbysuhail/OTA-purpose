@@ -9,7 +9,7 @@ import { APIClient } from '../../../../helpers/api-client';
 import Urls from '../../../../redux/urls';
 import { useDispatch } from 'react-redux';
 import { TemplateState } from '../../../InvoiceDesigner/Designer/interfaces';
-import { customJsonParse } from '../../../../utilities/jsonConverter';
+import { customJsonParse, parseTemplateContent } from '../../../../utilities/jsonConverter';
 import { formStateHandleFieldChange } from '../reducer';
 
 interface TemplatesProps {
@@ -25,7 +25,7 @@ export default function TemplatesView({ setIsOpen }: TemplatesProps) {
   const loadTemplateId = useCallback(async (template: TemplateState<unknown>) => {
     try {
       const res = await api.getAsync(`${Urls.templates}${template.id}`);
-      let cc: TemplateState<unknown> = customJsonParse(res.content)
+      let cc: TemplateState<unknown> = parseTemplateContent(res.content)
       const _template = {
         ...cc,
         id: res.id,

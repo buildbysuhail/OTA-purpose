@@ -28,7 +28,7 @@ import { pdf, BlobProvider } from "@react-pdf/renderer";
 import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import { DesignerElementType, TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
-import { customJsonParse } from "../../../../utilities/jsonConverter";
+import { customJsonParse, parseTemplateContent } from "../../../../utilities/jsonConverter";
 import Urls from "../../../../redux/urls";
 import VoucherType from "../../../../enums/voucher-types";
 import AdviceTemplate from "../../../InvoiceDesigner/DownloadPreview/advice-template";
@@ -74,7 +74,7 @@ export const usePrint = () => {
       const res = await api.getAsync(
         `${Urls.default_template}?template_group=${voucherType}`
       );
-      const cc: TemplateState<unknown> = customJsonParse(res.content);
+      const cc: TemplateState<unknown> = parseTemplateContent(res.content);
       const _template = {
         ...cc,
         id: res.id,

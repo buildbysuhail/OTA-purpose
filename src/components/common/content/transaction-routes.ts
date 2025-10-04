@@ -2,7 +2,7 @@ import VoucherType from "../../../enums/voucher-types";
 import { UserAction } from "../../../helpers/user-right-helper";
 import { Countries, UserModel, } from "../../../redux/slices/user-session/reducer";
 import { TransactionListTitles, TransactionTitles } from "./transaction-titles";
-import { Wallet, CreditCard, FileText, Receipt, Scale, NotebookPen, TextSelect, HandCoins, TrendingUp, TrendingDown, Banknote, FileSpreadsheet, FileSignature, Ship, ClipboardList, FileSearch, Package, PackageX, RotateCcw, Truck, Undo2, } from "lucide-react";
+import { Wallet, CreditCard, FileText, Receipt, Scale, NotebookPen, TextSelect, HandCoins, TrendingUp, TrendingDown, Banknote, FileSpreadsheet, FileSignature, Ship, ClipboardList, FileSearch, RotateCcw, Truck, Undo2, ArrowDownToLine, FileBadge, FileCheck, PackageCheck, PackageSearch, ReceiptText, ScrollText, ShoppingCart, } from "lucide-react";
 import { TbReceipt2 } from "react-icons/tb";
 import { TbReceipt } from "react-icons/tb";
 
@@ -189,92 +189,99 @@ export const transactionRoutes: TransactionRoute[] = [
     icon: HandCoins,
   },
   //#region inventory
-    {
-      transactionBase: TransactionBase.Sales,
-      formCode: "SI",
-      action: UserAction.Show,
-      voucherType: VoucherType.SalesInvoice,
-      transactionType: "SalesInvoice",
-      formType: "",
-      title: TransactionTitles.SalesInvoice,
-      drCr: "Dr",
-      listTitle: TransactionListTitles.SalesInvoices,
-      icon: HandCoins,
-    },
-    {
-      transactionBase: TransactionBase.Sales,
-      formCode: "SI",
-      action: UserAction.Show,
-      voucherType: VoucherType.SalesInvoice,
-      transactionType: "SalesInvoiceVAT",
-      formType: "VAT",
-      title: TransactionTitles.SalesInvoiceVAT,
-      drCr: "Dr",
-      listTitle: TransactionListTitles.SalesInvoicesVAT,
-       visibleFn: (userSession: UserModel) => userSession.countryId !== Countries.Saudi,
-      icon: HandCoins,
-    },
-     {
-      transactionBase: TransactionBase.Sales,
-      formCode: "SR",
-      action: UserAction.Show,
-      voucherType: VoucherType.SalesReturn,
-      transactionType: "SalesReturn",
-      formType: "",
-      title: TransactionTitles.SalesReturn,
-      drCr: "Dr",
-      listTitle: TransactionListTitles.SalesReturns,
-      icon: HandCoins,
-    },
-     {
-      transactionBase: TransactionBase.Sales,
-      formCode: "SR",
-      action: UserAction.Show,
-      voucherType: VoucherType.SalesReturn,
-      transactionType: "SalesReturnVAT",
-      formType: "VAT",
-      title: TransactionTitles.SalesReturnVAT,
-      drCr: "Dr",
-      listTitle: TransactionListTitles.SalesReturnsVAT,
-       visibleFn: (userSession: UserModel) => userSession.countryId !== Countries.Saudi,
-      icon: HandCoins,
-    },
-     {
-      transactionBase: TransactionBase.Sales,
-      formCode: "SQ",
-      action: UserAction.Show,
-      voucherType: VoucherType.SalesQuotation,
-      transactionType: "SalesQuotation",
-      formType: "",
-      title: TransactionTitles.SalesQuotation,
-      drCr: "Dr",
-      listTitle: TransactionListTitles.SalesQuotations,
-      icon: HandCoins,
-    },
-     {
-      transactionBase: TransactionBase.Sales,
-      formCode: "SO",
-      action: UserAction.Show,
-      voucherType: VoucherType.SalesOrder,
-      transactionType: "SalesOrder",
-      formType: "",
-      title: TransactionTitles.SalesOrder,
-      drCr: "Dr",
-      listTitle: TransactionListTitles.SalesOrders,
-      icon: HandCoins,
-    },
   {
-      transactionBase: TransactionBase.Sales,
-      formCode: "GR",
-      action: UserAction.Show,
-      voucherType: VoucherType.GoodRequest,
-      transactionType: "GoodsRequest",
-      formType: "",
-      title: TransactionTitles.GoodsRequest,
-      drCr: "Dr",
-      listTitle: TransactionListTitles.GoodsRequests,
-      icon: HandCoins,
-    },
+    transactionBase: TransactionBase.Sales,
+    formCode: "SI",
+    action: UserAction.Show,
+    voucherType: VoucherType.SalesInvoice,
+    transactionType: "SalesInvoice",
+    formType: "",
+    title: TransactionTitles.SalesInvoice,
+    drCr: "Dr",
+    listTitle: TransactionListTitles.SalesInvoices,
+    icon: FileText,
+  },
+
+  {
+    transactionBase: TransactionBase.Sales,
+    formCode: "SI",
+    action: UserAction.Show,
+    voucherType: VoucherType.SalesInvoice,
+    transactionType: "SalesInvoiceVAT",
+    formType: "VAT",
+    title: TransactionTitles.SalesInvoiceVAT,
+    drCr: "Dr",
+    listTitle: TransactionListTitles.SalesInvoicesVAT,
+    visibleFn: (userSession: UserModel) => userSession.countryId !== Countries.Saudi,
+    icon: ReceiptText,
+  },
+
+  {
+    transactionBase: TransactionBase.Sales,
+    formCode: "SR",
+    action: UserAction.Show,
+    voucherType: VoucherType.SalesReturn,
+    transactionType: "SalesReturn",
+    formType: "",
+    title: TransactionTitles.SalesReturn,
+    drCr: "Dr",
+    listTitle: TransactionListTitles.SalesReturns,
+    icon: Undo2,
+  },
+
+  {
+    transactionBase: TransactionBase.Sales,
+    formCode: "SR",
+    action: UserAction.Show,
+    voucherType: VoucherType.SalesReturn,
+    transactionType: "SalesReturnVAT",
+    formType: "VAT",
+    title: TransactionTitles.SalesReturnVAT,
+    drCr: "Dr",
+    listTitle: TransactionListTitles.SalesReturnsVAT,
+    visibleFn: (userSession: UserModel) => userSession.countryId !== Countries.Saudi,
+    icon: RotateCcw,
+  },
+
+  {
+    transactionBase: TransactionBase.Sales,
+    formCode: "SQ",
+    action: UserAction.Show,
+    voucherType: VoucherType.SalesQuotation,
+    transactionType: "SalesQuotation",
+    formType: "",
+    title: TransactionTitles.SalesQuotation,
+    drCr: "Dr",
+    listTitle: TransactionListTitles.SalesQuotations,
+    icon: FileSignature,
+  },
+
+  {
+    transactionBase: TransactionBase.Sales,
+    formCode: "SO",
+    action: UserAction.Show,
+    voucherType: VoucherType.SalesOrder,
+    transactionType: "SalesOrder",
+    formType: "",
+    title: TransactionTitles.SalesOrder,
+    drCr: "Dr",
+    listTitle: TransactionListTitles.SalesOrders,
+    icon: ShoppingCart,
+  },
+
+  {
+    transactionBase: TransactionBase.Sales,
+    formCode: "GR",
+    action: UserAction.Show,
+    voucherType: VoucherType.GoodRequest,
+    transactionType: "GoodsRequest",
+    formType: "",
+    title: TransactionTitles.GoodsRequest,
+    drCr: "Dr",
+    listTitle: TransactionListTitles.GoodsRequests,
+    icon: PackageSearch,
+  },
+
   {
     transactionBase: TransactionBase.Purchase,
     formCode: "PI",
@@ -286,7 +293,7 @@ export const transactionRoutes: TransactionRoute[] = [
     drCr: "Dr",
     listTitle: TransactionListTitles.PurchaseInvoices,
     // visibleFn: (userSession: UserModel) => userSession.countryId !== Countries.Saudi,
-    icon: FileText,
+    icon: FileBadge,
   },
   {
     transactionBase: TransactionBase.Purchase,
@@ -302,6 +309,7 @@ export const transactionRoutes: TransactionRoute[] = [
       userSession.countryId !== Countries.Saudi,
     icon: FileSpreadsheet,
   },
+
   {
     transactionBase: TransactionBase.Purchase,
     formCode: "PE",
@@ -312,8 +320,9 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.PurchaseEstimate,
     drCr: "Dr",
     listTitle: TransactionListTitles.PurchaseEstimates,
-    icon: FileSignature,
+    icon: ScrollText,
   },
+
   {
     transactionBase: TransactionBase.Purchase,
     formCode: "PI",
@@ -326,6 +335,7 @@ export const transactionRoutes: TransactionRoute[] = [
     listTitle: TransactionListTitles.PurchaseImports,
     icon: Ship,
   },
+
   {
     transactionBase: TransactionBase.Purchase,
     formCode: "PR",
@@ -336,8 +346,9 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.PurchaseReturn,
     drCr: "Dr",
     listTitle: TransactionListTitles.PurchaseReturns,
-    icon: Undo2,
+    icon: ArrowDownToLine,
   },
+
   {
     transactionBase: TransactionBase.Purchase,
     formCode: "PR",
@@ -350,8 +361,9 @@ export const transactionRoutes: TransactionRoute[] = [
     listTitle: TransactionListTitles.PurchaseReturnsVAT,
     visibleFn: (userSession: UserModel) =>
       userSession.countryId !== Countries.Saudi,
-    icon: RotateCcw,
+    icon: FileCheck,
   },
+
   {
     transactionBase: TransactionBase.Purchase,
     formCode: "PO",
@@ -364,6 +376,7 @@ export const transactionRoutes: TransactionRoute[] = [
     listTitle: TransactionListTitles.PurchaseOrders,
     icon: ClipboardList,
   },
+
   //request for sales
   // {
   //   transactionBase: TransactionBase.Sales,
@@ -377,6 +390,7 @@ export const transactionRoutes: TransactionRoute[] = [
   //   listTitle: TransactionListTitles.RequestForSalesQuotations,
   //   icon: HandCoins,
   // },
+
   {
     transactionBase: TransactionBase.Purchase,
     formCode: "PQ",
@@ -389,6 +403,7 @@ export const transactionRoutes: TransactionRoute[] = [
     listTitle: TransactionListTitles.PurchaseQuotations,
     icon: FileSearch,
   },
+
   {
     transactionBase: TransactionBase.Purchase,
     formCode: "POT",
@@ -402,7 +417,6 @@ export const transactionRoutes: TransactionRoute[] = [
     icon: Truck,
   },
 
-
   // {
   //     transactionBase: TransactionBase.Sales,
   //     formCode: "GD",
@@ -415,6 +429,7 @@ export const transactionRoutes: TransactionRoute[] = [
   //     listTitle: TransactionListTitles.GoodsDeliveries,
   //     icon: HandCoins,
   //   },
+
   //   {
   //     transactionBase: TransactionBase.Sales,
   //     formCode: "DR",
@@ -427,6 +442,7 @@ export const transactionRoutes: TransactionRoute[] = [
   //     listTitle: TransactionListTitles.GoodsDeliveryReturns,
   //     icon: HandCoins,
   //   },
+
   {
     transactionBase: TransactionBase.Purchase,
     formCode: "GRN",
@@ -437,8 +453,9 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.GoodsReceipt,
     drCr: "Dr",
     listTitle: TransactionListTitles.GoodsReceipts,
-    icon: Package,
+    icon: PackageCheck,
   },
+
   // {
   //   transactionBase: TransactionBase.Purchase,
   //   formCode: "GRR",

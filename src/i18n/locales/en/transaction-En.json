@@ -833,5 +833,20 @@
   "old_balance": "Old balance",
   "redeem": "Redeem",
   "redeem_points": "Redeem points",
-  "add_new": "Add new"
+  "add_new": "Add new",
+
+  "sales_invoice": "Sales Invoice",
+  "VAT_sales_invoice": "VAT Sales Invoice",
+  "sales_return_main": "Sales Return",
+  "sales_return/credit_note(VAT)": "Sales Return / Credit Note (VAT)",
+  "sales_quotation_main": "Sales Quotation",
+  "sales_order_main": "Sales Order",
+  "goods_request_main": "Goods Request",
+  "sales_invoices": "Sales Invoices",
+  "VAT_sales_invoices": "VAT Sales Invoices",
+  "sales_returns": "Sales Returns",
+  "sales_returns/credit_note(VAT)": "Sales Returns / Credit Note (VAT)",
+  "sales_quotations": "Sales Quotations",
+  "sales_orders": "Sales Orders",
+  "goods_requests": "Goods Requests"
 }

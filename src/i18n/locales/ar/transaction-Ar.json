@@ -830,5 +830,20 @@
   "old_balance": "الرصيد القديم",
   "redeem": "استرداد",
   "redeem_points": "استرداد النقاط",
-  "add_new": "إضافة جديد"
+  "add_new": "إضافة جديد",
+
+  "sales_invoice": "فاتورة مبيعات",
+  "VAT_sales_invoice": "فاتورة مبيعات (ضريبة القيمة المضافة)",
+  "sales_return_main": "مرتجع مبيعات",
+  "sales_return/credit_note(VAT)": "مرتجع مبيعات / إشعار دائن (ضريبة القيمة المضافة)",
+  "sales_quotation_main": "عرض أسعار المبيعات",
+  "sales_order_main": "طلب مبيعات",
+  "goods_request_main": "طلب بضائع",
+  "sales_invoices": "فواتير المبيعات",
+  "VAT_sales_invoices": "فواتير المبيعات (ضريبة القيمة المضافة)",
+  "sales_returns": "مرتجعات المبيعات",
+  "sales_returns/credit_note(VAT)": "مرتجعات المبيعات / إشعار دائن (ضريبة القيمة المضافة)",
+  "sales_quotations": "عروض أسعار المبيعات",
+  "sales_orders": "طلبات المبيعات",
+  "goods_requests": "طلبات البضائع"
 }

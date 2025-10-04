@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
 import ERPDateInput from "../../../../../components/ERPComponents/erp-date-input";
-import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import moment from "moment";
 import Urls from "../../../../../redux/urls";
 import ErpInput from "../../../../../components/ERPComponents/erp-input";
@@ -10,9 +9,9 @@ import { RootState } from "../../../../../redux/store";
 
 const PromotionalSalesReportFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
     const { t } = useTranslation('accountsReport')
-      const applicationSettings = useSelector(
+    const applicationSettings = useSelector(
         (state: RootState) => state.ApplicationSettings
-      );
+    );
     return (
         <div className="grid grid-cols-1 gap-4 overflow-y-hidden overflow-x-hidden">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
@@ -44,9 +43,9 @@ const PromotionalSalesReportFilter = ({ getFieldProps, handleFieldChange, formSt
                     label={t("product_group")}
                     onSelectItem={(data) => {
                         handleFieldChange({
-            productGroupID: data.value,
-            productGroup: data.label,
-          })
+                            productGroupID: data.value,
+                            productGroup: data.label,
+                        })
                     }}
                 />
                 <ERPDataCombobox
@@ -60,9 +59,9 @@ const PromotionalSalesReportFilter = ({ getFieldProps, handleFieldChange, formSt
                     label={t("brand")}
                     onSelectItem={(data) => {
                         handleFieldChange({
-            brandID: data.value,
-            brand: data.label,
-          })
+                            brandID: data.value,
+                            brand: data.label,
+                        })
                     }}
                 />
                 <ERPDataCombobox
@@ -76,9 +75,9 @@ const PromotionalSalesReportFilter = ({ getFieldProps, handleFieldChange, formSt
                     label={t("product")}
                     onSelectItem={(data) => {
                         handleFieldChange({
-            productID: data.value,
-            product: data.label,
-          })
+                            productID: data.value,
+                            product: data.label,
+                        })
                     }}
                 />
                 <ErpInput
@@ -96,53 +95,53 @@ const PromotionalSalesReportFilter = ({ getFieldProps, handleFieldChange, formSt
                     }}
                     label={t("sales_man")}
                     onSelectItem={(data) => {
-                      handleFieldChange({
-            sectionID: data.value,
-            section: data.label,
-          })
-                    }}
-                />
-                 {applicationSettings.mainSettings?.allowSalesRouteArea == true && (
-                <ERPDataCombobox
-                    {...getFieldProps("salesRouteID")}
-                    field={{
-                        id: "salesRouteID",
-                        getListUrl: Urls.data_salesRoute,
-                        valueKey: "id",
-                        labelKey: "name",
-                    }}
-                    label={t("sales_route")}
-                    onSelectItem={(data) => {
                         handleFieldChange({
-            salesRouteID: data.value,
-            salesRoute: data.label,
-          })
+                            sectionID: data.value,
+                            section: data.label,
+                        })
                     }}
                 />
+                {applicationSettings.mainSettings?.allowSalesRouteArea == true && (
+                    <ERPDataCombobox
+                        {...getFieldProps("salesRouteID")}
+                        field={{
+                            id: "salesRouteID",
+                            getListUrl: Urls.data_salesRoute,
+                            valueKey: "id",
+                            labelKey: "name",
+                        }}
+                        label={t("sales_route")}
+                        onSelectItem={(data) => {
+                            handleFieldChange({
+                                salesRouteID: data.value,
+                                salesRoute: data.label,
+                            })
+                        }}
+                    />
                 )}
-                  {applicationSettings.inventorySettings?.maintainWarehouse == true && (
-                <ERPDataCombobox
-                    {...getFieldProps("warehouseID")}
-                    field={{
-                        id: "warehouseID",
-                        getListUrl: Urls.data_warehouse,
-                        valueKey: "id",
-                        labelKey: "name",
-                    }}
-                    label={t("warehouse")}
-                    onSelectItem={(data) => {
-                        handleFieldChange({
-            warehouseID: data.value,
-            warehouse: data.label,
-          })
-                    }}
-                />
-                  )}
+                {applicationSettings.inventorySettings?.maintainWarehouse == true && (
+                    <ERPDataCombobox
+                        {...getFieldProps("warehouseID")}
+                        field={{
+                            id: "warehouseID",
+                            getListUrl: Urls.data_warehouse,
+                            valueKey: "id",
+                            labelKey: "name",
+                        }}
+                        label={t("warehouse")}
+                        onSelectItem={(data) => {
+                            handleFieldChange({
+                                warehouseID: data.value,
+                                warehouse: data.label,
+                            })
+                        }}
+                    />
+                )}
                 <ERPDataCombobox
                     {...getFieldProps("voucherForm")}
                     field={{
                         id: "voucherForm",
-                         getListUrl: Urls.data_form_type,
+                        getListUrl: Urls.data_form_type,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -176,9 +175,9 @@ const PromotionalSalesReportFilter = ({ getFieldProps, handleFieldChange, formSt
                     label={t("section")}
                     onSelectItem={(data) => {
                         handleFieldChange({
-            sectionID: data.value,
-            section: data.label,
-          })
+                            sectionID: data.value,
+                            section: data.label,
+                        })
                     }}
                 />
             </div>

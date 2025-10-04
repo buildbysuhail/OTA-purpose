@@ -1,17 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-  DrillDownCellTemplate,
-  SummaryConfig,
-} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { DrillDownCellTemplate, SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import { FC, useMemo } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../../redux/urls";
-import PromotionalSalesReportFilter, {
-  PromotionalSalesReportFilterInitialState,
-} from "./promotional-sales-filter";
+import PromotionalSalesReportFilter, { PromotionalSalesReportFilterInitialState, } from "./promotional-sales-filter";
 import moment from "moment";
 
 const PromotionalSalesReport = () => {
@@ -57,15 +52,15 @@ const PromotionalSalesReport = () => {
       allowSorting: true,
       width: 50,
       showInPdf: true,
-     cellRender: (cellElement: any, cellInfo: any) => {
-          return (
-            <DrillDownCellTemplate
-              data={cellElement}
-              field="vchNo"
-            ></DrillDownCellTemplate>
-          );
-        },
+      cellRender: (cellElement: any, cellInfo: any) => {
+        return (
+          <DrillDownCellTemplate
+            data={cellElement}
+            field="vchNo"
+          ></DrillDownCellTemplate>
+        );
       },
+    },
     {
       dataField: "form",
       caption: t("form"),
@@ -88,7 +83,7 @@ const PromotionalSalesReport = () => {
     },
     {
       dataField: "address1",
-      caption: t("address_1"),
+      caption: t("address1"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -98,7 +93,7 @@ const PromotionalSalesReport = () => {
     },
     {
       dataField: "address2",
-      caption: t("address_2"),
+      caption: t("address2"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -145,10 +140,10 @@ const PromotionalSalesReport = () => {
           return cellElement.data?.unitPrice == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.unitPrice),
-                false,
-                3
-              );
+              parseFloat(cellElement.data.unitPrice),
+              false,
+              3
+            );
         }
       },
     },
@@ -566,12 +561,12 @@ const PromotionalSalesReport = () => {
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 filterText=":From : {fromDate} - {toDate}
-                                {productID > 0 && , Product : [product]}
-                                {productGroupID > 0 && , Group Name : [productGroup]}
-                                {brandID > 0 && , Brand : [brand]}
-                                {salesRouteID > 0 && , Route Name : [salesRoute]} 
-                                {salesmanID > 0 && , Sales Man : [salesMan]} 
-                                {warehouseID > 0 && ,  Warehouse : [warehouse]}"
+                {productID > 0 && , Product : [product]}
+                {productGroupID > 0 && , Group Name : [productGroup]}
+                {brandID > 0 && , Brand : [brand]}
+                {salesRouteID > 0 && , Route Name : [salesRoute]} 
+                {salesmanID > 0 && , Sales Man : [salesMan]} 
+                {warehouseID > 0 && ,  Warehouse : [warehouse]}"
                 summaryItems={summaryItems}
                 remoteOperations={{
                   filtering: false,
@@ -591,13 +586,13 @@ const PromotionalSalesReport = () => {
                 filterInitialData={PromotionalSalesReportFilterInitialState}
                 reload={true}
                 gridId="grd_promotional_sales_report"
-                 childPopupProps={{
-                    content: null,
-                    title: "",
-                    isForm: false,
-                    isTransactionScreen: true,
-                    drillDownCells: "vchNo,",
-                  }}
+                childPopupProps={{
+                  content: null,
+                  title: "",
+                  isForm: false,
+                  isTransactionScreen: true,
+                  drillDownCells: "vchNo,",
+                }}
               />
             </div>
           </div>

@@ -7,11 +7,7 @@ import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 
-const DaywiseSummaryWithProfitFilter = ({
-  getFieldProps,
-  handleFieldChange,
-  formState,
-}: any) => {
+const DaywiseSummaryWithProfitFilter = ({ getFieldProps, handleFieldChange, formState, }: any) => {
   const { t } = useTranslation("accountsReport");
   const userSession = useSelector((state: RootState) => state.UserSession);
   return (

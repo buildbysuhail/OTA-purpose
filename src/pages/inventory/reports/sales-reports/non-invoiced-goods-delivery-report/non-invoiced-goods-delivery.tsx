@@ -1,20 +1,14 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-  DrillDownCellTemplate,
-  SummaryConfig,
-} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { DrillDownCellTemplate, SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
-import { FC, useMemo } from "react";
+import { useMemo } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../../redux/urls";
-import NonInvoicedGoodsDeliveryFilter, {
-  NonInvoicedGoodsDeliveryFilterInitialState,
-} from "./non-invloced-goods-deliveryfilter";
+import NonInvoicedGoodsDeliveryFilter, { NonInvoicedGoodsDeliveryFilterInitialState, } from "./non-invloced-goods-deliveryfilter";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
-import moment from "moment";
 
 const NonInvoicedGoodsDelivery = () => {
   const { t } = useTranslation("accountsReport");
@@ -91,14 +85,14 @@ const NonInvoicedGoodsDelivery = () => {
       width: 100,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any) => {
-          return (
-            <DrillDownCellTemplate
-              data={cellElement}
-              field="voucherNumber"
-            ></DrillDownCellTemplate>
-          );
-        },
+        return (
+          <DrillDownCellTemplate
+            data={cellElement}
+            field="voucherNumber"
+          ></DrillDownCellTemplate>
+        );
       },
+    },
     {
       dataField: "partyName",
       caption: t("party_name"),
@@ -150,10 +144,10 @@ const NonInvoicedGoodsDelivery = () => {
           return cellElement.data?.grandTotal == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.grandTotal),
-                false,
-                4
-              );
+              parseFloat(cellElement.data.grandTotal),
+              false,
+              4
+            );
         }
       },
     },
@@ -213,7 +207,6 @@ const NonInvoicedGoodsDelivery = () => {
                   sorting: false,
                 }}
                 columns={columns}
-                
                 gridHeader={t("non_invoiced_goods_delivery_report")}
                 dataUrl={Urls.non_invoiced_goods_delivery}
                 hideGridAddButton={true}
@@ -233,13 +226,13 @@ const NonInvoicedGoodsDelivery = () => {
                 filterHeight={230}
                 reload={true}
                 gridId="grd_non_invoiced_goods_delivery"
-                    childPopupProps={{
-                    content: null,
-                    title: "",
-                    isForm: false,
-                    isTransactionScreen: true,
-                    drillDownCells: "voucherNumber,",
-                  }}
+                childPopupProps={{
+                  content: null,
+                  title: "",
+                  isForm: false,
+                  isTransactionScreen: true,
+                  drillDownCells: "voucherNumber,",
+                }}
               />
             </div>
           </div>

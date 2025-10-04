@@ -59,6 +59,7 @@ const ShardPrevHeader = ({
                 backgroundRepeat: "no-repeat",
                 backgroundColor: `rgb(${headerState?.customElements?.background_color ?? "255,255,255"})`,
                 position: "relative",
+                overflow: "hidden",
                 }}
               >
                 {customElements.map((component) => (
@@ -71,6 +72,7 @@ const ShardPrevHeader = ({
                       convertAmountToEnglish={convertAmountToEnglish}
                     />
                   ))}
+                  
               </div>
             )}
 

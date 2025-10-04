@@ -28,8 +28,8 @@ export const RenderPreviewComponent: React.FC<Props> = ({
     left: `${component.x}pt`,
     top: `${component.y}pt`,
     transform: `rotate(${component.rotate || 0}deg)`,
-    height: `${component.height || 50}pt`,
-    width: `${component.width || 50}pt`,
+    height: component.height || 50,
+    width: component.width || 50,
     zIndex:  component.containerId ? 10 : 1,
   };
   
@@ -56,24 +56,39 @@ export const RenderPreviewComponent: React.FC<Props> = ({
   };
 
   switch (component.type) {
-    case DesignerElementType.text:
+     case DesignerElementType.text:
+    case DesignerElementType.field:
       return (
-        <div key={component.id} style={baseStyle}>
-          <p
+        <div 
+          key={component.id} 
+          style={{
+            ...baseStyle,
+            display: "flex",  // Added for vertical/horizontal centering
+            alignItems: "center",
+            justifyContent: component.textAlign || "center",
+            overflow: "hidden",
+          }}
+        >
+          <span
             style={{
               fontFamily: component.font || "Roboto, sans-serif",
               fontSize: `${component.fontSize || 12}pt`,
               fontStyle: component.fontStyle || "normal",
-              textAlign: (component.textAlign as any) || "center",
-              color:`rgb(${component.fontColor})`,
-              fontWeight:component.fontWeight,
-               whiteSpace: "pre-wrap",
+              textAlign: component.textAlign || "center",
+              color: `rgb(${component.fontColor || "0,0,0"})`,
+              fontWeight: component.fontWeight ?? "normal",
+              whiteSpace: "pre-wrap",
+              margin: 0,  // Ensure no extra spacing
+              width: "100%",  // Fill the container
             }}
           >
-            {component.content}
-          </p>
+            {component.type === DesignerElementType.text 
+              ? component.content 
+              : (bindDataForPrint(component.content, data, convertAmountToEnglish, convertAmountToArabic) || "N/A")}
+          </span>
         </div>
       );
+
 
     case DesignerElementType.image:
       return (
@@ -92,27 +107,6 @@ export const RenderPreviewComponent: React.FC<Props> = ({
         </div>
       );
 
-    case DesignerElementType.field:
-      return (
-        <div key={component.id} style={baseStyle}>
-          <p
-            style={{
-              fontFamily: component.font || "Roboto, sans-serif",
-              fontSize: `${component.fontSize || 12}pt`,
-              fontStyle: component.fontStyle || "normal",
-              textAlign: (component.textAlign as any) || "center",
-              minHeight: `${component.height || 50}pt`,
-              color:`rgb(${component.fontColor})`,
-              fontWeight:component.fontWeight,
-              width: `${component.width || 50}pt`,
-              margin: 0,
-       
-            }}
-          >
-            {bindDataForPrint(component.content, data,convertAmountToEnglish,convertAmountToArabic)|| "N\A"} 
-          </p>
-        </div>
-      );
 
     case DesignerElementType.line:
       return (
@@ -177,14 +171,15 @@ export const RenderPreviewComponent: React.FC<Props> = ({
         position: "absolute",
         left: `${component.x}pt`,
         top: `${component.y}pt`,
-    height: `${component.height || 50}pt`,
-    width: `${component.width || 50}pt`,
+        height:containerHeight,
+       width:component.width ,
         backgroundColor: containerProps.backgroundColor,
         border: `${containerProps.borderWidth}pt ${containerProps.borderStyle} ${containerProps.borderColor}`,
         padding: `${containerProps.padding}pt`,
         boxSizing: "border-box",
         transform: `rotate(${component.rotate || 0}deg)`,
-         overflow: containerProps.autoResize ? "visible" : "hidden",
+        overflow: containerProps.autoResize ? "visible" : "hidden",
+          borderRadius: `${containerProps?.borderRound || 1}pt`
       }}
     >
       {containerChildren.map((child) => (

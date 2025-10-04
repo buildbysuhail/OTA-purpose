@@ -57,12 +57,12 @@ const ShardPrevFooter = ({
                 backgroundSize: footerState?.customElements?.bg_image_objectFit || "cover",   
                 backgroundRepeat: "no-repeat",
                 backgroundColor: `rgb(${footerState?.customElements?.background_color ?? "255,255,255"})`,
-                // position: "relative",
+                position: "relative",
                 }
 
                 }
               >
-                 {customElements.map((component) => (
+                 {customElements.filter(comp => !comp.containerId).map((component) => (
                     <RenderPreviewComponent
                       key={component.id}
                       component={component}

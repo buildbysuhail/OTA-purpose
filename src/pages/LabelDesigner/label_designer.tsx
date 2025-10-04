@@ -1864,6 +1864,79 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
   };
 
   // Effects
+useEffect(() => {
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (!selectedComponent) return;
+
+    const step = 1; // step size (points or px)
+    let { x, y, width, height } = selectedComponent;
+
+    if (e.shiftKey) {
+      // --- Resize Mode ---
+      switch (e.key) {
+        case "ArrowUp":
+          height = Math.max(20, height - step);
+          break;
+        case "ArrowDown":
+          height = height + step;
+          break;
+        case "ArrowLeft":
+          width = Math.max(20, width - step);
+          break;
+        case "ArrowRight":
+          width = width + step;
+          break;
+        default:
+          return;
+      }
+    } else {
+      // --- Move Mode ---
+      switch (e.key) {
+        case "ArrowUp":
+          y = y - step;
+          break;
+        case "ArrowDown":
+          y = y + step;
+          break;
+        case "ArrowLeft":
+          x = x - step;
+          break;
+        case "ArrowRight":
+          x = x + step;
+          break;
+        default:
+          return;
+      }
+    }
+
+    // Update placedComponents
+    const updatedComponents =
+      templateData?.barcodeState?.placedComponents?.map((comp) =>
+        comp.id === selectedComponent.id
+          ? { ...comp, x, y, width, height }
+          : comp
+      ) || [];
+
+    setTemplateData((prev: TemplateState<unknown>) => ({
+      ...prev,
+      barcodeState: {
+        ...prev.barcodeState,
+        placedComponents: updatedComponents,
+      },
+    }));
+
+    // Update selectedComponent
+    setSelectedComponent((prev) =>
+      prev ? { ...prev, x, y, width, height } : prev
+    );
+  };
+
+  window.addEventListener("keydown", handleKeyDown);
+  return () => window.removeEventListener("keydown", handleKeyDown);
+}, [selectedComponent, templateData, setTemplateData, setSelectedComponent]);
+
+
+
   useEffect(() => {
     if (id !== "new" && !forCustomRows) getPDFTemplateData();
   }, []);

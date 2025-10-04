@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import Urls from "../../../../redux/urls";
 import OrderNo from "./components/order-number";
 import { LoadAndSetTransVoucherFn } from "./use-transaction";
-import { formStateMasterHandleFieldChange, formStateHandleFieldChangeKeysOnly } from "../reducer";
+import { formStateMasterHandleFieldChange } from "../reducer";
 import { TransactionFormState } from "../transaction-types";
 
 interface MoreOptionsModalContentProps {
@@ -105,30 +105,6 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({ formS
     300
   );
 
-  const { value: notes1Value, onChange: onNotes1Change } = useDebouncedInput(
-    formState.transaction.master.master2.notes1 || '',
-    (debouncedValue) => {
-      dispatch(
-        formStateHandleFieldChangeKeysOnly({
-          fields: { transaction:{master:{master2:{notes1: debouncedValue}}} },
-        })
-      );
-    },
-    300
-  );
-
-  const { value: notes2Value, onChange: onNotes2Change } = useDebouncedInput(
-    formState.transaction.master.master2.notes2 || '',
-    (debouncedValue) => {
-      dispatch(
-        formStateHandleFieldChangeKeysOnly({
-          fields: { transaction:{master:{master2:{notes2: debouncedValue}}} },
-        })
-      );
-    },
-    300
-  );
-
   return (
     <div className="w-full modal-content">
       <div className="flex flex-col gap-1">
@@ -139,7 +115,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({ formS
               <div className="font-bold text-sm mb-3 bg-gray-200 px-2 py-1">
                 {t("despatch_info")}
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 px-2">
                 <div className="flex flex-col sm:flex-row sm:items-center">
                   <label className="w-full sm:w-32 text-xs mb-1 sm:mb-0">
                     {t("despatch_doc_no")} :
@@ -192,7 +168,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({ formS
               <div className="font-bold text-sm mb-3 bg-gray-200 px-2 py-1">
                 {t("order_info")}
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 px-2">
                 <div className="flex flex-col sm:flex-row sm:items-center">
                   <label className="w-full sm:w-32 text-xs mb-1 sm:mb-0">
                     {t("order_no")} :
@@ -227,7 +203,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({ formS
               <div className="font-bold text-xs sm:text-sm mb-2 sm:mb-3 bg-gray-200 px-2 py-1">
                 {t("quotation_info")}
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 px-2">
                 <div className="flex flex-col sm:flex-row sm:items-center">
                   <label className="w-full sm:w-32 text-xs mb-1 sm:mb-0">
                     {t("quotation_no")} :
@@ -260,7 +236,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({ formS
               <div className="font-bold text-xs sm:text-sm mb-2 sm:mb-3 bg-gray-200 px-2 py-1">
                 {t("purchase_info")}
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 px-2">
                 <div className="flex flex-col sm:flex-row sm:items-center">
                   <label className="w-full sm:w-32 text-xs mb-1 sm:mb-0">
                     {t("pi_inv_no")} :
@@ -295,7 +271,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({ formS
               <div className="font-bold text-xs sm:text-sm mb-2 sm:mb-3 bg-gray-200 px-2 py-1">
                 {t("delivery_info")}
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 px-2">
                 <div className="flex flex-col sm:flex-row sm:items-center">
                   <label className="w-full sm:w-32 text-xs mb-1 sm:mb-0">
                     {t("delivery_note_no")} :
@@ -348,7 +324,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({ formS
               <div className="font-bold text-xs sm:text-sm mb-2 sm:mb-3 bg-gray-200 px-2 py-1">
                 {t("other")}
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 px-2">
                 <div className="flex flex-col sm:flex-row sm:items-center">
                   <label className="w-full sm:w-32 text-xs mb-1 sm:mb-0">
                     {t("gate_pass_no")} :
@@ -398,7 +374,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({ formS
                       id: "vehicleID",
                       valueKey: "id",
                       labelKey: "name",
-                      getListUrl:`${Urls.inv_transaction_base}${transactionType}/Data/Vehicles`
+                      getListUrl: `${Urls.inv_transaction_base}${transactionType}/Data/Vehicles`
                     }}
                     onSelectItem={(data) => dispatch(formStateMasterHandleFieldChange({ fields: { vehicleID: data.value } }))}
                   />
@@ -415,60 +391,26 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({ formS
                     onChange={(e) => onSalesManIncentiveChange(e.target.value)}
                   />
                 </div>
-                 {formState.transaction.master.voucherType == "PI" && 
-                 <div className="flex flex-col sm:flex-row sm:items-center flex-1 min-w-[200px]">
-                  <label className="w-full sm:w-32 text-xs mb-1 sm:mb-0">
-                    {t("sch_disc_posting_a/c")} :
-                  </label>
-                  <ERPDataCombobox
-                    id="tableId"
-                    noLabel={true}
-                    value={formState.transaction.master.tableId}
-                    className="flex-1 h-6 text-xs w-full sm:max-w-36"
-                    field={{
-                      id: "tableID",
-                      valueKey: "id",
-                      labelKey: "name",
-                      getListUrl: Urls.data_acc_ledgers,
-                    }}
-                    onSelectItem={(data) => dispatch(formStateMasterHandleFieldChange({ fields: { tableId: data.value } }))}
-                  />
-                </div>
+                {formState.transaction.master.voucherType == "PI" &&
+                  <div className="flex flex-col sm:flex-row sm:items-center flex-1 min-w-[200px]">
+                    <label className="w-full sm:w-32 text-xs mb-1 sm:mb-0">
+                      {t("sch_disc_posting_a/c")} :
+                    </label>
+                    <ERPDataCombobox
+                      id="tableId"
+                      noLabel={true}
+                      value={formState.transaction.master.tableId}
+                      className="flex-1 h-6 text-xs w-full sm:max-w-36"
+                      field={{
+                        id: "tableID",
+                        valueKey: "id",
+                        labelKey: "name",
+                        getListUrl: Urls.data_acc_ledgers,
+                      }}
+                      onSelectItem={(data) => dispatch(formStateMasterHandleFieldChange({ fields: { tableId: data.value } }))}
+                    />
+                  </div>
                 }
-              </div>
-            </div>
-
-            {/* Notes */}
-            <div>
-              <div className="font-bold text-xs sm:text-sm mb-2 sm:mb-3 bg-gray-200 px-2 py-1">
-                {t("notes")}
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <div className="flex flex-col sm:flex-row sm:items-center flex-1 min-w-[200px]">
-                  <label className="w-full sm:w-32 text-xs mb-1 sm:mb-0">
-                    {t("notes_1")} :
-                  </label>
-                  <ERPInput
-                    id="notes1"
-                    noLabel={true}
-                    value={notes1Value}
-                    className="flex-1 h-6 text-xs w-full sm:max-w-36"
-                    onChange={(e) => onNotes1Change(e.target.value)}
-                  />
-                </div>
-                <div className="flex flex-col sm:flex-row sm:items-center flex-1 min-w-[200px]">
-                  <label className="w-full sm:w-32 text-xs mb-1 sm:mb-0">
-                    {t("notes_2")} :
-                  </label>
-                  <ERPInput
-                    id="notes2"
-                    noLabel={true}
-                    value={notes2Value}
-                    className="flex-1 h-6 text-xs w-full sm:max-w-36"
-                    onChange={(e) => onNotes2Change(e.target.value)}
-                  />
-                </div>
-               
               </div>
             </div>
           </div>

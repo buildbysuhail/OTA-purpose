@@ -1,14 +1,14 @@
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
-import { VoucherElementProps } from "../../purchase/transaction-types";
 import React, { useCallback, useState } from "react";
 import Urls from "../../../../../redux/urls";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import { RootState } from "../../../../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { formStateHandleFieldChangeKeysOnly } from "../reducer";
 import { LoadAndSetTransVoucherFn } from "../use-transaction";
+import { formStateHandleFieldChangeKeysOnly } from "../../reducer";
+import { VoucherElementProps } from "../../transaction-types";
 
 interface GrnNumberProps extends VoucherElementProps {
   loadAndSetTransVoucher: LoadAndSetTransVoucherFn

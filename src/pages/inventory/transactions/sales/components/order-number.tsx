@@ -1,18 +1,16 @@
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
-import { VoucherElementProps } from "../../purchase/transaction-types";
 import React, { useCallback, useEffect, useState } from "react";
 import Urls from "../../../../../redux/urls";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import { RootState } from "../../../../../redux/store";
 import { useSelector } from "react-redux";
 import { Ellipsis } from "lucide-react";
-import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
-import { formStateMasterHandleFieldChange } from "../reducer";
-import VoucherType, {
-  purchaseVoucherTypes,
-} from "../../../../../enums/voucher-types";
+import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce"
+import VoucherType, { purchaseVoucherTypes, } from "../../../../../enums/voucher-types";
 import { LoadAndSetTransVoucherFn } from "../use-transaction";
+import { formStateMasterHandleFieldChange } from "../../reducer";
+import { VoucherElementProps } from "../../transaction-types";
 
 interface LoadByOrderNoProps extends VoucherElementProps {
   loadAndSetTransVoucher: LoadAndSetTransVoucherFn;
@@ -61,20 +59,20 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
     const showLoadByRefNo = useCallback(async () => {
       if (props.type == "PI_Ref") {
         await props.loadAndSetTransVoucher(
-        true,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        orderNumberValue.toString(),
-        undefined,
-        undefined,
-        true,
-        false,
-        "PI_Ref",
-        "",
-        ""
-      );
+          true,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          orderNumberValue.toString(),
+          undefined,
+          undefined,
+          true,
+          false,
+          "PI_Ref",
+          "",
+          ""
+        );
       } else {
         if (formState.transaction.master.orderNumber) {
           setShowLoadData(true);
@@ -106,7 +104,7 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
       loadData.formType,
       loadData.vNumber,
     ]);
-    
+
     useEffect(() => {
       if (showLoadData) {
         setLoadData((prev: any) => {
@@ -132,9 +130,9 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
         {!showLoadData ? (
           <div className="flex items-center gap-1">
             <ERPInput
-            localInputBox={props.localInputBox}
+              localInputBox={props.localInputBox}
               id="orderNumber"
-              label={ props.label  }
+              label={props.label}
               noLabel={props.label == undefined}
               value={orderNumberValue}
               labelDirection="horizontal"
@@ -143,13 +141,13 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
             />
             {(formState.transaction.master.voucherType == "PI" ||
               formState.transaction.master.voucherType == "GRN" || props.type == "PI_Ref") && (
-              <button
-                className="bg-gray-300 p-2 rounded-md hover:shadow-md transition duration-300 flex-shrink-0"
-                onClick={showLoadByRefNo}
-              >
-                <Ellipsis className="w-4 h-4" />
-              </button>
-            )}
+                <button
+                  className="bg-gray-300 p-2 rounded-md hover:shadow-md transition duration-300 flex-shrink-0"
+                  onClick={showLoadByRefNo}
+                >
+                  <Ellipsis className="w-4 h-4" />
+                </button>
+              )}
           </div>
         ) : (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">

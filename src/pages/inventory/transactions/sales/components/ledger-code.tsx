@@ -1,9 +1,9 @@
 import React from "react";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
-import { VoucherElementProps } from "../../purchase/transaction-types";
-import { formStateHandleFieldChangeKeysOnly } from "../reducer";
 import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
 import Urls from "../../../../../redux/urls";
+import { formStateHandleFieldChangeKeysOnly } from "../../reducer";
+import { VoucherElementProps } from "../../transaction-types";
 
 interface LedgerCodeProps extends VoucherElementProps {
   transactionType: string;

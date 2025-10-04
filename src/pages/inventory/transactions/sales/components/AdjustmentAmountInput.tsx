@@ -1,20 +1,11 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
-import { InvAccTransaction, VoucherElementProps } from "../../purchase/transaction-types";
 import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
-import { formStateMasterHandleFieldChange, formStateTransactionIvAccTransactionsRowsUpdate } from "../reducer";
 import ERPModal from "../../../../../components/ERPComponents/erp-modal";
-import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
-import Urls from "../../../../../redux/urls";
-import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
-import ERPButton from "../../../../../components/ERPComponents/erp-button";
-import ErpDevGrid, { SummaryConfig } from "../../../../../components/ERPComponents/erp-dev-grid";
-import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import { Pencil } from "lucide-react";
 import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
-import { isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from "../../../../../utilities/Utils";
-import ERPAlert from "../../../../../components/ERPComponents/erp-sweet-alert";
 import { AdjustmentAmountManager } from "./adjestAmount-manager";
+import { formStateMasterHandleFieldChange } from "../../reducer";
+import { VoucherElementProps } from "../../transaction-types";
 
 interface AdjustmentAmountInputProps extends VoucherElementProps {
   handleKeyDown?: (
@@ -24,18 +15,10 @@ interface AdjustmentAmountInputProps extends VoucherElementProps {
   transactionType: string
 }
 
-
-
-
-const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
-  formState,
-  t,
-  transactionType,
-  handleKeyDown,
-}) => {
+const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({ formState, t, transactionType, handleKeyDown, }) => {
   const dispatch = useAppDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
- 
+
   const exchangeRate = formState.transaction.master.exchangeRate || 1;
   // For testing const isFcTrans = true, const exchangeRate = 2;
 
@@ -66,26 +49,26 @@ const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
 
   return (
     <>
-    {!formState.transactionLoading && formState.formElements.pnlMasters?.disabled !==true &&(
-      <a
-        href="#"
-        type="popup"
-        onClick={(e) => {
-          e.preventDefault();
-          openModal();
-        }}
-        className="text-[#3B82F6] hover:text-[#1D4ED8] cursor-pointer"
-      >
-        {t(formState.formElements.adjustmentAmount.label)}
-      </a>
-    )}
+      {!formState.transactionLoading && formState.formElements.pnlMasters?.disabled !== true && (
+        <a
+          href="#"
+          type="popup"
+          onClick={(e) => {
+            e.preventDefault();
+            openModal();
+          }}
+          className="text-[#3B82F6] hover:text-[#1D4ED8] cursor-pointer"
+        >
+          {t(formState.formElements.adjustmentAmount.label)}
+        </a>
+      )}
       <ERPInput
         localInputBox={formState?.userConfig?.inputBoxStyle}
         fetching={formState.transactionLoading}
         id="adjustmentAmount"
         type="number"
         className="!m-0"
-        noLabel={!formState.transactionLoading && formState.formElements.pnlMasters?.disabled !==true}
+        noLabel={!formState.transactionLoading && formState.formElements.pnlMasters?.disabled !== true}
         label={t(formState.formElements.adjustmentAmount.label)}
         readOnly
         value={adjustmentAmountValue}
@@ -108,7 +91,7 @@ const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
           title={t("add_amount_or_jv")}
           content={
             <AdjustmentAmountManager
-            transactionType={transactionType}
+              transactionType={transactionType}
               formState={formState}
               t={t}
               handleKeyDown={handleKeyDown}

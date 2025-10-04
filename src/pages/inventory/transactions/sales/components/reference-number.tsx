@@ -1,9 +1,9 @@
 import { APIClient } from "../../../../../helpers/api-client";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
-import { VoucherElementProps } from "../../purchase/transaction-types";
-import { formStateMasterHandleFieldChange } from "../reducer";
 import React from "react";
 import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
+import { formStateMasterHandleFieldChange } from "../../reducer";
+import { VoucherElementProps } from "../../transaction-types";
 
 const api = new APIClient();
 

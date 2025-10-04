@@ -1,7 +1,7 @@
 import React from "react";
-import { VoucherElementProps } from "../../purchase/transaction-types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import { useAppState } from "../../../../../utilities/hooks/useAppState";
+import { VoucherElementProps } from "../../transaction-types";
 
 interface NetAmountInputProps extends VoucherElementProps {
   handleKeyDown?: (

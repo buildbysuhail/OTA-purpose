@@ -1,31 +1,12 @@
 import { useCallback } from "react";
-
-// import { handleResponse } from '../HandleResponse';
-import {
-  customJsonParse,
-  modelToBase64Unicode,
-} from "../../../utilities/jsonConverter";
+import { customJsonParse, modelToBase64Unicode, } from "../../../utilities/jsonConverter";
 import { APIClient } from "../../../helpers/api-client";
 import Urls from "../../../redux/urls";
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "../../../utilities/hooks/useAppDispatch";
+import { useAppDispatch, useAppSelector, } from "../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../redux/store";
 import { updateTransactionEditMode } from "./acc-transaction-functions";
 import { useDispatch } from "react-redux";
-import {
-  accFormStateHandleFieldChange,
-  accFormStateRowHandleFieldChange,
-  accFormStateTransactionDetailsRowAdd,
-  accFormStateTransactionDetailsRowRemove,
-  accFormStateTransactionMasterHandleFieldChange,
-  accFormStateTransactionUpdate,
-  loadTempRows,
-  clearState,
-  updateFormElement,
-  accFormStateClearBillWiseInDetails,
-} from "./reducer";
+import { accFormStateHandleFieldChange, accFormStateRowHandleFieldChange, accFormStateTransactionDetailsRowAdd, accFormStateTransactionDetailsRowRemove, accFormStateTransactionMasterHandleFieldChange, accFormStateTransactionUpdate, loadTempRows, clearState, updateFormElement, accFormStateClearBillWiseInDetails, } from "./reducer";
 import { UserAction, useUserRights } from "../../../helpers/user-right-helper";
 import { deleteAccVoucher, unlockAccTransactionMaster } from "./thunk";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
@@ -56,12 +37,10 @@ import { useAccPrint } from "./use-print";
 import moment from "moment";
 import VoucherType from "../../../enums/voucher-types";
 import { useTranslation } from "react-i18next";
-import localData from "../../../enums/local-datas";
-import { formStateHandleFieldChange } from "../../inventory/transactions/purchase/reducer";
 import { isDirtyTransaction, setTransactionForHistory } from "../../../helpers/transaction-modified-util";
 import { Countries, UserModel } from "../../../redux/slices/user-session/reducer";
 import { getStorageString, setStorageString } from "../../../utilities/storage-utils";
-import CachedUrls, { getApLocalData } from "../../../redux/cached-urls";
+import { getApLocalData } from "../../../redux/cached-urls";
 
 
 interface FormElementState {
@@ -246,7 +225,7 @@ export const useAccTransaction = (
     const _s_isDirty = isDirtyTransaction(formState.prev, {
       transaction: { ...formState.transaction },
       row: { ...formState.row },
-    },"acc");
+    }, "acc");
     if (_s_isDirty && skipPrompt != true) {
       // if (mode == "increment" || mode == "decrement") {
       //   // const _voucherNumber =
@@ -347,8 +326,8 @@ export const useAccTransaction = (
         (userConfig?.presetCostenterId ?? 0 > 0
           ? userConfig?.presetCostenterId
           : userSession.dbIdValue == "SAMAPLASTICS12121212121"
-          ? 0
-          : applicationSettings?.accountsSettings?.defaultCostCenterID) ?? 0;
+            ? 0
+            : applicationSettings?.accountsSettings?.defaultCostCenterID) ?? 0;
       _formState.userConfig = userConfig;
     }
 
@@ -370,13 +349,13 @@ export const useAccTransaction = (
       } else if (_formState.transaction.master.voucherType === "CR") {
         _formState.masterAccountID =
           userSession.counterwiseCashLedgerId > 0 &&
-          applicationSettings.accountsSettings.allowSalesCounter
+            applicationSettings.accountsSettings.allowSalesCounter
             ? userSession.counterwiseCashLedgerId
             : applicationSettings.accountsSettings.defaultCashAcc;
       }
-        let _ledger = await getApLocalData("AccLedgers")
+      let _ledger = await getApLocalData("AccLedgers")
       // Fetch Ledger ID
-      let id =  _ledger?.find(
+      let id = _ledger?.find(
         (x: any) => x.alias == _formState.row.ledgerCode
       )?.id;
       if (!(id > 0)) {
@@ -472,7 +451,7 @@ export const useAccTransaction = (
     }
 
     _formState.prev = modelToBase64Unicode(
-      setTransactionForHistory(_formState,"acc")
+      setTransactionForHistory(_formState, "acc")
     );
 
     console.log("accFormStateHandleFieldChange1");
@@ -541,7 +520,7 @@ export const useAccTransaction = (
     await undoEditMode(
       formState.isEdit,
       accTransactionMasterID ??
-        formState.transaction.master.accTransactionMasterID
+      formState.transaction.master.accTransactionMasterID
     );
 
     voucher.transaction = {
@@ -562,7 +541,7 @@ export const useAccTransaction = (
       };
       voucher.transaction.master = updatedMaster;
     }
-   
+
     if (vch?.details) {
       if (voucher.transaction.details?.length > 0) {
         voucher.total = voucher.transaction.details.reduce((total, detail) => {
@@ -751,10 +730,8 @@ export const useAccTransaction = (
   ) => {
     const response = await api.getAsync(
       Urls.get_last_voucher_no,
-      `formType=${formType ? formType : ""}&voucherType=${
-        voucherType ? voucherType : ""
-      }&voucherPrefix=${voucherPrefix ? voucherPrefix : ""}&isVoucherPrefix=${
-        isVoucherPrefix ? isVoucherPrefix : false
+      `formType=${formType ? formType : ""}&voucherType=${voucherType ? voucherType : ""
+      }&voucherPrefix=${voucherPrefix ? voucherPrefix : ""}&isVoucherPrefix=${isVoucherPrefix ? isVoucherPrefix : false
       }`
     );
 
@@ -773,35 +750,35 @@ export const useAccTransaction = (
   const validate = (): boolean => {
     // Check if demo version is expired
     if (clientSession.isDemoVersion) {
-        const demoExpiryDate = moment(clientSession.demoExpiryDate, "DD/MM/YYYY", true);
-        const transactionDate = moment(formState.transaction.master.transactionDate);
-        const softwareDate = moment(clientSession.softwareDate, "DD/MM/YYYY")
+      const demoExpiryDate = moment(clientSession.demoExpiryDate, "DD/MM/YYYY", true);
+      const transactionDate = moment(formState.transaction.master.transactionDate);
+      const softwareDate = moment(clientSession.softwareDate, "DD/MM/YYYY")
         .local()
         .toDate();
 
       const daysUntilExpiry = Math.floor(
         (demoExpiryDate.toDate().getTime() - transactionDate.toDate().getTime()) /
-          (1000 * 60 * 60 * 24)
+        (1000 * 60 * 60 * 24)
       );
       const daysSinceSoftwareDate = Math.floor(
         (transactionDate.toDate().getTime() - softwareDate.getTime()) /
-          (1000 * 60 * 60 * 24)
+        (1000 * 60 * 60 * 24)
       );
-if (
-      !["OB", "MJV"].includes(formState.transaction.master.voucherType) &&
-      isNullOrUndefinedOrZero(formState.masterAccountID)
-    ) {
-      ERPAlert.show({
-        icon: "info",
-        // title: t("select_master_account"),
-        title: "Please Select " + formState.formElements.masterAccount.label,
-        onConfirm: (result: any) => {
-          focusMasterAccount();
-          return false;
-        },
-      });
-      return false;
-    }
+      if (
+        !["OB", "MJV"].includes(formState.transaction.master.voucherType) &&
+        isNullOrUndefinedOrZero(formState.masterAccountID)
+      ) {
+        ERPAlert.show({
+          icon: "info",
+          // title: t("select_master_account"),
+          title: "Please Select " + formState.formElements.masterAccount.label,
+          onConfirm: (result: any) => {
+            focusMasterAccount();
+            return false;
+          },
+        });
+        return false;
+      }
       if (daysUntilExpiry < 0 || daysSinceSoftwareDate > 30) {
         dispatch(
           updateFormElement({
@@ -1117,28 +1094,28 @@ if (
     }
     return updatedDetails;
   };
-const attachMaster = async (): Promise<AccTransactionMaster> => {
-    
+  const attachMaster = async (): Promise<AccTransactionMaster> => {
+
     const { firstDebitLedgerID, firstCreditLedgerID } =
       getFirstDebitCreditLedgerIDs(formState.transaction);
-      const ledgers = await getApLocalData("AccLedgers");
+    const ledgers = await getApLocalData("AccLedgers");
     const master = {
       ...formState.transaction.master,
       particulars:
         formState.transaction.master.voucherType != "MJV" &&
-        formState.transaction.master.voucherType != "OB"
-          ?  ledgers?.find(
-              (x: any) => x.id == formState.masterAccountID
-            )?.name ?? ""
-          : formState.transaction.master.voucherType == "OB"
+          formState.transaction.master.voucherType != "OB"
           ? ledgers?.find(
+            (x: any) => x.id == formState.masterAccountID
+          )?.name ?? ""
+          : formState.transaction.master.voucherType == "OB"
+            ? ledgers?.find(
               (x: any) =>
                 x.id == applicationSettings.accountsSettings.defaultSuspenseAcc
             )?.name ?? ""
-          : formState.transaction.master.voucherType == "MJV"
-          ? ledgers?.find((x: any) => x.id == firstCreditLedgerID)
-              ?.name ?? ""
-          : "",
+            : formState.transaction.master.voucherType == "MJV"
+              ? ledgers?.find((x: any) => x.id == firstCreditLedgerID)
+                ?.name ?? ""
+              : "",
     };
 
     master.accTransactionMasterID = formState.isEdit
@@ -1181,8 +1158,8 @@ const attachMaster = async (): Promise<AccTransactionMaster> => {
     return master;
   };
   const preSave = async () => {
-    
-        // dispatch(formStateHandleFieldChange({fields: {prev: undefined}}));
+
+    // dispatch(formStateHandleFieldChange({fields: {prev: undefined}}));
     if (
       formState.isEdit &&
       formState.userConfig?.mnuShowConfirmationForEditOnAccounts == true
@@ -1237,13 +1214,13 @@ const attachMaster = async (): Promise<AccTransactionMaster> => {
       const saveRes =
         formState.transaction.master.accTransactionMasterID > 0
           ? await api.putAsync(
-              `${Urls.acc_transaction_base}${transactionType}`,
-              params
-            )
+            `${Urls.acc_transaction_base}${transactionType}`,
+            params
+          )
           : await api.postAsync(
-              `${Urls.acc_transaction_base}${transactionType}`,
-              params
-            );
+            `${Urls.acc_transaction_base}${transactionType}`,
+            params
+          );
       if (saveRes.isOk == true) {
         dispatch(
           accFormStateTransactionUpdate({
@@ -1252,7 +1229,7 @@ const attachMaster = async (): Promise<AccTransactionMaster> => {
           })
         );
         console.log(`userSession.dbIdValue?.trim()${userSession.dbIdValue?.trim()}`);
-        
+
         if (formState.userConfig?.printOnSave == true) {
           if (
             userSession.dbIdValue?.trim() == "BAHAMDOON" &&
@@ -1276,12 +1253,12 @@ const attachMaster = async (): Promise<AccTransactionMaster> => {
           const isFinancialYearClosed =
             userSession.financialYearStatus === "Closed";
           const fieldsToUpdate: Record<string, any> = {
-            
+
 
             pnlMasters: { disabled: true },
 
             linkEdit: { visible: false },
-           
+
           };
 
           // Dispatch the update action with all the required fields
@@ -1334,12 +1311,12 @@ const attachMaster = async (): Promise<AccTransactionMaster> => {
     }
     else {
       dispatch(
-      accFormStateHandleFieldChange({
-        fields: {
-          saving: false,
-        },
-      })
-    );
+        accFormStateHandleFieldChange({
+          fields: {
+            saving: false,
+          },
+        })
+      );
     }
   };
   const clearRow = async (isEdit: boolean, accTransactionMasterID: number) => {
@@ -1407,17 +1384,17 @@ const attachMaster = async (): Promise<AccTransactionMaster> => {
         applicationSettings: applicationSettings,
       })
     );
-           const details = formState.transaction.details.splice(index,1)
-          await setStorageString(
-          `${formState.transaction.master.voucherType}${formState.transaction.master.formType}`,
-          JSON.stringify(details)
-        );
+    const details = formState.transaction.details.splice(index, 1)
+    await setStorageString(
+      `${formState.transaction.master.voucherType}${formState.transaction.master.formType}`,
+      JSON.stringify(details)
+    );
   };
   const addOrEditRow = async (
     billwiseDetails?: string,
     totalAmount?: number
   ) => {
-    
+
     if (applicationSettings.accountsSettings?.billwiseMandatory) {
       if (!isNullOrUndefinedOrZero(formState.row.ledgerID)) {
         let _drCr = getDrCr(formState.transaction.master.voucherType);
@@ -1537,7 +1514,7 @@ const attachMaster = async (): Promise<AccTransactionMaster> => {
 
       return false;
     }
-    
+
     if (
       !["OB", "MJV"].includes(formState.transaction.master.voucherType) &&
       isNullOrUndefinedOrZero(formState.masterAccountID)
@@ -1562,7 +1539,7 @@ const attachMaster = async (): Promise<AccTransactionMaster> => {
         title: t("select_cost_center"),
         onConfirm: (result: any) => {
           focusCostCenterRef();
-      return false;
+          return false;
         },
       });
       return false;
@@ -1589,13 +1566,13 @@ const attachMaster = async (): Promise<AccTransactionMaster> => {
       };
     }
     formState.formElements.btnAdd;
-   let _costCenters = await getApLocalData("CostCentres");
-   let _ledgers = await getApLocalData("AccLedgers");
+    let _costCenters = await getApLocalData("CostCentres");
+    let _ledgers = await getApLocalData("AccLedgers");
     const costCentreName =
       formState.row.costCentreID ?? 0 > 0
         ? _costCenters?.find(
-            (x: any) => x.id == formState.row.costCentreID
-          )?.name
+          (x: any) => x.id == formState.row.costCentreID
+        )?.name
         : "";
     dispatch(
       accFormStateTransactionDetailsRowAdd({
@@ -1604,11 +1581,11 @@ const attachMaster = async (): Promise<AccTransactionMaster> => {
           costCentreName: costCentreName,
           ledgerName:
             formState.row.ledgerName == undefined ||
-            formState.row.ledgerName == null ||
-            formState.row.ledgerName == ""
+              formState.row.ledgerName == null ||
+              formState.row.ledgerName == ""
               ? _ledgers?.find(
-                  (x: any) => x.id == formState.row.ledgerID
-                )?.name
+                (x: any) => x.id == formState.row.ledgerID
+              )?.name
               : formState.row.ledgerName,
           amount: totalAmount ?? formState.row.amount,
           billwiseDetails:
@@ -1622,10 +1599,10 @@ const attachMaster = async (): Promise<AccTransactionMaster> => {
         userSession: userSession,
       })
     );
-await setStorageString(
-        `${formState.transaction.master.voucherType}${formState.transaction.master.formType}`,
-        JSON.stringify(formState.transaction.details)
-      );
+    await setStorageString(
+      `${formState.transaction.master.voucherType}${formState.transaction.master.formType}`,
+      JSON.stringify(formState.transaction.details)
+    );
     // Conditionally update costCentreID if needed
     if (formState.userConfig?.presetCostenterId ?? 0 > 0) {
       updatedFields.costCentreID = {
@@ -1805,7 +1782,7 @@ await setStorageString(
     gridRef?: any,
     applicationSettings?: ApplicationSettingsType
   ) => {
-    
+
     if (field === "test") {
       focusLedgerCombo();
     } else if (field === "grid") {
@@ -1898,7 +1875,7 @@ await setStorageString(
         text: t("you_want_to_delete"),
         icon: "warning",
         confirmButtonText: t("delete_it"),
-        onConfirm: async() => {
+        onConfirm: async () => {
           const dataGridInstance = gridRef.current.instance(); // Access DataGrid instance
           const focusedRowIndex = dataGridInstance.option("focusedRowIndex");
           dispatch(
@@ -1907,11 +1884,11 @@ await setStorageString(
               index: focusedRowIndex,
             })
           );
-           const details = formState.transaction.details.splice(focusedRowIndex,1)
+          const details = formState.transaction.details.splice(focusedRowIndex, 1)
           await setStorageString(
-          `${formState.transaction.master.voucherType}${formState.transaction.master.formType}`,
-          JSON.stringify(details)
-        );
+            `${formState.transaction.master.voucherType}${formState.transaction.master.formType}`,
+            JSON.stringify(details)
+          );
         },
       });
     }
@@ -1921,16 +1898,15 @@ await setStorageString(
   const handleLedgerCodeKeyDown = async (e: any) => {
     if (e === "Enter" || e === "Tab") {
       try {
-        
+
         const response = await api.getAsync(
-          `${Urls.get_ledgerId_by_code}${
-            formState.row.ledgerCode == undefined ||
+          `${Urls.get_ledgerId_by_code}${formState.row.ledgerCode == undefined ||
             formState.row.ledgerCode === ""
-              ? "___"
-              : formState.row.ledgerCode
+            ? "___"
+            : formState.row.ledgerCode
           }`
         );
-        
+
         if (response && response > 0) {
           dispatch(
             accFormStateRowHandleFieldChange({
@@ -1996,7 +1972,7 @@ await setStorageString(
     focusLedgerCode();
   };
   const handleNarrationKeyDown = (e: any) => {
-    
+
     // Handle Enter key
     if (e === "Enter") {
       const isChequeVoucher =
@@ -2009,9 +1985,9 @@ await setStorageString(
       if (
         applicationSettings.accountsSettings?.maintainBillwiseAccount &&
         // formState.formElements.btnBillWise.visible == true
-                            !billWiseExcludedTransactions.includes(
-                              formState.transaction.master.voucherType
-                            ) 
+        !billWiseExcludedTransactions.includes(
+          formState.transaction.master.voucherType
+        )
       ) {
         if (
           (clientSession.isAppGlobal == true && !isChequeVoucher) ||
@@ -2083,8 +2059,8 @@ await setStorageString(
           e == "ArrowDown"
             ? "decrement"
             : e == "ArrowUp"
-            ? "increment"
-            : undefined,
+              ? "increment"
+              : undefined,
           true
         );
       }
@@ -2092,65 +2068,67 @@ await setStorageString(
   };
 
   const loadTemporaryRows = async () => {
-         const tmp =await getStorageString(
-        `${formState.transaction.master.voucherType}${formState.transaction.master.formType}`
-      ); 
+    const tmp = await getStorageString(
+      `${formState.transaction.master.voucherType}${formState.transaction.master.formType}`
+    );
     dispatch(loadTempRows(tmp));
   };
-const setUserRight = (
-      formElements: FormElementsState, userSession: UserModel,formCode: string,detailsLength: number,
-        hasRight: (formCode: string, action: UserAction) => boolean
-    ) => {
+  const setUserRight = (
+    formElements: FormElementsState, userSession: UserModel, formCode: string, detailsLength: number,
+    hasRight: (formCode: string, action: UserAction) => boolean
+  ) => {
 
-      const isClosed = userSession.financialYearStatus === "Closed";
+    const isClosed = userSession.financialYearStatus === "Closed";
 
-  return {
-    ...formElements,
-    btnSave: {
-      ...formElements.btnSave,
-      disabled: !isClosed
-        ? hasRight(formCode, UserAction.Add) && detailsLength > 0
-        : false,
-    },
-    btnEdit: {
-      ...formElements.btnEdit,
-      disabled: !isClosed
-        ? hasRight(formCode, UserAction.Edit)
-        : false,
-    },
-    btnDelete: {
-      ...formElements.btnDelete,
-      disabled: !isClosed
-        ? hasRight(formCode, UserAction.Delete)
-        : false,
-    },
-    btnPrint: {
-      ...formElements.btnPrint,
-      disabled: !isClosed
-        ? hasRight(formCode, UserAction.Print)
-        : false,
-    },
+    return {
+      ...formElements,
+      btnSave: {
+        ...formElements.btnSave,
+        disabled: !isClosed
+          ? hasRight(formCode, UserAction.Add) && detailsLength > 0
+          : false,
+      },
+      btnEdit: {
+        ...formElements.btnEdit,
+        disabled: !isClosed
+          ? hasRight(formCode, UserAction.Edit)
+          : false,
+      },
+      btnDelete: {
+        ...formElements.btnDelete,
+        disabled: !isClosed
+          ? hasRight(formCode, UserAction.Delete)
+          : false,
+      },
+      btnPrint: {
+        ...formElements.btnPrint,
+        disabled: !isClosed
+          ? hasRight(formCode, UserAction.Print)
+          : false,
+      },
+    };
   };
-};
   const enableCombo = async () => {
     dispatch(
       updateFormElement({
         fields: {
           employee: { disabled: false },
           jvDrCr: { disabled: false },
-          masterAccount: { disabled: (formState.transaction.master.voucherType ==
-                        VoucherType.CashPayment ||
-                        formState.transaction.master.voucherType ==
-                          VoucherType.CashReceipt) &&
-                      userSession?.counterwiseCashLedgerId > 0 &&
-                      applicationSettings.accountsSettings?.allowSalesCounter &&
-                      userSession?.counterAssignedCashLedgerId > 0
-                        ? userSession.countryId == Countries.India
-                          ? formState.masterAccountActive == true
-                            ? false
-                            : true
-                          : true
-                        : false  },
+          masterAccount: {
+            disabled: (formState.transaction.master.voucherType ==
+              VoucherType.CashPayment ||
+              formState.transaction.master.voucherType ==
+              VoucherType.CashReceipt) &&
+              userSession?.counterwiseCashLedgerId > 0 &&
+              applicationSettings.accountsSettings?.allowSalesCounter &&
+              userSession?.counterAssignedCashLedgerId > 0
+              ? userSession.countryId == Countries.India
+                ? formState.masterAccountActive == true
+                  ? false
+                  : true
+                : true
+              : false
+          },
           referenceDate: { disabled: false },
           referenceNumber: { disabled: false },
           transactionDate: { disabled: false },
@@ -2356,7 +2334,7 @@ const setUserRight = (
           console.error("Error deleting voucher:", error);
         }
       },
-      onCancel: async() => {
+      onCancel: async () => {
         return false
       }
     });
@@ -2511,8 +2489,8 @@ const setUserRight = (
 
         break;
     }
-    
-    const _ledgerID  = ["CN","DN"].includes(formState.transaction.master.voucherType) ? formState.masterAccountID : formState.row.ledgerID;
+
+    const _ledgerID = ["CN", "DN"].includes(formState.transaction.master.voucherType) ? formState.masterAccountID : formState.row.ledgerID;
     const billwise = await api.getAsync(
       `${Urls.acc_transaction_ledger_bill_wise}?LedgerId=${_ledgerID}&DrCr=${_drcr}&AccTransactionDetailID=${accTransactionDetailID}`
     );
@@ -2583,7 +2561,7 @@ const setUserRight = (
     try {
       let drCr = "";
       const loadLedgerData = async () => {
-     
+
         if (
           formState.showbillwise === true &&
           formState.row.ledgerID &&

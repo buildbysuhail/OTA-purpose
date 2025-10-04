@@ -1,7 +1,7 @@
-import { VoucherElementProps } from "../../purchase/transaction-types";
 import React from "react";
 import ERPDateInput from "../../../../../components/ERPComponents/erp-date-input";
-import { formStateMasterHandleFieldChange} from "../reducer";
+import { formStateMasterHandleFieldChange } from "../../reducer";
+import { VoucherElementProps } from "../../transaction-types";
 
 interface TransactionDateProps extends VoucherElementProps {}
 

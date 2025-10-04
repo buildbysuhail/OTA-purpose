@@ -1,21 +1,14 @@
 import React, { useRef } from "react";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
-import { VoucherElementProps } from "../../purchase/transaction-types";
-import { formStateMasterHandleFieldChange } from "../../purchase/reducer";
 import Urls from "../../../../../redux/urls";
+import { formStateMasterHandleFieldChange } from "../../reducer";
+import { VoucherElementProps } from "../../transaction-types";
 
 interface CostCentreProps extends VoucherElementProps {
   handleFieldKeyDown: (field: string, key: string) => void;
 }
 
-const PriceCategory = React.forwardRef<HTMLInputElement, CostCentreProps>(({
-  formState,
-  dispatch,
-  t,
-  handleFieldKeyDown,
-  handleKeyDown,
-}, ref) => {
-
+const PriceCategory = React.forwardRef<HTMLInputElement, CostCentreProps>(({ formState, dispatch, t, handleFieldKeyDown, handleKeyDown, }, ref) => {
   return (
     <>
       {formState.formElements.priceCategoryID.visible && (

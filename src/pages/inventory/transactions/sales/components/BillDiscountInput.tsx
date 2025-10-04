@@ -1,10 +1,10 @@
 import React from "react";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
-import { VoucherElementProps } from "../../purchase/transaction-types";
-import { formStateMasterHandleFieldChange } from "../reducer";
 import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
 import { ChevronUp } from "lucide-react";
 import VoucherType from "../../../../../enums/voucher-types";
+import { formStateMasterHandleFieldChange } from "../../reducer";
+import { VoucherElementProps } from "../../transaction-types";
 
 interface BillDiscountInputProps extends VoucherElementProps {
   handleKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>, field: string) => void;

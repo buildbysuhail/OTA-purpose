@@ -3,12 +3,12 @@ import { useTranslation } from "react-i18next";
 import { APIClient } from "../../helpers/api-client";
 import ErpDevGrid from "../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../types/dev-grid-column";
-import { TransactionDetail } from "../../pages/inventory/transactions/purchase/transaction-types";
 import { useDispatch } from "react-redux";
-import { formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly } from "../../pages/inventory/transactions/purchase/reducer";
 import { generateUniqueKey } from "../../utilities/Utils";
 import ERPCheckbox from "./erp-checkbox";
 import Urls from "../../redux/urls";
+import { formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly } from "../../pages/inventory/transactions/reducer";
+import { TransactionDetail } from "../../pages/inventory/transactions/transaction-types";
 
 const isNotEmpty = (value: any) => value !== undefined && value !== null && value !== "";
 const api = new APIClient();

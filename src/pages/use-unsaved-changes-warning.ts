@@ -14,7 +14,7 @@ import { useDispatch } from "react-redux";
 import { accFormStateHandleFieldChange } from "./accounts/transactions/reducer";
 import { history as _history } from "../history";
 import { setTransactionForHistory } from "../helpers/transaction-modified-util";
-import { formStateHandleFieldChange } from "./inventory/transactions/purchase/reducer";
+import { formStateHandleFieldChange } from "./inventory/transactions/reducer";
 
 export const useUnsavedChangesWarning = () => {
   const navigate = useNavigate();

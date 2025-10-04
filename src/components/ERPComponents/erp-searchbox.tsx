@@ -6,7 +6,6 @@ import React, {
   useState,
   forwardRef,
   Fragment,
-  useImperativeHandle,
 } from "react";
 import { createPortal } from "react-dom";
 import { APIClient } from "../../helpers/api-client";
@@ -28,15 +27,15 @@ import ERPModal from "./erp-modal";
 import ProductModalGrid from "./erp-searchbox-modalContent";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { formStateHandleFieldChangeKeysOnly } from "../../pages/inventory/transactions/purchase/reducer";
 import Urls from "../../redux/urls";
-import { TransactionDetail } from "../../pages/inventory/transactions/purchase/transaction-types";
 import { inputBox } from "../../redux/slices/app/types";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
-import { DevGridColumn, GridPreference } from "../types/dev-grid-column";
+import { DevGridColumn } from "../types/dev-grid-column";
 import GridPreferenceChooser from "../../components/ERPComponents/erp-gridpreference";
 import usePreferenceData from "../../utilities/hooks/usePreference";
 import { SortDescriptor } from "devextreme/data";
+import { formStateHandleFieldChangeKeysOnly } from "../../pages/inventory/transactions/reducer";
+import { TransactionDetail } from "../../pages/inventory/transactions/transaction-types";
 interface InputProps {
   id?: string;
   inputId?: string;

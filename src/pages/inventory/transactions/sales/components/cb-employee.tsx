@@ -1,23 +1,15 @@
 import React from "react";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
-import { EmployeeType, VoucherElementProps } from "../../purchase/transaction-types";
-import { formStateMasterHandleFieldChange } from "../reducer";
 import Urls from "../../../../../redux/urls";
+import { formStateMasterHandleFieldChange } from "../../reducer";
+import { VoucherElementProps, EmployeeType } from "../../transaction-types";
 
 interface CostCentreProps extends VoucherElementProps {
   handleFieldKeyDown: (field: string, key: string) => void;
   transactionType: string;
 }
 
-const Employee = React.forwardRef<HTMLInputElement, CostCentreProps>(({
-  formState,
-  dispatch,
-  t,
-  handleFieldKeyDown,
-  handleKeyDown,
-  transactionType
-}, ref) => {
-
+const Employee = React.forwardRef<HTMLInputElement, CostCentreProps>(({ formState, dispatch, t, handleFieldKeyDown, handleKeyDown, transactionType }, ref) => {
   return (
     <>
       {formState.formElements.cbEmployee.visible && (
@@ -48,10 +40,10 @@ const Employee = React.forwardRef<HTMLInputElement, CostCentreProps>(({
             valueKey: "id",
             labelKey: "name",
             getListUrl: `${Urls.inv_transaction_base}${transactionType}/Data/Employee/`,
-            params:`employeeType=${formState.userConfig
-                ?.showPurchaserOnly
-                ? EmployeeType.Purchaser
-                : EmployeeType.All}`
+            params: `employeeType=${formState.userConfig
+              ?.showPurchaserOnly
+              ? EmployeeType.Purchaser
+              : EmployeeType.All}`
           }}
           disabled={
             (formState.userConfig?.presetCostenterId ?? 0) > 0 ||

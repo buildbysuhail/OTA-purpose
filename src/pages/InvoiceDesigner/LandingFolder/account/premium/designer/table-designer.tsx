@@ -2,22 +2,19 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { useTranslation } from "react-i18next";
-import { TemplateReducerState } from "../../../../../../redux/reducers/TemplateReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { ERPScrollArea } from "../../../../../../components/ERPComponents/erp-scrollbar";
-import {  setTemplateTableMasterState, setTemplateTableState, setTemplateTotalState } from "../../../../../../redux/slices/templates/reducer";
-import { ItemTableMasterState, TableColumn, TemplateState } from "../../../../Designer/interfaces";
+import {  setTemplateTableMasterState, setTemplateTableState } from "../../../../../../redux/slices/templates/reducer";
+import { ItemTableMasterState, TableColumn } from "../../../../Designer/interfaces";
 import ERPCheckbox from "../../../../../../components/ERPComponents/erp-checkbox";
 import ErpInput from "../../../../../../components/ERPComponents/erp-input";
 import ERPStepInput from "../../../../../../components/ERPComponents/erp-step-input";
 import ERPTab from "../../../../../../components/ERPComponents/erp-tab";
 import { DeepPartial } from "redux";
-import { TransactionDetail } from "../../../../../inventory/transactions/purchase/transaction-types";
 import { RootState } from "../../../../../../redux/store";
-import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import ERPButton from "../../../../../../components/ERPComponents/erp-button";
 import ERPModal from "../../../../../../components/ERPComponents/erp-modal";
-import { TableManagerContent, TableManagerFooter } from "./tabble-col-manage";
+import { TableManagerContent } from "./tabble-col-manage";
 
 interface ItemTableDesignerProps<T> {
   tableState: TableColumn<T>[];

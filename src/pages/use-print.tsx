@@ -1,20 +1,13 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { Currencies, useNumberToWords } from '../utilities/number-to-words';
-import { useNumberFormat } from '../utilities/hooks/use-number-format';
-import { useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
+import { Currencies } from '../utilities/number-to-words';
 import { HeaderFooter } from '../redux/slices/user-session/reducer';
 import Urls from '../redux/urls';
 import { APIClient } from '../helpers/api-client';
 import { DeepPartial } from 'redux';
 import { getAmountInWords, isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from '../utilities/Utils';
-import { getArabicNumber } from './inventory/reports/tax-reports-ksa/vat-return-form/Vat-Return-Form-arabic';
-import { TransactionMasterInitialData } from './inventory/transactions/purchase/transaction-type-data';
-import { PrintResponse, PrintDetailDto, PrintMasterDto, PrintCustomFields, CompanyDetailsForPrint } from './use-print-type';
+import { PrintResponse, PrintDetailDto, PrintMasterDto, CompanyDetailsForPrint } from './use-print-type';
 import { initialPrintCustomFields, initialPrintResponse } from './use-print-type-data';
 import { merge } from 'lodash';
-import { DevGridColumn } from '../components/types/dev-grid-column';
-import { PlacedComponent, TemplateState } from './InvoiceDesigner/Designer/interfaces';
+import { TemplateState } from './InvoiceDesigner/Designer/interfaces';
 
 
 type VoucherType = {

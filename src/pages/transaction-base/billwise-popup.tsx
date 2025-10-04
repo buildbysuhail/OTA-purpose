@@ -20,7 +20,7 @@ import { AccTransactionFormState, BillwiseData } from "../accounts/transactions/
 import { useNumberFormat } from "../../utilities/hooks/use-number-format";
 import { DevGridColumn } from "../../components/types/dev-grid-column";
 import { useTranslation } from "react-i18next";
-import { TransactionFormState } from "../inventory/transactions/purchase/transaction-types";
+import { TransactionFormState } from "../inventory/transactions/transaction-types";
 
 interface BillwiseProps {
   onSave?: (

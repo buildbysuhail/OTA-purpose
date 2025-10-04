@@ -1,8 +1,8 @@
 import React from "react";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
-import { VoucherElementProps } from "../../purchase/transaction-types";
-import { formStateMasterHandleFieldChange } from "../reducer";
 import Urls from "../../../../../redux/urls";
+import { formStateMasterHandleFieldChange } from "../../reducer";
+import { VoucherElementProps } from "../../transaction-types";
 
 interface WarehouseIDProps extends VoucherElementProps {
   handleFieldKeyDown: (field: string, key: string) => void;

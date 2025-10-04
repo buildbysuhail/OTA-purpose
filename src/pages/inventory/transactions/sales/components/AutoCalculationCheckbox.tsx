@@ -1,7 +1,7 @@
 import React from "react";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
-import { VoucherElementProps } from "../../purchase/transaction-types";
-import { formStateHandleFieldChange } from "../reducer";
+import { formStateHandleFieldChange } from "../../reducer";
+import { VoucherElementProps } from "../../transaction-types";
 
 interface AutoCalculationCheckboxProps extends VoucherElementProps {}
 

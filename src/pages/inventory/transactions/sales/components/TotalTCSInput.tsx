@@ -1,8 +1,8 @@
 import React from "react";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
-import { VoucherElementProps } from "../../purchase/transaction-types";
 import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
-import { formStateTransactionMaster3HandleFieldChange } from "../reducer";
+import { formStateTransactionMaster3HandleFieldChange } from "../../reducer";
+import { VoucherElementProps } from "../../transaction-types";
 
 interface TotalTCSInputProps extends VoucherElementProps {
   handleKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>, field: string) => void;

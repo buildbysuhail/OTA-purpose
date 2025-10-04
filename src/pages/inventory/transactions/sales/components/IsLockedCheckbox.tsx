@@ -1,7 +1,7 @@
 import React from "react";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
-import { VoucherElementProps } from "../../purchase/transaction-types";
-import { formStateMasterHandleFieldChange } from "../reducer";
+import { formStateMasterHandleFieldChange } from "../../reducer";
+import { VoucherElementProps } from "../../transaction-types";
 
 interface IsLockedCheckboxProps extends VoucherElementProps {}
 

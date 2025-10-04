@@ -19,11 +19,11 @@ export enum TransactionTitles {
   //inventory
   SalesInvoice = "sales_invoice",
   SalesInvoiceVAT = "VAT_sales_invoice",
-  SalesReturn = "sales_return",
+  SalesReturn = "sales_return_main",
   SalesReturnVAT = "sales_return/credit_note(VAT)",
-  SalesQuotation = "sales_quotation",
-  SalesOrder = "sales_order",
-  GoodsRequest = "goods_request",
+  SalesQuotation = "sales_quotation_main",
+  SalesOrder = "sales_order_main",
+  GoodsRequest = "goods_request_main",
 
   PurchaseInvoice = "purchase_invoice",
   PurchaseInvoiceVAT = "VAT_purchase_invoice",

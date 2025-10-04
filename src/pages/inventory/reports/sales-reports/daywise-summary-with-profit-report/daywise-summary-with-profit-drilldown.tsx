@@ -1,18 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-  DrillDownCellTemplate,
-  SummaryConfig,
-} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { DrillDownCellTemplate, } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
-import { FC, useMemo } from "react";
+import { FC } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../../redux/urls";
-import DaywiseSummaryWithProfitFilter, {
-  DaywiseSummaryWithProfitFilterInitialState,
-} from "./daywise-summary-with-profit-filter";
-import moment from "moment";
 import { mergeObjectsRemovingIdenticalKeys } from "../../../../../utilities/Utils";
 interface DaywiseSummaryWithProfitProps {
   postData?: any;
@@ -21,12 +14,7 @@ interface DaywiseSummaryWithProfitProps {
   rowData?: any;
   origin?: any;
 }
-const DaywiseSummaryWithProfitDrillDown: FC<DaywiseSummaryWithProfitProps> = ({
-  postData,
-  contentProps,
-  rowData,
-  origin,
-}) => {
+const DaywiseSummaryWithProfitDrillDown: FC<DaywiseSummaryWithProfitProps> = ({ postData, contentProps, rowData, origin, }) => {
   const { t } = useTranslation("accountsReport");
   const { getFormattedValue } = useNumberFormat();
   const columns: DevGridColumn[] = [
@@ -54,33 +42,33 @@ const DaywiseSummaryWithProfitDrillDown: FC<DaywiseSummaryWithProfitProps> = ({
             alignment: "left",
             textColor:
               cellElement.data.date === "TOTAL" ||
-              cellElement.data.date === "SUM" ||
-              cellElement.data.date === "SALES" ||
-              cellElement.data.date === "SALES RETURN"
+                cellElement.data.date === "SUM" ||
+                cellElement.data.date === "SALES" ||
+                cellElement.data.date === "SALES RETURN"
                 ? "#FF0000"
                 : "",
             font: {
               ...exportCell.font,
               color:
                 cellElement.data.date === "TOTAL" ||
-                cellElement.data.date === "SUM" ||
-                cellElement.data.date === "SALES" ||
-                cellElement.data.date === "SALES RETURN"
+                  cellElement.data.date === "SUM" ||
+                  cellElement.data.date === "SALES" ||
+                  cellElement.data.date === "SALES RETURN"
                   ? { argb: "FFFF0000" }
                   : "",
               size: 10,
               style:
                 cellElement.data.date === "TOTAL" ||
-                cellElement.data.date === "SUM" ||
-                cellElement.data.date === "SALES" ||
-                cellElement.data.date === "SALES RETURN"
+                  cellElement.data.date === "SUM" ||
+                  cellElement.data.date === "SALES" ||
+                  cellElement.data.date === "SALES RETURN"
                   ? "bold"
                   : "normal",
               bold:
                 cellElement.data.date === "TOTAL" ||
-                cellElement.data.date === "SUM" ||
-                cellElement.data.date === "SALES" ||
-                cellElement.data.date === "SALES RETURN"
+                  cellElement.data.date === "SUM" ||
+                  cellElement.data.date === "SALES" ||
+                  cellElement.data.date === "SALES RETURN"
                   ? true
                   : false,
             },
@@ -88,14 +76,13 @@ const DaywiseSummaryWithProfitDrillDown: FC<DaywiseSummaryWithProfitProps> = ({
         } else {
           return (
             <span
-              className={`${
-                cellElement.data.date === "TOTAL" ||
+              className={`${cellElement.data.date === "TOTAL" ||
                 cellElement.data.date === "SUM" ||
                 cellElement.data.date === "SALES" ||
                 cellElement.data.date === "SALES RETURN"
-                  ? "font-bold text-[#DC143C]"
-                  : ""
-              }`}
+                ? "font-bold text-[#DC143C]"
+                : ""
+                }`}
             >
               {/* {filter.showSalesReturn == true
                 ? moment(cellElement.data.date, "DD/MM/YYYY", true).isValid()
@@ -118,14 +105,14 @@ const DaywiseSummaryWithProfitDrillDown: FC<DaywiseSummaryWithProfitProps> = ({
         }
       },
     },
-     {
+    {
       dataField: "voucherNumber",
       caption: t("voucher_number"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 200,
-     cellRender: (cellElement: any, cellInfo: any) => {
+      cellRender: (cellElement: any, cellInfo: any) => {
         return (
           <DrillDownCellTemplate
             data={cellElement}
@@ -152,7 +139,7 @@ const DaywiseSummaryWithProfitDrillDown: FC<DaywiseSummaryWithProfitProps> = ({
     },
     {
       dataField: "totalGross",
-      caption: t("totalGross"),
+      caption: t("total_gross"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -176,25 +163,25 @@ const DaywiseSummaryWithProfitDrillDown: FC<DaywiseSummaryWithProfitProps> = ({
             alignmentExcel: { horizontal: "right" },
             textColor:
               cellElement.data.date === "TOTAL" ||
-              cellElement.data.date === "SUM"
+                cellElement.data.date === "SUM"
                 ? "#FF0000"
                 : "",
             font: {
               ...exportCell.font,
               color:
                 cellElement.data.date === "TOTAL" ||
-                cellElement.data.date === "SUM"
+                  cellElement.data.date === "SUM"
                   ? { argb: "FFFF0000" }
                   : "",
               size: 10,
               style:
                 cellElement.data.date === "TOTAL" ||
-                cellElement.data.date === "SUM"
+                  cellElement.data.date === "SUM"
                   ? "bold"
                   : "normal",
               bold:
                 cellElement.data.date === "TOTAL" ||
-                cellElement.data.date === "SUM"
+                  cellElement.data.date === "SUM"
                   ? true
                   : false,
             },
@@ -202,18 +189,16 @@ const DaywiseSummaryWithProfitDrillDown: FC<DaywiseSummaryWithProfitProps> = ({
         } else {
           return (
             <span
-              className={`${
-                cellElement.data.date === "TOTAL" ||
+              className={`${cellElement.data.date === "TOTAL" ||
                 cellElement.data.date === "SUM"
-                  ? "font-bold text-[#DC143C]"
-                  : ""
-              }`}
+                ? "font-bold text-[#DC143C]"
+                : ""
+                }`}
             >
-              {`${
-                cellElement.data?.totalGross == null
-                  ? ""
-                  : getFormattedValue(cellElement.data.totalGross)
-              }`}
+              {`${cellElement.data?.totalGross == null
+                ? ""
+                : getFormattedValue(cellElement.data.totalGross)
+                }`}
             </span>
           );
         }
@@ -221,7 +206,7 @@ const DaywiseSummaryWithProfitDrillDown: FC<DaywiseSummaryWithProfitProps> = ({
     },
     {
       dataField: "totalVAT",
-      caption: t("totalVAT"),
+      caption: t("total_vat"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -246,25 +231,25 @@ const DaywiseSummaryWithProfitDrillDown: FC<DaywiseSummaryWithProfitProps> = ({
             alignmentExcel: { horizontal: "right" },
             textColor:
               cellElement.data.date === "TOTAL" ||
-              cellElement.data.date === "SUM"
+                cellElement.data.date === "SUM"
                 ? "#FF0000"
                 : "",
             font: {
               ...exportCell.font,
               color:
                 cellElement.data.date === "TOTAL" ||
-                cellElement.data.date === "SUM"
+                  cellElement.data.date === "SUM"
                   ? { argb: "FFFF0000" }
                   : "",
               size: 10,
               style:
                 cellElement.data.date === "TOTAL" ||
-                cellElement.data.date === "SUM"
+                  cellElement.data.date === "SUM"
                   ? "bold"
                   : "normal",
               bold:
                 cellElement.data.date === "TOTAL" ||
-                cellElement.data.date === "SUM"
+                  cellElement.data.date === "SUM"
                   ? true
                   : false,
             },
@@ -272,18 +257,16 @@ const DaywiseSummaryWithProfitDrillDown: FC<DaywiseSummaryWithProfitProps> = ({
         } else {
           return (
             <span
-              className={`${
-                cellElement.data.date === "TOTAL" ||
+              className={`${cellElement.data.date === "TOTAL" ||
                 cellElement.data.date === "SUM"
-                  ? "font-bold text-[#DC143C]"
-                  : ""
-              }`}
+                ? "font-bold text-[#DC143C]"
+                : ""
+                }`}
             >
-              {`${
-                cellElement.data?.totalVAT == null
-                  ? ""
-                  : getFormattedValue(cellElement.data.totalVAT, false, 4)
-              }`}
+              {`${cellElement.data?.totalVAT == null
+                ? ""
+                : getFormattedValue(cellElement.data.totalVAT, false, 4)
+                }`}
             </span>
           );
         }
@@ -291,7 +274,7 @@ const DaywiseSummaryWithProfitDrillDown: FC<DaywiseSummaryWithProfitProps> = ({
     },
     {
       dataField: "totalDiscount",
-      caption: t("totalDiscount"),
+      caption: t("total_discount"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -315,25 +298,25 @@ const DaywiseSummaryWithProfitDrillDown: FC<DaywiseSummaryWithProfitProps> = ({
             alignmentExcel: { horizontal: "right" },
             textColor:
               cellElement.data.date === "TOTAL" ||
-              cellElement.data.date === "SUM"
+                cellElement.data.date === "SUM"
                 ? "#FF0000"
                 : "",
             font: {
               ...exportCell.font,
               color:
                 cellElement.data.date === "TOTAL" ||
-                cellElement.data.date === "SUM"
+                  cellElement.data.date === "SUM"
                   ? { argb: "FFFF0000" }
                   : "",
               size: 10,
               style:
                 cellElement.data.date === "TOTAL" ||
-                cellElement.data.date === "SUM"
+                  cellElement.data.date === "SUM"
                   ? "bold"
                   : "normal",
               bold:
                 cellElement.data.date === "TOTAL" ||
-                cellElement.data.date === "SUM"
+                  cellElement.data.date === "SUM"
                   ? true
                   : false,
             },
@@ -341,18 +324,16 @@ const DaywiseSummaryWithProfitDrillDown: FC<DaywiseSummaryWithProfitProps> = ({
         } else {
           return (
             <span
-              className={`${
-                cellElement.data.date === "TOTAL" ||
+              className={`${cellElement.data.date === "TOTAL" ||
                 cellElement.data.date === "SUM"
-                  ? "font-bold text-[#DC143C]"
-                  : ""
-              }`}
+                ? "font-bold text-[#DC143C]"
+                : ""
+                }`}
             >
-              {`${
-                cellElement.data?.totalDiscount == null
-                  ? ""
-                  : getFormattedValue(cellElement.data.totalDiscount)
-              }`}
+              {`${cellElement.data?.totalDiscount == null
+                ? ""
+                : getFormattedValue(cellElement.data.totalDiscount)
+                }`}
             </span>
           );
         }
@@ -360,7 +341,7 @@ const DaywiseSummaryWithProfitDrillDown: FC<DaywiseSummaryWithProfitProps> = ({
     },
     {
       dataField: "billDiscount",
-      caption: t("billDiscount"),
+      caption: t("bill_discount"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -384,25 +365,25 @@ const DaywiseSummaryWithProfitDrillDown: FC<DaywiseSummaryWithProfitProps> = ({
             alignmentExcel: { horizontal: "right" },
             textColor:
               cellElement.data.date === "TOTAL" ||
-              cellElement.data.date === "SUM"
+                cellElement.data.date === "SUM"
                 ? "#FF0000"
                 : "",
             font: {
               ...exportCell.font,
               color:
                 cellElement.data.date === "TOTAL" ||
-                cellElement.data.date === "SUM"
+                  cellElement.data.date === "SUM"
                   ? { argb: "FFFF0000" }
                   : "",
               size: 10,
               style:
                 cellElement.data.date === "TOTAL" ||
-                cellElement.data.date === "SUM"
+                  cellElement.data.date === "SUM"
                   ? "bold"
                   : "normal",
               bold:
                 cellElement.data.date === "TOTAL" ||
-                cellElement.data.date === "SUM"
+                  cellElement.data.date === "SUM"
                   ? true
                   : false,
             },
@@ -410,18 +391,16 @@ const DaywiseSummaryWithProfitDrillDown: FC<DaywiseSummaryWithProfitProps> = ({
         } else {
           return (
             <span
-              className={`${
-                cellElement.data.date === "TOTAL" ||
+              className={`${cellElement.data.date === "TOTAL" ||
                 cellElement.data.date === "SUM"
-                  ? "font-bold text-[#DC143C]"
-                  : ""
-              }`}
+                ? "font-bold text-[#DC143C]"
+                : ""
+                }`}
             >
-              {`${
-                cellElement.data?.billDiscount == null
-                  ? ""
-                  : getFormattedValue(cellElement.data.billDiscount)
-              }`}
+              {`${cellElement.data?.billDiscount == null
+                ? ""
+                : getFormattedValue(cellElement.data.billDiscount)
+                }`}
             </span>
           );
         }
@@ -429,7 +408,7 @@ const DaywiseSummaryWithProfitDrillDown: FC<DaywiseSummaryWithProfitProps> = ({
     },
     {
       dataField: "grandTotal",
-      caption: t("grandTotal"),
+      caption: t("grand_total"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -453,25 +432,25 @@ const DaywiseSummaryWithProfitDrillDown: FC<DaywiseSummaryWithProfitProps> = ({
             alignmentExcel: { horizontal: "right" },
             textColor:
               cellElement.data.date === "TOTAL" ||
-              cellElement.data.date === "SUM"
+                cellElement.data.date === "SUM"
                 ? "#FF0000"
                 : "",
             font: {
               ...exportCell.font,
               color:
                 cellElement.data.date === "TOTAL" ||
-                cellElement.data.date === "SUM"
+                  cellElement.data.date === "SUM"
                   ? { argb: "FFFF0000" }
                   : "",
               size: 10,
               style:
                 cellElement.data.date === "TOTAL" ||
-                cellElement.data.date === "SUM"
+                  cellElement.data.date === "SUM"
                   ? "bold"
                   : "normal",
               bold:
                 cellElement.data.date === "TOTAL" ||
-                cellElement.data.date === "SUM"
+                  cellElement.data.date === "SUM"
                   ? true
                   : false,
             },
@@ -479,18 +458,16 @@ const DaywiseSummaryWithProfitDrillDown: FC<DaywiseSummaryWithProfitProps> = ({
         } else {
           return (
             <span
-              className={`${
-                cellElement.data.date === "TOTAL" ||
+              className={`${cellElement.data.date === "TOTAL" ||
                 cellElement.data.date === "SUM"
-                  ? "font-bold text-[#DC143C]"
-                  : ""
-              }`}
+                ? "font-bold text-[#DC143C]"
+                : ""
+                }`}
             >
-              {`${
-                cellElement.data?.grandTotal == null
-                  ? ""
-                  : getFormattedValue(cellElement.data.grandTotal)
-              }`}
+              {`${cellElement.data?.grandTotal == null
+                ? ""
+                : getFormattedValue(cellElement.data.grandTotal)
+                }`}
             </span>
           );
         }
@@ -522,25 +499,25 @@ const DaywiseSummaryWithProfitDrillDown: FC<DaywiseSummaryWithProfitProps> = ({
             alignmentExcel: { horizontal: "right" },
             textColor:
               cellElement.data.date === "TOTAL" ||
-              cellElement.data.date === "SUM"
+                cellElement.data.date === "SUM"
                 ? "#FF0000"
                 : "",
             font: {
               ...exportCell.font,
               color:
                 cellElement.data.date === "TOTAL" ||
-                cellElement.data.date === "SUM"
+                  cellElement.data.date === "SUM"
                   ? { argb: "FFFF0000" }
                   : "",
               size: 10,
               style:
                 cellElement.data.date === "TOTAL" ||
-                cellElement.data.date === "SUM"
+                  cellElement.data.date === "SUM"
                   ? "bold"
                   : "normal",
               bold:
                 cellElement.data.date === "TOTAL" ||
-                cellElement.data.date === "SUM"
+                  cellElement.data.date === "SUM"
                   ? true
                   : false,
             },
@@ -548,18 +525,16 @@ const DaywiseSummaryWithProfitDrillDown: FC<DaywiseSummaryWithProfitProps> = ({
         } else {
           return (
             <span
-              className={`${
-                cellElement.data.date === "TOTAL" ||
+              className={`${cellElement.data.date === "TOTAL" ||
                 cellElement.data.date === "SUM"
-                  ? "font-bold text-[#DC143C]"
-                  : ""
-              }`}
+                ? "font-bold text-[#DC143C]"
+                : ""
+                }`}
             >
-              {`${
-                cellElement.data?.cost == null
-                  ? ""
-                  : getFormattedValue(cellElement.data.cost)
-              }`}
+              {`${cellElement.data?.cost == null
+                ? ""
+                : getFormattedValue(cellElement.data.cost)
+                }`}
             </span>
           );
         }
@@ -591,25 +566,25 @@ const DaywiseSummaryWithProfitDrillDown: FC<DaywiseSummaryWithProfitProps> = ({
             alignmentExcel: { horizontal: "right" },
             textColor:
               cellElement.data.date === "TOTAL" ||
-              cellElement.data.date === "SUM"
+                cellElement.data.date === "SUM"
                 ? "#FF0000"
                 : "",
             font: {
               ...exportCell.font,
               color:
                 cellElement.data.date === "TOTAL" ||
-                cellElement.data.date === "SUM"
+                  cellElement.data.date === "SUM"
                   ? { argb: "FFFF0000" }
                   : "",
               size: 10,
               style:
                 cellElement.data.date === "TOTAL" ||
-                cellElement.data.date === "SUM"
+                  cellElement.data.date === "SUM"
                   ? "bold"
                   : "normal",
               bold:
                 cellElement.data.date === "TOTAL" ||
-                cellElement.data.date === "SUM"
+                  cellElement.data.date === "SUM"
                   ? true
                   : false,
             },
@@ -617,24 +592,22 @@ const DaywiseSummaryWithProfitDrillDown: FC<DaywiseSummaryWithProfitProps> = ({
         } else {
           return (
             <span
-              className={`${
-                cellElement.data.date === "TOTAL" ||
+              className={`${cellElement.data.date === "TOTAL" ||
                 cellElement.data.date === "SUM"
-                  ? "font-bold text-[#DC143C]"
-                  : ""
-              }`}
+                ? "font-bold text-[#DC143C]"
+                : ""
+                }`}
             >
-              {`${
-                cellElement.data?.profit == null
-                  ? ""
-                  : getFormattedValue(cellElement.data.profit)
-              }`}
+              {`${cellElement.data?.profit == null
+                ? ""
+                : getFormattedValue(cellElement.data.profit)
+                }`}
             </span>
           );
         }
       },
     },
-   
+
     {
       dataField: "voucherType",
       caption: t("voucher_type"),
@@ -663,7 +636,7 @@ const DaywiseSummaryWithProfitDrillDown: FC<DaywiseSummaryWithProfitProps> = ({
                   postData,
                   contentProps
                 )}
-                filterText={`Day wise Sales${origin == "return" ? " and Return" : ""} Summary with Profit On : {**** (date)}`}
+                filterText={`${t('day_wise_sales')}${origin == "return" ? " and Return" : ""} ${t('summary_with_profit_on')} : {**** (date)}`}
                 dataUrl={Urls.daywise_summary_with_profit_by_date}
                 hideGridAddButton={true}
                 method={ActionType.POST}

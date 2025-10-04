@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { customJsonParse, modelToBase64 } from "../../../../utilities/jsonConverter";
 import { APIClient } from "../../../../helpers/api-client";
 import Urls from "../../../../redux/urls";
@@ -106,9 +106,6 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
   const handleUndoClick = () => {
     undoEditMode?.(formState.transaction.master.invTransactionMasterID > 0, formState.transaction.master.invTransactionMasterID);
   }
-
-
-
 
   const postUserConfig = async () => {
     try {
@@ -322,45 +319,15 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                     onChangeData={(e) => handleFieldChange("enableSalesMan", e.enableSalesMan)}
                   />
                   <ERPInput
+                    type="number"
+                    className="text-xs"
                     id="qtyDecimalPoint"
+                    labelDirection="horizontal"
                     label={t("qty_decimal_point")}
                     data={formState.userConfig}
                     value={formState?.userConfig?.qtyDecimalPoint}
                     onChangeData={(e) => handleFieldChange("qtyDecimalPoint", e.qtyDecimalPoint)}
                   />
-
-
-
-                  {/* <ERPCheckbox
-                    id="showProductInfoPopup"
-                    label={t("show_product_info_popup")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.showProductInfoPopup}
-                    onChangeData={(e) => handleFieldChange("showProductInfoPopup", e.showProductInfoPopup)}
-                  />
-                  <ERPCheckbox
-                    id="showPurchaserOnly"
-                    label={t("show_purchaser_only")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.showPurchaserOnly}
-                    onChangeData={(e) => handleFieldChange("showPurchaserOnly", e.showPurchaserOnly)}
-                  />
-                  <ERPCheckbox
-                    id="useSupplierProductCode"
-                    label={t("use_supplier_product_code")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.useSupplierProductCode}
-                    onChangeData={(e) => handleFieldChange("useSupplierProductCode", e.useSupplierProductCode)}
-                  />
-                  {formState.transaction.master.voucherType === 'PR' && (
-                    <ERPCheckbox
-                      id="enableVoucherPrefix"
-                      label={t("enable_voucher_prefix")}
-                      data={formState.userConfig}
-                      checked={formState.userConfig?.enableVoucherPrefix}
-                      onChangeData={(e) => handleFieldChange("enableVoucherPrefix", e.enableVoucherPrefix)}
-                    />
-                  )} */}
                 </div>
 
                 <div className="space-y-2">
@@ -420,23 +387,6 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                     checked={formState?.userConfig?.blockZeroFigureEntry}
                     onChangeData={(e) => handleFieldChange("blockZeroFigureEntry", e.blockZeroFigureEntry)}
                   />
-
-
-
-                  {/* <ERPCheckbox
-                    id="holdSameCode"
-                    label={t("hold_same_code")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.holdSameCode}
-                    onChangeData={(e) => handleFieldChange("holdSameCode", e.holdSameCode)}
-                  />
-                  <ERPCheckbox
-                    id="dummyProducts"
-                    label={t("dummy_products")}
-                    data={formState}
-                    checked={formState?.dummyProducts}
-                    onChangeData={(e) => dispatch(formStateHandleFieldChange({ fields: { dummyProducts: e.dummyProducts } }))}
-                  /> */}
                 </div>
 
                 <div className="space-y-2">
@@ -496,45 +446,9 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                     checked={formState?.userConfig?.showCustomersAfterSales}
                     onChangeData={(e) => handleFieldChange("showCustomersAfterSales", e.showCustomersAfterSales)}
                   />
-
-
-                  {/* <ERPCheckbox
-                    id="setDefaultQuantity"
-                    label={t("set_default_quantity")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.setDefaultQuantity}
-                    onChangeData={(e) => handleFieldChange("setDefaultQuantity", e.setDefaultQuantity)}
-                  />
-                  <ERPCheckbox
-                    id="useInSearch"
-                    label={t("use_in_search")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.useInSearch}
-                    onChangeData={(e) => handleFieldChange("useInSearch", e.useInSearch)}
-                  />
-                  <ERPCheckbox
-                    id="useCodeSearch"
-                    label={t("use_code_search")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.useCodeSearch}
-                    onChangeData={(e) => handleFieldChange("useCodeSearch", e.useCodeSearch)}
-                  />
-                  <ERPCheckbox
-                    id="barCodePrev"
-                    label={t("show_barcode_preview")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.barCodePrev}
-                    onChangeData={(e) => handleFieldChange("barCodePrev", e.barCodePrev)}
-                  />
-                  <ERPCheckbox
-                    id="stockUpdate"
-                    label={t("stock_update")}
-                    data={formState.transaction.master}
-                    checked={formState.transaction.master.stockUpdate}
-                    onChangeData={(e) => handleStockUpdateChange(e.stockUpdate)}
-                  /> */}
                 </div>
               </div>
+
               <div className="absolute top-[200px] right-[30px]">
                 {formState.transaction.master.invTransactionMasterID > 0 && (
                   <button

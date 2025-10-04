@@ -19,8 +19,7 @@ type IsPlainObject<T> =
 // leaf-only dot keys: "a" | "b.c" | "b.d.e" (no "b")
 type Prev = [never, 0, 1, 2]; // allows depth up to 5
 
-type LeafDotKeys<T, D extends number = 5> =
-  [D] extends [never] ? never :
+type LeafDotKeys<T, D extends number = 5> = [D] extends [never] ? never :
   {
     [K in Extract<keyof T, string>]:
     NonNullable<T[K]> extends object
@@ -51,7 +50,7 @@ export interface TransactionData {
   masterValidations?: TransactionValidationsData;
   details: TransactionDetail[];
   invAccTransactions: InvAccTransaction[];
-  attachments: any[]
+  attachments: any[];
 }
 
 export interface InvAccTransaction {
@@ -205,8 +204,8 @@ export interface TransactionMaster {
   dueDays: number;
   billWiseString: string;
   accTransactionDetailIDForBillwise: number;
-  master2: TransactionMaster2
-  master3: TransactionMaster3
+  master2: TransactionMaster2;
+  master3: TransactionMaster3;
 }
 
 export interface TransactionMaster3 {
@@ -275,16 +274,14 @@ export interface TransactionDetail {
   stockDetails: string;
   margin: number;
   salesPrice: number;
-  lpr: number;//LastPurchaseRate
-  lpc: number;//lastPurchaseCost
+  lpr: number; //LastPurchaseRate
+  lpc: number; //lastPurchaseCost
   stickerQty: number;
   profit: number;
   size: string;
   vatPerc: number;
   vatAmount: number;
   cst: number;
-
-
   cstPerc: number;
   cost: number;
   batchNo: string;
@@ -353,7 +350,7 @@ export interface TransactionDetail {
 }
 
 export interface TransactionDetailsMore {
-  memo?: string
+  memo?: string;
 }
 export interface TransactionDetails2 {
   invTransactionDetailID: number;
@@ -419,6 +416,26 @@ export interface UserConfig {
   gridFooterBg?: string;
   gridFooterFontColor?: string;
   enableVoucherPrefix?: boolean;
+  // sales
+  askConfirmationForRemoveItem?: boolean;
+  allowExcessCashReceipt?: boolean;
+  notSetDefaultCustomer?: boolean;
+  discAmtReadOnly?: boolean;
+  setDefaultCashReceived?: boolean;
+  enableSalesMan?: boolean;
+  qtyDecimalPoint?: number;
+  roundOff?: boolean;
+  qtyAfterBarcode?: boolean;
+  clearDetailsAfterSave?: boolean;
+  showPrintConfirmation?: boolean;
+  showRateBeforeTax?: boolean;
+  blockZeroFigureEntry?: boolean;
+  holdSalesMan?: boolean;
+  autoIncrementQty?: boolean;
+  initialFocusToCustomer?: boolean;
+  showSearchPopupWindowAutomatically?: boolean;
+  enableVoucherPrefixAndDate?: boolean;
+  showCustomersAfterSales?: boolean;
 }
 
 export type FormElementsState = {
@@ -541,7 +558,7 @@ export interface TransactionFormState {
   isPostedTransaction: boolean;
   isInv: boolean;
   summaryConfig: SummaryConfig<TransactionDetail>[];
-  showQuantityFactors: { visible: boolean; rowIndex: number, qtyDesc:string };
+  showQuantityFactors: { visible: boolean; rowIndex: number; qtyDesc: string };
   showPcode: boolean;
   batchEntryData: { visible: boolean; data: string; rowIndex: number };
   serialNoEntryData: { visible: boolean; data: string; rowIndex: number };
@@ -565,9 +582,9 @@ export interface TransactionFormState {
   // stockUpdate: boolean;
   batchGridShowKey?: number;
   orderStatus?: string;
-  selectedTheme?: any
-  currentTheme?: any
-  themeChangeCountdown?: number
+  selectedTheme?: any;
+  currentTheme?: any;
+  themeChangeCountdown?: number;
   isInitialLedger?: boolean;
   memoEditor: { visible: boolean; data: string; rowIndex: number };
   headerMenuOpen: boolean;
@@ -580,13 +597,14 @@ export interface TransactionFormState {
   billwiseDetails?: string;
   showbillwise?: boolean;
   ledgerBillWiseLoading?: boolean;
+  privilegeCardOpen: boolean;
 }
 interface loadingResult {
   isLoading: boolean;
   text: string;
 }
 export interface CurrentCell {
-  reCenterRow?: boolean
+  reCenterRow?: boolean;
   column: string;
   rowIndex: number;
   data: TransactionDetail;

@@ -1,16 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import { FC, useMemo } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../../redux/urls";
-import SalesmanwiseSalesAndCollectionFilter, {
-  SalesmanwiseSalesAndCollectionFilterInitialState,
-} from "./salesman-wise-sales-and-collection-filter";
+import SalesmanwiseSalesAndCollectionFilter, { SalesmanwiseSalesAndCollectionFilterInitialState, } from "./salesman-wise-sales-and-collection-filter";
 
 const SalesmanwiseSalesAndCollection = () => {
   const { t } = useTranslation("accountsReport");
@@ -66,7 +62,7 @@ const SalesmanwiseSalesAndCollection = () => {
       showInPdf: true,
       alignment: "right",
       visible: false,
-   cellRender: (
+      cellRender: (
         cellElement: any,
         cellInfo: any,
         filter: any,
@@ -101,7 +97,7 @@ const SalesmanwiseSalesAndCollection = () => {
       showInPdf: true,
       alignment: "right",
       visible: false,
-    cellRender: (
+      cellRender: (
         cellElement: any,
         cellInfo: any,
         filter: any,
@@ -111,7 +107,7 @@ const SalesmanwiseSalesAndCollection = () => {
           const value =
             cellElement.data?.incentivePercentage == null
               ? 0
-              : getFormattedValue(cellElement.data.incentivePercentage,false,2);
+              : getFormattedValue(cellElement.data.incentivePercentage, false, 2);
           return {
             ...exportCell,
             text: value,
@@ -121,7 +117,7 @@ const SalesmanwiseSalesAndCollection = () => {
         } else {
           return cellElement.data?.incentivePercentage == null
             ? 0
-            : getFormattedValue(cellElement.data.incentivePercentage,false,2);
+            : getFormattedValue(cellElement.data.incentivePercentage, false, 2);
         }
       },
     },
@@ -170,7 +166,7 @@ const SalesmanwiseSalesAndCollection = () => {
       showInPdf: true,
       alignment: "right",
       visible: false,
-   cellRender: (
+      cellRender: (
         cellElement: any,
         cellInfo: any,
         filter: any,
@@ -239,7 +235,7 @@ const SalesmanwiseSalesAndCollection = () => {
       showInPdf: true,
       alignment: "right",
       visible: false,
-    cellRender: (
+      cellRender: (
         cellElement: any,
         cellInfo: any,
         filter: any,
@@ -249,7 +245,7 @@ const SalesmanwiseSalesAndCollection = () => {
           const value =
             cellElement.data?.collectionPercentage == null
               ? 0
-              : getFormattedValue(cellElement.data.collectionPercentage,false,3);
+              : getFormattedValue(cellElement.data.collectionPercentage, false, 3);
           return {
             ...exportCell,
             text: value,
@@ -259,7 +255,7 @@ const SalesmanwiseSalesAndCollection = () => {
         } else {
           return cellElement.data?.collectionPercentage == null
             ? 0
-            : getFormattedValue(cellElement.data.collectionPercentage,false,3);
+            : getFormattedValue(cellElement.data.collectionPercentage, false, 3);
         }
       },
     },
@@ -274,7 +270,7 @@ const SalesmanwiseSalesAndCollection = () => {
       showInPdf: true,
       alignment: "right",
       visible: false,
-     cellRender: (
+      cellRender: (
         cellElement: any,
         cellInfo: any,
         filter: any,
@@ -309,7 +305,7 @@ const SalesmanwiseSalesAndCollection = () => {
       showInPdf: true,
       alignment: "right",
       visible: false,
-     cellRender: (
+      cellRender: (
         cellElement: any,
         cellInfo: any,
         filter: any,
@@ -344,7 +340,7 @@ const SalesmanwiseSalesAndCollection = () => {
       showInPdf: true,
       alignment: "right",
       visible: false,
-     cellRender: (
+      cellRender: (
         cellElement: any,
         cellInfo: any,
         filter: any,
@@ -451,7 +447,6 @@ const SalesmanwiseSalesAndCollection = () => {
                   summary: false,
                 }}
                 columns={columns}
-                
                 filterText=": {fromDate} - {toDate}"
                 gridHeader={t("salesmanwise_sales_and_collection_report")}
                 dataUrl={Urls.salesmanwise_sales_and_collection}
@@ -462,9 +457,7 @@ const SalesmanwiseSalesAndCollection = () => {
                 filterContent={<SalesmanwiseSalesAndCollectionFilter />}
                 filterWidth={420}
                 filterHeight={170}
-                filterInitialData={
-                  SalesmanwiseSalesAndCollectionFilterInitialState
-                }
+                filterInitialData={SalesmanwiseSalesAndCollectionFilterInitialState}
                 reload={true}
                 gridId="grd_salesmanwise_sales_and_collection"
               />

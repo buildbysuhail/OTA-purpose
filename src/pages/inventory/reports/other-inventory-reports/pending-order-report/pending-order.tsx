@@ -1,16 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
-import { FC, useMemo } from "react";
+import { useMemo } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../../redux/urls";
-import PendingOrderReportFilter, {
-  PendingOrderReportFilterInitialState,
-} from "./pending-order-filter";
+import PendingOrderReportFilter, { PendingOrderReportFilterInitialState, } from "./pending-order-filter";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 
@@ -141,7 +137,7 @@ const PendingOrderReport = () => {
       },
       {
         dataField: "mannualBarcode",
-        caption: t("mannual_barcode"),
+        caption: t("manual_barcode"),
         dataType: "string",
         allowSearch: true,
         allowFiltering: true,
@@ -179,10 +175,10 @@ const PendingOrderReport = () => {
             return cellElement.data?.pendingQty == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.pendingQty),
-                  false,
-                  4
-                );
+                parseFloat(cellElement.data.pendingQty),
+                false,
+                4
+              );
           }
         },
       },
@@ -226,10 +222,10 @@ const PendingOrderReport = () => {
             return cellElement.data?.quantity == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.quantity),
-                  false,
-                  4
-                );
+                parseFloat(cellElement.data.quantity),
+                false,
+                4
+              );
           }
         },
       },
@@ -295,10 +291,10 @@ const PendingOrderReport = () => {
             return cellElement.data?.unitPrice == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.unitPrice),
-                  false,
-                  3
-                );
+                parseFloat(cellElement.data.unitPrice),
+                false,
+                3
+              );
           }
         },
       },
@@ -332,10 +328,10 @@ const PendingOrderReport = () => {
             return cellElement.data?.grossValue == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.grossValue),
-                  false,
-                  4
-                );
+                parseFloat(cellElement.data.grossValue),
+                false,
+                4
+              );
           }
         },
       },
@@ -369,10 +365,10 @@ const PendingOrderReport = () => {
             return cellElement.data?.totalGross == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.totalGross),
-                  false,
-                  4
-                );
+                parseFloat(cellElement.data.totalGross),
+                false,
+                4
+              );
           }
         },
       },
@@ -406,16 +402,16 @@ const PendingOrderReport = () => {
             return cellElement.data?.totalVatAmount == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.totalVatAmount),
-                  false,
-                  4
-                );
+                parseFloat(cellElement.data.totalVatAmount),
+                false,
+                4
+              );
           }
         },
       },
       {
         dataField: "totalTAX",
-        caption: t("total_TAX"),
+        caption: t("total_tax"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -443,10 +439,10 @@ const PendingOrderReport = () => {
             return cellElement.data?.totalTAX == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.totalTAX),
-                  false,
-                  4
-                );
+                parseFloat(cellElement.data.totalTAX),
+                false,
+                4
+              );
           }
         },
       },
@@ -480,10 +476,10 @@ const PendingOrderReport = () => {
             return cellElement.data?.netAmount == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.netAmount),
-                  false,
-                  4
-                );
+                parseFloat(cellElement.data.netAmount),
+                false,
+                4
+              );
           }
         },
       },
@@ -631,7 +627,6 @@ const PendingOrderReport = () => {
                 }}
                 filterText=": {fromDate} - {toDate}"
                 columns={columns}
-                
                 gridHeader={t("pending_order_report")}
                 dataUrl={Urls.pending_order}
                 hideGridAddButton={true}

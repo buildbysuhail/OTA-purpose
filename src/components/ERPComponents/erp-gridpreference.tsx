@@ -14,7 +14,7 @@ import ERPToast from "./erp-toast";
 import { useAppState } from "../../utilities/hooks/useAppState";
 import { removeStorageString, setStorageString } from "../../utilities/storage-utils";
 import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
-import { formStateHandleFieldChange } from "../../pages/inventory/transactions/purchase/reducer";
+import { formStateHandleFieldChange } from "../../pages/inventory/transactions/reducer";
 interface GridPreferenceChooserProps {
   gridId: string;
   columns: DevGridColumn[];

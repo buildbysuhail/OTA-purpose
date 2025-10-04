@@ -33,22 +33,6 @@ import type {
 import ERPProductSearch from "../erp-searchbox";
 import Urls from "../../../redux/urls";
 import { applyGridColumnPreferences } from "../../../utilities/dx-grid-preference-updater";
-import type {
-  ColumnModel,
-  CurrentCell,
-  FormElementState,
-  SummaryItems,
-  TransactionDetail,
-  TransactionDetailKeys,
-  TransactionDetails2,
-  TransactionDetailsMore,
-  TransactionFormState,
-} from "../../../pages/inventory/transactions/purchase/transaction-types";
-import {
-  formStateDeleteDetails,
-  formStateHandleFieldChange,
-  formStateTransactionDetailsRowsAdd,
-} from "../../../pages/inventory/transactions/purchase/reducer";
 import useDebounce from "../../../pages/inventory/transactions/purchase/use-debounce";
 import {
   generateUniqueKey,
@@ -67,15 +51,13 @@ import { saveAs } from "file-saver";
 import { useTableResizeAndReorder } from "./use-resizing";
 import { useUltraFastVirtualScrolling } from "./use-virtual-scrolling";
 import { ApplicationSettingsType } from "../../../pages/settings/system/application-settings-types/application-settings-types";
-import {
-  initialTransactionDetailData,
-  initialTransactionDetails2,
-  transactionInitialMoreDetails,
-} from "../../../pages/inventory/transactions/purchase/transaction-type-data";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import moment from "moment";
 import { setStorageString } from "../../../utilities/storage-utils";
+import { formStateDeleteDetails, formStateHandleFieldChange, formStateTransactionDetailsRowsAdd } from "../../../pages/inventory/transactions/reducer";
+import { initialTransactionDetails2, transactionInitialMoreDetails, initialTransactionDetailData } from "../../../pages/inventory/transactions/transaction-type-data";
+import { TransactionDetailKeys, ColumnModel, TransactionDetail, FormElementState, CurrentCell, TransactionFormState, TransactionDetails2, TransactionDetailsMore, SummaryItems } from "../../../pages/inventory/transactions/transaction-types";
 
 type DataItem = Record<string, any>;
 export interface SummaryConfig<T = any> {

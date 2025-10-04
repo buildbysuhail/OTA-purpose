@@ -2,10 +2,6 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
-import {
-  formStateHandleFieldChangeKeysOnly,
-  reOrderGridCols,
-} from "../../../pages/inventory/transactions/purchase/reducer";
 import { moveArrayElement } from "../../../utilities/Utils";
 import {
   ColumnPreference,
@@ -13,6 +9,7 @@ import {
   initialGridPreference,
 } from "../../types/dev-grid-column";
 import { getStorageString, setStorageString } from "../../../utilities/storage-utils";
+import { formStateHandleFieldChangeKeysOnly, reOrderGridCols } from "../../../pages/inventory/transactions/reducer";
 
 // Enhanced resize and reorder hook
 export const useTableResizeAndReorder = (gridID: string, onApplyPreferences: any) => {

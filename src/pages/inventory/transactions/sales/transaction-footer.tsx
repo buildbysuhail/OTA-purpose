@@ -1,6 +1,4 @@
 import WarehouseID from "./components/warehouse-id ";
-import IsLockedCheckbox from "./components/IsLockedCheckbox";
-import AutoCalculationCheckbox from "./components/AutoCalculationCheckbox";
 import CashPaidSection from "./components/CashPaidSection";
 import PriceCategoryCombobox from "./components/PriceCategoryCombobox";
 import CostCentreCombobox from "./components/CostCentreCombobox";
@@ -21,11 +19,12 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import { useAppState } from "../../../../utilities/hooks/useAppState";
-import { remToPx } from "../../../../utilities/Utils";
 import VoucherType from "../../../../enums/voucher-types";
 import React from "react";
 import { formStateHandleFieldChangeKeysOnly, formStateHandleFieldChange, formStateTransactionMasterHandleFieldChange } from "../reducer";
 import { TransactionFormState } from "../transaction-types";
+import ERPModal from "../../../../components/ERPComponents/erp-modal";
+import PrivilegeCardEntry from "./privilege-card-entry";
 
 interface TransactionFooterProps {
   formState: TransactionFormState;
@@ -328,6 +327,21 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
     cursor: "pointer",
   };
 
+  const handlePrivilegeCardOpen = () => {
+    dispatch(
+      formStateHandleFieldChange({
+        fields: { privilegeCardOpen: true }
+      })
+    )
+  }
+  const handlePrivilegeCardClose = () => {
+    dispatch(
+      formStateHandleFieldChange({
+        fields: { privilegeCardOpen: false }
+      })
+    )
+  }
+
   const warehouseComponent = (
     <div className="w-full max-w-none sm:max-w-[180px]">
       <WarehouseID
@@ -410,6 +424,20 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             {
               (applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && showAttachmentOutside) && (
                 attachmentComponent
+              )
+            }
+            <ERPButton
+              title={t('privilege_card')}
+              onClick={handlePrivilegeCardOpen}
+            />
+            {
+              formState.privilegeCardOpen && (
+                <PrivilegeCardEntry
+                  isOpen={formState.privilegeCardOpen}
+                  onClose={handlePrivilegeCardClose}
+                  t={t}
+                  data={""}
+                />
               )
             }
           </div>
@@ -711,7 +739,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   const dropdownContent = (
     <div className="p-2 dark:bg-dark-bg-card bg-white border border-gray-300 dark:border md:border-t md:border-r md:border-l md:border-b-0 md:rounded-t-lg rounded-lg md:rounded-none">
       <div className="flex items-end gap-2 flex-wrap">
-          {/* <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
+        {/* <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
           <PriceCategoryCombobox
             formState={formState}
             dispatch={dispatch}
@@ -741,10 +769,10 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 {costCentreComponent}
               </div>
             )}
-            </>
-          )}
-          {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
-            <>
+          </>
+        )}
+        {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+          <>
             {!showAdjustmentOutside && (
               <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
                 {adjustmentComponent}
@@ -757,7 +785,21 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             {attachmentComponent}
           </div>
         )}
-          {/* <div className="w-full mb-2 sm:mb-0 sm:w-auto">
+        <ERPButton
+          title={t('privilege_card')}
+          onClick={handlePrivilegeCardOpen}
+        />
+        {
+          formState.privilegeCardOpen && (
+            <PrivilegeCardEntry
+              isOpen={formState.privilegeCardOpen}
+              onClose={handlePrivilegeCardClose}
+              t={t}
+              data={""}
+            />
+          )
+        }
+        {/* <div className="w-full mb-2 sm:mb-0 sm:w-auto">
             {checkboxesComponent}
           </div> */}
         <div className="flex items-center justify-between w-full">

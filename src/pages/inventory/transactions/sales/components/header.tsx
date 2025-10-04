@@ -1,10 +1,8 @@
-import { BillwiseData, VoucherElementProps, } from "../../purchase/transaction-types";
-import { formStateHandleFieldChange } from "../../purchase/reducer";
 import { useCallback, useEffect, useRef, useState } from "react";
 import React from "react";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import ERPModal from "../../../../../components/ERPComponents/erp-modal";
-import { TransactionUserConfig } from "../../purchase/transaction-user-config";
+import { TransactionUserConfig } from "../transaction-user-config";
 import { EllipsisVertical, KeyRound, Pencil, Printer, RefreshCw, Trash2, ChevronUp, BadgePlusIcon, Eraser, X, FileUp, History, AlignHorizontalSpaceBetween, Boxes, Group, DollarSign, Download, Package, ShoppingCart, Upload, } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
@@ -14,6 +12,8 @@ import VoucherType from "../../../../../enums/voucher-types";
 import { useAppState } from "../../../../../utilities/hooks/useAppState";
 import Urls from "../../../../../redux/urls";
 import { APIClient } from "../../../../../helpers/api-client";
+import { formStateHandleFieldChange } from "../../reducer";
+import { VoucherElementProps, BillwiseData } from "../../transaction-types";
 
 interface HeaderProps extends VoucherElementProps {
   loadTemporaryRows: () => Promise<void>;

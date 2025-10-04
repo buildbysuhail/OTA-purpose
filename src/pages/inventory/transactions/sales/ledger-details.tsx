@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux/es/exports";
 import { RootState } from "../../../../redux/store";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
-import { formStateMasterHandleFieldChange } from "./reducer";
+import { formStateMasterHandleFieldChange } from "../reducer";
 
 interface LedgerDetailsProps {
   closeModal: () => void;

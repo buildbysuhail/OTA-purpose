@@ -1,15 +1,14 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { useDebouncedInput } from "../../../../utilities/hooks/useDebounce";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
-import { formStateHandleFieldChangeKeysOnly, formStateMasterHandleFieldChange } from "./reducer";
 import { useTranslation } from "react-i18next";
-import { Ellipsis } from "lucide-react";
 import Urls from "../../../../redux/urls";
-import { TransactionFormState } from "./transaction-types";
 import OrderNo from "./components/order-number";
 import { LoadAndSetTransVoucherFn } from "./use-transaction";
+import { formStateMasterHandleFieldChange, formStateHandleFieldChangeKeysOnly } from "../reducer";
+import { TransactionFormState } from "../transaction-types";
 
 interface MoreOptionsModalContentProps {
   formState: TransactionFormState;

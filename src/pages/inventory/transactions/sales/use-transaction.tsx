@@ -30,47 +30,10 @@ import {
   getExcelCellValue,
   generateUniqueKey,
 } from "../../../../utilities/Utils";
-import { BillwiseData } from "../../../accounts/transactions/acc-transaction-types";
+import { Attachments, BillwiseData, FormElementsState } from "../../../accounts/transactions/acc-transaction-types";
 import { ApplicationSettingsType } from "../../../settings/system/application-settings-types/application-settings-types";
-import {
-  formStateHandleFieldChange,
-  formStateTransactionMasterHandleFieldChange,
-  updateFormElement,
-  formStateTransactionUpdate,
-  clearState,
-  formStateTransactionDetailsRowRemove,
-  formStateTransactionDetailsRowAdd,
-  formStateMasterHandleFieldChange,
-  formStateHandleFieldChangeKeysOnly,
-  formStateClearDetails,
-  formStateClearAttachments,
-  formStateSetDetails,
-} from "./reducer";
 import { deleteAccVoucher, unlockTransactionMaster } from "./thunk";
 import { updateTransactionEditMode } from "./transaction-functions";
-import {
-  UserConfig,
-  TransactionFormState,
-  TransactionData,
-  Attachments,
-  TransactionMaster,
-  TransactionDetail,
-  SummaryItems,
-  CommonParams,
-  LoadProductDetailsByAutoBarcodeProps,
-  DataAutoBarcode,
-  FormElementsState,
-  EmployeeType,
-  ExcelRowData,
-} from "./transaction-types";
-import {
-  initialInventoryTotals,
-  initialTransactionDetailData,
-  initialTransactionDetails2,
-  TransactionFormStateInitialData,
-  transactionInitialData,
-  TransactionMasterInitialData,
-} from "./transaction-type-data";
 import {
   isDirtyTransaction,
   setTransactionForHistory,
@@ -82,6 +45,9 @@ import ExcelJS from "exceljs";
 import { sanitizeDataAdvanced } from "../../../../utilities/Utils";
 import { getStorageString, setStorageString } from "../../../../utilities/storage-utils";
 import { getApLocalDataByUrl } from "../../../../redux/cached-urls";
+import { formStateHandleFieldChangeKeysOnly, formStateHandleFieldChange, formStateTransactionMasterHandleFieldChange, formStateTransactionUpdate, clearState, formStateMasterHandleFieldChange, formStateClearDetails, formStateClearAttachments, formStateTransactionDetailsRowRemove, formStateSetDetails, updateFormElement } from "../reducer";
+import { transactionInitialData, initialInventoryTotals, TransactionMasterInitialData, initialTransactionDetailData, initialTransactionDetails2 } from "../transaction-type-data";
+import { TransactionDetail, UserConfig, TransactionFormState, SummaryItems, TransactionMaster, TransactionData, LoadProductDetailsByAutoBarcodeProps, CommonParams, DataAutoBarcode, ExcelRowData } from "../transaction-types";
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;
 //   clearDetailsAfterSaveAccounts: boolean;

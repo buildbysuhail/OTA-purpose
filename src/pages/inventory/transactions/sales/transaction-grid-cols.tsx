@@ -4,7 +4,7 @@ import {
   UserModel,
 } from "../../../../redux/slices/user-session/reducer";
 import { ApplicationSettingsType } from "../../../settings/system/application-settings-types/application-settings-types";
-import { ColumnModel, TransactionFormState } from "./transaction-types";
+import { ColumnModel, TransactionFormState } from "../transaction-types";
 // voucherType ?? formState.transaction.master.voucherType
 // formType ?? formState.transaction.master.voucherForm
 export const purchaseGridCol = (

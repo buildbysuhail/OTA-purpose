@@ -7,7 +7,7 @@ import { handleResponse } from "../../../../utilities/HandleResponse";
 import { APIClient } from "../../../../helpers/api-client";
 import Urls from "../../../../redux/urls";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
-import { formStateHandleFieldChangeKeysOnly } from "./reducer";
+import { formStateHandleFieldChangeKeysOnly } from "../reducer";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";

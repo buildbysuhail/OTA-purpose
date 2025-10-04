@@ -12,7 +12,7 @@ import {
   TransactionDetails2,
   TransactionFormState,
   TransactionMaster,
-} from "./transaction-types";
+} from "../transaction-types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { APIClient } from "../../../../helpers/api-client";
 import Urls from "../../../../redux/urls";
@@ -31,12 +31,12 @@ import {
   transactionInitialData,
   TransactionMaster3InitialData,
   TransactionMasterInitialData,
-} from "./transaction-type-data";
+} from "../transaction-type-data";;
 import { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
-import { formStateHandleFieldChangeKeysOnly } from "./reducer";
+import { formStateHandleFieldChangeKeysOnly } from "../reducer";
 import { useCallback } from "react";
 import VoucherType from "../../../../enums/voucher-types";
 export const useTransactionHelper = (transactionType: string) => {

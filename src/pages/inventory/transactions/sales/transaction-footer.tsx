@@ -17,15 +17,15 @@ import BottomSidebar from "../../../../components/ERPComponents/bottom-sidebar";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPTextarea from "../../../../components/ERPComponents/erp-textarea";
-import { formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly, formStateTransactionMasterHandleFieldChange } from "./reducer";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
-import { TransactionFormState } from "./transaction-types";
 import { useAppState } from "../../../../utilities/hooks/useAppState";
 import { remToPx } from "../../../../utilities/Utils";
 import VoucherType from "../../../../enums/voucher-types";
 import React from "react";
+import { formStateHandleFieldChangeKeysOnly, formStateHandleFieldChange, formStateTransactionMasterHandleFieldChange } from "../reducer";
+import { TransactionFormState } from "../transaction-types";
 
 interface TransactionFooterProps {
   formState: TransactionFormState;

@@ -5,10 +5,8 @@ import Urls from "../../../../redux/urls";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
 import { useDispatch } from "react-redux";
-import { formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly, formStateMasterHandleFieldChange } from "./reducer";
 import { handleResponse } from "../../../../utilities/HandleResponse";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
-import { UserConfig } from "./transaction-types";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
@@ -23,6 +21,8 @@ import useDebounce from "./use-debounce";
 import { useAppState } from "../../../../utilities/hooks/useAppState";
 import { ERPScrollArea } from "../../../../components/ERPComponents/erp-scrollbar";
 import { setStorageString } from "../../../../utilities/storage-utils";
+import { formStateHandleFieldChange, formStateMasterHandleFieldChange, formStateHandleFieldChangeKeysOnly } from "../reducer";
+import { UserConfig } from "../transaction-types";
 
 const api = new APIClient();
 
@@ -113,7 +113,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
   const postUserConfig = async () => {
     try {
       const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, { ...formState.userConfig, themeName: 'Custom' });
-      handleResponse(response, async() => {
+      handleResponse(response, async () => {
         const base64 = modelToBase64(formState.userConfig);
         await setStorageString("utInvc", base64);
         dispatch(
@@ -161,7 +161,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
         showCancelButton: true,
         onConfirm: async (result: any) => {
           const res = await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/ResetLocalSettings`, {});
-          handleResponse(res, async() => {
+          handleResponse(res, async () => {
             const st = atob(res.item);
             await setStorageString("utInvc", res.item);
             const _st: any = customJsonParse(st);
@@ -272,14 +272,66 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                     checked={formState?.userConfig?.useBarcode}
                     onChangeData={(e) => handleFieldChange("useBarcode", e.useBarcode)}
                   />
-                  {/* <ERPCheckbox
-                    id="resizeGrid"
-                    label={t("resize_grid")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.resizeGrid}
-                    onChangeData={(e) => handleFieldChange("resizeGrid", e.resizeGrid)}
-                  /> */}
                   <ERPCheckbox
+                    id="printPreview"
+                    label={t("print_preview")}
+                    data={formState.userConfig}
+                    checked={formState?.userConfig?.printPreview}
+                    onChangeData={(e) => handleFieldChange("printPreview", e.printPreview)}
+                  />
+                  <ERPCheckbox
+                    id="askConfirmationForRemoveItem"
+                    label={t("ask_confirmation_for_remove_item")}
+                    data={formState.userConfig}
+                    checked={formState?.userConfig?.askConfirmationForRemoveItem}
+                    onChangeData={(e) => handleFieldChange("askConfirmationForRemoveItem", e.askConfirmationForRemoveItem)}
+                  />
+                  <ERPCheckbox
+                    id="allowExcessCashReceipt"
+                    label={t("allow_excess_cash_receipt")}
+                    data={formState.userConfig}
+                    checked={formState?.userConfig?.allowExcessCashReceipt}
+                    onChangeData={(e) => handleFieldChange("allowExcessCashReceipt", e.allowExcessCashReceipt)}
+                  />
+                  <ERPCheckbox
+                    id="notSetDefaultCustomer"
+                    label={t("not_set_default_customer")}
+                    data={formState.userConfig}
+                    checked={formState?.userConfig?.notSetDefaultCustomer}
+                    onChangeData={(e) => handleFieldChange("notSetDefaultCustomer", e.notSetDefaultCustomer)}
+                  />
+                  <ERPCheckbox
+                    id="discAmtReadOnly"
+                    label={t("disc_amt_read_only")}
+                    data={formState.userConfig}
+                    checked={formState?.userConfig?.discAmtReadOnly}
+                    onChangeData={(e) => handleFieldChange("discAmtReadOnly", e.discAmtReadOnly)}
+                  />
+                  <ERPCheckbox
+                    id="setDefaultCashReceived"
+                    label={t("set_default_cash_received")}
+                    data={formState.userConfig}
+                    checked={formState?.userConfig?.setDefaultCashReceived}
+                    onChangeData={(e) => handleFieldChange("setDefaultCashReceived", e.setDefaultCashReceived)}
+                  />
+                  <ERPCheckbox
+                    id="enableSalesMan"
+                    label={t("enable_sales_man")}
+                    data={formState.userConfig}
+                    checked={formState?.userConfig?.enableSalesMan}
+                    onChangeData={(e) => handleFieldChange("enableSalesMan", e.enableSalesMan)}
+                  />
+                  <ERPInput
+                    id="qtyDecimalPoint"
+                    label={t("qty_decimal_point")}
+                    data={formState.userConfig}
+                    value={formState?.userConfig?.qtyDecimalPoint}
+                    onChangeData={(e) => handleFieldChange("qtyDecimalPoint", e.qtyDecimalPoint)}
+                  />
+
+
+
+                  {/* <ERPCheckbox
                     id="showProductInfoPopup"
                     label={t("show_product_info_popup")}
                     data={formState.userConfig}
@@ -308,10 +360,31 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                       checked={formState.userConfig?.enableVoucherPrefix}
                       onChangeData={(e) => handleFieldChange("enableVoucherPrefix", e.enableVoucherPrefix)}
                     />
-                  )}
+                  )} */}
                 </div>
 
                 <div className="space-y-2">
+                  <ERPCheckbox
+                    id="roundOff"
+                    label={t("round_off")}
+                    data={formState.userConfig}
+                    checked={formState?.userConfig?.roundOff}
+                    onChangeData={(e) => handleFieldChange("roundOff", e.roundOff)}
+                  />
+                  <ERPCheckbox
+                    id="qtyAfterBarcode"
+                    label={t("qty_after_barcode")}
+                    data={formState.userConfig}
+                    checked={formState?.userConfig?.qtyAfterBarcode}
+                    onChangeData={(e) => handleFieldChange("qtyAfterBarcode", e.qtyAfterBarcode)}
+                  />
+                  <ERPCheckbox
+                    id="clearDetailsAfterSave"
+                    label={t("clear_details_after_save")}
+                    data={formState.userConfig}
+                    checked={formState?.userConfig?.clearDetailsAfterSave}
+                    onChangeData={(e) => handleFieldChange("clearDetailsAfterSave", e.clearDetailsAfterSave)}
+                  />
                   <ERPCheckbox
                     id="enableItemCodeSearchInNameColumn"
                     label={t("enable_item_code_search_in_name_column")}
@@ -320,6 +393,37 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                     onChangeData={(e) => handleFieldChange("enableItemCodeSearchInNameColumn", e.enableItemCodeSearchInNameColumn)}
                   />
                   <ERPCheckbox
+                    id="resizeGrid"
+                    label={t("resize_grid")}
+                    data={formState.userConfig}
+                    checked={formState?.userConfig?.resizeGrid}
+                    onChangeData={(e) => handleFieldChange("resizeGrid", e.resizeGrid)}
+                  />
+                  <ERPCheckbox
+                    id="showPrintConfirmation"
+                    label={t("show_print_confirmation")}
+                    data={formState.userConfig}
+                    checked={formState?.userConfig?.showPrintConfirmation}
+                    onChangeData={(e) => handleFieldChange("showPrintConfirmation", e.showPrintConfirmation)}
+                  />
+                  <ERPCheckbox
+                    id="showRateBeforeTax"
+                    label={t("show_rate_before_tax")}
+                    data={formState.userConfig}
+                    checked={formState?.userConfig?.showRateBeforeTax}
+                    onChangeData={(e) => handleFieldChange("showRateBeforeTax", e.showRateBeforeTax)}
+                  />
+                  <ERPCheckbox
+                    id="blockZeroFigureEntry"
+                    label={t("block_zero_figure_entry")}
+                    data={formState.userConfig}
+                    checked={formState?.userConfig?.blockZeroFigureEntry}
+                    onChangeData={(e) => handleFieldChange("blockZeroFigureEntry", e.blockZeroFigureEntry)}
+                  />
+
+
+
+                  {/* <ERPCheckbox
                     id="holdSameCode"
                     label={t("hold_same_code")}
                     data={formState.userConfig}
@@ -327,18 +431,42 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                     onChangeData={(e) => handleFieldChange("holdSameCode", e.holdSameCode)}
                   />
                   <ERPCheckbox
-                    id="printPreview"
-                    label={t("print_preview")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.printPreview}
-                    onChangeData={(e) => handleFieldChange("printPreview", e.printPreview)}
-                  />
-                  <ERPCheckbox
                     id="dummyProducts"
                     label={t("dummy_products")}
                     data={formState}
                     checked={formState?.dummyProducts}
                     onChangeData={(e) => dispatch(formStateHandleFieldChange({ fields: { dummyProducts: e.dummyProducts } }))}
+                  /> */}
+                </div>
+
+                <div className="space-y-2">
+                  <ERPCheckbox
+                    id="holdSalesMan"
+                    label={t("hold_salesman")}
+                    data={formState.userConfig}
+                    checked={formState?.userConfig?.holdSalesMan}
+                    onChangeData={(e) => handleFieldChange("holdSalesMan", e.holdSalesMan)}
+                  />
+                  <ERPCheckbox
+                    id="autoIncrementQty"
+                    label={t("auto_increment_qty")}
+                    data={formState.userConfig}
+                    checked={formState?.userConfig?.autoIncrementQty}
+                    onChangeData={(e) => handleFieldChange("autoIncrementQty", e.autoIncrementQty)}
+                  />
+                  <ERPCheckbox
+                    id="initialFocusToCustomer"
+                    label={t("initial_focus_to_customer")}
+                    data={formState.userConfig}
+                    checked={formState?.userConfig?.initialFocusToCustomer}
+                    onChangeData={(e) => handleFieldChange("initialFocusToCustomer", e.initialFocusToCustomer)}
+                  />
+                  <ERPCheckbox
+                    id="showSearchPopupWindowAutomatically"
+                    label={t("show_search_popup_window_automatically")}
+                    data={formState.userConfig}
+                    checked={formState?.userConfig?.showSearchPopupWindowAutomatically}
+                    onChangeData={(e) => handleFieldChange("showSearchPopupWindowAutomatically", e.showSearchPopupWindowAutomatically)}
                   />
                   <ERPCheckbox
                     id="duplicationMessage"
@@ -347,10 +475,30 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                     checked={formState?.userConfig?.duplicationMessage}
                     onChangeData={(e) => handleFieldChange("duplicationMessage", e.duplicationMessage)}
                   />
-                </div>
-
-                <div className="space-y-2">
                   <ERPCheckbox
+                    id="showProductInfoPopup"
+                    label={t("show_product_info_popup")}
+                    data={formState.userConfig}
+                    checked={formState?.userConfig?.showProductInfoPopup}
+                    onChangeData={(e) => handleFieldChange("showProductInfoPopup", e.showProductInfoPopup)}
+                  />
+                  <ERPCheckbox
+                    id="enableVoucherPrefixAndDate"
+                    label={t("enable_voucher_prefix_and_date")}
+                    data={formState.userConfig}
+                    checked={formState?.userConfig?.enableVoucherPrefixAndDate}
+                    onChangeData={(e) => handleFieldChange("enableVoucherPrefixAndDate", e.enableVoucherPrefixAndDate)}
+                  />
+                  <ERPCheckbox
+                    id="showCustomersAfterSales"
+                    label={t("show_customers_after_sales")}
+                    data={formState.userConfig}
+                    checked={formState?.userConfig?.showCustomersAfterSales}
+                    onChangeData={(e) => handleFieldChange("showCustomersAfterSales", e.showCustomersAfterSales)}
+                  />
+
+
+                  {/* <ERPCheckbox
                     id="setDefaultQuantity"
                     label={t("set_default_quantity")}
                     data={formState.userConfig}
@@ -384,7 +532,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                     data={formState.transaction.master}
                     checked={formState.transaction.master.stockUpdate}
                     onChangeData={(e) => handleStockUpdateChange(e.stockUpdate)}
-                  />
+                  /> */}
                 </div>
               </div>
               <div className="absolute top-[200px] right-[30px]">

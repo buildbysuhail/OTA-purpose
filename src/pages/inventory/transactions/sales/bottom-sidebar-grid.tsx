@@ -1,11 +1,7 @@
 import React, { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import ERPInput from "../../../../components/ERPComponents/erp-input";
-import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
-import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
 import { APIClient } from "../../../../helpers/api-client";
-import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { isNullOrUndefinedOrZero } from "../../../../utilities/Utils";
@@ -15,7 +11,6 @@ import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
 import { useDispatch } from "react-redux";
-import { formStateHandleFieldChange } from "./reducer";
 
 const api = new APIClient();
 

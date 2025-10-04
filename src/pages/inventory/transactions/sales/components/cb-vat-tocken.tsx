@@ -1,8 +1,8 @@
 import React from "react";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
-import { VoucherElementProps } from "../transaction-types";
-import { formStateHandleFieldChange, formStateMasterHandleFieldChange } from "../reducer";
+import { VoucherElementProps } from "../../transaction-types";
+import { formStateHandleFieldChange, formStateMasterHandleFieldChange } from "../../reducer";
 import { useAppState } from "../../../../../utilities/hooks/useAppState";
 
 interface VatTokenInputProps extends VoucherElementProps {

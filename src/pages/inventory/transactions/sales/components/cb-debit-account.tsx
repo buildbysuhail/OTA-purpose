@@ -1,10 +1,10 @@
 import React from "react";
-import { VoucherElementProps } from "../transaction-types";
+import { VoucherElementProps } from "../../transaction-types";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../../../../redux/urls";
 import { LedgerType } from "../../../../../enums/ledger-types";
-import { formStateHandleFieldChange, formStateMasterHandleFieldChange } from "../reducer";
+import { formStateHandleFieldChange, formStateMasterHandleFieldChange } from "../../reducer";
 import VoucherType from "../../../../../enums/voucher-types";
 import { useAppState } from "../../../../../utilities/hooks/useAppState";
 

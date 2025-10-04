@@ -7,9 +7,9 @@ import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { Edit, Trash2 } from "lucide-react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { useDispatch, useSelector } from "react-redux";
-import { formStateHandleFieldChangeKeysOnly } from "./reducer";
+import { formStateHandleFieldChangeKeysOnly } from "../reducer";
 import { RootState } from "../../../../redux/store";
-import { GridQtyFactors } from "./transaction-types";
+import { GridQtyFactors } from "../transaction-types";
 import { toast } from "react-toastify";
 
 interface QtyFactors {

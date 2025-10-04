@@ -8,7 +8,7 @@ import Urls from "../../../../redux/urls";
 import { useAppDispatch, useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { ActionType } from "../../../../redux/types";
-import { formStateHandleFieldChange } from "./reducer";
+import { formStateHandleFieldChange } from '../reducer';
 
 interface PartySelectionProps {
   focusTaxNoField: () => void;

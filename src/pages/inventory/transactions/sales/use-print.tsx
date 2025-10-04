@@ -14,7 +14,7 @@ import {
   TransactionData,
   TransactionDetail,
   TransactionFormState,
-} from "./transaction-types";
+} from "../transaction-types";
 import { logUserAction } from "../../../../redux/slices/user-action/thunk";
 import { useDispatch } from "react-redux";
 import {
@@ -22,7 +22,7 @@ import {
   formStateHandleFieldChangeKeysOnly,
   formStateMasterHandleFieldChange,
   templatesData,
-} from "./reducer";
+} from '../reducer';
 import { DeepPartial } from "redux";
 import { pdf, BlobProvider } from "@react-pdf/renderer";
 import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
@@ -33,7 +33,7 @@ import Urls from "../../../../redux/urls";
 import VoucherType from "../../../../enums/voucher-types";
 import AdviceTemplate from "../../../InvoiceDesigner/DownloadPreview/advice-template";
 import { useTranslation } from "react-i18next";
-import { initialProductData } from "./transaction-type-data";
+import { initialProductData } from "../transaction-type-data";;
 import DownloadBarcodePreview, { BarcodePDFDocument } from "../../../LabelDesigner/download-preview-barcode";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { generateBarcodeDataUrl, generateBarcodePages } from "../../../../utilities/barcode";

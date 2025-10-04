@@ -8,12 +8,12 @@ import ErpDevGrid, { SummaryConfig } from "../../../../../components/ERPComponen
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import { Pencil,Trash2 } from "lucide-react";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import { InvAccTransaction, TransactionFormState, VoucherElementProps } from "../transaction-types";
+import { InvAccTransaction, TransactionFormState, VoucherElementProps } from "../../transaction-types";
 import { isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from "../../../../../utilities/Utils";
 
 import ERPAlert from "../../../../../components/ERPComponents/erp-sweet-alert";
 import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
-import { formStateMasterHandleFieldChange, formStateTransactionIvAccTransactionsRowsUpdate } from "../reducer";
+import { formStateMasterHandleFieldChange, formStateTransactionIvAccTransactionsRowsUpdate } from "../../reducer";
 import { LedgerType } from "../../../../../enums/ledger-types";
 // Memoize ErpDevGrid to prevent unnecessary re-renders
 const MemoizedErpDevGrid = React.memo(ErpDevGrid, (prevProps, nextProps) => {

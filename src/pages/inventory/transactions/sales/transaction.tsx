@@ -6,30 +6,11 @@ import React, {
   useState,
 } from "react";
 import {
-  ColumnModel,
-  EmployeeType,
-  GridQtyFactors,
-  SummaryItems,
-  TransactionDetail,
-  TransactionProps,
-  UserConfig,
-} from "./transaction-types";
-import { TransactionData, TransactionFormState } from "./transaction-types";
-import {
   useAppDispatch,
   useAppSelector,
 } from "../../../../utilities/hooks/useAppDispatch";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../../../redux/store";
-import {
-  formStateHandleFieldChange,
-  formStateHandleFieldChangeKeysOnly,
-  formStateMasterHandleFieldChange,
-  formStateSetDetails,
-  resetState,
-  themeChangeCountdownTick,
-  updateFormElement,
-} from "./reducer";
 import { useDispatch, useSelector } from "react-redux";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import { APIClient } from "../../../../helpers/api-client";
@@ -63,13 +44,6 @@ import Urls from "../../../../redux/urls";
 import BottomSidebar from "../../../../components/ERPComponents/bottom-sidebar";
 import ProductSummaryMaster from "../../reports/other-inventory-reports/product-summary/product-summary-master";
 import PartySummaryMaster from "../../../accounts/reports/partywise-summary/party-summary-master";
-import {
-  transactionInitialData,
-  TransactionFormStateInitialData,
-  initialFormElements,
-  initialInventoryTotals,
-  initialUserConfig,
-} from "./transaction-type-data";
 import ErpPurchaseGrid, {
   SummaryConfig,
 } from "../../../../components/ERPComponents/erp-purchase-grid/dataGrid";
@@ -103,6 +77,9 @@ import MemoEditorModal from "./memo-editor";
 import { getStorageString } from "../../../../utilities/storage-utils";
 import { getApLocalData, getApLocalDataByUrl } from "../../../../redux/cached-urls";
 import BillWisePopup from "../../../transaction-base/billwise-popup";
+import { formStateHandleFieldChangeKeysOnly, resetState, formStateHandleFieldChange, updateFormElement } from "../reducer";
+import { initialUserConfig, transactionInitialData, TransactionFormStateInitialData, initialFormElements, initialInventoryTotals } from "../transaction-type-data";
+import { TransactionProps, UserConfig, TransactionDetail, TransactionFormState, TransactionData, SummaryItems, GridQtyFactors, ColumnModel } from "../transaction-types";
 interface BilledItem {
   id?: number;
   name: string;

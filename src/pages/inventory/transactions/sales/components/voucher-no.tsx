@@ -1,10 +1,10 @@
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
-import { VoucherElementProps } from "../transaction-types";
-import { formStateMasterHandleFieldChange } from "../reducer";
 import VoucherNumberDetailsSidebar from "../../../../transaction-base/Voucher-number-details";
 import React from "react";
 import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
 import { LoadAndSetTransVoucherFn } from "../use-transaction";
+import { formStateMasterHandleFieldChange } from "../../reducer";
+import { VoucherElementProps } from "../../transaction-types";
 
 interface AccVoucherNoProps {
   phone?: boolean;

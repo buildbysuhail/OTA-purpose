@@ -9,7 +9,7 @@ import { useAppSelector } from '../../../../utilities/hooks/useAppDispatch';
 import { APIClient } from '../../../../helpers/api-client';
 import Urls from '../../../../redux/urls';
 import { useDispatch } from 'react-redux';
-import { formStateHandleFieldChange } from './reducer';
+import { formStateHandleFieldChange } from '../reducer';
 import { handleResponse } from '../../../../utilities/HandleResponse';
 import { TemplateState } from '../../../InvoiceDesigner/Designer/interfaces';
 import { customJsonParse } from '../../../../utilities/jsonConverter';

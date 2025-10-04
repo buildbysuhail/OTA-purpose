@@ -2,15 +2,15 @@ import React, { useEffect, useRef } from "react";
 import ERPResizableSidebar from "../../../../components/ERPComponents/erp-resizable-sidebar";
 import { X, Check, Palette } from "lucide-react";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
-import { TransactionFormState } from "./transaction-types";
 import { useDispatch, useSelector } from "react-redux";
-import { formStateHandleFieldChangeKeysOnly } from "./reducer";
 import { handleResponse } from "../../../../utilities/HandleResponse";
 import { modelToBase64 } from "../../../../utilities/jsonConverter";
 import Urls from "../../../../redux/urls";
 import { APIClient } from "../../../../helpers/api-client";
 import { RootState } from "../../../../redux/store";
 import { setStorageString } from "../../../../utilities/storage-utils";
+import { formStateHandleFieldChangeKeysOnly } from "../reducer";
+import { TransactionFormState } from "../transaction-types";
 
 interface GridThemeProps {
   isOpen: boolean;

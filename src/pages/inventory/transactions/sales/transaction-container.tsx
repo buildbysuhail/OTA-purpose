@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Urls from "../../../../redux/urls";
 import { useSearchParams } from "react-router-dom";
-import { TransactionProps } from "./transaction-types";
+import { TransactionProps } from "../transaction-types";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../../../redux/store";

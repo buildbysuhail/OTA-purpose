@@ -1,30 +1,38 @@
-import React, { FC, Fragment, useEffect, useMemo, useState } from "react";
+import React, { FC, Fragment, useEffect, useMemo, useState, lazy, Suspense } from "react";
 import { connect, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import store, { RootState } from "../../../redux/store";
+
+// Image assets
 import logo1 from "../../../assets/images/brand-logos/logo_dark.png";
 import logo2 from "../../../assets/images/brand-logos/mini_logo.png";
 import logo3 from "../../../assets/images/brand-logos/desktop-dark.png";
 import logo4 from "../../../assets/images/brand-logos/toggle-dark.png";
 import logo5 from "../../../assets/images/brand-logos/desktop-dark.png";
 import logo6 from "../../../assets/images/brand-logos/toggle-white.png";
-import SimpleBar from "simplebar-react";
-import Menuloop from "../../ui/menuloop";
+import profile from "../../../assets/images/faces/profile-circle.512x512.png";
+
+// Hooks & utilities
 import { useAppState } from "../../../utilities/hooks/useAppState";
+import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
+import { useTranslation } from "react-i18next";
+import { Countries } from "../../../redux/slices/user-session/reducer";
+import { UserAction, useUserRights } from "../../../helpers/user-right-helper";
+import { exludedRoutes } from "../content/transaction-routes";
+import { getFilteredReports } from "../../ERPComponents/reports/reports-list-filter";
+import { ArrowBigLeftDash } from "lucide-react";
+
+// Lazy-loaded components
+const SimpleBar = lazy(() => import("simplebar-react"));
+const Menuloop = lazy(() => import("../../ui/menuloop"));
+const ErpAvatar = lazy(() => import("../../ERPComponents/erp-avatar"));
+
+// Side menu items 
 import { MENUITEMS } from "./sidemenu/sidemenu";
 import { AccountSettingsMenuItems } from "./sidemenu/account-settings";
 import { WorkspaceSettingsMenuItems } from "./sidemenu/workspace-settings";
 import { SettingsMenuItems } from "./sidemenu/settings";
-import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
-import ErpAvatar from "../../ERPComponents/erp-avatar";
-import { useTranslation } from "react-i18next";
 import { ReportsMenuItems } from "./sidemenu/reports-routes";
-import { Countries } from "../../../redux/slices/user-session/reducer";
-import { UserAction, useUserRights } from "../../../helpers/user-right-helper";
-import { exludedRoutes } from "../content/transaction-routes";
-import profile from "../../../assets/images/faces/profile-circle.512x512.png";
-import { ArrowBigLeftDash } from "lucide-react";
-import { getFilteredReports } from "../../ERPComponents/reports/reports-list-filter";
 
 interface SidebarProps {
   type:

@@ -1,5 +1,5 @@
 import React from 'react';
-import { TransactionFormState } from '../transaction-types';
+import { TransactionFormState } from '../../transaction-types';
 import { useTranslation } from 'react-i18next';
 
 interface ProductSummaryProps {

@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
-import { VoucherElementProps } from "../transaction-types";
+import { VoucherElementProps } from "../../transaction-types";
 
 interface BtnAddProps extends VoucherElementProps {
   rowProcessing: boolean;

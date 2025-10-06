@@ -1,5 +1,5 @@
 import { APIClient } from "../../../../../helpers/api-client";
-import { VoucherElementProps } from "../transaction-types";
+import { VoucherElementProps } from "../../transaction-types";
 import { useRef } from "react";
 import React from "react";
 

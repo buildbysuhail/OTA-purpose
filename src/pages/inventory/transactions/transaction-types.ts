@@ -597,7 +597,7 @@ export interface TransactionFormState {
   billwiseDetails?: string;
   showbillwise?: boolean;
   ledgerBillWiseLoading?: boolean;
-  privilegeCardOpen: boolean;
+  privilegeCardOpen?: boolean;
 }
 interface loadingResult {
   isLoading: boolean;

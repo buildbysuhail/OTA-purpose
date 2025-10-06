@@ -1,11 +1,19 @@
-import { Dispatch, FC, Fragment, SetStateAction, useEffect, useState } from 'react';
-import Header from '../header/header';
-import Sidebar from '../sidebar/sidebar';
-import Footer from '../footer/footer';
-import Content from '../content/content';
-import RPosContent from '../content/rpos-content';
-import RPosHeader from '../header/rpos-header';
-import { getStorageString } from '../../../utilities/storage-utils';
+import {
+  Dispatch,
+  FC,
+  Fragment,
+  SetStateAction,
+  useEffect,
+  useState,
+  lazy,
+} from "react";
+import { getStorageString } from "../../../utilities/storage-utils";
+// const Header = lazy(() => import("../header/header"));
+// const Sidebar = lazy(() => import("../sidebar/sidebar"));
+// const Footer = lazy(() => import("../footer/footer"));
+// const Content = lazy(() => import("../content/content"));
+const RPosContent = lazy(() => import("../content/rpos-content"));
+const RPosHeader = lazy(() => import("../header/rpos-header"));
 
 interface RPosProps { 
   setMyClass: Dispatch<SetStateAction<string>>;

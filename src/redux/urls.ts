@@ -451,7 +451,7 @@ const Urls = {
   grouped_brandwise_sales:
     "/Inventory/RptSalesReport/GroupedBrandwiseSalesReport/",
   party_monthwise_sales_summary:
-    "/Inventory/RptSalesReport/GroupedBrandwiseSalesReport/",
+    "/Inventory/RptSalesReport/PartyMonthwiseSalesSummary/",
   coupon_reports: "/Inventory/RptSalesReport/CouponReports/",
   scheme_wise_sales: "/Inventory/RptSalesReport/SchemewiseSalesReport/",
   sales_tax: "/Inventory/RptTAXReport/SalesTaxReport/",

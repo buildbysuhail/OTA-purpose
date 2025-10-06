@@ -462,6 +462,7 @@ return (
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 columns={baseColumns}
+                direction="rtl"
                 filterText="{fromDate} - {toDate}"
                 gridHeader={"إرجاع ضريبة القيمة المضافة من : "}
                 dataUrl={Urls.vat_return_form_arabic}

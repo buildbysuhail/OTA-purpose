@@ -134,6 +134,7 @@ type FilterOperation =
 interface ERPDevGridProps {
   showMoreOption?: boolean;
   moreOptions?: React.ReactNode[];
+  direction?: string;
   showPrintButton?: boolean;
   showTotalCount?: boolean;
   summaryItems?: SummaryConfig[];
@@ -632,6 +633,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       rowRenderingMode = "standard",
       keyExpr,
       dateSerializationFormat,
+      direction,
       loadPanelEnabled = true,
       hoverStateEnabled = true,
       wordWrapEnabled = true,
@@ -2111,7 +2113,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             loadPanel={{ enabled: loadPanelEnabled }}
             onOptionChanged={handleOptionChanged}
             onRowUpdating={onRowUpdating}
-            rtlEnabled={appState?.dir === "rtl"}
+            rtlEnabled={direction??appState?.dir === "rtl"}
             ref={gridRef}
             onInitialized={onGridReady}
             dataSource={memoizedStore}
@@ -2689,7 +2691,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 //     ? column.Actionswidth + 44 // Add 15px to Actionswidth
                 //     : column.width
                 // }
-                width={column.width}
+                // width={column.width}
+                width={column.minWidth}
                 fixed={column.fixed}
                 fixedPosition={column.fixedPosition}
                 cellRender={

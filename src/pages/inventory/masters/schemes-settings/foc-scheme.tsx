@@ -387,6 +387,7 @@ const FOCScheme: React.FC = () => {
                 </div>
                 <div>
                   <ERPProductSearch
+                closeIfNodata ={true}
                     showInputSymbol={false}
                     id="test"
                     keyId="testserch"

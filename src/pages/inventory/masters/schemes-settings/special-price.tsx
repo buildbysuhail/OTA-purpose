@@ -456,6 +456,7 @@ export const SpecialPrice: React.FC = () => {
                 </div>
                 <div className="flex-1">
                   <ERPProductSearch
+                closeIfNodata ={true}
                     showInputSymbol={false}
                     noLabel={true}
                     // isGridCell={false}

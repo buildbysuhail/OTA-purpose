@@ -363,6 +363,7 @@ const Content: FC<ContentProps> = () => {
                     <RouteGuard formCode={route.formCode} action={route.action}>
                       <SearchProvider>
                       <AccTransactionFormContainerView ///abc
+                        isInvTrans={true}
                         voucherType={route.voucherType}
                         transactionType={route.transactionType}
                         formCode={route.formCode}
@@ -438,6 +439,7 @@ const Content: FC<ContentProps> = () => {
                       <SearchProvider>
                       <AccTransactionFormContainerView ///abc
                         voucherType={route.voucherType}
+                        isInvTrans={true}
                         transactionType={route.transactionType}
                         formCode={route.formCode}
                         voucherPrefix={""}

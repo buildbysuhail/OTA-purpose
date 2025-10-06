@@ -8,6 +8,7 @@ import { AnyAction } from "redux";
 export interface AccTransactionProps {
   voucherType?: string;
   transactionType?: string;
+  isInvTrans?: boolean;
   formCode?: string;
   voucherPrefix?: string;
   formType?: string;

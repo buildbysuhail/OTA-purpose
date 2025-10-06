@@ -281,7 +281,7 @@ export const ProductDetailsGcc: React.FC<{
           </div>
 
           <div className="border border-gray-200 rounded-md p-2 relative">
-            <h6 className="absolute top-[-13px] rounded-md px-4 py-1">
+            <h6 className="absolute top-[-13px] rounded-md px-4 py-1 bg-slate-50">
               {t("list_in")}
             </h6>
             <div className="flex flex-wrap items-center gap-6 mt-5">

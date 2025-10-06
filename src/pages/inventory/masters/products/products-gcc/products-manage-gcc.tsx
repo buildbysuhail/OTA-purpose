@@ -164,6 +164,7 @@ export const ProductManageGcc: React.FC<{
               {/* {getFieldProps("product.productID")?.value} */}
               <ERPProductSearch
                 showInputSymbol={false}
+                closeIfNodata ={true}
                 label="Product Name"
                 placeholder="Product Name"
                 showCheckBox={false}

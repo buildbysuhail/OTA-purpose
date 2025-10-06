@@ -250,6 +250,7 @@ export const ProductManageIndia: React.FC<{
               {/* {getFieldProps("product.productId").value} */}
 
               <ERPProductSearch
+                closeIfNodata ={true}
                 showInputSymbol={false}
                 label={t("product_name")}
                 placeholder={t("product_name")}

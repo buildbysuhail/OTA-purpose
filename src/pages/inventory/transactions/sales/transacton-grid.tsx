@@ -153,7 +153,7 @@ const TransactionGrid: React.FC<{
           return (
             <div style={{ textAlign: "center" }}>
               <Link
-                to={`/inventory/transactions/Purchase/${cellInfo.value}?${queryString}`}
+                to={`/transactions/Purchase/${cellInfo.value}?${queryString}`}
                 style={{ color: "#1b6de0", textDecoration: "underline" }}
                 onClick={() => {
                   console.log("cellInfo", cellInfo);

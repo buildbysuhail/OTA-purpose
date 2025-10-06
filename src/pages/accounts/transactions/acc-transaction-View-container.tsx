@@ -7,14 +7,13 @@ import React, {
 } from "react";
 import Urls from "../../../redux/urls";
 import { useSearchParams,useParams,useNavigate,useLocation } from "react-router-dom";
-import { AccTransactionProps } from "./acc-transaction-types";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../../redux/store";
 import { useDispatch } from "react-redux";
 import { APIClient } from "../../../helpers/api-client";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
-import { isChooseVoucherEnabled, transactionRoutes } from "../../../components/common/content/transaction-routes";
+import { isChooseVoucherEnabled, TransactionBase, transactionRoutes } from "../../../components/common/content/transaction-routes";
 import AccTransactionForm from "./acc-transaction";
 import VoucherSelector from "../../transaction-base/voucher-selector";
 import { useUnsavedChangesWarning } from "../../use-unsaved-changes-warning";
@@ -62,22 +61,35 @@ import { useAccTransaction } from "./use-acc-transaction";
 import { templateConfig } from "../../InvoiceDesigner/LandingFolder/designSection";
 import VoucherType from "../../../enums/voucher-types";
 
+export interface TransactionViewProps {
+  voucherType?: string;
+  transactionType?: string;
+  isInvTrans?: boolean;
+  formCode?: string;
+  voucherPrefix?: string;
+  formType?: string;
+  title?: string;
+  drCr?: string;
+  voucherNo?: number;
+  transactionMasterID?: number,
+  financialYearID?: number,
+  isTeller?: boolean | false,
+}
 
-
-const AccTransactionFormContainerView: React.FC<AccTransactionProps> = (
+const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (
   props
 ) => {
   // const [searchQuery, setSearchQuery] = useState<string>('');
   //   const handleSearch = (query: string) => {
   //   setSearchQuery(query);
   // };
-
+debugger;
 const { printVoucher, getTemplate } = useAccPrint();
   const [searchParams] = useSearchParams();
   const { voucherNo: voucherNoParam } = useParams<{ voucherNo: string }>();
   const { searchQuery } = useSearch();
   const getParamOrProp = <T extends string | number>(
-    key: keyof AccTransactionProps,
+    key: keyof TransactionViewProps,
     isNumber: boolean = false
   ): T | undefined => {
     const paramValue = searchParams.get(key as string);
@@ -92,6 +104,7 @@ const { printVoucher, getTemplate } = useAccPrint();
     voucherType: getParamOrProp<string>("voucherType") || props.voucherType,
     transactionType:
       getParamOrProp<string>("transactionType") || props.transactionType,
+    isInvTrans: (props.isInvTrans) as boolean,
     formCode: getParamOrProp<string>("formCode") || props.formCode,
     voucherPrefix:
       getParamOrProp<string>("voucherPrefix") || props.voucherPrefix,
@@ -122,6 +135,7 @@ const shallowEqual = (a: Record<string, any>, b: Record<string, any>) => {
 useEffect(() => {
   const newInput = {
     voucherType: getParamOrProp<string>("voucherType") || input.voucherType,
+    isInvTrans: (getParamOrProp<string>("isInvTrans") || input.isInvTrans) as boolean,
     transactionType: input.transactionType, // keep existing transactionType unless you REALLY need to change it
     formCode: getParamOrProp<string>("formCode") || input.formCode,
     voucherPrefix: getParamOrProp<string>("voucherPrefix") || input.voucherPrefix,
@@ -138,7 +152,7 @@ useEffect(() => {
   }
   // intentionally exclude `input` from deps to avoid infinite loop,
   // but include searchParams and voucherNoParam so effect runs when URL changes
-}, [searchParams, voucherNoParam, props]); // if you need props in compare, include them too
+}, [searchParams, voucherNoParam, props, input.transactionMasterID]); // if you need props in compare, include them too
 
   // Set max height based on window size
 
@@ -179,7 +193,23 @@ useEffect(() => {
 
     //  Find transaction route details
     const tr = transactionRoutes.find((x) => x.voucherType === vchtype);
+const newInput = {
+    voucherType: vchtype,
+    isInvTrans: input.isInvTrans,
+    transactionType: input.transactionType, // keep existing transactionType unless you REALLY need to change it
+    formCode: clickedRow?.formCode,
+    voucherPrefix: prefix,
+    formType: voucherform,
+    title:  input.title,
+    drCr:  input.drCr,
+    voucherNo: vchno,
+    transactionMasterID: transactionMasterID,
+    financialYearID: financialYearID,
+  };
 
+  if (!shallowEqual(newInput, input)) {
+    setInput(newInput);
+  }
     //  Prepare full transaction data object (same as Component A)
     let transactionData: Record<string, string | number | undefined> = {};
     if (parseInt(vchno, 10) > 0) {
@@ -207,10 +237,10 @@ useEffect(() => {
 const newUrl = `/accounts/transactions/CashPayment/${vchno}${queryString ? `?${queryString}` : ""}`;
 
   // IMPORTANT: Only navigate when URL actually changes
-  const currentFullUrl = `${location.pathname}${location.search || ""}`;
-  if (currentFullUrl !== newUrl) {
-    navigate(newUrl, { replace: true });
-  }
+  // const currentFullUrl = `${location.pathname}${location.search || ""}`;
+  // if (currentFullUrl !== newUrl) {
+  //   navigate(newUrl, { replace: true });
+  // }
       setSelectedRow(clickedRow); // Set the selected row data
 
     },
@@ -404,7 +434,7 @@ const newUrl = `/accounts/transactions/CashPayment/${vchno}${queryString ? `?${q
     stableTemplateProps,
     loading,
     templateStyleProperties
-    } = useTemplateDesigner({ templateGroup:groupKey, templateKind: kindKey, designerType:typeKey,template
+    } = useTemplateDesigner({ templateGroup:groupKey, templateKind: kindKey, designerType:typeKey,template, isInvTrans: input.isInvTrans 
     ,MasterIDParam:input.transactionMasterID,transactionType:input.transactionType
     })
 
@@ -412,7 +442,7 @@ const MemoizedGrid = useMemo(() => {
   return (
     <ERPDevGrid
       columns={columnstwo} // already stable? If dynamic, memoize separately
-      dataUrl={`${urls.acc_transaction_base}${input.transactionType}/List/`}
+      dataUrl={`${input.isInvTrans ? urls.inv_transaction_base: urls.acc_transaction_base}${input.transactionType}/List/`}
       method={ActionType.GET}
       postData={{ searchQuery }}
       gridHeader={t("transactions")}

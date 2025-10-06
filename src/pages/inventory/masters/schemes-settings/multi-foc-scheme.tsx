@@ -345,6 +345,7 @@ const MultiFOCScheme: React.FC = () => {
               </div>
               <div className="md:col-span-4">
                 <ERPProductSearch
+                closeIfNodata ={true}
                   showInputSymbol={false}
                   value={focSchemeForm.data.nameOrCode}
                   onChange={(e) => {
@@ -465,6 +466,7 @@ const MultiFOCScheme: React.FC = () => {
                 </div>
                 <div className="md:col-span-4">
                   <ERPProductSearch
+                closeIfNodata ={true}
                     showInputSymbol={false}
                     value={focSchemeForm.data.nameOrCode_free}
                     onChange={(e) => {

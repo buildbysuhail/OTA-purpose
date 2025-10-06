@@ -212,27 +212,29 @@ export const useTemplateDesigner = ({ templateGroup="", templateKind="", designe
         
         debugger;
         const res = await api.getAsync(`${Urls.templates}${id || ""}`);
-        const cc: TemplateState<unknown> = parseTemplateContent(res.content);
-        const template: TemplateDto = {
-          ...cc,
-          id: res.id,
-          branchId: res.branchId,
+        if(res && res.id> 0) {
+          const cc: TemplateState<unknown> = parseTemplateContent(res.content);
+          const template: TemplateDto = {
+            ...cc,
+            id: res.id,
+            branchId: res.branchId,
 
-          isCurrent: res.isCurrent,
-          templateGroup: res.templateGroup,
-          templateKind: res.templateKind,
-          templateName: res.templateName,
-          templateType: res.templateType,
-          thumbImage: res.thumbImage,
-          backgroundImage: res?.payload?.data?.background_image,
-          backgroundImageHeader: res?.payload?.data?.background_image_header,
-          backgroundImageFooter: res?.payload?.data?.background_image_footer,
-          signatureImage: res?.payload?.data?.signature_image,
-        };
-        const initial = templateInitialState().activeTemplate;
-        const _returnData = merge({}, initial, template);
-        debugger;
-        dispatch(setTemplate(_returnData));
+            isCurrent: res.isCurrent,
+            templateGroup: res.templateGroup,
+            templateKind: res.templateKind,
+            templateName: res.templateName,
+            templateType: res.templateType,
+            thumbImage: res.thumbImage,
+            backgroundImage: res?.payload?.data?.background_image,
+            backgroundImageHeader: res?.payload?.data?.background_image_header,
+            backgroundImageFooter: res?.payload?.data?.background_image_footer,
+            signatureImage: res?.payload?.data?.signature_image,
+          };
+          const initial = templateInitialState().activeTemplate;
+          const _returnData = merge({}, initial, template);
+          debugger;
+          dispatch(setTemplate(_returnData));
+        }
       } catch (error) {
         console.error("Error fetching template data:", error);
         ERPToast.show(t("failed_to_fetch_template"));

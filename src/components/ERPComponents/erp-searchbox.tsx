@@ -43,6 +43,7 @@ interface InputProps {
   productGridId?: string;
   batchGridId?: string;
   productDataUrl?: string;
+  closeIfNodata?: boolean;
   batchDataUrl?: string;
   keyId?: string;
   onProductSelected?: (data: any) => void;
@@ -236,6 +237,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       inputId,
       label,
       productDataUrl,
+      closeIfNodata,
       batchDataUrl,
       productGridId = "product-search-grid",
       batchGridId = "batch-search-grid",
@@ -616,8 +618,15 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
                 desc: true,
               },
             ]);
-            setStore(store);
-            setShowProductGrid(true);
+            debugger;
+            const result: any = await store.load();
+
+              if (result.data.length === 0 && closeIfNodata) {
+                setShowProductGrid(false);
+              } else {
+                setStore(store);
+                setShowProductGrid(true);
+              }
           }
         }, 200),
       [productDataUrl, searchType]

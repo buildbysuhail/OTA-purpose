@@ -688,7 +688,7 @@ const TransactionGrid: React.FC<{
               <ERPDevGrid
                 gridAddButtonType={"link"}
                 gridAddButtonLink={`${import.meta.env.BASE_URL
-                  }inventory/transactions/${transactionType}`}
+                  }purchase/transactions/${transactionType}`}
                 columns={columns}
                 dataUrl={`${urls.inv_transaction_base}${transactionType}/List/`}
                 method={ActionType.GET}

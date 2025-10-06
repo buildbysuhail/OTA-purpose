@@ -692,7 +692,7 @@ const TransactionGrid: React.FC<{
                 gridAddButtonType={"link"}
                 gridAddButtonLink={`${
                   import.meta.env.BASE_URL
-                }inventory/transactions/${transactionType}`}
+                }sales/transactions/${transactionType}`}
                 columns={columns}
                 dataUrl={`${urls.inv_transaction_base}${transactionType}/List/`}
                 method={ActionType.GET}

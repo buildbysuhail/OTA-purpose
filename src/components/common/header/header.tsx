@@ -1,34 +1,53 @@
-import { FC, Fragment, useEffect, useState } from "react";
-import Modalsearch from "../modalsearch/modalsearch";
-import product1 from "../../../assets/images/ecommerce/jpg/1.jpg";
-import product3 from "../../../assets/images/ecommerce/jpg/3.jpg";
-import product5 from "../../../assets/images/ecommerce/jpg/5.jpg";
-import product4 from "../../../assets/images/ecommerce/jpg/4.jpg";
-import product6 from "../../../assets/images/ecommerce/jpg/6.jpg";
+import { FC, Fragment, useEffect, useState, lazy, Suspense } from "react";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
+
+// Redux hooks
+import { useAppDispatch, useAppSelector } from "../../../utilities/hooks/useAppDispatch";
+import { useAppState } from "../../../utilities/hooks/useAppState";
+
+// Redux types & data
 import { RootState } from "../../../redux/store";
+import { AppState, languagesData, Locale } from "../../../redux/slices/app/types";
+import CachedUrls from "../../../redux/cached-urls";
+
+// Assets
+import profile from "../../../assets/images/faces/profile-circle.512x512.png";
 import desktoplogo from "../../../assets/images/brand-logos/logo_dark.png";
 import togglelogo from "../../../assets/images/brand-logos/mini_logo.png";
 import desktopdark from "../../../assets/images/brand-logos/desktop-dark.png";
 import toggledark from "../../../assets/images/brand-logos/toggle-dark.png";
 import desktopwhite from "../../../assets/images/brand-logos/desktop-dark.png";
 import togglewhite from "../../../assets/images/brand-logos/mini_logo.png";
-import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { useAppState } from "../../../utilities/hooks/useAppState";
-import { AppState, languagesData, Locale, } from "../../../redux/slices/app/types";
-import { useAppDispatch, useAppSelector, } from "../../../utilities/hooks/useAppDispatch";
-import LanguageSwitcher from "./language-switcher";
-import { useSelector } from "react-redux";
-import * as switcherdata from "../switcher/switcherdata/switcherdata";
-import profile from "../../../assets/images/faces/profile-circle.512x512.png";
-import { Button } from "../../../dark/Button";
-import { Moon, RefreshCcw, Sun } from "lucide-react";
-import { menuClose, toggleSidebar } from "./toggle-sidebar";
-import CachedUrls from "../../../redux/cached-urls";
-import config from "../../../config";
+import product1 from "../../../assets/images/ecommerce/jpg/1.jpg";
+import product3 from "../../../assets/images/ecommerce/jpg/3.jpg";
+import product4 from "../../../assets/images/ecommerce/jpg/4.jpg";
+import product5 from "../../../assets/images/ecommerce/jpg/5.jpg";
+import product6 from "../../../assets/images/ecommerce/jpg/6.jpg";
+
+// Utilities
 import { APIClient } from "../../../helpers/api-client";
 import { removeStorageString, setStorageString } from "../../../utilities/storage-utils";
 import localforage from "localforage";
+
+// UI & components
+import { Button } from "../../../dark/Button";
+import { Moon, RefreshCcw, Sun } from "lucide-react";
+import LanguageSwitcher from "./language-switcher";
+import * as switcherdata from "../switcher/switcherdata/switcherdata";
+
+// Lazy-loaded components
+const Modalsearch = lazy(() => import("../modalsearch/modalsearch"));
+
+// Sidebar helpers
+import { menuClose, toggleSidebar } from "./toggle-sidebar";
+
+// Config
+import config from "../../../config";
+
+
+
 const api = new APIClient();
 
 interface HeaderProps { }

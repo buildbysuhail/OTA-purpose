@@ -1,167 +1,70 @@
-import { View, Text, Image, StyleSheet } from "@react-pdf/renderer";
-import {
-  DesignerElementType,
-  type PlacedComponent,
-  type TemplateState,
-} from "../../Designer/interfaces";
-import { Style } from "exceljs";
-import { renderComponent } from "../customElement";
-import { useEffect, useState } from "react";
-import { generateQRCodeDataUrl } from "../../utils/qrSvgToImg";
+import { View, Image, StyleSheet } from "@react-pdf/renderer";
+import {PlacedComponent, TemplateState } from "../../Designer/interfaces";
 import { useNumberToWords } from "../../../../utilities/number-to-words";
+import { RenderComponentPDF } from "../customElement";
 
-const styles = StyleSheet.create({
-  headerContainer: {
-    width: "100%",
-    position: "relative",
-    flexDirection: "column",
-    flexWrap: "wrap",
-  },
-  companyInfo: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    zIndex: 10,
-  },
-  orgName: {
-    textTransform: "capitalize",
-    fontWeight: "semibold",
-  },
-  orgAddress: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 2,
-  },
-  otherInfo: {
-    display: "flex",
-    flexDirection: "row",
-    gap: 2,
-    justifyContent: "flex-start",
-  },
-  bgImage: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-    zIndex: -10,
-  },
-  headerTop: {
-    width: "100%",
-    position: "relative",
-  },
-  headerBottom: {
-    width: "100%",
-    position: "relative",
-  },
-});
 
-export const Header = ({
-  data,
-  template,
-}: {
+interface ShardPrevHeaderPDFProps {
   data: any;
   template?: TemplateState<unknown>;
-}) => {
-const [qrCodeImages, setQrCodeImages] = useState<{ [key: string]: string }>({});
-const { convertAmountToEnglish, convertAmountToArabic } = useNumberToWords();
-  useEffect(() => { 
-    const generateQRCodes = async () => {
-      const images: { [key: string]: string } = {};
-      const qrComponents: PlacedComponent[] = [
-        ...(headerState?.customElements?.elements|| []),
-      ].filter((comp) => comp.type === DesignerElementType.qrCode);
+  qrCodes: { [key: string]: string };
+  AmountToEnglish?: any;
+  AmountToArabic?: any;
+}
 
-      for (const component of qrComponents) {
-        if (component.qrCodeProps) {
-          const dataUrl = await generateQRCodeDataUrl(component.qrCodeProps);
-          images[component.id] = dataUrl;
-        }
-      }
-      setQrCodeImages(images);
-    };
-    generateQRCodes();
-  },[template?.headerState?.customElements?.elements]);
+const ShardDowHeader = ({ data, template, qrCodes,AmountToEnglish,AmountToArabic }: ShardPrevHeaderPDFProps) => {
 
-  const logoWidthRatio = template?.headerState?.logoSize
-    ? template.headerState?.logoSize / 100
-    : 0.5;
   const headerState = template?.headerState;
-  const customElements = headerState?.customElements?.elements ?? [];
+  const customElements: PlacedComponent[] = headerState?.customElements?.elements ?? [];
   const customTopHeight = headerState?.customElements?.height ?? 0;
-  const paddingLeft = template?.propertiesState?.padding?.left;
-  const paddingRight = template?.propertiesState?.padding?.right;
-  const paddingTop = template?.propertiesState?.padding?.top || 10;
+  const bgImage = headerState?.customElements?.background_image;
 
-  const fontFamily = template?.propertiesState?.font_family || "Roboto";
-  const fontSize = template?.propertiesState?.font_size || 12;
-  const color = template?.propertiesState?.font_color || "#000";
-  const fontWeight = template?.propertiesState?.font_weight || 400;
-  const fontStyle = template?.propertiesState?.fontStyle || "normal";
-
-  const orgNameFontColor = headerState?.OrganizationFontColor || "#000";
-  const orgNameFontSize = headerState?.OrganizationFontSize || 12;
-  const pxToPt = (px: number) => px * (72 / 96);
-  const fontStyles = {
-    color,
-    fontSize,
-    fontWeight,
-    fontStyle,
-    fontFamily,
-  };
-  const labelStyles = {
-    color: template?.propertiesState?.label_font_color || "#000",
-    fontSize: template?.propertiesState?.label_font_size || 12,
-    fontWeight: template?.propertiesState?.label_font_weight || 400,
-    fontStyle: template?.propertiesState?.label_font_style || "normal",
-    fontFamily,
-  };
-
-  const isValidLogo = (logo: any): boolean => {
-    if (!logo) return false;
-    if (typeof logo !== "string") return false;
-    if (logo.trim() === "") return false;
-    return true;
-  };
+  const styles = StyleSheet.create({
+    headerContainer: {
+      width: "100%",
+      minHeight: customTopHeight,
+      height: customTopHeight,
+      backgroundColor: headerState?.customElements?.background_color
+        ? `rgb(${headerState.customElements.background_color})`
+        : "white",
+      position: "relative",
+    },
+    bgImage: {
+      position: "absolute",
+      width: "100%",
+      height: customTopHeight,
+      top: 0,
+      left: 0,
+      objectFit: headerState?.customElements?.bg_image_objectFit || "cover",
+    },
+    contentContainer: {
+      position: "relative",
+      flexDirection: "column",
+      flexWrap: "wrap",
+      zIndex: 10,
+      width: "100%",
+      minHeight: customTopHeight,
+      height: customTopHeight,
+    },
+  });
 
   return (
-    <View
-      style={{
-        ...styles.headerContainer,
-        height: "auto",
-        backgroundColor: template?.headerState?.bgColor || "#fff",
-      }}
-      fixed={!headerState?.isFirstOnly}
-    >
-      {/* Background Image */}
-      {template?.background_image_header && (
-        <Image
-          src={template?.background_image_header || "/placeholder.svg"}
-          style={[
-            styles.bgImage,
-            {
-              objectPosition: headerState?.bg_image_header_position || "center",
-            },
-          ]}
-        />
-      )}
-      {/* headTop */}
-      
-
-     {Array.isArray(customElements) && customElements.length > 0 && (
-        <View
-          style={[
-            styles.headerTop,
-            { minHeight: customTopHeight, height: "auto" },
-          ]}
-        >
-          {customElements?.map((component) =>
-            renderComponent(component,convertAmountToEnglish,convertAmountToArabic, data,qrCodeImages)
-          )}
-        </View>
-      )}
-      <View></View>
+    <View style={styles.headerContainer} fixed={!headerState?.customElements?.isFirstOnly}>
+      {bgImage && <Image src={bgImage} style={styles.bgImage} />}
+      <View style={styles.contentContainer}>
+        {customElements.map((component) => (
+          <RenderComponentPDF
+            key={component.id}
+            component={component}
+            data={data}
+            qrCodeImages={qrCodes}
+            convertAmountToArabic={AmountToArabic}
+            convertAmountToEnglish={AmountToEnglish}
+          />
+        ))}
+      </View>
     </View>
   );
 };
+
+export default ShardDowHeader;

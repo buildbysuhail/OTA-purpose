@@ -102,11 +102,11 @@ export const useAccPrint = () => {
   return template;
 };
 
-  const printVoucher = async (masterID: number,transactionType: string,voucherType?: any, transDate?: string) => {
-
+  const printVoucher = async (masterID: number,transactionType: string,printTmeplate?:any ,voucherType?: any, transDate?: string) => {
+  debugger
     transDate = transDate??(new Date()).toISOString();
    
-    const template = await getTemplate(voucherType, formState);
+    const template =printTmeplate? printTmeplate : await getTemplate(voucherType, formState);
     if (template?.id == 0) {
       // ERPAlert.show({ title: "Please Set Template For Print" })
       ERPToast.showWith("Please Set Template For Print", "warning");

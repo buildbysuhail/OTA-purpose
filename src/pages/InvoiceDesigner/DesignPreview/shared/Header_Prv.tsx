@@ -9,33 +9,14 @@ import { useNumberToWords } from "../../../../utilities/number-to-words";
 const ShardPrevHeader = ({
   data,
   template,
+  qrCodes
 }: {
   data: any;
   template?: TemplateState<unknown>
+  qrCodes: { [key: string]: string } 
 }) => {
 
   const { convertAmountToEnglish, convertAmountToArabic } = useNumberToWords();
-  const [qrCodeImages, setQrCodeImages] = useState<{ [key: string]: string }>({});
-
-  useEffect(() => {
-    const generateQRCodes = async () => {
-      const images: { [key: string]: string } = {};
-      const qrComponents: PlacedComponent[] = [
-        ...(template?.headerState?.customElements?.elements || []),
-      ].filter((comp) => comp.type === DesignerElementType.qrCode);
-
-      for (const component of qrComponents) {
-        if (component.qrCodeProps) {
-          const dataUrl = await generateQRCodeDataUrl(component.qrCodeProps);
-          images[component.id] = dataUrl;
-        }
-      }
-      setQrCodeImages(images);
-    };
-    generateQRCodes();
-  }, [template?.headerState?.customElements?.elements]);
-
-
   const headerState = template?.headerState;
   const customElements = headerState?.customElements?.elements ?? [];
   const customTopHeight = headerState?.customElements?.height ?? 0;
@@ -67,7 +48,7 @@ const ShardPrevHeader = ({
                       key={component.id}
                       component={component}
                       data={data}
-                      qrCodeImages={qrCodeImages}
+                      qrCodeImages={qrCodes}
                       convertAmountToArabic={convertAmountToArabic}
                       convertAmountToEnglish={convertAmountToEnglish}
                     />

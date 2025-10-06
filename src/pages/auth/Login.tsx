@@ -1,29 +1,31 @@
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import { EyeSlashIcon, EyeIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { useAppDispatch, useAppSelector, } from "../../utilities/hooks/useAppDispatch";
+import { useAppDispatch, useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import type { StateBase } from "../../base/state-base";
 import { LoginData, loginUser } from "../../redux/slices/auth/login/thunk";
 import { useAppState } from "../../utilities/hooks/useAppState";
 import type { RootState } from "../../redux/store";
 import { modelToBase64 } from "../../utilities/jsonConverter";
-import LanguageSwitcher from "../../components/common/header/language-switcher";
-import { Button } from "../../dark/Button";
-import * as switcherdata from "../../components/common/switcher/switcherdata/switcherdata";
 import { Sun, Moon } from "lucide-react";
-import ERPModal from "../../components/ERPComponents/erp-modal";
-import CounterSettings from "../settings/system/counter-settings";
-import ForgotPassword from "./ForgetPassword";
 import { setApplicationSettings } from "../../redux/slices/app/application-settings-reducer";
 import { APIClient } from "../../helpers/api-client";
 import Urls from "../../redux/urls";
 import polo from "../../assets/images/brand-logos/polo_logo.png";
 import loginBg from "../../assets/images/login.jpg";
-import ConfettiEffect from "./confetti-effect";
 import { handleLoginSuccess } from "../../utilities/handles-login-success-utils";
 import { getStorageString, setStorageString } from "../../utilities/storage-utils";
+// import * as switcherdata from "../../components/common/switcher/switcherdata/switcherdata";
+
+// Lazy loaded components
+const LanguageSwitcher = lazy(() => import("../../components/common/header/language-switcher"));
+const ERPModal = lazy(() => import("../../components/ERPComponents/erp-modal"));
+const CounterSettings = lazy(() => import("../settings/system/counter-settings"));
+const ForgotPassword = lazy(() => import("./ForgetPassword"));
+const ConfettiEffect = lazy(() => import("./confetti-effect"));
+const Button = lazy(() => import("../../dark/Button").then(module => ({ default: module.Button })));
 
 const api = new APIClient()
 const Login = () => {
@@ -133,11 +135,12 @@ const Login = () => {
           <div className="!absolute top-[7px] right-[26px]">
             {/* <span className="mr-2">{appState.mode === 'dark' ? 'Dark' : 'Light'} Mode</span> */}
             <Button
-              onClick={async() => {
-                appState.mode === "light"
-                  ? await switcherdata.Dark(updateAppState, appState)
-                  :await switcherdata.Light(updateAppState, appState);
-              }}
+              onClick={async () => {
+                  const module = await import("../../components/common/switcher/switcherdata/switcherdata");
+                  appState.mode === "light"
+                    ? await module.Dark(updateAppState, appState)
+                    : await module.Light(updateAppState, appState);
+                }}
               variant="ghost"
               size="icon">
               {appState.mode === "dark" ? (

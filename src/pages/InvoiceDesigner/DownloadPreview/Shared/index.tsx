@@ -4,16 +4,13 @@ import { Document, Page, View, Image } from "@react-pdf/renderer"
 import { TemplateState } from "../../Designer/interfaces"
 import { getPageDimensions, getPageSizeForPDF } from "../../utils/pdf-util"
 import FontRegistration from "../../../LabelDesigner/fontRegister"
-import { Header } from "./Header"
-import {Footer} from  "./Footer"
+import ShardDowHeader from "./Header"
+import { AccountTransactionProps } from "../../DesignPreview/shared"
+import ShardDownFooter from "./Footer"
+import SharedDownTable from "./Table"
 
-export interface AccountTransactionProps {
-  data?: any
-  template?: TemplateState<unknown>
 
-  
-}
-const SharedDownloadTemplate = ({ data, template}: AccountTransactionProps) => {
+const SharedDownloadTemplate = ({ data, template,qrCodeImages={},AmountToEnglish,AmountToArabic}: AccountTransactionProps) => {
   const pageOrientation = template?.propertiesState?.orientation === "landscape" ? "landscape" : "portrait"
   const paddingLeft = template?.propertiesState?.padding?.left || 10
   const paddingRight = template?.propertiesState?.padding?.right || 10
@@ -31,18 +28,12 @@ const SharedDownloadTemplate = ({ data, template}: AccountTransactionProps) => {
       <FontRegistration />
       <Page size={pdfPageSize} orientation={pageOrientation}>
         {/* Header */}
-        {template?.headerState?.showHeader && (
-        <Header data={data} template={template} />
-        )}
-        
+        <ShardDowHeader data={data} template={template} qrCodes={qrCodeImages}AmountToEnglish={AmountToEnglish}  AmountToArabic={AmountToArabic} /> 
         {/* Main Content Container */}
         <View
           style={{
-            display: "flex",
-            flexDirection: "column",
             backgroundColor: template?.propertiesState?.bg_color || "#fff",
             padding: paddingTop, paddingRight, paddingBottom ,paddingLeft,
-            flexGrow: 1,
             position:"relative",
             zIndex:10
           }}
@@ -62,20 +53,11 @@ const SharedDownloadTemplate = ({ data, template}: AccountTransactionProps) => {
               }}
             />
           )}
-
-          {/* Content Section */}
-        
-
-          {/* Table Section - Allow to break across pages */}
-          {/* <Table data={data} template={template} /> */}
+          <SharedDownTable data={data?.details??[]} template={template} />
         </View>
 
         {/* Footer */}
-  
-        <Footer data={data} template={template} />
-       
-        
-        
+        <ShardDownFooter data={data} template={template} qrCodes={qrCodeImages} AmountToEnglish={AmountToEnglish}  AmountToArabic={AmountToArabic} />   
       </Page>
     </Document>
   )

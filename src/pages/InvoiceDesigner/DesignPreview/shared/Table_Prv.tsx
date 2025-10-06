@@ -8,8 +8,8 @@ const DEFAULT_COLUMN_WIDTH = "10%";
 const normalizeWidth = (widthVal?: string | number): string => {
   if (widthVal === undefined || widthVal === null) return DEFAULT_COLUMN_WIDTH;
   const w = String(widthVal).trim();
-  if (w.endsWith("%") || w.endsWith("px")) return w;
-  return `${w}px`;
+  if (w.endsWith("%") || w.endsWith("px") || w.endsWith("pt")) return w;
+  return `${w}pt`;
 };
 
 const getCellStyle = (base: CSSProperties, width?: string | number): CSSProperties => {

@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import html2canvas from 'html2canvas';
-import { TemplateDto, TemplateState } from "../Designer/interfaces";
+import { DesignerElementType, PlacedComponent, TemplateDto, TemplateState } from "../Designer/interfaces";
 
 import { convertPdfBlobToImage, generatePdfBlob } from "../utils/pdf-save";
 
@@ -27,18 +27,19 @@ import { getOrientedDimensions, getPageDimensions } from "../utils/pdf-util";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { loadPrintData } from "../../use-print";
 import { merge } from 'lodash';
+import { generateQRCodeDataUrl } from "../utils/qrSvgToImg";
 
 const api = new APIClient();
 
 interface UseTemplateDesignerProps {
-  templateGroup: string;
-  templateKind: string;
-  designerType: string;
+  templateGroup?: string;
+  templateKind?: string;
+  designerType?: string;
   template?: TemplateState<unknown>
   MasterIDParam?: number, voucherTypeParam?: string, isInvTrans?: boolean, isSalesView?: boolean, isServiceTrans?: boolean, transDate?: string, printCopies?: number, isReprint?: boolean, isPOSPrinting?: boolean, isFromSalesReceipt?: boolean, isPackingSlipPrint?: boolean, warehouseID?: number, kitchenIDParam?: number, kitchenPrinterNameParam?: string, kitchenNameParam?: string, commonKitchenProductGroupIDParam?: number,  transactionType?: string, dbIdValue?: string, voucherType?: string, isAppGlobal?: boolean
 }
 
-export const useTemplateDesigner = ({ templateGroup, templateKind, designerType, template,MasterIDParam,voucherTypeParam,isInvTrans,isSalesView,isServiceTrans,transDate,printCopies,isReprint,isPOSPrinting,isFromSalesReceipt,isPackingSlipPrint,warehouseID,kitchenIDParam,kitchenPrinterNameParam,kitchenNameParam,commonKitchenProductGroupIDParam,transactionType,dbIdValue,voucherType,isAppGlobal}: UseTemplateDesignerProps) => {
+export const useTemplateDesigner = ({ templateGroup="", templateKind="", designerType="", template,MasterIDParam,voucherTypeParam,isInvTrans,isSalesView,isServiceTrans,transDate,printCopies,isReprint,isPOSPrinting,isFromSalesReceipt,isPackingSlipPrint,warehouseID,kitchenIDParam,kitchenPrinterNameParam,kitchenNameParam,commonKitchenProductGroupIDParam,transactionType,dbIdValue,voucherType,isAppGlobal}: UseTemplateDesignerProps) => {
   const { t } = useTranslation("system");
   const { id } = useParams();
   const navigate = useNavigate();
@@ -49,8 +50,8 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,
   const clientSession = useSelector((state: RootState) => state.ClientSession);
   const storeTemplate = useSelector((state: RootState) => state.Template?.activeTemplate);
   const templateData = template ?? storeTemplate;
-    const [stableTemplateProps, setStableTemplateProps] = useState<any>(null);
-    const [designTabs, setDesignTabs] = useState<DesignSectionType[]>([]);
+  const [stableTemplateProps, setStableTemplateProps] = useState<any>(null);
+  const [designTabs, setDesignTabs] = useState<DesignSectionType[]>([]);
   const [currentSection, setCurrentSection] = useState<DesignSectionType | null>(null);
   const [loading, setLoading] = useState(false);
   const [templateImages, setTemplateImages] = useState<TemplateImagesTypes>({
@@ -60,7 +61,7 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,
     background_image_footer: null,
   });
   const [maxHeight, setMaxHeight] = useState<number>(500);
-  // Add ref for preview container
+
   const previewContainerRef = useRef<HTMLDivElement>(null);
 
   //  Create consolidated template style properties object
@@ -100,6 +101,7 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,
   // Stabilize props for PDFViewer
  useEffect(() => {
     const load = async () => {
+      debugger;
       try {
         setLoading(true);
          let data = DummyVoucherData;
@@ -128,12 +130,20 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,
             isAppGlobal
           )) as any;
         }
+  // Generate QR codes here
+      const elements: PlacedComponent[] = [
+        ...(templateData?.headerState?.customElements?.elements ?? []),
+        ...(templateData?.footerState?.customElements?.elements ?? []),
+      ].filter(comp => comp.type === DesignerElementType.qrCode);
 
-        const props = {
-          template: templateData,
-          data,
+      const qrImages: { [key: string]: string } = {};
+      for (const comp of elements) {
+        if (comp.qrCodeProps) {
+          qrImages[comp.id] = await generateQRCodeDataUrl(comp.qrCodeProps);
+        }
+      }
+      const props = { template: templateData, data, qrCodeImages: qrImages };
 
-        };
 
         setStableTemplateProps(props);
       } catch (err) {
@@ -354,5 +364,6 @@ export const useTemplateDesigner = ({ templateGroup, templateKind, designerType,
     templateStyleProperties,
     previewContainerRef,
     masterId:MasterIDParam,
+
   };
 };

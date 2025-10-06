@@ -33,10 +33,8 @@ const InvoiceDesigner = () => {
   const { t } = useTranslation("system");
   const dispatch = useDispatch();
   const templateData = useSelector((state: RootState) => state.Template);
-  debugger;
   const rootState = useRootState();
   const tg = searchParams.get("template_group");
-
   const templateGroup = tg && Object.values(VoucherType).includes(tg as VoucherType)? (tg as VoucherType): ""; 
   const { templateKind,templateType} = (location.state as LocationState) || {};
 

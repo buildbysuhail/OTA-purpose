@@ -388,7 +388,6 @@ const newUrl = `/accounts/transactions/CashPayment/${vchno}${queryString ? `?${q
     const fetchTemplate = async () => {
       const result = await getTemplate(input?.voucherType, formState);
       setTemplate(result);
- 
     };
     fetchTemplate();
   }, [input, formState]); 
@@ -405,7 +404,7 @@ const newUrl = `/accounts/transactions/CashPayment/${vchno}${queryString ? `?${q
     stableTemplateProps,
     loading,
     templateStyleProperties
-    } = useTemplateDesigner({ templateGroup:groupKey, templateKind: kindKey, designerType:typeKey
+    } = useTemplateDesigner({ templateGroup:groupKey, templateKind: kindKey, designerType:typeKey,template
     ,MasterIDParam:input.transactionMasterID,transactionType:input.transactionType
     })
 
@@ -614,7 +613,7 @@ const MemoizedGrid = useMemo(() => {
                     className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${
                       phone ? "p-0.5" : "p-3"
                     } rounded-md hover:bg-gray-200 transition-colors`}
-                    //  onClick={() => printVoucher(setIsPrintModalOpen, voucherType)}
+                     onClick={() =>  printVoucher(input.transactionMasterID, input.transactionType ?? "",template,input.voucherType, formState.transaction.master.transactionDate)}
                   >
                     <Printer className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                   </button>

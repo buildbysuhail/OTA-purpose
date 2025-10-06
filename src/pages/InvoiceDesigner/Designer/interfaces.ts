@@ -69,6 +69,7 @@ export interface CustomElementType {
  bg_image_position?:string;
  background_color?: string;
  bg_image_objectFit?:string;
+ isFirstOnly?: boolean;
  }
 export interface LabelState {
   columnsPerRow?: number;

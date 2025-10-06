@@ -1,14 +1,8 @@
-// customElement.tsx
-import { Text, View, StyleSheet, Image } from "@react-pdf/renderer";
-import {
-  DesignerElementType,
-  PlacedComponent,
-  QRCodeProps,
-} from "../Designer/interfaces";
-import type { Style } from "@react-pdf/types";
+import React from "react";
+import { View, Text, Image, StyleSheet } from "@react-pdf/renderer";
+import { DesignerElementType, PlacedComponent } from "../Designer/interfaces";
 import { bindDataForPrint } from "../../use-print";
 
-const pxToPt = (px: number) => px * (72 / 96);
 interface Props {
   component: PlacedComponent;
   data?: any;
@@ -17,126 +11,131 @@ interface Props {
   convertAmountToArabic: any;
 }
 
-export const renderComponent = (component: PlacedComponent,
-  convertAmountToEnglish: any,
-  convertAmountToArabic: any,
-  data?: any,
-  qrCodeImages?: { [key: string]: string }) => {
+const pxToPt = (px: number) => px * (72 / 96);
 
+export const RenderComponentPDF: React.FC<Props> = ({
+  component,
+  data,
+  qrCodeImages,
+  convertAmountToEnglish,
+  convertAmountToArabic,
+}) => {
 
-  const baseStyle: Style = {
-    position: "absolute",
+  const baseStyle = {
+    position: "absolute" as const,
     left: component.x,
     top: component.y,
-    transform: `rotate(${component.rotate || 0}deg)`,
-    transformOrigin: "center",
     height: component.height || 50,
     width: component.width || 50,
+    transform: component.rotate ? `rotate(${component.rotate}deg)` : undefined,
+  };
+
+  // Calculate container height if needed
+  const calculateContainerHeight = () => {
+    if (component.type !== DesignerElementType.container || !component.containerProps?.autoResize || !component.children?.length) {
+      return component.height;
+    }
+
+    let maxBottom = 0;
+    component.children.forEach(child => {
+      const childBottom = child.y + child.height;
+      if (childBottom > maxBottom) maxBottom = childBottom;
+    });
+
+    const padding = component.containerProps?.padding || 0;
+    const minHeight = component.containerProps?.minHeight || 50;
+    const maxHeight = component.containerProps?.maxHeight || 500;
+
+    return Math.min(Math.max(maxBottom + padding, minHeight), maxHeight);
   };
 
   switch (component.type) {
     case DesignerElementType.text:
-      return (
-        <View key={component.id} style={{ ...baseStyle }}>
-          <Text
-            key={component.id}
-            style={{
-              fontFamily: component.font || "Roboto",
-              fontSize: component.fontSize || 12,
-              fontStyle: component.fontStyle || "normal",
-              textAlign: component.textAlign || "center",
-            }}
-          >
-            {component.content}
-          </Text>
-        </View>
-      );
-    case DesignerElementType.image:
-      return (
-        <View key={component.id} style={{ ...baseStyle }}>
-          {component.imgFromDevice ? (
-            <Image
-              key={component.id}
-              src={component.content}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: component.imgFit,
-                objectPosition: component.imgPosition,
-              }}
-            />
-          ) : (
-            <Image
-              key={component.id}
-              src={component.content}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: component.imgFit,
-                objectPosition: component.imgPosition,
-              }}
-            />
-          )}
-        </View>
-      );
     case DesignerElementType.field:
       return (
-        <View key={component.id} style={baseStyle}>
+        <View style={{ ...baseStyle, display: "flex", justifyContent: "center", alignItems: "center" }}>
           <Text
             style={{
-              fontFamily: component.font || "Roboto",
+              fontFamily: component.font || "Helvetica",
               fontSize: component.fontSize || 12,
-              fontStyle: component.fontStyle || "normal",
+              fontWeight: component.fontWeight || "normal",
+              color: component.fontColor ? `rgb(${component.fontColor})` : "black",
               textAlign: component.textAlign || "center",
-              minHeight: component.height || 50,
-              height: "auto",
-              width: component.width || 50,
             }}
           >
-            {bindDataForPrint(component.content, data,convertAmountToEnglish,convertAmountToArabic)|| "N\A"} 
-            {data?.[component.content] || "N/A"}
+            {component.type === DesignerElementType.text
+              ? component.content
+              : bindDataForPrint(component.content, data, convertAmountToEnglish, convertAmountToArabic) || "N/A"}
           </Text>
+        </View>
+      );
+
+    case DesignerElementType.image:
+      return (
+        <View style={baseStyle}>
+          <Image
+            src={component.content}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: component.imgFit || "contain",
+            }}
+          />
         </View>
       );
 
     case DesignerElementType.line:
       return (
         <View
-          key={component.id}
           style={{
             ...baseStyle,
-            width: component.lineWidth ?? "100%",
-            borderTop: `${component?.lineThickness || 1}pt ${
-              component?.lineType || "solid"
-            } ${component?.lineColor || "black"}`,
+            borderTop: `${component.lineThickness || 1}pt ${component.lineType || "solid"} ${component.lineColor || "black"}`,
+            width: component.lineWidth || component.width || "100%",
           }}
         />
       );
 
-  case DesignerElementType.qrCode:
-  const wPx = component.qrCodeProps?.width  || 128;
-  const hPx = component.qrCodeProps?.height || 128;
+    case DesignerElementType.qrCode:
+      const wPt = pxToPt(component.qrCodeProps?.width || 128);
+      const hPt = pxToPt(component.qrCodeProps?.height || 128);
+      return qrCodeImages?.[component.id] ? (
+        <View style={{ ...baseStyle, width: wPt, height: hPt }}>
+          <Image src={qrCodeImages[component.id]} style={{ width: "100%", height: "100%" }} />
+        </View>
+      ) : null;
 
-  return qrCodeImages?.[component.id] ? (
-    <View
-      key={component.id}
-      style={{
-        ...baseStyle,
-        // convert px → pt here:
-        width:  pxToPt(wPx),
-        height: pxToPt(hPx),
-      }}
-    >
-      <Image
-        src={qrCodeImages[component.id]}
-        // and again on the Image itself:
-        style={{
-          width:  pxToPt(wPx),
-          height: pxToPt(hPx),
-        }}
-      />
-    </View>
-  ) : null;
+    case DesignerElementType.container:
+      const containerHeight = calculateContainerHeight();
+      const containerChildren = component.children || [];
+      const containerProps = component.containerProps || {};
+      return (
+        <View
+          style={{
+            ...baseStyle,
+            height: containerHeight,
+            backgroundColor: containerProps.backgroundColor || "#fafafa",
+            borderColor: containerProps.borderColor || "#d0d0d0",
+            borderWidth: containerProps.borderWidth || 1,
+            borderStyle: (containerProps.borderStyle === "none" ? "none" : containerProps.borderStyle) as
+            | "solid"
+            | "dotted"
+            | "dashed",
+            padding: containerProps.padding || 0,
+            borderRadius: containerProps.borderRound || 0,
+          }}
+        >
+          {containerChildren.map((child) => (
+            <RenderComponentPDF
+              key={child.id}
+              component={{ ...child, containerId: component.id }}
+              data={data}
+              qrCodeImages={qrCodeImages}
+              convertAmountToEnglish={convertAmountToEnglish}
+              convertAmountToArabic={convertAmountToArabic}
+            />
+          ))}
+        </View>
+      );
 
     default:
       console.warn(`Unsupported component type: ${component.type}`);

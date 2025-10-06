@@ -151,7 +151,7 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                   </div>
                 ):(
-                <div className="relative h-full   w-full ">
+                  <div className="relative h-full   w-full ">
                     {React.cloneElement(templateComponent,  stableTemplateProps)}
                   </div>
 

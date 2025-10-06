@@ -249,7 +249,8 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
     background_image: "",
     bg_image_position: "",
     background_color: "",
-    bg_image_objectFit: ""
+    bg_image_objectFit: "",
+    isFirstOnly:true,
   });
 
   const pxToPoint = (px: number) => px * (72 / 96);
@@ -1970,6 +1971,8 @@ useEffect(() => {
         bg_image_position: nestedValue?.bg_image_position || "",
         background_color: nestedValue?.background_color || "",
         bg_image_objectFit: nestedValue?.bg_image_objectFit || "",
+        isFirstOnly:nestedValue?.isFirstOnly || true
+
       }));
     }
   }, []);
@@ -3915,6 +3918,16 @@ useEffect(() => {
                   <Box 
                  hidden={activeTab !== "designer"}
                  >
+                  <Box sx={{ mb: 1 }}>
+                      <ERPCheckbox
+                        id="isFirstOnly"
+                        label={t("isFirstOnly")}
+                        checked={designerData?.isFirstOnly ?? true}
+                        onChange={(e) =>
+                          handleDesignerChange("isFirstOnly", e.target.checked)
+                        }
+                      />                    
+                  </Box>  
                      <Box sx={{ mb: 1 }}>
                        <div className="flex flex-col gap-3">
                          <div className="text-xs">Background Image</div>
@@ -4026,13 +4039,8 @@ useEffect(() => {
                                              { label: "Center right", value: "bottom center" },
                                              { label: "Bottom right", value: "bottom right" },
                                            ]}
-                                         />
-     
-     
-                             
-                             
-        
-                           </>
+                                       />
+                             </>
                          )}
                        </div>
                      </Box>  

@@ -1,11 +1,19 @@
 import { FC, lazy, Suspense, useState } from "react";
 import { Routes, Route } from "react-router-dom";
-import ApplicationSettingsVirtual from "../../../pages/settings/system/app-new/application-settings-virtual";
-import Templates from "../../../pages/InvoiceDesigner/Templates";
-import Settings from "../../../pages/settings/AllSettings/Settings";
-import UserActionReport from "../../../pages/settings/system/user-action-report";
-import ReportList from "../../ERPComponents/reports/reports-list";
-import TemplateDesignerLayout from "../layout/template-designer-layout";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
+import RouteGuard from "../../../utilities/route-guard";
+import { UserAction } from "../../../helpers/user-right-helper";
+import { TransactionBase, transactionRoutes } from "./transaction-routes";
+import { ReportsMenuItems } from "../sidebar/sidemenu/reports-routes";
+
+// Pages / Components (lazy)
+const ApplicationSettingsVirtual = lazy(() => import("../../../pages/settings/system/app-new/application-settings-virtual"));
+const Templates = lazy(() => import("../../../pages/InvoiceDesigner/Templates"));
+const Settings = lazy(() => import("../../../pages/settings/AllSettings/Settings"));
+const UserActionReport = lazy(() => import("../../../pages/settings/system/user-action-report"));
+const ReportList = lazy(() => import("../../ERPComponents/reports/reports-list"));
+const TemplateDesignerLayout = lazy(() => import("../layout/template-designer-layout"));
 
 const AccountSettingsSecurity = lazy(() => import("../../../pages/account-settings/account-settings-security"));
 const AccountSettingsPreference = lazy(() => import("../../../pages/account-settings/account-settings-preference"));
@@ -25,13 +33,7 @@ const BranchGrid = lazy(() => import("../../../pages/settings/Administration/bra
 const NotificationSettings = lazy(() => import("../../../pages/settings/system/notification-settings"));
 const CounterSettings = lazy(() => import("../../../pages/settings/system/counter-settings"));
 
-// Inventory Starts
-// const InvTransactionMobile = lazy(
-//   () => import("../../../pages/inventory/inv-transaction-mobile")
-// );
-// Inventory End
-// Acc Starts
-
+// Accounts Masters
 const AccountsMasters = lazy(() => import("../../../pages/accounts/masters/account-groups/account-group"));
 const BankCards = lazy(() => import("../../../pages/accounts/masters/bank-cards/bank-cards"));
 const Upi = lazy(() => import("../../../pages/accounts/masters/upi/upi"));
@@ -46,24 +48,31 @@ const ChartOfAccounts = lazy(() => import("../../../pages/accounts/masters/chart
 const Customers = lazy(() => import("../../../pages/accounts/masters/parties/customers"));
 const Suppliers = lazy(() => import("../../../pages/accounts/masters/parties/suppliers"));
 const CustomerSupplierLedger = lazy(() => import("../../../pages/accounts/masters/customer/supplier/ledger/customer-supplier-ledger"));
-// Acc End
 
-//side menu account
+// Transactions
 const AccTransactionMobile = lazy(() => import("../../../pages/accounts/transactions/acc-transaction-mobile"));
-//integration
+const AccTransactionGrid = lazy(() => import("../../../pages/accounts/transactions/acc-transacton-grid"));
+const TransactionGrid = lazy(() => import("../../../pages/inventory/transactions/purchase/transacton-grid"));
+const SalesTransactionGrid = lazy(() => import("../../../pages/inventory/transactions/sales/transacton-grid"));
+const PostDatedCheques = lazy(() => import("../../../pages/accounts/transactions/acc-post-dated-cheques"));
+const AccTransactionFormContainer = lazy(() => import("../../../pages/accounts/transactions/acc-transaction-container"));
+const BankReconciliation = lazy(() => import("../../../pages/accounts/transactions/acc-bank-reconciliation"));
+const TransactionFormContainer = lazy(() => import("../../../pages/inventory/transactions/purchase/transaction-container"));
+const SalesTransactionFormContainer = lazy(() => import("../../../pages/inventory/transactions/sales/transaction-container"));
+const AccTransactionFormContainerView = lazy(() => import("../../../pages/accounts/transactions/acc-transaction-View-container"));
+
+// Named export
+const SearchProvider = lazy(() =>
+  import("../../../pages/accounts/transactions/search-context.tsx").then(m => ({ default: m.SearchProvider }))
+);
+
+// Integrations
 const SmsIntegration = lazy(() => import("../../../pages/settings/Integration/sms-integration"));
 const EmailIntegration = lazy(() => import("../../../pages/settings/Integration/email-integration"));
 const FileUploadIntegration = lazy(() => import("../../../pages/settings/Integration/file-upload-integration"));
 const WhatsappIntegration = lazy(() => import("../../../pages/settings/Integration/whatsapp-integration"));
-const Test = lazy(() => import("../../../pages/test"));
-// const AccountGroupTypeTest = lazy(() => import('../../../pages/accountgrouptest'));
-const TotalSummary = lazy(() => import("../../../pages/total-summary"));
 const ShortkeysSettings = lazy(() => import("../../../pages/settings/Integration/shortkeysSettings"));
-const TestInputButton = lazy(() => import("../../../pages/test-input-button"));
 const FcmPushNotificationTest = lazy(() => import("../../../pages/settings/Integration/fcm-push-notification-test"));
-const AccTransactionGrid = lazy(() => import("../../../pages/accounts/transactions/acc-transacton-grid"));
-const TransactionGrid = lazy(() => import("../../../pages/inventory/transactions/purchase/transacton-grid"));
-const SalesTransactionGrid = lazy(() => import("../../../pages/inventory/transactions/sales/transacton-grid"));
 
 // Inventory Masters
 const Products = lazy(() => import("../../../pages/inventory/masters/products/products"));
@@ -84,36 +93,26 @@ const Section = lazy(() => import("../../../pages/inventory/masters/section/sect
 const GroupCategory = lazy(() => import("../../../pages/inventory/masters/group-category/group-category"));
 const SpecialSchemes = lazy(() => import("../../../pages/inventory/masters/special-schemes/special-schemes"));
 const ListedProductPrices = lazy(() => import("../../../pages/inventory/masters/listed-product-prices/listed-product-prices"));
-//transaction
-const PostDatedCheques = lazy(() => import("../../../pages/accounts/transactions/acc-post-dated-cheques"));
+
 // Inventory Reports
-import { useSelector } from "react-redux";
-import { RootState } from "../../../redux/store";
-import RouteGuard from "../../../utilities/route-guard";
-import { UserAction } from "../../../helpers/user-right-helper";
-import { TransactionBase, transactionRoutes } from "./transaction-routes";
-import AccTransactionFormContainer from "../../../pages/accounts/transactions/acc-transaction-container";
-import BankReconciliation from "../../../pages/accounts/transactions/acc-bank-reconciliation";
-import TransactionFormContainer from "../../../pages/inventory/transactions/purchase/transaction-container";
-import SalesTransactionFormContainer from "../../../pages/inventory/transactions/sales/transaction-container";
-
-import AccTransactionFormContainerView from "../../../pages/accounts/transactions/acc-transaction-View-container";
-import { SearchProvider } from "../../../pages/accounts/transactions/search-context.tsx";
-import { ReportsMenuItems } from "../sidebar/sidemenu/reports-routes";
-import TaxCategoryIndia from "../../../pages/inventory/masters/tax-category-india/tax-category-india";
-import TcsCategory from "../../../pages/inventory/masters/tcs-category/tcs-category";
-import GeneralMaster from "../../../pages/inventory/masters/general-master";
-import TwilioPdfDownloader from "../../../pages/inventory/masters/pdf-download";
-import ProductPricesGCC from "../../../pages/inventory/masters/product-prices/products-price-gcc";
-import ProductPricesIndia from "../../../pages/inventory/masters/product-prices/products-price-india";
-
 const PriceList = lazy(() => import("../../../pages/inventory/reports/other-inventory-reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/other-inventory-reports/stock-ledger/stock-ledger-report"));
 const DailyBalanceAmount = lazy(() => import("../../../pages/inventory/reports/other-inventory-reports/daily-balance/daily-balance-report"));
-// const OpeningStock = lazy(() => import("../../../pages/inventory/reports/opening-stock-report/opening-stock"));
 const StockFlow = lazy(() => import("../../../pages/inventory/reports/other-inventory-reports/stock-flow/stock-flow-report"));
 const TransactionAnalysisReport = lazy(() => import("../../../pages/inventory/reports/other-inventory-reports/transaction-analysis-report/transaction-analysis-report"));
 
+// Other Inventory Masters
+const TaxCategoryIndia = lazy(() => import("../../../pages/inventory/masters/tax-category-india/tax-category-india"));
+const TcsCategory = lazy(() => import("../../../pages/inventory/masters/tcs-category/tcs-category"));
+const GeneralMaster = lazy(() => import("../../../pages/inventory/masters/general-master"));
+const TwilioPdfDownloader = lazy(() => import("../../../pages/inventory/masters/pdf-download"));
+const ProductPricesGCC = lazy(() => import("../../../pages/inventory/masters/product-prices/products-price-gcc"));
+const ProductPricesIndia = lazy(() => import("../../../pages/inventory/masters/product-prices/products-price-india"));
+
+// Misc / Test Pages
+const Test = lazy(() => import("../../../pages/test"));
+const TotalSummary = lazy(() => import("../../../pages/total-summary"));
+const TestInputButton = lazy(() => import("../../../pages/test-input-button"));
 interface ContentProps { }
 const loading = (
   <div className="w-full h-screen bg-transparent flex items-center justify-center">

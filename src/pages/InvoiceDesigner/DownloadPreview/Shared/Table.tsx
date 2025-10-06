@@ -1,478 +1,163 @@
-// import { View, Text, StyleSheet } from "@react-pdf/renderer";
-// import type { TemplateState } from "../../Designer/interfaces";
-// import type { AccTransactionRow } from "../../../accounts/transactions/acc-transaction-types";
+import { View, Text, StyleSheet } from "@react-pdf/renderer";
+import { TemplateState, TableColumn } from "../../Designer/interfaces";
+import { PrintDetailDto } from "../../../use-print-type";
 
-// const Table = ({ data, template }: { data: any; template?: TemplateState<unknown> }) => {
-//   // const accTableState = template?.accTableState;
-//   const propertiesState = template?.propertiesState;
+const DEFAULT_COLUMN_WIDTH = "10%";
 
-//   // Default column width (in percentage) if not specified
-//   const DEFAULT_COLUMN_WIDTH = "10%";
+const normalizeWidth = (widthVal?: string | number): string => {
+  if (widthVal === undefined || widthVal === null) return DEFAULT_COLUMN_WIDTH;
+  const w = String(widthVal).trim();
+  if (w.endsWith("%")) return w;
+  return `${w}pt`;
+};
 
-//   const labelStyles = {
-//     fontWeight: propertiesState?.label_font_weight ,
-//     fontStyle: propertiesState?.label_font_style ,
-//     fontFamily: propertiesState?.font_family ,
-//   };
-//   const normalizeWidth = (widthVal: string | number): string => {
-//     const w = widthVal.toString().trim();
-//     if (w.endsWith("%") || w.endsWith("pt")) {
-//       return w;
-//     }
-//     return `${w}pt`;
-//   };
-//   // Styles
-//   const styles = StyleSheet.create({
-//     table: {
-//       width: "100%",
-//       display: "flex",
-//       marginBottom: 10,
-//       marginTop: 10,
-//       borderTop: accTableState?.showTableRowBorder
-//         ? `1px solid ${accTableState?.tableRowBorderColor || "#000"}`
-//         : "none",
-//       borderBottom: accTableState?.showTableRowBorder
-//         ? `1px solid ${accTableState?.tableRowBorderColor || "#000"}`
-//         : "none",
-//       borderLeft: accTableState?.showTableColBorder
-//         ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
-//         : "none",
-//       borderRight: accTableState?.showTableColBorder
-//         ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
-//         : "none",
-//     },
-//     thead: {
-//       backgroundColor: accTableState?.showTableHeaderBg
-//         ? accTableState?.tableHeaderBgColor
-//         : "#fff",
-//       color: accTableState?.headerFontColor || "#000",
-//       fontSize: accTableState?.headerFontSize || 12,
-//       flexDirection: "row",
-//       borderBottom: accTableState?.showTableRowBorder
-//         ? `1px solid ${accTableState?.tableRowBorderColor || "#000"}`
-//         : "none",
-//     },
-//     th: {
-//     padding: 4,
-//     textAlign: "center",
-//     // display: "flex",
-//     // flexDirection: "column",
-//     // justifyContent: "center",
-//     // flexWrap: "wrap", 
-//     },
-//     tbody: {
-//       flexDirection: "column",
-//     },
-//     tr: {
-//       flexDirection: "row",
-//       color: accTableState?.itemRowFontColor || "#000",
-//       fontSize: accTableState?.itemRowFontSize   || 12,
-//       borderBottom: accTableState?.showTableRowBorder
-//         ? `1px solid ${accTableState?.tableRowBorderColor || "#000"}`
-//         : "none",
-//       backgroundColor: accTableState?.showRowBg
-//         ? accTableState?.itemRowBgColor
-//         : "#fff",
-//     },
-//     td: {
-//      padding: 4,
-//     textAlign: "center",     // allow body text to wrap
-   
-//     },
-//     cellText: {
-//       // ...labelStyles,
-//       // wordWrap: "break-word",
-//       // overflowWrap: "break-word",
-//       // hyphens: "auto",
-//     },
-//   });
+type DownTableProps = {
+  data: PrintDetailDto[];
+  template?: TemplateState<unknown>;
+};
 
-//   // Function to get the total number of visible columns
-//   const getVisibleColumnsCount = () => {
-//     let count = 0;
-//     if (accTableState?.showLineItemNumber) count++;
-//     if (accTableState?.showLedgerCode) count++;
-//     if (accTableState?.showLedger) count++;
-//     if (accTableState?.showAmount) count++;
-//     if (accTableState?.showNarration) count++;
-//     if (accTableState?.showBillwiseDetails) count++;
-//     if (accTableState?.showDiscount) count++;
-//     if (accTableState?.showCostCenter) count++;
-//     if (accTableState?.showAmountFc) count++;
-//     if (accTableState?.showBankCharge) count++;
-//     return count;
-//   };
+const SharedDownTable: React.FC<DownTableProps> = ({ data, template }) => {
+  const accTableState = (template as any)?.tableState as TableColumn<unknown>[] | undefined;
+  const tableMasterState = (template as any)?.itemTableMasterState;
+  const propertiesState = (template as any)?.propertiesState;
 
-//   // Helper function to create cell style with proper width constraints
-// const getCellStyle = (baseStyle: any, width: string | number) => {
-//     const w = normalizeWidth(width);
-//     return {
-//       ...baseStyle,
-//       width: w,
-//       minWidth: w,
-//       maxWidth: w,
-//     };
-//   };
+  const labelFontFamily = propertiesState?.font_family || "Helvetica";
+  const labelFontWeight = propertiesState?.label_font_weight || "normal";
+  const labelFontStyle = propertiesState?.label_font_style || "normal";
 
-//   // Function to Render the Table Header
-//   const renderHeader = () => {
-//     const visibleColumns = getVisibleColumnsCount();
-//     let columnIndex = 0;
+  const visibleColumns = accTableState?.filter((c) => c.show) ?? [];
 
-//     return (
-//       <View style={styles.thead} fixed={accTableState?.headerRepeatOnPage}>
-//         {accTableState?.showLineItemNumber && (
-//           <View
-//             style={{
-//               ...getCellStyle(styles.th, accTableState?.lineItemNumberWidth || DEFAULT_COLUMN_WIDTH),
-//               borderRight:
-//                 accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
-//                   ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
-//                   : "none",
-//             }}
-//           >
-//             <Text style={styles.cellText}>
-//               {accTableState?.lineItemNumberLabel || "SiNo"}
-//             </Text>
-//           </View>
-//         )}
-//         {accTableState?.showLineItemNumber && (columnIndex += 1)}
-//         {accTableState?.showLedgerCode && (
-//           <View
-//             style={{
-//               ...getCellStyle(styles.th, accTableState?.ledgerCodeWidth || DEFAULT_COLUMN_WIDTH),
-//               borderRight:
-//                 accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
-//                   ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
-//                   : "none",
-//             }}
-//           >
-//             <Text style={styles.cellText}>
-//               {accTableState?.ledgerCodeLabel || "Ledger code"}
-//             </Text>
-//           </View>
-//         )}
-//         {accTableState?.showLedgerCode && (columnIndex += 1)}
-//         {accTableState?.showLedger && (
-//           <View
-//             style={{
-//               ...getCellStyle(styles.th, accTableState?.ledgerWidth || DEFAULT_COLUMN_WIDTH),
-//               borderRight:
-//                 accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
-//                   ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
-//                   : "none",
-//             }}
-//           >
-//             <Text style={styles.cellText}>
-//               {accTableState?.ledgerLabel || "Ledger"}
-//             </Text>
-//           </View>
-//         )}
-//         {accTableState?.showLedger && (columnIndex += 1)}
-//         {accTableState?.showAmount && (
-//           <View
-//             style={{
-//               ...getCellStyle(styles.th, accTableState?.amountWidth  || DEFAULT_COLUMN_WIDTH),
-//               borderRight:
-//                 accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
-//                   ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
-//                   : "none",
-//             }}
-//           >
-//             <Text style={styles.cellText}>
-//               {accTableState?.amountLabel || "Amount"}
-//             </Text>
-//           </View>
-//         )}
-//         {accTableState?.showAmount && (columnIndex += 1)}
-//         {accTableState?.showNarration && (
-//           <View
-//             style={{
-//               ...getCellStyle(styles.th, accTableState?.narrationWidth || DEFAULT_COLUMN_WIDTH),
-//               borderRight:
-//                 accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
-//                   ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
-//                   : "none",
-//             }}
-//           >
-//             <Text style={styles.cellText}>
-//               {accTableState?.narrationLabel || "Narration"}
-//             </Text>
-//           </View>
-//         )}
-//         {accTableState?.showNarration && (columnIndex += 1)}
-//         {accTableState?.showBillwiseDetails && (
-//           <View
-//             style={{
-//               ...getCellStyle(styles.th, accTableState?.billwiseDetailsWidth || DEFAULT_COLUMN_WIDTH),
-//               borderRight:
-//                 accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
-//                   ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
-//                   : "none",
-//             }}
-//           >
-//             <Text style={styles.cellText}>
-//               {accTableState?.billwiseDetailsLabel || "Bill wise details"}
-//             </Text>
-//           </View>
-//         )}
-//         {accTableState?.showBillwiseDetails && (columnIndex += 1)}
-//         {accTableState?.showDiscount && (
-//           <View
-//             style={{
-//               ...getCellStyle(styles.th, accTableState?.discountWidth || DEFAULT_COLUMN_WIDTH),
-//               borderRight:
-//                 accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
-//                   ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
-//                   : "none",
-//             }}
-//           >
-//             <Text style={styles.cellText}>
-//               {accTableState?.discountLabel || "Discount"}
-//             </Text>
-//           </View>
-//         )}
-//         {accTableState?.showDiscount && (columnIndex += 1)}
-//         {accTableState?.showCostCenter && (
-//           <View
-//             style={{
-//               ...getCellStyle(styles.th, accTableState?.costCenterWidth || DEFAULT_COLUMN_WIDTH),
-//               borderRight:
-//                 accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
-//                   ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
-//                   : "none",
-//             }}
-//           >
-//             <Text style={styles.cellText}>
-//               {accTableState?.costCenterLabel || "Cost Center"}
-//             </Text>
-//           </View>
-//         )}
-//         {accTableState?.showCostCenter && (columnIndex += 1)}
-//         {accTableState?.showAmountFc && (
-//           <View
-//             style={{
-//               ...getCellStyle(styles.th, accTableState?.amountFcWidth || DEFAULT_COLUMN_WIDTH),
-//               borderRight:
-//                 accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
-//                   ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
-//                   : "none",
-//             }}
-//           >
-//             <Text style={styles.cellText}>
-//               {accTableState?.amountFcLabel || "AmountFc"}
-//             </Text>
-//           </View>
-//         )}
-//         {accTableState?.showAmountFc && (columnIndex += 1)}
-//         {accTableState?.showBankCharge && (
-//           <View
-//             style={{
-//               ...getCellStyle(styles.th, accTableState?.bankChargeWidth || DEFAULT_COLUMN_WIDTH),
-//               borderRight:
-//                 accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
-//                   ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
-//                   : "none",
-//             }}
-//           >
-//             <Text style={styles.cellText}>
-//               {accTableState?.bankChargeLabel || "Bank Charge"}
-//             </Text>
-//           </View>
-//         )}
-//       </View>
-//     );
-//   };
+  const styles = StyleSheet.create({
+    container: {
+      width: "100%",
+      flexDirection: "column",
+      marginVertical: 8,
+      borderWidth: tableMasterState?.showTableColBorder ? 1 : 0,
+      borderColor: tableMasterState?.tableColBorderColor || "#000",
+    },
+    thead: {
+      flexDirection: "row",
+      backgroundColor: tableMasterState?.showTableHeaderBg
+        ? tableMasterState?.tableHeaderBgColor
+        : "#fff",
+      color: tableMasterState?.headerFontColor || "#000",
+      fontSize: tableMasterState?.headerFontSize || 12,
+      borderBottomWidth: tableMasterState?.showTableRowBorder ? 1 : 0,
+      borderBottomColor: tableMasterState?.tableRowBorderColor || "#000",
+    },
+    th: {
+      padding: 4,
+      textAlign: "center",
+      justifyContent: "center",
+      fontFamily: labelFontFamily,
+      fontWeight: labelFontWeight,
+      fontStyle: labelFontStyle,
+    },
+    tbody: {
+      flexDirection: "column",
+    },
+    tr: {
+      flexDirection: "row",
+      fontSize: tableMasterState?.itemRowFontSize || 12,
+      color: tableMasterState?.itemRowFontColor || "#000",
+      borderBottomWidth: tableMasterState?.showTableRowBorder ? 1 : 0,
+      borderBottomColor: tableMasterState?.tableRowBorderColor || "#000",
+      backgroundColor: tableMasterState?.showRowBg
+        ? tableMasterState?.itemRowBgColor
+        : "#fff",
+    },
+    td: {
+      padding: 4,
+      textAlign: "center",
+      fontFamily: labelFontFamily,
+    },
+    cellText: {
+      wordBreak: "break-word",
+    },
+  });
 
-//   // Calculate how many rows we actually have
-//   const rowCount = data?.details?.length || 0;
-//   const visibleColumns = getVisibleColumnsCount();
+  const renderHeader = () => {
+    if (!visibleColumns.length) return null;
 
-//   return (
-//     <View style={[styles.table,labelStyles]} wrap>
-//       {/* Table Header */}
-//       {renderHeader()}
+    return (
+      <View style={styles.thead}>
+        {visibleColumns.map((col, idx) => (
+          <View
+            key={String(col.field)}
+            style={{
+              ...styles.th,
+              flex: 1,
+              maxWidth: normalizeWidth(col.width || DEFAULT_COLUMN_WIDTH),
+              borderRightWidth:
+                tableMasterState?.showTableColBorder && idx + 1 < visibleColumns.length ? 1 : 0,
+              borderRightColor: tableMasterState?.tableColBorderColor || "#000",
+            }}
+          >
+            <Text style={styles.cellText}>{col.label ?? String(col.field)}</Text>
+          </View>
+        ))}
+      </View>
+    );
+  };
 
-//       {/* Table Body */}
-//       <View style={styles.tbody}>
-//         {data?.details?.map((item: AccTransactionRow, index: number) => {
-//           let columnIndex = 0;
-//           return (
-//             <View
-//               key={`tbr${index}`}
-//               style={[
-//                 styles.tr,
-//                 index + 1 === rowCount && accTableState?.showTableRowBorder
-//                   ? { borderBottom: "none" }
-//                   : {},
-//               ]}
-          
-//             >
-//               {accTableState?.showLineItemNumber && (
-//                 <View
-//                   style={{
-//                     ...getCellStyle(styles.th, accTableState?.lineItemNumberWidth || DEFAULT_COLUMN_WIDTH),
-//                     borderRight:
-//                       accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
-//                         ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
-//                         : "none",
-//                   }}
-//                 >
-//                   <Text style={styles.cellText}>
-//                     {item.slNo}
-//                   </Text>
-//                 </View>
-//               )}
-//               {accTableState?.showLineItemNumber && (columnIndex += 1)}
-//               {accTableState?.showLedgerCode && (
-//                 <View
-//                   style={{
-//                     ...getCellStyle(styles.th, accTableState?.ledgerCodeWidth || DEFAULT_COLUMN_WIDTH),
-//                     borderRight:
-//                       accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
-//                         ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
-//                         : "none",
-//                   }}
-//                 >
-//                   <Text style={styles.cellText}>
-//                     {item.ledgerCode}
-//                   </Text>
-//                 </View>
-//               )}
-//               {accTableState?.showLedgerCode && (columnIndex += 1)}
-//               {accTableState?.showLedger && (
-//                 <View
-//                   style={{
-//                     ...getCellStyle(styles.th, accTableState?.ledgerWidth || DEFAULT_COLUMN_WIDTH),
-//                     borderRight:
-//                       accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
-//                         ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
-//                         : "none",
-//                   }}
-//                 >
-//                   <Text style={styles.cellText}>
-//                     {item.ledgerName}
-//                   </Text>
-//                 </View>
-//               )}
-//               {accTableState?.showLedger && (columnIndex += 1)}
-//               {accTableState?.showAmount && (
-//                 <View
-//                   style={{
-//                     ...getCellStyle(styles.th, accTableState?.amountWidth || DEFAULT_COLUMN_WIDTH),
-//                     borderRight:
-//                       accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
-//                         ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
-//                         : "none",
-//                   }}
-//                 >
-//                   <Text style={styles.cellText}>
-//                     {`${item.amount || ""}5142543`}
-//                   </Text>
-//                 </View>
-//               )}
-//               {accTableState?.showAmount && (columnIndex += 1)}
-//               {accTableState?.showNarration && (
-//                 <View
-//                   style={{
-//                     ...getCellStyle(styles.th, accTableState?.narrationWidth || DEFAULT_COLUMN_WIDTH),
-//                     borderRight:
-//                       accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
-//                         ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
-//                         : "none",
-//                   }}
-//                 >
-//                   <Text style={styles.cellText}>
-//                     {item.narration || (50 + index * 10).toFixed(2)}
-//                   </Text>
-//                 </View>
-//               )}
-//               {accTableState?.showNarration && (columnIndex += 1)}
-//               {accTableState?.showBillwiseDetails && (
-//                 <View
-//                   style={{
-//                     ...getCellStyle(styles.th, accTableState?.billwiseDetailsWidth || DEFAULT_COLUMN_WIDTH),
-//                     borderRight:
-//                       accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
-//                         ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
-//                         : "none",
-//                   }}
-//                 >
-//                   <Text style={styles.cellText}>
-//                     {item.billwiseDetails || (20 + index * 5).toFixed(2)}
-//                   </Text>
-//                 </View>
-//               )}
-//               {accTableState?.showBillwiseDetails && (columnIndex += 1)}
-//               {accTableState?.showDiscount && (
-//                 <View
-//                   style={{
-//                     ...getCellStyle(styles.th, accTableState?.discountWidth || DEFAULT_COLUMN_WIDTH),
-//                     borderRight:
-//                       accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
-//                         ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
-//                         : "none",
-//                   }}
-//                 >
-//                   <Text style={styles.cellText}>
-//                     {item.discount || (800 + index * 200).toFixed(2)}
-//                   </Text>
-//                 </View>
-//               )}
-//               {accTableState?.showDiscount && (columnIndex += 1)}
-//               {accTableState?.showCostCenter && (
-//                 <View
-//                   style={{
-//                     ...getCellStyle(styles.th, accTableState?.costCenterWidth || DEFAULT_COLUMN_WIDTH),
-//                     borderRight:
-//                       accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
-//                         ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
-//                         : "none",
-//                   }}
-//                 >
-//                   <Text style={styles.cellText}>
-//                     {(800 + index * 200).toFixed(2)}
-//                   </Text>
-//                 </View>
-//               )}
-//               {accTableState?.showCostCenter && (columnIndex += 1)}
-//               {accTableState?.showAmountFc && (
-//                 <View
-//                   style={{
-//                     ...getCellStyle(styles.th, accTableState?.amountFcWidth || DEFAULT_COLUMN_WIDTH),
-//                     borderRight:
-//                       accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
-//                         ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
-//                         : "none",
-//                   }}
-//                 >
-//                   <Text style={styles.cellText}>
-//                     {(800 + index * 200).toFixed(2)}
-//                   </Text>
-//                 </View>
-//               )}
-//               {accTableState?.showAmountFc && (columnIndex += 1)}
-//               {accTableState?.showBankCharge && (
-//                 <View
-//                   style={{
-//                     ...getCellStyle(styles.th, accTableState?.bankChargeWidth || DEFAULT_COLUMN_WIDTH),
-//                     borderRight:
-//                       accTableState?.showTableColBorder && columnIndex + 1 < visibleColumns
-//                         ? `1px solid ${accTableState?.tableColBorderColor || "#000"}`
-//                         : "none",
-//                   }}
-//                 >
-//                   <Text style={styles.cellText}>
-//                     {item.bankCharge || (800 + index * 200).toFixed(2)}
-//                   </Text>
-//                 </View>
-//               )}
-//             </View>
-//           );
-//         })}
-//       </View>
-//     </View>
-//   );
-// };
+  const renderBody = () => {
+    if (!visibleColumns.length) return null;
 
-// export default Table;
+    if (!data?.length) {
+      return (
+        <View style={styles.tbody}>
+          <View style={styles.tr}>
+            {visibleColumns.map((col, idx) => (
+              <View
+                key={String(col.field)}
+                style={{
+                  ...styles.td,
+                  flex: 1,
+                  maxWidth: normalizeWidth(col.width || DEFAULT_COLUMN_WIDTH),
+                  borderRightWidth:
+                    tableMasterState?.showTableColBorder && idx + 1 < visibleColumns.length ? 1 : 0,
+                  borderRightColor: tableMasterState?.tableColBorderColor || "#000",
+                }}
+              >
+                <Text style={styles.cellText}>—</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+      );
+    }
+
+    return (
+      <View style={styles.tbody}>
+        {data.map((row: any, rowIndex: number) => (
+          <View key={rowIndex} style={styles.tr}>
+            {visibleColumns.map((col, idx) => (
+              <View
+                key={String(col.field)}
+                style={{
+                  ...styles.td,
+                  flex: 1,
+                  maxWidth: normalizeWidth(col.width || DEFAULT_COLUMN_WIDTH),
+                  borderRightWidth:
+                    tableMasterState?.showTableColBorder && idx + 1 < visibleColumns.length ? 1 : 0,
+                  borderRightColor: tableMasterState?.tableColBorderColor || "#000",
+                }}
+              >
+                <Text style={styles.cellText}>{row?.[String(col.field)] ?? ""}</Text>
+              </View>
+            ))}
+          </View>
+        ))}
+      </View>
+    );
+  };
+
+  return (
+    <View style={styles.container}>
+      {renderHeader()}
+      {renderBody()}
+    </View>
+  );
+};
+
+export default SharedDownTable;

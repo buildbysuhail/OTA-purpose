@@ -7,6 +7,7 @@ import FontRegistration from "../../../LabelDesigner/fontRegister"
 import ShardDowHeader from "./Header"
 import { AccountTransactionProps } from "../../DesignPreview/shared"
 import ShardDownFooter from "./Footer"
+import SharedDownTable from "./Table"
 
 
 const SharedDownloadTemplate = ({ data, template,qrCodeImages={},AmountToEnglish,AmountToArabic}: AccountTransactionProps) => {
@@ -31,11 +32,8 @@ const SharedDownloadTemplate = ({ data, template,qrCodeImages={},AmountToEnglish
         {/* Main Content Container */}
         <View
           style={{
-            display: "flex",
-            flexDirection: "column",
             backgroundColor: template?.propertiesState?.bg_color || "#fff",
             padding: paddingTop, paddingRight, paddingBottom ,paddingLeft,
-            flexGrow: 1,
             position:"relative",
             zIndex:10
           }}
@@ -55,7 +53,7 @@ const SharedDownloadTemplate = ({ data, template,qrCodeImages={},AmountToEnglish
               }}
             />
           )}
-
+          <SharedDownTable data={data?.details??[]} template={template} />
         </View>
 
         {/* Footer */}

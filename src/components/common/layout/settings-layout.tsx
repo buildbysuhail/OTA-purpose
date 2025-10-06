@@ -1,9 +1,18 @@
-import { Dispatch, FC, Fragment, SetStateAction, useEffect, useState } from 'react';
-import Header from '../header/header';
-import Sidebar from '../sidebar/sidebar';
-import Footer from '../footer/footer';
-import Content from '../content/content';
-import { getStorageString } from '../../../utilities/storage-utils';
+import {
+  Dispatch,
+  FC,
+  Fragment,
+  SetStateAction,
+  useEffect,
+  useState,
+  lazy,
+  Suspense,
+} from "react";
+import { getStorageString } from "../../../utilities/storage-utils";
+const Header = lazy(() => import("../header/header"));
+const Sidebar = lazy(() => import("../sidebar/sidebar"));
+// const Footer = lazy(() => import("../footer/footer"));
+const Content = lazy(() => import("../content/content"));
 
 interface LayoutProps { 
   setMyClass: Dispatch<SetStateAction<string>>;

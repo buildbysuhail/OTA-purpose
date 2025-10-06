@@ -1,3 +1,4 @@
+
 import {
   Dispatch,
   FC,
@@ -6,15 +7,16 @@ import {
   Suspense,
   useEffect,
   useState,
+  lazy,
 } from "react";
-import Header from "../header/header";
-import Sidebar from "../sidebar/sidebar";
-import Footer from "../footer/footer";
-import Content from "../content/content";
 import { Route, Routes } from "react-router-dom";
-import InvoiceDesigner from "../../../pages/InvoiceDesigner/LandingFolder/InvoiceDesignerLanding";
-
-
+// const Header = lazy(() => import("../header/header"));
+// const Sidebar = lazy(() => import("../sidebar/sidebar"));
+// const Footer = lazy(() => import("../footer/footer"));
+// const Content = lazy(() => import("../content/content"));
+const InvoiceDesigner = lazy(
+  () => import("../../../pages/InvoiceDesigner/LandingFolder/InvoiceDesignerLanding")
+);
 // import InvoiceDesigner from "../../../pages/InvoiceDesigner/InvoiceDesigner";
 
 interface LayoutProps {

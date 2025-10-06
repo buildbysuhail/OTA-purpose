@@ -71,9 +71,14 @@ export const useTableResizeAndReorder = (gridID: string, onApplyPreferences: any
     const columnIndex = currentColumnIndex.current.index;
 
     setColumnWidths((prevWidths) => {
-      const newWidths = [...prevWidths];
-      if(newWidths.find(x => x.field == currentColumnIndex.current.field)) {
-      newWidths.find(x => x.field == currentColumnIndex.current.field)!.width = newWidth;
+      const newWidths = JSON.parse(JSON.stringify([...prevWidths]))
+      try {
+        if(newWidths.find((x: any) => x.field == currentColumnIndex.current.field)) {
+      newWidths.find((x: any) => x.field == currentColumnIndex.current.field)!.width = newWidth;
+      }
+      } catch (error) {
+        debugger;
+        
       }
       columnWidthsRef.current = newWidths;
       return newWidths;

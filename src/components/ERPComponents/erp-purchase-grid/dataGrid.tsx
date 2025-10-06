@@ -1748,7 +1748,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       console.log(columnWidths);
 
       return columnWidths.reduce(
-        (sum, widthItems) => sum + widthItems.width,
+        (sum, widthItems) => sum + widthItems?.width,
         0
       );
     }, [columnWidths]);
@@ -2749,7 +2749,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                       formState.userConfig?.showColumnBorder ?? true;
                     return (
                       <div
-                        key={`${column.dataField}-${index}`}
+                        key={`${column?.dataField}-${index}`}
                         draggable
                         onDragStart={(e) => handleDragStart(e, index)}
                         onDragEnd={handleDragEnd}
@@ -2758,17 +2758,17 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                         style={{
                           width: `${
                             columnWidths?.find(
-                              (x) => x.field == column.dataField
+                              (x) => x.field == column?.dataField
                             )?.width
                           }px`,
                           minWidth: `${
                             columnWidths?.find(
-                              (x) => x.field == column.dataField
+                              (x) => x.field == column?.dataField
                             )?.width
                           }px`,
                           maxWidth: `${
                             columnWidths?.find(
-                              (x) => x.field == column.dataField
+                              (x) => x.field == column?.dataField
                             )?.width
                           }px`,
                           padding: "8px 12px",
@@ -2825,7 +2825,8 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                           zIndex: isFixed ? 110 : 100,
                         }}
                       >
-                        {column.dataField === "slNo" ? (
+                        <>
+                         {column.dataField === "slNo" && (
                           <>
                             <div className="absolute top-[3px] left-[3px]">
                               <button
@@ -2845,15 +2846,13 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                             </div>
                             {column.caption}
                           </>
-                        ) : (
-                          <>
-                            <span style={{ marginRight: "8px", opacity: 0.6 }}>
+                        )}
+                        </>
+                         <span style={{ marginRight: "8px", opacity: 0.6 }}>
                               ⋮⋮
                             </span>
                             {column.caption}
-                          </>
-                        )}
-                        {column.dataField === "actionCol" && (
+                        {column.dataField !== "actionCol" && column.dataField !== "slNo" && (
                           <div
                             data-resize-handle
                             data-field={column.dataField}

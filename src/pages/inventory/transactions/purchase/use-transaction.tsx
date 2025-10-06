@@ -3405,7 +3405,32 @@ export const useTransaction = (
               const res = focusToNextColumn(rowIndex, columnName);
               setCurrentCell(res, data, false);
             }
-          } else if (columnName == "barCode") {
+          } 
+          else if (columnName == "product") {
+            data.product = value;
+            if (!isNullOrUndefinedOrEmpty(value)) {
+              await loadProductDetailsByAutoBarcode(
+                {
+                  productCode: data.pCode,
+                  autoBarcode: data.barCode,
+                  productBatchID: 0,
+                  searchText: data.product,
+                  detail: data,
+                  useProductCode: false,
+                  rowIndex: rowIndex,
+                  searchColumn: "product",
+                  setFocusToNextColumn: true,
+                },
+                { result: {}, formStateHandleFieldChangeKeysOnly },
+                true
+              );
+            } else {
+              const res = focusToNextColumn(rowIndex, columnName);
+              setCurrentCell(res, data, false);
+            }
+          } 
+          
+          else if (columnName == "barCode") {
             data.barCode = value;
             if (!isNullOrUndefinedOrEmpty(value)) {
               await loadProductDetailsByAutoBarcode(
@@ -3415,7 +3440,7 @@ export const useTransaction = (
                   productBatchID: 0,
                   searchText: data.barCode,
                   detail: data,
-                  useProductCode: false,
+                  useProductCode: true,
                   rowIndex: rowIndex,
                   searchColumn: "barCode",
                   setFocusToNextColumn: true,

@@ -7,28 +7,27 @@ import { APIClient } from "../../../../../helpers/api-client";
 import { FormField } from "../../../../../utilities/form-types";
 
 const api = new APIClient()
-const PromotionCommon: React.FC<{ getFieldProps: (fieldId: string, type?: string) => FormField;  isMaximized?: boolean;
-    modalHeight?: any }> = React.memo(({ getFieldProps,isMaximized,modalHeight }) => {
+const PromotionCommon: React.FC<{ getFieldProps: (fieldId: string, type?: string) => FormField; isMaximized?: boolean; modalHeight?: any, isView: boolean; }> = React.memo(({ getFieldProps, isMaximized, modalHeight, isView }) => {
   const { t } = useTranslation("inventory");
   const [data, setData] = useState([]);
-      const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
-          useEffect(() => {
-            let gridHeightMobile = modalHeight - 500;
-            let gridHeightWindows = modalHeight - 500;
-            setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
-          }, [isMaximized, modalHeight]);
+
+  const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
+  useEffect(() => {
+    let gridHeightMobile = modalHeight - 500;
+    let gridHeightWindows = modalHeight - 500;
+    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+  }, [isMaximized, modalHeight]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const productID = getFieldProps('product.productID').value;
         const productBatchID = getFieldProps('batch.productBatchID').value;
         if (!productID || !productBatchID) return; // skip if values are missing
-
         const params = {
           ProductID: productID,
           ProductBatchID: productBatchID,
         };
-
         const queryString = new URLSearchParams(params as any).toString();
         const res = await api.getAsync(`${Urls.product_scheme_details}?${queryString}`);
         // Handle response here (e.g., set state)
@@ -37,39 +36,38 @@ const PromotionCommon: React.FC<{ getFieldProps: (fieldId: string, type?: string
         console.error("Error fetching product scheme details", error);
       }
     };
-
     fetchData();
   }, [getFieldProps('product.productID').value, getFieldProps('batch.productBatchID').value]);
-  const columns: DevGridColumn[] = useMemo(() =>
-    [
-      {
-        dataField: "productId",
-        caption: t("product_id"),
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 50,
-      },
-      {
-        dataField: "product",
-        caption: t("product"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100
-      },
-      {
-        dataField: "unitName",
-        caption: t("unit_name"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100
-      }
-    ], []);
+
+  const columns: DevGridColumn[] = useMemo(() => [
+    {
+      dataField: "productId",
+      caption: t("product_id"),
+      dataType: "number",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
+    },
+    {
+      dataField: "product",
+      caption: t("product"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100
+    },
+    {
+      dataField: "unitName",
+      caption: t("unit_name"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100
+    }
+  ], []);
 
   return (
     <div className="border border-gray-200 rounded-md p-4">
@@ -82,7 +80,7 @@ const PromotionCommon: React.FC<{ getFieldProps: (fieldId: string, type?: string
         hideGridAddButton
         gridAddButtonType="popup"
         gridAddButtonIcon="ri-add-line"
-         heightToAdjustOnWindowsInModal={gridHeight.windows}
+        heightToAdjustOnWindowsInModal={gridHeight.windows}
       />
     </div>
   );

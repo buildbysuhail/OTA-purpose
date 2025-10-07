@@ -15,10 +15,11 @@ const SuppliersCommon: React.FC<{
     value?: PathValue<productDto, Path>
   ) => void;
   getFieldProps: (fieldId: string, type?: string) => FormField;
-   isMaximized?: boolean;
+  isMaximized?: boolean;
   modalHeight?: any;
   isGlobal?: boolean;
-}> = React.memo(({ formState, handleFieldChange, getFieldProps,isMaximized,modalHeight,isGlobal }) => {
+  isView: boolean;
+}> = React.memo(({ formState, handleFieldChange, getFieldProps, isMaximized, modalHeight, isGlobal, isView }) => {
   const supplierProducts =
   {
     ledgerID: 0,
@@ -26,24 +27,29 @@ const SuppliersCommon: React.FC<{
     supplierCode: '',
     supplier: '',
   };
+
+  const { t } = useTranslation('inventory')
   const [data, setData] = useState<SupplierProductsInputDto>(supplierProducts);
+
   const handleAdd = () => {
     let nutritionData = getFieldProps("supplierProducts").value as SupplierProductsInputDto[];
     handleFieldChange("supplierProducts", [...nutritionData, data])
     setData(supplierProducts);
   };
+
   const handleRemove = (rowId: number) => {
     let nutritionData = getFieldProps("supplierProducts").value as SupplierProductsInputDto[];
     handleFieldChange("supplierProducts", [...nutritionData?.filter((_, index) => index !== rowId)])
   };
 
-  const { t } = useTranslation('inventory')
- const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
-        useEffect(() => {
-          let gridHeightMobile = modalHeight - 500;
-          let gridHeightWindows = modalHeight - (isGlobal ? 600 : 350);
-          setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
-        }, [isMaximized, modalHeight]);
+  const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
+
+  useEffect(() => {
+    let gridHeightMobile = modalHeight - 500;
+    let gridHeightWindows = modalHeight - (isGlobal ? 600 : 350);
+    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+  }, [isMaximized, modalHeight]);
+
   return (
     <div className="border border-[#ccc] rounded-md p-4 w-full">
       <div className="flex flex-col gap-4">
@@ -53,6 +59,7 @@ const SuppliersCommon: React.FC<{
               id="supplier_code"
               value={data.supplierCode}
               label={t("supplier_code")}
+              disabled={isView}
               placeholder={t("enter_supplier_code")}
               required={false}
               onChange={(e) =>
@@ -70,6 +77,7 @@ const SuppliersCommon: React.FC<{
               id="supplier_name"
               value={data.ledgerID}
               label={t("supplier_name")}
+              disabled={isView}
               field={{
                 getListUrl: Urls.data_CustSupp,
                 valueKey: "id",
@@ -94,6 +102,7 @@ const SuppliersCommon: React.FC<{
               value={data.refCode}
               label={t("supplier_product_code")}
               placeholder={t("enter_product_code")}
+              disabled={isView}
               required={false}
               onChange={(e) =>
                 setData((prev: any) => ({
@@ -107,6 +116,7 @@ const SuppliersCommon: React.FC<{
 
           <div className="flex items-end min-w-[100px] mb-1">
             <ERPButton
+              disabled={isView}
               title={t("add")}
               variant="primary"
               onClick={handleAdd}
@@ -125,7 +135,9 @@ const SuppliersCommon: React.FC<{
             height={gridHeight.windows}
           >
 
-            <Paging defaultPageSize={5} />
+            <Paging
+              defaultPageSize={5}
+            />
 
             <Editing
               mode="cell"

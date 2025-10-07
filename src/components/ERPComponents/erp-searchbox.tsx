@@ -78,6 +78,7 @@ interface InputProps {
   customStyle?: inputBox;
   appState?: any;
   showInputSymbol?:boolean;
+  disabled?: boolean;
 }
 
 interface LoadResult {
@@ -266,6 +267,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       customStyle,
       appState,
       showInputSymbol = true,
+       disabled = false,
       ...rest
     },
     ref
@@ -633,6 +635,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     );
 
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {    
+      if (disabled) return;
       const value = e.target.value;
       setProductGridReady(false)
       setInputValue((prev) => ({
@@ -684,6 +687,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
 
     const handleGridKeyDown = useCallback(
       async (e: any) => {
+        if (disabled) return;
         const key = e.event?.key;
         if (!key) {
           return;
@@ -768,6 +772,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
 
     const handleBatchGridKeyDown = useCallback(
       async (e: any) => {
+        if (disabled) return;
     console.log(`Batch grid key: ${e.event.key}`); 
         if (e.event.key === "Enter") {
           const gridInstance = batchGridRef.current.instance();
@@ -831,6 +836,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
 
     const handleInputKeyDown = useCallback(
       async (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (disabled) return;
         const value = e.currentTarget.value;
         console.log(`Input key: ${value}`);
         if (
@@ -1210,6 +1216,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
               onChange={handleChange}
               onKeyDown={handleInputKeyDown}
               disableEnterNavigation
+              disabled={disabled}
               ref={inputRef}
               onFocus={(e) => {
                 console.log("Focused on ERPProductSearch input");

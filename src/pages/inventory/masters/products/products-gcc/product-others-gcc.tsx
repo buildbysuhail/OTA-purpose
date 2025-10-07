@@ -17,6 +17,7 @@ const ProductOthersGcc: React.FC<{
   appSettings: ApplicationSettingsType;
   formState: any;
   handleDataChange: (value: any) => void;
+  isView: boolean;
   handleFieldChange: <Path extends ProductFieldPath>(
     fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
     value?: PathValue<productDto, Path>
@@ -30,28 +31,23 @@ const ProductOthersGcc: React.FC<{
     getFieldProps,
     appSettings,
     handleDataChange,
+    isView
   }) => {
     const handleFieldChangeAndResetSettings = async (
       fieldId: string,
       value: any
     ) => {
-      
       const prev = getFieldProps("*");
-      const pay = {
-        ...prev.config
-        , [fieldId]: value
-      }
+      const pay = { ...prev.config, [fieldId]: value }
       const res = await api.postAsync(Urls.update_product_config, pay);
       const _data = { ...prev }
       _data.config = pay
-
       handleDataChange(_data);
     };
 
     useEffect(() => {
       const fetchData = async () => {
         try {
-          
           const prev = getFieldProps("*");
           const base64 = await api.getAsync(Urls.get_product_config);
           const _userConfig = atob(base64);
@@ -65,9 +61,9 @@ const ProductOthersGcc: React.FC<{
           console.error("Failed to fetch product config", error);
         }
       };
-
       fetchData();
     }, []);
+
     const { t } = useTranslation("inventory");
     const [activePopup, setActivePopup] = useState<string | null>(null);
     const openPopup = (popupType: string) => setActivePopup(popupType);
@@ -79,47 +75,56 @@ const ProductOthersGcc: React.FC<{
             title={t("pos_fast_moving_items")}
             variant="secondary"
             onClick={() => openPopup("fastMoving")}
+            disabled={isView}
             className="flex-grow min-w-[180px] sm:flex-grow-0"
           />
           <ERPButton
             title={t("change_autobarcode")}
             variant="secondary"
+            disabled={isView}
             onClick={() => openPopup("autoBarcode")}
             className="flex-grow min-w-[180px] sm:flex-grow-0"
           />
         </div>
         <div className="flex flex-wrap gap-4">
           <ERPCheckbox
+            disabled={isView}
             {...getFieldProps("config.showProductDuplicateWarning")}
             label={t("show_product_duplicate_warning_message")}
             onChange={(data) => handleFieldChangeAndResetSettings("showProductDuplicateWarning", data.target.checked)}
           />
           <ERPCheckbox
+            disabled={isView}
             {...getFieldProps("config.showProductDetailesAfterSave")}
             label={t("show_product_details_after_save")}
             onChange={(data) => handleFieldChangeAndResetSettings("showProductDetailesAfterSave", data.target.checked)}
           />
           <ERPCheckbox
+            disabled={isView}
             {...getFieldProps("config.blockConvertProductNameToUpperCase")}
             label={t("block_convert_product_name_to_upper_case")}
             onChange={(data) => handleFieldChangeAndResetSettings("blockConvertProductNameToUpperCase", data.target.checked)}
           />
           <ERPCheckbox
+            disabled={isView}
             {...getFieldProps("config.calculateMarkUpValue")}
             label={t("calculate_markup_value")}
             onChange={(data) => handleFieldChangeAndResetSettings("calculateMarkUpValue", data.target.checked)}
           />
           <ERPCheckbox
+            disabled={isView}
             {...getFieldProps("config.showDisplayCost")}
             label={t("show_display_cost")}
             onChange={(data) => handleFieldChangeAndResetSettings("showDisplayCost", data.target.checked)}
           />
           <ERPCheckbox
+            disabled={isView}
             {...getFieldProps("config.showMultiBarcodeOnSave")}
             label={t("show_multibacode_onsave")}
             onChange={(data) => handleFieldChangeAndResetSettings("showMultiBarcodeOnSave", data.target.checked)}
           />
           <ERPCheckbox
+            disabled={isView}
             {...getFieldProps("config.showFlavourOnSave")}
             label={t("show_flavour_onsave")}
             onChange={(data) => handleFieldChangeAndResetSettings("showFlavourOnSave", data.target.checked)}

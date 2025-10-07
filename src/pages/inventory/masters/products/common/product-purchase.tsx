@@ -10,17 +10,20 @@ import { useNumberFormat } from "../../../../../utilities/hooks/use-number-forma
 const PurchaseCommon: React.FC<{
   getFieldProps: (fieldId: string, type?: string) => FormField;
   isMaximized?: boolean;
-    modalHeight?: any
-    isGlobal?: boolean
-}> = React.memo(({ getFieldProps,isMaximized,modalHeight,isGlobal }) => {
+  modalHeight?: any
+  isGlobal?: boolean
+  isView: boolean;
+}> = React.memo(({ getFieldProps, isMaximized, modalHeight, isGlobal, isView }) => {
   const { t } = useTranslation("inventory");
   const { getFormattedValue } = useNumberFormat();
-    const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
-        useEffect(() => {
-          let gridHeightMobile = modalHeight - 500;
-          let gridHeightWindows = modalHeight -(isGlobal?500:300) ;
-          setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
-        }, [isMaximized, modalHeight]);
+  const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
+
+  useEffect(() => {
+    let gridHeightMobile = modalHeight - 500;
+    let gridHeightWindows = modalHeight - (isGlobal ? 500 : 300);
+    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+  }, [isMaximized, modalHeight]);
+
   const columns: DevGridColumn[] = useMemo(
     () => [
       {
@@ -74,28 +77,10 @@ const PurchaseCommon: React.FC<{
           exportCell: any
         ) => {
           if (exportCell != undefined) {
-            const value =
-              cellElement.data?.unitPrice == null
-                ? ""
-                : getFormattedValue(
-                    Number.parseFloat(cellElement.data.unitPrice),
-                    false,
-                    4
-                  );
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
+            const value = cellElement.data?.unitPrice == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.unitPrice), false, 4);
+            return { ...exportCell, text: value, alignment: "right", alignmentExcel: { horizontal: "right" }, };
           } else {
-            return cellElement.data?.unitPrice == null
-              ? ""
-              : getFormattedValue(
-                  Number.parseFloat(cellElement.data.unitPrice),
-                  false,
-                  4
-                );
+            return cellElement.data?.unitPrice == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.unitPrice), false, 4);
           }
         },
       },
@@ -114,28 +99,10 @@ const PurchaseCommon: React.FC<{
           exportCell: any
         ) => {
           if (exportCell != undefined) {
-            const value =
-              cellElement.data?.netAmount == null
-                ? ""
-                : getFormattedValue(
-                    Number.parseFloat(cellElement.data.netAmount),
-                    false,
-                    4
-                  );
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
+            const value = cellElement.data?.netAmount == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.netAmount), false, 4);
+            return { ...exportCell, text: value, alignment: "right", alignmentExcel: { horizontal: "right" }, };
           } else {
-            return cellElement.data?.netAmount == null
-              ? ""
-              : getFormattedValue(
-                  Number.parseFloat(cellElement.data.netAmount),
-                  false,
-                  4
-                );
+            return cellElement.data?.netAmount == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.netAmount), false, 4);
           }
         },
       },
@@ -154,28 +121,10 @@ const PurchaseCommon: React.FC<{
           exportCell: any
         ) => {
           if (exportCell != undefined) {
-            const value =
-              cellElement.data?.quantity == null
-                ? ""
-                : getFormattedValue(
-                    Number.parseFloat(cellElement.data.quantity),
-                    false,
-                    2
-                  );
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
+            const value = cellElement.data?.quantity == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.quantity), false, 2);
+            return { ...exportCell, text: value, alignment: "right", alignmentExcel: { horizontal: "right" }, };
           } else {
-            return cellElement.data?.quantity == null
-              ? ""
-              : getFormattedValue(
-                  Number.parseFloat(cellElement.data.quantity),
-                  false,
-                  2
-                );
+            return cellElement.data?.quantity == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.quantity), false, 2);
           }
         },
       },
@@ -188,9 +137,9 @@ const PurchaseCommon: React.FC<{
         allowFiltering: true,
         width: 100,
       },
-    ],
-    [t]
+    ], [t]
   );
+
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) => {
       const value = itemInfo.value;
@@ -243,7 +192,7 @@ const PurchaseCommon: React.FC<{
         method={ActionType.POST}
         postData={{ productID: getFieldProps("batch.productID").value }}
         gridId="grd_purchaseGcc"
-         heightToAdjustOnWindowsInModal={gridHeight.windows}
+        heightToAdjustOnWindowsInModal={gridHeight.windows}
         hideDefaultExportButton={true}
         hideDefaultSearchPanel={true}
         hideGridAddButton={true}

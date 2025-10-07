@@ -18,16 +18,17 @@ interface ProductMultiBarcodeManageProps {
   multiBarcode: MultiBarcodeState;
   setMultiBarcode: React.Dispatch<React.SetStateAction<MultiBarcodeState>>;
   units: ProductUnitInputDto[];
-  productBatchID: number
+  productBatchID: number;
+  isView: boolean;
 }
 const api = new APIClient();
-export const ProductMultiBarcodeManage: React.FC<ProductMultiBarcodeManageProps> = React.memo(({multiBarcode,setMultiBarcode,units, productBatchID}) => {
+export const ProductMultiBarcodeManage: React.FC<ProductMultiBarcodeManageProps> = React.memo(({ multiBarcode, setMultiBarcode, units, productBatchID, isView }) => {
   const { t } = useTranslation("inventory");
-  const [loading,setLoading]=useState(false)
-  const [formData,setFormData] = useState({
+  const [loading, setLoading] = useState(false)
+  const [formData, setFormData] = useState({
     unitID: 0,
-    unit:"",
-    barcode:""
+    unit: "",
+    barcode: ""
   })
   const handleAdd = () => {
     if (!formData.unit || !formData.barcode) {
@@ -41,7 +42,7 @@ export const ProductMultiBarcodeManage: React.FC<ProductMultiBarcodeManageProps>
         {
           unitCode: formData.unit,
           barcode: formData.barcode,
-          unitID:formData.unitID
+          unitID: formData.unitID
         },
       ],
     }));
@@ -53,35 +54,35 @@ export const ProductMultiBarcodeManage: React.FC<ProductMultiBarcodeManageProps>
     });
   };
 
-  const handleSubmit =async()=>{
+  const handleSubmit = async () => {
     setLoading(true)
     try {
-      console.log("multibarcode",multiBarcode);
-      
+      console.log("multibarcode", multiBarcode);
+
       const response = await api.postAsync(
         Urls.productBarcode,
         multiBarcode.data.filter(x => !isNullOrUndefinedOrEmpty(x.barcode)).map((x: any) => ({
           ...x,
-          barcode:x.barcode,
+          barcode: x.barcode,
           productBatchID
         }))
       );
-      handleResponse(response,()=>{
-        setMultiBarcode((prev)=>({
-          open:false,
-          data:[]
+      handleResponse(response, () => {
+        setMultiBarcode((prev) => ({
+          open: false,
+          data: []
         }))
       })
 
     } catch (error) {
       console.error("Error loading flavors:", error);
     }
-  finally{
-    setLoading(false)
-  }
+    finally {
+      setLoading(false)
+    }
   }
 
-  const handleClear =()=>{
+  const handleClear = () => {
 
     setFormData({
       unitID: 0,
@@ -89,75 +90,76 @@ export const ProductMultiBarcodeManage: React.FC<ProductMultiBarcodeManageProps>
       barcode: "",
     });
 
-    setMultiBarcode((prev)=>({
+    setMultiBarcode((prev) => ({
       ...prev,
-      data:[]
+      data: []
     }))
 
   }
-    // Map units to options for ERPDataCombobox
-    const unitOptions = units.map((unit) => ({
-      value: unit.unitID ?? 0,
-      label: unit.unit ?? "",
-    }));
+  // Map units to options for ERPDataCombobox
+  const unitOptions = units.map((unit) => ({
+    value: unit.unitID ?? 0,
+    label: unit.unit ?? "",
+  }));
 
-    const handleRowUpdating = useCallback((e: any) => {
-      const updatedData = { ...e.oldData, ...e.newData };
-      setMultiBarcode((prev) => ({
-        ...prev,
-        data: prev.data.map((item, index) =>
-          index === e.key ? updatedData : item
-        ),
-      }));
-    }, [setMultiBarcode]);
+  const handleRowUpdating = useCallback((e: any) => {
+    const updatedData = { ...e.oldData, ...e.newData };
+    setMultiBarcode((prev) => ({
+      ...prev,
+      data: prev.data.map((item, index) =>
+        index === e.key ? updatedData : item
+      ),
+    }));
+  }, [setMultiBarcode]);
   return (
     <div className="w-full modal-content">
       <div className="flex items-end justify-center gap-4">
-         <ErpDataCombobox
-              id="unitID"
-              value={formData.unitID}
-              label="unit"
-              field={{
-                id: "unitID",
-                getListUrl: Urls.data_units,
-                labelKey: "name",
-                valueKey: "id",
-              }}
-            data={formData}
-            onChange={(e) => {
-              setFormData((prev)=>({
-                ...prev,
-                unitID: e.value,
-                unit: e.name,
-              }))
-            }}
-            // options={unitOptions}
-            customSize={"md"}
-            className="w-full"
-          />
+        <ErpDataCombobox
+          id="unitID"
+          value={formData.unitID}
+          label="unit"
+          field={{
+            id: "unitID",
+            getListUrl: Urls.data_units,
+            labelKey: "name",
+            valueKey: "id",
+          }}
+          data={formData}
+          onChange={(e) => {
+            setFormData((prev) => ({
+              ...prev,
+              unitID: e.value,
+              unit: e.name,
+            }))
+          }}
+          // options={unitOptions}
+          customSize={"md"}
+          className="w-full"
+          disabled={isView}
+        />
         <ErpInput
           id="barcode"
           value={formData.barcode}
           label="barcode"
-          onChange={(e)=>{
-            setFormData((prev)=>({
+          onChange={(e) => {
+            setFormData((prev) => ({
               ...prev,
-              barcode:e.target.value
+              barcode: e.target.value
             }))
           }}
-          required={true} 
+          required={true}
           customSize={"md"}
-            className="w-full"
-          />
-      <ERPButton
-       title="Add"
-       variant="primary"
-       startIcon="ri-add-line"
-      className="h-[2rem]  w-20"
-      onClick={handleAdd}
-      />
-       
-           
+          className="w-full"
+          disabled={isView}
+        />
+        <ERPButton
+          title="Add"
+          variant="primary"
+          startIcon="ri-add-line"
+          className="h-[2rem] w-20"
+          disabled={isView}
+          onClick={handleAdd}
+        />
       </div>
 
       <div className="w-full mt-4">
@@ -168,8 +170,7 @@ export const ProductMultiBarcodeManage: React.FC<ProductMultiBarcodeManageProps>
           showBorders={true}
           showRowLines={true}
           // onFocusedCellChanging={onFocusedCellChanging}
-          onRowUpdating={handleRowUpdating} 
-
+          onRowUpdating={handleRowUpdating}
         >
           <KeyboardNavigation
             editOnKeyPress={true}
@@ -187,7 +188,7 @@ export const ProductMultiBarcodeManage: React.FC<ProductMultiBarcodeManageProps>
             paging={false}
           />
 
-        <Column
+          <Column
             dataField="unitID"
             caption={t("unitID")}
             dataType="number"
@@ -208,7 +209,7 @@ export const ProductMultiBarcodeManage: React.FC<ProductMultiBarcodeManageProps>
             caption={t("barcode")}
             allowEditing={true}
             dataType="string"
-          
+
           />
           <Editing
             allowUpdating={true}
@@ -218,11 +219,11 @@ export const ProductMultiBarcodeManage: React.FC<ProductMultiBarcodeManageProps>
           />
         </DataGrid>
       </div>
-         <ERPFormButtons
-              onClear={handleClear}
-              isLoading={loading}
-              onSubmit={handleSubmit}
-        />
+      <ERPFormButtons
+        onClear={handleClear}
+        isLoading={loading}
+        onSubmit={handleSubmit}
+      />
     </div>
   );
 });

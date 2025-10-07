@@ -19,14 +19,15 @@ const ProductOthersIndia: React.FC<{
     value?: any
   ) => void;
   getFieldProps: (fieldId: string, type?: string) => FormField | any;
+  isView: boolean;
 }> = React.memo(
-  ({ formState, handleFieldChange, getFieldProps, handleDataChange }) => {
+  ({ formState, handleFieldChange, getFieldProps, handleDataChange, isView }) => {
     const { t } = useTranslation("inventory");
+
     const handleFieldChangeAndResetSettings = async (
       fieldId: string,
       value: any
     ) => {
-      
       const prev = getFieldProps("*");
       const pay = { ...prev.config, [fieldId]: value };
       const res = await api.postAsync(Urls.update_product_config, pay);
@@ -37,6 +38,7 @@ const ProductOthersIndia: React.FC<{
 
       handleDataChange(_data);
     };
+
     useEffect(() => {
       const fetchData = async () => {
         try {
@@ -53,9 +55,9 @@ const ProductOthersIndia: React.FC<{
           console.error("Failed to fetch product config", error);
         }
       };
-
       fetchData();
     }, []);
+
     const [activePopup, setActivePopup] = useState<string | null>(null);
     const openPopup = (popupType: string) => setActivePopup(popupType);
     const closePopup = () => setActivePopup(null);
@@ -69,17 +71,20 @@ const ProductOthersIndia: React.FC<{
               variant="secondary"
               onClick={() => openPopup("fastMoving")}
               className="flex-grow min-w-[180px] sm:flex-grow-0"
+              disabled={isView}
             />
             <ERPButton
               title={t("change_autobarcode")}
               variant="secondary"
               onClick={() => openPopup("autoBarcode")}
               className="flex-grow min-w-[180px] sm:flex-grow-0"
+              disabled={isView}
             />
           </div>
           <div className="flex flex-col flex-1 min-w-[250px] gap-2">
             <div className="flex flex-wrap gap-x-8 gap-y-2">
               <ERPCheckbox
+                disabled={isView}
                 {...getFieldProps("config.blockConvertProductNameToUpperCase")}
                 label={t("block_convert_product_name_to_upper_case")}
                 onChange={(e) =>
@@ -91,6 +96,7 @@ const ProductOthersIndia: React.FC<{
                 className="min-w-[300px] flex-1"
               />
               <ERPCheckbox
+                disabled={isView}
                 {...getFieldProps("config.calculateMarkUpValue")}
                 label={t("calculate_markup_value")}
                 onChange={(e) =>
@@ -105,6 +111,7 @@ const ProductOthersIndia: React.FC<{
 
             <div className="flex flex-wrap gap-x-8 gap-y-2">
               <ERPCheckbox
+                disabled={isView}
                 {...getFieldProps("config.showDisplayCost")}
                 label={t("show_display_cost")}
                 onChange={(e) =>
@@ -116,6 +123,7 @@ const ProductOthersIndia: React.FC<{
                 className="min-w-[250px] flex-1"
               />
               <ERPCheckbox
+                disabled={isView}
                 {...getFieldProps("config.showProductDuplicateWarning")}
                 label={t("show_product_duplicate_warning_message")}
                 onChange={(e) =>
@@ -130,6 +138,7 @@ const ProductOthersIndia: React.FC<{
 
             <div className="flex flex-wrap gap-x-8 gap-y-2">
               <ERPCheckbox
+                disabled={isView}
                 {...getFieldProps("config.showProductDetailesAfterSave")}
                 label={t("show_product_details_after_save")}
                 onChange={(e) =>
@@ -141,6 +150,7 @@ const ProductOthersIndia: React.FC<{
                 className="min-w-[250px] flex-1"
               />
               <ERPCheckbox
+                disabled={isView}
                 {...getFieldProps("config.capitalizationForProductName")}
                 label={t("capitalization_for_product_name")}
                 onChange={(e) =>
@@ -154,11 +164,13 @@ const ProductOthersIndia: React.FC<{
             </div>
             <div className="flex flex-wrap gap-x-8 gap-y-2">
               <ERPCheckbox
+                disabled={isView}
                 {...getFieldProps("config.showMultiBarcodeOnSave")}
                 label={t("show_multibacode_onsave")}
                 onChange={(data) => handleFieldChangeAndResetSettings("showMultiBarcodeOnSave", data.target.checked)}
               />
               <ERPCheckbox
+                disabled={isView}
                 {...getFieldProps("config.showFlavourOnSave")}
                 label={t("show_flavour_onsave")}
                 onChange={(data) => handleFieldChangeAndResetSettings("showFlavourOnSave", data.target.checked)}

@@ -14,6 +14,7 @@ import { useLocation } from "react-router-dom";
 import RegisterFilter, {
   RegisterFilterInitialState,
 } from "./register-report-filter";
+import { isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
 
 interface RegisterProps {
   gridHeader: string;
@@ -1676,7 +1677,8 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         ) {
           return !clientSession.isAppGlobal;
         }
-        if(["referenceNumber"].includes(column.dataField??"")){//only for nahla
+        if (["referenceNumber"].includes(column.dataField ?? "")) {
+          //only for nahla
           return userSession.dbIdValue == "543140180640";
         }
         if (
@@ -1699,7 +1701,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
             "additionalCess",
             "gstNo",
             "priceCategoryID",
-            "salesPrice"
+            "salesPrice",
           ].includes(column.dataField ?? "")
         ) {
           return clientSession.isAppGlobal;
@@ -1737,21 +1739,6 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       return getFormattedValue(parseFloat(value)) || "0";
     };
   }, [getFormattedValue]);
-  const customizeSummaryRow4 = useMemo(() => {
-    return (itemInfo: { value: any }) => {
-      const value = itemInfo.value;
-      if (
-        value === null ||
-        value === undefined ||
-        value === "" ||
-        isNaN(value)
-      ) {
-        return "0";
-      }
-      return getFormattedValue(parseFloat(value), false, 4) || "0";
-    };
-  }, [getFormattedValue]);
-
   const customizeSummaryRowString = useMemo(() => {
     return (itemInfo: { value: any }) => {
       const value = itemInfo.value;
@@ -1798,7 +1785,19 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         column: "vat",
         summaryType: "sum",
         valueFormat: "currency",
-        customizeText: customizeSummaryRow4,
+        customizeText: (itemInfo: { value: any }) => {
+          return (
+            getFormattedValue(
+              parseFloat(
+                getFormattedValue(
+                  isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value
+                ).replace(/,/g, "") || "0"
+              ),
+              false,
+              4
+            ) || "0"
+          );
+        },
       },
       {
         column: "stdPurchasePrice",

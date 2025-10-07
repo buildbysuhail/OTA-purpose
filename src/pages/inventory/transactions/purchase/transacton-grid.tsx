@@ -9,7 +9,7 @@ import ERPDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import {  TransactionBase,  transactionRoutes,} from "../../../../components/common/content/transaction-routes";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const toggleTransactionPopup = (payload: {
   isOpen: boolean;
@@ -30,6 +30,36 @@ const TransactionGrid: React.FC<{
   const { getFormattedValue } = useNumberFormat();
   const { t } = useTranslation("transaction");
   const [reload, setReload] = useState<boolean>(true);
+  const location = useLocation();
+
+  // Normalize and map row data to route/query payload
+  const buildTransactionData = (row: any) => {
+    const transactionMasterID = parseInt(row.invTransactionMasterID || "0", 10);
+    const vchtype = row.voucherType;
+    const voucherform = row.formType ?? row.voucherForm;
+    const prefix = row.voucherPrefix;
+    const vchno = row.voucherNumber;
+    const financialYearID = parseInt(row.financialYearID || "0", 10);
+    const tr = transactionRoutes.find((x) => x.voucherType === vchtype);
+
+    if (parseInt(vchno, 10) > 0 && tr) {
+      return {
+        transactionMasterID,
+        formType: voucherform,
+        voucherPrefix: prefix,
+        voucherType: vchtype,
+        financialYearID,
+        voucherNo: parseInt(vchno, 10),
+        formCode: tr.formCode,
+        transactionType: tr.transactionType,
+        transactionBase: tr.transactionBase,
+        title: tr.title,
+        drCr: tr.drCr,
+      };
+    }
+    return null;
+  };
+
   const columns: DevGridColumn[] = useMemo(
     () => [
       {
@@ -112,39 +142,35 @@ const TransactionGrid: React.FC<{
         showInPdf: true,
         bold: true,
         cssClass: "centered-header",
-        cellRender: (cellInfo) => {
-          const row = cellInfo.data;
-          const transactionMasterID = parseInt(row.invTransactionMasterID || "0", 10);
-          const vchtype = row.voucherType;
-          const voucherform = row.formType;
-          const prefix = row.voucherPrefix;
-          const vchno = row.voucherNumber;
-          const financialYearID = parseInt(row.financialYearID || "0", 10);
+        // Important: keep route path shape and add export guards
+        // DevExtreme exporter passes exportCell; a global flag can be set for PDF
+        cellRender: (
+          cellInfo: any,
+          _a?: any,
+          _b?: any,
+          exportCell?: any
+        ) => {
+          const row = cellInfo?.data ?? {};
+          const tx = buildTransactionData(row);
+          const value = cellInfo?.value ?? row?.voucherNumber ?? "";
+          const isExporting =
+            !!exportCell || Boolean((window as any).__DX_PDF_EXPORTING__);
 
-          const tr = transactionRoutes.find((x) => x.voucherType === vchtype);
-
-          let transactionData: any = {};
-          if (parseInt(vchno, 10) > 0) {
-            transactionData = {
-              transactionMasterID,
-              formType: voucherform,
-              voucherPrefix: prefix,
-              voucherType: vchtype,
-              financialYearID,
-              formCode: tr?.formCode,
-              transactionType: tr?.transactionType,
-              transactionBase: tr?.transactionBase,
-              title: tr?.title,
-              drCr: tr?.drCr,
-            };
+          if (!tx) {
+            return value;
           }
-          // Convert object to query string
+
           const queryString = new URLSearchParams(
-            Object.entries(transactionData).reduce((acc, [key, value]) => {
-              acc[key] = String(value ?? "");
+            Object.entries(tx).reduce((acc, [k, v]) => {
+              acc[k] = String(v ?? "");
               return acc;
             }, {} as Record<string, string>)
           ).toString();
+
+          if (isExporting) {
+            // During Excel/PDF export, return plain text to avoid router/DOM usage
+            return value;
+          }
 
           return (
             <div style={{ textAlign: "center" }}>
@@ -152,15 +178,16 @@ const TransactionGrid: React.FC<{
                 to={`/${TransactionBase.Purchase}/${transactionType}/${cellInfo.value}?${queryString}`}
                 style={{ color: "#1b6de0", textDecoration: "underline" }}
                 onClick={() => {
-                  console.log("cellInfo", cellInfo);
-                  console.log("transactionData", transactionData);
+                  // Optional debugging retained from last code
+                  // console.log("cellInfo", cellInfo);
+                  // console.log("tx", tx);
                 }}
               >
-                {cellInfo.value}
+                {value}
               </Link>
             </div>
           );
-        }
+        },
       },
       {
         dataField: "purchaseInvoiceNumber",
@@ -667,18 +694,20 @@ const TransactionGrid: React.FC<{
                   invTransactionMasterID:
                     cellElement?.data?.invTransactionMasterID,
                   transactionType: transactionType,
-                }
+                },
               }}
             />
           );
         },
       },
     ],
-    [t, dispatch]
+    [t, dispatch, transactionType]
   );
+
   useEffect(() => {
     setReload(true);
   }, [location.pathname]);
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">

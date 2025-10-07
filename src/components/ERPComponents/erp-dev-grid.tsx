@@ -1460,8 +1460,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       [onExporting, gridId, preferences, gridCols, header]
     );
 
-    const handlePrintPdf = async () => {
-      if (gridRef.current) {
+  const handlePrintPdf = async () => {
+    if (gridRef.current) {
+      // Mark export mode ON so cell renderers can degrade without using <Link>
+      (window as any).__DX_PDF_EXPORTING__ = true;
+      try {
         const gridInstance = gridRef.current.instance();
         const doc = await generatePdf(gridInstance, true);
         doc?.setProperties({ title: gridHeader });
@@ -1476,15 +1479,26 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             };
           }
         }
+      } finally {
+        // Always turn export mode OFF
+        (window as any).__DX_PDF_EXPORTING__ = false;
       }
-    };
+    }
+  };
 
     const handlePrintMobilePdf = async () => {
       if (gridRef.current) {
-        const gridInstance = gridRef.current.instance();
-        const doc = await generatePdf(gridInstance, true);
-        doc?.autoPrint();
-        doc?.save(gridHeader);
+        // Mark export mode ON so cell renderers can degrade without using <Link>
+        (window as any).__DX_PDF_EXPORTING__ = true;
+        try {
+          const gridInstance = gridRef.current.instance();
+          const doc = await generatePdf(gridInstance, true);
+          doc?.autoPrint();
+          doc?.save(gridHeader);
+        } finally {
+          // Always turn export mode OFF
+          (window as any).__DX_PDF_EXPORTING__ = false;
+        }
       }
     };
 

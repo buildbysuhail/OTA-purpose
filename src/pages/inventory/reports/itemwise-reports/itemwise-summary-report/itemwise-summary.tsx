@@ -244,7 +244,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({
           }
         },
       },
-  {
+      {
         dataField: "totalTaxAmount",
         caption: t("total_tax"),
         dataType: "number",
@@ -340,15 +340,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({
           }
         },
       },
-      {
-        dataField: "warehouseName",
-        caption: t("warehouse"),
-        dataType: "string",
-        allowSearch: true,
-        allowFiltering: true,
-        visible: false,
-        width: 100,
-      },
+
       {
         dataField: "branchName",
         caption: t("branch_name"),
@@ -402,7 +394,15 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({
         width: 100,
         showInPdf: true,
       },
-    
+      {
+        dataField: "warehouseName",
+        caption: t("warehouse"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        visible: false,
+        width: 100,
+      },
     ];
     // Filter columns based on the `visible` property
     return baseColumns.filter((column) => {
@@ -428,7 +428,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({
       return true;
     });
     // .map((column) => {
-    //   
+    //
     //   if (column.dataField == "groupName") {
     //     column.groupIndex = filter.isCategoryWise == true ? undefined : 0 ;
     //   }
@@ -514,7 +514,6 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({
 
   const dataGridRef = useRef<any>(null);
   useEffect(() => {
-    
     const gridInstance = dataGridRef.current?.instance();
     if (gridInstance) {
       gridInstance.clearGrouping(); // Explicitly clear existing grouping
@@ -537,7 +536,6 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="px-4 pt-4 pb-2">
             <div className="grid grid-cols-1 gap-3">
-              
               <ErpDevGrid
                 key={key}
                 ref={dataGridRef}
@@ -546,9 +544,9 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({
                   filtering: false,
                   paging: false,
                   sorting: false,
-                  grouping:false,
-                  groupPaging:false,
-                  summary:false
+                  grouping: false,
+                  groupPaging: false,
+                  summary: false,
                 }}
                 columns={columns}
                 // moreOption

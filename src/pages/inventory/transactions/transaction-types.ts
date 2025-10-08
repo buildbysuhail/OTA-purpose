@@ -529,9 +529,9 @@ export interface TransactionFormState {
   printPreview: boolean;
   printCheque: boolean;
   amountInWords: string;
-  template?: any;
-  templates?: [];
-  templatesData?: TemplateState<TransactionDetail>[];
+  template23?: any;
+  templatesas?: [];
+  templatesDataas?: TemplateState<TransactionDetail>[];
   userConfig?: UserConfig;
   formElements: FormElementsState;
   openUnsavedPrompt?: boolean;

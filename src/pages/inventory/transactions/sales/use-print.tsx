@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { APIClient } from "../../../../helpers/api-client";
 import { useUserRights } from "../../../../helpers/user-right-helper";
 import { RootState } from "../../../../redux/store";
@@ -8,46 +8,24 @@ import {
   isNullOrUndefinedOrEmpty,
   sanitizeDataAdvanced,
 } from "../../../../utilities/Utils";
-import { printCheque_AccTransaction } from "./print-trans-service";
 import {
   BarcodeLabel,
-  TransactionData,
   TransactionDetail,
   TransactionFormState,
 } from "../transaction-types";
-import { logUserAction } from "../../../../redux/slices/user-action/thunk";
 import { useDispatch } from "react-redux";
 import {
   formStateHandleFieldChange,
   formStateHandleFieldChangeKeysOnly,
-  formStateMasterHandleFieldChange,
-  templatesData,
 } from '../reducer';
 import { DeepPartial } from "redux";
-import { pdf, BlobProvider } from "@react-pdf/renderer";
-import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
-import { DesignerElementType, TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
-import { customJsonParse, parseTemplateContent } from "../../../../utilities/jsonConverter";
 import Urls from "../../../../redux/urls";
 import VoucherType from "../../../../enums/voucher-types";
-import AdviceTemplate from "../../../InvoiceDesigner/DownloadPreview/advice-template";
 import { useTranslation } from "react-i18next";
 import { initialProductData } from "../transaction-type-data";;
-import DownloadBarcodePreview, { BarcodePDFDocument } from "../../../LabelDesigner/download-preview-barcode";
-import ERPModal from "../../../../components/ERPComponents/erp-modal";
-import { generateBarcodeDataUrl, generateBarcodePages } from "../../../../utilities/barcode";
-import {
-  JSPrintManager,
-  WSStatus,
-  ClientPrintJob,
-  InstalledPrinter,
-  DefaultPrinter,
-  PrintFilePDF,
-  FileSourceType
-} from "jsprintmanager";
-import { toggleSelectPrinterPopup } from "../../../../redux/slices/popup-reducer";
 import { useDirectPrint } from "../../../../utilities/hooks/use-direct-print";
+import { addTemplateToStore, fetchDefaultTemplateFromApi } from "../../../use-print";
 
 const api = new APIClient();
 export const usePrint = () => {
@@ -68,82 +46,14 @@ export const usePrint = () => {
   const { hasRight } = useUserRights();
   const voucherTypeSet = new Set(Object.values(VoucherType));
 
-  const fetchDefaultTemplates = async (voucherType: any) => {
-    // Create a set of all possible VoucherType values
-    try {
-      const res = await api.getAsync(
-        `${Urls.default_template}?template_group=${voucherType}`
-      );
-      const cc: TemplateState<unknown> = parseTemplateContent(res.content);
-      const _template = {
-        ...cc,
-        id: res.id,
-        background_image: res?.payload?.data?.background_image as
-          | string
-          | undefined,
-        background_image_header: res?.payload?.data?.background_image_header as
-          | string
-          | undefined,
-        background_image_footer: res?.payload?.data?.background_image_footer as
-          | string
-          | undefined,
-        signature_image: res?.payload?.data?.signature_image as
-          | string
-          | undefined,
-        branchId: res.branchId,
-        content: res.content,
-        isCurrent: res.isCurrent,
-        templateGroup: res.templateGroup,
-        templateKind: res.templateKind,
-        templateName: res.templateName,
-        templateType: res.templateType,
-        thumbImage: res.thumbImage as string | undefined,
-      };
-
-      dispatch(templatesData(_template));
-
-      const template = formState.templatesData?.find(
-        (item) => item.templateGroup === voucherType
-      );
-      if (voucherTypeSet.has(voucherType)) {
-        dispatch(
-          formStateHandleFieldChange({ fields: { template: _template } })
-        );
-      }
-
-      return _template;
-    } catch (error) {
-      console.error("Error fetching Default templates:", error);
-    }
-  };
+ 
 
   const printVoucher = async (
     setIsPrintModalOpen?: any,
     voucherType?: any,
     voucher?: TransactionFormState
   ) => {
-    const existingTemplate = formState.templatesData?.find(
-      (template: any) => template.templateGroup === voucherType
-    );
-    let template = formState.template;
-
-    if (formState.template == undefined || formState.template == null) {
-      if (existingTemplate) {
-        dispatch(
-          formStateHandleFieldChange({ fields: { template: existingTemplate } })
-        );
-        template = existingTemplate;
-      } else {
-        template = await fetchDefaultTemplates(voucherType);
-      }
-    }
-
-    // If template is valid, proceed with printing
-    if (formState.printPreview) {
-      setIsPrintModalOpen(true);
-    } else {
-      // await handleDirectPrint(template);
-    }
+   
   };
 
   const checkReprintAuthorization = async (

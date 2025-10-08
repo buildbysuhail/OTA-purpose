@@ -30,7 +30,7 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
       templateImages,
       setTemplateImages,
       maxHeight,
-      templateData,
+      activeTemplate,
       stableTemplateProps,
       manageSaveAccTemplate,
       dispatch,
@@ -90,7 +90,7 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
             <PropertiesDesigner
               templateGroup={templateGroup}
               tempImages={{ templateImages, setTemplateImages }}
-              propertiesState={templateData?.propertiesState}
+              propertiesState={activeTemplate?.propertiesState}
               onChange={(propertiesState) => dispatch(setTemplatePropertiesState(propertiesState))}
             />
           )}

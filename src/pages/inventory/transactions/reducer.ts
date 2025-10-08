@@ -145,18 +145,18 @@ const InvTransactionSlice = createSlice({
 
     // Inside the createSlice, update the reducer
     templatesData: (state, action: PayloadAction<TemplateState<unknown>>) => {
-      if (!state.templatesData) {
-        state.templatesData = [];
-      }
+      // if (!state.templatesData) {
+      //   state.templatesData = [];
+      // }
 
-      // Only add the template if it doesn't already exist
-      if (
-        !state.templatesData.some(
-          (template) => template.templateGroup === action.payload.templateGroup
-        )
-      ) {
-        state.templatesData.push(action.payload);
-      }
+      // // Only add the template if it doesn't already exist
+      // if (
+      //   !state.templatesData.some(
+      //     (template) => template.templateGroup === action.payload.templateGroup
+      //   )
+      // ) {
+      //   state.templatesData.push(action.payload);
+      // }
     },
     themeChangeCountdownTick: (
       state, action: PayloadAction<number>

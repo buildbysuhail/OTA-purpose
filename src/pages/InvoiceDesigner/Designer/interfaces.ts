@@ -33,9 +33,11 @@ type TemplateKindType =
     signatureImage?: string;
     content?: string;
     isCurrent?: boolean;
+    formType?:string|null;
+    customerType?:string|null;
   }
 export interface TemplateState<T> {
-  id?: string | number | undefined;
+  id?: number | undefined ;
   thumbImage?: string;
   background_image?: string;
   background_image_header?: string;
@@ -54,6 +56,8 @@ export interface TemplateState<T> {
   templateGroup?: string;
   templateName?: string;
   templateDescription?: string;
+  formType?:string;
+  customerType?:string;
       
 }
 export interface HistoryComponent {
@@ -252,6 +256,8 @@ export interface PropertiesState {
   template_kind?: TemplateKindType;
   template_group?: VoucherType | string;
   language_prefer?:"Eng"|"Arb";
+  template_formType?:string;
+  template_customerType?:string;
   ask_start_index?:boolean;
   templateName?: string;
   pageSize?: string;

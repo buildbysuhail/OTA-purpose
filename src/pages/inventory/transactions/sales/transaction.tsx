@@ -29,7 +29,6 @@ import {
 } from "../../../../utilities/Utils";
 import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
 import ERPResizableSidebar from "../../../../components/ERPComponents/erp-resizable-sidebar";
-import TemplatesView from "./templates";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { useUserRights } from "../../../../helpers/user-right-helper";
 import { Info, X } from "lucide-react";
@@ -80,6 +79,8 @@ import BillWisePopup from "../../../transaction-base/billwise-popup";
 import { formStateHandleFieldChangeKeysOnly, resetState, formStateHandleFieldChange, updateFormElement } from "../reducer";
 import { initialUserConfig, transactionInitialData, TransactionFormStateInitialData, initialFormElements, initialInventoryTotals } from "../transaction-type-data";
 import { TransactionProps, UserConfig, TransactionDetail, TransactionFormState, TransactionData, SummaryItems, GridQtyFactors, ColumnModel } from "../transaction-types";
+import { getTemplatesFromStore } from "../../../use-print";
+import TemplatesView from "../../../transaction-base/templates";
 interface BilledItem {
   id?: number;
   name: string;
@@ -635,9 +636,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
       }
       
 
-      const templates = formState.templates;
-      const templatesData = formState.templatesData;
-      const template = formState.template;
       if (!isInvoker) {
         const voucher: TransactionData = transactionInitialData;
         _formState = {
@@ -875,16 +873,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           }
         }
       }
-      _formState.templates = templates;
-      _formState.templatesData = templatesData;
-      const _template = templatesData?.find(
-        (x) => x.templateGroup == _formState.transaction.master.voucherType
-      );
-      if (_template != undefined) {
-        _formState.template = _template;
-      } else {
-        _formState.template = null;
-      }
+      
       const editableColumn = _formState.gridColumns?.find(
         (col) => col.visible !== false && col.dataField != null && col.allowEditing == true && col.readOnly !== true
       );
@@ -909,19 +898,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     };
     initializeFormElements();
   }, [voucherType, voucherPrefix, formType]);
-  const selectTemplates = useCallback(async () => {
-    setTemplateLoad(true);
-    setIsTemplateOpen(true);
-    try {
-      const response = await api.getAsync(
-        `${Urls.templates}?template_group=${voucherType}`
-      );
-      dispatch(formStateHandleFieldChange({ fields: { templates: response } }));
-    } catch (error) {
-    } finally {
-      setTemplateLoad(false);
-    }
-  }, []);
+
   const onProcessSelected = useCallback(async (masterIds: string, branchIDs: string, voucherNumbers: string, referenceNumber: string,loadType: string = "GRN", voucherType: string) => {
     if (masterIds.length > 0) {
 
@@ -1621,7 +1598,6 @@ debugger;
                     unlockVoucher={unlockVoucher}
                     setShowValidation={setShowValidation}
                     showValidation={showValidation}
-                    selectTemplates={selectTemplates}
                     goToPreviousPage={goToPreviousPage}
                     isHistorySidebarOpen={isHistorySidebarOpen}
                     setIsPrintModalOpen={setIsPrintModalOpen}
@@ -1830,7 +1806,6 @@ debugger;
                       unlockVoucher={unlockVoucher}
                       setShowValidation={setShowValidation}
                       showValidation={showValidation}
-                      selectTemplates={selectTemplates}
                       goToPreviousPage={goToPreviousPage}
                       isHistorySidebarOpen={isHistorySidebarOpen}
                       setIsPrintModalOpen={setIsPrintModalOpen}
@@ -1989,7 +1964,7 @@ debugger;
             ))}
         {/* footer ends here */}
 
-        {formState.transaction && formState.template && (
+        {formState.transaction && (
           <ERPModal
             isOpen={formState.printPreview && isPrintModalOpen}
             title={t("template")}
@@ -2142,7 +2117,7 @@ debugger;
           minWidth={350}
           isOpen={isTemplateOpen}
           setIsOpen={setIsTemplateOpen}
-          children={<TemplatesView setIsOpen={setIsTemplateOpen} />}
+          children={<TemplatesView voucherType={formState.transaction.master.voucherType}  setIsOpen={() => {}} />}
         />
 
         <ERPResizableSidebar

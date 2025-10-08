@@ -1,6 +1,6 @@
 import { AccTransactionFormState, AccUserConfig, AccVoucherElementProps } from "../acc-transaction-types";
 import { accFormStateHandleFieldChange } from "../reducer";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import React from "react";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
@@ -8,6 +8,9 @@ import AccExcelImport from "../acc-Excel-Import";
 import { AccTransactionUserConfig } from "../acc-transaction-user-config";
 import { EllipsisVertical, KeyRound, Pencil, Printer, RefreshCw, Trash2, ChevronUp, BadgePlusIcon, Eraser, X, FileUp, History, AlignHorizontalSpaceBetween, } from "lucide-react";
 import { useAppState } from "../../../../utilities/hooks/useAppState";
+import { APIClient } from "../../../../helpers/api-client";
+import Urls from "../../../../redux/urls";
+import { setTemplate } from "../../../../redux/slices/templates/reducer";
 
 interface AccHeaderProps extends AccVoucherElementProps {
   loadTemporaryRows: () => Promise<void>;
@@ -25,11 +28,10 @@ interface AccHeaderProps extends AccVoucherElementProps {
   unlockVoucher: () => void;
   setShowValidation: React.Dispatch<React.SetStateAction<boolean>>;
   showValidation: boolean;
-  selectTemplates: () => void;
   goToPreviousPage: () => void;
   isHistorySidebarOpen: boolean;
   phone?: boolean;
-  printPaymentReceiptAdvice: (voucher?: AccTransactionFormState, voucherType?: any) => Promise<void>
+  printPaymentReceiptAdvice: (voucherType?: any) => Promise<void>
 }
 
 const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
@@ -54,7 +56,6 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
       unlockVoucher,
       setShowValidation,
       showValidation,
-      selectTemplates,
       goToPreviousPage,
       isHistorySidebarOpen,
       phone = false,
@@ -90,7 +91,11 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
         document.removeEventListener("mousedown", handleClickOutside);
       };
     }, []);
-
+    const selectTemplates = useCallback(async () => {
+      dispatch(
+        accFormStateHandleFieldChange({ fields: { templateChooserModal: true } })
+      );
+    }, [formState.transaction.master?.voucherType]);
     const handleFieldChange = (field: keyof AccUserConfig, value: any) => {
       const updatedUserConfig = {
         ...formState.userConfig,
@@ -205,7 +210,7 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
               <nav className="w-full dark:bg-dark-bg dark:text-dark-text bg-gray-100 text-black">
                 <ul className="space-y-1">
                   <li>
-                    <button className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-400 hover:text-black transition-colors rounded-sm" onClick={(e) => { printPaymentReceiptAdvice(formState, voucherType); }}>
+                    <button className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-400 hover:text-black transition-colors rounded-sm" onClick={(e) => { printPaymentReceiptAdvice( voucherType,); }}>
                       <Printer className="h-4 w-4" />
                       <span>{t("print_payment_advise")}</span>
                     </button>

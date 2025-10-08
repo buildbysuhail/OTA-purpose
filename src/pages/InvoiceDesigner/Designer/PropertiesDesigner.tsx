@@ -16,6 +16,7 @@ import { useTranslation } from "react-i18next";
 import { TemplateImagesTypes } from "../LandingFolder/InvoiceDesignerLanding";
 import { RootState } from "../../../redux/store";
 import { AccessPrinterList } from "../utils/get_printers";
+import Urls from "../../../redux/urls";
 
 interface PropertiesDesignerProps {
   propertiesState?: PropertiesState;
@@ -162,6 +163,50 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             </>
           )
         }
+        <div className="flex gap-1">
+        <ERPDataCombobox
+          id="template_formType"
+          field={{
+            id: "template_formType",
+            // getListUrl: Urls.data_salesRoute,
+            valueKey: "value",
+            labelKey: "label",
+          }}
+          defaultValue={propertiesState?.orientation ?? "Portrait"}
+          value={propertiesState?.template_formType}
+          data={propertiesState}
+          onChangeData={(data: any) => {
+            onChange?.({ ...propertiesState, template_formType: data.template_formType })
+          }}
+          options={[
+            { label: " ", value: " " },
+            { label: " ", value: " " },
+          ]}
+          label={t("from_type")}
+        />
+
+          <ERPDataCombobox
+          id="template_customerType "
+          field={{
+            id: "template_customerType ",
+            valueKey: "value",
+            labelKey: "label",
+          }}
+          defaultValue={propertiesState?.template_customerType }
+          value={propertiesState?.template_customerType }
+          data={propertiesState}
+          onChangeData={(data: any) => {
+            onChange?.({ ...propertiesState, template_customerType : data.template_customerType  })
+          }}
+          options={[
+            { label: "B2B", value: "B2B" },
+            { label: "B2C", value: "B2C" },
+            { label: "INT", value: "INT" },
+            { label: " ", value: " " },
+          ]}
+          label={t("customer_type")}
+        />      
+        </div>
         <ERPDataCombobox
           id="orientation"
           field={{

@@ -718,7 +718,6 @@ export const initialPrintMasterDto: PrintMasterDto = {
   totDiscount: 0,
   empIncentive: 0,
   commonNarration: "",
-  formType: "",
   debitNoteTransID: 0,
   creditNoteTransID: 0,
   currencyID: 0,

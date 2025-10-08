@@ -1,56 +1,71 @@
 'use client'
-import { Dispatch, SetStateAction, useCallback, useState } from 'react'
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
 import { ChevronRight, X, CheckCircle2, AlertTriangle} from 'lucide-react'
 import { useTranslation } from 'react-i18next';
 import { PlusIcon, TrashIcon, PencilIcon, SparklesIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from 'react-router-dom';
-import { RootState } from '../../../redux/store';
-import { useAppSelector } from '../../../utilities/hooks/useAppDispatch';
-import { APIClient } from '../../../helpers/api-client';
-import Urls from '../../../redux/urls';
-import { useDispatch } from 'react-redux';
-import { accFormStateHandleFieldChange } from './reducer';
-import { handleResponse } from '../../../utilities/HandleResponse';
-import { TemplateState } from '../../InvoiceDesigner/Designer/interfaces';
-import {  parseTemplateContent } from '../../../utilities/jsonConverter';
+import { RootState } from '../../redux/store';
+import { useAppSelector } from '../../utilities/hooks/useAppDispatch';
+import { APIClient } from '../../helpers/api-client';
+import Urls from '../../redux/urls';
+import { useDispatch, useSelector } from 'react-redux';
+import { accFormStateHandleFieldChange } from '../accounts/transactions/reducer';
+import { handleResponse } from '../../utilities/HandleResponse';
+import { TemplateState } from '../InvoiceDesigner/Designer/interfaces';
+import { addTemplateToStore, fetchTemplateFromApiById } from '../use-print';
+import { isNullOrUndefinedOrEmpty } from '../../utilities/Utils';
 
 interface TemplatesProps {
-  setIsOpen: Dispatch<SetStateAction<boolean>>; 
+  setIsOpen: () => void; 
+  voucherType: string;
 }
 const api = new APIClient();
-export default function TemplatesView ({ setIsOpen}: TemplatesProps) {
+export default function TemplatesView ({ setIsOpen, voucherType}: TemplatesProps) {
 const { t } = useTranslation("system");
-const navigate = useNavigate();
-const dispatch = useDispatch();
-const templates = useAppSelector((x:RootState) =>x?.AccTransaction?.templates)
+const [templates, setTemplate] =useState<[]>([])
+const [templateLoad, setTemplateLoad] = useState(false);
 
-const loadTemplateId = useCallback(async(template: TemplateState<unknown>) => {
+useEffect(() => {
+  const fetchTemplates = async () => {
     try {
-    const res = await api.getAsync(`${Urls.templates}${template.id}`);
-    let cc: TemplateState<unknown> = parseTemplateContent(res.content)
-    const _template = {
-      ...cc,
-      id: res.id,
-      background_image: res?.payload?.data?.background_image as string | undefined,
-      background_image_header: res?.payload?.data?.background_image_header as string | undefined,
-      background_image_footer: res?.payload?.data?.background_image_footer as string | undefined,
-      signature_image: res?.payload?.data?.signature_image as string | undefined,
-      branchId: res.branchId,
-      content: res.content,
-      isCurrent: res.isCurrent,
-      templateGroup: res.templateGroup,
-      templateKind: res.templateKind,
-      templateName: res.templateName,
-      templateType: res.templateType,
-      thumbImage: res.thumbImage as string | undefined,
+      setTemplateLoad(true)
+      const api = new APIClient();
+      const response = await api.getAsync(
+        `${Urls.templates}?template_group=${voucherType}`
+      );
+      setTemplate(response);
+    } catch (error) {
+      console.error("Error fetching templates:", error);
+    }
+    finally {
+      
+      setTemplateLoad(false)
+    }
   };
 
-        dispatch(accFormStateHandleFieldChange({fields:{template:_template}}));
-        setIsOpen(false)
+  fetchTemplates();
+}, [voucherType]); // Add dependency if value can change
+
+const loadTemplateId = useCallback(
+  async (template: TemplateState<unknown> | null) => {
+    try {
+      if (!template || isNullOrUndefinedOrEmpty(template.id)) return null;
+
+      const _template = await fetchTemplateFromApiById(template.id);
+      if (!_template) {
+        console.warn("Template not found or failed to parse.");
+        return;
+      }
+
+      addTemplateToStore(_template);
+      setIsOpen();
+    } catch (error) {
+      console.error(error);
     }
-    catch (error) {
-    }
-    }, [])
+  },
+  []
+);
+
 
 
   return (
@@ -58,7 +73,7 @@ const loadTemplateId = useCallback(async(template: TemplateState<unknown>) => {
       {/* Header */}
       <div className="flex items-center justify-between mb-6 sticky top-0  ml-[5px] dark:!bg-dark-bg  bg-[#f9fafb] h-20 p-4 z-50">
        <h1 className=" font-medium text-xl dark:text-dark-text  capitalize">{t("templates")}</h1>
-        <button className="dark:text-dark-text text-gray-500 dark:hover:text-dark-text  hover:text-gray-700" onClick={() => { setIsOpen(false)}} >
+        <button className="dark:text-dark-text text-gray-500 dark:hover:text-dark-text  hover:text-gray-700" onClick={setIsOpen} >
           <X className="h-5 w-5" />
         </button>
       </div>

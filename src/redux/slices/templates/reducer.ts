@@ -43,7 +43,7 @@ const templateSlice = createSlice({
     },
     setTemplateId: (
       state,
-      action: PayloadAction<string | number | undefined>
+      action: PayloadAction<number | undefined>
     ) => {
       state.activeTemplate.id = action.payload;
     },

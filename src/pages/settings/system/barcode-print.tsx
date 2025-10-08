@@ -4,7 +4,7 @@ import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import { toggleCounterPopup } from "../../../redux/slices/popup-reducer";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
-import { useAppDispatch, useAppSelector } from "../../../utilities/hooks/useAppDispatch";
+import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { useTranslation } from "react-i18next";
 import ERPInput from "../../../components/ERPComponents/erp-input";
@@ -17,9 +17,9 @@ import SystemSettingsApi from "./system-apis";
 import DownloadBarcodePreview from "../../LabelDesigner/download-preview-barcode";
 import { APIClient } from "../../../helpers/api-client";
 import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
-import { customJsonParse, parseTemplateContent } from "../../../utilities/jsonConverter";
 import { generateBarcodePages } from "../../../utilities/barcode";
 import { useDirectPrint } from "../../../utilities/hooks/use-direct-print";
+import { fetchTemplateFromApiById } from "../../use-print";
 
 interface BarcodeFormData {
   formBcode: number;
@@ -151,24 +151,24 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
 
 
   const [gridHeight, setGridHeight] = useState<{
-      mobile: number;
-      windows: number;
-    }>({ mobile: 500, windows: 500 });
+    mobile: number;
+    windows: number;
+  }>({ mobile: 500, windows: 500 });
 
-      useEffect(() => {
-        let gridHeightMobile = modalHeight - 500;
-        let gridHeightWindows =  modalHeight - 490;
-        setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
-      }, [isMaximized, modalHeight]);
+  useEffect(() => {
+    let gridHeightMobile = modalHeight - 500;
+    let gridHeightWindows = modalHeight - 490;
+    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+  }, [isMaximized, modalHeight]);
 
-    const columnsPerRow = Number(template?.barcodeState?.labelState?.columnsPerRow) ?? 1;
-    
+  const columnsPerRow = Number(template?.barcodeState?.labelState?.columnsPerRow) ?? 1;
+
   const rowsPerPage = Number(template?.barcodeState?.labelState?.rowsPerPage) ?? 1;
 
   // 2) memoize pages
   const pages = useMemo(
     () => generateBarcodePages(data ?? [], columnsPerRow, rowsPerPage),
-    [data, columnsPerRow, rowsPerPage,template]
+    [data, columnsPerRow, rowsPerPage, template]
   );
 
 
@@ -211,30 +211,17 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
   };
 
   const handleComboboxChange = async (id: string, data: any) => {
-    
+
     switch (id) {
       case 'labelDesign':
         setLoadingTemplate(true);
         setBarcodeDesc((prev: any) => ({ ...prev, data: { ...prev.data, labelDesign: data?.labelDesign } }));
         const res = data?.labelDesign != undefined ? await api.getAsync(`${Urls.templates}${data?.labelDesign}`) : [];
-         let cc: TemplateState<unknown> = parseTemplateContent(res.content);
-        const _template = {
-        ...cc,
-        id: res.id,
-        background_image: res?.payload?.data?.background_image as string | undefined,
-        background_image_header: res?.payload?.data?.background_image_header as string | undefined,
-        background_image_footer: res?.payload?.data?.background_image_footer as string | undefined,
-        signature_image: res?.payload?.data?.signature_image as string | undefined,
-        branchId: res.branchId,
-        // content: res.content,
-        isCurrent: res.isCurrent,
-        templateGroup: res.templateGroup,
-        templateKind: res.templateKind,
-        templateName: res.templateName,
-        templateType: res.templateType,
-        thumbImage: res.thumbImage as string | undefined,
-      }
-        setTemplate(_template);
+
+        const _template = data?.labelDesign != undefined ? await fetchTemplateFromApiById(data?.labelDesignd) : [];
+        if (!_template) return null;
+
+        setTemplate(_template as any);
         setLoadingTemplate(false);
         break;
       case 'standardLabelDesign':
@@ -268,39 +255,39 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
     setData(sliceData);
   }, [voucherForm]);
 
-  const barcodeDescSubmit = useCallback(async() => {
+  const barcodeDescSubmit = useCallback(async () => {
     setPrinting(true);
-   try {
-    if (barcodeForm.data?.isFormTo) {
-      // Preview mode: Show modal
-      setShowPrint(true);
-    } else {
-      // Direct print mode: Silent print without browser dialog
-      setShowPrint(false);
- 
-     directPrint({
-        template,
-        data,
-        page: pages,
-        DefaultPrinterName: template?.propertiesState?.printer,
-      });
+    try {
+      if (barcodeForm.data?.isFormTo) {
+        // Preview mode: Show modal
+        setShowPrint(true);
+      } else {
+        // Direct print mode: Silent print without browser dialog
+        setShowPrint(false);
 
+        directPrint({
+          template,
+          data,
+          page: pages,
+          DefaultPrinterName: template?.propertiesState?.printer,
+        });
+
+      }
+    } catch (error) {
+      console.error('Error in print process:', error);
+      // Handle error - maybe show a toast notification
+    } finally {
+      setTimeout(() => {
+        setPrinting(false);
+        setBarcodeDesc((prevData: any) => ({
+          ...prevData,
+          validations: {
+            ...prevData.validations,
+          },
+        }));
+      }, 1000);
     }
-  } catch (error) {
-    console.error('Error in print process:', error);
-    // Handle error - maybe show a toast notification
-  } finally {
-    setTimeout(() => {
-      setPrinting(false);
-      setBarcodeDesc((prevData: any) => ({
-        ...prevData,
-        validations: {
-          ...prevData.validations,
-        },
-      }));
-    }, 1000);
-  }
-  }, [barcodeDesc?.data,barcodeForm.data?.isFormTo, template]);
+  }, [barcodeDesc?.data, barcodeForm.data?.isFormTo, template]);
 
 
   // Define columns for the Counters grid
@@ -732,13 +719,13 @@ const BarcodePrint: React.FC<BarcodePrintProps> = ({ isMaximized, modalHeight })
       </div>
 
       {
-        barcodeForm.data?.isFormTo&&template && data && showPrint &&
+        barcodeForm.data?.isFormTo && template && data && showPrint &&
         <ERPModal
           isOpen={showPrint}
           title={t("barcode_print")}
           isForm={true}
           closeModal={() => { setShowPrint(false); }}
-          content={<DownloadBarcodePreview template={template} data={data} pages={pages}/>}
+          content={<DownloadBarcodePreview template={template} data={data} pages={pages} />}
           width={1000}
           height={800}
         />

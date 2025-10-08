@@ -2,7 +2,7 @@ import { StyleSheet } from "@react-pdf/renderer";
 import { useEffect, useState } from "react";
 import { DesignerElementType, type PlacedComponent, type TemplateState, } from "../../../Designer/interfaces";
 import { generateQRCodeDataUrl } from "../../../utils/qrSvgToImg";
-import { renderComponent } from "../../../DownloadPreview/customElement";
+// import { renderComponent } from "../../../DownloadPreview/customElement";
 import useLogo from "../../../utils/useLogo";
 
 const styles = StyleSheet.create({
@@ -127,9 +127,7 @@ const AccPrevHeader = ({
             minHeight: customTopHeight,
             height: "auto",
           }}>
-          {customElements?.map((component) =>
-            renderComponent(component, userSession?.headerFooter, qrCodeImages)
-          )}
+        
         </div>
       )}
 

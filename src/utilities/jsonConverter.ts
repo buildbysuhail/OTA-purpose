@@ -24,27 +24,7 @@ export function customJsonParse<T>(jsonString: string): T {
 }
 
 // New function specifically for template content parsing
-export function parseTemplateContent<T>(jsonString: string): T {
-  try {
-    // Direct JSON parse without UTF-8 re-encoding
-    // This preserves Arabic and other Unicode characters
-    return JSON.parse(jsonString, (key, value) => {
-      if (value && typeof value === "object" && !Array.isArray(value)) {
-        const newObj: { [key: string]: any } = {};
-        for (const k in value) {
-          if (Object.prototype.hasOwnProperty.call(value, k)) {
-            newObj[toCamelCase(k)] = value[k];
-          }
-        }
-        return newObj;
-      }
-      return value;
-    });
-  } catch (error) {
-    console.error("Error parsing template content:", error);
-    return {} as T;
-  }
-}
+
 export function modelToBase64<T>(model: T): string {
   try {
     // Convert the model to a JSON string
@@ -61,7 +41,7 @@ export function modelToBase64<T>(model: T): string {
     throw new Error("Failed to convert model to base64");
   }
 }
-function toCamelCase(str: string): string {
+export function toCamelCase(str: string): string {
   return str
     .replace(/(?:^\w|[A-Z]|\b\w)/g, (letter, index) =>
       index === 0 ? letter.toLowerCase() : letter.toUpperCase()
@@ -99,7 +79,7 @@ export function safeBase64Decode(str: string) {
     return null;
   }
 }
-export function base64ToModelUnicode(base64String: string): string {
+export function base64ToModelUnicode(base64String: string): any {
   try {
     const binaryString = atob(base64String); // Decode Base64 to binary string
     const bytes = new Uint8Array(

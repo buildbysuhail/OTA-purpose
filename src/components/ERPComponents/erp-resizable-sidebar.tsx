@@ -10,7 +10,7 @@ import { RootState } from "../../redux/store";
 interface ERPResizableSidebarProps {
   children: React.ReactNode;
   isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
+   setIsOpen: ((isOpen: boolean) => void) | (() => void);
   minWidth?: number;
   maxWidth?: number;
   initialWidth?: number;
@@ -40,12 +40,20 @@ const ERPResizableSidebar: React.FC<ERPResizableSidebarProps> = ({
   const translateClass = isLeft ? (isOpen ? "translate-x-0" : "-translate-x-full") : (isOpen ? "translate-x-0" : "translate-x-full");
   const resizeHandleSide = isLeft ? (appState.appState.dir === "rtl" ? "w" : "e") : (appState.appState.dir === "rtl" ? "e" : "w");
   const handleClassDir = isLeft ? (appState.appState.dir === "rtl" ? "rtl" : "ltr") : (appState.appState.dir === "rtl" ? "ltr" : "rtl");
-
+  const handleClose = () => {
+    if (setIsOpen.length === 0) {
+      // Function expects no arguments → probably a dispatch wrapper
+      (setIsOpen as () => void)();
+    } else {
+      // Function expects a boolean → probably a useState setter
+      (setIsOpen as (isOpen: boolean) => void)(false);
+    }
+  };
   return (
     <>
       {/* Backdrop */}
       {overlayNeeded && (
-        <div className={`fixed inset-0 z-40 bg-black bg-opacity-50 transition-opacity duration-500 ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`} onClick={() => setIsOpen(false)} />
+        <div className={`fixed inset-0 z-40 bg-black bg-opacity-50 transition-opacity duration-500 ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`} onClick={handleClose} />
       )}
 
       {/* Resizable Sidebar */}

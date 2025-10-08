@@ -1235,14 +1235,14 @@ export const useAccTransaction = (
             userSession.dbIdValue?.trim() == "BAHAMDOON" &&
             formState.isBahamdoonPOSReceipt != true
           ) {
-            printPaymentReceiptAdvice();
+            printPaymentReceiptAdvice("");
           } else {
             printVoucher(formState.transaction.master.accTransactionMasterID, transactionType, formState.transaction.master.voucherType, formState.transaction.master.transactionDate);
           }
         }
 
         if (formState.userConfig?.printCheque) {
-          printCheque();
+          printCheque("");
         }
         if (formState.userConfig?.clearDetailsAfterSaveAccounts == true) {
           clearControls(

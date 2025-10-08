@@ -1,22 +1,12 @@
 import { ToWords } from "to-words";
-import { useDispatch, useSelector } from "react-redux";
-import { capitalize } from "@mui/material";
+import { useSelector } from "react-redux";
 import ERPToast from "../components/ERPComponents/erp-toast";
 import { thisYear } from "../utilities/ERPDateFilterData";
 import { RootState } from "../redux/store";
-import { AppState } from "../redux/slices/app/types";
 import moment from "moment";
 import dayjs from "dayjs";
-import { useNumberFormat } from "./hooks/use-number-format";
-import { TableColumn, TemplateState } from "../pages/InvoiceDesigner/Designer/interfaces";
-import Urls from "../redux/urls";
-import { customJsonParse, parseTemplateContent } from "./jsonConverter";
-import { APIClient } from "../helpers/api-client";
-import { Currencies } from "./number-to-words";
-import { BranchDetails, CompanyDetails, HeaderFooter, UserModel } from "../redux/slices/user-session/reducer";
-import { PrintResponse, PrintMasterDto, PrintDetailDto, CompanyDetailsForPrint } from "../pages/use-print-type";
-import { getCommonValues } from "../pages/use-print";
-import { getStorageString } from "./storage-utils";
+import { TableColumn } from "../pages/InvoiceDesigner/Designer/interfaces";
+import { fetchTemplateFromApiById } from "../pages/use-print";
 
 export function capitalizeFirstLetter(text: string) {
   return text.charAt(0)?.toUpperCase() + text.slice(1);
@@ -53,14 +43,14 @@ export const formatDateFields = (data: any) => {
 
   return Object.fromEntries(
     Object.entries(data).map(([key, value]) => {
-      
+
       if (
         (typeof value === "string" || value instanceof Date) && // Ensure it's a valid date input
         key.toLowerCase().includes("date") // Check if key includes "date"
       ) {
-        if(typeof value === "string") {
+        if (typeof value === "string") {
           const fd = formatDate(value);
-          return [key,  moment(fd,"DD/MM/YYYY").format("YYYY-MM-DD")];
+          return [key, moment(fd, "DD/MM/YYYY").format("YYYY-MM-DD")];
         }
         return [key, moment(value).format("YYYY-MM-DD")]; // Format the date
       }
@@ -661,16 +651,16 @@ export const identifyDateFormat = (dateString: string) => {
 
     // ISO 8601 variants
     moment.ISO_8601
-];
+  ];
 
-// Check all formats
-for (const format of formats) {
+  // Check all formats
+  for (const format of formats) {
     if (moment(dateString, format, true).isValid()) {
-        return format === moment.ISO_8601 ? "ISO 8601" : format;
+      return format === moment.ISO_8601 ? "ISO 8601" : format;
     }
-}
+  }
 
-return "Unknown format";
+  return "Unknown format";
 }
 export const getVoucherNameFromPath = (path: string) => {
   let voucherName: any;
@@ -746,11 +736,11 @@ export const setFgAccordingToBgPrimary = () => {
 
   // Check if the background color is close to white
   const isW = isLightColor(bgColor);
-  const dfdfd= isW === true ? 'text-gray-900' : 'text-white';
+  const dfdfd = isW === true ? 'text-gray-900' : 'text-white';
   return dfdfd;
 };
 // Function to calculate the luminance of a color
-const calculateLuminance = (r:number, g:number, b:number) => {
+const calculateLuminance = (r: number, g: number, b: number) => {
   const normalize = (value: any) => {
     value /= 255;
     return value <= 0.03928 ? value / 12.92 : Math.pow((value + 0.055) / 1.055, 2.4);
@@ -780,23 +770,23 @@ export const mergeObjectsRemovingIdenticalKeys = <T extends object, U extends Re
   obj2: U
 ): T & U => {
 
-if(obj1 == undefined || obj2 == undefined) {
-  if(obj1 == undefined && obj2 != undefined) {
-    const out2 = { ...obj2 } as T & U;
-    return out2;
-  } 
-  if(obj2 == undefined && obj1 != undefined) {
-    const out1 = { ...obj1 } as T & U;
-    return out1;
-  } 
-  if(obj2 == undefined && obj2 == undefined) {
-    const out1 = { } as T & U;
-    return out1;
+  if (obj1 == undefined || obj2 == undefined) {
+    if (obj1 == undefined && obj2 != undefined) {
+      const out2 = { ...obj2 } as T & U;
+      return out2;
+    }
+    if (obj2 == undefined && obj1 != undefined) {
+      const out1 = { ...obj1 } as T & U;
+      return out1;
+    }
+    if (obj2 == undefined && obj2 == undefined) {
+      const out1 = {} as T & U;
+      return out1;
+    }
   }
-}
   // Filter out keys with identical values
   const filteredObj2 = Object.fromEntries(
-    obj2 !== undefined && obj2 !== null ?Object.entries(obj2).filter(([key, value]) =>key !==undefined && key !== null && obj1[key as keyof T] !== value) :obj1 !== undefined && obj1 !== null ?Object.entries(obj1):[]
+    obj2 !== undefined && obj2 !== null ? Object.entries(obj2).filter(([key, value]) => key !== undefined && key !== null && obj1[key as keyof T] !== value) : obj1 !== undefined && obj1 !== null ? Object.entries(obj1) : []
   ) as Partial<U>; // Explicitly cast as Partial<U>
 
   // Merge the objects and cast to T & U
@@ -805,8 +795,8 @@ if(obj1 == undefined || obj2 == undefined) {
 };
 export const isEnterKey = (key: string | number) => {
   return (
-    key === "Enter" || 
-    key === "enter" || 
+    key === "Enter" ||
+    key === "enter" ||
     // key === "E" || 
     key === 13 || // Numeric key code for Enter
     key === "NumpadEnter" // Numpad Enter key (for numeric keypad)
@@ -819,27 +809,27 @@ export const decryptAES = async (encryptedText: string): Promise<string> => {
   const iv = new TextEncoder().encode(ivStr);
 
   const cryptoKey = await crypto.subtle.importKey(
-      "raw",
-      key,
-      { name: "AES-CBC" },
-      false,
-      ["decrypt"]
+    "raw",
+    key,
+    { name: "AES-CBC" },
+    false,
+    ["decrypt"]
   );
 
   const encryptedBytes = Uint8Array.from(atob(encryptedText), c => c.charCodeAt(0));
   const subtleCrypto = window.crypto?.subtle || null;
-if (!subtleCrypto) throw new Error("Web Crypto API not available");
+  if (!subtleCrypto) throw new Error("Web Crypto API not available");
   const decryptedBuffer = await crypto.subtle.decrypt(
-      { name: "AES-CBC", iv },
-      cryptoKey,
-      encryptedBytes
+    { name: "AES-CBC", iv },
+    cryptoKey,
+    encryptedBytes
   );
 
   return new TextDecoder().decode(decryptedBuffer);
 }
 
-export const calculateMarkup = (purPrice: number, salesPrice: number, salesTaxPercentage: number, showRateBeforeTax: boolean, getFormattedValue: (val: number, ignoreNullOrZero?: boolean, decimalPoint?: number | undefined) => string ) =>{
-  
+export const calculateMarkup = (purPrice: number, salesPrice: number, salesTaxPercentage: number, showRateBeforeTax: boolean, getFormattedValue: (val: number, ignoreNullOrZero?: boolean, decimalPoint?: number | undefined) => string) => {
+
   try {
     // Convert inputs to numbers
     let pp = purPrice || 0;
@@ -852,15 +842,15 @@ export const calculateMarkup = (purPrice: number, salesPrice: number, salesTaxPe
         // Adjust purchase price to include tax
         pp = pp * (1 + taxPerc / 100);
       }
-      
+
       // Calculate markup percentage
       mu = (sp - pp) / pp * 100;
-      return getFormattedValue(mu, false,4);
+      return getFormattedValue(mu, false, 4);
     }
-      return getFormattedValue(0, false,4);
+    return getFormattedValue(0, false, 4);
   } catch (error) {
     console.error("Error calculating markup:", error);
-      return getFormattedValue(0, false,4);
+    return getFormattedValue(0, false, 4);
   }
 }
 export const calculateSalesPrice = (purchasePriceInput: number,
@@ -892,33 +882,33 @@ export function getUUID() {
     return crypto.randomUUID();
   } else {
     // Polyfill fallback
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
       const r = Math.random() * 16 | 0;
       const v = c == 'x' ? r : (r & 0x3 | 0x8);
       return v.toString(16);
     });
   }
 }
-export const  getPurchasePriceCode = (priceVal: string, priceCodeFromSettings: string): string => {
+export const getPurchasePriceCode = (priceVal: string, priceCodeFromSettings: string): string => {
   priceVal = priceVal.replace(/,/g, "");
   let priceCode = priceVal;
   let priceCodes: string;
-  
+
   // First digit zero, then 1,2...9, 11th one ".", 12th repeated symbol
   priceCodes = priceCodeFromSettings + "ABCDEFGHIJPK";
-  
+
   if (priceCodes.length < 11) {
     return priceCode;
   }
-  
+
   let l: number;
   let pc = "", formatedCode = "", c = "", previousDigit = "";
   pc = priceVal;
   l = pc.length;
-  
+
   for (let i = 0; i < l; i++) {
     c = pc.substring(i, i + 1);
-    
+
     if (c === ".") {
       formatedCode = formatedCode + priceCodes.substring(10, 11);
     } else if (c === "-") {
@@ -934,7 +924,7 @@ export const  getPurchasePriceCode = (priceVal: string, priceCodeFromSettings: s
     }
     previousDigit = c;
   }
-  
+
   return formatedCode;
 }
 
@@ -943,74 +933,58 @@ export interface LoadTemplateParams {
 }
 
 export const loadTemplateById = async <T>(templateId: LoadTemplateParams) => {
-  
+
   try {
-    const api = new APIClient();
-    const res = await api.getAsync(`${Urls.templates}${templateId}`);
-        let cc: TemplateState<T> = parseTemplateContent(res.content);
-        const _template = {
-          ...cc,
-          id: res.id,
-          background_image: res?.payload?.data?.background_image as string | undefined,
-          background_image_header: res?.payload?.data?.background_image_header as string | undefined,
-          background_image_footer: res?.payload?.data?.background_image_footer as string | undefined,
-          isCurrent: res.isCurrent,
-          templateGroup: res.templateGroup,
-          templateKind: res.templateKind,
-          templateName: res.templateName,
-          templateType: res.templateType,
-          thumbImage: res.thumbImage as string | undefined,
-      };
-  return _template
+    const _template = await fetchTemplateFromApiById(templateId);
+    return _template
   } catch (error) {
     console.error('Error loading template:', error);
     throw error;
   }
 };
 export const getExcelCellValue = (cell: any): string | null => {
-    if (!cell || cell.value === null || cell.value === undefined) {
-      return null;
-    }
-    
-    const value = cell.value;
-    
-    if (typeof value === 'string' || typeof value === 'number') {
-      return value.toString();
-    }
-    
-    // Handle formula cells
-    if (typeof value === 'object' && 'result' in value) {
-      return (value as any).result?.toString() || null;
-    }
-    
-    // Handle date cells
-    if (value instanceof Date) {
-      return value.toISOString();
-    }
-    
-    return value?.toString() || null;
-  };
+  if (!cell || cell.value === null || cell.value === undefined) {
+    return null;
+  }
 
-export const remToPx = (rem: number) =>
-    {
-      const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize); // usually 16px
-      return rem * rootFontSize;
-    };
-    export const sanitizeData = (data: any, initialState: any): any => {
-      const sanitized: any = { ...data };
-    
-      for (const key in sanitized) {
-        if (
-          sanitized[key] === "" &&
-          typeof initialState?.[key] === "number"
-        ) {
-          sanitized[key] = 0;
-        }
-      }
-    
-      return sanitized;
-    };
-    export const sanitizeDataAdvanced = (
+  const value = cell.value;
+
+  if (typeof value === 'string' || typeof value === 'number') {
+    return value.toString();
+  }
+
+  // Handle formula cells
+  if (typeof value === 'object' && 'result' in value) {
+    return (value as any).result?.toString() || null;
+  }
+
+  // Handle date cells
+  if (value instanceof Date) {
+    return value.toISOString();
+  }
+
+  return value?.toString() || null;
+};
+
+export const remToPx = (rem: number) => {
+  const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize); // usually 16px
+  return rem * rootFontSize;
+};
+export const sanitizeData = (data: any, initialState: any): any => {
+  const sanitized: any = { ...data };
+
+  for (const key in sanitized) {
+    if (
+      sanitized[key] === "" &&
+      typeof initialState?.[key] === "number"
+    ) {
+      sanitized[key] = 0;
+    }
+  }
+
+  return sanitized;
+};
+export const sanitizeDataAdvanced = (
   data: any,
   initialState: any,
   options?: {
@@ -1066,9 +1040,9 @@ export const remToPx = (rem: number) =>
     if (data.hasOwnProperty(key)) {
       const value = data[key];
       const initialValue = initialState?.[key];
-if(key == "qty") {
-  
-}
+      if (key == "qty") {
+
+      }
       // Handle empty string to number conversion
       if (opts.convertEmptyStrings && value === "" && typeof initialValue === "number") {
         sanitized[key] = opts.defaultNumber;
@@ -1078,8 +1052,8 @@ if(key == "qty") {
       }
       // Recursively sanitize nested structures
       else if (typeof value === 'object' && value !== null) {
-        
-  
+
+
         sanitized[key] = sanitizeDataAdvanced(value, initialValue, opts);
       }
       // Handle primitive values
@@ -1122,7 +1096,7 @@ export function modelToListFromObject<T extends Record<string, any>>(obj: T, idP
   //cGST_5_Perc = CGST 5%
   // _Perc = %
   return Object.keys(obj).map(key => ({
-    id: `${idPrefix??""}${key}`,
+    id: `${idPrefix ?? ""}${key}`,
     label: toReadableLabel(key)
   }));
 }

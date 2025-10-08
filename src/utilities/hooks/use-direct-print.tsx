@@ -108,7 +108,6 @@ export const useDirectPrint = () => {
           params.kitchenPrinterNameParam,
           params.kitchenNameParam,
           params.commonKitchenProductGroupIDParam,
-          params.template,
           params.transactionType,
           params.dbIdValue,
           params.voucherType,

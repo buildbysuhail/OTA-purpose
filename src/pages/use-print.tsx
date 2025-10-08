@@ -8,6 +8,8 @@ import { PrintResponse, PrintDetailDto, PrintMasterDto, CompanyDetailsForPrint }
 import { initialPrintCustomFields, initialPrintResponse } from './use-print-type-data';
 import { merge } from 'lodash';
 import { TemplateState } from './InvoiceDesigner/Designer/interfaces';
+import { getStorageString, setStorageString } from '../utilities/storage-utils';
+import { base64ToModelUnicode, base64UnicodeToModel, modelToBase64Unicode, safeBase64Decode, toCamelCase } from '../utilities/jsonConverter';
 
 
 type VoucherType = {
@@ -15,7 +17,7 @@ type VoucherType = {
   transactionType: string;
 };
 
-const api = new APIClient();
+
 export function getKsaQrCode(transDate: Date, totalWithVat: string, vat: string, companyData: CompanyDetailsForPrint): string {
   const sellerName = companyData.registeredName; // replace with config/company profile
   const vatRegNo = companyData.taxRegNo;        // replace with config/company profile
@@ -259,11 +261,12 @@ export const loadPrintData = async (MasterIDParam: number, voucherTypeParam: str
   kitchenPrinterNameParam?: string,
   kitchenNameParam = "",
   commonKitchenProductGroupIDParam = 0,
-  template?: TemplateState<unknown>,
+  
   transactionType: string = "",
   dbIdValue: string = "",
   voucherType: string = "",
-  isAppGlobal: boolean = false
+  isAppGlobal: boolean = false,
+  template?: TemplateState<unknown>,
   // isReprintFlag = false,
   // isPdf = false,
   // filepath = "",
@@ -295,7 +298,7 @@ export const loadPrintData = async (MasterIDParam: number, voucherTypeParam: str
     // ///fields
     // const customElementsTop1 = template?.headerState?.customTop?.customElements ?? [];
     // const customElementsTop2 = template?.headerState?.customBottom?.customElements ?? [];
-    
+
     // const fieldsTable = template?.tableState ?? [];
     // const mergedCustomElements: PlacedComponent[] = [
     //   ...customElementsTop1,
@@ -307,18 +310,18 @@ export const loadPrintData = async (MasterIDParam: number, voucherTypeParam: str
     // console.log(fieldsTable);
     // console.log(mergedCustomElements);
     console.log(`${MasterIDParam}-MasterIDParam`);
-    
-    const printData: PrintResponse = await api.getAsync(`${isInvTrans ? Urls.inv_transaction_base: Urls.acc_transaction_base}${transactionType}/print/?
+    const api = new APIClient();
+    const printData: PrintResponse = await api.getAsync(`${isInvTrans ? Urls.inv_transaction_base : Urls.acc_transaction_base}${transactionType}/print/?
         KitchenId=${0}&CommonKitchenProductGroupId=${0}&IncludeStockDetails=${true}&IncludePreviousLedgerBalance=${true}
         &IncludeLoyaltyCardBalance=${true}&masterId=${MasterIDParam}&multiPayment=${multiPayment}
                                             &printCount= ${printCount}
                                             &taxableAmountIncludingTaxOnDiscount= ${taxableAmountIncludingTaxOnDiscount}
                                             &taxAmountIncludingTaxOnDiscount= ${taxAmountIncludingTaxOnDiscount}
                                             &privilageCardBalance= ${privilageCardBalance}`);
-                                            console.log(printData);
-    if(isNullOrUndefinedOrEmpty(printData?.master)) 
+    console.log(printData);
+    if (isNullOrUndefinedOrEmpty(printData?.master))
       return printData;
-                                            
+
     returnData = merge({}, returnData, printData);
     returnData.custom = returnData.custom ?? initialPrintCustomFields;
     const isKitchenPrint = !isNullOrUndefinedOrZero(kitchenIDParam) || !isNullOrUndefinedOrZero(commonKitchenProductGroupIDParam) ||
@@ -615,7 +618,7 @@ export const loadPrintData = async (MasterIDParam: number, voucherTypeParam: str
 
 
 export const getCommonValues = (field: string,
-  
+
   data: PrintResponse,
   convertAmountToArabic: any) => {
   let v = "";
@@ -1616,14 +1619,14 @@ export function bindDataForPrint(field: string, printData: PrintResponse,
   const splitData = field.split("___");
   const group = splitData[0] as any;
   const key = splitData[1];
-  if(field == "custom___transactionBarcode"){
-    
+  if (field == "custom___transactionBarcode") {
+
   }
-  if(isNullOrUndefinedOrEmpty(printData?.master)) 
+  if (isNullOrUndefinedOrEmpty(printData?.master))
     return "";
   const master = printData?.master
   const details = printData?.details
-  
+
   if (group == "master") {
     return master[key as (keyof PrintMasterDto)]
   }
@@ -1723,3 +1726,178 @@ export function bindDataForPrint(field: string, printData: PrintResponse,
 // Detail printing functions
 
 
+export const addTemplateToStore = async (data: TemplateState<unknown>) => {
+  if (!data) {
+    return
+  }
+
+  let _templates = await getStorageString("tds");
+  if (isNullOrUndefinedOrEmpty(_templates)) {
+    return
+  }
+  let templates: TemplateState<unknown>[] = base64ToModelUnicode(_templates ?? "") ?? "[]";
+  if (
+    !templates.some(
+      (template: TemplateState<unknown>) => template.templateGroup === data.templateGroup
+        && template.formType === data.formType
+        && template.customerType === data.customerType
+    )
+  ) {
+    templates.push(data);
+    const base64 = modelToBase64Unicode(templates)
+    await setStorageString("tds", base64);
+  } else {
+    templates = templates.filter((x: any) => x.templateGroup != data.templateGroup)
+    templates.push(data);
+    const base64 = modelToBase64Unicode(templates)
+    await setStorageString("tds", base64);
+  }
+}
+export const getTemplateFromStoreById = async (id: number) => {
+  const templates = await getTemplatesFromStore();
+  const data = templates.find(
+    (template: TemplateState<unknown>) => template.id === id
+  )
+  return data
+}
+export const getTemplateFromStoreByGroup = async (group: string) => {
+  const templates = await getTemplatesFromStore();
+  const data = templates.find(
+    (template: TemplateState<unknown>) => template.templateGroup === group
+  )
+  return data
+}
+export const getTemplatesFromStore = async () => {
+
+  let _templates = await getStorageString("tds");
+  if (isNullOrUndefinedOrEmpty(_templates)) {
+    return
+  }
+  const templates = base64UnicodeToModel(_templates ?? "") ?? "[]";
+
+  return templates
+}
+
+
+
+
+export const fetchDefaultTemplateFromApi = async (
+  voucherType: string,
+  formType?: string | null,
+  customerType?: string | null,
+): Promise<TemplateState<unknown> | null> => {
+  try {
+    const api = new APIClient();
+    const res = await api.postAsync(`${Urls.default_template}`, {
+      template_group: voucherType,
+      formType: formType,
+      customerType: customerType
+    });
+
+    if (!res.id && res.id<=0) {
+      console.warn("No default template response received.");
+      return null;
+    }
+
+    const parsedTemplate = parseTemplateContent<TemplateState<unknown>>(res);
+    if (!parsedTemplate) {
+      console.warn("Failed to parse default template.");
+      return null;
+    }
+
+    return parsedTemplate;
+  } catch (error) {
+    console.error("Error fetching default template:", error);
+    return null;
+  }
+};
+
+export const fetchTemplateFromApiById = async (
+  id: any
+): Promise<TemplateState<unknown> | null> => {
+  try {
+    const api = new APIClient();
+    const res = await api.getAsync(`${Urls.templates}${id}`);
+    const parsed = parseTemplateContent<TemplateState<unknown>>(res);
+    return parsed;
+  } catch (error) {
+    console.error("Error fetching template:", error);
+    return null;
+  }
+};
+
+export function parseTemplateContent<T extends object>(
+  templateRes: any
+): T | null {
+  try {
+    const cc = JSON.parse(templateRes.content, (key, value) => {
+      if (value && typeof value === "object" && !Array.isArray(value)) {
+        const newObj: { [key: string]: any } = {};
+        for (const k in value) {
+          if (Object.prototype.hasOwnProperty.call(value, k)) {
+            newObj[toCamelCase(k)] = value[k];
+          }
+        }
+        return newObj;
+      }
+      return value;
+    });
+
+    const _template = {
+      ...cc,
+      id: templateRes.id,
+      background_image: templateRes?.payload?.data?.background_image as string | undefined,
+      background_image_header: templateRes?.payload?.data?.background_image_header as string | undefined,
+      background_image_footer: templateRes?.payload?.data?.background_image_footer as string | undefined,
+      signature_image: templateRes?.payload?.data?.signature_image as string | undefined,
+      branchId: templateRes.branchId,
+      content: templateRes.content,
+      isCurrent: templateRes.isCurrent,
+      templateGroup: templateRes.templateGroup,
+      templateKind: templateRes.templateKind,
+      templateName: templateRes.templateName,
+      templateType: templateRes.templateType,
+      thumbImage: templateRes.thumbImage as string | undefined,
+      formType: templateRes.formType,
+      customerType: templateRes.customerType,
+    };
+
+    return _template as T;
+  } catch (error) {
+    console.error("Error parsing template content:", error);
+    return null;
+  }
+}
+
+export const fetchDefaultTemplate = async (
+  voucherType: string,
+  formType?: string | null,
+  customerType?: string | null,
+) => {
+  try {
+
+    const _template = await fetchDefaultTemplateFromApi(voucherType, formType, customerType);
+    if (!_template) return null;
+    await addTemplateToStore(_template)
+    return _template
+  } catch (error) {
+    console.error("Error fetching Default templates:", error)
+  }
+}
+
+export const getOrFetchTemplate = async (
+  voucherType: string,
+  formType?: string | null,
+  customerType?: string | null,
+) => {
+  const templates = await getTemplatesFromStore();
+  const existingTemplate = templates?.find((template: TemplateState<unknown>) => template.templateGroup === voucherType
+    && template.formType === formType
+    && template.customerType === customerType)
+
+  if (existingTemplate) {
+    return existingTemplate
+  } else {
+    return await fetchDefaultTemplate(voucherType, formType, customerType)
+  }
+};

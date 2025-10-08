@@ -16,7 +16,7 @@ export interface AccountTransactionProps {
 }
 
 const SharedTemplatePreview = ({ data, template, qrCodeImages = {}}: AccountTransactionProps) => {
- 
+
    const headerState = template?.headerState;
   const propertiesState = template?.propertiesState;
   return (

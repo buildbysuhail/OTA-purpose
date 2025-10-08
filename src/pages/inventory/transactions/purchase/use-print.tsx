@@ -11,15 +11,14 @@ import {
 import { useDispatch } from "react-redux";
 import { DeepPartial } from "redux";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
-import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
-import { customJsonParse, parseTemplateContent } from "../../../../utilities/jsonConverter";
 import Urls from "../../../../redux/urls";
 import VoucherType from "../../../../enums/voucher-types";
 import { useTranslation } from "react-i18next";
 import { useDirectPrint } from "../../../../utilities/hooks/use-direct-print";
-import { templatesData, formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly } from "../reducer";
+import { formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly } from "../reducer";
 import { initialProductData } from "../transaction-type-data";
 import { TransactionFormState, TransactionDetail, BarcodeLabel } from "../transaction-types";
+import { addTemplateToStore, fetchDefaultTemplateFromApi } from "../../../use-print";
 
 const api = new APIClient();
 export const usePrint = () => {
@@ -43,45 +42,11 @@ export const usePrint = () => {
   const fetchDefaultTemplates = async (voucherType: any) => {
     // Create a set of all possible VoucherType values
     try {
-      const res = await api.getAsync(
-        `${Urls.default_template}?template_group=${voucherType}`
-      );
-      const cc: TemplateState<unknown> = parseTemplateContent(res.content);
-      const _template = {
-        ...cc,
-        id: res.id,
-        background_image: res?.payload?.data?.background_image as
-          | string
-          | undefined,
-        background_image_header: res?.payload?.data?.background_image_header as
-          | string
-          | undefined,
-        background_image_footer: res?.payload?.data?.background_image_footer as
-          | string
-          | undefined,
-        signature_image: res?.payload?.data?.signature_image as
-          | string
-          | undefined,
-        branchId: res.branchId,
-        content: res.content,
-        isCurrent: res.isCurrent,
-        templateGroup: res.templateGroup,
-        templateKind: res.templateKind,
-        templateName: res.templateName,
-        templateType: res.templateType,
-        thumbImage: res.thumbImage as string | undefined,
-      };
-
-      dispatch(templatesData(_template));
-
-      const template = formState.templatesData?.find(
-        (item) => item.templateGroup === voucherType
-      );
-      if (voucherTypeSet.has(voucherType)) {
-        dispatch(
-          formStateHandleFieldChange({ fields: { template: _template } })
-        );
-      }
+        const _template =  await fetchDefaultTemplateFromApi(voucherType)
+        if(!_template){
+          return 
+        }
+          await addTemplateToStore(_template)
 
       return _template;
     } catch (error) {
@@ -94,28 +59,7 @@ export const usePrint = () => {
     voucherType?: any,
     voucher?: TransactionFormState
   ) => {
-    const existingTemplate = formState.templatesData?.find(
-      (template: any) => template.templateGroup === voucherType
-    );
-    let template = formState.template;
-
-    if (formState.template == undefined || formState.template == null) {
-      if (existingTemplate) {
-        dispatch(
-          formStateHandleFieldChange({ fields: { template: existingTemplate } })
-        );
-        template = existingTemplate;
-      } else {
-        template = await fetchDefaultTemplates(voucherType);
-      }
-    }
-
-    // If template is valid, proceed with printing
-    if (formState.printPreview) {
-      setIsPrintModalOpen(true);
-    } else {
-      // await handleDirectPrint(template);
-    }
+    
   };
 
   const checkReprintAuthorization = async (

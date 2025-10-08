@@ -51,7 +51,7 @@ import CustomerDetailsSidebar from "../../transaction-base/customer-details";
 import { isNullOrUndefinedOrZero } from "../../../utilities/Utils";
 import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
 import ERPResizableSidebar from "../../../components/ERPComponents/erp-resizable-sidebar";
-import TemplatesView from "./acc-templates";
+import TemplatesView from "../../transaction-base/templates";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import useFormComponent from "./use-form-components";
 import { useUserRights } from "../../../helpers/user-right-helper";
@@ -98,6 +98,8 @@ import { useAppState } from "../../../utilities/hooks/useAppState";
 import { templateConfig } from "../../InvoiceDesigner/LandingFolder/designSection";
 import { useTemplateDesigner } from "../../InvoiceDesigner/LandingFolder/useTemplateDesigner";
 import { TransactionDetail } from "../../inventory/transactions/transaction-types";
+import { getTemplatesFromStore } from "../../use-print";
+import SharedTemplatePreview from "../../InvoiceDesigner/DesignPreview/shared";
 interface BilledItem {
   id?: number;
   name: string;
@@ -197,20 +199,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   };
 
 
-
-  const groupKey = (formState?.template?.templateGroup ?? "") as VoucherType;
-  const typeKey = formState?.template?.templateType?.toUpperCase() ?? "STANDARD";
-  const kindKey = formState?.template?.templateKind ?? "";
-  const templateToRender = useMemo(() => {
-    return templateConfig?.[groupKey]?.[typeKey]?.[kindKey] ?? null;
-  }, [groupKey, typeKey, kindKey]);
-
   const {
     stableTemplateProps,
     templateStyleProperties
   } = useTemplateDesigner({
-    templateGroup: groupKey, templateKind: kindKey, designerType: typeKey, template: formState?.template
-    , MasterIDParam: transactionMasterID, isInvTrans: false, dbIdValue: userSession.dbIdValue, isAppGlobal: clientSession.isAppGlobal, printCopies: 1, transactionType: transactionType, voucherType: voucherType,
+   manuvalTemplateFeatch:true, MasterIDParam: transactionMasterID, isInvTrans: false, dbIdValue: userSession.dbIdValue, isAppGlobal: clientSession.isAppGlobal, printCopies: 1, transactionType: transactionType, voucherType: voucherType,
     transDate: formState.transaction?.master?.transactionDate
   })
   const [showValidation, setShowValidation] = useState(false);
@@ -621,9 +614,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         }
       }
       const prevNation = formState.row.narration;
-      const templates = formState.templates;
-      const templatesData = formState.templatesData;
-      const template = formState.template;
+
       if (!isInvoker) {
         const voucher: AccTransactionData = accTransactionInitialData;
         _formState = {
@@ -1293,17 +1284,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         _formState.row.ledgerCode = "";
       }
 
-      _formState.templates = templates;
-      _formState.templatesData = templatesData;
-      const _template = templatesData?.find(
-        (x) => x.templateGroup == _formState.transaction.master.voucherType
-      );
-      if (_template != undefined) {
-        _formState.template = _template;
-      } else {
-        _formState.template = null;
-      }
-
       if (voucherNo != undefined && voucherNo > 0) {
         _formState.formElements = setUserRight({ ..._formState.formElements }, userSession, _formState.formCode, _formState.transaction.details?.length ?? 0, hasRight);
       }
@@ -1322,21 +1302,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     };
     dispatch(accFormStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }));
   };
-  const selectTemplates = useCallback(async () => {
-    setTemplateLoad(true);
-    setIsTemplateOpen(true);
-    try {
-      const response = await api.getAsync(
-        `${Urls.templates}?template_group=${formState.transaction.master?.voucherType}`
-      );
-      dispatch(
-        accFormStateHandleFieldChange({ fields: { templates: response } })
-      );
-    } catch (error) {
-    } finally {
-      setTemplateLoad(false);
-    }
-  }, [formState.transaction.master?.voucherType]);
   const selectAttachment = useCallback(async () => {
     setIsAttachmentOpen(true);
   }, []);
@@ -1703,10 +1668,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const [isTemplateOpen, setIsTemplateOpen] = useState(false);
+
   const [isAttachmentOpen, setIsAttachmentOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
-  const [templateLoad, setTemplateLoad] = useState(false);
   const [isHistorySidebarOpen, setIsHistorySidebarOpen] = useState(false);
   const [historyData, setHistoryData] = useState<any>(null);
   const [isPartyDetailsOpen, setIsPartyDetailsOpen] = useState(false);
@@ -1824,7 +1788,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
   return (
     <div className="relative">
-      {/* <h1>SAFVAN{transactionType}</h1> */}
+     
       {!deviceInfo?.isMobile && (
         <div
           className={`dark:!bg-dark-bg p-4`}
@@ -1885,7 +1849,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   unlockVoucher={unlockVoucher}
                   setShowValidation={setShowValidation}
                   showValidation={showValidation}
-                  selectTemplates={selectTemplates}
                   goToPreviousPage={goToPreviousPage}
                   isHistorySidebarOpen={isHistorySidebarOpen}
                   printPaymentReceiptAdvice={printPaymentReceiptAdvice}
@@ -2657,7 +2620,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               unlockVoucher={unlockVoucher}
               setShowValidation={setShowValidation}
               showValidation={showValidation}
-              selectTemplates={selectTemplates}
               goToPreviousPage={goToPreviousPage}
               isHistorySidebarOpen={isHistorySidebarOpen}
               printPaymentReceiptAdvice={printPaymentReceiptAdvice}
@@ -2936,12 +2898,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           </div>
         </div>
       )}
-      {(() => {
-        console.log("showbillwise:", formState.showbillwise);
-        console.log("billwiseData:", formState.billwiseData);
-        console.log("billwiseData length:", formState.billwiseData?.length);
-        console.log("billwiseDrCr:", formState.billwiseDrCr);
-      })()}
       {formState.showbillwise == true &&
         formState.billwiseData != undefined &&
         formState.billwiseData != null &&
@@ -3312,7 +3268,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         </div>
       </div>
 
-      {formState.transaction && formState.template && (
+      {formState.transaction && (
         <ERPModal
           isOpen={(formState.userConfig?.printPreview ?? false) && formState.isPrintModalOpen}
           title={t("Template")}
@@ -3327,6 +3283,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             );
           }}
           content={
+            <></>
             //   <PDFViewer
             //     className="pdf-viewer"
             //     width="100%"
@@ -3336,39 +3293,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             // {renderSelectedTemplate({ template: formState.template, data: formState.transaction, })}
 
             //   </PDFViewer>
-            <div className="flex justify-center"  >
-              <div className="relative">
-                {/* Preview Container with Modern Styling */}
-                <div
-
-                  className="shadow-lg   border border-gray-200 overflow-hidden"
-                  style={{
-                    width: `${templateStyleProperties.previewWidth ?? 500}pt`,
-                    height: `${templateStyleProperties.previewHeight ?? 500}pt`,
-
-                  }}
-                >
-                  {/* Paper Effect */}
-                  {/* <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900" /> */}
-
-                  {/* Template Content */}
-                  <div className="relative h-full   w-full ">
-                    {templateToRender && React.cloneElement(templateToRender.PreviewComponent, stableTemplateProps)}
-                  </div>
-                </div>
-
-                {/* Drop Shadow Effect */}
-                <div
-                  className="absolute -bottom-2 -right-2 bg-gray-400/20 dark:bg-gray-600/20 rounded-lg -z-10"
-                  style={{
-                    width: `${templateStyleProperties.previewWidth}pt`,
-                    height: `${templateStyleProperties.previewHeight}pt`,
-                    minHeight: "400px",
-
-                  }}
-                />
-              </div>
-            </div>
+           
           }
         />
       )}
@@ -3379,12 +3304,26 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           setIsOpen={setIsPartyDetailsOpen}
         />
       )}
-      <ERPResizableSidebar
-        minWidth={350}
-        isOpen={isTemplateOpen}
-        setIsOpen={setIsTemplateOpen}
-        children={<TemplatesView setIsOpen={setIsTemplateOpen} />}
-      />
+
+ <ERPResizableSidebar
+    minWidth={350}
+    isOpen={formState.templateChooserModal ?? false}
+    setIsOpen={() =>
+      dispatch(
+        accFormStateHandleFieldChange({ fields: { templateChooserModal: false } })
+      )
+    }
+  >
+    <TemplatesView
+      voucherType={formState.transaction.master?.voucherType ?? ""}
+      setIsOpen={() =>
+        dispatch(
+          accFormStateHandleFieldChange({ fields: { templateChooserModal: false } })
+        )
+      }
+    />
+  </ERPResizableSidebar>
+
       <ERPResizableSidebar
         minWidth={350}
         isOpen={isAttachmentOpen}

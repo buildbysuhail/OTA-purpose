@@ -489,7 +489,6 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   formElements: initialFormElements,
   saving: false,
   store: undefined,
-  templatesData: [],
   transactionType: "",
   prev: "",
   showPartySelection: false,

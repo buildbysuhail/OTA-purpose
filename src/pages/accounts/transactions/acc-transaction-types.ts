@@ -470,9 +470,9 @@ export interface AccTransactionFormState {
   printCheque: boolean
   keepNarration: boolean
   amountInWords: string,
-  template?:any,
-  templates?: [],
-  templatesData?: TemplateState<AccTransactionRow>[]
+  templatea?:any,
+  templatesas?: [],
+  templatesDataas?: TemplateState<AccTransactionRow>[]
   userConfig?: AccUserConfig;
   formElements: FormElementsState
   openUnsavedPrompt?: boolean
@@ -481,6 +481,7 @@ export interface AccTransactionFormState {
   billWiseRemarks?: string
   masterAccountActive?: boolean
   isAcc?: boolean
+  templateChooserModal?: boolean
 }
 export const initialFormElements: { [key: string]: FormElementState } = {
   foreignCurrency: {
@@ -646,7 +647,6 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   formElements: initialFormElements,
   saving: false,
   store: undefined,
-  templatesData: [],
   transactionType: "",
   prev: "",
   showPartySelection: false,

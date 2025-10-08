@@ -1,33 +1,28 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import html2canvas from 'html2canvas';
 import { DesignerElementType, PlacedComponent, TemplateDto, TemplateState } from "../Designer/interfaces";
 
-import { convertPdfBlobToImage, generatePdfBlob } from "../utils/pdf-save";
 
-import { accTransaction } from "../constants/TemplateCategories";
 
 import { debounce } from "lodash";
 import { DummyVoucherData } from "../constants/DummyData";
-import useCurrentBranch from "../../../utilities/hooks/use-current-branch";
 import { RootState } from "../../../redux/store";
-import { templateInitialState, TemplateReducerState } from "../../../redux/reducers/TemplateReducer";
+import { templateInitialState } from "../../../redux/reducers/TemplateReducer";
 import { designerSectionsConfig, designSections, DesignSectionType } from "./designSection";
 import { TemplateImagesTypes } from "./InvoiceDesignerLanding";
-import VoucherType from "../../../enums/voucher-types";
 import Urls from "../../../redux/urls";
-import { customJsonParse, parseTemplateContent } from "../../../utilities/jsonConverter";
 import { setTemplate } from "../../../redux/slices/templates/reducer";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import { APIClient } from "../../../helpers/api-client";
 import { getOrientedDimensions, getPageDimensions } from "../utils/pdf-util";
-import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
-import { loadPrintData } from "../../use-print";
+import { fetchTemplateFromApiById, getOrFetchTemplate, loadPrintData } from "../../use-print";
 import { merge } from 'lodash';
 import { generateQRCodeDataUrl } from "../utils/qrSvgToImg";
+import { PrintDetailDto, PrintResponse } from "../../use-print-type";
 
 const api = new APIClient();
 
@@ -35,21 +30,18 @@ interface UseTemplateDesignerProps {
   templateGroup?: string;
   templateKind?: string;
   designerType?: string;
-  template?: TemplateState<unknown>
+  manuvalTemplateFeatch?:boolean,
   MasterIDParam?: number, voucherTypeParam?: string, isInvTrans?: boolean, isSalesView?: boolean, isServiceTrans?: boolean, transDate?: string, printCopies?: number, isReprint?: boolean, isPOSPrinting?: boolean, isFromSalesReceipt?: boolean, isPackingSlipPrint?: boolean, warehouseID?: number, kitchenIDParam?: number, kitchenPrinterNameParam?: string, kitchenNameParam?: string, commonKitchenProductGroupIDParam?: number,  transactionType?: string, dbIdValue?: string, voucherType?: string, isAppGlobal?: boolean
 }
 
-export const useTemplateDesigner = ({ templateGroup="", templateKind="", designerType="", template,MasterIDParam,voucherTypeParam,isInvTrans,isSalesView,isServiceTrans,transDate,printCopies,isReprint,isPOSPrinting,isFromSalesReceipt,isPackingSlipPrint,warehouseID,kitchenIDParam,kitchenPrinterNameParam,kitchenNameParam,commonKitchenProductGroupIDParam,transactionType,dbIdValue,voucherType,isAppGlobal}: UseTemplateDesignerProps) => {
+export const useTemplateDesigner = ({ templateGroup="", templateKind="", designerType="", manuvalTemplateFeatch,MasterIDParam,voucherTypeParam,isInvTrans,isSalesView,isServiceTrans,transDate,printCopies,isReprint,isPOSPrinting,isFromSalesReceipt,isPackingSlipPrint,warehouseID,kitchenIDParam,kitchenPrinterNameParam,kitchenNameParam,commonKitchenProductGroupIDParam,transactionType,dbIdValue,voucherType,isAppGlobal}: UseTemplateDesignerProps) => {
   const { t } = useTranslation("system");
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
-  const currentBranch = useCurrentBranch();
-  const userSession = useSelector((state: RootState) => state.UserSession);
-  const clientSession = useSelector((state: RootState) => state.ClientSession);
-  const storeTemplate = useSelector((state: RootState) => state.Template?.activeTemplate);
-  const templateData = template ?? storeTemplate;
+  const activeTemplate = useSelector((state: RootState) => state.Template?.activeTemplate);
+
   const [stableTemplateProps, setStableTemplateProps] = useState<any>(null);
   const [designTabs, setDesignTabs] = useState<DesignSectionType[]>([]);
   const [currentSection, setCurrentSection] = useState<DesignSectionType | null>(null);
@@ -61,40 +53,32 @@ export const useTemplateDesigner = ({ templateGroup="", templateKind="", designe
     background_image_footer: null,
   });
   const [maxHeight, setMaxHeight] = useState<number>(500);
-
   const previewContainerRef = useRef<HTMLDivElement>(null);
 
   //  Create consolidated template style properties object
-  const templateStyleProperties = useMemo(() => {
-    const pageOrientation = templateData.propertiesState?.orientation === "landscape" ? "landscape" : "portrait";
-    const pageSize = templateData.propertiesState?.pageSize ?? "A4";
+const templateStyleProperties = useMemo(() => {
+  const pageOrientation =
+    activeTemplate?.propertiesState?.orientation === "landscape" ? "landscape" : "portrait";
+  const pageSize = activeTemplate?.propertiesState?.pageSize ?? "A4";
 
-    const selectedPageSize = getPageDimensions(
-      pageSize,
-      templateData.propertiesState?.width,
-      templateData.propertiesState?.height,
-    );
+  const selectedPageSize = getPageDimensions(
+    pageSize,
+    activeTemplate?.propertiesState?.width,
+    activeTemplate?.propertiesState?.height
+  );
 
-    const orientedDimensions = getOrientedDimensions(selectedPageSize, pageOrientation);
-    const previewWidth = orientedDimensions.width;
-    const previewHeight = orientedDimensions.height;
+  const orientedDimensions = getOrientedDimensions(selectedPageSize, pageOrientation);
 
-    return {
-      previewWidth,
-      previewHeight,
-    };
-  }, [
-    templateData.propertiesState?.orientation,
-    templateData.propertiesState?.pageSize,
-    templateData.propertiesState?.bg_color,
-    templateData.propertiesState?.width,
-    templateData.propertiesState?.height,
-    templateData.propertiesState?.padding?.bottom,
-    templateData.propertiesState?.padding?.left,
-    templateData.propertiesState?.padding?.right,
-    templateData.propertiesState?.padding?.top,
-
-  ]);
+  return {
+    previewWidth: orientedDimensions.width,
+    previewHeight: orientedDimensions.height,
+  };
+}, [
+  activeTemplate?.propertiesState?.orientation,
+  activeTemplate?.propertiesState?.pageSize,
+  activeTemplate?.propertiesState?.width,
+  activeTemplate?.propertiesState?.height,
+]);
 
 
 
@@ -102,9 +86,11 @@ export const useTemplateDesigner = ({ templateGroup="", templateKind="", designe
  useEffect(() => {
     const load = async () => {
       debugger;
-      try {
         setLoading(true);
-         let data = DummyVoucherData;
+      try {
+      
+         let data: PrintResponse = DummyVoucherData as any;
+         let _template = activeTemplate;
         if (MasterIDParam) {
           data = (await loadPrintData(
             MasterIDParam ?? 0,
@@ -123,17 +109,27 @@ export const useTemplateDesigner = ({ templateGroup="", templateKind="", designe
             kitchenPrinterNameParam,
             kitchenNameParam,
             commonKitchenProductGroupIDParam,
-            template,
             transactionType,
             dbIdValue,
             voucherType,
             isAppGlobal
           )) as any;
         }
+        debugger
+   if(manuvalTemplateFeatch){
+      _template = await getOrFetchTemplate(data?.master?.voucherType,data?.master?.voucherForm,data?.master?.customerType); 
+        debugger
+      if (!_template) {
+        setStableTemplateProps(null);
+         setLoading(false);
+         return 
+      }
+
+   }
   // Generate QR codes here
       const elements: PlacedComponent[] = [
-        ...(templateData?.headerState?.customElements?.elements ?? []),
-        ...(templateData?.footerState?.customElements?.elements ?? []),
+        ...(_template?.headerState?.customElements?.elements ?? []),
+        ...(_template?.footerState?.customElements?.elements ?? []),
       ].filter(comp => comp.type === DesignerElementType.qrCode);
 
       const qrImages: { [key: string]: string } = {};
@@ -142,13 +138,17 @@ export const useTemplateDesigner = ({ templateGroup="", templateKind="", designe
           qrImages[comp.id] = await generateQRCodeDataUrl(comp.qrCodeProps);
         }
       }
-      const props = { template: templateData, data, qrCodeImages: qrImages };
-
+      const props = { template: _template, data, qrCodeImages: qrImages };
+      if(manuvalTemplateFeatch){
+        dispatch(setTemplate(_template));
+      }
+        
 
         setStableTemplateProps(props);
       } catch (err) {
         // handle/log error if you want
          setStableTemplateProps(null);
+         setLoading(false);
       } finally {
         setLoading(false);
       }
@@ -157,7 +157,6 @@ export const useTemplateDesigner = ({ templateGroup="", templateKind="", designe
     load();
   // include all deps that should retrigger reload
   }, [
-  templateData,
   MasterIDParam,
   transactionType,
   voucherTypeParam,
@@ -175,7 +174,6 @@ export const useTemplateDesigner = ({ templateGroup="", templateKind="", designe
   kitchenPrinterNameParam,
   kitchenNameParam,
   commonKitchenProductGroupIDParam,
-  template,
   dbIdValue,
   voucherType,
   isAppGlobal,
@@ -206,32 +204,19 @@ export const useTemplateDesigner = ({ templateGroup="", templateKind="", designe
 
   // Fetch template data for existing templates
   const getPDFTemplateData = useCallback(async () => {
+    debugger;
     if (id !== "new") {
       try {
         setLoading(true)
         
         debugger;
-        const res = await api.getAsync(`${Urls.templates}${id || ""}`);
-        if(res && res.id> 0) {
-          const cc: TemplateState<unknown> = parseTemplateContent(res.content);
-          const template: TemplateDto = {
-            ...cc,
-            id: res.id,
-            branchId: res.branchId,
+         const _template = await fetchTemplateFromApiById(id);
+              if(!_template) return null;
+      
+        if(_template && (_template?.id??0)> 0) {
 
-            isCurrent: res.isCurrent,
-            templateGroup: res.templateGroup,
-            templateKind: res.templateKind,
-            templateName: res.templateName,
-            templateType: res.templateType,
-            thumbImage: res.thumbImage,
-            backgroundImage: res?.payload?.data?.background_image,
-            backgroundImageHeader: res?.payload?.data?.background_image_header,
-            backgroundImageFooter: res?.payload?.data?.background_image_footer,
-            signatureImage: res?.payload?.data?.signature_image,
-          };
           const initial = templateInitialState().activeTemplate;
-          const _returnData = merge({}, initial, template);
+          const _returnData = merge({}, initial, _template);
           debugger;
           dispatch(setTemplate(_returnData));
         }
@@ -245,7 +230,10 @@ export const useTemplateDesigner = ({ templateGroup="", templateKind="", designe
   }, [id, dispatch, t]);
 
   useEffect(() => {
+    if(!manuvalTemplateFeatch){
     getPDFTemplateData();
+    }
+   
   }, [getPDFTemplateData]);
 
   // Function to convert preview component to image
@@ -275,20 +263,22 @@ export const useTemplateDesigner = ({ templateGroup="", templateKind="", designe
   const handleSave = useCallback(
     async (dataUrl: string) => {
       const tmpTemplate = {
-        ...templateData,
+        ...activeTemplate,
         propertiesState: {
-          ...templateData.propertiesState,
+          ...activeTemplate?.propertiesState,
           template_group: templateGroup,
           template_kind: templateKind,
           template_type: designerType,
         },
       };
 
-      const activeTemplate: TemplateDto = {
+      const activeTemplates: TemplateDto = {
         templateType: tmpTemplate.propertiesState.template_type ?? "standard",
         templateKind: tmpTemplate.propertiesState.template_kind ?? "standard",
         templateGroup: tmpTemplate.propertiesState.template_group ?? "",
         templateName: tmpTemplate.propertiesState?.templateName ?? "",
+        formType:tmpTemplate.propertiesState?.template_formType??null,
+        customerType:tmpTemplate.propertiesState?.template_customerType??null,
         thumbImage: dataUrl,
         content: JSON.stringify(tmpTemplate),
         isCurrent: tmpTemplate.isCurrent ?? false,
@@ -297,10 +287,10 @@ export const useTemplateDesigner = ({ templateGroup="", templateKind="", designe
         backgroundImageFooter: tmpTemplate.background_image_footer ?? "",
         signatureImage: tmpTemplate.signature_image ?? "",
         branchId: 0,
-        id: templateData?.id ?? 0,
+        id: id == "new" ? 0 :activeTemplate?.id,
       };
          const initial = templateInitialState().activeTemplate;
-        const _returnData = merge({}, initial, activeTemplate);
+        const _returnData = merge({}, initial, activeTemplates);
       dispatch(setTemplate(_returnData));
 
       try {
@@ -313,12 +303,12 @@ export const useTemplateDesigner = ({ templateGroup="", templateKind="", designe
         ERPToast.show(t("failed_to_save_template"));
       } 
     },
-    [templateData, templateGroup, templateKind, dispatch, navigate, t]
+    [activeTemplate, templateGroup, templateKind, dispatch, navigate, t]
   );
 
   // Updated save function that captures preview as image
   const manageSaveAccTemplate = useCallback(async () => {
-    if (id === "new" && !templateData.propertiesState?.templateName) {
+    if (id === "new" && !activeTemplate?.propertiesState?.templateName) {
       ERPToast.show(t("template_name_is_required"));
       return;
     }
@@ -336,7 +326,7 @@ export const useTemplateDesigner = ({ templateGroup="", templateKind="", designe
     finally {
         setLoading(false);
     }
-  }, [id, templateData, capturePreviewAsImage, handleSave, t]);
+  }, [id, activeTemplate, capturePreviewAsImage, handleSave, t]);
 
   // Debounced version if needed
   const debouncedSaveAccTemplate = useCallback(
@@ -356,10 +346,7 @@ export const useTemplateDesigner = ({ templateGroup="", templateKind="", designe
     templateImages,
     setTemplateImages,
     maxHeight,
-    currentBranch,
-    userSession,
-    clientSession,
-    templateData,
+    activeTemplate,
     stableTemplateProps,
     manageSaveAccTemplate,
     dispatch,

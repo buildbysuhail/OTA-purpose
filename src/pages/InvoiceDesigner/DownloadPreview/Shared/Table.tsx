@@ -100,6 +100,8 @@ const SharedDownTable: React.FC<DownTableProps> = ({ data, template }) => {
     );
   };
 
+
+  
   const renderBody = () => {
     if (!visibleColumns.length) return null;
 

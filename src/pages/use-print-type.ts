@@ -153,7 +153,6 @@ export interface PrintMasterDto {
   totDiscount?: number;
   empIncentive?: number;
   commonNarration: string;
-  formType: string;
   debitNoteTransID: number;
   creditNoteTransID: number;
   currencyID: number;

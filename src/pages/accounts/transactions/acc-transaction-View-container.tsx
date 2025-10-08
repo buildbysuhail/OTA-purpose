@@ -54,12 +54,10 @@ import {
   Trash2,
 } from "lucide-react";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
-import useCurrentBranch from "../../../utilities/hooks/use-current-branch";
 import { useSearch } from "./search-context.tsx";
 import { useAccPrint } from "./use-print";
-import { useAccTransaction } from "./use-acc-transaction";
-import { templateConfig } from "../../InvoiceDesigner/LandingFolder/designSection";
-import VoucherType from "../../../enums/voucher-types";
+import SharedTemplatePreview from "../../InvoiceDesigner/DesignPreview/shared";
+
 
 export interface TransactionViewProps {
   voucherType?: string;
@@ -68,6 +66,7 @@ export interface TransactionViewProps {
   formCode?: string;
   voucherPrefix?: string;
   formType?: string;
+  customerType?: string;
   title?: string;
   drCr?: string;
   voucherNo?: number;
@@ -84,7 +83,7 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (
   //   setSearchQuery(query);
   // };
 debugger;
-const { printVoucher, getTemplate } = useAccPrint();
+const { printVoucher } = useAccPrint();
   const [searchParams] = useSearchParams();
   const { voucherNo: voucherNoParam } = useParams<{ voucherNo: string }>();
   const { searchQuery } = useSearch();
@@ -156,9 +155,8 @@ useEffect(() => {
 
   // Set max height based on window size
 
-  const [template,setTemplate]= useState<any>(null)
   const { t } = useTranslation("transaction");
-  const formState = useAppSelector((state: RootState) => state.AccTransaction);
+  const formState: any = useAppSelector((state: RootState) => props.isInvTrans ?  state.InventoryTransaction : state.AccTransaction);
 
   const navigate = useNavigate();
    const location = useLocation();
@@ -414,29 +412,23 @@ const newUrl = `/accounts/transactions/CashPayment/${vchno}${queryString ? `?${q
   }, []);
 
 
-  useEffect(() => {
-    const fetchTemplate = async () => {
-      const result = await getTemplate(input?.voucherType, formState);
-      setTemplate(result);
-    };
-    fetchTemplate();
-  }, [input, formState]); 
 
-    const groupKey = (input?.voucherType ?? "") as VoucherType;
-    const typeKey = template?.templateType?.toUpperCase() ?? "STANDARD";
-    const kindKey = template?.templateKind ;
-    const templateToRender = useMemo(() => {
-      return templateConfig?.[groupKey]?.[typeKey]?.[kindKey] ?? null;
-    }, [groupKey, typeKey, kindKey]);
+    // const groupKey = (input?.voucherType ?? "") as VoucherType;
+    // const typeKey = template?.templateType?.toUpperCase() ?? "STANDARD";
+    // const kindKey = template?.templateKind ;
+    // const templateToRender = useMemo(() => {
+    //   return templateConfig?.[groupKey]?.[typeKey]?.[kindKey] ?? null;
+    // }, [groupKey, typeKey, kindKey]);
 
      
   const {
     stableTemplateProps,
     loading,
     templateStyleProperties
-    } = useTemplateDesigner({ templateGroup:groupKey, templateKind: kindKey, designerType:typeKey,template, isInvTrans: input.isInvTrans 
+    } = useTemplateDesigner({ manuvalTemplateFeatch:true, isInvTrans: input.isInvTrans 
     ,MasterIDParam:input.transactionMasterID,transactionType:input.transactionType
     })
+
 
 const MemoizedGrid = useMemo(() => {
   return (
@@ -643,7 +635,7 @@ const MemoizedGrid = useMemo(() => {
                     className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${
                       phone ? "p-0.5" : "p-3"
                     } rounded-md hover:bg-gray-200 transition-colors`}
-                     onClick={() =>  printVoucher(input.transactionMasterID, input.transactionType ?? "",template,input.voucherType, formState.transaction.master.transactionDate)}
+                     onClick={() =>  printVoucher(input.transactionMasterID, input.transactionType ?? "",stableTemplateProps.template,input.voucherType, formState.transaction.master.transactionDate)}
                   >
                     <Printer className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                   </button>
@@ -705,16 +697,23 @@ const MemoizedGrid = useMemo(() => {
 
                               }}
                               >
-                            {loading || !template ? (
+                            {loading  ? (
                               <div className="absolute inset-0 flex items-center justify-center">
                                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                               </div>
                             ) : (
-                              templateToRender?.PreviewComponent && template
-                                ? React.cloneElement(templateToRender.PreviewComponent, {...stableTemplateProps,template})
+                               stableTemplateProps?.template
+                                ? 
+                                // React.cloneElement(templateToRender.PreviewComponent, {...stableTemplateProps,template})
+                                      <SharedTemplatePreview
+                                        template={stableTemplateProps?.template}
+                                        data={stableTemplateProps?.data}
+                                        qrCodeImages={stableTemplateProps?.qrCodeImages}
+                                  
+                                      />
                                 : (
                                     <div className="flex items-center justify-center h-full text-gray-500 italic">
-                                     ...still finding
+                                     ...No Template Found
                                     </div>
                                   )
                             )}

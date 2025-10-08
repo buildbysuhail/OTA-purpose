@@ -26,7 +26,7 @@ interface TemplatesProps {
 
 const api = new APIClient();
 
-export default function TemplatesView({ setIsOpen, voucherType, isInvTrans,transactionMasterID,transactionType }: TemplatesProps) {
+export default function TemplatesPreView({ setIsOpen, voucherType, isInvTrans,transactionMasterID,transactionType }: TemplatesProps) {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 

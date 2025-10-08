@@ -115,7 +115,11 @@ const Templates = () => {
   const getTemplates = async () => {
     setLoading(true)
     try {
-      var res = await api.getAsync(Urls.templates, `template_group=${templateGroup}`)
+      var res = await api.postAsync(`${Urls.templates}filtered`, {
+        template_group:templateGroup,
+        formType:"",
+        customerType:null
+      })
       handlePlainResponse(
         res,
         () => {
@@ -149,7 +153,7 @@ const Templates = () => {
   }, [templateGroup])
 
   const filteredAndSortedTemplates = useMemo(() => {
-    let filtered = tempData
+    let filtered = tempData && Array.isArray(tempData) ? tempData : []
 
     if (searchQuery) {
       filtered = filtered.filter(
@@ -773,7 +777,7 @@ const Templates = () => {
                     {filteredAndSortedTemplates.length === 0 && !loading && (
                       <div className="text-center py-16 sm:py-20 px-4">
                         <div className="text-4xl sm:text-6xl mb-4 sm:mb-6">🎨</div>
-                        <h3 className="text-lg sm:text-2xl font-bold text-slate-900 mb-3">{t('no_templates_found')}</h3>
+                        <h3 className="text-lg sm:text-2xl font-bold text-slate-900 mb-3">{t('no_templates_foundz')}</h3>
                         <p className="text-slate-600 mb-6 text-sm sm:text-base max-w-sm mx-auto leading-relaxed">
                           {searchQuery
                             ? `We couldn't find any templates matching "${searchQuery}".`

@@ -15,6 +15,8 @@ import { accFormStateHandleFieldChange } from "./accounts/transactions/reducer";
 import { history as _history } from "../history";
 import { setTransactionForHistory } from "../helpers/transaction-modified-util";
 import { formStateHandleFieldChange } from "./inventory/transactions/reducer";
+import { purchaseVoucherTypes, salesVoucherTypes } from "../enums/voucher-types";
+import { TransactionBase } from "../components/common/content/transaction-routes";
 
 export const useUnsavedChangesWarning = () => {
   const navigate = useNavigate();
@@ -35,8 +37,8 @@ export const useUnsavedChangesWarning = () => {
   // Determine which form state to use based on flags
   const _formState = useMemo(() => {
     // First check if flags explicitly indicate which state to use
-    if ((_accFormState as any)?.isAcc === true) return _accFormState as any;
-    if ((_invFormState as any)?.isInv === true) return _invFormState as any;
+    if (_accFormState?.isAcc === true) { debugger; return _accFormState as any;}
+    if (_invFormState?.isInv === true) { debugger; return _invFormState as any;}
 
     // Fallback: use whichever state has data
     if ((_accFormState as any)?.prev || (_accFormState as any)?.transaction)
@@ -65,12 +67,19 @@ export const useUnsavedChangesWarning = () => {
       return "/accounts/transactions";
     }
     if (_invFormState?.isInv) {
+      if(purchaseVoucherTypes.includes(_invFormState.transaction.master.voucherType as any)) {
+        return `/${TransactionBase.Purchase}`;  
+      }
+      else if(salesVoucherTypes.includes(_invFormState.transaction.master.voucherType as any)) {
+        return `/${TransactionBase.Sales}`;  
+      }
       return "/inventory/transactions"; // Adjust this path as needed
     }
     return "/";
   }, [_accFormState, _invFormState]);
   const hasUnsavedChanges = useCallback(async () => {
     try {
+      debugger;
       if (!_formState || !_formState.prev) return false;
       let currentStateCompare: any;
       if (_formState.isAcc) {

@@ -717,13 +717,13 @@ const TransactionGrid: React.FC<{
               <ERPDevGrid
                 gridAddButtonType={"link"}
                 gridAddButtonLink={`${import.meta.env.BASE_URL
-                  }inventory/transactions/${transactionType}`}
+                  }${TransactionBase.Purchase}/${transactionType}`}
                 columns={columns}
                 dataUrl={`${urls.inv_transaction_base}${transactionType}/List/`}
                 method={ActionType.GET}
                 // postData={{voucherType: voucherType, transactionType: transactionType}}
                 gridHeader={t(`${title}`)}
-                gridId={`${addTitle ?? "transactions"} Transactions`}
+                gridId={`${addTitle ?? "transactions"}Transactions`}
                 gridAddButtonIcon="ri-add-line"
                 pageSize={40}
                 allowExport={true}

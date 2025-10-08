@@ -32,6 +32,7 @@ export enum TransactionTitles {
   PurchaseReturn = "purchase_return",
   PurchaseReturnVAT = "purchase_return_VAT",
   PurchaseOrder = "purchase_order",
+  LPO = "lpo",
   RequestForSalesQuotation = "request_for_sales_quotation",
   PurchaseQuotation = "purchase_quotation",
   PurchaseOrderTransist = "purchase_order_transist",

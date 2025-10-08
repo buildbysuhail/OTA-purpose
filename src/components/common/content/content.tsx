@@ -397,6 +397,24 @@ const Content: FC<ContentProps> = () => {
                 /> */}
               </>
             )}
+            <Route
+                  key={`${123}-purchase/transactions-lpo-`}
+                  path={`purchase/transactions/LPO`}
+                  element={
+                    <RouteGuard formCode={route.formCode} action={UserAction.Show}>
+                      <TransactionFormContainer
+                        voucherType={"LPO"}
+                        transactionType={"LocalPurchaseOrder"}
+                        formCode={""}
+                        voucherPrefix={""}
+                        formType={""}
+                        title={"LPO"}
+                        drCr={route.drCr}
+                        voucherNo={0}
+                      />
+                    </RouteGuard>
+                  }
+                />
             {route.transactionBase == TransactionBase.Sales && (
               <>
                 <Route

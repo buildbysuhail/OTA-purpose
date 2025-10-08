@@ -429,6 +429,15 @@ export const MENUITEMS = [
         rights: route.formCode,
         icon: route.icon,
       })),
+      {
+        path: `${import.meta.env.BASE_URL}purchase/transactions/LPO`,
+        type: "link",
+        active: false,
+        selected: false,
+        title: TransactionTitles.LPO,
+        rights: "BRC",
+        icon: Landmark
+      },
     ],
   },
   {

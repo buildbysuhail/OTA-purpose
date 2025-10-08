@@ -3440,7 +3440,7 @@ export const useTransaction = (
                   productBatchID: 0,
                   searchText: data.barCode,
                   detail: data,
-                  useProductCode: true,
+                  useProductCode: false,
                   rowIndex: rowIndex,
                   searchColumn: "barCode",
                   setFocusToNextColumn: true,

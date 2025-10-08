@@ -692,13 +692,13 @@ const TransactionGrid: React.FC<{
                 gridAddButtonType={"link"}
                 gridAddButtonLink={`${
                   import.meta.env.BASE_URL
-                }sales/transactions/${transactionType}`}
+                }${TransactionBase.Sales}/${transactionType}`}
                 columns={columns}
                 dataUrl={`${urls.inv_transaction_base}${transactionType}/List/`}
                 method={ActionType.GET}
                 // postData={{voucherType: voucherType, transactionType: transactionType}}
                 gridHeader={t(`${title}`)}
-                gridId={`${addTitle ?? "transactions"} Transactions`}
+                gridId={`${addTitle ?? "transactions"}Transactions`}
                 gridAddButtonIcon="ri-add-line"
                 pageSize={40}
                 allowExport={true}

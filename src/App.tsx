@@ -24,7 +24,6 @@ const AcceptInvitation = React.lazy(() => import("./pages/auth/accept-invitation
 const MobileFooter = React.lazy(() => import("./pages/dashboards/crm/mobile-footer"));
 const ERPModal = React.lazy(() => import("./components/ERPComponents/erp-modal"));
 const ERPAlert = React.lazy(() => import("./components/ERPComponents/erp-sweet-alert"));
-const UnsavedChangesModal = React.lazy(() => import("./pages/accounts/transactions/unsavedChangesModal"));
 const Switcher = React.lazy(() => import("./components/common/switcher/switcher"));
 const Loader = React.lazy(() => import("./components/common/loader/loader"));
 
@@ -40,8 +39,6 @@ import { UserTypeRights } from "./redux/slices/user-rights/reducer";
 import Urls from "./redux/urls";
 import { setApplicationSettings } from "./redux/slices/app/application-settings-reducer";
 import AutoClicker from "./Nodevwatermark";
-import { ClientSessionModel, setSoftwareDate } from "./redux/slices/client-session/reducer";
-import { useUnsavedChangesWarning } from "./pages/use-unsaved-changes-warning";
 import { useAppState } from "./utilities/hooks/useAppState";
 import { getUserSessionData } from "./session-data";
 import { useRootState } from "./utilities/hooks/useRootState";
@@ -54,6 +51,9 @@ import "./i18n/config";
 import { APIClient } from "./helpers/api-client";
 import { useAppSelector, useAppDispatch } from "./utilities/hooks/useAppDispatch";
 import { useTranslation } from "react-i18next";
+import { useUnsavedChangesWarning } from "./pages/use-unsaved-changes-warning";
+import UnsavedChangesModal from "./pages/accounts/transactions/unsavedChangesModal";
+import { setSoftwareDate } from "./redux/slices/client-session/reducer";
 // ====
 // import ERPModal from "./components/ERPComponents/erp-modal";
 // import 'devextreme/dist/css/dx.dark.css';  

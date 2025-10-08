@@ -35,6 +35,8 @@ interface TransactionFooterProps {
   focusAmount: any;
   goToPreviousPage: any;
   save: any;
+  generateLPQ:any
+  generateLPO:any
   selectAttachment: any;
   isDropUpOpen: boolean;
   toggleDropup: () => void;
@@ -162,6 +164,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   focusAmount,
   goToPreviousPage,
   save,
+  generateLPQ,
+  generateLPO,
   selectAttachment,
   isDropUpOpen,
   toggleDropup,
@@ -445,246 +449,266 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
     <div
       className={`dark:bg-dark-bg ${footerLayout === "vertical" ? "flex flex-col justify-between h-full" : ""}`}
       style={{ backgroundColor: formState.userConfig?.footerBg ? `rgb(${formState.userConfig.footerBg})` : undefined, }}>
-      <div className={`${footerLayout === "vertical" ? "relative block" : "hidden"}`}>
-        <div className="flex justify-between space-x-2">
-          <button onClick={toggleFooterPosition} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 dark:bg-dark-bg opacity-50 hover:opacity-100 transition-all duration-300" title={t("display_the_footer_at_the_bottom")}>
-            <PanelBottom className="text-[#b3b3b9] dark:text-dark-text w-4 h-4" />
-          </button>
+      {formState.transaction.master.voucherType !== "LPO" && (
+        <div className={`${footerLayout === "vertical" ? "relative block" : "hidden"}`}>
+          <div className="flex justify-between space-x-2">
+            <button onClick={toggleFooterPosition} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 dark:bg-dark-bg opacity-50 hover:opacity-100 transition-all duration-300" title={t("display_the_footer_at_the_bottom")}>
+              <PanelBottom className="text-[#b3b3b9] dark:text-dark-text w-4 h-4" />
+            </button>
 
-          <button ref={buttonRef} onClick={() => setIsPopupVisible((prev) => !prev)} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 dark:bg-dark-bg opacity-50 hover:opacity-100 transition-all duration-300" title={t("more_options")} >
-            <EllipsisVertical className="w-4 h-4 text-gray-600 dark:text-dark-text" />
-          </button>
-        </div>
+            <button ref={buttonRef} onClick={() => setIsPopupVisible((prev) => !prev)} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 dark:bg-dark-bg opacity-50 hover:opacity-100 transition-all duration-300" title={t("more_options")} >
+              <EllipsisVertical className="w-4 h-4 text-gray-600 dark:text-dark-text" />
+            </button>
+          </div>
 
-        {isPopupVisible && (
-          <div
-            ref={popupRef}
-            className="absolute rounded-sm dark:bg-dark-bg-card dark:text-dark-text bg-gray-100 shadow-lg p-4 z-50"
-            style={{ top: "100%", right: "0", width: "251px", marginTop: "8px", }}>
-            <nav className="w-full dark:bg-dark-bg-card dark:text-dark-text bg-gray-100 text-black">
-              <ul className="space-y-1">
-                <li>
-                  {formState.formElements.printOnSave.visible && (
-                    <ERPCheckbox
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      id="printOnSave"
-                      label={t(formState.formElements.printOnSave.label)}
-                      checked={formState.printOnSave}
-                      onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { printOnSave: e.target.checked }, }))}
-                      disabled={formState.formElements.printOnSave?.disabled}
-                    />
-                  )}
-                </li>
-                {/* <li>
-                  <AutoCalculationCheckbox
-                    formState={formState}
-                    dispatch={dispatch}
-                    t={t}
-                  />
-                </li>
-                <li>
-                  <IsLockedCheckbox
-                    formState={formState}
-                    dispatch={dispatch}
-                    t={t}
-                  />
-                </li> */}
-                <li>
-                  <button className="text-[#2563eb]">
-                    {applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && (
-                      <span className="hover:underline text-[#0ea5e9] capitalize" onClick={selectAttachment}>
-                        {t("attachment")}
-                      </span>
+          {isPopupVisible && (
+            <div
+              ref={popupRef}
+              className="absolute rounded-sm dark:bg-dark-bg-card dark:text-dark-text bg-gray-100 shadow-lg p-4 z-50"
+              style={{ top: "100%", right: "0", width: "251px", marginTop: "8px", }}>
+              <nav className="w-full dark:bg-dark-bg-card dark:text-dark-text bg-gray-100 text-black">
+                <ul className="space-y-1">
+                  <li>
+                    {formState.formElements.printOnSave.visible && (
+                      <ERPCheckbox
+                        localInputBox={formState?.userConfig?.inputBoxStyle}
+                        id="printOnSave"
+                        label={t(formState.formElements.printOnSave.label)}
+                        checked={formState.printOnSave}
+                        onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { printOnSave: e.target.checked }, }))}
+                        disabled={formState.formElements.printOnSave?.disabled}
+                      />
                     )}
-                  </button>
-                </li>
-                <li>
-                  <ERPButton
-                    title={t("grn_print")}
-                    variant="secondary"
-                    disabled={formState.transactionLoading}
-                  />
-                </li>
-              </ul>
-            </nav>
-          </div>
-        )}
-      </div>
-
-      <div className={`dark:bg-dark-bg-card ${footerLayout === "vertical" ? "" : "bg-white shadow-lg border dark:border-dark-border border-gray-200 overflow-hidden"}`}>
-        <div className={`${footerLayout === "vertical" && !isSmallHeight ? "block" : "hidden"}`}>
-          <div className="mb-2">
-            <div className={`grid ${footerLayout === "vertical" ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 items-end"}`}>
-              <div className="w-full">
-                <WarehouseID
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                  handleKeyDown={handleKeyDown}
-                  handleFieldKeyDown={handleFieldKeyDown}
-                />
-              </div>
-              <div className="w-full">
-                <PriceCategoryCombobox
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                  handleKeyDown={handleKeyDown}
-                  handleFieldKeyDown={handleFieldKeyDown}
-                />
-              </div>
-              <div className="w-full">
-                <CostCentreCombobox
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                  handleKeyDown={handleKeyDown}
-                  handleFieldKeyDown={handleFieldKeyDown}
-                />
-              </div>
-              <div className="w-full">
-                <SupplyTypeCombobox
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                  handleKeyDown={handleKeyDown}
-                  handleFieldKeyDown={handleFieldKeyDown}
-                />
-              </div>
-              <div className="w-full">
-                <AdjustmentAmountInput
-                  transactionType={transactionType}
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                  handleKeyDown={handleKeyDown}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className={`grid ${footerLayout === "vertical" ? "grid-cols-1 gap-1" : "grid-cols-1 md:grid-cols-[1fr_400px]"}`}>
-          <div className={`flex ${footerLayout === "vertical" ? "flex-col items-start justify-start" : "p-2 flex-col md:flex-row items-end justify-end gap-4"}`}>
-            <div className={`${footerLayout === "vertical" ? "hidden" : "block"}`}>
-              <div className="absolute top-1.5 left-1">
-                <button onClick={toggleFooterPosition} className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 dark:bg-dark-bg opacity-50 hover:opacity-100 transition-all duration-300" title={t("display_the_footer_on_the_right")}>
-                  <PanelRight className="text-[#b3b3b9] dark:text-dark-text w-4 h-4" />
-                </button>
-              </div>
-            </div>
-            {footerLayout !== "vertical" && outsideComponents}
-            <div className={`hidden md:flex ${footerLayout === "vertical" ? "flex-col items-start w-full" : "flex-col items-start w-full md:w-auto"}`}>
-              <div className={`flex ${footerLayout === "vertical" ? "flex-col items-start" : "items-end"} gap-2 mb-2`}>
-                <div className={`flex items-center w-full ${footerLayout === "vertical" ? "justify-between" : "gap-2"}`}>
-                  {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && formState.transaction.master.voucherType !== VoucherType.PurchaseEstimate && (
-                    <CashPaidSection
+                  </li>
+                  {/* <li>
+                    <AutoCalculationCheckbox
                       formState={formState}
                       dispatch={dispatch}
                       t={t}
-                      focusDiscount={focusDiscount}
-                      focusAmount={focusAmount}
                     />
-                  )}
-                  <RoundOffInput
-                    formState={formState}
-                    dispatch={dispatch}
-                    t={t}
-                    handleKeyDown={handleKeyDown}
-                    focusDiscount={() => document.getElementById("discountID")?.focus()}
-                    focusAmount={() => document.getElementById("amountID")?.focus()}
-                  />
-                </div>
-                <div className="flex flex-col w-full">
-                  <BillDiscountInput
-                    formState={formState}
-                    dispatch={dispatch}
-                    t={t}
-                    handleKeyDown={handleKeyDown}
-                    footerLayout={footerLayout}
-                    applyDiscountsToItems={applyDiscountsToItems}
-                  />
-                </div>
-              </div>
+                  </li>
+                  <li>
+                    <IsLockedCheckbox
+                      formState={formState}
+                      dispatch={dispatch}
+                      t={t}
+                    />
+                  </li> */}
+                  <li>
+                    <button className="text-[#2563eb]">
+                      {applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && (
+                        <span className="hover:underline text-[#0ea5e9] capitalize" onClick={selectAttachment}>
+                          {t("attachment")}
+                        </span>
+                      )}
+                    </button>
+                  </li>
+                  <li>
+                    <ERPButton
+                      title={t("grn_print")}
+                      variant="secondary"
+                      disabled={formState.transactionLoading}
+                    />
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          )}
+        </div>
+      )}
 
-              <div className={`${footerLayout === "vertical" ? "w-full max-w-[265px]" : "w-full md:w-[345px]"}`}>
-                <div className="flex flex-col">
-                  <ERPTextarea
-                    id="remarks"
-                    required={true}
-                    localInputBox={formState?.userConfig?.inputBoxStyle}
-                    label={t(formState.formElements.remarks.label)}
-                    value={formState.transaction.master.remarks}
-                    onChange={(e) => dispatch(formStateTransactionMasterHandleFieldChange({ fields: { remarks: e.target?.value }, }))}
-                    disabled={formState.formElements.remarks?.disabled || formState.formElements.pnlMasters?.disabled}
-                    className={`dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text ${isNewFooter ? "h-[42px]" : ""}`}
+      <div className={`dark:bg-dark-bg-card ${footerLayout === "vertical" ? "" : "bg-white shadow-lg border dark:border-dark-border border-gray-200 overflow-hidden"}`}>
+        {formState.transaction.master.voucherType !== "LPO" && (
+          <div className={`${footerLayout === "vertical" && !isSmallHeight ? "block" : "hidden"}`}>
+            <div className="mb-2">
+              <div className={`grid ${footerLayout === "vertical" ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 items-end"}`}>
+                <div className="w-full">
+                  <WarehouseID
+                    formState={formState}
+                    dispatch={dispatch}
+                    t={t}
+                    handleKeyDown={handleKeyDown}
+                    handleFieldKeyDown={handleFieldKeyDown}
+                  />
+                </div>
+                <div className="w-full">
+                  <PriceCategoryCombobox
+                    formState={formState}
+                    dispatch={dispatch}
+                    t={t}
+                    handleKeyDown={handleKeyDown}
+                    handleFieldKeyDown={handleFieldKeyDown}
+                  />
+                </div>
+                <div className="w-full">
+                  <CostCentreCombobox
+                    formState={formState}
+                    dispatch={dispatch}
+                    t={t}
+                    handleKeyDown={handleKeyDown}
+                    handleFieldKeyDown={handleFieldKeyDown}
+                  />
+                </div>
+                <div className="w-full">
+                  <SupplyTypeCombobox
+                    formState={formState}
+                    dispatch={dispatch}
+                    t={t}
+                    handleKeyDown={handleKeyDown}
+                    handleFieldKeyDown={handleFieldKeyDown}
+                  />
+                </div>
+                <div className="w-full">
+                  <AdjustmentAmountInput
+                    transactionType={transactionType}
+                    formState={formState}
+                    dispatch={dispatch}
+                    t={t}
+                    handleKeyDown={handleKeyDown}
                   />
                 </div>
               </div>
             </div>
           </div>
+        )}
 
-          <div className="p-2 dark:bg-dark-bg-card bg-gray-50 border-l dark:border-dark-border border-gray-200">
-            <div className="flex flex-col gap-1.5">
-              <NetAmountInput
-                formState={formState}
-                dispatch={dispatch}
-                t={t}
-                handleKeyDown={handleKeyDown}
-              />
-              <VatAmountLabel
-                formState={formState}
-                dispatch={dispatch}
-                t={t}
-                taxData={taxData}
-              />
-              <BillDiscountLabel
-                formState={formState}
-                dispatch={dispatch}
-                t={t}
-              />
-              {/* <NetTotalLabel formState={formState} dispatch={dispatch} t={t} /> */}
-              {formState.formElements.grandTotalFc.visible && (
-                <div>
-                  <div className="flex items-center justify-between dark:text-dark-text">
-                    <span>{t(formState.formElements.grandTotalFc.label)}:</span>
-                    <span>{formState.transaction.master.grandTotalFc}</span>
+        {formState.transaction.master.voucherType !== "LPO" && (
+          <div className={`grid ${footerLayout === "vertical" ? "grid-cols-1 gap-1" : "grid-cols-1 md:grid-cols-[1fr_400px]"}`}>
+            <div className={`flex ${footerLayout === "vertical" ? "flex-col items-start justify-start" : "p-2 flex-col md:flex-row items-end justify-end gap-4"}`}>
+              <div className={`${footerLayout === "vertical" ? "hidden" : "block"}`}>
+                <div className="absolute top-1.5 left-1">
+                  <button onClick={toggleFooterPosition} className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 dark:bg-dark-bg opacity-50 hover:opacity-100 transition-all duration-300" title={t("display_the_footer_on_the_right")}>
+                    <PanelRight className="text-[#b3b3b9] dark:text-dark-text w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+              {footerLayout !== "vertical" && outsideComponents}
+              <div className={`hidden md:flex ${footerLayout === "vertical" ? "flex-col items-start w-full" : "flex-col items-start w-full md:w-auto"}`}>
+                <div className={`flex ${footerLayout === "vertical" ? "flex-col items-start" : "items-end"} gap-2 mb-2`}>
+                  <div className={`flex items-center w-full ${footerLayout === "vertical" ? "justify-between" : "gap-2"}`}>
+                    {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && formState.transaction.master.voucherType !== VoucherType.PurchaseEstimate && (
+                      <CashPaidSection
+                        formState={formState}
+                        dispatch={dispatch}
+                        t={t}
+                        focusDiscount={focusDiscount}
+                        focusAmount={focusAmount}
+                      />
+                    )}
+                    <RoundOffInput
+                      formState={formState}
+                      dispatch={dispatch}
+                      t={t}
+                      handleKeyDown={handleKeyDown}
+                      focusDiscount={() => document.getElementById("discountID")?.focus()}
+                      focusAmount={() => document.getElementById("amountID")?.focus()}
+                    />
+                  </div>
+                  <div className="flex flex-col w-full">
+                    <BillDiscountInput
+                      formState={formState}
+                      dispatch={dispatch}
+                      t={t}
+                      handleKeyDown={handleKeyDown}
+                      footerLayout={footerLayout}
+                      applyDiscountsToItems={applyDiscountsToItems}
+                    />
                   </div>
                 </div>
-              )}
-              <div className="flex justify-between items-center border-t-2 border-[#3b82f6] mt-1">
-                <span className="text-sm font-bold dark:text-dark-text text-gray-900 uppercase">
-                  {t(formState.formElements.grandTotal.label)}
-                </span>
-                <span className="text-lg font-bold text-[#3b82f6]">
-                  {getFormattedValue(formState.transaction.master?.grandTotal ?? 0)}
-                </span>
+
+                <div className={`${footerLayout === "vertical" ? "w-full max-w-[265px]" : "w-full md:w-[345px]"}`}>
+                  <div className="flex flex-col">
+                    <ERPTextarea
+                      id="remarks"
+                      required={true}
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                      label={t(formState.formElements.remarks.label)}
+                      value={formState.transaction.master.remarks}
+                      onChange={(e) => dispatch(formStateTransactionMasterHandleFieldChange({ fields: { remarks: e.target?.value }, }))}
+                      disabled={formState.formElements.remarks?.disabled || formState.formElements.pnlMasters?.disabled}
+                      className={`dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text ${isNewFooter ? "h-[42px]" : ""}`}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-2 dark:bg-dark-bg-card bg-gray-50 border-l dark:border-dark-border border-gray-200">
+              <div className="flex flex-col gap-1.5">
+                <NetAmountInput
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  handleKeyDown={handleKeyDown}
+                />
+                <VatAmountLabel
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  taxData={taxData}
+                />
+                <BillDiscountLabel
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
+                {/* <NetTotalLabel formState={formState} dispatch={dispatch} t={t} /> */}
+                {formState.formElements.grandTotalFc.visible && (
+                  <div>
+                    <div className="flex items-center justify-between dark:text-dark-text">
+                      <span>{t(formState.formElements.grandTotalFc.label)}:</span>
+                      <span>{formState.transaction.master.grandTotalFc}</span>
+                    </div>
+                  </div>
+                )}
+                <div className="flex justify-between items-center border-t-2 border-[#3b82f6] mt-1">
+                  <span className="text-sm font-bold dark:text-dark-text text-gray-900 uppercase">
+                    {t(formState.formElements.grandTotal.label)}
+                  </span>
+                  <span className="text-lg font-bold text-[#3b82f6]">
+                    {getFormattedValue(formState.transaction.master?.grandTotal ?? 0)}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
 
         <div className={`p-2 dark:bg-dark-bg-card bg-gray-100 border-t dark:border-dark-border border-gray-200 flex ${footerLayout === "vertical" ? "flex-col" : "flex-col md:flex-row justify-between items-center gap-4"}`}>
           <div>
-            {/* {formState.formElements.printOnSave.visible && ( */}
-            <ERPCheckbox
-              localInputBox={formState?.userConfig?.inputBoxStyle}
-              id="printOnSave"
-              label={t(formState.formElements.printOnSave.label)}
-              checked={formState.printOnSave}
-              onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { printOnSave: e.target.checked }, }))}
-              disabled={formState.formElements.printOnSave?.disabled}
-              className="dark:text-dark-text"
-            />
-            {/* )} */}
+            {formState.transaction.master.voucherType !== "LPO" && (
+              <ERPCheckbox
+                localInputBox={formState?.userConfig?.inputBoxStyle}
+                id="printOnSave"
+                label={t(formState.formElements.printOnSave.label)}
+                checked={formState.printOnSave}
+                onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { printOnSave: e.target.checked }, }))}
+                disabled={formState.formElements.printOnSave?.disabled}
+                className="dark:text-dark-text"
+              />
+            )}
           </div>
           <div className="flex justify-end gap-2 w-full sm:w-auto">
-            <ConfettiWrapper onOriginalClick={save} triggerConfetti={formState.savingCompleted}>
+            {formState.transaction.master.voucherType === "LPO" && (
+              <ConfettiWrapper onOriginalClick={generateLPQ} triggerConfetti={formState.savingCompleted}>
+                <ERPButton
+                  variant="primary"
+                  ref={btnSaveRef}
+                  jumpTarget="save"
+                  title={t("generate_lpq")}
+                  startIcon={<Check className="w-3.5 h-3.5" />}
+                  localInputBox={formState?.userConfig?.inputBoxStyle}
+                  disabled={formState.formElements.pnlMasters?.disabled || formState.transaction.details == null || formState.transaction.details.length == 0}
+                  className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg flex-1 sm:flex-none"
+                />
+              </ConfettiWrapper>
+            )}
+            <ConfettiWrapper onOriginalClick={formState.transaction.master.voucherType === "LPO"?generateLPO:save} triggerConfetti={formState.savingCompleted}>
               <ERPButton
                 variant="primary"
                 ref={btnSaveRef}
                 jumpTarget="save"
-                title={t("save")}
+                title={formState.transaction.master.voucherType === "LPO" ? t("generate_lpo") : t("save")}
                 startIcon={<Check className="w-3.5 h-3.5" />}
                 localInputBox={formState?.userConfig?.inputBoxStyle}
                 disabled={formState.formElements.pnlMasters?.disabled || formState.transaction.details == null || formState.transaction.details.length == 0}
@@ -708,7 +732,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   const dropdownContent = (
     <div className="p-2 dark:bg-dark-bg-card bg-white border border-gray-300 dark:border md:border-t md:border-r md:border-l md:border-b-0 md:rounded-t-lg rounded-lg md:rounded-none">
       <div className="flex items-end gap-2 flex-wrap">
-          {/* <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
+        {/* <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
           <PriceCategoryCombobox
             formState={formState}
             dispatch={dispatch}
@@ -738,10 +762,10 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 {costCentreComponent}
               </div>
             )}
-            </>
-          )}
-          {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
-            <>
+          </>
+        )}
+        {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+          <>
             {!showAdjustmentOutside && (
               <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
                 {adjustmentComponent}
@@ -754,7 +778,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             {attachmentComponent}
           </div>
         )}
-          {/* <div className="w-full mb-2 sm:mb-0 sm:w-auto">
+        {/* <div className="w-full mb-2 sm:mb-0 sm:w-auto">
             {checkboxesComponent}
           </div> */}
         <div className="flex items-center justify-between w-full">
@@ -874,7 +898,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         )}
         {!deviceInfo?.isMobile && (
           <div className={`fixed dark:bg-dark-bg ${footerLayout === "vertical" ? `top-[170px] ${isRtl ? "left-0" : "right-0"} h-[-webkit-fill-available] w-[280px] sm:w-[300px] overflow-y-auto p-2 z-20 bg-white border-l dark:border-dark-border border-l-slate-200` : "z-40 bottom-0 shadow-lg full-available-width dark:bg-dark-bg bg-[#f8f8ff]"}`}>
-            {hasDropupContent && (
+            {formState.transaction.master.voucherType !== "LPO" && hasDropupContent && (
               <div className={`${footerLayout === "vertical" ? "hidden" : "block"}`}>
                 <div className="relative w-full">
                   <div className="absolute left-1/2 transform -translate-x-1/2 top-[-18px]">
@@ -910,7 +934,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         {deviceInfo?.isMobile && (
           <div className="z-40 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg full-available-width px-2 sm:px-3 py-2 mb-[65px]"
             style={{ boxShadow: "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)", }}>
-            {hasDropupContent && (
+            {formState.transaction.master.voucherType !== "LPO" && hasDropupContent && (
               <>
                 <div className="relative w-full">
                   <div className="absolute left-1/2 transform -translate-x-1/2 -top-8">
@@ -931,18 +955,20 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               </>
             )}
             <div className="flex items-end justify-end gap-2 sm:gap-4">
-              <div className="grid grid-cols-1 gap-1">
-                {formState.formElements.grandTotalFc.visible && (
-                  <div>
-                    <div className="flex items-center justify-between dark:text-dark-text text-xs sm:text-sm">
-                      <span>
-                        {t(formState.formElements.grandTotalFc.label)}
-                      </span>
-                      <span>:{formState.transaction.master.grandTotalFc}</span>
+              {formState.transaction.master.voucherType !== "LPO" && (
+                <div className="grid grid-cols-1 gap-1">
+                  {formState.formElements.grandTotalFc.visible && (
+                    <div>
+                      <div className="flex items-center justify-between dark:text-dark-text text-xs sm:text-sm">
+                        <span>
+                          {t(formState.formElements.grandTotalFc.label)}
+                        </span>
+                        <span>:{formState.transaction.master.grandTotalFc}</span>
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
+                  )}
+                </div>
+              )}
               <div className="flex items-center gap-2">
                 {/* <div className="hidden sm:block mr-2">
                   <h6 className="font-semibold whitespace-nowrap text-[18px] sm:text-[20px] dark:text-dark-text">
@@ -953,19 +979,21 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     </h6>
                 </div> */}
                 <div className="fixed bottom-0 left-0 w-full dark:bg-dark-bg-card bg-[#f8f8ff] flex flex-col py-2 z-10">
-                  <div>
-                    <div className="flex justify-between items-center px-2">
-                      <span className="text-xs sm:text-sm font-bold dark:text-dark-text text-gray-900 uppercase">
-                        {t(formState.formElements.grandTotal.label)}
-                      </span>
-                      <span className="text-base sm:text-lg font-bold text-[#3b82f6]">
-                        {getFormattedValue(formState.transaction.master?.grandTotal ?? 0)}
-                      </span>
+                  {formState.transaction.master.voucherType !== "LPO" && (
+                    <div>
+                      <div className="flex justify-between items-center px-2">
+                        <span className="text-xs sm:text-sm font-bold dark:text-dark-text text-gray-900 uppercase">
+                          {t(formState.formElements.grandTotal.label)}
+                        </span>
+                        <span className="text-base sm:text-lg font-bold text-[#3b82f6]">
+                          {getFormattedValue(formState.transaction.master?.grandTotal ?? 0)}
+                        </span>
+                      </div>
                     </div>
-                  </div>
+                  )}
                   <div className="flex gap-2 px-2 sm:px-4">
                     <ERPButton
-                      title={t("close")}
+                      title={t("cancel")}
                       onClick={() => goToPreviousPage()}
                       className="flex-1 rounded-none !m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg text-sm sm:text-base"
                       localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -974,7 +1002,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                       <ERPButton
                         localInputBox={formState?.userConfig?.inputBoxStyle}
                         ref={btnSaveRef}
-                        title={t("save")}
+                        title={formState.transaction.master.voucherType === "LPO" ? t("generate_lpo") : t("save")}
                         jumpTarget="save"
                         variant="primary"
                         className="flex-1 rounded-none !m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg text-sm sm:text-base"

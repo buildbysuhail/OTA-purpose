@@ -848,5 +848,19 @@
   "sales_returns/credit_note(VAT)": "Sales Returns / Credit Note (VAT)",
   "sales_quotations": "Sales Quotations",
   "sales_orders": "Sales Orders",
-  "goods_requests": "Goods Requests"
+  "goods_requests": "Goods Requests",
+
+  "show_stock_details": "Show stock details",
+  "skip_zero_qty_validation": "Skip zero qty validation",
+  "summary_as_on": "Summary as on",
+  "po_frequency": "PO Frequency",
+  "from": "From",
+  "sections": "Sections",
+  "group_category": "Group Category",
+  "product_group": "Product Group",
+  "product_category": "Product Category",
+  "supplier": "Supplier",
+  "method": "Method",
+  "generate_lpo": "Generate LPO",
+  "generate_lpq": "Generate LPQ"
 }

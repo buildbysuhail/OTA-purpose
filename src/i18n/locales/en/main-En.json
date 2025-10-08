@@ -673,5 +673,6 @@
   "sales_return_estimate_summary": "Sales Return Estimate Summary",
   "foc_register_report": "FOC Register Report",
   "item_used_for_service": "Item Used For Service",
-  "counter_report": "Counter Report"
+  "counter_report": "Counter Report",
+  "lpo": "LPO"
 }

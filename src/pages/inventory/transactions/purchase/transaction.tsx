@@ -1,15 +1,15 @@
-import React, {  useCallback,  useEffect,  useMemo,  useRef,  useState,} from "react";
-import {  useAppDispatch,  useAppSelector,} from "../../../../utilities/hooks/useAppDispatch";
+import React, { useCallback, useEffect, useMemo, useRef, useState, } from "react";
+import { useAppDispatch, useAppSelector, } from "../../../../utilities/hooks/useAppDispatch";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import { APIClient } from "../../../../helpers/api-client";
-import {  ApplicationMainSettings,  ApplicationMainSettingsInitialState,} from "../../../settings/system/application-settings-types/application-settings-types-main";
+import { ApplicationMainSettings, ApplicationMainSettingsInitialState, } from "../../../settings/system/application-settings-types/application-settings-types-main";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTransaction } from "./use-transaction";
 import CustomerDetailsSidebar from "../../../transaction-base/customer-details";
-import {  generateUniqueKey,  remToPx,} from "../../../../utilities/Utils";
+import { generateUniqueKey, remToPx, } from "../../../../utilities/Utils";
 import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
 import ERPResizableSidebar from "../../../../components/ERPComponents/erp-resizable-sidebar";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
@@ -467,6 +467,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
     handleFieldKeyDown,
     loadTemporaryRows,
     save,
+    generateLPQ,
+    generateLPO,
     enableCombo,
     disableCombo,
     handleEdit,
@@ -518,7 +520,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     handleKeyDown,
     formStateRef,
     purchaseGridRef,
-    
+
   );
 
   const applicationSettings = useAppSelector(
@@ -526,18 +528,23 @@ const TransactionForm: React.FC<TransactionProps> = ({
   );
   const { hasRight } = useUserRights();
   const gridHeight = useMemo(() => {
-    if (deviceInfo?.isMobile) {
-      return window.innerHeight - 330
+    if (formState?.transaction?.master?.voucherType === "LPO") {
+      return window.innerHeight - 405;
     }
+
+    if (deviceInfo?.isMobile) {
+      return window.innerHeight - 330;
+    }
+
     let height;
+
     if (
       (formState.transactionLoading && _st.footerPosition === "right") ||
-      (!formState.transactionLoading &&
-        formState.userConfig?.footerPosition === "right")
+      (!formState.transactionLoading && formState.userConfig?.footerPosition === "right")
     ) {
       height = window.innerHeight - 303;
     } else {
-      height = window.innerHeight - 500;
+      height = window.innerHeight - 505;
     }
 
     console.log('Max safe integer:', Number.MAX_SAFE_INTEGER);
@@ -546,7 +553,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     console.log('Current grid height:', height);
 
     return height;
-  }, [formState.transactionLoading, formState.userConfig?.footerPosition, _st.footerPosition]);
+  }, [formState?.transaction?.master?.voucherType, formState.transactionLoading, formState.userConfig?.footerPosition, deviceInfo?.isMobile, _st.footerPosition,]);
 
 
   useEffect(() => {
@@ -605,14 +612,14 @@ const TransactionForm: React.FC<TransactionProps> = ({
           voucherPrefix ?? "",
           false
         );
-        
+
         employeeID = userSession.employeeId ?? 0;
-        if (["PR","PQ","PO"].includes(voucherType as any)  && employeeID <= 0) {
+        if (["PR", "PQ", "PO"].includes(voucherType as any) && employeeID <= 0) {
           const emps = await getApLocalDataByUrl(`${Urls.inv_transaction_base}${transactionType}/Data/Employee/`);
           employeeID = emps && emps.length > 0 ? emps[0].id : employeeID;
         }
       }
-      
+
 
       const templatesData = await getTemplatesFromStore();
       if (!isInvoker) {
@@ -684,7 +691,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           _formState.userRightsFormCode = "PIIMPORT"
         }
       }
-      
+
       const _gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new APIClient()))
       const accountKey =
         formType == "PI-IND" ? applicationSettings.accountsSettings.defaultIndirectExpenseAccount as keyof typeof LedgerType
@@ -852,7 +859,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           }
         }
       }
-      
+
       const editableColumn = _formState.gridColumns?.find(
         (col) => col.visible !== false && col.dataField != null && col.allowEditing == true && col.readOnly !== true
       );
@@ -877,31 +884,31 @@ const TransactionForm: React.FC<TransactionProps> = ({
     };
     initializeFormElements();
   }, [voucherType, voucherPrefix, formType]);
-  
-  const onProcessSelected = useCallback(async (masterIds: string, branchIDs: string, voucherNumbers: string, referenceNumber: string,loadType: string = "GRN", voucherType: string) => {
+
+  const onProcessSelected = useCallback(async (masterIds: string, branchIDs: string, voucherNumbers: string, referenceNumber: string, loadType: string = "GRN", voucherType: string) => {
     if (masterIds.length > 0) {
 
       dispatch(formStateHandleFieldChange({ fields: { loading: { isLoading: true, text: `${loadType == "GRN" ? 'Please wait while loading GRN Items' : 'Please wait while loading Order Items'}` } } }));
       const PendingTransDetails: any = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/PendingTransactionsByMasterIds`, `masterIDs=${masterIds}`)
       if (PendingTransDetails && PendingTransDetails.details && PendingTransDetails.details.length > 0) {
-       
+
         const calculatedDetails: TransactionDetail[] = [];
-        const refactoredDetails = refactorDetails(PendingTransDetails.details, formState.transaction.master.voucherForm , voucherType, { result: {} },loadType);
+        const refactoredDetails = refactorDetails(PendingTransDetails.details, formState.transaction.master.voucherForm, voucherType, { result: {} }, loadType);
         for (let index = 0; index < refactoredDetails.length; index++) {
-            const _element = {...refactoredDetails[index]};
-          
-          const element = {..._element};
-           element.gRTransDetailID = loadType == "GRN" ? _element.invTransactionDetailID??0 : 0;
-           if(applicationSettings.inventorySettings.carryForwardPurchaseOrderQtyToPurchase) {
-            element.pOTransDetailID = _element.invTransactionDetailID??0
-           }else {
-            element.pO_PITransDetailIDs = _element.invTransactionDetailID??0
+          const _element = { ...refactoredDetails[index] };
+
+          const element = { ..._element };
+          element.gRTransDetailID = loadType == "GRN" ? _element.invTransactionDetailID ?? 0 : 0;
+          if (applicationSettings.inventorySettings.carryForwardPurchaseOrderQtyToPurchase) {
+            element.pOTransDetailID = _element.invTransactionDetailID ?? 0
+          } else {
+            element.pO_PITransDetailIDs = _element.invTransactionDetailID ?? 0
             try {
               element.pO_PITransDetailQtys = _element.poTransDetailsIDTag
             } catch (error) {
-              
+
             }
-           }
+          }
           const calculated = calculateRowAmount(
             element,
             "barCode",
@@ -922,7 +929,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
             summaryRes ? summaryRes.summary as SummaryItems : initialInventoryTotals,
             formState.formElements,
             {
-              result: {pendingOrdListMasterIDs: masterIds,pendingOrdListBranchIDs: branchIDs,transaction:{master:{remarks: voucherNumbers}}},
+              result: { pendingOrdListMasterIDs: masterIds, pendingOrdListBranchIDs: branchIDs, transaction: { master: { remarks: voucherNumbers } } },
             }
           );
 
@@ -1206,7 +1213,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 fields: {
                   ...totalRes,
                   summary: summaryRes.summary,
-                  showQuantityFactors: { visible: false, rowIndex: -1 , qtyDesc: ""  },
+                  showQuantityFactors: { visible: false, rowIndex: -1, qtyDesc: "" },
                   transaction: {
                     ...totalRes.transaction,
                     details: res.transaction?.details,
@@ -1618,7 +1625,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               className="mj23stylecheck"
               style={{
                 // marginTop: `${123 + (appState?.inputBox?.inputHeight ?? 0)}px`,
-                marginTop: `${97 + (getInputHeight())}px`,
+                marginTop: formState.transaction.master.voucherType === "LPO" ? `${150 + getInputHeight()}px` : `${97 + getInputHeight()}px`,
                 width: isFooterOnRight ? "calc(100% - 300px)" : "100%",
                 // height: `${gridHeight}px`,
                 overflow: "auto",
@@ -1703,6 +1710,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
                         toggleDropup={toggleFooterDropup}
                         footerLayout={"vertical"}
                         applicationSettings={applicationSettings}
+                        generateLPO={generateLPO}
+                        generateLPQ={generateLPQ}
                       />
                     )}
                 </div>
@@ -1885,6 +1894,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   isDropUpOpen={isDropUpOpen}
                   toggleDropup={toggleFooterDropup}
                   applicationSettings={applicationSettings}
+                  generateLPO={generateLPO}
+                  generateLPQ={generateLPQ}
                   footerLayout={
                     ((formState.transactionLoading
                       ? _st.footerPosition
@@ -1938,6 +1949,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 footerLayout={"horizontal"}
                 applyDiscountsToItems={applyDiscountsToItems}
                 applicationSettings={applicationSettings}
+                generateLPO={generateLPO}
+                generateLPQ={generateLPQ}
               />
             ))}
         {/* footer ends here */}
@@ -2095,7 +2108,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           minWidth={350}
           isOpen={isTemplateOpen}
           setIsOpen={setIsTemplateOpen}
-          children={<TemplatesView setIsOpen={()=>{}} voucherType={formState.transaction.master.voucherType} />}
+          children={<TemplatesView setIsOpen={() => { }} voucherType={formState.transaction.master.voucherType} />}
         />
 
         <ERPResizableSidebar
@@ -2342,7 +2355,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
             height={800}
             content={
               <BillWisePopup
-              isInv ={true}
+                isInv={true}
                 drCr={formState.billwiseDrCr}
                 onSave={async (
                   billwiseDetails: string,
@@ -2354,8 +2367,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   if (
                     applicationSettings.accountsSettings?.maintainBillwiseAccount
                   ) {
-                   await postBillWiseDetails({accTransactionDetailID:formState.transaction.master.accTransactionDetailIDForBillwise, billWiseDetails:bills??[]})
-                }
+                    await postBillWiseDetails({ accTransactionDetailID: formState.transaction.master.accTransactionDetailIDForBillwise, billWiseDetails: bills ?? [] })
+                  }
                 }}
               />
             }

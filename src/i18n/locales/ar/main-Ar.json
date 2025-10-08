@@ -673,5 +673,6 @@
   "sales_return_estimate_summary": "ملخص تقديرات مرتجعات المبيعات",
   "foc_register_report": "تقرير سجل الأصناف المجانية (FOC)",
   "item_used_for_service": "الأصناف المستخدمة للخدمة",
-  "counter_report": "تقرير العداد"
+  "counter_report": "تقرير العداد",
+  "lpo": "أمر الشراء المحلي"
 }

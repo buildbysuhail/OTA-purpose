@@ -2113,12 +2113,24 @@ debugger;
           </div>
         </BottomSidebar>
 
-        <ERPResizableSidebar
-          minWidth={350}
-          isOpen={isTemplateOpen}
-          setIsOpen={setIsTemplateOpen}
-          children={<TemplatesView voucherType={formState.transaction.master.voucherType}  setIsOpen={() => {}} />}
-        />
+         <ERPResizableSidebar
+    minWidth={350}
+    isOpen={formState.templateChooserModal ?? false}
+    setIsOpen={() =>
+      dispatch(
+        formStateHandleFieldChange({ fields: { templateChooserModal: false } })
+      )
+    }
+  >
+    <TemplatesView
+      voucherType={formState.transaction.master?.voucherType ?? ""}
+      setIsOpen={() =>
+        dispatch(
+          formStateHandleFieldChange({ fields: { templateChooserModal: false } })
+        )
+      }
+    />
+  </ERPResizableSidebar>
 
         <ERPResizableSidebar
           minWidth={350}

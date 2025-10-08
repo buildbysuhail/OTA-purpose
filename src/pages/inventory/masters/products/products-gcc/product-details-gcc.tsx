@@ -3,7 +3,6 @@ import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
 import ERPDateInput from "../../../../../components/ERPComponents/erp-date-input";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
-import { Ellipsis } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { FormField } from "../../../../../utilities/form-types";
 import Urls from "../../../../../redux/urls";
@@ -12,17 +11,12 @@ import { productDto } from "../products-type";
 
 export const ProductDetailsGcc: React.FC<{
   clientSession: any;
-  handleFieldChange: (
-    fields:
-      | string
-      | {
-        [fieldId: string]: any;
-      },
+  handleFieldChange: (fields: | string | { [fieldId: string]: any; },
     value?: any
   ) => void;
-
   getFieldProps: (fieldId: string, type?: string) => FormField;
-}> = React.memo(({ clientSession, handleFieldChange, getFieldProps }) => {
+  isView: boolean;
+}> = React.memo(({ clientSession, handleFieldChange, getFieldProps, isView }) => {
   const { t } = useTranslation("inventory");
   return (
     <>
@@ -31,6 +25,7 @@ export const ProductDetailsGcc: React.FC<{
           <div className="grid grid-cols-4 gap-1 items-end border border-gray-200 rounded-md p-2">
             <div className="grid grid-cols-3 gap-1">
               <ERPInput
+                disabled={isView}
                 {...getFieldProps("product.minimumStock")}
                 label={t("stock_min")}
                 placeholder="0.00"
@@ -45,6 +40,7 @@ export const ProductDetailsGcc: React.FC<{
               />
 
               <ERPInput
+                disabled={isView}
                 {...getFieldProps("product.maximumStock")}
                 label={t("stock_max")}
                 placeholder="0.00"
@@ -59,6 +55,7 @@ export const ProductDetailsGcc: React.FC<{
               />
 
               <ERPInput
+                disabled={isView}
                 {...getFieldProps("product.reorderQty")}
                 label={t("re_order_qty")}
                 placeholder="0.00"
@@ -75,6 +72,7 @@ export const ProductDetailsGcc: React.FC<{
 
             <div className="flex items-center gap-1">
               <ERPDataCombobox
+                disabled={isView}
                 {...getFieldProps("batch.warehouseID")}
                 id="warehouseID"
                 field={{
@@ -96,6 +94,7 @@ export const ProductDetailsGcc: React.FC<{
 
             <div className="flex items-center gap-1">
               <ERPDataCombobox
+                disabled={isView}
                 {...getFieldProps("batch.brandID")}
                 id="brandID"
                 field={{
@@ -117,6 +116,7 @@ export const ProductDetailsGcc: React.FC<{
             </div>
 
             <ERPInput
+              disabled={isView}
               {...getFieldProps("product.commodityCode")}
               label={t("commodity_plu")}
               placeholder=""
@@ -130,6 +130,7 @@ export const ProductDetailsGcc: React.FC<{
             />
 
             <ERPDataCombobox
+              disabled={isView}
               {...getFieldProps("product.productCategoryID")}
               id="productCategoryID"
               field={{
@@ -147,6 +148,7 @@ export const ProductDetailsGcc: React.FC<{
             />
 
             <ERPInput
+              disabled={isView}
               {...getFieldProps("batch.specification")}
               label={t("specification")}
               placeholder=""
@@ -160,6 +162,7 @@ export const ProductDetailsGcc: React.FC<{
             />
 
             <ERPInput
+              disabled={isView}
               {...getFieldProps("product.hsnCode")}
               label={t("hsn_code")}
               placeholder=""
@@ -170,6 +173,7 @@ export const ProductDetailsGcc: React.FC<{
             />
 
             <ERPInput
+              disabled={isView}
               {...getFieldProps("product.aliasItemName")}
               label={t("alias_name")}
               placeholder=""
@@ -188,12 +192,11 @@ export const ProductDetailsGcc: React.FC<{
               placeholder=""
               required={false}
               disabled
-              onChangeData={(data) =>
-                handleFieldChange("batch.autoBarcode", data.batch.autoBarcode)
-              }
+              onChangeData={(data) => handleFieldChange("batch.autoBarcode", data.batch.autoBarcode)}
             />
 
             <ERPInput
+              disabled={isView}
               {...getFieldProps("batch.batchNo")}
               label={t("batch_no")}
               placeholder=""
@@ -202,7 +205,9 @@ export const ProductDetailsGcc: React.FC<{
                 handleFieldChange("batch.batchNo", data.batch.batchNo)
               }
             />
+
             <ERPInput
+              disabled={isView}
               {...getFieldProps("product.netWt")}
               label={t("net_weight_(in_grams)")}
               placeholder="0.00"
@@ -215,6 +220,7 @@ export const ProductDetailsGcc: React.FC<{
             />
 
             <ERPInput
+              disabled={isView}
               {...getFieldProps("product.netWeightUnit")}
               label={t("unit_name")}
               placeholder={t("eg:gm/ml")}
@@ -227,7 +233,9 @@ export const ProductDetailsGcc: React.FC<{
               }
               className="flex-1 min-w-[80px]"
             />
+
             <ERPDateInput
+              disabled={isView}
               {...getFieldProps("batch.expiryDate")}
               label={t("exp_date")}
               required={false}
@@ -237,6 +245,7 @@ export const ProductDetailsGcc: React.FC<{
             />
 
             <ERPDateInput
+              disabled={isView}
               {...getFieldProps("batch.mfgDate")}
               label={t("mfg_date")}
               required={false}
@@ -255,6 +264,7 @@ export const ProductDetailsGcc: React.FC<{
             /> */}
 
             <ERPDataCombobox
+              disabled={isView}
               {...getFieldProps("batch.locationId")}
               id="locationId"
               field={{
@@ -272,6 +282,7 @@ export const ProductDetailsGcc: React.FC<{
             />
 
             <ERPCheckbox
+              disabled={isView}
               {...getFieldProps("product.isActive")}
               label={t("is_active_batch")}
               onChange={(data) =>
@@ -286,6 +297,7 @@ export const ProductDetailsGcc: React.FC<{
             </h6>
             <div className="flex flex-wrap items-center gap-6 mt-5">
               <ERPCheckbox
+                disabled={isView}
                 {...getFieldProps("product.canPurchase")}
                 label={t("purchase")}
                 onChange={(data) =>
@@ -294,6 +306,7 @@ export const ProductDetailsGcc: React.FC<{
               />
 
               <ERPCheckbox
+                disabled={isView}
                 {...getFieldProps("product.canSale")}
                 label={t("sales")}
                 onChange={(data) =>
@@ -302,6 +315,7 @@ export const ProductDetailsGcc: React.FC<{
               />
 
               <ERPCheckbox
+                disabled={isView}
                 {...getFieldProps("product.isFinishedGood")}
                 label={t("finished_goods")}
                 onChange={(data) =>
@@ -313,6 +327,7 @@ export const ProductDetailsGcc: React.FC<{
               />
 
               <ERPCheckbox
+                disabled={isView}
                 {...getFieldProps("product.isRawMaterial")}
                 label={t("raw_material")}
                 onChange={(data) =>
@@ -322,7 +337,9 @@ export const ProductDetailsGcc: React.FC<{
                   )
                 }
               />
+
               <ERPCheckbox
+                disabled={isView}
                 {...getFieldProps("batch.gatePass")}
                 label={t("gate_pass")}
                 onChange={(e) =>
@@ -332,8 +349,10 @@ export const ProductDetailsGcc: React.FC<{
               //   handleFieldChange("product.gatePass", data.gatePass)
               // }
               />
+
               {clientSession.dbIdValue == "543140180640" && (
                 <ERPCheckbox
+                  disabled={isView}
                   {...getFieldProps("product.hold")}
                   label={t("hold")}
                   onChange={(data) =>
@@ -344,11 +363,11 @@ export const ProductDetailsGcc: React.FC<{
             </div>
           </div>
           {getFieldProps("product.productID").value > 0 &&
-          <ProductDetailsBatches
-            getFieldProps={getFieldProps}
-            handleFieldChange={handleFieldChange}
-            t={t}
-          ></ProductDetailsBatches>
+            <ProductDetailsBatches
+              getFieldProps={getFieldProps}
+              handleFieldChange={handleFieldChange}
+              t={t}
+            />
           }
         </div>
       )}

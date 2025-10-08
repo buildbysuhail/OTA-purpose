@@ -24,7 +24,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: false,
-        showInPdf:true,
+        showInPdf: true,
         width: 50,
       },
       {
@@ -34,7 +34,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        visible:false,
+        visible: false,
         width: 50
       },
       {
@@ -44,7 +44,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        showInPdf:true,
+        showInPdf: true,
         width: 100,
       },
       {
@@ -54,7 +54,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        showInPdf:true,
+        showInPdf: true,
         width: 100
       },
       {
@@ -64,7 +64,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        showInPdf:true,
+        showInPdf: true,
         width: 100
       },
       {
@@ -74,7 +74,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        showInPdf:true,
+        showInPdf: true,
         width: 100
       },
       {
@@ -84,7 +84,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        showInPdf:true,
+        showInPdf: true,
         width: 100
       },
       {
@@ -94,7 +94,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        showInPdf:true,
+        showInPdf: true,
         width: 100
       },
       {
@@ -104,7 +104,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        showInPdf:true,
+        showInPdf: true,
         width: 100
       },
       {
@@ -114,7 +114,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        showInPdf:true,
+        showInPdf: true,
         width: 100
       },
       {
@@ -124,7 +124,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        showInPdf:true,
+        showInPdf: true,
         width: 100
       },
       {
@@ -143,7 +143,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        showInPdf:true,
+        showInPdf: true,
         width: 100
       },
       {
@@ -153,7 +153,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        showInPdf:true,
+        showInPdf: true,
         width: 100
       },
       {
@@ -163,7 +163,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        visible:false,
+        visible: false,
         width: 100
       },
       {
@@ -173,7 +173,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        visible:false,
+        visible: false,
         width: 100
       },
       {
@@ -183,7 +183,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        visible:false,
+        visible: false,
         width: 100
       },
       {
@@ -193,7 +193,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        visible:false,
+        visible: false,
         width: 100
       },
       {
@@ -203,7 +203,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        visible:false,
+        visible: false,
         width: 100
       },
       {
@@ -213,7 +213,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        visible:false,
+        visible: false,
         width: 100
       },
       {
@@ -223,7 +223,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        showInPdf:true,
+        showInPdf: true,
         width: 100
       },
       {
@@ -233,7 +233,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        visible:false,
+        visible: false,
         width: 100
       },
       {
@@ -243,7 +243,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        visible:false,
+        visible: false,
         width: 100
       },
       {
@@ -253,7 +253,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        visible:false,
+        visible: false,
         width: 100
       },
       {
@@ -263,7 +263,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        visible:false,
+        visible: false,
         width: 100
       },
       {
@@ -273,7 +273,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        visible:false,
+        visible: false,
         width: 100
       },
       {
@@ -283,7 +283,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        visible:false,
+        visible: false,
         width: 100
       },
       {
@@ -293,7 +293,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        showInPdf:true,
+        showInPdf: true,
         width: 100
       },
       {
@@ -303,7 +303,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        showInPdf:true,
+        showInPdf: true,
         width: 100
       },
       {
@@ -313,7 +313,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        visible:false,
+        visible: false,
         width: 100
       },
       {
@@ -323,7 +323,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        visible:false,
+        visible: false,
         width: 100
       },
       {
@@ -333,7 +333,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        visible:false,
+        visible: false,
         width: 100
       },
       {
@@ -343,7 +343,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        visible:false,
+        visible: false,
         width: 100
       },
       {
@@ -353,7 +353,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        visible:false,
+        visible: false,
         width: 100
       },
       {
@@ -363,7 +363,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        visible:false,
+        visible: false,
         width: 100
       },
       {
@@ -373,7 +373,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        visible:false,
+        visible: false,
         width: 100
       },
       {
@@ -383,7 +383,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        showInPdf:true,
+        showInPdf: true,
         width: 100
       },
       {
@@ -393,7 +393,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        visible:false,
+        visible: false,
         width: 100
       },
       {
@@ -403,7 +403,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        visible:false,
+        visible: false,
         width: 100
       },
       {
@@ -413,7 +413,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        visible:false,
+        visible: false,
         width: 100
       },
       {
@@ -423,7 +423,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        showInPdf:true,
+        showInPdf: true,
         width: 100
       },
       {
@@ -437,11 +437,10 @@ const Products = () => {
         cellRender: (cellElement: any) => {
           return (
             <ERPGridActions
-              view={{ type: "popup", action: () => toggleProducts({ isOpen: true, key: cellElement?.data?.productID, reload: false }) }}
-              edit={{ type: "popup", action: () => toggleProducts({ isOpen: true, key: cellElement?.data?.productID, reload: false }) }}
+              view={{ type: "popup", action: () => dispatch(toggleProducts({ isOpen: true, key: cellElement?.data?.productID, reload: false, mode: 'view' })) }}
+              edit={{ type: "popup", action: () => dispatch(toggleProducts({ isOpen: true, key: cellElement?.data?.productID, reload: false, mode: 'edit' })) }}
               delete={{
-                
-                onSuccess: () => { dispatch(toggleProducts({ isOpen: false, key: null, reload: true, })); },
+                onSuccess: () => { dispatch(toggleProducts({ isOpen: false, key: null, reload: true })); },
                 confirmationRequired: true,
                 confirmationMessage: t("are_you_sure_you_want_to_delete_this_item"),
                 url: Urls?.products, key: cellElement?.data?.productID
@@ -471,7 +470,7 @@ const Products = () => {
                   gridId="grd_products"
                   popupAction={toggleProducts}
                   gridAddButtonType="popup"
-                allowExport={true}
+                  allowExport={true}
                   changeReload={(reload: any) => { dispatch(toggleProducts({ ...rootState, reload: reload })); }}
                   reload={rootState?.PopupData?.products?.reload}
                   gridAddButtonIcon="ri-add-line"

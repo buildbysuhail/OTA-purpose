@@ -6,15 +6,14 @@ import { FormField } from "../../../../../utilities/form-types";
 import { ProductFieldPath, PathValue, productDto } from "../products-type";
 interface ProductNotesGccProps {
     getFieldProps: (fieldId: string, type?: string) => FormField | any;
-      handleFieldChange: <Path extends ProductFieldPath>(
+    isView: boolean;
+    handleFieldChange: <Path extends ProductFieldPath>(
         fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
         value?: PathValue<productDto, Path>
-      ) => void;
+    ) => void;
 }
-const ProductNotesGcc: React.FC<ProductNotesGccProps> = ({ getFieldProps, handleFieldChange }) => {
-    
-   const moreInfo = getFieldProps("moreInfo").value || {};
-
+const ProductNotesGcc: React.FC<ProductNotesGccProps> = ({ getFieldProps, handleFieldChange, isView }) => {
+    const moreInfo = getFieldProps("moreInfo").value || {};
     const [notes, setNotes] = useState<{ [key: string]: string }>({});
 
     useEffect(() => {
@@ -37,8 +36,9 @@ const ProductNotesGcc: React.FC<ProductNotesGccProps> = ({ getFieldProps, handle
         setNotes(updated);
         handleFieldChange("moreInfo", { ...moreInfo, [toKey]: updated[toKey] });
     };
+
     const { t } = useTranslation('inventory')
-    
+
     return (
         <div className="border border-[#ccc] rounded-md p-4 inline-block w-1/2">
             {[1, 3, 5, 7, 9].map((i, rowIndex) => {
@@ -47,6 +47,7 @@ const ProductNotesGcc: React.FC<ProductNotesGccProps> = ({ getFieldProps, handle
                 return (
                     <div key={rowIndex} className="grid grid-cols-2">
                         <ERPInput
+                            disabled={isView}
                             label={`${t('note')} ${i}`}
                             value={notes[leftKey] || ""}
                             onChange={(e) => handleNoteChange(leftKey, e.target.value)}
@@ -55,10 +56,12 @@ const ProductNotesGcc: React.FC<ProductNotesGccProps> = ({ getFieldProps, handle
                         />
                         <div className="flex items-end gap-2 w-full">
                             <ERPButton
+                                disabled={isView}
                                 title=">ar"
                                 onClick={() => handleTransformToUpper(leftKey, rightKey)}
                             />
                             <ERPInput
+                                disabled={isView}
                                 label={`${t('note')} ${i + 1}`}
                                 value={notes[rightKey] || ""}
                                 onChange={(e) => handleNoteChange(rightKey, e.target.value)}

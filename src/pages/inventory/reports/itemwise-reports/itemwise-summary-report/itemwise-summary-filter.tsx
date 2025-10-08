@@ -291,11 +291,11 @@ export const ItemWiseSummaryFilterInitialState = {
     partyID: 0,
     supplierID: -1,
     groupCategoryID: -1,
-    sectionID: 0,
+    sectionID: -1,
     productCode: "",
     toBranchID: 0,
     toWarehouseID: 0,
     location: "",
-    productCategoryID: 0,
+    productCategoryID: -1,
     isCategoryWise: false,
 };

@@ -1,12 +1,7 @@
-import { useEffect, useMemo, useState, useRef } from "react";
+import { useEffect, useMemo, useState } from "react";
 import React from "react";
 import { FormField } from "../../../../../utilities/form-types";
-import {
-  PathValue,
-  productDto,
-  ProductFieldPath,
-  ProductPriceInputDto,
-} from "../products-type";
+import { PathValue, productDto, ProductFieldPath, ProductPriceInputDto, } from "../products-type";
 import ERPAlert from "../../../../../components/ERPComponents/erp-sweet-alert";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
@@ -23,7 +18,8 @@ const MultiRatesGcc: React.FC<{
   isGlobal: boolean;
   isMaximized?: boolean;
   modalHeight?: any;
-}> = React.memo(({ t, handleFieldChange, getFieldProps, isGlobal, isMaximized, modalHeight }) => {
+  isView: boolean;
+}> = React.memo(({ t, handleFieldChange, getFieldProps, isGlobal, isMaximized, modalHeight, isView }) => {
   const dataGridRef = React.useRef<any>(null);
   const initialFocusDone = React.useRef(false);
   const [data, setData] = useState<ProductPriceInputDto[]>([]);
@@ -134,8 +130,7 @@ const MultiRatesGcc: React.FC<{
         allowEditing: true,
         width: 150,
       },
-    ],
-    [t]
+    ], [t]
   );
 
   // Filter columns based on isGlobal

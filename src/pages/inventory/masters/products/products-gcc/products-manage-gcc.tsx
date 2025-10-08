@@ -32,6 +32,7 @@ export const ProductManageGcc: React.FC<{
   ) => void;
   getFieldProps: (fieldId: string, type?: string) => FormField | any;
   switchToMultiRatesTab?: () => void; // Add new prop
+  isView: boolean;
 }> = React.memo(
   ({
     formState,
@@ -39,7 +40,8 @@ export const ProductManageGcc: React.FC<{
     getFieldProps,
     appSettings,
     handleDataChange,
-    switchToMultiRatesTab
+    switchToMultiRatesTab,
+    isView
   }) => {
     const { t } = useTranslation("inventory");
     const productNameRef = useRef<HTMLInputElement>(null);
@@ -51,12 +53,14 @@ export const ProductManageGcc: React.FC<{
     const clientSession = useSelector((state: RootState) => state.ClientSession);
     const rootState = useRootState();
     const dispatch = useDispatch();
+
     useEffect(() => {
       if (getFieldProps("product.manual").value) {
         productCodeRef?.current?.focus();
         productCodeRef?.current?.select();
       }
     }, [getFieldProps("product.manual").value]);
+
     useEffect(() => {
       const obj = getFieldProps("*") as any as productDto;
       const markupPercentage = calculateMarkup(obj.product.stdPurchasePrice ?? 0, obj.product.stdSalesPrice ?? 0, obj.taxCategoryTaxPercentage, appSettings.productsSettings.showRateBeforeTax, getFormattedValue);
@@ -79,7 +83,6 @@ export const ProductManageGcc: React.FC<{
                     const data = await api.getAsync(
                       `${Urls.products}ByBarcode/${barcode}`
                     );
-
                     handleDataChange(data);
                   } catch (error) {
                     console.error("API call failed", error);
@@ -104,7 +107,7 @@ export const ProductManageGcc: React.FC<{
                     placeholder={t("enter_product_code")}
                     required={false}
                     className="w-full"
-                    disabled={getFieldProps("product.manual").value != true}
+                    disabled={getFieldProps("product.manual").value != true || isView}
                     onChangeData={(data: any) =>
                       handleFieldChange(
                         "product.productCode",
@@ -112,24 +115,26 @@ export const ProductManageGcc: React.FC<{
                       )
                     }
                   />
-
-                  <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300" onClick={async () => {
-                    const nextProductCode = await api.getAsync(`${Urls.products}SelectNextProductCode`);
-                    handleFieldChange(
-                      "product.productCode",
-                      nextProductCode
-                    )
-                  }}>
+                  <button
+                    disabled={isView}
+                    className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300"
+                    onClick={async () => {
+                      const nextProductCode = await api.getAsync(`${Urls.products}SelectNextProductCode`);
+                      handleFieldChange(
+                        "product.productCode",
+                        nextProductCode
+                      )
+                    }}>
                     <Ellipsis className="w-4 h-4" />
                   </button>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-4">
                   <ERPCheckbox
+                    disabled={isView}
                     {...getFieldProps("product.manual")}
                     label={t("manual")}
                     onChange={(data) => {
-                      
                       if (data.target.checked == true) {
                         productCodeRef?.current?.focus();
                         productCodeRef?.current?.select();
@@ -146,9 +151,7 @@ export const ProductManageGcc: React.FC<{
                     title={t("create_new")}
                     variant="secondary"
                     onClick={async () => {
-                      const nextProductCode = await api.getAsync(
-                        `${Urls.products}SelectNextProductCode`
-                      );
+                      const nextProductCode = await api.getAsync(`${Urls.products}SelectNextProductCode`);
                       const data = { ...getFieldProps("*") };
                       if (data.product.productID > 0) {
                         data.product.productID = 0;
@@ -156,15 +159,16 @@ export const ProductManageGcc: React.FC<{
                         handleDataChange(data);
                       }
                     }}
-                    disabled={getFieldProps("product.productID")?.value === 0 || getFieldProps("product.productID") === 0}
+                    disabled={getFieldProps("product.productID")?.value === 0 || getFieldProps("product.productID") === 0 || isView}
                   />
                 </div>
               </div>
 
               {/* {getFieldProps("product.productID")?.value} */}
               <ERPProductSearch
+                disabled={isView}
                 showInputSymbol={false}
-                closeIfNodata ={true}
+                closeIfNodata={true}
                 label="Product Name"
                 placeholder="Product Name"
                 showCheckBox={false}
@@ -174,7 +178,6 @@ export const ProductManageGcc: React.FC<{
                 })}
                 productDataUrl={Urls.load_product_details}
                 onProductSelected={(data: any) => {
-                  
                   handleFieldChange({
                     "product.productName": data.productName
                   });
@@ -184,7 +187,6 @@ export const ProductManageGcc: React.FC<{
                 }}
                 ref={gccProductSearchRef}
                 onEnterKeyDown={() => {
-                  
                   productGroupRef?.current?.focus()
                 }}
               />
@@ -216,6 +218,7 @@ export const ProductManageGcc: React.FC<{
 
               <div className="flex flex-1 min-w-[200px] items-center gap-2">
                 <ERPDataCombobox
+                  disabled={isView}
                   {...getFieldProps("product.productGroupID")}
                   ref={productGroupRef}
                   id="productGroupID"
@@ -251,6 +254,7 @@ export const ProductManageGcc: React.FC<{
               <div className="flex flex-wrap gap-2">
                 <div className="flex flex-1 min-w-[150px] lg:max-w-[150px] sm:max-w-full items-center gap-2">
                   <ERPDataCombobox
+                    disabled={isView}
                     {...getFieldProps("product.basicUnitID")}
                     id="basicUnitID"
                     field={{
@@ -260,7 +264,6 @@ export const ProductManageGcc: React.FC<{
                       getListUrl: Urls.data_units,
                     }}
                     onSelectItem={(data: any) => {
-                      
                       handleFieldChange({ "batch.basicUnitID": data.value, "product.basicUnitID": data.value, "product.basicUnitName": data.label })
                     }}
                     label={t("base_unit")}
@@ -286,6 +289,7 @@ export const ProductManageGcc: React.FC<{
 
                 <div className="flex flex-1 min-w-[150px] max-w-[150px]">
                   <ERPInput
+                    disabled={isView}
                     {...getFieldProps("product.unitQty")}
                     label={t("unit_qty")}
                     placeholder=""
@@ -301,6 +305,7 @@ export const ProductManageGcc: React.FC<{
 
               <div className="flex flex-wrap items-end gap-2">
                 <ERPCheckbox
+                  disabled={isView}
                   {...getFieldProps("upcBarcode")}
                   label={t("upc_barcode")}
                   // onChangeData={(data: any) => handleFieldChange("product.upcBarcode", data.product.upcBarcode)}
@@ -325,6 +330,7 @@ export const ProductManageGcc: React.FC<{
                   }}
                 />
                 <ERPInput
+                  disabled={isView}
                   {...getFieldProps("batch.manualBarcode")}
                   label={t(" ")}
                   placeholder=""
@@ -344,6 +350,7 @@ export const ProductManageGcc: React.FC<{
 
                 {appSettings.productsSettings.allowMultiUnits && (
                   <ERPCheckbox
+                    disabled={isView}
                     {...getFieldProps("mu")}
                     label={t("mu")}
                     // onChangeData={(data: any) => handleFieldChange("product.mu", data.product.mu)}
@@ -352,6 +359,7 @@ export const ProductManageGcc: React.FC<{
                 )}
                 {appSettings.productsSettings.allowMultirate && (
                   <ERPCheckbox
+                    disabled={isView}
                     {...getFieldProps("mr")}
                     label={t("mr")}
                     // onChangeData={(data: any) => handleFieldChange("product.mr", data.product.mr)}
@@ -408,9 +416,7 @@ export const ProductManageGcc: React.FC<{
                 <div className="flex-1 min-w-[120px] max-w-[120px]">
                   <ERPInput
                     {...getFieldProps("product.stdPurchasePrice")}
-                    disabled={
-                      getFieldProps("product.itemType").value === "Dummy"
-                    }
+                    disabled={getFieldProps("product.itemType").value === "Dummy" || isView}
                     label={t("purchase_price")}
                     placeholder="0.00"
                     type="number"
@@ -425,15 +431,12 @@ export const ProductManageGcc: React.FC<{
                 <div className="flex-1 min-w-[120px] max-w-[120px]">
                   <ERPInput
                     {...getFieldProps("product.stdSalesPrice")}
-                    disabled={
-                      getFieldProps("product.itemType").value === "Dummy"
-                    }
+                    disabled={getFieldProps("product.itemType").value === "Dummy" || isView}
                     label={t("sales_price")}
                     placeholder="0.00"
                     type="number"
                     required={false}
                     onChangeData={(data: any) => {
-                      
                       const markupPercentage = calculateMarkup(
                         parseFloat((data.product.stdPurchasePrice ?? 0).toString()),
                         parseFloat((data.product.stdSalesPrice ?? 0).toString()),
@@ -454,20 +457,19 @@ export const ProductManageGcc: React.FC<{
                         },
                         markup: markupPercentage,
                       };
-
                       handleDataChange(_data);
                     }}
                   />
                 </div>
                 <div className="flex-1 min-w-[120px] max-w-[120px]">
                   <ERPInput
+                    disabled={isView}
                     {...getFieldProps("markup")}
                     label={t("markup") + "%"}
                     placeholder="0.00"
                     type="number"
                     required={false}
                     onChangeData={(data: any) => {
-                      
                       const stdSalesPrice = getFormattedValue(calculateSalesPrice(
                         parseFloat((data.product.stdPurchasePrice ?? 0).toString()),
                         parseFloat((data.markup ?? 0).toString()),
@@ -487,7 +489,6 @@ export const ProductManageGcc: React.FC<{
                         },
                         markup: data.markup ?? 0,
                       };
-
                       handleDataChange(_data);
                       // const stdSalesPrice =calculateSalesPrice(data.product.stdPurchasePrice, data.markup, data.taxCategoryTaxPercentage,appSettings?.productsSettings.showRateBeforeTax)
                       // handleFieldChange("product.stdSalesPrice", stdSalesPrice)
@@ -496,6 +497,7 @@ export const ProductManageGcc: React.FC<{
                 </div>
                 <div className="flex-1 min-w-[120px] max-w-[120px]">
                   <ERPInput
+                    disabled={isView}
                     {...getFieldProps("batch.displayCost")}
                     label={t("display_cost")}
                     placeholder="0.00"
@@ -512,6 +514,7 @@ export const ProductManageGcc: React.FC<{
 
                 <div className="flex-1 min-w-[120px] max-w-[120px]">
                   <ERPInput
+                    disabled={isView}
                     {...getFieldProps("batch.msp")}
                     label={t("min_sale_price")}
                     placeholder="0.00"
@@ -526,7 +529,7 @@ export const ProductManageGcc: React.FC<{
                 <div className="flex-1 min-w-[120px] max-w-[120px]">
                   <ERPInput
                     {...getFieldProps("batch.openingStock")}
-                    disabled={getFieldProps("product.itemType").value === "Dummy"}
+                    disabled={getFieldProps("product.itemType").value === "Dummy" || isView}
                     label={t("op_stock")}
                     placeholder="0.00"
                     type="number"
@@ -553,6 +556,7 @@ export const ProductManageGcc: React.FC<{
                   <>
                     <div className="flex-1 min-w-[120px] max-w-[120px]">
                       <ERPInput
+                        disabled={isView}
                         {...getFieldProps("batch.aPC")}
                         label={t("avg_cost")}
                         placeholder="0.00"
@@ -565,6 +569,7 @@ export const ProductManageGcc: React.FC<{
                     </div>
                     <div className="flex-1 min-w-[120px] max-w-[120px]">
                       <ERPInput
+                        disabled={isView}
                         {...getFieldProps("batch.stock")}
                         label={t("stock")}
                         placeholder="0.00"
@@ -581,6 +586,7 @@ export const ProductManageGcc: React.FC<{
               {appSettings.mainSettings.maintainMultilanguage__ == true && (
                 <div>
                   <ERPInput
+                    disabled={isView}
                     {...getFieldProps("product.secondLanguage")}
                     label={t("product_(arabic)")}
                     placeholder=""
@@ -598,6 +604,7 @@ export const ProductManageGcc: React.FC<{
               <div className="flex flex-wrap items-center gap-1">
                 <div className="flex items-center">
                   <ERPCheckbox
+                    disabled={isView}
                     {...getFieldProps("batchCriteria")}
                     label={t("batch_criteria")}
                     onChange={(data) =>
@@ -617,7 +624,7 @@ export const ProductManageGcc: React.FC<{
                     }}
                     enableClearOption={false}
                     className="w-full"
-                    disabled={getFieldProps("batchCriteria").value != true}
+                    disabled={getFieldProps("batchCriteria").value != true || isView}
                     noLabel={true}
                     onChangeData={(data: any) =>
                       handleFieldChange(
@@ -632,6 +639,7 @@ export const ProductManageGcc: React.FC<{
               <div className="flex flex-wrap gap-4">
                 <div className="flex-1 min-w-[200px] max-w-[200px]">
                   <ERPDataCombobox
+                    disabled={isView}
                     {...getFieldProps("product.itemType")}
                     id="itemType"
                     field={{
@@ -664,6 +672,7 @@ export const ProductManageGcc: React.FC<{
                 </div>
                 <div className="flex-1 min-w-[200px] max-w-[200px]">
                   <ERPDataCombobox
+                    disabled={isView}
                     {...getFieldProps("product.taxCategoryID")}
                     id="taxCategoryID"
                     field={{
@@ -673,14 +682,7 @@ export const ProductManageGcc: React.FC<{
                       nameKey: "alias",
                       getListUrl: Urls.data_taxCategory,
                     }}
-                    onSelectItem={(data: any) =>
-                      handleFieldChange(
-                        {
-                          "product.taxCategoryID":
-                            data.value, "taxCategoryTaxPercentage": data.name
-                        }
-                      )
-                    }
+                    onSelectItem={(data: any) => handleFieldChange({ "product.taxCategoryID": data.value, "taxCategoryTaxPercentage": data.name })}
                     label={t("tax_category")}
                     className="w-full"
                   />
@@ -689,15 +691,15 @@ export const ProductManageGcc: React.FC<{
                   {getFieldProps("product.itemType").value == "KIT" && (
                     <ERPButton
                       title={t("kit")}
+                      disabled={isView}
                       variant="secondary"
                     />
                   )}
                   <ERPCheckbox
                     {...getFieldProps("details")}
                     label={t("details")}
-                    onChange={(data) =>
-                      handleFieldChange("details", data.target.checked)
-                    }
+                    disabled={isView}
+                    onChange={(data) => handleFieldChange("details", data.target.checked)}
                   />
                 </div>
               </div>

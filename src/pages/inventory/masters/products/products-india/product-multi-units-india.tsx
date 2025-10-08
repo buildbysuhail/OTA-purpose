@@ -4,13 +4,7 @@ import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../../../../redux/urls";
-import {
-  PathValue,
-  productDto,
-  ProductFieldPath,
-  ProductPriceInputDto,
-  ProductUnitInputDto,
-} from "../products-type";
+import { PathValue, productDto, ProductFieldPath, ProductPriceInputDto, ProductUnitInputDto, } from "../products-type";
 import { FormField } from "../../../../../utilities/form-types";
 import ERPModal from "../../../../../components/ERPComponents/erp-modal";
 import ERPSubmitButton from "../../../../../components/ERPComponents/erp-submit-button";
@@ -45,12 +39,9 @@ const ProductMultiUnitsIndia = forwardRef<
     isMaximized?: boolean;
     modalHeight?: any
     isGlobal?: boolean;
-  }
->(
-  (
-    { t, handleFieldChange, getFieldProps, handleDataChange, appSettings ,isMaximized, modalHeight,isGlobal},
-    ref
-  ) => {
+    isView: boolean;
+  }>
+  (({ t, handleFieldChange, getFieldProps, handleDataChange, appSettings, isMaximized, modalHeight, isGlobal, isView }, ref) => {
     const unitDAta: ProductUnitInputDto = {
       productUnitID: 0,
       productBatchID: 0,
@@ -77,24 +68,22 @@ const ProductMultiUnitsIndia = forwardRef<
       data: { unit: string; barcode: String }[];
     }>({ index: 0, open: false, unit: "", data: [] });
     const multiUnitRef = useRef<any>(null);
-   const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
-      useEffect(() => {
-        let gridHeightMobile = modalHeight - 500;
-        let gridHeightWindows = modalHeight - (isGlobal ?500: 450);
-        setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
-      }, [isMaximized, modalHeight]);
+    const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
+    useEffect(() => {
+      let gridHeightMobile = modalHeight - 500;
+      let gridHeightWindows = modalHeight - (isGlobal ? 500 : 450);
+      setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+    }, [isMaximized, modalHeight]);
 
     useImperativeHandle(ref, () => ({
       loadMultiRateToGrid: async (obj: productDto, units: any) => {
-        return await loadMultiRateToGrid(obj, units,api, getFormattedValue);  
+        return await loadMultiRateToGrid(obj, units, api, getFormattedValue);
       },
     }));
 
     const handleAddUnit = async () => {
-      
       const obj = getFieldProps("*");
       const updated = [...obj.units, unit];
-
       let selected = updated
         .filter((x) => x.unitID ?? 0 > 0)
         .map((x: any) => ({
@@ -115,34 +104,31 @@ const ProductMultiUnitsIndia = forwardRef<
             },
           ];
       }
+
       const unSelected = units
         .filter((x) => !selected.map((x) => x.id).includes(x.id ?? 0))
         .map((x: any) => ({
           id: Number(x.id), // Ensure type matches: number
           name: String(x.name), // Ensure type matches: string
         }));
-      
       setSelectedUnits(selected);
       unSetSelectedUnits(unSelected);
-
       let rates = obj.prices;
       if (appSettings?.productsSettings?.allowMultirate) {
-        rates = await loadMultiRateToGrid(obj, updated,api,  getFormattedValue);
+        rates = await loadMultiRateToGrid(obj, updated, api, getFormattedValue);
       }
-        handleDataChange({ ...obj, prices: rates, units: updated });
-
+      handleDataChange({ ...obj, prices: rates, units: updated });
       setUnit(unitDAta);
     };
+
     useEffect(() => {
       const fetchUnits = async () => {
         try {
           const response = await api.getAsync(Urls.data_units); // adjust API endpoint
           const fList = response;
           setUnits(fList);
-
           const obj = getFieldProps("*") as any as productDto;
           const updated = [...obj.units, unit];
-          
           let selected = updated
             .filter((x) => x.unitID ?? 0 > 0)
             .map((x: any) => ({
@@ -157,7 +143,6 @@ const ProductMultiUnitsIndia = forwardRef<
             const exists = selected?.some(
               (u: any) => u.id === Number(obj.product.basicUnitID)
             );
-
             const name = response.find((x: any) => x.id == basic)?.name;
             if (!exists && name)
               selected = [
@@ -168,43 +153,42 @@ const ProductMultiUnitsIndia = forwardRef<
                 },
               ];
           }
+
           const unSelected = response
             .filter((x: any) => !selected.map((x) => x.id).includes(x.id ?? 0))
             .map((x: any) => ({
               id: Number(x.id), // Ensure type matches: number
               name: String(x.name), // Ensure type matches: string
             }));
-          
           setSelectedUnits(selected);
           unSetSelectedUnits(unSelected);
         } catch (error) {
           console.error("Error fetching units:", error);
         }
       };
-
       fetchUnits();
     }, []);
 
-        const columns: DevGridColumn[] = useMemo(() => [
-       {
+    const columns: DevGridColumn[] = useMemo(() => [
+      {
         dataField: "unit",
         caption: t("uom"),
         dataType: "string",
         allowEditing: false,
         allowSorting: true,
-       allowSearch: true,
-       allowFiltering: true,
+        allowSearch: true,
+        allowFiltering: true,
         width: 100,
       },
-          {
+      {
         dataField: "unitID",
         caption: t("unit_id"),
         dataType: "number",
-         visible: false,
+        visible: false,
         allowEditing: false,
         allowSorting: true,
-       allowSearch: true,
-       allowFiltering: true,
+        allowSearch: true,
+        allowFiltering: true,
         width: 100,
       },
       {
@@ -212,9 +196,9 @@ const ProductMultiUnitsIndia = forwardRef<
         caption: t("multi_factor"),
         dataType: "number",
         allowEditing: true,
-         allowSearch: true,
+        allowSearch: true,
         allowFiltering: true,
-         width: 150,
+        width: 150,
       },
       {
         dataField: "barCode",
@@ -223,7 +207,6 @@ const ProductMultiUnitsIndia = forwardRef<
         allowSearch: true,
         allowFiltering: true,
         allowEditing: true,
-    
       },
       {
         dataField: "salesPrice",
@@ -238,7 +221,7 @@ const ProductMultiUnitsIndia = forwardRef<
         dataField: "mrp",
         caption: t("mrp"),
         dataType: "number",
-         allowSearch: true,
+        allowSearch: true,
         allowFiltering: true,
         allowEditing: true,
         width: 100,
@@ -247,61 +230,56 @@ const ProductMultiUnitsIndia = forwardRef<
         dataField: "msp",
         caption: t("msp"),
         dataType: "number",
-      allowSearch: true,
+        allowSearch: true,
         allowFiltering: true,
         allowEditing: true,
-
         width: 100,
       },
       {
         dataField: "description",
         caption: t("description"),
         dataType: "string",
-         allowSearch: true,
+        allowSearch: true,
         allowFiltering: true,
-        allowEditing: true,width: 250,
+        allowEditing: true, width: 250,
       },
       {
         dataField: "descriptionFL",
         caption: t("description_fl"),
         dataType: "string",
         allowEditing: true,
-       allowSearch: true,
+        allowSearch: true,
         allowFiltering: true,
         width: 250,
       },
       {
         dataField: "mb",
         caption: t("mb"),
-         fixed: true,
-       fixedPosition: "right",
+        fixed: true,
+        fixedPosition: "right",
         allowEditing: false,
         allowSearch: false,
         allowFiltering: false,
         width: 80,
         cellRender: (cellData, cellInfo) => {
-       
-        const rowIndex = cellData.rowIndex  ?? -1;
-        if (rowIndex === -1) {
-          console.error("Row index not found in cellInfo:", cellInfo);
-          return null;
+          const rowIndex = cellData.rowIndex ?? -1;
+          if (rowIndex === -1) {
+            console.error("Row index not found in cellInfo:", cellInfo);
+            return null;
+          }
+          return (
+            <div className="flex items-center justify-center hover:shadow-md p-2 rounded-md shadow-sm cursor-pointer transition duration-300 ease-in-out">
+              <button
+                type="button"
+                className="text-[#e53e3e] hover:text-[#c53030] font-semibold"
+                onClick={() => setMultiBarcode(cellData.data.multiBarcodes, cellData.data.unit, rowIndex)}
+              >
+                <Barcode className="w-4 h-4" />
+              </button>
+            </div>
+          );
         }
-        return (
-        
-          <div className="flex items-center justify-center hover:shadow-md p-2 cursor-pointer rounded-md shadow-sm cursor-pointer transition duration-300 ease-in-out">
-            <button
-              type="button"
-              className="text-[#e53e3e] hover:text-[#c53030] font-semibold"
-              onClick={() => setMultiBarcode(cellData.data.multiBarcodes, cellData.data.unit,rowIndex)}
-            >
-              <Barcode className="w-4 h-4" />
-            </button>
-          </div>
-        );
       },
-      
-      },
-      
       {
         dataField: "actions",
         caption: "X",
@@ -311,52 +289,46 @@ const ProductMultiUnitsIndia = forwardRef<
         allowFiltering: false,
         fixed: true,
         width: 50,
-         fixedPosition: "right",
+        fixedPosition: "right",
         // alignment: "center",
         cellRender: (cellData) => {
-          return(
-         <div className="flex items-center justify-center p-2 cursor-pointer">
-            <a
-              className="cursor-pointer text-[#e53e3e] hover:text-[#c53030] font-semibold"
-            onClick={() => {
-            // Access the grid's data via the ref
-            const gridData = multiUnitRef.current?.instance()?.option("dataSource") || getFieldProps("units").value;
-            handleRemoveUnit(cellData.data.unitID, gridData);
-          }}
-        >
-            
-              <X className="w-4 h-4" />
-            </a>
-          </div>
+          return (
+            <div className="flex items-center justify-center p-2 cursor-pointer">
+              <a
+                className="cursor-pointer text-[#e53e3e] hover:text-[#c53030] font-semibold"
+                onClick={() => {
+                  // Access the grid's data via the ref
+                  const gridData = multiUnitRef.current?.instance()?.option("dataSource") || getFieldProps("units").value;
+                  handleRemoveUnit(cellData.data.unitID, gridData);
+                }}
+              >
+                <X className="w-4 h-4" />
+              </a>
+            </div>
           )
         }
-         
-        
-   
-      },
-        ], [t]);
+      },], [t]);
 
-  const handleRemoveUnit = (unitID: number, gridData: ProductUnitInputDto[]) => {
-  const updatedUnits = gridData.filter((unit) => Number(unit.unitID) !== Number(unitID));
-  handleFieldChange("units", updatedUnits);
-}; 
+    const handleRemoveUnit = (unitID: number, gridData: ProductUnitInputDto[]) => {
+      const updatedUnits = gridData.filter((unit) => Number(unit.unitID) !== Number(unitID));
+      handleFieldChange("units", updatedUnits);
+    };
 
-const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number) => {
-  
-  const barcodeArray = barcodesString
-    .split(",")
-    .map((barcode:any) => barcode.trim())
-    .filter((barcode:any) => barcode.length > 0);
+    const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number) => {
+      const barcodeArray = barcodesString
+        .split(",")
+        .map((barcode: any) => barcode.trim())
+        .filter((barcode: any) => barcode.length > 0);
 
       const data =
         barcodeArray == undefined ||
-        barcodeArray == null ||
-        barcodeArray.length == 0
+          barcodeArray == null ||
+          barcodeArray.length == 0
           ? [{ unit: unitName, barcode: "" }]
           : barcodeArray.map((barcode: any) => ({
-              unit: unitName,
-              barcode,
-            }));
+            unit: unitName,
+            barcode,
+          }));
       setOpenMB({
         index: rowId,
         open: true,
@@ -364,6 +336,7 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
         data: data,
       });
     };
+
     const onFocusedCellChanging = (e: { isHighlighted: boolean }) => {
       e.isHighlighted = true;
     };
@@ -388,26 +361,13 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
         unit: "",
       }));
     };
-    const [selectedUnits, setSelectedUnits] = useState<
-      {
-        id: number;
-        name: string;
-      }[]
-    >([{ id: 0, name: "" }]);
-    const [units, setUnits] = useState<
-      {
-        id: number;
-        name: string;
-      }[]
-    >([{ id: 0, name: "" }]);
-    const [unSelectedUnits, unSetSelectedUnits] = useState<
-      {
-        id: number;
-        name: string;
-      }[]
-    >([{ id: 0, name: "" }]);
+
+    const [selectedUnits, setSelectedUnits] = useState<{ id: number; name: string; }[]>([{ id: 0, name: "" }]);
+    const [units, setUnits] = useState<{ id: number; name: string; }[]>([{ id: 0, name: "" }]);
+    const [unSelectedUnits, unSetSelectedUnits] = useState<{ id: number; name: string; }[]>([{ id: 0, name: "" }]);
+
     return (
-      <div className="border border-[#ccc] rounded-md p-4 w-full">
+      <div className="border border-[#ccc] rounded-md p-4 w-full mb-12">
         <div className="flex flex-col gap-4">
           <div className="flex flex-wrap items-end">
             <div className="w-full flex flex-wrap gap-1">
@@ -425,7 +385,7 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
                   const obj = getFieldProps("*");
                   if (
                     obj?.units?.find((x: any) => x.unitID == e.value) !=
-                      undefined ||
+                    undefined ||
                     obj?.product?.basicUnitID == e.value
                   ) {
                     ERPAlert.show({
@@ -446,6 +406,7 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
                   }
                 }}
                 className="flex-1 min-w-[120px] max-w-[222px]"
+                disabled={isView}
               />
 
               <ERPInput
@@ -456,7 +417,6 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
                 onChange={(e) => {
                   const obj = getFieldProps("*") as productDto;
                   const mFactor = Number(e.target.value);
-                  
                   setUnit((prev) => ({
                     ...prev,
                     multiFactor: Number(e.target.value),
@@ -467,6 +427,7 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
                   }));
                 }}
                 className="flex-1 min-w-[120px] max-w-[222px]"
+                disabled={isView}
               />
 
               <ERPInput
@@ -481,6 +442,7 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
                   }))
                 }
                 className="flex-1 min-w-[120px] max-w-[222px]"
+                disabled={isView}
               />
 
               <ERPInput
@@ -495,6 +457,7 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
                   }))
                 }
                 className="flex-1 min-w-[120px] max-w-[222px]"
+                disabled={isView}
               />
 
               <ERPInput
@@ -509,6 +472,7 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
                   }))
                 }
                 className="flex-1 min-w-[120px] max-w-[222px]"
+                disabled={isView}
               />
 
               <ERPInput
@@ -523,6 +487,7 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
                   }))
                 }
                 className="flex-1 min-w-[120px] max-w-[222px]"
+                disabled={isView}
               />
 
               <ERPInput
@@ -537,6 +502,7 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
                   }))
                 }
                 className="flex-1 min-w-[120px] max-w-[222px]"
+                disabled={isView}
               />
 
               <ERPInput
@@ -551,6 +517,7 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
                   }))
                 }
                 className="flex-1 min-w-[120px] max-w-[222px]"
+                disabled={isView}
               />
             </div>
 
@@ -560,50 +527,48 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
                 variant="primary"
                 onClick={handleAddUnit}
                 className="h-10"
+                disabled={isView}
               />
             </div>
           </div>
 
           {/* DataGrid Section */}
           <div className="px-4 pb-4 pt-1 rounded-md shadow grid grid-cols-1 gap-3 ">
-            
-               <ErpDevGrid
-                    ref={multiUnitRef}
-                    hideGridHeader={true}
-                    // hideDefaultSearchPanel={true}
-                    keyExpr="unitID"
-                    data={getFieldProps("units").value}
-                    columns={columns}
-                    editMode="cell"
-                    remoteOperations={false}
-                    allowEditing={{
-                      allow: true,
-                      config: {
-                      edit: true,
-                      add: false,
-                      delete: false,
-                      },
-                    }}
-                     scrollingMode="virtual"
-                      keyboardNavigation={{
-                        editOnKeyPress: true,
-                        enterKeyAction: "moveFocus",
-                        enterKeyDirection: "row",
-                        enabled: true,
-                      }}
-
-                    showBorders={true}
-                    rowAlternationEnabled={true}
-                    enableScrollButton={false}
-                    hideDefaultExportButton={true}
-                    hideGridAddButton={true}
-                    ShowGridPreferenceChooser={false}
-                    showPrintButton={false}
-                    pageSize={100}
-                    heightToAdjustOnWindowsInModal={gridHeight.windows}
-                    gridId="product_multi_units_grid"
-                />
-               
+            <ErpDevGrid
+              ref={multiUnitRef}
+              hideGridHeader={true}
+              // hideDefaultSearchPanel={true}
+              keyExpr="unitID"
+              data={getFieldProps("units").value}
+              columns={columns}
+              editMode="cell"
+              remoteOperations={false}
+              allowEditing={{
+                allow: true,
+                config: {
+                  edit: true,
+                  add: false,
+                  delete: false,
+                },
+              }}
+              scrollingMode="virtual"
+              keyboardNavigation={{
+                editOnKeyPress: true,
+                enterKeyAction: "moveFocus",
+                enterKeyDirection: "row",
+                enabled: true,
+              }}
+              showBorders={true}
+              rowAlternationEnabled={true}
+              enableScrollButton={false}
+              hideDefaultExportButton={true}
+              hideGridAddButton={true}
+              ShowGridPreferenceChooser={false}
+              showPrintButton={false}
+              pageSize={100}
+              heightToAdjustOnWindowsInModal={gridHeight.windows}
+              gridId="product_multi_units_grid"
+            />
           </div>
 
           {/* Default Units Section */}
@@ -628,6 +593,7 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
                   }
                   className="w-full"
                   label={t("sales")}
+                  disabled={isView}
                 />
               </div>
               <div className="flex-1 px-1 mb-3 min-w-[200px] max-w-[200px]">
@@ -648,6 +614,7 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
                     )
                   }
                   className="w-full"
+                  disabled={isView}
                 />
               </div>
               <div className="flex-1 px-1 mb-3 min-w-[200px] max-w-[200px]">
@@ -668,6 +635,7 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
                     )
                   }
                   className="w-full"
+                  disabled={isView}
                 />
               </div>
             </div>
@@ -677,9 +645,7 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
         {openMB.open && (
           <ERPModal
             isOpen={openMB.open}
-            closeModal={(reload: boolean) =>
-              setOpenMB({ index: 0, open: false, unit: "", data: [] })
-            }
+            closeModal={(reload: boolean) => setOpenMB({ index: 0, open: false, unit: "", data: [] })}
             title={t("multi_barcode")}
             content={
               <div className="w-full">
@@ -735,9 +701,13 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
                     enterKeyDirection={"column"}
                   />
 
-                  <Paging pageSize={100} />
+                  <Paging
+                    pageSize={100}
+                  />
 
-                  <Scrolling mode="standard" />
+                  <Scrolling
+                    mode="standard"
+                  />
 
                   <RemoteOperations
                     filtering={false}
@@ -776,16 +746,16 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
             footer={
               <div className="absolute -bottom-0 h-[42px] pt-[4px] pb-[2px] left-0 w-full flex justify-end space-x-2 dark:!border-dark-border dark:!bg-dark-bg bg-white border-t z-10 pr-[10px] rounded-b-md">
                 <ERPSubmitButton
+                  disabled={isView}
                   type="reset"
-                  onClick={() =>
-                    setOpenMB({ index: 0, open: false, unit: "", data: [] })
-                  }
+                  onClick={() => setOpenMB({ index: 0, open: false, unit: "", data: [] })}
                   className="dark:text-dark-hover-text w-28 bg-[#808080] text-[#404040] max-w-[115px]"
                 >
                   {t("cancel")}
                 </ERPSubmitButton>
 
                 <ERPSubmitButton
+                  disabled={isView}
                   type="button"
                   className="max-w-[115px]"
                   variant="primary"
@@ -798,8 +768,8 @@ const setMultiBarcode = (barcodesString: string, unitName: string, rowId: number
           />
         )}
       </div>
-    );
+    )
   }
-);
+  );
 
 export default React.memo(ProductMultiUnitsIndia);

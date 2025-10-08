@@ -7,7 +7,7 @@ import Urls from "../../../../redux/urls";
 import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { toggleProducts } from "../../../../redux/slices/popup-reducer";
-import { productDto, ProductLocalConfig } from "./products-type";
+import { productDto } from "./products-type";
 import initialProductData from "./products-data";
 import ProductDetailsIndia from "./products-india/product-details-india";
 import ProductManageIndia from "./products-india/products-manage-india";
@@ -16,7 +16,7 @@ import ProductDetailsGcc from "./products-gcc/product-details-gcc";
 import ProductOthersIndia from "./products-india/product-others-india";
 import ProductOthersGcc from "./products-gcc/product-others-gcc";
 import ProductNotesGcc from "./products-gcc/product-notes-gcc";
-import ProductMultiUnitsGCC, { ProductMultiUnitsGccRef } from "./products-gcc/product-multi-units-gcc";
+import { ProductMultiUnitsGccRef } from "./products-gcc/product-multi-units-gcc";
 import NutritionFactsIndia from "./products-india/product-nutrition-facts-india";
 import SearchCommon from "./common/product-search";
 import ImageCommon from "./common/product-image";
@@ -71,7 +71,7 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
     open: false,
     data: [],
     onClose: undefined // Add onClose to the state
-  }); 
+  });
 
   const {
     isEdit,
@@ -99,9 +99,11 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
   const [activeTab, setActiveTab] = React.useState(0);
   const productMultiUnitsIndiaRef = useRef<ProductMultiUnitsIndiaRef>(null);
   const productMultiUnitsGccRef = useRef<ProductMultiUnitsGccRef>(null);
-  const handleTabChange = async (index: number,obj:productDto) => {
+  const mode = rootState.PopupData.products?.mode || (rootState.PopupData.products?.key ? 'edit' : 'add');
+  const isView = mode === 'view';
+  const handleTabChange = async (index: number, obj: productDto) => {
     setActiveTab(index);
-    
+
     const tabs = getTabs();
     const multiRatesIndex = tabs?.findIndex((tab) => tab === t("multi_rates"));
     if (
@@ -109,17 +111,17 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
       multiRatesIndex !== -1 &&
       multiRatesIndex == index
     ) {
-      
+
       if (
         appSettings?.productsSettings?.allowMultirate &&
         obj.prices &&
         ((obj.prices.length == 0 && (obj.product.productID ?? 0) > 0) || ((obj.product.productID ?? 0) <= 0))
       ) {
-           const rates =
-            await loadMultiRateToGrid(
-              obj,
-              obj.units,api, getFormattedValue);
-          handleDataChange({ ...obj, prices: rates });
+        const rates =
+          await loadMultiRateToGrid(
+            obj,
+            obj.units, api, getFormattedValue);
+        handleDataChange({ ...obj, prices: rates });
         // if (productMultiUnitsGccRef.current) {
         //   const rates = await productMultiUnitsGccRef.current.loadMultiRateToGrid(obj, obj.units, (obj.product.productID ?? 0) > 0 ? getFieldProps("prices").value : []);
         //   handleDataChange({ ...obj, prices: rates });
@@ -130,8 +132,8 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
 
   const updatePrice = async () => {
     const obj = getFieldProps("*") as productDto;
-    
-    
+
+
     if (!isNullOrUndefinedOrEmpty(obj.product.autoBarcode)) {
       const payload = {
         units: obj.units,
@@ -196,10 +198,10 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
       if (isNullOrUndefinedOrEmpty(obj.product.hsnCode)) {
         ERPAlert.show(
           {
-            title: "Validation Failed",
-            text: "HSN Code missing, are you sure to continue?",
+            title: t("validation_failed"),
+            text: t("hsn_code_missing_are_you_sure_to_continue"),
             icon: "warning",
-            cancelButtonText: "cancel",
+            cancelButtonText: t("cancel"),
             showCancelButton: true,
             onConfirm: () => { handleSubmit() },
             onCancel: () => {
@@ -271,7 +273,7 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
   };
   // Callback to switch to Multi Rates tab
   const switchToMultiRatesTab = useCallback(() => {
-    
+
     const tabs = getTabs();
     const multiRatesIndex = tabs?.findIndex((tab) => tab === t("multi_rates"));
     if (multiRatesIndex !== undefined && multiRatesIndex !== -1) {
@@ -299,9 +301,9 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
       );
       let data: productDto;
       let nextProductCode: string;
-      
+
       const res = await api.getAsync(`${Urls.get_product_config}`);
-      
+
       const st = atob(res);
       const _st: any = customJsonParse(st);
       if (isEditMode) {
@@ -345,7 +347,7 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
         );
         data.onHold = holdStatus;
       }
-      
+
 
       // if (!clientSession.isAppGlobal) {
       const markupPercentage = calculateMarkup(
@@ -412,6 +414,7 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
           getFieldProps={getFieldProps}
           handleFieldChange={handleFieldChange}
           t={t}
+          isView={isView}
         />
       </div>,
 
@@ -425,7 +428,8 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
           handleFieldChange={handleFieldChange}
           isMaximized={isMaximized}
           modalHeight={modalHeight}
-         isGlobal={true}
+          isGlobal={true}
+          isView={isView}
         />
       </div>,
       <div key="multi_rates">
@@ -434,8 +438,9 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
           t={t}
           getFieldProps={getFieldProps}
           handleFieldChange={handleFieldChange}
-           isMaximized={isMaximized}
+          isMaximized={isMaximized}
           modalHeight={modalHeight}
+          isView={isView}
         />
       </div>,
       <div key="image">
@@ -443,6 +448,7 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
           t={t}
           getFieldProps={getFieldProps}
           handleFieldChange={handleFieldChange}
+          isView={isView}
         />
       </div>,
       <div key="others">
@@ -452,22 +458,26 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
           formState={formState}
           getFieldProps={getFieldProps}
           handleFieldChange={handleFieldChange}
+          isView={isView}
         />
       </div>,
       <div key="sales">
-        <SalesCommon 
-         getFieldProps={getFieldProps} 
-           isMaximized={isMaximized}
+        <SalesCommon
+          getFieldProps={getFieldProps}
+          isMaximized={isMaximized}
           modalHeight={modalHeight}
           isGlobal={true}
-         />
+          isView={isView}
+        />
       </div>,
       <div key="purchase">
-        <PurchaseCommon getFieldProps={getFieldProps} 
-           isMaximized={isMaximized}
+        <PurchaseCommon
+          getFieldProps={getFieldProps}
+          isMaximized={isMaximized}
           modalHeight={modalHeight}
           isGlobal={true}
-         />
+          isView={isView}
+        />
       </div>,
       <div key="stock">
         <StockCommon
@@ -477,6 +487,7 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
           isMaximized={isMaximized}
           modalHeight={modalHeight}
           isGlobal={true}
+          isView={isView}
         />
       </div>,
       <div key="suppliers">
@@ -484,24 +495,27 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
           formState={formState}
           getFieldProps={getFieldProps}
           handleFieldChange={handleFieldChange}
-           isMaximized={isMaximized}
-        modalHeight={modalHeight}
-        isGlobal={true}
+          isMaximized={isMaximized}
+          modalHeight={modalHeight}
+          isGlobal={true}
+          isView={isView}
         />
       </div>,
       // <div key="re_order">  <ProductReOrderIndia formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
       <div key="promotion_details">
-        <PromotionCommon 
-        getFieldProps={getFieldProps}
-        isMaximized={isMaximized}
-        modalHeight={modalHeight}
+        <PromotionCommon
+          getFieldProps={getFieldProps}
+          isMaximized={isMaximized}
+          modalHeight={modalHeight}
+          isView={isView}
         />
       </div>,
       <div key="search">
-        <SearchCommon 
-        isGlobal={true}
-        isMaximized={isMaximized}
-        modalHeight={modalHeight}  
+        <SearchCommon
+          isGlobal={true}
+          isMaximized={isMaximized}
+          modalHeight={modalHeight}
+          isView={isView}
         />
       </div>,
       <div key="nutrition_facts">
@@ -509,8 +523,9 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
           formState={formState}
           getFieldProps={getFieldProps}
           handleFieldChange={handleFieldChange}
-        isMaximized={isMaximized}
-        modalHeight={modalHeight}
+          isMaximized={isMaximized}
+          modalHeight={modalHeight}
+          isView={isView}
         />
       </div>,
     ]
@@ -523,12 +538,14 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
           getFieldProps={getFieldProps}
           handleFieldChange={handleFieldChange}
           switchToMultiRatesTab={switchToMultiRatesTab}
+          isView={isView}
         />
 
         <ProductDetailsGcc
           clientSession={clientSession}
           getFieldProps={getFieldProps}
           handleFieldChange={handleFieldChange}
+          isView={isView}
         />
       </div>,
       <div key="multi_units">
@@ -542,6 +559,7 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
           isMaximized={isMaximized}
           modalHeight={modalHeight}
           isGlobal={false}
+          isView={isView}
         />
       </div>,
       <div key="multi_rates">
@@ -550,15 +568,17 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
           t={t}
           getFieldProps={getFieldProps}
           handleFieldChange={handleFieldChange}
-           isMaximized={isMaximized}
+          isMaximized={isMaximized}
           modalHeight={modalHeight}
+          isView={isView}
         />
       </div>,
       <div key="search">
-        <SearchCommon 
-         isGlobal={false}
-         isMaximized={isMaximized}
-         modalHeight={modalHeight}
+        <SearchCommon
+          isGlobal={false}
+          isMaximized={isMaximized}
+          modalHeight={modalHeight}
+          isView={isView}
         />
       </div>,
       <div key="image">
@@ -566,6 +586,7 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
           t={t}
           getFieldProps={getFieldProps}
           handleFieldChange={handleFieldChange}
+          isView={isView}
         />
       </div>,
       <div key="others">
@@ -575,21 +596,25 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
           formState={formState}
           getFieldProps={getFieldProps}
           handleFieldChange={handleFieldChange}
+          isView={isView}
         />
       </div>,
       <div key="sales">
-        <SalesCommon 
-        getFieldProps={getFieldProps}    
-         isMaximized={isMaximized}
-          modalHeight={modalHeight}
-          isGlobal={false}/>
-      </div>,
-      <div key="purchase">
-        <PurchaseCommon 
-        getFieldProps={getFieldProps} 
+        <SalesCommon
+          getFieldProps={getFieldProps}
           isMaximized={isMaximized}
           modalHeight={modalHeight}
           isGlobal={false}
+          isView={isView}
+        />
+      </div>,
+      <div key="purchase">
+        <PurchaseCommon
+          getFieldProps={getFieldProps}
+          isMaximized={isMaximized}
+          modalHeight={modalHeight}
+          isGlobal={false}
+          isView={isView}
         />
       </div>,
       <div key="stock">
@@ -600,6 +625,7 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
           isMaximized={isMaximized}
           modalHeight={modalHeight}
           isGlobal={false}
+          isView={isView}
         />
       </div>,
       <div key="suppliers">
@@ -610,10 +636,15 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
           isMaximized={isMaximized}
           modalHeight={modalHeight}
           isGlobal={false}
+          isView={isView}
         />
       </div>,
       <div key="notes">
-        <ProductNotesGcc getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} />
+        <ProductNotesGcc
+          getFieldProps={getFieldProps}
+          handleFieldChange={handleFieldChange}
+          isView={isView}
+        />
       </div>,
     ];
   return (
@@ -625,9 +656,10 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
           placeholder={t("barcode")}
           required={false}
           disableEnterNavigation
+          readOnly={isView}
           onKeyDown={async (e: any) => {
             const barcode = e.target.value;
-            if (e.key === "Enter" && barcode != null && barcode != "") {
+            if (e.key === "Enter" && barcode != null && barcode != "" && !isView) {
               try {
                 const data = await api.getAsync(`${Urls.products}ByBarcode/${barcode}`);
                 handleDataChange(data);
@@ -650,6 +682,7 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
             formState={formState}
             getFieldProps={getFieldProps}
             handleFieldChange={handleFieldChange}
+            isView={isView}
           />
         ) : (
           ""
@@ -669,10 +702,10 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
             return true;
           })}
           activeTab={activeTab}
-          onClickTabAt={(ta)=>{
-            
+          onClickTabAt={(ta) => {
+
             const obj = getFieldProps("*") as productDto;
-            handleTabChange(ta,obj);
+            handleTabChange(ta, obj);
           }}
           className="overflow-x-auto whitespace-nowrap scrollbar-hide"
         >
@@ -701,23 +734,26 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
       <ERPFormButtons
         customButtons={[
           {
-            title: "Update Price",
+            title: t("update_price"),
             onClick: updatePrice,
             disabled:
               appSettings.branchSettings.maintainMasterEntry ||
               (formState.data.product.productID ?? 0) <= 0 ||
-              !appSettings.branchSettings?.useBranchWiseSalesPrice,
+              !appSettings.branchSettings?.useBranchWiseSalesPrice ||
+              isView,
             variant: "secondary",
           },
           {
-            title: "Flavors",
+            title: t("flavors"),
             onClick: handleFlavorOpen,
             variant: "secondary",
+            disabled: isView,
           },
           {
-            title: "Multi Barcode",
+            title: t("multi_barcode"),
             onClick: handleMultibarcode,
             variant: "secondary",
+            disabled: isView,
           },
         ].filter((x: any) => {
           const obj = getFieldProps("*") as any as productDto;
@@ -726,7 +762,7 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
               return false
             }
           }
-          
+
           if (x.title == "Multi Barcode") {
             if (((clientSession.isAppGlobal && !obj.elements?.mbVisible)) || (formState.data.product.productID ?? 0) == 0) {
               return false
@@ -743,7 +779,8 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
         onCancel={handleClose}
         submitDisabled={
           !appSettings.branchSettings.maintainMasterEntry ||
-          getFieldProps("hasDisabled").value == true
+          getFieldProps("hasDisabled").value == true ||
+          isView
         }
         onSubmit={handleSubmitProductManage}
       />
@@ -812,12 +849,12 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
                 dataField="flavor"
                 caption={t("flavor")}
                 dataType="string"
-                allowEditing={true}
+                allowEditing={!isView}
                 minWidth={150}
               />
 
               <Editing
-                allowUpdating={true}
+                allowUpdating={!isView}
                 allowAdding={false}
                 allowDeleting={false}
                 mode="cell"
@@ -847,6 +884,7 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
               className="max-w-[115px]"
               variant="primary"
               onClick={handleSaveFlavor}
+              disabled={isView}
             >
               {t("save")}
             </ERPSubmitButton>
@@ -861,19 +899,19 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
         isOpen={multiBarcode.open}
         closeModal={multiBarcode.onClose ?? (() => { })}
         title={t("multi_barcode")}
-        content={<ProductMultiBarcodeManage
-          multiBarcode={multiBarcode}
-          setMultiBarcode={setMultiBarcode}
-          units={units}
-          productBatchID={getFieldProps("batch.productBatchID").value}
-        />}
+        content={
+          <ProductMultiBarcodeManage
+            multiBarcode={multiBarcode}
+            setMultiBarcode={setMultiBarcode}
+            units={units}
+            productBatchID={getFieldProps("batch.productBatchID").value}
+            isView={isView}
+          />}
         width={780}
         height={570}
         disableOutsideClickClose={false}
       />
     </div>
-
-
   );
 });
 

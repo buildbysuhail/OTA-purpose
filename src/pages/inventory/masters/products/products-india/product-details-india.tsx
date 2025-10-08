@@ -22,7 +22,8 @@ const ProductDetailsIndia: React.FC<{
   ) => void;
   t: any;
   getFieldProps: (fieldId: string, type?: string) => FormField;
-}> = React.memo(({ formState, handleFieldChange, t, getFieldProps, clientSession, isMobile }) => {
+  isView: boolean;
+}> = React.memo(({ formState, handleFieldChange, t, getFieldProps, clientSession, isMobile, isView }) => {
   const rootState = useRootState();
   const dispatch = useDispatch();
   const MemoizedWarehouseManage = useMemo(() => React.memo(WarehouseManage), []);
@@ -40,6 +41,7 @@ const ProductDetailsIndia: React.FC<{
                   placeholder="0.00"
                   type="number"
                   required={false}
+                  readOnly={isView}
                   onChangeData={(data: productDto) =>
                     handleFieldChange("product.minimumStock", data.product.minimumStock)
                   }
@@ -52,6 +54,7 @@ const ProductDetailsIndia: React.FC<{
                   placeholder="0.00"
                   type="number"
                   required={false}
+                  readOnly={isView}
                   onChangeData={(data: productDto) =>
                     handleFieldChange("product.maximumStock", data.product.maximumStock)
                   }
@@ -63,6 +66,7 @@ const ProductDetailsIndia: React.FC<{
                   placeholder="0.00"
                   type="number"
                   required={false}
+                  readOnly={isView}
                   onChangeData={(data: productDto) =>
                     handleFieldChange("product.reorderQty", data.product.reorderQty)
                   }
@@ -80,6 +84,7 @@ const ProductDetailsIndia: React.FC<{
                     getListUrl: Urls.data_warehouse,
                     labelKey: "name",
                   }}
+                  disabled={isView}
                   onChangeData={(data: productDto) =>
                     handleFieldChange("batch.warehouseID", data.batch.warehouseID)
                   }
@@ -113,6 +118,7 @@ const ProductDetailsIndia: React.FC<{
                     getListUrl: Urls.data_brands,
                     labelKey: "name",
                   }}
+                  disabled={isView}
                   onSelectItem={(data: any) =>
                     handleFieldChange("batch.brandID", data.value)
                   }
@@ -143,6 +149,7 @@ const ProductDetailsIndia: React.FC<{
                 label={t("commodity_plu")}
                 placeholder=""
                 required={false}
+                readOnly={isView}
                 onChangeData={(data: productDto) =>
                   handleFieldChange("product.commodityCode", data.product.commodityCode)
                 }
@@ -154,6 +161,7 @@ const ProductDetailsIndia: React.FC<{
                 label={t("alias_name")}
                 placeholder=""
                 required={false}
+                readOnly={isView}
                 onChangeData={(data: productDto) =>
                   handleFieldChange("product.aliasItemName", data.product.aliasItemName)
                 }
@@ -165,6 +173,7 @@ const ProductDetailsIndia: React.FC<{
                 label={t("specification")}
                 placeholder=""
                 required={false}
+                readOnly={isView}
                 onChangeData={(data: productDto) =>
                   handleFieldChange("batch.specification", data.batch.specification)
                 }
@@ -178,6 +187,7 @@ const ProductDetailsIndia: React.FC<{
                 label={t("hsn_code")}
                 placeholder=""
                 required={false}
+                readOnly={isView}
                 onChangeData={(data: productDto) =>
                   handleFieldChange("product.hsnCode", data.product.hsnCode)
                 }
@@ -188,6 +198,7 @@ const ProductDetailsIndia: React.FC<{
                 {...getFieldProps("batch.expiryDate")}
                 label={t("exp_date")}
                 required={false}
+                disabled={isView}
                 onChange={(e) => handleFieldChange('batch.expiryDate', e.target.value as any)}
                 className="flex-1 min-w-[200px]"
               // onChangeData={(data: productDto) =>
@@ -199,7 +210,7 @@ const ProductDetailsIndia: React.FC<{
                 {...getFieldProps("batch.autoBarcode")}
                 label={t("auto_barcode")}
                 placeholder=""
-                readOnly
+                readOnly={true}
                 required={false}
                 onChangeData={(data: productDto) =>
                   handleFieldChange("batch.autoBarcode", data.batch.autoBarcode)
@@ -214,6 +225,7 @@ const ProductDetailsIndia: React.FC<{
                 label={t("batch_no")}
                 placeholder=""
                 required={false}
+                readOnly={isView}
                 onChangeData={(data: productDto) =>
                   handleFieldChange("batch.batchNo", data.batch.batchNo)
                 }
@@ -227,6 +239,7 @@ const ProductDetailsIndia: React.FC<{
                   placeholder="0.00"
                   type="number"
                   required={false}
+                  readOnly={isView}
                   onChangeData={(data: productDto) =>
                     handleFieldChange("product.netWt", data.product.netWt)
                   }
@@ -238,6 +251,7 @@ const ProductDetailsIndia: React.FC<{
                   label={t("unit_name")}
                   placeholder={t("eg:gm/ml")}
                   required={false}
+                  readOnly={isView}
                   onChangeData={(data: productDto) =>
                     handleFieldChange("product.netWeightUnit", data.product.netWeightUnit)
                   }
@@ -250,6 +264,7 @@ const ProductDetailsIndia: React.FC<{
                 id="mfgDate"
                 label={t("mfg_date")}
                 required={false}
+                disabled={isView}
                 onChange={(e) => handleFieldChange('batch.mfgDate', e.target.value as any)}
                 className="flex-1 min-w-[200px]"
               // onChangeData={(data: productDto) =>
@@ -268,6 +283,7 @@ const ProductDetailsIndia: React.FC<{
                   labelKey: "name",
                   getListUrl: Urls.data_locations
                 }}
+                disabled={isView}
                 onSelectItem={(data: any) =>
                   handleFieldChange({ "batch.locationId": data.value, "batch.location": data.label })
                 }
@@ -286,12 +302,14 @@ const ProductDetailsIndia: React.FC<{
               <ERPCheckbox
                 {...getFieldProps("product.canPurchase")}
                 label={t("purchase")}
+                disabled={isView}
                 onChange={(e) => handleFieldChange('product.canPurchase', e.target.checked)}
               />
 
               <ERPCheckbox
                 {...getFieldProps("product.canSale")}
                 label={t("sales")}
+                disabled={isView}
                 onChange={(e) => handleFieldChange('product.canSale', e.target.checked)}
               // onChangeData={(data: productDto) =>
               //   handleFieldChange("product.canSale", data.canSale)
@@ -301,6 +319,7 @@ const ProductDetailsIndia: React.FC<{
               <ERPCheckbox
                 {...getFieldProps("product.isFinishedGood")}
                 label={t("finished_goods")}
+                disabled={isView}
                 onChange={(e) => handleFieldChange('product.isFinishedGood', e.target.checked)}
               // onChangeData={(data: productDto) =>
               //   handleFieldChange("product.isFinishedGood", data.isFinishedGood)
@@ -310,6 +329,7 @@ const ProductDetailsIndia: React.FC<{
               <ERPCheckbox
                 {...getFieldProps("product.isRawMaterial")}
                 label={t("raw_material")}
+                disabled={isView}
                 onChange={(e) => handleFieldChange('product.isRawMaterial', e.target.checked)}
               // onChangeData={(data: productDto) =>
               //   handleFieldChange("product.isRawMaterial", data.isRawMaterial)
@@ -319,6 +339,7 @@ const ProductDetailsIndia: React.FC<{
               <ERPCheckbox
                 {...getFieldProps("product.isActive")}
                 label={t("is_active_batch")}
+                disabled={isView}
                 onChange={(e) => handleFieldChange('product.isActive', e.target.checked)}
               // onChangeData={(data: productDto) =>
               //   handleFieldChange("product.active", data.active)
@@ -328,6 +349,7 @@ const ProductDetailsIndia: React.FC<{
               <ERPCheckbox
                 {...getFieldProps("batch.gatePass")}
                 label={t("gate_pass")}
+                disabled={isView}
                 onChange={(e) => handleFieldChange('batch.gatePass', e.target.checked)}
               // onChangeData={(data: productDto) =>
               //   handleFieldChange("product.gatePass", data.gatePass)
@@ -337,6 +359,7 @@ const ProductDetailsIndia: React.FC<{
                 <ERPCheckbox
                   {...getFieldProps("product.hold")}
                   label={t("hold")}
+                  disabled={isView}
                   onChange={(e) => handleFieldChange('product.hold', e.target.checked)}
                 // onChangeData={(data: productDto) =>
                 //   handleFieldChange("product.hold", data.hold)
@@ -345,11 +368,9 @@ const ProductDetailsIndia: React.FC<{
               }
             </div>
           </div>
-          
         </div>
       }
     </>
-
   );
 });
 

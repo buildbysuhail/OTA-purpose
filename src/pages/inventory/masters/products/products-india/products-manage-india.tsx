@@ -35,7 +35,7 @@ export const ProductManageIndia: React.FC<{
     fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
     value?: PathValue<productDto, Path>
   ) => void;
-
+  isView: boolean;
   getFieldProps: (fieldId: string, type?: any) => FormField | any;
   productMultiUnitsIndiaRef: React.RefObject<ProductMultiUnitsIndiaRef>;
 }> = React.memo(
@@ -46,7 +46,8 @@ export const ProductManageIndia: React.FC<{
     appSettings,
     handleDataChange,
     productMultiUnitsIndiaRef,
-    isMobile
+    isMobile,
+    isView
   }) => {
     const rootState = useRootState();
     const dispatch = useDispatch();
@@ -83,7 +84,6 @@ export const ProductManageIndia: React.FC<{
 
     async function handlePriceValidation() {
       try {
-        
         const obj = getFieldProps("*") as productDto;
         const showWarning =
           appSettings.inventorySettings.showRateWarning.toUpperCase();
@@ -135,7 +135,6 @@ export const ProductManageIndia: React.FC<{
               onCancel: setFocus,
               onConfirm: setFocusMRP,
             });
-
             if (obj.prices.length === 0) {
               try {
                 if (productMultiUnitsIndiaRef.current) {
@@ -150,11 +149,9 @@ export const ProductManageIndia: React.FC<{
                 console.error(err.message);
               }
             }
-
             // setFocus("mrp");
           }
         }
-
         // mrpSaleRateCompare(mrp, sales, "mrp");
       } catch (err: any) {
         ERPAlert.show({
@@ -195,7 +192,7 @@ export const ProductManageIndia: React.FC<{
                     className="w-full"
                     // readOnly={!isMobile || appSettings.productsSettings.showLabelHorizontally}
                     // labelDirection={isMobile ? "vertical" : "horizontal"}
-                    disabled={!getFieldProps("product.manual").value}
+                    disabled={!getFieldProps("product.manual").value || isView}
                     onChangeData={(data: any) =>
                       handleFieldChange(
                         "product.productCode",
@@ -204,15 +201,15 @@ export const ProductManageIndia: React.FC<{
                     }
                   />
 
-                  <button className="bg-gray-300 p-2 rounded-md hover:shadow-md transition duration-300" onClick={async () => {
-                    
-                    const nextProductCode = await api.getAsync(
-                      `${Urls.products}SelectNextProductCode`
-                    ); handleFieldChange(
-                      "product.productCode",
-                      nextProductCode
-                    )
-                  }}>
+                  <button
+                    disabled={isView}
+                    className="bg-gray-300 p-2 rounded-md hover:shadow-md transition duration-300" onClick={async () => {
+                      const nextProductCode = await api.getAsync(`${Urls.products}SelectNextProductCode`);
+                      handleFieldChange(
+                        "product.productCode",
+                        nextProductCode
+                      )
+                    }}>
                     <RefreshCcw className="w-4 h-4" />
                   </button>
                 </div>
@@ -221,6 +218,7 @@ export const ProductManageIndia: React.FC<{
                   <ERPCheckbox
                     {...getFieldProps("product.manual")}
                     label={t("manual")}
+                    disabled={isView}
                     onChange={(e) =>
                       handleFieldChange("product.manual", e.target.checked)
                     }
@@ -242,7 +240,8 @@ export const ProductManageIndia: React.FC<{
                     }}
                     disabled={
                       getFieldProps("product.productID")?.value === 0 ||
-                      getFieldProps("product.productID") === 0
+                      getFieldProps("product.productID") === 0 ||
+                      isView
                     }
                   />
                 </div>
@@ -250,7 +249,8 @@ export const ProductManageIndia: React.FC<{
               {/* {getFieldProps("product.productId").value} */}
 
               <ERPProductSearch
-                closeIfNodata ={true}
+                disabled={isView}
+                closeIfNodata={true}
                 showInputSymbol={false}
                 label={t("product_name")}
                 placeholder={t("product_name")}
@@ -261,7 +261,6 @@ export const ProductManageIndia: React.FC<{
                 })}
                 productDataUrl={Urls.load_product_details}
                 onProductSelected={(data: any) => {
-                  
                   handleFieldChange({
                     "product.productName": data.productName
                   });
@@ -271,7 +270,6 @@ export const ProductManageIndia: React.FC<{
                 }}
                 ref={productSearchRef}
                 onEnterKeyDown={() => {
-                  
                   productCategoryRef?.current?.focus()
                 }}
               />
@@ -289,7 +287,6 @@ export const ProductManageIndia: React.FC<{
                     }}
                     // labelDirection={isMobile ? "vertical" : "horizontal"}
                     onChangeData={(data: any) => {
-                      
                       handleFieldChange(
                         "product.productCategoryID",
                         data.product.productCategoryID
@@ -299,6 +296,7 @@ export const ProductManageIndia: React.FC<{
                     className="w-full"
                     required={true}
                     addNewOption={true}
+                    disabled={isView}
                     addNewOptionCobonent={{
                       title: t("product_category"),
                       popupAction: toggleProductCategory,
@@ -329,6 +327,7 @@ export const ProductManageIndia: React.FC<{
                     }}
                     // labelDirection={isMobile ? "vertical" : "horizontal"}
                     addNewOption={true}
+                    disabled={isView}
                     addNewOptionCobonent={{
                       title: t("product_group"),
                       popupAction: toggleProductGroup,
@@ -342,8 +341,6 @@ export const ProductManageIndia: React.FC<{
                     className="w-full"
                     required={true}
                   />
-
-
                 </div>
               </div>
 
@@ -396,7 +393,6 @@ export const ProductManageIndia: React.FC<{
                       getListUrl: Urls.data_units,
                     }}
                     onSelectItem={(data: any) => {
-                      
                       handleFieldChange({
                         "batch.basicUnitID": data.value,
                         "product.basicUnitID": data.value,
@@ -417,6 +413,7 @@ export const ProductManageIndia: React.FC<{
                         dispatch(toggleUnitOfMeasure({ isOpen: false })),
                       content: <UnitOfMeasureManage />,
                     }}
+                    disabled={isView}
                   />
                   {/* 
                   <button className="bg-gray-300 text-black p-2 rounded-full mt-5 hover:shadow-md hover:text-white hover:bg-black hover:font-bold transition duration-300">
@@ -429,6 +426,7 @@ export const ProductManageIndia: React.FC<{
                   label={t("unit_qty")}
                   placeholder=""
                   type="number"
+                  disabled={isView}
                   required={false}
                   className="flex-1 min-w-[150px] max-w-[150px]"
                   onChangeData={(data: any) =>
@@ -440,6 +438,7 @@ export const ProductManageIndia: React.FC<{
               <div className="flex flex-wrap items-center gap-2">
                 <div className="flex items-end gap-2">
                   <ERPCheckbox
+                    disabled={isView}
                     {...getFieldProps("upcBarcode")}
                     label={t("upc_barcode")}
                     // onChangeData={(data: any) => handleFieldChange("product.upcBarcode", data.product.upcBarcode)}
@@ -469,6 +468,7 @@ export const ProductManageIndia: React.FC<{
                     placeholder=""
                     required={false}
                     className="flex-1 min-w-[140px]"
+                    disabled={isView}
                     onChangeData={(data: any) =>
                       handleFieldChange(
                         "batch.manualBarcode",
@@ -480,6 +480,7 @@ export const ProductManageIndia: React.FC<{
                 {appSettings.productsSettings.allowMultiUnits && (
                   <ERPCheckbox
                     {...getFieldProps("mu")}
+                    disabled={isView}
                     label={t("mu")}
                     // onChangeData={(data: any) => handleFieldChange("product.mu", data.product.mu)}
                     onChange={(e) => handleFieldChange("mu", e.target.checked)}
@@ -487,6 +488,7 @@ export const ProductManageIndia: React.FC<{
                 )}
                 {appSettings.productsSettings.allowMultirate && (
                   <ERPCheckbox
+                    disabled={isView}
                     {...getFieldProps("mr")}
                     label={t("mr")}
                     // onChangeData={(data: any) => handleFieldChange("product.mr", data.product.mr)}
@@ -499,6 +501,7 @@ export const ProductManageIndia: React.FC<{
               <div className="flex flex-wrap items-end gap-1">
                 <div className="flex flex-1 min-w-[200px] max-w-[200px] items-center gap-2">
                   <ERPDataCombobox
+                    disabled={isView}
                     {...getFieldProps("product.taxCategoryID")}
                     field={{
                       id: "taxCategoryID",
@@ -571,7 +574,7 @@ export const ProductManageIndia: React.FC<{
                 <ERPInput
                   {...getFieldProps("product.stdPurchasePrice")}
                   label={t("purchase_price")}
-                  disabled={getFieldProps("product.itemType").value === "Dummy"}
+                  disabled={getFieldProps("product.itemType").value === "Dummy" || isView}
                   placeholder="0.00"
                   type="number"
                   required={false}
@@ -588,13 +591,12 @@ export const ProductManageIndia: React.FC<{
                   {...getFieldProps("product.stdSalesPrice")}
                   label={t("sales_price")}
                   className="flex-1 min-w-[120px] max-w-[140px]"
-                  disabled={getFieldProps("product.itemType").value === "Dummy"}
+                  disabled={getFieldProps("product.itemType").value === "Dummy" || isView}
                   placeholder="0.00"
                   type="number"
                   ref={salesPriceRef}
                   required={false}
                   onChangeData={(data: any) => {
-                    
                     const markupPercentage = calculateMarkup(
                       parseFloat(
                         (data.product.stdPurchasePrice ?? 0).toString()
@@ -624,6 +626,7 @@ export const ProductManageIndia: React.FC<{
                 />
 
                 <ERPInput
+                  disabled={isView}
                   {...getFieldProps("markup")}
                   ref={markupRef}
                   className="flex-1 min-w-[120px] max-w-[140px]"
@@ -632,7 +635,6 @@ export const ProductManageIndia: React.FC<{
                   type="number"
                   required={false}
                   onChangeData={(data: any) => {
-                    
                     const stdSalesPrice = getFormattedValue(calculateSalesPrice(
                       parseFloat(
                         (data.product.stdPurchasePrice ?? 0).toString()
@@ -662,6 +664,7 @@ export const ProductManageIndia: React.FC<{
                 />
 
                 <ERPInput
+                  disabled={isView}
                   {...getFieldProps("batch.displayCost")}
                   label={t("display_cost")}
                   placeholder="0.00"
@@ -680,7 +683,7 @@ export const ProductManageIndia: React.FC<{
                   {...getFieldProps("product.mrp")}
                   ref={mrpRef}
                   label={t("mrp")}
-                  disabled={getFieldProps("product.itemType").value === "Dummy"}
+                  disabled={getFieldProps("product.itemType").value === "Dummy" || isView}
                   placeholder="0.00"
                   type="number"
                   required={false}
@@ -712,6 +715,7 @@ export const ProductManageIndia: React.FC<{
                   />
                 )} */}
                 <ERPInput
+                  disabled={isView}
                   {...getFieldProps("batch.msp")}
                   label={t("msp")}
                   placeholder="0.00"
@@ -757,6 +761,7 @@ export const ProductManageIndia: React.FC<{
               <div className="flex flex-wrap items-center gap-1">
                 <div className="flex items-center">
                   <ERPCheckbox
+                    disabled={isView}
                     {...getFieldProps("batchCriteria")}
                     label={t("batch_criteria")}
                     onChange={(data) =>
@@ -776,7 +781,7 @@ export const ProductManageIndia: React.FC<{
                     }}
                     enableClearOption={false}
                     className="w-full"
-                    disabled={getFieldProps("batchCriteria").value != true}
+                    disabled={getFieldProps("batchCriteria").value != true || isView}
                     noLabel={true}
                     onChangeData={(data: any) =>
                       handleFieldChange(
@@ -809,7 +814,7 @@ export const ProductManageIndia: React.FC<{
                       _data.product.stdSalesPrice = 0;
                       _data.product.manual = true;
                     }
-                    
+
                     handleDataChange(_data);
                   }}
                   label={t("product_type")}
@@ -822,6 +827,7 @@ export const ProductManageIndia: React.FC<{
                     { value: "Other", label: "Other" },
                     { value: "Fixed Asset", label: "Fixed Asset" },
                   ]}
+                  disabled={isView}
                 />
 
                 <div className="flex flex-wrap items-center gap-2">
@@ -829,6 +835,7 @@ export const ProductManageIndia: React.FC<{
                     <ERPButton title={t("kit")} variant="secondary" />
                   )}
                   <ERPCheckbox
+                    disabled={isView}
                     {...getFieldProps("details")}
                     label={t("details")}
                     onChange={(e) =>

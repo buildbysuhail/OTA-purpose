@@ -14,226 +14,169 @@ import { useNumberFormat } from "../../../../../utilities/hooks/use-number-forma
 
 const StockCommon: React.FC<{
   isMaximized?: boolean;
-    modalHeight?: any;
+  modalHeight?: any;
   isGlobal?: boolean;
   formState: any;
+  isView: boolean;
   handleFieldChange: (
-    fields:
-      | string
-      | {
-        [fieldId: string]: any;
-      },
+    fields: | string | { [fieldId: string]: any; },
     value?: any
   ) => void;
-
   getFieldProps: (fieldId: string, type?: string) => FormField;
-}> = React.memo(({ formState, handleFieldChange, getFieldProps,isMaximized,modalHeight,isGlobal }) => {
+}> = React.memo(({ formState, handleFieldChange, getFieldProps, isMaximized, modalHeight, isGlobal, isView }) => {
   const { t } = useTranslation("inventory");
   const [showGrid, setShowGrid] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { getFormattedValue } = useNumberFormat();
-    const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
-        useEffect(() => {
-          let gridHeightMobile = modalHeight - 500;
-          let gridHeightWindows = modalHeight - (isGlobal?500:350);
-          setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
-        }, [isMaximized, modalHeight]);
-  const columns: DevGridColumn[] = useMemo(
-    () => [
-      {
-        dataField: "siNo",
-        caption: t("si_no"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
+  const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
+
+  useEffect(() => {
+    let gridHeightMobile = modalHeight - 500;
+    let gridHeightWindows = modalHeight - (isGlobal ? 500 : 350);
+    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+  }, [isMaximized, modalHeight]);
+
+  const columns: DevGridColumn[] = useMemo(() => [
+    {
+      dataField: "siNo",
+      caption: t("si_no"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "transactionDate",
+      caption: t("date"),
+      dataType: "date",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      format: "dd-MMM-yyyy"
+    },
+    {
+      dataField: "partyName",
+      caption: t("particulars"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "voucherType",
+      caption: t("voucher_type"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "voucherForm",
+      caption: t("form"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "voucherNumber",
+      caption: t("voucher_no"),
+      dataType: "number",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "inwardQty",
+      caption: t("inward_qty"),
+      dataType: "number",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value = cellElement.data?.inwardQty == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.inwardQty), false, 4);
+          return { ...exportCell, text: value, alignment: "right", alignmentExcel: { horizontal: "right" }, };
+        } else {
+          return cellElement.data?.inwardQty == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.inwardQty), false, 4);
+        }
       },
-      {
-        dataField: "transactionDate",
-        caption: t("date"),
-        dataType: "date",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-        format: "dd-MMM-yyyy"
+    },
+    {
+      dataField: "outwardQty",
+      caption: t("outward_qty"),
+      dataType: "number",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value = cellElement.data?.outwardQty == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.outwardQty), false, 4);
+          return { ...exportCell, text: value, alignment: "right", alignmentExcel: { horizontal: "right" }, };
+        } else {
+          return cellElement.data?.outwardQty == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.outwardQty), false, 4);
+        }
       },
-      {
-        dataField: "partyName",
-        caption: t("particulars"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
+    },
+    {
+      dataField: "balance",
+      caption: t("balance"),
+      dataType: "number",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value = cellElement.data?.balance == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.balance), false, 4);
+          return { ...exportCell, text: value, alignment: "right", alignmentExcel: { horizontal: "right" }, };
+        } else {
+          return cellElement.data?.balance == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.balance), false, 4);
+        }
       },
-      {
-        dataField: "voucherType",
-        caption: t("voucher_type"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "voucherForm",
-        caption: t("form"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "voucherNumber",
-        caption: t("voucher_no"),
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "inwardQty",
-        caption: t("inward_qty"),
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-        cellRender: (
-          cellElement: any,
-          cellInfo: any,
-          filter: any,
-          exportCell: any
-        ) => {
-          if (exportCell != undefined) {
-            const value =
-              cellElement.data?.inwardQty == null
-                ? ""
-                : getFormattedValue(
-                  Number.parseFloat(cellElement.data.inwardQty),
-                  false,
-                  4
-                );
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
-          } else {
-            return cellElement.data?.inwardQty == null
-              ? ""
-              : getFormattedValue(
-                Number.parseFloat(cellElement.data.inwardQty),
-                false,
-                4
-              );
-          }
-        },
-      },
-      {
-        dataField: "outwardQty",
-        caption: t("outward_qty"),
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-        cellRender: (
-          cellElement: any,
-          cellInfo: any,
-          filter: any,
-          exportCell: any
-        ) => {
-          if (exportCell != undefined) {
-            const value =
-              cellElement.data?.outwardQty == null
-                ? ""
-                : getFormattedValue(
-                  Number.parseFloat(cellElement.data.outwardQty),
-                  false,
-                  4
-                );
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
-          } else {
-            return cellElement.data?.outwardQty == null
-              ? ""
-              : getFormattedValue(
-                Number.parseFloat(cellElement.data.outwardQty),
-                false,
-                4
-              );
-          }
-        },
-      },
-      {
-        dataField: "balance",
-        caption: t("balance"),
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-        cellRender: (
-          cellElement: any,
-          cellInfo: any,
-          filter: any,
-          exportCell: any
-        ) => {
-          if (exportCell != undefined) {
-            const value =
-              cellElement.data?.balance == null
-                ? ""
-                : getFormattedValue(
-                  Number.parseFloat(cellElement.data.balance),
-                  false,
-                  4
-                );
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
-          } else {
-            return cellElement.data?.balance == null
-              ? ""
-              : getFormattedValue(
-                Number.parseFloat(cellElement.data.balance),
-                false,
-                4
-              );
-          }
-        },
-      },
-      {
-        dataField: "unit",
-        caption: t("unit"),
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "voucherPrefix",
-        caption: t("prefix"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-    ], [t]
+    },
+    {
+      dataField: "unit",
+      caption: t("unit"),
+      dataType: "number",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "voucherPrefix",
+      caption: t("prefix"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+  ], [t]
   );
 
   const modalColumns: DevGridColumn[] = useMemo(
@@ -294,11 +237,13 @@ const StockCommon: React.FC<{
       <div className="flex items-end justify-between">
         <div className="flex items-end gap-2">
           <ERPCheckbox
+            disabled={isView}
             {...getFieldProps("product.warehouse")}
             label={t("warehouse")}
             onChange={(e) => handleFieldChange('product.warehouse', e.target.checked)}
           />
           <ERPDataCombobox
+            disabled={isView}
             {...getFieldProps("batch.warehouseID")}
             id="warehouseID"
             field={{
@@ -318,11 +263,13 @@ const StockCommon: React.FC<{
           <ERPButton
             title={t("show")}
             variant="primary"
+            disabled={isView}
             onClick={handleShowClick}
           />
           <ERPButton
             title={t("wh/w")}
             variant="secondary"
+            disabled={isView}
             onClick={handleWhWClick}
           />
         </div>

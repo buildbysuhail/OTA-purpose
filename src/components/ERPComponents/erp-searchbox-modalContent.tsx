@@ -50,69 +50,71 @@ const RelatedInfoCheckboxes = React.memo<RelatedInfoCheckboxesProps>(
 // ----------------------------------------------------------------------------
 // Memoized Grid Container
 // ----------------------------------------------------------------------------
-interface GridContainerProps {
-  columns: DevGridColumn[];
-  gridHeight: number;
-  popupSearchUrl: string;
-  warehouseId: number;
-  searchCriteria: string;
-  searchText: string;
-  gridRef: React.Ref<any>;
-  handleEnter: (e: any) => void;
-  searchColumn: keyof TransactionDetail;
-  rowIndex: number;
-  onNextCellFind?: (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]) => void;
-  onClose?: () => void;
-}
-const GridContainer = React.memo(({
-  columns,
-  gridHeight,
-  popupSearchUrl,
-  warehouseId,
-  searchCriteria,
-  searchText,
-  gridRef,
-  handleEnter,
-}: GridContainerProps) => {
+// interface GridContainerProps {
+//   columns: DevGridColumn[];
+//   gridHeight: number;
+//   popupSearchUrl: string;
+//   warehouseId: number;
+//   searchCriteria: string;
+//   searchText: string;
+//   gridRef: React.Ref<any>;
+//   handleEnter: (e: any) => void;
+//   searchColumn: keyof TransactionDetail;
+//   rowIndex: number;
+//   onNextCellFind?: (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]) => void;
+//   onClose?: () => void;
+// }
+// const GridContainer = React.memo(({
+//   columns,
+//   gridHeight,
+//   popupSearchUrl,
+//   warehouseId,
+//   searchCriteria,
+//   searchText,
+//   gridRef,
+//   handleEnter,
+// }: GridContainerProps) => {
 
 
-  return (
-    <ErpDevGrid
-      ref={gridRef}
-      hideGridAddButton
-      enableScrollButton={false}
-      pageSize={30}
-      columns={columns}
-      heightToAdjustOnWindowsInModal={gridHeight}
-      dataUrl={`${popupSearchUrl}/${warehouseId}/true/true`}
-      gridId="grd_acc_group"
-      gridAddButtonType="popup"
-      reload
-      gridAddButtonIcon="ri-add-line"
-      selectionMode="multiple"
-      onKeyDown={handleEnter}
-      initialFilters={
-        searchCriteria == "pCode"
-          ? [
-            {
-              field: "productCode",
-              value: searchCriteria == "pCode" ? searchText : "",
-              operation: "startswith",
-              initialFocus: searchCriteria == "pCode" ? true : false,
-            },
-          ] : [
-            {
-              field: "productName",
-              value: searchCriteria == "product" ? searchText : "",
-              operation: "startswith",
-              initialFocus:
-                searchCriteria == "product" ? true : false,
-            },
-          ]
-      }
-    />
-  );
-});
+//   return (
+//     <ErpDevGrid
+//       ref={gridRef}
+//       hideGridAddButton
+//       enableScrollButton={false}
+//       pageSize={30}
+//       columns={columns}
+//       heightToAdjustOnWindowsInModal={gridHeight}
+//       dataUrl={`${popupSearchUrl}/${warehouseId}/true/true`}
+//       gridId="grd_acc_group"
+//       gridAddButtonType="popup"
+//       reload
+//       gridAddButtonIcon="ri-add-line"
+//       selectionMode="multiple"
+//       onKeyDown={handleEnter}
+//       initialFilters={
+//         searchCriteria == "pCode"
+//           ? [
+//             {
+//               field: "productCode",
+//               value: searchCriteria == "pCode" ? searchText : "",
+//               operation: "startswith",
+//               initialFocus: searchCriteria == "pCode" ? true : false,
+//             },
+//           ] : [
+//             {
+//               field: "productName",
+//               value: searchCriteria == "product" ? searchText : "",
+//               operation: "startswith",
+//               initialFocus:
+//                 searchCriteria == "product" ? true : false,
+//             },
+//           ]
+//       }
+//     />
+//   );
+// });
+
+// ------------------------------------------------
 
 
 
@@ -218,7 +220,7 @@ const ProductModalGrid = ({
         dataField: "productName",
         caption: t("product_name"),
         dataType: "string",
-        minWidth: 150,
+        width: 150,
         allowFiltering: true,
         selectedFilterOperation: "startswith",
       },
@@ -231,7 +233,13 @@ const ProductModalGrid = ({
         dataField: "warehouseName",
         caption: t("warehouse_name"),
         dataType: "string",
-        minWidth: 150,
+        width: 100,  
+      },
+      {
+        dataField: "stock",
+        caption: t("stock"),
+        dataType: "number",
+        width: 100,
       },
       {
         dataField: "stockDetails",
@@ -240,10 +248,11 @@ const ProductModalGrid = ({
         width: 100,
       },
       {
-        dataField: "stock",
-        caption: t("stock"),
+        dataField: "warehouseID",
+        caption: t("warehouse_id"),
         dataType: "number",
         width: 100,
+        visible: false
       },
     ], [t]
   );
@@ -251,29 +260,105 @@ const ProductModalGrid = ({
   const unitPrice: DevGridColumn[] = useMemo(
     () => [
       {
-        dataField: "productCode",
-        caption: t("product_code"),
+        dataField: "autoBarcode",
+        caption: t("auto_barcode"),
         dataType: "string",
         width: 100,
         allowFiltering: true,
+        visible: false
       },
       {
-        dataField: "productID",
-        caption: t("product_id"),
-        dataType: "number",
-        visible: false,
+        dataField: "unitCode",
+        caption: t("unit_code"),
+        dataType: "string",
+        width: 60,
+        allowFiltering: true,
+        visible:true
+      },
+      {
+        dataField: "unitName",
+        caption: t("unit_name"),
+        dataType: "string",
+        width:100,
+        visible: true,
         allowFiltering: false,
       },
       {
-        dataField: "productName",
-        caption: t("product_name"),
-        dataType: "string",
-        minWidth: 150,
+        dataField: "convFac",
+        caption: t("conv_fac"),
+        dataType: "number",
+        visible: true,
+        width: 70,
+        allowFiltering: false,
+      },
+      {
+        dataField: "salesPrice",
+        caption: t("sales_price"),
+        dataType: "number",
+        width: 70,
+        visible: true,
         allowFiltering: true,
         selectedFilterOperation: "startswith",
       },
+      {
+        dataField: "minPrice",
+        caption: t("min_price"),
+        dataType: "number",
+        width: 150,
+        visible: false,
+        allowFiltering: true,
+      },
+      {
+        dataField: "cost",
+        caption: t("cost"),
+        dataType: "number",
+        width: 70,
+        visible: false,
+        allowFiltering: true,
+      },
+      {
+        dataField: "lpr",
+        caption: t("lpr"),
+        dataType: "number",
+        visible: false,
+        width: 70,
+        allowFiltering: false,
+      },
+      {
+        dataField: "lpc",
+        caption: t("lpc"),
+        dataType: "number",
+        width: 70,
+        visible: false,
+        allowFiltering: true,
+      },
+      {
+        dataField: "unitRemarks",
+        caption: t("unit_remarks"),
+        dataType: "string",
+        width: 70,
+        visible: false,
+        allowFiltering: true,
+      },
+      {
+        dataField: "convFac2",
+        caption: t("conv_fac2"),
+        dataType: "number",
+        visible: false,
+        width: 70,
+        allowFiltering: false,
+      },
+      {
+        dataField: "stdCost",
+        caption: t("std_cost"),
+        dataType: "number",
+        width: 100,
+        visible: false,
+        allowFiltering: true,
+      },
     ], [t]
   );
+
 
   const handleRelatedInfoChange = useCallback(
     async (key: keyof typeof relatedInfo, value: boolean) => {
@@ -296,13 +381,24 @@ const ProductModalGrid = ({
     }, []
   );
 
+
+    const [warehouseData, setWarehouseData] = useState<any[]>([]);
+    const [unitPriceData, setUnitPriceData] = useState<any[]>([]);
+      const handleRowClick = (e: any) => {
+        const wareHouseDetails =  e.data.warehouseStockDetails;  
+        setWarehouseData(wareHouseDetails); 
+        const unitPriceDetails =  e.data.unitPriceDetails;
+        setUnitPriceData(unitPriceDetails)
+    }
+
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <RelatedInfoCheckboxes relatedInfo={{ ...relatedInfo, allWarehouseProducts: userConfig.allWarehouseProducts }} onChange={handleRelatedInfoChange} />
           <div className="grid grid-cols-1 gap-3">
-            <GridContainer
+            {/* <GridContainer
               columns={columns}
               gridHeight={gridHeight.windows}
               popupSearchUrl={popupSearchUrl}
@@ -315,7 +411,42 @@ const ProductModalGrid = ({
               rowIndex={rowIndex}
               onNextCellFind={onNextCellFind}
               onClose={onClose}
-            />
+            /> */}
+            <ErpDevGrid
+                ref={gridRef}
+                hideGridAddButton
+                enableScrollButton={false}
+                pageSize={30}
+                columns={columns}
+                heightToAdjustOnWindowsInModal={gridHeight.windows-50}
+                dataUrl={`${popupSearchUrl}/${warehouseId}/true/true`}
+                gridId="grd_acc_group"
+                gridAddButtonType="popup"
+                reload
+                gridAddButtonIcon="ri-add-line"
+                selectionMode="multiple"
+                onKeyDown={handleEnterKeyDown}
+                onRowClick={handleRowClick}
+                initialFilters={
+                  searchCriteria == "pCode"
+                    ? [
+                      {
+                        field: "productCode",
+                        value: searchCriteria == "pCode" ? searchText : "",
+                        operation: "startswith",
+                        initialFocus: searchCriteria == "pCode" ? true : false,
+                      },
+                    ] : [
+                      {
+                        field: "productName",
+                        value: searchCriteria == "product" ? searchText : "",
+                        operation: "startswith",
+                        initialFocus:
+                          searchCriteria == "product" ? true : false,
+                      },
+                    ]
+                }
+              />
 
             {relatedInfo.showStockDetails &&
               <div className="flex justify-between items-start gap-5">
@@ -335,12 +466,14 @@ const ProductModalGrid = ({
                     allowExport={false}
                     enablefilter={false}
                     remoteOperations={false}
+                    dataSource={warehouseData}
                     columns={stockDetails}
                     heightToAdjustOnWindowsInModal={relatedGridHeight.windows}
-                    gridId="grd_warehouse_products"
+                    gridId={`grd_warehouse_products${transactionType}`}
                     reload
                     gridAddButtonIcon="ri-add-line"
                     showTotalCount={false}
+                    height={200}
                   />
                 </div>
 
@@ -360,9 +493,11 @@ const ProductModalGrid = ({
                     allowExport={false}
                     enablefilter={false}
                     remoteOperations={false}
-                    columns={stockDetails}
+                    dataSource={unitPriceData}
+                    columns={unitPrice}
+                    height={200}
                     heightToAdjustOnWindowsInModal={relatedGridHeight.windows}
-                    gridId="grd_stock_details"
+                    gridId={`grd_stock_details${transactionType}`}
                     reload
                     showTotalCount={false}
                   />

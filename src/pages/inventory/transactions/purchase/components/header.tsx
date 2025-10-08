@@ -106,7 +106,9 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
     const closeMenuPopup = () => {
       dispatch(formStateHandleFieldChange({ fields: { headerMenuOpen: false }, }));
     };
-
+    const selectTemplates = () => {
+      dispatch(formStateHandleFieldChange({ fields: {templateChooserModal: true }, }));
+    }
     const openMenuPopup = () => {
       dispatch(formStateHandleFieldChange({ fields: { headerMenuOpen: true }, }));
     };
@@ -371,7 +373,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
 
                     <li>
                       <button
-                        // onClick={selectTemplates}
+                        onClick={selectTemplates}
                         disabled={formState.formElements?.pnlMasters?.disabled}
                         className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left  ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#fff7ed] hover:text-[#c2410c] dark:hover:bg-[#7c2d124d] dark:hover:text-[#fdba74]'}`}>
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200   ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#ffedd5] dark:bg-[#7c2d124d] group-hover:bg-[#fed7aa] dark:group-hover:bg-[#7c2d1299] group-hover:scale-110'}`}>

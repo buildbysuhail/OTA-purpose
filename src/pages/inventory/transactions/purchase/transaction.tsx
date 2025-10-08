@@ -2104,12 +2104,24 @@ const TransactionForm: React.FC<TransactionProps> = ({
           </div>
         </BottomSidebar>
 
-        <ERPResizableSidebar
-          minWidth={350}
-          isOpen={isTemplateOpen}
-          setIsOpen={setIsTemplateOpen}
-          children={<TemplatesView setIsOpen={() => { }} voucherType={formState.transaction.master.voucherType} />}
-        />
+      <ERPResizableSidebar
+    minWidth={350}
+    isOpen={formState.templateChooserModal ?? false}
+    setIsOpen={() =>
+      dispatch(
+        formStateHandleFieldChange({ fields: { templateChooserModal: false } })
+      )
+    }
+  >
+    <TemplatesView
+      voucherType={formState.transaction.master?.voucherType ?? ""}
+      setIsOpen={() =>
+        dispatch(
+          formStateHandleFieldChange({ fields: { templateChooserModal: false } })
+        )
+      }
+    />
+  </ERPResizableSidebar>
 
         <ERPResizableSidebar
           minWidth={350}

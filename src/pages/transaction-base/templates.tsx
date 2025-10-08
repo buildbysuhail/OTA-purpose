@@ -2,15 +2,8 @@
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
 import { ChevronRight, X, CheckCircle2, AlertTriangle} from 'lucide-react'
 import { useTranslation } from 'react-i18next';
-import { PlusIcon, TrashIcon, PencilIcon, SparklesIcon } from "@heroicons/react/24/outline";
-import { useNavigate } from 'react-router-dom';
-import { RootState } from '../../redux/store';
-import { useAppSelector } from '../../utilities/hooks/useAppDispatch';
 import { APIClient } from '../../helpers/api-client';
 import Urls from '../../redux/urls';
-import { useDispatch, useSelector } from 'react-redux';
-import { accFormStateHandleFieldChange } from '../accounts/transactions/reducer';
-import { handleResponse } from '../../utilities/HandleResponse';
 import { TemplateState } from '../InvoiceDesigner/Designer/interfaces';
 import { addTemplateToStore, fetchTemplateFromApiById } from '../use-print';
 import { isNullOrUndefinedOrEmpty } from '../../utilities/Utils';

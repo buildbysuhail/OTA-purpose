@@ -67,7 +67,7 @@ const Templates = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [sortBy, setSortBy] = useState<"name" | "date" | "type">("name")
-  const [formType, setFormType] = useState("")
+  const [formType, setFormType] = useState(null)
   const [customerType,setCustomerType] = useState(null)
 
   const [templateGroup, setTemplateGroup] = useState<VoucherType | string>(
@@ -449,7 +449,7 @@ const Templates = () => {
                           setTemplateGroup(template?.template_group_id);
                           setSidebarOpen(false);
                           // Check the below both 
-                          setFormType("")
+                          setFormType(null)
                           setCustomerType(null)
                         }}
                         className={`group w-full flex items-center justify-between px-4 py-2 text-sm font-medium rounded-xl sm:rounded-2xl transition-all duration-200 ${isActive
@@ -722,7 +722,7 @@ const Templates = () => {
                   }}
 
                   onChange={(e: any) =>{
-                    setFormType(e.name)
+                    setFormType(e.value ?e.name:null)
                   } }
                   
               />
@@ -741,7 +741,7 @@ const Templates = () => {
                     { id: 4, name: "INT" },
                   ]}
                   onChange={(e: any) =>{
-                    setCustomerType(e.name)
+                    setCustomerType(e.value ?e.name:null)
                   } } 
               /> 
             </div>

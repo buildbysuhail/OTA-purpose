@@ -1362,12 +1362,38 @@ export const userRights: UserRight[] = [
   // Routewise Sales and Collection
   { id: 2032705, headId: 20327, name: "RoutewiseSalesCollection", fullName: "Routewise Sales and Collection", formCode: "ROUTWISE_SL_CR_1", treeNode: 4, description: "Manage Routewise Sales and Collection" },
   { id: 203270501, headId: 2032705, name: "RoutewiseSalesCollection_Show", fullName: "Show", formCode: "S", treeNode: 5, description: "Routewise Sales and Collection Show" },
+  //#region NOT IN 1050
+    // Diagnosis Report nodes
+{ id: 2032706, headId: 20327, name: "DiagnosisReport", fullName: "Diagnosis Report", formCode: "ADVDIGREPT", treeNode: 4, description: "Manage Diagnosis Report" },
+{ id: 203270601, headId: 2032706, name: "DiagnosisReport_Print", fullName: "Print", formCode: "P", treeNode: 5, description: "Diagnosis Report Print" },
+{ id: 203270602, headId: 2032706, name: "DiagnosisReport_Settings", fullName: "Settings", formCode: "S", treeNode: 5, description: "Diagnosis Report Settings" },
+{ id: 203270603, headId: 2032706, name: "DiagnosisReport_Export", fullName: "Export", formCode: "X", treeNode: 5, description: "Diagnosis Report Export" },
+
+  // Branch Inventory Request Pending Report nodes
+{ id: 2032707, headId: 20327, name: "BranchInventoryRequestPendingReport", fullName: "Branch Inventory Request Pending Report", formCode: "ADVBRNCHPEN", treeNode: 4, description: "Manage Branch Inventory Request Pending Report" },
+{ id: 203270701, headId: 2032707, name: "BranchInventoryRequestPendingReport_Print", fullName: "Print", formCode: "P", treeNode: 5, description: "Branch Inventory Request Pending Report Print" },
+{ id: 203270702, headId: 2032707, name: "BranchInventoryRequestPendingReport_Settings", fullName: "Settings", formCode: "S", treeNode: 5, description: "Branch Inventory Request Pending Report Settings" },
+{ id: 203270703, headId: 2032707, name: "BranchInventoryRequestPendingReport_Export", fullName: "Export", formCode: "X", treeNode: 5, description: "Branch Inventory Request Pending Report Export" },
+ //#region NOT IN 1050 and india
+// CustomerWise PriceList nodes
+{ id: 2032708, headId: 20327, name: "CustomerWisePriceList", fullName: "Customer Wise Price List", formCode: "ADVCUSTPRLI", treeNode: 4, description: "Manage Customer Wise Price List" },
+{ id: 203270801, headId: 2032708, name: "CustomerWisePriceList_Print", fullName: "Print", formCode: "P", treeNode: 5, description: "Customer Wise Price List Print" },
+{ id: 203270802, headId: 2032708, name: "CustomerWisePriceList_Settings", fullName: "Settings", formCode: "S", treeNode: 5, description: "Customer Wise Price List Settings" },
+{ id: 203270803, headId: 2032708, name: "CustomerWisePriceList_Export", fullName: "Export", formCode: "X", treeNode: 5, description: "Customer Wise Price List Export" },
+//#endregion NOT IN 1050 and india
+// Print Details nodes
+{ id: 2032709, headId: 20327, name: "PrintDetails", fullName: "Print Details", formCode: "ADVPRINT", treeNode: 4, description: "Manage Print Details" },
+{ id: 203270901, headId: 2032709, name: "PrintDetails_Print", fullName: "Print", formCode: "P", treeNode: 5, description: "Print Details Print" },
+{ id: 203270902, headId: 2032709, name: "PrintDetails_Settings", fullName: "Settings", formCode: "S", treeNode: 5, description: "Print Details Settings" },
+{ id: 203270903, headId: 2032709, name: "PrintDetails_Export", fullName: "Export", formCode: "X", treeNode: 5, description: "Print Details Export" },
+
   //#region NOT IN 1050 and india
-  { id: 2032706, headId: 20327, name: "VoidReport", fullName: "Void Report", formCode: "RPTADVOID", treeNode: 4, description: "Manage Void Report" },
-  { id: 203270601, headId: 2032706, name: "VoidReport_Print", fullName: "Print", formCode: "P", treeNode: 5, description: "Void Report Print" },
-  { id: 203270602, headId: 2032706, name: "VoidReport_Settings", fullName: "Settings", formCode: "S", treeNode: 5, description: "Void Report Settings" },
-  { id: 203270603, headId: 2032706, name: "VoidReport_Export", fullName: "Export", formCode: "X", treeNode: 5, description: "Void Report Export" },
+  { id: 2032710, headId: 20327, name: "VoidReport", fullName: "Void Report", formCode: "RPTADVOID", treeNode: 4, description: "Manage Void Report" },
+  { id: 203271001, headId: 2032710, name: "VoidReport_Print", fullName: "Print", formCode: "P", treeNode: 5, description: "Void Report Print" },
+  { id: 203271002, headId: 2032710, name: "VoidReport_Settings", fullName: "Settings", formCode: "S", treeNode: 5, description: "Void Report Settings" },
+  { id: 203271003, headId: 2032710, name: "VoidReport_Export", fullName: "Export", formCode: "X", treeNode: 5, description: "Void Report Export" },
 //#endregion NOT IN 1050
+//#endregion NOT IN 1050 and india
   // Service Report
   { id: 20328, headId: 203, name: "ServiceReport", fullName: "Service Report", formCode: "SERVCRPT", treeNode: 3, description: "Manage Service Report" },
   { id: 2032801, headId: 20328, name: "ServiceReport_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Service Report Print" },

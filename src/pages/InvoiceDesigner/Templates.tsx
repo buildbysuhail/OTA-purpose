@@ -17,6 +17,7 @@ import type VoucherType from "../../enums/voucher-types"
 import { Search, Sparkles } from "lucide-react"
 import ChooseTemplate from "./choose-template"
 import ERPToast from "../../components/ERPComponents/erp-toast"
+import ERPDataCombobox from "../../components/ERPComponents/erp-data-combobox";
 
 // Enhanced scrollbar styles
 const scrollbarStyles = `
@@ -66,6 +67,8 @@ const Templates = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [sortBy, setSortBy] = useState<"name" | "date" | "type">("name")
+  const [formType, setFormType] = useState("")
+  const [customerType,setCustomerType] = useState(null)
 
   const [templateGroup, setTemplateGroup] = useState<VoucherType | string>(
     (searchParams?.get("template_group")! as VoucherType | string) ?? "SI",
@@ -117,8 +120,8 @@ const Templates = () => {
     try {
       var res = await api.postAsync(`${Urls.templates}filtered`, {
         template_group:templateGroup,
-        formType:null,
-        customerType:null
+        formType: formType,
+        customerType: customerType
       })
       handlePlainResponse(
         res,
@@ -150,7 +153,7 @@ const Templates = () => {
   useEffect(() => {
     setTempData([])
     getTemplates()
-  }, [templateGroup])
+  }, [templateGroup,formType,customerType])
 
   const filteredAndSortedTemplates = useMemo(() => {
     let filtered = tempData && Array.isArray(tempData) ? tempData : []
@@ -445,6 +448,9 @@ const Templates = () => {
                           setSearchParams({ template_group: template?.template_group_id });
                           setTemplateGroup(template?.template_group_id);
                           setSidebarOpen(false);
+                          // Check the below both 
+                          setFormType("")
+                          setCustomerType(null)
                         }}
                         className={`group w-full flex items-center justify-between px-4 py-2 text-sm font-medium rounded-xl sm:rounded-2xl transition-all duration-200 ${isActive
                           ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
@@ -701,6 +707,43 @@ const Templates = () => {
                   </div>
                 </div>
               </div>
+            </div>
+            {/* New Header creation for formtype */}
+            {/* Initial first list selection required */}
+            <div className="border-2 bg-white h-fit p-2 flex gap-8">
+              <ERPDataCombobox
+                  id="Form Type"
+                  labelDirection="horizontal"
+                  field={{
+                    id: "id",
+                    getListUrl: `${Urls.template_FormTypeByVoucherType}/${templateGroup}`,
+                    valueKey: "id",
+                    labelKey: "name",
+                  }}
+
+                  onChange={(e: any) =>{
+                    setFormType(e.name)
+                  } }
+                  
+              />
+              <ERPDataCombobox
+                  id="Customer Type"
+                  labelDirection="horizontal"
+                  field={{
+                    id: "id",
+                    valueKey: "id",
+                    labelKey: "name",
+                  }}
+                  options={[
+                    { id: 1, name: "" },
+                    { id: 2, name: "B2B" },
+                    { id: 3, name: "B2C" },
+                    { id: 4, name: "INT" },
+                  ]}
+                  onChange={(e: any) =>{
+                    setCustomerType(e.name)
+                  } } 
+              /> 
             </div>
             <div className="flex-1 overflow-y-auto scrollbar-thin">
               <div className="p-2 w-full">

@@ -653,6 +653,7 @@ const Urls = {
   templates: "/Core/Template/",
   default_template: "Core/Template/Default",
   crm_templates: "/Core/Template/CRM/",
+  template_FormTypeByVoucherType: "/Core/Template/Data/FormTypeByVoucherType",
   // Tax Treatments
   tax_treatment: "api/tax_treatment/",
 

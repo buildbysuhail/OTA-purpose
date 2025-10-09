@@ -693,7 +693,7 @@ const VirtualRow = React.memo(
           (col) => col.visible !== false && col.dataField != null
         );
         const currentColumnIndex = visibleColumns.findIndex(
-          (col) => col.dataField === column.dataField
+          (col) => col.dataField === column?.dataField
         );
 
         if (

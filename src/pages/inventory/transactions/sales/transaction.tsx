@@ -106,8 +106,8 @@ import {
   GridQtyFactors,
   ColumnModel,
 } from "../transaction-types";
-import { getTemplatesFromStore } from "../../../use-print";
-import TemplatesView from "../../../transaction-base/templates";
+import TemplatesView from "../../../transaction-base/template_picker";
+
 interface BilledItem {
   id?: number;
   name: string;
@@ -2335,7 +2335,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           <TemplatesView
             voucherType={formState.transaction.master?.voucherType ?? ""}
             formType={formState.transaction.master?.voucherForm}
-            customerType={formState.transaction.master?.customerType ?? null}
+            customerType={formState.transaction.master?.customerType}
             setIsOpen={() =>
               dispatch(
                 formStateHandleFieldChange({

@@ -1119,7 +1119,7 @@ export const useTransaction = (
       let params = {
         master: {
           ...master,
-          customerType: !clientSession.isAppGlobal && master.voucherType == "PR" && master.customerType == "" && applicationSettings.branchSettings.maintainKSA_EInvoice ?  "B2C"  : master.customerType
+          customerType: !clientSession.isAppGlobal && master.voucherType == "PR" && master.customerType == "" && applicationSettings.branchSettings.maintainKSA_EInvoice ?  "B2C"  : master.customerType,
           transactionDate:
             master.transactionDate == "" ? null : master.transactionDate,
         },

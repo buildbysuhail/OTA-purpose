@@ -644,12 +644,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     ? applicationSettings.inventorySettings?.defaultSalesAcc
                     : applicationSettings.inventorySettings?.defaultPurchaseAcc,
               ledgerID: applicationSettings.accountsSettings?.defaultCashAcc,
-              customerType: formType?.toUpperCase() === "IMPORT" ? "IMPORT" : formType?.toUpperCase() === "INTERSTATE" ? "Interstate" :
-                formType?.toUpperCase() === "INT" ? "Int" :
-                  ["WHOLESALE", "B2B"].includes(formType?.toUpperCase() ?? "")
-                    ? "B2B" :
-                    formType !== "BT" ? "B2C" :
-                      ""
+             
             },
           },
           formElements: {
@@ -696,15 +691,29 @@ const TransactionForm: React.FC<TransactionProps> = ({
       const accountKey =
         formType == "PI-IND" ? applicationSettings.accountsSettings.defaultIndirectExpenseAccount as keyof typeof LedgerType
           : formType == "PI-ASST" ? applicationSettings.accountsSettings.defaultPurchaseAssetsAccount as keyof typeof LedgerType : LedgerType.All;
-      const customerType = formType?.toUpperCase() === "PI-IND" ? "B2B"
-        : formType?.toUpperCase() === "PI-ASST" ? "B2B"
-          : formType?.toUpperCase() === "IMPORT" ? "IMPORT"
-            : formType?.toUpperCase() === "INTERSTATE" ? "Interstate" :
-              formType?.toUpperCase() === "INT" ? "Int" :
-                ["WHOLESALE", "B2B"].includes(formType?.toUpperCase() ?? "")
-                  ? "B2B" :
-                  formType !== "BT" ? "B2C" :
-                    ""
+       const customerType = clientSession.isAppGlobal
+        ? ["PI", "PR"].includes(voucherType ?? "")
+          ? formType?.toUpperCase() === "PI-IND"
+            ? "B2B"
+            : formType?.toUpperCase() === "PI-ASST"
+            ? "B2B"
+            : formType?.toUpperCase() === "IMPORT"
+            ? "IMPORT"
+            : formType?.toUpperCase() === "INTERSTATE"
+            ? "Interstate"
+            : formType?.toUpperCase() === "INT"
+            ? "Int"
+            : ["WHOLESALE", "B2B"].includes(formType?.toUpperCase() ?? "")
+            ? "B2B"
+            : formType !== "BT"
+            ? "B2C"
+            : ""
+          : ""
+        : VoucherType.PurchaseReturn
+        ? applicationSettings.branchSettings.maintainKSA_EInvoice
+          ? "B2C"
+          : ""
+        : "";
       _formState = {
         ..._formState,
         isInv: true,

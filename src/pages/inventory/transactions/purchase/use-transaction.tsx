@@ -1080,6 +1080,7 @@ export const useTransaction = (
         master: {
           ...master,
           voucherType: saveMode === "LPO" ? "PO" : saveMode === "LPQ" ? "PQ" : master.voucherType,
+          customerType: !clientSession.isAppGlobal && master.voucherType == "PR" && master.customerType == "" && applicationSettings.branchSettings.maintainKSA_EInvoice ?  "B2C"  : master.customerType,
           transactionDate:
             master.transactionDate == "" ? null : master.transactionDate,
         },
@@ -4070,7 +4071,7 @@ export const useTransaction = (
           ),
         ]);
 
-        const ret = {
+        let ret = {
           ..._formState,
           formElements: {
             ..._formState.formElements,
@@ -4098,6 +4099,37 @@ export const useTransaction = (
               address3: ledgerData?.address3 ?? "",
             }
           }
+        }
+        if (!clientSession.isAppGlobal) {
+          let customerType = "";
+          if (
+            ["PR"].includes(_formState.transaction?.master?.voucherType ?? "")
+          ) {
+            if (applicationSettings.branchSettings.maintainKSA_EInvoice) {
+              if (
+                ledgerData?.taxNumber != null &&
+                ledgerData?.taxNumber.length > 0
+              ) {
+                customerType = "B2B";
+              } else {
+                customerType = "B2C";
+              }
+            } else {
+              customerType = "";
+            }
+          } else {
+            customerType = "";
+          }
+          ret = {
+            ...ret,
+            transaction: {
+              ...ret.transaction,
+              master: {
+                ...ret.transaction?.master,
+                customerType: customerType,
+              },
+            },
+          };
         }
         _dispatch && _dispatch(formStateHandleFieldChangeKeysOnly({
           fields: ret

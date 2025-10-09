@@ -7,7 +7,7 @@ import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import VoucherType from "../../../../enums/voucher-types";
 import { APIClient } from "../../../../helpers/api-client";
-import { merge } from 'lodash';
+import { merge } from "lodash";
 import {
   useUserRights,
   UserAction,
@@ -30,7 +30,11 @@ import {
   getExcelCellValue,
   generateUniqueKey,
 } from "../../../../utilities/Utils";
-import { Attachments, BillwiseData, FormElementsState } from "../../../accounts/transactions/acc-transaction-types";
+import {
+  Attachments,
+  BillwiseData,
+  FormElementsState,
+} from "../../../accounts/transactions/acc-transaction-types";
 import { ApplicationSettingsType } from "../../../settings/system/application-settings-types/application-settings-types";
 import { deleteAccVoucher, unlockTransactionMaster } from "./thunk";
 import { updateTransactionEditMode } from "./transaction-functions";
@@ -43,11 +47,43 @@ import { useTransactionHelper } from "./use-transaction-helper";
 import { DeepPartial } from "redux";
 import ExcelJS from "exceljs";
 import { sanitizeDataAdvanced } from "../../../../utilities/Utils";
-import { getStorageString, setStorageString } from "../../../../utilities/storage-utils";
+import {
+  getStorageString,
+  setStorageString,
+} from "../../../../utilities/storage-utils";
 import { getApLocalDataByUrl } from "../../../../redux/cached-urls";
-import { formStateHandleFieldChangeKeysOnly, formStateHandleFieldChange, formStateTransactionMasterHandleFieldChange, formStateTransactionUpdate, clearState, formStateMasterHandleFieldChange, formStateClearDetails, formStateClearAttachments, formStateTransactionDetailsRowRemove, formStateSetDetails, updateFormElement } from "../reducer";
-import { transactionInitialData, initialInventoryTotals, TransactionMasterInitialData, initialTransactionDetailData, initialTransactionDetails2 } from "../transaction-type-data";
-import { TransactionDetail, UserConfig, TransactionFormState, SummaryItems, TransactionMaster, TransactionData, LoadProductDetailsByAutoBarcodeProps, CommonParams, DataAutoBarcode, ExcelRowData } from "../transaction-types";
+import {
+  formStateHandleFieldChangeKeysOnly,
+  formStateHandleFieldChange,
+  formStateTransactionMasterHandleFieldChange,
+  formStateTransactionUpdate,
+  clearState,
+  formStateMasterHandleFieldChange,
+  formStateClearDetails,
+  formStateClearAttachments,
+  formStateTransactionDetailsRowRemove,
+  formStateSetDetails,
+  updateFormElement,
+} from "../reducer";
+import {
+  transactionInitialData,
+  initialInventoryTotals,
+  TransactionMasterInitialData,
+  initialTransactionDetailData,
+  initialTransactionDetails2,
+} from "../transaction-type-data";
+import {
+  TransactionDetail,
+  UserConfig,
+  TransactionFormState,
+  SummaryItems,
+  TransactionMaster,
+  TransactionData,
+  LoadProductDetailsByAutoBarcodeProps,
+  CommonParams,
+  DataAutoBarcode,
+  ExcelRowData,
+} from "../transaction-types";
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;
 //   clearDetailsAfterSaveAccounts: boolean;
@@ -71,10 +107,10 @@ export type LoadAndSetTransVoucherFn = (
   transactionMasterID?: number,
   mode?: "increment" | "decrement" | undefined,
   skipPrompt?: boolean | false,
-  setVoucherNo?: boolean | false,    
+  setVoucherNo?: boolean | false,
   loadVType?: string,
   loadFType?: string,
-  loadPrefix?: string,
+  loadPrefix?: string
 ) => Promise<boolean | undefined>; // ✅ fix return type
 
 const api = new APIClient();
@@ -112,7 +148,7 @@ export const useTransaction = (
   chequeStatusRef?: any,
   handleKeyDown?: (e: any, field: string, rowIndex: number) => void,
   formStateRef?: any,
-  purchaseGridRef?: any,
+  purchaseGridRef?: any
 ) => {
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
@@ -153,7 +189,8 @@ export const useTransaction = (
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.ctrlKey) {
         const currentRowIndex = formState.currentCell?.rowIndex ?? -1;
-        const currentProduct = formState.transaction.details[currentRowIndex]?.product ?? "";
+        const currentProduct =
+          formState.transaction.details[currentRowIndex]?.product ?? "";
 
         if (currentProduct.trim() !== "") {
           dispatch(
@@ -293,10 +330,9 @@ export const useTransaction = (
         `${Urls.inv_transaction_base}${transactionType}/GetLocalSettings`
       );
       await setStorageString("utInvc", base64);
-      // Decode the base64 back to JSON string      
-      const _userConfig = safeBase64Decode(base64 ?? "");;
-      const userConfig: UserConfig = customJsonParse(_userConfig??"{}");
-
+      // Decode the base64 back to JSON string
+      const _userConfig = safeBase64Decode(base64 ?? "");
+      const userConfig: UserConfig = customJsonParse(_userConfig ?? "{}");
 
       return userConfig;
     } catch (error) {
@@ -305,21 +341,20 @@ export const useTransaction = (
   };
 
   const loadAndSetTransVoucher: LoadAndSetTransVoucherFn = async (
-  usingManualInvNumber = false,
-  voucherNumber,
-  voucherPrefix,
-  voucherType,
-  formType,
-  manualInvoiceNumber,
-  transactionMasterID,
-  mode,
-  skipPrompt = false,
-  setVoucherNo = false,
-  loadVType,
-  loadFType,
-  loadPrefix,
+    usingManualInvNumber = false,
+    voucherNumber,
+    voucherPrefix,
+    voucherType,
+    formType,
+    manualInvoiceNumber,
+    transactionMasterID,
+    mode,
+    skipPrompt = false,
+    setVoucherNo = false,
+    loadVType,
+    loadFType,
+    loadPrefix
   ) => {
-    
     const _s_isDirty = isDirtyTransaction(
       formState.prev,
       {
@@ -348,7 +383,7 @@ export const useTransaction = (
         })
       );
     }
-debugger;
+    debugger;
     let _formState = await loadTransVoucher(
       usingManualInvNumber,
       voucherNumber,
@@ -361,12 +396,19 @@ debugger;
       loadFType,
       loadPrefix
     );
-    
+
     if (loadVType == "GRN" || loadVType == "GRR") {
-       _formState = merge({}, _formState, {transaction:{master:{deliveryNoteNumber: manualInvoiceNumber}}} );
-    }
-    else if (loadVType == "PO" && (formState.transaction.master.voucherType == "GRN" || formState.transaction.master.voucherType == "PI")) {
-       _formState = merge({}, _formState, {transaction:{master:{orderNumber: manualInvoiceNumber}}} );
+      _formState = merge({}, _formState, {
+        transaction: { master: { deliveryNoteNumber: manualInvoiceNumber } },
+      });
+    } else if (
+      loadVType == "PO" &&
+      (formState.transaction.master.voucherType == "GRN" ||
+        formState.transaction.master.voucherType == "PI")
+    ) {
+      _formState = merge({}, _formState, {
+        transaction: { master: { orderNumber: manualInvoiceNumber } },
+      });
     }
 
     if (typeof _formState == "boolean") {
@@ -411,13 +453,10 @@ debugger;
     _formState: TransactionFormState,
     loadUserConfig: boolean = false
   ) => {
-
-
-
     const Utc = await getStorageString("utInvc");
     let userConfig: UserConfig | undefined;
     if (Utc) {
-      const decoded = safeBase64Decode(Utc)??"{}";
+      const decoded = safeBase64Decode(Utc) ?? "{}";
       userConfig = customJsonParse(decoded ?? "{}");
     } else {
       userConfig = await fetchUserConfig();
@@ -436,12 +475,12 @@ debugger;
       showColumnBorder: userConfig?.showColumnBorder,
       activeRowBg: userConfig?.activeRowBg,
       gridRowHeight: userConfig?.gridRowHeight,
-      isInitial: true
-    }
+      isInitial: true,
+    };
     if (userConfig) {
       _formState.userConfig = userConfig;
-      _formState.currentTheme = ct
-      _formState.selectedTheme = ct
+      _formState.currentTheme = ct;
+      _formState.selectedTheme = ct;
     }
 
     _formState.prev = modelToBase64Unicode(
@@ -479,9 +518,9 @@ debugger;
         openUnsavedPrompt: false,
       })
     );
-    
+
     let url = `${Urls.inv_transaction_base}${transactionType}`;
-    
+
     let _voucherNumber =
       voucherNumber ?? (formState.transaction?.master?.voucherNumber || 0);
     let out_voucherNumber =
@@ -496,28 +535,28 @@ debugger;
     if (loadVType == "PO") {
       out_voucherNumber = manualInvoiceNumber ?? 0;
       out_voucherType = loadVType;
-      out_voucherForm = loadFType??"";
-      out_voucherPrefix = loadPrefix??"";
+      out_voucherForm = loadFType ?? "";
+      out_voucherPrefix = loadPrefix ?? "";
     }
     if (loadVType == "GRN") {
       out_voucherNumber = manualInvoiceNumber ?? 0;
       out_voucherType = loadVType;
-      out_voucherForm = loadFType??"";
-      out_voucherPrefix = loadPrefix??"";
+      out_voucherForm = loadFType ?? "";
+      out_voucherPrefix = loadPrefix ?? "";
       url = url + "/ByGRN";
     }
     if (loadVType == "GRR") {
       out_voucherNumber = manualInvoiceNumber ?? 0;
       out_voucherType = loadVType;
-      out_voucherForm = loadFType??"";
-      out_voucherPrefix = loadPrefix??"";
+      out_voucherForm = loadFType ?? "";
+      out_voucherPrefix = loadPrefix ?? "";
       url = url + "/ByGRN";
     }
     if (loadVType == "PI_Ref") {
       out_voucherNumber = manualInvoiceNumber ?? 0;
       out_voucherType = "PI";
       out_voucherForm = "VAT";
-      out_voucherPrefix = loadPrefix??"";
+      out_voucherPrefix = loadPrefix ?? "";
       url = url + "/ByReferenceNo";
     }
 
@@ -526,17 +565,15 @@ debugger;
     }
     const params: Record<any, any> = {
       VoucherNumber: out_voucherNumber, // Ensuring it's always a string
-      voucherPrefix:
-        out_voucherPrefix,
-      voucherType:
-        out_voucherType,
-      voucherForm:
-        out_voucherForm,
+      voucherPrefix: out_voucherPrefix,
+      voucherType: out_voucherType,
+      voucherForm: out_voucherForm,
       isUsingManualInvNo: usingManualInvNumber, // Convert boolean to string
-      isActualPriceVisible: formState.gridColumns.find(x => x.dataField == "actualSalesPrice")?.visible ?? false,
-      referenceNumber: loadVType == "PI_Ref" ? out_voucherNumber : null
+      isActualPriceVisible:
+        formState.gridColumns.find((x) => x.dataField == "actualSalesPrice")
+          ?.visible ?? false,
+      referenceNumber: loadVType == "PI_Ref" ? out_voucherNumber : null,
     };
-
 
     // ByGRN
     let vch = await api.getAsync(url, new URLSearchParams(params).toString());
@@ -565,7 +602,6 @@ debugger;
         },
       };
     }
-    
 
     if (usingManualInvNumber) {
       vch.master = {
@@ -603,7 +639,7 @@ debugger;
         ...(vch?.master || {}),
         hasroundOff: vch?.master?.roundAmount != 0,
         cashReceived: vch?.master?.cashReceived,
-        hasCashPaid: vch?.master?.cashReceived != 0
+        hasCashPaid: vch?.master?.cashReceived != 0,
       },
       details: refactorDetails(
         vch.details,
@@ -644,7 +680,7 @@ debugger;
     voucher.formElements.lblPosted.visible = voucher.isPostedTransaction;
     voucher.formElements.cbCostCentre.disabled =
       voucher.transaction.master.costCentreID <= 0 &&
-        (formState.userConfig?.presetCostenterId ?? 0) > 0
+      (formState.userConfig?.presetCostenterId ?? 0) > 0
         ? true
         : false;
     // voucher.transaction = vch;
@@ -673,9 +709,9 @@ debugger;
         voucher.transaction
       );
     }
-    
+
     voucher.isInitialLedger = true;
-    voucher = await loadLedgerData(voucher) as any;
+    voucher = (await loadLedgerData(voucher)) as any;
     return voucher;
   };
   const refactorAttachments = (transaction: TransactionData) => {
@@ -716,12 +752,17 @@ debugger;
     voucherPrefix: string,
     isVoucherPrefix: boolean
   ) => {
-    isVoucherPrefix = isVoucherPrefix ? isVoucherPrefix : false
-    isVoucherPrefix = !clientSession.isAppGlobal && voucherType == VoucherType.PurchaseReturn ? true :  isVoucherPrefix
+    isVoucherPrefix = isVoucherPrefix ? isVoucherPrefix : false;
+    isVoucherPrefix =
+      !clientSession.isAppGlobal && voucherType == VoucherType.PurchaseReturn
+        ? true
+        : isVoucherPrefix;
     const response = await api.getAsync(
       `${Urls.inv_transaction_base}${transactionType}/GetNextVoucherNumber/`,
-      `formType=${formType ? formType : ""}&voucherType=${voucherType ? voucherType : ""
-      }&voucherPrefix=${voucherPrefix ? voucherPrefix : ""}&isVoucherPrefix=${isVoucherPrefix ? isVoucherPrefix : false
+      `formType=${formType ? formType : ""}&voucherType=${
+        voucherType ? voucherType : ""
+      }&voucherPrefix=${voucherPrefix ? voucherPrefix : ""}&isVoucherPrefix=${
+        isVoucherPrefix ? isVoucherPrefix : false
       }`
     );
 
@@ -740,18 +781,26 @@ debugger;
   async function validate(): Promise<boolean> {
     const master = formState.transaction.master;
     const details = formState.transaction.details;
-debugger;
+    debugger;
     // Stock update restriction
-    if (!formState.transaction.master.stockUpdate && (formState.transaction.master.voucherType === "PI" || formState.transaction.master.voucherType === "PR")) {
+    if (
+      !formState.transaction.master.stockUpdate &&
+      (formState.transaction.master.voucherType === "PI" ||
+        formState.transaction.master.voucherType === "PR")
+    ) {
       const voucherType = formState.transaction.master.voucherType;
       const confirm = await ERPAlert.show({
         icon: "info",
         title: t("stock_update_warning"),
-        text: voucherType === "PI" ? "Stock cannot be updated in this invoice.In goods Receipt voucher stock already updated. Do you want to continue?" : voucherType === "PR" ? "Stock cannot be updated in this invoice.In Goods Receipt Return voucher stock already updated. Do you want to continue?" : "",
+        text:
+          voucherType === "PI"
+            ? "Stock cannot be updated in this invoice.In goods Receipt voucher stock already updated. Do you want to continue?"
+            : voucherType === "PR"
+            ? "Stock cannot be updated in this invoice.In Goods Receipt Return voucher stock already updated. Do you want to continue?"
+            : "",
         confirmButtonText: t("yes"),
         cancelButtonText: t("no"),
         showCancelButton: true,
-       
       });
       if (!confirm) {
         return false;
@@ -917,17 +966,16 @@ debugger;
         const confirm = await ERPAlert.show({
           icon: "question",
           title: t("zero_rate_or_qty"),
-          text: `${t('zero_rate_or_qty_entered_in_row')} row: ${i + 1}`,
+          text: `${t("zero_rate_or_qty_entered_in_row")} row: ${i + 1}`,
           confirmButtonText: t("yes"),
           cancelButtonText: t("no"),
           showCancelButton: true,
         });
         if (!confirm) {
-          const rowIndex = details.findIndex(x => x.slNo == row.slNo);
+          const rowIndex = details.findIndex((x) => x.slNo == row.slNo);
           const res = focusColumn(rowIndex, "qty");
           setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
-          return false
-          
+          return false;
         }
       }
     }
@@ -1009,7 +1057,6 @@ debugger;
   };
 
   const preSave = async () => {
-
     if (
       formState.isEdit &&
       formState.userConfig?.mnuShowConfirmationForEditOnAccounts == true
@@ -1039,7 +1086,7 @@ debugger;
     );
 
     const valid = await validate();
-debugger;
+    debugger;
     if (valid == true) {
       const master = attachMaster(formState);
       const attachments = formState.transaction.attachments
@@ -1072,6 +1119,7 @@ debugger;
       let params = {
         master: {
           ...master,
+          customerType: !clientSession.isAppGlobal && master.voucherType == "PR" && master.customerType == "" && applicationSettings.branchSettings.maintainKSA_EInvoice ?  "B2C"  : master.customerType
           transactionDate:
             master.transactionDate == "" ? null : master.transactionDate,
         },
@@ -1079,21 +1127,21 @@ debugger;
         attachments: attachments,
         invAccTransactions: formState.transaction.invAccTransactions,
         pendingOrderListMasterIDs: formState.pendingOrdListMasterIDs,
-        PendingOrderListBranchIDs: formState.pendingOrdListBranchIDs
+        PendingOrderListBranchIDs: formState.pendingOrdListBranchIDs,
       };
 
-      params = sanitizeDataAdvanced(params, transactionInitialData)
+      params = sanitizeDataAdvanced(params, transactionInitialData);
       try {
         const saveRes =
           formState.transaction.master.invTransactionMasterID > 0
             ? await api.putAsync(
-              `${Urls.inv_transaction_base}${transactionType}`,
-              params
-            )
+                `${Urls.inv_transaction_base}${transactionType}`,
+                params
+              )
             : await api.postAsync(
-              `${Urls.inv_transaction_base}${transactionType}`,
-              params
-            );
+                `${Urls.inv_transaction_base}${transactionType}`,
+                params
+              );
         if (saveRes.isOk == true) {
           dispatch(
             formStateTransactionUpdate({
@@ -1101,15 +1149,20 @@ debugger;
               value: undefined,
             })
           );
-          clearControls(formState.transaction.master.invTransactionMasterID > 0, formState.transaction.master.invTransactionMasterID)
+          clearControls(
+            formState.transaction.master.invTransactionMasterID > 0,
+            formState.transaction.master.invTransactionMasterID
+          );
           if (formState.printOnSave == true) {
             printVoucher();
           }
-          dispatch(formStateHandleFieldChange({
-            fields: {
-              savingCompleted: true,
-            },
-          }))
+          dispatch(
+            formStateHandleFieldChange({
+              fields: {
+                savingCompleted: true,
+              },
+            })
+          );
           // ERPToast.show(saveRes.message, "success");
         } else {
           // dispatch(acc)
@@ -1140,28 +1193,28 @@ debugger;
           );
         }
       } catch (error) {
-        dispatch(formStateHandleFieldChange({
-          fields: {
-            saving: false,
-            savingCompleted: true,
-          },
-        }))
+        dispatch(
+          formStateHandleFieldChange({
+            fields: {
+              saving: false,
+              savingCompleted: true,
+            },
+          })
+        );
         ERPAlert.show({
           icon: "warning",
           text: "Please try Again",
           title: "",
         });
       }
-
-    }
-    else{
-       dispatch(
-      formStateHandleFieldChange({
-        fields: {
-          saving: false,
-        },
-      })
-    );
+    } else {
+      dispatch(
+        formStateHandleFieldChange({
+          fields: {
+            saving: false,
+          },
+        })
+      );
     }
   };
   const clearRow = async (isEdit: boolean, transactionMasterID: number) => {
@@ -1187,7 +1240,6 @@ debugger;
   ) => {
     if (transactionMasterID ?? 0 > 0) {
       await undoEditMode(isEdit, transactionMasterID ?? 0);
-
     }
     const vNo = await getNextVoucherNumber(
       formState.transaction.master.voucherForm,
@@ -1196,10 +1248,17 @@ debugger;
       false
     );
     let employeeID = userSession.employeeId ?? 0;
-            if (["PR","PQ","PO"].includes(formState.transaction.master.voucherType ?? "" as any)  && employeeID <= 0) {
-              const emps = await getApLocalDataByUrl(`${Urls.inv_transaction_base}${transactionType}/Data/Employee/`);
-              employeeID = emps && emps.length > 0 ? emps[0].id : employeeID;
-            }
+    if (
+      ["PR", "PQ", "PO"].includes(
+        formState.transaction.master.voucherType ?? ("" as any)
+      ) &&
+      employeeID <= 0
+    ) {
+      const emps = await getApLocalDataByUrl(
+        `${Urls.inv_transaction_base}${transactionType}/Data/Employee/`
+      );
+      employeeID = emps && emps.length > 0 ? emps[0].id : employeeID;
+    }
     const master: TransactionMaster = {
       ...TransactionMasterInitialData,
       voucherType: formState.transaction.master.voucherType ?? "",
@@ -1210,19 +1269,21 @@ debugger;
       employeeID: employeeID,
       voucherNumber: vNo ?? 0,
       inventoryLedgerID:
-        formState.transaction.master.voucherType == VoucherType.PurchaseReturn ? applicationSettings.inventorySettings?.defaultPurchaseReturnAcc
+        formState.transaction.master.voucherType == VoucherType.PurchaseReturn
+          ? applicationSettings.inventorySettings?.defaultPurchaseReturnAcc
           : applicationSettings.inventorySettings?.defaultPurchaseAcc,
       ledgerID: applicationSettings.accountsSettings.defaultCashAcc,
       isLocked: false,
       grandTotal: 0,
       grandTotalFc: 0,
       fromWarehouseID:
-        formState.userConfig?.presetWarehouseId ?? 0 > 0 ? formState.userConfig?.presetWarehouseId ?? 0
+        formState.userConfig?.presetWarehouseId ?? 0 > 0
+          ? formState.userConfig?.presetWarehouseId ?? 0
           : applicationSettings.inventorySettings?.defaultWareHouse,
       costCentreID:
-        formState.userConfig?.presetCostenterId ?? 0 > 0 ? formState.userConfig?.presetCostenterId ?? 0
-          : applicationSettings.accountsSettings.defaultCostCenterID
-
+        formState.userConfig?.presetCostenterId ?? 0 > 0
+          ? formState.userConfig?.presetCostenterId ?? 0
+          : applicationSettings.accountsSettings.defaultCostCenterID,
     };
     dispatch(
       formStateHandleFieldChange({
@@ -1244,25 +1305,25 @@ debugger;
                 transaction: {
                   master: master,
                   details: [],
-
                 },
               },
               "inv"
             )
           ),
-        }
+        },
       })
     );
 
     dispatch(
       formStateMasterHandleFieldChange({
-        fields: { ...master }
+        fields: { ...master },
       })
     );
-    dispatch(formStateClearDetails())
-    dispatch(formStateClearAttachments())
+    dispatch(formStateClearDetails());
+    dispatch(formStateClearAttachments());
     dispatch(
-      formStateTransactionUpdate({ key: "invAccTransactions", value: [] }));
+      formStateTransactionUpdate({ key: "invAccTransactions", value: [] })
+    );
     dispatch(
       formStateHandleFieldChangeKeysOnly({
         // Form elements
@@ -1276,12 +1337,14 @@ debugger;
             },
             cbCostCentre: {
               reload: true,
-              visible: applicationSettings?.accountsSettings?.maintainCostCenter,
+              visible:
+                applicationSettings?.accountsSettings?.maintainCostCenter,
               disabled: (formState.userConfig?.presetCostenterId ?? 0) > 0,
             },
             cbWarehouse: {
               reload: true,
-              visible: applicationSettings?.inventorySettings?.maintainWarehouse,
+              visible:
+                applicationSettings?.inventorySettings?.maintainWarehouse,
               disabled: (formState.userConfig?.presetWarehouseId ?? 0) > 0,
             },
             amount: {
@@ -1318,16 +1381,24 @@ debugger;
     );
 
     const editableColumns = formState.gridColumns?.filter(
-      (col) => col.visible != false && col.dataField != null && col.allowEditing == true && col.readOnly !== true
+      (col) =>
+        col.visible != false &&
+        col.dataField != null &&
+        col.allowEditing == true &&
+        col.readOnly !== true
     );
 
     if (editableColumns && editableColumns.length > 0) {
-      const res = focusColumn(0, editableColumns[0].dataField ?? "")
-      setCurrentCell(res, formState.transaction.details[0] as TransactionDetail, true);
+      const res = focusColumn(0, editableColumns[0].dataField ?? "");
+      setCurrentCell(
+        res,
+        formState.transaction.details[0] as TransactionDetail,
+        true
+      );
     }
   };
   const handleRemoveItem = async (slNo: string) => {
-    debugger
+    debugger;
     dispatch(
       formStateTransactionDetailsRowRemove({
         slNo: slNo,
@@ -1335,24 +1406,43 @@ debugger;
         clearEntryControl,
       })
     );
-    const details = formState.transaction.details.filter(x => x.productID > 0 && x.slNo != slNo)
-    const data = formState.transaction.details.find((x: TransactionDetail) => isNullOrUndefinedOrZero(x.productID) || x.productID <= 0)
-    const rowIndex = formState.transaction.details.findIndex(x => x.slNo == data?.slNo)
+    const details = formState.transaction.details.filter(
+      (x) => x.productID > 0 && x.slNo != slNo
+    );
+    const data = formState.transaction.details.find(
+      (x: TransactionDetail) =>
+        isNullOrUndefinedOrZero(x.productID) || x.productID <= 0
+    );
+    const rowIndex = formState.transaction.details.findIndex(
+      (x) => x.slNo == data?.slNo
+    );
     const editableColumn = formState.gridColumns?.find(
-      (col) => col.visible !== false && col.dataField != null && col.allowEditing == true && col.readOnly !== true
+      (col) =>
+        col.visible !== false &&
+        col.dataField != null &&
+        col.allowEditing == true &&
+        col.readOnly !== true
     );
     await setStorageString(
       `${formState.transaction.master.voucherType}${formState.transaction.master.voucherForm}`,
       JSON.stringify(details)
     );
-    if (calculateSummary && calculateTotal && formState && dispatch && formStateHandleFieldChangeKeysOnly) {
+    if (
+      calculateSummary &&
+      calculateTotal &&
+      formState &&
+      dispatch &&
+      formStateHandleFieldChangeKeysOnly
+    ) {
       const summaryRes = calculateSummary(details, formState, {
         result: {},
       });
 
       const totalRes = calculateTotal(
         formState.transaction.master,
-        summaryRes ? summaryRes.summary as SummaryItems : initialInventoryTotals,
+        summaryRes
+          ? (summaryRes.summary as SummaryItems)
+          : initialInventoryTotals,
         formState.formElements,
         {
           result: {},
@@ -1360,25 +1450,23 @@ debugger;
       );
 
       if (totalRes) {
-
         totalRes.summary = summaryRes.summary;
         totalRes.transaction = totalRes.transaction ?? {};
         totalRes.transaction.master = { ...totalRes.transaction.master };
         totalRes.transaction.details = [];
-        totalRes.loading = { isLoading: false, text: '' }
-        totalRes.currentCell = {
+        totalRes.loading = { isLoading: false, text: "" };
+        (totalRes.currentCell = {
           reCenterRow: false,
           column: editableColumn?.dataField ?? "",
           data: data ?? initialTransactionDetailData,
           rowIndex: rowIndex ?? 0,
-        },
-
+        }),
           // Dispatch the state update
 
           dispatch(
             formStateHandleFieldChangeKeysOnly({
               fields: totalRes,
-              updateOnlyGivenDetailsColumns: true
+              updateOnlyGivenDetailsColumns: true,
             })
           );
       }
@@ -1793,7 +1881,7 @@ debugger;
     // }
   };
 
-  const handleGridKeyDown = async(
+  const handleGridKeyDown = async (
     key: any,
     gridRef: any,
     applicationSettings?: ApplicationSettingsType
@@ -1809,11 +1897,12 @@ debugger;
         text: t("you_want_to_delete"),
         icon: "warning",
         confirmButtonText: t("delete_it"),
-        onConfirm: async() => {
+        onConfirm: async () => {
           const dataGridInstance = gridRef.current.instance(); // Access DataGrid instance
           const focusedRowIndex = dataGridInstance.option("focusedRowIndex");
-          const rowData = dataGridInstance.getVisibleRows()[focusedRowIndex]?.data;
-          await handleRemoveItem(rowData.slNo)
+          const rowData =
+            dataGridInstance.getVisibleRows()[focusedRowIndex]?.data;
+          await handleRemoveItem(rowData.slNo);
         },
       });
     }
@@ -1964,10 +2053,8 @@ debugger;
   // };
 
   // Voucher number navigation handlers
- 
 
   const loadTemporaryRows = async () => {
-
     let details: Array<TransactionDetail> = [];
     const tmp = await getStorageString(
       `${formState.transaction.master.voucherType}${formState.transaction.master.voucherForm}`
@@ -1975,21 +2062,36 @@ debugger;
     if (tmp != undefined && tmp != null && tmp != "") {
       const tmpRows = JSON.parse(tmp) as Array<TransactionDetail>;
       if (tmpRows.length > 0) {
-        details = [...tmpRows, ...Array.from({ length: 30 }, (_, index) => ({
-          ...initialTransactionDetailData,
-          slNo: generateUniqueKey()
-        }))];
-        const batchIds = tmpRows.map(x => x.productBatchID).join(',');
-        const batchUnits = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/BatchUnits`, `arrayOfBatchID=${batchIds}`)
+        details = [
+          ...tmpRows,
+          ...Array.from({ length: 30 }, (_, index) => ({
+            ...initialTransactionDetailData,
+            slNo: generateUniqueKey(),
+          })),
+        ];
+        const batchIds = tmpRows.map((x) => x.productBatchID).join(",");
+        const batchUnits = await api.getAsync(
+          `${Urls.inv_transaction_base}${transactionType}/BatchUnits`,
+          `arrayOfBatchID=${batchIds}`
+        );
 
-        if (details.length > 0 && calculateSummary && calculateTotal && formState && dispatch && formStateHandleFieldChangeKeysOnly) {
+        if (
+          details.length > 0 &&
+          calculateSummary &&
+          calculateTotal &&
+          formState &&
+          dispatch &&
+          formStateHandleFieldChangeKeysOnly
+        ) {
           const summaryRes = calculateSummary(details, formState, {
             result: {},
           });
 
           const totalRes = calculateTotal(
             formState.transaction.master,
-            summaryRes ? summaryRes.summary as SummaryItems : initialInventoryTotals,
+            summaryRes
+              ? (summaryRes.summary as SummaryItems)
+              : initialInventoryTotals,
             formState.formElements,
             {
               result: {},
@@ -2002,19 +2104,17 @@ debugger;
             totalRes.transaction.master = { ...totalRes.transaction.master };
             totalRes.transaction.details = [];
             totalRes.batchesUnits = batchUnits;
-            totalRes.loading = { isLoading: false, text: '' }
+            totalRes.loading = { isLoading: false, text: "" };
 
             // Dispatch the state update
 
             dispatch(
               formStateHandleFieldChangeKeysOnly({
                 fields: totalRes,
-                updateOnlyGivenDetailsColumns: true
+                updateOnlyGivenDetailsColumns: true,
               })
             );
-            dispatch(
-              formStateSetDetails(details)
-            );
+            dispatch(formStateSetDetails(details));
           }
         }
       }
@@ -2131,7 +2231,10 @@ debugger;
     //   return;
     // }
 
-    if (formState.transaction.master.isInvoiced === true && (formState.transaction.master.voucherType == "GRN" )) {
+    if (
+      formState.transaction.master.isInvoiced === true &&
+      formState.transaction.master.voucherType == "GRN"
+    ) {
       const invoicedConfirmResult = await ERPAlert.show({
         title: t("warning"),
         text: t("transaction_already_invoiced_warning"),
@@ -2207,7 +2310,7 @@ debugger;
       if (deleteConfirmResult) {
         try {
           // Begin transaction and delete
-          const deleteResult = await api.delete(
+          const deleteResult = (await api.delete(
             `${Urls.inv_transaction_base}${transactionType}`,
             {
               data: {
@@ -2216,7 +2319,7 @@ debugger;
                 transactionType: transactionType,
               },
             }
-          ) as any;
+          )) as any;
 
           if (deleteResult && deleteResult?.isOk) {
             ERPAlert.show({
@@ -2224,16 +2327,14 @@ debugger;
               text: t("transaction_deleted_successfully"),
               icon: "success",
             });
-            clearControls(false)
+            clearControls(false);
           } else {
-            
             ERPAlert.show({
               title: t("delete_operation_failed"),
               text: deleteResult?.message,
               icon: "error",
             });
           }
-
 
           // Update form elements state
           dispatch(
@@ -2286,7 +2387,11 @@ debugger;
         formState.transaction.master.purchaseInvoiceNumber,
         undefined,
         undefined,
-        true,false, "PO","",formState.transaction.master.voucherPrefix
+        true,
+        false,
+        "PO",
+        "",
+        formState.transaction.master.voucherPrefix
       );
     }
   }, [formState.transaction.master?.purchaseInvoiceNumber]);
@@ -2455,9 +2560,12 @@ debugger;
           );
           calculateSummaryAndTotal = true;
         }
-      } else if (columnName === "qty" || columnName === "unitPrice"
-        || columnName === "discPerc" || columnName === "discount"
-        || columnName === "barcodePrinted"
+      } else if (
+        columnName === "qty" ||
+        columnName === "unitPrice" ||
+        columnName === "discPerc" ||
+        columnName === "discount" ||
+        columnName === "barcodePrinted"
       ) {
         outDetail[columnName] = value;
         // Calculate row amount
@@ -2558,7 +2666,7 @@ debugger;
           warehouseId = detailWarehouseId ?? 0;
         }
       }
-      const _lastSelectedWarehouseIDOfItemPopupsSearch = (async() => {
+      const _lastSelectedWarehouseIDOfItemPopupsSearch = (async () => {
         try {
           const stored = await getStorageString(
             "lastSelectedWarehouseIDOfItemPopupsSearch"
@@ -2596,7 +2704,8 @@ debugger;
         }
       });
       const res: DataAutoBarcode = await api.getAsync(
-        `${Urls.inv_transaction_base
+        `${
+          Urls.inv_transaction_base
         }${transactionType}/LoadProductDetailsByAutoBarCode?${queryParams.toString()}`
       );
 
@@ -2627,15 +2736,17 @@ debugger;
         );
       } else if (res?.products?.length === 1) {
         let product = res.products[0];
-        product.productName = product.productName.replace(/^\s+/, m => "\u00A0".repeat(m.length));
+        product.productName = product.productName.replace(/^\s+/, (m) =>
+          "\u00A0".repeat(m.length)
+        );
         const _index =
           forImport != true
             ? formState.transaction.details.findIndex(
-              (x) =>
-                x.barCode == product.autoBarcode &&
-                x.productID > 0 &&
-                x.slNo != detail.slNo
-            )
+                (x) =>
+                  x.barCode == product.autoBarcode &&
+                  x.productID > 0 &&
+                  x.slNo != detail.slNo
+              )
             : -1;
         if (
           product.autoBarcode != "" &&
@@ -2666,7 +2777,7 @@ debugger;
               pld.currentCell = {
                 ...res,
                 data: formState.transaction.details[_index],
-                reCenterRow: false
+                reCenterRow: false,
               };
             }
             dispatch(
@@ -2798,14 +2909,18 @@ debugger;
         // Handle VAT and CST based on form type
         if (clientSession.isAppGlobal) {
           outDetail.hsnCode = product.hsnCode || "";
-          outDetail.details2 = { ...outDetail.details2 ?? initialTransactionDetails2 }
+          outDetail.details2 = {
+            ...(outDetail.details2 ?? initialTransactionDetails2),
+          };
           // if (formState.transaction.master.voucherType !== "PI") {
           outDetail.details2!.cgstPerc = Number(product.p_CGSTPerc || 0);
           outDetail.details2!.sgstPerc = Number(product.p_SGSTPerc || 0);
           outDetail.details2!.igstPerc = 0;
 
           if (
-            formState.transaction.master.voucherForm.toLowerCase() === "interstate" || formState.transaction.master.voucherForm.toLowerCase() === "import"
+            formState.transaction.master.voucherForm.toLowerCase() ===
+              "interstate" ||
+            formState.transaction.master.voucherForm.toLowerCase() === "import"
           ) {
             outDetail.details2!.cgstPerc = 0;
             outDetail.details2!.sgstPerc = 0;
@@ -2813,7 +2928,9 @@ debugger;
           }
 
           outDetail.details2!.cessPerc = Number(product.p_CessPerc || 0);
-          outDetail.details2!.additionalCessPerc = Number(product.p_AdditionalCessPerc || 0);
+          outDetail.details2!.additionalCessPerc = Number(
+            product.p_AdditionalCessPerc || 0
+          );
           // } else {
           //   outDetail.details2!.cgstPerc = 0;
           //   outDetail.details2!.sgstPerc = 0;
@@ -2822,15 +2939,15 @@ debugger;
           //   outDetail.details2!.additionalCessPerc = 0;
           // }
         } else {
-          
-
           const { voucherType, voucherForm } = formState.transaction.master;
 
           if (
-            !clientSession.isAppGlobal && (
-              voucherType === "PO" ||
+            !clientSession.isAppGlobal &&
+            (voucherType === "PO" ||
               voucherType === "PE" ||
-              (voucherForm === "VAT" && voucherType !== "PO" && voucherType !== "PE"))
+              (voucherForm === "VAT" &&
+                voucherType !== "PO" &&
+                voucherType !== "PE"))
           ) {
             outDetail.vatPerc = Number(product.pVatPerc || 0);
             outDetail.cstPerc = Number(product.purchaseExciseTaxPerc || 0);
@@ -2894,9 +3011,9 @@ debugger;
           ];
           let final =
             _res?.transaction?.details != undefined &&
-              _res?.transaction?.details.length > 0
+            _res?.transaction?.details.length > 0
               ? (_res?.transaction
-                ?.details[0] as DeepPartial<TransactionDetail>)
+                  ?.details[0] as DeepPartial<TransactionDetail>)
               : latestData;
           currentDetails[data.rowIndex] = final as TransactionDetail;
           const summaryRes = calculateSummary(currentDetails, formState, {
@@ -2915,7 +3032,7 @@ debugger;
           result = {
             ...totalRes,
             summary: summaryRes.summary,
-            showQuantityFactors: { visible: false, rowIndex: -1 , qtyDesc: "" },
+            showQuantityFactors: { visible: false, rowIndex: -1, qtyDesc: "" },
             transaction: {
               ...totalRes.transaction,
               details: [final],
@@ -2952,20 +3069,20 @@ debugger;
           ]);
           setCurrentCell(
             res,
-            result.transaction!.details[0] as TransactionDetail, false
+            result.transaction!.details[0] as TransactionDetail,
+            false
           );
         }
 
         return result;
       } else if (res?.productId > 0 && forImport != true) {
-
-        dispatch(formStateHandleFieldChangeKeysOnly(
-          {
+        dispatch(
+          formStateHandleFieldChangeKeysOnly({
             fields: {
-              batchGridShowKey: res?.productId
-            }
-          }
-        ));
+              batchGridShowKey: res?.productId,
+            },
+          })
+        );
       } else if (forImport != true) {
         const res = focusToNextColumn(data.rowIndex, data.searchColumn, [
           "pCode",
@@ -2980,7 +3097,6 @@ debugger;
       console.log(err);
 
       return result;
-
     }
   };
 
@@ -2992,7 +3108,6 @@ debugger;
     columnName: keyof TransactionDetail,
     rowIndex: number
   ) => {
-
     const res = await api.getAsync(
       `${Urls.inv_transaction_base}${transactionType}/ProductBatchUnitPrices/${detail.productBatchID}/${outDetail.unitID}/${actualPriceVisible}`
     );
@@ -3048,11 +3163,12 @@ debugger;
     }
   };
 
-  const handlePrintBarcode = async (
-  ) => {
+  const handlePrintBarcode = async () => {
     try {
       const rowIndexes = [];
-      const hasReprint = formState.transaction.details.filter(x => x.barcodePrinted == true).length > 0
+      const hasReprint =
+        formState.transaction.details.filter((x) => x.barcodePrinted == true)
+          .length > 0;
       if (hasReprint) {
         const confirm = await ERPAlert.show({
           icon: "info",
@@ -3066,8 +3182,14 @@ debugger;
           },
         });
         if (confirm) {
-
-          const slNos = formState.transaction.details.filter(x => x.productID > 0 && x.barcodePrinted != true && (x.stickerQty + x.qty) > 0).map(x => x.slNo);
+          const slNos = formState.transaction.details
+            .filter(
+              (x) =>
+                x.productID > 0 &&
+                x.barcodePrinted != true &&
+                x.stickerQty + x.qty > 0
+            )
+            .map((x) => x.slNo);
           printBarcode(
             slNos,
             true,
@@ -3078,7 +3200,14 @@ debugger;
           );
         }
       } else {
-        const slNos = formState.transaction.details.filter(x => x.productID > 0 && x.barcodePrinted != true && (x.stickerQty + x.qty) > 0).map(x => x.slNo);
+        const slNos = formState.transaction.details
+          .filter(
+            (x) =>
+              x.productID > 0 &&
+              x.barcodePrinted != true &&
+              x.stickerQty + x.qty > 0
+          )
+          .map((x) => x.slNo);
         printBarcode(
           slNos,
           false,
@@ -3088,12 +3217,8 @@ debugger;
           false
         );
       }
-
-
-    } catch (error) {
-
-    }
-  }
+    } catch (error) {}
+  };
   const handleTextDataKeyDown = async (
     value: any,
     event: React.KeyboardEvent<HTMLInputElement> | KeyboardEvent,
@@ -3124,9 +3249,9 @@ debugger;
           event.preventDefault();
           dispatch(
             formStateHandleFieldChange({
-              fields: { documentModal: true }
+              fields: { documentModal: true },
             })
-          )
+          );
         }
         // Document Properties ☝
         // if (event.shiftKey && event.key === "F2") {
@@ -3157,8 +3282,7 @@ debugger;
               const columnIndex = visibleColumns.indexOf(firstEditableColumn);
               const res = purchaseGridRef.current.focusCell(0, columnIndex);
               if (res) {
-                const data =
-                  formState.transaction.details[res.rowIndex];
+                const data = formState.transaction.details[res.rowIndex];
                 dispatch(
                   formStateHandleFieldChange({
                     fields: {
@@ -3187,7 +3311,7 @@ debugger;
           }
         }
         // Save Document ☝
-        return { handled: true }
+        return { handled: true };
       }
       if (!result.formElements) {
         result.formElements = {};
@@ -3212,7 +3336,11 @@ debugger;
             dispatch(
               commonParams.formStateHandleFieldChangeKeysOnly({
                 fields: {
-                  showQuantityFactors: { visible: true, rowIndex: rowIndex, qtyDesc:data.productDescription },
+                  showQuantityFactors: {
+                    visible: true,
+                    rowIndex: rowIndex,
+                    qtyDesc: data.productDescription,
+                  },
                 },
               })
             );
@@ -3234,7 +3362,6 @@ debugger;
         case "i":
         case "I":
           if (isCtrlPressed) {
-
             dispatch(
               formStateHandleFieldChange({
                 fields: {
@@ -3253,10 +3380,10 @@ debugger;
             dispatch(
               commonParams.formStateHandleFieldChangeKeysOnly({
                 fields: {
-                  ledgerDetails: true
-                }
+                  ledgerDetails: true,
+                },
               })
-            )
+            );
             return { handled: true };
           }
         //  Party Search ☝
@@ -3319,12 +3446,12 @@ debugger;
           let data = { ...formState.transaction.details[rowIndex] };
           if (columnName == "actionCol") {
             if (!isNullOrUndefinedOrEmpty(value)) {
-              await handleRemoveItem(value)
+              await handleRemoveItem(value);
             } else {
               // const res = focusToNextColumn(rowIndex, columnName);
               // setCurrentCell(res, data);
             }
-            break
+            break;
           }
           if (columnName == "pCode") {
             data.pCode = value;
@@ -3429,7 +3556,7 @@ debugger;
 
             if (
               applicationSettings.inventorySettings?.showRateWarning.toUpperCase() ==
-              "WARN" &&
+                "WARN" &&
               data.salesPrice > 0
             ) {
               if (data.unitPrice > data.salesPrice) {
@@ -3458,7 +3585,7 @@ debugger;
               }
             } else if (
               applicationSettings.inventorySettings?.showRateWarning.toUpperCase() ==
-              "BLOCK" &&
+                "BLOCK" &&
               data.salesPrice > 0
             ) {
               if (data.unitPrice > data.salesPrice) {
@@ -3467,9 +3594,12 @@ debugger;
               }
             }
           } else if (columnName == "btnPrintBarcode") {
-            
-            if ((formState.transaction.details[rowIndex].qty + formState.transaction.details[rowIndex].stickerQty) <= 0) {
-              break
+            if (
+              formState.transaction.details[rowIndex].qty +
+                formState.transaction.details[rowIndex].stickerQty <=
+              0
+            ) {
+              break;
             }
             const isReprint =
               formState.transaction.details[rowIndex].barcodePrinted;
@@ -3557,9 +3687,9 @@ debugger;
                 updateOnlyGivenDetailsColumns: true,
               })
             );
-          }
-          else if (columnName == "memoEditor") {
-            const data: TransactionDetail = formState.transaction.details[rowIndex];
+          } else if (columnName == "memoEditor") {
+            const data: TransactionDetail =
+              formState.transaction.details[rowIndex];
             const memoDetails = {
               memo: data.moreDetails.memo || "",
             };
@@ -3575,8 +3705,7 @@ debugger;
                 updateOnlyGivenDetailsColumns: true,
               })
             );
-          }
-          else if (columnName == "grossConvert") {
+          } else if (columnName == "grossConvert") {
             changeGrossToUnitRate(rowIndex, columnName);
           } else if (columnName == "serial") {
             const rowData: TransactionDetail =
@@ -3706,8 +3835,9 @@ debugger;
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `Purchase_Import_Template_${new Date().toISOString().split("T")[0]
-        }.xlsx`;
+      link.download = `Purchase_Import_Template_${
+        new Date().toISOString().split("T")[0]
+      }.xlsx`;
       link.style.display = "none";
 
       document.body.appendChild(link);
@@ -3950,9 +4080,12 @@ debugger;
       // setIsLoading(false);
     }
   };
-  const loadLedgerData = async (_formState?: DeepPartial<TransactionFormState>, _dispatch?: any) => {
+  const loadLedgerData = async (
+    _formState?: DeepPartial<TransactionFormState>,
+    _dispatch?: any
+  ) => {
     const ledgerID = (_formState ?? formState)?.transaction?.master?.ledgerID;
-    _formState = _formState ?? {}
+    _formState = _formState ?? {};
     dispatch(
       formStateHandleFieldChange({
         fields: {
@@ -3963,18 +4096,19 @@ debugger;
     );
 
     try {
-
       if (!isNullOrUndefinedOrZero(ledgerID)) {
         const [ledgerBalance, ledgerData] = await Promise.all([
           (ledgerID ?? 0) > 0
-            ? api.getAsync(`${Urls.inv_transaction_base}${transactionType}/LedgerBalance/${ledgerID}`)
+            ? api.getAsync(
+                `${Urls.inv_transaction_base}${transactionType}/LedgerBalance/${ledgerID}`
+              )
             : 0,
           api.getAsync(
             `${Urls.inv_transaction_base}${transactionType}/LedgerDetails?LedgerId=${ledgerID}`
           ),
         ]);
-        
-        const ret = {
+
+        let ret: DeepPartial<TransactionFormState> = {
           ..._formState,
           formElements: {
             ..._formState.formElements,
@@ -3998,16 +4132,51 @@ debugger;
               partyName: ledgerData?.partyName ?? "",
               displayName: ledgerData?.displayName ?? "",
               address1: ledgerData?.address1 ?? "",
-              address4: _formState.isInitialLedger ? _formState.transaction?.master?.address4: ledgerData?.mobileNumber ?? "",
+              address4: _formState.isInitialLedger
+                ? _formState.transaction?.master?.address4
+                : ledgerData?.mobileNumber ?? "",
               address3: ledgerData?.address3 ?? "",
+            },
+          },
+        };
+        if (!clientSession.isAppGlobal) {
+          let customerType = "";
+          if (
+            ["PR"].includes(_formState.transaction?.master?.voucherType ?? "")
+          ) {
+            if (applicationSettings.branchSettings.maintainKSA_EInvoice) {
+              if (
+                ledgerData?.taxNumber != null &&
+                ledgerData?.taxNumber.length > 0
+              ) {
+                customerType = "B2B";
+              } else {
+                customerType = "B2C";
+              }
+            } else {
+              customerType = "";
             }
+          } else {
+            customerType = "";
           }
+          ret = {
+            ...ret,
+            transaction: {
+              ...ret.transaction,
+              master: {
+                ...ret.transaction?.master,
+                customerType: customerType,
+              },
+            },
+          };
         }
-        _dispatch && _dispatch(formStateHandleFieldChangeKeysOnly({
-          fields: ret
-        }));
+        _dispatch &&
+          _dispatch(
+            formStateHandleFieldChangeKeysOnly({
+              fields: ret,
+            })
+          );
         return ret;
-
       } else {
         const ret = {
           ..._formState,
@@ -4027,14 +4196,15 @@ debugger;
               address1: "",
               address4: "",
               address3: "",
-            }
-          }
-        }
-        _dispatch && _dispatch(
-          formStateHandleFieldChangeKeysOnly({
-            fields: ret,
-          })
-        );
+            },
+          },
+        };
+        _dispatch &&
+          _dispatch(
+            formStateHandleFieldChangeKeysOnly({
+              fields: ret,
+            })
+          );
         return ret;
       }
     } catch (error) {
@@ -4048,39 +4218,37 @@ debugger;
         },
       })
     );
-    return {}
+    return {};
   };
   interface BillWiseDetail {
-  accTransDetailID: number;
-  billWiseAdjAmt: number;
-  adjustedTransDetailID: number;
-}
-
-interface BillWiseRequest {
-  accTransactionDetailID: number;
-  billWiseDetails: BillWiseDetail[];
-}
-async function postBillWiseDetails(
-  data: BillWiseRequest
-): Promise<any> {
-  try {
-    const response = await api.postAsync(
-      `${Urls.inv_transaction_base}${transactionType}/BillWiseDetail`,
-      data
-    );
-    dispatch(
-      formStateHandleFieldChange({
-        fields: {
-          showbillwise: false,
-        },
-      })
-    )
-    return response.data;
-  } catch (error: any) {
-    console.error("Error posting BillWiseDetails:", error);
-    throw error;
+    accTransDetailID: number;
+    billWiseAdjAmt: number;
+    adjustedTransDetailID: number;
   }
-}
+
+  interface BillWiseRequest {
+    accTransactionDetailID: number;
+    billWiseDetails: BillWiseDetail[];
+  }
+  async function postBillWiseDetails(data: BillWiseRequest): Promise<any> {
+    try {
+      const response = await api.postAsync(
+        `${Urls.inv_transaction_base}${transactionType}/BillWiseDetail`,
+        data
+      );
+      dispatch(
+        formStateHandleFieldChange({
+          fields: {
+            showbillwise: false,
+          },
+        })
+      );
+      return response.data;
+    } catch (error: any) {
+      console.error("Error posting BillWiseDetails:", error);
+      throw error;
+    }
+  }
   return {
     downloadImportTemplateHeadersOnly,
     importFromExcel,
@@ -4123,6 +4291,6 @@ async function postBillWiseDetails(
     applyDiscountsToItems,
     handlePrintBarcode,
     loadLedgerData,
-    postBillWiseDetails
+    postBillWiseDetails,
   };
 };

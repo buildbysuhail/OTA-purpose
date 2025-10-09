@@ -1219,7 +1219,9 @@ export const useTransaction = (
       voucherNumber: vNo ?? 0,
       inventoryLedgerID:
         formState.transaction.master.voucherType == VoucherType.PurchaseReturn ? applicationSettings.inventorySettings?.defaultPurchaseReturnAcc
-          : applicationSettings.inventorySettings?.defaultPurchaseAcc,
+          : formState.transaction.master.voucherType == "DNS"
+                    ? applicationSettings.inventorySettings?.defaultSalesAcc
+                    : applicationSettings.inventorySettings?.defaultPurchaseAcc,
       ledgerID: applicationSettings.accountsSettings.defaultCashAcc,
       isLocked: false,
       grandTotal: 0,

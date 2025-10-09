@@ -658,12 +658,14 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     ? applicationSettings.inventorySettings?.defaultSalesAcc
                     : applicationSettings.inventorySettings?.defaultPurchaseAcc,
               ledgerID: applicationSettings.accountsSettings?.defaultCashAcc,
-              customerType: formType?.toUpperCase() === "IMPORT" ? "IMPORT" : formType?.toUpperCase() === "INTERSTATE" ? "Interstate" :
+              customerType: clientSession.isAppGlobal ?
+               formType?.toUpperCase() === "IMPORT" ? "IMPORT" : formType?.toUpperCase() === "INTERSTATE" ? "Interstate" :
                 formType?.toUpperCase() === "INT" ? "Int" :
                   ["WHOLESALE", "B2B"].includes(formType?.toUpperCase() ?? "")
                     ? "B2B" :
                     formType !== "BT" ? "B2C" :
                       ""
+                : VoucherType.PurchaseReturn ? applicationSettings.branchSettings.maintainKSA_EInvoice ? "B2C" : "" : ""
             },
           },
           formElements: {

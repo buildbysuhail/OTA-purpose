@@ -1731,8 +1731,9 @@ export const addTemplateToStore = async (data: TemplateState<unknown>) => {
   if (!data) {
     return
   }
+  let key = btoa(`${data.templateGroup}-${data.customerType}-${data.formType}`)
 
-  let _templates = await getStorageString("tds");
+  let _templates = await getStorageString(key);
   if (isNullOrUndefinedOrEmpty(_templates)) {
     return
   }
@@ -1754,23 +1755,10 @@ export const addTemplateToStore = async (data: TemplateState<unknown>) => {
     await setStorageString("tds", base64);
   }
 }
-export const getTemplateFromStoreById = async (id: number) => {
-  const templates = await getTemplatesFromStore();
-  const data = templates.find(
-    (template: TemplateState<unknown>) => template.id === id
-  )
-  return data
-}
-export const getTemplateFromStoreByGroup = async (group: string) => {
-  const templates = await getTemplatesFromStore();
-  const data = templates.find(
-    (template: TemplateState<unknown>) => template.templateGroup === group
-  )
-  return data
-}
-export const getTemplatesFromStore = async () => {
+export const getTemplatesFromStore = async (templateGroup: string, customerType: string = "", formType: string = "") => {
 
-  let _templates = await getStorageString("tds");
+    let key = btoa(`${templateGroup}-${customerType}-${formType}`)
+  let _templates = await getStorageString(key);
   if (isNullOrUndefinedOrEmpty(_templates)) {
     return
   }
@@ -1877,6 +1865,7 @@ export const fetchDefaultTemplate = async (
 ) => {
   try {
 
+debugger;
     const _template = await fetchDefaultTemplateFromApi(voucherType, formType, customerType);
     if (!_template) return null;
     await addTemplateToStore(_template)
@@ -1891,14 +1880,19 @@ export const getOrFetchTemplate = async (
   formType?: string ,
   customerType?: string ,
 ) => {
-  const templates = await getTemplatesFromStore();
+  const templates = await getTemplatesFromStore(voucherType, customerType, formType);
+  
+debugger;
   const existingTemplate = templates?.find((template: TemplateState<unknown>) => template.templateGroup === voucherType
     && template.formType === formType
     && template.customerType === customerType)
 
+debugger;
   if (existingTemplate) {
     return existingTemplate
   } else {
+    
+debugger;
     return await fetchDefaultTemplate(voucherType, formType, customerType)
   }
 };

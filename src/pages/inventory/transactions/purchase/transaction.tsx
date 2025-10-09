@@ -622,7 +622,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
       }
 
 
-      const templatesData = await getTemplatesFromStore();
+      
       if (!isInvoker) {
         const voucher: TransactionData = transactionInitialData;
         _formState = {

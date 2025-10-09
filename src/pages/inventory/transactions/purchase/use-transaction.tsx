@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { usePrint } from "./use-print";
+import { useAccPrint } from "../../../accounts/transactions/use-print";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
@@ -144,7 +145,9 @@ export const useTransaction = (
   const clientSession = useAppSelector(
     (state: RootState) => state.ClientSession
   );
-  const { printBarcode, printVoucher } = usePrint();
+  const { printBarcode } = usePrint();
+  
+const { printVoucher } = useAccPrint();
   const formState = useAppSelector(
     (state: RootState) => state.InventoryTransaction
   );
@@ -1112,7 +1115,17 @@ export const useTransaction = (
           );
           clearControls(formState.transaction.master.invTransactionMasterID > 0, formState.transaction.master.invTransactionMasterID)
           if (formState.printOnSave == true) {
-            printVoucher();
+            // masterID: number,transactionType: string,printTmeplate?:any ,transDate?: string,voucherType?: string,formType?:string,customerType?:string,
+    
+            printVoucher(
+  formState.transaction?.master.invTransactionMasterID,
+  formState.transactionType,
+  undefined, // ← skip printTmeplate
+  formState.transaction?.master.transactionDate,
+  formState.transaction?.master.voucherType,
+   undefined, // ← skip formType
+  formState.transaction?.master.customerType
+);
           }
           dispatch(formStateHandleFieldChange({
             fields: {

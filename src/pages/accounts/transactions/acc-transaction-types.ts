@@ -81,7 +81,7 @@ export interface AccTransactionMaster {
   remarks: string;
   voucherType: string;
   formType: string;
-  customerType?: string|null;
+  customerType: string;
   debitNoteTransId: number;
   creditNoteTransId: number;
   currencyID: number;
@@ -292,7 +292,7 @@ export const AccTransactionMasterInitialData: AccTransactionMaster = {
   remarks: "",
   voucherType: "",
   formType: "",
-  customerType:null,
+  customerType:"",
   debitNoteTransId: 0,
   creditNoteTransId: 0,
   currencyID: 0,

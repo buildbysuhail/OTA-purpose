@@ -25,6 +25,7 @@ import { formStateHandleFieldChangeKeysOnly, formStateHandleFieldChange, formSta
 import { TransactionFormState } from "../transaction-types";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import PrivilegeCardEntry from "./privilege-card-entry";
+import Tender from "./tender";
 
 interface TransactionFooterProps {
   formState: TransactionFormState;
@@ -342,6 +343,21 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
     )
   }
 
+  const handleTenderOpen = () => {
+    dispatch(
+      formStateHandleFieldChange({
+        fields: { tenderOpen: true }
+      })
+    )
+  }
+  const handleTenderClose = () => {
+    dispatch(
+      formStateHandleFieldChange({
+        fields: { tenderOpen: false }
+      })
+    )
+  }
+
   const warehouseComponent = (
     <div className="w-full max-w-none sm:max-w-[180px]">
       <WarehouseID
@@ -440,6 +456,19 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 />
               )
             }
+          </div>
+          <div>
+            <ERPButton
+              title={t('tender')}
+              onClick={handleTenderOpen}
+            />
+            {formState.tenderOpen && (
+              <Tender
+                isOpen={formState.tenderOpen}
+                onClose={handleTenderClose}
+                t={t}
+              />
+            )}
           </div>
         </>
       ) : (
@@ -789,6 +818,17 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           title={t('privilege_card')}
           onClick={handlePrivilegeCardOpen}
         />
+        <ERPButton
+          title={t('tender')}
+          onClick={handleTenderOpen}
+        />
+        {formState.tenderOpen && (
+          <Tender
+            isOpen={formState.tenderOpen}
+            onClose={handleTenderClose}
+            t={t}
+          />
+        )}
         {
           formState.privilegeCardOpen && (
             <PrivilegeCardEntry

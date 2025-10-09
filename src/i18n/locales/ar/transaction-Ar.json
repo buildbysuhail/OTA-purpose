@@ -845,5 +845,19 @@
   "sales_returns/credit_note(VAT)": "مرتجعات المبيعات / إشعار دائن (ضريبة القيمة المضافة)",
   "sales_quotations": "عروض أسعار المبيعات",
   "sales_orders": "طلبات المبيعات",
-  "goods_requests": "طلبات البضائع"
+  "goods_requests": "طلبات البضائع",
+
+  "show_stock_details": "عرض تفاصيل المخزون",
+  "skip_zero_qty_validation": "تخطي التحقق من الكمية الصفرية",
+  "summary_as_on": "الملخص اعتبارًا من",
+  "po_frequency": "تكرار أمر الشراء",
+  "from": "من",
+  "sections": "الأقسام",
+  "group_category": "تجميع الفئة",
+  "product_group": "مجموعة المنتج",
+  "product_category": "فئة المنتج",
+  "supplier": "المورد",
+  "method": "الطريقة",
+  "generate_lpo": "إنشاء أمر شراء محلي",
+  "generate_lpq": "إنشاء عرض أسعار شراء محلي"
 }

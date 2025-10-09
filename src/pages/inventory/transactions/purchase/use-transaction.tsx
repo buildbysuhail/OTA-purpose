@@ -295,7 +295,7 @@ export const useTransaction = (
       await setStorageString("utInvc", base64);
       // Decode the base64 back to JSON string      
       const _userConfig = safeBase64Decode(base64 ?? "");;
-      const userConfig: UserConfig = customJsonParse(_userConfig??"{}");
+      const userConfig: UserConfig = customJsonParse(_userConfig ?? "{}");
 
 
       return userConfig;
@@ -363,10 +363,10 @@ export const useTransaction = (
     );
 
     if (loadVType == "GRN" || loadVType == "GRR") {
-       _formState = merge({}, _formState, {transaction:{master:{deliveryNoteNumber: manualInvoiceNumber}}} );
+      _formState = merge({}, _formState, { transaction: { master: { deliveryNoteNumber: manualInvoiceNumber } } });
     }
     else if (loadVType == "PO" && (formState.transaction.master.voucherType == "GRN" || formState.transaction.master.voucherType == "PI")) {
-       _formState = merge({}, _formState, {transaction:{master:{orderNumber: manualInvoiceNumber}}} );
+      _formState = merge({}, _formState, { transaction: { master: { orderNumber: manualInvoiceNumber } } });
     }
 
     if (typeof _formState == "boolean") {
@@ -417,7 +417,7 @@ export const useTransaction = (
     const Utc = await getStorageString("utInvc");
     let userConfig: UserConfig | undefined;
     if (Utc) {
-      const decoded = safeBase64Decode(Utc)??"{}";
+      const decoded = safeBase64Decode(Utc) ?? "{}";
       userConfig = customJsonParse(decoded ?? "{}");
     } else {
       userConfig = await fetchUserConfig();
@@ -496,28 +496,28 @@ export const useTransaction = (
     if (loadVType == "PO") {
       out_voucherNumber = manualInvoiceNumber ?? 0;
       out_voucherType = loadVType;
-      out_voucherForm = loadFType??"";
-      out_voucherPrefix = loadPrefix??"";
+      out_voucherForm = loadFType ?? "";
+      out_voucherPrefix = loadPrefix ?? "";
     }
     if (loadVType == "GRN") {
       out_voucherNumber = manualInvoiceNumber ?? 0;
       out_voucherType = loadVType;
-      out_voucherForm = loadFType??"";
-      out_voucherPrefix = loadPrefix??"";
+      out_voucherForm = loadFType ?? "";
+      out_voucherPrefix = loadPrefix ?? "";
       url = url + "/ByGRN";
     }
     if (loadVType == "GRR") {
       out_voucherNumber = manualInvoiceNumber ?? 0;
       out_voucherType = loadVType;
-      out_voucherForm = loadFType??"";
-      out_voucherPrefix = loadPrefix??"";
+      out_voucherForm = loadFType ?? "";
+      out_voucherPrefix = loadPrefix ?? "";
       url = url + "/ByGRN";
     }
     if (loadVType == "PI_Ref") {
       out_voucherNumber = manualInvoiceNumber ?? 0;
       out_voucherType = "PI";
       out_voucherForm = "VAT";
-      out_voucherPrefix = loadPrefix??"";
+      out_voucherPrefix = loadPrefix ?? "";
       url = url + "/ByReferenceNo";
     }
 
@@ -717,7 +717,7 @@ export const useTransaction = (
     isVoucherPrefix: boolean
   ) => {
     isVoucherPrefix = isVoucherPrefix ? isVoucherPrefix : false
-    isVoucherPrefix = !clientSession.isAppGlobal && voucherType == VoucherType.PurchaseReturn ? true :  isVoucherPrefix
+    isVoucherPrefix = !clientSession.isAppGlobal && voucherType == VoucherType.PurchaseReturn ? true : isVoucherPrefix
     const response = await api.getAsync(
       `${Urls.inv_transaction_base}${transactionType}/GetNextVoucherNumber/`,
       `formType=${formType ? formType : ""}&voucherType=${voucherType ? voucherType : ""
@@ -1008,6 +1008,13 @@ export const useTransaction = (
     return { firstDebitLedgerID, firstCreditLedgerID };
   };
 
+  const generateLPO = async () => {
+    await save("LPO");
+  };
+  const generateLPQ = async () => {
+    await save("LPQ");
+  };
+
   const preSave = async () => {
 
     if (
@@ -1029,7 +1036,7 @@ export const useTransaction = (
       await save();
     }
   };
-  const save = async () => {
+  const save = async (saveMode: "" | "LPO" | "LPQ" = "") => {
     dispatch(
       formStateHandleFieldChange({
         fields: {
@@ -1072,6 +1079,7 @@ export const useTransaction = (
       let params = {
         master: {
           ...master,
+          voucherType: saveMode === "LPO" ? "PO" : saveMode === "LPQ" ? "PQ" : master.voucherType,
           transactionDate:
             master.transactionDate == "" ? null : master.transactionDate,
         },
@@ -1154,7 +1162,7 @@ export const useTransaction = (
       }
 
     }
-    else{
+    else {
       dispatch(
         formStateHandleFieldChange({
           fields: {
@@ -1196,7 +1204,7 @@ export const useTransaction = (
       false
     );
     let employeeID = userSession.employeeId ?? 0;
-            if (["PR","PQ","PO"].includes(formState.transaction.master.voucherType ?? "" as any)  && employeeID <= 0) {
+    if (["PR", "PQ", "PO"].includes(formState.transaction.master.voucherType ?? "" as any) && employeeID <= 0) {
       const emps = await getApLocalDataByUrl(`${Urls.inv_transaction_base}${transactionType}/Data/Employee/`);
       employeeID = emps && emps.length > 0 ? emps[0].id : employeeID;
     }
@@ -1793,7 +1801,7 @@ export const useTransaction = (
     // }
   };
 
-  const handleGridKeyDown = async(
+  const handleGridKeyDown = async (
     key: any,
     gridRef: any,
     applicationSettings?: ApplicationSettingsType
@@ -1809,7 +1817,7 @@ export const useTransaction = (
         text: t("you_want_to_delete"),
         icon: "warning",
         confirmButtonText: t("delete_it"),
-        onConfirm: async() => {
+        onConfirm: async () => {
           const dataGridInstance = gridRef.current.instance(); // Access DataGrid instance
           const focusedRowIndex = dataGridInstance.option("focusedRowIndex");
           const rowData = dataGridInstance.getVisibleRows()[focusedRowIndex]?.data;
@@ -2131,7 +2139,7 @@ export const useTransaction = (
     //   return;
     // }
 
-    if (formState.transaction.master.isInvoiced === true && (formState.transaction.master.voucherType == "GRN" )) {
+    if (formState.transaction.master.isInvoiced === true && (formState.transaction.master.voucherType == "GRN")) {
       const invoicedConfirmResult = await ERPAlert.show({
         title: t("warning"),
         text: t("transaction_already_invoiced_warning"),
@@ -2318,7 +2326,7 @@ export const useTransaction = (
         formState.transaction.master.purchaseInvoiceNumber,
         undefined,
         undefined,
-        true,false, "PO","",formState.transaction.master.voucherPrefix
+        true, false, "PO", "", formState.transaction.master.voucherPrefix
       );
     }
   }, [formState.transaction.master?.purchaseInvoiceNumber]);
@@ -2392,7 +2400,7 @@ export const useTransaction = (
           fields: {
             // voucherPrefix: lastPrefix,
             voucherNumber: getVoucherNumber,
-            purchaseInvoiceNumber:"",
+            purchaseInvoiceNumber: "",
             // transactionMasterID: 0,
             transactionDate: moment(
               clientSession.softwareDate,
@@ -2615,7 +2623,7 @@ export const useTransaction = (
           warehouseId = detailWarehouseId ?? 0;
         }
       }
-      const _lastSelectedWarehouseIDOfItemPopupsSearch = (async() => {
+      const _lastSelectedWarehouseIDOfItemPopupsSearch = (async () => {
         try {
           const stored = await getStorageString(
             "lastSelectedWarehouseIDOfItemPopupsSearch"
@@ -2972,7 +2980,7 @@ export const useTransaction = (
           result = {
             ...totalRes,
             summary: summaryRes.summary,
-            showQuantityFactors: { visible: false, rowIndex: -1 , qtyDesc: "" },
+            showQuantityFactors: { visible: false, rowIndex: -1, qtyDesc: "" },
             transaction: {
               ...totalRes.transaction,
               details: [final],
@@ -3269,7 +3277,7 @@ export const useTransaction = (
             dispatch(
               commonParams.formStateHandleFieldChangeKeysOnly({
                 fields: {
-                  showQuantityFactors: { visible: true, rowIndex: rowIndex, qtyDesc:data.productDescription },
+                  showQuantityFactors: { visible: true, rowIndex: rowIndex, qtyDesc: data.productDescription },
                 },
               })
             );
@@ -3405,7 +3413,7 @@ export const useTransaction = (
               const res = focusToNextColumn(rowIndex, columnName);
               setCurrentCell(res, data, false);
             }
-          } 
+          }
           else if (columnName == "product") {
             data.product = value;
             if (!isNullOrUndefinedOrEmpty(value)) {
@@ -3428,8 +3436,8 @@ export const useTransaction = (
               const res = focusToNextColumn(rowIndex, columnName);
               setCurrentCell(res, data, false);
             }
-          } 
-          
+          }
+
           else if (columnName == "barCode") {
             data.barCode = value;
             if (!isNullOrUndefinedOrEmpty(value)) {
@@ -3519,7 +3527,7 @@ export const useTransaction = (
               if (data.unitPrice > data.salesPrice) {
                 // event.preventDefault();
                 event.preventDefault();
-                event.stopPropagation(); 
+                event.stopPropagation();
                 const confirm = await ERPAlert.show({
                   icon: "info",
                   title: t("warning"),
@@ -4084,7 +4092,7 @@ export const useTransaction = (
               partyName: ledgerData?.partyName ?? "",
               displayName: ledgerData?.displayName ?? "",
               address1: ledgerData?.address1 ?? "",
-              address4: _formState.isInitialLedger ? _formState.transaction?.master?.address4: ledgerData?.mobileNumber ?? "",
+              address4: _formState.isInitialLedger ? _formState.transaction?.master?.address4 : ledgerData?.mobileNumber ?? "",
               address3: ledgerData?.address3 ?? "",
             }
           }
@@ -4180,6 +4188,8 @@ export const useTransaction = (
     validate,
     refactorDetails,
     save: preSave,
+    generateLPQ: generateLPQ,
+    generateLPO: generateLPO,
     clearControls,
     addOrEditRow,
     handleRemoveItem,

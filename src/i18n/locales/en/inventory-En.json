@@ -520,5 +520,10 @@
   "s_price": "S Price",
   "item_search": "Item Search",
   "show_stock_details": "Show Stock Details",
-  "all_warehouse_products": "All Warehouse Products"
+  "all_warehouse_products": "All Warehouse Products",
+
+  "validation_failed": "Validation Failed",
+  "hsn_code_missing_are_you_sure_to_continue": "HSN Code missing, Are you sure to continue?",
+  "update_price": "Update Price",
+  "flavors": "Flavors"
 }

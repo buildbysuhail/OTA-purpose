@@ -113,7 +113,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
   const postUserConfig = async () => {
     try {
       const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, { ...formState.userConfig, themeName: 'Custom' });
-      handleResponse(response, async() => {
+      handleResponse(response, async () => {
         const base64 = modelToBase64(formState.userConfig);
         await setStorageString("utInvc", base64);
         dispatch(
@@ -161,7 +161,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
         showCancelButton: true,
         onConfirm: async (result: any) => {
           const res = await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/ResetLocalSettings`, {});
-          handleResponse(res, async() => {
+          handleResponse(res, async () => {
             const st = atob(res.item);
             await setStorageString("utInvc", res.item);
             const _st: any = customJsonParse(st);
@@ -234,7 +234,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between sm:justify-start gap-3">
+                  <div className={`flex items-center justify-between sm:justify-start ${formState.transaction.master.voucherType === "LPO" ? "hidden" : "block"} gap-3`}>
                     <span className="text-sm text-gray-700 dark:text-dark-text font-medium">{t("footer_position")}</span>
                     <div className="relative inline-block w-16 h-8 flex-shrink-0">
                       <input

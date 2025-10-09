@@ -520,5 +520,10 @@
   "s_price": "سعر البيع",
   "item_search": "البحث عن صنف",
   "show_stock_details": "عرض تفاصيل المخزون",
-  "all_warehouse_products": "جميع منتجات المستودع"
+  "all_warehouse_products": "جميع منتجات المستودع",
+
+  "validation_failed": "فشل التحقق من الصحة",
+  "hsn_code_missing_are_you_sure_to_continue": "رمز HSN مفقود، هل أنت متأكد من المتابعة؟",
+  "update_price": "تحديث السعر",
+  "flavors": "النكهات"
 }

@@ -454,7 +454,6 @@ const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, transactionTy
 
  const handleSave = async () => {
     try {
-      
       if (!formState.selectedTheme) return;
       const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, { ...formState?.userConfig, ...formState.selectedTheme });
       handleResponse(response, async() => {

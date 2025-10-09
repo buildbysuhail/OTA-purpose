@@ -37,6 +37,7 @@ import OrderNo from "./components/order-number";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import { formStateHandleFieldChange, formStateMasterHandleFieldChange } from "../reducer";
 import { TransactionFormState, TransactionDetail } from "../transaction-types";
+import LPOGeneration from "./LPOGeneration";
 
 interface TransactionHeaderProps {
   formState: TransactionFormState;
@@ -311,90 +312,94 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
           style={headerStyle}
           className="fixed top-[110px] z-[39] dark:bg-dark-bg bg-white shadow-md transition-all duration-300"
         >
-          <div className="flex items-end gap-1 relative px-2 !pb-3">
-            <PartyLedger
-              ref={ledgerIdRef}
-              handleFieldKeyDown={handleFieldKeyDown}
-              transactionType={transactionType}
-              handleKeyDown={handleKeyDown}
-              formState={formState}
-              dispatch={dispatch}
-              t={t}
-              setIsPartyDetailsOpen={() => {
-                setIsPartyDetailsOpen((prev: any) => {
-                  return !prev;
-                });
-              }}
-            />
-            <div>
-              <button
-                onClick={handleLedgerDetailsClick}
-                aria-label="View Ledger Details"
-                className="p-2 rounded-md shadow-md dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg hover:bg-gray-300 focus:outline-none transition-colors duration-200"
-              >
-                <Search className="w-4 h-4 dark:text-dark-text text-gray-700" />
-              </button>
-            </div>
-
-            <AccVoucherPrefix
-              ref={voucherNumberRef}
-              formState={formState}
-              dispatch={dispatch}
-              handleKeyDown={handleKeyDown}
-              loadAndSetTransVoucher={loadAndSetTransVoucher}
+          {formState.transaction.master.voucherType === "LPO" ?
+            <LPOGeneration
               t={t}
             />
+            :
+            <div className="flex items-end gap-1 relative px-2 !pb-3">
+              <PartyLedger
+                ref={ledgerIdRef}
+                handleFieldKeyDown={handleFieldKeyDown}
+                transactionType={transactionType}
+                handleKeyDown={handleKeyDown}
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                setIsPartyDetailsOpen={() => {
+                  setIsPartyDetailsOpen((prev: any) => {
+                    return !prev;
+                  });
+                }}
+              />
+              <div>
+                <button
+                  onClick={handleLedgerDetailsClick}
+                  aria-label="View Ledger Details"
+                  className="p-2 rounded-md shadow-md dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg hover:bg-gray-300 focus:outline-none transition-colors duration-200"
+                >
+                  <Search className="w-4 h-4 dark:text-dark-text text-gray-700" />
+                </button>
+              </div>
 
-            <AccVoucherNo
-              ref={voucherNumberRef}
-              formState={formState}
-              dispatch={dispatch}
-              handleKeyDown={handleKeyDown}
-              loadAndSetTransVoucher={loadAndSetTransVoucher}
-              t={t}
-            />
+              <AccVoucherPrefix
+                ref={voucherNumberRef}
+                formState={formState}
+                dispatch={dispatch}
+                handleKeyDown={handleKeyDown}
+                loadAndSetTransVoucher={loadAndSetTransVoucher}
+                t={t}
+              />
 
-            {formState.transaction.master.voucherType !==
-              VoucherType.GoodsReceiptNote && (
-                <ReferenceNumber
-                  formState={formState}
-                  dispatch={dispatch}
-                  handleLoadByRefNo={handleLoadByRefNo}
-                  ref={refNoRef}
-                  t={t}
-                />
-              )}
+              <AccVoucherNo
+                ref={voucherNumberRef}
+                formState={formState}
+                dispatch={dispatch}
+                handleKeyDown={handleKeyDown}
+                loadAndSetTransVoucher={loadAndSetTransVoucher}
+                t={t}
+              />
 
-            <ReferenceDate
-              dispatch={dispatch}
-              formState={formState}
-              handleKeyDown={(e) => {
-                if (isEnterKey(e.key)) {
-                  if (
-                    formState.currentCell &&
-                    formState.currentCell.rowIndex > 0 &&
-                    formState.currentCell.column != ""
-                  ) {
-                    focusToNextColumn(
-                      formState.currentCell.rowIndex,
-                      formState.currentCell.column
-                    );
-                  } else {
-                    focusToNextColumn(0, "slNo");
+              {formState.transaction.master.voucherType !==
+                VoucherType.GoodsReceiptNote && (
+                  <ReferenceNumber
+                    formState={formState}
+                    dispatch={dispatch}
+                    handleLoadByRefNo={handleLoadByRefNo}
+                    ref={refNoRef}
+                    t={t}
+                  />
+                )}
+
+              <ReferenceDate
+                dispatch={dispatch}
+                formState={formState}
+                handleKeyDown={(e) => {
+                  if (isEnterKey(e.key)) {
+                    if (
+                      formState.currentCell &&
+                      formState.currentCell.rowIndex > 0 &&
+                      formState.currentCell.column != ""
+                    ) {
+                      focusToNextColumn(
+                        formState.currentCell.rowIndex,
+                        formState.currentCell.column
+                      );
+                    } else {
+                      focusToNextColumn(0, "slNo");
+                    }
                   }
-                }
-              }}
-              t={t}
-            />
-
-            <TransactionDate formState={formState} dispatch={dispatch} t={t} />
-          </div>
+                }}
+                t={t}
+              />
+              <TransactionDate formState={formState} dispatch={dispatch} t={t} />
+            </div>
+          }
 
           {/* Dropdown content */}
           <div
             ref={dropdownRef}
-            className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropDownOpen ? "max-h-[50vh]" : "max-h-0"
-              }`}
+            className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${formState.transaction.master.voucherType === "LPO" ? 'hidden' : 'block'} ${isDropDownOpen ? "max-h-[50vh]" : "max-h-0"}`}
           >
             <div className="p-4 md:p-2 dark:bg-dark-bg-card bg-white border-t dark:border-dark-border border-gray-300 shadow-lg">
               <div className="flex flex-wrap !items-end gap-1">
@@ -793,6 +798,12 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     }
                   />
                 )}
+
+                {/* {formState.transaction.master.voucherType === "LPO" && (
+                  <LPOGeneration
+                    t={t}
+                  />
+                )} */}
               </div>
 
               {conditionalFooterComponents}
@@ -873,7 +884,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
           </div>
 
           {/* Chevron button - moves with dropdown content */}
-          <div className="relative w-full">
+          <div className={`relative w-full ${formState.transaction.master.voucherType === "LPO" ? 'hidden' : 'block'}`}>
             <div className="absolute left-1/2 transform -translate-x-1/2 top-[-8px]">
               <button
                 onClick={toggleDropdown}

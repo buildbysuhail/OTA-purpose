@@ -168,31 +168,28 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
           id="template_formType"
           field={{
             id: "template_formType",
-            // getListUrl: Urls.data_salesRoute,
-            valueKey: "value",
-            labelKey: "label",
+            getListUrl: `${Urls.template_FormTypeByVoucherType}/${templateGroup}`,
+            valueKey: "name",
+            labelKey: "name",
           }}
-          defaultValue={propertiesState?.orientation ?? "Portrait"}
+          defaultValue={propertiesState?.template_formType ?? ""}
           value={propertiesState?.template_formType}
           data={propertiesState}
           onChangeData={(data: any) => {
+            debugger;
             onChange?.({ ...propertiesState, template_formType: data.template_formType })
           }}
-          options={[
-            { label: " ", value: " " },
-            { label: " ", value: " " },
-          ]}
           label={t("from_type")}
         />
 
           <ERPDataCombobox
-          id="template_customerType "
+          id="template_customerType"
           field={{
-            id: "template_customerType ",
+            id: "template_customerType",
             valueKey: "value",
             labelKey: "label",
           }}
-          defaultValue={propertiesState?.template_customerType }
+          
           value={propertiesState?.template_customerType }
           data={propertiesState}
           onChangeData={(data: any) => {
@@ -202,7 +199,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             { label: "B2B", value: "B2B" },
             { label: "B2C", value: "B2C" },
             { label: "INT", value: "INT" },
-            { label: " ", value: " " },
+            { label: "", value: "" },
           ]}
           label={t("customer_type")}
         />      

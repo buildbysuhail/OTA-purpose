@@ -12,7 +12,7 @@ interface TemplatesProps {
   setIsOpen: () => void; 
   voucherType: string;
   formType:string;
-  customerType:string|null;
+  customerType:string;
 }
 const api = new APIClient();
 export default function TemplatesView ({ setIsOpen, voucherType,formType,customerType}: TemplatesProps) {
@@ -25,9 +25,12 @@ useEffect(() => {
     try {
       setTemplateLoad(true)
       const api = new APIClient();
-      const response = await api.getAsync(
-        `${Urls.templates}?template_group=${voucherType}&FormType=${formType}&CustomerType=${customerType}`
-      );
+      const payload = {
+      template_group: voucherType,
+      formType: formType,
+      customerType: customerType
+      }
+      const response = await api.postAsync(`${Urls.templates}Filtered`,payload);
       setTemplate(response);
     } catch (error) {
       console.error("Error fetching templates:", error);

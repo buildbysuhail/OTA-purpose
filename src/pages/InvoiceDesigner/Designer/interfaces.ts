@@ -33,8 +33,8 @@ type TemplateKindType =
     signatureImage?: string;
     content?: string;
     isCurrent?: boolean;
-    formType?:string|null;
-    customerType?:string|null;
+    formType?:string;
+    customerType?:string;
   }
 export interface TemplateState<T> {
   id?: number | undefined ;

@@ -311,7 +311,7 @@ export const loadPrintData = async (MasterIDParam: number, voucherTypeParam: str
     // console.log(mergedCustomElements);
     console.log(`${MasterIDParam}-MasterIDParam`);
     const api = new APIClient();
-    const printData: PrintResponse = await api.getAsync(`${isInvTrans ? Urls.inv_transaction_base : Urls.acc_transaction_base}${transactionType}/print/?
+    let printData: PrintResponse = await api.getAsync(`${isInvTrans ? Urls.inv_transaction_base : Urls.acc_transaction_base}${transactionType}/print/?
         KitchenId=${0}&CommonKitchenProductGroupId=${0}&IncludeStockDetails=${true}&IncludePreviousLedgerBalance=${true}
         &IncludeLoyaltyCardBalance=${true}&masterId=${MasterIDParam}&multiPayment=${multiPayment}
                                             &printCount= ${printCount}
@@ -321,7 +321,8 @@ export const loadPrintData = async (MasterIDParam: number, voucherTypeParam: str
     console.log(printData);
     if (isNullOrUndefinedOrEmpty(printData?.master))
       return printData;
-
+    printData.master.customerType = printData.master?.customerType ?? ""
+    printData.master.voucherForm = printData.master?.voucherForm ?? ""
     returnData = merge({}, returnData, printData);
     returnData.custom = returnData.custom ?? initialPrintCustomFields;
     const isKitchenPrint = !isNullOrUndefinedOrZero(kitchenIDParam) || !isNullOrUndefinedOrZero(commonKitchenProductGroupIDParam) ||
@@ -1783,8 +1784,8 @@ export const getTemplatesFromStore = async () => {
 
 export const fetchDefaultTemplateFromApi = async (
   voucherType: string,
-  formType?: string | null,
-  customerType?: string | null,
+  formType?: string ,
+  customerType?: string ,
 ): Promise<TemplateState<unknown> | null> => {
   try {
     const api = new APIClient();
@@ -1871,8 +1872,8 @@ export function parseTemplateContent<T extends object>(
 
 export const fetchDefaultTemplate = async (
   voucherType: string,
-  formType?: string | null,
-  customerType?: string | null,
+  formType?: string ,
+  customerType?: string ,
 ) => {
   try {
 
@@ -1887,8 +1888,8 @@ export const fetchDefaultTemplate = async (
 
 export const getOrFetchTemplate = async (
   voucherType: string,
-  formType?: string | null,
-  customerType?: string | null,
+  formType?: string ,
+  customerType?: string ,
 ) => {
   const templates = await getTemplatesFromStore();
   const existingTemplate = templates?.find((template: TemplateState<unknown>) => template.templateGroup === voucherType

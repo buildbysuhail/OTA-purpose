@@ -5,6 +5,8 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import html2canvas from 'html2canvas';
 import { DesignerElementType, PlacedComponent, TemplateDto, TemplateState } from "../Designer/interfaces";
 
+
+
 import { debounce } from "lodash";
 import { DummyVoucherData } from "../constants/DummyData";
 import { RootState } from "../../../redux/store";
@@ -28,55 +30,11 @@ interface UseTemplateDesignerProps {
   templateGroup?: string;
   templateKind?: string;
   designerType?: string;
-  manuvalTemplateFeatch?: boolean;
-  MasterIDParam?: number;
-  voucherTypeParam?: string;
-  isInvTrans?: boolean;
-  isSalesView?: boolean;
-  isServiceTrans?: boolean;
-  transDate?: string;
-  printCopies?: number;
-  isReprint?: boolean;
-  isPOSPrinting?: boolean;
-  isFromSalesReceipt?: boolean;
-  isPackingSlipPrint?: boolean;
-  warehouseID?: number;
-  kitchenIDParam?: number;
-  kitchenPrinterNameParam?: string;
-  kitchenNameParam?: string;
-  commonKitchenProductGroupIDParam?: number;
-  transactionType?: string;
-  dbIdValue?: string;
-  voucherType?: string;
-  isAppGlobal?: boolean;
+  manuvalTemplateFeatch?:boolean,
+  MasterIDParam?: number, voucherTypeParam?: string, isInvTrans?: boolean, isSalesView?: boolean, isServiceTrans?: boolean, transDate?: string, printCopies?: number, isReprint?: boolean, isPOSPrinting?: boolean, isFromSalesReceipt?: boolean, isPackingSlipPrint?: boolean, warehouseID?: number, kitchenIDParam?: number, kitchenPrinterNameParam?: string, kitchenNameParam?: string, commonKitchenProductGroupIDParam?: number,  transactionType?: string, dbIdValue?: string, voucherType?: string, isAppGlobal?: boolean
 }
 
-export const useTemplateDesigner = ({
-  templateGroup = "",
-  templateKind = "",
-  designerType = "",
-  manuvalTemplateFeatch,
-  MasterIDParam,
-  voucherTypeParam,
-  isInvTrans,
-  isSalesView,
-  isServiceTrans,
-  transDate,
-  printCopies,
-  isReprint,
-  isPOSPrinting,
-  isFromSalesReceipt,
-  isPackingSlipPrint,
-  warehouseID,
-  kitchenIDParam,
-  kitchenPrinterNameParam,
-  kitchenNameParam,
-  commonKitchenProductGroupIDParam,
-  transactionType,
-  dbIdValue,
-  voucherType,
-  isAppGlobal
-}: UseTemplateDesignerProps) => {
+export const useTemplateDesigner = ({ templateGroup="", templateKind="", designerType="", manuvalTemplateFeatch,MasterIDParam,voucherTypeParam,isInvTrans,isSalesView,isServiceTrans,transDate,printCopies,isReprint,isPOSPrinting,isFromSalesReceipt,isPackingSlipPrint,warehouseID,kitchenIDParam,kitchenPrinterNameParam,kitchenNameParam,commonKitchenProductGroupIDParam,transactionType,dbIdValue,voucherType,isAppGlobal}: UseTemplateDesignerProps) => {
   const { t } = useTranslation("system");
   const { id } = useParams();
   const navigate = useNavigate();
@@ -85,7 +43,6 @@ export const useTemplateDesigner = ({
   const activeTemplate = useSelector((state: RootState) => state.Template?.activeTemplate);
 
   const [stableTemplateProps, setStableTemplateProps] = useState<any>(null);
-  const [printData, setPrintData] = useState<PrintResponse | null>(null);
   const [designTabs, setDesignTabs] = useState<DesignSectionType[]>([]);
   const [currentSection, setCurrentSection] = useState<DesignSectionType | null>(null);
   const [loading, setLoading] = useState(false);
@@ -98,38 +55,42 @@ export const useTemplateDesigner = ({
   const [maxHeight, setMaxHeight] = useState<number>(500);
   const previewContainerRef = useRef<HTMLDivElement>(null);
 
-  // Create consolidated template style properties object
-  const templateStyleProperties = useMemo(() => {
-    const pageOrientation =
-      activeTemplate?.propertiesState?.orientation === "landscape" ? "landscape" : "portrait";
-    const pageSize = activeTemplate?.propertiesState?.pageSize ?? "A4";
+  //  Create consolidated template style properties object
+const templateStyleProperties = useMemo(() => {
+  const pageOrientation =
+    activeTemplate?.propertiesState?.orientation === "landscape" ? "landscape" : "portrait";
+  const pageSize = activeTemplate?.propertiesState?.pageSize ?? "A4";
 
-    const selectedPageSize = getPageDimensions(
-      pageSize,
-      activeTemplate?.propertiesState?.width,
-      activeTemplate?.propertiesState?.height
-    );
-
-    const orientedDimensions = getOrientedDimensions(selectedPageSize, pageOrientation);
-
-    return {
-      previewWidth: orientedDimensions.width,
-      previewHeight: orientedDimensions.height,
-    };
-  }, [
-    activeTemplate?.propertiesState?.orientation,
-    activeTemplate?.propertiesState?.pageSize,
+  const selectedPageSize = getPageDimensions(
+    pageSize,
     activeTemplate?.propertiesState?.width,
-    activeTemplate?.propertiesState?.height,
-  ]);
+    activeTemplate?.propertiesState?.height
+  );
 
-  // Effect 1: Load print data (only depends on parameters, NOT on activeTemplate)
-  useEffect(() => {
-    const loadData = async () => {
-      setLoading(true);
+  const orientedDimensions = getOrientedDimensions(selectedPageSize, pageOrientation);
+
+  return {
+    previewWidth: orientedDimensions.width,
+    previewHeight: orientedDimensions.height,
+  };
+}, [
+  activeTemplate?.propertiesState?.orientation,
+  activeTemplate?.propertiesState?.pageSize,
+  activeTemplate?.propertiesState?.width,
+  activeTemplate?.propertiesState?.height,
+]);
+
+
+
+  // Stabilize props for PDFViewer
+ useEffect(() => {
+    const load = async () => {
+      debugger;
+        setLoading(true);
       try {
-        let data: PrintResponse = DummyVoucherData as any;
-
+      
+         let data: PrintResponse = DummyVoucherData as any;
+        //  let _template = activeTemplate;
         if (MasterIDParam) {
           data = (await loadPrintData(
             MasterIDParam ?? 0,
@@ -154,88 +115,67 @@ export const useTemplateDesigner = ({
             isAppGlobal
           )) as any;
         }
+        debugger
+   if(manuvalTemplateFeatch){
+     const _template = await getOrFetchTemplate(data?.master?.voucherType,data?.master?.voucherForm,data?.master?.customerType); 
+        debugger
+      if (!_template) {
+        setStableTemplateProps(null);
+         setLoading(false);
+         return 
+      }else{
+        dispatch(setTemplate(_template));
+      }
 
-        setPrintData(data);
+   }
+  // Generate QR codes here
+      const elements: PlacedComponent[] = [
+        ...(activeTemplate?.headerState?.customElements?.elements ?? []),
+        ...(activeTemplate?.footerState?.customElements?.elements ?? []),
+      ].filter(comp => comp.type === DesignerElementType.qrCode);
 
-        // Fetch template if needed
-        if (manuvalTemplateFeatch) {
-          const _template = await getOrFetchTemplate(
-            data?.master?.voucherType,
-            data?.master?.voucherForm,
-            data?.master?.customerType
-          );
-
-          if (_template) {
-            dispatch(setTemplate(_template));
-          }
+      const qrImages: { [key: string]: string } = {};
+      for (const comp of elements) {
+        if (comp.qrCodeProps) {
+          qrImages[comp.id] = await generateQRCodeDataUrl(comp.qrCodeProps);
         }
+      }
+      const props = { template: activeTemplate, data, qrCodeImages: qrImages };
+        setStableTemplateProps(props);
       } catch (err) {
-        console.error("Error loading data:", err);
+        // handle/log error if you want
+         setStableTemplateProps(null);
+         setLoading(false);
       } finally {
         setLoading(false);
       }
     };
 
-    loadData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    load();
+  // include all deps that should retrigger reload
   }, [
-    manuvalTemplateFeatch,
-    MasterIDParam,
-    transactionType,
-    voucherTypeParam,
-    isInvTrans,
-    isSalesView,
-    isServiceTrans,
-    transDate,
-    printCopies,
-    isReprint,
-    isPOSPrinting,
-    isFromSalesReceipt,
-    isPackingSlipPrint,
-    warehouseID,
-    kitchenIDParam,
-    kitchenPrinterNameParam,
-    kitchenNameParam,
-    commonKitchenProductGroupIDParam,
-    dbIdValue,
-    voucherType,
-    isAppGlobal,
-
+  MasterIDParam,
+  transactionType,
+  voucherTypeParam,
+  isInvTrans,
+  isSalesView,
+  isServiceTrans,
+  transDate,
+  printCopies,
+  isReprint,
+  isPOSPrinting,
+  isFromSalesReceipt,
+  isPackingSlipPrint,
+  warehouseID,
+  kitchenIDParam,
+  kitchenPrinterNameParam,
+  kitchenNameParam,
+  commonKitchenProductGroupIDParam,
+  dbIdValue,
+  voucherType,
+  isAppGlobal,
   ]);
 
-  // Effect 2: Update stableTemplateProps when activeTemplate OR printData changes
-  useEffect(() => {
-    const updateProps = async () => {
-      if (!activeTemplate || !printData) return;
-
-      try {
-        // Generate QR codes
-        const elements: PlacedComponent[] = [
-          ...(activeTemplate?.headerState?.customElements?.elements ?? []),
-          ...(activeTemplate?.footerState?.customElements?.elements ?? []),
-        ].filter(comp => comp.type === DesignerElementType.qrCode);
-
-        const qrImages: { [key: string]: string } = {};
-        for (const comp of elements) {
-          if (comp.qrCodeProps) {
-            qrImages[comp.id] = await generateQRCodeDataUrl(comp.qrCodeProps);
-          }
-        }
-
-        const props = {
-          template: activeTemplate,
-          data: printData,
-          qrCodeImages: qrImages
-        };
-
-        setStableTemplateProps(props);
-      } catch (err) {
-        console.error("Error updating props:", err);
-      }
-    };
-
-    updateProps();
-  }, [activeTemplate, printData]);
 
   // Set max height based on window size
   useEffect(() => {
@@ -244,6 +184,7 @@ export const useTemplateDesigner = ({
   }, []);
 
   // Filter design sections based on designer type
+  // Filter design sections based on type & kind
   useEffect(() => {
     if (templateGroup) {
       const typeKey = designerType.toUpperCase();
@@ -260,32 +201,37 @@ export const useTemplateDesigner = ({
 
   // Fetch template data for existing templates
   const getPDFTemplateData = useCallback(async () => {
+    debugger;
     if (id !== "new") {
       try {
-        setLoading(true);
+        setLoading(true)
+        
+        debugger;
+         const _template = await fetchTemplateFromApiById(id);
+              if(!_template) return null;
+      
+        if(_template && (_template?.id??0)> 0) {
 
-        const _template = await fetchTemplateFromApiById(id);
-        if (!_template) return null;
-
-        if (_template && (_template?.id ?? 0) > 0) {
           const initial = templateInitialState().activeTemplate;
           const _returnData = merge({}, initial, _template);
+          debugger;
           dispatch(setTemplate(_returnData));
         }
       } catch (error) {
         console.error("Error fetching template data:", error);
         ERPToast.show(t("failed_to_fetch_template"));
-      } finally {
+      }finally {
         setLoading(false);
       }
     }
   }, [id, dispatch, t]);
 
   useEffect(() => {
-    if (!manuvalTemplateFeatch) {
-      getPDFTemplateData();
+    if(!manuvalTemplateFeatch){
+    getPDFTemplateData();
     }
-  }, [getPDFTemplateData, manuvalTemplateFeatch]);
+   
+  }, [getPDFTemplateData]);
 
   // Function to convert preview component to image
   const capturePreviewAsImage = useCallback(async (): Promise<string> => {
@@ -293,13 +239,14 @@ export const useTemplateDesigner = ({
       throw new Error("Preview container not found");
     }
 
+    // Find the actual preview content container (the one with template styling)
     const previewContent = previewContainerRef.current.querySelector('[data-template-preview]') as HTMLElement;
     const targetElement = previewContent || previewContainerRef.current;
 
     try {
       const canvas = await html2canvas(targetElement, {
-        backgroundColor: "#ffffff",
-        scale: 2,
+        backgroundColor: "#ffffff", // or your bg
+        scale: 2,                   // smooth scaling
         useCORS: true,
       });
       return canvas.toDataURL("image/png", 0.95);
@@ -307,7 +254,7 @@ export const useTemplateDesigner = ({
       console.error("Image capture failed:", err);
       throw err;
     }
-  }, []);
+  }, [templateStyleProperties]);
 
   // Handle template saving
   const handleSave = useCallback(
@@ -327,8 +274,8 @@ export const useTemplateDesigner = ({
         templateKind: tmpTemplate.propertiesState.template_kind ?? "standard",
         templateGroup: tmpTemplate.propertiesState.template_group ?? "",
         templateName: tmpTemplate.propertiesState?.templateName ?? "",
-        formType: tmpTemplate.propertiesState?.template_formType ?? "",
-        customerType: tmpTemplate.propertiesState?.template_customerType ?? "",
+        formType:tmpTemplate.propertiesState?.template_formType??"",
+        customerType:tmpTemplate.propertiesState?.template_customerType??"",
         thumbImage: dataUrl,
         content: JSON.stringify(tmpTemplate),
         isCurrent: tmpTemplate.isCurrent ?? false,
@@ -337,11 +284,10 @@ export const useTemplateDesigner = ({
         backgroundImageFooter: tmpTemplate.background_image_footer ?? "",
         signatureImage: tmpTemplate.signature_image ?? "",
         branchId: 0,
-        id: id == "new" ? 0 : activeTemplate?.id,
+        id: id == "new" ? 0 :activeTemplate?.id,
       };
-
-      const initial = templateInitialState().activeTemplate;
-      const _returnData = merge({}, initial, activeTemplates);
+         const initial = templateInitialState().activeTemplate;
+        const _returnData = merge({}, initial, activeTemplates);
       dispatch(setTemplate(_returnData));
 
       try {
@@ -352,9 +298,9 @@ export const useTemplateDesigner = ({
       } catch (error) {
         console.error("Error saving template:", error);
         ERPToast.show(t("failed_to_save_template"));
-      }
+      } 
     },
-    [activeTemplate, templateGroup, templateKind, designerType, dispatch, navigate, t, id]
+    [activeTemplate, templateGroup, templateKind, dispatch, navigate, t]
   );
 
   // Updated save function that captures preview as image
@@ -366,13 +312,16 @@ export const useTemplateDesigner = ({
 
     try {
       setLoading(true);
+      // Capture the preview as image
       const imageDataUrl = await capturePreviewAsImage();
+      // Save with the captured image
       await handleSave(imageDataUrl);
     } catch (error) {
       console.error("Error saving template:", error);
       ERPToast.show(t("failed_to_save_template"));
-    } finally {
-      setLoading(false);
+    }
+    finally {
+        setLoading(false);
     }
   }, [id, activeTemplate, capturePreviewAsImage, handleSave, t]);
 
@@ -400,6 +349,7 @@ export const useTemplateDesigner = ({
     dispatch,
     templateStyleProperties,
     previewContainerRef,
-    masterId: MasterIDParam,
+    masterId:MasterIDParam,
+
   };
 };

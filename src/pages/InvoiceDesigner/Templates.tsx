@@ -67,8 +67,8 @@ const Templates = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [sortBy, setSortBy] = useState<"name" | "date" | "type">("name")
-  const [formType, setFormType] = useState(null)
-  const [customerType,setCustomerType] = useState(null)
+  const [formType, setFormType] = useState("")
+  const [customerType,setCustomerType] = useState("")
 
   const [templateGroup, setTemplateGroup] = useState<VoucherType | string>(
     (searchParams?.get("template_group")! as VoucherType | string) ?? "SI",
@@ -449,8 +449,8 @@ const Templates = () => {
                           setTemplateGroup(template?.template_group_id);
                           setSidebarOpen(false);
                           // Check the below both 
-                          setFormType(null)
-                          setCustomerType(null)
+                          setFormType("")
+                          setCustomerType("")
                         }}
                         className={`group w-full flex items-center justify-between px-4 py-2 text-sm font-medium rounded-xl sm:rounded-2xl transition-all duration-200 ${isActive
                           ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
@@ -717,12 +717,12 @@ const Templates = () => {
                   field={{
                     id: "id",
                     getListUrl: `${Urls.template_FormTypeByVoucherType}/${templateGroup}`,
-                    valueKey: "id",
+                    valueKey: "name",
                     labelKey: "name",
                   }}
 
                   onChange={(e: any) =>{
-                    setFormType(e.value ?e.name:null)
+                    setFormType(e.value ?e.name:"")
                   } }
                   
               />
@@ -741,7 +741,7 @@ const Templates = () => {
                     { id: 4, name: "INT" },
                   ]}
                   onChange={(e: any) =>{
-                    setCustomerType(e.value ?e.name:null)
+                    setCustomerType(e.value ?e.name:"")
                   } } 
               /> 
             </div>

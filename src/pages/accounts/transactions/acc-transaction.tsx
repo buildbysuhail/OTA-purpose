@@ -51,7 +51,7 @@ import CustomerDetailsSidebar from "../../transaction-base/customer-details";
 import { isNullOrUndefinedOrZero } from "../../../utilities/Utils";
 import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
 import ERPResizableSidebar from "../../../components/ERPComponents/erp-resizable-sidebar";
-import TemplatesView from "../../transaction-base/templates";
+import TemplatesView from "../../transaction-base/template_picker";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import useFormComponent from "./use-form-components";
 import { useUserRights } from "../../../helpers/user-right-helper";
@@ -3318,7 +3318,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     <TemplatesView
       voucherType={formState.transaction.master?.voucherType ?? ""}
       formType={formState.transaction.master?.formType}
-      customerType={formState.transaction.master?.customerType??null}
+      customerType={formState.transaction.master?.customerType}
       setIsOpen={() =>
         dispatch(
           accFormStateHandleFieldChange({ fields: { templateChooserModal: false } })

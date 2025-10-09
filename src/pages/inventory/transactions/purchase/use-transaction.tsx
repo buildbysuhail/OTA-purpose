@@ -4049,6 +4049,7 @@ export const useTransaction = (
   };
   const loadLedgerData = async (_formState?: DeepPartial<TransactionFormState>, _dispatch?: any) => {
     const ledgerID = (_formState ?? formState)?.transaction?.master?.ledgerID;
+    const voucherType = (_formState ?? formState)?.transaction?.master?.voucherType;
     _formState = _formState ?? {}
     dispatch(
       formStateHandleFieldChange({
@@ -4100,10 +4101,11 @@ export const useTransaction = (
             }
           }
         }
+        debugger;
         if (!clientSession.isAppGlobal) {
           let customerType = "";
           if (
-            ["PR"].includes(_formState.transaction?.master?.voucherType ?? "")
+            ["PR"].includes(voucherType ?? "")
           ) {
             if (applicationSettings.branchSettings.maintainKSA_EInvoice) {
               if (

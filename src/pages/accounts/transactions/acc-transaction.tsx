@@ -206,7 +206,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   //  manuvalTemplateFeatch:true, MasterIDParam: transactionMasterID, isInvTrans: false, dbIdValue: userSession.dbIdValue, isAppGlobal: clientSession.isAppGlobal, printCopies: 1, transactionType: transactionType, voucherType: voucherType,
   //   transDate: formState.transaction?.master?.transactionDate
   // })
-  
+
   const [showValidation, setShowValidation] = useState(false);
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
   const focusTaxNoField = () => {
@@ -3317,6 +3317,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   >
     <TemplatesView
       voucherType={formState.transaction.master?.voucherType ?? ""}
+      formType={formState.transaction.master?.formType}
+      customerType={formState.transaction.master?.customerType??null}
       setIsOpen={() =>
         dispatch(
           accFormStateHandleFieldChange({ fields: { templateChooserModal: false } })

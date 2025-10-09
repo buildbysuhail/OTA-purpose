@@ -11,9 +11,11 @@ import { isNullOrUndefinedOrEmpty } from '../../utilities/Utils';
 interface TemplatesProps {
   setIsOpen: () => void; 
   voucherType: string;
+  formType:string;
+  customerType:string|null;
 }
 const api = new APIClient();
-export default function TemplatesView ({ setIsOpen, voucherType}: TemplatesProps) {
+export default function TemplatesView ({ setIsOpen, voucherType,formType,customerType}: TemplatesProps) {
 const { t } = useTranslation("system");
 const [templates, setTemplate] =useState<[]>([])
 const [templateLoad, setTemplateLoad] = useState(false);
@@ -24,7 +26,7 @@ useEffect(() => {
       setTemplateLoad(true)
       const api = new APIClient();
       const response = await api.getAsync(
-        `${Urls.templates}?template_group=${voucherType}`
+        `${Urls.templates}?template_group=${voucherType}&FormType=${formType}&CustomerType=${customerType}`
       );
       setTemplate(response);
     } catch (error) {

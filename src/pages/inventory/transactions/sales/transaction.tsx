@@ -2124,6 +2124,8 @@ debugger;
   >
     <TemplatesView
       voucherType={formState.transaction.master?.voucherType ?? ""}
+      formType={formState.transaction.master?.voucherForm}
+      customerType={formState.transaction.master?.customerType??null}
       setIsOpen={() =>
         dispatch(
           formStateHandleFieldChange({ fields: { templateChooserModal: false } })

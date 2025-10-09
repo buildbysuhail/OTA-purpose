@@ -58,6 +58,7 @@ import { setStorageString } from "../../../utilities/storage-utils";
 import { formStateDeleteDetails, formStateHandleFieldChange, formStateTransactionDetailsRowsAdd } from "../../../pages/inventory/transactions/reducer";
 import { initialTransactionDetails2, transactionInitialMoreDetails, initialTransactionDetailData } from "../../../pages/inventory/transactions/transaction-type-data";
 import { TransactionDetailKeys, ColumnModel, TransactionDetail, FormElementState, CurrentCell, TransactionFormState, TransactionDetails2, TransactionDetailsMore, SummaryItems } from "../../../pages/inventory/transactions/transaction-types";
+import { ERPScrollArea } from "../erp-scrollbar";
 
 type DataItem = Record<string, any>;
 export interface SummaryConfig<T = any> {
@@ -2692,7 +2693,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
               }
             />
           )}
-          <div
+          <ERPScrollArea
             ref={containerRef}
             className="border border-gray-300 "
             style={{
@@ -2702,8 +2703,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
               position: "relative",
               scrollbarWidth: "auto",
               paddingTop: isMobile ? "8px" : "",
-              scrollbarColor:
-                appState.mode === "dark" ? "#555 #333" : "#ddd #f1f1f1",
+              // scrollbarColor: appState.mode === "dark" ? "#555 #333" : "#ddd #f1f1f1",
             }}
             onScroll={(e) => {
               handleScroll(e);
@@ -2826,7 +2826,8 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                         }}
                       >
                         <>
-                         {column.dataField === "slNo" && (
+                         {
+                         column.dataField === "slNo" ? (
                           <>
                             <div className="absolute top-[3px] left-[3px]">
                               <button
@@ -2846,13 +2847,22 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                             </div>
                             {column.caption}
                           </>
-                        )}
+                        ):column.dataField === "actionCol"?
+                        (
+                        <>
+                        <span style={{ marginRight: "8px", opacity: 0.6 }}>
+                              
+                            </span>
+                            {column.caption}
                         </>
-                         <span style={{ marginRight: "8px", opacity: 0.6 }}>
+
+                        )
+                        : (
+                         <>
+                          <span style={{ marginRight: "8px", opacity: 0.6 }}>
                               ⋮⋮
                             </span>
                             {column.caption}
-                        {column.dataField !== "actionCol" && column.dataField !== "slNo" && (
                           <div
                             data-resize-handle
                             data-field={column.dataField}
@@ -2877,7 +2887,10 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                                 "transparent";
                             }}
                           />
-                        )}
+                         </>
+                        )
+                      }
+                        </>
                       </div>
                     );
                   })}
@@ -3084,7 +3097,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                 })}
               </div>
             </div>
-          </div>
+          </ERPScrollArea>
         </div>
       </div>
     );

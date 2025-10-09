@@ -156,7 +156,7 @@ export const useTemplateDesigner = ({
         }
 
         setPrintData(data);
-
+debugger;
         // Fetch template if needed
         if (manuvalTemplateFeatch) {
           const _template = await getOrFetchTemplate(

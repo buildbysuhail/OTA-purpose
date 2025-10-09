@@ -82,7 +82,6 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (
   //   const handleSearch = (query: string) => {
   //   setSearchQuery(query);
   // };
-debugger;
 const { printVoucher } = useAccPrint();
   const [searchParams] = useSearchParams();
   const { voucherNo: voucherNoParam } = useParams<{ voucherNo: string }>();

@@ -2113,6 +2113,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
       )
     }
   >
+    {formState.templateChooserModal &&(
     <TemplatesView
       voucherType={formState.transaction.master?.voucherType ?? ""}
       setIsOpen={() =>
@@ -2121,6 +2122,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         )
       }
     />
+    )}
   </ERPResizableSidebar>
 
         <ERPResizableSidebar

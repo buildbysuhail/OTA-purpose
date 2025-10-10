@@ -2,13 +2,11 @@ import React, {
   useCallback,
   useMemo,
   useState,
+  useRef,
+  useEffect,
 } from "react";
-import { useSearchParams,useParams,useNavigate,useLocation } from "react-router-dom";
-import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
+import { useSearchParams, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { RootState } from "../../../redux/store";
-import { useDispatch } from "react-redux";
-import { useUnsavedChangesWarning } from "../../use-unsaved-changes-warning";
 import {
   Box,
 } from "@mui/material";
@@ -86,128 +84,170 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (
       0,
   });
 
-  const shallowEqual = (a: Record<string, any>, b: Record<string, any>) => {
-    const aKeys = Object.keys(a);
-    const bKeys = Object.keys(b);
-    if (aKeys.length !== bKeys.length) return false;
-    for (const k of aKeys) {
-      if (String(a[k]) !== String(b[k])) return false;
-    }
-    return true;
-  };
-
   const { t } = useTranslation("transaction");
+  
+  // Use ref to track selected row without causing re-renders
+  const selectedRowIdRef = useRef<number>(0);
 
-const [selectedRowId, setSelectedRow] = useState(0);
+  // Add CSS for selection - this runs once on mount
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      .grid-row-item {
+        transition: all 0.2s ease-in-out;
+      }
+      .grid-row-item:hover {
+        background-color: #f5f5f5 !important;
+      }
+      .grid-row-item.selected {
+        background-color: #e3f2fd !important;
+        border-left-color: #2196f3 !important;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+      }
+      .grid-row-item.selected .text-blue {
+        color: #1976d2 !important;
+      }
+    `;
+    document.head.appendChild(style);
+    
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
   const onRowClick = useCallback(
-    async (event: any) => {
-      debugger;
+    (event: any) => {
       const _event = event.data != undefined ? event : event?.event;
       const clickedRow = _event.data;
       
-      const transactionMasterID = parseInt( (input.isInvTrans ? clickedRow.invTransactionMasterID : clickedRow.accTransactionMasterID) || "0", 10);
+      const transactionMasterID = parseInt(
+        (input.isInvTrans ? clickedRow.invTransactionMasterID : clickedRow.accTransactionMasterID) || "0", 
+        10
+      );
 
-      setInput((prev: any) => {
-        return {
-          ...prev,
-          transactionMasterID: transactionMasterID
-        }
+      // Update state for content component
+      setInput((prev) => ({
+        ...prev,
+        transactionMasterID: transactionMasterID
+      }));
+
+      // Pure DOM manipulation for selection styling
+      requestAnimationFrame(() => {
+        // Remove previous selection
+        document.querySelectorAll('.grid-row-item.selected').forEach(el => {
+          el.classList.remove('selected');
+        });
+        
+        // Add selection to clicked row
+        document.querySelectorAll('.grid-row-item').forEach(el => {
+          const rowId = el.getAttribute('data-row-id');
+          if (rowId === String(transactionMasterID)) {
+            el.classList.add('selected');
+          }
+        });
       });
-      // setSelectedRow(transactionMasterID);
+
+      // Update ref
+      selectedRowIdRef.current = transactionMasterID;
     },
-    [input]
+    [input.isInvTrans]
   );
 
-
-  const columnstwo: DevGridColumn[] = useMemo(() => [
-    {
-      dataField:input.isInvTrans ?  "invTransactionMasterID" :  "accTransactionMasterID",
-      caption: t("Actions"),
-      allowSearch: true,
-      allowSorting: false,
-      allowFiltering: false,
-      fixed: true,
-      fixedPosition: "right",
-      width: 100,
-      cellRender: (cellElement: any) => {
-        const rowId = parseInt((input.isInvTrans ? cellElement.data?.invTransactionMasterID: cellElement.data?.accTransactionMasterID) || "0", 10);
-        // const isSelected = rowId === selectedRowId && selectedRowId !== null && selectedRowId !== 0;
-        const isSelected = false;
-        return (
-          <div className={`bg-white p-4 transition-all duration-300 ease-in-out 
-            ${isSelected 
-              ? 'bg-[#e3f2fd] border-l-4 border-blue-500 ring-2 ring-blue-300' 
-              : 'hover:bg-[#f1f1fa] hover:ring-2 hover:ring-blue-300'
-            }`}
-          >
-            <div className="w-full flex flex-row">
-              <div className="w-1/2 flex items-center">
-                <CalendarDays className="mr-1 w-4 h-4 text-gray-500 font-semibold !text-[10px]" />
-                <p className="text-gray-600 font-medium !text-[12px]">
-                  {new Date(
-                    cellElement.data?.transactionDate
-                  ).toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                  })}
-                </p>
+  // Column definitions - static, won't cause re-render
+  const columnstwo: DevGridColumn[] = useMemo(() => {
+    return [
+      {
+        dataField: input.isInvTrans ? "invTransactionMasterID" : "accTransactionMasterID",
+        caption: t("Actions"),
+        allowSearch: true,
+        allowSorting: false,
+        allowFiltering: false,
+        fixed: true,
+        fixedPosition: "right",
+        width: 100,
+        cellRender: (cellElement: any) => {
+          const rowId = parseInt(
+            (input.isInvTrans ? cellElement.data?.invTransactionMasterID : cellElement.data?.accTransactionMasterID) || "0", 
+            10
+          );
+          
+          // Initial render - check if this should be selected
+          const isInitiallySelected = rowId === selectedRowIdRef.current && selectedRowIdRef.current !== 0;
+          
+          return (
+            <div 
+              data-row-id={rowId}
+              className={`grid-row-item p-4 cursor-pointer bg-white border-l-4 border-transparent ${isInitiallySelected ? 'selected' : ''}`}
+            >
+              <div className="w-full flex flex-row">
+                <div className="w-1/2 flex items-center">
+                  <CalendarDays className="mr-1 w-4 h-4 text-gray-500 font-semibold !text-[10px]" />
+                  <p className="text-gray-600 font-medium !text-[12px]">
+                    {new Date(
+                      cellElement.data?.transactionDate
+                    ).toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })}
+                  </p>
+                </div>
+                <div className="w-1/2 flex items-center justify-end">
+                  <p className="text-blue font-medium text-gray-800">
+                    {cellElement.data?.voucherNumber}
+                  </p>
+                </div>
               </div>
-              <div className="w-1/2 flex items-center justify-end">
-                <p className={`font-medium ${isSelected ? 'text-blue-700' : 'text-gray-800'}`}>
-                  {cellElement.data?.voucherNumber}
+              <div className="w-full flex justify-end">
+                <div className="text-right">
+                  <p className="text-blue font-medium text-gray-800">
+                    {cellElement.data?.amount}
+                  </p>
+                </div>
+              </div>
+              <div className="pt-2">
+                <p className="text-gray-600 font-normal overflow-hidden text-ellipsis whitespace-nowrap">
+                  {cellElement.data?.particulars}
                 </p>
               </div>
             </div>
-            <div className="w-full flex justify-end">
-              <div className="text-right">
-                <p className={`font-medium ${isSelected ? 'text-blue-700' : 'text-gray-800'}`}>
-                  {cellElement.data?.amount}
-                </p>
-              </div>
-            </div>
-            <div className="pt-2">
-              <p className="text-gray-600 font-normal overflow-hidden text-ellipsis whitespace-nowrap">
-                {cellElement.data?.particulars}
-              </p>
-            </div>
-          </div>
-        );
+          );
+        },
       },
-    },
-    {
-      dataField: "transactionDate",
-      visible: false,
-      allowFiltering: true,
-      dataType: "date",
-    },
-    {
-      dataField: "voucherNumber",
-      visible: false,
-      allowFiltering: true,
-      dataType: "string",
-    },
-    {
-      dataField: "amount",
-      visible: false,
-      allowFiltering: true,
-      dataType: "number",
-    },
-    {
-      dataField: "particulars",
-      visible: false,
-      allowFiltering: true,
-      dataType: "string",
-    },
-  ], [t, selectedRowId]);
-  
+      {
+        dataField: "transactionDate",
+        visible: false,
+        allowFiltering: true,
+        dataType: "date",
+      },
+      {
+        dataField: "voucherNumber",
+        visible: false,
+        allowFiltering: true,
+        dataType: "string",
+      },
+      {
+        dataField: "amount",
+        visible: false,
+        allowFiltering: true,
+        dataType: "number",
+      },
+      {
+        dataField: "particulars",
+        visible: false,
+        allowFiltering: true,
+        dataType: "string",
+      },
+    ];
+  }, [t, input.isInvTrans]); // Minimal dependencies
+
   const MemoizedGrid = useMemo(() => {
     return (
       <ERPDevGrid
         columns={columnstwo}
-        keyExpr={input.isInvTrans ?  "invTransactionMasterID" :  "accTransactionMasterID"}
+        keyExpr={input.isInvTrans ? "invTransactionMasterID" : "accTransactionMasterID"}
         height={"89vh"}
-        dataUrl={`${input.isInvTrans ? urls.inv_transaction_base: urls.acc_transaction_base}${input.transactionType}/List/`}
+        dataUrl={`${input.isInvTrans ? urls.inv_transaction_base : urls.acc_transaction_base}${input.transactionType}/List/`}
         method={ActionType.GET}
         postData={{ searchQuery }}
         gridHeader={t("All invoices")}
@@ -234,7 +274,7 @@ const [selectedRowId, setSelectedRow] = useState(0);
         onRowClick={onRowClick}
       />
     );
-  }, [columnstwo, searchQuery]);
+  }, [columnstwo, searchQuery, onRowClick, input.isInvTrans, input.transactionType, t]);
 
   return (
     <>
@@ -268,9 +308,11 @@ const [selectedRowId, setSelectedRow] = useState(0);
         </Box>
 
         {/* Main Content */}
-        <AccTransactionFormContainerViewContent isInvTrans={input.isInvTrans} transactionMasterID={input.transactionMasterID} transactionType={input.transactionType}>
-
-        </AccTransactionFormContainerViewContent>
+        <AccTransactionFormContainerViewContent 
+          isInvTrans={input.isInvTrans} 
+          transactionMasterID={input.transactionMasterID} 
+          transactionType={input.transactionType}
+        />
       </Box>
     </>
   );

@@ -205,6 +205,7 @@ const [selectedRowId, setSelectedRow] = useState(0);
     return (
       <ERPDevGrid
         columns={columnstwo}
+        keyExpr={input.isInvTrans ?  "invTransactionMasterID" :  "accTransactionMasterID"}
         height={"89vh"}
         dataUrl={`${input.isInvTrans ? urls.inv_transaction_base: urls.acc_transaction_base}${input.transactionType}/List/`}
         method={ActionType.GET}

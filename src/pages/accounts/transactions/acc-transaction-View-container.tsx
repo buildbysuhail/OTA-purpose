@@ -35,22 +35,13 @@ import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import urls from "../../../redux/urls";
 import { ActionType } from "../../../redux/types";
 import {
-  BadgePlusIcon,
-  Boxes,
   CalendarDays,
   ChevronUp,
-  CopyPlus,
   EllipsisVertical,
-  Eraser,
-  FileText,
-  Group,
   Mail,
   MessageCircle,
   MessageSquare,
-  Pencil,
   Printer,
-  RefreshCw,
-  Share2,
   Trash2,
 } from "lucide-react";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
@@ -70,23 +61,20 @@ export interface TransactionViewProps {
   title?: string;
   drCr?: string;
   voucherNo?: number;
-  transactionMasterID?: number,
-  financialYearID?: number,
-  isTeller?: boolean | false,
+  transactionMasterID?: number;
+  financialYearID?: number;
+  isTeller?: boolean | false;
 }
 
 const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (
   props
 ) => {
-  // const [searchQuery, setSearchQuery] = useState<string>('');
-  //   const handleSearch = (query: string) => {
-  //   setSearchQuery(query);
-  // };
-debugger;
-const { printVoucher } = useAccPrint();
+  debugger;
+  const { printVoucher } = useAccPrint();
   const [searchParams] = useSearchParams();
   const { voucherNo: voucherNoParam } = useParams<{ voucherNo: string }>();
   const { searchQuery } = useSearch();
+  
   const getParamOrProp = <T extends string | number>(
     key: keyof TransactionViewProps,
     isNumber: boolean = false
@@ -121,45 +109,41 @@ const { printVoucher } = useAccPrint();
       0,
   });
 
-const shallowEqual = (a: Record<string, any>, b: Record<string, any>) => {
-  const aKeys = Object.keys(a);
-  const bKeys = Object.keys(b);
-  if (aKeys.length !== bKeys.length) return false;
-  for (const k of aKeys) {
-    if (String(a[k]) !== String(b[k])) return false; // string compare to normalize types
-  }
-  return true;
-};
-
-useEffect(() => {
-  const newInput = {
-    voucherType: getParamOrProp<string>("voucherType") || input.voucherType,
-    isInvTrans: (getParamOrProp<string>("isInvTrans") || input.isInvTrans) as boolean,
-    transactionType: input.transactionType, // keep existing transactionType unless you REALLY need to change it
-    formCode: getParamOrProp<string>("formCode") || input.formCode,
-    voucherPrefix: getParamOrProp<string>("voucherPrefix") || input.voucherPrefix,
-    formType: getParamOrProp<string>("formType") || input.formType,
-    title: getParamOrProp<string>("title") || input.title,
-    drCr: getParamOrProp<string>("drCr") || input.drCr,
-    voucherNo: Number(voucherNoParam) || input.voucherNo,
-    transactionMasterID: getParamOrProp<number>("transactionMasterID", true) || input.transactionMasterID,
-    financialYearID: getParamOrProp<number>("financialYearID", true) || input.financialYearID,
+  const shallowEqual = (a: Record<string, any>, b: Record<string, any>) => {
+    const aKeys = Object.keys(a);
+    const bKeys = Object.keys(b);
+    if (aKeys.length !== bKeys.length) return false;
+    for (const k of aKeys) {
+      if (String(a[k]) !== String(b[k])) return false;
+    }
+    return true;
   };
 
-  if (!shallowEqual(newInput, input)) {
-    setInput(newInput);
-  }
-  // intentionally exclude `input` from deps to avoid infinite loop,
-  // but include searchParams and voucherNoParam so effect runs when URL changes
-}, [searchParams, voucherNoParam, props, input.transactionMasterID]); // if you need props in compare, include them too
+  useEffect(() => {
+    const newInput = {
+      voucherType: getParamOrProp<string>("voucherType") || input.voucherType,
+      isInvTrans: (getParamOrProp<string>("isInvTrans") || input.isInvTrans) as boolean,
+      transactionType: input.transactionType,
+      formCode: getParamOrProp<string>("formCode") || input.formCode,
+      voucherPrefix: getParamOrProp<string>("voucherPrefix") || input.voucherPrefix,
+      formType: getParamOrProp<string>("formType") || input.formType,
+      title: getParamOrProp<string>("title") || input.title,
+      drCr: getParamOrProp<string>("drCr") || input.drCr,
+      voucherNo: Number(voucherNoParam) || input.voucherNo,
+      transactionMasterID: getParamOrProp<number>("transactionMasterID", true) || input.transactionMasterID,
+      financialYearID: getParamOrProp<number>("financialYearID", true) || input.financialYearID,
+    };
 
-  // Set max height based on window size
+    if (!shallowEqual(newInput, input)) {
+      setInput(newInput);
+    }
+  }, [searchParams, voucherNoParam, props, input.transactionMasterID]);
 
   const { t } = useTranslation("transaction");
   const formState: any = useAppSelector((state: RootState) => props.isInvTrans ?  state.InventoryTransaction : state.AccTransaction);
 
   const navigate = useNavigate();
-   const location = useLocation();
+  const location = useLocation();
   const { hasUnsavedChanges, setIsModalOpen } = useUnsavedChangesWarning();
   const dispatch = useDispatch();
 
@@ -172,80 +156,71 @@ useEffect(() => {
     }
   };
 
-
   const [selectedRow, setSelectedRow] = useState<any>(null);
+  const [selectedRowId, setSelectedRowId] = useState<string | number | null>(null);
 
   const onRowClick = useCallback(
-   
     async (event: any) => {
-       
       const _event = event.data != undefined ? event : event?.event;
       const clickedRow = _event.data;
-        // Extract values
-    const transactionMasterID = parseInt(clickedRow.accTransactionMasterID || "0", 10);
-    const vchtype = clickedRow.voucherType;
-    const voucherform = clickedRow.formType;
-    const prefix = clickedRow.lastPrefix || clickedRow.voucherPrefix;
-    const vchno = clickedRow.lastVNo || clickedRow.voucherNumber;
-    const financialYearID = parseInt(clickedRow.financialYearID || "0", 10);
+      
+      const transactionMasterID = parseInt(clickedRow.accTransactionMasterID || "0", 10);
+      const vchtype = clickedRow.voucherType;
+      const voucherform = clickedRow.formType;
+      const prefix = clickedRow.lastPrefix || clickedRow.voucherPrefix;
+      const vchno = clickedRow.lastVNo || clickedRow.voucherNumber;
+      const financialYearID = parseInt(clickedRow.financialYearID || "0", 10);
 
-    //  Find transaction route details
-    const tr = transactionRoutes.find((x) => x.voucherType === vchtype);
-const newInput = {
-    voucherType: vchtype,
-    isInvTrans: input.isInvTrans,
-    transactionType: input.transactionType, // keep existing transactionType unless you REALLY need to change it
-    formCode: clickedRow?.formCode,
-    voucherPrefix: prefix,
-    formType: voucherform,
-    title:  input.title,
-    drCr:  input.drCr,
-    voucherNo: vchno,
-    transactionMasterID: transactionMasterID,
-    financialYearID: financialYearID,
-  };
+      // Set selected row ID for highlighting - use the ID as number
+      setSelectedRowId(transactionMasterID);
 
-  if (!shallowEqual(newInput, input)) {
-    setInput(newInput);
-  }
-    //  Prepare full transaction data object (same as Component A)
-    let transactionData: Record<string, string | number | undefined> = {};
-    if (parseInt(vchno, 10) > 0) {
-      transactionData = {
-        transactionMasterID,
-        formType: voucherform,
-        voucherPrefix: prefix?.toUpperCase(),
+      const tr = transactionRoutes.find((x) => x.voucherType === vchtype);
+      const newInput = {
         voucherType: vchtype,
-        financialYearID,
-        formCode: tr?.formCode,
-        transactionBase: tr?.transactionBase,
-        title: tr?.title,
-        drCr: tr?.drCr,
+        isInvTrans: input.isInvTrans,
+        transactionType: input.transactionType,
+        formCode: clickedRow?.formCode,
+        voucherPrefix: prefix,
+        formType: voucherform,
+        title:  input.title,
+        drCr:  input.drCr,
+        voucherNo: vchno,
+        transactionMasterID: transactionMasterID,
+        financialYearID: financialYearID,
       };
-    }
 
-    //  Convert object to query string
-    const queryString = new URLSearchParams(
-      Object.entries(transactionData).reduce((acc, [key, value]) => {
-        acc[key] = String(value ?? "");
-        return acc;
-      }, {} as Record<string, string>)
-    ).toString();
+      if (!shallowEqual(newInput, input)) {
+        setInput(newInput);
+      }
+      
+      let transactionData: Record<string, string | number | undefined> = {};
+      if (Number.parseInt(vchno, 10) > 0) {
+        transactionData = {
+          transactionMasterID,
+          formType: voucherform,
+          voucherPrefix: prefix?.toUpperCase(),
+          voucherType: vchtype,
+          financialYearID,
+          formCode: tr?.formCode,
+          transactionBase: tr?.transactionBase,
+          title: tr?.title,
+          drCr: tr?.drCr,
+        };
+      }
 
-const newUrl = `/accounts/transactions/CashPayment/${vchno}${queryString ? `?${queryString}` : ""}`;
+      const queryString = new URLSearchParams(
+        Object.entries(transactionData).reduce((acc, [key, value]) => {
+          acc[key] = String(value ?? "");
+          return acc;
+        }, {} as Record<string, string>)
+      ).toString();
 
-  // IMPORTANT: Only navigate when URL actually changes
-  // const currentFullUrl = `${location.pathname}${location.search || ""}`;
-  // if (currentFullUrl !== newUrl) {
-  //   navigate(newUrl, { replace: true });
-  // }
-      setSelectedRow(clickedRow); // Set the selected row data
+      const newUrl = `/accounts/transactions/CashPayment/${vchno}${queryString ? `?${queryString}` : ""}`;
 
+      setSelectedRow(clickedRow);
     },
-    []
+    [input]
   );
-
-
 
   const columns: DevGridColumn[] = useMemo(
     () => [
@@ -259,13 +234,19 @@ const newUrl = `/accounts/transactions/CashPayment/${vchno}${queryString ? `?${q
         fixedPosition: "right",
         width: 100,
         cellRender: (cellElement: any) => {
+          const rowId = parseInt(cellElement.data?.accTransactionMasterID || "0", 10);
+          const isSelected = rowId === selectedRowId && selectedRowId !== null && selectedRowId !== 0;
           return (
-            <div className="bg-white p-4 hover:bg-[#0f0f0f83] shadow-md transition-transform transform duration-300 ease-in-out hover:scale-105 hover:bg-gradient-to-r hover:from-[#dfe7f9] hover:to-[#f1f7ff] hover:ring-2 hover:ring-blue-300">
+            <div className={`bg-white p-4 shadow-md transition-all duration-300 ease-in-out 
+              ${isSelected 
+                ? 'bg-[#e3f2fd] border-l-4 border-blue-500 ring-2 ring-blue-300' 
+                : 'hover:bg-gradient-to-r hover:from-[#dfe7f9] hover:to-[#f1f7ff] hover:ring-2 hover:ring-blue-300 hover:scale-105'
+              }`}
+            >
               <div className="w-full flex flex-row">
                 <div className="w-1/2  flex items-center ">
                   <CalendarDays className="mr-1 w-4 h-4 text-gray-500 font-semibold !text-[10px]" />
                   <p className="text-gray-600 font-medium !text-[12px]">
-                    {/* <CalendarDays /> */}
                     {new Date(
                       cellElement.data?.transactionDate
                     ).toLocaleDateString("en-GB", {
@@ -276,27 +257,14 @@ const newUrl = `/accounts/transactions/CashPayment/${vchno}${queryString ? `?${q
                   </p>
                 </div>
                 <div className="w-1/2  flex items-center justify-end ">
-                  {/* <p className="text-gray-800 font-medium">
-                        {cellElement.data?.amount}
-                      </p> */}
-                  {/* <p className="text-gray-800 font-medium">
-                        =and=
-                      </p> */}
-                  <p className="text-gray-800 font-medium">
+                  <p className={`font-medium ${isSelected ? 'text-blue-700' : 'text-gray-800'}`}>
                     {cellElement.data?.voucherNumber}
                   </p>
                 </div>
               </div>
-              {/* <div className="w-full flex flex-row">
-                    <div className="  flex items-center justify-end ">
-                      <p className="text-gray-800 font-medium !text-right" >
-                        {cellElement.data?.amount}
-                      </p>
-                    </div>
-                  </div> */}
               <div className="w-full flex justify-end">
                 <div className="text-right">
-                  <p className="text-gray-800 font-medium">
+                  <p className={`font-medium ${isSelected ? 'text-blue-700' : 'text-gray-800'}`}>
                     {cellElement.data?.amount}
                   </p>
                 </div>
@@ -311,22 +279,29 @@ const newUrl = `/accounts/transactions/CashPayment/${vchno}${queryString ? `?${q
         },
       },
     ],
-    [t] // Dependency for columns
+    [t, selectedRowId]
   );
 
-  const columnstwo: DevGridColumn[] = [
+  const columnstwo: DevGridColumn[] = useMemo(() => [
     {
       dataField: "accTransactionMasterID",
       caption: t("Actions"),
       allowSearch: true,
       allowSorting: false,
-      allowFiltering: false, // Disable filtering on ID since it’s not relevant
+      allowFiltering: false,
       fixed: true,
       fixedPosition: "right",
       width: 100,
       cellRender: (cellElement: any) => {
+        const rowId = parseInt(cellElement.data?.accTransactionMasterID || "0", 10);
+        const isSelected = rowId === selectedRowId && selectedRowId !== null && selectedRowId !== 0;
         return (
-          <div className="bg-white p-4 hover:bg-[#0f0f0f83] shadow-md transition-transform transform duration-300 ease-in-out hover:scale-105 hover:bg-gradient-to-r hover:from-[#dfe7f9] hover:to-[#f1f7ff] hover:ring-2 hover:ring-blue-300">
+          <div className={`bg-white p-4 transition-all duration-300 ease-in-out 
+            ${isSelected 
+              ? 'bg-[#e3f2fd] border-l-4 border-blue-500 ring-2 ring-blue-300' 
+              : 'hover:bg-[#f1f1fa] hover:ring-2 hover:ring-blue-300'
+            }`}
+          >
             <div className="w-full flex flex-row">
               <div className="w-1/2 flex items-center">
                 <CalendarDays className="mr-1 w-4 h-4 text-gray-500 font-semibold !text-[10px]" />
@@ -341,14 +316,14 @@ const newUrl = `/accounts/transactions/CashPayment/${vchno}${queryString ? `?${q
                 </p>
               </div>
               <div className="w-1/2 flex items-center justify-end">
-                <p className="text-gray-800 font-medium">
+                <p className={`font-medium ${isSelected ? 'text-blue-700' : 'text-gray-800'}`}>
                   {cellElement.data?.voucherNumber}
                 </p>
               </div>
             </div>
             <div className="w-full flex justify-end">
               <div className="text-right">
-                <p className="text-gray-800 font-medium">
+                <p className={`font-medium ${isSelected ? 'text-blue-700' : 'text-gray-800'}`}>
                   {cellElement.data?.amount}
                 </p>
               </div>
@@ -366,7 +341,7 @@ const newUrl = `/accounts/transactions/CashPayment/${vchno}${queryString ? `?${q
       dataField: "transactionDate",
       visible: false,
       allowFiltering: true,
-      dataType: "date", // Ensures proper date filtering
+      dataType: "date",
     },
     {
       dataField: "voucherNumber",
@@ -378,7 +353,7 @@ const newUrl = `/accounts/transactions/CashPayment/${vchno}${queryString ? `?${q
       dataField: "amount",
       visible: false,
       allowFiltering: true,
-      dataType: "number", // Ensures proper numeric filtering
+      dataType: "number",
     },
     {
       dataField: "particulars",
@@ -386,7 +361,8 @@ const newUrl = `/accounts/transactions/CashPayment/${vchno}${queryString ? `?${q
       allowFiltering: true,
       dataType: "string",
     },
-  ];
+  ], [t, selectedRowId]);
+  
   const phone = window.innerWidth <= 600;
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
@@ -394,7 +370,6 @@ const newUrl = `/accounts/transactions/CashPayment/${vchno}${queryString ? `?${q
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      // Check if the click is outside the popup AND not on the button
       if (
         popupRef.current &&
         !popupRef.current.contains(event.target as Node) &&
@@ -411,333 +386,178 @@ const newUrl = `/accounts/transactions/CashPayment/${vchno}${queryString ? `?${q
     };
   }, []);
 
-
-
-    // const groupKey = (input?.voucherType ?? "") as VoucherType;
-    // const typeKey = template?.templateType?.toUpperCase() ?? "STANDARD";
-    // const kindKey = template?.templateKind ;
-    // const templateToRender = useMemo(() => {
-    //   return templateConfig?.[groupKey]?.[typeKey]?.[kindKey] ?? null;
-    // }, [groupKey, typeKey, kindKey]);
-
-     
   const {
     stableTemplateProps,
     loading,
     templateStyleProperties
-    } = useTemplateDesigner({ manuvalTemplateFeatch:true, isInvTrans: input.isInvTrans 
-    ,MasterIDParam:input.transactionMasterID,transactionType:input.transactionType
-    })
+  } = useTemplateDesigner({ 
+    manuvalTemplateFeatch:true, 
+    isInvTrans: input.isInvTrans,
+    MasterIDParam:input.transactionMasterID,
+    transactionType:input.transactionType
+  })
 
-
-const MemoizedGrid = useMemo(() => {
-  return (
-    <ERPDevGrid
-      columns={columnstwo} // already stable? If dynamic, memoize separately
-      dataUrl={`${input.isInvTrans ? urls.inv_transaction_base: urls.acc_transaction_base}${input.transactionType}/List/`}
-      method={ActionType.GET}
-      postData={{ searchQuery }}
-      gridHeader={t("transactions")}
-      gridId="transaction-grid"
-      remoteOperations={{
-        paging: true,
-        filtering: true,
-        sorting: true,
-      }}
-      gridAddButtonIcon="ri-add-line"
-      pageSize={40}
-      scrollingMode="virtual"
-      allowExport={true}
-      allowSearching={true}
-      hideDefaultExportButton={true}
-      hideDefaultSearchPanel={false}
-      hideGridAddButton={true}
-      hideGridHeader={true}
-      showColumnHeaders={false}
-      className="HistorySidebarcustom"
-      ShowGridPreferenceChooser={false}
-      onRowClick={onRowClick}
-    />
-  );
-}, []);
-
+  const MemoizedGrid = useMemo(() => {
+    return (
+      <ERPDevGrid
+        columns={columnstwo}
+        height={"89vh"}
+        dataUrl={`${input.isInvTrans ? urls.inv_transaction_base: urls.acc_transaction_base}${input.transactionType}/List/`}
+        method={ActionType.GET}
+        postData={{ searchQuery }}
+        gridHeader={t("All invoices")}
+        gridId="transaction-grid"
+        remoteOperations={{
+          paging: true,
+          filtering: true,
+          sorting: true,
+        }}
+        gridAddButtonIcon="ri-add-line"
+        showPrintButton={false}
+        pageSize={40}
+        scrollingMode="virtual"
+        allowExport={false}
+        allowSearching={true}
+        hideDefaultExportButton={true}
+        hideDefaultSearchPanel={false}
+        hideGridAddButton={true}
+        hideGridHeader={true}
+        showColumnHeaders={false}
+        className="HistorySidebarcustomtwo"
+        ShowGridPreferenceChooser={false}
+        onRowClick={onRowClick}
+      />
+    );
+  }, [columnstwo, onRowClick, searchQuery]);
 
   return (
     <>
-      {/* <InvoiceView/> */}
       <Box display="flex" height="100vh">
         {/* Sidebar */}
         <Box
           width={350}
           bgcolor="#fafbfc"
           borderRight="1px solid #eee"
-          p={2}
+          position="fixed"
           sx={{
+            overflowY: "auto",
+            height: "100vh",
             display: {
-              xs: "none", // visible on extra-small
-              sm: "none", // visible on small
-              md: "none", // visible on medium
-              lg: "block", // visible on large (<1280px)
-              xl: "block", // hidden on extra-large (>=1280px)
+              xs: "none",
+              sm: "none",
+              md: "none",
+              lg: "block",
+              xl: "block",
             },
           }}
         >
-          <div className="py-0 bg-gray-50 h-[94vh] ">
-            {/* Header */}
-            <div className="flex justify-between items-center mb-1 px-4">
-              <h6 className=" font-semibold text-[15px] text-gray-800">
-                All invoices
-              </h6>
+          <div className="py-0 bg-gray-50 h-[94vh]">
+            <div className="flex items-center justify-between px-3">
             </div>
 
-            {/* Content */}
             <div className="space-y-4">
-              {/* {isOpen && */}
-     {MemoizedGrid}
-              {/* } */}
-              {/* Transaction Date */}
+              {MemoizedGrid}
             </div>
           </div>
         </Box>
 
         {/* Main Content */}
-        <Box flex={1} p={3} bgcolor="#fff">
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <Typography variant="h5">
-              {input?.voucherNo}
-            </Typography>
-            <Box>
-              <div
-                className={`!overflow-visible flex items-center ${
-                  phone ? "justify-evenly" : "justify-end"
-                }  space-x-2 p-1 w-full overflow-x-auto ${
-                  phone ? "bg-[#f9fafb]" : ""
-                } ${phone ? "" : ""} ${phone ? "" : ""}`}
+        <Box flex={1} bgcolor="#fff" sx={{ overflowY: "auto", marginLeft: { lg: "350px", xl: "350px" } }}>
+          <header className="fixed  z-40 w-[-webkit-fill-available] h-[52px] bg-white flex items-center justify-between gap-4 px-6 py-3 border-b border-gray-200">
+            <h1 className="text-sm md:text-sm font-semibold tracking-tight text-[color:var(--color-foreground)]">
+              {`INV-${String(input?.voucherNo || "").padStart(6, "0")}`}
+            </h1>
+            
+            <div className="flex items-center gap-1 border border-gray-200 rounded-md bg-white p-0.5">
+              {/* Edit Button */}
+              <button
+                type="button"
+                className="h-8 px-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded inline-flex items-center gap-1.5 transition-colors"
+                title={t("edit")}
+                aria-label={t("edit")}
               >
-                {/* Edit Button */}
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                <span>Edit</span>
+              </button>
+
+              <div className="w-px h-6 bg-gray-200" />
+
+              {/* PDF/Print Dropdown Button */}
+              <button
+                type="button"
+                className="h-8 px-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded inline-flex items-center gap-1.5 transition-colors"
+                onClick={() => printVoucher(input.transactionMasterID, input.transactionType ?? "", stableTemplateProps.template, input.voucherType, formState.transaction.master.transactionDate)}
+                title={t("print")}
+              >
+                <Printer className="w-4 h-4" />
+                <span>PDF/Print</span>
+                <ChevronUp className="w-3.5 h-3.5 opacity-60 rotate-180" />
+              </button>
+
+              <div className="w-px h-6 bg-gray-200" />
+
+              {/* Delete Button */}
+              <button
+                type="button"
+                className="h-8 px-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded inline-flex items-center gap-1.5 transition-colors"
+                title={t("Delete")}
+                aria-label={t("Delete")}
+              >
+                <Trash2 className="w-4 h-4" />
+                <span>Delete</span>
+              </button>
+            </div>
+          </header>
+
+          <Paper elevation={0} sx={{ p: 0 }}>
+            <div className="flex justify-center px-2 md:px-6 py-4 mt-[60px]">
+              <div className="relative">
                 <div
-                  className="group relative inline-flex flex-col items-center ps-[5px]"
-                  title={t("edit")}
+                  className="bg-white shadow-sm border border-[color:var(--color-border)] overflow-hidden rounded-sm"
+                  style={{
+                    width: `${templateStyleProperties.previewWidth ?? 500}pt`,
+                    height: `${templateStyleProperties.previewHeight ?? 500}pt`,
+                  }}
                 >
-                  <button
-                    //  disabled={formState.transaction.master.invTransactionMasterId < 1 || (formState.transaction.master.invTransactionMasterId > 0 && formState.formElements.pnlMasters.disabled !== true)}
-                    className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${
-                      phone ? "p-0.5" : "p-3"
-                    } rounded-md hover:bg-gray-200 transition-colors`}
-                    //  onClick={handleEdit}
+                  <div
+                    className="relative"
+                    style={{ width: "100%", height: "100%" }}
                   >
-                    <Pencil className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-                  </button>
-                </div>
-                {/* send Button */}
-
-                <div className="relative">
-                  <button
-                    ref={buttonRef}
-                    onClick={() => setIsPopupVisible((prev: any) => !prev)}
-                    className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${
-                      phone ? "p-0.5" : "p-3"
-                    }  rounded-md hover:bg-gray-200 transition-colors`}
-                    title={t("previous_page")}
-                  >
-                    <Mail className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-                  </button>
-
-                  {isPopupVisible && (
-                    <div
-                      ref={popupRef}
-                      className="absolute rounded-sm dark:bg-dark-bg dark:text-dark-text bg-gray-100 shadow-lg p-4 z-50"
-                      style={{
-                        top: "100%",
-                        left: "-180px",
-                        width: "251px",
-                        marginTop: "8px",
-                      }}
-                    >
-                      <nav className="w-full dark:bg-dark-bg dark:text-dark-text bg-gray-100 text-black">
-                        <ul className="space-y-1">
-                          {/* <p>test23</p> */}
-                          <li>
-                            <button
-                              className="flex items-center w-full px-3 py-2 rounded-md   hover:bg-[#bfdbfe] transition text-gray-700"
-                              style={{ gap: 8 }}
-                            >
-                              <Mail className="w-4 h-4 mr-2" />
-                              Email
-                            </button>
-                          </li>
-                          <li>
-                            <button
-                              className="flex items-center w-full px-3 py-2 rounded-md hover:bg-[#bfdbfe] transition text-gray-700"
-                              style={{ gap: 8 }}
-                            >
-                              {/* You can use another icon here, e.g., MessageCircle */}
-                              <MessageSquare className="w-4 h-4 mr-2" />
-                              SMS
-                            </button>
-                          </li>
-                          <li>
-                            <button
-                              className="flex items-center w-full px-3 py-2 rounded-md hover:bg-[#bfdbfe] transition text-gray-700"
-                              style={{ gap: 8 }}
-                            >
-                              <MessageCircle className="w-4 h-4 mr-2" />
-                              whatsapp
-                            </button>
-                          </li>
-                        </ul>
-                      </nav>
-                    </div>
-                  )}
-                </div>
-                {/* share Button */}
-                <div
-                  className="group relative inline-flex flex-col items-center ps-[5px]"
-                  title={t("edit")}
-                >
-                  <button
-                    //  disabled={formState.transaction.master.invTransactionMasterId < 1 || (formState.transaction.master.invTransactionMasterId > 0 && formState.formElements.pnlMasters.disabled !== true)}
-                    className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${
-                      phone ? "p-0.5" : "p-3"
-                    } rounded-md hover:bg-gray-200 transition-colors`}
-                    //  onClick={handleEdit}
-                  >
-                    <Share2 className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-                  </button>
-                </div>
-
-                {/* pdf Button */}
-                <div
-                  className="group relative inline-flex flex-col items-center ps-[5px]"
-                  title={t("edit")}
-                >
-                  <button
-                    //  disabled={formState.transaction.master.invTransactionMasterId < 1 || (formState.transaction.master.invTransactionMasterId > 0 && formState.formElements.pnlMasters.disabled !== true)}
-                    className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${
-                      phone ? "p-0.5" : "p-3"
-                    } rounded-md hover:bg-gray-200 transition-colors`}
-                    //  onClick={handleEdit}
-                  >
-                    <FileText className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-                  </button>
-                </div>
-                {/* Print Button */}
-                <div
-                  className="group relative inline-flex flex-col items-center ps-[5px]"
-                  title={t("print")}
-                >
-                  <button
-                    //  disabled={formState.transaction.master.invTransactionMasterId < 1 || (formState.transaction.master.invTransactionMasterId > 0 && formState.formElements.pnlMasters.disabled !== true)}
-                    className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${
-                      phone ? "p-0.5" : "p-3"
-                    } rounded-md hover:bg-gray-200 transition-colors`}
-                     onClick={() =>  printVoucher(input.transactionMasterID, input.transactionType ?? "",stableTemplateProps.template,input.voucherType, formState.transaction.master.transactionDate)}
-                  >
-                    <Printer className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-                  </button>
-                </div>
-                {/* clone Button */}
-                <div
-                  className="group relative inline-flex flex-col items-center ps-[5px]"
-                  title={t("print")}
-                >
-                  <button
-                    //  disabled={formState.transaction.master.invTransactionMasterId < 1 || (formState.transaction.master.invTransactionMasterId > 0 && formState.formElements.pnlMasters.disabled !== true)}
-                    className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${
-                      phone ? "p-0.5" : "p-3"
-                    } rounded-md hover:bg-gray-200 transition-colors`}
-                    //  onClick={() => printVoucher(setIsPrintModalOpen, voucherType)}
-                  >
-                    <CopyPlus className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-                  </button>
-                </div>
-                {/* Delete Button */}
-                <div
-                  className="group relative inline-flex flex-col items-center ps-[5px]"
-                  title={t("delete")}
-                >
-                  <button
-                    //  disabled={formState.transaction.master.invTransactionMasterId < 1 || (formState.transaction.master?.invTransactionMasterId > 0 && formState.formElements?.pnlMasters?.disabled !== true)}
-                    className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${
-                      phone ? "p-0.5" : "p-3"
-                    } rounded-md hover:bg-gray-200 transition-colors`}
-                    //  onClick={deleteTransVoucher}
-                  >
-                    <Trash2 className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-                  </button>
-                </div>
-              </div>
-            </Box>
-          </Box>
-          <Divider sx={{ my: 2 }} />
-          <Paper elevation={2} sx={{ p: 3, mt: 2 }}>
-
-                        <div className="flex justify-center p-6 "  >
-                          <div className="relative">
-                            {/* Preview Container with Modern Styling */}
-                            <div
-                              
-                              className=" shadow-lg border border-gray-200 overflow-hidden"
-                              style={{
-                                      width: `${templateStyleProperties.previewWidth??500}pt`,
-                                      height: `${templateStyleProperties.previewHeight??500}pt`,
-                                    }}
-                            >
-
-            
-                              {/* Template Content */}
-                              <div className="relative "
-                              style={{
-                              width: "100%", 
-                              height: "100%",
-
-                              }}
-                              >
-                            {loading  ? (
-                              <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                              </div>
-                            ) : (
-                               stableTemplateProps?.template
-                                ? 
-                                // React.cloneElement(templateToRender.PreviewComponent, {...stableTemplateProps,template})
-                                      <SharedTemplatePreview
-                                        template={stableTemplateProps?.template}
-                                        data={stableTemplateProps?.data}
-                                        qrCodeImages={stableTemplateProps?.qrCodeImages}
-                                  
-                                      />
-                                : (
-                                    <div className="flex items-center justify-center h-full text-gray-500 italic">
-                                     ...No Template Found
-                                    </div>
-                                  )
-                            )}
-
-
-                              </div>
-                            </div>
-            
-                            {/* Drop Shadow Effect */}
-                            <div
-                              className="absolute -bottom-2 -right-2 bg-gray-400/20 dark:bg-gray-600/20 rounded-lg -z-10"
-                              style={{
-                                width: `${templateStyleProperties.previewWidth}pt`,
-                                height: `${templateStyleProperties.previewHeight}pt`,
-                                minHeight: "400px",
-                                
-                              }}
-                            />
+                    {loading  ? (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                      </div>
+                    ) : (
+                      stableTemplateProps?.template
+                        ? 
+                        <SharedTemplatePreview
+                          template={stableTemplateProps?.template}
+                          data={stableTemplateProps?.data}
+                          qrCodeImages={stableTemplateProps?.qrCodeImages}
+                        />
+                        : (
+                          <div className="flex items-center justify-center h-full text-gray-500 italic">
+                            ...No Template Found
                           </div>
-                        </div> 
+                        )
+                    )}
+                  </div>
+                </div>
 
-
-           </Paper>
-
+                <div
+                  aria-hidden
+                  className="absolute -bottom-2 -right-2 bg-black/5 rounded-md -z-10"
+                  style={{
+                    width: `${templateStyleProperties.previewWidth}pt`,
+                    height: `${templateStyleProperties.previewHeight}pt`,
+                    minHeight: "400px",
+                  }}
+                />
+              </div>
+            </div>
+          </Paper>
         </Box>
       </Box>
     </>

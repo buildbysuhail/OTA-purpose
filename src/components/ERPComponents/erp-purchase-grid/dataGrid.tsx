@@ -59,6 +59,7 @@ import { formStateDeleteDetails, formStateHandleFieldChange, formStateTransactio
 import { initialTransactionDetails2, transactionInitialMoreDetails, initialTransactionDetailData } from "../../../pages/inventory/transactions/transaction-type-data";
 import { TransactionDetailKeys, ColumnModel, TransactionDetail, FormElementState, CurrentCell, TransactionFormState, TransactionDetails2, TransactionDetailsMore, SummaryItems } from "../../../pages/inventory/transactions/transaction-types";
 import { ERPScrollArea } from "../erp-scrollbar";
+import usePreferenceData from "../../../utilities/hooks/usePreference";
 
 type DataItem = Record<string, any>;
 export interface SummaryConfig<T = any> {
@@ -1787,6 +1788,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       return visibleColumns;
     }, [columnOrder, formState.gridColumns]);
 
+    const { preferences } = usePreferenceData(columns, gridId);
     const ITEM_HEIGHT =
       window.innerWidth < 480
         ? 125
@@ -2584,6 +2586,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                   {/* Grid Preferences */}
                   <li> 
                         <GridPreferenceChooser
+                        initialPreferences={preferences}
                         ref={preferenceChooserRef}
                         gridId={gridId}
                         columns={

@@ -25,7 +25,7 @@ export function applyGridColumnPreferences(
   }
   const updatedColumns = columns.map((column) => {
     const preference = preferences?.columnPreferences?.find(
-      (p) => p.dataField === column.dataField
+      (p) => p.dataField === column?.dataField
     );
     if (preference) {
       return {

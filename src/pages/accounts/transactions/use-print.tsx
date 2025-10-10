@@ -36,7 +36,7 @@ export const useAccPrint = () => {
 
 
   const printVoucher = async (masterID: number,transactionType: string,printTmeplate?:any ,transDate?: string,voucherType?: string,formType?:string,customerType?:string,) => {
-  debugger
+
     transDate = transDate??(new Date()).toISOString();
    
     const template =printTmeplate? printTmeplate : await getOrFetchTemplate(voucherType??'', formType,customerType);

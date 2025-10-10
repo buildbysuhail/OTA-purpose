@@ -69,8 +69,11 @@ export interface TransactionViewProps {
 const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (
   props
 ) => {
-  debugger;
-  const { printVoucher } = useAccPrint();
+  // const [searchQuery, setSearchQuery] = useState<string>('');
+  //   const handleSearch = (query: string) => {
+  //   setSearchQuery(query);
+  // };
+const { printVoucher } = useAccPrint();
   const [searchParams] = useSearchParams();
   const { voucherNo: voucherNoParam } = useParams<{ voucherNo: string }>();
   const { searchQuery } = useSearch();

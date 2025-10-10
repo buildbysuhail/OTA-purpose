@@ -21,6 +21,7 @@ import { fetchTemplateFromApiById, getOrFetchTemplate, loadPrintData } from "../
 import { merge } from 'lodash';
 import { generateQRCodeDataUrl } from "../utils/qrSvgToImg";
 import { PrintDetailDto, PrintResponse } from "../../use-print-type";
+import { compressData } from "../../../utilities/compression";
 
 const api = new APIClient();
 
@@ -265,13 +266,9 @@ debugger;
         setLoading(true);
 
         const _template = await fetchTemplateFromApiById(id);
-        if (!_template) return null;
 
-        if (_template && (_template?.id ?? 0) > 0) {
-          const initial = templateInitialState().activeTemplate;
-          const _returnData = merge({}, initial, _template);
-          dispatch(setTemplate(_returnData));
-        }
+          dispatch(setTemplate(_template));
+        
       } catch (error) {
         console.error("Error fetching template data:", error);
         ERPToast.show(t("failed_to_fetch_template"));
@@ -321,7 +318,7 @@ debugger;
           template_type: designerType,
         },
       };
-
+      const compressedContent = await compressData(tmpTemplate);
       const activeTemplates: TemplateDto = {
         templateType: tmpTemplate.propertiesState.template_type ?? "standard",
         templateKind: tmpTemplate.propertiesState.template_kind ?? "standard",
@@ -330,7 +327,7 @@ debugger;
         formType: tmpTemplate.propertiesState?.template_formType ?? "",
         customerType: tmpTemplate.propertiesState?.template_customerType ?? "",
         thumbImage: dataUrl,
-        content: JSON.stringify(tmpTemplate),
+        content: compressedContent,
         isCurrent: tmpTemplate.isCurrent ?? false,
         backgroundImage: tmpTemplate.background_image ?? "",
         backgroundImageHeader: tmpTemplate.background_image_header ?? "",
@@ -342,7 +339,7 @@ debugger;
 
       const initial = templateInitialState().activeTemplate;
       const _returnData = merge({}, initial, activeTemplates);
-      dispatch(setTemplate(_returnData));
+      // dispatch(setTemplate(_returnData));
 
       try {
         const res = await api.postAsync(Urls.templates, _returnData);

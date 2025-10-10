@@ -15,6 +15,8 @@ import type VoucherType from "../../enums/voucher-types"
 import { Badge, FileSpreadsheet, Gem, LayoutList, ShoppingBag, Search, Sparkles, Grid3X3, List } from "lucide-react"
 import { useAppDispatch } from "../../utilities/hooks/useAppDispatch"
 import { fetchTemplateFromApiById } from "../use-print"
+import { merge } from "lodash"
+import { templateInitialState } from "../../redux/reducers/TemplateReducer"
 
 interface ChooseTemplateProps {
   templateGroup: VoucherType | string
@@ -194,6 +196,8 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
     const length = tempData?.length || 0
      const _template = await fetchTemplateFromApiById(template.id);
           if(!_template) return null;
+            const initial = templateInitialState().activeTemplate;
+    const _returnData = merge({}, initial, _template);
     const propertiesState = {
       ..._template.propertiesState,
       templateName: t("untitled_template") + (length + 1),

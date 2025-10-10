@@ -10,6 +10,8 @@ import { merge } from 'lodash';
 import { TemplateState } from './InvoiceDesigner/Designer/interfaces';
 import { getStorageString, setStorageString } from '../utilities/storage-utils';
 import { base64ToModelUnicode, base64UnicodeToModel, modelToBase64Unicode, safeBase64Decode, toCamelCase } from '../utilities/jsonConverter';
+import { decompressData } from '../utilities/compression';
+import { templateInitialState } from '../redux/reducers/TemplateReducer';
 
 
 type VoucherType = {
@@ -1787,14 +1789,15 @@ export const fetchDefaultTemplateFromApi = async (
       console.warn("No default template response received.");
       return null;
     }
-
-    const parsedTemplate = parseTemplateContent<TemplateState<unknown>>(res);
+    const templateContent = await decompressData(res.content);
+    const parsedTemplate = parseTemplateContent<TemplateState<unknown>>({...res,content:templateContent});
     if (!parsedTemplate) {
       console.warn("Failed to parse default template.");
       return null;
     }
-
-    return parsedTemplate;
+    const initial = templateInitialState().activeTemplate;
+    const merged = merge({}, initial, parsedTemplate);
+    return merged;
   } catch (error) {
     console.error("Error fetching default template:", error);
     return null;
@@ -1807,8 +1810,16 @@ export const fetchTemplateFromApiById = async (
   try {
     const api = new APIClient();
     const res = await api.getAsync(`${Urls.templates}${id}`);
-    const parsed = parseTemplateContent<TemplateState<unknown>>(res);
-    return parsed;
+    const templateContent = await decompressData(res.content);
+    const parsed = parseTemplateContent<TemplateState<unknown>>({...res,content:templateContent});
+       if (!parsed) {
+      console.warn("⚠️ Failed to parse template content.");
+      return null;
+    }
+
+    const initial = templateInitialState().activeTemplate;
+    const merged = merge({}, initial, parsed);
+    return merged;
   } catch (error) {
     console.error("Error fetching template:", error);
     return null;
@@ -1819,21 +1830,29 @@ export function parseTemplateContent<T extends object>(
   templateRes: any
 ): T | null {
   try {
-    const cc = JSON.parse(templateRes.content, (key, value) => {
-      if (value && typeof value === "object" && !Array.isArray(value)) {
+      let cc = templateRes.content;
+    
+    // If for some reason it's still a string, parse it
+    if (typeof cc === 'string') {
+      cc = JSON.parse(cc);
+    }
+
+    const convertToCamelCase = (obj: any): any => {
+      if (obj && typeof obj === "object" && !Array.isArray(obj)) {
         const newObj: { [key: string]: any } = {};
-        for (const k in value) {
-          if (Object.prototype.hasOwnProperty.call(value, k)) {
-            newObj[toCamelCase(k)] = value[k];
+        for (const k in obj) {
+          if (Object.prototype.hasOwnProperty.call(obj, k)) {
+            newObj[toCamelCase(k)] = convertToCamelCase(obj[k]);
           }
         }
         return newObj;
       }
-      return value;
-    });
-
+      return obj;
+    };
+    
+    const camelCasedContent = convertToCamelCase(cc);
     const _template = {
-      ...cc,
+      ...camelCasedContent,
       id: templateRes.id,
       background_image: templateRes?.payload?.data?.background_image as string | undefined,
       background_image_header: templateRes?.payload?.data?.background_image_header as string | undefined,

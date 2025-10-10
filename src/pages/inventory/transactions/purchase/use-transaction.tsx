@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { usePrint } from "./use-print";
-import { useAccPrint } from "../../../accounts/transactions/use-print";
+import { usePurchasePrint } from "./use-print";
+import { useCommenPrint } from "../../../transaction-base/use-print";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
@@ -145,9 +145,9 @@ export const useTransaction = (
   const clientSession = useAppSelector(
     (state: RootState) => state.ClientSession
   );
-  const { printBarcode } = usePrint();
+  const { printBarcode } = usePurchasePrint();
   
-const { printVoucher } = useAccPrint();
+const { printVoucher } = useCommenPrint();
   const formState = useAppSelector(
     (state: RootState) => state.InventoryTransaction
   );
@@ -1117,15 +1117,16 @@ const { printVoucher } = useAccPrint();
           if (formState.printOnSave == true) {
             // masterID: number,transactionType: string,printTmeplate?:any ,transDate?: string,voucherType?: string,formType?:string,customerType?:string,
     
-            printVoucher(
-  formState.transaction?.master.invTransactionMasterID,
-  formState.transactionType,
-  undefined, // ← skip printTmeplate
-  formState.transaction?.master.transactionDate,
-  formState.transaction?.master.voucherType,
-   undefined, // ← skip formType
-  formState.transaction?.master.customerType
-);
+                     printVoucher(
+                      formState.transaction?.master.invTransactionMasterID,  // masterID
+                      transactionType ?? "",                       // transactionType
+                      formState.transaction?.master.voucherType ?? "",        // voucherType
+                      formState.transaction?.master?.voucherForm?? "",           // formType
+                      formState.transaction?.master.customerType ?? "",       // customerType
+                      undefined,                                              // printTmeplate (optional)
+                      formState.transaction?.master.transactionDate ?? ""     // transDate
+                    )
+
           }
           dispatch(formStateHandleFieldChange({
             fields: {

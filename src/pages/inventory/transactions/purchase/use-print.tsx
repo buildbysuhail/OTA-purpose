@@ -21,7 +21,7 @@ import { TransactionFormState, TransactionDetail, BarcodeLabel } from "../transa
 import { addTemplateToStore, fetchDefaultTemplateFromApi } from "../../../use-print";
 
 const api = new APIClient();
-export const usePrint = () => {
+export const usePurchasePrint = () => {
   const { t } = useTranslation('system');
     const { directPrint } = useDirectPrint();
   const dispatch = useDispatch();
@@ -32,84 +32,7 @@ export const usePrint = () => {
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
-  const clientSession = useAppSelector(
-    (state: RootState) => state.ClientSession
-  );
-   const [showPrint, setShowPrint] = useState<boolean>(false);
-  const { hasRight } = useUserRights();
-  const voucherTypeSet = new Set(Object.values(VoucherType));
 
-  const fetchDefaultTemplates = async (voucherType: any) => {
-    // Create a set of all possible VoucherType values
-    try {
-        const _template =  await fetchDefaultTemplateFromApi(voucherType)
-        if(!_template){
-          return 
-        }
-          await addTemplateToStore(_template)
-
-      return _template;
-    } catch (error) {
-      console.error("Error fetching Default templates:", error);
-    }
-  };
-
-  const printVoucher = async (
-    setIsPrintModalOpen?: any,
-    voucherType?: any,
-    voucher?: TransactionFormState
-  ) => {
-    
-    
-  };
-
-  const checkReprintAuthorization = async (
-    event: any,
-    voucherNumber: number,
-    voucherType: number,
-    transactionType: string
-  ): Promise<boolean> => {
-    try {
-      let allow = true;
-      if (isNaN(voucherNumber)) {
-        return false;
-      }
-
-      const response = await api.getAsync(
-        `${Urls.inv_transaction_base}${transactionType}/checkReprintAuthorization/${voucherType}/${voucherNumber}`
-      );
-
-      if (response.cnt > 1) {
-        event.preventDefault();
-        const confirm = await ERPAlert.show({
-          icon: "info",
-          title: t("warning"),
-          text: t("unit_price_zero_do_you_want_to_continue"),
-          confirmButtonText: t("yes"),
-          cancelButtonText: t("no"),
-          showCancelButton: true,
-          onCancel: () => {
-            return false;
-          },
-        });
-        if (confirm) {
-          await api.postAsync(`${Urls.inv_transaction_base}`, {
-            action: `User Printed Voucher ${formState.transaction.master.voucherType}:${formState.transaction.master.voucherForm}:${formState.transaction.master.voucherPrefix}${formState.transaction.master.voucherNumber}`,
-            module: "Voucher Print",
-            voucherType: formState.transaction.master.voucherType,
-            voucherNumber: `${formState.transaction.master.voucherPrefix}${formState.transaction.master.voucherNumber}`,
-          });
-        } else {
-          allow = true;
-        }
-      }
-
-      return true;
-    } catch (error) {
-      console.log("Error checking reprint authorization", error as Error);
-      return false;
-    }
-  };
   async function printBarcode(
     slNos: string[],
     isReprint: boolean,
@@ -320,7 +243,6 @@ export const usePrint = () => {
   }
 
   return {
-    printVoucher,
     printBarcode,
   };
 };

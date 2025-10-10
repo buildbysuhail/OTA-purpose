@@ -33,7 +33,7 @@ import {
   calculateTotal,
   validateTransactionDate,
 } from "./functions";
-import { useAccPrint } from "./use-print";
+import { useCommenPrint } from "../../transaction-base/use-print";
 import moment from "moment";
 import VoucherType from "../../../enums/voucher-types";
 import { useTranslation } from "react-i18next";
@@ -76,8 +76,7 @@ export const useAccTransaction = (
   const softwareDate = useAppSelector(
     (state: RootState) => state.ClientSession.softwareDate
   );
-  const { printVoucher, printCheque, printPaymentReceiptAdvice } =
-    useAccPrint();
+  const { printVoucher, printCheque, printPaymentReceiptAdvice } = useCommenPrint();
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
@@ -1237,7 +1236,7 @@ export const useAccTransaction = (
           ) {
             printPaymentReceiptAdvice("");
           } else {
-            printVoucher(formState.transaction.master.accTransactionMasterID, transactionType, formState.transaction.master.voucherType, formState.transaction.master.transactionDate);
+            printVoucher(formState.transaction.master.accTransactionMasterID, transactionType, formState.transaction.master.voucherType,formState.transaction.master.formType,formState.transaction.master.customerType, formState.transaction.master.transactionDate);
           }
         }
 

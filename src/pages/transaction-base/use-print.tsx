@@ -1,41 +1,26 @@
-import { APIClient } from "../../../helpers/api-client"
-import { useUserRights } from "../../../helpers/user-right-helper"
-import type { RootState } from "../../../redux/store"
-import { useAppSelector } from "../../../utilities/hooks/useAppDispatch"
-import { isNullOrUndefinedOrEmpty } from "../../../utilities/Utils"
-import type { AccTransactionFormState, AccUserConfig } from "./acc-transaction-types"
+import { APIClient } from "../../helpers/api-client"
+import { useUserRights } from "../../helpers/user-right-helper"
+import type { RootState } from "../../redux/store"
+import { useAppSelector } from "../../utilities/hooks/useAppDispatch"
+import { isNullOrUndefinedOrEmpty } from "../../utilities/Utils"
+import type { AccTransactionFormState, AccUserConfig } from "../accounts/transactions/acc-transaction-types"
 import { useDispatch } from "react-redux"
-import { accFormStateHandleFieldChange,  } from "./reducer"
-import useCurrentBranch from "../../../utilities/hooks/use-current-branch"
-import VoucherType from "../../../enums/voucher-types"
-import ERPToast from "../../../components/ERPComponents/erp-toast"
-import { useDirectPrint } from "../../../utilities/hooks/use-direct-print"
-import { getOrFetchTemplate } from "../../use-print"
+import { accFormStateHandleFieldChange,  } from "../accounts/transactions/reducer"
+import useCurrentBranch from "../../utilities/hooks/use-current-branch"
+import VoucherType from "../../enums/voucher-types"
+import ERPToast from "../../components/ERPComponents/erp-toast"
+import { useDirectPrint } from "../../utilities/hooks/use-direct-print"
+import { getOrFetchTemplate } from "../use-print"
 
 const api = new APIClient()
-export const useAccPrint = () => {
-  const currentBranch = useCurrentBranch()
+export const useCommenPrint = () => {
   const dispatch = useDispatch()
-
-    const { directPrint } = useDirectPrint();
+  const { directPrint } = useDirectPrint();
   const userSession = useAppSelector((state: RootState) => state.UserSession)
   const formState = useAppSelector((state: RootState) => state.AccTransaction)
-  const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings)
   const clientSession = useAppSelector((state: RootState) => state.ClientSession)
-  const handleFieldChange = (field: keyof AccUserConfig, value: any) => {
-    const updatedUserConfig = {
-      ...formState.userConfig,
-      [field]: value,
-    }
-    dispatch(accFormStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }))
-  }
 
-  const { hasRight } = useUserRights()
-  const voucherTypeSet = new Set(Object.values(VoucherType))
-
-
-
-  const printVoucher = async (masterID: number,transactionType: string,printTmeplate?:any ,transDate?: string,voucherType?: string,formType?:string,customerType?:string,) => {
+  const printVoucher = async (masterID: number,transactionType: string,voucherType: string,formType:string,customerType:string,printTmeplate?:any ,transDate?: string,) => {
 
     transDate = transDate??(new Date()).toISOString();
    

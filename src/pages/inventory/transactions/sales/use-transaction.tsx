@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { usePrint } from "./use-print";
+import { useSalesPrint } from "./use-print";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
@@ -84,6 +84,7 @@ import {
   DataAutoBarcode,
   ExcelRowData,
 } from "../transaction-types";
+import {  useCommenPrint } from "../../../transaction-base/use-print";
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;
 //   clearDetailsAfterSaveAccounts: boolean;
@@ -180,7 +181,8 @@ export const useTransaction = (
   const clientSession = useAppSelector(
     (state: RootState) => state.ClientSession
   );
-  const { printBarcode, printVoucher } = usePrint();
+  const { printBarcode } = useSalesPrint();
+  const { printVoucher } = useCommenPrint();
   const formState = useAppSelector(
     (state: RootState) => state.InventoryTransaction
   );
@@ -1154,7 +1156,15 @@ export const useTransaction = (
             formState.transaction.master.invTransactionMasterID
           );
           if (formState.printOnSave == true) {
-            printVoucher();
+                     printVoucher(
+                      formState.transaction?.master.invTransactionMasterID,  // masterID
+                      transactionType ?? "",                       // transactionType
+                      formState.transaction?.master.voucherType ?? "",        // voucherType
+                      formState.transaction?.master?.voucherForm?? "",           // formType
+                      formState.transaction?.master.customerType ?? "",       // customerType
+                      undefined,                                              // printTmeplate (optional)
+                      formState.transaction?.master.transactionDate ?? ""     // transDate
+                    )
           }
           dispatch(
             formStateHandleFieldChange({

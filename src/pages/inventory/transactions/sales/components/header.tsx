@@ -21,7 +21,15 @@ interface HeaderProps extends VoucherElementProps {
   handleRefresh: () => void;
   createNewVoucher: () => void;
   handleEdit: () => void;
-  printVoucher: (setIsPrintModalOpen: React.Dispatch<React.SetStateAction<boolean>>, voucherType: string) => void;
+  printVoucher: (
+    masterID: number,
+    transactionType: string,
+    voucherType: string,
+    formType: string,
+    customerType: string,
+    printTmeplate?: any,
+    transDate?: string,
+  ) => Promise<void>;
   handleClearControls: () => void;
   handleHistoryClick: () => void;
   setIsHistorySidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -247,7 +255,18 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
               <button
                 disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master.invTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
                 className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
-                onClick={() => printVoucher(setIsPrintModalOpen, voucherType)}>
+                        onClick={() =>
+                            printVoucher(
+                              formState.transaction?.master.invTransactionMasterID,  // masterID
+                              transactionType ?? "",                       // transactionType
+                              voucherType ?? "",        // voucherType
+                              formState.transaction?.master?.voucherForm?? "",           // formType
+                              formState.transaction?.master.customerType ?? "",       // customerType
+                              undefined,                                              // printTmeplate (optional)
+                              formState.transaction?.master.transactionDate ?? ""     // transDate
+                            )
+                          }
+                >
                 <Printer className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
               </button>
             </div>
@@ -609,7 +628,18 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                           <button
                             disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master.invTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
                             className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f5f3ff] hover:text-[#6d28d9] dark:hover:bg-[#4c1d954d] dark:hover:text-[#ddd6fe] transition-all duration-200 rounded-md group text-left"
-                            onClick={() => printVoucher(setIsPrintModalOpen, voucherType)}>
+                        onClick={() =>
+                            printVoucher(
+                              formState.transaction?.master.invTransactionMasterID,  // masterID
+                              transactionType ?? "",                       // transactionType
+                              voucherType ?? "",        // voucherType
+                              formState.transaction?.master?.voucherForm?? "",           // formType
+                              formState.transaction?.master.customerType ?? "",       // customerType
+                              undefined,                                              // printTmeplate (optional)
+                              formState.transaction?.master.transactionDate ?? ""     // transDate
+                            )
+                          }
+                            >
                             <div className="w-8 h-8 bg-[#ede9fe] dark:bg-[#4c1d954d] rounded-full flex items-center justify-center group-hover:bg-[#ddd6fe] dark:group-hover:bg-[#4c1d9599] group-hover:scale-110 transition-all duration-200">
                               <Printer className="h-4 w-4 text-[#6d28d9] dark:text-[#ddd6fe]" />
                             </div>

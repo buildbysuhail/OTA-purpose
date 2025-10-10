@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox"
-import type { PropertiesState } from "../Designer/interfaces"
+import type { PropertiesState, TemplateState } from "../Designer/interfaces"
 import ERPToast from "../../../components/ERPComponents/erp-toast"
 import ERPFormButtons from "../../../components/ERPComponents/erp-form-buttons";
 import { useAppDispatch, useAppSelector } from "../../../utilities/hooks/useAppDispatch";
@@ -338,6 +338,8 @@ const handleInstallJSPrintManager = useCallback(async () => {
             <ERPDataCombobox
               id="printer"
               data={templateData?.propertiesState}
+              value={templateData?.propertiesState?.printer??""}
+              defaultValue={templateData?.propertiesState?.printer??""}
               label={t("select_printer")}
               field={{
                 id: "printer",

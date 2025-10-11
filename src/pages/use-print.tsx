@@ -4,7 +4,7 @@ import Urls from '../redux/urls';
 import { APIClient } from '../helpers/api-client';
 import { DeepPartial } from 'redux';
 import { getAmountInWords, isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from '../utilities/Utils';
-import { PrintResponse, PrintDetailDto, PrintMasterDto, CompanyDetailsForPrint } from './use-print-type';
+import { PrintResponse, PrintDetailDto, PrintMasterDto, CompanyDetailsForPrint, PartyDetailsForPrint } from './use-print-type';
 import { initialPrintCustomFields, initialPrintResponse } from './use-print-type-data';
 import { merge } from 'lodash';
 import { TemplateState } from './InvoiceDesigner/Designer/interfaces';
@@ -1647,6 +1647,9 @@ export function bindDataForPrint(field: string, printData: PrintResponse,
   }
   else if (group == "headerFooter") {
     return printData.headerFooter?.[key as keyof HeaderFooter]
+  }
+  else if (group == "customer") {
+    return printData?.master?.partyData?.[key as keyof PartyDetailsForPrint]
   }
 }
 // Format field values based on format specification

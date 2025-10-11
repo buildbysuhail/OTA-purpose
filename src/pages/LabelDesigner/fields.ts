@@ -4,8 +4,8 @@ import { HeaderFooter, initialHeaderFooter } from "../../redux/slices/user-sessi
 import { modelToListFromObject } from "../../utilities/Utils";
 import { TransactionMasterInitialData, initialTransactionDetailData, initialProductData } from "../inventory/transactions/transaction-type-data";
 import { TransactionMaster, TransactionDetail, BarcodeLabel } from "../inventory/transactions/transaction-types";
-import { CompanyDetailsForPrint, PrintCustomFields } from "../use-print-type";
-import { initialCompanyDetailsForPrint, initialPrintCustomFields } from "../use-print-type-data";
+import { CompanyDetailsForPrint, PartyDetailsForPrint, PrintCustomFields } from "../use-print-type";
+import { initialCompanyDetailsForPrint, initialPartyDetailsForPrint, initialPrintCustomFields } from "../use-print-type-data";
 interface fdf {
   fdd: number
 }
@@ -15,7 +15,7 @@ export const inventoryFields: OptionGroup[] = [
   { groupName: 'Master', options: modelToListFromObject<TransactionMaster>(TransactionMasterInitialData, "master___") },
   { groupName: 'Details', options: modelToListFromObject<TransactionDetail>(initialTransactionDetailData, "details___") },
   { groupName: 'Organization', options: modelToListFromObject<CompanyDetailsForPrint>(initialCompanyDetailsForPrint, "org___") },
-  // { groupName: 'Branch',  options: modelToListFromObject<BranchDetails>(initialBranchDetails,"branch___") },
+  { groupName: 'Customer',  options: modelToListFromObject<PartyDetailsForPrint>(initialPartyDetailsForPrint,"customer___") },
   { groupName: 'HeaderFooter', options: modelToListFromObject<HeaderFooter>(initialHeaderFooter, "headerFooter___") },
 ];
 export const accountsFields: OptionGroup[] = [
@@ -23,7 +23,7 @@ export const accountsFields: OptionGroup[] = [
   { groupName: 'Master', options: modelToListFromObject<TransactionMaster>(TransactionMasterInitialData, "master___") },
   { groupName: 'Details', options: modelToListFromObject<TransactionMaster>(TransactionMasterInitialData, "details___") },
   { groupName: 'Organization', options: modelToListFromObject<CompanyDetailsForPrint>(initialCompanyDetailsForPrint, "org___") },
-  // { groupName: 'Branch',  options: modelToListFromObject<BranchDetails>(initialBranchDetails,"branch___") },
+  { groupName: 'Customer',  options: modelToListFromObject<PartyDetailsForPrint>(initialPartyDetailsForPrint,"customer___") },
   { groupName: 'HeaderFooter', options: modelToListFromObject<HeaderFooter>(initialHeaderFooter, "headerFooter___") },
 ];
 export const barCodeField: OptionGroup[] = [

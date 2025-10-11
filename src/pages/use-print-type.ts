@@ -235,6 +235,7 @@ export interface PartyDetailsForPrint {
   partyCitySubDivision: string;
   partyCountrySubDivision: string;
   partyCountry: string;
+  totItemDiscPlusBillDisc: number;
 }
 
 export interface CompanyDetailsForPrint {

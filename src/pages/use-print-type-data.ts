@@ -66,7 +66,8 @@ export const initialPartyDetailsForPrint: PartyDetailsForPrint = {
   partyBuildingNumber: "",
   partyCitySubDivision: "",
   partyCountrySubDivision: "",
-  partyCountry: ""
+  partyCountry: "",
+  totItemDiscPlusBillDisc: 0,
 };
 
 export const initialCompanyDetailsForPrint: CompanyDetailsForPrint = {

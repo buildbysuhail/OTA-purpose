@@ -71,6 +71,7 @@ import {
   TransactionMasterInitialData,
   initialTransactionDetailData,
   initialTransactionDetails2,
+  initialUserConfig,
 } from "../transaction-type-data";
 import {
   TransactionDetail,
@@ -328,15 +329,34 @@ export const useTransaction = (
   const { hasRight, hasBlockedRight } = useUserRights();
   const fetchUserConfig = async () => {
     try {
-      const base64 = await api.get(
+      const savedPreferences = await api.getAsync(
         `${Urls.inv_transaction_base}${transactionType}/GetLocalSettings`
       );
-      await setStorageString("utInvc", base64);
-      // Decode the base64 back to JSON string
-      const _userConfig = safeBase64Decode(base64 ?? "");
-      const userConfig: UserConfig = customJsonParse(_userConfig ?? "{}");
+      if (
+        savedPreferences != "undefined" &&
+        savedPreferences != undefined &&
+        savedPreferences != null &&
+        savedPreferences != `""` &&
+        savedPreferences != ""
+      ) {
+        await setStorageString(
+          `${transactionType}_LocalSettings`,
+          savedPreferences
+        );
+        // Decode the base64 back to JSON string
+        const _userConfig = safeBase64Decode(savedPreferences ?? "");
+        const userConfig: UserConfig = customJsonParse(_userConfig ?? "{}");
 
-      return userConfig;
+        return userConfig;
+      }
+
+      const _bs64 = modelToBase64Unicode(initialUserConfig) 
+       await setStorageString(
+          `${transactionType}_LocalSettings`,
+          _bs64
+        );
+
+        return initialUserConfig;
     } catch (error) {
       console.error("Error fetching user config:", error);
     }
@@ -455,7 +475,7 @@ export const useTransaction = (
     _formState: TransactionFormState,
     loadUserConfig: boolean = false
   ) => {
-    const Utc = await getStorageString("utInvc");
+    const Utc = await getStorageString(`${transactionType}_LocalSettings`);
     let userConfig: UserConfig | undefined;
     if (Utc) {
       const decoded = safeBase64Decode(Utc) ?? "{}";

@@ -8,7 +8,7 @@ import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import VoucherType from "../../../../enums/voucher-types";
 import { APIClient } from "../../../../helpers/api-client";
-import { merge } from 'lodash';
+import { merge } from "lodash";
 import {
   useUserRights,
   UserAction,
@@ -31,7 +31,11 @@ import {
   getExcelCellValue,
   generateUniqueKey,
 } from "../../../../utilities/Utils";
-import { Attachments, BillwiseData, FormElementsState } from "../../../accounts/transactions/acc-transaction-types";
+import {
+  Attachments,
+  BillwiseData,
+  FormElementsState,
+} from "../../../accounts/transactions/acc-transaction-types";
 import { ApplicationSettingsType } from "../../../settings/system/application-settings-types/application-settings-types";
 import { deleteAccVoucher, unlockTransactionMaster } from "./thunk";
 import { updateTransactionEditMode } from "./transaction-functions";
@@ -44,11 +48,44 @@ import { useTransactionHelper } from "./use-transaction-helper";
 import { DeepPartial } from "redux";
 import ExcelJS from "exceljs";
 import { sanitizeDataAdvanced } from "../../../../utilities/Utils";
-import { getStorageString, setStorageString } from "../../../../utilities/storage-utils";
+import {
+  getStorageString,
+  setStorageString,
+} from "../../../../utilities/storage-utils";
 import { getApLocalDataByUrl } from "../../../../redux/cached-urls";
-import { formStateHandleFieldChangeKeysOnly, formStateHandleFieldChange, formStateTransactionMasterHandleFieldChange, formStateTransactionUpdate, clearState, formStateMasterHandleFieldChange, formStateClearDetails, formStateClearAttachments, formStateTransactionDetailsRowRemove, formStateSetDetails, updateFormElement } from "../reducer";
-import { transactionInitialData, initialInventoryTotals, TransactionMasterInitialData, initialTransactionDetailData, initialTransactionDetails2 } from "../transaction-type-data";
-import { TransactionDetail, UserConfig, TransactionFormState, SummaryItems, TransactionMaster, TransactionData, LoadProductDetailsByAutoBarcodeProps, CommonParams, DataAutoBarcode, ExcelRowData } from "../transaction-types";
+import {
+  formStateHandleFieldChangeKeysOnly,
+  formStateHandleFieldChange,
+  formStateTransactionMasterHandleFieldChange,
+  formStateTransactionUpdate,
+  clearState,
+  formStateMasterHandleFieldChange,
+  formStateClearDetails,
+  formStateClearAttachments,
+  formStateTransactionDetailsRowRemove,
+  formStateSetDetails,
+  updateFormElement,
+} from "../reducer";
+import {
+  transactionInitialData,
+  initialInventoryTotals,
+  TransactionMasterInitialData,
+  initialTransactionDetailData,
+  initialTransactionDetails2,
+  initialUserConfig,
+} from "../transaction-type-data";
+import {
+  TransactionDetail,
+  UserConfig,
+  TransactionFormState,
+  SummaryItems,
+  TransactionMaster,
+  TransactionData,
+  LoadProductDetailsByAutoBarcodeProps,
+  CommonParams,
+  DataAutoBarcode,
+  ExcelRowData,
+} from "../transaction-types";
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;
 //   clearDetailsAfterSaveAccounts: boolean;
@@ -75,7 +112,7 @@ export type LoadAndSetTransVoucherFn = (
   setVoucherNo?: boolean | false,
   loadVType?: string,
   loadFType?: string,
-  loadPrefix?: string,
+  loadPrefix?: string
 ) => Promise<boolean | undefined>; // ✅ fix return type
 
 const api = new APIClient();
@@ -113,7 +150,7 @@ export const useTransaction = (
   chequeStatusRef?: any,
   handleKeyDown?: (e: any, field: string, rowIndex: number) => void,
   formStateRef?: any,
-  purchaseGridRef?: any,
+  purchaseGridRef?: any
 ) => {
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
@@ -146,8 +183,8 @@ export const useTransaction = (
     (state: RootState) => state.ClientSession
   );
   const { printBarcode } = usePurchasePrint();
-  
-const { printVoucher } = useCommenPrint();
+
+  const { printVoucher } = useCommenPrint();
   const formState = useAppSelector(
     (state: RootState) => state.InventoryTransaction
   );
@@ -156,7 +193,8 @@ const { printVoucher } = useCommenPrint();
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.ctrlKey) {
         const currentRowIndex = formState.currentCell?.rowIndex ?? -1;
-        const currentProduct = formState.transaction.details[currentRowIndex]?.product ?? "";
+        const currentProduct =
+          formState.transaction.details[currentRowIndex]?.product ?? "";
 
         if (currentProduct.trim() !== "") {
           dispatch(
@@ -292,16 +330,35 @@ const { printVoucher } = useCommenPrint();
   const { hasRight, hasBlockedRight } = useUserRights();
   const fetchUserConfig = async () => {
     try {
-      const base64 = await api.get(
+      debugger;
+      const savedPreferences = await api.getAsync(
         `${Urls.inv_transaction_base}${transactionType}/GetLocalSettings`
       );
-      await setStorageString("utInvc", base64);
-      // Decode the base64 back to JSON string      
-      const _userConfig = safeBase64Decode(base64 ?? "");;
-      const userConfig: UserConfig = customJsonParse(_userConfig ?? "{}");
+      if (
+        savedPreferences != "undefined" &&
+        savedPreferences != undefined &&
+        savedPreferences != null &&
+        savedPreferences != `""` &&
+        savedPreferences != ""
+      ) {
+        await setStorageString(
+          `${transactionType}_LocalSettings`,
+          savedPreferences
+        );
+        // Decode the base64 back to JSON string
+        const _userConfig = safeBase64Decode(savedPreferences ?? "");
+        const userConfig: UserConfig = customJsonParse(_userConfig ?? "{}");
 
+        return userConfig;
+      }
 
-      return userConfig;
+      const _bs64 = modelToBase64Unicode(initialUserConfig) 
+       await setStorageString(
+          `${transactionType}_LocalSettings`,
+          _bs64
+        );
+
+        return initialUserConfig;
     } catch (error) {
       console.error("Error fetching user config:", error);
     }
@@ -320,9 +377,8 @@ const { printVoucher } = useCommenPrint();
     setVoucherNo = false,
     loadVType,
     loadFType,
-    loadPrefix,
+    loadPrefix
   ) => {
-
     const _s_isDirty = isDirtyTransaction(
       formState.prev,
       {
@@ -366,10 +422,17 @@ const { printVoucher } = useCommenPrint();
     );
 
     if (loadVType == "GRN" || loadVType == "GRR") {
-      _formState = merge({}, _formState, { transaction: { master: { deliveryNoteNumber: manualInvoiceNumber } } });
-    }
-    else if (loadVType == "PO" && (formState.transaction.master.voucherType == "GRN" || formState.transaction.master.voucherType == "PI")) {
-      _formState = merge({}, _formState, { transaction: { master: { orderNumber: manualInvoiceNumber } } });
+      _formState = merge({}, _formState, {
+        transaction: { master: { deliveryNoteNumber: manualInvoiceNumber } },
+      });
+    } else if (
+      loadVType == "PO" &&
+      (formState.transaction.master.voucherType == "GRN" ||
+        formState.transaction.master.voucherType == "PI")
+    ) {
+      _formState = merge({}, _formState, {
+        transaction: { master: { orderNumber: manualInvoiceNumber } },
+      });
     }
 
     if (typeof _formState == "boolean") {
@@ -414,10 +477,9 @@ const { printVoucher } = useCommenPrint();
     _formState: TransactionFormState,
     loadUserConfig: boolean = false
   ) => {
+    debugger;
 
-
-
-    const Utc = await getStorageString("utInvc");
+    const Utc = await getStorageString(`${transactionType}_LocalSettings`);
     let userConfig: UserConfig | undefined;
     if (Utc) {
       const decoded = safeBase64Decode(Utc) ?? "{}";
@@ -439,18 +501,18 @@ const { printVoucher } = useCommenPrint();
       showColumnBorder: userConfig?.showColumnBorder,
       activeRowBg: userConfig?.activeRowBg,
       gridRowHeight: userConfig?.gridRowHeight,
-      isInitial: true
-    }
+      isInitial: true,
+    };
     if (userConfig) {
       _formState.userConfig = userConfig;
-      _formState.currentTheme = ct
-      _formState.selectedTheme = ct
+      _formState.currentTheme = ct;
+      _formState.selectedTheme = ct;
     }
 
     _formState.prev = modelToBase64Unicode(
       setTransactionForHistory(_formState, "inv")
     );
-
+    debugger;
     _formState.transactionLoading = false;
     dispatch(
       formStateHandleFieldChange({
@@ -529,17 +591,15 @@ const { printVoucher } = useCommenPrint();
     }
     const params: Record<any, any> = {
       VoucherNumber: out_voucherNumber, // Ensuring it's always a string
-      voucherPrefix:
-        out_voucherPrefix,
-      voucherType:
-        out_voucherType,
-      voucherForm:
-        out_voucherForm,
+      voucherPrefix: out_voucherPrefix,
+      voucherType: out_voucherType,
+      voucherForm: out_voucherForm,
       isUsingManualInvNo: usingManualInvNumber, // Convert boolean to string
-      isActualPriceVisible: formState.gridColumns.find(x => x.dataField == "actualSalesPrice")?.visible ?? false,
-      referenceNumber: loadVType == "PI_Ref" ? out_voucherNumber : null
+      isActualPriceVisible:
+        formState.gridColumns.find((x) => x.dataField == "actualSalesPrice")
+          ?.visible ?? false,
+      referenceNumber: loadVType == "PI_Ref" ? out_voucherNumber : null,
     };
-
 
     // ByGRN
     let vch = await api.getAsync(url, new URLSearchParams(params).toString());
@@ -568,7 +628,6 @@ const { printVoucher } = useCommenPrint();
         },
       };
     }
-
 
     if (usingManualInvNumber) {
       vch.master = {
@@ -606,7 +665,7 @@ const { printVoucher } = useCommenPrint();
         ...(vch?.master || {}),
         hasroundOff: vch?.master?.roundAmount != 0,
         cashReceived: vch?.master?.cashReceived,
-        hasCashPaid: vch?.master?.cashReceived != 0
+        hasCashPaid: vch?.master?.cashReceived != 0,
       },
       details: refactorDetails(
         vch.details,
@@ -647,7 +706,7 @@ const { printVoucher } = useCommenPrint();
     voucher.formElements.lblPosted.visible = voucher.isPostedTransaction;
     voucher.formElements.cbCostCentre.disabled =
       voucher.transaction.master.costCentreID <= 0 &&
-        (formState.userConfig?.presetCostenterId ?? 0) > 0
+      (formState.userConfig?.presetCostenterId ?? 0) > 0
         ? true
         : false;
     // voucher.transaction = vch;
@@ -678,7 +737,7 @@ const { printVoucher } = useCommenPrint();
     }
 
     voucher.isInitialLedger = true;
-    voucher = await loadLedgerData(voucher) as any;
+    voucher = (await loadLedgerData(voucher)) as any;
     return voucher;
   };
   const refactorAttachments = (transaction: TransactionData) => {
@@ -719,12 +778,17 @@ const { printVoucher } = useCommenPrint();
     voucherPrefix: string,
     isVoucherPrefix: boolean
   ) => {
-    isVoucherPrefix = isVoucherPrefix ? isVoucherPrefix : false
-    isVoucherPrefix = !clientSession.isAppGlobal && voucherType == VoucherType.PurchaseReturn ? true : isVoucherPrefix
+    isVoucherPrefix = isVoucherPrefix ? isVoucherPrefix : false;
+    isVoucherPrefix =
+      !clientSession.isAppGlobal && voucherType == VoucherType.PurchaseReturn
+        ? true
+        : isVoucherPrefix;
     const response = await api.getAsync(
       `${Urls.inv_transaction_base}${transactionType}/GetNextVoucherNumber/`,
-      `formType=${formType ? formType : ""}&voucherType=${voucherType ? voucherType : ""
-      }&voucherPrefix=${voucherPrefix ? voucherPrefix : ""}&isVoucherPrefix=${isVoucherPrefix ? isVoucherPrefix : false
+      `formType=${formType ? formType : ""}&voucherType=${
+        voucherType ? voucherType : ""
+      }&voucherPrefix=${voucherPrefix ? voucherPrefix : ""}&isVoucherPrefix=${
+        isVoucherPrefix ? isVoucherPrefix : false
       }`
     );
 
@@ -745,16 +809,24 @@ const { printVoucher } = useCommenPrint();
     const details = formState.transaction.details;
     debugger;
     // Stock update restriction
-    if (!formState.transaction.master.stockUpdate && (formState.transaction.master.voucherType === "PI" || formState.transaction.master.voucherType === "PR")) {
+    if (
+      !formState.transaction.master.stockUpdate &&
+      (formState.transaction.master.voucherType === "PI" ||
+        formState.transaction.master.voucherType === "PR")
+    ) {
       const voucherType = formState.transaction.master.voucherType;
       const confirm = await ERPAlert.show({
         icon: "info",
         title: t("stock_update_warning"),
-        text: voucherType === "PI" ? "Stock cannot be updated in this invoice.In goods Receipt voucher stock already updated. Do you want to continue?" : voucherType === "PR" ? "Stock cannot be updated in this invoice.In Goods Receipt Return voucher stock already updated. Do you want to continue?" : "",
+        text:
+          voucherType === "PI"
+            ? "Stock cannot be updated in this invoice.In goods Receipt voucher stock already updated. Do you want to continue?"
+            : voucherType === "PR"
+            ? "Stock cannot be updated in this invoice.In Goods Receipt Return voucher stock already updated. Do you want to continue?"
+            : "",
         confirmButtonText: t("yes"),
         cancelButtonText: t("no"),
         showCancelButton: true,
-
       });
       if (!confirm) {
         return false;
@@ -920,17 +992,16 @@ const { printVoucher } = useCommenPrint();
         const confirm = await ERPAlert.show({
           icon: "question",
           title: t("zero_rate_or_qty"),
-          text: `${t('zero_rate_or_qty_entered_in_row')} row: ${i + 1}`,
+          text: `${t("zero_rate_or_qty_entered_in_row")} row: ${i + 1}`,
           confirmButtonText: t("yes"),
           cancelButtonText: t("no"),
           showCancelButton: true,
         });
         if (!confirm) {
-          const rowIndex = details.findIndex(x => x.slNo == row.slNo);
+          const rowIndex = details.findIndex((x) => x.slNo == row.slNo);
           const res = focusColumn(rowIndex, "qty");
           setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
-          return false
-
+          return false;
         }
       }
     }
@@ -1019,7 +1090,6 @@ const { printVoucher } = useCommenPrint();
   };
 
   const preSave = async () => {
-
     if (
       formState.isEdit &&
       formState.userConfig?.mnuShowConfirmationForEditOnAccounts == true
@@ -1082,8 +1152,19 @@ const { printVoucher } = useCommenPrint();
       let params = {
         master: {
           ...master,
-          voucherType: saveMode === "LPO" ? "PO" : saveMode === "LPQ" ? "PQ" : master.voucherType,
-          customerType: !clientSession.isAppGlobal && master.voucherType == "PR" && master.customerType == "" && applicationSettings.branchSettings.maintainKSA_EInvoice ?  "B2C"  : master.customerType,
+          voucherType:
+            saveMode === "LPO"
+              ? "PO"
+              : saveMode === "LPQ"
+              ? "PQ"
+              : master.voucherType,
+          customerType:
+            !clientSession.isAppGlobal &&
+            master.voucherType == "PR" &&
+            master.customerType == "" &&
+            applicationSettings.branchSettings.maintainKSA_EInvoice
+              ? "B2C"
+              : master.customerType,
           transactionDate:
             master.transactionDate == "" ? null : master.transactionDate,
         },
@@ -1091,21 +1172,21 @@ const { printVoucher } = useCommenPrint();
         attachments: attachments,
         invAccTransactions: formState.transaction.invAccTransactions,
         pendingOrderListMasterIDs: formState.pendingOrdListMasterIDs,
-        PendingOrderListBranchIDs: formState.pendingOrdListBranchIDs
+        PendingOrderListBranchIDs: formState.pendingOrdListBranchIDs,
       };
 
-      params = sanitizeDataAdvanced(params, transactionInitialData)
+      params = sanitizeDataAdvanced(params, transactionInitialData);
       try {
         const saveRes =
           formState.transaction.master.invTransactionMasterID > 0
             ? await api.putAsync(
-              `${Urls.inv_transaction_base}${transactionType}`,
-              params
-            )
+                `${Urls.inv_transaction_base}${transactionType}`,
+                params
+              )
             : await api.postAsync(
-              `${Urls.inv_transaction_base}${transactionType}`,
-              params
-            );
+                `${Urls.inv_transaction_base}${transactionType}`,
+                params
+              );
         if (saveRes.isOk == true) {
           dispatch(
             formStateTransactionUpdate({
@@ -1113,26 +1194,30 @@ const { printVoucher } = useCommenPrint();
               value: undefined,
             })
           );
-          clearControls(formState.transaction.master.invTransactionMasterID > 0, formState.transaction.master.invTransactionMasterID)
+          clearControls(
+            formState.transaction.master.invTransactionMasterID > 0,
+            formState.transaction.master.invTransactionMasterID
+          );
           if (formState.printOnSave == true) {
             // masterID: number,transactionType: string,printTmeplate?:any ,transDate?: string,voucherType?: string,formType?:string,customerType?:string,
-    
-                     printVoucher(
-                      formState.transaction?.master.invTransactionMasterID,  // masterID
-                      transactionType ?? "",                       // transactionType
-                      formState.transaction?.master.voucherType ?? "",        // voucherType
-                      formState.transaction?.master?.voucherForm?? "",           // formType
-                      formState.transaction?.master.customerType ?? "",       // customerType
-                      undefined,                                              // printTmeplate (optional)
-                      formState.transaction?.master.transactionDate ?? ""     // transDate
-                    )
 
+            printVoucher(
+              formState.transaction?.master.invTransactionMasterID, // masterID
+              transactionType ?? "", // transactionType
+              formState.transaction?.master.voucherType ?? "", // voucherType
+              formState.transaction?.master?.voucherForm ?? "", // formType
+              formState.transaction?.master.customerType ?? "", // customerType
+              undefined, // printTmeplate (optional)
+              formState.transaction?.master.transactionDate ?? "" // transDate
+            );
           }
-          dispatch(formStateHandleFieldChange({
-            fields: {
-              savingCompleted: true,
-            },
-          }))
+          dispatch(
+            formStateHandleFieldChange({
+              fields: {
+                savingCompleted: true,
+              },
+            })
+          );
           // ERPToast.show(saveRes.message, "success");
         } else {
           // dispatch(acc)
@@ -1163,21 +1248,21 @@ const { printVoucher } = useCommenPrint();
           );
         }
       } catch (error) {
-        dispatch(formStateHandleFieldChange({
-          fields: {
-            saving: false,
-            savingCompleted: true,
-          },
-        }))
+        dispatch(
+          formStateHandleFieldChange({
+            fields: {
+              saving: false,
+              savingCompleted: true,
+            },
+          })
+        );
         ERPAlert.show({
           icon: "warning",
           text: "Please try Again",
           title: "",
         });
       }
-
-    }
-    else {
+    } else {
       dispatch(
         formStateHandleFieldChange({
           fields: {
@@ -1210,7 +1295,6 @@ const { printVoucher } = useCommenPrint();
   ) => {
     if (transactionMasterID ?? 0 > 0) {
       await undoEditMode(isEdit, transactionMasterID ?? 0);
-
     }
     const vNo = await getNextVoucherNumber(
       formState.transaction.master.voucherForm,
@@ -1219,8 +1303,15 @@ const { printVoucher } = useCommenPrint();
       false
     );
     let employeeID = userSession.employeeId ?? 0;
-    if (["PR", "PQ", "PO"].includes(formState.transaction.master.voucherType ?? "" as any) && employeeID <= 0) {
-      const emps = await getApLocalDataByUrl(`${Urls.inv_transaction_base}${transactionType}/Data/Employee/`);
+    if (
+      ["PR", "PQ", "PO"].includes(
+        formState.transaction.master.voucherType ?? ("" as any)
+      ) &&
+      employeeID <= 0
+    ) {
+      const emps = await getApLocalDataByUrl(
+        `${Urls.inv_transaction_base}${transactionType}/Data/Employee/`
+      );
       employeeID = emps && emps.length > 0 ? emps[0].id : employeeID;
     }
     const master: TransactionMaster = {
@@ -1233,21 +1324,23 @@ const { printVoucher } = useCommenPrint();
       employeeID: employeeID,
       voucherNumber: vNo ?? 0,
       inventoryLedgerID:
-        formState.transaction.master.voucherType == VoucherType.PurchaseReturn ? applicationSettings.inventorySettings?.defaultPurchaseReturnAcc
+        formState.transaction.master.voucherType == VoucherType.PurchaseReturn
+          ? applicationSettings.inventorySettings?.defaultPurchaseReturnAcc
           : formState.transaction.master.voucherType == "DNS"
-                    ? applicationSettings.inventorySettings?.defaultSalesAcc
-                    : applicationSettings.inventorySettings?.defaultPurchaseAcc,
+          ? applicationSettings.inventorySettings?.defaultSalesAcc
+          : applicationSettings.inventorySettings?.defaultPurchaseAcc,
       ledgerID: applicationSettings.accountsSettings.defaultCashAcc,
       isLocked: false,
       grandTotal: 0,
       grandTotalFc: 0,
       fromWarehouseID:
-        formState.userConfig?.presetWarehouseId ?? 0 > 0 ? formState.userConfig?.presetWarehouseId ?? 0
+        formState.userConfig?.presetWarehouseId ?? 0 > 0
+          ? formState.userConfig?.presetWarehouseId ?? 0
           : applicationSettings.inventorySettings?.defaultWareHouse,
       costCentreID:
-        formState.userConfig?.presetCostenterId ?? 0 > 0 ? formState.userConfig?.presetCostenterId ?? 0
-          : applicationSettings.accountsSettings.defaultCostCenterID
-
+        formState.userConfig?.presetCostenterId ?? 0 > 0
+          ? formState.userConfig?.presetCostenterId ?? 0
+          : applicationSettings.accountsSettings.defaultCostCenterID,
     };
     dispatch(
       formStateHandleFieldChange({
@@ -1269,25 +1362,25 @@ const { printVoucher } = useCommenPrint();
                 transaction: {
                   master: master,
                   details: [],
-
                 },
               },
               "inv"
             )
           ),
-        }
+        },
       })
     );
 
     dispatch(
       formStateMasterHandleFieldChange({
-        fields: { ...master }
+        fields: { ...master },
       })
     );
-    dispatch(formStateClearDetails())
-    dispatch(formStateClearAttachments())
+    dispatch(formStateClearDetails());
+    dispatch(formStateClearAttachments());
     dispatch(
-      formStateTransactionUpdate({ key: "invAccTransactions", value: [] }));
+      formStateTransactionUpdate({ key: "invAccTransactions", value: [] })
+    );
     dispatch(
       formStateHandleFieldChangeKeysOnly({
         // Form elements
@@ -1301,12 +1394,14 @@ const { printVoucher } = useCommenPrint();
             },
             cbCostCentre: {
               reload: true,
-              visible: applicationSettings?.accountsSettings?.maintainCostCenter,
+              visible:
+                applicationSettings?.accountsSettings?.maintainCostCenter,
               disabled: (formState.userConfig?.presetCostenterId ?? 0) > 0,
             },
             cbWarehouse: {
               reload: true,
-              visible: applicationSettings?.inventorySettings?.maintainWarehouse,
+              visible:
+                applicationSettings?.inventorySettings?.maintainWarehouse,
               disabled: (formState.userConfig?.presetWarehouseId ?? 0) > 0,
             },
             amount: {
@@ -1343,16 +1438,24 @@ const { printVoucher } = useCommenPrint();
     );
 
     const editableColumns = formState.gridColumns?.filter(
-      (col) => col.visible != false && col.dataField != null && col.allowEditing == true && col.readOnly !== true
+      (col) =>
+        col.visible != false &&
+        col.dataField != null &&
+        col.allowEditing == true &&
+        col.readOnly !== true
     );
 
     if (editableColumns && editableColumns.length > 0) {
-      const res = focusColumn(0, editableColumns[0].dataField ?? "")
-      setCurrentCell(res, formState.transaction.details[0] as TransactionDetail, true);
+      const res = focusColumn(0, editableColumns[0].dataField ?? "");
+      setCurrentCell(
+        res,
+        formState.transaction.details[0] as TransactionDetail,
+        true
+      );
     }
   };
   const handleRemoveItem = async (slNo: string) => {
-    debugger
+    debugger;
     dispatch(
       formStateTransactionDetailsRowRemove({
         slNo: slNo,
@@ -1360,24 +1463,43 @@ const { printVoucher } = useCommenPrint();
         clearEntryControl,
       })
     );
-    const details = formState.transaction.details.filter(x => x.productID > 0 && x.slNo != slNo)
-    const data = formState.transaction.details.find((x: TransactionDetail) => isNullOrUndefinedOrZero(x.productID) || x.productID <= 0)
-    const rowIndex = formState.transaction.details.findIndex(x => x.slNo == data?.slNo)
+    const details = formState.transaction.details.filter(
+      (x) => x.productID > 0 && x.slNo != slNo
+    );
+    const data = formState.transaction.details.find(
+      (x: TransactionDetail) =>
+        isNullOrUndefinedOrZero(x.productID) || x.productID <= 0
+    );
+    const rowIndex = formState.transaction.details.findIndex(
+      (x) => x.slNo == data?.slNo
+    );
     const editableColumn = formState.gridColumns?.find(
-      (col) => col.visible !== false && col.dataField != null && col.allowEditing == true && col.readOnly !== true
+      (col) =>
+        col.visible !== false &&
+        col.dataField != null &&
+        col.allowEditing == true &&
+        col.readOnly !== true
     );
     await setStorageString(
       `${formState.transaction.master.voucherType}${formState.transaction.master.voucherForm}`,
       JSON.stringify(details)
     );
-    if (calculateSummary && calculateTotal && formState && dispatch && formStateHandleFieldChangeKeysOnly) {
+    if (
+      calculateSummary &&
+      calculateTotal &&
+      formState &&
+      dispatch &&
+      formStateHandleFieldChangeKeysOnly
+    ) {
       const summaryRes = calculateSummary(details, formState, {
         result: {},
       });
 
       const totalRes = calculateTotal(
         formState.transaction.master,
-        summaryRes ? summaryRes.summary as SummaryItems : initialInventoryTotals,
+        summaryRes
+          ? (summaryRes.summary as SummaryItems)
+          : initialInventoryTotals,
         formState.formElements,
         {
           result: {},
@@ -1385,25 +1507,23 @@ const { printVoucher } = useCommenPrint();
       );
 
       if (totalRes) {
-
         totalRes.summary = summaryRes.summary;
         totalRes.transaction = totalRes.transaction ?? {};
         totalRes.transaction.master = { ...totalRes.transaction.master };
         totalRes.transaction.details = [];
-        totalRes.loading = { isLoading: false, text: '' }
-        totalRes.currentCell = {
+        totalRes.loading = { isLoading: false, text: "" };
+        (totalRes.currentCell = {
           reCenterRow: false,
           column: editableColumn?.dataField ?? "",
           data: data ?? initialTransactionDetailData,
           rowIndex: rowIndex ?? 0,
-        },
-
+        }),
           // Dispatch the state update
 
           dispatch(
             formStateHandleFieldChangeKeysOnly({
               fields: totalRes,
-              updateOnlyGivenDetailsColumns: true
+              updateOnlyGivenDetailsColumns: true,
             })
           );
       }
@@ -1837,8 +1957,9 @@ const { printVoucher } = useCommenPrint();
         onConfirm: async () => {
           const dataGridInstance = gridRef.current.instance(); // Access DataGrid instance
           const focusedRowIndex = dataGridInstance.option("focusedRowIndex");
-          const rowData = dataGridInstance.getVisibleRows()[focusedRowIndex]?.data;
-          await handleRemoveItem(rowData.slNo)
+          const rowData =
+            dataGridInstance.getVisibleRows()[focusedRowIndex]?.data;
+          await handleRemoveItem(rowData.slNo);
         },
       });
     }
@@ -1990,9 +2111,7 @@ const { printVoucher } = useCommenPrint();
 
   // Voucher number navigation handlers
 
-
   const loadTemporaryRows = async () => {
-
     let details: Array<TransactionDetail> = [];
     const tmp = await getStorageString(
       `${formState.transaction.master.voucherType}${formState.transaction.master.voucherForm}`
@@ -2000,21 +2119,36 @@ const { printVoucher } = useCommenPrint();
     if (tmp != undefined && tmp != null && tmp != "") {
       const tmpRows = JSON.parse(tmp) as Array<TransactionDetail>;
       if (tmpRows.length > 0) {
-        details = [...tmpRows, ...Array.from({ length: 30 }, (_, index) => ({
-          ...initialTransactionDetailData,
-          slNo: generateUniqueKey()
-        }))];
-        const batchIds = tmpRows.map(x => x.productBatchID).join(',');
-        const batchUnits = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/BatchUnits`, `arrayOfBatchID=${batchIds}`)
+        details = [
+          ...tmpRows,
+          ...Array.from({ length: 30 }, (_, index) => ({
+            ...initialTransactionDetailData,
+            slNo: generateUniqueKey(),
+          })),
+        ];
+        const batchIds = tmpRows.map((x) => x.productBatchID).join(",");
+        const batchUnits = await api.getAsync(
+          `${Urls.inv_transaction_base}${transactionType}/BatchUnits`,
+          `arrayOfBatchID=${batchIds}`
+        );
 
-        if (details.length > 0 && calculateSummary && calculateTotal && formState && dispatch && formStateHandleFieldChangeKeysOnly) {
+        if (
+          details.length > 0 &&
+          calculateSummary &&
+          calculateTotal &&
+          formState &&
+          dispatch &&
+          formStateHandleFieldChangeKeysOnly
+        ) {
           const summaryRes = calculateSummary(details, formState, {
             result: {},
           });
 
           const totalRes = calculateTotal(
             formState.transaction.master,
-            summaryRes ? summaryRes.summary as SummaryItems : initialInventoryTotals,
+            summaryRes
+              ? (summaryRes.summary as SummaryItems)
+              : initialInventoryTotals,
             formState.formElements,
             {
               result: {},
@@ -2027,19 +2161,17 @@ const { printVoucher } = useCommenPrint();
             totalRes.transaction.master = { ...totalRes.transaction.master };
             totalRes.transaction.details = [];
             totalRes.batchesUnits = batchUnits;
-            totalRes.loading = { isLoading: false, text: '' }
+            totalRes.loading = { isLoading: false, text: "" };
 
             // Dispatch the state update
 
             dispatch(
               formStateHandleFieldChangeKeysOnly({
                 fields: totalRes,
-                updateOnlyGivenDetailsColumns: true
+                updateOnlyGivenDetailsColumns: true,
               })
             );
-            dispatch(
-              formStateSetDetails(details)
-            );
+            dispatch(formStateSetDetails(details));
           }
         }
       }
@@ -2156,7 +2288,10 @@ const { printVoucher } = useCommenPrint();
     //   return;
     // }
 
-    if (formState.transaction.master.isInvoiced === true && (formState.transaction.master.voucherType == "GRN")) {
+    if (
+      formState.transaction.master.isInvoiced === true &&
+      formState.transaction.master.voucherType == "GRN"
+    ) {
       const invoicedConfirmResult = await ERPAlert.show({
         title: t("warning"),
         text: t("transaction_already_invoiced_warning"),
@@ -2238,7 +2373,7 @@ const { printVoucher } = useCommenPrint();
 
         try {
           // Begin transaction and delete
-          const deleteResult = await api.delete(
+          const deleteResult = (await api.delete(
             `${Urls.inv_transaction_base}${transactionType}`,
             {
               data: {
@@ -2247,7 +2382,7 @@ const { printVoucher } = useCommenPrint();
                 transactionType: transactionType,
               },
             }
-          ) as any;
+          )) as any;
 
           if (deleteResult && deleteResult?.isOk) {
             dispatch(
@@ -2261,7 +2396,7 @@ const { printVoucher } = useCommenPrint();
               text: t("transaction_deleted_successfully"),
               icon: "success",
               showCancelButton: false,
-              confirmButtonText: t("close")
+              confirmButtonText: t("close"),
             });
 
             clearControls(false);
@@ -2278,7 +2413,6 @@ const { printVoucher } = useCommenPrint();
               icon: "error",
             });
           }
-
 
           // Update form elements state
           dispatch(
@@ -2343,7 +2477,11 @@ const { printVoucher } = useCommenPrint();
         formState.transaction.master.purchaseInvoiceNumber,
         undefined,
         undefined,
-        true, false, "PO", "", formState.transaction.master.voucherPrefix
+        true,
+        false,
+        "PO",
+        "",
+        formState.transaction.master.voucherPrefix
       );
     }
   }, [formState.transaction.master?.purchaseInvoiceNumber]);
@@ -2419,10 +2557,9 @@ const { printVoucher } = useCommenPrint();
             voucherNumber: getVoucherNumber,
             purchaseInvoiceNumber: "",
             // transactionMasterID: 0,
-            transactionDate: moment(
-              clientSession.softwareDate,
-              "DD/MM/YYYY"
-            ).local().toISOString(),
+            transactionDate: moment(clientSession.softwareDate, "DD/MM/YYYY")
+              .local()
+              .toISOString(),
           },
         })
       );
@@ -2513,9 +2650,12 @@ const { printVoucher } = useCommenPrint();
           );
           calculateSummaryAndTotal = true;
         }
-      } else if (columnName === "qty" || columnName === "unitPrice"
-        || columnName === "discPerc" || columnName === "discount"
-        || columnName === "barcodePrinted"
+      } else if (
+        columnName === "qty" ||
+        columnName === "unitPrice" ||
+        columnName === "discPerc" ||
+        columnName === "discount" ||
+        columnName === "barcodePrinted"
       ) {
         outDetail[columnName] = value;
         // Calculate row amount
@@ -2678,7 +2818,8 @@ const { printVoucher } = useCommenPrint();
         }
       });
       const res: DataAutoBarcode = await api.getAsync(
-        `${Urls.inv_transaction_base
+        `${
+          Urls.inv_transaction_base
         }${transactionType}/LoadProductDetailsByAutoBarCode?${queryParams.toString()}`
       );
 
@@ -2709,15 +2850,17 @@ const { printVoucher } = useCommenPrint();
         );
       } else if (res?.products?.length === 1) {
         let product = res.products[0];
-        product.productName = product.productName.replace(/^\s+/, m => "\u00A0".repeat(m.length));
+        product.productName = product.productName.replace(/^\s+/, (m) =>
+          "\u00A0".repeat(m.length)
+        );
         const _index =
           forImport != true
             ? formState.transaction.details.findIndex(
-              (x) =>
-                x.barCode == product.autoBarcode &&
-                x.productID > 0 &&
-                x.slNo != detail.slNo
-            )
+                (x) =>
+                  x.barCode == product.autoBarcode &&
+                  x.productID > 0 &&
+                  x.slNo != detail.slNo
+              )
             : -1;
         if (
           product.autoBarcode != "" &&
@@ -2748,7 +2891,7 @@ const { printVoucher } = useCommenPrint();
               pld.currentCell = {
                 ...res,
                 data: formState.transaction.details[_index],
-                reCenterRow: false
+                reCenterRow: false,
               };
             }
             dispatch(
@@ -2880,14 +3023,18 @@ const { printVoucher } = useCommenPrint();
         // Handle VAT and CST based on form type
         if (clientSession.isAppGlobal) {
           outDetail.hsnCode = product.hsnCode || "";
-          outDetail.details2 = { ...outDetail.details2 ?? initialTransactionDetails2 }
+          outDetail.details2 = {
+            ...(outDetail.details2 ?? initialTransactionDetails2),
+          };
           // if (formState.transaction.master.voucherType !== "PI") {
           outDetail.details2!.cgstPerc = Number(product.p_CGSTPerc || 0);
           outDetail.details2!.sgstPerc = Number(product.p_SGSTPerc || 0);
           outDetail.details2!.igstPerc = 0;
 
           if (
-            formState.transaction.master.voucherForm.toLowerCase() === "interstate" || formState.transaction.master.voucherForm.toLowerCase() === "import"
+            formState.transaction.master.voucherForm.toLowerCase() ===
+              "interstate" ||
+            formState.transaction.master.voucherForm.toLowerCase() === "import"
           ) {
             outDetail.details2!.cgstPerc = 0;
             outDetail.details2!.sgstPerc = 0;
@@ -2895,7 +3042,9 @@ const { printVoucher } = useCommenPrint();
           }
 
           outDetail.details2!.cessPerc = Number(product.p_CessPerc || 0);
-          outDetail.details2!.additionalCessPerc = Number(product.p_AdditionalCessPerc || 0);
+          outDetail.details2!.additionalCessPerc = Number(
+            product.p_AdditionalCessPerc || 0
+          );
           // } else {
           //   outDetail.details2!.cgstPerc = 0;
           //   outDetail.details2!.sgstPerc = 0;
@@ -2904,15 +3053,15 @@ const { printVoucher } = useCommenPrint();
           //   outDetail.details2!.additionalCessPerc = 0;
           // }
         } else {
-
-
           const { voucherType, voucherForm } = formState.transaction.master;
 
           if (
-            !clientSession.isAppGlobal && (
-              voucherType === "PO" ||
+            !clientSession.isAppGlobal &&
+            (voucherType === "PO" ||
               voucherType === "PE" ||
-              (voucherForm === "VAT" && voucherType !== "PO" && voucherType !== "PE"))
+              (voucherForm === "VAT" &&
+                voucherType !== "PO" &&
+                voucherType !== "PE"))
           ) {
             outDetail.vatPerc = Number(product.pVatPerc || 0);
             outDetail.cstPerc = Number(product.purchaseExciseTaxPerc || 0);
@@ -2976,9 +3125,9 @@ const { printVoucher } = useCommenPrint();
           ];
           let final =
             _res?.transaction?.details != undefined &&
-              _res?.transaction?.details.length > 0
+            _res?.transaction?.details.length > 0
               ? (_res?.transaction
-                ?.details[0] as DeepPartial<TransactionDetail>)
+                  ?.details[0] as DeepPartial<TransactionDetail>)
               : latestData;
           currentDetails[data.rowIndex] = final as TransactionDetail;
           const summaryRes = calculateSummary(currentDetails, formState, {
@@ -3034,20 +3183,20 @@ const { printVoucher } = useCommenPrint();
           ]);
           setCurrentCell(
             res,
-            result.transaction!.details[0] as TransactionDetail, false
+            result.transaction!.details[0] as TransactionDetail,
+            false
           );
         }
 
         return result;
       } else if (res?.productId > 0 && forImport != true) {
-
-        dispatch(formStateHandleFieldChangeKeysOnly(
-          {
+        dispatch(
+          formStateHandleFieldChangeKeysOnly({
             fields: {
-              batchGridShowKey: res?.productId
-            }
-          }
-        ));
+              batchGridShowKey: res?.productId,
+            },
+          })
+        );
       } else if (forImport != true) {
         const res = focusToNextColumn(data.rowIndex, data.searchColumn, [
           "pCode",
@@ -3062,7 +3211,6 @@ const { printVoucher } = useCommenPrint();
       console.log(err);
 
       return result;
-
     }
   };
 
@@ -3074,7 +3222,6 @@ const { printVoucher } = useCommenPrint();
     columnName: keyof TransactionDetail,
     rowIndex: number
   ) => {
-
     const res = await api.getAsync(
       `${Urls.inv_transaction_base}${transactionType}/ProductBatchUnitPrices/${detail.productBatchID}/${outDetail.unitID}/${actualPriceVisible}`
     );
@@ -3130,11 +3277,12 @@ const { printVoucher } = useCommenPrint();
     }
   };
 
-  const handlePrintBarcode = async (
-  ) => {
+  const handlePrintBarcode = async () => {
     try {
       const rowIndexes = [];
-      const hasReprint = formState.transaction.details.filter(x => x.barcodePrinted == true).length > 0
+      const hasReprint =
+        formState.transaction.details.filter((x) => x.barcodePrinted == true)
+          .length > 0;
       if (hasReprint) {
         const confirm = await ERPAlert.show({
           icon: "info",
@@ -3148,8 +3296,14 @@ const { printVoucher } = useCommenPrint();
           },
         });
         if (confirm) {
-
-          const slNos = formState.transaction.details.filter(x => x.productID > 0 && x.barcodePrinted != true && (x.stickerQty + x.qty) > 0).map(x => x.slNo);
+          const slNos = formState.transaction.details
+            .filter(
+              (x) =>
+                x.productID > 0 &&
+                x.barcodePrinted != true &&
+                x.stickerQty + x.qty > 0
+            )
+            .map((x) => x.slNo);
           printBarcode(
             slNos,
             true,
@@ -3160,7 +3314,14 @@ const { printVoucher } = useCommenPrint();
           );
         }
       } else {
-        const slNos = formState.transaction.details.filter(x => x.productID > 0 && x.barcodePrinted != true && (x.stickerQty + x.qty) > 0).map(x => x.slNo);
+        const slNos = formState.transaction.details
+          .filter(
+            (x) =>
+              x.productID > 0 &&
+              x.barcodePrinted != true &&
+              x.stickerQty + x.qty > 0
+          )
+          .map((x) => x.slNo);
         printBarcode(
           slNos,
           false,
@@ -3170,12 +3331,8 @@ const { printVoucher } = useCommenPrint();
           false
         );
       }
-
-
-    } catch (error) {
-
-    }
-  }
+    } catch (error) {}
+  };
   const handleTextDataKeyDown = async (
     value: any,
     event: React.KeyboardEvent<HTMLInputElement> | KeyboardEvent,
@@ -3206,9 +3363,9 @@ const { printVoucher } = useCommenPrint();
           event.preventDefault();
           dispatch(
             formStateHandleFieldChange({
-              fields: { documentModal: true }
+              fields: { documentModal: true },
             })
-          )
+          );
         }
         // Document Properties ☝
         // if (event.shiftKey && event.key === "F2") {
@@ -3239,8 +3396,7 @@ const { printVoucher } = useCommenPrint();
               const columnIndex = visibleColumns.indexOf(firstEditableColumn);
               const res = purchaseGridRef.current.focusCell(0, columnIndex);
               if (res) {
-                const data =
-                  formState.transaction.details[res.rowIndex];
+                const data = formState.transaction.details[res.rowIndex];
                 dispatch(
                   formStateHandleFieldChange({
                     fields: {
@@ -3269,7 +3425,7 @@ const { printVoucher } = useCommenPrint();
           }
         }
         // Save Document ☝
-        return { handled: true }
+        return { handled: true };
       }
       if (!result.formElements) {
         result.formElements = {};
@@ -3294,7 +3450,11 @@ const { printVoucher } = useCommenPrint();
             dispatch(
               commonParams.formStateHandleFieldChangeKeysOnly({
                 fields: {
-                  showQuantityFactors: { visible: true, rowIndex: rowIndex, qtyDesc: data.productDescription },
+                  showQuantityFactors: {
+                    visible: true,
+                    rowIndex: rowIndex,
+                    qtyDesc: data.productDescription,
+                  },
                 },
               })
             );
@@ -3316,7 +3476,6 @@ const { printVoucher } = useCommenPrint();
         case "i":
         case "I":
           if (isCtrlPressed) {
-
             dispatch(
               formStateHandleFieldChange({
                 fields: {
@@ -3335,10 +3494,10 @@ const { printVoucher } = useCommenPrint();
             dispatch(
               commonParams.formStateHandleFieldChangeKeysOnly({
                 fields: {
-                  ledgerDetails: true
-                }
+                  ledgerDetails: true,
+                },
               })
-            )
+            );
             return { handled: true };
           }
         //  Party Search ☝
@@ -3401,12 +3560,12 @@ const { printVoucher } = useCommenPrint();
           let data = { ...formState.transaction.details[rowIndex] };
           if (columnName == "actionCol") {
             if (!isNullOrUndefinedOrEmpty(value)) {
-              await handleRemoveItem(value)
+              await handleRemoveItem(value);
             } else {
               // const res = focusToNextColumn(rowIndex, columnName);
               // setCurrentCell(res, data);
             }
-            break
+            break;
           }
           if (columnName == "pCode") {
             data.pCode = value;
@@ -3430,8 +3589,7 @@ const { printVoucher } = useCommenPrint();
               const res = focusToNextColumn(rowIndex, columnName);
               setCurrentCell(res, data, false);
             }
-          }
-          else if (columnName == "product") {
+          } else if (columnName == "product") {
             data.product = value;
             if (!isNullOrUndefinedOrEmpty(value)) {
               await loadProductDetailsByAutoBarcode(
@@ -3453,9 +3611,7 @@ const { printVoucher } = useCommenPrint();
               const res = focusToNextColumn(rowIndex, columnName);
               setCurrentCell(res, data, false);
             }
-          }
-
-          else if (columnName == "barCode") {
+          } else if (columnName == "barCode") {
             data.barCode = value;
             if (!isNullOrUndefinedOrEmpty(value)) {
               await loadProductDetailsByAutoBarcode(
@@ -3524,21 +3680,24 @@ const { printVoucher } = useCommenPrint();
             data.salesPrice =
               columnName == "salesPrice" ? value : data.salesPrice;
 
-            calculateRowAmount(data, columnName, {
-              result: {
-                transaction: {
-                  details: [data],
-                }
-
+            calculateRowAmount(
+              data,
+              columnName,
+              {
+                result: {
+                  transaction: {
+                    details: [data],
+                  },
+                },
+                formStateHandleFieldChangeKeysOnly:
+                  formStateHandleFieldChangeKeysOnly,
               },
-              formStateHandleFieldChangeKeysOnly:
-                formStateHandleFieldChangeKeysOnly,
-            },
-              false);
+              false
+            );
 
             if (
               applicationSettings.inventorySettings?.showRateWarning.toUpperCase() ==
-              "WARN" &&
+                "WARN" &&
               data.salesPrice > 0
             ) {
               if (data.unitPrice > data.salesPrice) {
@@ -3569,7 +3728,7 @@ const { printVoucher } = useCommenPrint();
               }
             } else if (
               applicationSettings.inventorySettings?.showRateWarning.toUpperCase() ==
-              "BLOCK" &&
+                "BLOCK" &&
               data.salesPrice > 0
             ) {
               if (data.unitPrice > data.salesPrice) {
@@ -3578,9 +3737,12 @@ const { printVoucher } = useCommenPrint();
               }
             }
           } else if (columnName == "btnPrintBarcode") {
-
-            if ((formState.transaction.details[rowIndex].qty + formState.transaction.details[rowIndex].stickerQty) <= 0) {
-              break
+            if (
+              formState.transaction.details[rowIndex].qty +
+                formState.transaction.details[rowIndex].stickerQty <=
+              0
+            ) {
+              break;
             }
             const isReprint =
               formState.transaction.details[rowIndex].barcodePrinted;
@@ -3668,9 +3830,9 @@ const { printVoucher } = useCommenPrint();
                 updateOnlyGivenDetailsColumns: true,
               })
             );
-          }
-          else if (columnName == "memoEditor") {
-            const data: TransactionDetail = formState.transaction.details[rowIndex];
+          } else if (columnName == "memoEditor") {
+            const data: TransactionDetail =
+              formState.transaction.details[rowIndex];
             const memoDetails = {
               memo: data.moreDetails.memo || "",
             };
@@ -3686,8 +3848,7 @@ const { printVoucher } = useCommenPrint();
                 updateOnlyGivenDetailsColumns: true,
               })
             );
-          }
-          else if (columnName == "grossConvert") {
+          } else if (columnName == "grossConvert") {
             changeGrossToUnitRate(rowIndex, columnName);
           } else if (columnName == "serial") {
             const rowData: TransactionDetail =
@@ -3817,8 +3978,9 @@ const { printVoucher } = useCommenPrint();
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `Purchase_Import_Template_${new Date().toISOString().split("T")[0]
-        }.xlsx`;
+      link.download = `Purchase_Import_Template_${
+        new Date().toISOString().split("T")[0]
+      }.xlsx`;
       link.style.display = "none";
 
       document.body.appendChild(link);
@@ -4061,10 +4223,14 @@ const { printVoucher } = useCommenPrint();
       // setIsLoading(false);
     }
   };
-  const loadLedgerData = async (_formState?: DeepPartial<TransactionFormState>, _dispatch?: any) => {
+  const loadLedgerData = async (
+    _formState?: DeepPartial<TransactionFormState>,
+    _dispatch?: any
+  ) => {
     const ledgerID = (_formState ?? formState)?.transaction?.master?.ledgerID;
-    const voucherType = (_formState ?? formState)?.transaction?.master?.voucherType;
-    _formState = _formState ?? {}
+    const voucherType = (_formState ?? formState)?.transaction?.master
+      ?.voucherType;
+    _formState = _formState ?? {};
     dispatch(
       formStateHandleFieldChange({
         fields: {
@@ -4075,11 +4241,12 @@ const { printVoucher } = useCommenPrint();
     );
 
     try {
-
       if (!isNullOrUndefinedOrZero(ledgerID)) {
         const [ledgerBalance, ledgerData] = await Promise.all([
           (ledgerID ?? 0) > 0
-            ? api.getAsync(`${Urls.inv_transaction_base}${transactionType}/LedgerBalance/${ledgerID}`)
+            ? api.getAsync(
+                `${Urls.inv_transaction_base}${transactionType}/LedgerBalance/${ledgerID}`
+              )
             : 0,
           api.getAsync(
             `${Urls.inv_transaction_base}${transactionType}/LedgerDetails?LedgerId=${ledgerID}`
@@ -4110,17 +4277,17 @@ const { printVoucher } = useCommenPrint();
               partyName: ledgerData?.partyName ?? "",
               displayName: ledgerData?.displayName ?? "",
               address1: ledgerData?.address1 ?? "",
-              address4: _formState.isInitialLedger ? _formState.transaction?.master?.address4 : ledgerData?.mobileNumber ?? "",
+              address4: _formState.isInitialLedger
+                ? _formState.transaction?.master?.address4
+                : ledgerData?.mobileNumber ?? "",
               address3: ledgerData?.address3 ?? "",
-            }
-          }
-        }
+            },
+          },
+        };
         debugger;
         if (!clientSession.isAppGlobal) {
           let customerType = "";
-          if (
-            ["PR"].includes(voucherType ?? "")
-          ) {
+          if (["PR"].includes(voucherType ?? "")) {
             if (applicationSettings.branchSettings.maintainKSA_EInvoice) {
               if (
                 ledgerData?.taxNumber != null &&
@@ -4147,11 +4314,13 @@ const { printVoucher } = useCommenPrint();
             },
           };
         }
-        _dispatch && _dispatch(formStateHandleFieldChangeKeysOnly({
-          fields: ret
-        }));
+        _dispatch &&
+          _dispatch(
+            formStateHandleFieldChangeKeysOnly({
+              fields: ret,
+            })
+          );
         return ret;
-
       } else {
         const ret = {
           ..._formState,
@@ -4171,14 +4340,15 @@ const { printVoucher } = useCommenPrint();
               address1: "",
               address4: "",
               address3: "",
-            }
-          }
-        }
-        _dispatch && _dispatch(
-          formStateHandleFieldChangeKeysOnly({
-            fields: ret,
-          })
-        );
+            },
+          },
+        };
+        _dispatch &&
+          _dispatch(
+            formStateHandleFieldChangeKeysOnly({
+              fields: ret,
+            })
+          );
         return ret;
       }
     } catch (error) {
@@ -4192,7 +4362,7 @@ const { printVoucher } = useCommenPrint();
         },
       })
     );
-    return {}
+    return {};
   };
   interface BillWiseDetail {
     accTransDetailID: number;
@@ -4204,9 +4374,7 @@ const { printVoucher } = useCommenPrint();
     accTransactionDetailID: number;
     billWiseDetails: BillWiseDetail[];
   }
-  async function postBillWiseDetails(
-    data: BillWiseRequest
-  ): Promise<any> {
+  async function postBillWiseDetails(data: BillWiseRequest): Promise<any> {
     try {
       const response = await api.postAsync(
         `${Urls.inv_transaction_base}${transactionType}/BillWiseDetail`,
@@ -4218,7 +4386,7 @@ const { printVoucher } = useCommenPrint();
             showbillwise: false,
           },
         })
-      )
+      );
       return response.data;
     } catch (error: any) {
       console.error("Error posting BillWiseDetails:", error);
@@ -4269,6 +4437,6 @@ const { printVoucher } = useCommenPrint();
     applyDiscountsToItems,
     handlePrintBarcode,
     loadLedgerData,
-    postBillWiseDetails
+    postBillWiseDetails,
   };
 };

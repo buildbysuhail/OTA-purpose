@@ -81,7 +81,8 @@ export function safeBase64Decode(str: string) {
 }
 export function base64ToModelUnicode(base64String: string): any {
   try {
-    const binaryString = atob(base64String); // Decode Base64 to binary string
+    const binaryString = safeBase64Decode(base64String);
+    if (binaryString == null) { return null}
     const bytes = new Uint8Array(
       binaryString.split("").map((char) => char.charCodeAt(0))
     );

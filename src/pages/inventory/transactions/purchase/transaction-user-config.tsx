@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { customJsonParse, modelToBase64 } from "../../../../utilities/jsonConverter";
+import { customJsonParse, modelToBase64, modelToBase64Unicode } from "../../../../utilities/jsonConverter";
 import { APIClient } from "../../../../helpers/api-client";
 import Urls from "../../../../redux/urls";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
@@ -114,8 +114,8 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
     try {
       const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, { ...formState.userConfig, themeName: 'Custom' });
       handleResponse(response, async () => {
-        const base64 = modelToBase64(formState.userConfig);
-        await setStorageString("utInvc", base64);
+        const base64 = modelToBase64Unicode(formState.userConfig);
+        await setStorageString(`${transactionType}_LocalSettings`, base64);
         dispatch(
           formStateHandleFieldChangeKeysOnly({
             fields: {
@@ -162,10 +162,9 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
         onConfirm: async (result: any) => {
           const res = await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/ResetLocalSettings`, {});
           handleResponse(res, async () => {
-            const st = atob(res.item);
-            await setStorageString("utInvc", res.item);
-            const _st: any = customJsonParse(st);
-            dispatch(formStateHandleFieldChange({ fields: { userConfig: _st } }));
+            const st = modelToBase64Unicode(res.item);
+            await setStorageString(`${transactionType}_LocalSettings`, st);
+            dispatch(formStateHandleFieldChange({ fields: { userConfig: res.item } }));
           });
         },
       });

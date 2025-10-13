@@ -4,7 +4,7 @@ import { X, Check, Palette } from "lucide-react";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import { useDispatch, useSelector } from "react-redux";
 import { handleResponse } from "../../../../utilities/HandleResponse";
-import { modelToBase64 } from "../../../../utilities/jsonConverter";
+import { modelToBase64, modelToBase64Unicode } from "../../../../utilities/jsonConverter";
 import Urls from "../../../../redux/urls";
 import { APIClient } from "../../../../helpers/api-client";
 import { RootState } from "../../../../redux/store";
@@ -457,8 +457,8 @@ const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, transactionTy
       if (!formState.selectedTheme) return;
       const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, { ...formState?.userConfig, ...formState.selectedTheme });
       handleResponse(response, async() => {
-        const base64 = modelToBase64({ ...formState?.userConfig, ...formState.selectedTheme });
-        await setStorageString("utInvc", base64)
+        const base64 = modelToBase64Unicode({ ...formState?.userConfig, ...formState.selectedTheme });
+        await setStorageString(`${transactionType}_LocalSettings`, base64)
         dispatch(formStateHandleFieldChangeKeysOnly({ fields: { selectedTheme: null, themeChangeCountdown: undefined } }))
         onClearThemeChangeInterval && onClearThemeChangeInterval();
         onClose();

@@ -292,16 +292,16 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       setForeColor(bgFor);
     }, [appState.mode, isFocused, focused, isHovered, inputBoxState]);
 
-    useEffect(() => {
-      if (inputBoxState?.inputStyle !== "normal" && useMUI === undefined) {
-        set_useMUI(true);
-      } else if (
-        inputBoxState?.inputStyle === "normal" &&
-        useMUI === undefined
-      ) {
-        set_useMUI(false);
-      }
-    }, [inputBoxState?.inputStyle, useMUI]);
+    // useEffect(() => {
+    //   if (inputBoxState?.inputStyle !== "normal" && useMUI === undefined) {
+    //     set_useMUI(true);
+    //   } else if (
+    //     inputBoxState?.inputStyle === "normal" &&
+    //     useMUI === undefined
+    //   ) {
+    //     set_useMUI(false);
+    //   }
+    // }, [inputBoxState?.inputStyle, useMUI]);
 
     useEffect(() => {
       if (
@@ -637,193 +637,193 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       type: type === "text" || type === undefined ? "text" : type,
     };
 
-    // if (_useMUI == true) {
-    //   const muiProps: TextFieldProps = {
-    //     ...commonProps,
-    //     ...numberInputProps,
-    //     label: !noLabel ? iLabel : undefined,
-    //     InputProps: {
-    //       startAdornment: prefix ? (
-    //         <InputAdornment position="start" onClick={onClickPrefix}>
-    //           {prefix}
-    //         </InputAdornment>
-    //       ) : undefined,
-    //       endAdornment: (
-    //         <>
-    //           {suffix && (
-    //             <InputAdornment position="end" onClick={onClickSuffix}>
-    //               {suffix}
-    //             </InputAdornment>
-    //           )}
-    //           {showCustomNumberChanger && (
-    //             <div
-    //               className="absolute right-0 top-0  h-full flex flex-col border-l dark:border-dark-border border-gray-300"
-    //               style={{
-    //                 // height: inputHeight,
-    //                 // width: `max(calc(${inputHeight} / 2), 1rem)`,
-    //                 ...(document.documentElement.dir === "rtl"
-    //                   ? {
-    //                     borderTopLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-    //                     borderBottomLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-    //                   }
-    //                   : {
-    //                     borderTopRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-    //                     borderBottomRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-    //                   }),
-    //               }}
-    //             >
-    //               <button
-    //                 type="button"
-    //                 className="flex items-center justify-center h-1/2 w-full dark:bg-dark-combo-dd dark:hover:bg-dark-hover-bg bg-white hover:bg-gray-100 focus:outline-none"
-    //                 onClick={() => {
-    //                   const currentValue = parseFloat(value as string) || 0;
-    //                   const newValue =
-    //                     currentValue + (step ? parseFloat(step.toString()) : 1);
-    //                   if (
-    //                     max === undefined ||
-    //                     newValue <= parseFloat(max.toString())
-    //                   ) {
-    //                     const event = {
-    //                       isCustomNumberChangerEvent: true,
-    //                       target: { value: newValue.toString() },
-    //                       mode: "up",
-    //                     } as any;
-    //                     handleChange(event);
-    //                   }
-    //                 }}
-    //                 style={{
-    //                   ...(document.documentElement.dir === "rtl"
-    //                     ? {
-    //                       borderTopLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-    //                     }
-    //                     : {
-    //                       borderTopRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-    //                     }),
-    //                 }}
-    //               >
-    //                 <ChevronUp
-    //                   className="text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-500 transition-colors"
-    //                   style={{
-    //                     height: `max(calc(${inputHeight} * 0.3), 0.5rem)`,
-    //                     width: `max(calc(${inputHeight} * 0.3), 0.5rem)`,
-    //                   }}
-    //                 />
-    //               </button>
-    //               <button
-    //                 type="button"
-    //                 className="flex items-center justify-center h-1/2 w-full dark:bg-dark-combo-dd dark:hover:bg-dark-hover-bg bg-white hover:bg-gray-100 border-t dark:border-dark-border border-gray-300 focus:outline-none"
-    //                 onClick={() => {
-    //                   const currentValue = parseFloat(value as string) || 0;
-    //                   const newValue =
-    //                     currentValue - (step ? parseFloat(step.toString()) : 1);
-    //                   if (
-    //                     min === undefined ||
-    //                     newValue >= parseFloat(min.toString())
-    //                   ) {
-    //                     const event = {
-    //                       isCustomNumberChangerEvent: true,
-    //                       target: { value: newValue.toString() },
-    //                       mode: "down",
-    //                     } as any;
-    //                     handleChange(event);
-    //                   }
-    //                 }}
-    //                 style={{
-    //                   ...(document.documentElement.dir === "rtl"
-    //                     ? {
-    //                       borderBottomLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-    //                     }
-    //                     : {
-    //                       borderBottomRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-    //                     }),
-    //                 }}
-    //               >
-    //                 <ChevronDown
-    //                   className="text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-500 transition-colors"
-    //                   style={{
-    //                     height: `max(calc(${inputHeight} * 0.3), 0.5rem)`,
-    //                     width: `max(calc(${inputHeight} * 0.3), 0.5rem)`,
-    //                     // marginTop: "1px",
-    //                     // width:"13px"
-    //                   }}
-    //                 />
-    //               </button>
-    //             </div>
-    //           )}
-    //           {fetching && (
-    //             <LoadingContainer>
-    //               <LoadingBar />
-    //             </LoadingContainer>
-    //           )}
-    //         </>
-    //       ),
-    //       inputRef: ref, // Add the ref attribute here
-    //     },
-    //     fullWidth: true,
-    //     variant: _variant,
-    //     inputProps: {
-    //       maxLength,
-    //       min,
-    //       max,
-    //       step,
-    //       accept,
-    //       "data-skip": skip,
-    //       "data-jump-to": jumpTo,
-    //       "data-jump-target": jumpTarget,
-    //       style: { appearance: "none" },
-    //       ...(type === "number" && {
-    //         inputMode: "decimal",
-    //         pattern: "[0-9]*\\.?[0-9]*",
-    //       }),
-    //     },
-    //     sx: {
-    //       ...sizeStyles.mui,
-    //       "& .MuiInputBase-input.Mui-disabled": {
-    //         "-webkit-text-fill-color": "#606060 !important",
-    //         color: "#606060 !important",
-    //       },
-    //       "& .Mui-disabled input": {
-    //         "-webkit-text-fill-color": "#606060 !important",
-    //         color: "#606060 !important",
-    //       },
-    //       ...(showCustomNumberChanger && {
-    //         "& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button": {
-    //           appearance: "none",
-    //         },
-    //         "& input[type=number]": {
-    //           appearance: "textfield",
-    //         },
-    //       }),
-    //     },
-    //     onKeyDown: (e) =>
-    //       disableEnterNavigation == true
-    //         ? onKeyDown != undefined
-    //           ? onKeyDown(e)
-    //           : undefined
-    //         : handleKeyDown(e),
-    //     onKeyUp: onKeyUp,
-    //   };
-    //   return (
-    //     <div
-    //       className={`${className} ${contextClassName || ""} `}
-    //       style={{
-    //         marginBottom: `${inputBoxState?.marginBottom ?? 0}px`,
-    //         marginTop: `${inputBoxState?.marginTop ?? 0}px`,
-    //       }}>
-    //       <TextField {...muiProps} />
-    //       {validation != undefined &&
-    //         validation != null &&
-    //         validation != "" && (
-    //           <ERPElementValidationMessage validation={validation} />
-    //         )}
-    //       {info != undefined && info != null && info != "" && (
-    //         <Typography className="text-[#374151] text-xs font-medium mt-1">
-    //           {infoWithLineBreaks(info)}
-    //         </Typography>
-    //       )}
-    //     </div>
-    //   );
-    // }
+    if (_useMUI == true) {
+      const muiProps: TextFieldProps = {
+        ...commonProps,
+        ...numberInputProps,
+        label: !noLabel ? iLabel : undefined,
+        InputProps: {
+          startAdornment: prefix ? (
+            <InputAdornment position="start" onClick={onClickPrefix}>
+              {prefix}
+            </InputAdornment>
+          ) : undefined,
+          endAdornment: (
+            <>
+              {suffix && (
+                <InputAdornment position="end" onClick={onClickSuffix}>
+                  {suffix}
+                </InputAdornment>
+              )}
+              {showCustomNumberChanger && (
+                <div
+                  className="absolute right-0 top-0  h-full flex flex-col border-l dark:border-dark-border border-gray-300"
+                  style={{
+                    // height: inputHeight,
+                    // width: `max(calc(${inputHeight} / 2), 1rem)`,
+                    ...(document.documentElement.dir === "rtl"
+                      ? {
+                        borderTopLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                        borderBottomLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                      }
+                      : {
+                        borderTopRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                        borderBottomRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                      }),
+                  }}
+                >
+                  <button
+                    type="button"
+                    className="flex items-center justify-center h-1/2 w-full dark:bg-dark-combo-dd dark:hover:bg-dark-hover-bg bg-white hover:bg-gray-100 focus:outline-none"
+                    onClick={() => {
+                      const currentValue = parseFloat(value as string) || 0;
+                      const newValue =
+                        currentValue + (step ? parseFloat(step.toString()) : 1);
+                      if (
+                        max === undefined ||
+                        newValue <= parseFloat(max.toString())
+                      ) {
+                        const event = {
+                          isCustomNumberChangerEvent: true,
+                          target: { value: newValue.toString() },
+                          mode: "up",
+                        } as any;
+                        handleChange(event);
+                      }
+                    }}
+                    style={{
+                      ...(document.documentElement.dir === "rtl"
+                        ? {
+                          borderTopLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                        }
+                        : {
+                          borderTopRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                        }),
+                    }}
+                  >
+                    <ChevronUp
+                      className="text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-500 transition-colors"
+                      style={{
+                        height: `max(calc(${inputHeight} * 0.3), 0.5rem)`,
+                        width: `max(calc(${inputHeight} * 0.3), 0.5rem)`,
+                      }}
+                    />
+                  </button>
+                  <button
+                    type="button"
+                    className="flex items-center justify-center h-1/2 w-full dark:bg-dark-combo-dd dark:hover:bg-dark-hover-bg bg-white hover:bg-gray-100 border-t dark:border-dark-border border-gray-300 focus:outline-none"
+                    onClick={() => {
+                      const currentValue = parseFloat(value as string) || 0;
+                      const newValue =
+                        currentValue - (step ? parseFloat(step.toString()) : 1);
+                      if (
+                        min === undefined ||
+                        newValue >= parseFloat(min.toString())
+                      ) {
+                        const event = {
+                          isCustomNumberChangerEvent: true,
+                          target: { value: newValue.toString() },
+                          mode: "down",
+                        } as any;
+                        handleChange(event);
+                      }
+                    }}
+                    style={{
+                      ...(document.documentElement.dir === "rtl"
+                        ? {
+                          borderBottomLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                        }
+                        : {
+                          borderBottomRightRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                        }),
+                    }}
+                  >
+                    <ChevronDown
+                      className="text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-500 transition-colors"
+                      style={{
+                        height: `max(calc(${inputHeight} * 0.3), 0.5rem)`,
+                        width: `max(calc(${inputHeight} * 0.3), 0.5rem)`,
+                        // marginTop: "1px",
+                        // width:"13px"
+                      }}
+                    />
+                  </button>
+                </div>
+              )}
+              {fetching && (
+                <LoadingContainer>
+                  <LoadingBar />
+                </LoadingContainer>
+              )}
+            </>
+          ),
+          inputRef: ref, // Add the ref attribute here
+        },
+        fullWidth: true,
+        variant: _variant,
+        inputProps: {
+          maxLength,
+          min,
+          max,
+          step,
+          accept,
+          "data-skip": skip,
+          "data-jump-to": jumpTo,
+          "data-jump-target": jumpTarget,
+          style: { appearance: "none" },
+          ...(type === "number" && {
+            inputMode: "decimal",
+            pattern: "[0-9]*\\.?[0-9]*",
+          }),
+        },
+        sx: {
+          ...sizeStyles.mui,
+          "& .MuiInputBase-input.Mui-disabled": {
+            "-webkit-text-fill-color": "#606060 !important",
+            color: "#606060 !important",
+          },
+          "& .Mui-disabled input": {
+            "-webkit-text-fill-color": "#606060 !important",
+            color: "#606060 !important",
+          },
+          ...(showCustomNumberChanger && {
+            "& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button": {
+              appearance: "none",
+            },
+            "& input[type=number]": {
+              appearance: "textfield",
+            },
+          }),
+        },
+        onKeyDown: (e) =>
+          disableEnterNavigation == true
+            ? onKeyDown != undefined
+              ? onKeyDown(e)
+              : undefined
+            : handleKeyDown(e),
+        onKeyUp: onKeyUp,
+      };
+      return (
+        <div
+          className={`${className} ${contextClassName || ""} `}
+          style={{
+            marginBottom: `${inputBoxState?.marginBottom ?? 0}px`,
+            marginTop: `${inputBoxState?.marginTop ?? 0}px`,
+          }}>
+          <TextField {...muiProps} />
+          {validation != undefined &&
+            validation != null &&
+            validation != "" && (
+              <ERPElementValidationMessage validation={validation} />
+            )}
+          {info != undefined && info != null && info != "" && (
+            <Typography className="text-[#374151] text-xs font-medium mt-1">
+              {infoWithLineBreaks(info)}
+            </Typography>
+          )}
+        </div>
+      );
+    }
 
     const { height, fontSize, fontWeight, color } = sizeStyles.regular;
 

@@ -146,8 +146,13 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   useEffect(() => {
     const fetchData = async () => {
-      const storedUtc = await getStorageString("utInvc"); // use get, not set
-      if (storedUtc) {
+      const storedUtc = await getStorageString(`${transactionType}_LocalSettings`); // use get, not set
+      if (storedUtc &&
+  storedUtc !== "" &&
+  storedUtc !== "undefined" &&
+  storedUtc !== "null" &&
+  storedUtc !== undefined &&
+  storedUtc !== null) {
         const decoded = safeBase64Decode(storedUtc) ?? "{}";
         setSt(customJsonParse(decoded));
       }

@@ -1821,8 +1821,8 @@ export const fetchTemplateFromApiById = async (
     }
 
     const initial = templateInitialState().activeTemplate;
-    const merged = merge({}, initial, parsed);
-    return merged;
+    const _merged = merge({}, initial, parsed);
+    return _merged;
   } catch (error) {
     console.error("Error fetching template:", error);
     return null;

@@ -49,7 +49,7 @@ export const templateConfig: DesignerConfigMap = {
         downloadComponent: <SharedDownloadTemplate />,
         PreviewComponent: <SharedTemplatePreview />,
         sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
-        tableState: generateTableColumns(initialPrintDetailDto)
+        tableState: []
         })},
       },
     },
@@ -58,7 +58,7 @@ export const templateConfig: DesignerConfigMap = {
         downloadComponent: <SharedDownloadTemplate />,
         PreviewComponent:  <SharedTemplatePreview />,
         sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
-        tableState: generateTableColumns(initialPrintDetailDto)
+        tableState: []
         })},
       },
     },
@@ -67,7 +67,7 @@ export const templateConfig: DesignerConfigMap = {
         downloadComponent: <SharedDownloadTemplate />,
         PreviewComponent: <SharedTemplatePreview />,
         sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
-        tableState: generateTableColumns(initialPrintDetailDto)
+        tableState: []
         })},
       },
     },
@@ -78,7 +78,7 @@ export const templateConfig: DesignerConfigMap = {
         downloadComponent: <SharedDownloadTemplate />,
         PreviewComponent: <SharedTemplatePreview />,
         sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
-        tableState: generateTableColumns(initialPrintDetailDto)
+        tableState: []
         })},
       },
     },
@@ -87,7 +87,7 @@ export const templateConfig: DesignerConfigMap = {
         downloadComponent: <SharedDownloadTemplate />,
         PreviewComponent:  <SharedTemplatePreview />,
         sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
-        tableState: generateTableColumns(initialPrintDetailDto)
+        tableState: []
       })},
       },
     },
@@ -96,7 +96,7 @@ export const templateConfig: DesignerConfigMap = {
         downloadComponent: <SharedDownloadTemplate />,
         PreviewComponent: <SharedTemplatePreview />,
         sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
-        tableState: generateTableColumns(initialPrintDetailDto)
+        tableState: []
         })},
       },
     },
@@ -105,7 +105,7 @@ export const templateConfig: DesignerConfigMap = {
         downloadComponent: <SharedDownloadTemplate />,
         PreviewComponent: <SharedTemplatePreview />,
         sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
-        tableState: generateTableColumns(initialPrintDetailDto)
+        tableState: []
         })},
     }
     },
@@ -115,14 +115,14 @@ export const templateConfig: DesignerConfigMap = {
         downloadComponent: <SharedDownloadTemplate />,
         PreviewComponent: <SharedTemplatePreview />,
         sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
-        tableState: generateTableColumns(initialPrintDetailDto)
+        tableState: []
         })},
       },
       "2inch": {
         downloadComponent: <SharedDownloadTemplate />,
         PreviewComponent: <SharedTemplatePreview />,
         sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
-        tableState: generateTableColumns(initialPrintDetailDto)
+        tableState: []
         })},
       },
     },

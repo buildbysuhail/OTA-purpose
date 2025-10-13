@@ -13,6 +13,7 @@ import {
 import { templateInitialState } from "../../reducers/TemplateReducer";
 import { getTemplates } from "./thunk";
 import { convertFileToBase64 } from "../../../utilities/file-utils";
+import { generateUniqueKey } from "../../../utilities/Utils";
 
 // Helper function to handle file-to-base64 conversion
 
@@ -125,6 +126,54 @@ const templateSlice = createSlice({
     //   ...fields
     // };
   }
+},
+addTemplateTableColumn: (
+  state: any,
+  action: PayloadAction<{
+    index?: number;
+    column: any;
+  }>
+) => {
+  const { index, column } = action.payload;
+  const table = state.activeTemplate.tableState;
+
+  if (index === undefined || index === null) {
+    // ✅ Add to the end
+    table.push({...column, key: generateUniqueKey()});
+  } else {
+    // ✅ Insert at specific index
+    table.splice(index, 0, column);
+  }
+},
+editTemplateTableColumn: (
+  state: any,
+  action: PayloadAction<{
+    index?: number;
+    column: any;
+  }>
+) => {
+  const { index, column } = action.payload;
+  const table = state.activeTemplate.tableState;
+
+  if (index === undefined || index === null) {
+    return;
+  } else {
+    // ✅ Insert at specific index
+    table[index] = {
+      ...table[index],
+      ...column, // merge or replace as needed
+    };
+  }
+},
+updateTemplateTableState: (
+  state: any,
+  action: PayloadAction<{
+    fields: any
+  }>
+) => {
+  const { fields } = action.payload;
+
+    state.activeTemplate.tableState = fields;
 },
     setTemplateTableMasterState: (state, action: PayloadAction<ItemTableMasterState>) => {
       state.activeTemplate.itemTableMasterState = action.payload;
@@ -287,6 +336,9 @@ export const {
   setTemplateFooterState,
   setTemplateCustomElements,
   setTemplateTableMasterState,
+  addTemplateTableColumn,
+  editTemplateTableColumn,
+  updateTemplateTableState
 } = templateSlice.actions;
 
 export default templateSlice.reducer;

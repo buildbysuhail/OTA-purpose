@@ -20,6 +20,7 @@ const getCellStyle = (base: CSSProperties, width?: string | number): CSSProperti
     minWidth: w,
     maxWidth: w,
     boxSizing: "border-box",
+    fontFamily:"roboto",
   };
 };
 
@@ -122,6 +123,7 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
         ...labelStylesBase,
         overflowWrap: "break-word",
         wordBreak: "break-word",
+        fontFamily:"roboto",
         hyphens: "auto" as CSSProperties["hyphens"],
       } as CSSProperties,
     };

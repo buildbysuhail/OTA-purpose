@@ -22,6 +22,7 @@ import { merge } from 'lodash';
 import { generateQRCodeDataUrl } from "../utils/qrSvgToImg";
 import { PrintDetailDto, PrintResponse } from "../../use-print-type";
 import { compressData } from "../../../utilities/compression";
+import { removeDefaults } from "../../../utilities/Utils";
 
 const api = new APIClient();
 
@@ -311,6 +312,7 @@ debugger;
     async (dataUrl: string) => {
       const tmpTemplate = {
         ...activeTemplate,
+        content: null, 
         propertiesState: {
           ...activeTemplate?.propertiesState,
           template_group: templateGroup,
@@ -318,6 +320,8 @@ debugger;
           template_type: designerType,
         },
       };
+      console.log(tmpTemplate);
+      
       const compressedContent = await compressData(tmpTemplate);
       const activeTemplates: TemplateDto = {
         templateType: tmpTemplate.propertiesState.template_type ?? "standard",
@@ -338,11 +342,11 @@ debugger;
       };
 
       const initial = templateInitialState().activeTemplate;
-      const _returnData = merge({}, initial, activeTemplates);
+      const cleanedTemplate = removeDefaults(activeTemplates, initial);
       // dispatch(setTemplate(_returnData));
 
       try {
-        const res = await api.postAsync(Urls.templates, _returnData);
+        const res = await api.postAsync(Urls.templates, cleanedTemplate);
         handleResponse(res, () => {
           navigate(`/templates?template_group=${templateGroup}`);
         });

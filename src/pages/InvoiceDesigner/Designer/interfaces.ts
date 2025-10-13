@@ -1,5 +1,6 @@
 import VoucherType from "../../../enums/voucher-types";
 import { ActionState } from "../../../redux/slices/templates/thunk";
+import { PrintDetailDto } from "../../use-print-type";
 
 type TemplateTypes =
   | "standard"
@@ -567,6 +568,14 @@ export interface TableColumn<T> {
   width: any;
   field: keyof T;
   show: boolean;
+  key: string;
+}
+export const initialTableColumn: TableColumn<PrintDetailDto> = {
+  label: "",
+  width: 50,
+  field: "slNo",
+  show: true,
+  key:""
 }
 
 export interface TotalState {

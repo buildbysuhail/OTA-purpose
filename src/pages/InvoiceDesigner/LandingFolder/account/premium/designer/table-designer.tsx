@@ -1,11 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { ERPScrollArea } from "../../../../../../components/ERPComponents/erp-scrollbar";
-import {  setTemplateTableMasterState, setTemplateTableState } from "../../../../../../redux/slices/templates/reducer";
-import { ItemTableMasterState, TableColumn } from "../../../../Designer/interfaces";
+import {
+  setTemplateTableMasterState,
+  setTemplateTableState,
+  updateTemplateTableState,
+} from "../../../../../../redux/slices/templates/reducer";
+import {
+  ItemTableMasterState,
+  TableColumn,
+} from "../../../../Designer/interfaces";
 import ERPCheckbox from "../../../../../../components/ERPComponents/erp-checkbox";
 import ErpInput from "../../../../../../components/ERPComponents/erp-input";
 import ERPStepInput from "../../../../../../components/ERPComponents/erp-step-input";
@@ -15,6 +22,9 @@ import { RootState } from "../../../../../../redux/store";
 import ERPButton from "../../../../../../components/ERPComponents/erp-button";
 import ERPModal from "../../../../../../components/ERPComponents/erp-modal";
 import { TableManagerContent } from "./tabble-col-manage";
+import { TableColumnAddOrEdit } from "./tabble-column";
+import { PrintDetailDto } from "../../../../../use-print-type";
+import { generateUniqueKey, moveArrayElement } from "../../../../../../utilities/Utils";
 
 interface ItemTableDesignerProps<T> {
   tableState: TableColumn<T>[];
@@ -29,113 +39,185 @@ interface ItemTableLayoutDesignerProps {
   onChange?: (state: ItemTableMasterState) => void;
 }
 
-const LabelsEditor = <T,>({ tableState, currentTableState,  onChange}: ItemTableLabelDesignerProps<T>) => {
-  const { t } = useTranslation('system');
+const LabelsEditor = <T,>({
+  tableState,
+  currentTableState,
+  onChange,
+}: ItemTableLabelDesignerProps<T>) => {
+  const { t } = useTranslation("system");
   const dispatch = useDispatch();
-  const [openTableCol,setOpenTableCol] = useState(false);
+  const [openTableCol, setOpenTableCol] = useState({show: false, index: undefined, column: undefined} as {show: boolean, index?: number, column?: TableColumn<PrintDetailDto>});
 
-  useEffect(() => {
-    const updatedCurrentTableState = currentTableState.map(currentItem => {
-      // Find matching item in tableState by field variable
-      const matchingTableItem = tableState.find(tableItem => 
-        tableItem.field === currentItem.field
-      );
-      
-      // If matching item exists in tableState, keep the current item
-      // Otherwise, it will be filtered out
-      return matchingTableItem ? currentItem : null;
-    }).filter(Boolean); // Remove null items
-    
-    // Add items from tableState that don't exist in currentTableState
-    const fieldsInCurrent = new Set(currentTableState.map(item => item.field));
-    const itemsToAdd = tableState.filter(tableItem => 
-      !fieldsInCurrent.has(tableItem.field)
-    );
-    
-    // Combine filtered current items with new items from tableState
-    const finalTableState = [...updatedCurrentTableState, ...itemsToAdd];
-    
-    // Only update if there are actual changes
-    if (JSON.stringify(finalTableState) !== JSON.stringify(currentTableState)) {
-      dispatch(setTemplateTableState({fields:{}, key:"", templateState:finalTableState as any, updateAll: true}));
-    }
-  }, [tableState, currentTableState, onChange]);
+  // useEffect(() => {
+  //   const updatedCurrentTableState = currentTableState
+  //     .map((currentItem) => {
+  //       // Find matching item in tableState by field variable
+  //       const matchingTableItem = tableState.find(
+  //         (tableItem) => tableItem.field === currentItem.field
+  //       );
 
+  //       // If matching item exists in tableState, keep the current item
+  //       // Otherwise, it will be filtered out
+  //       return matchingTableItem ? currentItem : null;
+  //     })
+  //     .filter(Boolean); // Remove null items
+
+  //   // Add items from tableState that don't exist in currentTableState
+  //   const fieldsInCurrent = new Set(
+  //     currentTableState.map((item) => item.field)
+  //   );
+  //   const itemsToAdd = tableState.filter(
+  //     (tableItem) => !fieldsInCurrent.has(tableItem.field)
+  //   );
+
+  //   // Combine filtered current items with new items from tableState
+  //   const finalTableState = [...updatedCurrentTableState, ...itemsToAdd];
+
+  //   // Only update if there are actual changes
+  //   if (JSON.stringify(finalTableState) !== JSON.stringify(currentTableState)) {
+  //     dispatch(
+  //       setTemplateTableState({
+  //         fields: {},
+  //         key: "",
+  //         templateState: finalTableState as any,
+  //         updateAll: true,
+  //       })
+  //     );
+  //   }
+  // }, [tableState, currentTableState, onChange]);
+ const dragItem = useRef<string | null>(null);
+  const dragOverItem = useRef<string | null>(null);
+   const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
+      dragItem.current = e.currentTarget.id;
+    };
   
-  const onClose = async () => setOpenTableCol(false);
-   const onSubmit = async () => {
-    setOpenTableCol(false);
-   }
+    const handleDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
+      e.preventDefault();
+      dragOverItem.current = e.currentTarget.id;
+    };
   
+    const handleDropping = (eFromDataGrid: boolean = false, startIndex?: number | null, endIndex?: number | null) => {
+      debugger;
+      const draggedDataField = dragItem.current ? dragItem.current : null;
+      const targetDataField = dragOverItem.current ? dragOverItem.current: null;
+      startIndex = startIndex != null ? startIndex : currentTableState?.findIndex((fld: any) => fld?.key === draggedDataField);
+      endIndex = endIndex != null ? endIndex : currentTableState?.findIndex((fld: any) => fld?.key === targetDataField);
+  
+      if (startIndex !== -1 && endIndex !== -1) {
+        const list = moveArrayElement(
+              currentTableState,
+              startIndex,
+              endIndex
+            );
+            dispatch(updateTemplateTableState({fields: list}));
+      }
+  
+      dragItem.current = null;
+      dragOverItem.current = null;
+    };
+  
+  
+
   return (
     <>
-       <div className="flex justify-end">
-          <ERPButton
-            title={t("new")}
-            variant="primary"
-            onClick={()=>setOpenTableCol(true)}
+      <div className="flex justify-end">
+        <ERPButton
+          title={t("new")}
+          variant="primary"
+          onClick={() => {debugger; setOpenTableCol((prev: any) => {return {
+            ...prev,
+            show: true, index: undefined, column: undefined
+          }})}}
         />
+        
       </div>
-    {  currentTableState && currentTableState.length > 0 && 
-     currentTableState.filter((col)=>col.show).map((item: TableColumn<T>, index: number) => {
+      {currentTableState &&
+        currentTableState.length > 0 &&
+        currentTableState
+          .map((item: TableColumn<T>, index: number) => {
+            return (
+              <div
+                className=" flex gap-2  cursor-move"
+                key={`${index}_${String(item.field)}`}
+                id={`${item.key}`}
+                 draggable
+                        onDragStart={handleDragStart}
+                        onDragEnter={handleDragEnd}
+                        onDragEnd={() => handleDropping(false)}
+              >
+                ⋮⋮
+                <ERPCheckbox
+                  id="tb_col_show"
+                  noLabel
+                  // label={t(item.label)}
+                  checked={item.show}
+                  onChange={(e) =>
+                    onChange &&
+                    onChange(item.field as keyof T, { show: e.target.checked })
+                  }
+                />
+                <ErpInput
+                  disabled={item.show != true}
+                  type="number"
+                  id="tb_col_width"
+                  label={t("width")}
+                  className="w-20"
+                  value={item.width}
+                  onChange={(e) =>
+                    onChange &&
+                    onChange(item.field as keyof T, { width: e.target.value })
+                  }
+                />
+                <ErpInput
+                  disabled={item.show != true}
+                  id="tb_col_label"
+                  label={t(item.label)}
+                  value={item.label}
+                  onChange={(e) =>
+                    onChange &&
+                    onChange(item.field as keyof T, { label: e.target.value })
+                  }
+                />
+              </div>
+            );
+          })}
+      
 
-        return (
-           <div className=" flex gap-2" key={`${index}_${String(item.field)}`}>
-            <ERPCheckbox
-            
-        id="tb_col_show"
-        noLabel
-        // label={t(item.label)}
-        checked={item.show}
-        onChange={(e) => onChange && onChange(item.field as keyof T,{show: e.target.checked})}
-      />
-            <ErpInput
-            disabled={item.show != true}
-            type="number"
-              id="tb_col_width"
-              label={t("width")}
-              className="w-20"
-              value={item.width}
-              onChange={(e) => onChange && onChange(item.field as keyof T,{width: e.target.value})}
-            />
-            <ErpInput
-            disabled={item.show != true}
-              id="tb_col_label"
-              label={t(item.label)}
-              value={item.label}
-              onChange={(e) => onChange && onChange(item.field as keyof T,{label: e.target.value})}
-            />
-          </div>
-        )
-      })
-    }
-      <ERPModal
-        isForm={true}
-        disableOutsideClickClose={false}
-        isOpen={openTableCol}
-        title="Choose TableColumns"
-        closeModal={() => setOpenTableCol(false)}
-        width={1000}
-        height={700}
-        content={<TableManagerContent<T> currentTableState={currentTableState} />}
-        // footer={<TableManagerFooter onSubmit={onSubmit}  onClose={onClose}/>}
-      />  
+      {openTableCol && openTableCol.show && (
+        <ERPModal
+          isForm={true}
+          disableOutsideClickClose={false}
+          isOpen={openTableCol.show}
+          title="Choose TableColumns"
+          closeModal={() => setOpenTableCol({show: false, index: undefined, column: undefined})}
+          width={1000}
+          height={700}
+          content={
+            <TableColumnAddOrEdit onClose={() =>{setOpenTableCol({show: false, index: undefined, column: undefined})}} column={openTableCol.column} index={openTableCol.index} />
+          }
+          // footer={<TableManagerFooter onSubmit={onSubmit}  onClose={onClose}/>}
+        />
+      )}
     </>
   );
 };
 
-
-const LayoutEditor = ({ masterState, onChange }: ItemTableLayoutDesignerProps) => {
+const LayoutEditor = ({
+  masterState,
+  onChange,
+}: ItemTableLayoutDesignerProps) => {
   const [searchParams] = useSearchParams();
   const templateGroup = searchParams?.get("template_group");
-  const { t } = useTranslation('system');
+  const { t } = useTranslation("system");
 
   return (
     <div className="flex flex-col gap-4">
       <ERPCheckbox
         id="showTableRowBorder"
         label={t("table_row_border")}
-        onChange={(e) => onChange?.({ ...masterState, showTableRowBorder: e.target.checked })}
+        onChange={(e) =>
+          onChange?.({ ...masterState, showTableRowBorder: e.target.checked })
+        }
         checked={masterState?.showTableRowBorder}
       />
 
@@ -145,14 +227,18 @@ const LayoutEditor = ({ masterState, onChange }: ItemTableLayoutDesignerProps) =
           label={t("border_color")}
           type="color"
           value={masterState?.tableRowBorderColor}
-          onChange={(e) => onChange?.({ ...masterState, tableRowBorderColor: e.target?.value })}
+          onChange={(e) =>
+            onChange?.({ ...masterState, tableRowBorderColor: e.target?.value })
+          }
         />
       )}
 
       <ERPCheckbox
         id="showTableColBorder"
         label={t("table_col_border")}
-        onChange={(e) => onChange?.({ ...masterState, showTableColBorder: e.target.checked })}
+        onChange={(e) =>
+          onChange?.({ ...masterState, showTableColBorder: e.target.checked })
+        }
         checked={masterState?.showTableColBorder}
       />
 
@@ -162,7 +248,9 @@ const LayoutEditor = ({ masterState, onChange }: ItemTableLayoutDesignerProps) =
           label={t("border_color")}
           type="color"
           value={masterState?.tableColBorderColor}
-          onChange={(e) => onChange?.({ ...masterState, tableColBorderColor: e.target?.value })}
+          onChange={(e) =>
+            onChange?.({ ...masterState, tableColBorderColor: e.target?.value })
+          }
         />
       )}
 
@@ -170,12 +258,16 @@ const LayoutEditor = ({ masterState, onChange }: ItemTableLayoutDesignerProps) =
       <ERPCheckbox
         id="headerRepeatOnPage"
         label={t("header_repeat_on_each_page")}
-        onChange={(e) => onChange?.({ ...masterState, headerRepeatOnPage: e.target.checked })}
+        onChange={(e) =>
+          onChange?.({ ...masterState, headerRepeatOnPage: e.target.checked })
+        }
         checked={masterState?.headerRepeatOnPage}
       />
       <ERPStepInput
         value={masterState?.headerFontSize}
-        onChange={(headerFontSize) => onChange?.({ ...masterState, headerFontSize })}
+        onChange={(headerFontSize) =>
+          onChange?.({ ...masterState, headerFontSize })
+        }
         label={t("size_(8-28)")}
         id="headerFontSize"
         placeholder=" "
@@ -220,7 +312,9 @@ const LayoutEditor = ({ masterState, onChange }: ItemTableLayoutDesignerProps) =
 
       <ERPStepInput
         value={masterState?.itemRowFontSize}
-        onChange={(itemRowFontSize) => onChange?.({ ...masterState, itemRowFontSize })}
+        onChange={(itemRowFontSize) =>
+          onChange?.({ ...masterState, itemRowFontSize })
+        }
         label={t("size_(8-28)")}
         id="itemRowFontSize"
         placeholder=" "
@@ -264,37 +358,66 @@ const LayoutEditor = ({ masterState, onChange }: ItemTableLayoutDesignerProps) =
   );
 };
 
-const TablePremiumDesigner = <T,>({ tableState}: ItemTableDesignerProps<T>) => {
-// const TablePremiumDesigner = ({ }: ItemTableDesignerProps) => {
-    const templateData = useSelector((state: RootState) => state?.Template);
-    const dispatch = useDispatch();
+const TablePremiumDesigner = <T,>({
+  tableState,
+}: ItemTableDesignerProps<T>) => {
+  // const TablePremiumDesigner = ({ }: ItemTableDesignerProps) => {
+  const templateData = useSelector((state: RootState) => state?.Template);
+  const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState(0);
 
-  const { t } = useTranslation('system')
+  const { t } = useTranslation("system");
   const [maxHeight, setMaxHeight] = useState<number>(500);
-    useEffect(() => {
-      let wh = window.innerHeight;
-      setMaxHeight(wh);
-    }, []);
+  useEffect(() => {
+    let wh = window.innerHeight;
+    setMaxHeight(wh);
+  }, []);
 
   return (
     <>
-      <ERPScrollArea className={`overflow-y-auto overflow-x-hidden  flex h-auto max-h-[${maxHeight - 100}px] flex-col gap-1`}>
-       <div className="transition-all flex flex-col gap-1 p-4">
-         <div className="">
-            <ERPTab tabs={[t("labels"), t("layout")]} activeTab={activeTab} onClickTabAt={(index:number) => setActiveTab(index)} />
+      <ERPScrollArea
+        className={`overflow-y-auto overflow-x-hidden  flex h-auto max-h-[${
+          maxHeight - 100
+        }px] flex-col gap-1`}
+      >
+        <div className="transition-all flex flex-col gap-1 p-4">
+          <div className="">
+            <ERPTab
+              tabs={[t("labels"), t("layout")]}
+              activeTab={activeTab}
+              onClickTabAt={(index: number) => setActiveTab(index)}
+            />
           </div>
 
-
-      {activeTab === 0 && <LabelsEditor<T> tableState={tableState} currentTableState={templateData.activeTemplate.tableState??[]} onChange={(key: keyof T, tableState: DeepPartial<TableColumn<T>>) => dispatch(setTemplateTableState({key:key as string, fields: tableState}))} />}
-      {activeTab === 1 && <LayoutEditor masterState={templateData?.activeTemplate?.itemTableMasterState } onChange={(masterState: any) => dispatch(setTemplateTableMasterState(masterState))} />}
-    </div>
-    </ERPScrollArea>
-  
+          {activeTab === 0 && (
+            <LabelsEditor<T>
+              tableState={tableState}
+              currentTableState={templateData.activeTemplate.tableState ?? []}
+              onChange={(
+                key: keyof T,
+                tableState: DeepPartial<TableColumn<T>>
+              ) =>
+                dispatch(
+                  setTemplateTableState({
+                    key: key as string,
+                    fields: tableState,
+                  })
+                )
+              }
+            />
+          )}
+          {activeTab === 1 && (
+            <LayoutEditor
+              masterState={templateData?.activeTemplate?.itemTableMasterState}
+              onChange={(masterState: any) =>
+                dispatch(setTemplateTableMasterState(masterState))
+              }
+            />
+          )}
+        </div>
+      </ERPScrollArea>
     </>
   );
 };
 
 export default TablePremiumDesigner;
-
-

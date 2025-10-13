@@ -7,6 +7,7 @@ import moment from "moment";
 import dayjs from "dayjs";
 import { TableColumn } from "../pages/InvoiceDesigner/Designer/interfaces";
 import { fetchTemplateFromApiById } from "../pages/use-print";
+import { isEqual, isObject } from "lodash";
 
 export function capitalizeFirstLetter(text: string) {
   return text.charAt(0)?.toUpperCase() + text.slice(1);
@@ -1112,4 +1113,28 @@ export function generateTableColumns<T extends object>(obj: T): TableColumn<T>[]
 
 // More practical approach: convert from an object instance
 
+
+
+export function removeDefaults(obj: any, defaults: any): any {
+  if (!isObject(obj)) return obj;
+
+  // 👇 use Record<string, any> instead of {}
+  const result: Record<string, any> = Array.isArray(obj) ? [] : {};
+
+  for (const key in obj as Record<string, any>) {
+    const value = (obj as Record<string, any>)[key];
+    const defaultValue = defaults ? defaults[key] : undefined;
+
+    if (isObject(value)) {
+      const cleaned = removeDefaults(value, defaultValue);
+      if (Object.keys(cleaned).length > 0) {
+        result[key] = cleaned;
+      }
+    } else if (!isEqual(value, defaultValue)) {
+      result[key] = value;
+    }
+  }
+
+  return result;
+}
 

@@ -32,7 +32,7 @@ const SharedTemplatePreview = ({ data, template, qrCodeImages = {}}: AccountTran
         className=" relative  flex flex-col flex-grow-1 h-full w-full"
           style={{
           backgroundColor: template?.propertiesState?.bg_color || "#fff",
-          paddingTop: `${propertiesState?.padding?.top ?? 0}pt`,
+          // paddingTop: `${propertiesState?.padding?.top ?? 0}pt`,
           paddingRight: `${propertiesState?.padding?.right ?? 0}pt`,
           paddingBottom: `${propertiesState?.padding?.bottom ?? 0}pt`,
           paddingLeft: `${propertiesState?.padding?.left ?? 0}pt`,

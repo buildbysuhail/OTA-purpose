@@ -150,7 +150,7 @@ const DayBookDetailed = () => {
               ? ""
               : balance < 0
                 ? cellElement.data.particulars === "TOTAL" ? getFormattedValue(-1 * balance) :getFormattedValue (-1 * balance,false,4)
-                : cellElement.data.particulars === "TOTAL" ? getFormattedValue(balance) : balance;
+                : cellElement.data.particulars === "TOTAL" ? getFormattedValue(balance) : getFormattedValue(balance,false,4);
           return {
             ...exportCell,
             text: value,
@@ -193,8 +193,8 @@ const DayBookDetailed = () => {
             balance == null
               ? ""
               : balance < 0
-                ? cellElement.data.particulars === "TOTAL" ? getFormattedValue(-1 * balance) : (-1 * balance)
-                : cellElement.data.particulars === "TOTAL" ? getFormattedValue(balance) : balance;
+                ? cellElement.data.particulars === "TOTAL" ? getFormattedValue(-1 * balance) : getFormattedValue(-1 * balance,false,4)
+                : cellElement.data.particulars === "TOTAL" ? getFormattedValue(balance) :getFormattedValue(balance,false,4);
           return {
             ...exportCell,
             text: value,

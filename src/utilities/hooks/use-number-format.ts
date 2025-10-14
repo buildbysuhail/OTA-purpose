@@ -163,7 +163,6 @@ export const useNumberFormat = (): UseNumberFormatResult => {
       return '';
     }
     const _decimalPoint = decimalPoint != undefined ? decimalPoint: applicationSettings.mainSettings?.decimalPoints;
-    console.log(`_decimalPoint${_decimalPoint}`);
     
     let formattedText: string = round(val, _decimalPoint).toString();
     if(cuttingPoint > 0) {

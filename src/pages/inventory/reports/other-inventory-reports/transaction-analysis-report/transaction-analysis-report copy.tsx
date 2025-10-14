@@ -187,7 +187,7 @@ const TransactionAnalysis = () => {
         allowSearch: true,
         allowFiltering: true,
         allowSorting: true,
-        width: 80,
+        width: 80,        
         showInPdf: true,
         cellRender: (
           cellElement: any,
@@ -324,7 +324,7 @@ const TransactionAnalysis = () => {
         );
       },
       cellSummaryAction:(value: number) => {
-          return parseFloat(getFormattedValue(value));
+          return value.toFixed(2);
         },
     },
     {
@@ -419,27 +419,7 @@ const TransactionAnalysis = () => {
     },
   ];
 
-  const handleCalculateSummary = (options: any) => {
-    // if (options.name === "sales") {
-      switch (options.summaryProcess) {
-        case "start":
-          options.totalValue = 0;
-          break;
-
-        case "calculate":
-          if (options.value != null) {
-            const roundedSaleAmount = parseFloat(getFormattedValue(isNullOrUndefinedOrEmpty(options.value) ? 0 : options.value ) || "0")
-            options.totalValue += roundedSaleAmount;
-          }
-          break;
-
-        case "finalize":
-          options.totalValue = Number(options.totalValue);
-          // console.log(options.totalValue, "TOTAL");
-          break;
-      }
-    // }
-  };
+ 
 
 
   return (
@@ -524,7 +504,7 @@ const TransactionAnalysis = () => {
                   },
                 ]}
                 hideGridAddButton={true}
-                handleCalculateSummary={handleCalculateSummary}
+                // handleCalculateSummary={handleCalculateSummary}
                 enablefilter={false}
                 method={ActionType.GET}
                 reload={true}

@@ -11,7 +11,7 @@ import Urls from "../../../../../redux/urls";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import moment from "moment";
-import { isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
+import { erpParseFloat, isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
 
 const TransactionAnalysis = () => {
   const { t } = useTranslation("accountsReport");
@@ -284,7 +284,7 @@ const TransactionAnalysis = () => {
         })
     );
   }, [t, userSession.userTypeCode]);
-  const { getFormattedValue } = useNumberFormat();
+  const { getFormattedValue} = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) => {
       const value = itemInfo.value;
@@ -324,7 +324,7 @@ const TransactionAnalysis = () => {
         );
       },
       cellSummaryAction:(value: number) => {
-          return parseFloat(getFormattedValue(value));
+          return erpParseFloat(getFormattedValue(value));
         },
     },
     {
@@ -468,61 +468,8 @@ const TransactionAnalysis = () => {
                 columns={columns}
                 moreOption={false}
                 gridHeader={t("transaction_analysis")}
-                // dataUrl={Urls.transaction_analysis}
-                                data={[
-                  {
-                    "branch": null,
-                    "year": 2021,
-                    "month": "January",
-                    "sales": 12.3456,
-                    "purchase": 14187403.7824,
-                    "expense": 14875159.0154,
-                    "income": 14867712.1195,
-                    "accountsPayable": 578490.73,
-                    "accountsReceivable": 522435.767,
-                    "intMonth": 1,
-                    "branchID": 1
-                  },
-                  {
-                    "branch": null,
-                    "year": 2021,
-                    "month": "February",
-                    "sales": 7.89123,
-                    "purchase": 11900940.3618,
-                    "expense": 12557650.0338,
-                    "income": 12809228.7,
-                    "accountsPayable": 30212.27,
-                    "accountsReceivable": 20331.01,
-                    "intMonth": 2,
-                    "branchID": 1
-                  },
-                  {
-                    "branch": null,
-                    "year": 2021,
-                    "month": "March",
-                    "sales": 45.6789,
-                    "purchase": 14324396.6502,
-                    "expense": 14822318.0202,
-                    "income": 16014681.933,
-                    "accountsPayable": 324441.85,
-                    "accountsReceivable": 794062.95,
-                    "intMonth": 3,
-                    "branchID": 1
-                  },
-                  {
-                    "branch": null,
-                    "year": 2021,
-                    "month": "March",
-                    "sales": 3.45678,
-                    "purchase": 14324396.6502,
-                    "expense": 14822318.0202,
-                    "income": 16014681.933,
-                    "accountsPayable": 324441.85,
-                    "accountsReceivable": 794062.95,
-                    "intMonth": 3,
-                    "branchID": 1
-                  },
-                ]}
+                dataUrl={Urls.transaction_analysis}
+                         
                 hideGridAddButton={true}
                 handleCalculateSummary={handleCalculateSummary}
                 enablefilter={false}

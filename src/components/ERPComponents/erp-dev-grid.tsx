@@ -1740,7 +1740,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     const handleCalculateSummary = (options: any) => {
       let cellSummaryAction = summaryItems.find((x: SummaryConfig)=> x.column === options.name && x.cellSummaryAction != undefined )?.cellSummaryAction;
       if (summaryItems && summaryItems.length > 0 && cellSummaryAction != undefined) {
-        debugger;
         switch (options.summaryProcess) {
         case "start":
           options.totalValue = 0;
@@ -1748,12 +1747,12 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
         case "calculate":
           if (options.value != null) {
+        debugger;
             console.log(options.value);
-            console.log(options.text);
-            console.log(options);
             
             const roundedSaleAmount = cellSummaryAction  && cellSummaryAction(options.value);
             options.totalValue += roundedSaleAmount;
+            console.log(options.totalValue + roundedSaleAmount);
           }
           break;
 

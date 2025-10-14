@@ -1137,4 +1137,11 @@ export function removeDefaults(obj: any, defaults: any): any {
 
   return result;
 }
+export function erpParseFloat(value: string): number {
+    if (!value) return 0;
+    // Remove all commas
+    const cleaned = value.replace(/,/g, '');
+    // Parse as float
+    return parseFloat(cleaned) || 0;
+}
 

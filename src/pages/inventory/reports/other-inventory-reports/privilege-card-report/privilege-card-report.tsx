@@ -49,6 +49,29 @@ const PrivilegeCardReport = () => {
       allowSorting: true,
       width: 80,
       showInPdf: true,
+   cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.billAmount == null
+              ? 0
+              : getFormattedValue(cellElement.data.billAmount,false,4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.billAmount == null
+            ? 0
+            : getFormattedValue(cellElement.data.billAmount,false,4);
+        }
+      },
     },
     {
       dataField: "cardNumber",

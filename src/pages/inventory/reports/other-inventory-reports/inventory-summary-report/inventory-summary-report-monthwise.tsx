@@ -169,7 +169,6 @@ const InventorySummaryReportMonthwise: FC<
                     width: 1300,
                     drillDownCells: "month",
                     bodyProps: "month",
-
                   }}
               />
             </div>

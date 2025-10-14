@@ -14,6 +14,7 @@ import FOCRegisterReportFilter, {
 } from "./foc-register-report-filter";
 import GridId from "../../../../../redux/gridId";
 import moment from "moment";
+import { isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
 
 const FOCRegisterReport = () => {
   const { t } = useTranslation("accountsReport");
@@ -58,14 +59,14 @@ const FOCRegisterReport = () => {
       visible: true,
       width: 50,
       cellRender: (cellElement: any, cellInfo: any) => {
-          return (
-            <DrillDownCellTemplate
-              data={cellElement}
-              field="vchNo"
-            ></DrillDownCellTemplate>
-          );
-        },
+        return (
+          <DrillDownCellTemplate
+            data={cellElement}
+            field="vchNo"
+          ></DrillDownCellTemplate>
+        );
       },
+    },
     {
       dataField: "form",
       caption: t("form"),
@@ -552,25 +553,73 @@ const FOCRegisterReport = () => {
       column: "free",
       summaryType: "sum",
       valueFormat: "fixedPoint",
-      customizeText: customizeSummaryRow,
+      customizeText: (itemInfo: { value: any }) => {
+        return (
+          getFormattedValue(
+            parseFloat(
+              getFormattedValue(
+                isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value
+              ).replace(/,/g, "") || "0"
+            ),
+            false,
+            2
+          ) || "0"
+        );
+      },
     },
     {
       column: "freeValue",
       summaryType: "sum",
       valueFormat: "fixedPoint",
-      customizeText: customizeSummaryRow,
+      customizeText: (itemInfo: { value: any }) => {
+        return (
+          getFormattedValue(
+            parseFloat(
+              getFormattedValue(
+                isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value
+              ).replace(/,/g, "") || "0"
+            ),
+            false,
+            2
+          ) || "0"
+        );
+      },
     },
     {
       column: "freeCost",
       summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeSummaryRow,
+      customizeText: (itemInfo: { value: any }) => {
+        return (
+          getFormattedValue(
+            parseFloat(
+              getFormattedValue(
+                isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value
+              ).replace(/,/g, "") || "0"
+            ),
+            false,
+            2
+          ) || "0"
+        );
+      },
     },
     {
       column: "totalProfit",
       summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeSummaryRow,
+      customizeText: (itemInfo: { value: any }) => {
+        return (
+          getFormattedValue(
+            parseFloat(
+              getFormattedValue(
+                isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value
+              ).replace(/,/g, "") || "0"
+            ),
+            false,
+            2
+          ) || "0"
+        );
+      },
     },
   ];
   return (
@@ -600,13 +649,13 @@ const FOCRegisterReport = () => {
                 filterInitialData={FOCRegisterReportFilterInitialState}
                 reload={true}
                 gridId={GridId.foc_register_report}
-                 childPopupProps={{
-                    content: null,
-                    title: "",
-                    isForm: false,
-                    isTransactionScreen: true,
-                    drillDownCells: "vchNo,",
-                  }}
+                childPopupProps={{
+                  content: null,
+                  title: "",
+                  isForm: false,
+                  isTransactionScreen: true,
+                  drillDownCells: "vchNo,",
+                }}
               />
             </div>
           </div>

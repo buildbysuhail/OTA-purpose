@@ -76,6 +76,38 @@ export const purchaseGridCol = (
         visible: false,
       },
       {
+        dataField: "supplier",
+        caption: t("supplier"),
+        dataType: "string",
+        width: 100,
+        readOnly: true,
+        alignment: "right",
+      },
+      {
+        dataField: "supplierID",
+        caption: t("supplier_id"),
+        dataType: "number",
+        width: 100,
+        readOnly: true,
+        alignment: "right",
+      },
+      {
+        dataField: "avgSales",
+        caption: t("avg_sales"),
+        dataType: "number",
+        width: 100,
+        readOnly: true,
+        alignment: "right",
+      },
+      {
+        dataField: "sold",
+        caption: t("sold"),
+        dataType: "number",
+        width: 100,
+        readOnly: true,
+        alignment: "right",
+      },
+      {
         dataField: "brand",
         caption: t("brand"),
         idField: "brand",
@@ -223,6 +255,13 @@ export const purchaseGridCol = (
         allowEditing: true,
         alignment: "right",
         decimalPoint: 4,
+      },
+      {
+        dataField: "status",
+        caption: t("status"),
+        dataType: "string",
+        width: 200,
+        visible:false
       },
       {
         dataField: "salesPrice",
@@ -797,6 +836,59 @@ export const purchaseGridCol = (
         alignment: "left",
       },
       {
+        dataField: "salesLast30Days",
+        caption: t("sales_last_30_days"),
+        dataType: "number",
+        visible: false,
+        width: 150,
+        alignment: "right",
+      },
+      {
+        dataField: "salesLast90Days",
+        caption: t("sales_last_90_days"),
+        dataType: "number",
+        visible: false,
+        width: 150,
+        alignment: "right",
+      },
+      {
+        dataField: "supplierRefCode",
+        caption: t("supplier_ref_code"),
+        dataType: "string",
+        visible: false,
+        width: 150,
+        alignment: "right",
+      },
+      {
+        dataField: "lastSoldDate",
+        caption: t("last_sold_date"),
+        dataType: "string",
+        width: 150,
+        alignment: "right",
+      },
+      {
+        dataField: "poPendingQty",
+        caption: t("po_pending_qty"),
+        dataType: "number",
+        visible: false,
+        width: 150,
+        alignment: "right",
+      },
+      {
+        dataField: "salesLast180Days",
+        caption: t("sales_last_180_days"),
+        dataType: "number",
+        width: 150,
+        alignment: "right",
+      },
+      {
+        dataField: "pqPendingQty",
+        caption: t("pq_pending_qty"),
+        dataType: "number",
+        width: 150,
+        alignment: "right",
+      },
+      {
         dataField: "supplierReferenceProductCode",
         caption: t("supplier_pcode"),
         dataType: "string",
@@ -987,6 +1079,10 @@ export const purchaseGridCol = (
           "igstPerc", "igst", "cessPerc", "cessAmt", "additionalCessPerc",
           "additionalCess", "mR", "netRate", "itemType", "refBranchID",
           "employeeCode", "employeeName", "stdPurchasePrice", "refTransDtailId",
+
+          "supplier", "supplierID", "avgSales", "sold", "status", "salesLast30Days",
+          "salesLast90Days", "supplierRefCode", "lastSoldDate", "poPendingQty",
+          "salesLast180Days", "pqPendingQty",
         ].includes(field);
       } else if (
         userSession.countryId == Countries.India &&
@@ -995,6 +1091,10 @@ export const purchaseGridCol = (
         return ![
           "itemType", "employeeCode", "employeeName",
           "stdPurchasePrice", "refTransDtailId",
+
+          "supplier", "supplierID", "avgSales", "sold", "status", "salesLast30Days",
+          "salesLast90Days", "supplierRefCode", "lastSoldDate", "poPendingQty",
+          "salesLast180Days", "pqPendingQty",
         ].includes(field);
       }
 
@@ -1018,6 +1118,10 @@ export const purchaseGridCol = (
           "location", "grTransDetailsID", "poTransDetailsID", "ratePlusTax",
           "sortOrder", "profitPercentage", "schemeDiscount", "memo", "memoEditor",
           "rowNumber", "actualSalesPrice", "unit2", "unit3", "mfdDate", "warranty",
+
+          "supplier", "supplierID", "avgSales", "sold", "status", "salesLast30Days",
+          "salesLast90Days", "supplierRefCode", "lastSoldDate", "poPendingQty",
+          "salesLast180Days", "pqPendingQty",
         ].includes(field);
       } else if (
         userSession.countryId == Countries.India &&
@@ -1037,6 +1141,10 @@ export const purchaseGridCol = (
           "sortOrder", "profitPercentage", "schemeDiscount", "memo", "memoEditor",
           "rowNumber", "actualSalesPrice", "unit2", "unit3", "serial",
           "unitPriceFC", "grossFC", "mfdDate", "warranty",
+
+         "supplier", "supplierID", "avgSales", "sold", "status", "salesLast30Days",
+          "salesLast90Days", "supplierRefCode", "lastSoldDate", "poPendingQty",
+          "salesLast180Days", "pqPendingQty",
         ].includes(field);
       }
 
@@ -1061,6 +1169,10 @@ export const purchaseGridCol = (
           "supplierReferenceProductCode", "poTransDetailsID", "ratePlusTax",
           "warehouseID", "sortOrder", "profitPercentage", "schemeDiscount",
           "memo", "memoEditor", "actualSalesPrice", "unit2", "unit3",
+
+          "supplier", "supplierID", "avgSales", "sold", "status", "salesLast30Days",
+          "salesLast90Days", "supplierRefCode", "lastSoldDate", "poPendingQty",
+          "salesLast180Days", "pqPendingQty",
         ].includes(field);
       } else if (
         userSession.countryId == Countries.India &&
@@ -1077,6 +1189,10 @@ export const purchaseGridCol = (
           "poTransDetailsID", "ratePlusTax", "warehouseID", "sortOrder",
           "profitPercentage", "schemeDiscount", "memo", "memoEditor",
           "actualSalesPrice",
+
+          "supplier", "supplierID", "avgSales", "sold", "status", "salesLast30Days",
+          "salesLast90Days", "supplierRefCode", "lastSoldDate", "poPendingQty",
+          "salesLast180Days", "pqPendingQty",
         ].includes(field);
       }
 
@@ -1101,6 +1217,10 @@ export const purchaseGridCol = (
           "location", "grTransDetailsID", "ratePlusTax", "warehouseID",
           "sortOrder", "profitPercentage", "schemeDiscount", "memo", "memoEditor",
           "actualSalesPrice", "unit2", "unit3", "serial",
+
+          "supplier", "supplierID", "avgSales", "sold", "status", "salesLast30Days",
+          "salesLast90Days", "supplierRefCode", "lastSoldDate", "poPendingQty",
+          "salesLast180Days", "pqPendingQty",
         ].includes(field);
       } else if (
         userSession.countryId == Countries.India &&
@@ -1120,6 +1240,10 @@ export const purchaseGridCol = (
           "location", "grTransDetailsID", "ratePlusTax", "warehouseID",
           "sortOrder", "profitPercentage", "schemeDiscount", "memo", "memoEditor",
           "actualSalesPrice", "unit2", "unit3", "serial",
+
+          "supplier", "supplierID", "avgSales", "sold", "status", "salesLast30Days",
+          "salesLast90Days", "supplierRefCode", "lastSoldDate", "poPendingQty",
+          "salesLast180Days", "pqPendingQty",
         ].includes(field);
       }
 
@@ -1140,6 +1264,10 @@ export const purchaseGridCol = (
           "barcodeUnit3Printed", "grTransDetailsID", "ratePlusTax", "sortOrder",
           "profitPercentage", "schemeDiscount", "memo", "memoEditor",
           "actualSalesPrice", "unit2", "unit3",
+
+          "supplier", "supplierID", "avgSales", "sold", "status", "salesLast30Days",
+          "salesLast90Days", "supplierRefCode", "lastSoldDate", "poPendingQty",
+          "salesLast180Days", "pqPendingQty",
         ].includes(field);
       }
 
@@ -1152,6 +1280,12 @@ export const purchaseGridCol = (
           "mrp", "hsnCode", "cgst", "cgstPerc", "sgstPerc", "sgst",
           "igstPerc", "igst", "cessPerc", "cessAmt", "additionalCessPerc",
           "additionalCess", "mR", "netRate", "itemType", "refBranchID",
+
+          "supplier", "supplierID", "avgSales", "sold", "status", "salesLast30Days",
+          "salesLast90Days", "supplierRefCode", "lastSoldDate", "poPendingQty",
+          "salesLast180Days", "pqPendingQty",
+
+
           "lastPurchaseRate", "lastPurchaseCost", "bd", "btnPrintBarcode",
           "mfdDate", "expDate", "expDays", "additionalExpense", "unitPriceFC",
           "colour", "warranty", "nosQty", "totalAddExpense", "grossConvert",
@@ -1165,9 +1299,227 @@ export const purchaseGridCol = (
           "actualSalesPrice", "unit2", "unit3",
         ].includes(field);
       }
+            // ---------------- LPO ----------------
+        else if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.LPO
+      ) {
+        return ![
+            "mrp", "hsnCode", "cgst", "cgstPerc", "sgstPerc", "sgst",
+          "igstPerc", "igst", "cessPerc", "cessAmt", "additionalCessPerc",
+          "additionalCess", "mR", "netRate", "itemType", "refBranchID",
+          "employeeCode", "employeeName", "stdPurchasePrice", "refTransDtailId",
+
+            "mrp", "brand", "brandID", "free", "discPerc", "discount", "lpr", "lpc",
+            "stickerQty", "profit", "size", "batchNo", "mfdDate", "expDate", "expDays",
+            "bd", "btnPrintBarcode", "barcodePrinted", "batchCreated", "productDescription",
+            "serial", "additionalExpense", "unitPriceFC", "colour", "warranty", "nosQty",
+            "totalAddExpense", "grossConvert", "grossFC", "unitID2", "unit2Qty",
+            "unit2SalesRate", "unit2MRP", "unit2MBarcode", "unit2StickerQty", "unitID3",
+            "unit3Qty", "unit3SalesRate", "unit3MRP", "unit3MBarcode", "unit3StickerQty",
+            "tagQty", "barcodeTagPrinted", "barcodeUnit2Printed", "barcodeUnit3Printed",
+            "location", "grTransDetailsID", "supplierReferenceProductCode", "poTransDetailsID",
+            "ratePlusTax", "warehouseID", "sortOrder", "profitPercentage", "schemeDiscount",
+            "memo", "memoEditor", "rowNumber", "actualSalesPrice", "unit2", "unit3",
+            "btnPrintBarcodeStd", "schemeDiscPerc", "margin", "stockDetails"
+        ].includes(field);
+      }
+        else if (
+        userSession.countryId == Countries.India &&
+        voucherType == VoucherType.LPO
+      ) {
+        return ![
+             //not in pi added from others
+            "mrp", "hsnCode","igstPerc", "igst","mR", "netRate", "itemType", "refBranchID",
+            "employeeCode", "employeeName", "stdPurchasePrice", "refTransDtailId",
+             //common
+            "mrp", "brand", "brandID", "free", "discPerc", "discount", "lpr", "lpc",
+            "stickerQty", "profit", "size", "batchNo", "mfdDate", "expDate", "expDays",
+            "bd", "btnPrintBarcode", "barcodePrinted", "batchCreated", "productDescription",
+            "serial", "additionalExpense", "unitPriceFC", "colour", "warranty", "nosQty",
+            "totalAddExpense", "grossConvert", "grossFC", "unitID2", "unit2Qty",
+            "unit2SalesRate", "unit2MRP", "unit2MBarcode", "unit2StickerQty", "unitID3",
+            "unit3Qty", "unit3SalesRate", "unit3MRP", "unit3MBarcode", "unit3StickerQty",
+            "tagQty", "barcodeTagPrinted", "barcodeUnit2Printed", "barcodeUnit3Printed",
+            "location", "grTransDetailsID", "supplierReferenceProductCode", "poTransDetailsID",
+            "ratePlusTax", "warehouseID", "sortOrder", "profitPercentage", "schemeDiscount",
+            "memo", "memoEditor", "rowNumber", "actualSalesPrice", "unit2", "unit3",
+            "btnPrintBarcodeStd", "schemeDiscPerc", "margin", "stockDetails",
+            //not in global but in gcc
+            "salesLast180Days","pqPendingQty","minSalePrice",
+        ].includes(field);
+      }
 
       // ✅ Default: allow all if no case matches
       return true;
+    }) .map((mi) => {
+      // if(userSession.countryId!=Countries.India)
+      if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.PurchaseInvoice &&
+        formType == "Import" &&
+        (mi.dataField?.includes("unitPriceFC") ||
+          mi.dataField?.includes("grossFC"))
+      ) {
+        return {
+          ...mi,
+          visible: true,
+        };
+      }
+
+      if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.PurchaseReturn &&
+        (mi.dataField?.includes("pCode") ||
+          mi.dataField?.includes("discPerc") ||
+          mi.dataField?.includes("discount") ||
+          mi.dataField?.includes("stock") ||
+          mi.dataField?.includes("salesPrice") ||
+          mi.dataField?.includes("cost") ||
+          mi.dataField?.includes("profit") ||
+          mi.dataField?.includes("barcodePrinted"))
+      ) {
+        return {
+          ...mi,
+          visible: false,
+        };
+      }
+
+      if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.PurchaseEstimate &&
+        (mi.dataField?.includes("netValue") ||
+          mi.dataField?.includes("vatPerc") ||
+          mi.dataField?.includes("vatAmount") ||
+          mi.dataField?.includes("margin") ||
+          mi.dataField?.includes("size") ||
+          mi.dataField?.includes("stickerQty"))
+      ) {
+        return {
+          ...mi,
+          visible: true,
+        };
+      }
+      if (
+        userSession.countryId == Countries.India &&
+        (voucherType == VoucherType.PurchaseOrder ||
+          VoucherType.PurchaseQuotation) &&
+        (mi.dataField?.includes("hsnCode") ||
+          mi.dataField?.includes("cgst") ||
+          mi.dataField?.includes("cgstPerc") ||
+          mi.dataField?.includes("sgstPerc") ||
+          mi.dataField?.includes("sgst") ||
+          mi.dataField?.includes("igstPerc") ||
+          mi.dataField?.includes("igst") ||
+          mi.dataField?.includes("cessPerc") ||
+          mi.dataField?.includes("cessAmt") ||
+          mi.dataField?.includes("additionalCessPerc") ||
+          mi.dataField?.includes("additionalCess"))
+      ) {
+        return {
+          ...mi,
+          visible: true,
+        };
+      }
+      if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.PurchaseOrder
+      ) {
+        if (
+          mi.dataField?.includes("gross") ||
+          mi.dataField?.includes("discPerc") ||
+          mi.dataField?.includes("discount") ||
+          mi.dataField?.includes("salesPrice") ||
+          mi.dataField?.includes("cost") ||
+          mi.dataField?.includes("profit")
+        ) {
+          return {
+            ...mi,
+            visible: false,
+          };
+        } else if (mi.dataField?.includes("stockDetails")) {
+          return {
+            ...mi,
+            visible: true,
+          };
+        }
+      }
+
+      if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.GoodsReceiptReturn &&
+        (mi.dataField?.includes("pCode") ||
+          mi.dataField?.includes("manualBarcode") ||
+          mi.dataField?.includes("salesPrice") ||
+          mi.dataField?.includes("cost") ||
+          mi.dataField?.includes("stock"))
+        //check rate field present in GRR
+      ) {
+        return {
+          ...mi,
+          visible: false,
+        };
+      }
+      if (voucherType == VoucherType.LPO &&
+        (
+          mi.dataField?.includes("cost") ||
+          mi.dataField?.includes("supplierID") 
+        )
+      ) {
+        return {
+          ...mi,
+          visible: false,
+        };
+      }
+       if (voucherType == VoucherType.LPO &&
+        (mi.dataField?.includes("netValue") ||
+          mi.dataField?.includes("vatAmount") ||
+          mi.dataField?.includes("arabicName") ||
+          mi.dataField?.includes("cgst") ||
+          mi.dataField?.includes("cgstPerc") ||
+          mi.dataField?.includes("sgstPerc") ||
+          mi.dataField?.includes("sgst") ||
+          mi.dataField?.includes("cessPerc") ||
+          mi.dataField?.includes("cessAmt") ||
+          mi.dataField?.includes("additionalCessPerc") ||
+          mi.dataField?.includes("additionalCess"))
+      ) {
+        return {
+          ...mi,
+          visible: true,
+        };
+      }
+//  if (voucherType == VoucherType.LPO) {
+//         if (
+//           mi.dataField?.includes("cost") ||
+//           mi.dataField?.includes("supplierID") ||
+//           mi.dataField?.includes("avgSales")
+//         )
+//           return {
+//             ...mi,
+//             visible: false,
+//           };
+//         else if (
+//           voucherType == VoucherType.LPO &&
+//           (mi.dataField?.includes("netValue") ||
+//             mi.dataField?.includes("vatAmount") ||
+//             mi.dataField?.includes("arabicName") ||
+//             mi.dataField?.includes("cgst") ||
+//             mi.dataField?.includes("cgstPerc") ||
+//             mi.dataField?.includes("sgstPerc") ||
+//             mi.dataField?.includes("sgst") ||
+//             mi.dataField?.includes("cessPerc") ||
+//             mi.dataField?.includes("cessAmt") ||
+//             mi.dataField?.includes("additionalCessPerc") ||
+//             mi.dataField?.includes("additionalCess"))
+//         ) {
+//           return {
+//             ...mi,
+//             visible: true,
+//           };
+//         }
+//       }
+      return mi;
     });
 
 

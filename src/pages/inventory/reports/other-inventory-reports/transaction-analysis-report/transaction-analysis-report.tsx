@@ -11,6 +11,7 @@ import Urls from "../../../../../redux/urls";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import moment from "moment";
+import { isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
 
 const TransactionAnalysis = () => {
   const { t } = useTranslation("accountsReport");
@@ -309,37 +310,109 @@ const TransactionAnalysis = () => {
       column: "sales",
       summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeSummaryRow,
+       customizeText: (itemInfo: { value: any }) => {
+             return (
+               getFormattedValue(
+                 parseFloat(
+                   getFormattedValue(
+                     isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value
+                   ).replace(/,/g, "") || "0"
+                 ),
+                 false,
+                  2
+               ) || "0"
+             );
+           },
     },
     {
       column: "purchase",
       summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeSummaryRow,
+       customizeText: (itemInfo: { value: any }) => {
+             return (
+               getFormattedValue(
+                 parseFloat(
+                   getFormattedValue(
+                     isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value
+                   ).replace(/,/g, "") || "0"
+                 ),
+                 false,
+                  2
+               ) || "0"
+             );
+           },
     },
     {
       column: "expense",
       summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeSummaryRow,
+      customizeText: (itemInfo: { value: any }) => {
+             return (
+               getFormattedValue(
+                 parseFloat(
+                   getFormattedValue(
+                     isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value
+                   ).replace(/,/g, "") || "0"
+                 ),
+                 false,
+                  2
+               ) || "0"
+             );
+           },
     },
     {
       column: "income",
       summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeSummaryRow,
+      customizeText: (itemInfo: { value: any }) => {
+             return (
+               getFormattedValue(
+                 parseFloat(
+                   getFormattedValue(
+                     isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value
+                   ).replace(/,/g, "") || "0"
+                 ),
+                 false,
+                  2
+               ) || "0"
+             );
+           },
     },
     {
       column: "accountsPayable",
       summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeSummaryRow,
+      customizeText: (itemInfo: { value: any }) => {
+             return (
+               getFormattedValue(
+                 parseFloat(
+                   getFormattedValue(
+                     isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value
+                   ).replace(/,/g, "") || "0"
+                 ),
+                 false,
+                  2
+               ) || "0"
+             );
+           },
     },
     {
       column: "accountsReceivable",
       summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeSummaryRow,
+      customizeText: (itemInfo: { value: any }) => {
+             return (
+               getFormattedValue(
+                 parseFloat(
+                   getFormattedValue(
+                     isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value
+                   ).replace(/,/g, "") || "0"
+                 ),
+                 false,
+                  2
+               ) || "0"
+             );
+           },
     },
   ];
 
@@ -349,9 +422,6 @@ const TransactionAnalysis = () => {
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
-              {userSession.finTo?.toString()}
-              {clientSession.softwareDate?.toString()}
-              {userSession.userTypeCode}
               <ErpDevGrid
                 summaryItems={summaryItems}
                 remoteOperations={{

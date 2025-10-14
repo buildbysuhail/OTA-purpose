@@ -282,7 +282,7 @@ const SummaryFilter = ({
             });
           }}
         />
-        {userSession.dbIdValue == "489995732270" && (
+        {userSession.dbIdValue != "543140180640" && applicationSettings.accountsSettings.maintainCostCenter == true && (
           <ERPDataCombobox
             label={t("cost_center")}
             {...getFieldProps("costCenterID")}
@@ -385,13 +385,13 @@ export const SummaryFilterInitialState = {
   fromDate: moment().local().toDate(), //software date as initial
   toDate: moment().local().toDate(),
   voucherType: "",
-  salesRouteID: 0,
-  counterID: 0,
-  salesmanID: 0,
-  partyID: 0,
+  salesRouteID: -1,
+  counterID: -1,
+  salesmanID: -1,
+  partyID: -1,
   voucherForm: "@",
-  warehouseID: 0, //PRESETWAREHOUSEID>0 disable with that value
-  partyCategoryID: 0,
+  warehouseID: -1, //PRESETWAREHOUSEID>0 disable with that value
+  partyCategoryID: -1,
   isTimeBased: false,
   fromTime: moment().local().format("HH:mm"), // 12-hour format without seconds
   toTime: moment().local().format("HH:mm"),

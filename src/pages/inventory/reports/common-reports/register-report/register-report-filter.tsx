@@ -59,7 +59,7 @@ const RegisterFilter = ({
           />
         )}
 
-        {clientSession.isAppGlobal && (
+        {/* {clientSession.isAppGlobal && ( */}
           <ERPDataCombobox
             label={t("product_category")}
             {...getFieldProps("productCategoryID")}
@@ -73,7 +73,7 @@ const RegisterFilter = ({
               handleFieldChange("productCategoryID", data.value);
             }}
           />
-        )}
+        {/* )} */}
 
         <ERPDataCombobox
           label={t("product_group")}

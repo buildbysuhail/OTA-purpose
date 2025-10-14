@@ -52,7 +52,7 @@ const RouteWiseSalesAndCollection = () => {
           const value =
             cellElement.data?.salesTarget == null
               ? 0
-              : getFormattedValue(cellElement.data.salesTarget, false, 4);
+              : getFormattedValue(cellElement.data.salesTarget, false, 2);
           return {
             ...exportCell,
             text: value,
@@ -62,7 +62,7 @@ const RouteWiseSalesAndCollection = () => {
         } else {
           return cellElement.data?.salesTarget == null
             ? 0
-            : getFormattedValue(cellElement.data.salesTarget, false, 4);
+            : getFormattedValue(cellElement.data.salesTarget, false, 2);
         }
       },
     },
@@ -85,7 +85,7 @@ const RouteWiseSalesAndCollection = () => {
           const value =
             cellElement.data?.total_Sales == null
               ? 0
-              : getFormattedValue(cellElement.data.total_Sales, false, 4);
+              : getFormattedValue(cellElement.data.total_Sales);
           return {
             ...exportCell,
             text: value,
@@ -95,7 +95,7 @@ const RouteWiseSalesAndCollection = () => {
         } else {
           return cellElement.data?.total_Sales == null
             ? 0
-            : getFormattedValue(cellElement.data.total_Sales, false, 4);
+            : getFormattedValue(cellElement.data.total_Sales);
         }
       },
     },
@@ -128,7 +128,7 @@ const RouteWiseSalesAndCollection = () => {
           const value =
             cellElement.data?.total_Collection == null
               ? 0
-              : getFormattedValue(cellElement.data.total_Collection, false, 4);
+              : getFormattedValue(cellElement.data.total_Collection);
           return {
             ...exportCell,
             text: value,
@@ -138,7 +138,7 @@ const RouteWiseSalesAndCollection = () => {
         } else {
           return cellElement.data?.total_Collection == null
             ? 0
-            : getFormattedValue(cellElement.data.total_Collection, false, 4);
+            : getFormattedValue(cellElement.data.total_Collection);
         }
       },
     },
@@ -173,6 +173,15 @@ const RouteWiseSalesAndCollection = () => {
       return getFormattedValue(value) || "0";
     };
   }, [getFormattedValue]);
+   const customizeSummaryRow2 = useMemo(() => {
+    return (itemInfo: { value: any }) => {
+      const value = itemInfo.value;
+      if (value === null || value === undefined || value === "" || isNaN(value)) {
+        return "0";
+      }
+      return getFormattedValue(value,false,2) || "0";
+    };
+  }, [getFormattedValue]);
   const customizeTotal = (itemInfo: any) => `TOTAL`;
   const summaryItems: SummaryConfig[] = [
      {
@@ -184,7 +193,7 @@ const RouteWiseSalesAndCollection = () => {
       column: "salesTarget",
       summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeSummaryRow,
+      customizeText: customizeSummaryRow2,
     },
     {
       column: "total_Sales",

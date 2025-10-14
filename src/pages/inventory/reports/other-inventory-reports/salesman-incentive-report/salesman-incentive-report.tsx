@@ -10,6 +10,7 @@ import Urls from "../../../../../redux/urls";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import moment from "moment";
+import { isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
 
 const SalesmanIncentiveReport = () => {
     const { t } = useTranslation('accountsReport');
@@ -125,7 +126,19 @@ const customizeTotal = (itemInfo: any) => `TOTAL`;
             column: "smIncentive",
             summaryType: "sum",
             valueFormat: "currency",
-            customizeText: customizeSummaryRow,
+            customizeText: (itemInfo: { value: any }) => {
+                  return (
+                    getFormattedValue(
+                      parseFloat(
+                        getFormattedValue(
+                          isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value
+                        ).replace(/,/g, "") || "0"
+                      ),
+                      false,
+                       2
+                    ) || "0"
+                  );
+                },
         }
     ];
 

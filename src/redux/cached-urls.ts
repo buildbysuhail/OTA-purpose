@@ -18,25 +18,30 @@ const CachedUrls = {
     btoa(Urls.data_acc_ledgers),
     ...transactionRoutes.map((x: any) =>
       btoa(
-        `/${
-          x.transactionBase == TransactionBase.Accounts
-            ? "Accounts"
-            : "Inventory"
+        `/${x.transactionBase == TransactionBase.Accounts
+          ? "Accounts"
+          : "Inventory"
         }/${x.transactionType}/Data/AccLedgers/`
       )
     ),
+    btoa('/Inventory/LocalPurchaseOrder/Data/AccLedgers/')
   ],
+  ProductCategory: [btoa('/Inventory/LocalPurchaseOrder/Data/ProductCategory/')],
+  ProductGroup: [btoa('/Inventory/LocalPurchaseOrder/Data/ProductGroup/')],
+  GroupCategory: [btoa('/Inventory/LocalPurchaseOrder/Data/GroupCategory/')],
+  Section: [btoa('/Inventory/LocalPurchaseOrder/Data/Section/')],
+  Product: [btoa('/Inventory/LocalPurchaseOrder/Data/Product/')],
+  ProductsCode: [btoa('/Inventory/LocalPurchaseOrder/Data/ProductsCode/')],
   CostCentres: [btoa(Urls.data_costcentres)],
   Employees: [btoa(Urls.data_costcentres),
-     ...transactionRoutes.map((x: any) =>
-      btoa(
-        `/${
-          x.transactionBase == TransactionBase.Accounts
-            ? "Accounts"
-            : "Inventory"
-        }/${x.transactionType}/Data/Employee/`
-      )
-    ),
+  ...transactionRoutes.map((x: any) =>
+    btoa(
+      `/${x.transactionBase == TransactionBase.Accounts
+        ? "Accounts"
+        : "Inventory"
+      }/${x.transactionType}/Data/Employee/`
+    )
+  ),
   ],
 } as const;
 export default CachedUrls;
@@ -66,11 +71,16 @@ export function getCacheStoreKey(url: string): string | null {
 }
 type CachedKeys = keyof typeof CachedUrls;
 
-export const getApLocalDataByUrl = async (url: string) => {
+export const getApLocalDataByUrl = async (url: string,
+  queryString: string = "",) => {
+  debugger;
   const encoded = url.startsWith("/") ? btoa(url) : url;
   const key = getCacheKey(encoded);
   if (key) {
-    const data = await getApLocalData(key);
+    console.log("Called");
+    const data = await getApLocalData(key, queryString);
+
+    console.log("Called end");
     if (data) {
       return data;
     }
@@ -79,11 +89,65 @@ export const getApLocalDataByUrl = async (url: string) => {
   }
   return null;
 };
-export const getApLocalData = async (groupKey: keyof typeof CachedUrls) => {
-  const encoded = groupKey.startsWith("/") ? btoa(groupKey) : groupKey;
+export const getApLocalData = async (groupKey: keyof typeof CachedUrls,
+  queryString: string = "",) => {
+  const encoded = btoa(groupKey);
   const df = await getStorageString(encoded);
   if (df == null || df == undefined || df == "undefined") {
     return null;
   }
-  return JSON.parse(df);
+  const val = JSON.parse(df);
+  debugger;
+  const filtered = filterData(val, queryString);
+  return filtered;
+};
+/**
+ * Generic filter function for any array and query string.
+ * Example: filterData(data, "status=active&type=2")
+ */
+const filterData = async <T extends Record<string, any>>(
+  data: T[],
+  queryString: string
+): Promise<T[]> => {
+  if (!Array.isArray(data)) return [];
+  const decryptedData = await Promise.all(
+    data.map(async (item) => ({
+      ...item,
+      // Decrypt or transform fields here if needed
+      // name: await decryptAES(item.name),
+    }))
+  );
+
+  if (!queryString) return decryptedData;
+
+  const params = new URLSearchParams(queryString);
+
+  return decryptedData.filter((item) => {
+    for (const [key, value] of params.entries()) {
+      const normalizedValue = value.trim();
+      if (!normalizedValue || ["0", "00"].includes(normalizedValue)) {
+        continue; // Skip "empty" params
+      }
+
+      const itemValue = item[key];
+
+      // Array field (e.g. ledgerType = [1,2,3])
+      if (Array.isArray(itemValue)) {
+        const numValue = Number(normalizedValue);
+        if (!itemValue.includes(isNaN(numValue) ? normalizedValue : numValue)) {
+          return false;
+        }
+      }
+      // Object or primitive field
+      else {
+        const numValue = Number(normalizedValue);
+        const compareValue = isNaN(numValue) ? normalizedValue : numValue;
+
+        if (String(itemValue) !== String(compareValue)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  });
 };

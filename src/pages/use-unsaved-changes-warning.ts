@@ -37,8 +37,8 @@ export const useUnsavedChangesWarning = () => {
   // Determine which form state to use based on flags
   const _formState = useMemo(() => {
     // First check if flags explicitly indicate which state to use
-    if (_accFormState?.isAcc === true) { debugger; return _accFormState as any;}
-    if (_invFormState?.isInv === true) { debugger; return _invFormState as any;}
+    if (_accFormState?.isAcc === true) { return _accFormState as any;}
+    if (_invFormState?.isInv === true) { return _invFormState as any;}
 
     // Fallback: use whichever state has data
     if ((_accFormState as any)?.prev || (_accFormState as any)?.transaction)
@@ -79,7 +79,6 @@ export const useUnsavedChangesWarning = () => {
   }, [_accFormState, _invFormState]);
   const hasUnsavedChanges = useCallback(async () => {
     try {
-      debugger;
       if (!_formState || !_formState.prev) return false;
       let currentStateCompare: any;
       if (_formState.isAcc) {

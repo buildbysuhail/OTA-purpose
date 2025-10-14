@@ -35,8 +35,8 @@ interface TransactionFooterProps {
   focusAmount: any;
   goToPreviousPage: any;
   save: any;
-  generateLPQ:any
-  generateLPO:any
+  generateLPQ: any
+  generateLPO: any
   selectAttachment: any;
   isDropUpOpen: boolean;
   toggleDropup: () => void;
@@ -692,7 +692,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             {formState.transaction.master.voucherType === "LPO" && (
               <ConfettiWrapper onOriginalClick={generateLPQ} triggerConfetti={formState.savingCompleted}>
                 <ERPButton
-                  variant="primary"
+                  variant="custom"
                   ref={btnSaveRef}
                   jumpTarget="save"
                   title={t("generate_lpq")}
@@ -700,10 +700,11 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   localInputBox={formState?.userConfig?.inputBoxStyle}
                   disabled={formState.formElements.pnlMasters?.disabled || formState.transaction.details == null || formState.transaction.details.length == 0}
                   className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg flex-1 sm:flex-none"
+                  customVariant="bg-green-500 hover:bg-green-600 text-white"
                 />
               </ConfettiWrapper>
             )}
-            <ConfettiWrapper onOriginalClick={formState.transaction.master.voucherType === "LPO"?generateLPO:save} triggerConfetti={formState.savingCompleted}>
+            <ConfettiWrapper onOriginalClick={formState.transaction.master.voucherType === "LPO" ? generateLPO : save} triggerConfetti={formState.savingCompleted}>
               <ERPButton
                 variant="primary"
                 ref={btnSaveRef}

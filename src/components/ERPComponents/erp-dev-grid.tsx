@@ -104,6 +104,7 @@ export interface SummaryConfig {
   alignByColumn?: boolean;
   alignment?: "center" | "left" | "right";
   customizeText?: (itemInfo: { value: any }) => string;
+  cellSummaryAction?: (value: any) => any;
 }
 
 interface KeyboardNavigationProps {
@@ -138,7 +139,6 @@ interface ERPDevGridProps {
   showPrintButton?: boolean;
   showTotalCount?: boolean;
   summaryItems?: SummaryConfig[];
-  handleCalculateSummary?: (e: any) => void;
   columns: DevGridColumn[];
   showSerialNo?: boolean;
   gridId: string;
@@ -513,7 +513,7 @@ const createStore = async (
     },
   });
 };
-
+ 
 const isNotEmpty = (value: any) =>
   value !== undefined && value !== null && value !== "";
 // Forward the ref
@@ -525,7 +525,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       showPrintButton = true,
       showTotalCount = true,
       summaryItems = [],
-      handleCalculateSummary = undefined,
       columns,
       showSerialNo,
       gridId,
@@ -1738,7 +1737,52 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         gridInstance?.searchByText("");
       }
     }, [dataUrl]);
+    const handleCalculateSummary = (options: any) => {
+      let cellSummaryAction = summaryItems.find((x: SummaryConfig)=> x.column === options.name && x.cellSummaryAction != undefined )?.cellSummaryAction;
+      if (summaryItems && summaryItems.length > 0 && cellSummaryAction != undefined) {
+        debugger;
+        switch (options.summaryProcess) {
+        case "start":
+          options.totalValue = 0;
+          break;
 
+        case "calculate":
+          if (options.value != null) {
+            console.log(options.value);
+            console.log(options.text);
+            console.log(options);
+            
+            const roundedSaleAmount = cellSummaryAction  && cellSummaryAction(options.value);
+            options.totalValue += roundedSaleAmount;
+          }
+          break;
+
+        case "finalize":
+          options.totalValue = Number(options.totalValue);
+          // console.log(options.totalValue, "TOTAL");
+          break;
+      }
+      } else {
+        switch (options.summaryProcess) {
+        case "start":
+          options.totalValue = 0;
+          break;
+
+        case "calculate":
+          if (options.value != null) {
+            options.totalValue += options.value;
+          }
+          break;
+
+        case "finalize":
+          options.totalValue = Number(options.totalValue);
+          // console.log(options.totalValue, "TOTAL");
+          break;
+      }
+      }
+      
+    // }
+  }
     // Memoize the entire Summary component
     const MemoizedSummary = useMemo(() => {
       return (

@@ -1630,6 +1630,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               toggleDropdown={toggleHeaderDropdown}
               footerLayout="vertical"
               userSession={userSession}
+              refactorDetails={refactorDetails}
             />
             {/* header ends here */}
 
@@ -1844,6 +1845,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     toggleDropdown={toggleHeaderDropdown}
                     footerLayout="vertical"
                     userSession={userSession}
+                    refactorDetails={refactorDetails}
                   />
                 </div>
               </div>

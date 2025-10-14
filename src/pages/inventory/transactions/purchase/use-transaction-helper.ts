@@ -1264,7 +1264,9 @@ export const useTransactionHelper = (transactionType: string) => {
             !clientSession.isAppGlobal && (
               voucherType === "PO" ||
             voucherType === "PE" ||
-            (formType === "VAT" && voucherType !== "PO" && voucherType !== "PE")
+            voucherType === "GRN" ||
+            voucherType === "PQ" ||
+            (formType === "VAT" && voucherType !== "PO" && voucherType !== "PE"&& voucherType !== "GRN"&& voucherType !== "PQ")
             )
           ) {
           detail.vatPerc = row.vatPercentage;

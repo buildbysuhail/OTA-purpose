@@ -62,6 +62,7 @@ interface TransactionHeaderProps {
   toggleDropdown: () => void;
   footerLayout: "horizontal" | "vertical";
   userSession: any;
+  refactorDetails:any;
 }
 
 const TransactionHeader: React.FC<TransactionHeaderProps> = ({
@@ -83,6 +84,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   footerLayout,
   focusToNextColumn,
   userSession,
+  refactorDetails,
 }) => {
   const { appState } = useAppState();
   const [isMoreModalOpen, setIsMoreModalOpen] = useState(false);
@@ -314,7 +316,10 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
         >
           {formState.transaction.master.voucherType === "LPO" ?
             <LPOGeneration
+              transactionType={transactionType}
               t={t}
+              refactorDetails={refactorDetails}
+              formState={formState}
             />
             :
             <div className="flex items-end gap-1 relative px-2 !pb-3">
@@ -684,12 +689,11 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     />
                   )}
 
-                {formState.transaction.master.voucherType ===
-                  VoucherType.PurchaseReturn && (
-                    <span className="text-xs dark:text-dark-text text-[#191155] font-bold px-4 py-1">
-                      {t(formState.transaction.master.customerType)}
-                    </span>
-                  )}
+                {formState.transaction.master.voucherType === VoucherType.PurchaseReturn || formState.transaction.master.voucherType === VoucherType.PurchaseInvoice && (
+                  <span className="text-xs dark:text-dark-text text-[#191155] font-bold px-4 py-1">
+                    {t(formState.transaction.master.customerType)}
+                  </span>
+                )}
 
                 {(formState.transaction.master.voucherType ===
                   VoucherType.PurchaseInvoice || formState.transaction.master.voucherType ===

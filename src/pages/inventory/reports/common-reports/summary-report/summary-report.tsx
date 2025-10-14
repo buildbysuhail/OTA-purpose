@@ -746,6 +746,38 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         },
       },
       {
+        dataField: "taxableValue",
+        caption: t("taxable_value"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.taxableValue == null
+                ? ""
+                : getFormattedValue(cellElement.data.taxableValue);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.taxableValue == null
+              ? ""
+              : getFormattedValue(parseFloat(cellElement.data.taxableValue));
+          }
+        },
+      },
+      {
         dataField: "createdDate",
         caption: t("created_date"),
         dataType: "date",
@@ -1003,7 +1035,8 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         if (
           column.dataField == "mobileNumber" ||
           column.dataField == "totalExciseTax" ||
-          column.dataField == "toWarehouseName"
+          column.dataField == "toWarehouseName" ||
+          column.dataField == "taxableValue" 
         ) {
           return (
             clientSession.isAppGlobal &&
@@ -1191,13 +1224,22 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
       },
+      {
+        column: "taxableValue",
+        summaryType: "sum",
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
     ];
     // Filter columns based on the `visible` property
     return _summaryItems.filter((column) => {
       if (column.column == "salesAmount" || column.column == "totalProfit") {
         return userSession.dbIdValue == "489995732270";
       }
-      if (column.column == "totalExciseTax") {
+      
+      if (
+        column.column == "totalExciseTax"
+      ) {
         return clientSession.isAppGlobal;
       }
       if (column.column == "srAmount") {

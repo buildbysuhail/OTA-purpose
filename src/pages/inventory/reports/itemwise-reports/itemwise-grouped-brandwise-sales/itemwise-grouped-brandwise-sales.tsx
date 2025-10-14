@@ -337,6 +337,24 @@ const ItemWiseGroupedBrandwiseSales = () => {
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
+    {
+      column: "qty",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "unitPrice",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "stdPurchasePrice",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
   ];
 
   return (

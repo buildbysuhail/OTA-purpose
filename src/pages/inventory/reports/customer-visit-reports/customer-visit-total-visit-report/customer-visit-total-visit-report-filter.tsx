@@ -74,6 +74,13 @@ const CustomerVisitTotalVisitFilter = ({ getFieldProps, handleFieldChange, formS
           checked={formState.zeroVisit}
           onChange={(e) => handleFieldChange("zeroVisit", e.target.checked)}
         />
+        <ERPCheckbox
+          id="showSupplier"
+          {...getFieldProps("showSupplier")}
+          label={t("include_suppliers")}
+          checked={formState.showSupplier}
+          onChange={(e) => handleFieldChange("showSupplier", e.target.checked)}
+        />
       </div>
     </div>
   );
@@ -87,4 +94,5 @@ export const CustomerVisitTotalVisitFilterInitialState = {
   // mainRoute: 0, 
   salesRouteID: 0, 
   zeroVisit: false,
+  showSupplier: false,
 };

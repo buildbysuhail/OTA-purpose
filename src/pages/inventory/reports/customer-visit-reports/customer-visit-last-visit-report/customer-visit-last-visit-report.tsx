@@ -16,6 +16,7 @@ import moment from "moment";
 
 const CustomerVisitLastVisit = () => {
   const { t } = useTranslation("accountsReport");
+    const { getFormattedValue } = useNumberFormat();
   const columns: DevGridColumn[] = [
     {
       dataField: "routeName",
@@ -141,6 +142,56 @@ const CustomerVisitLastVisit = () => {
       visible: false,
       width: 100,
     },
+    {
+      dataField: "voucherType",
+      caption: t("voucher_type"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      allowSorting: true,
+      width: 100,
+    },
+    {
+      dataField: "voucherNumber",
+      caption: t("voucher_number"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      allowSorting: true,
+      width: 100,
+    },
+    {
+      dataField: "grandTotal",
+      caption: t("grand_total"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      allowSorting: true,
+      width: 100,
+     cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.grandTotal == null
+              ? 0
+              : getFormattedValue(cellElement.data.grandTotal);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.grandTotal == null
+            ? 0
+            : getFormattedValue(cellElement.data.grandTotal);
+        }
+      },
+    },
   ];
   return (
     <Fragment>
@@ -160,6 +211,7 @@ const CustomerVisitLastVisit = () => {
                 dataUrl={Urls.customer_visit_last_visit}
                 hideGridAddButton={true}
                 enablefilter={true}
+                showFilterInitially={true}
                 method={ActionType.POST}
                 filterContent={<CustomerVisitLastVisitFilter />}
                 filterWidth={300}

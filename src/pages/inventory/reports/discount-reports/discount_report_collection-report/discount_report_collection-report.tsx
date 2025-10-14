@@ -176,7 +176,7 @@ const DiscountReportCollection = () => {
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 summaryItems={summaryItems}
-                filterText="{routeID > 0 && Route Name : [route]} Between : {fromDate} - {toDate}"
+                filterText="{salesRouteID > 0 && Route Name : [salesRoute]} Between : {fromDate} - {toDate}"
                 remoteOperations={{
                   filtering: false,
                   paging: false,

@@ -165,7 +165,7 @@ export const useNumberFormat = (): UseNumberFormatResult => {
     const _decimalPoint = decimalPoint != undefined ? decimalPoint: applicationSettings.mainSettings?.decimalPoints;
     console.log(`_decimalPoint${_decimalPoint}`);
     
-    let formattedText: string = parseFloat((val??"0").toString())?.toFixed( _decimalPoint);
+    let formattedText: string = round(val, _decimalPoint).toString();
     if(cuttingPoint > 0) {
        formattedText =  formatDecimal(formattedText, cuttingPoint, numberOfZero);
     }

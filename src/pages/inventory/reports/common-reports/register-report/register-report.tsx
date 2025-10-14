@@ -1325,38 +1325,38 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         showInPdf: true,
       },
 
-      {
-        dataField: "salesPrice",
-        caption: t("sales_price"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-        showInPdf: true,
-        cellRender: (
-          cellElement: any,
-          cellInfo: any,
-          filter: any,
-          exportCell: any
-        ) => {
-          if (exportCell != undefined) {
-            const value =
-              cellElement.data?.salesPrice == null
-                ? ""
-                : getFormattedValue(cellElement.data.salesPrice);
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
-          } else {
-            return cellElement.data?.salesPrice == null
-              ? ""
-              : getFormattedValue(parseFloat(cellElement.data.salesPrice));
-          }
-        },
-      },
+      // {
+      //   dataField: "salesPrice",
+      //   caption: t("sales_price"),
+      //   dataType: "number",
+      //   allowSearch: true,
+      //   allowFiltering: true,
+      //   width: 100,
+      //   showInPdf: true,
+      //   cellRender: (
+      //     cellElement: any,
+      //     cellInfo: any,
+      //     filter: any,
+      //     exportCell: any
+      //   ) => {
+      //     if (exportCell != undefined) {
+      //       const value =
+      //         cellElement.data?.salesPrice == null
+      //           ? ""
+      //           : getFormattedValue(cellElement.data.salesPrice);
+      //       return {
+      //         ...exportCell,
+      //         text: value,
+      //         alignment: "right",
+      //         alignmentExcel: { horizontal: "right" },
+      //       };
+      //     } else {
+      //       return cellElement.data?.salesPrice == null
+      //         ? ""
+      //         : getFormattedValue(parseFloat(cellElement.data.salesPrice));
+      //     }
+      //   },
+      // },
       {
         dataField: "remarks",
         caption: t("remarks"),
@@ -1657,6 +1657,38 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
           }
         },
       },
+      {
+        dataField: "taxableValue",
+        caption: t("taxable_value"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.taxableValue == null
+                ? ""
+                : getFormattedValue(cellElement.data.taxableValue);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.taxableValue == null
+              ? ""
+              : getFormattedValue(parseFloat(cellElement.data.taxableValue));
+          }
+        },
+      },
     ];
     // Filter columns based on the `visible` property
     return baseColumns
@@ -1670,6 +1702,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         if (
           column.dataField == "vat" ||
           column.dataField == "baseUnitQuantity" ||
+          column.dataField == "partyCode" ||
           // column.dataField == "referenceNumber" ||
           // column.dataField == "salesPrice" ||
           column.dataField == "vatNumber" ||
@@ -1701,7 +1734,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
             "additionalCess",
             "gstNo",
             "priceCategoryID",
-            "salesPrice",
+            "taxableValue",
           ].includes(column.dataField ?? "")
         ) {
           return clientSession.isAppGlobal;
@@ -1815,7 +1848,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         column: "quantity",
         summaryType: "sum",
         valueFormat: "currency",
-        customizeText: customizeSummaryRowString,
+        customizeText: customizeSummaryRow,
       },
       {
         column: "free",
@@ -1886,6 +1919,12 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       },
       {
         column: "exciseTax",
+        summaryType: "sum",
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
+      {
+        column: "taxableValue",
         summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,

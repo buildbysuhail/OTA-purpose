@@ -40,17 +40,17 @@ const DiscountReportCollectionFilter = ({
         <div className="col-span-1">
           <ERPDataCombobox
             label={t("sales_route")}
-            {...getFieldProps("routeID")}
+            {...getFieldProps("salesRouteID")}
             field={{
-              id: "routeID",
+              id: "salesRouteID",
               getListUrl: Urls.data_salesRoute,
               valueKey: "id",
               labelKey: "name",
             }}
             onSelectItem={(data) => {
               handleFieldChange({
-                routeID: data.value,
-                route: data.label,
+                salesRouteID: data.value,
+                salesRoute: data.label,
               });
             }}
           />
@@ -97,5 +97,5 @@ export default DiscountReportCollectionFilter;
 export const DiscountReportCollectionFilterInitialState = {
   fromDate: moment().local().toDate(),
   toDate: moment().local().toDate(),
-  routeID: 0,
+  salesRouteID: 0,
 };

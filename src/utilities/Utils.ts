@@ -1102,14 +1102,14 @@ export function modelToListFromObject<T extends Record<string, any>>(obj: T, idP
   }));
 }
 
-export function generateTableColumns<T extends object>(obj: T): TableColumn<T>[] {
-  return (Object.keys(obj) as (keyof T)[]).map((key) => ({
-    field: key,
-    label: String(key),
-    show: false,
-    width: 0
-  }));
-}
+// export function generateTableColumns<T extends object>(obj: T): TableColumn<T>[] {
+//   return (Object.keys(obj) as (keyof T)[]).map((key) => ({
+//     field: key,
+//     label: String(key),
+//     show: false,
+//     width: 0
+//   }));
+// }
 
 // More practical approach: convert from an object instance
 

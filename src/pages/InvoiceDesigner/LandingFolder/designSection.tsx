@@ -1,4 +1,4 @@
-import { ComponentType, lazy, ReactNode } from "react";
+import { ComponentType } from "react";
 import {
   DocumentTextIcon,
   BarsArrowUpIcon,
@@ -9,8 +9,6 @@ import {
 
 import TablePremiumDesigner from "./account/premium/designer/table-designer";
 import { PrintDetailDto } from "../../use-print-type";
-import { generateTableColumns } from "../../../utilities/Utils";
-import { initialPrintDetailDto } from "../../use-print-type-data";
 import SharedDownloadTemplate from "../DownloadPreview/Shared";
 import SharedTemplatePreview from "../DesignPreview/shared";
 import VoucherType from "../../../enums/voucher-types";

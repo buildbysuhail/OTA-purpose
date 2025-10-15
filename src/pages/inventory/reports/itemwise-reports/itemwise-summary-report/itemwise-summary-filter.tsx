@@ -15,6 +15,9 @@ const ItemWiseSummaryFilter = ({
 }: any) => {
     const { t } = useTranslation("accountsReport");
     const clientSession = useSelector((state: RootState) => state.ClientSession);
+     const applicationSettings = useSelector(
+        (state: RootState) => state.ApplicationSettings
+      );
     return (
         <div className="grid grid-cols-1 gap-4 overflow-y-auto overflow-x-hidden">
             <div className="grid grid-cols-1 gap-4">
@@ -191,19 +194,24 @@ const ItemWiseSummaryFilter = ({
                 />
 
                 {/* always visible false */}
-                {/* <ERPDataCombobox
-                    label={t("sales_route")}
-                    {...getFieldProps("salesRouteID")}
-                    field={{
-                        id: "salesRouteID",
-                        getListUrl: Urls.data_salesRoute,
-                        valueKey: "id",
-                        labelKey: "name",
-                    }}
-                    onSelectItem={(data) => {
-                        handleFieldChange("salesRouteID", data.value);
-                    }}
-                /> */}
+                {applicationSettings.mainSettings?.allowSalesRouteArea == true && (
+                         <ERPDataCombobox
+                           label={t("sales_route")}
+                           {...getFieldProps("salesRouteID")}
+                           field={{
+                             id: "salesRouteID",
+                             getListUrl: Urls.data_salesRoute,
+                             valueKey: "id",
+                             labelKey: "name",
+                           }}
+                           onSelectItem={(data) => {
+                             handleFieldChange({
+                               salesRouteID: data.value,
+                               routeName: data.label,
+                             });
+                           }}
+                         />
+                       )}
 
                 <ERPDataCombobox
                     label={t("supplier")}

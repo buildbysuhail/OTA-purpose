@@ -344,10 +344,16 @@ const TransactionAnalysis = () => {
           ) || "0"
         );
       },
+      // cellSummaryAction(value: any) {
+      //      getFormattedValue(value);
+      // },
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
     },
     {
       column: "expense",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -362,10 +368,13 @@ const TransactionAnalysis = () => {
           ) || "0"
         );
       },
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
     },
     {
       column: "income",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -380,10 +389,13 @@ const TransactionAnalysis = () => {
           ) || "0"
         );
       },
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
     },
     {
       column: "accountsPayable",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -398,10 +410,13 @@ const TransactionAnalysis = () => {
           ) || "0"
         );
       },
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
     },
     {
       column: "accountsReceivable",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -416,6 +431,9 @@ const TransactionAnalysis = () => {
           ) || "0"
         );
       },
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
     },
   ];
 

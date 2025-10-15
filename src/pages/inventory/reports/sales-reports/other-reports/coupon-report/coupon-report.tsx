@@ -44,13 +44,14 @@ const CouponReports = () => {
         {
             dataField: "date",
             caption: t("date"),
-            dataType: "string",
-            allowSearch: true,
-            allowFiltering: true,
-            allowSorting: true,
-            width: 80,
-            showInPdf: true,
-        },
+            dataType: "date",
+      allowSearch: true,
+      allowFiltering: true,
+      allowSorting: true,
+      width: 100,
+      format: "dd-MMM-yyyy",
+      showInPdf: true,
+    },
         {
             dataField: "billNo",
             caption: t("bill_no"),
@@ -139,7 +140,30 @@ const CouponReports = () => {
             allowSorting: true,
             width: 100,
             showInPdf: true,
-        },
+         cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.billTotal == null
+              ? 0
+              : getFormattedValue(cellElement.data.billTotal, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.billTotal == null
+            ? 0
+            : getFormattedValue(cellElement.data.billTotal, false, 4);
+        }
+      },
+    },
         {
             dataField: "couponAmount",
             caption: t("coupon_amount"),
@@ -149,7 +173,30 @@ const CouponReports = () => {
             allowSorting: true,
             width: 120,
             showInPdf: true,
-        },
+         cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.couponAmount == null
+              ? 0
+              : getFormattedValue(cellElement.data.couponAmount, false, 2);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.couponAmount == null
+            ? 0
+            : getFormattedValue(cellElement.data.couponAmount, false, 2);
+        }
+      },
+    },
     ];
 
     const { getFormattedValue } = useNumberFormat();
@@ -159,7 +206,16 @@ const CouponReports = () => {
             if (value === null || value === undefined || value === "" || isNaN(value)) {
                 return "0";
             }
-            return getFormattedValue(value) || "0";
+            return getFormattedValue(value,false,4) || "0";
+        };
+    }, [getFormattedValue]);
+    const customizeSummaryRow2 = useMemo(() => {
+        return (itemInfo: { value: any }) => {
+            const value = itemInfo.value;
+            if (value === null || value === undefined || value === "" || isNaN(value)) {
+                return "0";
+            }
+            return getFormattedValue(value,false,2) || "0";
         };
     }, [getFormattedValue]);
 
@@ -174,7 +230,7 @@ const CouponReports = () => {
             column: "couponAmount",
             summaryType: "sum",
             valueFormat: "currency",
-            customizeText: customizeSummaryRow,
+            customizeText: customizeSummaryRow2,
         }
     ];
 

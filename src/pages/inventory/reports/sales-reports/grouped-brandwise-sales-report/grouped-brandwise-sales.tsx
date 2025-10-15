@@ -11,6 +11,7 @@ import Urls from "../../../../../redux/urls";
 import GroupedBrandwiseSalesFilter, {
   GroupedBrandwiseSalesFilterInitialState,
 } from "./grouped-brandwise-sales-filter";
+import { isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
 
 const GroupedBrandwiseSales = () => {
   const { t } = useTranslation("accountsReport");
@@ -105,26 +106,26 @@ const GroupedBrandwiseSales = () => {
       showInPdf: true,
       format: "dd-MMM-yyyy",
     },
-    {
-      dataField: "month",
-      caption: t("month"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      allowSorting: true,
-      width: 80,
-      showInPdf: true,
-    },
-    {
-      dataField: "year",
-      caption: t("year"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      allowSorting: true,
-      width: 70,
-      showInPdf: true,
-    },
+    // {
+    //   dataField: "month",
+    //   caption: t("month"),
+    //   dataType: "string",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   allowSorting: true,
+    //   width: 80,
+    //   showInPdf: true,
+    // },
+    // {
+    //   dataField: "year",
+    //   caption: t("year"),
+    //   dataType: "number",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   allowSorting: true,
+    //   width: 70,
+    //   showInPdf: true,
+    // },
     {
       dataField: "voucherNumber",
       caption: t("voucher_number"),
@@ -154,7 +155,7 @@ const GroupedBrandwiseSales = () => {
           const value =
             cellElement.data?.total == null
               ? ""
-              : getFormattedValue(cellElement.data.total, false, 4);
+              : getFormattedValue(cellElement.data.total, false, 2);
           return {
             ...exportCell,
             text: value,
@@ -164,20 +165,20 @@ const GroupedBrandwiseSales = () => {
         } else {
           return cellElement.data?.total == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.total), false, 4);
+            : getFormattedValue(parseFloat(cellElement.data.total), false, 2);
         }
       },
     },
-    {
-      dataField: "salesMan",
-      caption: t("sales_man"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      allowSorting: true,
-      width: 120,
-      showInPdf: true,
-    },
+    // {
+    //   dataField: "salesMan",
+    //   caption: t("sales_man"),
+    //   dataType: "string",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   allowSorting: true,
+    //   width: 120,
+    //   showInPdf: true,
+    // },
   ];
 
   const { getFormattedValue } = useNumberFormat();
@@ -192,7 +193,7 @@ const GroupedBrandwiseSales = () => {
       ) {
         return "0";
       }
-      return getFormattedValue(value) || "0";
+      return getFormattedValue(value,false,2) || "0";
     };
   }, [getFormattedValue]);
   const customizeDate = (itemInfo: any) => `TOTAL`;
@@ -206,7 +207,22 @@ const GroupedBrandwiseSales = () => {
       column: "total",
       summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeSummaryRow,
+       customizeText: (itemInfo: { value: any }) => {
+             return (
+               getFormattedValue(
+                 parseFloat(
+                   getFormattedValue(
+                     isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value
+                   ).replace(/,/g, "") || "0"
+                 ),
+                 false,
+                  2
+               ) || "0"
+             );
+           },
+            cellSummaryAction(value: any) {
+          getFormattedValue(value, false, 2);
+      },
     },
   ];
 

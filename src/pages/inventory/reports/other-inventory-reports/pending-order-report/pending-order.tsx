@@ -543,6 +543,15 @@ const PendingOrderReport = () => {
         width: 120,
         showInPdf: true,
       },
+      {
+        dataField: "routeName",
+        caption: t("route_name"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting: true,
+        width: 120,
+      },
     ];
     // Filter columns based on the `visible` property
     return baseColumns.filter((column) => {

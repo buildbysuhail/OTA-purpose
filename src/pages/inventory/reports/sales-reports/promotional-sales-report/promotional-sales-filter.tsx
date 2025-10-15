@@ -96,8 +96,8 @@ const PromotionalSalesReportFilter = ({ getFieldProps, handleFieldChange, formSt
                     label={t("sales_man")}
                     onSelectItem={(data) => {
                         handleFieldChange({
-                            sectionID: data.value,
-                            section: data.label,
+                            salesmanID: data.value,
+                            salesMan: data.label,
                         })
                     }}
                 />
@@ -142,7 +142,7 @@ const PromotionalSalesReportFilter = ({ getFieldProps, handleFieldChange, formSt
                     field={{
                         id: "voucherForm",
                         getListUrl: Urls.data_form_type,
-                        valueKey: "id",
+                        valueKey: "name",
                         labelKey: "name",
                     }}
                     label={t("voucher_form")}

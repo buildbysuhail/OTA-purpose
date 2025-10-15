@@ -1089,6 +1089,7 @@ export const purchaseGridCol = (
         voucherType == VoucherType.PurchaseInvoice
       ) {
         return ![
+          "vatPerc","vatAmount",
           "itemType", "employeeCode", "employeeName",
           "stdPurchasePrice", "refTransDtailId",
 
@@ -1128,6 +1129,7 @@ export const purchaseGridCol = (
         voucherType == VoucherType.PurchaseReturn
       ) {
         return ![
+          "vatPerc","vatAmount",
           "refBranchID", "employeeCode", "employeeName",
           "stdPurchasePrice", "refTransDtailId",
           "mR", "netRate", "manualBarcode", "stockDetails", "lastPurchaseRate",
@@ -1179,6 +1181,7 @@ export const purchaseGridCol = (
         voucherType == VoucherType.PurchaseEstimate
       ) {
         return ![
+          "vatPerc","vatAmount",
           "hsnCode", "itemType", "refBranchID", "employeeCode", "employeeName",
           "stdPurchasePrice", "refTransDtailId", "stock", "stockDetails",
           "lastPurchaseRate", "lastPurchaseCost", "serial", "additionalExpense",
@@ -1228,6 +1231,7 @@ export const purchaseGridCol = (
           voucherType == VoucherType.PurchaseQuotation)
       ) {
         return ![
+          "vatPerc","vatAmount",
           "mR", "netRate", "itemType", "employeeCode", "employeeName",
           "stdPurchasePrice", "refTransDtailId", "lastPurchaseRate",
           "lastPurchaseCost", "bd", "btnPrintBarcode", "mfdDate", "expDate",
@@ -1330,6 +1334,7 @@ export const purchaseGridCol = (
       ) {
         return ![
              //not in pi added from others
+            "vatPerc","vatAmount",
             "mrp", "hsnCode","igstPerc", "igst","mR", "netRate", "itemType", "refBranchID",
             "employeeCode", "employeeName", "stdPurchasePrice", "refTransDtailId",
              //common

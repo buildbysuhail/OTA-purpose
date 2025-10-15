@@ -20,6 +20,7 @@ import ItemWiseSummaryFilter, {
   ItemWiseSummaryFilterInitialState,
 } from "./itemwise-summary-filter";
 import { useLocation } from "react-router-dom";
+import { erpParseFloat } from "../../../../../utilities/Utils";
 
 interface ItemWiseSummaryReportProps {
   gridHeader: string;
@@ -403,6 +404,15 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({
         visible: false,
         width: 100,
       },
+      {
+        dataField: "productCategoryName",
+        caption: t("product_category_name"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        visible: false,
+        width: 100,
+      },
     ];
     // Filter columns based on the `visible` property
     return baseColumns.filter((column) => {
@@ -411,6 +421,9 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({
           applicationSettings.branchSettings.maintainTaxes &&
           !clientSession.isAppGlobal
         );
+      }
+      if (column.dataField == "productCategoryName") {
+        return !clientSession.isAppGlobal;
       }
       if (column.dataField == "branchName") {
         return userSession.currentBranchId == 0;
@@ -465,27 +478,36 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({
     },
     {
       column: "totQty",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       isGroupItem: true,
       showInGroupFooter: true,
       customizeText: customizeSummaryRow,
+     cellSummaryAction:(value: number) => {
+             return erpParseFloat(getFormattedValue(value));
+           },
     },
     {
       column: "totNetAmount",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       isGroupItem: true,
       showInGroupFooter: true,
       customizeText: customizeSummaryRow,
+     cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
     },
     {
       column: "totFree",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       isGroupItem: true,
       showInGroupFooter: true,
       customizeText: customizeSummaryRow,
+           cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
     },
     {
       column: "productName",
@@ -494,21 +516,30 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({
     },
     {
       column: "totQty",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+           cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
     },
     {
       column: "totNetAmount",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+           cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
     },
     {
       column: "totFree",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+           cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
     },
   ];
 
@@ -556,8 +587,9 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({
                 {productGroupID > 0 && , Product Group: [productGroup]} 
                 {warehouseID > 0 && , Warehouse: [warehouse]} 
                 {brandID > 0 && , Brand: [brand]}
+                {salesRouteID > 0 && , Route: [routeName]}
                 {salesmanID > 0 && , Sales Man: [salesman]}"
-                // {salesRouteID > 0 && , Route: [salesRoute]} salesRouteID is always visible false
+                //  salesRouteID is always visible false
                 allowGrouping={true}
                 groupPanelVisible={true}
                 autoExpandAll={true}

@@ -384,7 +384,7 @@ const PromotionalSalesReport = () => {
           const value =
             cellElement.data?.stdPurchasePrice == null
               ? ""
-              : getFormattedValue(cellElement.data.stdPurchasePrice);
+              : getFormattedValue(cellElement.data.stdPurchasePrice,false,2);
           return {
             ...exportCell,
             text: value,
@@ -394,7 +394,7 @@ const PromotionalSalesReport = () => {
         } else {
           return cellElement.data?.stdPurchasePrice == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.stdPurchasePrice));
+            : getFormattedValue(parseFloat(cellElement.data.stdPurchasePrice),false,2);
         }
       },
     },
@@ -417,7 +417,7 @@ const PromotionalSalesReport = () => {
           const value =
             cellElement.data?.stdSalesPrice == null
               ? ""
-              : getFormattedValue(cellElement.data.stdSalesPrice);
+              : getFormattedValue(cellElement.data.stdSalesPrice,false,2);
           return {
             ...exportCell,
             text: value,
@@ -427,7 +427,7 @@ const PromotionalSalesReport = () => {
         } else {
           return cellElement.data?.stdSalesPrice == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.stdSalesPrice));
+            : getFormattedValue(parseFloat(cellElement.data.stdSalesPrice),false,2);
         }
       },
     },
@@ -560,7 +560,7 @@ const PromotionalSalesReport = () => {
           <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
-                filterText=":From : {fromDate} - {toDate}
+                filterText="From : {fromDate} - {toDate}
                 {productID > 0 && , Product : [product]}
                 {productGroupID > 0 && , Group Name : [productGroup]}
                 {brandID > 0 && , Brand : [brand]}

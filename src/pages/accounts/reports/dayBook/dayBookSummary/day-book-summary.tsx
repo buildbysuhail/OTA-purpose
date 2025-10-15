@@ -3,19 +3,26 @@ import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
 import { Fragment, useState } from "react";
 import { useRootState } from "../../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ErpDevGrid, { DrillDownCellTemplate } from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  DrillDownCellTemplate,
+} from "../../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
-import DayBookReportFilter, { DayBookReportFilterInitialState } from "../day-book-report-filter";
+import DayBookReportFilter, {
+  DayBookReportFilterInitialState,
+} from "../day-book-report-filter";
 import DayBookBillWise from "./day-book-billwise";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
+import DayBookSummaryReportFilter, {
+  DayBookSummaryReportFilterInitialState,
+} from "./day-book-summary-report-filter";
 // interface DayBookSummary {
 //   from: Date
 // }
 const DayBookSummary = () => {
   const dispatch = useAppDispatch();
-  const { t } = useTranslation('accountsReport');
-  const { getFormattedValue } = useNumberFormat()
+  const { t } = useTranslation("accountsReport");
+  const { getFormattedValue } = useNumberFormat();
   const [filter, setFilter] = useState<any>(DayBookReportFilterInitialState);
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
@@ -35,7 +42,12 @@ const DayBookSummary = () => {
       allowFiltering: true,
       width: 150,
       showInPdf: true,
-      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement} field="voucherType"></DrillDownCellTemplate>
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <DrillDownCellTemplate
+          data={cellElement}
+          field="voucherType"
+        ></DrillDownCellTemplate>
+      ),
     },
     {
       dataField: "particulars",
@@ -56,39 +68,60 @@ const DayBookSummary = () => {
             balance == null
               ? ""
               : balance < 0
-                ? getFormattedValue(-1 * balance) + " Cr"
-                : getFormattedValue(balance) + " Dr";
-          return exportCell != undefined ? {
-            ...exportCell,
-            text: cellInfo.value,
-            bold: true,
-            alignment: "right",
-            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
-            font: {
-              ...exportCell.font,
-              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : "",
-              size: 10,
-              style: cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
-              bold: cellElement.data.particulars === "TOTAL" ? true : false,
-            }
-          } : undefined;
+              ? getFormattedValue(-1 * balance) + " Cr"
+              : getFormattedValue(balance) + " Dr";
+          return exportCell != undefined
+            ? {
+                ...exportCell,
+                text: cellInfo.value,
+                bold: true,
+                alignment: "right",
+                textColor:
+                  cellElement.data.particulars === "TOTAL" ? "#FF0000" : "",
+                font: {
+                  ...exportCell.font,
+                  color:
+                    cellElement.data.particulars === "TOTAL"
+                      ? { argb: "FFFF0000" }
+                      : "",
+                  size: 10,
+                  style:
+                    cellElement.data.particulars === "TOTAL"
+                      ? "bold"
+                      : "normal",
+                  bold: cellElement.data.particulars === "TOTAL" ? true : false,
+                },
+              }
+            : undefined;
+        } else {
+          return (
+            <span
+              className={`${
+                cellElement.data.particulars === "TOTAL"
+                  ? "font-bold text-[#DC143C]"
+                  : ""
+              }`}
+            >
+              {cellElement.data.particulars}
+            </span>
+          );
         }
-        else {
-          return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-            {cellElement.data.particulars}
-          </span>)
-        }
-      }
+      },
     },
     {
       dataField: "amount",
-      caption: t('amount'),
+      caption: t("amount"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 250,
       showInPdf: true,
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.amount;
           const isDebit = balance >= 0;
@@ -96,32 +129,55 @@ const DayBookSummary = () => {
             balance == null
               ? ""
               : balance < 0
-                ? cellElement.data.particulars === "TOTAL" ? getFormattedValue(-1 * balance) : (-1 * balance)
-                : cellElement.data.particulars === "TOTAL" ? getFormattedValue(balance) : getFormattedValue(balance, false, 2);
+              ? cellElement.data.particulars === "TOTAL"
+                ? getFormattedValue(-1 * balance)
+                : getFormattedValue(-1 * balance, false, 4)
+              : cellElement.data.particulars === "TOTAL"
+              ? getFormattedValue(balance)
+              : getFormattedValue(balance, false, 4);
 
           return {
             ...exportCell,
             text: value,
             bold: true,
             alignment: "right",
-            alignmentExcel: { horizontal: 'right' },
-            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
+            alignmentExcel: { horizontal: "right" },
+            textColor:
+              cellElement.data.particulars === "TOTAL" ? "#FF0000" : "",
             font: {
               ...exportCell.font,
-              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : "",
+              color:
+                cellElement.data.particulars === "TOTAL"
+                  ? { argb: "FFFF0000" }
+                  : "",
               size: 10,
-              style: cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
+              style:
+                cellElement.data.particulars === "TOTAL" ? "bold" : "normal",
               bold: cellElement.data.particulars === "TOTAL" ? true : false,
             },
           };
+        } else {
+          return (
+            <span
+              className={`${
+                cellElement.data.particulars === "TOTAL"
+                  ? "font-bold text-[#DC143C]"
+                  : ""
+              }`}
+            >
+              {`${
+                cellElement.data?.amount == null
+                  ? "0"
+                  : cellElement.data.amount < 0 && cellElement.data.particulars === "TOTAL"
+                  ? getFormattedValue(cellElement.data.amount)
+                  : cellElement.data.particulars === "TOTAL"
+                  ? getFormattedValue(cellElement.data.amount)
+                  : getFormattedValue(cellElement.data.amount, false, 4)
+              }`}
+            </span>
+          );
         }
-        else {
-          return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-            {`${cellElement.data?.amount == null ? '0' : cellElement.data.amount < 0 ? (-1 * cellElement.data.amount) : cellElement.data.particulars === "TOTAL" ?
-              getFormattedValue(cellElement.data.amount) : getFormattedValue(cellElement.data.amount, false, 2)}`}
-          </span>)
-        }
-      }
+      },
     },
     // {
     //   dataField: "credit",
@@ -221,9 +277,13 @@ const DayBookSummary = () => {
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                  remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                  remoteOperations={{
+                    filtering: false,
+                    paging: false,
+                    sorting: false,
+                  }}
                   columns={columns}
-                  filterText="from {dateFrom} to {dateTo} {costCenterID > 0 && , Cost Center: [CostCenterName]}"
+                  filterText="from {dateFrom} to {dateTo}"
                   gridHeader={t("day_book_summary")}
                   dataUrl={Urls.acc_reports_day_book_summary}
                   method={ActionType.POST}
@@ -231,9 +291,11 @@ const DayBookSummary = () => {
                   filterWidth={350}
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterContent={<DayBookReportFilter />}
-                  filterInitialData={DayBookReportFilterInitialState}
-                  onFilterChanged={(filter: any) => { setFilter(filter) }}
+                  filterContent={<DayBookSummaryReportFilter />}
+                  filterInitialData={DayBookSummaryReportFilterInitialState}
+                  onFilterChanged={(filter: any) => {
+                    setFilter(filter);
+                  }}
                   reload={true}
                   gridId="grd_day_book_summary"
                   // popupAction={toggleCostCentrePopup}
@@ -256,7 +318,6 @@ const DayBookSummary = () => {
           </div>
         </div>
       </div>
-
     </Fragment>
   );
 };

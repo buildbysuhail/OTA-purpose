@@ -173,7 +173,7 @@ const DayBookDetailed = () => {
               ? ''
               : cellElement.data.particulars === "TOTAL"
                 ? getFormattedValue(cellElement.data.debit)
-                : cellElement.data.debit}`}
+                : getFormattedValue(cellElement.data.debit,false,4)}`}
           </span>)
         }
       }
@@ -217,7 +217,7 @@ const DayBookDetailed = () => {
               ? ''
               : cellElement.data.particulars === "TOTAL"
                 ? getFormattedValue(cellElement.data.credit)
-                : cellElement.data.credit}`}
+                : getFormattedValue(cellElement.data.credit,false,4)}`}
           </span>)
         }
       }
@@ -291,6 +291,7 @@ const DayBookDetailed = () => {
                   filterInitialData={DayBookReportFilterInitialState}
                   hideGridAddButton={true}
                   reload={true}
+                  remoteOperations={{filtering:false,sorting:false,paging:false}}
                   childPopupProps={{
                     content: <AccTransactionForm isTeller={false} />,
                     title: t(""),

@@ -155,10 +155,10 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
               : balance < 0
                 ? cellElement.data.particulars === "TOTAL"
                   ? getFormattedValue(-1 * balance)
-                  : -1 * balance
+                  : getFormattedValue(-1 * balance,false,4)
                 : cellElement.data.particulars === "TOTAL"
                   ? getFormattedValue(balance)
-                  : balance;
+                  : getFormattedValue(balance,false,4);
           return {
             ...exportCell,
             text: value,
@@ -193,7 +193,7 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
                     ? -1 * cellElement.data.debit
                     : cellElement.data.particulars === "TOTAL"
                       ? getFormattedValue(cellElement.data.debit)
-                      : cellElement.data.debit
+                      :getFormattedValue (cellElement.data.debit,false,4)
                 }`}
             </span>
           );
@@ -223,10 +223,10 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
               : balance < 0
                 ? cellElement.data.particulars === "TOTAL"
                   ? getFormattedValue(-1 * balance)
-                  : -1 * balance
+                  : getFormattedValue(-1 * balance,false,4)
                 : cellElement.data.particulars === "TOTAL"
                   ? getFormattedValue(balance)
-                  : balance;
+                  : getFormattedValue( balance,false,4);
           return {
             ...exportCell,
             text: value,
@@ -261,7 +261,7 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
                     ? -1 * cellElement.data.credit
                     : cellElement.data.particulars === "TOTAL"
                       ? getFormattedValue(cellElement.data.credit)
-                      : cellElement.data.credit
+                      :getFormattedValue(cellElement.data.credit,false,4)
                 }`}
             </span>
           );
@@ -290,8 +290,8 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
             balance == null
               ? ""
               : balance < 0
-                ? getFormattedValue(-1 * balance)
-                : getFormattedValue(balance);
+                ? getFormattedValue(-1 * balance,false,4)
+                : getFormattedValue(balance,false,4);
           return {
             ...exportCell,
             text: value,
@@ -323,8 +323,8 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
                   cellElement.data?.balance == null
                   ? ""
                   : cellElement.data.balance < 0
-                    ? getFormattedValue(-1 * cellElement.data.balance)
-                    : getFormattedValue(cellElement.data.balance)
+                    ? getFormattedValue(-1 * cellElement.data.balance,false,4)
+                    : getFormattedValue(cellElement.data.balance,false,4)
                 } ${cellElement.data?.balance == 0 ||
                   cellElement.data?.balance == null
                   ? ""

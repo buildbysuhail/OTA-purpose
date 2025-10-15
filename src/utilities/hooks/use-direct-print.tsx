@@ -20,7 +20,7 @@ import SharedDownloadTemplate from "../../pages/InvoiceDesigner/DownloadPreview/
 import { loadPrintData } from "../../pages/use-print";
 import { generateQRCodeDataUrl } from "../../pages/InvoiceDesigner/utils/qrSvgToImg";
 import { useNumberToWords } from "../number-to-words";
-
+import { saveAs } from "file-saver";
 interface DirectPrintArgs {
   template?: any;
   data?: any;
@@ -197,82 +197,103 @@ export const useDirectPrint = () => {
           />
         );
       }
-
-      // 2. If no printer detected, ask user
-      if (!PrinterName || PrinterName.trim() === "") {
-        await ERPAlert.show({
-          text: t("Oops! No printer detected. Please set a printer before continuing."),
-          title: t("select_a_printer"),
-          icon: "warning",
-          confirmButtonText: t("set_printer"),
-          cancelButtonText: t("cancel"),
-          onConfirm: async() => {
-            const templateData = await fetchTemplateData(params);
-            dispatch?.(
-              toggleSelectPrinterPopup({ isOpen: true, template, data })
-            );
-            setPrinter = true;
-          },
-          onCancel: () => {
-            noDefaultPrint = true;
-          },
-        });
-      }
-
-      // 3. Build PDF blob
+        
+        // 2️⃣ Convert the React PDF document into a Blob
       const blob = await pdf(pdfDocument).toBlob();
 
-      if (setPrinter) return { success: true, reason: "setPrinter" };
-      if (noDefaultPrint) {
-        const pdfUrl = URL.createObjectURL(blob);
-        const printWindow = window.open(pdfUrl);
-        if (!printWindow) {
-          console.error("Failed to open print window. Please allow popups.");
-          alert("Failed to open print window. Please allow popups and try again.");
-          return { success: false, reason: "popup-blocked" };
-        }
-        printWindow.onload = () => printWindow.print();
-        return { success: true, reason: "browser-print" };
-      }
+      // 3️⃣ Download the file using FileSaver
+      const fileName =
+        template?.propertiesState?.fileName ||
+        `${template?.templateGroup || "document"}.pdf`;
+      saveAs(blob, fileName);
+      return { success: true };
 
-      // 4. Ensure JSPM agent is running
-      if (!JSPrintManager.WS || JSPrintManager.websocket_status !== WSStatus.Open) {
-        try {
-          await JSPrintManager.start();
-        } catch {
-          await ERPAlert.show({
-            text: t("JSPrintManager is not installed or not running. Please install it before printing."),
-            title: t("install_jsprintmanager"),
-            icon: "warning",
-            confirmButtonText: t("download"),
-            cancelButtonText: t("cancel"),
-            onConfirm: () => {
-              window.open("https://www.neodynamic.com/downloads/jspm", "_blank");
-            },
-          });
-          return { success: false, reason: "jspm-missing" };
-        }
-      }
+        // const pdfUrl = URL.createObjectURL(blob);
+        // const printWindow = window.open(pdfUrl);
+        // if (!printWindow) {
+        //   console.error("Failed to open print window. Please allow popups.");
+        //   alert("Failed to open print window. Please allow popups and try again.");
+        //   return { success: false, reason: "popup-blocked" };
+        // }
+        // printWindow.onload = () => printWindow.print();
+        // return { success: true, reason: "browser-print" };
+      
 
-      // 5. Create & send silent print job
-      const cpj = new ClientPrintJob();
-      cpj.clientPrinter =
-        PrinterName && PrinterName.trim() !== ""
-          ? new InstalledPrinter(PrinterName)
-          : new DefaultPrinter();
-      cpj.files.push(
-        new PrintFilePDF(blob, FileSourceType.BLOB, "document.pdf", 1)
-      );
+      // 2. If no printer detected, ask user
+      // if (!PrinterName || PrinterName.trim() === "") {
+      //   await ERPAlert.show({
+      //     text: t("Oops! No printer detected. Please set a printer before continuing."),
+      //     title: t("select_a_printer"),
+      //     icon: "warning",
+      //     confirmButtonText: t("set_printer"),
+      //     cancelButtonText: t("cancel"),
+      //     onConfirm: async() => {
+      //       const templateData = await fetchTemplateData(params);
+      //       dispatch?.(
+      //         toggleSelectPrinterPopup({ isOpen: true, template, data })
+      //       );
+      //       setPrinter = true;
+      //     },
+      //     onCancel: () => {
+      //       noDefaultPrint = true;
+      //     },
+      //   });
+      // }
 
-      cpj.onUpdated = (status) => console.log("Print job status update:", status);
-      cpj.onFinished = (result) => {
-        console.log("Print job finished:", result);
-        if (!result.success) console.error("Print job failed:", result.error);
-      };
+      // // 3. Build PDF blob
+      // const blob = await pdf(pdfDocument).toBlob();
 
-      await cpj.sendToClient();
+      // if (setPrinter) return { success: true, reason: "setPrinter" };
+      // if (noDefaultPrint) {
+      //   const pdfUrl = URL.createObjectURL(blob);
+      //   const printWindow = window.open(pdfUrl);
+      //   if (!printWindow) {
+      //     console.error("Failed to open print window. Please allow popups.");
+      //     alert("Failed to open print window. Please allow popups and try again.");
+      //     return { success: false, reason: "popup-blocked" };
+      //   }
+      //   printWindow.onload = () => printWindow.print();
+      //   return { success: true, reason: "browser-print" };
+      // }
 
-      return { success: true, reason: "printed" };
+      // // 4. Ensure JSPM agent is running
+      // if (!JSPrintManager.WS || JSPrintManager.websocket_status !== WSStatus.Open) {
+      //   try {
+      //     await JSPrintManager.start();
+      //   } catch {
+      //     await ERPAlert.show({
+      //       text: t("JSPrintManager is not installed or not running. Please install it before printing."),
+      //       title: t("install_jsprintmanager"),
+      //       icon: "warning",
+      //       confirmButtonText: t("download"),
+      //       cancelButtonText: t("cancel"),
+      //       onConfirm: () => {
+      //         window.open("https://www.neodynamic.com/downloads/jspm", "_blank");
+      //       },
+      //     });
+      //     return { success: false, reason: "jspm-missing" };
+      //   }
+      // }
+
+      // // 5. Create & send silent print job
+      // const cpj = new ClientPrintJob();
+      // cpj.clientPrinter =
+      //   PrinterName && PrinterName.trim() !== ""
+      //     ? new InstalledPrinter(PrinterName)
+      //     : new DefaultPrinter();
+      // cpj.files.push(
+      //   new PrintFilePDF(blob, FileSourceType.BLOB, "document.pdf", 1)
+      // );
+
+      // cpj.onUpdated = (status) => console.log("Print job status update:", status);
+      // cpj.onFinished = (result) => {
+      //   console.log("Print job finished:", result);
+      //   if (!result.success) console.error("Print job failed:", result.error);
+      // };
+
+      // await cpj.sendToClient();
+
+      // return { success: true, reason: "printed" };
     } catch (error) {
       console.error("Error printing:", error);
       return { success: false, reason: "error", error };

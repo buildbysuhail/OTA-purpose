@@ -38,9 +38,7 @@ const ShardPrevFooter = ({
                 backgroundRepeat: "no-repeat",
                 backgroundColor: `rgb(${footerState?.customElements?.background_color ?? "255,255,255"})`,
                 position: "relative",
-                }
-
-                }
+                }}
               >
                  {customElements.filter(comp => !comp.containerId).map((component) => (
                     <RenderPreviewComponent

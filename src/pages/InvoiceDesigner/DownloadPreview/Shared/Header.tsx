@@ -20,7 +20,7 @@ const ShardDowHeader = ({ data, template, qrCodes,AmountToEnglish,AmountToArabic
   const bgImage = headerState?.customElements?.background_image;
 
   const styles = StyleSheet.create({
-    headerContainer: {
+    headerContainer:{
       width: "100%",
       minHeight: customTopHeight,
       height: customTopHeight,

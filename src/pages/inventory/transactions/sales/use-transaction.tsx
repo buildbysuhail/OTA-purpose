@@ -85,7 +85,7 @@ import {
   DataAutoBarcode,
   ExcelRowData,
 } from "../transaction-types";
-import {  useCommenPrint } from "../../../transaction-base/use-print";
+import {  useCommenPrint } from "../../../transaction-base/use-commen-print";
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;
 //   clearDetailsAfterSaveAccounts: boolean;
@@ -1183,7 +1183,8 @@ export const useTransaction = (
                       formState.transaction?.master?.voucherForm?? "",           // formType
                       formState.transaction?.master.customerType ?? "",       // customerType
                       undefined,                                              // printTmeplate (optional)
-                      formState.transaction?.master.transactionDate ?? ""     // transDate
+                      formState.transaction?.master.transactionDate ?? ""
+                      , true
                     )
           }
           dispatch(

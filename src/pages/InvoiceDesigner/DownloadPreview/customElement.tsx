@@ -52,20 +52,26 @@ export const RenderComponentPDF: React.FC<Props> = ({
   switch (component.type) {
     case DesignerElementType.text:
     case DesignerElementType.field:
+  const textContent =
+  component.type === DesignerElementType.text
+    ? component.content
+    : bindDataForPrint(component.content, data, convertAmountToEnglish, convertAmountToArabic) || "N/A";
+
+const isArabicText = typeof textContent === "string" && /[\u0600-\u06FF]/.test(textContent);
+
       return (
         <View style={{ ...baseStyle, display: "flex", justifyContent: "center", alignItems: "center" }}>
           <Text
             style={{
-              fontFamily: component.font || "Helvetica",
+              fontFamily: isArabicText ? "Amiri" : (component.font || "Helvetica"),
               fontSize: component.fontSize || 12,
               fontWeight: component.fontWeight || "normal",
               color: component.fontColor ? `rgb(${component.fontColor})` : "black",
               textAlign: component.textAlign || "center",
+              direction: isArabicText ? "rtl" : "ltr",
             }}
           >
-            {component.type === DesignerElementType.text
-              ? component.content
-              : bindDataForPrint(component.content, data, convertAmountToEnglish, convertAmountToArabic) || "N/A"}
+            {textContent}
           </Text>
         </View>
       );

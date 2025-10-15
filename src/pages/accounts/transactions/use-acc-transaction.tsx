@@ -33,7 +33,7 @@ import {
   calculateTotal,
   validateTransactionDate,
 } from "./functions";
-import { useCommenPrint } from "../../transaction-base/use-print";
+import { useCommenPrint } from "../../transaction-base/use-commen-print";
 import moment from "moment";
 import VoucherType from "../../../enums/voucher-types";
 import { useTranslation } from "react-i18next";

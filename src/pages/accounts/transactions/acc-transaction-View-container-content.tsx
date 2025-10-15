@@ -19,6 +19,7 @@ import {
 import { useSearch } from "./search-context.tsx";
 import SharedTemplatePreview from "../../InvoiceDesigner/DesignPreview/shared";
 import { useAccPrint } from "./use-acc-print";
+import { useCommenPrint } from "../../transaction-base/use-commen-print";
 
 
 export interface TransactionViewProps {
@@ -71,7 +72,7 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
 
   const { t } = useTranslation("transaction");
   const formState: any = useAppSelector((state: RootState) => props.isInvTrans ?  state.InventoryTransaction : state.AccTransaction);
-
+  const { printVoucher,} = useCommenPrint();
   const {
     stableTemplateProps,
     loading,
@@ -94,6 +95,7 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
             <div className="flex items-center gap-1 border border-gray-200 rounded-md bg-white p-0.5">
               {/* Edit Button */}
               <button
+                disabled={loading}
                 type="button"
                 className="h-8 px-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded inline-flex items-center gap-1.5 transition-colors"
                 title={t("edit")}
@@ -108,21 +110,23 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
               <div className="w-px h-6 bg-gray-200" />
 
               {/* PDF/Print Dropdown Button */}
-              {/* <button
+              <button
                 type="button"
+                disabled={loading}
                 className="h-8 px-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded inline-flex items-center gap-1.5 transition-colors"
-                onClick={() => printVoucher(input.transactionMasterID, input.transactionType ?? "", stableTemplateProps.template, input.voucherType, formState.transaction.master.transactionDate)}
+                onClick={() => printVoucher(props.transactionMasterID??0, props.transactionType ?? "",props.voucherType??'',props.formType??'',props.customerType??'',stableTemplateProps?.template,undefined,props.isInvTrans)}
                 title={t("print")}
               >
                 <Printer className="w-4 h-4" />
                 <span>PDF/Print</span>
                 <ChevronUp className="w-3.5 h-3.5 opacity-60 rotate-180" />
-              </button> */}
+              </button>
 
               <div className="w-px h-6 bg-gray-200" />
 
               {/* Delete Button */}
               <button
+                disabled={loading}
                 type="button"
                 className="h-8 px-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded inline-flex items-center gap-1.5 transition-colors"
                 title={t("Delete")}

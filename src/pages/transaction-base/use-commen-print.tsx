@@ -20,8 +20,8 @@ export const useCommenPrint = () => {
   const formState = useAppSelector((state: RootState) => state.AccTransaction)
   const clientSession = useAppSelector((state: RootState) => state.ClientSession)
 
-  const printVoucher = async (masterID: number,transactionType: string,voucherType: string,formType:string,customerType:string,printTmeplate?:any ,transDate?: string,) => {
-
+  const printVoucher = async (masterID: number,transactionType: string,voucherType: string,formType:string,customerType:string,printTmeplate?:any ,transDate?: string,isInvTrans: boolean= false) => {
+debugger;
     transDate = transDate??(new Date()).toISOString();
    
     const template =printTmeplate? printTmeplate : await getOrFetchTemplate(voucherType??'', formType,customerType);
@@ -34,7 +34,7 @@ export const useCommenPrint = () => {
     if (formState.userConfig?.printPreview) {
       dispatch(accFormStateHandleFieldChange({ fields: { isPrintModalOpen: true } }))
     } else {
-      await directPrint({template: template,masterIDParam: masterID, isInvTrans: false,dbIdValue: userSession.dbIdValue,isAppGlobal: clientSession.isAppGlobal, printCopies:1, transactionType: transactionType,transDate: transDate})
+      await directPrint({template: template,masterIDParam: masterID, isInvTrans: isInvTrans,dbIdValue: userSession.dbIdValue,isAppGlobal: clientSession.isAppGlobal, printCopies:1, transactionType: transactionType,transDate: transDate})
     }
   }
 

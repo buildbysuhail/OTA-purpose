@@ -263,9 +263,10 @@ debugger;
   // Fetch template data for existing templates
   const getPDFTemplateData = useCallback(async () => {
     if (id !== "new") {
+      debugger;
       try {
         setLoading(true);
-
+        
         const _template = await fetchTemplateFromApiById(id);
 
           dispatch(setTemplate(_template));

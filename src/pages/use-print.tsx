@@ -1887,7 +1887,6 @@ export const fetchDefaultTemplate = async (
 ) => {
   try {
 
-debugger;
     const _template = await fetchDefaultTemplateFromApi(voucherType, formType, customerType);
     if (!_template) return null;
     await addTemplateToStore(_template)
@@ -1904,17 +1903,14 @@ export const getOrFetchTemplate = async (
 ) => {
   const templates = await getTemplatesFromStore(voucherType, customerType, formType);
   
-debugger;
   const existingTemplate = templates?.find((template: TemplateState<unknown>) => template.templateGroup === voucherType
     && template.formType === formType
     && template.customerType === customerType)
 
-debugger;
   if (existingTemplate) {
     return existingTemplate
   } else {
     
-debugger;
     return await fetchDefaultTemplate(voucherType, formType, customerType)
   }
 };

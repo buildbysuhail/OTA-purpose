@@ -29,7 +29,7 @@ const ShardPrevHeader = ({
     >
       {/* Background Image */}
 
-          {Array.isArray(customElements) && customElements.length > 0 && (
+          {Array.isArray(customElements) && (
               <div
                 style={{
                 minHeight: `${customTopHeight}pt`, height:`${customTopHeight}pt`,

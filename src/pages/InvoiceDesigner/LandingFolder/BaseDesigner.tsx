@@ -9,17 +9,21 @@ import { setTemplatePropertiesState } from "../../../redux/slices/templates/redu
 import { ERPScrollArea } from "../../../components/ERPComponents/erp-scrollbar"
 import HeaderDesigner from "../Designer/HeaderDesigner"
 import FooterDesigner from "../Designer/FooterDesigner"
+import TablePremiumDesigner from "./account/premium/designer/table-designer"
+import { PrintDetailDto } from "../../use-print-type"
+import SharedTemplatePreview from "../DesignPreview/shared"
+import { TableColumn } from "../Designer/interfaces"
 
 interface BaseDesignerProps {
   designerType: string
   designerKind:string
   templateGroup: string
-  templateComponent: React.ReactElement
-  sections: Record<string, React.ComponentType>
+  // templateComponent: React.ReactElement
+  // sections: Record<string, React.ComponentType>
 }
 
 const BaseDesigner: React.FC<BaseDesignerProps> = React.memo( 
-  ({ templateGroup, designerType, designerKind,templateComponent, sections }) => {
+  ({ templateGroup, designerType, designerKind}) => {
     const {
       t,
       navigate,
@@ -38,8 +42,7 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
      previewContainerRef,
      masterId
     } = useTemplateDesigner({ templateGroup, templateKind: designerKind, designerType })
-
-    const SectionComponent = currentSection ? sections[currentSection.type] : null
+  const tableColumns: TableColumn<PrintDetailDto>[] = [];
     return (
       <div className="flex h-full text-black dark:text-white bg-white dark:bg-body_dark">
         {/* Mini Tab Icons */}
@@ -97,9 +100,11 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
 
           {currentSection?.type === "header" && <HeaderDesigner />}
 
-          {SectionComponent && currentSection?.type !== "properties" && currentSection?.type !== "header" && currentSection?.type !== "footer" &&(
-            <SectionComponent />
-          )}
+          {
+            currentSection?.type === "table"  &&(
+              <TablePremiumDesigner<PrintDetailDto> tableState={tableColumns} />
+            )
+          }
            {currentSection?.type === "footer" && <FooterDesigner />}
         </div>
 
@@ -152,7 +157,12 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
                   </div>
                 ):(
                   <div className="relative h-full   w-full ">
-                    {React.cloneElement(templateComponent,  stableTemplateProps)}
+                    {/* {React.cloneElement(templateComponent,  stableTemplateProps)} */}
+                        <SharedTemplatePreview
+                          template={stableTemplateProps?.template}
+                          data={stableTemplateProps?.data}
+                          qrCodeImages={stableTemplateProps?.qrCodeImages}
+                        />
                   </div>
 
                 )}

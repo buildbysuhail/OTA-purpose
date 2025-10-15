@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { usePurchasePrint } from "./use-print";
-import { useCommenPrint } from "../../../transaction-base/use-print";
+import { useCommenPrint } from "../../../transaction-base/use-commen-print";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
@@ -1208,7 +1208,8 @@ export const useTransaction = (
               formState.transaction?.master?.voucherForm ?? "", // formType
               formState.transaction?.master.customerType ?? "", // customerType
               undefined, // printTmeplate (optional)
-              formState.transaction?.master.transactionDate ?? "" // transDate
+              formState.transaction?.master.transactionDate ?? "",
+              true
             );
           }
           dispatch(

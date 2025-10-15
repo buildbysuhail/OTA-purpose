@@ -29,6 +29,7 @@ interface HeaderProps extends VoucherElementProps {
     customerType: string,
     printTmeplate?: any,
     transDate?: string,
+    isInvTrans?: boolean
   ) => Promise<void>;
   handleClearControls: () => void;
   handleHistoryClick: () => void;
@@ -263,7 +264,8 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                               formState.transaction?.master?.voucherForm?? "",           // formType
                               formState.transaction?.master.customerType ?? "",       // customerType
                               undefined,                                              // printTmeplate (optional)
-                              formState.transaction?.master.transactionDate ?? ""     // transDate
+                              formState.transaction?.master.transactionDate ?? "",
+                              true
                             )
                           }
                 >
@@ -636,7 +638,8 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                               formState.transaction?.master?.voucherForm?? "",           // formType
                               formState.transaction?.master.customerType ?? "",       // customerType
                               undefined,                                              // printTmeplate (optional)
-                              formState.transaction?.master.transactionDate ?? ""     // transDate
+                              formState.transaction?.master.transactionDate ?? "",
+                              true
                             )
                           }
                             >

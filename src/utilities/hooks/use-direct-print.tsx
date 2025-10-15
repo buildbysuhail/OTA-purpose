@@ -15,14 +15,10 @@ import { BarcodePDFDocument } from "../../pages/LabelDesigner/download-preview-b
 import ERPAlert from "../../components/ERPComponents/erp-sweet-alert";
 import { toggleSelectPrinterPopup } from "../../redux/slices/popup-reducer";
 import { useTranslation } from "react-i18next";
-import useCurrentBranch from "./use-current-branch";
-import { useAppSelector } from "./useAppDispatch";
-import { RootState } from "../../redux/store";
 import { useCallback } from "react";
 import SharedDownloadTemplate from "../../pages/InvoiceDesigner/DownloadPreview/Shared";
 import { loadPrintData } from "../../pages/use-print";
 import { generateQRCodeDataUrl } from "../../pages/InvoiceDesigner/utils/qrSvgToImg";
-import { DummyVoucherData } from "../../pages/InvoiceDesigner/constants/DummyData";
 import { useNumberToWords } from "../number-to-words";
 
 interface DirectPrintArgs {
@@ -55,8 +51,6 @@ interface DirectPrintArgs {
 export const useDirectPrint = () => {
   const { t } = useTranslation("system");
   const dispatch = useDispatch();
-  const currentBranch = useCurrentBranch();
-  const userSession = useAppSelector((state: RootState) => state.UserSession);
   const adviceTem = ["PARP", "RARP"];
   const { convertAmountToEnglish, convertAmountToArabic } = useNumberToWords();
   const generateBarcodeImagesForPrint = async (pages: any[], template: any) => {
@@ -188,6 +182,7 @@ export const useDirectPrint = () => {
         console.warn("Cheque template handling not yet implemented");
         return { success: false, reason: "not-implemented" };
       } else {
+        debugger;
         // For standard templates, fetch the data
         console.log("Fetching template data for printing...");
         const templateData = await fetchTemplateData(params);

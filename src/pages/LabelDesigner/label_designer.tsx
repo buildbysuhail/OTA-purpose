@@ -232,7 +232,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
   const qrCodeRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const [activeTab, setActiveTab] = useState(forCustomRows ? "element" : "page");
   const [barcodeErrors, setBarcodeErrors] = useState<any>([]);
-
+  const isHeader = customTemplate?.split(".")[0] ?? "";
   const appState = useAppState();
   const inputFile = useRef<HTMLInputElement>(null);
   const inputImgFile = useRef<HTMLInputElement>(null);
@@ -1742,6 +1742,8 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
               background_image: designerData?.background_image,
               bg_image_position: designerData?.bg_image_position,
               background_color: designerData?.background_color,
+              isFirstOnly:designerData?.isFirstOnly??true
+
             },
             field: customTemplate,
           })
@@ -3903,7 +3905,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
                 <Box sx={{ mb: 1 }}>
                   <ERPCheckbox
                     id="isFirstOnly"
-                    label={t("isFirstOnly")}
+                    label=  {isHeader =="headerState" ?t("show_in_first_page"):t("show_in_last_page")}
                     checked={designerData?.isFirstOnly ?? true}
                     onChange={(e) =>
                       handleDesignerChange("isFirstOnly", e.target.checked)

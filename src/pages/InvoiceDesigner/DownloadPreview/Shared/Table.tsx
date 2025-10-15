@@ -1,7 +1,11 @@
-import { View, Text, StyleSheet } from "@react-pdf/renderer";
-import { TemplateState, TableColumn } from "../../Designer/interfaces";
 import { PrintDetailDto } from "../../../use-print-type";
+import { TableColumn, TemplateState } from "../../Designer/interfaces";
+import { View, Text, StyleSheet } from "@react-pdf/renderer";
 
+type DownTableProps = {
+  data: PrintDetailDto[];
+  template?: TemplateState<unknown>;
+};
 const DEFAULT_COLUMN_WIDTH = "10%";
 
 const normalizeWidth = (widthVal?: string | number): string => {
@@ -11,12 +15,7 @@ const normalizeWidth = (widthVal?: string | number): string => {
   return `${w}pt`;
 };
 
-type DownTableProps = {
-  data: PrintDetailDto[];
-  template?: TemplateState<unknown>;
-};
-
-const SharedDownTable: React.FC<DownTableProps> = ({ data, template }) => {
+ export const SharedDownTable: React.FC<DownTableProps> = ({ data, template }) => {
   const accTableState = (template as any)?.tableState as TableColumn<unknown>[] | undefined;
   const tableMasterState = (template as any)?.itemTableMasterState;
   const propertiesState = (template as any)?.propertiesState;
@@ -31,9 +30,6 @@ const SharedDownTable: React.FC<DownTableProps> = ({ data, template }) => {
     container: {
       width: "100%",
       flexDirection: "column",
-      marginVertical: 8,
-      borderWidth: tableMasterState?.showTableColBorder ? 1 : 0,
-      borderColor: tableMasterState?.tableColBorderColor || "#000",
     },
     thead: {
       flexDirection: "row",
@@ -53,9 +49,6 @@ const SharedDownTable: React.FC<DownTableProps> = ({ data, template }) => {
       fontWeight: labelFontWeight,
       fontStyle: labelFontStyle,
     },
-    tbody: {
-      flexDirection: "column",
-    },
     tr: {
       flexDirection: "row",
       fontSize: tableMasterState?.itemRowFontSize || 12,
@@ -70,96 +63,52 @@ const SharedDownTable: React.FC<DownTableProps> = ({ data, template }) => {
       padding: 4,
       textAlign: "center",
       fontFamily: labelFontFamily,
-    },
-    cellText: {
-      wordBreak: "break-word",
+      flexGrow: 1,
     },
   });
 
-  const renderHeader = () => {
-    if (!visibleColumns.length) return null;
-
-    return (
-      <View style={styles.thead}>
-        {visibleColumns.map((col, idx) => (
-          <View
-            key={String(col.field)}
-            style={{
-              ...styles.th,
-              flex: 1,
-              maxWidth: normalizeWidth(col.width || DEFAULT_COLUMN_WIDTH),
-              borderRightWidth:
-                tableMasterState?.showTableColBorder && idx + 1 < visibleColumns.length ? 1 : 0,
-              borderRightColor: tableMasterState?.tableColBorderColor || "#000",
-            }}
-          >
-            <Text style={styles.cellText}>{col.label ?? String(col.field)}</Text>
-          </View>
-        ))}
-      </View>
-    );
-  };
-
-
-  
-  const renderBody = () => {
-    if (!visibleColumns.length) return null;
-
-    if (!data?.length) {
-      return (
-        <View style={styles.tbody}>
-          <View style={styles.tr}>
-            {visibleColumns.map((col, idx) => (
-              <View
-                key={String(col.field)}
-                style={{
-                  ...styles.td,
-                  flex: 1,
-                  maxWidth: normalizeWidth(col.width || DEFAULT_COLUMN_WIDTH),
-                  borderRightWidth:
-                    tableMasterState?.showTableColBorder && idx + 1 < visibleColumns.length ? 1 : 0,
-                  borderRightColor: tableMasterState?.tableColBorderColor || "#000",
-                }}
-              >
-                <Text style={styles.cellText}>—</Text>
-              </View>
-            ))}
-          </View>
+  const renderHeader = () => (
+    <View style={styles.thead} fixed>
+      {visibleColumns.map((col, idx) => (
+        <View
+          key={String(col.field)}
+          style={{
+            ...styles.th,
+            flex: 1,
+            maxWidth: normalizeWidth(col.width || DEFAULT_COLUMN_WIDTH),
+            borderRightWidth:
+              tableMasterState?.showTableColBorder && idx + 1 < visibleColumns.length ? 1 : 0,
+            borderRightColor: tableMasterState?.tableColBorderColor || "#000",
+          }}
+        >
+          <Text>{col.label ?? String(col.field)}</Text>
         </View>
-      );
-    }
-
-    return (
-      <View style={styles.tbody}>
-        {data.map((row: any, rowIndex: number) => (
-          <View key={rowIndex} style={styles.tr}>
-            {visibleColumns.map((col, idx) => (
-              <View
-                key={String(col.field)}
-                style={{
-                  ...styles.td,
-                  flex: 1,
-                  maxWidth: normalizeWidth(col.width || DEFAULT_COLUMN_WIDTH),
-                  borderRightWidth:
-                    tableMasterState?.showTableColBorder && idx + 1 < visibleColumns.length ? 1 : 0,
-                  borderRightColor: tableMasterState?.tableColBorderColor || "#000",
-                }}
-              >
-                <Text style={styles.cellText}>{row?.[String(col.field)] ?? ""}</Text>
-              </View>
-            ))}
-          </View>
-        ))}
-      </View>
-    );
-  };
+      ))}
+    </View>
+  );
 
   return (
     <View style={styles.container}>
       {renderHeader()}
-      {renderBody()}
+      {/* ✅ Each row is a separate flowing block so page break works */}
+      {data?.map((row, rowIndex) => (
+        <View key={rowIndex} style={styles.tr} wrap>
+          {visibleColumns.map((col, idx) => (
+            <View
+              key={String(col.field)}
+              style={{
+                ...styles.td,
+                maxWidth: normalizeWidth(col.width || DEFAULT_COLUMN_WIDTH),
+                borderRightWidth:tableMasterState?.showTableColBorder && idx + 1 < visibleColumns.length ? 1 : 0,
+                borderRightColor: tableMasterState?.tableColBorderColor || "#000",
+              }}
+            >
+             <Text>{(row as Record<string, any>)?.[String(col.field)] ?? ""}</Text>
+
+            </View>
+          ))}
+        </View>
+      ))}
     </View>
   );
 };
-
-export default SharedDownTable;

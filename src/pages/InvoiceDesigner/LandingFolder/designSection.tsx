@@ -7,11 +7,6 @@ import {
   PaintBrushIcon
 } from "@heroicons/react/20/solid";
 
-import TablePremiumDesigner from "./account/premium/designer/table-designer";
-import { PrintDetailDto } from "../../use-print-type";
-import SharedDownloadTemplate from "../DownloadPreview/Shared";
-import SharedTemplatePreview from "../DesignPreview/shared";
-import VoucherType from "../../../enums/voucher-types";
 
 export  interface DesignSectionType {
   id: number;
@@ -20,113 +15,113 @@ export  interface DesignSectionType {
   description: string;
   icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>; // Updated to ComponentType
 }
-export interface DesignerConfig {
-  downloadComponent:JSX.Element;
-  PreviewComponent: JSX.Element;
-  sections: {
-    transactions?: ComponentType<any>; // Use specific prop types if available
-    table?: ComponentType<any>;
-    footer?: ComponentType<any>;
+// export interface DesignerConfig {
+//   downloadComponent:JSX.Element;
+//   PreviewComponent: JSX.Element;
+//   sections: {
+//     transactions?: ComponentType<any>; // Use specific prop types if available
+//     table?: ComponentType<any>;
+//     footer?: ComponentType<any>;
 
-  };
-}
+//   };
+// }
 
 // Map: templateGroup -> templateType -> templateKind
-export type DesignerConfigMap = Partial<
-  Record<
-    VoucherType,
-    Record<string, Record<string, DesignerConfig>>
-  >
->;
+// export type DesignerConfigMap = Partial<
+//   Record<
+//     VoucherType,
+//     Record<string, Record<string, DesignerConfig>>
+//   >
+// >;
 
-export const templateConfig: DesignerConfigMap = {
+// export const templateConfig: DesignerConfigMap = {
  
-  CP:{
-    STANDARD: {
-      standard: {
-        downloadComponent: <SharedDownloadTemplate />,
-        PreviewComponent: <SharedTemplatePreview />,
-        sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
-        tableState: []
-        })},
-      },
-    },
-    PREMIUM: {
-      premium: {
-        downloadComponent: <SharedDownloadTemplate />,
-        PreviewComponent:  <SharedTemplatePreview />,
-        sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
-        tableState: []
-        })},
-      },
-    },
-    UNIVERSAL: {
-      universal: {
-        downloadComponent: <SharedDownloadTemplate />,
-        PreviewComponent: <SharedTemplatePreview />,
-        sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
-        tableState: []
-        })},
-      },
-    },
-  },
-  PI:{
-      STANDARD: {
-      standard: {
-        downloadComponent: <SharedDownloadTemplate />,
-        PreviewComponent: <SharedTemplatePreview />,
-        sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
-        tableState: []
-        })},
-      },
-    },
-    PREMIUM: {
-      premium: {
-        downloadComponent: <SharedDownloadTemplate />,
-        PreviewComponent:  <SharedTemplatePreview />,
-        sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
-        tableState: []
-      })},
-      },
-    },
-    UNIVERSAL: {
-      universal: {
-        downloadComponent: <SharedDownloadTemplate />,
-        PreviewComponent: <SharedTemplatePreview />,
-        sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
-        tableState: []
-        })},
-      },
-    },
-     SPREDSHEET:{
-       spreadsheet:{
-        downloadComponent: <SharedDownloadTemplate />,
-        PreviewComponent: <SharedTemplatePreview />,
-        sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
-        tableState: []
-        })},
-    }
-    },
+//   CP:{
+//     STANDARD: {
+//       standard: {
+//         downloadComponent: <SharedDownloadTemplate />,
+//         PreviewComponent: <SharedTemplatePreview />,
+//         sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
+//         tableState: []
+//         })},
+//       },
+//     },
+//     PREMIUM: {
+//       premium: {
+//         downloadComponent: <SharedDownloadTemplate />,
+//         PreviewComponent:  <SharedTemplatePreview />,
+//         sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
+//         tableState: []
+//         })},
+//       },
+//     },
+//     UNIVERSAL: {
+//       universal: {
+//         downloadComponent: <SharedDownloadTemplate />,
+//         PreviewComponent: <SharedTemplatePreview />,
+//         sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
+//         tableState: []
+//         })},
+//       },
+//     },
+//   },
+//   PI:{
+//       STANDARD: {
+//       standard: {
+//         downloadComponent: <SharedDownloadTemplate />,
+//         PreviewComponent: <SharedTemplatePreview />,
+//         sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
+//         tableState: []
+//         })},
+//       },
+//     },
+//     PREMIUM: {
+//       premium: {
+//         downloadComponent: <SharedDownloadTemplate />,
+//         PreviewComponent:  <SharedTemplatePreview />,
+//         sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
+//         tableState: []
+//       })},
+//       },
+//     },
+//     UNIVERSAL: {
+//       universal: {
+//         downloadComponent: <SharedDownloadTemplate />,
+//         PreviewComponent: <SharedTemplatePreview />,
+//         sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
+//         tableState: []
+//         })},
+//       },
+//     },
+//      SPREDSHEET:{
+//        spreadsheet:{
+//         downloadComponent: <SharedDownloadTemplate />,
+//         PreviewComponent: <SharedTemplatePreview />,
+//         sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
+//         tableState: []
+//         })},
+//     }
+//     },
 
-    RETAIL: {
-      "retail-standard": {
-        downloadComponent: <SharedDownloadTemplate />,
-        PreviewComponent: <SharedTemplatePreview />,
-        sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
-        tableState: []
-        })},
-      },
-      "2inch": {
-        downloadComponent: <SharedDownloadTemplate />,
-        PreviewComponent: <SharedTemplatePreview />,
-        sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
-        tableState: []
-        })},
-      },
-    },
+//     RETAIL: {
+//       "retail-standard": {
+//         downloadComponent: <SharedDownloadTemplate />,
+//         PreviewComponent: <SharedTemplatePreview />,
+//         sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
+//         tableState: []
+//         })},
+//       },
+//       "2inch": {
+//         downloadComponent: <SharedDownloadTemplate />,
+//         PreviewComponent: <SharedTemplatePreview />,
+//         sections: {  table: () => TablePremiumDesigner<PrintDetailDto>({
+//         tableState: []
+//         })},
+//       },
+//     },
 
-  }
-};
+//   }
+// };
 
 export const designSections: DesignSectionType[] = [
   {

@@ -5,9 +5,10 @@ import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
 import { initialFormElements } from "./transaction-type-data";
 import { SummaryConfig } from "../../../components/ERPComponents/erp-purchase-grid/dataGrid";
 import { PrintResponse } from "../../use-print-type";
+import { List } from "lodash";
 
 // primitives we don't recurse into
-type Primitive = string | number | boolean | bigint | symbol | null | undefined | Date;
+type Primitive = string | number | boolean | bigint | symbol  | undefined | Date;
 
 // treat only plain objects as nestable
 type IsPlainObject<T> =
@@ -51,6 +52,10 @@ export interface TransactionData {
   details: TransactionDetail[];
   invAccTransactions: InvAccTransaction[];
   attachments: any[];
+  couponDetails:CouponDetails[]; // new
+  privilegeCardDetails:PrivilegeCardDetails[]; //new
+  bankCardDetails:List<SettlementDetails>[]; //new
+  uPIDetails:List<SettlementDetails>[]; //new
 }
 
 export interface InvAccTransaction {
@@ -206,6 +211,7 @@ export interface TransactionMaster {
   accTransactionDetailIDForBillwise: number;
   master2: TransactionMaster2;
   master3: TransactionMaster3;
+  lblSRAmount:string; //new
 }
 
 export interface TransactionMaster3 {
@@ -872,3 +878,52 @@ export interface BillwiseData {
   voucherPrefix: string;
   voucherType: string;
 }
+export interface CouponDetails {
+  cardID: number;
+  cardNumber: string;
+  amount: number;
+  cardType: string;
+  customerName: string;
+  totalAmount: number;
+  cardHolderName: string;
+  couponID: number;
+}
+export interface PrivilegeCardDetails {
+  privilegeCardsID: number;
+  branchID: number;
+  cardNumber: string;
+  cardHolderName: string;
+  address1: string;
+  address2: string;
+  phone: string;
+  mobile: string;
+  priceCategoryID: number;
+  expiryDate: Date;
+  activatedDate: Date;
+  createdUserID: number;
+  createdDate: Date;
+  modifiedUserID: number;
+  modifiedDate: Date;
+  cardType: string;
+  oBalance: number;
+  cardBalance: number;
+  dob: Date;
+  email: string;
+  changeID: number;
+  adjustAmt: number;
+  marginWiseBalancePoint: number;
+  totalBalance: number;
+}
+export interface SettlementDetails {
+  invTransactionMasterID: number;
+  paymentTypeID: number;
+  description: string;
+  amount: number;
+  ledgerId: number;
+  transactionDate: Date;
+  ledgerName: string;
+  paymentName: string;
+  paymentType: string;
+}
+
+

@@ -1,4 +1,4 @@
-import { TransactionMaster, TransactionValidationsData, TransactionDetail, TransactionMaster3, FormElementState, TransactionFormState, SummaryItems, TransactionData, BarcodeLabel, ProductDisplayDto, EmployeeType, TransactionDetails2, TransactionMaster2, TransactionDetailsMore, UserConfig } from "./transaction-types";
+import { TransactionMaster, TransactionValidationsData, TransactionDetail, TransactionMaster3, FormElementState, TransactionFormState, SummaryItems, TransactionData, BarcodeLabel, ProductDisplayDto, EmployeeType, TransactionDetails2, TransactionMaster2, TransactionDetailsMore, UserConfig, CouponDetails, PrivilegeCardDetails, SettlementDetails } from "./transaction-types";
 import { generateUniqueKey } from "../../../utilities/Utils";
 
 
@@ -190,7 +190,8 @@ export const TransactionMasterInitialData: TransactionMaster = {
   billWiseString:"",
   accTransactionDetailIDForBillwise:0,
   master2: initialInvTransactionMaster2,
-  master3: TransactionMaster3InitialData
+  master3: TransactionMaster3InitialData,
+  lblSRAmount:""
 }
 export const initialTransactionDetailData: TransactionDetail = {
   slNo: "",
@@ -299,7 +300,11 @@ export const transactionInitialData: TransactionData = {
   })),
   attachments: [],
   masterValidations: initialTransactionMasterValidations,
-  invAccTransactions: []
+  invAccTransactions: [],
+  couponDetails:[], //new
+  privilegeCardDetails:[], //new
+  bankCardDetails:[],// new
+  uPIDetails:[],// new
 };
 
 export const initialFormElements: { [key: string]: FormElementState } = {
@@ -737,3 +742,52 @@ export const initialProductDisplayData: ProductDisplayDto = {
   minSalePrice: "",
   image: ""
 };
+export const initialCouponDetails: CouponDetails = {
+  cardID: 0,
+  cardNumber: '',
+  amount: 0,
+  cardType: '',
+  customerName: '',
+  totalAmount: 0,
+  cardHolderName: '',
+  couponID: 0
+};
+export const initialPrivilegeCardOutput: PrivilegeCardDetails = {
+  privilegeCardsID: 0,
+  branchID: 0,
+  cardNumber: '',
+  cardHolderName: '',
+  address1: '',
+  address2: '',
+  phone: '',
+  mobile: '',
+  priceCategoryID: 0,
+  expiryDate: new Date(0),
+  activatedDate: new Date(0),
+  createdUserID: 0,
+  createdDate: new Date(0),
+  modifiedUserID: 0,
+  modifiedDate: new Date(0),
+  cardType: '',
+  oBalance: 0,
+  cardBalance: 0,
+  dob: new Date(0),
+  email: '',
+  changeID: 0,
+  adjustAmt: 0,
+  marginWiseBalancePoint: 0,
+  totalBalance: 0
+};
+export const initialSettlement: SettlementDetails = {
+  invTransactionMasterID: 0,
+  paymentTypeID: 0,
+  description: '',
+  amount: 0,
+  ledgerId: 0,
+  transactionDate: new Date(0),
+  ledgerName: '',
+  paymentName: '',
+  paymentType: ''
+};
+
+

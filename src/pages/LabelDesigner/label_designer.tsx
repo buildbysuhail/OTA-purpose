@@ -208,9 +208,6 @@ const objectPosition = [
 const imgContent = [{ label: "img1", value: usFlag }];
 
 // Utility functions
-function ptToPx(pt: number) {
-  return pt * (96 / 72);
-}
 
 // Main Component
 const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
@@ -244,7 +241,8 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
   const [templateData, setTemplateData] = useState<TemplateState<unknown>>(
     initialBacodeTemplateState<unknown>().data || {}
   );
-
+const ptToPx = (pt?: number) => (pt ? (pt * 96) / 72 : 0);
+const pxToPt = (px?: number) => (px ? (px * 72) / 96 : 0);
   const [designerData, setDesignerData] = useState({
     background_image: "",
     bg_image_position: "",
@@ -999,37 +997,68 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
     return (
       <ResizableBox
         key={container.id}
-        width={container.width}
-        height={containerHeight}
-        minConstraints={[50, 50]}
-        maxConstraints={[800, 600]}
+          width={ptToPx(container.width)}
+  height={ptToPx(containerHeight)}
+
+   minConstraints={[ptToPx(20), ptToPx(20)]}
+  maxConstraints={[ptToPx(800), ptToPx(600)]}
+
         resizeHandles={isSelected ? ['se', 'sw', 'ne', 'nw', 'n', 's', 'e', 'w'] : []}
+        // onResize={(e, { size }) => {
+        //   const updatedComponents = allComponents.map((comp) => {
+        //     if (comp.id === container.id) {
+        //       return {
+        //         ...comp,
+        //         width: size.width,
+        //         height: size.height,
+        //       };
+        //     }
+        //     return comp;
+        //   });
+        //   setTemplateData((prev: TemplateState<unknown>) => ({
+        //     ...prev,
+        //     barcodeState: {
+        //       ...prev.barcodeState,
+        //       placedComponents: updatedComponents,
+        //     },
+        //   }));
+        //   if (selectedComponent?.id === container.id) {
+        //     setSelectedComponent((prev) => ({
+        //       ...prev!,
+        //       width: size.width,
+        //       height: size.height,
+        //     }));
+        //   }
+        // }}
+
         onResize={(e, { size }) => {
-          const updatedComponents = allComponents.map((comp) => {
-            if (comp.id === container.id) {
-              return {
-                ...comp,
-                width: size.width,
-                height: size.height,
-              };
-            }
-            return comp;
-          });
-          setTemplateData((prev: TemplateState<unknown>) => ({
-            ...prev,
-            barcodeState: {
-              ...prev.barcodeState,
-              placedComponents: updatedComponents,
-            },
-          }));
-          if (selectedComponent?.id === container.id) {
-            setSelectedComponent((prev) => ({
-              ...prev!,
-              width: size.width,
-              height: size.height,
-            }));
-          }
-        }}
+    // Convert px -> pt before saving
+    const widthPt = pxToPt(size.width);
+    const heightPt = pxToPt(size.height);
+
+    const updatedComponents =
+      templateData?.barcodeState?.placedComponents?.map((comp) =>
+        comp.id === container.id
+          ? { ...comp, width: widthPt, height: heightPt }
+          : comp
+      ) || [];
+
+    setTemplateData((prev) => ({
+      ...prev,
+      barcodeState: {
+        ...prev.barcodeState,
+        placedComponents: updatedComponents,
+      },
+    }));
+
+    if (selectedComponent?.id === container.id) {
+      setSelectedComponent((prev) => ({
+        ...prev!,
+        width: widthPt,
+        height: heightPt,
+      }));
+    }
+  }}
         className="container-component"
         style={{
           position: "absolute",

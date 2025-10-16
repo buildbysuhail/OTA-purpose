@@ -8,6 +8,7 @@ import { useNumberFormat } from "../../../../../utilities/hooks/use-number-forma
 import Urls from "../../../../../redux/urls";
 import PromotionalSalesReportFilter, { PromotionalSalesReportFilterInitialState, } from "./promotional-sales-filter";
 import moment from "moment";
+import { erpParseFloat } from "../../../../../utilities/Utils";
 
 const PromotionalSalesReport = () => {
   const { t } = useTranslation("accountsReport");
@@ -523,33 +524,49 @@ const PromotionalSalesReport = () => {
     },
     {
       column: "quantity",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "fixedPoint",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
+      
     },
     {
       column: "netAmount",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "grossValue",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "stdGross",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "priceDiff",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
     },
   ];
 

@@ -11,6 +11,7 @@ import Urls from "../../../../../redux/urls";
 import ItemWiseGroupedBrandwiseSalesFilter, {
   ItemWiseGroupedBrandwiseSalesFilterInitialState,
 } from "./itemwise-grouped-brandwise-sales-filter";
+import { erpParseFloat } from "../../../../../utilities/Utils";
 
 const ItemWiseGroupedBrandwiseSales = () => {
   const { t } = useTranslation("accountsReport");
@@ -333,27 +334,39 @@ const ItemWiseGroupedBrandwiseSales = () => {
     },
     {
       column: "total",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 4));
+      },
     },
     {
       column: "qty",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 3));
+      },
     },
     {
       column: "unitPrice",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 2));
+      },
     },
     {
       column: "stdPurchasePrice",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 2));
+      },
     },
   ];
 

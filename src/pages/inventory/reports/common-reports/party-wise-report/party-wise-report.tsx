@@ -6,6 +6,7 @@ import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import PartyWiseReportFilter, {  PartyWiseReportFilterInitialState,} from "./party-wise-report-filter";
 import moment from "moment";
+import { erpParseFloat } from "../../../../../utilities/Utils";
 
 interface PartyWiseReportProps {
   gridHeader: string;
@@ -229,14 +230,20 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({
     },
     {
       column: "netAmount",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+                return erpParseFloat(getFormattedValue(value, false, 4));
+              },
     },
     {
       column: "quantity",
-      summaryType: "sum",
+      summaryType: "custom",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+                return erpParseFloat(getFormattedValue(value, false, 4));
+              },
     },
   ];
 

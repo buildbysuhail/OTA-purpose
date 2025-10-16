@@ -12,6 +12,7 @@ import VoidReportFilter, {
   VoidReportFilterInitialState,
 } from "./void-report-filter";
 import moment from "moment";
+import { erpParseFloat } from "../../../../../utilities/Utils";
 
 const VoidReport = () => {
   const { t } = useTranslation("accountsReport");
@@ -231,15 +232,21 @@ const VoidReport = () => {
     },
     {
       column: "total",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+                return erpParseFloat(getFormattedValue(value));
+              },
     },
     {
       column: "qty",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+                return erpParseFloat(getFormattedValue(value));
+              },
     },
   ];
 

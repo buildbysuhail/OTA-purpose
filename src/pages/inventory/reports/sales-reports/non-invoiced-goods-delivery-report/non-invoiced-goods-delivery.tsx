@@ -9,6 +9,7 @@ import Urls from "../../../../../redux/urls";
 import NonInvoicedGoodsDeliveryFilter, { NonInvoicedGoodsDeliveryFilterInitialState, } from "./non-invloced-goods-deliveryfilter";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
+import { erpParseFloat } from "../../../../../utilities/Utils";
 
 const NonInvoicedGoodsDelivery = () => {
   const { t } = useTranslation("accountsReport");
@@ -186,9 +187,12 @@ const NonInvoicedGoodsDelivery = () => {
     },
     {
       column: "grandTotal",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 4));
+        },
     },
   ];
 

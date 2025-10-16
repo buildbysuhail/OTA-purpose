@@ -5,6 +5,7 @@ import ErpDevGrid, { SummaryConfig } from "../../../../../components/ERPComponen
 import { ActionType } from "../../../../../redux/types"
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format"
 import SalesTransferMonthWiseSummaryReportFilter, { SalesTransferMonthWiseSummaryReportFilterInitialState } from "./sales-transfer-monthwise-summary-report-filter"
+import { erpParseFloat } from "../../../../../utilities/Utils"
 
 interface SalesTransferMonthWiseSummaryReportProps {
   gridHeader: string;
@@ -391,82 +392,122 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
       },
       {
         column: "january",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+        },
+        
       },
       {
         column: "february",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "march",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "april",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "may",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "june",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "july",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "august",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "september",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+        },
       },
 
       {
         column: "october",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "november",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "december",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "total",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+        },
       }
     ];
 

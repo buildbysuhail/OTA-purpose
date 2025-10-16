@@ -14,7 +14,7 @@ import FOCRegisterReportFilter, {
 } from "./foc-register-report-filter";
 import GridId from "../../../../../redux/gridId";
 import moment from "moment";
-import { isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
+import { erpParseFloat, isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
 
 const FOCRegisterReport = () => {
   const { t } = useTranslation("accountsReport");
@@ -551,7 +551,7 @@ const FOCRegisterReport = () => {
     },
     {
       column: "free",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "fixedPoint",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -565,11 +565,14 @@ const FOCRegisterReport = () => {
             2
           ) || "0"
         );
+      },
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 4));
       },
     },
     {
       column: "freeValue",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "fixedPoint",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -584,10 +587,13 @@ const FOCRegisterReport = () => {
           ) || "0"
         );
       },
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 4));
+      },
     },
     {
       column: "freeCost",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -602,10 +608,13 @@ const FOCRegisterReport = () => {
           ) || "0"
         );
       },
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 4));
+      },
     },
     {
       column: "totalProfit",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -619,6 +628,9 @@ const FOCRegisterReport = () => {
             2
           ) || "0"
         );
+      },
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 4));
       },
     },
   ];

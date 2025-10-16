@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import moment from "moment";
-import { isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
+import { erpParseFloat, isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
 import TaxReportDetailedFilter, {
   TaxReportDetailedFilterInitialState,
 } from "./tax-report-detailed-filter";
@@ -253,7 +253,7 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({
   const summaryItems: SummaryConfig[] = [
     {
       column: "taxableValue",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -268,10 +268,13 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({
           ) || "0"
         );
       },
+      cellSummaryAction:(value: number) => {
+                  return erpParseFloat(getFormattedValue(value, false, 4));
+            },
     },
     {
       column: "totalVAT",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -286,10 +289,13 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({
           ) || "0"
         );
       },
+         cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 4));
+      },
     },
     {
       column: "total",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -303,6 +309,9 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({
              4
           ) || "0"
         );
+      },
+         cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 4));
       },
     },
   ];

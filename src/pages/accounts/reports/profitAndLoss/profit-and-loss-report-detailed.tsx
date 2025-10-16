@@ -18,7 +18,7 @@ import { userSession } from "../../../../redux/slices/user-session/thunk";
 import { printPdf } from "../../../../utilities/print-report-utils";
 import ProfitAndLossDetailedVerticalPDFTemplate from "./profit-and-loss-pdf/profit-and-loss-detailed-vertical-pdf";
 import ProfitAndLossDetailedPDFTemplate from "./profit-and-loss-pdf/profit-and-loss-detailed-horizontal-pdf ";
-import { formatDateFields } from "../../../../utilities/Utils";
+import { erpParseFloat, formatDateFields } from "../../../../utilities/Utils";
 
 const api = new APIClient();
 const ProfitAndLossRow: React.FC<{
@@ -87,7 +87,7 @@ const ProfitAndLossRow: React.FC<{
             {item.total < 0
               ? "(-)" + getFormattedValue(-1 * item.total)
               : item.title == "M" ? getFormattedValue(item.total)
-                : parseFloat(getFormattedValue(item.total)) === 0
+                : erpParseFloat(getFormattedValue(item.total)) === 0
                   ? ''
                   : getFormattedValue(item.total)}
           </a>
@@ -412,7 +412,7 @@ const ProfitAndLossDetailedReport = () => {
 
         worksheet.getCell(`B${currentRow}`).value = expense[i].total < 0
           ? "(-)" + getFormattedValue(-1 * expense[i].total)
-          : parseFloat(getFormattedValue(expense[i].total)) === 0
+          : erpParseFloat(getFormattedValue(expense[i].total)) === 0
             ? ''
             : getFormattedValue(expense[i].total);
 
@@ -468,7 +468,7 @@ const ProfitAndLossDetailedReport = () => {
         worksheet.getCell(`C${currentRow}`).value = income[i].groupName;
         worksheet.getCell(`D${currentRow}`).value = income[i].total < 0
           ? `(-)${getFormattedValue(Math.abs(income[i].total))}`
-          : parseFloat(getFormattedValue(income[i].total)) === 0
+          : erpParseFloat(getFormattedValue(income[i].total)) === 0
             ? ''
             : getFormattedValue(income[i].total);
         // assets[i].transType == "E"

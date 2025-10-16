@@ -7,6 +7,7 @@ import Urls from "../../../../../redux/urls";
 import { useMemo } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import RouteWiseSalesAndCollectionFilter, { RouteWiseSalesAndCollectionFilterInitialState } from "./routewise-sales-and-collection-filter";
+import { erpParseFloat } from "../../../../../utilities/Utils";
 
 
 const RouteWiseSalesAndCollection = () => {
@@ -191,21 +192,30 @@ const RouteWiseSalesAndCollection = () => {
     },
     {
       column: "salesTarget",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow2,
+      cellSummaryAction:(value: number) => {
+                return erpParseFloat(getFormattedValue(value, false, 2));
+              },
     },
     {
       column: "total_Sales",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
     },
     {
       column: "total_Collection",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+                return erpParseFloat(getFormattedValue(value));
+              },
     }
   ];
 

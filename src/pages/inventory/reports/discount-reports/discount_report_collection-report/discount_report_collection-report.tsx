@@ -12,7 +12,7 @@ import GridId from "../../../../../redux/gridId";
 import DiscountReportCollectionFilter, {
   DiscountReportCollectionFilterInitialState,
 } from "./discount_report_collection-report-filter";
-import { isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
+import { erpParseFloat, isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
 const DiscountReportCollection = () => {
   const { t } = useTranslation("accountsReport");
   const columns: DevGridColumn[] = [
@@ -151,7 +151,7 @@ const DiscountReportCollection = () => {
     },
     {
       column: "discount",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "fixedPoint",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -166,6 +166,9 @@ const DiscountReportCollection = () => {
           ) || "0"
         );
       },
+      cellSummaryAction:(value: number) => {
+                return erpParseFloat(getFormattedValue(value, false, 4));
+            },
     },
   ];
   return (

@@ -11,6 +11,7 @@ import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import { TransactionBase, transactionRoutes } from "../../../components/common/content/transaction-routes";
 import { Link, useLocation } from "react-router-dom";
 import { useSearch } from "./search-context.tsx";
+import { erpParseFloat } from "../../../utilities/Utils";
 
 const toggleTransactionPopup = (payload: {
   isOpen: boolean;
@@ -392,9 +393,12 @@ const AccTransactionGrid: React.FC<{voucherType?: string
    const summaryItems: SummaryConfig[] = [
       {
         column: "amount",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+                  return erpParseFloat(getFormattedValue(value));
+                },
       },
       {
         column: "discount",
@@ -404,12 +408,15 @@ const AccTransactionGrid: React.FC<{voucherType?: string
       },
       {
         column: "amount",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         isGroupItem: true,
         showInGroupFooter:true,
         displayFormat:"Total: {0}",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
       }
     ];
 

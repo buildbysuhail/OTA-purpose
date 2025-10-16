@@ -9,6 +9,7 @@ import { useNumberFormat } from "../../../../../utilities/hooks/use-number-forma
 import { GstReportFilterInitialState } from "./gst-report-filter";
 import { useLocation } from "react-router-dom";
 import GstReportFilter from "./gst-report-filter";
+import { erpParseFloat } from "../../../../../utilities/Utils";
 
 interface GSTRegisterFormatProps {
   gridHeader: string;
@@ -1274,196 +1275,292 @@ const GSTRegisterFormat: FC<GSTRegisterFormatProps> = ({
     },
     {
       column: "total",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 4));
+      },
     },
     {
       column: "cess",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 4));
+      },
     },
     {
       column: "taxable0",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 6));
+      },
     },
     {
       column: "taxAmt0",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 2));
+      },
     },
     {
       column: "taxable3",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 6));
+      },
     },
     {
       column: "cgsT1_5",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 6));
+      },
     },
     {
       column: "sgsT1_5",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 6));
+      },
     },
     {
       column: "igsT3",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 6));
+      },
     },
     {
       column: "taxable6",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 6));
+      },
     },
     {
       column: "cgsT3",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 6));
+      },
     },
     {
       column: "sgsT3",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 6));
+      },
     },
     {
       column: "igsT6",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 6));
+      },
     },
     {
       column: "taxable5",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 6));
+      },
     },
     {
       column: "cgsT2_5",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 6));
+      },
     },
     {
       column: "sgsT2_5",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 6));
+      },
     },
     {
       column: "igsT5",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 6));
+      },
     },
     {
       column: "taxable12",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 6));
+      },
     },
     {
       column: "cgsT6",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 6));
+      },
     },
     {
       column: "sgsT6",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 6));
+      },
     },
     {
       column: "igsT12",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 6));
+      },
     },
     {
       column: "taxable18",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 6));
+      },
     },
     {
       column: "cgsT9",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 6));
+      },
     },
     {
       column: "sgsT9",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 6));
+      },
     },
     {
       column: "igsT18",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 6));
+      },
     },
 
     {
       column: "taxable28",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 6));
+      },
     },
     {
       column: "cgsT14",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 6));
+      },
     },
     {
       column: "sgsT14",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 6));
+      },
     },
     {
       column: "igsT28",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 6));
+      },
     },
     {
       column: "taxable28_12",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 6));
+      },
     },
     {
       column: "cgsT14_6",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 6));
+      },
     },
     {
       column: "sgsT14_6",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 6));
+      },
     },
     {
       column: "igsT28_12",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 6));
+      },
     },
   ];
 

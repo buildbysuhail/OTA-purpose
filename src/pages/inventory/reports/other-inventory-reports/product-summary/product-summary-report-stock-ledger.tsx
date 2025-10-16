@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import { ProductSummaryFilter } from "./product-summary-master";
+import { erpParseFloat } from "../../../../../utilities/Utils";
 
 const ProductSummaryReportStockLedger: React.FC<{ filter: ProductSummaryFilter; setFilter: React.Dispatch<React.SetStateAction<any>>; onReloadChange: () => void; reloadBase: boolean }> = ({ filter, setFilter, onReloadChange, reloadBase }) => {
   const { t } = useTranslation("accountsReport");
@@ -196,21 +197,30 @@ const ProductSummaryReportStockLedger: React.FC<{ filter: ProductSummaryFilter; 
     },
     {
       column: "inwardQty",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 4));
+      },
     },
     {
       column: "outwardQty",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 4));
+      },
     },
     {
       column: "balance",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 4));
+      },
     }
   ];
 

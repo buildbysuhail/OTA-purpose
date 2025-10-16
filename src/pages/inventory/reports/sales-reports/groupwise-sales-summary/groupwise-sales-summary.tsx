@@ -8,6 +8,7 @@ import { useNumberFormat } from "../../../../../utilities/hooks/use-number-forma
 import Urls from "../../../../../redux/urls";
 import { useLocation } from "react-router-dom";
 import GroupwiseSalesSummaryFilter from "./groupwise-sales-summary-filter";
+import { erpParseFloat } from "../../../../../utilities/Utils";
 
 interface SummaryProps {
   gridHeader: string;
@@ -650,68 +651,101 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
   const summaryItems: SummaryConfig[] = [
     {
       column: "quantity",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "fixedPoint",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "grossValue",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "totalDiscount",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "netAmount",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "cost",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
     },
     //total margin/ netvalue *100 as margin%
     {
       column: "marginPerc",
-      summaryType: "custom",
+      summaryType: "custom",  //summaryType: "custom",
       valueFormat: "percent",
       showInColumn: "marginPerc",
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "margin",
-      summaryType: "sum",
+      summaryType: "custom",  
       valueFormat: "fixedPoint",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "salesPerc",
-      summaryType: "max",
+      summaryType: "max",  // Check
       customizeText: customizeSummaryRow100,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "marginSharePerc",
-      summaryType: "max",
+      summaryType: "max", // check
       customizeText: customizeSummaryRow100,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "netValue",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "free",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
     },
   ];
 

@@ -15,6 +15,7 @@ import ERPMultiSelect from "../../../../components/ERPComponents/erp-multi-selec
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { APIClient } from "../../../../helpers/api-client";
 import { useNavigate } from "react-router-dom";
+import { erpParseFloat } from "../../../../utilities/Utils";
 
 interface OptionItem {
     id: string | number;
@@ -485,7 +486,7 @@ const ProductPricesIndia: React.FC = React.memo(() => {
                                         } else if (obj.priceUpdateType === "MRP") {
                                             Result = MRP - (MRP * value) / 100;
                                         }
-                                        Result = parseFloat(getFormattedValue(Result));
+                                        Result = erpParseFloat(getFormattedValue(Result));
                                         SalesRate = Result;
                                         if (Cost !== 0) {
                                             Margin = ((SalesRate - Cost) / Cost) * 100;
@@ -494,7 +495,7 @@ const ProductPricesIndia: React.FC = React.memo(() => {
                                             ...row,
                                             markUpDown: value,
                                             salesRate: SalesRate,
-                                            margin: parseFloat(getFormattedValue(Margin)),
+                                            margin: erpParseFloat(getFormattedValue(Margin)),
                                         };
                                     });
 

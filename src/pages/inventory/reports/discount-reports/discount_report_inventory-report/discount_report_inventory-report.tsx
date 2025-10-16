@@ -11,7 +11,7 @@ import GridId from "../../../../../redux/gridId";
 import DiscountReportInventoryFilter, {
   DiscountReportInventoryFilterInitialState,
 } from "./discount_report_inventory-report-filter";
-import { isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
+import { erpParseFloat, isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
 
 const DiscountReportInventory = () => {
   const { t } = useTranslation("accountsReport");
@@ -261,7 +261,7 @@ const DiscountReportInventory = () => {
     },
     {
       column: "discountAmt",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "fixedPoint",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -275,12 +275,15 @@ const DiscountReportInventory = () => {
             2
           ) || "0"
         );
+      },
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 2));
       },
     },
 
     {
       column: "billDiscount",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "fixedPoint",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -295,11 +298,14 @@ const DiscountReportInventory = () => {
           ) || "0"
         );
       },
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 2));
+      },
     },
 
     {
       column: "grandTotal",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -314,11 +320,14 @@ const DiscountReportInventory = () => {
           ) || "0"
         );
       },
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 4));
+      },
     },
 
     {
       column: "totalDisc",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -332,6 +341,9 @@ const DiscountReportInventory = () => {
             2
           ) || "0"
         );
+      },
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 2));
       },
     },
   ];

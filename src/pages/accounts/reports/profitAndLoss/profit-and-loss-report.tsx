@@ -18,7 +18,7 @@ import { useSelector } from "react-redux";
 import { printPdf } from "../../../../utilities/print-report-utils";
 import ProfitAndLossVerticalPDFTemplate from "./profit-and-loss-pdf/profit-and-loss-vertical-pdf";
 import ProfitAndLossPDFTemplate from "./profit-and-loss-pdf/profit-and-loss-horizontal-pdf";
-import { formatDateFields } from "../../../../utilities/Utils";
+import { erpParseFloat, formatDateFields } from "../../../../utilities/Utils";
 
 const api = new APIClient();
 const ProfitAndLossRow: React.FC<{
@@ -88,7 +88,7 @@ const ProfitAndLossRow: React.FC<{
             {item.total < 0
               ? "(-)" + getFormattedValue(-1 * item.total)
               : item.title == "M" ? getFormattedValue(item.total)
-                : parseFloat(getFormattedValue(item.total)) == 0
+                : erpParseFloat(getFormattedValue(item.total)) == 0
                   ? ''
                   : getFormattedValue(item.total)}
           </a>
@@ -374,7 +374,7 @@ const ProfitAndLossReport = () => {
         worksheet.getCell(`A${currentRow}`).value = expense[i].groupName;
         worksheet.getCell(`B${currentRow}`).value = expense[i].total < 0
           ? "(-)" + getFormattedValue(-1 * expense[i].total)
-          : parseFloat(getFormattedValue(expense[i].total)) === 0
+          : erpParseFloat(getFormattedValue(expense[i].total)) === 0
             ? ''
             : getFormattedValue(expense[i].total);
 
@@ -417,7 +417,7 @@ const ProfitAndLossReport = () => {
         worksheet.getCell(`C${currentRow}`).value = income[i].groupName;
         worksheet.getCell(`D${currentRow}`).value = income[i].total < 0
           ? `(-)${getFormattedValue(Math.abs(income[i].total))}`
-          : parseFloat(getFormattedValue(income[i].total)) === 0
+          : erpParseFloat(getFormattedValue(income[i].total)) === 0
             ? ''
             : getFormattedValue(income[i].total);
 

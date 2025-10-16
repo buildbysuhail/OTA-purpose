@@ -15,6 +15,7 @@ import FastMovingReportFilter, {
 } from "./fast-moving-products-filter";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
+import { erpParseFloat } from "../../../../../utilities/Utils";
 
 const FastMovingProductsReport = () => {
     const userSession = useSelector(
@@ -206,15 +207,21 @@ const FastMovingProductsReport = () => {
     },
     {
       column: "totalSold",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "fixedPoint",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+                return erpParseFloat(getFormattedValue(value));
+              }
     },
     {
       column: "totalValue",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "fixedPoint",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
     },
   ];
   return (

@@ -8,6 +8,7 @@ import { useNumberFormat } from "../../../../../utilities/hooks/use-number-forma
 import { useLocation } from "react-router-dom";
 import PurchaseGstReportFilterGstCat, { GstReportFilterGstCatInitialState} from "./gst-report-filter-gst";
 import GstReportFilterGstCat from "./gst-report-filter-gst";
+import { erpParseFloat } from "../../../../../utilities/Utils";
 interface GSTMonthlySummaryProps {
   gridHeader: string;
   dataUrl: string;
@@ -266,33 +267,48 @@ const GSTMonthlySummary: FC<GSTMonthlySummaryProps> = ({ gridHeader, dataUrl, gr
     },
     {
       column: "taxableValue",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+                  return erpParseFloat(getFormattedValue(value));
+            },
     },
     {
       column: "totalGST",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+                  return erpParseFloat(getFormattedValue(value));
+            },
     },
     {
       column: "total",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "cess",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "addCess",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+      },
     },
 
   ];

@@ -14,7 +14,7 @@ import InventorySummaryReportFilter, {
 import Urls from "../../../../../redux/urls";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
-import { mergeObjectsRemovingIdenticalKeys } from "../../../../../utilities/Utils";
+import { erpParseFloat, mergeObjectsRemovingIdenticalKeys } from "../../../../../utilities/Utils";
 import InventorySummaryReportDetailed from "./inventory-summary-detailed";
 
 interface InventorySummaryReportMonthwiseProps {
@@ -131,9 +131,12 @@ const InventorySummaryReportMonthwise: FC<
     },
     {
       column: "grandTotal",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 4));
+      },
     },
   ];
 

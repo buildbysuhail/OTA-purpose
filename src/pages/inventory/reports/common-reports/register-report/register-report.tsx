@@ -14,7 +14,7 @@ import { useLocation } from "react-router-dom";
 import RegisterFilter, {
   RegisterFilterInitialState,
 } from "./register-report-filter";
-import { isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
+import { erpParseFloat, isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
 
 interface RegisterProps {
   gridHeader: string;
@@ -1797,15 +1797,21 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       },
       {
         column: "totalProfit",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+                  return erpParseFloat(getFormattedValue(value));
+                },
       },
       {
         column: "netAmount",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+                  return erpParseFloat(getFormattedValue(value));
+                },
       },
       {
         column: "additionalExpenses",
@@ -1816,7 +1822,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       //is not is appglobal + 4 decimal
       {
         column: "vat",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: (itemInfo: { value: any }) => {
           return (
@@ -1831,42 +1837,64 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
             ) || "0"
           );
         },
+           cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 4));
+        },
       },
       {
         column: "stdPurchasePrice",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+                  return erpParseFloat(getFormattedValue(value));
+                },
       },
       {
         column: "stdSalesPrice",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+                  return erpParseFloat(getFormattedValue(value));
+                },
       },
       {
         column: "quantity",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+           cellSummaryAction:(value: number) => {
+                     return erpParseFloat(getFormattedValue(value, false, 4));
+                   },
       },
       {
         column: "free",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRowString,
+        cellSummaryAction:(value: number) => {
+                  return erpParseFloat(getFormattedValue(value, false, 4));
+                },
       },
       {
         column: "freeValue",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRowString,
+        cellSummaryAction:(value: number) => {
+                  return erpParseFloat(getFormattedValue(value, false, 4));
+                },
+        
       },
       {
         column: "freeCost",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRowString,
+        cellSummaryAction:(value: number) => {
+                  return erpParseFloat(getFormattedValue(value, false, 8));
+                },
       },
       {
         column: "qtyNos",
@@ -1876,58 +1904,85 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       },
       {
         column: "xRate",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRowString,
+         cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 6));
+        },
       },
       {
         column: "additionalExpense",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+                  return erpParseFloat(getFormattedValue(value));
+                },
       },
       //.DBID_VALUE == "543140180640"
       {
         column: "baseUnitQuantity",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+                  return erpParseFloat(getFormattedValue(value));
+                },
       },
       {
         column: "totalDiscount",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "grossValue",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "netValue",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "schemeDisc",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "exciseTax",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "taxableValue",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
       },
     ];
     return _summaryItems.filter((column) => {

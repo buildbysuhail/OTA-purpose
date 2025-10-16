@@ -48,7 +48,7 @@ import { useAccTransaction } from "./use-acc-transaction";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import BillWisePopup from "../../transaction-base/billwise-popup";
 import CustomerDetailsSidebar from "../../transaction-base/customer-details";
-import { isNullOrUndefinedOrZero } from "../../../utilities/Utils";
+import { erpParseFloat, isNullOrUndefinedOrZero } from "../../../utilities/Utils";
 import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
 import ERPResizableSidebar from "../../../components/ERPComponents/erp-resizable-sidebar";
 import TemplatesView from "../../transaction-base/template_picker";
@@ -1629,32 +1629,46 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const summaryItems: SummaryConfig[] = [
     {
       column: "amount",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+              return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "amountFC",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+         cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
     },
     {
       column: "debit",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+         cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
     },
     {
       column: "credit",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
-      customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
     },
     {
       column: "discount",
-      summaryType: "sum",
+      summaryType: "custom",
       customizeText: customizeSummaryRow,
+       cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
     },
   ];
   const [activeButton, setActiveButton] = useState("credit");

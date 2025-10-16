@@ -9,6 +9,7 @@ import { RootState } from "../../../../../redux/store";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import { APIClient } from "../../../../../helpers/api-client";
 import Urls from "../../../../../redux/urls";
+import { erpParseFloat } from "../../../../../utilities/Utils";
 
 const api = new APIClient();
 const ProductDetailsBatches: React.FC<{
@@ -25,7 +26,7 @@ const ProductDetailsBatches: React.FC<{
     return (
       <div
       >
-        {parseFloat(getFormattedValue(cellData.data[field], false, 4))}
+        {erpParseFloat(getFormattedValue(cellData.data[field], false, 4))}
       </div>
     );
   };
@@ -110,7 +111,7 @@ const ProductDetailsBatches: React.FC<{
           modifiedData.batch.manualBarcode = row.mannualBarcode?.toString() || "";
           modifiedData.batch.openingStock = +row.openingStock || 0;
           
-          modifiedData.batch.stock = parseFloat(getFormattedValue((row.stock || 0),false,3));
+          modifiedData.batch.stock = erpParseFloat(getFormattedValue((row.stock || 0),false,3));
           modifiedData.batch.aPC = row.apc?.toString() || "";
           modifiedData.batch.specification = row.specification?.toString() || "";
           modifiedData.batch.isActive = Boolean(row.isActive);

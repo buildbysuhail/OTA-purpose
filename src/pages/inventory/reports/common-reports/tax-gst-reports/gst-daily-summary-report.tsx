@@ -12,6 +12,7 @@ import {
   GstReportFilterGstCatInitialState,
 } from "./gst-report-filter-gst";
 import GstReportFilterGstCat from "./gst-report-filter-gst";
+import { erpParseFloat } from "../../../../../utilities/Utils";
 
 interface GSTDailySummaryProps {
   gridHeader: string;
@@ -299,33 +300,48 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
     },
     {
       column: "taxableValue",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 4));
+      },
     },
     {
       column: "totalGST",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 4));
+      },
     },
     {
       column: "total",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 4));
+      },
     },
     {
       column: "cess",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 4));
+      },
     },
     {
       column: "addCess",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 4));
+      },
     },
   ];
   const location = useLocation();

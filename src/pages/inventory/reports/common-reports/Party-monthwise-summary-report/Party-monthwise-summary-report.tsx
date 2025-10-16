@@ -7,6 +7,7 @@ import ErpDevGrid, {
 import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import PartyMonthwiseSummaryReportFilter, { PartyMonthwiseSummaryReportFilterInitialState } from "./Party-monthwise-summary-report-filter";
+import { erpParseFloat } from "../../../../../utilities/Utils";
 
 interface PartyMonthwiseSummaryReportProps {
   gridHeader: string;
@@ -251,15 +252,21 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({
     },
     {
       column: "total",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+                return erpParseFloat(getFormattedValue(value));
+              },
     },
     {
       column: "grandTotal",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+                return erpParseFloat(getFormattedValue(value));
+              },
     },
   ];
 

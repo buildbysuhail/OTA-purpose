@@ -8,6 +8,7 @@ import { useNumberFormat } from "../../../../../utilities/hooks/use-number-forma
 import NetSalesReportFilter, { NetSalesReportFilterInitialState, } from "./net-sales-filter";
 import { RootState } from "../../../../../redux/store";
 import { useSelector } from "react-redux";
+import { erpParseFloat } from "../../../../../utilities/Utils";
 
 interface NetSalesProps {
   gridHeader: string;
@@ -452,63 +453,93 @@ const NetSalesReport: FC<NetSalesProps> = ({ gridHeader, dataUrl, gridId }) => {
     const _summaryItems: SummaryConfig[] = [
       {
         column: "salesAmt",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "cashAmt",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "creditAmt",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "bankAmt",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "saleReturnAmt",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "balance",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "couponAmt",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "grossValue",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "vatAmount",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "netSales",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+        },
       },
     ];
 

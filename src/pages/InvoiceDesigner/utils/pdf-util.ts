@@ -123,7 +123,8 @@ export const PAGE_DIMENSIONS = {
     
     return pages
   }
-  
+  export const ptToPx = (pt?: number): number => (pt ? (pt * 96) / 72 : 0);
+  export const pxToPt = (px?: number): number => (px ? (px * 72) / 96 : 0);
   // src/utils/qrToSvg.ts
 
 

@@ -33,7 +33,7 @@ const CachedUrls = {
   Product: [btoa('/Inventory/LocalPurchaseOrder/Data/Product/')],
   ProductsCode: [btoa('/Inventory/LocalPurchaseOrder/Data/ProductsCode/')],
   CostCentres: [btoa(Urls.data_costcentres)],
-  Employees: [btoa(Urls.data_costcentres),
+  Employees: [btoa(Urls.data_employees),
   ...transactionRoutes.map((x: any) =>
     btoa(
       `/${x.transactionBase == TransactionBase.Accounts

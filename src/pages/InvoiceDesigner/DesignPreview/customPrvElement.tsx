@@ -172,7 +172,7 @@ export const RenderPreviewComponent: React.FC<Props> = ({
         left: `${component.x}pt`,
         top: `${component.y}pt`,
         height:containerHeight,
-       width:component.width ,
+        width:`${component.width}pt`,
         backgroundColor: containerProps.backgroundColor,
         border: `${containerProps.borderWidth}pt ${containerProps.borderStyle} ${containerProps.borderColor}`,
         padding: `${containerProps.padding}pt`,

@@ -11,7 +11,7 @@ import Urls from "../../../../../redux/urls";
 import GroupedBrandwiseSalesFilter, {
   GroupedBrandwiseSalesFilterInitialState,
 } from "./grouped-brandwise-sales-filter";
-import { isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
+import { erpParseFloat, isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
 
 const GroupedBrandwiseSales = () => {
   const { t } = useTranslation("accountsReport");
@@ -205,7 +205,7 @@ const GroupedBrandwiseSales = () => {
     },
     {
       column: "total",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
        customizeText: (itemInfo: { value: any }) => {
              return (
@@ -220,9 +220,9 @@ const GroupedBrandwiseSales = () => {
                ) || "0"
              );
            },
-            cellSummaryAction(value: any) {
-          getFormattedValue(value, false, 2);
-      },
+            cellSummaryAction:(value: number) => {
+                      return erpParseFloat(getFormattedValue(value, false, 2));
+                    },
     },
   ];
 

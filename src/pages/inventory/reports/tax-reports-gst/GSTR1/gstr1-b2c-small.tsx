@@ -9,6 +9,7 @@ import Urls from "../../../../../redux/urls";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import GSTR1B2BFilter, { GSTR1B2BFilterInitialState } from "./gstr1-b2b-filter";
+import { erpParseFloat } from "../../../../../utilities/Utils";
 
 const GSTR1B2CSmall = () => {
   const { t } = useTranslation("accountsReport");
@@ -212,15 +213,21 @@ const GSTR1B2CSmall = () => {
   const summaryItems: SummaryConfig[] = [
     {
       column: "taxableValue",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 2));
+        },
     },
     {
       column: "cessAmount",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 2));
+        },
     },
   ];
 

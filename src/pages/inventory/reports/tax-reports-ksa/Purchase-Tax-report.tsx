@@ -12,6 +12,7 @@ import GridId from "../../../../redux/gridId";
 import { ActionType } from "../../../../redux/types";
 import Urls from "../../../../redux/urls";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import { erpParseFloat } from "../../../../utilities/Utils";
 
 const PurchaseTaxReport = () => {
   const { t } = useTranslation("accountsReport");
@@ -319,21 +320,30 @@ const PurchaseTaxReport = () => {
     },
     {
       column: "taxableAmount",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+        },
     },
     {
       column: "vatAmount",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow1,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 4));
+        },
     },
     {
       column: "amount",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+        },
     },
   ];
   return (

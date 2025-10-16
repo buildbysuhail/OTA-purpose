@@ -9,6 +9,7 @@ import Urls from "../../../../../redux/urls";
 import PendingOrderReportFilter, { PendingOrderReportFilterInitialState, } from "./pending-order-filter";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
+import { erpParseFloat } from "../../../../../utilities/Utils";
 
 const PendingOrderReport = () => {
   const { t } = useTranslation("accountsReport");
@@ -585,39 +586,57 @@ const PendingOrderReport = () => {
   const summaryItems: SummaryConfig[] = [
     {
       column: "pendingQty",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "fixedPoint",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 4));
+      },
     },
     {
       column: "quantity",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "fixedPoint",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 4));
+      },
     },
     {
       column: "free",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "fixedPoint",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 4));
+      },
     },
     {
       column: "totalGross",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 4));
+      },
     },
     {
       column: "totalVatAmount",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 4));
+      },
     },
     {
       column: "netAmount",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 4));
+      },
     },
   ];
 

@@ -14,6 +14,7 @@ import PrivilegeCardReportFilter, {
 import moment from "moment";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
+import { erpParseFloat } from "../../../../../utilities/Utils";
 
 const PrivilegeCardReport = () => {
   const userSession = useSelector((state: RootState) => state.UserSession);
@@ -208,21 +209,30 @@ const PrivilegeCardReport = () => {
     },
     {
       column: "addAmt",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "redeem",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "balance",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
     },
   ];
 

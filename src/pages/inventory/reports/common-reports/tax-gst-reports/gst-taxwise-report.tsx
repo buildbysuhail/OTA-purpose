@@ -7,6 +7,7 @@ import { useNumberFormat } from "../../../../../utilities/hooks/use-number-forma
 import { useLocation } from "react-router-dom";
 import PurchaseGstReportFilterGstCat, { GstReportFilterGstCatInitialState } from "./gst-report-filter-gst";
 import GstReportFilterGstCat from "./gst-report-filter-gst";
+import { erpParseFloat } from "../../../../../utilities/Utils";
 interface GSTTaxwiseProps {
   gridHeader: string;
   dataUrl: string;
@@ -611,51 +612,75 @@ const GSTTaxwise: FC<GSTTaxwiseProps> = ({ gridHeader, dataUrl, gridId }) => {
     },
     {
       column: "qty",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "taxableValue",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "cgst",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "sgst",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "igst",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "total",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "cessAmt",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "addCess",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "party",
@@ -666,67 +691,91 @@ const GSTTaxwise: FC<GSTTaxwiseProps> = ({ gridHeader, dataUrl, gridId }) => {
     },
      {
       column: "qty",
-      summaryType: "sum",
+      summaryType: "custom",
       isGroupItem: true,
       showInGroupFooter: true,
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "taxableValue",
-      summaryType: "sum",
+      summaryType: "custom",
       isGroupItem: true,
       showInGroupFooter: true,
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "cgst",
-      summaryType: "sum",
+      summaryType: "custom",
       isGroupItem: true,
       showInGroupFooter: true,
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "sgst",
-      summaryType: "sum",
+      summaryType: "custom",
       isGroupItem: true,
       showInGroupFooter: true,
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "igst",
-      summaryType: "sum",
+      summaryType: "custom",
       isGroupItem: true,
       showInGroupFooter: true,
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "total",
-      summaryType: "sum",
+      summaryType: "custom",
       isGroupItem: true,
       showInGroupFooter: true,
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "cessAmt",
-      summaryType: "sum",
+      summaryType: "custom",
       isGroupItem: true,
       showInGroupFooter: true,
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "addCess",
-      summaryType: "sum",
+      summaryType: "custom",
       isGroupItem: true,
       showInGroupFooter: true,
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+      },
     },
   ];
   const location = useLocation();

@@ -12,6 +12,7 @@ import GridId from "../../../../../redux/gridId";
 import ItemUsedForServiceFilter, {
   ItemUsedForServiceFilterInitialState,
 } from "./item_used_for_service-report-filter";
+import { erpParseFloat } from "../../../../../utilities/Utils";
 
 const ItemUsedForService = () => {
   const { t } = useTranslation("accountsReport");
@@ -246,15 +247,21 @@ const ItemUsedForService = () => {
     },
     {
       column: "qty",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "fixedPoint",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 4));
+      },
     },
     {
       column: "netAmount",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "fixedPoint",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 4));
+      },
     },
   ];
   return (

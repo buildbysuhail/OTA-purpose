@@ -13,6 +13,7 @@ import BranchTransferFilter, {
   BranchTransferFilterInitialState,
 } from "./branch-transfer-filter";
 import moment from "moment";
+import { erpParseFloat } from "../../../../../utilities/Utils";
 interface BranchTransferSummaryProps {
   gridHeader: string;
   dataUrl: string;
@@ -202,9 +203,12 @@ const BranchTransferSummary: FC<BranchTransferSummaryProps> = ({
     },
     {
       column: "grandTotal",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 4));
+        },
     },
   ];
   const location = useLocation();

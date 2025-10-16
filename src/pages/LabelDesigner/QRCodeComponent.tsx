@@ -4,6 +4,7 @@ import { PlacedComponent, DesignerElementType } from "../InvoiceDesigner/Designe
 import { DeleteButton } from "./label_designer";
 import { ResizableBox } from "react-resizable";
 import "react-resizable/css/styles.css";
+import { ptToPx, pxToPt } from "../InvoiceDesigner/utils/pdf-util";
 
 interface QRCodeComponentProps {
   component: PlacedComponent;
@@ -102,22 +103,26 @@ export const QRCodeComponent: React.FC<QRCodeComponentProps> = ({
 
   // 5) Render a ResizableBox container
  return (
-    <ResizableBox
-      width={props.width || 200}
-      height={props.height || 200}
-      minConstraints={[20, 20]}
-      maxConstraints={[800, 600]}
-      resizeHandles={isSelected ? ['se', 'sw', 'ne', 'nw', 'n', 's', 'e', 'w'] : []}
-      onResize={(e, { size }) => {
-        if (setTemplateData && templateData) {
+            <ResizableBox
+              key={component.id}
+              width={ptToPx(props.width)}
+              height={ptToPx(props.height)}
+              minConstraints={[ptToPx(20), ptToPx(20)]}
+              maxConstraints={[ptToPx(800), ptToPx(600)]}
+              resizeHandles={isSelected ? ['se', 'sw', 'ne', 'nw', 'n', 's', 'e', 'w'] : []}
+   
+                 onResize={(e, { size }) => {
+               const widthPt = pxToPt(size.width);
+              const heightPt = pxToPt(size.height);
+         if (setTemplateData && templateData) {
           const updatedComponents = templateData?.barcodeState?.placedComponents?.map((comp: PlacedComponent) => {
             if (comp.id === component.id) {
               return {
                 ...comp,
                 qrCodeProps: {
                   ...comp.qrCodeProps,
-                  width: size.width,
-                  height: size.height,
+                  width: widthPt,
+                  height:heightPt,
                 },
               };
             }
@@ -136,13 +141,15 @@ export const QRCodeComponent: React.FC<QRCodeComponentProps> = ({
             ...prev!,
             qrCodeProps: {
               ...prev?.qrCodeProps,
-              width: size.width,
-              height: size.height,
+              width: widthPt,
+              height: heightPt,
               value: prev?.qrCodeProps?.value || "",
             },
           }));
         }
-      }}
+      }}     
+  
+
       style={{
         position: "absolute",
         left: `${component.x}pt`,

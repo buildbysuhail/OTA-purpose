@@ -9,7 +9,7 @@ import { ActionType } from "../../../../../redux/types";
 import { FC, useMemo } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../../redux/urls";
-import { mergeObjectsRemovingIdenticalKeys } from "../../../../../utilities/Utils";
+import { erpParseFloat, mergeObjectsRemovingIdenticalKeys } from "../../../../../utilities/Utils";
 interface StockSummaryLedgerProps {
   postData?: any;
   groupName?: string;
@@ -307,9 +307,13 @@ const StockSummaryLedgerReport: FC<StockSummaryLedgerProps> = ({
     },
     {
       column: "balance",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "fixedPoint",
       customizeText: customizeSummaryRow1,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 3));
+      },
+      
     },
   ];
 

@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import { ProductSummaryFilter } from "./product-summary-master";
+import { erpParseFloat } from "../../../../../utilities/Utils";
 
 interface ProductSummaryReport {
   productID: string;
@@ -295,21 +296,30 @@ const ProductSummaryReport1: React.FC<{
   const basicInfoSummaryItems: SummaryConfig[] = [
     {
       column: "stockIn",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "number",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 2));
+      },
     },
     {
       column: "stockOut",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "number",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 2));
+      },
     },
     {
       column: "stock",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "number",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 2));
+      },
     }
   ];
 

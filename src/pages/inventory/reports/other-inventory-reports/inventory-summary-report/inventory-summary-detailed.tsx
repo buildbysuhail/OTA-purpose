@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import { useLocation } from "react-router-dom";
 import {
+  erpParseFloat,
   isNullOrUndefinedOrEmpty,
   mergeObjectsRemovingIdenticalKeys,
 } from "../../../../../utilities/Utils";
@@ -1048,13 +1049,16 @@ const InventorySummaryReportDetailed: FC<
       },
       {
         column: "gross",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
       },
       {
         column: "vat",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: (itemInfo: { value: any }) => {
           return (
@@ -1069,115 +1073,166 @@ const InventorySummaryReportDetailed: FC<
             ) || "0"
           );
         },
+         cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 4));
+      },
       },
       {
         column: "disc",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
       },
       {
         column: "grandTotal",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
       },
       {
         column: "billDiscount",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
       },
       {
         column: "cashDiscount",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
       },
       {
         column: "cashAmt",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
       },
       {
         column: "creditAmt",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
       },
       {
         column: "bankAmt",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
       },
 
       {
         column: "adjustmentAmount",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
       },
       //only in multipayment and inventorysumary
       {
         column: "netValue",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
       },
       //only in multipayment and inventorysumary
       {
         column: "srAmount",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
       },
       //not in inactive and nahla
       // usersession.dbIdValue!== "543140180640"&&(
       {
         column: "couponAmt",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
       },
       // )
       //not in inactive
       {
         column: "taxOnDiscount",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
       },
       //not in inactive
       {
         column: "roundAmount",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
       },
 
       //dbid value="489995732270"
       //asmari only
       {
         column: "salesAmount",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
       },
       //asmari only
       {
         column: "totalProfit",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
       },
       // //inventory summary only+09
       {
         column: "totalExciseTax",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+      },
       },
     ];
     // Filter columns based on the `visible` property

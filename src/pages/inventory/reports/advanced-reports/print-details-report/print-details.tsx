@@ -7,6 +7,7 @@ import Urls from "../../../../../redux/urls";
 import { useMemo } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import PrintDetailsFilter, { PrintDetailsFilterInitialState } from "./print-details-filter";
+import { erpParseFloat } from "../../../../../utilities/Utils";
 
 const PrintDetails = () => {
   const { t } = useTranslation('accountsReport');
@@ -137,9 +138,12 @@ const PrintDetails = () => {
   const summaryItems: SummaryConfig[] = [
     {
       column: "grandTotal",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+         cellSummaryAction:(value: number) => {
+                   return erpParseFloat(getFormattedValue(value, false, 4));
+                 },
     }
   ];
 

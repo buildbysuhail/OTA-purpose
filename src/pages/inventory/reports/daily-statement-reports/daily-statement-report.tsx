@@ -8,6 +8,7 @@ import { ActionType } from "../../../../redux/types"
 import GridId from "../../../../redux/gridId"
 import DailyStatementReportFilter, { DailyStatementReportInitialState } from "./daily-statement-report -filter"
 import { useLocation } from "react-router-dom"
+import { erpParseFloat } from "../../../../utilities/Utils"
 interface DailyStatementReportProps {
   gridHeader: string;
   dataUrl: string;
@@ -215,27 +216,39 @@ interface DailyStatementReportProps {
     },
     {
       column: "cash",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+                return erpParseFloat(getFormattedValue(value));
+            },
     },
     {
       column: "credit",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+                return erpParseFloat(getFormattedValue(value));
+            },
     },
     {
       column: "bank",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+                return erpParseFloat(getFormattedValue(value));
+            },
     },
     {
       column: "total",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+                return erpParseFloat(getFormattedValue(value));
+            },
     },
   ];
  const location = useLocation();

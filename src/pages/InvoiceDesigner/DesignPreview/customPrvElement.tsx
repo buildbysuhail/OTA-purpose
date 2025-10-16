@@ -28,8 +28,8 @@ export const RenderPreviewComponent: React.FC<Props> = ({
     left: `${component.x}pt`,
     top: `${component.y}pt`,
     transform: `rotate(${component.rotate || 0}deg)`,
-    height: component.height || 50,
-    width: component.width || 50,
+    height: `${component.height}pt` || 50,
+    width: `${component.width}pt` || 50,
     zIndex:  component.containerId ? 10 : 1,
   };
   
@@ -171,8 +171,8 @@ export const RenderPreviewComponent: React.FC<Props> = ({
         position: "absolute",
         left: `${component.x}pt`,
         top: `${component.y}pt`,
-        height:containerHeight,
-       width:component.width ,
+        height:`${containerHeight}pt`,
+        width:`${component.width}pt`,
         backgroundColor: containerProps.backgroundColor,
         border: `${containerProps.borderWidth}pt ${containerProps.borderStyle} ${containerProps.borderColor}`,
         padding: `${containerProps.padding}pt`,

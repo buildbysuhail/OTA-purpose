@@ -12,6 +12,7 @@ import ServiceReportFilter, {
 } from "./service-report-filter";
 import Urls from "../../../../../redux/urls";
 import moment from "moment";
+import { erpParseFloat } from "../../../../../utilities/Utils";
 
 const ServiceReport = () => {
   const { t } = useTranslation("accountsReport");
@@ -300,21 +301,30 @@ const ServiceReport = () => {
     },
     {
       column: "billedRate",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 2));
+      },
     },
     {
       column: "invSpareTotal",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 2));
+      },
     },
     {
       column: "profit",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 2));
+      },
     },
   ];
 

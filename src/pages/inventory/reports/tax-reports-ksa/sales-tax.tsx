@@ -7,6 +7,7 @@ import { FC, useMemo } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../redux/urls";
 import PurchaseTaxReportFilter, { PurchaseTaxReportFilterInitialState, } from "./Purchase-Tax-report-filter";
+import { erpParseFloat } from "../../../../utilities/Utils";
 
 const SalesTax = () => {
   const { t } = useTranslation("accountsReport");
@@ -352,27 +353,39 @@ const SalesTax = () => {
     },
     {
       column: "taxableAmount",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+        },
     },
     {
       column: "vatAmount",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow4,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value, false, 4));
+        },
     },
     {
       column: "amount",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+        },
     },
     {
       column: "grandTotal",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+            return erpParseFloat(getFormattedValue(value));
+        },
     },
   ];
 

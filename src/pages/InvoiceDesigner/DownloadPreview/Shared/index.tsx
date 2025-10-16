@@ -29,19 +29,17 @@ import { SharedDownTable } from "./Table"
         <FontRegistration />
         <Page size={pdfPageSize} orientation={pageOrientation} style={{ flexDirection: "column" }}>
           {/* Header */}
-          <ShardDowHeader data={data} template={template} qrCodes={qrCodeImages}AmountToEnglish={AmountToEnglish}  AmountToArabic={AmountToArabic} /> 
+          <ShardDowHeader data={data} template={template} qrCodes={qrCodeImages}AmountToEnglish={AmountToEnglish}  AmountToArabic={AmountToArabic}/> 
+
           {/* Main Content Container */}
           <View
             style={{
-            display: "flex",
-            flexDirection: "column",
             backgroundColor: template?.propertiesState?.bg_color || "#fff",
             paddingTop,
             paddingRight,
             paddingBottom,
             paddingLeft,
             flexGrow: 1,
-              // position:"relative",
             }}
             wrap={true}
           >
@@ -58,7 +56,7 @@ import { SharedDownTable } from "./Table"
                   zIndex: -1,
                   objectPosition: template?.propertiesState?.bg_image_position ?? "center",
                 }}
-              />
+              />  
             )}
             <SharedDownTable data={data?.details??[]} template={template} />
           </View>

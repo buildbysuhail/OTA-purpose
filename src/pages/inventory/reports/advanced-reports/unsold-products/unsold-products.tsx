@@ -15,6 +15,7 @@ import UnsoldProductReportFilter, {
 } from "./unsold-products-filter";
 import { RootState } from "../../../../../redux/store";
 import { useSelector } from "react-redux";
+import { erpParseFloat } from "../../../../../utilities/Utils";
 
 const UnsoldProductReport = () => {
   const { t } = useTranslation("accountsReport");
@@ -140,9 +141,12 @@ const UnsoldProductReport = () => {
     },
     {
       column: "quantity",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "fixedPoint",
       customizeText: customizeSummaryRow,
+      cellSummaryAction:(value: number) => {
+                return erpParseFloat(getFormattedValue(value, false, 4));
+              },
     },
   ];
   return (

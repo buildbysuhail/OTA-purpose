@@ -15,7 +15,7 @@ import Urls from "../../../../../redux/urls";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
-import { isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
+import { erpParseFloat, isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
 
 const CreditPurchaseSummaryReport = () => {
   const { t } = useTranslation("accountsReport");
@@ -563,7 +563,7 @@ const CreditPurchaseSummaryReport = () => {
     },
     {
       column: "gross",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -577,11 +577,14 @@ const CreditPurchaseSummaryReport = () => {
             2
           ) || "0"
         );
+      },
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 4));
       },
     },
     {
       column: "disc",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -595,11 +598,14 @@ const CreditPurchaseSummaryReport = () => {
             2
           ) || "0"
         );
+      },
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 4));
       },
     },
     {
       column: "vat",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -613,11 +619,14 @@ const CreditPurchaseSummaryReport = () => {
             2
           ) || "0"
         );
+      },
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 4));
       },
     },
     {
       column: "grandTotal",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -631,11 +640,14 @@ const CreditPurchaseSummaryReport = () => {
             2
           ) || "0"
         );
+      },
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 4));
       },
     },
     {
       column: "billDiscount",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -649,11 +661,14 @@ const CreditPurchaseSummaryReport = () => {
             2
           ) || "0"
         );
+      },
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 2));
       },
     },
     {
       column: "cashDiscount",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -667,11 +682,14 @@ const CreditPurchaseSummaryReport = () => {
             2
           ) || "0"
         );
+      },
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 4));
       },
     },
     {
       column: "cashReceived",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -686,10 +704,13 @@ const CreditPurchaseSummaryReport = () => {
           ) || "0"
         );
       },
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 4));
+      },
     },
     {
       column: "adjustmentAmount",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -703,6 +724,9 @@ const CreditPurchaseSummaryReport = () => {
             2
           ) || "0"
         );
+      },
+      cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 4));
       },
     },
   ];

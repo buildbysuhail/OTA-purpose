@@ -69,7 +69,7 @@ import VoucherType, {
   accountsVoucherTypes,
 } from "../../enums/voucher-types";
 import { accountsFields, inventoryFields, barCodeField } from "./fields";
-import { getPageDimensions } from "../InvoiceDesigner/utils/pdf-util";
+import { getPageDimensions, ptToPx, pxToPt } from "../InvoiceDesigner/utils/pdf-util";
 import { QRCodeComponent } from "./QRCodeComponent";
 import GroupedComboBox from "../../components/ERPComponents/erp-grouped-combo";
 import { AccessPrinterList } from "../InvoiceDesigner/utils/get_printers";
@@ -208,9 +208,6 @@ const objectPosition = [
 const imgContent = [{ label: "img1", value: usFlag }];
 
 // Utility functions
-function ptToPx(pt: number) {
-  return pt * (96 / 72);
-}
 
 // Main Component
 const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
@@ -245,6 +242,8 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
     initialBacodeTemplateState<unknown>().data || {}
   );
 
+
+
   const [designerData, setDesignerData] = useState({
     background_image: "",
     bg_image_position: "",
@@ -253,8 +252,8 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
     isFirstOnly: true,
   });
 
-  const pxToPoint = (px: number) => px * (72 / 96);
-  const pointToPx = (pt: number) => pt * (96 / 72);
+ 
+ 
   const { t } = useTranslation("labelDesigner");
   const pageSize = template?.propertiesState?.pageSize ?? "A4";
 
@@ -410,8 +409,8 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
     const paddingTop = parseFloat(computedStyle.paddingTop) || 0;
 
     if (containerRect) {
-      const x = pxToPoint(e.clientX - containerRect.left - paddingLeft);
-      const y = pxToPoint(e.clientY - containerRect.top - paddingTop);
+      const x = pxToPt(e.clientX - containerRect.left - paddingLeft);
+      const y = pxToPt(e.clientY - containerRect.top - paddingTop);
 
       const component = components.find((c) => c.id === componentType);
       if (component) {
@@ -512,8 +511,8 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
     const canvasRect = canvasRef.current?.getBoundingClientRect();
 
     if (canvasRect) {
-      const x = pxToPoint(e.clientX - canvasRect.left);
-      const y = pxToPoint(e.clientY - canvasRect.top);
+      const x = pxToPt(e.clientX - canvasRect.left);
+      const y = pxToPt(e.clientY - canvasRect.top);
 
       setSelectedComponent(null);
 
@@ -727,8 +726,8 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
         templateData?.barcodeState?.placedComponents || []
       );
 
-      const offsetX = pxToPoint(e.clientX - canvasRect.left) - absolutePos.x;
-      const offsetY = pxToPoint(e.clientY - canvasRect.top) - absolutePos.y;
+      const offsetX = pxToPt(e.clientX - canvasRect.left) - absolutePos.x;
+      const offsetY = pxToPt(e.clientY - canvasRect.top) - absolutePos.y;
       setDragOffset({ x: offsetX, y: offsetY });
     }
   };
@@ -999,37 +998,41 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
     return (
       <ResizableBox
         key={container.id}
-        width={container.width}
-        height={containerHeight}
-        minConstraints={[50, 50]}
-        maxConstraints={[800, 600]}
+          width={ptToPx(container.width)}
+          height={ptToPx(containerHeight)}
+
+         minConstraints={[ptToPx(20), ptToPx(20)]}
+         maxConstraints={[ptToPx(800), ptToPx(600)]}
+
         resizeHandles={isSelected ? ['se', 'sw', 'ne', 'nw', 'n', 's', 'e', 'w'] : []}
         onResize={(e, { size }) => {
-          const updatedComponents = allComponents.map((comp) => {
-            if (comp.id === container.id) {
-              return {
-                ...comp,
-                width: size.width,
-                height: size.height,
-              };
-            }
-            return comp;
-          });
-          setTemplateData((prev: TemplateState<unknown>) => ({
-            ...prev,
-            barcodeState: {
-              ...prev.barcodeState,
-              placedComponents: updatedComponents,
-            },
-          }));
-          if (selectedComponent?.id === container.id) {
-            setSelectedComponent((prev) => ({
-              ...prev!,
-              width: size.width,
-              height: size.height,
-            }));
-          }
-        }}
+    // Convert px -> pt before saving
+    const widthPt = pxToPt(size.width);
+    const heightPt = pxToPt(size.height);
+
+    const updatedComponents =
+      templateData?.barcodeState?.placedComponents?.map((comp) =>
+        comp.id === container.id
+          ? { ...comp, width: widthPt, height: heightPt }
+          : comp
+      ) || [];
+
+    setTemplateData((prev) => ({
+      ...prev,
+      barcodeState: {
+        ...prev.barcodeState,
+        placedComponents: updatedComponents,
+      },
+    }));
+
+    if (selectedComponent?.id === container.id) {
+      setSelectedComponent((prev) => ({
+        ...prev!,
+        width: widthPt,
+        height: heightPt,
+      }));
+    }
+  }}
         className="container-component"
         style={{
           position: "absolute",
@@ -1199,22 +1202,22 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
         return (
           <ResizableBox
             key={component.id}
-            width={component.width}
-            height={component.height}
-            minConstraints={[20, 20]}
-            maxConstraints={[800, 600]}
+            width={ptToPx(component.width)}
+            height={ptToPx(component.height)}
+            minConstraints={[ptToPx(20), ptToPx(20)]}
+            maxConstraints={[ptToPx(800), ptToPx(600)]}
             resizeHandles={isSelected ? ['se', 'sw', 'ne', 'nw', 'n', 's', 'e', 'w'] : []}
             onResize={(e, { size }) => {
-              const updatedComponents = templateData?.barcodeState?.placedComponents?.map((comp) => {
-                if (comp.id === component.id) {
-                  return {
-                    ...comp,
-                    width: size.width,
-                    height: size.height,
-                  };
-                }
-                return comp;
-              }) || [];
+            const widthPt = pxToPt(size.width);
+            const heightPt = pxToPt(size.height);
+
+            const updatedComponents =
+            templateData?.barcodeState?.placedComponents?.map((comp) =>
+              comp.id === component.id
+                ? { ...comp, width: widthPt, height: heightPt }
+                : comp
+            ) || [];         
+
               setTemplateData((prev: TemplateState<unknown>) => ({
                 ...prev,
                 barcodeState: {
@@ -1225,8 +1228,8 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
               if (selectedComponent?.id === component.id) {
                 setSelectedComponent((prev) => ({
                   ...prev!,
-                  width: size.width,
-                  height: size.height,
+                      width: widthPt,
+                      height: heightPt,
                 }));
               }
             }}
@@ -1328,22 +1331,22 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
         return (
           <ResizableBox
             key={component.id}
-            width={component.width}
-            height={component.height}
-            minConstraints={[20, 20]}
-            maxConstraints={[800, 600]}
+            width={ptToPx(component.width)}
+            height={ptToPx(component.height)}
+            minConstraints={[ptToPx(20), ptToPx(20)]}
+            maxConstraints={[ptToPx(800), ptToPx(600)]}
             resizeHandles={isSelected ? ['se', 'sw', 'ne', 'nw', 'n', 's', 'e', 'w'] : []}
             onResize={(e, { size }) => {
-              const updatedComponents = templateData?.barcodeState?.placedComponents?.map((comp) => {
-                if (comp.id === component.id) {
-                  return {
-                    ...comp,
-                    width: size.width,
-                    height: size.height,
-                  };
-                }
-                return comp;
-              }) || [];
+            const widthPt = pxToPt(size.width);
+            const heightPt = pxToPt(size.height);
+
+            const updatedComponents =
+            templateData?.barcodeState?.placedComponents?.map((comp) =>
+              comp.id === component.id
+                ? { ...comp, width: widthPt, height: heightPt }
+                : comp
+            ) || [];         
+
               setTemplateData((prev: TemplateState<unknown>) => ({
                 ...prev,
                 barcodeState: {
@@ -1354,11 +1357,12 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
               if (selectedComponent?.id === component.id) {
                 setSelectedComponent((prev) => ({
                   ...prev!,
-                  width: size.width,
-                  height: size.height,
+                      width: widthPt,
+                      height: heightPt,
                 }));
               }
-            }}
+            }}          
+
             style={{
               position: "absolute",
               left: `${component.x}pt`,
@@ -1463,8 +1467,8 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
           if (!draggingRef.current || !canvasRef.current) return;
 
           const canvasRect = canvasRef.current.getBoundingClientRect();
-          let newX = pxToPoint(e.clientX - canvasRect.left) - dragOffsetRef.current.x;
-          let newY = pxToPoint(e.clientY - canvasRect.top) - dragOffsetRef.current.y;
+          let newX = pxToPt(e.clientX - canvasRect.left) - dragOffsetRef.current.x;
+          let newY = pxToPt(e.clientY - canvasRect.top) - dragOffsetRef.current.y;
 
           setTemplateData((prev: TemplateState<unknown>) => {
             const components = prev?.barcodeState?.placedComponents || [];
@@ -1643,8 +1647,8 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
     e: React.SyntheticEvent,
     { size }: { size: { width: number; height: number } }
   ) => {
-    const newWidthPt = pxToPoint(size.width);
-    const newHeightPt = pxToPoint(size.height);
+    const newWidthPt = pxToPt(size.width);
+    const newHeightPt = pxToPt(size.height);
     setTemplateData((prevData: TemplateState<unknown>) => {
       const updated = {
         ...prevData,
@@ -1998,8 +2002,8 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
   // Computed values
   const labelWidthPt = templateData?.barcodeState?.labelState?.labelWidth ?? 300;
   const labelHeightPt = templateData?.barcodeState?.labelState?.labelHeight ?? 200;
-  const labelWidthPx = pointToPx(labelWidthPt);
-  const labelHeightPx = pointToPx(labelHeightPt);
+  const labelWidthPx = ptToPx(labelWidthPt);
+  const labelHeightPx = ptToPx(labelHeightPt);
 
   const bgImage = forCustomRows
     ? designerData?.background_image
@@ -2157,8 +2161,8 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
           <ResizableBox
             width={labelWidthPx}
             height={labelHeightPx}
-            minConstraints={[pointToPx(50), pointToPx(50)]}
-            maxConstraints={[pointToPx(1200), pointToPx(800)]}
+            minConstraints={[ptToPx(50), ptToPx(50)]}
+            maxConstraints={[ptToPx(1200), ptToPx(800)]}
             resizeHandles={[
               forCustomRows
                 ? "s"

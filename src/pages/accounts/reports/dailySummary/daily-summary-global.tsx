@@ -261,7 +261,7 @@ const DailySummaryGlobal = () => {
         }
         else {
           return (<span className={`${cellElement.data.date === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-            {getFormattedValue(cellElement.data.received)}
+               {cellElement.data.received==undefined||cellElement.data.received==null?'': getFormattedValue(cellElement.data.received)}
           </span>)
         }
       }
@@ -304,7 +304,7 @@ const DailySummaryGlobal = () => {
         }
         else {
           return (<span className={`${cellElement.data.date === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-            {getFormattedValue(cellElement.data.balance)}
+            {cellElement.data.balance==undefined||cellElement.data.balance==null?'': getFormattedValue(cellElement.data.balance)}
           </span>)
         }
       }
@@ -347,7 +347,7 @@ const DailySummaryGlobal = () => {
         }
         else {
           return (<span className={`${cellElement.data.date === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-            {getFormattedValue(cellElement.data.runningBalance)}
+            {cellElement.data.runningBalance==undefined||cellElement.data.runningBalance==null?'':getFormattedValue(cellElement.data.runningBalance)}
           </span>)
         }
       }
@@ -401,7 +401,7 @@ const DailySummaryGlobal = () => {
         }
         else {
           return (<span>
-            {getFormattedValue(cellElement.data.quantity, false, 4)}
+            {cellElement.data.quantity==undefined||cellElement.data.quantity==null?'':getFormattedValue(cellElement.data.quantity, false, 4)}
           </span>)
         }
       }
@@ -446,7 +446,7 @@ const DailySummaryGlobal = () => {
         }
         else {
           return (<span>
-            {getFormattedValue(cellElement.data.netAmt, false, 4)}
+                   {cellElement.data.netAmt==undefined||cellElement.data.netAmt==null?'': getFormattedValue(cellElement.data.netAmt,false, 4)}
           </span>)
         }
       }

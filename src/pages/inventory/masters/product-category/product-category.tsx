@@ -138,8 +138,8 @@ const ProductCategory = () => {
       cellRender: (cellElement: any) => {
         return (
           <ERPGridActions
-            view={{ type: "popup", action: () => toggleProductCategory({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
-            edit={{ type: "popup", action: () => toggleProductCategory({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
+            view={{ type: "popup", action: () => toggleProductCategory({ isOpen: true, key: cellElement?.data?.id, reload: false, mode:"view" }) }}
+            edit={{ type: "popup", action: () => toggleProductCategory({ isOpen: true, key: cellElement?.data?.id, reload: false, mode:"edit" }) }}
             delete={{
               onSuccess: () => { dispatch(toggleProductCategory({ isOpen: false, key: null, reload: true, })); },
               confirmationRequired: true,

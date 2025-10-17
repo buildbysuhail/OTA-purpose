@@ -42,6 +42,7 @@ export const PriceCategoryManage: React.FC = React.memo(() => {
           label={t("name")}
           placeholder={t("name")}
           onChangeData={(data: any) => { handleFieldChange("priceCategoryName", data.priceCategoryName); }}
+          readOnly={rootState.PopupData.priceCategory.mode == "view"}
         />
 
         <ERPInput
@@ -49,6 +50,7 @@ export const PriceCategoryManage: React.FC = React.memo(() => {
           label={t("short_name")}
           placeholder={t("short_name")}
           onChangeData={(data: any) => handleFieldChange("shortName", data.shortName)}
+          readOnly={rootState.PopupData.priceCategory.mode == "view"}
         />
 
         <ERPInput
@@ -56,6 +58,7 @@ export const PriceCategoryManage: React.FC = React.memo(() => {
           label={t("remarks")}
           placeholder={t("remarks")}
           onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
+          readOnly={rootState.PopupData.priceCategory.mode == "view"}
         />
 
         <ERPInput
@@ -64,6 +67,7 @@ export const PriceCategoryManage: React.FC = React.memo(() => {
           label={t("discount_%")}
           placeholder={t("discount_%")}
           onChangeData={(data: any) => handleFieldChange("discountPerc", data.discountPerc)}
+          readOnly={rootState.PopupData.priceCategory.mode == "view"}
         />
 
         <ERPInput
@@ -72,14 +76,15 @@ export const PriceCategoryManage: React.FC = React.memo(() => {
           label={t("margin_%")}
           placeholder={t("margin_%")}
           onChangeData={(data: any) => handleFieldChange("marginPerc", data.marginPerc)}
+          readOnly={rootState.PopupData.priceCategory.mode == "view"}
         />
       </div>
       <ERPFormButtons
-        onClear={handleClear}
+        onClear={rootState.PopupData.priceCategory.mode == "view" ? undefined: handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={handleSubmit}
+        onSubmit={rootState.PopupData.priceCategory.mode == "view" ? undefined: handleSubmit}
       />
     </div>
   );

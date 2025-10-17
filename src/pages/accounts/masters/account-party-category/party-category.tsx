@@ -105,8 +105,8 @@ const PartyCategory = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => togglePartyCategoryPopup({ isOpen: true, key: cellElement?.data?.id, reload: false }), }}
-          edit={{ type: "popup", action: () => togglePartyCategoryPopup({ isOpen: true, key: cellElement?.data?.id, reload: false }), }}
+          view={{ type: "popup", action: () => togglePartyCategoryPopup({ isOpen: true, key: cellElement?.data?.id, reload: false, mode:"view" }), }}
+          edit={{ type: "popup", action: () => togglePartyCategoryPopup({ isOpen: true, key: cellElement?.data?.id, reload: false, mode:"edit" }), }}
           delete={{
             onSuccess: () => { dispatch(togglePartyCategoryPopup({ isOpen: false, key: null, reload: true, })); },
             confirmationRequired: true,

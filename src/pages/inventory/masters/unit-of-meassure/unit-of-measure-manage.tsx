@@ -49,6 +49,7 @@ export const UnitOfMeasureManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => {
             handleFieldChange("unitCode", data.unitCode);
           }}
+          readOnly={rootState.PopupData.unitOfMeasure.mode == "view"}
         />
 
         <ERPInput
@@ -57,6 +58,7 @@ export const UnitOfMeasureManage: React.FC = React.memo(() => {
           placeholder={t("unit_name")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("unitName", data.unitName)}
+          readOnly={rootState.PopupData.unitOfMeasure.mode == "view"}
         />
 
         <ERPDataCombobox
@@ -72,6 +74,7 @@ export const UnitOfMeasureManage: React.FC = React.memo(() => {
             { value: 'Simple', label: t('simple') },
             { value: 'Compound', label: t('compound') },
           ]}
+          disabled={rootState.PopupData.unitOfMeasure.mode == "view"}
         />
 
         <ERPInput
@@ -80,6 +83,7 @@ export const UnitOfMeasureManage: React.FC = React.memo(() => {
           label={t("decimal_points")}
           placeholder={t("decimal_points")}
           onChangeData={(data: any) => handleFieldChange("decimalPoints", data.decimalPoints)}
+          readOnly={rootState.PopupData.unitOfMeasure.mode == "view"}
         />
 
         <ERPInput
@@ -87,14 +91,15 @@ export const UnitOfMeasureManage: React.FC = React.memo(() => {
           label={t("remarks")}
           placeholder={t("remarks")}
           onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
+          readOnly={rootState.PopupData.unitOfMeasure.mode == "view"}
         />
       </div>
       <ERPFormButtons
-        onClear={handleClear}
+        onClear={rootState.PopupData.unitOfMeasure.mode == "view" ? undefined : handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={handleSubmit}
+        onSubmit={rootState.PopupData.unitOfMeasure.mode == "view" ? undefined : handleSubmit}
       />
     </div>
   );

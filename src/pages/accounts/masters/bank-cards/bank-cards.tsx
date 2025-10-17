@@ -132,8 +132,8 @@ const BankCards = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => toggleBankCardsPopup({ isOpen: true, key: cellElement?.data?.paymentTypeID, reload: false }) }}
-          edit={{ type: "popup", action: () => toggleBankCardsPopup({ isOpen: true, key: cellElement?.data?.paymentTypeID, reload: false }) }}
+          view={{ type: "popup", action: () => toggleBankCardsPopup({ isOpen: true, key: cellElement?.data?.paymentTypeID, reload: false, mode:"view" }) }}
+          edit={{ type: "popup", action: () => toggleBankCardsPopup({ isOpen: true, key: cellElement?.data?.paymentTypeID, reload: false, mode:"edit" }) }}
           delete={{
             onSuccess: () => { dispatch(toggleBankCardsPopup({ isOpen: false, key: null, reload: true, })); },
             confirmationRequired: true,

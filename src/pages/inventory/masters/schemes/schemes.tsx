@@ -184,8 +184,8 @@ const Schemes = () => {
       cellRender: (cellElement: any) => {
         return (
           <ERPGridActions
-            view={{ type: "popup", action: () => toggleSchemes({ isOpen: true, key: cellElement?.data?.schemeID, reload: false }) }}
-            edit={{ type: "popup", action: () => toggleSchemes({ isOpen: true, key: cellElement?.data?.schemeID, reload: false }) }}
+            view={{ type: "popup", action: () => toggleSchemes({ isOpen: true, key: cellElement?.data?.schemeID, reload: false, mode:"view" }) }}
+            edit={{ type: "popup", action: () => toggleSchemes({ isOpen: true, key: cellElement?.data?.schemeID, reload: false, mode:"edit" }) }}
             delete={{
               visible:false,
               onSuccess: () => { dispatch(toggleSchemes({ isOpen: false, key: null, reload: true, })); },

@@ -39,6 +39,8 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
           placeholder={t("name")}
           required={true}
           onChangeData={(data: any) => { handleFieldChange("partyCategoryName", data.partyCategoryName); }}
+          readOnly={rootState.PopupData.partyCategory.mode == "view"}
+          
         />
 
         <ERPInput
@@ -46,6 +48,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
           label={t("remarks")}
           placeholder={t("remarks")}
           onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
+          readOnly={rootState.PopupData.partyCategory.mode == "view"}
         />
         {/* <ERPDataCombobox
           {...getFieldProps("partyColor")}
@@ -67,19 +70,21 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
           {...getFieldProps("isEdit")}
           label={t("is_editable")}
           onChangeData={(data: any) => handleFieldChange("isEdit", data.isEdit)}
+          disabled={rootState.PopupData.partyCategory.mode == "view"}
         />
         <ERPCheckbox
           {...getFieldProps("isDelete")}
           label={t("is_deletable")}
           onChangeData={(data: any) => handleFieldChange("isDelete", data.isDelete)}
+          disabled={rootState.PopupData.partyCategory.mode == "view"}
         />
       </div>
       <ERPFormButtons
-        onClear={handleClear}
+        onClear={rootState.PopupData.partyCategory.mode == "view"? undefined : handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={handleSubmit}
+        onSubmit={rootState.PopupData.partyCategory.mode == "view" ? undefined : handleSubmit}
       />
     </div>
   );

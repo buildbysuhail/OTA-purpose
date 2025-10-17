@@ -264,6 +264,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
                 <span>{t("read_only")}</span>
                 <span>{t("pdf")}</span>
               </div>
+              {preferences.columnPreferences.length}
               {preferences &&
                 preferences.columnPreferences &&
                 preferences.columnPreferences

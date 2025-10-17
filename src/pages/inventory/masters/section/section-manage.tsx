@@ -40,6 +40,7 @@ export const SectionManage: React.FC = React.memo(() => {
           label={t("code")}
           placeholder={t("code")}
           onChangeData={(data: any) => handleFieldChange("sectionCode", data.sectionCode)}
+          readOnly={rootState.PopupData.section.mode == "view"}
         />
 
         <ERPInput
@@ -47,6 +48,7 @@ export const SectionManage: React.FC = React.memo(() => {
           label={t("name")}
           placeholder={t("name")}
           onChangeData={(data: any) => handleFieldChange("sectionName", data.sectionName)}
+          readOnly={rootState.PopupData.section.mode == "view"}
         />
 
         <ERPInput
@@ -54,6 +56,7 @@ export const SectionManage: React.FC = React.memo(() => {
           label={t("short_name")}
           placeholder={t("short_name")}
           onChangeData={(data: any) => handleFieldChange("shortName", data.shortName)}
+          readOnly={rootState.PopupData.section.mode == "view"}
         />
 
         <ERPInput
@@ -61,21 +64,23 @@ export const SectionManage: React.FC = React.memo(() => {
           label={t("remarks")}
           placeholder={t("remarks")}
           onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
+          readOnly={rootState.PopupData.section.mode == "view"}
         />
 
         <ERPCheckbox
           {...getFieldProps('isCommon')}
           label={t("common")}
           onChangeData={(data: any) => handleFieldChange('isCommon', data.isCommon)}
+          disabled={rootState.PopupData.section.mode == "view"}
         />
       </div>
       
       <ERPFormButtons
-        onClear={handleClear}
+        onClear={rootState.PopupData.section.mode == "view" ? undefined : handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={handleSubmit}
+        onSubmit={rootState.PopupData.section.mode == "view" ? undefined : handleSubmit}
       />
     </div>
   );

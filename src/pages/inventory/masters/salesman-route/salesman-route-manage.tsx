@@ -154,6 +154,7 @@ export const SalesmanRoute: React.FC = React.memo(() => {
           label={t("salesman")}
           validation={formStateValidation?.salesManID}
           onChangeData={(data: any) => handleFieldChange("salesManID", data.salesManID)}
+          disabled={rootState.PopupData.salesManRoute.mode == "view"}
         />
 
         <ERPDataCombobox
@@ -170,6 +171,7 @@ export const SalesmanRoute: React.FC = React.memo(() => {
           label={t("sales_route")}
           validation={formStateValidation?.salesRouteID}
           onChangeData={(data: any) => handleFieldChange("salesRouteID", data.salesRouteID)}
+          disabled={rootState.PopupData.salesManRoute.mode == "view"}
         />
 
         <ERPInput
@@ -179,6 +181,7 @@ export const SalesmanRoute: React.FC = React.memo(() => {
           label={t("remarks")}
           placeholder={t("remarks")}
           onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
+          readOnly={rootState.PopupData.salesManRoute.mode == "view"}
         />
       </div>
 
@@ -194,6 +197,7 @@ export const SalesmanRoute: React.FC = React.memo(() => {
               label={translatedDays[day]}
               checked={formState.salesDayArray?.includes(dayMappings[day]) || false}
               onChange={() => onCheckboxChange(day)}
+              disabled={rootState.PopupData.salesManRoute.mode == "view"}
             />
           ))}
         </div>
@@ -242,14 +246,14 @@ export const SalesmanRoute: React.FC = React.memo(() => {
               variant: "secondary",
               disabled: isSaving,
               loading: isSaving,
-              onClick: () => handleClear(),
+              onClick: () => {rootState.PopupData.salesManRoute.mode == "view"? undefined: handleClear()},
             },  
             {
               title: isEdit ? t("edit") : t("add"),
               variant: "primary",
               disabled: isSaving,
               loading: isSaving,
-              onClick: () => handleSubmit(),
+              onClick: () => {rootState.PopupData.salesManRoute.mode == "view"? undefined: handleSubmit()},
             },
           ]}
           customButtonsPosition="right"

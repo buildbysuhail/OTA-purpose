@@ -39,6 +39,7 @@ export const CostCentreManage = () => {
           placeholder={t("enter_cost_centre_name")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("costCentreName", data.costCentreName)}
+          readOnly={rootState.PopupData.costCentre.mode == "view"}
         />
 
         <ERPInput
@@ -46,6 +47,7 @@ export const CostCentreManage = () => {
           label={t("short_name")}
           placeholder={t("enter_short_name")}
           onChangeData={(data: any) => handleFieldChange("shortName", data.shortName)}
+          readOnly={rootState.PopupData.costCentre.mode == "view"}
         />
 
         <ERPInput
@@ -53,16 +55,17 @@ export const CostCentreManage = () => {
           label={t("remarks")}
           placeholder={t("enter_remarks")}
           onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
+          readOnly={rootState.PopupData.costCentre.mode == "view"}
         />
       </div>
 
       <div className="">
         <ERPFormButtons
-          onClear={handleClear}
+          onClear={rootState.PopupData.costCentre.mode == "view"? undefined :handleClear}
           isEdit={isEdit}
           isLoading={isLoading}
           onCancel={handleClose}
-          onSubmit={handleSubmit}
+          onSubmit={rootState.PopupData.costCentre.mode == "view"? undefined :handleSubmit}
         />
       </div>
     </div>

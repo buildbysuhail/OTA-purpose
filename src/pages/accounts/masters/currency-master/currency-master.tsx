@@ -106,8 +106,8 @@ const CurrencyMaster = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => toggleCurrencyMasterPopup({ isOpen: true, key: cellElement?.data?.currencyId, reload: false }) }}
-          edit={{ type: "popup", action: () => toggleCurrencyMasterPopup({ isOpen: true, key: cellElement?.data?.currencyId, reload: false }) }}
+          view={{ type: "popup", action: () => toggleCurrencyMasterPopup({ isOpen: true, key: cellElement?.data?.currencyId, reload: false, mode:"view" }) }}
+          edit={{ type: "popup", action: () => toggleCurrencyMasterPopup({ isOpen: true, key: cellElement?.data?.currencyId, reload: false, mode:"edit" }) }}
           delete={{
             onSuccess: () => { dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null, reload: true, })) },
             confirmationRequired: true,

@@ -287,6 +287,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               onChangeData={(data: any) =>
                 handleFieldChange("partyCode", data.partyCode)
               }
+              readOnly={rootState.PopupData.parties.mode == "view"}
             />
 
             <ERPInput
@@ -294,6 +295,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               label={t("name")}
               placeholder={t("name")}
               required={true}
+              readOnly={rootState.PopupData.parties.mode == "view"}
               onChangeData={(data: any) => {
                 handleFieldChange({
                   partyName: data.partyName,
@@ -308,6 +310,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               label={t("display_name")}
               placeholder={t("display_name")}
               required={false}
+              readOnly={rootState.PopupData.parties.mode == "view"}
               onChangeData={(data: any) =>
                 handleFieldChange("displayName", data.displayName)
               }
@@ -318,6 +321,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               label={t("arabic_name")}
               placeholder={t("arabic_name")}
               required={false}
+              readOnly={rootState.PopupData.parties.mode == "view"}
               onChangeData={(data: any) =>
                 handleFieldChange("arabicName", data.arabicName)
               }
@@ -329,6 +333,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               placeholder={t("ledger_name")}
               required={false}
               readOnly={true}
+              // readOnly={rootState.PopupData.parties.mode == "view"}
               onChangeData={(data: any) =>
                 handleFieldChange("ledger_name", data.ledgerName)
               }
@@ -347,6 +352,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 handleFieldChange("partyCategoryID", data.partyCategoryID);
               }}
               label={t("party_category")}
+              disabled={rootState.PopupData.parties.mode == "view"}
             // disabled={true}
             />
 
@@ -363,6 +369,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 handleFieldChange("accGroupID", data.accGroupID);
               }}
               label={t("acc_group")}
+              disabled={rootState.PopupData.parties.mode == "view"}
               // readonly={true}
             />
 
@@ -371,6 +378,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               label={t("address")}
               required={true}
               placeholder={t("address")}
+              readOnly={rootState.PopupData.parties.mode == "view"}
               onChangeData={(data: any) =>
                 handleFieldChange("address1", data.address1)
               }
@@ -381,6 +389,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               label={t("mobile_phone")}
               placeholder={t("mobile_phone")}
               required={true}
+              readOnly={rootState.PopupData.parties.mode == "view"}
               onChangeData={(data: any) =>
                 handleFieldChange("mobilePhone", data.mobilePhone)
               }
@@ -399,6 +408,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 handleFieldChange("salesRouteID", data.salesRouteID);
               }}
               label={t("sales_route")}
+              disabled={rootState.PopupData.parties.mode == "view"}
             />
 
             <ERPInput
@@ -409,6 +419,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               onChangeData={(data: any) =>
                 handleFieldChange("taxNumber", data.taxNumber)
               }
+              readOnly={rootState.PopupData.parties.mode == "view"}
             />
 
             <ERPInput
@@ -419,6 +430,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               onChangeData={(data: any) =>
                 handleFieldChange("cstNumber", data.cstNumber)
               }
+              readOnly={rootState.PopupData.parties.mode == "view"}
             />
 
             <ERPInput
@@ -431,6 +443,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               onChangeData={(data: any) =>
                 handleFieldChange("creditDays", parseInt(data.creditDays))
               }
+              readOnly={rootState.PopupData.parties.mode == "view"}
             />
 
             <ERPInput
@@ -443,6 +456,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               onChangeData={(data: any) =>
                 handleFieldChange("creditAmount", (data.creditAmount))
               }
+              readOnly={rootState.PopupData.parties.mode == "view"}
             />
 
             <div className="flex gap-4">
@@ -457,6 +471,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 onChangeData={(data: any) =>
                   handleFieldChange("opBalance", (data.opBalance))
                 }
+                readOnly={rootState.PopupData.parties.mode == "view"}
               />
 
               <div className="">
@@ -476,6 +491,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     { value: "Dr", label: t("Dr") },
                     { value: "Cr", label: t("Cr") },
                   ]}
+                  disabled={rootState.PopupData.parties.mode == "view"}
                 />
               </div>
             </div>
@@ -483,6 +499,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
             <ERPCheckbox
               {...getFieldProps("billwiseBillApplicable")}
               label={t("bill_wise_applicable")}
+              disabled={rootState.PopupData.parties.mode == "view"}
               onChangeData={(data: any) =>
                 handleFieldChange(
                   "billwiseBillApplicable",
@@ -494,6 +511,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
             <ERPCheckbox
               {...getFieldProps("isActive")}
               label={t("is_active")}
+              disabled={rootState.PopupData.parties.mode == "view"}
               onChangeData={(data: any) =>
                 handleFieldChange("isActive", data.isActive)
               }
@@ -502,6 +520,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
             <ERPCheckbox
               {...getFieldProps("isCommon")}
               label={t("is_common")}
+              disabled={rootState.PopupData.parties.mode == "view"}
               onChangeData={(data: any) =>
                 handleFieldChange("isCommon", data.isCommon)
               }
@@ -524,6 +543,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     handleFieldChange("faxNumber", data.faxNumber);
                   }}
                   label={t("referred_by")}
+                  disabled={rootState.PopupData.parties.mode == "view"}
                 />
 
                 <ERPInput
@@ -534,6 +554,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   onChangeData={(data: any) =>
                     handleFieldChange("address4", data.address4)
                   }
+                  readOnly={rootState.PopupData.parties.mode == "view"}
                 />
 
                 <ERPInput
@@ -544,6 +565,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   onChangeData={(data: any) =>
                     handleFieldChange("panNo", data.panNo)
                   }
+                  readOnly={rootState.PopupData.parties.mode == "view"}
                 />
 
                 <ERPInput
@@ -554,6 +576,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   onChangeData={(data: any) =>
                     handleFieldChange("aadharNo", data.aadharNo)
                   }
+                  readOnly={rootState.PopupData.parties.mode == "view"}
                 />
 
                 <ERPDataCombobox
@@ -589,6 +612,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     { value: "Intra-State supplies attracting IGST", label: "Intra-State supplies attracting IGST", },
                   ]}
                   defaultValue={{ value: "Regular", label: "Regular" }}
+                  disabled={rootState.PopupData.parties.mode == "view"}
                 />
               </>
             )}
@@ -664,6 +688,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 onChangeData={(data: any) =>
                   handleFieldChange("address2", data.address2)
                 }
+                readOnly={rootState.PopupData.parties.mode == "view"}
               />
 
               {userSession.countryId != Countries.India && (
@@ -675,6 +700,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   onChangeData={(data: any) =>
                     handleFieldChange("address3", data.address3)
                   }
+                  readOnly={rootState.PopupData.parties.mode == "view"}
                 />
               )}
 
@@ -687,6 +713,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   onChangeData={(data: any) =>
                     handleFieldChange("address3", data.address3)
                   }
+                  readOnly={rootState.PopupData.parties.mode == "view"}
                 />
               )}
 
@@ -699,6 +726,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   onChangeData={(data: any) =>
                     handleFieldChange("address4", data.address4)
                   }
+                  readOnly={rootState.PopupData.parties.mode == "view"}
                 />
               )}
 
@@ -710,6 +738,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 onChangeData={(data: any) =>
                   handleFieldChange("officePhone", data.officePhone)
                 }
+                readOnly={rootState.PopupData.parties.mode == "view"}
               />
 
               <ERPInput
@@ -720,6 +749,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 onChangeData={(data: any) =>
                   handleFieldChange("workPhone", data.workPhone)
                 }
+                readOnly={rootState.PopupData.parties.mode == "view"}
               />
 
               <ERPInput
@@ -730,6 +760,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 onChangeData={(data: any) =>
                   handleFieldChange("contactPhone", data.contactPhone)
                 }
+                readOnly={rootState.PopupData.parties.mode == "view"}
               />
 
               <ERPInput
@@ -741,6 +772,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 onChangeData={(data: any) =>
                   handleFieldChange("email", data.email)
                 }
+                readOnly={rootState.PopupData.parties.mode == "view"}
               />
 
               <ERPInput
@@ -751,6 +783,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 onChangeData={(data: any) =>
                   handleFieldChange("webURL", data.webURL)
                 }
+                readOnly={rootState.PopupData.parties.mode == "view"}
               />
 
               <ERPInput
@@ -761,6 +794,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 onChangeData={(data: any) =>
                   handleFieldChange("postalCode", data.postalCode)
                 }
+                readOnly={rootState.PopupData.parties.mode == "view"}
               />
             </div>
           )}
@@ -781,6 +815,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                       onChangeData={(data: any) =>
                         handleFieldChange("bankAcNumber1", data.bankAcNumber1)
                       }
+                      readOnly={rootState.PopupData.parties.mode == "view"}
                     />
 
                     <ERPInput
@@ -791,6 +826,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                       onChangeData={(data: any) =>
                         handleFieldChange("bankAcName1", data.bankAcName1)
                       }
+                      readOnly={rootState.PopupData.parties.mode == "view"}
                     />
 
                     <ERPInput
@@ -801,6 +837,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                       onChangeData={(data: any) =>
                         handleFieldChange("bankDetails1", data.bankDetails1)
                       }
+                      readOnly={rootState.PopupData.parties.mode == "view"}
                     />
                   </div>
                 </div>
@@ -818,6 +855,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                       onChangeData={(data: any) =>
                         handleFieldChange("bankAcNumber2", data.bankAcNumber2)
                       }
+                      readOnly={rootState.PopupData.parties.mode == "view"}
                     />
 
                     <ERPInput
@@ -828,6 +866,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                       onChangeData={(data: any) =>
                         handleFieldChange("bankAcName2", data.bankAcName2)
                       }
+                      readOnly={rootState.PopupData.parties.mode == "view"}
                     />
 
                     <ERPInput
@@ -838,6 +877,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                       onChangeData={(data: any) =>
                         handleFieldChange("bankDetails2", data.bankDetails2)
                       }
+                      readOnly={rootState.PopupData.parties.mode == "view"}
                     />
                   </div>
                 </div>
@@ -856,6 +896,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                         label={t("start_date")}
                         required={true}
                         onChangeData={(data) => handleFieldChange("startDate", data.startDate)}
+                        readOnly={rootState.PopupData.parties.mode == "view"}
                       />
                     </div>
 
@@ -865,6 +906,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                         label={t("exp_date")}
                         required={true}
                         onChangeData={(data) => handleFieldChange("expiryDate", data.expiryDate)}
+                        readOnly={rootState.PopupData.parties.mode == "view"}
                       />
                     </div>
 
@@ -884,7 +926,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                               });
                             }
                           }}
-                          disabled={fileLoading}
+                          disabled={fileLoading || rootState.PopupData.parties.mode == "view"}
                           className="w-full border rounded-lg p-2 text-sm"
                         />
                         {fileLoading && (
@@ -927,6 +969,8 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                             });
                           }
                         }}
+                        disabled={rootState.PopupData.parties.mode == "view"}
+                        
                         className="w-full border rounded-lg p-2 text-sm"
                       />
 
@@ -955,6 +999,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                             handleFieldChange("isTCSApplicable", data.isTCSApplicable);
                             setIsTCSApplicable(data.isTCSApplicable);
                           }}
+                          disabled={rootState.PopupData.parties.mode == "view"}
                         />
                       </div>
 
@@ -970,7 +1015,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                           }}
                           onChangeData={(data) => handleFieldChange("tcsCategoryID", data.tcsCategoryID)}
                           label={t("tcs_category")}
-                          disabled={!isTCSApplicable}
+                          disabled={!isTCSApplicable || rootState.PopupData.parties.mode === "view"}
                         />
                       </div>
 
@@ -991,6 +1036,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                             });
                           }}
                           label={t("state_name")}
+                          disabled={rootState.PopupData.parties.mode == "view"}
                         />
                       </div>
 
@@ -1003,6 +1049,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                           placeholder={t("state_code")}
                           required={false}
                           onChangeData={(data) => handleFieldChange("stateCode", data.stateCode)}
+                          readOnly={rootState.PopupData.parties.mode == "view"}
                         />
                       </div>
 
@@ -1011,6 +1058,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                           {...getFieldProps("stopCredit")}
                           label={t("stop_credit")}
                           onChangeData={(data) => handleFieldChange("stopCredit", data.stopCredit)}
+                          disabled={rootState.PopupData.parties.mode == "view"}
                         />
                       </div>
                     </div>
@@ -1077,6 +1125,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                       handleFieldChange("priceCategoryID", data.priceCategoryID)
                     }
                     label={t("price_category")}
+                    disabled={rootState.PopupData.parties.mode == "view"}
                   />
 
                   <ERPDataCombobox
@@ -1092,6 +1141,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                       handleFieldChange("formTypeID", data.formTypeID)
                     }
                     label={t("form_type")}
+                    disabled={rootState.PopupData.parties.mode == "view"}
                   />
 
                   <ERPInput
@@ -1104,6 +1154,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     onChangeData={(data: any) =>
                       handleFieldChange("visitSequenceNo", data.visitSequenceNo)
                     }
+                    readOnly={rootState.PopupData.parties.mode == "view"}
                   />
 
                   {isIndianCompany && (
@@ -1116,6 +1167,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                         onChangeData={(data: any) =>
                           handleFieldChange("legalName", data.legalName)
                         }
+                        readOnly={rootState.PopupData.parties.mode == "view"}
                       />
 
                       <ERPInput
@@ -1126,16 +1178,20 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                         onChangeData={(data: any) =>
                           handleFieldChange("tradeName", data.tradeName)
                         }
+                        readOnly={rootState.PopupData.parties.mode == "view"}
                       />
                     </>
                   )}
 
                   <div className="md:mt-2">
-                    <ErpCropper
+                    {rootState.PopupData.parties.mode == "view"?
+                    "":<ErpCropper
                       apiUrl="/Subscription/Profile/UploadUserImage"
                       onImageSuccess={onImageSuccess}
                       useCircle
-                    />
+                      
+                    />}
+                    
                   </div>
                 </div>
               </div>
@@ -1161,6 +1217,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                           return { ...prev, projectName: data.projectName };
                         })
                       }
+                      readOnly={rootState.PopupData.parties.mode == "view"}
                     />
 
                     <ERPInput
@@ -1175,6 +1232,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                           return { ...prev, address1: data.address1 };
                         })
                       }
+                      readOnly={rootState.PopupData.parties.mode == "view"}
                     />
 
                     <ERPInput
@@ -1189,9 +1247,11 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                           return { ...prev, address2: data.address2 };
                         })
                       }
+                      readOnly={rootState.PopupData.parties.mode == "view"}
                     />
 
-                    <div className="flex items-end gap-2">
+                    <div className="flex items-end mt-2 gap-2">
+                      {rootState.PopupData.parties.mode == "view"?"":
                         <ERPButton
                         type="button"
                         disabled={projectOnAction}
@@ -1203,7 +1263,8 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                             ? t("update")
                             : t("Save")
                         }
-                      />
+                      />}
+                      {rootState.PopupData.parties.mode == "view"?"":
                       <ERPButton
                         type="button"
                         title={t("clear")}
@@ -1214,6 +1275,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                         }}
                         disabled={projectOnAction}
                       />
+                     }
 
                     
                     </div>
@@ -1268,6 +1330,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   { value: "GCC", label: "GCC" },
                   { value: "OTH", label: "OTH" },
                 ]}
+                disabled={rootState.PopupData.parties.mode == "view"}
               />
 
               <ERPInput
@@ -1278,6 +1341,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 onChangeData={(data) =>
                   handleFieldChange("buildingNumber", data.buildingNumber)
                 }
+                readOnly={rootState.PopupData.parties.mode == "view"}
               />
 
               <ERPInput
@@ -1291,6 +1355,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     data.plotIdentificationNumber
                   )
                 }
+                readOnly={rootState.PopupData.parties.mode == "view"}
               />
 
               <ERPInput
@@ -1301,6 +1366,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 onChangeData={(data) =>
                   handleFieldChange("citySubDivision", data.citySubDivision)
                 }
+                readOnly={rootState.PopupData.parties.mode == "view"}
               />
 
               <ERPInput
@@ -1311,6 +1377,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 onChangeData={(data) =>
                   handleFieldChange("postalCode", data.postalCode)
                 }
+                readOnly={rootState.PopupData.parties.mode == "view"}
               />
 
               <ERPDataCombobox
@@ -1325,6 +1392,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   valueKey: "name",
                   labelKey: "name",
                 }}
+                disabled={rootState.PopupData.parties.mode == "view"}
               />
 
               <ERPInput
@@ -1335,6 +1403,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 onChangeData={(data) =>
                   handleFieldChange("countrySubEntity", data.countrySubEntity)
                 }
+                readOnly={rootState.PopupData.parties.mode == "view"}
               />
             </div>
           )}
@@ -1343,11 +1412,11 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
         <div className="fixed bottom-0 left-0 right-0 bg-white px-4 py-1 z-50 rounded-b-lg">
           <div className="max-w-screen-2xl mx-auto">
             <ERPFormButtons
-              onClear={handleClear}
+              onClear={rootState.PopupData.parties.mode == "view" ? undefined : handleClear}
               isEdit={isEdit}
               isLoading={isLoading}
               onCancel={handleClose}
-              onSubmit={handleSubmit}
+              onSubmit={rootState.PopupData.parties.mode == "view"? undefined : handleSubmit}
             />
           </div>
         </div>

@@ -41,6 +41,7 @@ export const GroupCategoryManage: React.FC = React.memo(() => {
           label={t("code")}
           placeholder={t("code")}
           onChangeData={(data: any) => handleFieldChange("groupCategoryCode", data.groupCategoryCode)}
+          readOnly={rootState.PopupData.groupCategory.mode == "view"}
         />
 
         <ERPInput
@@ -48,6 +49,7 @@ export const GroupCategoryManage: React.FC = React.memo(() => {
           label={t("name")}
           placeholder={t("name")}
           onChangeData={(data: any) => handleFieldChange("groupCategoryName", data.groupCategoryName)}
+          readOnly={rootState.PopupData.groupCategory.mode == "view"}
         />
 
         <ERPInput
@@ -55,6 +57,7 @@ export const GroupCategoryManage: React.FC = React.memo(() => {
           label={t("short_name")}
           placeholder={t("short_name")}
           onChangeData={(data: any) => handleFieldChange("shortName", data.shortName)}
+          readOnly={rootState.PopupData.groupCategory.mode == "view"}
         />
 
         <ERPInput
@@ -62,21 +65,23 @@ export const GroupCategoryManage: React.FC = React.memo(() => {
           label={t("remarks")}
           placeholder={t("remarks")}
           onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
+          readOnly={rootState.PopupData.groupCategory.mode == "view"}
         />
 
         <ERPCheckbox
           {...getFieldProps('isCommon')}
           label={t("is_common")}
           onChangeData={(data: any) => handleFieldChange('isCommon', data.isCommon)}
+          disabled={rootState.PopupData.groupCategory.mode == "view"}
         />
       </div>
 
       <ERPFormButtons
-        onClear={handleClear}
+        onClear={rootState.PopupData.groupCategory.mode == "view" ? undefined : handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={handleSubmit}
+        onSubmit={rootState.PopupData.groupCategory.mode == "view" ? undefined : handleSubmit}
       />
     </div>
   );

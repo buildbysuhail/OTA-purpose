@@ -183,8 +183,8 @@ const PrivilegeCard = () => {
       width: 100,
       cellRender: (cellElement: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => togglePrivilegeCardPopup({ isOpen: true, key: cellElement?.data?.privilegeCardsID, reload: false }) }}
-          edit={{ type: "popup", action: () => togglePrivilegeCardPopup({ isOpen: true, key: cellElement?.data?.privilegeCardsID, reload: false }) }}
+          view={{ type: "popup", action: () => togglePrivilegeCardPopup({ isOpen: true, key: cellElement?.data?.privilegeCardsID, reload: false, mode:"view" }) }}
+          edit={{ type: "popup", action: () => togglePrivilegeCardPopup({ isOpen: true, key: cellElement?.data?.privilegeCardsID, reload: false, mode:"edit" }) }}
           delete={{
             onSuccess: () => { dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, reload: true, })) },
             confirmationRequired: true,

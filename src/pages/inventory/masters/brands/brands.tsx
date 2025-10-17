@@ -127,8 +127,8 @@ const Brands = () => {
       cellRender: (cellElement: any) => {
         return (
           <ERPGridActions
-            view={{ type: "popup", action: () => toggleBrands({ isOpen: true, key: cellElement?.data?.brandID, reload: false }) }}
-            edit={{ type: "popup", action: () => toggleBrands({ isOpen: true, key: cellElement?.data?.brandID, reload: false }) }}
+            view={{ type: "popup", action: () => toggleBrands({ isOpen: true, key: cellElement?.data?.brandID, reload: false, mode:"view" }) }}
+            edit={{ type: "popup", action: () => toggleBrands({ isOpen: true, key: cellElement?.data?.brandID, reload: false, mode:"edit" }) }}
             delete={{
               onSuccess: () => { dispatch(toggleBrands({ isOpen: false, key: null, reload: true, })); },
               confirmationRequired: true,

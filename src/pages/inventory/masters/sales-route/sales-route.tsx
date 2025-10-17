@@ -155,8 +155,8 @@ const SalesRoute = () => {
       cellRender: (cellElement: any) => {
         return (
           <ERPGridActions
-            view={{ type: "popup", action: () => toggleSalesRoute({ isOpen: true, key: cellElement?.data?.salesRouteID, reload: false }) }}
-            edit={{ type: "popup", action: () => toggleSalesRoute({ isOpen: true, key: cellElement?.data?.salesRouteID, reload: false }) }}
+            view={{ type: "popup", action: () => toggleSalesRoute({ isOpen: true, key: cellElement?.data?.salesRouteID, reload: false, mode:"view" }) }}
+            edit={{ type: "popup", action: () => toggleSalesRoute({ isOpen: true, key: cellElement?.data?.salesRouteID, reload: false, mode:"edit" }) }}
             delete={{
               onSuccess: () => {
                 dispatch(toggleSalesRoute({ isOpen: false, key: null, reload: true, }));

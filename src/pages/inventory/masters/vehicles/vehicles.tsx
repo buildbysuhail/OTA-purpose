@@ -208,8 +208,8 @@ const Vehicles = () => {
       cellRender: (cellElement: any) => {
         return (
           <ERPGridActions
-            view={{ type: "popup", action: () => toggleVehicles({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
-            edit={{ type: "popup", action: () => toggleVehicles({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
+            view={{ type: "popup", action: () => toggleVehicles({ isOpen: true, key: cellElement?.data?.id, reload: false, mode:"view" }) }}
+            edit={{ type: "popup", action: () => toggleVehicles({ isOpen: true, key: cellElement?.data?.id, reload: false, mode:"edit" }) }}
             delete={{
               onSuccess: () => { dispatch(toggleVehicles({ isOpen: false, key: null, reload: true, })); },
               confirmationRequired: true,

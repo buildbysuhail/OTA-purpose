@@ -46,6 +46,7 @@ export const BranchLedgerManage = () => {
           }}
           onChangeData={(data: any) => { handleFieldChange("refBranchID", data?.refBranchID) }}
           label={t("reference_branch")}
+          disabled={rootState.PopupData.branchLedger.mode == "view"}
         />
 
         <ERPDataCombobox
@@ -62,6 +63,7 @@ export const BranchLedgerManage = () => {
           }}
           onChangeData={(data: any) => { handleFieldChange("purchaseLedgerID", data?.purchaseLedgerID) }}
           label={t("purchase_ledger")}
+          disabled={rootState.PopupData.branchLedger.mode == "view"}
         />
 
         <ERPDataCombobox
@@ -75,6 +77,7 @@ export const BranchLedgerManage = () => {
           }}
           onChangeData={(data: any) => { handleFieldChange("receivableLedgerID", data?.receivableLedgerID) }}
           label={t("receivable_ledger")}
+          disabled={rootState.PopupData.branchLedger.mode == "view"}
         />
 
         <ERPDataCombobox
@@ -91,16 +94,17 @@ export const BranchLedgerManage = () => {
           }}
           onChangeData={(data: any) => { handleFieldChange("branchPayableLedgerID", data?.branchPayableLedgerID) }}
           label={t("branch_payable_ledger")}
+          disabled={rootState.PopupData.branchLedger.mode == "view"}
         />
       </div>
 
       <div className="w-full  flex justify-center space-x-2 ">
         <ERPFormButtons
-          onClear={handleClear}
+          onClear={rootState.PopupData.branchLedger.mode == "view"?undefined:handleClear}
           isEdit={isEdit}
           isLoading={isLoading}
           onCancel={handleClose}
-          onSubmit={handleSubmit}
+          onSubmit={rootState.PopupData.branchLedger.mode == "view"?undefined:handleSubmit}
         />
       </div>
     </div>

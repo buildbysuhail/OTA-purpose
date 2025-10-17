@@ -211,13 +211,13 @@ const AccountGroupType = () => {
                 view={
                   {
                     type: "popup",
-                    action: () => toggleAccountGroupPopup({ isOpen: true, key: cellElement?.data?.id, reload: false, }),
+                    action: () => toggleAccountGroupPopup({ isOpen: true, key: cellElement?.data?.id, reload: false, mode: "view" }),
                   }
                 }
                 edit={
                   {
                     type: "popup",
-                    action: () => toggleAccountGroupPopup({ isOpen: true, key: cellElement?.data?.id, reload: false, }),
+                    action: () => toggleAccountGroupPopup({ isOpen: true, key: cellElement?.data?.id, reload: false, mode: "edit" }),
                   }
                 }
                 delete={

@@ -56,6 +56,7 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
           placeholder={t("card_number")}
           required={true}
           onChangeData={(data: any) => handleFieldChange('cardNumber', data.cardNumber)}
+          readOnly={rootState.PopupData.privilegeCard.mode == "view"}
         />
 
         <ERPInput
@@ -64,6 +65,7 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
           placeholder={t("card_holder_name")}
           required={true}
           onChangeData={(data: any) => handleFieldChange('cardHolderName', data.cardHolderName)}
+          readOnly={rootState.PopupData.privilegeCard.mode == "view"}
         />
 
         <ERPInput
@@ -71,6 +73,7 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
           label={t("address1")}
           placeholder={t("address1")}
           onChangeData={(data: any) => handleFieldChange('address1', data.address1)}
+          readOnly={rootState.PopupData.privilegeCard.mode == "view"}
         />
 
         <ERPInput
@@ -79,6 +82,7 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
           placeholder={t("address2")}
           required={false}
           onChangeData={(data: any) => handleFieldChange('address2', data.address2)}
+          readOnly={rootState.PopupData.privilegeCard.mode == "view"}
         />
 
         <ERPInput
@@ -86,6 +90,7 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
           label={t("phone")}
           placeholder={t("phone")}
           onChangeData={(data: any) => handleFieldChange('phone', data.phone)}
+          readOnly={rootState.PopupData.privilegeCard.mode == "view"}
         />
 
         <ERPInput
@@ -93,6 +98,7 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
           label={t("mobile")}
           placeholder={t("mobile")}
           onChangeData={(data: any) => handleFieldChange('mobile', data.mobile)}
+          readOnly={rootState.PopupData.privilegeCard.mode == "view"}
         />
 
         <ERPInput
@@ -101,6 +107,7 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
           placeholder={t("email")}
           required={false}
           onChangeData={(data: any) => handleFieldChange('email', data.email)}
+          readOnly={rootState.PopupData.privilegeCard.mode == "view"}
         />
 
         <ERPDataCombobox
@@ -114,6 +121,7 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
           }}
           onChangeData={(data: any) => handleFieldChange("priceCategoryID", data.priceCategoryID)}
           label={t("price_category")}
+          disabled={rootState.PopupData.privilegeCard.mode == "view"}
         />
 
         <ERPDataCombobox
@@ -131,6 +139,7 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
           ]}
           onChangeData={(data: any) => handleFieldChange("cardType", data.cardType)}
           label={t("card_type")}
+          disabled={rootState.PopupData.privilegeCard.mode == "view"}
         />
 
         <ERPInput
@@ -139,18 +148,21 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
           placeholder={formState?.data.cardType == "Privilege" ? t("op_balance") : t("amount")}
           type="number"
           onChangeData={(data: any) => handleFieldChange('oBalance', data.oBalance)}
+          readOnly={rootState.PopupData.privilegeCard.mode == "view"}
         />
 
         <ERPDateInput
           {...getFieldProps("activatedDate")}
           label={t("activate_date")}
           onChangeData={(data: any) => handleDateChange("activateDate", data.activateDate)}
+          readOnly={rootState.PopupData.privilegeCard.mode == "view"}
         />
 
         <ERPDateInput
           {...getFieldProps("expiryDate")}
           label={t("expiry_date")}
           onChangeData={(data: any) => handleDateChange("expiryDate", data.expiryDate)}
+          readOnly={rootState.PopupData.privilegeCard.mode == "view"}
         />
 
         {/* <ERPDateInput
@@ -161,11 +173,11 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
         /> */}
       </div>
       <ERPFormButtons
-        onClear={handleClear}
+        onClear={rootState.PopupData.privilegeCard.mode == "view" ? undefined : handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={handleSubmit}
+        onSubmit={rootState.PopupData.privilegeCard.mode == "view" ? undefined : handleSubmit}
       />
     </div>
   );

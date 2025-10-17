@@ -138,8 +138,8 @@ const GroupCategory = () => {
       cellRender: (cellElement: any) => {
         return (
           <ERPGridActions
-            view={{ type: "popup", action: () => toggleGroupCategory({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
-            edit={{ type: "popup", action: () => toggleGroupCategory({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
+            view={{ type: "popup", action: () => toggleGroupCategory({ isOpen: true, key: cellElement?.data?.id, reload: false, mode:"view" }) }}
+            edit={{ type: "popup", action: () => toggleGroupCategory({ isOpen: true, key: cellElement?.data?.id, reload: false, mode:"edit" }) }}
             delete={{
               onSuccess: () => {
                 dispatch(toggleGroupCategory({ isOpen: false, key: null, reload: true, }));

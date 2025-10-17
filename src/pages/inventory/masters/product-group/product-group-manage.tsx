@@ -62,6 +62,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => {
             handleFieldChange("groupName", data.groupName);
           }}
+          readOnly={rootState.PopupData.productGroup.mode == "view"}
         />
 
         <ERPInput
@@ -71,6 +72,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
           onChangeData={(data: any) =>
             handleFieldChange("arabicName", data.arabicName)
           }
+          readOnly={rootState.PopupData.productGroup.mode == "view"}
         />
 
         <ERPInput
@@ -80,6 +82,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
           onChangeData={(data: any) =>
             handleFieldChange("shortName", data.shortName)
           }
+          readOnly={rootState.PopupData.productGroup.mode == "view"}
         />
 
         <ERPDataCombobox
@@ -96,6 +99,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
           onChangeData={(data: any) =>
             handleFieldChange("parentGroupID", data.parentGroupID)
           }
+          disabled={rootState.PopupData.productGroup.mode == "view"}
         />
 
         <ERPDataCombobox
@@ -111,6 +115,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
           onChangeData={(data: any) =>
             handleFieldChange("groupCategoryID", data.groupCategoryID)
           }
+          disabled={rootState.PopupData.productGroup.mode == "view"}
         />
 
         <ERPDataCombobox
@@ -126,6 +131,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
           onChangeData={(data: any) =>
             handleFieldChange("sectionID", data.sectionID)
           }
+          disabled={rootState.PopupData.productGroup.mode == "view"}
         />
 
         {appSettings.mainSettings.maintainBusinessType ==
@@ -143,6 +149,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
             onChangeData={(data: any) =>
               handleFieldChange("kitchenID", data.kitchenID)
             }
+            disabled={rootState.PopupData.productGroup.mode == "view"}
           />
         )}
 
@@ -161,6 +168,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
             { value: "Active", label: t("active") },
             { value: "Inactive", label: t("inactive") },
           ]}
+          disabled={rootState.PopupData.productGroup.mode == "view"}
         />
 
         <ERPInput
@@ -170,6 +178,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
           onChangeData={(data: any) =>
             handleFieldChange("remarks", data.remarks)
           }
+          readOnly={rootState.PopupData.productGroup.mode == "view"}
         />
 
         <ERPInput
@@ -179,6 +188,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
           onChangeData={(data: any) =>
             handleFieldChange("marginPerc", data.marginPerc)
           }
+          readOnly={rootState.PopupData.productGroup.mode == "view"}
         />
 
         <ERPCheckbox
@@ -187,6 +197,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
           onChangeData={(data: any) =>
             handleFieldChange("isEditable", data.isEditable)
           }
+          disabled={rootState.PopupData.productGroup.mode == "view"}
         />
 
         <ERPCheckbox
@@ -195,14 +206,15 @@ export const ProductGroupManage: React.FC = React.memo(() => {
           onChangeData={(data: any) =>
             handleFieldChange("isDeletable", data.isDeletable)
           }
+          disabled={rootState.PopupData.productGroup.mode == "view"}
         />
       </div>
       <ERPFormButtons
-        onClear={handleClear}
+        onClear={rootState.PopupData.productGroup.mode == "view" ? undefined : handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={handleSubmit}
+        onSubmit={rootState.PopupData.productGroup.mode == "view" ? undefined : handleSubmit}
       />
     </div>
   );

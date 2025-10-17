@@ -48,6 +48,7 @@ export const UserTypeManage: React.FC = React.memo(() => {
           placeholder={t("user_type_name")}
           required={true}
           onChangeData={(data: any) => { handleFieldChange('userTypeName', data.userTypeName) }}
+          readOnly={rootState.PopupData.userType.mode == "view"}
         />
 
         <ERPInput
@@ -57,6 +58,7 @@ export const UserTypeManage: React.FC = React.memo(() => {
           required={true}
           disabled={isEdit}
           onChangeData={(data: any) => handleFieldChange('userTypeCode', data.userTypeCode)}
+          readOnly={rootState.PopupData.userType.mode == "view"}
         />
 
         <ERPInput
@@ -65,6 +67,7 @@ export const UserTypeManage: React.FC = React.memo(() => {
           placeholder={t("remarks")}
           required={true}
           onChangeData={(data: any) => handleFieldChange('remarks', data.remarks)}
+          readOnly={rootState.PopupData.userType.mode == "view"}
         />
 
         <div className="flex space-x-4">
@@ -72,21 +75,23 @@ export const UserTypeManage: React.FC = React.memo(() => {
             {...getFieldProps('isEditable')}
             label={t("is_editable")}
             onChangeData={(data: any) => handleFieldChange('isEditable', data.isEditable)}
+            disabled={rootState.PopupData.userType.mode == "view"}
           />
 
           <ERPCheckbox
             {...getFieldProps('isDeletable')}
             label={t("is_deletable")}
             onChangeData={(data: any) => handleFieldChange('isDeletable', data.isDeletable)}
+            disabled={rootState.PopupData.userType.mode == "view"}
           />
         </div>
       </div>
       <ERPFormButtons
-        onClear={handleClear}
+        onClear={rootState.PopupData.userType.mode == "view"? undefined:handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={handleSubmit}
+        onSubmit={rootState.PopupData.userType.mode == "view"? undefined: handleSubmit}
       />
     </div>
   );

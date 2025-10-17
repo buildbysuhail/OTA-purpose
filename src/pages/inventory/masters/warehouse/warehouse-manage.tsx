@@ -43,6 +43,7 @@ export const WarehouseManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => {
             handleFieldChange("warehouseName", data.warehouseName);
           }}
+          readOnly={rootState.PopupData.warehouse.mode == "view"}
         />
 
         <ERPInput
@@ -51,12 +52,14 @@ export const WarehouseManage: React.FC = React.memo(() => {
           placeholder={t("short_name")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("shortName", data.shortName)}
+          readOnly={rootState.PopupData.warehouse.mode == "view"}
         />
 
         <ERPCheckbox
           {...getFieldProps('isStockWarehouse')}
           label={t("is_stock_warehouse")}
           onChangeData={(data: any) => handleFieldChange('isStockWarehouse', data.isStockWarehouse)}
+          disabled={rootState.PopupData.warehouse.mode == "view"}
         />
 
         <ERPDataCombobox
@@ -72,6 +75,7 @@ export const WarehouseManage: React.FC = React.memo(() => {
             { value: 'Physical', label: t('physical') },
             { value: 'Van', label: t('van') },
           ]}
+          disabled={rootState.PopupData.warehouse.mode == "view"}
         />
 
         <ERPInput
@@ -79,6 +83,7 @@ export const WarehouseManage: React.FC = React.memo(() => {
           label={t("remarks")}
           placeholder={t("remarks")}
           onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
+          readOnly={rootState.PopupData.warehouse.mode == "view"}
         />
 
         <ERPDataCombobox
@@ -93,14 +98,15 @@ export const WarehouseManage: React.FC = React.memo(() => {
           }}
           label={t("cash_ledger")}
           onChangeData={(data: any) => handleFieldChange("cashLedgerID", data.cashLedgerID)}
+          disabled={rootState.PopupData.warehouse.mode == "view"}
         />
       </div>
       <ERPFormButtons
-        onClear={handleClear}
+        onClear={rootState.PopupData.warehouse.mode == "view" ? undefined : handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={handleSubmit}
+        onSubmit={rootState.PopupData.warehouse.mode == "view" ? undefined : handleSubmit}
       />
     </div>
   );

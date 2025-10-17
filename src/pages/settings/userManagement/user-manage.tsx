@@ -44,6 +44,7 @@ export const UserManage: React.FC = React.memo(() => {
           placeholder={t("username")}
           required={true}
           onChangeData={(data: any) => { handleFieldChange("userName", data.userName); }}
+          readOnly={rootState.PopupData.user.mode == "view"}
         />
 
         <ERPInput
@@ -53,6 +54,7 @@ export const UserManage: React.FC = React.memo(() => {
           placeholder={t("password")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("Passwd", data.Passwd)}
+          readOnly={rootState.PopupData.user.mode == "view"}
         />
 
         <ERPInput
@@ -62,6 +64,7 @@ export const UserManage: React.FC = React.memo(() => {
           placeholder={t("confirm_password")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("confrimPassword", data.confrimPassword)}
+          readOnly={rootState.PopupData.user.mode == "view"}
         />
 
         <ERPInput
@@ -71,6 +74,7 @@ export const UserManage: React.FC = React.memo(() => {
           placeholder={t("email")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("email", data.email)}
+          readOnly={rootState.PopupData.user.mode == "view"}
         />
 
         <ERPInput
@@ -79,6 +83,7 @@ export const UserManage: React.FC = React.memo(() => {
           placeholder={t("mobile")}
           required={false}
           onChangeData={(data: any) => handleFieldChange("phoneNumber", data.phoneNumber)}
+          readOnly={rootState.PopupData.user.mode == "view"}
         />
 
         <ERPInput
@@ -87,6 +92,7 @@ export const UserManage: React.FC = React.memo(() => {
           placeholder={t("name")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("displayName", data.displayName)}
+          readOnly={rootState.PopupData.user.mode == "view"}
         />
 
         <ERPDataCombobox
@@ -102,6 +108,7 @@ export const UserManage: React.FC = React.memo(() => {
           label={t("usertype")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("userTypeCode", data.userTypeCode)}
+          disabled={rootState.PopupData.user.mode == "view"}
         />
 
         {
@@ -119,6 +126,7 @@ export const UserManage: React.FC = React.memo(() => {
             label={t("counter")}
             required={true}
             onChangeData={(data: any) => handleFieldChange("counterID", data.counterID)}
+            disabled={rootState.PopupData.user.mode == "view"}
           />
         }
 
@@ -135,6 +143,7 @@ export const UserManage: React.FC = React.memo(() => {
           label={t("employee")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("employeeID", data.employeeID)}
+          disabled={rootState.PopupData.user.mode == "view"}
         />
 
         <ERPInput
@@ -145,6 +154,7 @@ export const UserManage: React.FC = React.memo(() => {
           placeholder={t("max_dis%")}
           required={false}
           onChangeData={(data) => handleFieldChange("maxDiscPercAllowed", (data.maxDiscPercAllowed))}
+          readOnly={rootState.PopupData.user.mode == "view"}
         />
 
         {
@@ -155,15 +165,16 @@ export const UserManage: React.FC = React.memo(() => {
             placeholder={t("passkey")}
             required={false}
             onChangeData={(data: any) => handleFieldChange("passkey", data.passkey)}
+            readOnly={rootState.PopupData.user.mode == "view"}
           />
         }
       </div>
       <ERPFormButtons
-        onClear={handleClear}
+        onClear={rootState.PopupData.user.mode == "view"? undefined : handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={handleSubmit}
+        onSubmit={rootState.PopupData.user.mode == "view"? undefined : handleSubmit}
       />
     </div>
   );

@@ -42,6 +42,7 @@ export const TaxCategoryManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => {
             handleFieldChange("taxCategoryName", data.taxCategoryName);
           }}
+          readOnly={rootState.PopupData.taxCategory.mode == "view"}
         />
 
         <ERPInput
@@ -51,6 +52,7 @@ export const TaxCategoryManage: React.FC = React.memo(() => {
           placeholder={t("sales_VAT_%")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("sVatPerc", data.sVatPerc)}
+          readOnly={rootState.PopupData.taxCategory.mode == "view"}
         />
 
         <ERPInput
@@ -59,6 +61,7 @@ export const TaxCategoryManage: React.FC = React.memo(() => {
           label={t("purchase_VAT_%")}
           placeholder={t("purchase_VAT_%")}
           onChangeData={(data: any) => handleFieldChange("pVatPerc", data.pVatPerc)}
+          readOnly={rootState.PopupData.taxCategory.mode == "view"}
         />
 
         <ERPInput
@@ -67,6 +70,7 @@ export const TaxCategoryManage: React.FC = React.memo(() => {
           label={t("purchase_excise_tax_%")}
           placeholder={t("purchase_excise_tax_%")}
           onChangeData={(data: any) => handleFieldChange("pCstPerc", data.pCstPerc)}
+          readOnly={rootState.PopupData.taxCategory.mode == "view"}
         />
 
         <ERPInput
@@ -75,14 +79,15 @@ export const TaxCategoryManage: React.FC = React.memo(() => {
           label={t("sales_excise_tax_%")}
           placeholder={t("sales_excise_tax_%")}
           onChangeData={(data: any) => handleFieldChange("sCstPerc", data.sCstPerc)}
+          readOnly={rootState.PopupData.taxCategory.mode == "view"}
         />
       </div>
       <ERPFormButtons
-        onClear={handleClear}
+        onClear={rootState.PopupData.taxCategory.mode == "view" ? undefined : handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={handleSubmit}
+        onSubmit={rootState.PopupData.taxCategory.mode == "view" ? undefined : handleSubmit}
       />
     </div>
   );

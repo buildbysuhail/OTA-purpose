@@ -164,8 +164,8 @@ const Users = () => {
       cellRender: (cellElement: any, cellInfo: any) => {
         return (
           <ERPGridActions
-            view={{ type: "popup", action: () => toggleUserPopup({ isOpen: true, key: cellElement?.data?.user, reload: false }) }}
-            edit={{ type: "popup", action: () => toggleUserPopup({ isOpen: true, key: cellElement?.data?.user, reload: false }) }}
+            view={{ type: "popup", action: () => toggleUserPopup({ isOpen: true, key: cellElement?.data?.user, reload: false, mode:"view" }) }}
+            edit={{ type: "popup", action: () => toggleUserPopup({ isOpen: true, key: cellElement?.data?.user, reload: false, mode:"edit" }) }}
           // delete={{
           //   confirmationRequired: true,
           //   confirmationMessage: "Are you sure you want to delete this item?",

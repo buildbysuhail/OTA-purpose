@@ -44,6 +44,7 @@ export const SchemesManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => {
             handleFieldChange("schemeCode", data.schemeCode);
           }}
+          readOnly={rootState.PopupData.schemes.mode == "view"}
         />
 
         <ERPInput
@@ -52,6 +53,7 @@ export const SchemesManage: React.FC = React.memo(() => {
           placeholder={t("scheme_name")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("schemeName", data.schemeName)}
+          readOnly={rootState.PopupData.schemes.mode == "view"}
         />
 
         <ERPDateInput
@@ -59,6 +61,7 @@ export const SchemesManage: React.FC = React.memo(() => {
           label={t("from_date")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("dateFrom", data.dateFrom)}
+          readOnly={rootState.PopupData.schemes.mode == "view"}
         />
 
         <ERPDateInput
@@ -66,6 +69,7 @@ export const SchemesManage: React.FC = React.memo(() => {
           label={t("to_date")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("dateTo", data.dateTo)}
+          readOnly={rootState.PopupData.schemes.mode == "view"}
         />
 
         <ERPDataCombobox
@@ -81,6 +85,7 @@ export const SchemesManage: React.FC = React.memo(() => {
           label={t("scheme_type")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("schemeType", data.schemeType)}
+          disabled={rootState.PopupData.schemes.mode == "view"}
         />
 
         <ERPInput
@@ -88,6 +93,7 @@ export const SchemesManage: React.FC = React.memo(() => {
           label={t("disc_%")}
           placeholder={t("disc_%")}
           onChangeData={(data: any) => handleFieldChange("discPercentage", data.discPercentage)}
+          readOnly={rootState.PopupData.schemes.mode == "view"}
         />
 
         <ERPInput
@@ -95,6 +101,7 @@ export const SchemesManage: React.FC = React.memo(() => {
           label={t("qty_limit")}
           placeholder={t("qty_limit")}
           onChangeData={(data: any) => handleFieldChange("qtyLimit", data.qtyLimit)}
+          readOnly={rootState.PopupData.schemes.mode == "view"}
         />
 
         <ERPInput
@@ -102,6 +109,7 @@ export const SchemesManage: React.FC = React.memo(() => {
           label={t("free_qty")}
           placeholder={t("free_qty")}
           onChangeData={(data: any) => handleFieldChange("freeQty", data.freeQty)}
+          readOnly={rootState.PopupData.schemes.mode == "view"}
         />
 
         <ERPDataCombobox
@@ -117,15 +125,16 @@ export const SchemesManage: React.FC = React.memo(() => {
             { value: 'Active', label: t('active') },
             { value: 'Inactive', label: t('inactive') },
           ]}
+          disabled={rootState.PopupData.schemes.mode == "view"}
         />
       </div>
 
       <ERPFormButtons
-        onClear={handleClear}
+        onClear={rootState.PopupData.schemes.mode == "view"? undefined : handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={handleSubmit}
+        onSubmit={rootState.PopupData.schemes.mode == "view"? undefined : handleSubmit}
       />
     </div>
   );

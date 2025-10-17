@@ -190,7 +190,7 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (
 
 
         const overdueDays = calculateOverdueDays(d?.transactionDate);
-        const isOverdue = overdueDays > 0;
+        // const isOverdue = overdueDays > 0;
         const isSelected = rowId === selectedRowIdRef.current;
 
         return (
@@ -316,7 +316,7 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (
             </Tooltip> */}
 
              {/* Overdue Status */}
-            {isOverdue && (
+            {/* {isOverdue && (
               <Box
                 sx={{
                   display: "inline-flex",
@@ -332,7 +332,7 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (
                   <path d="M3 8L10.89 13.26C11.5396 13.6728 12.4604 13.6728 13.11 13.26L21 8M5 19H19C20.1046 19 21 18.1046 21 17V7C21 5.89543 20.1046 5 19 5H5C3.89543 5 3 5.89543 3 7V17C3 18.1046 3.89543 19 5 19Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </Box>
-            )}
+            )} */}
           </Box>
         );
       },

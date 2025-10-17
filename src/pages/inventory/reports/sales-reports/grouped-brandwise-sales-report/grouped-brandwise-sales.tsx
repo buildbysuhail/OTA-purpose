@@ -1,16 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
-import { FC, useMemo } from "react";
+import { useMemo } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../../redux/urls";
-import GroupedBrandwiseSalesFilter, {
-  GroupedBrandwiseSalesFilterInitialState,
-} from "./grouped-brandwise-sales-filter";
+import GroupedBrandwiseSalesFilter, { GroupedBrandwiseSalesFilterInitialState, } from "./grouped-brandwise-sales-filter";
 import { erpParseFloat, isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
 
 const GroupedBrandwiseSales = () => {
@@ -193,7 +189,7 @@ const GroupedBrandwiseSales = () => {
       ) {
         return "0";
       }
-      return getFormattedValue(value,false,2) || "0";
+      return getFormattedValue(value, false, 2) || "0";
     };
   }, [getFormattedValue]);
   const customizeDate = (itemInfo: any) => `TOTAL`;
@@ -207,22 +203,22 @@ const GroupedBrandwiseSales = () => {
       column: "total",
       summaryType: "custom",
       valueFormat: "currency",
-       customizeText: (itemInfo: { value: any }) => {
-             return (
-               getFormattedValue(
-                 parseFloat(
-                   getFormattedValue(
-                     isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value
-                   ).replace(/,/g, "") || "0"
-                 ),
-                 false,
-                  2
-               ) || "0"
-             );
-           },
-            cellSummaryAction:(value: number) => {
-                      return erpParseFloat(getFormattedValue(value, false, 2));
-                    },
+      customizeText: (itemInfo: { value: any }) => {
+        return (
+          getFormattedValue(
+            parseFloat(
+              getFormattedValue(
+                isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value
+              ).replace(/,/g, "") || "0"
+            ),
+            false,
+            2
+          ) || "0"
+        );
+      },
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value, false, 2));
+      },
     },
   ];
 

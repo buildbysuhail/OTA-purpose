@@ -7,12 +7,13 @@ import { ReportsMenuItems } from "../../common/sidebar/sidemenu/reports-routes";
 import { useNavigate } from "react-router-dom";
 import { XMarkIcon, MagnifyingGlassIcon, } from "@heroicons/react/20/solid";
 import ERPToast from "../erp-toast";
-import { ChartLine } from "lucide-react";
+import { ChartLine, X } from "lucide-react";
 import { APIClient } from "../../../helpers/api-client";
 import Urls from "../../../redux/urls";
 import { RootState } from "../../../redux/store";
 import { getFilteredReports } from "./reports-list-filter";
 import { useUserRights } from "../../../helpers/user-right-helper";
+import { useAppState } from "../../../utilities/hooks/useAppState";
 
 interface MenuItem {
   title: string;
@@ -31,6 +32,8 @@ const ReportList = () => {
   const { t } = useTranslation();
   const rootState = useRootState();
   const dispatch = useAppDispatch();
+  const { appState } = useAppState();
+  const isRtl = appState.locale.rtl;
   const { hasRight } = useUserRights();
   let clientSession = useAppSelector((state: RootState) => state.ClientSession);
   let applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
@@ -132,9 +135,7 @@ const ReportList = () => {
         }
       });
     };
-
     extractRoutes(ReportsMenuItems);
-
     let searchResult = AllRoutes.filter((item) =>
       item.title.toLowerCase().includes(searchTerm)
     );
@@ -191,13 +192,13 @@ const ReportList = () => {
           <div className="flex items-center gap-1">
             <ChartLine className="w-5 aspect-square" />
             <h3 className="text-base dark:!text-dark-text font-medium">
-              {t("Reports")}
+              {t("reports")}
             </h3>
           </div>
 
           <div className="flex gap-1 items-center py-1 px-2 dark:bg-dark-bg-card dark:border-dark-border bg-gray-50 rounded-md border cursor-pointer" onClick={handleNavigation}>
-            <p className="text-[10px] dark:!text-dark-text">{t("Close")}</p>
-            <XMarkIcon className="w-4 aspect-square stroke-red-600" />
+            <p className="text-[10px] dark:!text-dark-text">{t("close")}</p>
+            <X className="w-4 aspect-square stroke-red-600" />
           </div>
         </div>
 
@@ -205,7 +206,7 @@ const ReportList = () => {
         <div className="px-6 py-4 flex justify-center">
           <div className="w-full max-w-lg relative">
             <div className="flex h-10">
-              <div className={`h-full p-2 dark:bg-dark-bg-card dark:border-dark-border bg-slate-50 border border-r-0 rounded-md rounded-r-none`}>
+              <div className={`h-full p-2 dark:bg-dark-bg-card dark:border-dark-border bg-slate-50 border rounded-md ${isRtl ? 'border-l-0 rounded-l-none' : 'border-r-0 rounded-r-none'}`}>
                 <MagnifyingGlassIcon className="w-4 mt-1 aspect-square stroke-accent" />
               </div>
               <input
@@ -222,11 +223,9 @@ const ReportList = () => {
                     width: 100%;
                     outline: none;
                     border: 1px solid #d1d5db;
-                    border-top-right-radius: 0.375rem;
-                    border-bottom-right-radius: 0.375rem;
                     font-size: 0.75rem;
                     padding: 0 0.5rem;
-                    // transition: all 550ms ease-in-out;
+                    ${isRtl ? `border-top-left-radius: 0.375rem;  border-bottom-left-radius: 0.375rem;` : `border-top-right-radius: 0.375rem; border-bottom-right-radius: 0.375rem;`}
                   }
                   .custom-input:focus {
                     border-color: #3b82f6;
@@ -236,12 +235,7 @@ const ReportList = () => {
               </style>
 
               {search && (
-                <XMarkIcon
-                  className="w-4 aspect-square stroke-red-700 absolute right-2 top-3 cursor-pointer"
-                  onClick={() => {
-                    setSearch("");
-                  }}
-                />
+                <X className={`w-4 aspect-square stroke-red-700 absolute top-2 cursor-pointer ${isRtl ? "left-2" : "right-2"}`} onClick={() => setSearch("")} />
               )}
             </div>
 

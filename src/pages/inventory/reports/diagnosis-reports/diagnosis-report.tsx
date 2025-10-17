@@ -11,11 +11,7 @@ interface DiagnosisProps {
   dataUrl: string;
   gridId: string;
 }
-const DiagnosisReport: FC<DiagnosisProps> = ({
-  gridHeader,
-  dataUrl,
-  gridId,
-}) => {
+const DiagnosisReport: FC<DiagnosisProps> = ({ gridHeader, dataUrl, gridId, }) => {
   const { t } = useTranslation("accountsReport");
   const location = useLocation();
   const [key, setKey] = useState(1);
@@ -107,7 +103,7 @@ const DiagnosisReport: FC<DiagnosisProps> = ({
       },
       {
         dataField: "priceCategory1",
-        caption: t("price_category1"),
+        caption: t("price_category_1"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -140,7 +136,7 @@ const DiagnosisReport: FC<DiagnosisProps> = ({
       },
       {
         dataField: "priceCategory2",
-        caption: t("price_category2"),
+        caption: t("price_category_2"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -337,6 +333,7 @@ const DiagnosisReport: FC<DiagnosisProps> = ({
         },
       },
     ];
+
     return baseColumns.filter((column) => {
       if (column.dataField == "cost") {
         return (
@@ -412,9 +409,11 @@ const DiagnosisReport: FC<DiagnosisProps> = ({
       return true;
     });
   }, [t, key]);
+
   useEffect(() => {
     setKey((prev: any) => prev + 1);
   }, [location]);
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">

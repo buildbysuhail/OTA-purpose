@@ -4,11 +4,7 @@ import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-co
 import moment from "moment";
 import Urls from "../../../../../redux/urls";
 
-const DiscountReportCollectionFilter = ({
-  getFieldProps,
-  handleFieldChange,
-  formState,
-}: any) => {
+const DiscountReportCollectionFilter = ({ getFieldProps, handleFieldChange, formState, }: any) => {
   const { t } = useTranslation("accountsReport");
 
   return (
@@ -93,7 +89,6 @@ const DiscountReportCollectionFilter = ({
 };
 
 export default DiscountReportCollectionFilter;
-
 export const DiscountReportCollectionFilterInitialState = {
   fromDate: moment().local().toDate(),
   toDate: moment().local().toDate(),

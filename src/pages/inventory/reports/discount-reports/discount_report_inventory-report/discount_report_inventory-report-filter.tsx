@@ -4,13 +4,8 @@ import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-co
 import moment from "moment";
 import Urls from "../../../../../redux/urls";
 
-const DiscountReportInventoryFilter = ({
-  getFieldProps,
-  handleFieldChange,
-  formState,
-}: any) => {
+const DiscountReportInventoryFilter = ({ getFieldProps, handleFieldChange, formState, }: any) => {
   const { t } = useTranslation("accountsReport");
-
   return (
     <div className="grid grid-cols-1 gap-4 overflow-hidden">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
@@ -137,7 +132,6 @@ const DiscountReportInventoryFilter = ({
 };
 
 export default DiscountReportInventoryFilter;
-
 export const DiscountReportInventoryFilterInitialState = {
   voucherType: "",
   fromDate: moment().local().toDate(),

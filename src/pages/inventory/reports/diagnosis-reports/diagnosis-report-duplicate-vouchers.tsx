@@ -8,7 +8,7 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
 const DiagnosisReportDuplicateVouchers = () => {
   const { t } = useTranslation("accountsReport");
-   const { getFormattedValue } = useNumberFormat();
+  const { getFormattedValue } = useNumberFormat();
   const columns: DevGridColumn[] = [
     {
       dataField: "voucherType",
@@ -30,7 +30,7 @@ const DiagnosisReportDuplicateVouchers = () => {
       width: 120,
       showInPdf: true,
     },
-     {
+    {
       dataField: "voucherNumber",
       caption: t("voucher_number"),
       dataType: "string",
@@ -40,7 +40,7 @@ const DiagnosisReportDuplicateVouchers = () => {
       width: 120,
       showInPdf: true,
     },
-     {
+    {
       dataField: "formType",
       caption: t("form_type"),
       dataType: "string",
@@ -50,7 +50,6 @@ const DiagnosisReportDuplicateVouchers = () => {
       width: 120,
       showInPdf: true,
     },
-
     {
       dataField: "transactionDate",
       caption: t("transaction_date"),
@@ -81,30 +80,30 @@ const DiagnosisReportDuplicateVouchers = () => {
       allowSorting: true,
       width: 120,
       showInPdf: true,
-     cellRender: (
-          cellElement: any,
-          cellInfo: any,
-          filter: any,
-          exportCell: any
-        ) => {
-          if (exportCell != undefined) {
-            const value =
-              cellElement.data?.totalDebit == null
-                ? 0
-                : getFormattedValue(cellElement.data.totalDebit, false, 4);
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
-          } else {
-            return cellElement.data?.totalDebit == null
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.totalDebit == null
               ? 0
               : getFormattedValue(cellElement.data.totalDebit, false, 4);
-          }
-        },
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.totalDebit == null
+            ? 0
+            : getFormattedValue(cellElement.data.totalDebit, false, 4);
+        }
       },
+    },
     {
       dataField: "totalCredit",
       caption: t("total_credit"),
@@ -114,30 +113,30 @@ const DiagnosisReportDuplicateVouchers = () => {
       allowSorting: true,
       width: 120,
       showInPdf: true,
-    cellRender: (
-          cellElement: any,
-          cellInfo: any,
-          filter: any,
-          exportCell: any
-        ) => {
-          if (exportCell != undefined) {
-            const value =
-              cellElement.data?.totalCredit == null
-                ? 0
-                : getFormattedValue(cellElement.data.totalCredit, false, 4);
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
-          } else {
-            return cellElement.data?.totalCredit == null
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.totalCredit == null
               ? 0
               : getFormattedValue(cellElement.data.totalCredit, false, 4);
-          }
-        },
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.totalCredit == null
+            ? 0
+            : getFormattedValue(cellElement.data.totalCredit, false, 4);
+        }
       },
+    },
     {
       dataField: "accTransactionMasterID",
       caption: t("acc_transaction_masterID"),
@@ -163,12 +162,12 @@ const DiagnosisReportDuplicateVouchers = () => {
                 }}
                 columns={columns}
                 gridHeader={t("diagnosis_report_of_duplicate_vouchers")}
-              dataUrl={Urls.diagnosis_report_of_duplicate_vouchers}
+                dataUrl={Urls.diagnosis_report_of_duplicate_vouchers}
                 hideGridAddButton={true}
                 method={ActionType.POST}
                 reload={true}
                 gridId="grd_diagnosis_report_of_duplicate_vouchers"
-               />
+              />
             </div>
           </div>
         </div>

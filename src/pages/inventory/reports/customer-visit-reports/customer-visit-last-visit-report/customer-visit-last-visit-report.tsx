@@ -1,22 +1,17 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import Urls from "../../../../../redux/urls";
-import { useMemo } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
-import CustomerVisitLastVisitFilter, {
-  CustomerVisitLastVisitFilterInitialState,
-} from "./customer-visit-last-visit-report-filter";
+import CustomerVisitLastVisitFilter, { CustomerVisitLastVisitFilterInitialState, } from "./customer-visit-last-visit-report-filter";
 import GridId from "../../../../../redux/gridId";
 import moment from "moment";
 
 const CustomerVisitLastVisit = () => {
   const { t } = useTranslation("accountsReport");
-    const { getFormattedValue } = useNumberFormat();
+  const { getFormattedValue } = useNumberFormat();
   const columns: DevGridColumn[] = [
     {
       dataField: "routeName",
@@ -118,8 +113,8 @@ const CustomerVisitLastVisit = () => {
           cellElement.data.lastTransDate == ""
           ? ""
           : moment(cellElement.data.lastTransDate, "DD-MM-YYYY").format(
-              "DD-MMM-YYYY"
-            ); // Ensures proper formatting
+            "DD-MMM-YYYY"
+          ); // Ensures proper formatting
       },
     },
     {
@@ -168,7 +163,7 @@ const CustomerVisitLastVisit = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 100,
-     cellRender: (
+      cellRender: (
         cellElement: any,
         cellInfo: any,
         filter: any,

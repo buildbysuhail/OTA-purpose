@@ -1,8 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import { useMemo } from "react";
@@ -182,7 +180,7 @@ const TransactionAnalysis = () => {
       },
       {
         dataField: "accountsPayable",
-        caption: t("ac_payable"),
+        caption: t("acc_payable"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -215,7 +213,7 @@ const TransactionAnalysis = () => {
       },
       {
         dataField: "accountsReceivable",
-        caption: t("ac_receivable"),
+        caption: t("acc_receivable"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -248,7 +246,7 @@ const TransactionAnalysis = () => {
       },
       {
         dataField: "intMonth",
-        caption: t("intMonth"),
+        caption: t("int_month"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -259,7 +257,7 @@ const TransactionAnalysis = () => {
       },
       {
         dataField: "branchID",
-        caption: t("branchID"),
+        caption: t("branch_id"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -284,7 +282,7 @@ const TransactionAnalysis = () => {
         })
     );
   }, [t, userSession.userTypeCode]);
-  const { getFormattedValue} = useNumberFormat();
+  const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) => {
       const value = itemInfo.value;
@@ -323,9 +321,9 @@ const TransactionAnalysis = () => {
           ) || "0"
         );
       },
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "purchase",
@@ -347,9 +345,9 @@ const TransactionAnalysis = () => {
       // cellSummaryAction(value: any) {
       //      getFormattedValue(value);
       // },
-        cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "expense",
@@ -368,9 +366,9 @@ const TransactionAnalysis = () => {
           ) || "0"
         );
       },
-        cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "income",
@@ -389,9 +387,9 @@ const TransactionAnalysis = () => {
           ) || "0"
         );
       },
-        cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "accountsPayable",
@@ -410,9 +408,9 @@ const TransactionAnalysis = () => {
           ) || "0"
         );
       },
-        cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "accountsReceivable",
@@ -431,34 +429,33 @@ const TransactionAnalysis = () => {
           ) || "0"
         );
       },
-        cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
+      },
     },
   ];
 
   const handleCalculateSummary = (options: any) => {
     // if (options.name === "sales") {
-      switch (options.summaryProcess) {
-        case "start":
-          options.totalValue = 0;
-          break;
+    switch (options.summaryProcess) {
+      case "start":
+        options.totalValue = 0;
+        break;
 
-        case "calculate":
-          if (options.value != null) {
-            const roundedSaleAmount = parseFloat(getFormattedValue(isNullOrUndefinedOrEmpty(options.value) ? 0 : options.value ) || "0")
-            options.totalValue += roundedSaleAmount;
-          }
-          break;
+      case "calculate":
+        if (options.value != null) {
+          const roundedSaleAmount = parseFloat(getFormattedValue(isNullOrUndefinedOrEmpty(options.value) ? 0 : options.value) || "0")
+          options.totalValue += roundedSaleAmount;
+        }
+        break;
 
-        case "finalize":
-          options.totalValue = Number(options.totalValue);
-          // console.log(options.totalValue, "TOTAL");
-          break;
-      }
+      case "finalize":
+        options.totalValue = Number(options.totalValue);
+        // console.log(options.totalValue, "TOTAL");
+        break;
+    }
     // }
   };
-
 
   return (
     <Fragment>
@@ -473,13 +470,12 @@ const TransactionAnalysis = () => {
                   paging: false,
                   sorting: false,
                 }}
-                filterText={`Report As On ${
-                  userSession.userTypeCode != "CA"
-                    ? moment(userSession.finTo).local().format("DD/MMM/YYYY")
-                    : moment(clientSession.softwareDate, "DD/MM/YYYY")
-                        .local()
-                        .format("DD/MMM/YYYY")
-                }`}
+                filterText={`${t('report_as_on')} ${userSession.userTypeCode != "CA"
+                  ? moment(userSession.finTo).local().format("DD/MMM/YYYY")
+                  : moment(clientSession.softwareDate, "DD/MM/YYYY")
+                    .local()
+                    .format("DD/MMM/YYYY")
+                  }`}
                 //  "
                 //       // {userSession.userTypeCode == 'CA' && [userSession.finTo]}
                 //       // {userSession.userTypeCode != 'CA' && [clientSession.softwareDate]}
@@ -487,7 +483,6 @@ const TransactionAnalysis = () => {
                 moreOption={false}
                 gridHeader={t("transaction_analysis")}
                 dataUrl={Urls.transaction_analysis}
-                         
                 hideGridAddButton={true}
                 handleCalculateSummary={handleCalculateSummary}
                 enablefilter={false}

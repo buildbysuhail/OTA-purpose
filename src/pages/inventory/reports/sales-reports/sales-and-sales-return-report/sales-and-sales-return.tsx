@@ -1,8 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Fragment, useState } from "react";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import { useMemo } from "react";
@@ -27,6 +25,7 @@ const SalesAndSalesReturn = () => {
       [field]: value,
     }));
   };
+  
   const [reload, setReload] = useState<boolean>(true);
   const handleShow = () => {
     setReload(true);
@@ -364,7 +363,7 @@ const SalesAndSalesReturn = () => {
                   // showPrintButton={false}
                   ShowGridPreferenceChooser={false}
                   allowSearching={false}
-                  // allowExport={false}
+                // allowExport={false}
                 />
               </div>
               <div className="grid grid-cols-1 gap-3">
@@ -394,7 +393,7 @@ const SalesAndSalesReturn = () => {
                   // showPrintButton={false}
                   ShowGridPreferenceChooser={false}
                   allowSearching={false}
-                  // allowExport={false}
+                // allowExport={false}
                 />
               </div>
             </div>

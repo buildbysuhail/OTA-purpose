@@ -859,5 +859,21 @@
   "supplier": "المورد",
   "method": "الطريقة",
   "generate_lpo": "إنشاء أمر شراء محلي",
-  "generate_lpq": "إنشاء عرض أسعار شراء محلي"
+  "generate_lpq": "إنشاء عرض أسعار شراء محلي",
+
+  "tender": "مناقصة",
+  "tax_on_disc": "الضريبة على الخصم",
+  "card_amount": "مبلغ البطاقة",
+  "hide": "إخفاء",
+  "delivery_quot_no": "رقم عرض سعر التسليم",
+  "delivery_no": "رقم التسليم",
+  "create_invoice_from_other_voucher": "إنشاء فاتورة من قسيمة أخرى",
+  "address_4": "العنوان 4",
+  "draft_mode": "وضع المسودة",
+  "cash": "نقدًا",
+  "w_stock": "مخزون المستودع",
+  "b_stock": "مخزون الفرع",
+  "new": "جديد",
+  "ord_card_no": "رقم بطاقة الطلب",
+  "enter_ord_card_no": "أدخل رقم بطاقة الطلب"
 }

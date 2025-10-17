@@ -8,9 +8,9 @@ import { RootState } from "../../../../../redux/store";
 
 const VoidReportFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
   const { t } = useTranslation('accountsReport')
-    const applicationSettings = useSelector(
-      (state: RootState) => state.ApplicationSettings
-    );
+  const applicationSettings = useSelector(
+    (state: RootState) => state.ApplicationSettings
+  );
   return (
     <div className="grid grid-cols-1 gap-4 overflow-hidden">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
@@ -33,27 +33,26 @@ const VoidReportFilter = ({ getFieldProps, handleFieldChange, formState }: any) 
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-end gap-4">
-           {applicationSettings.accountsSettings?.allowSalesCounter == true && (
-     
-        <div className="col-span-1">
-          <ERPDataCombobox
-            label={t("counter")}
-            {...getFieldProps("counterID")}
-            field={{
-              id: "counterID",
-              getListUrl: Urls.data_counters,
-              valueKey: "id",
-              labelKey: "name",
-            }}
-            onSelectItem={(data) => {
-             handleFieldChange({
-              counterID: data.value,
-              counter: data.label,
-            });
-            }}
-          />
-        </div>
-           )}
+        {applicationSettings.accountsSettings?.allowSalesCounter == true && (
+          <div className="col-span-1">
+            <ERPDataCombobox
+              label={t("counter")}
+              {...getFieldProps("counterID")}
+              field={{
+                id: "counterID",
+                getListUrl: Urls.data_counters,
+                valueKey: "id",
+                labelKey: "name",
+              }}
+              onSelectItem={(data) => {
+                handleFieldChange({
+                  counterID: data.value,
+                  counter: data.label,
+                });
+              }}
+            />
+          </div>
+        )}
         <div className="col-span-1">
           <ERPDataCombobox
             label={t("user")}
@@ -65,10 +64,10 @@ const VoidReportFilter = ({ getFieldProps, handleFieldChange, formState }: any) 
               labelKey: "name",
             }}
             onSelectItem={(data) => {
-            handleFieldChange({
-              userID: data.value,
-              user: data.label,
-            });
+              handleFieldChange({
+                userID: data.value,
+                user: data.label,
+              });
             }}
           />
         </div>
@@ -77,11 +76,11 @@ const VoidReportFilter = ({ getFieldProps, handleFieldChange, formState }: any) 
           <ERPDataCombobox
             label={t("status")}
             {...getFieldProps("status")}
-                options={[
-          { value: "All", label: "All" },
-          { value: "Void", label: "Void" },
-          { value: "Cancel", label: "Cancel" },
-        ]}
+            options={[
+              { value: "All", label: "All" },
+              { value: "Void", label: "Void" },
+              { value: "Cancel", label: "Cancel" },
+            ]}
             field={{
               id: "status",
               valueKey: "value",

@@ -66,30 +66,30 @@ const PrintDetails = () => {
       width: 100,
       visible: true,
       showInPdf: true,
-    cellRender: (
-          cellElement: any,
-          cellInfo: any,
-          filter: any,
-          exportCell: any
-        ) => {
-          if (exportCell != undefined) {
-            const value =
-              cellElement.data?.grandTotal == null
-                ? 0
-                : getFormattedValue(cellElement.data.grandTotal, false, 4);
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
-          } else {
-            return cellElement.data?.grandTotal == null
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.grandTotal == null
               ? 0
               : getFormattedValue(cellElement.data.grandTotal, false, 4);
-          }
-        },
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.grandTotal == null
+            ? 0
+            : getFormattedValue(cellElement.data.grandTotal, false, 4);
+        }
       },
+    },
     {
       dataField: "userName",
       caption: t("user_name"),
@@ -141,9 +141,9 @@ const PrintDetails = () => {
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-         cellSummaryAction:(value: number) => {
-                   return erpParseFloat(getFormattedValue(value, false, 4));
-                 },
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value, false, 4));
+      },
     }
   ];
 
@@ -157,7 +157,7 @@ const PrintDetails = () => {
                 summaryItems={summaryItems}
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={columns}
-                 filterText=": {dateFrom} - {dateTo}"
+                filterText=": {dateFrom} - {dateTo}"
                 gridHeader={t("invoice_print_details_report")}
                 dataUrl={Urls.print_details}
                 hideGridAddButton={true}

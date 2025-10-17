@@ -1,24 +1,12 @@
-import {
-  FC,
-  Fragment,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { FC, Fragment, useEffect, useMemo, useRef, useState, } from "react";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
-import ItemWiseSummaryFilter, {
-  ItemWiseSummaryFilterInitialState,
-} from "./itemwise-summary-filter";
+import ItemWiseSummaryFilter, { ItemWiseSummaryFilterInitialState, } from "./itemwise-summary-filter";
 import { useLocation } from "react-router-dom";
 import { erpParseFloat } from "../../../../../utilities/Utils";
 
@@ -28,18 +16,12 @@ interface ItemWiseSummaryReportProps {
   gridId: string;
 }
 
-const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({
-  gridHeader,
-  dataUrl,
-  gridId,
-}) => {
+const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dataUrl, gridId, }) => {
   const { t } = useTranslation("accountsReport");
   const [filter, setFilter] = useState<any>(ItemWiseSummaryFilterInitialState);
   const userSession = useSelector((state: RootState) => state.UserSession);
   const clientSession = useSelector((state: RootState) => state.ClientSession);
-  const applicationSettings = useSelector(
-    (state: RootState) => state.ApplicationSettings
-  );
+  const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
   const columns: DevGridColumn[] = useMemo(() => {
     const baseColumns: DevGridColumn[] = [
       //iscategorywise  groupindex =0 for category
@@ -341,7 +323,6 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({
           }
         },
       },
-
       {
         dataField: "branchName",
         caption: t("branch_name"),
@@ -359,7 +340,6 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({
         allowFiltering: true,
         width: 100,
       },
-
       {
         dataField: "groupCategoryName",
         caption: t("group_category_name"),
@@ -483,9 +463,9 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({
       isGroupItem: true,
       showInGroupFooter: true,
       customizeText: customizeSummaryRow,
-     cellSummaryAction:(value: number) => {
-             return erpParseFloat(getFormattedValue(value));
-           },
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "totNetAmount",
@@ -494,9 +474,9 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({
       isGroupItem: true,
       showInGroupFooter: true,
       customizeText: customizeSummaryRow,
-     cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "totFree",
@@ -505,9 +485,9 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({
       isGroupItem: true,
       showInGroupFooter: true,
       customizeText: customizeSummaryRow,
-           cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "productName",
@@ -519,27 +499,27 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-           cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "totNetAmount",
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-           cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "totFree",
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-           cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
+      },
     },
   ];
 
@@ -561,6 +541,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({
   useEffect(() => {
     setKey((prev: any) => prev + 1);
   }, [location]);
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">

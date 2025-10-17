@@ -1,9 +1,6 @@
 import { FC, Fragment, useEffect, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ErpDevGrid, {
-  DrillDownCellTemplate,
-  SummaryConfig,
-} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { DrillDownCellTemplate, SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../../redux/types";
@@ -32,7 +29,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
     const baseColumns: DevGridColumn[] = [
       {
         dataField: "si",
-        caption: t("si"),
+        caption: t("si_no"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -891,7 +888,6 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         width: 100,
       },
       //in 1050 shown only on summary calculation
-
       {
         dataField: "toWarehouseName",
         caption: t("to_warehouse_name"),
@@ -1036,7 +1032,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
           column.dataField == "mobileNumber" ||
           column.dataField == "totalExciseTax" ||
           column.dataField == "toWarehouseName" ||
-          column.dataField == "taxableValue" 
+          column.dataField == "taxableValue"
         ) {
           return (
             clientSession.isAppGlobal &&
@@ -1067,9 +1063,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: any) => {
       console.log("itemInfo");
-
       console.log(itemInfo);
-
       const value = itemInfo.value;
       if (
         value === null ||
@@ -1096,9 +1090,9 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-           cellSummaryAction:(value: number) => {
-                     return erpParseFloat(getFormattedValue(value));
-                   },
+        cellSummaryAction: (value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "vat",
@@ -1117,7 +1111,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
             ) || "0"
           );
         },
-           cellSummaryAction:(value: number) => {
+        cellSummaryAction: (value: number) => {
           return erpParseFloat(getFormattedValue(value, false, 4));
         },
       },
@@ -1126,16 +1120,16 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-           cellSummaryAction:(value: number) => {
-                     return erpParseFloat(getFormattedValue(value));
-                   },
+        cellSummaryAction: (value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "grandTotal",
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
+        cellSummaryAction: (value: number) => {
           return erpParseFloat(getFormattedValue(value));
         },
       },
@@ -1144,16 +1138,16 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-                  return erpParseFloat(getFormattedValue(value));
-                },
+        cellSummaryAction: (value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "cashDiscount",
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
+        cellSummaryAction: (value: number) => {
           return erpParseFloat(getFormattedValue(value));
         },
       },
@@ -1162,27 +1156,27 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-                  return erpParseFloat(getFormattedValue(value));
-                },
+        cellSummaryAction: (value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "creditAmt",
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-                  return erpParseFloat(getFormattedValue(value));
-                },
+        cellSummaryAction: (value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "bankAmt",
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-                  return erpParseFloat(getFormattedValue(value));
-                },
+        cellSummaryAction: (value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
       },
 
       {
@@ -1190,9 +1184,9 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-                  return erpParseFloat(getFormattedValue(value));
-                },
+        cellSummaryAction: (value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
       },
       //only in multipayment and inventorysumary
       {
@@ -1200,7 +1194,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
+        cellSummaryAction: (value: number) => {
           return erpParseFloat(getFormattedValue(value));
         },
       },
@@ -1210,7 +1204,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-           cellSummaryAction:(value: number) => {
+        cellSummaryAction: (value: number) => {
           return erpParseFloat(getFormattedValue(value));
         },
       },
@@ -1221,7 +1215,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
+        cellSummaryAction: (value: number) => {
           return erpParseFloat(getFormattedValue(value));
         },
       },
@@ -1232,9 +1226,9 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-                  return erpParseFloat(getFormattedValue(value));
-                },
+        cellSummaryAction: (value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
       },
       //not in inactive
       {
@@ -1242,11 +1236,10 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
+        cellSummaryAction: (value: number) => {
           return erpParseFloat(getFormattedValue(value));
         },
       },
-
       //dbid value="489995732270"
       //asmari only
       {
@@ -1254,7 +1247,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
+        cellSummaryAction: (value: number) => {
           return erpParseFloat(getFormattedValue(value));
         },
       },
@@ -1264,7 +1257,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
+        cellSummaryAction: (value: number) => {
           return erpParseFloat(getFormattedValue(value));
         },
       },
@@ -1274,7 +1267,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
+        cellSummaryAction: (value: number) => {
           return erpParseFloat(getFormattedValue(value));
         },
       },
@@ -1283,7 +1276,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
+        cellSummaryAction: (value: number) => {
           return erpParseFloat(getFormattedValue(value));
         },
       },
@@ -1293,7 +1286,6 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
       if (column.column == "salesAmount" || column.column == "totalProfit") {
         return userSession.dbIdValue == "489995732270";
       }
-      
       if (
         column.column == "totalExciseTax"
       ) {
@@ -1312,15 +1304,17 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
       // if (column.column == "roundAmount") {
       //   return !filter.IsInactive;
       // }
-
       return true;
     });
   }, [t, filter, userSession.dbIdValue]);
+
   const location = useLocation();
   const [key, setKey] = useState(1);
+
   useEffect(() => {
     setKey((prev: any) => prev + 1);
   }, [location]);
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">

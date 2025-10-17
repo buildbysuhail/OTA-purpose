@@ -1,16 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import Urls from "../../../../../redux/urls";
 import { useMemo } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
-import InventoryStatusFilter, {
-  InventoryStatusFilterInitialState,
-} from "./inventory-status-filter";
+import InventoryStatusFilter, { InventoryStatusFilterInitialState, } from "./inventory-status-filter";
 import moment from "moment";
 
 const InventoryStatusReport = () => {
@@ -18,7 +14,7 @@ const InventoryStatusReport = () => {
   const columns: DevGridColumn[] = [
     {
       dataField: "si",
-      caption: t("si"),
+      caption: t("si_no"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -337,8 +333,8 @@ const InventoryStatusReport = () => {
           cellElement.data.refDate == ""
           ? ""
           : moment(cellElement.data.refDate, "DD-MM-YYYY").format(
-              "DD-MMM-YYYY"
-            ); // Ensures proper formatting
+            "DD-MMM-YYYY"
+          ); // Ensures proper formatting
       },
     },
     {
@@ -501,6 +497,7 @@ const InventoryStatusReport = () => {
       return getFormattedValue(value) || "0";
     };
   }, [getFormattedValue]);
+  
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">

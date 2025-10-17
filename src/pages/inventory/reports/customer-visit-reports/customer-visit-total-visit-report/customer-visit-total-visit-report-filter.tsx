@@ -7,7 +7,6 @@ import Urls from "../../../../../redux/urls";
 
 const CustomerVisitTotalVisitFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
   const { t } = useTranslation('accountsReport');
-
   return (
     <div className="grid grid-cols-1 gap-4 overflow-hidden">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
@@ -29,25 +28,23 @@ const CustomerVisitTotalVisitFilter = ({ getFieldProps, handleFieldChange, formS
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 items-end gap-4">
-        <div className="col-span-1">
-          <ERPDataCombobox
-            label={t("main_route")}
-            {...getFieldProps("salesRouteID")}
-            field={{
-              id: "salesRouteID",
-              getListUrl: Urls.data_mainsalesroute, 
-              valueKey: "id",
-              labelKey: "name",
-            }}
-            onSelectItem={(data) => {
-              handleFieldChange({
-            salesRouteID: data.value,
-            salesRoute: data.label,
-          })
-            }}
-          />
-        </div>
+      <div className="flex items-end gap-2">
+        <ERPDataCombobox
+          label={t("main_route")}
+          {...getFieldProps("salesRouteID")}
+          field={{
+            id: "salesRouteID",
+            getListUrl: Urls.data_mainsalesroute,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onSelectItem={(data) => {
+            handleFieldChange({
+              salesRouteID: data.value,
+              salesRoute: data.label,
+            })
+          }}
+        />
 
         {/* <div className="col-span-1">
           <ERPDataCombobox
@@ -64,9 +61,7 @@ const CustomerVisitTotalVisitFilter = ({ getFieldProps, handleFieldChange, formS
             }}
           />
         </div> */}
-      </div>
 
-      <div className="col-span-1">
         <ERPCheckbox
           id="zeroVisit"
           {...getFieldProps("zeroVisit")}
@@ -82,17 +77,16 @@ const CustomerVisitTotalVisitFilter = ({ getFieldProps, handleFieldChange, formS
           onChange={(e) => handleFieldChange("showSupplier", e.target.checked)}
         />
       </div>
-    </div>
+    </div >
   );
 };
 
 export default CustomerVisitTotalVisitFilter;
-
 export const CustomerVisitTotalVisitFilterInitialState = {
   fromDate: moment().local().toDate(),
   toDate: moment().local().toDate(),
   // mainRoute: 0, 
-  salesRouteID: 0, 
+  salesRouteID: 0,
   zeroVisit: false,
   showSupplier: false,
 };

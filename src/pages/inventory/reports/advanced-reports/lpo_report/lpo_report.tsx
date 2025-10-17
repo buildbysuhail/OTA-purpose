@@ -1,16 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import Urls from "../../../../../redux/urls";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import GridId from "../../../../../redux/gridId";
-import LPOReportFilter, {
-  LPOReportFilterInitialState,
-} from "./lpo_report-filter";
+import LPOReportFilter, { LPOReportFilterInitialState, } from "./lpo_report-filter";
 
 const LPOReport = () => {
   const { t } = useTranslation("accountsReport");
@@ -38,7 +34,7 @@ const LPOReport = () => {
     },
     {
       dataField: "mannualBarcode",
-      caption: t("mannual_barcode"),
+      caption: t("manual_barcode"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,

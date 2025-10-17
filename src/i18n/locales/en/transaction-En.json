@@ -862,5 +862,21 @@
   "supplier": "Supplier",
   "method": "Method",
   "generate_lpo": "Generate LPO",
-  "generate_lpq": "Generate LPQ"
+  "generate_lpq": "Generate LPQ",
+
+  "tender": "Tender",
+  "tax_on_disc": "Tax on disc",
+  "card_amount": "Card amount",
+  "hide": "Hide",
+  "delivery_quot_no": "Delivery quot no",
+  "delivery_no": "Delivery no",
+  "create_invoice_from_other_voucher": "Create invoice from other voucher",
+  "address_4": "Address 4",
+  "draft_mode": "Draft Mode",
+  "cash": "Cash",
+  "w_stock": "W Stock",
+  "b_stock": "B Stock",
+  "new": "New",
+  "ord_card_no": "Ord Card No",
+  "enter_ord_card_no": "Enter Ord Card No"
 }

@@ -1,29 +1,27 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, { SummaryConfig } from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import Urls from "../../../../../redux/urls";
-import { useMemo } from "react";
-import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import CustomerVisitTotalVisitFilter, { CustomerVisitTotalVisitFilterInitialState } from "./customer-visit-total-visit-report-filter";
 import GridId from "../../../../../redux/gridId";
 
 const CustomerVisitTotalVisit = () => {
   const { t } = useTranslation('accountsReport');
   const columns: DevGridColumn[] = [
-    
     {
       dataField: "routeName",
       caption: t("route_name"),
       dataType: "string",
-      groupIndex:0,
+      groupIndex: 0,
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
       visible: true,
       width: 120,
-    },{
+    },
+    {
       dataField: "partyCode",
       caption: t("party_code"),
       dataType: "string",
@@ -32,7 +30,8 @@ const CustomerVisitTotalVisit = () => {
       allowSorting: true,
       visible: true,
       width: 70,
-    },{
+    },
+    {
       dataField: "partyName",
       caption: t("party_name"),
       dataType: "string",
@@ -42,7 +41,6 @@ const CustomerVisitTotalVisit = () => {
       visible: true,
       width: 150,
     },
-    
     {
       dataField: "address1",
       caption: t("address1"),

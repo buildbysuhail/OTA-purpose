@@ -5,11 +5,7 @@ import Urls from "../../../../../redux/urls";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import moment from "moment";
 
-const BranchInventoryRequestPendingOrderFilter = ({
-  getFieldProps,
-  handleFieldChange,
-  formState,
-}: any) => {
+const BranchInventoryRequestPendingOrderFilter = ({ getFieldProps, handleFieldChange, formState, }: any) => {
   const { t } = useTranslation("accountsReport");
   return (
     <div className="grid grid-cols-1 gap-4 overflow-hidden">

@@ -1,18 +1,14 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import Urls from "../../../../../redux/urls";
-import { useMemo } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import GridId from "../../../../../redux/gridId";
-import DiscountReportCollectionFilter, {
-  DiscountReportCollectionFilterInitialState,
-} from "./discount_report_collection-report-filter";
+import DiscountReportCollectionFilter, { DiscountReportCollectionFilterInitialState, } from "./discount_report_collection-report-filter";
 import { erpParseFloat, isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
+
 const DiscountReportCollection = () => {
   const { t } = useTranslation("accountsReport");
   const columns: DevGridColumn[] = [
@@ -69,7 +65,7 @@ const DiscountReportCollection = () => {
     },
     {
       dataField: "vchPrefix",
-      caption: t("vch_prefix"),
+      caption: t("voucher_prefix"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -79,7 +75,7 @@ const DiscountReportCollection = () => {
     },
     {
       dataField: "vchNo",
-      caption: t("vch_no"),
+      caption: t("voucher_no"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -141,6 +137,7 @@ const DiscountReportCollection = () => {
       width: 150,
     },
   ];
+
   const customizeTotal = (itemInfo: any) => `TOTAL`;
   const { getFormattedValue } = useNumberFormat();
   const summaryItems: SummaryConfig[] = [
@@ -166,9 +163,9 @@ const DiscountReportCollection = () => {
           ) || "0"
         );
       },
-      cellSummaryAction:(value: number) => {
-                return erpParseFloat(getFormattedValue(value, false, 4));
-            },
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value, false, 4));
+      },
     },
   ];
   return (

@@ -1,16 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {  SummaryConfig,} from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
-import { FC, useMemo } from "react";
+import { useMemo } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../../redux/urls";
-import ItemWiseGroupedBrandwiseSalesFilter, {
-  ItemWiseGroupedBrandwiseSalesFilterInitialState,
-} from "./itemwise-grouped-brandwise-sales-filter";
+import ItemWiseGroupedBrandwiseSalesFilter, {  ItemWiseGroupedBrandwiseSalesFilterInitialState,} from "./itemwise-grouped-brandwise-sales-filter";
 import { erpParseFloat } from "../../../../../utilities/Utils";
 
 const ItemWiseGroupedBrandwiseSales = () => {

@@ -1,8 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
 import { FC, useEffect, useMemo, useState } from "react";
@@ -13,9 +11,8 @@ interface DiagnosisReportPostDatedTransactionProps {
   dataUrl: string;
   gridId: string;
 }
-const DiagnosisReportPostDatedTransactions: FC<
-  DiagnosisReportPostDatedTransactionProps
-> = ({ gridHeader, dataUrl, gridId }) => {
+
+const DiagnosisReportPostDatedTransactions: FC<DiagnosisReportPostDatedTransactionProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("accountsReport");
   const location = useLocation();
   const [key, setKey] = useState(1);
@@ -85,9 +82,11 @@ const DiagnosisReportPostDatedTransactions: FC<
       return true;
     });
   }, [t, key]);
+
   useEffect(() => {
     setKey((prev: any) => prev + 1);
   }, [location]);
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">

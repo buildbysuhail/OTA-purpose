@@ -9,14 +9,8 @@ import { RootState } from "../../../../../redux/store";
 import { LedgerType } from "../../../../../enums/ledger-types";
 import { useLocation } from "react-router-dom";
 
-const SummaryFilter = ({
-  getFieldProps,
-  handleFieldChange,
-  formState,
-}: any) => {
-  const applicationSettings = useSelector(
-    (state: RootState) => state.ApplicationSettings
-  );
+const SummaryFilter = ({ getFieldProps, handleFieldChange, formState, }: any) => {
+  const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
   const userSession = useSelector((state: RootState) => state.UserSession);
   const clientSession = useSelector((state: RootState) => state.ClientSession);
   const { t } = useTranslation("accountsReport");
@@ -82,9 +76,7 @@ const SummaryFilter = ({
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
-        {location.pathname.includes(
-          "inventory/sales_transfer_summary_report"
-        ) && (
+        {location.pathname.includes("inventory/sales_transfer_summary_report") && (
           <ERPDataCombobox
             label={t("transfer_voucher")}
             {...getFieldProps("transferVoucher")}
@@ -194,69 +186,68 @@ const SummaryFilter = ({
               ? Urls.data_FormTypeByVoucherType
               : Urls.data_form_type,
             params: clientSession.isAppGlobal
-              ? `voucherType=${
-                  location.pathname.includes(
-                    "inventory/purchase_summary_report"
+              ? `voucherType=${location.pathname.includes(
+                "inventory/purchase_summary_report"
+              )
+                ? "PI"
+                : location.pathname.includes(
+                  "inventory/purchase_return_summary"
+                )
+                  ? "PR"
+                  : location.pathname.includes(
+                    "inventory/purchase_estimate_summary"
                   )
-                    ? "PI"
-                    : location.pathname.includes(
-                        "inventory/purchase_return_summary"
-                      )
-                    ? "PR"
-                    : location.pathname.includes(
-                        "inventory/purchase_estimate_summary"
-                      )
                     ? "PE"
                     : location.pathname.includes(
-                        "inventory/purchase_order_summary"
-                      )
-                    ? "PO"
-                    : location.pathname.includes(
+                      "inventory/purchase_order_summary"
+                    )
+                      ? "PO"
+                      : location.pathname.includes(
                         "inventory/purchase_return_estimate_summary_report"
                       )
-                    ? "PRE"
-                    : location.pathname.includes(
-                        "inventory/sales_summary_report"
-                      )
-                    ? "SI"
-                    : location.pathname.includes(
-                        "inventory/sales_return_summary"
-                      )
-                    ? "SR"
-                    : location.pathname.includes(
-                        "inventory/sales_order_summary_report"
-                      )
-                    ? "SO"
-                    : location.pathname.includes(
-                        "inventory/sales_estimate_summary_report"
-                      )
-                    ? "SE"
-                    : location.pathname.includes(
-                        "inventory/sales_quotation_summary_report"
-                      )
-                    ? "SQ"
-                    : location.pathname.includes("inventory/substitute_report")
-                    ? "SUB"
-                    : location.pathname.includes(
-                        "inventory/booking_summary_report"
-                      )
-                    ? "SB"
-                    : location.pathname.includes(
-                        "inventory/transaction_summary_report"
-                      )
-                    ? ""
-                    : location.pathname.includes(
-                        "inventory/sales_transfer_summary_report"
-                      )
-                    ? "ST"
-                    : // :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST"
-                      // :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST"
-                      // :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST"
-                      // :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST"
-                      // :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST"
-                      // :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST"
-                      ""
-                }`
+                        ? "PRE"
+                        : location.pathname.includes(
+                          "inventory/sales_summary_report"
+                        )
+                          ? "SI"
+                          : location.pathname.includes(
+                            "inventory/sales_return_summary"
+                          )
+                            ? "SR"
+                            : location.pathname.includes(
+                              "inventory/sales_order_summary_report"
+                            )
+                              ? "SO"
+                              : location.pathname.includes(
+                                "inventory/sales_estimate_summary_report"
+                              )
+                                ? "SE"
+                                : location.pathname.includes(
+                                  "inventory/sales_quotation_summary_report"
+                                )
+                                  ? "SQ"
+                                  : location.pathname.includes("inventory/substitute_report")
+                                    ? "SUB"
+                                    : location.pathname.includes(
+                                      "inventory/booking_summary_report"
+                                    )
+                                      ? "SB"
+                                      : location.pathname.includes(
+                                        "inventory/transaction_summary_report"
+                                      )
+                                        ? ""
+                                        : location.pathname.includes(
+                                          "inventory/sales_transfer_summary_report"
+                                        )
+                                          ? "ST"
+                                          : // :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST"
+                                          // :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST"
+                                          // :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST"
+                                          // :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST"
+                                          // :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST"
+                                          // :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST"
+                                          ""
+              }`
               : undefined,
             valueKey: "name",
             labelKey: "name",
@@ -349,37 +340,35 @@ const SummaryFilter = ({
             }}
           />
         )}
-        {(location.pathname.includes(
-          "inventory/sales_transfer_summary_report"
-        ) ||
+        {(
+          location.pathname.includes("inventory/sales_transfer_summary_report") ||
           location.pathname.includes("inventory/sales_summary_report") ||
           location.pathname.includes("inventory/sales_return_summary")) && (
-          <ERPDataCombobox
-            label={t("report_of")}
-            {...getFieldProps("reportOf")}
-            options={[
-              { value: "All", label: "All" },
-              { value: "Credit", label: "Credit" },
-              { value: "Cash", label: "Cash" },
-              { value: "Card", label: "Card" },
-            ]}
-            field={{
-              id: "reportOf",
-              valueKey: "value",
-              labelKey: "label",
-            }}
-            onSelectItem={(data) => {
-              handleFieldChange("reportOf", data.value);
-            }}
-          />
-        )}
+            <ERPDataCombobox
+              label={t("report_of")}
+              {...getFieldProps("reportOf")}
+              options={[
+                { value: "All", label: "All" },
+                { value: "Credit", label: "Credit" },
+                { value: "Cash", label: "Cash" },
+                { value: "Card", label: "Card" },
+              ]}
+              field={{
+                id: "reportOf",
+                valueKey: "value",
+                labelKey: "label",
+              }}
+              onSelectItem={(data) => {
+                handleFieldChange("reportOf", data.value);
+              }}
+            />
+          )}
       </div>
     </div>
   );
 };
 
 export default SummaryFilter;
-
 export const SummaryFilterInitialState = {
   // fromDate: clientSession.softwareDate,
   fromDate: moment().local().toDate(), //software date as initial

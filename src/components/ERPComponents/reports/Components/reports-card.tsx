@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useTranslation } from "react-i18next";
+import { useAppState } from "../../../../utilities/hooks/useAppState";
 
 interface Route {
   id: number;
@@ -26,6 +27,8 @@ const ReportsCard: React.FC<ReportsCardProps> = ({ data, toggleFavorite, favorit
   const navigate = useNavigate();
   const { t } = useTranslation('accountsReport');
   const dispatch = useAppDispatch();
+  const { appState } = useAppState();
+  const isRtl = appState.locale.rtl;
   const columns = Math.max(1, data.columns || 1);
   const children = data.children || [];
   const distributeItems = useCallback(
@@ -101,7 +104,7 @@ const ReportsCard: React.FC<ReportsCardProps> = ({ data, toggleFavorite, favorit
             {data?.children?.map((route: any) => (
               <li key={route.id} className="flex items-center">
                 <span
-                  className="cursor-pointer mr-2"
+                  className={`cursor-pointer ${isRtl ? 'ml-2' : 'mr-2'}`}
                   onClick={(e) => {
                     e.stopPropagation();
                     toggleFavorite(route.id);

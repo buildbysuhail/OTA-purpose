@@ -1,26 +1,23 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-} from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { } from "../../../../components/ERPComponents/erp-dev-grid";
 import { ActionType } from "../../../../redux/types";
-import { FC, useEffect,useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 interface DiagnosisDynamicProps {
   gridHeader: string;
   dataUrl: string;
   gridId: string;
 }
-const DiagnosisDynamicReport: FC<DiagnosisDynamicProps> = ({
-  gridHeader,
-  dataUrl,
-  gridId,
-}) => {
+const DiagnosisDynamicReport: FC<DiagnosisDynamicProps> = ({ gridHeader, dataUrl, gridId, }) => {
   const { t } = useTranslation("accountsReport");
   const location = useLocation();
   const [key, setKey] = useState(1);
-   useEffect(() => {
+
+  useEffect(() => {
     setKey((prev: any) => prev + 1);
   }, [location]);
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">

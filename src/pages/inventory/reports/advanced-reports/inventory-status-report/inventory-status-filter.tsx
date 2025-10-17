@@ -2,7 +2,6 @@ import { useTranslation } from "react-i18next";
 import ERPDateInput from "../../../../../components/ERPComponents/erp-date-input";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
 import moment from "moment";
-import Urls from "../../../../../redux/urls";
 
 const InventoryStatusFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
   const { t } = useTranslation('accountsReport')
@@ -43,11 +42,11 @@ const InventoryStatusFilter = ({ getFieldProps, handleFieldChange, formState }: 
           { value: "PO", label: "Purchase Order" },
           { value: "ILR", label: "Item Load Request" }
         ]}
-          field={{
-              id: "voucherType",
-              valueKey: "value",
-              labelKey: "label",
-            }}  
+        field={{
+          id: "voucherType",
+          valueKey: "value",
+          labelKey: "label",
+        }}
         className="max-w-[297px]"
         onSelectItem={(data) => {
           handleFieldChange("voucherType", data.value);

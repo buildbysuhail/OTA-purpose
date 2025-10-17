@@ -1,8 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import Urls from "../../../../../redux/urls";
@@ -272,8 +270,8 @@ const CounterReport = () => {
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value, false, 4));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value, false, 4));
       },
     },
     {
@@ -281,8 +279,8 @@ const CounterReport = () => {
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value, false, 4));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value, false, 4));
       },
     },
     {
@@ -290,8 +288,8 @@ const CounterReport = () => {
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value, false, 4));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value, false, 4));
       },
     },
     {
@@ -299,8 +297,8 @@ const CounterReport = () => {
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value, false, 4));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value, false, 4));
       },
     },
     {
@@ -308,8 +306,8 @@ const CounterReport = () => {
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value, false, 4));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value, false, 4));
       },
     },
     {
@@ -317,8 +315,8 @@ const CounterReport = () => {
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value, false, 4));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value, false, 4));
       },
     },
   ];

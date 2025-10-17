@@ -1,11 +1,8 @@
 import { useTranslation } from "react-i18next";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../../../../redux/urls";
-const LPOReportFilter = ({
-  getFieldProps,
-  handleFieldChange,
-  formState,
-}: any) => {
+
+const LPOReportFilter = ({ getFieldProps, handleFieldChange, formState, }: any) => {
   const { t } = useTranslation("accountsReport");
   return (
     <div className="grid grid-cols-1 gap-4 overflow-hidden">
@@ -86,6 +83,7 @@ const LPOReportFilter = ({
     </div>
   );
 };
+
 export default LPOReportFilter;
 export const LPOReportFilterInitialState = {
   supplierID: -1,

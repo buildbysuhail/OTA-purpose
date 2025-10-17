@@ -1,16 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import Urls from "../../../../../redux/urls";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import GridId from "../../../../../redux/gridId";
-import DiscountReportInventoryFilter, {
-  DiscountReportInventoryFilterInitialState,
-} from "./discount_report_inventory-report-filter";
+import DiscountReportInventoryFilter, { DiscountReportInventoryFilterInitialState, } from "./discount_report_inventory-report-filter";
 import { erpParseFloat, isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
 
 const DiscountReportInventory = () => {
@@ -119,7 +115,7 @@ const DiscountReportInventory = () => {
     },
     {
       dataField: "discountAmt",
-      caption: t("discount_amt"),
+      caption: t("disc_amt"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -218,7 +214,7 @@ const DiscountReportInventory = () => {
     },
     {
       dataField: "totalDisc",
-      caption: t("total_disc"),
+      caption: t("total_discount"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -276,11 +272,10 @@ const DiscountReportInventory = () => {
           ) || "0"
         );
       },
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value, false, 2));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value, false, 2));
       },
     },
-
     {
       column: "billDiscount",
       summaryType: "custom",
@@ -298,11 +293,10 @@ const DiscountReportInventory = () => {
           ) || "0"
         );
       },
-        cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value, false, 2));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value, false, 2));
       },
     },
-
     {
       column: "grandTotal",
       summaryType: "custom",
@@ -320,11 +314,10 @@ const DiscountReportInventory = () => {
           ) || "0"
         );
       },
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value, false, 4));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value, false, 4));
       },
     },
-
     {
       column: "totalDisc",
       summaryType: "custom",
@@ -342,8 +335,8 @@ const DiscountReportInventory = () => {
           ) || "0"
         );
       },
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value, false, 2));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value, false, 2));
       },
     },
   ];
@@ -362,7 +355,8 @@ const DiscountReportInventory = () => {
                   sorting: false,
                 }}
                 columns={columns}
-                filterText="{voucherType =='SI' && Sales Discount Report} 
+                filterText="
+                {voucherType =='SI' && Sales Discount Report} 
                 {voucherType =='PI' && Purchase Discount Report}
                 {voucherType =='SR' && Sales Discount Report} 
                 {voucherType =='PR' && Purchase Discount Report}
@@ -375,7 +369,7 @@ const DiscountReportInventory = () => {
                 {salesRouteID > 0 && Route Name :[salesRoute]}
                 Between : {fromDate} - {toDate}"
                 dataUrl={Urls.discount_report_inventory}
-                gridHeader={t(" ")}
+                gridHeader={t("inventory_discount")}
                 hideGridAddButton={true}
                 enablefilter={true}
                 showFilterInitially={true}

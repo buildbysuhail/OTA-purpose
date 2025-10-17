@@ -1362,7 +1362,7 @@ export const purchaseGridCol = (
       if (
         userSession.countryId != Countries.India &&
         voucherType == VoucherType.PurchaseInvoice &&
-        formType == "Import" &&
+        formType.toUpperCase() == "IMPORT" &&
         (mi.dataField?.includes("unitPriceFC") ||
           mi.dataField?.includes("grossFC"))
       ) {

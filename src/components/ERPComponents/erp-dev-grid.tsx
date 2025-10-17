@@ -1738,6 +1738,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       }
     }, [dataUrl]);
     const handleCalculateSummary = (options: any) => {
+      
       let cellSummaryAction = summaryItems.find((x: SummaryConfig)=> x.column === options.name && x.cellSummaryAction != undefined )?.cellSummaryAction;
       if (summaryItems && summaryItems.length > 0 && cellSummaryAction != undefined) {
         switch (options.summaryProcess) {
@@ -1747,7 +1748,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
         case "calculate":
           if (options.value != null) {
-        debugger;
+        
             console.log(options.value);
             
             const roundedSaleAmount = cellSummaryAction  && cellSummaryAction(options.value);
@@ -1784,6 +1785,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
   }
     // Memoize the entire Summary component
     const MemoizedSummary = useMemo(() => {
+      
       return (
         <Summary
           recalculateWhileEditing={true}
@@ -2197,7 +2199,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             onKeyDown={onKeyDown}
             onRowUpdated={onRowUpdated}
             onExporting={onExportingHandler}
-            onContentReady={(e) => {
+           onContentReady={(e) => {
               if (e.component) {
                 const instance = e.component;
                 const totalCount = instance.totalCount();
@@ -2205,10 +2207,15 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                   totalRowCountRef.current = totalRowCountRef.current
                     ? totalRowCountRef.current
                     : totalCount;
-                  if (totalRowCountDisplayRef.current) {
-                    totalRowCountDisplayRef.current.textContent =
-                      totalRowCountRef.current.toString();
-                  }
+                 if (totalRowCountDisplayRef.current) {
+                    if(typeof totalRowCountRef.current === "number"
+                      ) {
+                        totalRowCountDisplayRef.current.textContent =
+                          totalRowCountRef.current.toString();
+                      } else {
+                        totalRowCountDisplayRef.current.textContent = "0"
+                      }
+                    }
                 }
                 if (selectionMode === "multiple") {
                   FilterRowKeyDown(e)

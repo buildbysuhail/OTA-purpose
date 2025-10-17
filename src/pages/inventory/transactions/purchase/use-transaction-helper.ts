@@ -20,8 +20,23 @@ import { RootState } from "../../../../redux/store";
 import { useCallback } from "react";
 import VoucherType from "../../../../enums/voucher-types";
 import { formStateHandleFieldChangeKeysOnly } from "../reducer";
-import { TransactionMaster3InitialData, initialTransactionDetails2, initialInventoryTotals, initialTransactionDetailData, TransactionMasterInitialData } from "../transaction-type-data";
-import { TransactionFormState, TransactionMaster, SummaryItems, FormElementsState, CommonParams, TransactionDetail, TransactionDetailKeys, TransactionDetails2 } from "../transaction-types";
+import {
+  TransactionMaster3InitialData,
+  initialTransactionDetails2,
+  initialInventoryTotals,
+  initialTransactionDetailData,
+  TransactionMasterInitialData,
+} from "../transaction-type-data";
+import {
+  TransactionFormState,
+  TransactionMaster,
+  SummaryItems,
+  FormElementsState,
+  CommonParams,
+  TransactionDetail,
+  TransactionDetailKeys,
+  TransactionDetails2,
+} from "../transaction-types";
 export const useTransactionHelper = (transactionType: string) => {
   const dispatch = useDispatch();
   const applicationSettings = useAppSelector(
@@ -59,7 +74,7 @@ export const useTransactionHelper = (transactionType: string) => {
     const isClosed = userSession.financialYearStatus === "Closed";
     state.formElements.btnSave.disabled = !isClosed
       ? hasRight(state.formCode, UserAction.Add) &&
-      (state?.transaction?.details?.length ?? 0) > 0
+        (state?.transaction?.details?.length ?? 0) > 0
       : false;
 
     state.formElements.btnEdit.disabled = !isClosed
@@ -123,7 +138,7 @@ export const useTransactionHelper = (transactionType: string) => {
       if (
         applicationSettings.mainSettings?.allowPostdatedTrans &&
         moment(transDate).local().format("YYYY-MM-DD") !==
-        moment(softwareDate, "DD/MM/YYYY").local().format("YYYY-MM-DD")
+          moment(softwareDate, "DD/MM/YYYY").local().format("YYYY-MM-DD")
       ) {
         if (
           hasBlockedRight == undefined ||
@@ -133,7 +148,7 @@ export const useTransactionHelper = (transactionType: string) => {
           maxPostDate.setHours(0, 0, 0, 0); // Removes time part
           maxPostDate.setDate(
             maxPostDate.getDate() +
-            (applicationSettings.mainSettings?.postDatedTransInNumbers || 0)
+              (applicationSettings.mainSettings?.postDatedTransInNumbers || 0)
           );
 
           const transDateOnly = new Date(transDate);
@@ -157,7 +172,7 @@ export const useTransactionHelper = (transactionType: string) => {
       if (
         applicationSettings.mainSettings?.allowPredatedTrans &&
         moment(transDate).local().format("YYYY-MM-DD") !==
-        moment(softwareDate, "DD/MM/YYYY").local().format("YYYY-MM-DD")
+          moment(softwareDate, "DD/MM/YYYY").local().format("YYYY-MM-DD")
       ) {
         if (
           hasBlockedRight == undefined ||
@@ -167,7 +182,7 @@ export const useTransactionHelper = (transactionType: string) => {
           minPreDate.setHours(0, 0, 0, 0); // Removes time part
           minPreDate.setDate(
             minPreDate.getDate() -
-            (applicationSettings.mainSettings?.preDatedTransInNumbers || 0)
+              (applicationSettings.mainSettings?.preDatedTransInNumbers || 0)
           );
 
           const transDateOnly = new Date(transDate);
@@ -214,17 +229,17 @@ export const useTransactionHelper = (transactionType: string) => {
     result = result
       ? result
       : {
-        netAmount: 0,
-        transaction: {
-          master: {
-            grandTotal: 0,
-            grandTotalFc: undefined,
-            vatAmount: 0,
-            roundAmount: 0,
+          netAmount: 0,
+          transaction: {
+            master: {
+              grandTotal: 0,
+              grandTotalFc: undefined,
+              vatAmount: 0,
+              roundAmount: 0,
+            },
           },
-        },
-      };
-    
+        };
+
     const netVal = summary.netValue;
     let netAmt = summary.total;
     const tax = summary.vatAmount;
@@ -251,13 +266,14 @@ export const useTransactionHelper = (transactionType: string) => {
       result.transaction.master.master3 = {};
     }
     result.transaction.master.vatAmount = round(tax);
-    if(clientSession.isAppGlobal) {
-    result.transaction.master.master3 ?? TransactionMaster3InitialData;
-    result.transaction.master.master3!.totCGST = round(cgst);
-    result.transaction.master.master3!.totSGST = round(sgst);
-    result.transaction.master.master3!.totIGST = round(igst);
-    result.transaction.master.master3!.totCess = round(cessAmt);
-    result.transaction.master.master3!.totAdditionalCess = round(additionalCess);
+    if (clientSession.isAppGlobal) {
+      result.transaction.master.master3 ?? TransactionMaster3InitialData;
+      result.transaction.master.master3!.totCGST = round(cgst);
+      result.transaction.master.master3!.totSGST = round(sgst);
+      result.transaction.master.master3!.totIGST = round(igst);
+      result.transaction.master.master3!.totCess = round(cessAmt);
+      result.transaction.master.master3!.totAdditionalCess =
+        round(additionalCess);
     }
     result.netAmount = round(netAmt);
 
@@ -269,7 +285,8 @@ export const useTransactionHelper = (transactionType: string) => {
         result.transaction!.master!.roundAmount = parseFloat(
           (Math.round(_grandTotal) - _grandTotal).toFixed(3)
         );
-        _grandTotal = _grandTotal ?? 0 - result.transaction!.master!.roundAmount
+        _grandTotal =
+          _grandTotal ?? 0 - result.transaction!.master!.roundAmount;
         result.transaction!.master!.grandTotal = Math.round(_grandTotal);
       } catch (err) {
         // handle error if needed
@@ -326,7 +343,7 @@ export const useTransactionHelper = (transactionType: string) => {
     try {
       // Initialize variables with proper null checks and defaults
 
-      transactionDetail = { ...transactionDetail, ...detail }
+      transactionDetail = { ...transactionDetail, ...detail };
       let qty = Number(transactionDetail.qty || 0);
       let freeQty = Number(transactionDetail.free || 0);
       let rate = Number(transactionDetail.unitPrice || 0);
@@ -339,18 +356,19 @@ export const useTransactionHelper = (transactionType: string) => {
       let ratePlusTax = 0;
       let cost = 0;
       let unitPrice = Number(transactionDetail.unitPrice || 0);
-      
 
       // India
       let cgstPerc = Number(transactionDetail.details2?.cgstPerc || 0);
       let sgstPerc = Number(transactionDetail.details2?.sgstPerc || 0);
       let igstPerc = Number(transactionDetail.details2?.igstPerc || 0);
-      let addnlCessPerc = Number(transactionDetail.details2?.additionalCessPerc || 0);
+      let addnlCessPerc = Number(
+        transactionDetail.details2?.additionalCessPerc || 0
+      );
       let cessPerc = Number(transactionDetail.details2?.cessPerc || 0);
       let cess = Number(transactionDetail.details2?.cessAmt || 0);
 
       if (clientSession.isAppGlobal) {
-        vatPerc = cgstPerc + sgstPerc+ igstPerc + addnlCessPerc + cessPerc
+        vatPerc = cgstPerc + sgstPerc + igstPerc + addnlCessPerc + cessPerc;
       }
       detail.unitPrice = transactionDetail.unitPrice;
       // Handle RatePlusTax visibility and calculation
@@ -368,21 +386,24 @@ export const useTransactionHelper = (transactionType: string) => {
 
       // Handle RatePlusTax calculation when current column is RatePlusTax
       if (ratePlusTax > 0 && currentColumn === "ratePlusTax") {
-        if (clientSession.isAppGlobal && formState.transaction.master.voucherForm !== "") {
+        if (
+          clientSession.isAppGlobal &&
+          formState.transaction.master.voucherForm !== ""
+        ) {
           let dval =
             (Number(transactionDetail.details2?.cgstPerc || 0) +
               Number(transactionDetail.details2?.sgstPerc || 0) +
               Number(transactionDetail.details2?.igstPerc || 0) +
               Number(transactionDetail.details2?.additionalCessPerc || 0)) /
-            100 +
+              100 +
             1;
 
           let qty1 = Number(transactionDetail.qty || 1);
           if (qty1 === 0) qty1 = 1;
 
-          let rate = round(((ratePlusTax * qty1) / dval), 3)
+          let rate = round((ratePlusTax * qty1) / dval, 3);
 
-          rate = (Number(rate) / qty1); // convert back to number
+          rate = Number(rate) / qty1; // convert back to number
         } else {
           const dval = vatPerc / 100 + 1;
           let qty1 = qty || 1;
@@ -440,11 +461,10 @@ export const useTransactionHelper = (transactionType: string) => {
       // India tax
       if (clientSession.isAppGlobal) {
         // === Case 1: Additional Cess calculation ===
-        detail.details2 = {...transactionDetail.details2??initialTransactionDetails2};
-        if (
-          netValue > 0 &&
-          currentColumn === "details2.additionalCess"
-        ) {
+        detail.details2 = {
+          ...(transactionDetail.details2 ?? initialTransactionDetails2),
+        };
+        if (netValue > 0 && currentColumn === "details2.additionalCess") {
           if (Number(detail.details2?.additionalCess || 0) > 0) {
             const addCessAmount = Number(detail.details2?.additionalCess || 0);
             detail.details2!.additionalCessPerc = Number(
@@ -515,15 +535,22 @@ export const useTransactionHelper = (transactionType: string) => {
         //   // }
         // } else {
         // === Case 3: Tax on NetValue ===
-        detail.details2.cgst = netValue * (transactionDetail.details2!.cgstPerc || 0) / 100;
-        detail.details2.sgst = netValue * (transactionDetail.details2!.sgstPerc || 0) / 100;
-        detail.details2.igst = netValue * (transactionDetail.details2!.igstPerc || 0) / 100;
-        detail.details2.additionalCess = netValue * (transactionDetail.details2!.additionalCessPerc || 0) / 100;
+        detail.details2.cgst =
+          (netValue * (transactionDetail.details2!.cgstPerc || 0)) / 100;
+        detail.details2.sgst =
+          (netValue * (transactionDetail.details2!.sgstPerc || 0)) / 100;
+        detail.details2.igst =
+          (netValue * (transactionDetail.details2!.igstPerc || 0)) / 100;
+        detail.details2.additionalCess =
+          (netValue * (transactionDetail.details2!.additionalCessPerc || 0)) /
+          100;
 
         if (transactionDetail.details2!.cessPerc > 0) {
-          detail.details2!.cessAmt = netValue * (transactionDetail.details2!.cessPerc || 0) / 100;
+          detail.details2!.cessAmt =
+            (netValue * (transactionDetail.details2!.cessPerc || 0)) / 100;
         } else if (netValue > 0 && currentColumn === "details2.cessAmt") {
-          detail.details2!.cessPerc = (detail.details2!.cessAmt * 100) / netValue;
+          detail.details2!.cessPerc =
+            (detail.details2!.cessAmt * 100) / netValue;
         } else {
           detail.details2!.cessAmt = 0;
           detail.details2!.cessPerc = 0;
@@ -552,7 +579,6 @@ export const useTransactionHelper = (transactionType: string) => {
         // }
         // }
 
-
         // === Final update (equivalent to dgvInventory cell values) ===
         detail.details2.cgst = round(detail.details2!.cgst);
         detail.details2.sgst = round(detail.details2!.sgst);
@@ -560,19 +586,42 @@ export const useTransactionHelper = (transactionType: string) => {
         detail.details2.additionalCess = round(detail.details2!.additionalCess);
         detail.details2.cessAmt = round(detail.details2!.cessAmt);
         detail.details2.cessPerc = round(detail.details2!.cessPerc);
+        if (
+          formState.transaction.master.voucherForm == "Interstate" ||
+          formState.transaction.master.voucherForm == "Int" ||
+          formState.transaction.master.voucherForm == "Import"
+        ) {
+          detail.details2.cgst = 0;
+          detail.details2.sgst = 0;
+          detail.details2.sgstPerc = 0;
+          detail.details2.sgstPerc = 0;
+        }
       }
 
       let vat = round((netValue * vatPerc) / 100, 4);
       // Calculate net value per unit for cost calculation
       let netVal = rate - (rate * discPerc) / 100;
       if (clientSession.isAppGlobal) {
-        vat = detail.details2!.cgst + detail.details2!.sgst + detail.details2!.igst + detail.details2!.cessAmt + detail.details2!.additionalCess
+        vat =
+          detail.details2!.cgst +
+          detail.details2!.sgst +
+          detail.details2!.igst +
+          detail.details2!.cessAmt +
+          detail.details2!.additionalCess;
       }
       // Calculate cost based on settings
       if (applicationSettings?.inventorySettings?.setProductCostWithVATAmount) {
         if (clientSession.isAppGlobal) {
-
-          cost = round(netVal + (netVal * (detail.details2!.cgstPerc + detail.details2!.sgstPerc + detail.details2!.igstPerc + detail.details2!.cessPerc + detail.details2!.additionalCessPerc)) / 100);
+          cost = round(
+            netVal +
+              (netVal *
+                (detail.details2!.cgstPerc +
+                  detail.details2!.sgstPerc +
+                  detail.details2!.igstPerc +
+                  detail.details2!.cessPerc +
+                  detail.details2!.additionalCessPerc)) /
+                100
+          );
         } else {
           cost = round(netVal + (netVal * vatPerc) / 100);
         }
@@ -585,13 +634,12 @@ export const useTransactionHelper = (transactionType: string) => {
       detail.vatAmount = getFormattedValueIgnoreRoundingToNumber(vat);
 
       // Calculate final net amount (NetValue + VAT)
-      let netAmount = 0
+      let netAmount = 0;
       if (clientSession.isAppGlobal) {
         netAmount = round(netValue + vat);
       } else {
-        netAmount = round(netValue+vat, 4);
+        netAmount = round(netValue + vat, 4);
       }
-
 
       // Update gross and total
       detail.gross = getFormattedValueIgnoreRoundingToNumber(gross);
@@ -930,771 +978,797 @@ export const useTransactionHelper = (transactionType: string) => {
       if (!detail || typeof detail !== "object") {
         return null;
       }
-          
-        let value: any;
-        if (columnName.startsWith("details2.")) {
-          
-          const oth = columnName.substring("details2.".length);
-          value = detail.details2?.[oth as keyof TransactionDetails2] as any;
-        }
-        else {  // Handle invalid column name
-          if (!columnName || typeof columnName !== "string") {
-            return null;
-          }
 
-          // Check if property exists
-          if (!(columnName in detail)) {
-            return null;
-          }
-
-          value = detail[columnName] as any;
-        }
-
-        // Handle null, undefined, empty string
-        if (value == null || value === "") {
+      let value: any;
+      if (columnName.startsWith("details2.")) {
+        const oth = columnName.substring("details2.".length);
+        value = detail.details2?.[oth as keyof TransactionDetails2] as any;
+      } else {
+        // Handle invalid column name
+        if (!columnName || typeof columnName !== "string") {
           return null;
         }
 
-        // Handle already numeric values
-        if (typeof value === "number") {
-          return isNaN(value) || !isFinite(value) ? null : value;
-        }
-
-        // Handle string conversion
-        if (typeof value === "string") {
-          const trimmed = value.trim();
-          if (trimmed === "") return null;
-
-          // Handle common edge cases
-          if (trimmed === "-" || trimmed === "+") return null;
-
-          const numValue = Number(trimmed);
-          return isNaN(numValue) || !isFinite(numValue) ? null : numValue;
-        }
-
-        // Handle boolean conversion
-        if (typeof value === "boolean") {
-          return value ? 1 : 0;
-        }
-
-        // Handle arrays, objects, functions - return null
-        if (typeof value === "object" || typeof value === "function") {
+        // Check if property exists
+        if (!(columnName in detail)) {
           return null;
         }
 
-        // Last resort conversion attempt
-        const numValue = Number(value);
-        return isNaN(numValue) || !isFinite(numValue) ? null : numValue;
-      } catch (error) {
-        // Log error in development, return null in production
-        if (process.env.NODE_ENV === "development") {
-          console.warn(`getColumnValue error for column '${columnName}':`, error);
-        }
+        value = detail[columnName] as any;
+      }
+
+      // Handle null, undefined, empty string
+      if (value == null || value === "") {
         return null;
       }
-    };
 
-    const calculateSummaryValue = (
-      details: TransactionDetail[],
-      config: SummaryConfig
-    ): number => {
-      // Input validation - fail fast
-      if (!details?.length || !config?.summaryType || !config?.column) {
+      // Handle already numeric values
+      if (typeof value === "number") {
+        return isNaN(value) || !isFinite(value) ? null : value;
+      }
+
+      // Handle string conversion
+      if (typeof value === "string") {
+        const trimmed = value.trim();
+        if (trimmed === "") return null;
+
+        // Handle common edge cases
+        if (trimmed === "-" || trimmed === "+") return null;
+
+        const numValue = Number(trimmed);
+        return isNaN(numValue) || !isFinite(numValue) ? null : numValue;
+      }
+
+      // Handle boolean conversion
+      if (typeof value === "boolean") {
+        return value ? 1 : 0;
+      }
+
+      // Handle arrays, objects, functions - return null
+      if (typeof value === "object" || typeof value === "function") {
+        return null;
+      }
+
+      // Last resort conversion attempt
+      const numValue = Number(value);
+      return isNaN(numValue) || !isFinite(numValue) ? null : numValue;
+    } catch (error) {
+      // Log error in development, return null in production
+      if (process.env.NODE_ENV === "development") {
+        console.warn(`getColumnValue error for column '${columnName}':`, error);
+      }
+      return null;
+    }
+  };
+
+  const calculateSummaryValue = (
+    details: TransactionDetail[],
+    config: SummaryConfig
+  ): number => {
+    // Input validation - fail fast
+    if (!details?.length || !config?.summaryType || !config?.column) {
+      return 0;
+    }
+
+    const { summaryType, column } = config;
+
+    // Initialize variables - only what we need
+    let sum = 0;
+    let count = 0;
+    let min = Infinity;
+    let max = -Infinity;
+
+    const needsSum = summaryType === "sum" || summaryType === "avg";
+    const needsMin = summaryType === "min";
+    const needsMax = summaryType === "max";
+
+    // Single optimized pass for all calculations
+    for (let i = 0; i < details.length; i++) {
+      const detail = details[i];
+
+      // Handle potential null/undefined detail
+      if (!detail) continue;
+
+      const value = getColumnValue(detail, column as keyof TransactionDetail);
+
+      // Robust null/undefined/NaN checking
+      if (value === null || value === undefined || !Number.isFinite(value)) {
+        continue;
+      }
+
+      count++;
+
+      // Conditional processing - only do what's needed
+      if (needsSum) sum += value;
+      if (needsMin && value < min) min = value;
+      if (needsMax && value > max) max = value;
+    }
+
+    // Handle no valid data case
+    if (count === 0) return 0;
+
+    // Return based on summary type with error handling
+    switch (summaryType) {
+      case "sum":
+        return Number.isFinite(sum) ? sum : 0;
+
+      case "avg":
+        const avg = sum / count;
+        return Number.isFinite(avg) ? avg : 0;
+
+      case "count":
+        return count;
+
+      case "min":
+        return min !== Infinity ? min : 0;
+
+      case "max":
+        return max !== -Infinity ? max : 0;
+
+      default:
+        // Log unexpected summary type in development
+        if (process.env.NODE_ENV === "development") {
+          console.warn(`Unknown summaryType: ${summaryType}`);
+        }
         return 0;
+    }
+  };
+  const calculateSummary = (
+    details: any,
+    formState: TransactionFormState,
+    commonParams: CommonParams
+  ) => {
+    let { result } = commonParams;
+
+    try {
+      let tot = 0;
+
+      if (!result) {
+        result = {};
       }
-
-      const { summaryType, column } = config;
-
-      // Initialize variables - only what we need
-      let sum = 0;
-      let count = 0;
-      let min = Infinity;
-      let max = -Infinity;
-
-      const needsSum = summaryType === "sum" || summaryType === "avg";
-      const needsMin = summaryType === "min";
-      const needsMax = summaryType === "max";
-
-      // Single optimized pass for all calculations
-      for (let i = 0; i < details.length; i++) {
-        const detail = details[i];
-
-        // Handle potential null/undefined detail
-        if (!detail) continue;
-
-        const value = getColumnValue(detail, column as keyof TransactionDetail);
-
-        // Robust null/undefined/NaN checking
-        if (value === null || value === undefined || !Number.isFinite(value)) {
-          continue;
-        }
-
-        count++;
-
-        // Conditional processing - only do what's needed
-        if (needsSum) sum += value;
-        if (needsMin && value < min) min = value;
-        if (needsMax && value > max) max = value;
+      if (!result.summary) {
+        result.summary = {};
       }
+      const summaryConfig = formState.summaryConfig;
 
-      // Handle no valid data case
-      if (count === 0) return 0;
-
-      // Return based on summary type with error handling
-      switch (summaryType) {
-        case "sum":
-          return Number.isFinite(sum) ? sum : 0;
-
-        case "avg":
-          const avg = sum / count;
-          return Number.isFinite(avg) ? avg : 0;
-
-        case "count":
-          return count;
-
-        case "min":
-          return min !== Infinity ? min : 0;
-
-        case "max":
-          return max !== -Infinity ? max : 0;
-
-        default:
-          // Log unexpected summary type in development
-          if (process.env.NODE_ENV === "development") {
-            console.warn(`Unknown summaryType: ${summaryType}`);
-          }
-          return 0;
-      }
-    };
-    const calculateSummary = (
-      details: any,
-      formState: TransactionFormState,
-      commonParams: CommonParams
-    ) => {
-      let { result } = commonParams;
-
-      try {
-        let tot = 0;
-
-        if (!result) {
-          result = {};
-        }
-        if (!result.summary) {
-          result.summary = {};
-        }
-        const summaryConfig = formState.summaryConfig;
-        
-        summaryConfig.forEach((config, index) => {
-          try {
-            // Calculate the summary value
-            const calculatedValue = calculateSummaryValue(details, config);
-            let _columnKey = (config.showInColumn ||
-              config.column);
-            if(_columnKey.startsWith("details2.")) {
-
-              _columnKey = _columnKey.substring("details2.".length);
-            }
-            const columnKey = _columnKey as keyof SummaryItems;
-            if ((config.showInColumn || config.column) == "vatAmount") {
-              (result.summary as any)[columnKey] = round(
-                calculatedValue,
-                undefined,
-                true
-              );
-            } else {
-              (result.summary as any)[columnKey] = round(calculatedValue);
-            }
-          } catch (configError) {
-            console.error(
-              `Error processing summary config for column ${config.column}:`,
-              configError
-            );
-          }
-        });
-
-        // Dispatch the updated state
-        commonParams.formStateHandleFieldChangeKeysOnly &&
-          dispatch &&
-          dispatch(
-            commonParams.formStateHandleFieldChangeKeysOnly({ fields: result })
-          );
-      } catch (error) {
-        console.error("Error in calculateSummary:", error);
-      } finally {
-        return result;
-      }
-    };
-
-    const refactorDetails = (
-      _details: any[],
-      formType: string,
-      voucherType: string,
-      commonParams: CommonParams,
-      loadType?: string
-    ): TransactionDetail[] => {
-      const detailsLength = _details.length;
-      let details = [..._details];
-      let validDetailsCount = 0;
-      for (let i = 0; i < detailsLength; i++) {
-        const row = details[i];
-        let detail: TransactionDetail = { ...(details[i] || {}) };
-        if (isNullOrUndefinedOrZero(detail.productID)) {
-          break;
-        }
-        validDetailsCount++;
-        // Set row header/index
-        detail.slNo = generateUniqueKey();
-
-        // Basic product information
-        detail.pCode = row.productCode;
-        detail.productBatchID = row.productBatchID;
-        detail.barCode = row.autoBarcode;
-        detail.product = row.productName;
-        detail.productID = row.productID;
-        detail.brandID = row.brandID;
-        detail.brand = row.brandName;
-        detail.arabicName = row.arabicName;
-
-        // Quantity and pricing
-        detail.free = round(Number(row.free || 0), 4);
-        detail.qty = round(Number(row.quantity || 0), 4);
-        detail.nosQty = row.qtyInNumbers;
-        detail.unit = row.unitName;
-        detail.unitID = row.unitID;
-
-        // Foreign currency pricing
-        detail.unitPriceFC = Number(row.xRate || 0);
-        const qtyVal = Number(detail.qty || 0);
-        const unitPriceFCVal = Number(detail.unitPriceFC || 0);
-        detail.grossFC = qtyVal * unitPriceFCVal;
-
-        // Local currency pricing
-        detail.unitPrice = getFormattedValueIgnoreRoundingToNumber(
-          Number(row.unitPrice || 0)
-        );
-
-        // Special handling for GRN type
-        if (loadType === "GRN") {
-          detail.unitPriceTag = getFormattedValueIgnoreRoundingToNumber(
-            Number(row.unitPrice || 0)
-          );
-          detail.qtyTag = getFormattedValueIgnoreRoundingToNumber(
-            Number(row.quantity || 0)
-          );
-          detail.grTransDetailsID = row.invTransactionDetailID
-          detail.grTransDetailsIDTag = row.pendingQty
-        }
-        
-        // Special handling for GRN type
-        if (loadType === "PO" ) {
-          detail.poTransDetailsID = row.invTransactionDetailID
-          detail.poTransDetailsIDTag = row.pendingQty
-        }
-        if (loadType === "PO") {
-          detail.poTransDetailsIDTag = row.pendingQty
-        }
-
-        // Cost calculations
-        const costPerItem = Number(row.costPerItem || 0);
-        const additionalExpense = Number(row.additionalExpense || 0);
-        detail.cost = getFormattedValueIgnoreRoundingToNumber(costPerItem);
-        detail.cost = costPerItem - additionalExpense;
-
-        // Tax information
-        detail.cstPerc = row.cstPerc;
-        detail.cst = row.cst;
-
-        // Product specifications
-        detail.size = row.specification;
-        detail.stickerQty = 0;
-        detail.additionalExpense = row.additionalExpense;
-
-        // Color handling with fallback
-        detail.colour = row.colour || row.color;
-
-        detail.warranty = row.warranty;
-        detail.totalAddExpense =
-          Number(row.quantity || 0) * Number(row.additionalExpense || 0);
-        detail.location = row.location;
-        detail.profit = row.totalProfit;
-
-        // Sales pricing
-        detail.salesPrice = getFormattedValueIgnoreRoundingToNumber(
-          Number(row.stdSalesPrice || 0)
-        );
-        detail.ratePlusTax = getFormattedValueIgnoreRoundingToNumber(
-          Number(row.rateWithTax || 0)
-        );
-
-        // Fallback sales price
-        if (Number(detail.salesPrice || 0) === 0) {
-          detail.salesPrice = row.stdSalesPricePB;
-        }
-
-        detail.margin = row.marginPer;
-        detail.stock = row.stock;
-
-        // Minimum sale price calculation
-        const minSalePrice = Number(row.minSalePrice || 0);
-        const multiFactor = Number(row.multiFactor || 1);
-        detail.minSalePrice = minSalePrice * multiFactor;
-
-        // Date handling
-        detail.mfdDate = row.mfgDate;
-        detail.expDate = row.expiryDate;
-
-        detail.batchNo = row.batchNo;
-        detail.manualBarcode = row.manualBarcode;
-
-        // Financial calculations
-        detail.gross = getFormattedValueIgnoreRoundingToNumber(
-          Number(row.grossValue || 0)
-        );
-        detail.discPerc = getFormattedValueIgnoreRoundingToNumber(
-          Number(row.discountPer1 || 0)
-        );
-        detail.discount = getFormattedValueIgnoreRoundingToNumber(
-          Number(row.discountAmt1 || 0)
-        );
-        detail.schemeDiscount = getFormattedValueIgnoreRoundingToNumber(
-          Number(row.schemeDiscAmt || 0)
-        );
-        // VAT handling based on form type
-       if (
-            !clientSession.isAppGlobal && (
-              voucherType === "PO" ||
-            voucherType === "PE" ||
-            voucherType === "GRN" ||
-            voucherType === "PQ" ||
-            (formType === "VAT" && voucherType !== "PO" && voucherType !== "PE"&& voucherType !== "GRN"&& voucherType !== "PQ")
-            )
-          ) {
-          detail.vatPerc = row.vatPercentage;
-          detail.vatAmount = getFormattedValueIgnoreRoundingToNumber(
-            Number(row.totalVatAmount || 0)
-          );
-        } else {
-          detail.vatPerc = 0;
-          detail.vatAmount = 0;
-        }
-
-        detail.netValue = getFormattedValueIgnoreRoundingToNumber(
-          Number(row.netValue || 0)
-        );
-        detail.total = getFormattedValueIgnoreRoundingToNumber(
-          Number(row.netAmount || 0)
-        );
-        detail.productDescription = row.productDescription;
-
-        // Unit 2 information
-        detail.unitID2 = row.unit2ID;
-        detail.unit2Qty = row.unit2Qty;
-        detail.unit2MBarcode = row.unit2Barcode;
-        detail.unit2SalesRate = row.unit2SalesPrice;
-        detail.unit2MRP = row.unit2MRP;
-
-        // Unit 3 information
-        detail.unitID3 = row.unit3ID;
-        detail.unit3Qty = row.unit3Qty;
-        detail.unit3MBarcode = row.unit3Barcode;
-        detail.unit3SalesRate = row.unit3SalesPrice;
-        detail.unit3MRP = row.unit3MRP;
-
-        // detail.moreDetails.memo = row.memo;
-        detail.actualSalesPrice = row.actualSalesPrice;
-
-        // Optional fields with error handling
+      summaryConfig.forEach((config, index) => {
         try {
-          detail.supplierReferenceProductCode = row.supplierReferenceProductCode;
-        } catch (error) {
-          console.error("Error setting supplier reference product code:", error);
-        }
-
-        try {
-          detail.warehouseID = row.warehouseID;
-          detail.warehouseName = row.warehouseName;
-        } catch (error) {
-          console.error("Error setting warehouse information:", error);
-        }
-
-        // Additional flags
-        detail.barcodePrinted = false;
-        detail.batchCreated = true;
-
-        // Store original cost for restoration after calculation
-        const originalCost = detail.cost;
-
-        // Calculate row amounts
-        const res = calculateRowAmount(
-          detail,
-          "slNo",
-          {
-            ...commonParams,
-            result: {
-              transaction: {
-                details: [{ ...detail }],
-              },
-            },
-          },
-          true
-        );
-        if (res.transaction!.details) {
-          detail = res.transaction!.details[0] as TransactionDetail;
-        }
-        // Restore original cost
-        detail.cost = originalCost;
-        details[i] = detail;
-      }
-
-      // Calculate empty rows needed
-      const blankDetailsCount = detailsLength - validDetailsCount;
-      const emptyRowsNeeded = Math.max(0, 50 - blankDetailsCount);
-
-      // Fill remaining slots with empty rows if needed
-      if (emptyRowsNeeded > 0) {
-        for (let i = detailsLength; i < detailsLength + emptyRowsNeeded; i++) {
-          details[i] = {
-            ...initialTransactionDetailData,
-            slNo: generateUniqueKey(),
-          };
-        }
-      }
-
-      // Return appropriately sized array
-      return details.slice(0, Math.max(detailsLength + emptyRowsNeeded, 50));
-    };
-    const attachDetails = (
-      details: TransactionDetail[],
-      formType: string,
-      transDate: string,
-      supplierLedgerId: number,
-      warehouseId: number,
-      allowStockUpdate: boolean
-    ) => {
-      const outputDetails: TransactionDetail[] = [];
-      const errors: string[] = [];
-      let hasError = false;
-
-      for (let i = 0; i < details.length; i++) {
-        const rowDetail = details[i];
-        const rowNumber = i + 1;
-
-        
-        // Check if row is empty - break if product is empty (matching C# logic)
-        if (!(rowDetail.productID > 0)) {
-          break;
-        }
-
-let detail  = sanitizeDataAdvanced({...rowDetail}, initialTransactionDetailData)
-        let outputRow: any = { ...detail };
-        
-        // Core transaction fields
-        outputRow.bulkRowInserted = false;
-        outputRow.productBatchID = detail.productBatchID;
-        outputRow.productID = detail.productID;
-        outputRow.quantity = detail.qty;
-        outputRow.qtyInNumbers = detail.nosQty;
-        outputRow.free = detail.free;
-
-        // Pricing and transaction details
-        outputRow.unitPrice = detail.unitPrice;
-        outputRow.transDate = transDate;
-        outputRow.unitID = detail.unitID;
-
-        // Discounts
-        outputRow.discountPer1 = detail.discPerc;
-        outputRow.discountAmt1 = detail.discount;
-
-        // Tax information
-        outputRow.cstPerc = detail.cstPerc;
-        outputRow.cst = detail.cst;
-
-        // Supplier and additional fields
-        outputRow.supplierLedgerID = supplierLedgerId;
-        outputRow.additionalExpense = detail.additionalExpense;
-
-        // VAT handling
-        outputRow.vatPercentage = detail.vatPerc;
-        outputRow.totalVatAmount = detail.vatAmount;
-
-        // Financial calculations
-        outputRow.grossValue = detail.gross;
-        outputRow.netValue = detail.netValue;
-        outputRow.netAmount = detail.total;
-        outputRow.productDescription = detail.productDescription || "";
-        outputRow.invStatus = "";
-
-        // Sales and margin
-        outputRow.marginPer = detail.margin;
-        outputRow.stdSalesPrice = detail.salesPrice;
-        outputRow.specification = detail.size;
-        outputRow.costPerItem = detail.cost;
-        outputRow.totalProfit = detail.profit;
-        outputRow.barcodeQty = detail.stickerQty;
-        outputRow.rateWithTax = detail.ratePlusTax;
-
-        // Set rate with tax fallback
-        if (outputRow.rateWithTax === 0) {
-          outputRow.rateWithTax = outputRow.unitPrice;
-        }
-
-        // Scheme discount
-        outputRow.schemeDiscount = detail.schemeDiscount;
-
-        // Validation checks - collect errors instead of throwing
-        if (outputRow.unitID === 0) {
-          hasError = true;
-          errors.push(`Row ${rowNumber}, Unit Column: Invalid Unit Selected`);
-        }
-
-        if (
-          Math.abs(
-            outputRow.grossValue - outputRow.quantity * outputRow.unitPrice
-          ) > 1
-        ) {
-          hasError = true;
-          errors.push(
-            `Row ${rowNumber}, Gross Value Column: Gross value calculation mismatch`
-          );
-        }
-
-        // Warehouse handling
-        if (applicationSettings?.inventorySettings?.maintainWarehouse === true) {
-          outputRow.wareHouseID = warehouseId;
-        } else {
-          outputRow.wareHouseId = 1;
-        }
-
-        // Multi-warehouse billing
-        if (
-          applicationSettings?.productsSettings?.enableMultiWarehouseBilling &&
-          applicationSettings?.productsSettings?.usePopupWindowForItemSearch
-        ) {
-          try {
-            const warehouseIdFromDetail = detail.warehouseID;
-            if (warehouseIdFromDetail > 0) {
-              outputRow.wareHouseID = warehouseIdFromDetail;
-            }
-          } catch (error) {
-            hasError = true;
-            errors.push(
-              `Row ${rowNumber}, Warehouse Column: Error setting warehouse from detail - ${error}`
-            );
+          // Calculate the summary value
+          const calculatedValue = calculateSummaryValue(details, config);
+          let _columnKey = config.showInColumn || config.column;
+          if (_columnKey.startsWith("details2.")) {
+            _columnKey = _columnKey.substring("details2.".length);
           }
-        }
-
-        // Exchange rate
-        outputRow.xRate = 1;
-        if (formType === "Import") {
-          outputRow.xRate = detail.unitPriceFC;
-        }
-
-        // Stock update flag
-        outputRow.stockUpdate = allowStockUpdate;
-
-        // Supplier reference
-        outputRow.supplierProductReferenceCode =
-          detail.supplierReferenceProductCode;
-debugger
-        // GR Transaction details
-        // outputRow.gRTransDetailID = detail.grTransDetailsID;
-
-        // Purchase Order handling
-        // if (
-        //   applicationSettings?.inventorySettings
-        //     ?.carryForwardPurchaseOrderQtyToPurchase
-        // ) {
-        //   outputRow.pOTransDetailID = detail.poTransDetailsID;
-        // } else {
-        //   outputRow.pO_PITransDetailIDs = detail.poTransDetailsID as string;
-        //   try {
-        //     outputRow.pO_PITransDetailQtys = detail.poTransDetailsIDTag as string;
-        //   } catch (error) {
-        //     hasError = true;
-        //     errors.push(
-        //       `Row ${rowNumber}, PO Detail Quantities Column: Error setting PO detail quantities - ${error}`
-        //     );
-        //   }
-        // }
-        // Memo and random key
-        outputRow.memo = detail.memo;
-        outputRow.randomKey = 0;
-
-        // Basic product information
-        outputRow.productCode = detail.pCode;
-        outputRow.autoBarcode = detail.barCode;
-        outputRow.productName = detail.product;
-        outputRow.brandID = detail.brandID;
-        outputRow.brandName = detail.brand;
-        outputRow.itemNameInSecondLanguage = detail.arabicName;
-
-        // Unit information
-        outputRow.unitName = detail.unit;
-
-        // Product specifications
-        outputRow.colour = detail.colour;
-        outputRow.color = detail.colour; // Fallback for legacy systems
-        outputRow.warranty = detail.warranty;
-        outputRow.location = detail.location;
-
-        // Stock and pricing
-        outputRow.stock = detail.stock;
-        outputRow.minSalePrice = detail.minSalePrice;
-        outputRow.multiFactor = 1; // Default or calculate if needed
-
-        // Date handling
-        outputRow.mfgDate = detail.mfdDate;
-        outputRow.expiryDate = detail.expDate;
-        outputRow.batchNo = detail.batchNo;
-        outputRow.mannualBarcode = detail.manualBarcode;
-
-        // Unit 2 information
-        outputRow.unit2ID = detail.unitID2;
-        outputRow.unit2Qty = detail.unit2Qty;
-        outputRow.unit2Barcode = detail.unit2MBarcode;
-        outputRow.unit2SalesPrice = detail.unit2SalesRate;
-        outputRow.unit2MRP = detail.unit2MRP;
-
-        // Unit 3 information
-        outputRow.unit3ID = detail.unitID3;
-        outputRow.unit3Qty = detail.unit3Qty;
-        outputRow.unit3Barcode = detail.unit3MBarcode;
-        outputRow.unit3SalesPrice = detail.unit3SalesRate;
-        outputRow.unit3MRP = detail.unit3MRP;
-
-        // Additional sales and warehouse info
-        outputRow.actualSalesPrice = detail.actualSalesPrice;
-        // outputRow.wareHouseID = detail.warehouse;
-        outputRow.grandTotal = outputRow.grandTotal ?? 0;
-
-        outputDetails.push(outputRow);
-      }
-
-      return {
-        outputDetails,
-        hasError,
-        errors,
-      };
-    };
-
-    const attachMaster = (formState: TransactionFormState) => {
-      const master: TransactionMaster = {
-        ...formState.transaction.master,
-        address2: formState.transaction.master.voucherType == VoucherType.PurchaseReturn ? formState.transaction.master.address2 : "",
-        address3: formState.transaction.master.voucherType == VoucherType.PurchaseReturn ? formState.transaction.master.address3: "",
-        address4: formState.transaction.master.voucherType == VoucherType.PurchaseReturn ? formState.transaction.master.address4 : "",
-      };
-      
-      master.partyName = !isNullOrUndefinedOrEmpty(master.displayName) ? master.displayName : master.partyName
-      master.invTransactionMasterID = formState.isEdit
-        ? master.invTransactionMasterID
-        : 0;
-      // master.bankDate = new Date().toISOString();
-      master.prevTransDate =
-        master.transactionDate == ""
-          ? moment().local().toISOString()
-          : master.prevTransDate;
-      master.cashAmt = master.cashReceived;
-      master.fromWarehouseID = master.fromWarehouseID > 0 ? master.fromWarehouseID :
-        master.voucherType == VoucherType.PurchaseReturn ? 0 : 1;
-      master.stockUpdate = master.stockUpdate
-      master.ledgerID = isNullOrUndefinedOrZero(master.ledgerID) ? 0: master.ledgerID
-      master.supplyType = master.supplyType == undefined || master.supplyType == null ? "" : master.supplyType.toString()
-
-      let _master  = sanitizeDataAdvanced({...master}, TransactionMasterInitialData)
-      return _master;
-    };
-    const applyDiscountsToItems = (): void => {
-
-      try {
-        let outState: DeepPartial<TransactionFormState> = {
-          transaction: { master: {}, details: [] },
-        };
-        let billDisc = 0,
-          totalGross = 0,
-          itemGross = 0,
-          grossPerc = 0,
-          itemDisc = 0,
-          discPerc = 0;
-
-        let details = formState.transaction.details.filter(
-          (x) => x.productID > 0
-        );
-        billDisc = formState.transaction.master.billDiscount;
-        outState.transaction!.master!.billDiscount = 0;
-        // Calculate total gross for items with productID > 0
-        totalGross = formState.summary.gross;
-        // Apply discount to each item with productID > 0
-        if (details.length > 0) {
-          details = details.map((item, i) => {
-            itemGross = item.gross ?? 0;
-            grossPerc = (itemGross / totalGross) * 100;
-            itemDisc = (billDisc * grossPerc) / 100;
-            discPerc = round((itemDisc / itemGross) * 100, 5);
-
-            const detail = { slNo: item.slNo, discPerc: discPerc };
-            const updatedRow = calculateRowAmount(
-              item,
-              "discPerc",
-              { result: { transaction: { details: [detail] } } },
+          const columnKey = _columnKey as keyof SummaryItems;
+          if ((config.showInColumn || config.column) == "vatAmount") {
+            (result.summary as any)[columnKey] = round(
+              calculatedValue,
+              undefined,
               true
             );
-            if (updatedRow?.transaction?.details?.length ?? 0 > 0) {
-              outState.transaction!.details!.push(updatedRow.transaction!.details![0]);
-              return { ...item, ...updatedRow.transaction!.details![0] };
-            }
-            return item;
-          });
-
-          const summaryRes = calculateSummary(details, formState, {
-            result: {},
-          });
-          let totalRes = calculateTotal(
-            formState.transaction.master,
-            summaryRes
-              ? (summaryRes.summary as SummaryItems)
-              : initialInventoryTotals,
-            formState.formElements,
-            {
-              result: {},
-            }
-          );
-          if (totalRes) {
-            totalRes.summary = summaryRes.summary;
-            totalRes.transaction = totalRes.transaction ?? {};
-            totalRes.transaction.master = totalRes.transaction.master ?? {};
-            totalRes.transaction.master.billDiscount = 0;
-            totalRes.transaction.details = outState?.transaction
-              ?.details as TransactionDetail[];
-
-            dispatch(
-              formStateHandleFieldChangeKeysOnly({
-                fields: totalRes,
-                updateOnlyGivenDetailsColumns: true
-              })
-            );
+          } else {
+            (result.summary as any)[columnKey] = round(calculatedValue);
           }
+        } catch (configError) {
+          console.error(
+            `Error processing summary config for column ${config.column}:`,
+            configError
+          );
         }
-      } catch (ex: any) {
-        console.error("Error applying discounts:", ex);
+      });
+
+      // Dispatch the updated state
+      commonParams.formStateHandleFieldChangeKeysOnly &&
+        dispatch &&
+        dispatch(
+          commonParams.formStateHandleFieldChangeKeysOnly({ fields: result })
+        );
+    } catch (error) {
+      console.error("Error in calculateSummary:", error);
+    } finally {
+      return result;
+    }
+  };
+
+  const refactorDetails = (
+    _details: any[],
+    formType: string,
+    voucherType: string,
+    commonParams: CommonParams,
+    loadType?: string
+  ): TransactionDetail[] => {
+    const detailsLength = _details.length;
+    let details = [..._details];
+    let validDetailsCount = 0;
+    for (let i = 0; i < detailsLength; i++) {
+      const row = details[i];
+      let detail: TransactionDetail = { ...(details[i] || {}) };
+      if (isNullOrUndefinedOrZero(detail.productID)) {
+        break;
       }
-    };
+      validDetailsCount++;
+      // Set row header/index
+      detail.slNo = generateUniqueKey();
+
+      // Basic product information
+      detail.pCode = row.productCode;
+      detail.productBatchID = row.productBatchID;
+      detail.barCode = row.autoBarcode;
+      detail.product = row.productName;
+      detail.productID = row.productID;
+      detail.brandID = row.brandID;
+      detail.brand = row.brandName;
+      detail.arabicName = row.arabicName;
+
+      // Quantity and pricing
+      detail.free = round(Number(row.free || 0), 4);
+      detail.qty = round(Number(row.quantity || 0), 4);
+      detail.nosQty = row.qtyInNumbers;
+      detail.unit = row.unitName;
+      detail.unitID = row.unitID;
+
+      // Foreign currency pricing
+      detail.unitPriceFC = Number(row.xRate || 0);
+      const qtyVal = Number(detail.qty || 0);
+      const unitPriceFCVal = Number(detail.unitPriceFC || 0);
+      detail.grossFC = qtyVal * unitPriceFCVal;
+
+      // Local currency pricing
+      detail.unitPrice = getFormattedValueIgnoreRoundingToNumber(
+        Number(row.unitPrice || 0)
+      );
+
+      // Special handling for GRN type
+      if (loadType === "GRN") {
+        detail.unitPriceTag = getFormattedValueIgnoreRoundingToNumber(
+          Number(row.unitPrice || 0)
+        );
+        detail.qtyTag = getFormattedValueIgnoreRoundingToNumber(
+          Number(row.quantity || 0)
+        );
+        detail.grTransDetailsID = row.invTransactionDetailID;
+        detail.grTransDetailsIDTag = row.pendingQty;
+      }
+
+      // Special handling for GRN type
+      if (loadType === "PO") {
+        detail.poTransDetailsID = row.invTransactionDetailID;
+        detail.poTransDetailsIDTag = row.pendingQty;
+      }
+      if (loadType === "PO") {
+        detail.poTransDetailsIDTag = row.pendingQty;
+      }
+
+      // Cost calculations
+      const costPerItem = Number(row.costPerItem || 0);
+      const additionalExpense = Number(row.additionalExpense || 0);
+      detail.cost = getFormattedValueIgnoreRoundingToNumber(costPerItem);
+      detail.cost = costPerItem - additionalExpense;
+
+      // Tax information
+      detail.cstPerc = row.cstPerc;
+      detail.cst = row.cst;
+
+      // Product specifications
+      detail.size = row.specification;
+      detail.stickerQty = 0;
+      detail.additionalExpense = row.additionalExpense;
+
+      // Color handling with fallback
+      detail.colour = row.colour || row.color;
+
+      detail.warranty = row.warranty;
+      detail.totalAddExpense =
+        Number(row.quantity || 0) * Number(row.additionalExpense || 0);
+      detail.location = row.location;
+      detail.profit = row.totalProfit;
+
+      // Sales pricing
+      detail.salesPrice = getFormattedValueIgnoreRoundingToNumber(
+        Number(row.stdSalesPrice || 0)
+      );
+      detail.ratePlusTax = getFormattedValueIgnoreRoundingToNumber(
+        Number(row.rateWithTax || 0)
+      );
+
+      // Fallback sales price
+      if (Number(detail.salesPrice || 0) === 0) {
+        detail.salesPrice = row.stdSalesPricePB;
+      }
+
+      detail.margin = row.marginPer;
+      detail.stock = row.stock;
+
+      // Minimum sale price calculation
+      const minSalePrice = Number(row.minSalePrice || 0);
+      const multiFactor = Number(row.multiFactor || 1);
+      detail.minSalePrice = minSalePrice * multiFactor;
+
+      // Date handling
+      detail.mfdDate = row.mfgDate;
+      detail.expDate = row.expiryDate;
+
+      detail.batchNo = row.batchNo;
+      detail.manualBarcode = row.manualBarcode;
+
+      // Financial calculations
+      detail.gross = getFormattedValueIgnoreRoundingToNumber(
+        Number(row.grossValue || 0)
+      );
+      detail.discPerc = getFormattedValueIgnoreRoundingToNumber(
+        Number(row.discountPer1 || 0)
+      );
+      detail.discount = getFormattedValueIgnoreRoundingToNumber(
+        Number(row.discountAmt1 || 0)
+      );
+      detail.schemeDiscount = getFormattedValueIgnoreRoundingToNumber(
+        Number(row.schemeDiscAmt || 0)
+      );
+      // VAT handling based on form type
+      if (
+        !clientSession.isAppGlobal &&
+        (voucherType === "PO" ||
+          voucherType === "PE" ||
+          voucherType === "GRN" ||
+          voucherType === "PQ" ||
+          (formType === "VAT" &&
+            voucherType !== "PO" &&
+            voucherType !== "PE" &&
+            voucherType !== "GRN" &&
+            voucherType !== "PQ"))
+      ) {
+        detail.vatPerc = row.vatPercentage;
+        detail.vatAmount = getFormattedValueIgnoreRoundingToNumber(
+          Number(row.totalVatAmount || 0)
+        );
+      } else {
+        detail.vatPerc = 0;
+        detail.vatAmount = 0;
+      }
+
+      detail.netValue = getFormattedValueIgnoreRoundingToNumber(
+        Number(row.netValue || 0)
+      );
+      detail.total = getFormattedValueIgnoreRoundingToNumber(
+        Number(row.netAmount || 0)
+      );
+      detail.productDescription = row.productDescription;
+
+      // Unit 2 information
+      detail.unitID2 = row.unit2ID;
+      detail.unit2Qty = row.unit2Qty;
+      detail.unit2MBarcode = row.unit2Barcode;
+      detail.unit2SalesRate = row.unit2SalesPrice;
+      detail.unit2MRP = row.unit2MRP;
+
+      // Unit 3 information
+      detail.unitID3 = row.unit3ID;
+      detail.unit3Qty = row.unit3Qty;
+      detail.unit3MBarcode = row.unit3Barcode;
+      detail.unit3SalesRate = row.unit3SalesPrice;
+      detail.unit3MRP = row.unit3MRP;
+
+      // detail.moreDetails.memo = row.memo;
+      detail.actualSalesPrice = row.actualSalesPrice;
+
+      // Optional fields with error handling
+      try {
+        detail.supplierReferenceProductCode = row.supplierReferenceProductCode;
+      } catch (error) {
+        console.error("Error setting supplier reference product code:", error);
+      }
+
+      try {
+        detail.warehouseID = row.warehouseID;
+        detail.warehouseName = row.warehouseName;
+      } catch (error) {
+        console.error("Error setting warehouse information:", error);
+      }
+
+      // Additional flags
+      detail.barcodePrinted = false;
+      detail.batchCreated = true;
+
+      // Store original cost for restoration after calculation
+      const originalCost = detail.cost;
+
+      // Calculate row amounts
+      const res = calculateRowAmount(
+        detail,
+        "slNo",
+        {
+          ...commonParams,
+          result: {
+            transaction: {
+              details: [{ ...detail }],
+            },
+          },
+        },
+        true
+      );
+      if (res.transaction!.details) {
+        detail = res.transaction!.details[0] as TransactionDetail;
+      }
+      // Restore original cost
+      detail.cost = originalCost;
+      details[i] = detail;
+    }
+
+    // Calculate empty rows needed
+    const blankDetailsCount = detailsLength - validDetailsCount;
+    const emptyRowsNeeded = Math.max(0, 50 - blankDetailsCount);
+
+    // Fill remaining slots with empty rows if needed
+    if (emptyRowsNeeded > 0) {
+      for (let i = detailsLength; i < detailsLength + emptyRowsNeeded; i++) {
+        details[i] = {
+          ...initialTransactionDetailData,
+          slNo: generateUniqueKey(),
+        };
+      }
+    }
+
+    // Return appropriately sized array
+    return details.slice(0, Math.max(detailsLength + emptyRowsNeeded, 50));
+  };
+  const attachDetails = (
+    details: TransactionDetail[],
+    formType: string,
+    transDate: string,
+    supplierLedgerId: number,
+    warehouseId: number,
+    allowStockUpdate: boolean
+  ) => {
+    const outputDetails: TransactionDetail[] = [];
+    const errors: string[] = [];
+    let hasError = false;
+
+    for (let i = 0; i < details.length; i++) {
+      const rowDetail = details[i];
+      const rowNumber = i + 1;
+
+      // Check if row is empty - break if product is empty (matching C# logic)
+      if (!(rowDetail.productID > 0)) {
+        break;
+      }
+
+      let detail = sanitizeDataAdvanced(
+        { ...rowDetail },
+        initialTransactionDetailData
+      );
+      let outputRow: any = { ...detail };
+
+      // Core transaction fields
+      outputRow.bulkRowInserted = false;
+      outputRow.productBatchID = detail.productBatchID;
+      outputRow.productID = detail.productID;
+      outputRow.quantity = detail.qty;
+      outputRow.qtyInNumbers = detail.nosQty;
+      outputRow.free = detail.free;
+
+      // Pricing and transaction details
+      outputRow.unitPrice = detail.unitPrice;
+      outputRow.transDate = transDate;
+      outputRow.unitID = detail.unitID;
+
+      // Discounts
+      outputRow.discountPer1 = detail.discPerc;
+      outputRow.discountAmt1 = detail.discount;
+
+      // Tax information
+      outputRow.cstPerc = detail.cstPerc;
+      outputRow.cst = detail.cst;
+
+      // Supplier and additional fields
+      outputRow.supplierLedgerID = supplierLedgerId;
+      outputRow.additionalExpense = detail.additionalExpense;
+
+      // VAT handling
+      outputRow.vatPercentage = detail.vatPerc;
+      outputRow.totalVatAmount = detail.vatAmount;
+
+      // Financial calculations
+      outputRow.grossValue = detail.gross;
+      outputRow.netValue = detail.netValue;
+      outputRow.netAmount = detail.total;
+      outputRow.productDescription = detail.productDescription || "";
+      outputRow.invStatus = "";
+
+      // Sales and margin
+      outputRow.marginPer = detail.margin;
+      outputRow.stdSalesPrice = detail.salesPrice;
+      outputRow.specification = detail.size;
+      outputRow.costPerItem = detail.cost;
+      outputRow.totalProfit = detail.profit;
+      outputRow.barcodeQty = detail.stickerQty;
+      outputRow.rateWithTax = detail.ratePlusTax;
+
+      // Set rate with tax fallback
+      if (outputRow.rateWithTax === 0) {
+        outputRow.rateWithTax = outputRow.unitPrice;
+      }
+
+      // Scheme discount
+      outputRow.schemeDiscount = detail.schemeDiscount;
+
+      // Validation checks - collect errors instead of throwing
+      if (outputRow.unitID === 0) {
+        hasError = true;
+        errors.push(`Row ${rowNumber}, Unit Column: Invalid Unit Selected`);
+      }
+
+      if (
+        Math.abs(
+          outputRow.grossValue - outputRow.quantity * outputRow.unitPrice
+        ) > 1
+      ) {
+        hasError = true;
+        errors.push(
+          `Row ${rowNumber}, Gross Value Column: Gross value calculation mismatch`
+        );
+      }
+
+      // Warehouse handling
+      if (applicationSettings?.inventorySettings?.maintainWarehouse === true) {
+        outputRow.wareHouseID = warehouseId;
+      } else {
+        outputRow.wareHouseId = 1;
+      }
+
+      // Multi-warehouse billing
+      if (
+        applicationSettings?.productsSettings?.enableMultiWarehouseBilling &&
+        applicationSettings?.productsSettings?.usePopupWindowForItemSearch
+      ) {
+        try {
+          const warehouseIdFromDetail = detail.warehouseID;
+          if (warehouseIdFromDetail > 0) {
+            outputRow.wareHouseID = warehouseIdFromDetail;
+          }
+        } catch (error) {
+          hasError = true;
+          errors.push(
+            `Row ${rowNumber}, Warehouse Column: Error setting warehouse from detail - ${error}`
+          );
+        }
+      }
+
+      // Exchange rate
+      outputRow.xRate = 1;
+      if (formType === "Import") {
+        outputRow.xRate = detail.unitPriceFC;
+      }
+
+      // Stock update flag
+      outputRow.stockUpdate = allowStockUpdate;
+
+      // Supplier reference
+      outputRow.supplierProductReferenceCode =
+        detail.supplierReferenceProductCode;
+      debugger;
+      // GR Transaction details
+      // outputRow.gRTransDetailID = detail.grTransDetailsID;
+
+      // Purchase Order handling
+      // if (
+      //   applicationSettings?.inventorySettings
+      //     ?.carryForwardPurchaseOrderQtyToPurchase
+      // ) {
+      //   outputRow.pOTransDetailID = detail.poTransDetailsID;
+      // } else {
+      //   outputRow.pO_PITransDetailIDs = detail.poTransDetailsID as string;
+      //   try {
+      //     outputRow.pO_PITransDetailQtys = detail.poTransDetailsIDTag as string;
+      //   } catch (error) {
+      //     hasError = true;
+      //     errors.push(
+      //       `Row ${rowNumber}, PO Detail Quantities Column: Error setting PO detail quantities - ${error}`
+      //     );
+      //   }
+      // }
+      // Memo and random key
+      outputRow.memo = detail.memo;
+      outputRow.randomKey = 0;
+
+      // Basic product information
+      outputRow.productCode = detail.pCode;
+      outputRow.autoBarcode = detail.barCode;
+      outputRow.productName = detail.product;
+      outputRow.brandID = detail.brandID;
+      outputRow.brandName = detail.brand;
+      outputRow.itemNameInSecondLanguage = detail.arabicName;
+
+      // Unit information
+      outputRow.unitName = detail.unit;
+
+      // Product specifications
+      outputRow.colour = detail.colour;
+      outputRow.color = detail.colour; // Fallback for legacy systems
+      outputRow.warranty = detail.warranty;
+      outputRow.location = detail.location;
+
+      // Stock and pricing
+      outputRow.stock = detail.stock;
+      outputRow.minSalePrice = detail.minSalePrice;
+      outputRow.multiFactor = 1; // Default or calculate if needed
+
+      // Date handling
+      outputRow.mfgDate = detail.mfdDate;
+      outputRow.expiryDate = detail.expDate;
+      outputRow.batchNo = detail.batchNo;
+      outputRow.mannualBarcode = detail.manualBarcode;
+
+      // Unit 2 information
+      outputRow.unit2ID = detail.unitID2;
+      outputRow.unit2Qty = detail.unit2Qty;
+      outputRow.unit2Barcode = detail.unit2MBarcode;
+      outputRow.unit2SalesPrice = detail.unit2SalesRate;
+      outputRow.unit2MRP = detail.unit2MRP;
+
+      // Unit 3 information
+      outputRow.unit3ID = detail.unitID3;
+      outputRow.unit3Qty = detail.unit3Qty;
+      outputRow.unit3Barcode = detail.unit3MBarcode;
+      outputRow.unit3SalesPrice = detail.unit3SalesRate;
+      outputRow.unit3MRP = detail.unit3MRP;
+
+      // Additional sales and warehouse info
+      outputRow.actualSalesPrice = detail.actualSalesPrice;
+      // outputRow.wareHouseID = detail.warehouse;
+      outputRow.grandTotal = outputRow.grandTotal ?? 0;
+
+      outputDetails.push(outputRow);
+    }
 
     return {
-      clearEntryControl,
-      setUserRightsFn,
-      disableControlsFn,
-      validateTransactionDate,
-      getClosedDate,
-      calculateTotal,
-      calculateRowAmount,
-      changeGrossToUnitRate,
-      enableControls,
-      disableControls,
-      calculateSummary,
-      refactorDetails,
-      attachDetails,
-      attachMaster,
-      applyDiscountsToItems
+      outputDetails,
+      hasError,
+      errors,
     };
   };
+
+  const attachMaster = (formState: TransactionFormState) => {
+    const master: TransactionMaster = {
+      ...formState.transaction.master,
+      address2:
+        formState.transaction.master.voucherType == VoucherType.PurchaseReturn
+          ? formState.transaction.master.address2
+          : "",
+      address3:
+        formState.transaction.master.voucherType == VoucherType.PurchaseReturn
+          ? formState.transaction.master.address3
+          : "",
+      address4:
+        formState.transaction.master.voucherType == VoucherType.PurchaseReturn
+          ? formState.transaction.master.address4
+          : "",
+    };
+
+    master.partyName = !isNullOrUndefinedOrEmpty(master.displayName)
+      ? master.displayName
+      : master.partyName;
+    master.invTransactionMasterID = formState.isEdit
+      ? master.invTransactionMasterID
+      : 0;
+    // master.bankDate = new Date().toISOString();
+    master.prevTransDate =
+      master.transactionDate == ""
+        ? moment().local().toISOString()
+        : master.prevTransDate;
+    master.cashAmt = master.cashReceived;
+    master.fromWarehouseID =
+      master.fromWarehouseID > 0
+        ? master.fromWarehouseID
+        : master.voucherType == VoucherType.PurchaseReturn
+        ? 0
+        : 1;
+    master.stockUpdate = master.stockUpdate;
+    master.ledgerID = isNullOrUndefinedOrZero(master.ledgerID)
+      ? 0
+      : master.ledgerID;
+    master.supplyType =
+      master.supplyType == undefined || master.supplyType == null
+        ? ""
+        : master.supplyType.toString();
+
+    let _master = sanitizeDataAdvanced(
+      { ...master },
+      TransactionMasterInitialData
+    );
+    return _master;
+  };
+  const applyDiscountsToItems = (): void => {
+    try {
+      let outState: DeepPartial<TransactionFormState> = {
+        transaction: { master: {}, details: [] },
+      };
+      let billDisc = 0,
+        totalGross = 0,
+        itemGross = 0,
+        grossPerc = 0,
+        itemDisc = 0,
+        discPerc = 0;
+
+      let details = formState.transaction.details.filter(
+        (x) => x.productID > 0
+      );
+      billDisc = formState.transaction.master.billDiscount;
+      outState.transaction!.master!.billDiscount = 0;
+      // Calculate total gross for items with productID > 0
+      totalGross = formState.summary.gross;
+      // Apply discount to each item with productID > 0
+      if (details.length > 0) {
+        details = details.map((item, i) => {
+          itemGross = item.gross ?? 0;
+          grossPerc = (itemGross / totalGross) * 100;
+          itemDisc = (billDisc * grossPerc) / 100;
+          discPerc = round((itemDisc / itemGross) * 100, 5);
+
+          const detail = { slNo: item.slNo, discPerc: discPerc };
+          const updatedRow = calculateRowAmount(
+            item,
+            "discPerc",
+            { result: { transaction: { details: [detail] } } },
+            true
+          );
+          if (updatedRow?.transaction?.details?.length ?? 0 > 0) {
+            outState.transaction!.details!.push(
+              updatedRow.transaction!.details![0]
+            );
+            return { ...item, ...updatedRow.transaction!.details![0] };
+          }
+          return item;
+        });
+
+        const summaryRes = calculateSummary(details, formState, {
+          result: {},
+        });
+        let totalRes = calculateTotal(
+          formState.transaction.master,
+          summaryRes
+            ? (summaryRes.summary as SummaryItems)
+            : initialInventoryTotals,
+          formState.formElements,
+          {
+            result: {},
+          }
+        );
+        if (totalRes) {
+          totalRes.summary = summaryRes.summary;
+          totalRes.transaction = totalRes.transaction ?? {};
+          totalRes.transaction.master = totalRes.transaction.master ?? {};
+          totalRes.transaction.master.billDiscount = 0;
+          totalRes.transaction.details = outState?.transaction
+            ?.details as TransactionDetail[];
+
+          dispatch(
+            formStateHandleFieldChangeKeysOnly({
+              fields: totalRes,
+              updateOnlyGivenDetailsColumns: true,
+            })
+          );
+        }
+      }
+    } catch (ex: any) {
+      console.error("Error applying discounts:", ex);
+    }
+  };
+
+  return {
+    clearEntryControl,
+    setUserRightsFn,
+    disableControlsFn,
+    validateTransactionDate,
+    getClosedDate,
+    calculateTotal,
+    calculateRowAmount,
+    changeGrossToUnitRate,
+    enableControls,
+    disableControls,
+    calculateSummary,
+    refactorDetails,
+    attachDetails,
+    attachMaster,
+    applyDiscountsToItems,
+  };
+};

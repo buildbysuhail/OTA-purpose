@@ -9,18 +9,15 @@ import { useSearchParams, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   Box,
+  Tooltip,
 } from "@mui/material";
 import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import urls from "../../../redux/urls";
 import { ActionType } from "../../../redux/types";
-import {
-  CalendarDays,
-} from "lucide-react";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import { useSearch } from "./search-context.tsx";
 // import { useAccPrint } from "./use-print";
 import AccTransactionFormContainerViewContent from "./acc-transaction-View-container-content";
-
 
 export interface TransactionViewProps {
   voucherType?: string;
@@ -94,51 +91,66 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (
     const style = document.createElement('style');
     style.textContent = `
       .grid-row-item {
-        transition: all 0.2s ease-in-out;
+        transition: all 0.15s ease-in-out;
       }
       .grid-row-item:hover {
-        background-color: #f5f5f5 !important;
+        background-color: #f8f9fa !important;
       }
       .grid-row-item.selected {
-        background-color: #e3f2fd !important;
-        border-left-color: #2196f3 !important;
-        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-      }
-      .grid-row-item.selected .text-blue {
-        color: #1976d2 !important;
+        background-color: #f0f4ff !important;
+        border-left: 3px solid #2563eb !important;
       }
     `;
     document.head.appendChild(style);
-    
     return () => {
       document.head.removeChild(style);
     };
   }, []);
 
+  // Sync selected row on mount or when transactionMasterID changes from outside
+  useEffect(() => {
+    if (input.transactionMasterID && input.transactionMasterID !== selectedRowIdRef.current) {
+      selectedRowIdRef.current = input.transactionMasterID;
+      
+      requestAnimationFrame(() => {
+        document.querySelectorAll('.grid-row-item.selected').forEach(el => {
+          el.classList.remove('selected');
+        });
+
+        document.querySelectorAll('.grid-row-item').forEach(el => {
+          const rowId = el.getAttribute('data-row-id');
+          if (rowId === String(input.transactionMasterID)) {
+            el.classList.add('selected');
+          }
+        });
+      });
+    }
+  }, [input.transactionMasterID]);
+
   const onRowClick = useCallback(
     (event: any) => {
       const _event = event.data != undefined ? event : event?.event;
       const clickedRow = _event.data;
-      
       const transactionMasterID = parseInt(
-        (input.isInvTrans ? clickedRow.invTransactionMasterID : clickedRow.accTransactionMasterID) || "0", 
+        (input.isInvTrans ? clickedRow.invTransactionMasterID : clickedRow.accTransactionMasterID) || "0",
         10
       );
 
-      // Update state for content component
+      // Update ref without causing re-render
+      selectedRowIdRef.current = transactionMasterID;
+
+      // Update state to pass to child component
       setInput((prev) => ({
         ...prev,
         transactionMasterID: transactionMasterID
       }));
 
-      // Pure DOM manipulation for selection styling
+      // Update UI directly without re-render
       requestAnimationFrame(() => {
-        // Remove previous selection
         document.querySelectorAll('.grid-row-item.selected').forEach(el => {
           el.classList.remove('selected');
         });
-        
-        // Add selection to clicked row
+
         document.querySelectorAll('.grid-row-item').forEach(el => {
           const rowId = el.getAttribute('data-row-id');
           if (rowId === String(transactionMasterID)) {
@@ -146,100 +158,204 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (
           }
         });
       });
-
-      // Update ref
-      selectedRowIdRef.current = transactionMasterID;
     },
     [input.isInvTrans]
   );
 
-  // Column definitions - static, won't cause re-render
+  const calculateOverdueDays = (transactionDate: string): number => {
+    const today = new Date();
+    const txnDate = new Date(transactionDate);
+    const diffTime = today.getTime() - txnDate.getTime();
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  };
+
   const columnstwo: DevGridColumn[] = useMemo(() => {
-    return [
-      {
-        dataField: input.isInvTrans ? "invTransactionMasterID" : "accTransactionMasterID",
-        caption: t("Actions"),
-        allowSearch: true,
-        allowSorting: false,
-        allowFiltering: false,
-        fixed: true,
-        fixedPosition: "right",
-        width: 100,
-        cellRender: (cellElement: any) => {
-          const rowId = parseInt(
-            (input.isInvTrans ? cellElement.data?.invTransactionMasterID : cellElement.data?.accTransactionMasterID) || "0", 
-            10
-          );
-          
-          // Initial render - check if this should be selected
-          const isInitiallySelected = rowId === selectedRowIdRef.current && selectedRowIdRef.current !== 0;
-          
-          return (
-            <div 
-              data-row-id={rowId}
-              className={`grid-row-item p-4 cursor-pointer bg-white border-l-4 border-transparent ${isInitiallySelected ? 'selected' : ''}`}
+    const isPurchase = (input.isInvTrans && (input.transactionType?.toLowerCase() === "purchase"));
+    const idField = input.isInvTrans ? "invTransactionMasterID" : "accTransactionMasterID";
+
+    const CardCol: DevGridColumn = {
+      dataField: idField,
+      caption: t("Actions"),
+      allowSearch: true,
+      allowSorting: false,
+      allowFiltering: false,
+      fixed: false,
+      width: undefined,
+      cellRender: (cellElement: any) => {
+        const d = cellElement.data as any;
+        const rowId = parseInt(String(d[idField] ?? "0"), 10);
+        const dateStr = new Date(d?.transactionDate).toLocaleDateString("en-GB", { day: "2-digit", month: "2-digit", year: "numeric" });
+        const voucher = d?.voucherPrefix ? `${d.voucherPrefix}-${d.voucherNumber}` : `${d?.voucherNumber}`;
+
+
+        const overdueDays = calculateOverdueDays(d?.transactionDate);
+        // const isOverdue = overdueDays > 0;
+        const isSelected = rowId === selectedRowIdRef.current;
+
+        return (
+          <Box
+            className={`grid-row-item ${isSelected ? 'selected' : ''}`}
+            data-row-id={rowId}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 0.5,
+              py: 1.5,
+              px: 2,
+              borderBottom: "1px solid #e5e7eb",
+              cursor: "pointer",
+              backgroundColor: "#ffffff",
+            }}
+          >
+            {/* Title/Party Name */}
+            <Tooltip title={isPurchase ? (d?.partyName || "") : (d?.particulars || "")} arrow placement="top-start">
+              <Box
+                sx={{
+                  fontSize: "14px",
+                  fontWeight: 500,
+                  color: "#1e293b",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  display: "block",
+                  width: "100%",
+                }}
+              >
+                {isPurchase ? d?.partyName : d?.particulars}
+              </Box>
+            </Tooltip>
+
+            {/* Invoice Number and Date */}
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1, overflow: "hidden" }}>
+              <Tooltip title={voucher} arrow placement="top-start">
+                <Box
+                  sx={{
+                    fontSize: "13px",
+                    fontWeight: 400,
+                    color: "#64748b",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    display: "inline-block",
+                    width: "25%",
+                  }}
+                >
+                  {voucher}
+                </Box>
+              </Tooltip>
+              <Box sx={{ fontSize: "13px", color: "#cbd5e1", flexShrink: 0 }}>•</Box>
+              <Tooltip title={dateStr} arrow placement="top-start">
+                <Box
+                  sx={{
+                    fontSize: "13px",
+                    fontWeight: 400,
+                    color: "#64748b",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    display: "inline-block",
+                    width: "30%",
+                  }}
+                >
+                  {dateStr}
+                </Box>
+              </Tooltip>
+              <Tooltip 
+              title={Math.abs(
+                Number(isPurchase ? d?.grandTotal ?? 0 : d?.amount ?? 0)
+              ).toLocaleString("en-IN", { style: "currency", currency: "INR" })}
+              arrow 
+              placement="top-start"
             >
-              <div className="w-full flex flex-row">
-                <div className="w-1/2 flex items-center">
-                  <CalendarDays className="mr-1 w-4 h-4 text-gray-500 font-semibold !text-[10px]" />
-                  <p className="text-gray-600 font-medium !text-[12px]">
-                    {new Date(
-                      cellElement.data?.transactionDate
-                    ).toLocaleDateString("en-GB", {
-                      day: "2-digit",
-                      month: "2-digit",
-                      year: "numeric",
-                    })}
-                  </p>
-                </div>
-                <div className="w-1/2 flex items-center justify-end">
-                  <p className="text-blue font-medium text-gray-800">
-                    {cellElement.data?.voucherNumber}
-                  </p>
-                </div>
-              </div>
-              <div className="w-full flex justify-end">
-                <div className="text-right">
-                  <p className="text-blue font-medium text-gray-800">
-                    {cellElement.data?.amount}
-                  </p>
-                </div>
-              </div>
-              <div className="pt-2">
-                <p className="text-gray-600 font-normal overflow-hidden text-ellipsis whitespace-nowrap">
-                  {cellElement.data?.particulars}
-                </p>
-              </div>
-            </div>
-          );
-        },
+              <Box
+                sx={{
+                  fontSize: "14px",
+                  fontWeight: 600,
+                  color: "#1e293b",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  display: "block",
+                  width: "45%",
+                }}
+              >
+                {Math.abs(
+                  Number(isPurchase ? d?.grandTotal ?? 0 : d?.amount ?? 0)
+                ).toLocaleString("en-IN", { style: "currency", currency: "INR" })}
+              </Box>
+            </Tooltip>
+            </Box>
+
+           
+
+            {/* Amount */}
+            {/* <Tooltip 
+              title={Math.abs(
+                Number(isPurchase ? d?.grandTotal ?? 0 : d?.amount ?? 0)
+              ).toLocaleString("en-IN", { style: "currency", currency: "INR" })}
+              arrow 
+              placement="top-start"
+            >
+              <Box
+                sx={{
+                  fontSize: "14px",
+                  fontWeight: 600,
+                  color: "#1e293b",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  display: "block",
+                  width: "100%",
+                }}
+              >
+                {Math.abs(
+                  Number(isPurchase ? d?.grandTotal ?? 0 : d?.amount ?? 0)
+                ).toLocaleString("en-IN", { style: "currency", currency: "INR" })}
+              </Box>
+            </Tooltip> */}
+
+             {/* Overdue Status */}
+            {/* {isOverdue && (
+              <Box
+                sx={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 0.5,
+                  fontSize: "12px",
+                  fontWeight: 500,
+                  color: "#dc2626",
+                }}
+              >
+                <span>OVERDUE BY {overdueDays} DAYS</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M3 8L10.89 13.26C11.5396 13.6728 12.4604 13.6728 13.11 13.26L21 8M5 19H19C20.1046 19 21 18.1046 21 17V7C21 5.89543 20.1046 5 19 5H5C3.89543 5 3 5.89543 3 7V17C3 18.1046 3.89543 19 5 19Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </Box>
+            )} */}
+          </Box>
+        );
       },
-      {
-        dataField: "transactionDate",
-        visible: false,
-        allowFiltering: true,
-        dataType: "date",
-      },
-      {
-        dataField: "voucherNumber",
-        visible: false,
-        allowFiltering: true,
-        dataType: "string",
-      },
-      {
-        dataField: "amount",
-        visible: false,
-        allowFiltering: true,
-        dataType: "number",
-      },
-      {
-        dataField: "particulars",
-        visible: false,
-        allowFiltering: true,
-        dataType: "string",
-      },
+    };
+
+    const hiddenForPurchase: DevGridColumn[] = [
+      { dataField: "partyName", visible: false, allowFiltering: true, dataType: "string" },
+      { dataField: "grandTotal", visible: false, allowFiltering: true, dataType: "number" },
+      { dataField: "transactionDate", visible: false, allowFiltering: true, dataType: "date" },
+      { dataField: "voucherPrefix", visible: false, allowFiltering: true, dataType: "string" },
+      { dataField: "voucherNumber", visible: false, allowFiltering: true, dataType: "string" },
     ];
-  }, [t, input.isInvTrans]); // Minimal dependencies
+
+    const hiddenForCash: DevGridColumn[] = [
+      { dataField: "particulars", visible: false, allowFiltering: true, dataType: "string" },
+      { dataField: "amount", visible: false, allowFiltering: true, dataType: "number" },
+      { dataField: "transactionDate", visible: false, allowFiltering: true, dataType: "date" },
+      { dataField: "voucherPrefix", visible: false, allowFiltering: true, dataType: "string" },
+      { dataField: "voucherNumber", visible: false, allowFiltering: true, dataType: "string" },
+    ];
+
+    return [CardCol, ...(isPurchase ? hiddenForPurchase : hiddenForCash)];
+  }, [t, input.isInvTrans, input.transactionType]);
 
   const MemoizedGrid = useMemo(() => {
     return (
@@ -272,16 +388,24 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (
         className="HistorySidebarcustomtwo"
         ShowGridPreferenceChooser={false}
         onRowClick={onRowClick}
+        // searchQuery={searchQuery}
+        showOptions={false}
+        t={t}
       />
     );
   }, [columnstwo, searchQuery, onRowClick, input.isInvTrans, input.transactionType, t]);
 
   return (
     <>
-      <Box display="flex" height="100vh">
+      <Box
+        sx={{
+          display: "flex",
+          height: "100vh",
+        }}
+      >
         {/* Sidebar */}
         <Box
-          width={350}
+          width={349}
           bgcolor="#fafbfc"
           borderRight="1px solid #eee"
           position="fixed"
@@ -308,11 +432,19 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (
         </Box>
 
         {/* Main Content */}
-        <AccTransactionFormContainerViewContent 
-          isInvTrans={input.isInvTrans} 
-          transactionMasterID={input.transactionMasterID} 
-          transactionType={input.transactionType}
-        />
+        <Box
+          sx={{
+            flex: 1,
+            overflowY: "auto",
+            // marginLeft: { lg: "349px", xl: "349px" },
+          }}
+        >
+          <AccTransactionFormContainerViewContent
+            isInvTrans={input.isInvTrans}
+            transactionMasterID={input.transactionMasterID}
+            transactionType={input.transactionType}
+          />
+        </Box>
       </Box>
     </>
   );

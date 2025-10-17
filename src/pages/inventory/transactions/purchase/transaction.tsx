@@ -692,8 +692,17 @@ const TransactionForm: React.FC<TransactionProps> = ({
           _formState.userRightsFormCode = "PIIMPORT"
         }
       }
-
-      const _gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new APIClient()))
+debugger;
+      let __gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new APIClient()))
+      debugger;
+      const _gridCols = __gridCols.columnPreferences.map(x => 
+          {
+            return {
+              ...x,
+              visible: (clientSession.isAppGlobal && (_formState.transaction.master.voucherForm.toUpperCase() == "INTERSTATE" ||
+          _formState.transaction.master.voucherForm.toUpperCase() == "INT" ||
+          _formState.transaction.master.voucherForm.toUpperCase() == "IMPORT") && ["cgst","sgst","sgstPerc","cgstPerc"].includes(x.dataField) ) ? false : x.visible
+          }});
       const accountKey =
         formType == "PI-IND" ? applicationSettings.accountsSettings.defaultIndirectExpenseAccount as keyof typeof LedgerType
           : formType == "PI-ASST" ? applicationSettings.accountsSettings.defaultPurchaseAssetsAccount as keyof typeof LedgerType : LedgerType.All;
@@ -735,7 +744,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
             customerType: customerType
           },
         },
-        gridColumns: _gridCols.columnPreferences,
+        gridColumns: _gridCols,
         userConfig: {
           ...formState.userConfig,
         },

@@ -1665,6 +1665,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   <ErpPurchaseGrid
                     ref={purchaseGridRef}
                     onChange={handleTextDataChange}
+                    zIndexController ={40}
                     onKeyDown={(
                       value: any,
                       e: React.KeyboardEvent<any>,
@@ -1856,6 +1857,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 <ErpPurchaseGrid
                   isMobile={true}
                   ref={purchaseGridRef}
+                  zIndexController={40}
                   onChange={handleTextDataChange}
                   onKeyDown={(
                     value: any,

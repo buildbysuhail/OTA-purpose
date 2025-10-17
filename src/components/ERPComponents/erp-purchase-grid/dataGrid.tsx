@@ -107,6 +107,7 @@ interface DataGridProps<T extends DataItem> {
   headerRowHeight?: number;
   gridFooterBg?: string;
   gridFooterFontColor?: string;
+  zIndexController?: number;
 }
 
 interface EditableCellProps {
@@ -200,6 +201,7 @@ interface RowData {
   applicationSettings: ApplicationSettingsType;
   isMobileGridRow?: boolean;
   isMobileEditRow?: boolean;
+  zIndexController?:number;
 }
 
 const EditableCell: React.FC<EditableCellProps> = React.memo(
@@ -623,6 +625,7 @@ const VirtualRow = React.memo(
     formState,
     appState,
     applicationSettings,
+    zIndexController,
     isMobileGridRow = false,
     isMobileEditRow = false,
   }: RowData) => {
@@ -1490,6 +1493,7 @@ const VirtualRow = React.memo(
                       showInputSymbol={false}
                       customStyle={customStyle}
                       appState={appState}
+                      zIndexController={zIndexController}
                       textAlign={
                         column.alignment === "right" ? "right" : "left"
                       }
@@ -1691,6 +1695,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       headerRowHeight = 40,
       gridFooterBg,
       gridFooterFontColor,
+      zIndexController,
     }: DataGridProps<T>,
     ref: Ref<any>
   ) {
@@ -2916,6 +2921,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                     <VirtualRow
                       t={t}
                       isMobileGridRow={isMobile}
+                      zIndexController={zIndexController}
                       appState={appState}
                       applicationSettings={applicationState}
                       formState={formState}

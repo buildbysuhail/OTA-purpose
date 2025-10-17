@@ -79,6 +79,7 @@ interface InputProps {
   appState?: any;
   showInputSymbol?:boolean;
   disabled?: boolean;
+  zIndexController?: number;
 }
 
 interface LoadResult {
@@ -268,6 +269,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       appState,
       showInputSymbol = true,
        disabled = false,
+       zIndexController = 9999  ,
       ...rest
     },
     ref
@@ -1049,7 +1051,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
         maxWidth: "800px",
         minHeight: "200px",
         maxHeight: "400px",
-        zIndex: 9999,
+        zIndex: zIndexController,
         // conditionally assign left or right
         ...(direction === "rtl"
           ? { right: `${right}px`, left: undefined }

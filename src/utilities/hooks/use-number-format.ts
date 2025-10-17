@@ -265,7 +265,9 @@ export const useNumberFormat = (): UseNumberFormatResult => {
     if(taxFormatted && applicationSettings.branchSettings.countryName == Countries.Saudi) {
       return parseFloat(value.toFixed(decimalPoints != undefined ? decimalPoints : 2));  
     } 
-     return  Math.round((value + Number.EPSILON) * Math.pow(10, decimals)) / Math.pow(10, decimals)
+    const factor = Math.pow(10, decimals);
+  return Math.sign(value) *
+         (Math.round((Math.abs(value) + Number.EPSILON) * factor) / factor);
   }
   function getAmountInWords(amount: number): string {
     

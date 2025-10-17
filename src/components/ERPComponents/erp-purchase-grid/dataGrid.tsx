@@ -1793,7 +1793,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       return visibleColumns;
     }, [columnOrder, formState.gridColumns]);
 
-    const { preferences } = usePreferenceData(columns, gridId);
+    const { preferences } = usePreferenceData(formState.gridColumns, gridId);
     const ITEM_HEIGHT =
       window.innerWidth < 480
         ? 125

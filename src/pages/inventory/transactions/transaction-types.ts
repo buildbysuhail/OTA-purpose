@@ -603,10 +603,82 @@ export interface TransactionFormState {
   billwiseDetails?: string;
   showbillwise?: boolean;
   ledgerBillWiseLoading?: boolean;
-  privilegeCardOpen?: boolean;
-  templateChooserModal?: boolean;
   tenderOpen?: boolean;
+
+  templateChooserModal?: boolean;
+
+  //Sales
+  privilegeCardOpen?: boolean;
+  schemeDiscount: number;
+  postCashMasterId: number;
+  randomKey: number;
+  allowStockUpdate: boolean;
+  isAccUpdate: boolean;
+  isEditBill: boolean;
+  pnlVisibleCnt: number;
+  accTransMasterId: number;
+  invTransMasterId: number;
+  srVoucherNumber: string;
+  srVoucherPrefix: string;
+  srFormType: string;
+  prevTransDate?: Date;
+  giftClaimed: boolean;
+  giftBatchId: number;
+  giftProductQty: number;
+  giftProductPrice: number;
+  creditStopped: boolean;
+  obParent?: any; // frmSalesInvoices reference
+  obChild?: any;
+  giftProductBatchId: number;
+  giftModels: GiftModel[];
+  isInvokingTrans: boolean;
+  isSaveClicked: boolean;
+  partyAccTransDetailId: number;
+  partyCashRcvdTransDetailId: number;
+  partyBankRcvdTransDetailId: number;
+  salesDraftTransactionMasterId: number;
+  defaultPriceCategoryId: number;
+  oldLedgerId: number;
+  privilegeCardId: number;
+  dsBillWiseTrans: any;
+  constructorFlag: boolean;
+  dtTemp: any;
+  closeAfterSave: boolean;
+  address2: string;
+  address3: string;
+  showPrintConfirmation: boolean;
+  previousGrandTotal: number;
+  oldPartyLedId: number;
+  sbCashReceived: number;
+  sbBillDiscount: number;
+  isSalesBookingLoaded: boolean;
+  isAuthorized: boolean;
+  itemSearch: boolean;
+  oldQuoteVatPercentage: number;
+  isWindowLoaded: boolean;
+  nlaStdSalesPrice: number;
+  advanceAmtFromSo: number;
+  currentLoadedPrefix: string;
+  currentLoadedVno: string;
+  initialVrType: string;
+  initialFormType: string;
+  initialVrPrefix: string;
+  initialTitle: string;
+  guidTransaction: string;
+  isCsi: boolean;
+  isConsolidateSo: boolean;
+  dtCouponDetails: any;
+  selectedPartiesDefaultPriceCategoryId: number;
+  blnCreateCreditNoteAutomatically: boolean;
 }
+export interface GiftModel {
+  productBatchId: number;
+  productId: number;
+  productName: string;
+  productCode: string;
+  barcode: string;
+}
+
 interface loadingResult {
   isLoading: boolean;
   text: string;

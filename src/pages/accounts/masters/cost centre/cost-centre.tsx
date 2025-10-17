@@ -64,8 +64,8 @@ const CostCentre = () => {
       
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: true, key: cellElement?.data?.costCentreID, reload: false }) }}
-          edit={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: true, key: cellElement?.data?.costCentreID, reload: false }) }}
+          view={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: true, key: cellElement?.data?.costCentreID, reload: false, mode:"view" }) }}
+          edit={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: true, key: cellElement?.data?.costCentreID, reload: false, mode: "edit" }) }}
           delete={{
             onSuccess: () => { dispatch(toggleCostCentrePopup({ isOpen: false, key: null, reload: true, })); },
             confirmationRequired: true,

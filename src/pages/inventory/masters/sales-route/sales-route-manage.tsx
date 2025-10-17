@@ -54,6 +54,7 @@ export const SalesRouteManage: React.FC = React.memo(() => {
           placeholder={t("route_name")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("routeName", data.routeName)}
+          readOnly={rootState.PopupData.salesRoute.mode == "view"}
         />
 
         <ERPInput
@@ -61,6 +62,7 @@ export const SalesRouteManage: React.FC = React.memo(() => {
           label={t("short_name")}
           placeholder={t("short_name")}
           onChangeData={(data: any) => handleFieldChange("shortName", data.shortName)}
+          readOnly={rootState.PopupData.salesRoute.mode == "view"}
         />
 
         <ERPDataCombobox
@@ -75,6 +77,7 @@ export const SalesRouteManage: React.FC = React.memo(() => {
           }}
           label={t("parent_route")}
           onChangeData={(data: any) => handleFieldChange("parentRouteID", data.parentRouteID)}
+          disabled={rootState.PopupData.salesRoute.mode == "view"}
         />
 
         <ERPInput
@@ -82,6 +85,7 @@ export const SalesRouteManage: React.FC = React.memo(() => {
           label={t("remarks")}
           placeholder={t("remarks")}
           onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
+          readOnly={rootState.PopupData.salesRoute.mode == "view"}
         />
 
         <ERPInput
@@ -89,6 +93,7 @@ export const SalesRouteManage: React.FC = React.memo(() => {
           label={t("credit_limit")}
           placeholder={t("credit_limit")}
           onChangeData={(data: any) => handleFieldChange("creditLimit", data.creditLimit)}
+          readOnly={rootState.PopupData.salesRoute.mode == "view"}
         />
 
         <ERPDataCombobox
@@ -103,6 +108,7 @@ export const SalesRouteManage: React.FC = React.memo(() => {
           }}
           label={t("salesman")}
           onChangeData={(data: any) => handleFieldChange("salesManID", data.salesManID)}
+          disabled={rootState.PopupData.salesRoute.mode == "view"}
         />
 
         <ERPDataCombobox
@@ -117,6 +123,7 @@ export const SalesRouteManage: React.FC = React.memo(() => {
           }}
           label={t("warehouse")}
           onChangeData={(data: any) => handleFieldChange("warehouseID", data.warehouseID)}
+          disabled={rootState.PopupData.salesRoute.mode == "view"}
         />
       </div>
 
@@ -128,6 +135,7 @@ export const SalesRouteManage: React.FC = React.memo(() => {
           checked={gridType.mainRoute}
           onChange={() => setGridType({ mainRoute: true, subRoute: false })}
           label={t("main_route")}
+          disabled={rootState.PopupData.salesRoute.mode == "view"}
         />
 
         <ERPRadio
@@ -137,21 +145,23 @@ export const SalesRouteManage: React.FC = React.memo(() => {
           checked={gridType.subRoute}
           onChange={() => setGridType({ mainRoute: false, subRoute: true })}
           label={t("sub_route")}
+          disabled={rootState.PopupData.salesRoute.mode == "view"}
         />
 
         <ERPCheckbox
           {...getFieldProps("isActive")}
           label={t("is_active")}
           onChangeData={(data: any) => handleFieldChange("isActive", data.isActive)}
+          disabled={rootState.PopupData.salesRoute.mode == "view"}
         />
       </div>
 
       <ERPFormButtons
-        onClear={handleClear}
+        onClear={rootState.PopupData.salesRoute.mode == "view"? undefined : handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={handleSubmit}
+        onSubmit={rootState.PopupData.salesRoute.mode == "view"? undefined : handleSubmit}
       />
     </div>
   );

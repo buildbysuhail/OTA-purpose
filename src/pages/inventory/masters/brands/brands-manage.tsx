@@ -44,6 +44,7 @@ export const BrandsManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => {
             handleFieldChange("brandName", data.brandName);
           }}
+          readOnly={rootState.PopupData.brands.mode == "view"}
         />
 
         <ERPInput
@@ -51,6 +52,7 @@ export const BrandsManage: React.FC = React.memo(() => {
           label={t("short_name")}
           placeholder={t("short_name")}
           onChangeData={(data: any) => handleFieldChange("brandShortName", data.brandShortName)}
+          readOnly={rootState.PopupData.brands.mode == "view"}
         />
 
         <ERPInput
@@ -58,20 +60,22 @@ export const BrandsManage: React.FC = React.memo(() => {
           label={t("remarks")}
           placeholder={t("remarks")}
           onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
+          readOnly={rootState.PopupData.brands.mode == "view"}
         />
 
         <ERPCheckbox
           {...getFieldProps('isCommon')}
           label={t("is_common")}
           onChangeData={(data: any) => handleFieldChange('isCommon', data.isCommon)}
+          disabled={rootState.PopupData.brands.mode == "view"}
         />
       </div>
       <ERPFormButtons
-        onClear={handleClear}
+        onClear={rootState.PopupData.brands.mode == "view" ? undefined : handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={handleSubmit}
+        onSubmit={rootState.PopupData.brands.mode == "view" ? undefined : handleSubmit}
       />
     </div>
   );

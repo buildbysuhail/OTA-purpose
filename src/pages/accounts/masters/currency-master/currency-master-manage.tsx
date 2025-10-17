@@ -39,6 +39,7 @@ export const CurrencyMasterManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => { handleFieldChange("countryID", data.countryID); }}
           label={t("country")}
+          disabled={rootState.PopupData.currencyMaster.mode == "view"}
         />
 
         <ERPInput
@@ -47,6 +48,7 @@ export const CurrencyMasterManage: React.FC = React.memo(() => {
           placeholder={t("currency_code")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("currencyCode", data.currencyCode)}
+          readOnly={rootState.PopupData.currencyMaster.mode == "view"}
         />
 
         <ERPInput
@@ -55,6 +57,7 @@ export const CurrencyMasterManage: React.FC = React.memo(() => {
           placeholder={t("currency_name")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("currencyName", data.currencyName)}
+          readOnly={rootState.PopupData.currencyMaster.mode == "view"}
         />
 
         <ERPInput
@@ -63,6 +66,7 @@ export const CurrencyMasterManage: React.FC = React.memo(() => {
           placeholder={t("currency_symbol")}
           required={false}
           onChangeData={(data: any) => handleFieldChange("currencySymbol", data.currencySymbol)}
+          readOnly={rootState.PopupData.currencyMaster.mode == "view"}
         />
 
         <ERPInput
@@ -71,6 +75,7 @@ export const CurrencyMasterManage: React.FC = React.memo(() => {
           placeholder={t("sub_unit")}
           required={false}
           onChangeData={(data: any) => handleFieldChange("subUnit", data.subUnit)}
+          readOnly={rootState.PopupData.currencyMaster.mode == "view"}
         />
 
         <ERPInput
@@ -79,6 +84,7 @@ export const CurrencyMasterManage: React.FC = React.memo(() => {
           placeholder={t("sub_unit_symbol")}
           required={false}
           onChangeData={(data: any) => handleFieldChange("subUnitSymbol", data.subUnitSymbol)}
+          readOnly={rootState.PopupData.currencyMaster.mode == "view"}
         />
 
         {/* <ERPCheckbox
@@ -94,11 +100,11 @@ export const CurrencyMasterManage: React.FC = React.memo(() => {
 
       </div>
       <ERPFormButtons
-        onClear={handleClear}
+        onClear={rootState.PopupData.currencyMaster.mode == "view"? undefined : handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={handleSubmit}
+        onSubmit={rootState.PopupData.currencyMaster.mode == "view"? undefined :  handleSubmit}
       />
     </div>
   );

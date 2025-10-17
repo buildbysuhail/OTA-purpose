@@ -534,8 +534,8 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust', gridId = 'grd_cust' })
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => toggleParties({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
-          edit={{ type: "popup", action: () => toggleParties({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
+          view={{ type: "popup", action: () => toggleParties({ isOpen: true, key: cellElement?.data?.id, reload: false, mode:"view" }) }}
+          edit={{ type: "popup", action: () => toggleParties({ isOpen: true, key: cellElement?.data?.id, reload: false, mode:"edit" }) }}
           delete={{
             onSuccess: () => {
               dispatch(

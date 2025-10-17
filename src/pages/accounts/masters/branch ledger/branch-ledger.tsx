@@ -108,8 +108,8 @@ const BranchLedger = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => toggleBranchLedgerPopup({ isOpen: true, key: cellElement?.data?.branchLedgerID, reload: false }) }}
-          edit={{ type: "popup", action: () => toggleBranchLedgerPopup({ isOpen: true, key: cellElement?.data?.branchLedgerID, reload: false }) }}
+          view={{ type: "popup", action: () => toggleBranchLedgerPopup({ isOpen: true, key: cellElement?.data?.branchLedgerID, reload: false, mode: "view" }) }}
+          edit={{ type: "popup", action: () => toggleBranchLedgerPopup({ isOpen: true, key: cellElement?.data?.branchLedgerID, reload: false, mode:"edit" }) }}
           delete={{
             onSuccess: () => { dispatch(toggleBranchLedgerPopup({ isOpen: false, key: null, reload: true, })); },
             confirmationRequired: true,

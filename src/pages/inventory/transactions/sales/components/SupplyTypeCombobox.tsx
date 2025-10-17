@@ -37,7 +37,7 @@ const SupplyTypeCombobox: React.FC<SupplyTypeComboboxProps> = ({
       value={formState.transaction.master.supplyType}
       field={{
         id: "supplyType",
-        valueKey: "value",
+        valueKey: "label",
         labelKey: "label",
       }}
       options={[

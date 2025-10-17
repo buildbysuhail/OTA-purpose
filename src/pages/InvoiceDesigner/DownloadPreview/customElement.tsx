@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, Image, StyleSheet } from "@react-pdf/renderer";
 import { DesignerElementType, PlacedComponent } from "../Designer/interfaces";
 import { bindDataForPrint } from "../../use-print";
+import { containsArabicString } from "../utils/pdf-util";
 
 interface Props {
   component: PlacedComponent;
@@ -57,18 +58,31 @@ export const RenderComponentPDF: React.FC<Props> = ({
     ? component.content
     : bindDataForPrint(component.content, data, convertAmountToEnglish, convertAmountToArabic) || "N/A";
 
-const isArabicText = typeof textContent === "string" && /[\u0600-\u06FF]/.test(textContent);
+const isArabicText = typeof textContent === "string" && containsArabicString(textContent);
+const pdfDirection = isArabicText ? "rtl" : "ltr";
 
       return (
-        <View style={{ ...baseStyle, display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <View 
+        style={{
+           ...baseStyle, display: "flex",
+            // Adjust justifyContent to align horizontally based on component setting (and RTL flip)
+                justifyContent: 
+                    component.textAlign === 'left' ? 'flex-start' : 
+                    component.textAlign === 'right' ? 'flex-end' : 
+                    component.textAlign || "center",
+             alignItems: "center" ,
+             overflow: "hidden",
+          //  direction: pdfDirection,
+           }}>
           <Text
             style={{
-              fontFamily: isArabicText ? "Amiri" : (component.font || "Helvetica"),
+              width:"100%",
+              margin:0,
+              fontFamily: isArabicText ? component?.arabicFont ?? "Amiri" : (component?.font ?? "Roboto"),
               fontSize: component.fontSize || 12,
               fontWeight: component.fontWeight || "normal",
               color: component.fontColor ? `rgb(${component.fontColor})` : "black",
               textAlign: component.textAlign || "center",
-              direction: isArabicText ? "rtl" : "ltr",
             }}
           >
             {textContent}
@@ -128,6 +142,7 @@ const isArabicText = typeof textContent === "string" && /[\u0600-\u06FF]/.test(t
             | "dashed",
             padding: containerProps.padding || 0,
             borderRadius: containerProps.borderRound || 0,
+    
           }}
         >
           {containerChildren.map((child) => (

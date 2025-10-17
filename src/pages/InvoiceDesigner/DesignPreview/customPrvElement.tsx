@@ -4,6 +4,7 @@ import {
   PlacedComponent,
 } from "../Designer/interfaces";
 import { bindDataForPrint } from "../../use-print";
+import { containsArabicString } from "../utils/pdf-util";
 
 interface Props {
   component: PlacedComponent;
@@ -57,37 +58,57 @@ export const RenderPreviewComponent: React.FC<Props> = ({
 
   switch (component.type) {
      case DesignerElementType.text:
-    case DesignerElementType.field:
+     case DesignerElementType.field:
+
+    const finalContent = 
+      component.type === DesignerElementType.text 
+        ? component.content 
+        : (bindDataForPrint(component.content, data, convertAmountToEnglish, convertAmountToArabic) || "N/A");
+
+    const isArabic = containsArabicString(finalContent ?? "");
+    const textDirection = isArabic ? "rtl" : "ltr";
       return (
         <div 
-          key={component.id} 
-          style={{
-            ...baseStyle,
-            display: "flex",  // Added for vertical/horizontal centering
-            alignItems: "center",
-            justifyContent: component.textAlign || "center",
-            overflow: "hidden",
-          }}
-        >
-          <span
+            key={component.id} 
             style={{
-              fontFamily: component.font || "Roboto, sans-serif",
-              fontSize: `${component.fontSize || 12}pt`,
-              fontStyle: component.fontStyle || "normal",
-              textAlign: component.textAlign || "center",
-              color: `rgb(${component.fontColor || "0,0,0"})`,
-              fontWeight: component.fontWeight ?? "normal",
-              whiteSpace: "pre-wrap",
-              margin: 0,  // Ensure no extra spacing
-              width: "100%",  // Fill the container
+                ...baseStyle,
+                display: "flex", 
+                alignItems: "center",
+                
+                // CRITICAL: Set the text direction on the container
+                // direction: textDirection, 
+                
+                // Adjust justifyContent based on component textAlign AND direction
+                justifyContent: 
+                    component.textAlign === 'left' ? 'flex-start' : 
+                    component.textAlign === 'right' ? 'flex-end' : 
+                    component.textAlign || "center",
+                
+                overflow: "hidden",
             }}
-          >
-            {component.type === DesignerElementType.text 
-              ? component.content 
-              : (bindDataForPrint(component.content, data, convertAmountToEnglish, convertAmountToArabic) || "N/A")}
-          </span>
+        >
+            <span
+                style={{
+                    // FONT FAMILY: Use Arabic font if detected
+                    fontFamily: isArabic ? component?.arabicFont ?? "Amiri" : component?.font ?? "Roboto",
+                    
+                    fontSize: `${component.fontSize || 12}pt`,
+                    fontStyle: component.fontStyle || "normal",
+                    
+                    // textAlign is kept based on design setting
+                    textAlign: component.textAlign || "center",
+                    
+                    color: `rgb(${component.fontColor || "0,0,0"})`,
+                    fontWeight: component.fontWeight ?? "normal",
+                    whiteSpace: "pre-wrap",
+                    margin: 0, 
+                    width: "100%", 
+                }}
+            >
+                {finalContent}
+            </span>
         </div>
-      );
+    );
 
 
     case DesignerElementType.image:
@@ -150,7 +171,7 @@ export const RenderPreviewComponent: React.FC<Props> = ({
 
   
 
-      case DesignerElementType.container:
+  case DesignerElementType.container:
   const containerHeight = calculateContainerHeight();
   const containerChildren = component.children || [];
   const containerProps = component.containerProps || {

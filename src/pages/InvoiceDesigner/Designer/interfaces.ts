@@ -111,6 +111,7 @@ export interface PlacedComponent {
   fontSize: number;
   fontStyle: "normal" | "italic";
   font: string;
+  arabicFont?:string;
   fontColor?:string;
   fontWeight?:string;
   width: number;

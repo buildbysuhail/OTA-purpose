@@ -176,66 +176,435 @@ div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=tip] {
   background: #ffd0d0;
 }
 
+/*
+|--------------------------------------------------------------------------
+| 1. ROBOTO FAMILY (@font-face)
+|--------------------------------------------------------------------------
+| Maps to the exact 300/400/500/600/700 weights using dedicated files.
+*/
+
+/* --- NORMAL STYLES --- */
 @font-face {
-  font-family: "Roboto";
-  src: url("../../assets/font/Roboto/Roboto-Regular.ttf") format("truetype");
-  font-weight: 400;
+  font-family: 'Roboto';
+  src: url('../../assets/font/Roboto/Roboto-Light.ttf') format('truetype');
+  font-weight: 300; /* Light/Small */
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Roboto';
+  src: url('../../assets/font/Roboto/Roboto-Regular.ttf') format('truetype');
+  font-weight: 400; /* Regular */
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Roboto';
+  src: url('../../assets/font/Roboto/Roboto-Medium.ttf') format('truetype');
+  font-weight: 500; /* Medium */
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Roboto';
+  /* 600 uses the Bold file as a fallback/synthesis point, matching the JS register */
+  src: url('../../assets/font/Roboto/Roboto-Bold.ttf') format('truetype');
+  font-weight: 600; /* SemiBold (Synthesized) */
   font-style: normal;
 }
 
 @font-face {
-  font-family: "Roboto";
-  src: url("../../assets/font/Roboto/Roboto-Bold.ttf") format("truetype");
-  font-weight: 700;
-  font-style: bold;
+  font-family: 'Roboto';
+  src: url('../../assets/font/Roboto/Roboto-Bold.ttf') format('truetype');
+  font-weight: 700; /* Bold */
+  font-style: normal;
 }
 
+/* --- ITALIC STYLES --- */
 @font-face {
-  font-family: "Roboto";
-  src: url("../../assets/font/Roboto/Roboto-Italic.ttf") format("truetype");
+  font-family: 'Roboto';
+  src: url('../../assets/font/Roboto/Roboto-LightItalic.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Roboto';
+  src: url('../../assets/font/Roboto/Roboto-Italic.ttf') format('truetype');
   font-weight: 400;
   font-style: italic;
 }
-
 @font-face {
-  font-family: "FiraSans";
-  src: url("../../assets/font/FiraSans/FiraSans-Regular.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
+  font-family: 'Roboto';
+  src: url('../../assets/font/Roboto/Roboto-MediumItalic.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
 }
-
 @font-face {
-  font-family: "FiraSans";
-  src: url("../../assets/font/FiraSans/FiraSans-Bold.ttf") format("truetype");
+  font-family: 'Roboto';
+  /* 600 Italic uses the base Italic file, matching the JS register (Synthesized) */
+  src: url('../../assets/font/Roboto/Roboto-Italic.ttf') format('truetype');
+  font-weight: 600; 
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Roboto';
+  src: url('../../assets/font/Roboto/Roboto-BoldItalic.ttf') format('truetype');
   font-weight: 700;
-  font-style: bold;
-}
-
-@font-face {
-  font-family: "FiraSans";
-  src: url("../../assets/font/FiraSans/FiraSans-Italic.ttf") format("truetype");
-  font-weight: 400;
   font-style: italic;
 }
 
+/*
+|--------------------------------------------------------------------------
+| 2. FIRASANS FAMILY (@font-face)
+|--------------------------------------------------------------------------
+*/
+
+/* --- NORMAL STYLES --- */
 @font-face {
-  font-family: "RobotoMono";
-  src: url("../../assets/font/RobotoMono/RobotoMono-Regular.ttf") format("truetype");
+  font-family: 'FiraSans';
+  src: url('../../assets/font/FiraSans/FiraSans-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'FiraSans';
+  src: url('../../assets/font/FiraSans/FiraSans-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
 }
-
 @font-face {
-  font-family: "RobotoMono";
-  src: url("../../assets/font/RobotoMono/RobotoMono-Bold.ttf") format("truetype");
+  font-family: 'FiraSans';
+  src: url('../../assets/font/FiraSans/FiraSans-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'FiraSans';
+  src: url('../../assets/font/FiraSans/FiraSans-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'FiraSans';
+  src: url('../../assets/font/FiraSans/FiraSans-Bold.ttf') format('truetype');
   font-weight: 700;
-  font-style: bold;
+  font-style: normal;
 }
 
+/* --- ITALIC STYLES --- */
 @font-face {
-  font-family: "RobotoMono";
-  src: url("../../assets/font/RobotoMono/RobotoMono-Italic.ttf") format("truetype");
+  font-family: 'FiraSans';
+  src: url('../../assets/font/FiraSans/FiraSans-LightItalic.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'FiraSans';
+  src: url('../../assets/font/FiraSans/FiraSans-Italic.ttf') format('truetype');
   font-weight: 400;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'FiraSans';
+  src: url('../../assets/font/FiraSans/FiraSans-MediumItalic.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'FiraSans';
+  src: url('../../assets/font/FiraSans/FiraSans-SemiBoldItalic.ttf') format('truetype');
+  font-weight: 600;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'FiraSans';
+  src: url('../../assets/font/FiraSans/FiraSans-BoldItalic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+}
+
+/*
+|--------------------------------------------------------------------------
+| 3. ROBOTOMONO FAMILY (@font-face)
+|--------------------------------------------------------------------------
+*/
+
+/* --- NORMAL STYLES --- */
+@font-face {
+  font-family: 'RobotoMono';
+  src: url('../../assets/font/RobotMono/RobotoMono-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'RobotoMono';
+  src: url('../../assets/font/RobotMono/RobotoMono-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'RobotoMono';
+  src: url('../../assets/font/RobotMono/RobotoMono-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'RobotoMono';
+  src: url('../../assets/font/RobotMono/RobotoMono-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'RobotoMono';
+  src: url('../../assets/font/RobotMono/RobotoMono-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* --- ITALIC STYLES --- */
+@font-face {
+  font-family: 'RobotoMono';
+  src: url('../../assets/font/RobotMono/RobotoMono-LightItalic.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'RobotoMono';
+  src: url('../../assets/font/RobotMono/RobotoMono-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'RobotoMono';
+  src: url('../../assets/font/RobotMono/RobotoMono-MediumItalic.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'RobotoMono';
+  src: url('../../assets/font/RobotMono/RobotoMono-SemiBoldItalic.ttf') format('truetype');
+  font-weight: 600;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'RobotoMono';
+  src: url('../../assets/font/RobotMono/RobotoMono-BoldItalic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+}
+
+/*
+|--------------------------------------------------------------------------
+| 4. POPPINS FAMILY (@font-face)
+|--------------------------------------------------------------------------
+*/
+
+/* --- NORMAL STYLES --- */
+@font-face {
+  font-family: 'Poppins';
+  src: url('../../assets/font/Poppins/Poppins-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('../../assets/font/Poppins/Poppins-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('../../assets/font/Poppins/Poppins-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('../../assets/font/Poppins/Poppins-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('../../assets/font/Poppins/Poppins-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* --- ITALIC STYLES --- */
+@font-face {
+  font-family: 'Poppins';
+  src: url('../../assets/font/Poppins/Poppins-LightItalic.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('../../assets/font/Poppins/Poppins-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('../../assets/font/Poppins/Poppins-MediumItalic.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('../../assets/font/Poppins/Poppins-SemiBoldItalic.ttf') format('truetype');
+  font-weight: 600;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('../../assets/font/Poppins/Poppins-BoldItalic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+}
+
+/*
+|--------------------------------------------------------------------------
+| 5. NOTO NASKH ARABIC FAMILY (@font-face)
+|--------------------------------------------------------------------------
+| Uses Medium file as base for all 'italic' styles (which will be synthesized/slanted).
+*/
+
+/* --- NORMAL STYLES --- */
+@font-face {
+  font-family: 'NotoNaskhArabic';
+  /* 300 (Light) uses Regular file (Synthesized) */
+  src: url('../../assets/font/NotoNaskhArabic/NotoNaskhArabic-Regular.ttf') format('truetype');
+  font-weight: 300; 
+  font-style: normal;
+}
+@font-face {
+  font-family: 'NotoNaskhArabic';
+  src: url('../../assets/font/NotoNaskhArabic/NotoNaskhArabic-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'NotoNaskhArabic';
+  src: url('../../assets/font/NotoNaskhArabic/NotoNaskhArabic-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'NotoNaskhArabic';
+  src: url('../../assets/font/NotoNaskhArabic/NotoNaskhArabic-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'NotoNaskhArabic';
+  src: url('../../assets/font/NotoNaskhArabic/NotoNaskhArabic-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* --- ITALIC (Slanted) STYLES --- */
+/* All italic styles point to the same Medium file to be digitally slanted/synthesized */
+@font-face {
+  font-family: 'NotoNaskhArabic';
+  src: url('../../assets/font/NotoNaskhArabic/NotoNaskhArabic-Medium.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'NotoNaskhArabic';
+  src: url('../../assets/font/NotoNaskhArabic/NotoNaskhArabic-Medium.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'NotoNaskhArabic';
+  src: url('../../assets/font/NotoNaskhArabic/NotoNaskhArabic-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'NotoNaskhArabic';
+  src: url('../../assets/font/NotoNaskhArabic/NotoNaskhArabic-Medium.ttf') format('truetype');
+  font-weight: 600;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'NotoNaskhArabic';
+  src: url('../../assets/font/NotoNaskhArabic/NotoNaskhArabic-Medium.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+}
+
+/*
+|--------------------------------------------------------------------------
+| 6. AMIRI FAMILY (@font-face)
+|--------------------------------------------------------------------------
+| Relies heavily on synthesis for 300/500/600 weights.
+*/
+
+/* --- NORMAL STYLES --- */
+@font-face {
+  font-family: 'Amiri';
+  /* 300, 400, 500 all use Regular file (300 & 500 are synthesized) */
+  src: url('../../assets/font/Amiri/Amiri-Regular.ttf') format('truetype');
+  font-weight: 300; 
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Amiri';
+  src: url('../../assets/font/Amiri/Amiri-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Amiri';
+  src: url('../../assets/font/Amiri/Amiri-Regular.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Amiri';
+  /* 600 and 700 use Bold file (600 is synthesized) */
+  src: url('../../assets/font/Amiri/Amiri-Bold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Amiri';
+  src: url('../../assets/font/Amiri/Amiri-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* --- ITALIC (Slanted) STYLES --- */
+@font-face {
+  font-family: 'Amiri';
+  /* 300, 400, 500, 600 all use Italic file (Synthesized) */
+  src: url('../../assets/font/Amiri/Amiri-Italic.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Amiri';
+  src: url('../../assets/font/Amiri/Amiri-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Amiri';
+  src: url('../../assets/font/Amiri/Amiri-Italic.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Amiri';
+  src: url('../../assets/font/Amiri/Amiri-Italic.ttf') format('truetype');
+  font-weight: 600;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Amiri';
+  /* 700 uses dedicated BoldItalic file */
+  src: url('../../assets/font/Amiri/Amiri-BoldItalic.ttf') format('truetype'); 
+  font-weight: 700;
   font-style: italic;
 }
 

@@ -69,7 +69,7 @@ import VoucherType, {
   accountsVoucherTypes,
 } from "../../enums/voucher-types";
 import { accountsFields, inventoryFields, barCodeField } from "./fields";
-import { getPageDimensions, ptToPx, pxToPt } from "../InvoiceDesigner/utils/pdf-util";
+import { containsArabicString, getPageDimensions, ptToPx, pxToPt } from "../InvoiceDesigner/utils/pdf-util";
 import { QRCodeComponent } from "./QRCodeComponent";
 import GroupedComboBox from "../../components/ERPComponents/erp-grouped-combo";
 import { AccessPrinterList } from "../InvoiceDesigner/utils/get_printers";
@@ -429,6 +429,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
           textAlign: "center",
           fontSize: 12,
           font: "Roboto",
+          arabicFont:"Amiri",
           fontStyle: "normal",
           width: componentType === DesignerElementType.container ? 200 : 100,
           height: componentType === DesignerElementType.container ? 150 :
@@ -1199,6 +1200,8 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
 
       case DesignerElementType.text:
       case DesignerElementType.field:
+        const isArabic = containsArabicString(component?.content??"")
+        const textDirection = isArabic ? "rtl" : "ltr";
         return (
           <ResizableBox
             key={component.id}
@@ -1249,15 +1252,13 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
                 height: "100%",
                 border: isSelected ? "2px solid #2196f3" : "none",
                 boxSizing: "border-box",
-                fontSize: `${component.fontSize || 12}pt`,
-                fontFamily: component.font || "Roboto",
-                fontWeight: component.fontWeight ?? "400",
-                fontStyle: component.fontStyle || "normal",
-                textAlign: component.textAlign || "center",
-                color: `rgb(${component.fontColor})`,
                 display: "flex",
                 alignItems: "center",
-                justifyContent: component.textAlign || "center",
+                // direction: textDirection,
+                justifyContent: 
+                        component.textAlign === 'left' ? 'flex-start' : 
+                        component.textAlign === 'right' ? 'flex-end' : 
+                        component.textAlign || "center",
                 overflow: "hidden",
                 backgroundColor: isSelected ? "#ffffffff" : "inherit",
                 pointerEvents: 'auto',
@@ -1273,9 +1274,22 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
                 handleMouseDown(e, component);
               }}
             >
-              <p style={{ pointerEvents: 'none', userSelect: 'none', whiteSpace: "pre-wrap" }}>
+              <span
+                style={{ 
+                    // --- PRESENTATION STYLES GO HERE (MATCHING PREVIEW) ---
+                    fontFamily: isArabic ? component?.arabicFont ?? "Amiri" : component?.font ?? "Roboto",
+                    fontSize: `${component.fontSize || 12}pt`,
+                    fontWeight: component.fontWeight ?? "400",
+                    fontStyle: component.fontStyle || "normal",
+                    textAlign: component.textAlign || "center",
+                    color: `rgb(${component.fontColor || "0,0,0"})`, // Ensure color fallback
+                    pointerEvents: 'none', 
+                    userSelect: 'none', 
+                    whiteSpace: "pre-wrap" 
+                    }}
+                >
                 {component.content}
-              </p>
+              </span>
             </div>
             <DeleteButton
               id={component.id}
@@ -2991,13 +3005,33 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
                                 { value: "Roboto", label: "Roboto" },
                                 { value: "RobotoMono", label: "RobotoMono" },
                                 { value: "FiraSans", label: "FiraSans" },
+                                { value: "Poppins", label: "Poppins"},
                               ]}
                               onChange={(e) =>
                                 handlePropertyChange("font", e.value)
                               }
                             />
                           </Box>
-
+                          <Box sx={{ mb: 1 }}>
+                            <ERPDataCombobox
+                              id="arabicFont"
+                              data={selectedComponent}
+                              defaultValue={"Amiri"}
+                              label="arabicFont"
+                              field={{
+                                id: "arabicFont",
+                                valueKey: "value",
+                                labelKey: "label",
+                              }}
+                              options={[
+                                { value: "NotoNaskhArabic", label: "NotoNaskhArabic" },
+                                { value: "Amiri", label: "Amiri" },
+                              ]}
+                              onChange={(e) =>
+                                handlePropertyChange("arabicFont", e.value)
+                              }
+                            />
+                          </Box>
                           <Box
                             sx={{ mb: 1 }}
                             className="flex justify-start gap-2 items-center"

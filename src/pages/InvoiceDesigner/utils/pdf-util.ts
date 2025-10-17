@@ -123,10 +123,18 @@ export const PAGE_DIMENSIONS = {
     
     return pages
   }
-  export const ptToPx = (pt?: number): number => (pt ? (pt * 96) / 72 : 0);
-  export const pxToPt = (px?: number): number => (px ? (px * 72) / 96 : 0);
-  // src/utils/qrToSvg.ts
 
+  //point covertion util
+  // ==================
+  export const ptToPx = (pt?: number): number => (pt ? (pt * 96) / 72 : 0);
+  export const pxToPt = (px?: number): number => (px ? (px * 72) / 96 : 0);  
+
+// =======================================================
+//Check Arabic String
+export const containsArabicString = (text: string): boolean => {
+  const arabicRegex = /[\u0600-\u06FF\u0750-\u077F]/u;
+  return arabicRegex.test(text);
+};
 
 
 

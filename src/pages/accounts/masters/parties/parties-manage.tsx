@@ -206,7 +206,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
           allowSearch: false,
           allowFiltering: false,
           fixed: true,
-          fixedPosition: "right",
+          fixedPosition: document?.dir === "rtl" ? "left" : "right",
           width: 50,
           cellRender: (cellElement: any, cellInfo: any) => {
             

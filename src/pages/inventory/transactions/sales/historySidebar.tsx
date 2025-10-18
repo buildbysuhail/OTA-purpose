@@ -45,7 +45,7 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({ setIsOpen, isOpen, onCl
         allowSearch: true,
         allowFiltering: false,
         fixed: true,
-        fixedPosition: "right",
+        fixedPosition: document?.dir === "rtl" ? "left" : "right",
         width: 1000,
         cellRender: (cellElement: any) => {
           const transactionDate = new Date(cellElement.data?.transactionDate);

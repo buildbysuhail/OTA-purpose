@@ -153,7 +153,7 @@ const SystemVoucher = () => {
       allowSearch: false,
       allowFiltering: false,
       fixed: true,
-      fixedPosition: "right",
+      fixedPosition: document?.dir === "rtl" ? "left" : "right",
       width: 100,
       cellRender: (cellElement: any) => {
         return (

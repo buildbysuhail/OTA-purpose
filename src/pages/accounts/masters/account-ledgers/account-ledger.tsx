@@ -172,7 +172,7 @@ const AccountLedgerType = () => {
         width: 100,
         showInPdf: true,
         // fixed: true,
-        // fixedPosition: "right",
+        // fixedPosition: document?.dir === "rtl" ? "left" : "right",
       },
       {
         dataField: "isCostCentreApplicable",
@@ -204,7 +204,7 @@ const AccountLedgerType = () => {
         width: 150,
         visible: false,
         // fixed: true,
-        // fixedPosition: "right",
+        // fixedPosition: document?.dir === "rtl" ? "left" : "right",
       },
       {
         dataField: "actions",
@@ -214,7 +214,7 @@ const AccountLedgerType = () => {
         allowSearch: false,
         allowFiltering: false,
         fixed: true,
-        fixedPosition: "right",
+        fixedPosition: document?.dir === "rtl" ? "left" : "right",
         width: 100,
         
         cellRender: (cellElement: any, cellInfo: any) => (

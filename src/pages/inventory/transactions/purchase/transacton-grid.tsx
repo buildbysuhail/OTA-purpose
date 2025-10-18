@@ -611,7 +611,7 @@ const TransactionGrid: React.FC<{
         allowFiltering: false,
         allowSorting: false,
         fixed: true,
-        fixedPosition: "right",
+        fixedPosition: document?.dir === "rtl" ? "left" : "right",
         width: 100,
 
         cellRender: (cellElement: any) => {

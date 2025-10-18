@@ -59,7 +59,7 @@ const CostCentre = () => {
       allowSearch: false,
       allowFiltering: false,
       fixed: true,
-      fixedPosition: "right",
+      fixedPosition: document?.dir === "rtl" ? "left" : "right",
       width: 180,
       
       cellRender: (cellElement: any, cellInfo: any) => (

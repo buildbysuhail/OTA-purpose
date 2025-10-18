@@ -256,7 +256,7 @@ const ProductMultiUnitsIndia = forwardRef<
         dataField: "mb",
         caption: t("mb"),
         fixed: true,
-        fixedPosition: "right",
+        fixedPosition: document?.dir === "rtl" ? "left" : "right",
         allowEditing: false,
         allowSearch: false,
         allowFiltering: false,
@@ -289,7 +289,7 @@ const ProductMultiUnitsIndia = forwardRef<
         allowFiltering: false,
         fixed: true,
         width: 50,
-        fixedPosition: "right",
+        fixedPosition: document?.dir === "rtl" ? "left" : "right",
         // alignment: "center",
         cellRender: (cellData) => {
           return (

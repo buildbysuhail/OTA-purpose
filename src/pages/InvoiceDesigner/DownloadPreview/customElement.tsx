@@ -3,6 +3,7 @@ import { View, Text, Image, StyleSheet } from "@react-pdf/renderer";
 import { DesignerElementType, PlacedComponent } from "../Designer/interfaces";
 import { bindDataForPrint } from "../../use-print";
 import { containsArabicString } from "../utils/pdf-util";
+import { Height, Width } from "devextreme-react/cjs/chart";
 
 interface Props {
   component: PlacedComponent;
@@ -59,30 +60,43 @@ export const RenderComponentPDF: React.FC<Props> = ({
     : bindDataForPrint(component.content, data, convertAmountToEnglish, convertAmountToArabic) || "N/A";
 
 const isArabicText = typeof textContent === "string" && containsArabicString(textContent);
-const pdfDirection = isArabicText ? "rtl" : "ltr";
+const pdfDirection = component.direction ?? (isArabicText ? "rtl" : "ltr");
+
+// Map textAlign to PDF justifyContent
+const getJustifyContent = () => {
+  if (component.textAlign === "left") return pdfDirection === "rtl" ? "flex-end" : "flex-start";
+  if (component.textAlign === "right") return pdfDirection === "rtl" ? "flex-start" : "flex-end";
+  return "center";
+};
 
       return (
         <View 
         style={{
-           ...baseStyle, display: "flex",
-            // Adjust justifyContent to align horizontally based on component setting (and RTL flip)
-                justifyContent: 
-                    component.textAlign === 'left' ? 'flex-start' : 
-                    component.textAlign === 'right' ? 'flex-end' : 
-                    component.textAlign || "center",
-             alignItems: "center" ,
-             overflow: "hidden",
-          //  direction: pdfDirection,
+          ...baseStyle,
+          display: "flex",
+          flexDirection: "column",
+          // justifyContent: getJustifyContent(),
+          alignItems: "stretch",
+          justifyContent: "flex-start",
+          // flexWrap: "wrap",
+          // textAlign: component.textAlign || "center",formState.userConfig?.printPreview
+          // direction: pdfDirection, // CRUCIAL: apply direction to the container
+          overflow: "hidden",
            }}>
           <Text
             style={{
               width:"100%",
               margin:0,
+              padding:0,
               fontFamily: isArabicText ? component?.arabicFont ?? "Amiri" : (component?.font ?? "Roboto"),
               fontSize: component.fontSize || 12,
+              lineHeight: 1.2,
               fontWeight: component.fontWeight || "normal",
               color: component.fontColor ? `rgb(${component.fontColor})` : "black",
               textAlign: component.textAlign || "center",
+              verticalAlign:"sub"
+              //               whiteSpace: "pre-wrap",
+              // wordBreak: "break-word",
             }}
           >
             {textContent}

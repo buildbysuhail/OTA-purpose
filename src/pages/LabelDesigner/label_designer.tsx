@@ -82,6 +82,7 @@ import { hexToRgb } from "../../components/common/switcher/switcherdata/switcher
 import { generateUniqueKey } from "../../utilities/Utils";
 import ERPSlider from "../../components/ERPComponents/erp-slider";
 import { fetchTemplateFromApiById } from "../use-print";
+import ERPRadio from "../../components/ERPComponents/erp-radio";
 
 // Interfaces
 interface SaveDialogProps {
@@ -428,6 +429,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
           containerId: container.id,
           textAlign: "center",
           fontSize: 12,
+          direction:"ltr",
           font: "Roboto",
           arabicFont:"Amiri",
           fontStyle: "normal",
@@ -532,6 +534,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
           rotate: 0,
           textAlign: "center",
           fontSize: 12,
+          direction:"ltr",
           font: "Roboto",
           fontStyle: "normal",
           lineThickness: "1",
@@ -1201,7 +1204,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
       case DesignerElementType.text:
       case DesignerElementType.field:
         const isArabic = containsArabicString(component?.content??"")
-        const textDirection = isArabic ? "rtl" : "ltr";
+        const textDirection =  component.direction ?? isArabic ? "rtl" : "ltr";
         return (
           <ResizableBox
             key={component.id}
@@ -1253,12 +1256,18 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
                 border: isSelected ? "2px solid #2196f3" : "none",
                 boxSizing: "border-box",
                 display: "flex",
-                alignItems: "center",
+                alignItems: "flex-start",
                 // direction: textDirection,
-                justifyContent: 
-                        component.textAlign === 'left' ? 'flex-start' : 
-                        component.textAlign === 'right' ? 'flex-end' : 
-                        component.textAlign || "center",
+                // justifyContent:
+                //   component.textAlign === "left"
+                //     ? textDirection === "rtl"
+                //       ? "flex-end"
+                //       : "flex-start"
+                //     : component.textAlign === "right"
+                //     ? textDirection === "rtl"
+                //       ? "flex-start"
+                //       : "flex-end"
+                //     : "center",
                 overflow: "hidden",
                 backgroundColor: isSelected ? "#ffffffff" : "inherit",
                 pointerEvents: 'auto',
@@ -1277,6 +1286,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
               <span
                 style={{ 
                     // --- PRESENTATION STYLES GO HERE (MATCHING PREVIEW) ---
+                    display:"block",
                     fontFamily: isArabic ? component?.arabicFont ?? "Amiri" : component?.font ?? "Roboto",
                     fontSize: `${component.fontSize || 12}pt`,
                     fontWeight: component.fontWeight ?? "400",
@@ -1285,7 +1295,12 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
                     color: `rgb(${component.fontColor || "0,0,0"})`, // Ensure color fallback
                     pointerEvents: 'none', 
                     userSelect: 'none', 
-                    whiteSpace: "pre-wrap" 
+                    whiteSpace: "pre-wrap" ,
+
+                  margin: 0,
+                  width: "100%",
+                  padding:0,
+                  verticalAlign:"top"
                     }}
                 >
                 {component.content}
@@ -1749,7 +1764,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
     setLoading(true);
     try {
       const consolidatedComponents = consolidateContainerChildren();
-
+debugger;
       if (forCustomRows) {
         dispatch(
           setTemplateCustomElements({
@@ -3137,7 +3152,47 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
                             </div>
 
                           </Box>
+                          {/* <Box
+                            sx={{ mb: 1 }}
+                          >
+                            <InputLabel
+                              sx={{
+                                textTransform: "capitalize",
+                                marginBottom: "0.25rem",
+                                display: "block",
+                                fontSize: "0.75rem",
+                                color: "rgb(17, 24, 39)",
+                                textAlign: "left",
+                                direction: "rtl",
+                              }}
+                            >
+                             Text Direction
+                            </InputLabel>
+                              <div className=" flex space-x-2 m-2">
+                              <ERPRadio
+                                id="ltr"
+                                name="ltr"
+                                value="ltr"
+                                label={t("ltr")}
+                                checked={selectedComponent?.direction =="ltr"}
+                                onChange={(e) =>
+                                  handlePropertyChange(
+                                    "direction",e.target.value) }
 
+                              />   
+                                <ERPRadio
+                                id="rtl"
+                                name="rtl"
+                                value="rtl"
+                                label={t("rtl")}
+                                checked={selectedComponent?.direction =="rtl"}
+                                onChange={(e) =>
+                                  handlePropertyChange(
+                                    "direction",e.target.value) }
+                                />                                                  
+                              </div>
+                   
+                          </Box> */}
                           <Box sx={{ mb: 1 }}>
                             <InputLabel
                               sx={{

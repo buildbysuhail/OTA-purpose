@@ -79,8 +79,10 @@ interface popupData {
   printerList:popupDataProps
   GrnNumber: popupDataProps
   CustomDesignerPopup: popupDataProps;
+  IsPrintPreviewPopup : popupDataProps;
 }
 const initialState: popupData = {
+  IsPrintPreviewPopup:{isOpen:false},
   printerList:{isOpen:false,template:null,data:null,formState:null},
   CustomDesignerPopup:{ isOpen: false, key: null,reload:false, mode: "edit" ,},
   onCloseWithUnsavedChange: { warn: false, succeeded: false, canceled: false },
@@ -153,6 +155,10 @@ const popupDataSlice = createSlice({
   name: 'popupData',
   initialState,
   reducers: {
+    
+    toggleIsPrintPreviewPopup: (state, action: PayloadAction<popupDataProps>) => {
+      state.IsPrintPreviewPopup = action.payload;
+    },
     toggleCustomDesignerPopup: (state, action: PayloadAction<popupDataProps>) => {
       state.CustomDesignerPopup = action.payload;
     },
@@ -438,7 +444,8 @@ export const {
   toggleSpecialSchemes,
   toggleProducts,
   updateProductSummaryData,
-  toggleGrnNumber
+  toggleGrnNumber,
+  toggleIsPrintPreviewPopup,
 } = popupDataSlice.actions;
 
 export default popupDataSlice.reducer;

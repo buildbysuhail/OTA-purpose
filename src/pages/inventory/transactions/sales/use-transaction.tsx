@@ -1176,16 +1176,18 @@ export const useTransaction = (
             formState.transaction.master.invTransactionMasterID
           );
           if (formState.printOnSave == true) {
-                     printVoucher(
-                      formState.transaction?.master.invTransactionMasterID,  // masterID
-                      transactionType ?? "",                       // transactionType
-                      formState.transaction?.master.voucherType ?? "",        // voucherType
-                      formState.transaction?.master?.voucherForm?? "",           // formType
-                      formState.transaction?.master.customerType ?? "",       // customerType
-                      undefined,                                              // printTmeplate (optional)
-                      formState.transaction?.master.transactionDate ?? ""
-                      , true
-                    )
+            printVoucher(
+              formState.transaction?.master.invTransactionMasterID, // masterID
+              transactionType ?? "", // transactionType
+              formState.transaction?.master.voucherType ?? "", // voucherType
+              formState.transaction?.master?.voucherForm ?? "", // formType
+              formState.transaction?.master.customerType ?? "", // customerType
+              true, //isInv
+              formState.userConfig?.printPreview, // printPreview
+              undefined, //template
+              formState.transaction?.master.transactionDate ?? "",
+              
+            );
           }
           dispatch(
             formStateHandleFieldChange({
@@ -2828,7 +2830,7 @@ export const useTransaction = (
         outDetail.product = product.productName;
         outDetail.productID = product.productID;
         outDetail.barCode = product.autoBarcode;
-        outDetail.manualBarcode = product.manualBarcode;
+        outDetail.manualBarcode = product.mannualBarcode;
         outDetail.productBatchID = product.productBatchID;
 
         // Set default quantity if configured

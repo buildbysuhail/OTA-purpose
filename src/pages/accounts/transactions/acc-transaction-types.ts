@@ -468,7 +468,7 @@ export interface AccTransactionFormState {
   total: number;
   printOnSave: boolean
   printPreview: boolean
-  isPrintModalOpen: boolean
+
   printCheque: boolean
   keepNarration: boolean
   amountInWords: string,
@@ -652,7 +652,6 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   transactionType: "",
   prev: "",
   showPartySelection: false,
-  isPrintModalOpen: false,
   isAcc: false
 }
 export interface PrintTransProps {

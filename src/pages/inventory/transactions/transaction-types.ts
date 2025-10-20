@@ -764,7 +764,7 @@ interface ProductBatchDetailsForAutoBarcodeData {
   productCategoryID: number;
   productGroupID: number;
   autoBarcode: string;
-  manualBarcode: string;
+  mannualBarcode: string;
   mfgDate?: string;
   expiryDate?: string;
   batchNo: string;

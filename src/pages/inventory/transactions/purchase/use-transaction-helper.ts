@@ -597,6 +597,21 @@ export const useTransactionHelper = (transactionType: string) => {
           detail.details2.sgstPerc = 0;
           detail.details2.sgstPerc = 0;
         }
+
+         if (
+          formState.transaction.master.voucherType == "PE"
+        ) {
+          detail.details2.cgst = 0;
+          detail.details2.sgst = 0;
+          detail.details2.igst = 0;
+          detail.details2.cessAmt = 0;
+          detail.details2.additionalCess = 0;
+          detail.details2.sgstPerc = 0;
+          detail.details2.cgstPerc = 0;
+          detail.details2.igstPerc = 0;
+          detail.details2.cessPerc = 0;
+          detail.details2.additionalCessPerc = 0;
+        }
       }
 
       let vat = round((netValue * vatPerc) / 100, 4);

@@ -38,6 +38,7 @@ const DefaultSITemplates: DeafultTemplateProps[] = [
         template_type: "standard",
         template_kind: "standard",
       },
+      tableState:[],
       headerState: {
         showLogo: false,
         logo: "",

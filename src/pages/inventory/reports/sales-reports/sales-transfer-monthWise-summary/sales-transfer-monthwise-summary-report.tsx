@@ -1,11 +1,15 @@
-import { useTranslation } from "react-i18next"
-import { FC, Fragment, useMemo } from "react"
-import { DevGridColumn } from "../../../../../components/types/dev-grid-column"
-import ErpDevGrid, { SummaryConfig } from "../../../../../components/ERPComponents/erp-dev-grid"
-import { ActionType } from "../../../../../redux/types"
-import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format"
-import SalesTransferMonthWiseSummaryReportFilter, { SalesTransferMonthWiseSummaryReportFilterInitialState } from "./sales-transfer-monthwise-summary-report-filter"
-import { erpParseFloat } from "../../../../../utilities/Utils"
+import { useTranslation } from "react-i18next";
+import { FC, Fragment, useMemo } from "react";
+import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../../components/ERPComponents/erp-dev-grid";
+import { ActionType } from "../../../../../redux/types";
+import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
+import SalesTransferMonthWiseSummaryReportFilter, {
+  SalesTransferMonthWiseSummaryReportFilterInitialState,
+} from "./sales-transfer-monthwise-summary-report-filter";
+import { erpParseFloat } from "../../../../../utilities/Utils";
 
 interface SalesTransferMonthWiseSummaryReportProps {
   gridHeader: string;
@@ -13,9 +17,11 @@ interface SalesTransferMonthWiseSummaryReportProps {
   gridId: string;
 }
 
-const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryReportProps> = ({ gridHeader, dataUrl, gridId }) => {
-  const { t } = useTranslation("accountsReport")
-  const { getFormattedValue } = useNumberFormat()
+const SalesTransferMonthWiseSummaryReport: FC<
+  SalesTransferMonthWiseSummaryReportProps
+> = ({ gridHeader, dataUrl, gridId }) => {
+  const { t } = useTranslation("accountsReport");
+  const { getFormattedValue } = useNumberFormat();
 
   const columns: DevGridColumn[] = [
     {
@@ -46,18 +52,27 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.january == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.january))
+            cellElement.data?.january == null
+              ? ""
+              : getFormattedValue(Number.parseFloat(cellElement.data.january),false,2);
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+          };
         } else {
-          return (cellElement.data?.january == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.january)))
+          return cellElement.data?.january == null
+            ? ""
+            : getFormattedValue(Number.parseFloat(cellElement.data.january),false,2);
         }
       },
     },
@@ -71,22 +86,31 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.february == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.february))
+            cellElement.data?.february == null
+              ? ""
+              : getFormattedValue(Number.parseFloat(cellElement.data.february),false,2);
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+          };
         } else {
-          return (cellElement.data?.february == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.february)))
+          return cellElement.data?.february == null
+            ? ""
+            : getFormattedValue(Number.parseFloat(cellElement.data.february),false,2);
         }
       },
     },
-        {
+    {
       dataField: "march",
       caption: "March",
       dataType: "number",
@@ -96,22 +120,31 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.march == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.march))
+            cellElement.data?.march == null
+              ? ""
+              : getFormattedValue(Number.parseFloat(cellElement.data.march),false,2);
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+          };
         } else {
-          return (cellElement.data?.march == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.march)))
+          return cellElement.data?.march == null
+            ? ""
+            : getFormattedValue(Number.parseFloat(cellElement.data.march),false,2);
         }
       },
     },
-        {
+    {
       dataField: "april",
       caption: "April",
       dataType: "number",
@@ -121,22 +154,31 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.april == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.april))
+            cellElement.data?.april == null
+              ? ""
+              : getFormattedValue(Number.parseFloat(cellElement.data.april),false,2);
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+          };
         } else {
-          return (cellElement.data?.april == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.april)))
+          return cellElement.data?.april == null
+            ? ""
+            : getFormattedValue(Number.parseFloat(cellElement.data.april),false,2);
         }
       },
     },
-        {
+    {
       dataField: "may",
       caption: "May",
       dataType: "number",
@@ -146,22 +188,31 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.may == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.may))
+            cellElement.data?.may == null
+              ? ""
+              : getFormattedValue(Number.parseFloat(cellElement.data.may),false,2);
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+          };
         } else {
-          return (cellElement.data?.may == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.may)))
+          return cellElement.data?.may == null
+            ? ""
+            : getFormattedValue(Number.parseFloat(cellElement.data.may),false,2);
         }
       },
     },
-        {
+    {
       dataField: "june",
       caption: "June",
       dataType: "number",
@@ -171,22 +222,31 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.june == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.june))
+            cellElement.data?.june == null
+              ? ""
+              : getFormattedValue(Number.parseFloat(cellElement.data.june),false,2);
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+          };
         } else {
-          return (cellElement.data?.june == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.june)))
+          return cellElement.data?.june == null
+            ? ""
+            : getFormattedValue(Number.parseFloat(cellElement.data.june),false,2);
         }
       },
     },
-        {
+    {
       dataField: "july",
       caption: "July",
       dataType: "number",
@@ -196,22 +256,31 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.july == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.july))
+            cellElement.data?.july == null
+              ? ""
+              : getFormattedValue(Number.parseFloat(cellElement.data.july),false,2);
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+          };
         } else {
-          return (cellElement.data?.july == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.july)))
+          return cellElement.data?.july == null
+            ? ""
+            : getFormattedValue(Number.parseFloat(cellElement.data.july),false,2);
         }
       },
     },
-        {
+    {
       dataField: "august",
       caption: "August",
       dataType: "number",
@@ -221,22 +290,31 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.august == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.august))
+            cellElement.data?.august == null
+              ? ""
+              : getFormattedValue(Number.parseFloat(cellElement.data.august),false,2);
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+          };
         } else {
-          return (cellElement.data?.august == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.august)))
+          return cellElement.data?.august == null
+            ? ""
+            : getFormattedValue(Number.parseFloat(cellElement.data.august),false,2);
         }
       },
     },
-        {
+    {
       dataField: "september",
       caption: "September",
       dataType: "number",
@@ -246,22 +324,33 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.september == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.september))
+            cellElement.data?.september == null
+              ? ""
+              : getFormattedValue(
+                  Number.parseFloat(cellElement.data.september),false,2
+                );
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+          };
         } else {
-          return (cellElement.data?.september == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.september)))
+          return cellElement.data?.september == null
+            ? ""
+            : getFormattedValue(Number.parseFloat(cellElement.data.september),false,2);
         }
       },
     },
-        {
+    {
       dataField: "october",
       caption: "October",
       dataType: "number",
@@ -271,22 +360,31 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.october == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.october))
+            cellElement.data?.october == null
+              ? ""
+              : getFormattedValue(Number.parseFloat(cellElement.data.october),false,2);
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+          };
         } else {
-          return (cellElement.data?.october == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.october)))
+          return cellElement.data?.october == null
+            ? ""
+            : getFormattedValue(Number.parseFloat(cellElement.data.october),false,2);
         }
       },
     },
-        {
+    {
       dataField: "november",
       caption: "November",
       dataType: "number",
@@ -296,22 +394,31 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.november == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.november))
+            cellElement.data?.november == null
+              ? ""
+              : getFormattedValue(Number.parseFloat(cellElement.data.november),false,2);
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+          };
         } else {
-          return (cellElement.data?.november == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.november)))
+          return cellElement.data?.november == null
+            ? ""
+            : getFormattedValue(Number.parseFloat(cellElement.data.november),false,2);
         }
       },
     },
-        {
+    {
       dataField: "december",
       caption: "December",
       dataType: "number",
@@ -321,22 +428,31 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.december == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.december))
+            cellElement.data?.december == null
+              ? ""
+              : getFormattedValue(Number.parseFloat(cellElement.data.december),false,2);
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+          };
         } else {
-          return (cellElement.data?.december == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.december)))
+          return cellElement.data?.december == null
+            ? ""
+            : getFormattedValue(Number.parseFloat(cellElement.data.december),false,2);
         }
       },
     },
-   {
+    {
       dataField: "total",
       caption: t("total"),
       dataType: "number",
@@ -346,26 +462,35 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.total == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.total))
+            cellElement.data?.total == null
+              ? ""
+              : getFormattedValue(Number.parseFloat(cellElement.data.total),false,2);
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+          };
         } else {
-          return (cellElement.data?.total == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.total)))
+          return cellElement.data?.total == null
+            ? ""
+            : getFormattedValue(Number.parseFloat(cellElement.data.total),false,2);
         }
       },
     },
   ];
-  
+
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: any) => {
-      console.log('itemInfo');
+      console.log("itemInfo");
 
       console.log(itemInfo);
 
@@ -383,133 +508,87 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
   }, []);
   const customizeDate = (itemInfo: any) => `TOTAL`;
 
-    const summaryItems: SummaryConfig[] = [
-      {
-        column: "salesMan",
-        summaryType: "custom",
-        valueFormat:"string",
-        customizeText: customizeDate,
-      },
-      {
-        column: "january",
-        summaryType: "custom",
-        valueFormat: "currency",
-        customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
-        
-      },
-      {
-        column: "february",
-        summaryType: "custom",
-        valueFormat: "currency",
-        customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
-      },
-      {
-        column: "march",
-        summaryType: "custom",
-        valueFormat: "currency",
-        customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
-      },
-      {
-        column: "april",
-        summaryType: "custom",
-        valueFormat: "currency",
-        customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
-      },
-      {
-        column: "may",
-        summaryType: "custom",
-        valueFormat: "currency",
-        customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
-      },
-      {
-        column: "june",
-        summaryType: "custom",
-        valueFormat: "currency",
-        customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
-      },
-      {
-        column: "july",
-        summaryType: "custom",
-        valueFormat: "currency",
-        customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
-      },
-      {
-        column: "august",
-        summaryType: "custom",
-        valueFormat: "currency",
-        customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
-      },
-      {
-        column: "september",
-        summaryType: "custom",
-        valueFormat: "currency",
-        customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
-      },
+  const summaryItems: SummaryConfig[] = [
+    {
+      column: "salesMan",
+      summaryType: "custom",
+      valueFormat: "string",
+      customizeText: customizeDate,
+    },
+    {
+      column: "january",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "february",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "march",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "april",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "may",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "june",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "july",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "august",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "september",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
 
-      {
-        column: "october",
-        summaryType: "custom",
-        valueFormat: "currency",
-        customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
-      },
-      {
-        column: "november",
-        summaryType: "custom",
-        valueFormat: "currency",
-        customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
-      },
-      {
-        column: "december",
-        summaryType: "custom",
-        valueFormat: "currency",
-        customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
-      },
-      {
-        column: "total",
-        summaryType: "custom",
-        valueFormat: "currency",
-        customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
-      }
-    ];
+    {
+      column: "october",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "november",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "december",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+  ];
 
   return (
     <Fragment>
@@ -520,8 +599,8 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  summaryItems={summaryItems}
-                  filterText="of {voucherForm != ''&& , Voucher Form : [voucherForm]}
+                  // summaryItems={summaryItems}
+                  filterText=" {voucherForm != ''&& , Voucher Form : [voucherForm]}
                   {salesRouteID > 0 && , Route Name : [routeName]} 
                   {counterID > 0 && , Counter : [counterName]} 
                   {salesmanID > 0 && , Sales Man : [salesMan]} 
@@ -535,15 +614,17 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
                   filterWidth={500}
                   filterHeight={290}
                   filterContent={<SalesTransferMonthWiseSummaryReportFilter />}
-                  filterInitialData={SalesTransferMonthWiseSummaryReportFilterInitialState}
+                  filterInitialData={
+                    SalesTransferMonthWiseSummaryReportFilterInitialState
+                  }
                   hideGridAddButton={true}
                   reload={true}
-                   remoteOperations={{
-                  filtering: true,
-                  paging: true,
-                  sorting: true,
-                  summary: true,
-                }}
+                  remoteOperations={{
+                    filtering: true,
+                    paging: true,
+                    sorting: true,
+                    summary: true,
+                  }}
                 />
               </div>
             </div>
@@ -551,8 +632,7 @@ const SalesTransferMonthWiseSummaryReport: FC<SalesTransferMonthWiseSummaryRepor
         </div>
       </div>
     </Fragment>
-  )
-}
+  );
+};
 
-export default SalesTransferMonthWiseSummaryReport
-
+export default SalesTransferMonthWiseSummaryReport;

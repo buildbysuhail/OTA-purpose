@@ -198,7 +198,7 @@ export const useAccTransaction = (
   const { hasRight, hasBlockedRight } = useUserRights();
   const fetchUserConfig = async () => {
     try {
-      const base64 = await api.get(`${Urls.acc_transaction_base}${formState.transactionType}/GetLocalSettings`);
+      const base64 = await api.get(`${Urls.acc_transaction_base}${transactionType}/GetLocalSettings`);
       await setStorageString("utc", base64);
       // Decode the base64 back to JSON string
       const _userConfig = atob(base64);

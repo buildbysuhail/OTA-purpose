@@ -1,6 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, { SummaryConfig } from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import { FC, useEffect, useMemo, useState } from "react";
@@ -48,7 +50,9 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
         }
         break;
       case "finalize":
-        e.totalValue = e.totalNetValue ? (e.totalMargin / e.totalNetValue) * 100 : 0;
+        e.totalValue = e.totalNetValue
+          ? (e.totalMargin / e.totalNetValue) * 100
+          : 0;
         break;
     }
   };
@@ -94,6 +98,15 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
       {
         dataField: "brandName",
         caption: t("brand"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting: true,
+        width: 100,
+      },
+      {
+        dataField: "salesman",
+        caption: t("salesman"),
         dataType: "string",
         allowSearch: true,
         allowFiltering: true,
@@ -531,25 +544,27 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
       //   width: 120,
       // },
     ];
-    return baseColumns
-      .filter((column) => {
-        if (column.dataField == "productGroup") {
-          return filterInitialData.isGroupWise;
-        }
-        if (column.dataField == "category") {
-          return filterInitialData.isCategoryWise;
-        }
-        if (column.dataField == "productCategory") {
-          return filterInitialData.isProductCatWise;
-        }
-        if (column.dataField == "sectionName") {
-          return filterInitialData.isSectionWise;
-        }
-        if (column.dataField == "brandName") {
-          return filterInitialData.isBrandWise;
-        }
-        return true;
-      })
+    return baseColumns.filter((column) => {
+      if (column.dataField == "productGroup") {
+        return filterInitialData.isGroupWise;
+      }
+      if (column.dataField == "category") {
+        return filterInitialData.isCategoryWise;
+      }
+      if (column.dataField == "productCategory") {
+        return filterInitialData.isProductCatWise;
+      }
+      if (column.dataField == "sectionName") {
+        return filterInitialData.isSectionWise;
+      }
+      if (column.dataField == "brandName") {
+        return filterInitialData.isBrandWise;
+      }
+      if (column.dataField == "salesman") {
+        return filterInitialData.isSalesmanwise;
+      }
+      return true;
+    });
 
     //   .map((column) => {
     //     if (column.dataField !== "productGroup") return column;
@@ -654,8 +669,8 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
       summaryType: "custom",
       valueFormat: "fixedPoint",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
       },
     },
     {
@@ -663,8 +678,8 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
       },
     },
     {
@@ -672,8 +687,8 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
       },
     },
     {
@@ -681,8 +696,8 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
       },
     },
     {
@@ -690,43 +705,43 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
       },
     },
     //total margin/ netvalue *100 as margin%
     {
       column: "marginPerc",
-      summaryType: "custom",  //summaryType: "custom",
+      summaryType: "custom", //summaryType: "custom",
       valueFormat: "percent",
       showInColumn: "marginPerc",
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
       },
     },
     {
       column: "margin",
-      summaryType: "custom",  
+      summaryType: "custom",
       valueFormat: "fixedPoint",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
       },
     },
     {
       column: "salesPerc",
-      summaryType: "max",  // Check
+      summaryType: "max", // Check
       customizeText: customizeSummaryRow100,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
       },
     },
     {
       column: "marginSharePerc",
       summaryType: "max", // check
       customizeText: customizeSummaryRow100,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
       },
     },
     {
@@ -734,8 +749,8 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
       },
     },
     {
@@ -743,8 +758,8 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
       },
     },
   ];
@@ -761,15 +776,20 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
           <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
-                filterText="{isCategorywise == true && , Categorywise Sales Report From:} 
-                 {isSectionwise == true && , Sectionwise Sales Report From:} 
-                 {isProductCatwise == true && , ProductCategorywise Sales Report From:} 
-                 {isBrandwise == true && , Brandwise Sales Report From:} 
-                 {isProductCatwise == false & isCategorywise == false & isSectionwise == false & isBrandwise==false && ,Groupwise Sales Report From:}
-                 {fromDate} - {toDate}
+              // not working head from direct
+              // {isCategorywise == true && , Categorywise Sales Report From:} 
+              //    {isSectionwise == true && , Sectionwise Sales Report From:} 
+              //    {isProductCatwise == true && , ProductCategorywise Sales Report From:} 
+              //    {isBrandwise == true && , Brandwise Sales Report From:} 
+              //    {isSalesmanwise == true && , Salesmanwise Sales Report From: } 
+              //    {isProductCatwise == false & isCategorywise == false & isSectionwise == false & isBrandwise==false & isSalesmanwise==false && ,Groupwise Sales Report From:}
+                 
+                filterText=" From: {fromDate} - {toDate}
                  {productGroupID > 0 && , Group : [productGroup]} 
                  {groupCategoryID > 0 && , Category :  [groupCategory]}
-                 {sectionID > 0 && , Section :  [section]}"
+                 {sectionID > 0 && , Section :  [section]}
+                 {salesmanID > 0 && , salesman :  [salesman]}
+                 "
                 key={key}
                 summaryItems={summaryItems}
                 remoteOperations={{
@@ -779,7 +799,6 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
                 }}
                 handleCalculateSummary={handleCalculateSummary}
                 columns={columns}
-                
                 gridHeader={t(gridHeader)}
                 dataUrl={Urls.groupwise_sales_summary}
                 hideGridAddButton={true}

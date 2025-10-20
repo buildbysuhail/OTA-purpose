@@ -68,7 +68,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
         };
         console.log(`updatedPreferences`);
         if (eFromDataGrid) {
-          onChange(updatedPreferences);
+          // onChange(updatedPreferences);
         }
         return updatedPreferences;
       });

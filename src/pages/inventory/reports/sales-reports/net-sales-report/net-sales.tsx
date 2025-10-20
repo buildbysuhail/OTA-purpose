@@ -1,11 +1,15 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, { SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import { FC, useMemo, useState } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
-import NetSalesReportFilter, { NetSalesReportFilterInitialState, } from "./net-sales-filter";
+import NetSalesReportFilter, {
+  NetSalesReportFilterInitialState,
+} from "./net-sales-filter";
 import { RootState } from "../../../../../redux/store";
 import { useSelector } from "react-redux";
 import { erpParseFloat } from "../../../../../utilities/Utils";
@@ -448,98 +452,73 @@ const NetSalesReport: FC<NetSalesProps> = ({ gridHeader, dataUrl, gridId }) => {
       return getFormattedValue(value) || "0";
     };
   }, [getFormattedValue]);
-
+  const customizeTotal = (itemInfo: any) => `TOTAL`;
   const summaryItems: SummaryConfig[] = useMemo(() => {
     const _summaryItems: SummaryConfig[] = [
+      {
+        column: "party",
+        summaryType: "max",
+        customizeText: customizeTotal,
+      },
       {
         column: "salesAmt",
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
       },
       {
         column: "cashAmt",
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
       },
       {
         column: "creditAmt",
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
       },
       {
         column: "bankAmt",
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
       },
       {
         column: "saleReturnAmt",
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
       },
       {
         column: "balance",
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
       },
       {
         column: "couponAmt",
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
       },
       {
         column: "grossValue",
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
       },
       {
         column: "vatAmount",
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
       },
       {
         column: "netSales",
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
       },
     ];
 
@@ -566,8 +545,9 @@ const NetSalesReport: FC<NetSalesProps> = ({ gridHeader, dataUrl, gridId }) => {
                   filtering: true,
                   paging: true,
                   sorting: false,
-                  summary: true,
+                  summary: false,
                 }}
+                filterText="{salesRouteID > 0 && Route Name :  [salesRoute]} {salesmanID > 0 && , Sales Man : [salesman]} From Date : {dateFrom} To Date : {dateTo}"
                 columns={columns}
                 gridHeader={t(gridHeader)}
                 dataUrl={dataUrl}

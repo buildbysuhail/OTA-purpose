@@ -552,7 +552,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     ) {
       height = window.innerHeight - 303;
     } else {
-      height = window.innerHeight - 505;
+      height = window.innerHeight - (505+23);
     }
 
     console.log('Max safe integer:', Number.MAX_SAFE_INTEGER);
@@ -1535,6 +1535,11 @@ debugger;
     return formState.userConfig?.inputBoxStyle?.inputSize == "sm" ? remToPx(0) : formState.userConfig?.inputBoxStyle?.inputSize == "md" ? remToPx(0.75) : formState.userConfig?.inputBoxStyle?.inputSize == "lg" ? remToPx(1.375) : formState.userConfig?.inputBoxStyle?.inputSize == "customize" ? (remToPx(formState.userConfig?.inputBoxStyle?.inputHeight) ?? 0) - 23 : 0
   }
 
+const [headerHeight ,setHeaderHeight] = useState<number>(0);
+const handleHeightChange =(height :number)=>{
+  setHeaderHeight(height)
+}
+
   return (
     <>
       {/* { !formState.transactionLoading ?( */}
@@ -1622,6 +1627,7 @@ debugger;
 
             {/* header starts here */}
             <TransactionHeader
+              onHeightChange={handleHeightChange}
               formState={formState}
               dispatch={dispatch}
               handleKeyDown={handleKeyDown}
@@ -1651,7 +1657,7 @@ debugger;
               className="mj23stylecheck"
               style={{
                 // marginTop: `${123 + (appState?.inputBox?.inputHeight ?? 0)}px`,
-                marginTop: formState.transaction.master.voucherType === "LPO" ? `${150 + getInputHeight()}px` : `${97 + getInputHeight()}px`,
+                marginTop: formState.transaction.master.voucherType === "LPO" ? `${150 + getInputHeight()}px` : `${headerHeight + 52 + getInputHeight()}px`,
                 width: isFooterOnRight ? "calc(100% - 300px)" : "100%",
                 // height: `${gridHeight}px`,
                 overflow: "auto",

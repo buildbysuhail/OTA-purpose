@@ -3,13 +3,13 @@ export interface ApplicationGstSettings {
     purchaseInterstateType: boolean;
     purchaseForm62: boolean;
     outputFormType: string;
-    defaultFormTypeForPOS: string;
+    defaultFormTypeForPOS: any;
     inputCSTAccount: string;
-    defaultPrefixForPOS: string;
+    defaultPrefixForPOS: any;
     outputCSTAccount: string;
-    defaultSRFormTypeForPOS: string;
+    defaultSRFormTypeForPOS: any;
     inputCessAccount: string;
-    defaultSRPrefixForPOS: string;
+    defaultSRPrefixForPOS: any;
     outputCessAccount: string;
     inputSGSTAccount: string;
     outputSGSTAccount: string;
@@ -42,13 +42,13 @@ export const ApplicationGstSettingsInitialState: ApplicationGstSettings = {
     purchaseInterstateType: false,
     purchaseForm62: false,
     outputFormType: '',
-    defaultFormTypeForPOS: '',
+    defaultFormTypeForPOS: -2,
     inputCSTAccount: '',
-    defaultPrefixForPOS: '',
+    defaultPrefixForPOS: -2,
     outputCSTAccount: '',
-    defaultSRFormTypeForPOS: '',
+    defaultSRFormTypeForPOS: -2,
     inputCessAccount: '',
-    defaultSRPrefixForPOS: '',
+    defaultSRPrefixForPOS: -2,
     outputCessAccount: '',
     inputSGSTLedgerID: '',
     inputAddCessAccount: '',

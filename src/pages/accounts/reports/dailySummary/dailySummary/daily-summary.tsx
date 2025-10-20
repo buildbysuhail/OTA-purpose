@@ -684,7 +684,7 @@ const DailySummary: React.FC<{ filter: DailySummaryFilter; onReloadChange: () =>
 
           <div className="grid grid-cols-1 gap-3">
             {voucherType != undefined && voucherType != null && voucherType != "" && !["CB", "CRS", "CD", "TMR"].includes(voucherType) && <ErpDevGrid
-              remoteOperations={{ filtering: true, paging: true, sorting: true }}
+              remoteOperations={{ filtering: false, paging: false, sorting: false,summary:false }}
               heightToAdjustOnWindows={275}
               columns={detailsColumns}
               gridHeader={t("daily_summary_detailed")}

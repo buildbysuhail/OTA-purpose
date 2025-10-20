@@ -563,7 +563,7 @@ const CreditPurchaseSummaryReport = () => {
     },
     {
       column: "gross",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -577,14 +577,11 @@ const CreditPurchaseSummaryReport = () => {
             2
           ) || "0"
         );
-      },
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value, false, 4));
       },
     },
     {
       column: "disc",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -598,14 +595,11 @@ const CreditPurchaseSummaryReport = () => {
             2
           ) || "0"
         );
-      },
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value, false, 4));
       },
     },
     {
       column: "vat",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -619,14 +613,11 @@ const CreditPurchaseSummaryReport = () => {
             2
           ) || "0"
         );
-      },
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value, false, 4));
       },
     },
     {
       column: "grandTotal",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -641,13 +632,10 @@ const CreditPurchaseSummaryReport = () => {
           ) || "0"
         );
       },
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value, false, 4));
-      },
     },
     {
       column: "billDiscount",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -668,7 +656,7 @@ const CreditPurchaseSummaryReport = () => {
     },
     {
       column: "cashDiscount",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -682,14 +670,11 @@ const CreditPurchaseSummaryReport = () => {
             2
           ) || "0"
         );
-      },
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value, false, 4));
       },
     },
     {
       column: "cashReceived",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -703,14 +688,11 @@ const CreditPurchaseSummaryReport = () => {
             2
           ) || "0"
         );
-      },
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value, false, 4));
       },
     },
     {
       column: "adjustmentAmount",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -724,9 +706,6 @@ const CreditPurchaseSummaryReport = () => {
             2
           ) || "0"
         );
-      },
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value, false, 4));
       },
     },
   ];

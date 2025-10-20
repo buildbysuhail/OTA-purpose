@@ -253,7 +253,7 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({
   const summaryItems: SummaryConfig[] = [
     {
       column: "taxableValue",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -268,13 +268,13 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({
           ) || "0"
         );
       },
-      cellSummaryAction:(value: number) => {
-                  return erpParseFloat(getFormattedValue(value, false, 4));
-            },
+      // cellSummaryAction:(value: number) => {
+      //             return erpParseFloat(getFormattedValue(value, false, 4));
+      //       },
     },
     {
       column: "totalVAT",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -289,13 +289,13 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({
           ) || "0"
         );
       },
-         cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value, false, 4));
-      },
+      //    cellSummaryAction:(value: number) => {
+      //       return erpParseFloat(getFormattedValue(value, false, 4));
+      // },
     },
     {
       column: "total",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -310,9 +310,7 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({
           ) || "0"
         );
       },
-         cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value, false, 4));
-      },
+         
     },
   ];
 

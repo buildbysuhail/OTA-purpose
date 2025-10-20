@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, KeyboardEvent, useEffect, useState, cloneElement } from "react";
+import React, { forwardRef, memo, KeyboardEvent, useEffect, useState, cloneElement, useRef } from "react";
 import { TextField, InputAdornment, TextFieldProps, Theme, SxProps, Typography, styled } from "@mui/material";
 import { setNestedValue } from "../../utilities/Utils";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
@@ -183,6 +183,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       fetching = false,
       boldInput = false,
       contextClassName,
+      autoFocus,
       ...props
     }: ERPInputProps,
     ref
@@ -214,6 +215,18 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     const handleMouseEnter = () => setIsHovered(true);
     const handleMouseLeave = () => setIsHovered(false);
     const [initial, setInitial] = useState<Option | null>(initialValue);
+
+    const input_Ref = useRef<HTMLInputElement | null>(null);
+
+    useEffect(() => {
+      if (autoFocus) {
+        const timer = setTimeout(() => {
+          input_Ref.current?.focus();
+          input_Ref.current?.select();
+        }, 300); 
+        return () => clearTimeout(timer);
+      }
+    }, [autoFocus]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const ds = min != undefined ? parseFloat(min.toString()) : undefined;
@@ -918,11 +931,19 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             )}
             <div className="relative flex-1" style={{ backgroundColor: bgColor }}>
               <input
+                ref={(r) => {
+                    input_Ref.current = r;
+                    if (typeof ref === "function") {
+                      ref(r);
+                    } else if (ref) {
+                      ref.current = r;
+                    }
+                  }}
                 {...commonProps}
                 {...numberInputProps}
                 placeholder={fetching
                   ? "" : iPlaceholder}
-                ref={ref}
+                // ref={ref}
                 autoComplete="off"
                 autoCorrect="off"
                 autoCapitalize="off"

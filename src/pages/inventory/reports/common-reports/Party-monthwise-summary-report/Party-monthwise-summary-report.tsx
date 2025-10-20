@@ -168,7 +168,7 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({
           const value =
             cellElement.data?.total == null
               ? ""
-              : getFormattedValue(Number.parseFloat(cellElement.data.total));
+              : getFormattedValue(cellElement.data.total);
           return {
             ...exportCell,
             text: value,
@@ -178,7 +178,7 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({
         } else {
           return cellElement.data?.total == null
             ? ""
-            : getFormattedValue(Number.parseFloat(cellElement.data.total));
+            : getFormattedValue(cellElement.data.total);
         }
       },
     },
@@ -212,7 +212,7 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({
             cellElement.data?.grandTotal == null
               ? ""
               : getFormattedValue(
-                Number.parseFloat(cellElement.data.grandTotal)
+                cellElement.data.grandTotal
               );
           return {
             ...exportCell,
@@ -223,7 +223,7 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({
         } else {
           return cellElement.data?.grandTotal == null
             ? ""
-            : getFormattedValue(Number.parseFloat(cellElement.data.grandTotal));
+            : getFormattedValue(cellElement.data.grandTotal);
         }
       },
     },
@@ -252,21 +252,15 @@ const PartyMonthwiseSummaryReport: FC<PartyMonthwiseSummaryReportProps> = ({
     },
     {
       column: "total",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-                return erpParseFloat(getFormattedValue(value));
-              },
     },
     {
       column: "grandTotal",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-                return erpParseFloat(getFormattedValue(value));
-              },
     },
   ];
 

@@ -2830,7 +2830,7 @@ export const useTransaction = (
         outDetail.product = product.productName;
         outDetail.productID = product.productID;
         outDetail.barCode = product.autoBarcode;
-        outDetail.manualBarcode = product.manualBarcode;
+        outDetail.manualBarcode = product.mannualBarcode;
         outDetail.productBatchID = product.productBatchID;
 
         // Set default quantity if configured
@@ -2953,6 +2953,8 @@ export const useTransaction = (
           if (
             formState.transaction.master.voucherForm.toLowerCase() ===
               "interstate" ||
+            formState.transaction.master.voucherForm.toLowerCase() ===
+              "int" ||
             formState.transaction.master.voucherForm.toLowerCase() === "import"
           ) {
             outDetail.details2!.cgstPerc = 0;

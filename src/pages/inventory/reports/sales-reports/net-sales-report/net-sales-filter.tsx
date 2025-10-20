@@ -36,9 +36,12 @@ const NetSalesReportFilter = ({ getFieldProps, handleFieldChange, formState }: a
                         valueKey: "id",
                         labelKey: "name",
                     }}
-                    onSelectItem={(data) => {
-                        handleFieldChange("salesRouteID", data.salesRouteID);
-                    }}
+                     onSelectItem={(data) => {
+            handleFieldChange({
+              salesRouteID: data.value,
+              salesRoute: data.label,
+            })
+          }}
                 />
 
                 <ERPDataCombobox
@@ -46,13 +49,16 @@ const NetSalesReportFilter = ({ getFieldProps, handleFieldChange, formState }: a
                     {...getFieldProps("salesmanID")}
                     field={{
                         id: "salesmanID",
-                        getListUrl: Urls.data_users,
+                        getListUrl: Urls.data_employees,
                         valueKey: "id",
                         labelKey: "name",
                     }}
-                    onSelectItem={(data) => {
-                        handleFieldChange("salesmanID", data.salesmanID);
-                    }}
+                     onSelectItem={(data) => {
+            handleFieldChange({
+              salesmanID: data.value,
+              salesman: data.label,
+            })
+          }}
                 />
 
                 <ERPDataCombobox
@@ -65,7 +71,10 @@ const NetSalesReportFilter = ({ getFieldProps, handleFieldChange, formState }: a
                         labelKey: "name",
                     }}
                     onSelectItem={(data) => {
-                        handleFieldChange("partyID", data.partyID);
+                       handleFieldChange({
+              partyID: data.value,
+              party: data.label,
+            })
                     }}
                 />
 
@@ -79,7 +88,10 @@ const NetSalesReportFilter = ({ getFieldProps, handleFieldChange, formState }: a
                         labelKey: "name",
                     }}
                     onSelectItem={(data) => {
-                        handleFieldChange("partyCategoryID", data.partyCategoryID);
+                         handleFieldChange({
+              partyCategoryID: data.value,
+              partyCategory: data.label,
+            })
                     }}
                 />
 

@@ -352,13 +352,10 @@ export const useTransaction = (
         return userConfig;
       }
 
-      const _bs64 = modelToBase64Unicode(initialUserConfig) 
-       await setStorageString(
-          `${transactionType}_LocalSettings`,
-          _bs64
-        );
+      const _bs64 = modelToBase64Unicode(initialUserConfig);
+      await setStorageString(`${transactionType}_LocalSettings`, _bs64);
 
-        return initialUserConfig;
+      return initialUserConfig;
     } catch (error) {
       console.error("Error fetching user config:", error);
     }
@@ -812,9 +809,9 @@ export const useTransaction = (
 
     const setting = applicationSettings.productsSettings.mRPLessThanSalesPrice;
 
-      // Equivalent condition:
-      // if ((setting is not "Block" && UserSession.IsAPPGlobal) || !UserSession.IsAPPGlobal)
-      if ((setting == "Block" && clientSession.isAppGlobal)) {
+    // Equivalent condition:
+    // if ((setting is not "Block" && UserSession.IsAPPGlobal) || !UserSession.IsAPPGlobal)
+    if (setting == "Block" && clientSession.isAppGlobal) {
       // Find invalid rows (Sales price greater than MRP)
       const invalidRows = details
         .map((item, index) => ({ item, index }))
@@ -822,14 +819,16 @@ export const useTransaction = (
         .map(({ index }) => index + 1);
 
       if (invalidRows.length > 0) {
-          await ERPAlert.show({
+        await ERPAlert.show({
           icon: "error",
           title: t("validation_error"),
-          text: t(`Sales price greater than MRP at rows: ${invalidRows.join(", ")}`),
+          text: t(
+            `Sales price greater than MRP at rows: ${invalidRows.join(", ")}`
+          ),
           confirmButtonText: t("ok"),
         });
         return false;
-      } 
+      }
     }
 
     if (
@@ -3057,8 +3056,7 @@ export const useTransaction = (
           if (
             formState.transaction.master.voucherForm.toLowerCase() ===
               "interstate" ||
-            formState.transaction.master.voucherForm.toLowerCase() ===
-              "int" ||
+            formState.transaction.master.voucherForm.toLowerCase() === "int" ||
             formState.transaction.master.voucherForm.toLowerCase() === "import"
           ) {
             outDetail.details2!.cgstPerc = 0;
@@ -3658,18 +3656,21 @@ export const useTransaction = (
               const res = focusToNextColumn(rowIndex, columnName);
               setCurrentCell(res, data, rowIndex != res?.rowIndex);
             }
-          }
-          // else if (columnName == "unitPrice") {
-          // dispatch(
-          //   commonParams.formStateHandleFieldChangeKeysOnly({
-          //     fields: {
-          //       productInfo: true,
-          //     },
-          //   })
-          // );
-          // return { handled: true };
-          // }
-          else if (columnName == "unitPriceFC") {
+          } else if (columnName == "unitPrice") {
+            if (!formState.productInfo == true) {
+              if (formState.userConfig?.showProductInfoPopup) {
+                dispatch(
+                  commonParams.formStateHandleFieldChangeKeysOnly({
+                    fields: {
+                      productInfo: true,
+                    },
+                  })
+                );
+              }
+            } 
+             const res = focusToNextColumn(rowIndex, columnName);
+            setCurrentCell(res, data, rowIndex != res?.rowIndex);
+          } else if (columnName == "unitPriceFC") {
             if (
               (() => {
                 try {

@@ -1,12 +1,17 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, { DrillDownCellTemplate, SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  DrillDownCellTemplate,
+  SummaryConfig,
+} from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import { useMemo } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../../redux/urls";
-import NonInvoicedGoodsDeliveryFilter, { NonInvoicedGoodsDeliveryFilterInitialState, } from "./non-invloced-goods-deliveryfilter";
+import NonInvoicedGoodsDeliveryFilter, {
+  NonInvoicedGoodsDeliveryFilterInitialState,
+} from "./non-invloced-goods-deliveryfilter";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import { erpParseFloat } from "../../../../../utilities/Utils";
@@ -145,10 +150,10 @@ const NonInvoicedGoodsDelivery = () => {
           return cellElement.data?.grandTotal == null
             ? ""
             : getFormattedValue(
-              parseFloat(cellElement.data.grandTotal),
-              false,
-              4
-            );
+                parseFloat(cellElement.data.grandTotal),
+                false,
+                4
+              );
         }
       },
     },
@@ -175,7 +180,7 @@ const NonInvoicedGoodsDelivery = () => {
       ) {
         return "0";
       }
-      return getFormattedValue(value, false, 2) || "0";
+      return getFormattedValue(value) || "0";
     };
   }, [getFormattedValue]);
   const customizeDate = (itemInfo: any) => `TOTAL`;
@@ -190,9 +195,9 @@ const NonInvoicedGoodsDelivery = () => {
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value, false, 4));
-        },
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value, false, 4));
+      },
     },
   ];
 

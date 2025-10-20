@@ -8,25 +8,6 @@ import { useNumberFormat } from "../../../../../utilities/hooks/use-number-forma
 import { ProductSummaryFilter } from "./product-summary-master";
 import { erpParseFloat } from "../../../../../utilities/Utils";
 
-interface ProductSummaryReportByTransaction {
-  vNo: string;
-  vPrefix: string;
-  voucherType: string;
-  voucherForm: string;
-  date: string;
-  ledgerName: string;
-  partyName: string;
-  address1: string;
-  quantity: number;
-  unitName: string;
-  unitPrice: number;
-  grossValue: number;
-  rateWithTax: number;
-  netValue: number;
-  totalVatAmount: number;
-  netAmount: number;
-}
-
 const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter; setFilter: React.Dispatch<React.SetStateAction<any>>; onReloadChange: () => void; reloadBase: boolean; voucherType: string }> = ({ filter, setFilter, onReloadChange, reloadBase, voucherType }) => {
   const { t } = useTranslation("accountsReport");
   const columns: DevGridColumn[] = useMemo(() => {
@@ -405,30 +386,21 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
     },
     {
       column: "quantity",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value, false, 4));
-      },
     },
     {
       column: "netValue",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value, false, 4));
-      },
     },
     {
       column: "netAmount",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value, false, 4));
-      },
     }
   ];
 
@@ -440,7 +412,7 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 summaryItems={summaryItems}
-                remoteOperations={{ filtering: true, paging: false, sorting: true, summary: true }}
+                remoteOperations={{ filtering: true, paging: true, sorting: true, summary: true }}
                 columns={columns}
                 gridHeader={t("product_summary_report_by_transaction")}
                 dataUrl={Urls.product_summary_transaction}

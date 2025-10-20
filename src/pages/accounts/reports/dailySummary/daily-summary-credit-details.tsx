@@ -290,7 +290,7 @@ const DailySummaryCreditDetails: React.FC<{filter: DailySummaryFilter; onReloadC
           <div className="grid grid-cols-1 gap-3">
             <ErpDevGrid
               heightToAdjustOnWindows={275}
-              remoteOperations={{ filtering: true, paging: true, sorting: true }}
+              remoteOperations={{ filtering: false, paging: false, sorting: false }}
               columns={columns}
               gridHeader={t("daily_summary_sales_credit_details")}
               dataUrl={Urls.acc_reports_daily_summary_credit_details}

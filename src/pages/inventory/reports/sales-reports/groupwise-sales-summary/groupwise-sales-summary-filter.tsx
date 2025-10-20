@@ -83,6 +83,22 @@ const GroupwiseSalesSummaryFilter = ({
             })
           }}
         />
+        <ERPDataCombobox
+          label={t("salesman")}
+          {...getFieldProps("salesmanID")}
+          field={{
+            id: "salesmanID",
+            getListUrl: Urls.data_employees,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onSelectItem={(data) => {
+            handleFieldChange({
+              salesmanID: data.value,
+              salesman: data.label,
+            })
+          }}
+        />
       </div>
 
       <div className="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-2">
@@ -108,10 +124,11 @@ export const GroupwiseSalesSummaryFilterInitialState = {
   productGroupID: -1,
   groupCategoryID: -1,
   sectionID: -1,
+  salesmanID: -1,
   isProductCatWise: false,
   isCategoryWise: false,
   isSectionWise: false,
   isBrandWise: false,
-  // isGroupWise: false,
+  isSalesmanwise: false,
   showTransactionTimeProfit: true,
 };

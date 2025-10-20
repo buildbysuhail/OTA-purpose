@@ -595,7 +595,7 @@ const DaywiseSummaryWithProfit = () => {
       ) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.gpPercentage;
-          const value = balance == null ? "" : getFormattedValue(balance);
+          const value = balance == null ? "" : getFormattedValue(balance,false,3);
           return {
             ...exportCell,
             text: value,
@@ -638,7 +638,7 @@ const DaywiseSummaryWithProfit = () => {
             >
               {`${cellElement.data?.gpPercentage == null
                 ? ""
-                : getFormattedValue(cellElement.data.gpPercentage)
+                : getFormattedValue(cellElement.data.gpPercentage,false,3)
                 }`}
             </span>
           );
@@ -662,7 +662,7 @@ const DaywiseSummaryWithProfit = () => {
       ) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.markupPercentage;
-          const value = balance == null ? "" : getFormattedValue(balance);
+          const value = balance == null ? "" : getFormattedValue(balance,false,3);
           return {
             ...exportCell,
             text: value,
@@ -705,7 +705,7 @@ const DaywiseSummaryWithProfit = () => {
             >
               {`${cellElement.data?.markupPercentage == null
                 ? ""
-                : getFormattedValue(cellElement.data.markupPercentage)
+                : getFormattedValue(cellElement.data.markupPercentage,false,3)
                 }`}
             </span>
           );

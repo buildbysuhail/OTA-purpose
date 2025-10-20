@@ -14,9 +14,7 @@ import { useLocation } from "react-router-dom";
 import RegisterFilter, {
   RegisterFilterInitialState,
 } from "./register-report-filter";
-import { isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
-import { DataGrid } from "devextreme-react";
-import { Summary, TotalItem } from "devextreme-react/cjs/data-grid";
+import { erpParseFloat, isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
 
 interface RegisterProps {
   gridHeader: string;
@@ -44,7 +42,856 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
 
   const columns: DevGridColumn[] = useMemo(() => {
     const baseColumns: DevGridColumn[] = [
-     
+      {
+        dataField: "masterID",
+        caption: t("master_ID"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        visible: false,
+        width: 100,
+      },
+      {
+        dataField: "date",
+        caption: t("date"),
+        dataType: "date",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 80,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          return cellElement.data.date == null || cellElement.data.date == ""
+            ? ""
+            : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY"); // Ensures proper formatting
+        },
+      },
+      {
+        dataField: "vchNo",
+        caption: t("voucher_no"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 50,
+        showInPdf: true,
+        cellRender: (cellElement: any, cellInfo: any) => {
+          return (
+            <DrillDownCellTemplate
+              data={cellElement}
+              field="vchNo"
+            ></DrillDownCellTemplate>
+          );
+        },
+      },
+      {
+        dataField: "form",
+        caption: t("form"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 80,
+        showInPdf: true,
+      },
+      {
+        dataField: "partyCode",
+        caption: t("party_code"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 110,
+        showInPdf: true,
+      },
+      {
+        dataField: "party",
+        caption: t("party"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        // width: 150,
+        showInPdf: true,
+      },
+      {
+        dataField: "address1",
+        caption: t("address1"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+      },
+      {
+        dataField: "address2",
+        caption: t("address2"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "detailID",
+        caption: t("detail_ID"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        visible: false,
+        width: 100,
+      },
+
+      //repeat from procedure
+      {
+        dataField: "batchNo",
+        caption: t("batch_no"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "productCode",
+        caption: t("product_code"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 70,
+      },
+      {
+        dataField: "product",
+        caption: t("product"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+      },
+      {
+        dataField: "productGroup",
+        caption: t("product_group"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "brand",
+        caption: t("brand"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "categoryCode",
+        caption: t("category_code"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 80,
+      },
+      {
+        dataField: "category",
+        caption: t("category"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "quantity",
+        caption: t("quantity"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 80,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.quantity == null
+                ? ""
+                : getFormattedValue(cellElement.data.quantity, false, 4);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.quantity == null
+              ? ""
+              : getFormattedValue(
+                  parseFloat(cellElement.data.quantity),
+                  false,
+                  4
+                );
+          }
+        },
+      },
+      {
+        dataField: "free",
+        caption: t("free"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 60,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.free == null
+                ? ""
+                : getFormattedValue(cellElement.data.free, false, 4);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.free == null
+              ? ""
+              : getFormattedValue(parseFloat(cellElement.data.free), false, 4);
+          }
+        },
+      },
+      {
+        dataField: "unitCode",
+        caption: t("unit_code"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "unitPrice",
+        caption: t("unit_price"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.unitPrice == null
+                ? ""
+                : getFormattedValue(cellElement.data.unitPrice, false, 3);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.unitPrice == null
+              ? ""
+              : getFormattedValue(
+                  parseFloat(cellElement.data.unitPrice),
+                  false,
+                  3
+                );
+          }
+        },
+      },
+      {
+        dataField: "vat",
+        caption: t("vat"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.vat == null
+                ? ""
+                : getFormattedValue(cellElement.data.vat, false, 4);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.vat == null
+              ? ""
+              : getFormattedValue(parseFloat(cellElement.data.vat), false, 4);
+          }
+        },
+      },
+      {
+        dataField: "netAmount",
+        caption: t("net_amount"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 80,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.netAmount == null
+                ? ""
+                : getFormattedValue(cellElement.data.netAmount);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.netAmount == null
+              ? ""
+              : getFormattedValue(parseFloat(cellElement.data.netAmount));
+          }
+        },
+      },
+      {
+        dataField: "freeValue",
+        caption: t("free_value"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 80,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.freeValue == null
+                ? ""
+                : getFormattedValue(cellElement.data.freeValue, false, 7);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.freeValue == null
+              ? ""
+              : getFormattedValue(
+                  parseFloat(cellElement.data.freeValue),
+                  false,
+                  7
+                );
+          }
+        },
+      },
+      {
+        dataField: "cost",
+        caption: t("cost"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 80,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.cost == null
+                ? ""
+                : getFormattedValue(cellElement.data.cost, false, 4);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.cost == null
+              ? ""
+              : getFormattedValue(parseFloat(cellElement.data.cost), false, 4);
+          }
+        },
+      },
+      {
+        dataField: "freeCost",
+        caption: t("free_cost"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 80,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.freeCost == null
+                ? ""
+                : getFormattedValue(cellElement.data.freeCost, false, 8);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.freeCost == null
+              ? ""
+              : getFormattedValue(
+                  parseFloat(cellElement.data.freeCost),
+                  false,
+                  8
+                );
+          }
+        },
+      },
+      {
+        dataField: "totalProfit",
+        caption: t("total_profit"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 80,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.totalProfit == null
+                ? ""
+                : getFormattedValue(cellElement.data.totalProfit);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.totalProfit == null
+              ? ""
+              : getFormattedValue(parseFloat(cellElement.data.totalProfit));
+          }
+        },
+      },
+      {
+        dataField: "specification",
+        caption: t("specification"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+      },
+      {
+        dataField: "counterName",
+        caption: t("counter_name"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "routeName",
+        caption: t("route_name"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+      },
+      {
+        dataField: "financialYearID",
+        caption: t("financial_year_ID"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        visible: false,
+        width: 100,
+      },
+      {
+        dataField: "xRate",
+        caption: t("x_rate"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        // visible: false,
+        width: 100,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.xRate == null
+                ? ""
+                : getFormattedValue(cellElement.data.xRate, false, 6);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.xRate == null
+              ? ""
+              : getFormattedValue(parseFloat(cellElement.data.xRate), false, 6);
+          }
+        },
+      },
+      {
+        dataField: "autoBarcode",
+        caption: t("autobarcode"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 90,
+        showInPdf: true,
+      },
+      {
+        dataField: "additionalExpense",
+        caption: t("additional_expenses"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 80,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.additionalExpense == null
+                ? ""
+                : getFormattedValue(cellElement.data.additionalExpense);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.additionalExpense == null
+              ? ""
+              : getFormattedValue(
+                  parseFloat(cellElement.data.additionalExpense)
+                );
+          }
+        },
+      },
+      {
+        dataField: "branchName",
+        caption: t("branch_name"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "productDescription",
+        caption: t("product_description"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "color",
+        caption: t("color"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "warranty",
+        caption: t("warranty"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "qtyNos",
+        caption: t("qty_nos"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.qtyNos == null
+                ? "0"
+                : cellElement.data.qtyNos.toString();
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.qtyNos == null
+              ? ""
+              : cellElement.data.qtyNos.toString();
+          }
+        },
+      },
+      {
+        dataField: "mrp",
+        caption: t("mrp"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 80,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.mrp == null
+                ? ""
+                : getFormattedValue(cellElement.data.mrp, false, 3);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.mrp == null
+              ? ""
+              : getFormattedValue(parseFloat(cellElement.data.mrp), false, 3);
+          }
+        },
+      },
+      {
+        dataField: "groupCategoryName",
+        caption: t("group_category_name"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "sectionName",
+        caption: t("section_name"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "stdPurchasePrice",
+        caption: t("std_purchase_price"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.stdPurchasePrice == null
+                ? ""
+                : getFormattedValue(cellElement.data.stdPurchasePrice);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.stdPurchasePrice == null
+              ? ""
+              : getFormattedValue(
+                  parseFloat(cellElement.data.stdPurchasePrice)
+                );
+          }
+        },
+      },
+      {
+        dataField: "stdSalesPrice",
+        caption: t("std_sales_price"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.stdSalesPrice == null
+                ? ""
+                : getFormattedValue(cellElement.data.stdSalesPrice);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.stdSalesPrice == null
+              ? ""
+              : getFormattedValue(parseFloat(cellElement.data.stdSalesPrice));
+          }
+        },
+      },
+      {
+        dataField: "employeeName",
+        caption: t("employee_name"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "expiryDate",
+        caption: t("expiry_date"),
+        dataType: "date",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+
+      {
+        dataField: "warrantyPeriod",
+        caption: t("warranty_period"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "costCentreName",
+        caption: t("cost_centre_name"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "totalDiscount",
+        caption: t("total_discount"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.totalDiscount == null
+                ? ""
+                : getFormattedValue(cellElement.data.totalDiscount);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.totalDiscount == null
+              ? ""
+              : getFormattedValue(parseFloat(cellElement.data.totalDiscount));
+          }
+        },
+      },
+      {
+        dataField: "netValue",
+        caption: t("net_value"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.netValue == null
+                ? ""
+                : getFormattedValue(cellElement.data.netValue);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.netValue == null
+              ? ""
+              : getFormattedValue(parseFloat(cellElement.data.netValue));
+          }
+        },
+      },
       {
         dataField: "grossValue",
         caption: t("gross_value"),
@@ -105,6 +952,638 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         showInPdf: true,
       },
 
+      {
+        dataField: "purchaseInvoiceNumber",
+        caption: t("purchase_invoice_number"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        visible: false,
+        width: 100,
+      },
+      {
+        dataField: "priceCategoryID",
+        caption: t("price_category_ID"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "schemeDisc",
+        caption: t("scheme_disc"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        visible: false,
+        width: 100,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.schemeDisc == null
+                ? ""
+                : getFormattedValue(cellElement.data.schemeDisc);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.schemeDisc == null
+              ? ""
+              : getFormattedValue(parseFloat(cellElement.data.schemeDisc));
+          }
+        },
+      },
+
+      {
+        dataField: "exciseTax",
+        caption: t("excise_tax"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.exciseTax == null
+                ? ""
+                : getFormattedValue(cellElement.data.exciseTax);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.exciseTax == null
+              ? ""
+              : getFormattedValue(parseFloat(cellElement.data.exciseTax));
+          }
+        },
+      },
+      {
+        dataField: "vNUM",
+        caption: t("vnum"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        visible: false,
+        width: 100,
+        showInPdf: true,
+      },
+      {
+        dataField: "cgstPerc",
+        caption: t("cgst_%"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.cgstPerc == null
+                ? ""
+                : getFormattedValue(cellElement.data.cgstPerc, false, 4);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.cgstPerc == null
+              ? ""
+              : getFormattedValue(
+                  parseFloat(cellElement.data.cgstPerc),
+                  false,
+                  4
+                );
+          }
+        },
+      },
+      {
+        dataField: "cgst",
+        caption: t("cgst"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.cgst == null
+                ? ""
+                : getFormattedValue(cellElement.data.cgst, false, 4);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.cgst == null
+              ? ""
+              : getFormattedValue(parseFloat(cellElement.data.cgst), false, 4);
+          }
+        },
+      },
+      {
+        dataField: "sgstPerc",
+        caption: t("sgst_%"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.sgstPerc == null
+                ? ""
+                : getFormattedValue(cellElement.data.sgstPerc, false, 4);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.sgstPerc == null
+              ? ""
+              : getFormattedValue(
+                  parseFloat(cellElement.data.sgstPerc),
+                  false,
+                  4
+                );
+          }
+        },
+      },
+      {
+        dataField: "sgst",
+        caption: t("sgst"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.sgst == null
+                ? ""
+                : getFormattedValue(cellElement.data.sgst, false, 4);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.sgst == null
+              ? ""
+              : getFormattedValue(parseFloat(cellElement.data.sgst), false, 4);
+          }
+        },
+      },
+      {
+        dataField: "igstPerc",
+        caption: t("igst_%"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.igstPerc == null
+                ? ""
+                : getFormattedValue(cellElement.data.igstPerc, false, 4);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.igstPerc == null
+              ? ""
+              : getFormattedValue(
+                  parseFloat(cellElement.data.igstPerc),
+                  false,
+                  4
+                );
+          }
+        },
+      },
+      {
+        dataField: "igst",
+        caption: t("igst"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.igst == null
+                ? ""
+                : getFormattedValue(cellElement.data.igst, false, 4);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.igst == null
+              ? ""
+              : getFormattedValue(parseFloat(cellElement.data.igst), false, 4);
+          }
+        },
+      },
+      {
+        dataField: "gstPercent",
+        caption: t("gst_%"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.gstPercent == null
+                ? ""
+                : getFormattedValue(cellElement.data.gstPercent, false, 4);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.gstPercent == null
+              ? ""
+              : getFormattedValue(
+                  parseFloat(cellElement.data.gstPercent),
+                  false,
+                  4
+                );
+          }
+        },
+      },
+      {
+        dataField: "gstAmt",
+        caption: t("gst_amt"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.gstAmt == null
+                ? ""
+                : getFormattedValue(cellElement.data.gstAmt, false, 4);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.gstAmt == null
+              ? ""
+              : getFormattedValue(
+                  parseFloat(cellElement.data.gstAmt),
+                  false,
+                  4
+                );
+          }
+        },
+      },
+      {
+        dataField: "hsnCode",
+        caption: t("hsn_code"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+      },
+
+      // {
+      //   dataField: "salesPrice",
+      //   caption: t("sales_price"),
+      //   dataType: "number",
+      //   allowSearch: true,
+      //   allowFiltering: true,
+      //   width: 100,
+      //   showInPdf: true,
+      //   cellRender: (
+      //     cellElement: any,
+      //     cellInfo: any,
+      //     filter: any,
+      //     exportCell: any
+      //   ) => {
+      //     if (exportCell != undefined) {
+      //       const value =
+      //         cellElement.data?.salesPrice == null
+      //           ? ""
+      //           : getFormattedValue(cellElement.data.salesPrice);
+      //       return {
+      //         ...exportCell,
+      //         text: value,
+      //         alignment: "right",
+      //         alignmentExcel: { horizontal: "right" },
+      //       };
+      //     } else {
+      //       return cellElement.data?.salesPrice == null
+      //         ? ""
+      //         : getFormattedValue(parseFloat(cellElement.data.salesPrice));
+      //     }
+      //   },
+      // },
+      {
+        dataField: "remarks",
+        caption: t("remarks"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "cessPerc",
+        caption: t("cess_%"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.cessPerc == null
+                ? ""
+                : getFormattedValue(cellElement.data.cessPerc, false, 2);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.cessPerc == null
+              ? ""
+              : getFormattedValue(
+                  parseFloat(cellElement.data.cessPerc),
+                  false,
+                  2
+                );
+          }
+        },
+      },
+      {
+        dataField: "cessAmt",
+        caption: t("cess"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.cessAmt == null
+                ? ""
+                : getFormattedValue(cellElement.data.cessAmt, false, 4);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.cessAmt == null
+              ? ""
+              : getFormattedValue(
+                  parseFloat(cellElement.data.cessAmt),
+                  false,
+                  4
+                );
+          }
+        },
+      },
+      {
+        dataField: "additionalCessPerc",
+        caption: t("additional_cess_%"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.additionalCessPerc == null
+                ? ""
+                : getFormattedValue(
+                    cellElement.data.additionalCessPerc,
+                    false,
+                    4
+                  );
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.additionalCessPerc == null
+              ? ""
+              : getFormattedValue(
+                  parseFloat(cellElement.data.additionalCessPerc),
+                  false,
+                  4
+                );
+          }
+        },
+      },
+      {
+        dataField: "additionalCess",
+        caption: t("additional_cess"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.additionalCess == null
+                ? ""
+                : getFormattedValue(cellElement.data.additionalCess, false, 4);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.additionalCess == null
+              ? ""
+              : getFormattedValue(
+                  parseFloat(cellElement.data.additionalCess),
+                  false,
+                  4
+                );
+          }
+        },
+      },
+      // {
+      //   dataField: "taxNo",
+      //   caption: t("TaxNo"),
+      //   dataType: "string",
+      //   allowSearch: true,
+      //   allowFiltering: true,
+      //   width: 100,
+      // },
+      {
+        dataField: "gstNo",
+        caption: t("gst_no"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+      },
+      // {
+      //   dataField: "sl",
+      //   caption: t("Sl"),
+      //   dataType: "number",
+      //   allowSearch: true,
+      //   allowFiltering: true,
+      //   width: 100,
+      // },
+      // {
+      //   dataField: "unitName",
+      //   caption: t("UnitName"),
+      //   dataType: "string",
+      //   allowSearch: true,
+      //   allowFiltering: true,
+      //   width: 100,
+      // },
+
+      // {
+      //   dataField: "totalProfitPercent",
+      //   caption: t("Total Profit%"),
+      //   dataType: "number",
+      //   allowSearch: true,
+      //   allowFiltering: true,
+      //   width: 100,
+      //   cellRender: (
+      //     cellElement: any,
+      //     cellInfo: any,
+      //     filter: any,
+      //     exportCell: any
+      //   ) => {
+      //     if (exportCell != undefined) {
+      //       const value =
+      //         cellElement.data?.totalProfitPercent == null
+      //           ? ""
+      //           : getFormattedValue(
+      //             cellElement.data.totalProfitPercent,
+      //             false,
+      //             2
+      //           );
+      //       return {
+      //         ...exportCell,
+      //         text: value,
+      //         alignment: "right",
+      //         alignmentExcel: { horizontal: "right" },
+      //       };
+      //     } else {
+      //       return cellElement.data?.totalProfitPercent == null
+      //         ? ""
+      //         : getFormattedValue(
+      //           parseFloat(cellElement.data.totalProfitPercent),
+      //           false,
+      //           2
+      //         );
+      //     }
+      //   },
+      // },
       // {
       //   dataField: "avgPrice",
       //   caption: t("AvgPrice"),
@@ -318,15 +1797,17 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       },
       {
         column: "totalProfit",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+       
       },
       {
         column: "netAmount",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        
       },
       {
         column: "additionalExpenses",
@@ -337,7 +1818,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       //is not is appglobal + 4 decimal
       {
         column: "vat",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: (itemInfo: { value: any }) => {
           return (
@@ -352,42 +1833,60 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
             ) || "0"
           );
         },
+           cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 4));
+        },
       },
       {
         column: "stdPurchasePrice",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+      
       },
       {
         column: "stdSalesPrice",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+      
       },
       {
         column: "quantity",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+           cellSummaryAction:(value: number) => {
+                     return erpParseFloat(getFormattedValue(value, false, 4));
+                   },
       },
       {
         column: "free",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRowString,
+        cellSummaryAction:(value: number) => {
+                  return erpParseFloat(getFormattedValue(value, false, 4));
+                },
       },
       {
         column: "freeValue",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRowString,
+        cellSummaryAction:(value: number) => {
+                  return erpParseFloat(getFormattedValue(value, false, 4));
+                },
+        
       },
       {
         column: "freeCost",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRowString,
+        cellSummaryAction:(value: number) => {
+                  return erpParseFloat(getFormattedValue(value, false, 8));
+                },
       },
       {
         column: "qtyNos",
@@ -397,58 +1896,77 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
       },
       {
         column: "xRate",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRowString,
+         cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value, false, 6));
+        },
       },
       {
         column: "additionalExpense",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+      
       },
       //.DBID_VALUE == "543140180640"
       {
         column: "baseUnitQuantity",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+      
       },
       {
         column: "totalDiscount",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "grossValue",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+     
       },
       {
         column: "netValue",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        
       },
       {
         column: "schemeDisc",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "exciseTax",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "taxableValue",
-        summaryType: "sum",
+        summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+        cellSummaryAction:(value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
       },
     ];
     return _summaryItems.filter((column) => {
@@ -466,396 +1984,43 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="px-4 pt-4 pb-2">
             <div className="grid grid-cols-1 gap-3">
-              <DataGrid
+              <ErpDevGrid
                 key={key}
-                // filterText=" From : {fromDate} - {toDate} {productID > 0 && , Product Name : [productName]} {productGroupID > 0 && , Group Name : [groupName]}{brandID > 0 && , Brand : [brand]}{salesRouteID > 0 && , Route Name : [routeName]}  {salesmanID > 0 && , Sales Man : [salesMan]}  {warehouseID > 0 && ,  Warehouse : [warehouse]} {supplierID > 0 && , Supplier :[supplier]} "
-               
-          allowColumnReordering={true}
+                filterText=" From : {fromDate} - {toDate} {productID > 0 && , Product Name : [productName]} {productGroupID > 0 && , Group Name : [groupName]}{brandID > 0 && , Brand : [brand]}{salesRouteID > 0 && , Route Name : [routeName]}  {salesmanID > 0 && , Sales Man : [salesMan]}  {warehouseID > 0 && ,  Warehouse : [warehouse]} {supplierID > 0 && , Supplier :[supplier]} "
+                summaryItems={summaryItems}
                 remoteOperations={{
                   filtering: false,
                   paging: false,
                   sorting: false,
                 }}
                 columns={columns}
-                // gridHeader={t(gridHeader)}
-                // dataUrl={dataUrl}
-                dataSource={
-                  [
-                    {
-            "masterID": 600001078054,
-            "date": "17-10-2024",
-            "vchNo": " 611680",
-            "vnum": "",
-            "form": "SI VAT",
-            "partyCode": "8323",
-            "party": "مؤسسة مدن السواحل التجارية",
-            "address1": "",
-            "address2": "",
-            "detailID": 600007436495,
-            "unitPrice": 31,
-            "batchNo": "",
-            "productCode": "10349",
-            "product": "SHOPPING BAG 18X1500 NASIM",
-            "productGroup": "SHOPPING BAG",
-            "brand": "1x1",
-            "categoryCode": "PL",
-            "category": "PLASTIC",
-            "quantity": 2,
-            "free": 0,
-            "unitCode": "CTN",
-            "vat": 9.3,
-            "netAmount": 71.3,
-            "freeValue": 0,
-            "cost": 30,
-            "freeCost": 0,
-            "totalProfit": 2,
-            "mrp": 31,
-            "specification": "",
-            "counterName": "SAMA  PLASTIC",
-            "routeName": "SAMA MAHJAR",
-            "financialYearID": 1,
-            "xRate": 0,
-            "autoBarcode": "6610349",
-            "additionalExpense": 0,
-            "branchName": "SAMA UNITED TRADING COMPANY",
-            "productDescription": "",
-            "colour": "",
-            "warranty": "",
-            "qtyNos": 0,
-            "groupCategoryName": "BAG",
-            "sectionName": "PLASTICS",
-            "employeeName": "SALIM MAMPATTA",
-            "totalDiscount": 0,
-            "netValue": 62,
-            "grossValue": 62,
-            "vatNumber": "310101529800003",
-            "mannualBarcode": "",
-            "purchaseInvoiceNumber": "0",
-            "schemeDisc": 0,
-            "exciseTax": 0,
-            "stdPurchasePrice": 30,
-            "stdSalesPrice": 31,
-            "expiryDate": "2099-12-31T00:00:00",
-            "costCentreName": "SAMA PLASTICS",
-            "cgstPerc": 0,
-            "cgst": null,
-            "sgstPerc": 0,
-            "sgst": null,
-            "igstPerc": 0,
-            "igst": null,
-            "additionalCessPerc": 0,
-            "additionalCess": null,
-            "gstPercent": 0,
-            "gstAmt": 0,
-            "hsnCode": "",
-            "gstin": "",
-            "salesPrice": 0,
-            "remarks": "",
-            "cessPerc": 0,
-            "cessAmt": 0,
-            "taxNo": "",
-            "gstNo": "",
-            "sl": 0,
-            "unitName": "",
-            "priceCategoryID": 0,
-            "referenceNumber": "",
-            "baseUnitQuantity": 0,
-            "taxableValue": 0
-        },
-        {
-            "masterID": 600001078054,
-            "date": "17-10-2024",
-            "vchNo": " 611680",
-            "vnum": "",
-            "form": "SI VAT",
-            "partyCode": "8323",
-            "party": "مؤسسة مدن السواحل التجارية",
-            "address1": "",
-            "address2": "",
-            "detailID": 600007436496,
-            "unitPrice": 27,
-            "batchNo": "",
-            "productCode": "10351",
-            "product": "SHOPPING BAG 22X800 NASIM",
-            "productGroup": "SHOPPING BAG",
-            "brand": "1x1",
-            "categoryCode": "PL",
-            "category": "PLASTIC",
-            "quantity": 2,
-            "free": 0,
-            "unitCode": "CTN",
-            "vat": 8.1,
-            "netAmount": 62.1,
-            "freeValue": 0,
-            "cost": 25,
-            "freeCost": 0,
-            "totalProfit": 4,
-            "mrp": 26,
-            "specification": "",
-            "counterName": "SAMA  PLASTIC",
-            "routeName": "SAMA MAHJAR",
-            "financialYearID": 1,
-            "xRate": 0,
-            "autoBarcode": "6610351",
-            "additionalExpense": 0,
-            "branchName": "SAMA UNITED TRADING COMPANY",
-            "productDescription": "",
-            "colour": "",
-            "warranty": "",
-            "qtyNos": 0,
-            "groupCategoryName": "BAG",
-            "sectionName": "PLASTICS",
-            "employeeName": "SALIM MAMPATTA",
-            "totalDiscount": 0,
-            "netValue": 54,
-            "grossValue": 54,
-            "vatNumber": "310101529800003",
-            "mannualBarcode": "",
-            "purchaseInvoiceNumber": "0",
-            "schemeDisc": 0,
-            "exciseTax": 0,
-            "stdPurchasePrice": 25,
-            "stdSalesPrice": 27,
-            "expiryDate": "2099-12-31T00:00:00",
-            "costCentreName": "SAMA PLASTICS",
-            "cgstPerc": 0,
-            "cgst": null,
-            "sgstPerc": 0,
-            "sgst": null,
-            "igstPerc": 0,
-            "igst": null,
-            "additionalCessPerc": 0,
-            "additionalCess": null,
-            "gstPercent": 0,
-            "gstAmt": 0,
-            "hsnCode": "",
-            "gstin": "",
-            "salesPrice": 0,
-            "remarks": "",
-            "cessPerc": 0,
-            "cessAmt": 0,
-            "taxNo": "",
-            "gstNo": "",
-            "sl": 0,
-            "unitName": "",
-            "priceCategoryID": 0,
-            "referenceNumber": "",
-            "baseUnitQuantity": 0,
-            "taxableValue": 0
-        },
-        {
-            "masterID": 600001078054,
-            "date": "17-10-2024",
-            "vchNo": " 611680",
-            "vnum": "",
-            "form": "SI VAT",
-            "partyCode": "8323",
-            "party": "مؤسسة مدن السواحل التجارية",
-            "address1": "",
-            "address2": "",
-            "detailID": 600007436489,
-            "unitPrice": 69,
-            "batchNo": "",
-            "productCode": "10440",
-            "product": "SUFRA 3X20 MAHA 3IN1 (100X120)",
-            "productGroup": "SUFRA ROLL",
-            "brand": "3x20",
-            "categoryCode": "PL",
-            "category": "PLASTIC",
-            "quantity": 1,
-            "free": 0,
-            "unitCode": "CTN",
-            "vat": 10.35,
-            "netAmount": 79.35,
-            "freeValue": 0,
-            "cost": 62.25,
-            "freeCost": 0,
-            "totalProfit": 6.75,
-            "mrp": 67,
-            "specification": "",
-            "counterName": "SAMA  PLASTIC",
-            "routeName": "SAMA MAHJAR",
-            "financialYearID": 1,
-            "xRate": 0,
-            "autoBarcode": "6610440",
-            "additionalExpense": 0,
-            "branchName": "SAMA UNITED TRADING COMPANY",
-            "productDescription": "",
-            "colour": "",
-            "warranty": "",
-            "qtyNos": 0,
-            "groupCategoryName": "SUFRA",
-            "sectionName": "PLASTICS",
-            "employeeName": "SALIM MAMPATTA",
-            "totalDiscount": 0,
-            "netValue": 69,
-            "grossValue": 69,
-            "vatNumber": "310101529800003",
-            "mannualBarcode": "",
-            "purchaseInvoiceNumber": "0",
-            "schemeDisc": 0,
-            "exciseTax": 0,
-            "stdPurchasePrice": 62.25,
-            "stdSalesPrice": 69,
-            "expiryDate": "2099-12-31T00:00:00",
-            "costCentreName": "SAMA PLASTICS",
-            "cgstPerc": 0,
-            "cgst": null,
-            "sgstPerc": 0,
-            "sgst": null,
-            "igstPerc": 0,
-            "igst": null,
-            "additionalCessPerc": 0,
-            "additionalCess": null,
-            "gstPercent": 0,
-            "gstAmt": 0,
-            "hsnCode": "",
-            "gstin": "",
-            "salesPrice": 0,
-            "remarks": "",
-            "cessPerc": 0,
-            "cessAmt": 0,
-            "taxNo": "",
-            "gstNo": "",
-            "sl": 0,
-            "unitName": "",
-            "priceCategoryID": 0,
-            "referenceNumber": "",
-            "baseUnitQuantity": 0,
-            "taxableValue": 0
-        },
-        {
-            "masterID": 600001078054,
-            "date": "17-10-2024",
-            "vchNo": " 611680",
-            "vnum": "",
-            "form": "SI VAT",
-            "partyCode": "8323",
-            "party": "مؤسسة مدن السواحل التجارية",
-            "address1": "",
-            "address2": "",
-            "detailID": 600007436494,
-            "unitPrice": 44,
-            "batchNo": "",
-            "productCode": "13022",
-            "product": "GLOVES VINYL CLEAR MEDIUM YASHFEEN (PG-02) 70 PS",
-            "productGroup": "GLOVES",
-            "brand": "1x10",
-            "categoryCode": "PL",
-            "category": "PLASTIC",
-            "quantity": 1,
-            "free": 0,
-            "unitCode": "CTN",
-            "vat": 6.6,
-            "netAmount": 50.6,
-            "freeValue": 0,
-            "cost": 37,
-            "freeCost": 0,
-            "totalProfit": 7,
-            "mrp": 40,
-            "specification": "",
-            "counterName": "SAMA  PLASTIC",
-            "routeName": "SAMA MAHJAR",
-            "financialYearID": 1,
-            "xRate": 0,
-            "autoBarcode": "6613022",
-            "additionalExpense": 0,
-            "branchName": "SAMA UNITED TRADING COMPANY",
-            "productDescription": "",
-            "colour": "",
-            "warranty": "",
-            "qtyNos": 0,
-            "groupCategoryName": "WEARING",
-            "sectionName": "PLASTICS",
-            "employeeName": "SALIM MAMPATTA",
-            "totalDiscount": 0,
-            "netValue": 44,
-            "grossValue": 44,
-            "vatNumber": "310101529800003",
-            "mannualBarcode": "100013022",
-            "purchaseInvoiceNumber": "0",
-            "schemeDisc": 0,
-            "exciseTax": 0,
-            "stdPurchasePrice": 37,
-            "stdSalesPrice": 42,
-            "expiryDate": "2099-12-31T00:00:00",
-            "costCentreName": "SAMA PLASTICS",
-            "cgstPerc": 0,
-            "cgst": null,
-            "sgstPerc": 0,
-            "sgst": null,
-            "igstPerc": 0,
-            "igst": null,
-            "additionalCessPerc": 0,
-            "additionalCess": null,
-            "gstPercent": 0,
-            "gstAmt": 0,
-            "hsnCode": "",
-            "gstin": "",
-            "salesPrice": 0,
-            "remarks": "",
-            "cessPerc": 0,
-            "cessAmt": 0,
-            "taxNo": "",
-            "gstNo": "",
-            "sl": 0,
-            "unitName": "",
-            "priceCategoryID": 0,
-            "referenceNumber": "",
-            "baseUnitQuantity": 0,
-            "taxableValue": 0
-        },
-                    
-                     ]
-                }
-                // hideGridAddButton={true}
-                // enablefilter={false}
-                // showFilterInitially={true}
-                // method={ActionType.POST}
-                // filterContent={<RegisterFilter />}
-                // filterHeight={460}
-                // filterWidth={700}
-                // filterInitialData={{
-                //   ...RegisterFilterInitialState,
-                //   fromDate: moment(
-                //     clientSession.softwareDate,
-                //     "DD/MM/YYYY"
-                //   ).local(),
-                // }}
-                // onFilterChanged={(f: any) => setFilter(f)}
-                // reload={true}
-                // gridId={gridId}
-                // childPopupProps={{
-                //   content: null,
-                //   title: "",
-                //   isForm: false,
-                //   isTransactionScreen: true,
-                //   drillDownCells: "vchNo,",
-                // }}
-              >
-                 <Summary
-          recalculateWhileEditing={true}
-          skipEmptyValues={false}
-          
-          
-        >
-          {summaryItems?.map((config: SummaryConfig, index: number) => {
-            return  (
-              <TotalItem
-                key={`summaryItem_${index}`}
-                column={config.column}
-                name={config.column}
-                summaryType={config.summaryType}
-                valueFormat={config.valueFormat}
-                showInColumn={config.showInColumn}
-                alignment={config.alignment}
-                customizeText={config.customizeText}
-                skipEmptyValues={false}
+                gridHeader={t(gridHeader)}
+                dataUrl={dataUrl}
+                hideGridAddButton={true}
+                enablefilter={true}
+                showFilterInitially={true}
+                method={ActionType.POST}
+                filterContent={<RegisterFilter />}
+                filterHeight={460}
+                filterWidth={700}
+                filterInitialData={{
+                  ...RegisterFilterInitialState,
+                  fromDate: moment(
+                    clientSession.softwareDate,
+                    "DD/MM/YYYY"
+                  ).local(),
+                }}
+                onFilterChanged={(f: any) => setFilter(f)}
+                reload={true}
+                gridId={gridId}
+                childPopupProps={{
+                  content: null,
+                  title: "",
+                  isForm: false,
+                  isTransactionScreen: true,
+                  drillDownCells: "vchNo,",
+                }}
               />
-            );
-          })}
-        </Summary>
-                </DataGrid>
             </div>
           </div>
         </div>

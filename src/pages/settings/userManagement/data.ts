@@ -7,7 +7,7 @@ export interface UserRight {
   treeNode: number;
   description: string;
 };
-export const userRights: UserRight[] = [
+export const userRightsgcc: UserRight[] = [
   // Accounts Module
   { id: 1, headId: 0, name: "Accounts_Main", fullName: "Accounts", formCode: "ACC", treeNode: 1, description: "Main Accounts Module" },
   //#region accounts

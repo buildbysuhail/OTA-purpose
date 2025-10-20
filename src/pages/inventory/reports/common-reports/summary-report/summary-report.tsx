@@ -15,9 +15,10 @@ interface SummaryProps {
   gridHeader: string;
   dataUrl: string;
   gridId: string;
+  voucherType?:string;
 }
 
-const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
+const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId,voucherType }) => {
   const { t } = useTranslation("accountsReport");
   const [filter, setFilter] = useState<any>(SummaryFilterInitialState);
   const userSession = useSelector((state: RootState) => state.UserSession);
@@ -1373,6 +1374,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
                     clientSession.softwareDate,
                     "DD/MM/YYYY"
                   ).local(),
+                  voucherType:voucherType
                 }}
                 onFilterChanged={(f: any) => {
                   setFilter(f);

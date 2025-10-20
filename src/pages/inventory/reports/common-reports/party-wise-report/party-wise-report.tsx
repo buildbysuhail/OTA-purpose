@@ -230,20 +230,14 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({
     },
     {
       column: "netAmount",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-                return erpParseFloat(getFormattedValue(value, false, 4));
-              },
     },
     {
       column: "quantity",
-      summaryType: "custom",
+      summaryType: "sum",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-                return erpParseFloat(getFormattedValue(value, false, 4));
-              },
     },
   ];
 

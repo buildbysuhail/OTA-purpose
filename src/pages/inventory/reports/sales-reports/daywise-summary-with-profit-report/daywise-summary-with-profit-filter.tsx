@@ -62,7 +62,7 @@ const DaywiseSummaryWithProfitFilter = ({ getFieldProps, handleFieldChange, form
           }}
           onSelectItem={(data) => {
             handleFieldChange({
-              costCentreID: data.value,
+              costCenterID: data.value,
               costCenterName: data.label,
             });
           }}

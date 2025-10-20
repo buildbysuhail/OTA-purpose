@@ -821,7 +821,7 @@ export const useTransaction = (
         .filter(({ item }) => item.salesPrice > item.mrp)
         .map(({ index }) => index + 1);
 
-      if (invalidRows.length === 0) {
+      if (invalidRows.length > 0) {
           await ERPAlert.show({
           icon: "error",
           title: t("validation_error"),

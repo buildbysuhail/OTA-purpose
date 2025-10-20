@@ -345,7 +345,10 @@ const AccTransactionGrid: React.FC<{voucherType?: string
                               drCr: tr?.drCr,
                             };
                           } 
-                  const url = new URL(`${window.location.origin}${TransactionBase.Accounts}/${transactionType}`);
+                          const url = new URL(
+                                              `${window.location.origin}/${TransactionBase.Accounts}/${transactionType}`
+                                             )
+                                    
 
                   // Append all parameters from the `params` object
                   Object.entries(transactionData).forEach(([key, value]) => {

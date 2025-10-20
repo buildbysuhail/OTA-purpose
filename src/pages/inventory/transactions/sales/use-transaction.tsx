@@ -2828,7 +2828,7 @@ export const useTransaction = (
         outDetail.product = product.productName;
         outDetail.productID = product.productID;
         outDetail.barCode = product.autoBarcode;
-        outDetail.manualBarcode = product.manualBarcode;
+        outDetail.manualBarcode = product.mannualBarcode;
         outDetail.productBatchID = product.productBatchID;
 
         // Set default quantity if configured

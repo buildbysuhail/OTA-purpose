@@ -84,6 +84,7 @@ export const AccountLedgerManage = () => {
           required={true}
           readOnly={rootState.PopupData.accountLedger.mode == "view"}
           onChangeData={(data: any) => handleFieldChange("ledgerCode", data.ledgerCode)}
+          autoFocus={true}
         />
 
         <ERPInput

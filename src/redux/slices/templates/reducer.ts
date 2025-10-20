@@ -135,7 +135,10 @@ addTemplateTableColumn: (
   }>
 ) => {
   const { index, column } = action.payload;
-  const table = state.activeTemplate.tableState;
+  if(state.activeTemplate.tableState== undefined){
+    state.activeTemplate.tableState=[];
+  }
+  const table = state.activeTemplate.tableState??[];
 
   if (index === undefined || index === null) {
     // ✅ Add to the end

@@ -317,7 +317,7 @@ const BillwiseProfitGlobal = () => {
         }
         else {
           return (<span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-[#DC143C]' : ''}`}>
-            {`${cellElement.data?.salesPrice == null ? '0' : cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? getFormattedValue(cellElement.data.salesPrice) : getFormattedValue(cellElement.data.salesPrice, false, 3)}`}
+            {`${cellElement.data?.salesPrice == null ? '' : cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? getFormattedValue(cellElement.data.salesPrice) : getFormattedValue(cellElement.data.salesPrice, false, 3)}`}
           </span>)
         }
       }

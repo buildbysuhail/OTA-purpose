@@ -62,6 +62,7 @@ const InventorySalesPOSFilterableComponents: React.FC<ApplicationSettingsProps> 
             )
           }
           label={t("default_SI_form_type_for_POS")}
+          enableClearOption={false}
         />
       ),
     },
@@ -88,6 +89,7 @@ const InventorySalesPOSFilterableComponents: React.FC<ApplicationSettingsProps> 
             )
           }
           label={t("default_SI_prefix_for_POS")}
+          enableClearOption={false}
         />
       ),
     },
@@ -113,6 +115,7 @@ const InventorySalesPOSFilterableComponents: React.FC<ApplicationSettingsProps> 
               data.defaultSRFormTypeForPOS
             )
           }
+          enableClearOption={false}
         />
       ),
     },
@@ -139,6 +142,7 @@ const InventorySalesPOSFilterableComponents: React.FC<ApplicationSettingsProps> 
               data.defaultSRPrefixForPOS
             )
           }
+          enableClearOption={false}
         />
       ),
     },

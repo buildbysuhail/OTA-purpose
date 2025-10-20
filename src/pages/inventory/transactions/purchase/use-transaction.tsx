@@ -809,6 +809,30 @@ export const useTransaction = (
     const details = formState.transaction.details;
     debugger;
     // Stock update restriction
+
+  //   const setting = applicationSettings.productsSettings.mRPLessThanSalesPrice;
+
+  // // Equivalent condition:
+  // // if ((setting is not "Block" && UserSession.IsAPPGlobal) || !UserSession.IsAPPGlobal)
+  // if ((setting !== "Block" && clientSession.isAppGlobal) || !clientSession.isAppGlobal) {
+  //   return { success: true };
+  // }
+
+  // // Find invalid rows (Sales price greater than MRP)
+  // const invalidRows = details
+  //   .map((item, index) => ({ item, index }))
+  //   .filter(({ item }) => item.stdSalesPrice > item.mrp)
+  //   .map(({ index }) => index + 1);
+
+  // if (invalidRows.length === 0) {
+  //   return { success: true };
+  // } else {
+  //   return {
+  //     success: false,
+  //     message: `Sales price greater than MRP at rows: ${invalidRows.join(", ")}`,
+  //   };
+  // }
+
     if (
       !formState.transaction.master.stockUpdate &&
       (formState.transaction.master.voucherType === "PI" ||

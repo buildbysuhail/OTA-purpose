@@ -1994,6 +1994,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     const handleOptionChanged = (e: any) => {
       if (e.fullName?.startsWith("columns")) {
         if (e.fullName.endsWith("visibleIndex")) {
+          debugger;
           preferenceChooserRef.current?.handleDropping(
             true,
             e.previousValue,

@@ -107,6 +107,7 @@ import {
   ColumnModel,
 } from "../transaction-types";
 import TemplatesView from "../../../transaction-base/template_picker";
+import { toggleIsPrintPreviewPopup } from "../../../../redux/slices/popup-reducer";
 
 interface BilledItem {
   id?: number;
@@ -246,6 +247,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const [gridCode, setGridCode] = useState<string>(
     `grd_inv_transaction_${(voucherType ?? "") + (formType ?? "")}`
   );
+  const popupData = useSelector((state: RootState) => state?.PopupData);
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
   const formState = useAppSelector(
@@ -1190,7 +1192,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const [isAttachmentOpen, setIsAttachmentOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [templateLoad, setTemplateLoad] = useState(false);
-  const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
+  // const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
   const [isHistorySidebarOpen, setIsHistorySidebarOpen] = useState(false);
   const [historyData, setHistoryData] = useState<any>(null);
   const [isPartySelectionModalOpen, setIsPartySelectionModalOpen] =
@@ -1785,7 +1787,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     showValidation={showValidation}
                     goToPreviousPage={goToPreviousPage}
                     isHistorySidebarOpen={isHistorySidebarOpen}
-                    setIsPrintModalOpen={setIsPrintModalOpen}
                     onProcessSelected={onProcessSelected}
                     downloadImportTemplateHeadersOnly={
                       downloadImportTemplateHeadersOnly
@@ -2002,7 +2003,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
                       showValidation={showValidation}
                       goToPreviousPage={goToPreviousPage}
                       isHistorySidebarOpen={isHistorySidebarOpen}
-                      setIsPrintModalOpen={setIsPrintModalOpen}
                       onProcessSelected={onProcessSelected}
                       downloadImportTemplateHeadersOnly={
                         downloadImportTemplateHeadersOnly
@@ -2169,13 +2169,13 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
         {formState.transaction && (
           <ERPModal
-            isOpen={formState.printPreview && isPrintModalOpen}
+            isOpen={formState.printPreview && (popupData.IsPrintPreviewPopup.isOpen??false)}
             title={t("template")}
             width={1000}
             height={700}
             isForm={true}
             closeModal={() => {
-              setIsPrintModalOpen(false);
+               dispatch(toggleIsPrintPreviewPopup({ isOpen: true }));
               dispatch(
                 formStateHandleFieldChange({ fields: { printPreview: false } })
               );

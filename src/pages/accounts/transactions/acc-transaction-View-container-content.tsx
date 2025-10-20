@@ -114,7 +114,7 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
                 type="button"
                 disabled={loading}
                 className="h-8 px-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded inline-flex items-center gap-1.5 transition-colors"
-                onClick={() => printVoucher(props.transactionMasterID??0, props.transactionType ?? "",props.voucherType??'',props.formType??'',props.customerType??'',stableTemplateProps?.template,undefined,props.isInvTrans)}
+                onClick={() => printVoucher(props.transactionMasterID??0, props.transactionType ?? "",props.voucherType??'',props.formType??'',props.customerType??'',props.isInvTrans,undefined,stableTemplateProps?.template)}
                 title={t("print")}
               >
                 <Printer className="w-4 h-4" />

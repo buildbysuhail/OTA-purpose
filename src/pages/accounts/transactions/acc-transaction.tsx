@@ -96,6 +96,7 @@ import AccHeader from "./components/acc-header";
 import { Countries } from "../../../redux/slices/user-session/reducer";
 import { useAppState } from "../../../utilities/hooks/useAppState";
 import { TransactionDetail } from "../../inventory/transactions/transaction-types";
+import { toggleIsPrintPreviewPopup } from "../../../redux/slices/popup-reducer";
 interface BilledItem {
   id?: number;
   name: string;
@@ -319,6 +320,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
+  const popupData = useSelector((state: RootState) => state?.PopupData);
   const { hasRight } = useUserRights();
   useEffect(() => {
     dispatch(
@@ -3281,17 +3283,16 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
       {formState.transaction && (
         <ERPModal
-          isOpen={(formState.userConfig?.printPreview ?? false) && formState.isPrintModalOpen}
+          isOpen={(formState.userConfig?.printPreview ?? false) && (popupData.IsPrintPreviewPopup.isOpen??false) }
           title={t("Template")}
           width={1000}
           height={700}
           isForm={true}
           closeModal={() => {
             dispatch(
-              accFormStateHandleFieldChange({
-                fields: { printPreview: false, isPrintModalOpen: false },
-              })
+              accFormStateHandleFieldChange({fields: { printPreview: false}})
             );
+            dispatch(toggleIsPrintPreviewPopup({ isOpen: true }));
           }}
           content={
             <></>

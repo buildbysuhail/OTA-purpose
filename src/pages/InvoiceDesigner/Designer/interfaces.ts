@@ -109,6 +109,7 @@ export interface PlacedComponent {
   textAlign?: "left" | "center" | "right";
   textUnderLine?:boolean;
   fontSize: number;
+  direction:"ltr"|"rtl"
   fontStyle: "normal" | "italic";
   font: string;
   arabicFont?:string;

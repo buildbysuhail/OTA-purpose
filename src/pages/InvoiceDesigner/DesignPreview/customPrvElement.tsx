@@ -66,49 +66,56 @@ export const RenderPreviewComponent: React.FC<Props> = ({
         : (bindDataForPrint(component.content, data, convertAmountToEnglish, convertAmountToArabic) || "N/A");
 
     const isArabic = containsArabicString(finalContent ?? "");
-    const textDirection = isArabic ? "rtl" : "ltr";
-      return (
-        <div 
-            key={component.id} 
-            style={{
+    const textDirection =  component.direction ?? isArabic ? "rtl" : "ltr";
+
+              return (
+            <div
+              key={component.id}
+              style={{
                 ...baseStyle,
-                display: "flex", 
-                alignItems: "center",
-                
-                // CRITICAL: Set the text direction on the container
-                // direction: textDirection, 
-                
-                // Adjust justifyContent based on component textAlign AND direction
-                justifyContent: 
-                    component.textAlign === 'left' ? 'flex-start' : 
-                    component.textAlign === 'right' ? 'flex-end' : 
-                    component.textAlign || "center",
-                
-                overflow: "hidden",
-            }}
-        >
-            <span
-                style={{
-                    // FONT FAMILY: Use Arabic font if detected
-                    fontFamily: isArabic ? component?.arabicFont ?? "Amiri" : component?.font ?? "Roboto",
-                    
-                    fontSize: `${component.fontSize || 12}pt`,
-                    fontStyle: component.fontStyle || "normal",
-                    
-                    // textAlign is kept based on design setting
-                    textAlign: component.textAlign || "center",
-                    
-                    color: `rgb(${component.fontColor || "0,0,0"})`,
-                    fontWeight: component.fontWeight ?? "normal",
-                    whiteSpace: "pre-wrap",
-                    margin: 0, 
-                    width: "100%", 
-                }}
+                display: "flex",
+                alignItems: "flex-start",
+
+                // Critical: apply the direction
+                // direction: textDirection,
+               overflow:"hidden"
+                // Adjust justifyContent based on textAlign and direction
+                // justifyContent:
+                //   component.textAlign === "left"
+                //     ? textDirection === "rtl"
+                //       ? "flex-end"
+                //       : "flex-start"
+                //     : component.textAlign === "right"
+                //     ? textDirection === "rtl"
+                //       ? "flex-start"
+                //       : "flex-end"
+                //     : "center",
+              }}
             >
+              <span
+                style={{
+                  display: "block",
+                  fontFamily: isArabic
+                    ? component?.arabicFont ?? "Amiri"
+                    : component?.font ?? "Roboto",
+                  lineHeight: 1.2,
+                  fontSize: `${component.fontSize || 12}pt`,
+                  fontStyle: component.fontStyle || "normal",
+                  textAlign: component.textAlign || "center",
+                  color: `rgb(${component.fontColor || "0,0,0"})`,
+                  fontWeight: component.fontWeight ?? "normal",
+                  whiteSpace: "pre-wrap",
+                  margin: 0,
+                  padding: 0,
+                  width: "100%",
+                  verticalAlign: "top",
+                }}
+              >
                 {finalContent}
-            </span>
-        </div>
-    );
+              </span>
+            </div>
+          );
+
 
 
     case DesignerElementType.image:

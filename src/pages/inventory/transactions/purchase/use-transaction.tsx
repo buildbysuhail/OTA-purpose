@@ -1207,9 +1207,11 @@ export const useTransaction = (
               formState.transaction?.master.voucherType ?? "", // voucherType
               formState.transaction?.master?.voucherForm ?? "", // formType
               formState.transaction?.master.customerType ?? "", // customerType
-              undefined, // printTmeplate (optional)
+              true, //isInv
+              formState.userConfig?.printPreview, // printPreview
+              undefined, //template
               formState.transaction?.master.transactionDate ?? "",
-              true
+              
             );
           }
           dispatch(

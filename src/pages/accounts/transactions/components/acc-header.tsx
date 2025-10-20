@@ -18,7 +18,7 @@ interface AccHeaderProps extends AccVoucherElementProps {
   handleRefresh: () => void;
   createNewVoucher: () => void;
   handleEdit: () => void;
-  printVoucher: (  masterID: number,transactionType: string,voucherType: string,formType:string,customerType:string,printTmeplate?:any ,transDate?: string,
+  printVoucher: ( masterID: number,transactionType: string,voucherType: string,formType:string,customerType:string,isInvTrans: boolean,printPreview:boolean, printTmeplate?:any ,transDate?: string,
    ) => void;
   handleClearControls: () => void;
   handleHistoryClick: () => void;
@@ -166,7 +166,7 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
           <button
             disabled={formState.transaction.master.accTransactionMasterID < 1 || (formState.transaction.master.accTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
             className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`}
-            onClick={() => printVoucher(formState.transaction.master.accTransactionMasterID, transactionType ?? "", voucherType,formState.transaction.master.formType??"",formState.transaction.master.customerType??"", formState.transaction.master.transactionDate)}
+            onClick={() => printVoucher(formState.transaction.master.accTransactionMasterID, transactionType ?? "", voucherType,formState.transaction.master.formType??"",formState.transaction.master.customerType??"",false,formState.userConfig?.printPreview??false,undefined, formState.transaction.master.transactionDate)}
           >
             <Printer className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
           </button>

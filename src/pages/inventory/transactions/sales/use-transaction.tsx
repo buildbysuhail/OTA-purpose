@@ -2951,6 +2951,8 @@ export const useTransaction = (
           if (
             formState.transaction.master.voucherForm.toLowerCase() ===
               "interstate" ||
+            formState.transaction.master.voucherForm.toLowerCase() ===
+              "int" ||
             formState.transaction.master.voucherForm.toLowerCase() === "import"
           ) {
             outDetail.details2!.cgstPerc = 0;

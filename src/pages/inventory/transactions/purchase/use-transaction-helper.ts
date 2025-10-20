@@ -535,6 +535,7 @@ export const useTransactionHelper = (transactionType: string) => {
         //   // }
         // } else {
         // === Case 3: Tax on NetValue ===
+        debugger;
         detail.details2.cgst =
           (netValue * (transactionDetail.details2!.cgstPerc || 0)) / 100;
         detail.details2.sgst =
@@ -587,9 +588,9 @@ export const useTransactionHelper = (transactionType: string) => {
         detail.details2.cessAmt = round(detail.details2!.cessAmt);
         detail.details2.cessPerc = round(detail.details2!.cessPerc);
         if (
-          formState.transaction.master.voucherForm == "Interstate" ||
-          formState.transaction.master.voucherForm == "Int" ||
-          formState.transaction.master.voucherForm == "Import"
+          formState.transaction.master.voucherForm.toUpperCase() == "INTERSTATE" ||
+          formState.transaction.master.voucherForm.toUpperCase() == "INT" ||
+          formState.transaction.master.voucherForm.toUpperCase() == "IMPORT"
         ) {
           detail.details2.cgst = 0;
           detail.details2.sgst = 0;

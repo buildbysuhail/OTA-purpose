@@ -3030,11 +3030,12 @@ export const useTransaction = (
           // if (formState.transaction.master.voucherType !== "PI") {
           outDetail.details2!.cgstPerc = Number(product.p_CGSTPerc || 0);
           outDetail.details2!.sgstPerc = Number(product.p_SGSTPerc || 0);
-          outDetail.details2!.igstPerc = 0;
 
           if (
             formState.transaction.master.voucherForm.toLowerCase() ===
               "interstate" ||
+            formState.transaction.master.voucherForm.toLowerCase() ===
+              "int" ||
             formState.transaction.master.voucherForm.toLowerCase() === "import"
           ) {
             outDetail.details2!.cgstPerc = 0;

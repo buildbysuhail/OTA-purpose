@@ -810,28 +810,27 @@ export const useTransaction = (
     debugger;
     // Stock update restriction
 
-  //   const setting = applicationSettings.productsSettings.mRPLessThanSalesPrice;
+    const setting = applicationSettings.productsSettings.mRPLessThanSalesPrice;
 
-  // // Equivalent condition:
-  // // if ((setting is not "Block" && UserSession.IsAPPGlobal) || !UserSession.IsAPPGlobal)
-  // if ((setting !== "Block" && clientSession.isAppGlobal) || !clientSession.isAppGlobal) {
-  //   return { success: true };
-  // }
+      // Equivalent condition:
+      // if ((setting is not "Block" && UserSession.IsAPPGlobal) || !UserSession.IsAPPGlobal)
+      if ((setting == "Block" && clientSession.isAppGlobal)) {
+      // Find invalid rows (Sales price greater than MRP)
+      const invalidRows = details
+        .map((item, index) => ({ item, index }))
+        .filter(({ item }) => item.salesPrice > item.mrp)
+        .map(({ index }) => index + 1);
 
-  // // Find invalid rows (Sales price greater than MRP)
-  // const invalidRows = details
-  //   .map((item, index) => ({ item, index }))
-  //   .filter(({ item }) => item.stdSalesPrice > item.mrp)
-  //   .map(({ index }) => index + 1);
-
-  // if (invalidRows.length === 0) {
-  //   return { success: true };
-  // } else {
-  //   return {
-  //     success: false,
-  //     message: `Sales price greater than MRP at rows: ${invalidRows.join(", ")}`,
-  //   };
-  // }
+      if (invalidRows.length === 0) {
+          await ERPAlert.show({
+          icon: "error",
+          title: t("validation_error"),
+          text: t(`Sales price greater than MRP at rows: ${invalidRows.join(", ")}`),
+          confirmButtonText: t("ok"),
+        });
+        return false;
+      } 
+    }
 
     if (
       !formState.transaction.master.stockUpdate &&

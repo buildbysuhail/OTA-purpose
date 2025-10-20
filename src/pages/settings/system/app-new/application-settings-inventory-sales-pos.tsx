@@ -7,7 +7,7 @@ import { MutableRefObject, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 interface ApplicationSettingsProps {
-  settings: any; // Replace `any` with the actual type if known
+  settings: ApplicationSettingsType; // Replace `any` with the actual type if known
   handleFieldChange: <T extends keyof ApplicationSettingsType>(
     type: T,
     settingName: keyof ApplicationSettingsType[T],
@@ -46,6 +46,7 @@ const InventorySalesPOSFilterableComponents: React.FC<ApplicationSettingsProps> 
         <ERPDataCombobox
           isInModal={false}
           id="defaultFormTypeForPOS"
+          value={settings.gSTTaxesSettings.defaultFormTypeForPOS}
           field={{
             id: "defaultFormTypeForPOS",
             getListUrl: Urls.data_FormTypeBySI,
@@ -70,9 +71,11 @@ const InventorySalesPOSFilterableComponents: React.FC<ApplicationSettingsProps> 
         <ERPDataCombobox
           isInModal={false}
           id="defaultPrefixForPOS"
+          value={settings.gSTTaxesSettings.defaultPrefixForPOS}
           field={{
             id: "defaultPrefixForPOS",
             getListUrl: Urls.data_VPrefixForSI,
+            params:`VoucherType=${'SI'}&FormType=${settings?.gSTTaxesSettings?.defaultFormTypeForPOS}`,
             valueKey: "lastVoucherPrefix",
             labelKey: "lastVoucherPrefix",
           }}
@@ -93,7 +96,8 @@ const InventorySalesPOSFilterableComponents: React.FC<ApplicationSettingsProps> 
       element: (
         <ERPDataCombobox
           isInModal={false}
-          id="defaultSRFormTypeForPOS"
+          id="defaultSRFormTypeForPOS"      
+          value={settings.gSTTaxesSettings.defaultSRFormTypeForPOS}
           data={settings?.gSTTaxesSettings}
           label={t("default_SR_form_type_for_POS")}
           field={{
@@ -118,11 +122,13 @@ const InventorySalesPOSFilterableComponents: React.FC<ApplicationSettingsProps> 
         <ERPDataCombobox
           isInModal={false}
           id="defaultSRPrefixForPOS"
+          value={settings.gSTTaxesSettings.defaultSRPrefixForPOS}
           data={settings?.gSTTaxesSettings}
           label={t("default_SR_prefix_for_POS")}
           field={{
             id: "defaultSRPrefixForPOS",
             getListUrl: Urls.data_VPrefixForSR,
+            params:`VoucherType=${'SR'}&FormType=${settings.gSTTaxesSettings.defaultSRFormTypeForPOS}`,
             valueKey: "lastVoucherPrefix",
             labelKey: "lastVoucherPrefix",
           }}

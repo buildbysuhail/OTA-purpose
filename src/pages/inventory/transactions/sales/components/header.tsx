@@ -14,6 +14,9 @@ import Urls from "../../../../../redux/urls";
 import { APIClient } from "../../../../../helpers/api-client";
 import { formStateHandleFieldChange } from "../../reducer";
 import { VoucherElementProps, BillwiseData } from "../../transaction-types";
+import ShowEInvoice from "../show-e-invoice";
+import GiftOrCashCouponSelector from "../giftOrCash-Coupon-Selector";
+import PrintAddressLabel from "../print-address-label";
 
 interface HeaderProps extends VoucherElementProps {
   loadTemporaryRows: () => Promise<void>;
@@ -185,9 +188,31 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
     const isAbove640 = useMediaQuery('(min-width: 640px)');
     const isAbove480 = useMediaQuery('(min-width: 480px)');
 
+    const handleShowEInvoiceModal = () => {
+        dispatch(
+          formStateHandleFieldChange({
+            fields: { showEInvoice: true },
+          })
+        );
+      };
+
+      const closeShowEInvoiceModal = () => {
+          dispatch(
+            formStateHandleFieldChange({
+              fields: { showEInvoice: false },
+            })
+          );
+        };
+
     return (
       <>
         <div className={`!overflow-visible flex items-center justify-evenly md:justify-end space-x-2 p-1 w-full overflow-x-auto bg-[#f9fafb] md:bg-transparent`}>
+          {/* SAMPLE BUTTONS CREATED FOR SHOW-E-INVOICE, GIFT/CASH COUPON SELECTOR, PRINT LABEL ADDRESS */}
+          {/* ----------------------------------------------------------------------------------------- */}
+                   <button onClick={handleShowEInvoiceModal} className="bg-gray-300">Show E-inv</button>
+                   <button className="bg-gray-300">Gift</button>
+                   <button className="bg-gray-300">Print Address</button>
+
           {/* Load Temp Rows */}
           <div className="group relative inline-flex flex-col items-center ps-[5px]" title="Load Details">
             <button
@@ -716,6 +741,39 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
               </button>
             </div>
           )}
+
+          {/* ----------------------------------------------------------------------------------------- */}
+          {/* THIS CREATED FOR MODAL SHOW-E-INVOICE, GIFT/CASH COUPON SELECTOR, PRINT LABEL ADDRESS */}
+          {/* ----------------------------------------------------------------------------------------- */}
+            <ERPModal
+        isOpen={formState.showEInvoice}
+        title={t("Show_E_Invoice")}
+        width={650}
+        height={610}
+        closeModal={closeShowEInvoiceModal}
+        content={<ShowEInvoice t={t} closeModal={closeShowEInvoiceModal} /> }
+      /> 
+      {/* Need to add open, close functions */}
+      <ERPModal
+        isOpen={formState.giftOrCashCouponSelector}
+        title={t("Gift/Cash_Coupon_selector")}
+        width={700}
+        height={500}
+        closeModal={closeShowEInvoiceModal}
+        content={<GiftOrCashCouponSelector t={t} closeModal={closeShowEInvoiceModal} /> }
+      />
+      {/* Need to add open, close functions */}
+      <ERPModal
+        isOpen={formState.printAddressLabel}
+        title={t("Print_Address_Label")}
+        width={650}
+        height={500}
+        closeModal={closeShowEInvoiceModal}
+        content={<PrintAddressLabel t={t} closeModal={closeShowEInvoiceModal} /> }
+      />
+      {/* ----------------------------------------------------------------------------------------- */}
+          {/* THIS CREATED FOR MODAL SHOW-E-INVOICE, GIFT/CASH COUPON SELECTOR, PRINT LABEL ADDRESS */}
+          {/* ----------------------------------------------------------------------------------------- */}
         </div>
       </>
     );

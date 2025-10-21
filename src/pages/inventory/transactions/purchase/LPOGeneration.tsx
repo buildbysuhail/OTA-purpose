@@ -7,10 +7,11 @@ import Urls from "../../../../redux/urls";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import { getApLocalDataByUrl } from "../../../../redux/cached-urls";
 import { LedgerType } from "../../../../enums/ledger-types";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { formStateHandleFieldChange, formStateTransactionDetailsRowsAdd, formStateTransactionDetailsRowsEmptyAdd } from "../reducer";
 import { APIClient } from "../../../../helpers/api-client";
 import { generateUniqueKey } from "../../../../utilities/Utils";
+import { RootState } from "../../../../redux/store";
 
 interface LPOGenerationProps {
     t: any;
@@ -53,7 +54,7 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
     });
     const api = new APIClient();
     const dispatch = useDispatch();
-
+const clientSession = useSelector((state: RootState) => state.ClientSession)
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -125,6 +126,84 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
     //     },
     //     [],
     // )
+const calculateRowAmount = (item: any) => {
+  try {
+    if (!item.product || item.product === "") return;
+
+    const isAppGlobal = clientSession.isAppGlobal; // same as PolosysFrameWork.General.IS_APP_GLOBAL
+
+    const qty = Number(item.qty) || 0;
+    const rate = Number(item.unitPrice) || 0;
+    const vatPerc = Number(item.vatPerc) || 0;
+
+    const CGSTPerc = Number(item.cgstPerc) || 0;
+    const SGSTPerc = Number(item.sgstPerc) || 0;
+    const IGSTPerc = Number(item.igstPerc) || 0;
+    const CessPerc = Number(item.cessPerc) || 0;
+    const AddnlCessPerc = Number(item.addnlCessPerc) || 0;
+
+    const discPerc = Number(item.discPerc) || 0;
+    const disc = Number(item.discount) || 0;
+    const schmeDiscPerc = Number(item.schemeDiscPerc) || 0;
+    const schmeDiscAmt = Number(item.schemeDiscAmt) || 0;
+
+    let gross = qty * rate;
+    let netValue = gross - disc;
+
+    let vat = 0;
+    let netAmount = 0;
+    let cost = 0;
+
+    // --- GST / VAT Calculation ---
+    if (isAppGlobal) {
+      const cgst = (netValue * CGSTPerc) / 100;
+      const sgst = (netValue * SGSTPerc) / 100;
+      const igst = (netValue * IGSTPerc) / 100;
+      const cess = (netValue * CessPerc) / 100;
+      const addnlCess = (netValue * AddnlCessPerc) / 100;
+
+      cost =
+        rate -
+        (rate * discPerc) / 100 +
+        (rate *
+          (CGSTPerc + SGSTPerc + IGSTPerc + CessPerc + AddnlCessPerc)) /
+          100;
+
+      netAmount =
+        netValue + cgst + sgst + igst + cess + addnlCess - schmeDiscAmt;
+
+      Object.assign(item, {
+        cgst,
+        sgst,
+        igst,
+        cessAmt: cess,
+        addnlCessAmt: addnlCess,
+        cost,
+        netValue,
+        gross,
+        total: netAmount,
+      });
+    } else {
+      vat = (netValue * vatPerc) / 100;
+      cost =
+        rate - (rate * discPerc) / 100 + (rate * vatPerc) / 100;
+      netAmount = netValue + vat - schmeDiscAmt;
+
+      Object.assign(item, {
+        vatAmount: vat,
+        cost,
+        netValue,
+        gross,
+        total: netAmount,
+      });
+    }
+
+    return item;
+  } catch (ex) {
+    console.error("Error in calculateRowAmount:", ex);
+    return item;
+  }
+};
 
     const handleShow = async () => {
         try {
@@ -192,10 +271,10 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
                     qty: 0.0,
                     headerIndex: i + 1,
                 };
-                // if (method !== "All Products") {
-                //     item.qty = Number(row["Qty"] || 0).toFixed(2);
-                //     calculateRowAmount(item);
-                // }
+                if (formState.method !== "All Products") {
+                    item.qty = Number(row["Qty"] || 0).toFixed(2);
+                    calculateRowAmount(item);
+                }
                 return item;
             });
             debugger;

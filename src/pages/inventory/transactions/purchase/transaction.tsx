@@ -597,12 +597,12 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   useEffect(() => {
     const initializeFormElements = async () => {
-      const dataWarranty = await api.getAsync(
+      const dataWarranty = voucherType != "LPO" ? await api.getAsync(
         `${Urls.inv_transaction_base}${transactionType}/data/warranty`
-      );
-      const dataBrands = await api.getAsync(
+      ) : [];
+      const dataBrands = voucherType != "LPO" ? await api.getAsync(
         `${Urls.inv_transaction_base}${transactionType}/data/brands`
-      );
+      ): [];
       let _formState: TransactionFormState;
       const isInvoker = (voucherNo && voucherNo > 0) || (transactionMasterID && transactionMasterID > 0);
 

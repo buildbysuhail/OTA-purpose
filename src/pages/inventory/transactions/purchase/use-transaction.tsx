@@ -1349,7 +1349,7 @@ export const useTransaction = (
     );
     let employeeID = userSession.employeeId ?? 0;
     if (
-      ["PR", "PQ", "PO"].includes(
+      ["PR", "PQ", "wPO"].includes(
         formState.transaction.master.voucherType ?? ("" as any)
       ) &&
       employeeID <= 0
@@ -4292,17 +4292,31 @@ export const useTransaction = (
     );
 
     try {
-      if (!isNullOrUndefinedOrZero(ledgerID)) {
-        const [ledgerBalance, ledgerData] = await Promise.all([
-          (ledgerID ?? 0) > 0
-            ? api.getAsync(
-                `${Urls.inv_transaction_base}${transactionType}/LedgerBalance/${ledgerID}`
-              )
-            : 0,
-          api.getAsync(
-            `${Urls.inv_transaction_base}${transactionType}/LedgerDetails?LedgerId=${ledgerID}`
-          ),
-        ]);
+    if (!isNullOrUndefinedOrZero(ledgerID)) {
+  let ledgerBalance: any;
+  let ledgerData: any;
+
+  if (_formState?.transaction?.master?.voucherType === "LPO") {
+    // ✅ Manually assign values when voucher type is LPO
+    ledgerBalance = 0; // or any default value you want
+    ledgerData = {
+      ledgerName: "",
+      ledgerId: ledgerID,
+      // ...other manual fields
+    };
+  } else {
+    // ✅ Fetch from API for other voucher types
+    [ledgerBalance, ledgerData] = await Promise.all([
+      (ledgerID ?? 0) > 0
+        ? api.getAsync(
+            `${Urls.inv_transaction_base}${transactionType}/LedgerBalance/${ledgerID}`
+          )
+        : 0,
+      api.getAsync(
+        `${Urls.inv_transaction_base}${transactionType}/LedgerDetails?LedgerId=${ledgerID}`
+      ),
+    ]);
+  }
 
         let ret = {
           ..._formState,

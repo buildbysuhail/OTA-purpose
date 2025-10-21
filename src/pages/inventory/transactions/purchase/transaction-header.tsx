@@ -38,6 +38,7 @@ import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import { formStateHandleFieldChange, formStateMasterHandleFieldChange } from "../reducer";
 import { TransactionFormState, TransactionDetail } from "../transaction-types";
 import LPOGeneration from "./LPOGeneration";
+import { LoadAndSetTransVoucherFn } from "./use-transaction";
 
 interface TransactionHeaderProps {
   formState: TransactionFormState;
@@ -48,7 +49,7 @@ interface TransactionHeaderProps {
     column: string,
     excludedColumns?: (keyof TransactionDetail)[]
   ) => { column: string; rowIndex: number } | null;
-  loadAndSetTransVoucher: any;
+  loadAndSetTransVoucher: LoadAndSetTransVoucherFn;
   t: any;
   handleLoadByRefNo: any;
   handleFieldChange: any;
@@ -62,8 +63,9 @@ interface TransactionHeaderProps {
   toggleDropdown: () => void;
   footerLayout: "horizontal" | "vertical";
   userSession: any;
-  refactorDetails:any;
-  onHeightChange?: (height:number)=>void;
+  refactorDetails: any;
+  onHeightChange?: (height: number) => void;
+  voucherType?: string;
 }
 
 const TransactionHeader: React.FC<TransactionHeaderProps> = ({
@@ -87,6 +89,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   userSession,
   refactorDetails,
   onHeightChange,
+  voucherType
 }) => {
   const { appState } = useAppState();
   const [isMoreModalOpen, setIsMoreModalOpen] = useState(false);
@@ -312,7 +315,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
       for (const entry of entries) {
         const height = entry.contentRect.height;
         if (typeof onHeightChange === "function") {
-          onHeightChange(height); 
+          onHeightChange(height);
         }
       }
     });
@@ -323,7 +326,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
       observer.disconnect();
     };
   }, [onHeightChange]);
-  
+
   return (
     <div>
       {isDropDownOpen && (
@@ -337,7 +340,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
           style={headerStyle}
           className="fixed top-[110px] z-[39] dark:bg-dark-bg bg-white shadow-md transition-all duration-300"
         >
-          {formState.transaction.master.voucherType === "LPO" ?
+          {formState.transaction.master.voucherType === "LPO" && voucherType === "LPO" ?
             <LPOGeneration
               transactionType={transactionType}
               t={t}

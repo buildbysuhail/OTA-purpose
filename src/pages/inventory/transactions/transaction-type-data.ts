@@ -719,7 +719,10 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   isConsolidateSo: false,
   dtCouponDetails: undefined,
   selectedPartiesDefaultPriceCategoryId: 0,
-  blnCreateCreditNoteAutomatically: false
+  blnCreateCreditNoteAutomatically: false,
+  showEInvoice: false,
+  giftOrCashCouponSelector: false,
+  printAddressLabel: false,
 }
 
 export const initialProductData: BarcodeLabel = {

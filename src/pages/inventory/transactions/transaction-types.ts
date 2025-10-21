@@ -8,7 +8,7 @@ import { PrintResponse } from "../../use-print-type";
 import { List } from "lodash";
 
 // primitives we don't recurse into
-type Primitive = string | number | boolean | bigint | symbol  | undefined | Date;
+type Primitive = string | number | boolean | bigint | symbol | undefined | Date;
 
 // treat only plain objects as nestable
 type IsPlainObject<T> =
@@ -52,10 +52,10 @@ export interface TransactionData {
   details: TransactionDetail[];
   invAccTransactions: InvAccTransaction[];
   attachments: any[];
-  couponDetails:CouponDetails[]; // new
-  privilegeCardDetails:PrivilegeCardDetails[]; //new
-  bankCardDetails:List<SettlementDetails>[]; //new
-  uPIDetails:List<SettlementDetails>[]; //new
+  couponDetails: CouponDetails[]; // new
+  privilegeCardDetails: PrivilegeCardDetails[]; //new
+  bankCardDetails: List<SettlementDetails>[]; //new
+  uPIDetails: List<SettlementDetails>[]; //new
 }
 
 export interface InvAccTransaction {
@@ -211,7 +211,7 @@ export interface TransactionMaster {
   accTransactionDetailIDForBillwise: number;
   master2: TransactionMaster2;
   master3: TransactionMaster3;
-  lblSRAmount:string; //new
+  lblSRAmount: string; //new
 }
 
 export interface TransactionMaster3 {
@@ -603,6 +603,7 @@ export interface TransactionFormState {
   billwiseDetails?: string;
   showbillwise?: boolean;
   ledgerBillWiseLoading?: boolean;
+  ledgerBillWiseSaving?: boolean;
   tenderOpen?: boolean;
 
   templateChooserModal?: boolean;
@@ -670,6 +671,13 @@ export interface TransactionFormState {
   dtCouponDetails: any;
   selectedPartiesDefaultPriceCategoryId: number;
   blnCreateCreditNoteAutomatically: boolean;
+  showEInvoice: boolean;
+  giftOrCashCouponSelector: boolean;
+  printAddressLabel: boolean;
+  draftMode: boolean;
+  draftModeModal?: boolean;
+  createInterfaceFromOtherVoucher?: boolean;
+  skipZeroQty: boolean;
 }
 export interface GiftModel {
   productBatchId: number;
@@ -997,5 +1005,3 @@ export interface SettlementDetails {
   paymentName: string;
   paymentType: string;
 }
-
-

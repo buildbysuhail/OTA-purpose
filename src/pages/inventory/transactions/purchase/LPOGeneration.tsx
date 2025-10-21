@@ -1,16 +1,17 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import Urls from "../../../../redux/urls";
-import axios from "axios";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import { getApLocalDataByUrl } from "../../../../redux/cached-urls";
 import { LedgerType } from "../../../../enums/ledger-types";
-import { useDispatch } from "react-redux";
-import { formStateHandleFieldChange } from "../reducer";
+import { useDispatch, useSelector } from "react-redux";
+import { formStateHandleFieldChange, formStateTransactionDetailsRowsAdd, formStateTransactionDetailsRowsEmptyAdd } from "../reducer";
 import { APIClient } from "../../../../helpers/api-client";
+import { generateUniqueKey } from "../../../../utilities/Utils";
+import { RootState } from "../../../../redux/store";
 
 interface LPOGenerationProps {
     t: any;
@@ -31,7 +32,6 @@ interface FormStates {
     toDate: string;
     summaryAsOnDate: string;
     productCode: string;
-    skipZeroQty: boolean;
     showStockDetails: boolean;
 }
 
@@ -48,12 +48,11 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
         toDate: new Date(2025, 9, 10).toLocaleDateString(),
         summaryAsOnDate: new Date(2025, 9, 10).toLocaleDateString(),
         productCode: "",
-        skipZeroQty: false,
         showStockDetails: false,
     });
     const api = new APIClient();
     const dispatch = useDispatch();
-
+    const clientSession = useSelector((state: RootState) => state.ClientSession)
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -83,51 +82,9 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
                 });
                 setFormStates(prev => ({ ...prev, ...updates }));
 
-                const updatedInventory = endpoints.map((row: any, i: number) => {
-                    const avgSalesLast30Days = Number(row["SalesLast30Days"]) || 0;
-                    const avgSales = avgSalesLast30Days / 30;
-
-                    const item: any = {
-                        pCode: row["ProductCode"] ?? "",
-                        product: row["ProductName"] ?? "",
-                        productID: row["ProductID"] ?? "",
-                        barCode: row["AutoBarcode"] ?? "",
-                        manualBarCode: row["MannualBarcode"] ?? "",
-                        productBatchID: row["ProductBatchID"] ?? "",
-                        unit: row["UnitName"] ?? "",
-                        unitID: row["BasicUnitID"] ?? "",
-                        unitPrice: Number(row["StdPurchasePrice"] || 0).toFixed(2),
-                        salesPrice: Number(row["StdSalesPrice"] || 0).toFixed(2),
-                        mrp: Number(row["MRP"] || 0).toFixed(2),
-                        vatPerc: Number(row["PVAtPerc"] || 0).toFixed(2),
-                        supplierID: row["LedgerID"] ?? "",
-                        supplier: row["LedgerName"] ?? "",
-                        stock: Number(row["Stock"] || 0).toFixed(2),
-                        avgSales: avgSales.toFixed(2),
-                        salesLast30Days: Number(row["SalesLast30Days"] || 0).toFixed(2),
-                        salesLast90Days: Number(row["SalesLast90Days"] || 0).toFixed(2),
-                        salesLast180Days: Number(row["SalesLast180Days"] || 0).toFixed(2),
-                        arabicName: row["ArabicName"] ?? "",
-                        supplierRefCode: row["SupplierRefCode"] ?? "",
-                        lastSoldDate: row["LastSoldDate"] ?? "",
-                        minSalePrice: Number(row["MinSalePrice"] || 0).toFixed(2),
-                        poPendingQty: row["PO_Pending_Qty"] ?? "",
-                        pqPendingQty: row["PQ_Pending_Qty"] ?? "",
-                        qty: 0.0,
-                        headerIndex: i + 1,
-                    };
-                    // if (method !== "All Products") {
-                    //     item.qty = Number(row["Qty"] || 0).toFixed(2);
-                    //     calculateRowAmount(item);
-                    // }
-                    return item;
-                });
 
                 dispatch(formStateHandleFieldChange({ fields: { loading: { isLoading: false, text: 'Please wait while LPO' } } }));
-                for (let row = 0; row < updatedInventory.length; row++) {
-                    const _element = { ...updatedInventory[row] };
-                    const element = { ..._element };
-                }
+
             } catch (error) {
                 console.error('Failed to fetch data:', error);
                 ERPToast.show("Failed to load initial data", "error");
@@ -153,7 +110,6 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
             toDate: "",
             summaryAsOnDate: "",
             productCode: "",
-            skipZeroQty: false,
             showStockDetails: false,
         });
     };
@@ -167,7 +123,84 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
     //     },
     //     [],
     // )
+    const calculateRowAmount = (item: any) => {
+        try {
+            if (!item.product || item.product === "") return;
 
+            const isAppGlobal = clientSession.isAppGlobal; // same as PolosysFrameWork.General.IS_APP_GLOBAL
+
+            const qty = Number(item.qty) || 0;
+            const rate = Number(item.unitPrice) || 0;
+            const vatPerc = Number(item.vatPerc) || 0;
+
+            const CGSTPerc = Number(item.cgstPerc) || 0;
+            const SGSTPerc = Number(item.sgstPerc) || 0;
+            const IGSTPerc = Number(item.igstPerc) || 0;
+            const CessPerc = Number(item.cessPerc) || 0;
+            const AddnlCessPerc = Number(item.addnlCessPerc) || 0;
+
+            const discPerc = Number(item.discPerc) || 0;
+            const disc = Number(item.discount) || 0;
+            const schmeDiscPerc = Number(item.schemeDiscPerc) || 0;
+            const schmeDiscAmt = Number(item.schemeDiscAmt) || 0;
+
+            let gross = qty * rate;
+            let netValue = gross - disc;
+
+            let vat = 0;
+            let netAmount = 0;
+            let cost = 0;
+
+            // --- GST / VAT Calculation ---
+            if (isAppGlobal) {
+                const cgst = (netValue * CGSTPerc) / 100;
+                const sgst = (netValue * SGSTPerc) / 100;
+                const igst = (netValue * IGSTPerc) / 100;
+                const cess = (netValue * CessPerc) / 100;
+                const addnlCess = (netValue * AddnlCessPerc) / 100;
+
+                cost =
+                    rate -
+                    (rate * discPerc) / 100 +
+                    (rate *
+                        (CGSTPerc + SGSTPerc + IGSTPerc + CessPerc + AddnlCessPerc)) /
+                    100;
+
+                netAmount =
+                    netValue + cgst + sgst + igst + cess + addnlCess - schmeDiscAmt;
+
+                Object.assign(item, {
+                    cgst,
+                    sgst,
+                    igst,
+                    cessAmt: cess,
+                    addnlCessAmt: addnlCess,
+                    cost,
+                    netValue,
+                    gross,
+                    total: netAmount,
+                });
+            } else {
+                vat = (netValue * vatPerc) / 100;
+                cost =
+                    rate - (rate * discPerc) / 100 + (rate * vatPerc) / 100;
+                netAmount = netValue + vat - schmeDiscAmt;
+
+                Object.assign(item, {
+                    vatAmount: vat,
+                    cost,
+                    netValue,
+                    gross,
+                    total: netAmount,
+                });
+            }
+
+            return item;
+        } catch (ex) {
+            console.error("Error in calculateRowAmount:", ex);
+            return item;
+        }
+    };
 
     const handleShow = async () => {
         try {
@@ -183,10 +216,70 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
                 toDate: formStates.toDate,
                 summaryAsOnDate: formStates.summaryAsOnDate,
                 productCode: formStates.productCode,
-                skipZeroQty: formStates.skipZeroQty,
+                skipZeroQty: formState.skipZeroQty,
                 showStockDetails: formStates.showStockDetails,
             };
-            const response = await axios.get(Urls.localPurchaseOrder, { params });
+            const encoded =
+                "method=" + encodeURIComponent(String(params.method ?? "all Products")) +
+                "&supplierId=" + encodeURIComponent(String(params.supplierId ?? "-1")) +
+                "&productCategoryId=" + encodeURIComponent(String(params.productCategoryId ?? "-1")) +
+                "&productGroupId=" + encodeURIComponent(String(params.productGroupId ?? "-1")) +
+                "&groupCategoryId=" + encodeURIComponent(String(params.groupCategoryId ?? "-1")) +
+                "&sectionId=" + encodeURIComponent(String(params.sectionId ?? "-1")) +
+                "&productId=" + encodeURIComponent(String(params.productId ?? "-1")) +
+                "&fromDate=" + encodeURIComponent(String(params.fromDate ?? "")) +
+                "&toDate=" + encodeURIComponent(String(params.toDate ?? "")) +
+                "&summaryAsOnDate=" + encodeURIComponent(String(params.summaryAsOnDate ?? "")) +
+                "&productCode=" + encodeURIComponent(String(params.productCode ?? "")) +
+                "&skipZeroQty=" + encodeURIComponent(String(params.skipZeroQty ?? false)) +
+                "&showStockDetails=" + encodeURIComponent(String(params.showStockDetails ?? false));
+            const response = await api.getAsync(Urls.localPurchaseOrder, encoded);
+
+            const updatedInventory = response.map((row: any, i: number) => {
+                const avgSalesLast30Days = Number(row["salesLast30Days"]) || 0;
+                const avgSales = avgSalesLast30Days / 30;
+                const item: any = {
+                    slNo: generateUniqueKey(),
+                    pCode: row["productCode"] ?? "",
+                    product: row["productName"] ?? "",
+                    productID: row["productID"] ?? "",
+                    barCode: row["autoBarcode"] ?? "",
+                    manualBarCode: row["mannualBarcode"] ?? "",
+                    productBatchID: row["productBatchID"] ?? "",
+                    unit: row["unitName"] ?? "",
+                    unitID: row["basicUnitID"] ?? "",
+                    unitPrice: Number(row["stdPurchasePrice"] || 0).toFixed(2),
+                    salesPrice: Number(row["stdSalesPrice"] || 0).toFixed(2),
+                    mrp: Number(row["mRP"] || 0).toFixed(2),
+                    vatPerc: Number(row["pVAtPerc"] || 0).toFixed(2),
+                    supplierID: row["ledgerID"] ?? "",
+                    supplier: row["ledgerName"] ?? "",
+                    stock: Number(row["stock"] || 0).toFixed(2),
+                    avgSales: avgSales.toFixed(2),
+                    salesLast30Days: Number(row["salesLast30Days"] || 0).toFixed(2),
+                    salesLast90Days: Number(row["salesLast90Days"] || 0).toFixed(2),
+                    salesLast180Days: Number(row["salesLast180Days"] || 0).toFixed(2),
+                    arabicName: row["arabicName"] ?? "",
+                    supplierRefCode: row["supplierRefCode"] ?? "",
+                    lastSoldDate: row["lastSoldDate"] ?? "",
+                    minSalePrice: Number(row["minSalePrice"] || 0).toFixed(2),
+                    poPendingQty: row["pO_Pending_Qty"] ?? "",
+                    pqPendingQty: row["pQ_Pending_Qty"] ?? "",
+                    qty: 0.0,
+                    headerIndex: i + 1,
+                };
+                if (formState.method !== "All Products") {
+                    item.qty = Number(row["Qty"] || 0).toFixed(2);
+                    calculateRowAmount(item);
+                }
+                return item;
+            });
+            debugger;
+            dispatch(
+                formStateTransactionDetailsRowsEmptyAdd(
+                    updatedInventory
+                )
+            )
             ERPToast.show("LPO Showing Successfully", "success");
         } catch (error) {
             ERPToast.show("Failed to Show", "error");
@@ -322,8 +415,10 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
                     <ERPCheckbox
                         id="skipZeroQty"
                         label={t("skip_zero_qty_validation")}
-                        checked={formStates.skipZeroQty}
-                        onChange={(e) => handleFieldChange({ skipZeroQty: e.target.checked })}
+                        checked={formState.skipZeroQty}
+                        onChange={(e) => dispatch(formStateHandleFieldChange({
+                            fields: { skipZeroQty: e.target.checked }
+                        }))}
                     />
                     <ERPCheckbox
                         id="showStockDetails"

@@ -23,7 +23,7 @@ const SummaryFilter = ({ getFieldProps, handleFieldChange, formState, }: any) =>
           <ERPDateInput
             label={t("from_date")}
             {...getFieldProps("fromDate")}
-            className="w-full"
+            className="w-full text-center "
             onChangeData={(data: any) =>
               handleFieldChange("fromDate", data.fromDate)
             }

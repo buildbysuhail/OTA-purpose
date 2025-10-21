@@ -1,6 +1,7 @@
 import { PrintDetailDto } from "../../../use-print-type";
-import { TableColumn, TemplateState } from "../../Designer/interfaces";
+import { ItemTableMasterState, TableColumn, TemplateState } from "../../Designer/interfaces";
 import { View, Text, StyleSheet } from "@react-pdf/renderer";
+import { containsArabicString } from "../../utils/pdf-util";
 
 type DownTableProps = {
   data: PrintDetailDto[];
@@ -8,53 +9,56 @@ type DownTableProps = {
 };
 const DEFAULT_COLUMN_WIDTH = "10%";
 
-const normalizeWidth = (widthVal?: string | number): string => {
-  if (widthVal === undefined || widthVal === null) return DEFAULT_COLUMN_WIDTH;
-  const w = String(widthVal).trim();
-  if (w.endsWith("%")) return w;
-  return `${w}pt`;
-};
-
  export const SharedDownTable: React.FC<DownTableProps> = ({ data, template }) => {
   const accTableState = (template as any)?.tableState as TableColumn<unknown>[] | undefined;
-  const tableMasterState = (template as any)?.itemTableMasterState;
-  const propertiesState = (template as any)?.propertiesState;
+  const tableMasterState = (template as TemplateState<unknown>)?.itemTableMasterState;
 
-  const labelFontFamily = propertiesState?.font_family || "Helvetica";
-  const labelFontWeight = propertiesState?.label_font_weight || "normal";
-  const labelFontStyle = propertiesState?.label_font_style || "normal";
-
+  const HeadFontFamily = tableMasterState?.headerFontFamily || "Roboto";
+  const arabicHeadFontFamily = tableMasterState?.arabicHeaderFontFamily?? "Amiri";
+  const rowFontFamily = tableMasterState?.itemRowFontFamily || "Roboto";
+  const arabicrowFontFamily = tableMasterState?.arabicItemRowFontFamily?? "Amiri";
+ const property =  template?.propertiesState
   const visibleColumns = accTableState?.filter((c) => c.show) ?? [];
 
   const styles = StyleSheet.create({
     container: {
       width: "100%",
       flexDirection: "column",
+      
+
     },
     thead: {
       flexDirection: "row",
       backgroundColor: tableMasterState?.showTableHeaderBg
         ? tableMasterState?.tableHeaderBgColor
         : "#fff",
-      color: tableMasterState?.headerFontColor || "#000",
-      fontSize: tableMasterState?.headerFontSize || 12,
-      borderBottomWidth: tableMasterState?.showTableRowBorder ? 1 : 0,
-      borderBottomColor: tableMasterState?.tableRowBorderColor || "#000",
+    borderTopWidth: tableMasterState?.showTableRowBorder ? 1 : 0,
+    borderTopColor: tableMasterState?.tableRowBorderColor || "#000",
+    borderBottomWidth: tableMasterState?.showTableRowBorder ? 1 : 0,
+    borderBottomColor: tableMasterState?.tableRowBorderColor || "#000",
+    borderLeftWidth:(tableMasterState?.showTableColBorder)? 1 : 0,
+    borderLeftColor: tableMasterState?.tableColBorderColor || "#000",  
+    borderRightWidth:(tableMasterState?.showTableColBorder)? 1 : 0,
+    borderRightColor: tableMasterState?.tableColBorderColor || "#000",     
+
     },
     th: {
       padding: 4,
       textAlign: "center",
       justifyContent: "center",
-      fontFamily: labelFontFamily,
-      fontWeight: labelFontWeight,
-      fontStyle: labelFontStyle,
+      color: tableMasterState?.headerFontColor || "#000",
+      fontSize: tableMasterState?.headerFontSize || 12,
+      fontWeight: tableMasterState?.headerFontWeight || 400,
+      fontStyle:  tableMasterState?.headerFontStyle || "normal",
     },
     tr: {
       flexDirection: "row",
-      fontSize: tableMasterState?.itemRowFontSize || 12,
-      color: tableMasterState?.itemRowFontColor || "#000",
       borderBottomWidth: tableMasterState?.showTableRowBorder ? 1 : 0,
       borderBottomColor: tableMasterState?.tableRowBorderColor || "#000",
+      borderLeftWidth:(tableMasterState?.showTableColBorder)? 1 : 0,
+      borderLeftColor: tableMasterState?.tableColBorderColor || "#000",  
+      borderRightWidth:(tableMasterState?.showTableColBorder)? 1 : 0,
+      borderRightColor: tableMasterState?.tableColBorderColor || "#000",         
       backgroundColor: tableMasterState?.showRowBg
         ? tableMasterState?.itemRowBgColor
         : "#fff",
@@ -62,28 +66,36 @@ const normalizeWidth = (widthVal?: string | number): string => {
     td: {
       padding: 4,
       textAlign: "center",
-      fontFamily: labelFontFamily,
       flexGrow: 1,
+      fontSize: tableMasterState?.itemRowFontSize || 12,
+      color: tableMasterState?.itemRowFontColor || "#000",
+      fontWeight: tableMasterState?.itemRowFontWeight || 400,
+      fontStyle:  tableMasterState?.itemRowFontStyle || "normal",      
     },
   });
 
   const renderHeader = () => (
-    <View style={styles.thead} fixed>
-      {visibleColumns.map((col, idx) => (
+    <View style={styles.thead} fixed={tableMasterState?.headerRepeatOnPage}>
+      {visibleColumns.map((col, idx) => {
+        const isArabic = containsArabicString(col.label)
+        return(
         <View
           key={String(col.field)}
           style={{
             ...styles.th,
+            fontFamily:isArabic ? arabicHeadFontFamily: HeadFontFamily,
             flex: 1,
-            maxWidth: normalizeWidth(col.width || DEFAULT_COLUMN_WIDTH),
-            borderRightWidth:
-              tableMasterState?.showTableColBorder && idx + 1 < visibleColumns.length ? 1 : 0,
+            maxWidth:col.width || DEFAULT_COLUMN_WIDTH,
+            borderRightWidth:(tableMasterState?.showTableColBorder && idx + 1 < visibleColumns.length ) ? 1 : 0,
             borderRightColor: tableMasterState?.tableColBorderColor || "#000",
+          
           }}
         >
           <Text>{col.label ?? String(col.field)}</Text>
         </View>
-      ))}
+        )
+
+       })}
     </View>
   );
 
@@ -93,20 +105,29 @@ const normalizeWidth = (widthVal?: string | number): string => {
       {/* ✅ Each row is a separate flowing block so page break works */}
       {data?.map((row, rowIndex) => (
         <View key={rowIndex} style={styles.tr} wrap>
-          {visibleColumns.map((col, idx) => (
+          {visibleColumns.map((col, idx) => {
+   // Get cell value
+      const cellValue = (row as Record<string, any>)?.[String(col.field)] ?? "";
+
+      // Check if text is Arabic
+        const isArabic = containsArabicString(cellValue);
+            return(
             <View
               key={String(col.field)}
               style={{
                 ...styles.td,
-                maxWidth: normalizeWidth(col.width || DEFAULT_COLUMN_WIDTH),
+                fontFamily:isArabic ? arabicrowFontFamily: rowFontFamily,
+                maxWidth: col.width || DEFAULT_COLUMN_WIDTH,
                 borderRightWidth:tableMasterState?.showTableColBorder && idx + 1 < visibleColumns.length ? 1 : 0,
                 borderRightColor: tableMasterState?.tableColBorderColor || "#000",
               }}
             >
-             <Text>{(row as Record<string, any>)?.[String(col.field)] ?? ""}</Text>
+             <Text>{cellValue}</Text>
 
             </View>
-          ))}
+            )
+
+         })}
         </View>
       ))}
     </View>

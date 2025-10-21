@@ -403,7 +403,8 @@ const handleAmountModal = (
                       id: "ledgerID",
                       valueKey: "id",
                       labelKey: "name",
-                      getListUrl: `${Urls.inv_transaction_base}${transactionType}/Data/AccLedgers/?ledgerType=${amountModal.showAllList? LedgerType.All: LedgerType.Liabilities_Expenses}`,
+                      getListUrl: `${Urls.inv_transaction_base}${transactionType}/Data/AccLedgers/`,
+                      params:`ledgerType=${amountModal.showAllList? LedgerType.All: LedgerType.Liabilities_Expenses}`
                     }}
                     noLabel={true}
                     enableClearOption={false}

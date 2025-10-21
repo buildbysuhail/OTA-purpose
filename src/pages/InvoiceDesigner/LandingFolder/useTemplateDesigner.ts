@@ -311,33 +311,45 @@ debugger;
   // Handle template saving
   const handleSave = useCallback(
     async (dataUrl: string) => {
+      debugger
+       const thumbImage= dataUrl;
+       const backgroundImage= activeTemplate.background_image ?? "";
+       const backgroundImageHeader= activeTemplate.background_image_header ?? "";
+       const backgroundImageFooter= activeTemplate.background_image_footer ?? "";
+       const signatureImage= activeTemplate.signature_image ?? "";
       const tmpTemplate = {
         ...activeTemplate,
         content: null, 
+        background_image: "",
+        thumbImage: "",
+        backgroundImageHeader: "",
+        backgroundImageFooter: "",
+        signatureImage: "",
         propertiesState: {
           ...activeTemplate?.propertiesState,
           template_group: templateGroup,
           template_kind: templateKind,
           template_type: designerType,
+
         },
-      };
+      } as TemplateState<unknown>;
       console.log(tmpTemplate);
       
       const compressedContent = await compressData(tmpTemplate);
       const activeTemplates: TemplateDto = {
-        templateType: tmpTemplate.propertiesState.template_type ?? "standard",
-        templateKind: tmpTemplate.propertiesState.template_kind ?? "standard",
-        templateGroup: tmpTemplate.propertiesState.template_group ?? "",
+        templateType: tmpTemplate.propertiesState?.template_type ?? "standard",
+        templateKind: tmpTemplate.propertiesState?.template_kind ?? "standard",
+        templateGroup: tmpTemplate.propertiesState?.template_group ?? "",
         templateName: tmpTemplate.propertiesState?.templateName ?? "",
         formType: tmpTemplate.propertiesState?.template_formType ?? "",
         customerType: tmpTemplate.propertiesState?.template_customerType ?? "",
-        thumbImage: dataUrl,
+        thumbImage: thumbImage,
         content: compressedContent,
         isCurrent: tmpTemplate.isCurrent ?? false,
-        backgroundImage: tmpTemplate.background_image ?? "",
-        backgroundImageHeader: tmpTemplate.background_image_header ?? "",
-        backgroundImageFooter: tmpTemplate.background_image_footer ?? "",
-        signatureImage: tmpTemplate.signature_image ?? "",
+        background_image: backgroundImage,
+        background_image_header: backgroundImageHeader,
+        background_image_footer: backgroundImageFooter,
+        signature_image: signatureImage,
         branchId: 0,
         id: id == "new" ? 0 : activeTemplate?.id,
       };

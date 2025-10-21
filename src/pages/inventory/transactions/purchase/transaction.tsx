@@ -1745,6 +1745,7 @@ const handleHeightChange =(height :number)=>{
                         applicationSettings={applicationSettings}
                         generateLPO={generateLPO}
                         generateLPQ={generateLPQ}
+                        clientSession={clientSession}
                       />
                     )}
                 </div>
@@ -1930,6 +1931,7 @@ const handleHeightChange =(height :number)=>{
                   applicationSettings={applicationSettings}
                   generateLPO={generateLPO}
                   generateLPQ={generateLPQ}
+                  clientSession={clientSession}
                   footerLayout={
                     ((formState.transactionLoading
                       ? _st.footerPosition
@@ -1985,6 +1987,7 @@ const handleHeightChange =(height :number)=>{
                 applicationSettings={applicationSettings}
                 generateLPO={generateLPO}
                 generateLPQ={generateLPQ}
+                clientSession={clientSession}
               />
             ))}
         {/* footer ends here */}

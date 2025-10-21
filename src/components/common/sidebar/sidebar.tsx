@@ -1,5 +1,4 @@
 import React, { FC, Fragment, useEffect, useMemo, useState, lazy, Suspense } from "react";
-import { connect, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import store, { RootState } from "../../../redux/store";
 

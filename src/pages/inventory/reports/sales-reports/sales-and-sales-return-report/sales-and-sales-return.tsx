@@ -47,11 +47,12 @@ const SalesAndSalesReturn = () => {
     {
       dataField: "transactionDate",
       caption: t("date"),
-      dataType: "string",
+      dataType: "date",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
       width: 90,
+      format: "dd-MMM-yyyy",
       showInPdf: true,
     },
     {
@@ -253,7 +254,7 @@ const SalesAndSalesReturn = () => {
       },
     },
     {
-      dataField: "Refund",
+      dataField: "refund",
       caption: t("refund"),
       dataType: "number",
       allowSearch: true,
@@ -268,9 +269,9 @@ const SalesAndSalesReturn = () => {
       ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.Refund == null
+            cellElement.data?.refund == null
               ? ""
-              : getFormattedValue(cellElement.data.Refund);
+              : getFormattedValue(cellElement.data.refund);
           return {
             ...exportCell,
             text: value,
@@ -278,9 +279,9 @@ const SalesAndSalesReturn = () => {
             alignmentExcel: { horizontal: "right" },
           };
         } else {
-          return cellElement.data?.Refund == null
+          return cellElement.data?.refund == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.Refund));
+            : getFormattedValue(parseFloat(cellElement.data.refund));
         }
       },
     },
@@ -319,13 +320,14 @@ const SalesAndSalesReturn = () => {
       showInPdf: true,
     },
     {
-      dataField: "transDate",
+      dataField: "transactionDate",
       caption: t("date"),
-      dataType: "string",
+      dataType: "date",
       allowSearch: true,
       allowFiltering: true,
       allowSorting: true,
       width: 80,
+      format: "dd-MMM-yyyy",
       showInPdf: true,
     },
     {
@@ -563,8 +565,13 @@ const SalesAndSalesReturn = () => {
       return getFormattedValue(value) || "0";
     };
   }, [getFormattedValue]);
-
+  const customizeTotal = (itemInfo: any) => `TOTAL`;
   const summaryItems: SummaryConfig[] = [
+    {
+      column: "transactionDate",
+      summaryType: "custom",
+      customizeText: customizeTotal,
+    },
     {
       column: "salesAmt",
       summaryType: "sum",
@@ -597,12 +604,6 @@ const SalesAndSalesReturn = () => {
     },
     {
       column: "balance",
-      summaryType: "sum",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    },
-    {
-      column: "salesDisc",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
@@ -648,12 +649,13 @@ const SalesAndSalesReturn = () => {
                 <ErpDevGrid
                   summaryItems={summaryItems}
                   remoteOperations={{
-                    filtering: false,
-                    paging: false,
-                    sorting: false,
-                    summary: false,
+                    filtering: true,
+                    paging: true,
+                    sorting: true,
+                    summary: true,
                   }}
                   columns={summaryColumns}
+
                   moreOption={false}
                   gridHeader={t("sales_summary_report")}
                   dataUrl={Urls.sales_and_sales_return_master}
@@ -671,7 +673,7 @@ const SalesAndSalesReturn = () => {
                   hideGridHeader={true}
                   enableScrollButton={false}
                   // showPrintButton={false}
-                  ShowGridPreferenceChooser={false}
+                  ShowGridPreferenceChooser={true}
                   allowSearching={false}
                   // allowExport={false}
                 />
@@ -680,11 +682,12 @@ const SalesAndSalesReturn = () => {
                 <ErpDevGrid
                   summaryItems={summaryItems}
                   remoteOperations={{
-                    filtering: false,
-                    paging: false,
-                    sorting: false,
-                    summary: false,
+                    filtering: true,
+                    paging: true,
+                    sorting: true,
+                    summary: true,
                   }}
+                  allowColumnChooser={true}
                   columns={detailedColumns}
                   moreOption={false}
                   gridHeader={t("sales_detail_report")}
@@ -703,7 +706,7 @@ const SalesAndSalesReturn = () => {
                   hideGridHeader={true}
                   enableScrollButton={false}
                   // showPrintButton={false}
-                  ShowGridPreferenceChooser={false}
+                  ShowGridPreferenceChooser={true}
                   allowSearching={false}
                   // allowExport={false}
                 />

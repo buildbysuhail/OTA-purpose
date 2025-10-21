@@ -76,7 +76,7 @@ interface ReturnTaxGSTProps {
           const value =
             cellElement.data?.taxableValue == null
               ? ""
-              : getFormattedValue(cellElement.data.taxableValue,false,4);
+              : getFormattedValue(cellElement.data.taxableValue);
           return {
             ...exportCell,
             text: value,
@@ -86,7 +86,7 @@ interface ReturnTaxGSTProps {
         } else {
           return cellElement.data?.taxableValue == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.taxableValue),false,4);
+            : getFormattedValue(parseFloat(cellElement.data.taxableValue));
         }
       },
     },
@@ -319,7 +319,7 @@ interface ReturnTaxGSTProps {
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
       cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value, false, 4));
+            return erpParseFloat(getFormattedValue(value));
       },
     },
     {
@@ -328,7 +328,7 @@ interface ReturnTaxGSTProps {
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
       cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value, false, 4));
+            return erpParseFloat(getFormattedValue(value));
       },
     },
     {

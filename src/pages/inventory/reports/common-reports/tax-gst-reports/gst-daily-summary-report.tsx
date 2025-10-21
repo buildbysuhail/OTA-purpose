@@ -8,9 +8,7 @@ import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import moment from "moment";
 import { useLocation } from "react-router-dom";
-import {
-  GstReportFilterGstCatInitialState,
-} from "./gst-report-filter-gst";
+import { GstReportFilterGstCatInitialState } from "./gst-report-filter-gst";
 import GstReportFilterGstCat from "./gst-report-filter-gst";
 import { erpParseFloat } from "../../../../../utilities/Utils";
 
@@ -25,9 +23,7 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
   gridId,
 }) => {
   const { t } = useTranslation("accountsReport");
-  const [filter, setFilter] = useState<any>(
-    GstReportFilterGstCatInitialState
-  );
+  const [filter, setFilter] = useState<any>(GstReportFilterGstCatInitialState);
   const columns: DevGridColumn[] = [
     {
       dataField: "date",
@@ -84,7 +80,7 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
           const value =
             cellElement.data?.gstPercentage == null
               ? ""
-              : getFormattedValue(cellElement.data.gstPercentage, false, 4);
+              : getFormattedValue(cellElement.data.gstPercentage);
           return {
             ...exportCell,
             text: value,
@@ -94,11 +90,7 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
         } else {
           return cellElement.data?.gstPercentage == null
             ? ""
-            : getFormattedValue(
-              parseFloat(cellElement.data.gstPercentage),
-              false,
-              4
-            );
+            : getFormattedValue(parseFloat(cellElement.data.gstPercentage));
         }
       },
     },
@@ -120,7 +112,7 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
           const value =
             cellElement.data?.taxableValue == null
               ? ""
-              : getFormattedValue(cellElement.data.taxableValue, false, 4);
+              : getFormattedValue(cellElement.data.taxableValue);
           return {
             ...exportCell,
             text: value,
@@ -130,11 +122,7 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
         } else {
           return cellElement.data?.taxableValue == null
             ? ""
-            : getFormattedValue(
-              parseFloat(cellElement.data.taxableValue),
-              false,
-              4
-            );
+            : getFormattedValue(parseFloat(cellElement.data.taxableValue));
         }
       },
     },
@@ -156,7 +144,7 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
           const value =
             cellElement.data?.totalGST == null
               ? ""
-              : getFormattedValue(cellElement.data.totalGST, false, 4);
+              : getFormattedValue(cellElement.data.totalGST);
           return {
             ...exportCell,
             text: value,
@@ -166,11 +154,7 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
         } else {
           return cellElement.data?.totalGST == null
             ? ""
-            : getFormattedValue(
-              parseFloat(cellElement.data.totalGST),
-              false,
-              4
-            );
+            : getFormattedValue(parseFloat(cellElement.data.totalGST));
         }
       },
     },
@@ -192,7 +176,7 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
           const value =
             cellElement.data?.cess == null
               ? ""
-              : getFormattedValue(cellElement.data.cess, false, 4);
+              : getFormattedValue(cellElement.data.cess);
           return {
             ...exportCell,
             text: value,
@@ -202,7 +186,7 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
         } else {
           return cellElement.data?.cess == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.cess), false, 4);
+            : getFormattedValue(parseFloat(cellElement.data.cess));
         }
       },
     },
@@ -224,7 +208,7 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
           const value =
             cellElement.data?.addCess == null
               ? ""
-              : getFormattedValue(cellElement.data.addCess, false, 4);
+              : getFormattedValue(cellElement.data.addCess);
           return {
             ...exportCell,
             text: value,
@@ -234,7 +218,7 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
         } else {
           return cellElement.data?.addCess == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.addCess), false, 4);
+            : getFormattedValue(parseFloat(cellElement.data.addCess));
         }
       },
     },
@@ -256,7 +240,7 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
           const value =
             cellElement.data?.total == null
               ? ""
-              : getFormattedValue(cellElement.data.total, false, 4);
+              : getFormattedValue(cellElement.data.total);
           return {
             ...exportCell,
             text: value,
@@ -266,7 +250,7 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
         } else {
           return cellElement.data?.total == null
             ? ""
-            : getFormattedValue(cellElement.data.total, false, 4);
+            : getFormattedValue(cellElement.data.total);
         }
       },
     },
@@ -303,8 +287,8 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value, false, 4));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
       },
     },
     {
@@ -312,8 +296,8 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value, false, 4));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
       },
     },
     {
@@ -321,8 +305,8 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value, false, 4));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
       },
     },
     {
@@ -330,8 +314,8 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value, false, 4));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
       },
     },
     {
@@ -339,8 +323,8 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value, false, 4));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
       },
     },
   ];

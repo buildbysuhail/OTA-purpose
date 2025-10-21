@@ -10,6 +10,7 @@ import { LedgerType } from "../../../../enums/ledger-types";
 import { useDispatch } from "react-redux";
 import { formStateHandleFieldChange, formStateTransactionDetailsRowsAdd, formStateTransactionDetailsRowsEmptyAdd } from "../reducer";
 import { APIClient } from "../../../../helpers/api-client";
+import { generateUniqueKey } from "../../../../utilities/Utils";
 
 interface LPOGenerationProps {
     t: any;
@@ -162,6 +163,7 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
                 const avgSalesLast30Days = Number(row["salesLast30Days"]) || 0;
                 const avgSales = avgSalesLast30Days / 30;
                 const item: any = {
+                    slNo:generateUniqueKey(),
                     pCode: row["productCode"] ?? "",
                     product: row["productName"] ?? "",
                     productID: row["productID"] ?? "",

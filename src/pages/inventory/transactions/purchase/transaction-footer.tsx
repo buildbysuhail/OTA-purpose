@@ -23,6 +23,7 @@ import VoucherType from "../../../../enums/voucher-types";
 import React from "react";
 import { TransactionFormState } from "../transaction-types";
 import { formStateHandleFieldChangeKeysOnly, formStateHandleFieldChange, formStateTransactionMasterHandleFieldChange } from "../reducer";
+import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 
 interface TransactionFooterProps {
   formState: TransactionFormState;
@@ -302,6 +303,27 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         setDropupState('closed');
       }
     }, 250);
+  };
+
+  const generateLPOLPQ = () => {
+    const master = formState.transaction.master;
+  const details = formState.transaction.details;
+
+  // Check if "Skip Zero Quantity Validation" is unchecked
+  // if (!formState.chkSkipZeroQtyValidation) {
+  //   for (let i = 0; i < details.length; i++) {
+  //     const qty = Number(details[i].qty) || 0;
+
+  //     if (qty === 0) {
+  //       ERPAlert.show(
+  //         {text:`Please set quantity in row ${i + 1}. Please correct it or remove the row.`, title:"Failed"}
+  //       );
+  //       return false;
+  //     }
+  //   }
+  // }
+
+  return true;
   };
 
   const taxData = [

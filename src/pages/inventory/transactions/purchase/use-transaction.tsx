@@ -821,6 +821,7 @@ export const useTransaction = (
     return response;
   };
 
+  
   async function validate(): Promise<boolean> {
     const master = formState.transaction.master;
     const details = formState.transaction.details;

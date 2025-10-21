@@ -522,11 +522,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
             }
             value={displayValue}
             labelClassName={labelClassName}
-            // inputClassName={inputClassName}
-            // inputClassName={`${inputClassName || ""} [&[type=date]]:text-center`}
-            // inputClassName={`${inputClassName || ""} [&[type=date]]:!text-center [&[type=date]]:align-middle`}
-            // inputClassName={`${inputClassName || ""} [&[type=date]]:text-center [&[type=date]]:pr-8`}
-            inputClassName={`${inputClassName || ""} [&[type=date]]:text-center [&[type=date]]:leading-none`}
+            inputClassName={inputClassName}
             data-skip={skip}
             data-jump-to={jumpTo}
             data-jump-target={jumpTarget}

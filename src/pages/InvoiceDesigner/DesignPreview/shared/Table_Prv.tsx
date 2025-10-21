@@ -2,27 +2,9 @@ import React, { useMemo } from "react";
 import type { CSSProperties } from "react";
 import type { TableColumn, TemplateState } from "../../Designer/interfaces";
 import { PrintDetailDto } from "../../../use-print-type";
+import { containsArabicString } from "../../utils/pdf-util";
 
 const DEFAULT_COLUMN_WIDTH = "10%";
-
-const normalizeWidth = (widthVal?: string | number): string => {
-  if (widthVal === undefined || widthVal === null) return DEFAULT_COLUMN_WIDTH;
-  const w = String(widthVal).trim();
-  if (w.endsWith("%") || w.endsWith("px") || w.endsWith("pt")) return w;
-  return `${w}pt`;
-};
-
-const getCellStyle = (base: CSSProperties, width?: string | number): CSSProperties => {
-  const w = normalizeWidth(width);
-  return {
-    ...base,
-    width: w,
-    minWidth: w,
-    maxWidth: w,
-    boxSizing: "border-box",
-    fontFamily:"roboto",
-  };
-};
 
 type AccPrvTableProps = {
   data: PrintDetailDto[];
@@ -30,16 +12,28 @@ type AccPrvTableProps = {
 };
 
 const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
-  const accTableState = (template as any)?.tableState as TableColumn<unknown>[] | undefined;
-  const tableMasterState = (template as any)?.itemTableMasterState;
-  const propertiesState = (template as any)?.propertiesState;
+  const accTableState = (template as TemplateState<unknown>)?.tableState as TableColumn<unknown>[] | undefined;
+  const tableMasterState = (template as TemplateState<unknown>)?.itemTableMasterState;
+  const HeadFontFamily = tableMasterState?.headerFontFamily || "Roboto";
+  const arabicHeadFontFamily = tableMasterState?.arabicHeaderFontFamily?? "Amiri";
+  const rowFontFamily = tableMasterState?.itemRowFontFamily || "Roboto";
+  const arabicrowFontFamily = tableMasterState?.arabicItemRowFontFamily?? "Amiri";
  
   // label font preferences from propertiesState
-  const labelStylesBase: CSSProperties = {
-    fontWeight: propertiesState?.label_font_weight ?? undefined,
-    fontStyle: propertiesState?.label_font_style ?? undefined,
-    fontFamily: propertiesState?.font_family ?? undefined,
+  const HeaderFontBase: CSSProperties = {
+    fontWeight: tableMasterState?.headerFontWeight?? undefined,
+    fontStyle: tableMasterState?.headerFontStyle?? undefined,
+    color: tableMasterState?.headerFontColor || "#000",
+    fontSize: `${tableMasterState?.headerFontSize??12}pt`,
   };
+
+    const RowFontBase: CSSProperties = {
+    fontWeight: tableMasterState?.itemRowFontWeight ?? undefined,
+    fontStyle: tableMasterState?.itemRowFontStyle?? undefined,
+    color: tableMasterState?.itemRowFontColor || "#000",
+    fontSize: `${tableMasterState?.itemRowFontSize??12}pt`,
+  };
+
 
   // compute visible columns once
   const visibleColumns = useMemo(() => {
@@ -50,16 +44,16 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
   // component-level styles (DOM-friendly)
   const styles = useMemo(() => {
     const borderTop = tableMasterState?.showTableRowBorder
-      ? `1px solid ${tableMasterState?.tableRowBorderColor || "#000"}`
+      ? `1pt solid ${tableMasterState?.tableRowBorderColor || "#000"}`
       : undefined;
     const borderBottom = tableMasterState?.showTableRowBorder
-      ? `1px solid ${tableMasterState?.tableRowBorderColor || "#000"}`
+      ? `1pt solid ${tableMasterState?.tableRowBorderColor || "#000"}`
       : undefined;
     const borderLeft = tableMasterState?.showTableColBorder
-      ? `1px solid ${tableMasterState?.tableColBorderColor || "#000"}`
+      ? `1pt solid ${tableMasterState?.tableColBorderColor || "#000"}`
       : undefined;
     const borderRight = tableMasterState?.showTableColBorder
-      ? `1px solid ${tableMasterState?.tableColBorderColor || "#000"}`
+      ? `1pt solid ${tableMasterState?.tableColBorderColor || "#000"}`
       : undefined;
 
     const commonTh: CSSProperties = {
@@ -71,6 +65,7 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
       flexWrap: "wrap",
       // prevent overflow and allow wrapping
       overflow: "hidden",
+      boxSizing: "border-box",
     };
 
     return {
@@ -92,42 +87,38 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
         backgroundColor: tableMasterState?.showTableHeaderBg
           ? tableMasterState?.tableHeaderBgColor
           : "#fff",
-        color: tableMasterState?.headerFontColor || "#000",
-        fontSize: tableMasterState?.headerFontSize || 12,
-        borderBottom: tableMasterState?.showTableRowBorder
-          ? `1px solid ${tableMasterState?.tableRowBorderColor || "#000"}`
-          : undefined,
+
+         borderBottom: tableMasterState?.showTableRowBorder
+          ? `1pt solid ${tableMasterState?.tableRowBorderColor || "#000"}`
+          : undefined,  
+                          
       } as CSSProperties,
       th: commonTh as CSSProperties,
       tbody: {
         display: "flex",
         flexDirection: "column",
+        
       } as CSSProperties,
       tr: {
         display: "flex",
         flexDirection: "row",
-        color: tableMasterState?.itemRowFontColor || "#000",
-        fontSize: tableMasterState?.itemRowFontSize || 12,
-        borderBottom: tableMasterState?.showTableRowBorder
-          ? `1px solid ${tableMasterState?.tableRowBorderColor || "#000"}`
-          : undefined,
         backgroundColor: tableMasterState?.showRowBg ? tableMasterState?.itemRowBgColor : "#fff",
       } as CSSProperties,
       td: {
         padding: 6,
         textAlign: "center",
         overflow: "hidden",
+        boxSizing: "border-box",
       } as CSSProperties,
       // cellText for DOM: allow wrapping and hyphenation
       cellText: {
-        ...labelStylesBase,
+        // ...labelStylesBase,
         overflowWrap: "break-word",
         wordBreak: "break-word",
-        fontFamily:"roboto",
         hyphens: "auto" as CSSProperties["hyphens"],
       } as CSSProperties,
     };
-  }, [tableMasterState, propertiesState, labelStylesBase]);
+  }, [tableMasterState]);
 
   // header render
   const renderHeader = () => {
@@ -138,18 +129,28 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
         {visibleColumns.map((col, idx) => {
           const borderRight =
             tableMasterState?.showTableColBorder && idx + 1 < visibleColumns.length
-              ? `1px solid ${tableMasterState?.tableColBorderColor || "#000"}`
+              ? `1pt solid ${tableMasterState?.tableColBorderColor || "#000"}`
               : undefined;
-
+              const text =col.label?? String(col.field) 
+          const isArabic = containsArabicString(text)
           return (
             <div
               key={String(col.field)}
               style={{
-                ...getCellStyle(styles.th, col.width || DEFAULT_COLUMN_WIDTH),
+                ...styles.th,
+                width:`${col.width}pt` || DEFAULT_COLUMN_WIDTH,
+                minWidth: `${col.width}pt` || DEFAULT_COLUMN_WIDTH,
+                maxWidth: `${col.width}pt` || DEFAULT_COLUMN_WIDTH,
                 borderRight,
               }}
             >
-              <span style={styles.cellText}>{col.label ?? String(col.field)}</span>
+              <span 
+              style={{ ...HeaderFontBase, 
+                   fontFamily:isArabic ? arabicHeadFontFamily: HeadFontFamily,
+                  ...styles.cellText 
+                }}>
+                {text}
+                </span>
             </div>
           );
         })}
@@ -168,7 +169,12 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
             {visibleColumns.map((col) => (
               <div
                 key={String(col.field)}
-                style={getCellStyle(styles.td, col.width || DEFAULT_COLUMN_WIDTH)}
+              style={{
+                ...styles.td,
+                width:`${col.width}pt` || DEFAULT_COLUMN_WIDTH,
+                minWidth: `${col.width}pt` || DEFAULT_COLUMN_WIDTH,
+                maxWidth: `${col.width}pt` || DEFAULT_COLUMN_WIDTH,
+              }}
               >
                 <span style={styles.cellText}>—</span>
               </div>
@@ -181,18 +187,45 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
     return (
       <div style={styles.tbody}>
         {data.slice(0, 3).map((row: any, rowIndex: number) => (
-          <div key={rowIndex} style={styles.tr}>
-            {visibleColumns.map((col) => (
+
+          <div key={rowIndex}
+           style={{...styles.tr,
+           borderBottom: tableMasterState?.showTableRowBorder && rowIndex + 1 < data.length
+          ? `1pt solid ${tableMasterState?.tableRowBorderColor || "#000"}`
+          : undefined,
+           }}>
+            {visibleColumns.map((col,index) => {
+          const borderRight =
+            tableMasterState?.showTableColBorder && index + 1 < visibleColumns.length
+              ? `1pt solid ${tableMasterState?.tableColBorderColor || "#000"}`
+              : undefined;
+      // Get cell value
+        const cellValue = row?.[String(col.field)] ?? "";
+      // Check if text is Arabic
+        const isArabic = containsArabicString(cellValue);
+              return(
               <div
                 key={String(col.field)}
-                style={getCellStyle(styles.td, col.width || DEFAULT_COLUMN_WIDTH)}
+              style={{
+                ...styles.td,
+                width:`${col.width}pt` || DEFAULT_COLUMN_WIDTH,
+                minWidth: `${col.width}pt` || DEFAULT_COLUMN_WIDTH,
+                maxWidth: `${col.width}pt` || DEFAULT_COLUMN_WIDTH,
+                borderRight
+              }}
               >
-                <span style={styles.cellText}>
+                <span 
+                 style={{ ...RowFontBase, 
+                  fontFamily:isArabic ? arabicrowFontFamily: rowFontFamily,
+                  ...styles.cellText 
+                }}>
                   {/* safely access value */}
-                  {row?.[String(col.field)] ?? ""}
+                  {cellValue}
                 </span>
               </div>
-            ))}
+              )
+
+            })}
           </div>
         ))}
         <span>{``}</span>

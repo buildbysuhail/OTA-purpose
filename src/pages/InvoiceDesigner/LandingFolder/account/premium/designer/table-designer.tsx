@@ -25,7 +25,9 @@ import { TableManagerContent } from "./tabble-col-manage";
 import { TableColumnAddOrEdit } from "./tabble-column";
 import { PrintDetailDto } from "../../../../../use-print-type";
 import { generateUniqueKey, moveArrayElement } from "../../../../../../utilities/Utils";
-
+import ERPDataCombobox from "../../../../../../components/ERPComponents/erp-data-combobox";
+import ERPInput from "../../../../../../components/ERPComponents/erp-input";
+import ERPSlider from "../../../../../../components/ERPComponents/erp-slider";
 interface ItemTableDesignerProps<T> {
   tableState: TableColumn<T>[];
 }
@@ -165,7 +167,7 @@ const LabelsEditor = <T,>({
                   value={item.width}
                   onChange={(e) =>
                     onChange &&
-                    onChange(item.field as keyof T, { width: e.target.value })
+                    onChange(item.field as keyof T, { width: parseInt(e.target.value, 10) })
                   }
                 />
                 <ErpInput
@@ -211,7 +213,7 @@ const LayoutEditor = ({
   const { t } = useTranslation("system");
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-2">
       <ERPCheckbox
         id="showTableRowBorder"
         label={t("table_row_border")}
@@ -263,20 +265,127 @@ const LayoutEditor = ({
         }
         checked={masterState?.headerRepeatOnPage}
       />
-      <ERPStepInput
-        value={masterState?.headerFontSize}
-        onChange={(headerFontSize) =>
-          onChange?.({ ...masterState, headerFontSize })
-        }
-        label={t("size_(8-28)")}
-        id="headerFontSize"
-        placeholder=" "
-        defaultValue={10}
-        min={8}
-        max={28}
-        step={1}
-      />
+        <ERPDataCombobox
+            id="headerFontFamily"
+            label={t("header_font_family")}
+            field={{
+              id: "headerFontFamily",
+              required: true,
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            data={masterState}
+            defaultValue={masterState?.headerFontFamily?? "Roboto"}
+            value={masterState?.headerFontFamily ?? "Roboto"}
+            onChangeData={(data: any) => {
+              onChange?.({ ...masterState, headerFontFamily: data.headerFontFamily})
+            }}
+            options={[
+              { value: "Roboto", label: t("roboto") },
+              { value: "RobotoMono", label: t("roboto_mono") },
+              { value: "FiraSans", label: t("fira_sans") },
+              { value: "Poppins", label: t("poppins") },
+            ]}
+          />
+         <ERPDataCombobox
+            id="arabicHeaderFontFamily"
+            label={t("arbic_font_family")}
+            field={{
+              id: "arabicHeaderFontFamily",
+              required: true,
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            data={masterState}
+            defaultValue={masterState?.arabicHeaderFontFamily?? "Amri"}
+            value={masterState?.arabicHeaderFontFamily ?? "Amiri"}
+            onChangeData={(data: any) => {
+              onChange?.({ ...masterState, arabicHeaderFontFamily: data.arabicHeaderFontFamily})
+            }}
+            options={[
+              { value: "NotoNaskhArabic", label: t("noto_naskh_arabic") },
+              { value: "Amiri", label: t("amiri") },
+            ]}
+          />  
 
+          <ERPDataCombobox
+            id="headerFontStyle"
+            label={t("font_style")}
+            data={masterState}
+            field={{
+              id: "headerFontStyle",
+              required: true,
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            defaultValue={masterState?.headerFontStyle ?? "normal"}
+            value={masterState?.headerFontStyle ?? "normal"}
+            onChangeData={(data: any) => {
+              onChange?.({ ...masterState, headerFontStyle: data.headerFontStyle })
+            }}
+            options={[
+              { value: "normal", label: t("normal") },
+              { value: "italic", label: t("italic") },
+            ]}
+          /> 
+         <ERPStepInput
+            value={masterState?.headerFontSize}
+            onChange={(headerFontSize) =>
+              onChange?.({ ...masterState, headerFontSize })
+            }
+            label={t("size_(8-28)")}
+            id="headerFontSize"
+            placeholder=" "
+            defaultValue={10}
+            min={5}
+            max={28}
+            step={1}
+          />
+        <div className="flex items-center space-x-3">
+          <div className="basis-2/3 ">
+              <ERPSlider
+                id="headerFontWeightt"
+                label={t("font_weight")}
+                className="bg-slate-300"
+                value={masterState?.headerFontWeight??400}
+                onChange={(e) =>
+                  onChange?.({ ...masterState, headerFontWeight: parseInt(e.target.value, 10) })
+                }
+                min={300}
+                max={700}
+                step={100}
+              />
+            </div>
+            <div className="basis-1/3 translate-y-3">
+              <ERPInput
+                id="headerFontWeight"
+                type="number"
+                noLabel
+                value={masterState?.headerFontWeight??400}
+                data={masterState}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  const headerFontWeight = value === "" ? 0 : parseInt(value, 10);
+                  onChange?.({
+                    ...masterState,
+                      headerFontWeight
+                  });
+                }}
+                min={300}
+                max={700}
+                step={100}
+              />
+            </div>
+          </div>        
+      <ErpInput
+        id="headerFontColor"
+        label={t("font_color")}
+        type="color"
+        value={masterState?.headerFontColor}
+        onChange={(e) => {
+          onChange?.({ ...masterState, headerFontColor: e.target?.value });
+        }}
+      />
       <ERPCheckbox
         id="showTableHeaderBg"
         label={t("background")}
@@ -298,18 +407,71 @@ const LayoutEditor = ({
         />
       )}
 
-      <ErpInput
-        id="headerFontColor"
-        label={t("font_color")}
-        type="color"
-        value={masterState?.headerFontColor}
-        onChange={(e) => {
-          onChange?.({ ...masterState, headerFontColor: e.target?.value });
-        }}
-      />
 
       <h3>{t("item_row")}</h3>
+        <ERPDataCombobox
+            id="itemRowFontFamily"
+            label={t("font_family")}
+            field={{
+              id: "itemRowFontFamily",
+              required: true,
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            data={masterState}
+            defaultValue={masterState?.itemRowFontFamily?? "Roboto"}
+            value={masterState?.itemRowFontFamily ?? "Roboto"}
+            onChangeData={(data: any) => {
+              onChange?.({ ...masterState, itemRowFontFamily: data.itemRowFontFamily})
+            }}
+            options={[
+              { value: "Roboto", label: t("roboto") },
+              { value: "RobotoMono", label: t("roboto_mono") },
+              { value: "FiraSans", label: t("fira_sans") },
+              { value: "Poppins", label: t("poppins") },
+            ]}
+          />
+         <ERPDataCombobox
+            id="arabicItemRowFontFamily"
+            label={t("arbic_font_family")}
+            field={{
+              id: "arabicItemRowFontFamily",
+              required: true,
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            data={masterState}
+            defaultValue={masterState?.arabicItemRowFontFamily?? "Amri"}
+            value={masterState?.arabicItemRowFontFamily ?? "Amiri"}
+            onChangeData={(data: any) => {
+              onChange?.({ ...masterState, arabicItemRowFontFamily: data.arabicItemRowFontFamily})
+            }}
+            options={[
+              { value: "NotoNaskhArabic", label: t("noto_naskh_arabic") },
+              { value: "Amiri", label: t("amiri") },
+            ]}
+          />  
 
+          <ERPDataCombobox
+            id="itemRowFontStyle"
+            label={t("font_style")}
+            data={masterState}
+            field={{
+              id: "itemRowFontStyle",
+              required: true,
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            defaultValue={masterState?.itemRowFontStyle ?? "normal"}
+            value={masterState?.itemRowFontStyle ?? "normal"}
+            onChangeData={(data: any) => {
+              onChange?.({ ...masterState, itemRowFontStyle: data.itemRowFontStyle })
+            }}
+            options={[
+              { value: "normal", label: t("normal") },
+              { value: "italic", label: t("italic") },
+            ]}
+          /> 
       <ERPStepInput
         value={masterState?.itemRowFontSize}
         onChange={(itemRowFontSize) =>
@@ -319,11 +481,46 @@ const LayoutEditor = ({
         id="itemRowFontSize"
         placeholder=" "
         defaultValue={10}
-        min={8}
+        min={5}
         max={28}
         step={1}
       />
-
+        <div className="flex items-center space-x-3">
+          <div className="basis-2/3 ">
+              <ERPSlider
+                id="itemRowFontWeight"
+                label={t("font_weight")}
+                className="bg-slate-300"
+                value={masterState?.itemRowFontWeight??400}
+                onChange={(e) =>
+                  onChange?.({ ...masterState, itemRowFontWeight: parseInt(e.target.value, 10) })
+                }
+                min={300}
+                max={700}
+                step={100}
+              />
+            </div>
+            <div className="basis-1/3 translate-y-3">
+              <ERPInput
+                id="itemRowFontWeight"
+                type="number"
+                noLabel
+                value={masterState?.itemRowFontWeight??400}
+                data={masterState}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  const itemRowFontWeight = value === "" ? 0 : parseInt(value, 10);
+                  onChange?.({
+                    ...masterState,
+                      itemRowFontWeight
+                  });
+                }}
+                min={300}
+                max={700}
+                step={100}
+              />
+            </div>
+          </div> 
       <ErpInput
         id="itemRowFontColor"
         label={t("font_color")}

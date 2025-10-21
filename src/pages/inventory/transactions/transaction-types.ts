@@ -608,7 +608,7 @@ export interface TransactionFormState {
 
   templateChooserModal?: boolean;
 
-  //Sales
+   //Sales
   privilegeCardOpen?: boolean;
   schemeDiscount: number;
   postCashMasterId: number;
@@ -674,6 +674,9 @@ export interface TransactionFormState {
   showEInvoice: boolean;
   giftOrCashCouponSelector: boolean;
   printAddressLabel: boolean;
+  draftMode: boolean;
+  draftModeModal?: boolean;
+  createInterfaceFromOtherVoucher?: boolean;
 }
 export interface GiftModel {
   productBatchId: number;
@@ -1001,5 +1004,3 @@ export interface SettlementDetails {
   paymentName: string;
   paymentType: string;
 }
-
-

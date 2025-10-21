@@ -537,7 +537,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const { hasRight } = useUserRights();
   const gridHeight = useMemo(() => {
     if (formState?.transaction?.master?.voucherType === "LPO") {
-      return window.innerHeight - 405;
+      return window.innerHeight - 450;
     }
 
     if (deviceInfo?.isMobile) {
@@ -1657,7 +1657,7 @@ const handleHeightChange =(height :number)=>{
               className="mj23stylecheck"
               style={{
                 // marginTop: `${123 + (appState?.inputBox?.inputHeight ?? 0)}px`,
-                marginTop: formState.transaction.master.voucherType === "LPO" ? `${150 + getInputHeight()}px` : `${headerHeight + 52 + getInputHeight()}px`,
+                marginTop: formState.transaction.master.voucherType === "LPO" ? `${170 + getInputHeight()}px` : `${headerHeight + 52 + getInputHeight()}px`,
                 width: isFooterOnRight ? "calc(100% - 300px)" : "100%",
                 // height: `${gridHeight}px`,
                 overflow: "auto",

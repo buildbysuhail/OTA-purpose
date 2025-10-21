@@ -670,6 +670,9 @@ export interface TransactionFormState {
   dtCouponDetails: any;
   selectedPartiesDefaultPriceCategoryId: number;
   blnCreateCreditNoteAutomatically: boolean;
+  showEInvoice: boolean;
+  giftOrCashCouponSelector: boolean;
+  printAddressLabel: boolean;
 }
 export interface GiftModel {
   productBatchId: number;

@@ -20,9 +20,10 @@ interface RegisterProps {
   gridHeader: string;
   dataUrl: string;
   gridId: string;
+  voucherType?: string;
 }
 
-const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
+const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId,voucherType }) => {
   const { t } = useTranslation("accountsReport");
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [filter, setFilter] = useState<any>(RegisterFilterInitialState);
@@ -2009,6 +2010,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId }) => {
                     clientSession.softwareDate,
                     "DD/MM/YYYY"
                   ).local(),
+                  voucherType:voucherType,
                 }}
                 onFilterChanged={(f: any) => setFilter(f)}
                 reload={true}

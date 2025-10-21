@@ -430,8 +430,8 @@ const Urls = {
   sales_return_summary: "/Inventory/RptSalesReport/SalesReturnSummary/",
   sales_return_estimate_summary: "/Inventory/RptSalesReport/SalesReturnEstimateSummary/",
   sales_return_register: "/Inventory/RptSalesReport/SalesReturnRegister/",
-  sales_and_sales_return:
-    "/Inventory/RptSalesReport/SalesAndSalesReturnReport/",
+  sales_and_sales_return_master:"/Inventory/RptSalesReport/SalesAndSalesReturnReportmaster/",
+  sales_and_sales_return_details:"/Inventory/RptSalesReport/SalesAndSalesReturnReportDetails/",
   sales_order_summary: "/Inventory/RptSalesReport/SalesOrderSummary/",
   sales_estimate_summary: "/Inventory/RptSalesReport/SalesEstimateSummary/",
   sales_quotation_summary: "/Inventory/RptSalesReport/SalesQuotationSummary/",

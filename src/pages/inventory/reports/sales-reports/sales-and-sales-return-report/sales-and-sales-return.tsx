@@ -1,6 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { Fragment, useState } from "react";
-import ErpDevGrid, { SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import { useMemo } from "react";
@@ -14,18 +16,18 @@ import ERPButton from "../../../../../components/ERPComponents/erp-button";
 const SalesAndSalesReturn = () => {
   const { t } = useTranslation("accountsReport");
   const [filterState, setFilterState] = useState({
-    dateFrom: moment().local().toDate(),
-    dateTo: moment().local().toDate(),
+    fromDate: moment().local().toDate(),
+    toDate: moment().local().toDate(),
     printLineBetweenRows: false,
   });
 
-  const handleFieldChange = (field: string, value: boolean) => {
+  const handleFieldChange = (field: string, value: any) => {
     setFilterState((prevState) => ({
       ...prevState,
       [field]: value,
     }));
   };
-  
+
   const [reload, setReload] = useState<boolean>(true);
   const handleShow = () => {
     setReload(true);
@@ -61,6 +63,29 @@ const SalesAndSalesReturn = () => {
       allowSorting: true,
       width: 80,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.salesAmt == null
+              ? ""
+              : getFormattedValue(cellElement.data.salesAmt);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.salesAmt == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.salesAmt));
+        }
+      },
     },
     {
       dataField: "cashAmt",
@@ -71,6 +96,29 @@ const SalesAndSalesReturn = () => {
       allowSorting: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.cashAmt == null
+              ? ""
+              : getFormattedValue(cellElement.data.cashAmt);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.cashAmt == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.cashAmt));
+        }
+      },
     },
     {
       dataField: "creditAmt",
@@ -81,6 +129,29 @@ const SalesAndSalesReturn = () => {
       allowSorting: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.creditAmt == null
+              ? ""
+              : getFormattedValue(cellElement.data.creditAmt);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.creditAmt == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.creditAmt));
+        }
+      },
     },
     {
       dataField: "bankAmt",
@@ -91,6 +162,29 @@ const SalesAndSalesReturn = () => {
       allowSorting: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.bankAmt == null
+              ? ""
+              : getFormattedValue(cellElement.data.bankAmt);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.bankAmt == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.bankAmt));
+        }
+      },
     },
     {
       dataField: "saleReturnAmt",
@@ -101,6 +195,29 @@ const SalesAndSalesReturn = () => {
       allowSorting: true,
       width: 80,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.saleReturnAmt == null
+              ? ""
+              : getFormattedValue(cellElement.data.saleReturnAmt);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.saleReturnAmt == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.saleReturnAmt));
+        }
+      },
     },
     {
       dataField: "balance",
@@ -111,17 +228,73 @@ const SalesAndSalesReturn = () => {
       allowSorting: true,
       width: 80,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.balance == null
+              ? ""
+              : getFormattedValue(cellElement.data.balance);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.balance == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.balance));
+        }
+      },
     },
     {
-      dataField: "salesDisc",
-      caption: t("sales_disc"),
+      dataField: "Refund",
+      caption: t("refund"),
       dataType: "number",
       allowSearch: true,
+      visible: false,
       allowFiltering: true,
-      allowSorting: true,
       width: 80,
-      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.Refund == null
+              ? ""
+              : getFormattedValue(cellElement.data.Refund);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.Refund == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.Refund));
+        }
+      },
     },
+    //just column with assign 0 from 1050 in all rows
+    // {
+    //   dataField: "salesDisc",
+    //   caption: t("sales_disc"),
+    //   dataType: "number",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   allowSorting: true,
+    //   width: 80,
+    //   showInPdf: true,
+    // },
   ];
 
   const detailedColumns: DevGridColumn[] = [
@@ -184,6 +357,29 @@ const SalesAndSalesReturn = () => {
       allowSorting: true,
       width: 80,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.salesAmt == null
+              ? ""
+              : getFormattedValue(cellElement.data.salesAmt);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.salesAmt == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.salesAmt));
+        }
+      },
     },
     {
       dataField: "cashAmt",
@@ -194,6 +390,29 @@ const SalesAndSalesReturn = () => {
       allowSorting: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.cashAmt == null
+              ? ""
+              : getFormattedValue(cellElement.data.cashAmt);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.cashAmt == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.cashAmt));
+        }
+      },
     },
     {
       dataField: "creditAmt",
@@ -204,6 +423,29 @@ const SalesAndSalesReturn = () => {
       allowSorting: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.creditAmt == null
+              ? ""
+              : getFormattedValue(cellElement.data.creditAmt);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.creditAmt == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.creditAmt));
+        }
+      },
     },
     {
       dataField: "bankAmt",
@@ -214,6 +456,29 @@ const SalesAndSalesReturn = () => {
       allowSorting: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.bankAmt == null
+              ? ""
+              : getFormattedValue(cellElement.data.bankAmt);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.bankAmt == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.bankAmt));
+        }
+      },
     },
     {
       dataField: "saleReturnAmt",
@@ -224,6 +489,29 @@ const SalesAndSalesReturn = () => {
       allowSorting: true,
       width: 80,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.saleReturnAmt == null
+              ? ""
+              : getFormattedValue(cellElement.data.saleReturnAmt);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.saleReturnAmt == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.saleReturnAmt));
+        }
+      },
     },
     {
       dataField: "balance",
@@ -234,6 +522,29 @@ const SalesAndSalesReturn = () => {
       allowSorting: true,
       width: 80,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.balance == null
+              ? ""
+              : getFormattedValue(cellElement.data.balance);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.balance == null
+            ? ""
+            : getFormattedValue(parseFloat(cellElement.data.balance));
+        }
+      },
     },
   ];
 
@@ -311,17 +622,15 @@ const SalesAndSalesReturn = () => {
             id={""}
           />
           <ERPDateInput
-            value={filterState.dateFrom}
+            value={filterState.fromDate}
             label={t("date_from")}
-            onChangeData={(data) =>
-              handleFieldChange("dateFrom", data.dateFrom)
-            }
+            onChange={(e) => handleFieldChange("fromDate", e.target.value)}
             id={""}
           />
           <ERPDateInput
-            value={filterState.dateTo}
+            value={filterState.toDate}
             label={t("date_to")}
-            onChangeData={(data) => handleFieldChange("dateTo", data.dateTo)}
+            onChange={(e) => handleFieldChange("toDate", e.target.value)}
             id={""}
           />
           <ERPButton
@@ -342,11 +651,12 @@ const SalesAndSalesReturn = () => {
                     filtering: false,
                     paging: false,
                     sorting: false,
+                    summary: false,
                   }}
                   columns={summaryColumns}
                   moreOption={false}
                   gridHeader={t("sales_summary_report")}
-                  dataUrl={Urls.sales_and_sales_return}
+                  dataUrl={Urls.sales_and_sales_return_master}
                   hideGridAddButton={true}
                   enablefilter={false}
                   showFilterInitially={false}
@@ -363,7 +673,7 @@ const SalesAndSalesReturn = () => {
                   // showPrintButton={false}
                   ShowGridPreferenceChooser={false}
                   allowSearching={false}
-                // allowExport={false}
+                  // allowExport={false}
                 />
               </div>
               <div className="grid grid-cols-1 gap-3">
@@ -373,13 +683,15 @@ const SalesAndSalesReturn = () => {
                     filtering: false,
                     paging: false,
                     sorting: false,
+                    summary: false,
                   }}
                   columns={detailedColumns}
                   moreOption={false}
                   gridHeader={t("sales_detail_report")}
-                  dataUrl={Urls.sales_and_sales_return}
+                  dataUrl={Urls.sales_and_sales_return_details}
                   hideGridAddButton={true}
                   enablefilter={false}
+                  postData={filterState}
                   showFilterInitially={false}
                   method={ActionType.POST}
                   reload={reload}
@@ -393,7 +705,7 @@ const SalesAndSalesReturn = () => {
                   // showPrintButton={false}
                   ShowGridPreferenceChooser={false}
                   allowSearching={false}
-                // allowExport={false}
+                  // allowExport={false}
                 />
               </div>
             </div>

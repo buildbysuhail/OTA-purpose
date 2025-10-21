@@ -394,7 +394,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
         }
       </div>
 
-      <div className="transition-all  flex flex-col gap-4  p-4">
+      {/* <div className="transition-all  flex flex-col gap-4  p-4">
         <div className="flex flex-col gap-2 mt-1">
         {["Cheque"]?.includes(templateGroup!) &&
          <ERPCheckbox
@@ -636,12 +636,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             customSize="md"
           />
         </div>
-      </div>
-
-
-
-
-
+      </div> */}
 
       <div className="transition-all  flex flex-col gap-4  p-4">
         <label htmlFor="background" className="font-regular text-sm">

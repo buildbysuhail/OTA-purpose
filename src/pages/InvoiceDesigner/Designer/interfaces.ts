@@ -287,6 +287,7 @@ export interface PropertiesState {
 
   /// Font
   font_family?: string;
+  arabic_fontFamily?:string;
   font_size?: number;
   font_color?: string;
   font_weight?: number;
@@ -549,16 +550,18 @@ export interface ItemTableMasterState {
   tableHeaderBgColor?: string;
   headerFontColor?: string;
   headerFontSize?: number;
-  headerFontWidth?: string;
+  headerFontWeight?: number;
   headerFontFamily?: string;
+  arabicHeaderFontFamily?:string;
   headerFontStyle?:  "normal" | "italic";
   /// Item Row
   showRowBg?: boolean;
   itemRowBgColor?: string;
   itemRowFontColor?: string;
   itemRowFontSize?: number;
-  itemRowFontWidth?: string;
+  itemRowFontWeight?: number;
   itemRowFontFamily?: string;
+  arabicItemRowFontFamily?:string;
   itemRowFontStyle?:  "normal" | "italic";
   /////// Labels
   showLineItemNumber?: boolean;
@@ -567,7 +570,7 @@ export interface ItemTableMasterState {
 }
 export interface TableColumn<T> {
   label: string;
-  width: any;
+  width: number;
   field: keyof T;
   show: boolean;
   key: string;

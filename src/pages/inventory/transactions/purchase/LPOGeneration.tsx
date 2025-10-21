@@ -1,15 +1,14 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import Urls from "../../../../redux/urls";
-import axios from "axios";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import { getApLocalDataByUrl } from "../../../../redux/cached-urls";
 import { LedgerType } from "../../../../enums/ledger-types";
 import { useDispatch } from "react-redux";
-import { formStateHandleFieldChange } from "../reducer";
+import { formStateHandleFieldChange, formStateTransactionDetailsRowsAdd } from "../reducer";
 import { APIClient } from "../../../../helpers/api-client";
 
 interface LPOGenerationProps {
@@ -83,51 +82,9 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
                 });
                 setFormStates(prev => ({ ...prev, ...updates }));
 
-                const updatedInventory = endpoints.map((row: any, i: number) => {
-                    const avgSalesLast30Days = Number(row["SalesLast30Days"]) || 0;
-                    const avgSales = avgSalesLast30Days / 30;
-
-                    const item: any = {
-                        pCode: row["ProductCode"] ?? "",
-                        product: row["ProductName"] ?? "",
-                        productID: row["ProductID"] ?? "",
-                        barCode: row["AutoBarcode"] ?? "",
-                        manualBarCode: row["MannualBarcode"] ?? "",
-                        productBatchID: row["ProductBatchID"] ?? "",
-                        unit: row["UnitName"] ?? "",
-                        unitID: row["BasicUnitID"] ?? "",
-                        unitPrice: Number(row["StdPurchasePrice"] || 0).toFixed(2),
-                        salesPrice: Number(row["StdSalesPrice"] || 0).toFixed(2),
-                        mrp: Number(row["MRP"] || 0).toFixed(2),
-                        vatPerc: Number(row["PVAtPerc"] || 0).toFixed(2),
-                        supplierID: row["LedgerID"] ?? "",
-                        supplier: row["LedgerName"] ?? "",
-                        stock: Number(row["Stock"] || 0).toFixed(2),
-                        avgSales: avgSales.toFixed(2),
-                        salesLast30Days: Number(row["SalesLast30Days"] || 0).toFixed(2),
-                        salesLast90Days: Number(row["SalesLast90Days"] || 0).toFixed(2),
-                        salesLast180Days: Number(row["SalesLast180Days"] || 0).toFixed(2),
-                        arabicName: row["ArabicName"] ?? "",
-                        supplierRefCode: row["SupplierRefCode"] ?? "",
-                        lastSoldDate: row["LastSoldDate"] ?? "",
-                        minSalePrice: Number(row["MinSalePrice"] || 0).toFixed(2),
-                        poPendingQty: row["PO_Pending_Qty"] ?? "",
-                        pqPendingQty: row["PQ_Pending_Qty"] ?? "",
-                        qty: 0.0,
-                        headerIndex: i + 1,
-                    };
-                    // if (method !== "All Products") {
-                    //     item.qty = Number(row["Qty"] || 0).toFixed(2);
-                    //     calculateRowAmount(item);
-                    // }
-                    return item;
-                });
 
                 dispatch(formStateHandleFieldChange({ fields: { loading: { isLoading: false, text: 'Please wait while LPO' } } }));
-                for (let row = 0; row < updatedInventory.length; row++) {
-                    const _element = { ...updatedInventory[row] };
-                    const element = { ..._element };
-                }
+
             } catch (error) {
                 console.error('Failed to fetch data:', error);
                 ERPToast.show("Failed to load initial data", "error");
@@ -168,7 +125,6 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
     //     [],
     // )
 
-
     const handleShow = async () => {
         try {
             const params = {
@@ -186,7 +142,65 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
                 skipZeroQty: formStates.skipZeroQty,
                 showStockDetails: formStates.showStockDetails,
             };
-            const response = await axios.get(Urls.localPurchaseOrder, { params });
+            const encoded =
+                "method=" + encodeURIComponent(String(params.method ?? "0")) +
+                "&supplierId=" + encodeURIComponent(String(params.supplierId ?? "0")) +
+                "&productCategoryId=" + encodeURIComponent(String(params.productCategoryId ?? "0")) +
+                "&productGroupId=" + encodeURIComponent(String(params.productGroupId ?? "0")) +
+                "&groupCategoryId=" + encodeURIComponent(String(params.groupCategoryId ?? "0")) +
+                "&sectionId=" + encodeURIComponent(String(params.sectionId ?? "0")) +
+                "&productId=" + encodeURIComponent(String(params.productId ?? "0")) +
+                "&fromDate=" + encodeURIComponent(String(params.fromDate ?? "")) +
+                "&toDate=" + encodeURIComponent(String(params.toDate ?? "")) +
+                "&summaryAsOnDate=" + encodeURIComponent(String(params.summaryAsOnDate ?? "")) +
+                "&productCode=" + encodeURIComponent(String(params.productCode ?? "")) +
+                "&skipZeroQty=" + encodeURIComponent(String(params.skipZeroQty ?? false)) +
+                "&showStockDetails=" + encodeURIComponent(String(params.showStockDetails ?? false));
+            const response = await api.getAsync(Urls.localPurchaseOrder, encoded);
+
+            const updatedInventory = response.map((row: any, i: number) => {
+                const avgSalesLast30Days = Number(row["SalesLast30Days"]) || 0;
+                const avgSales = avgSalesLast30Days / 30;
+                const item: any = {
+                    pCode: row["ProductCode"] ?? "",
+                    product: row["ProductName"] ?? "",
+                    productID: row["ProductID"] ?? "",
+                    barCode: row["AutoBarcode"] ?? "",
+                    manualBarCode: row["MannualBarcode"] ?? "",
+                    productBatchID: row["ProductBatchID"] ?? "",
+                    unit: row["UnitName"] ?? "",
+                    unitID: row["BasicUnitID"] ?? "",
+                    unitPrice: Number(row["StdPurchasePrice"] || 0).toFixed(2),
+                    salesPrice: Number(row["StdSalesPrice"] || 0).toFixed(2),
+                    mrp: Number(row["MRP"] || 0).toFixed(2),
+                    vatPerc: Number(row["PVAtPerc"] || 0).toFixed(2),
+                    supplierID: row["LedgerID"] ?? "",
+                    supplier: row["LedgerName"] ?? "",
+                    stock: Number(row["Stock"] || 0).toFixed(2),
+                    avgSales: avgSales.toFixed(2),
+                    salesLast30Days: Number(row["SalesLast30Days"] || 0).toFixed(2),
+                    salesLast90Days: Number(row["SalesLast90Days"] || 0).toFixed(2),
+                    salesLast180Days: Number(row["SalesLast180Days"] || 0).toFixed(2),
+                    arabicName: row["ArabicName"] ?? "",
+                    supplierRefCode: row["SupplierRefCode"] ?? "",
+                    lastSoldDate: row["LastSoldDate"] ?? "",
+                    minSalePrice: Number(row["MinSalePrice"] || 0).toFixed(2),
+                    poPendingQty: row["PO_Pending_Qty"] ?? "",
+                    pqPendingQty: row["PQ_Pending_Qty"] ?? "",
+                    qty: 0.0,
+                    headerIndex: i + 1,
+                };
+                // if (method !== "All Products") {
+                //     item.qty = Number(row["Qty"] || 0).toFixed(2);
+                //     calculateRowAmount(item);
+                // }
+                return item;
+            });
+            dispatch(
+                formStateTransactionDetailsRowsAdd(
+                    updatedInventory
+                )
+            )
             ERPToast.show("LPO Showing Successfully", "success");
         } catch (error) {
             ERPToast.show("Failed to Show", "error");

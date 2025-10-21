@@ -44,6 +44,7 @@ interface TransactionFooterProps {
   applyDiscountsToItems: any;
   calculateTotal: any
   applicationSettings: any;
+  clientSession: any;
 }
 
 interface Confetti {
@@ -173,6 +174,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   calculateTotal,
   applyDiscountsToItems,
   applicationSettings,
+  clientSession,
 }) => {
   const [hasAnimated, setHasAnimated] = useState(false);
   const [isOpentwo, setIsOpentwo] = useState(false);
@@ -413,6 +415,30 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 attachmentComponent
               )
             }
+            {clientSession.isAppGlobal && (
+              <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
+                <PriceCategoryCombobox
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  handleKeyDown={handleKeyDown}
+                  handleFieldKeyDown={handleFieldKeyDown}
+                />
+              </div>
+            )}
+          </div>
+          <div>
+            {clientSession.isAppGlobal && (
+              <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
+                <SupplyTypeCombobox
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  handleKeyDown={handleKeyDown}
+                  handleFieldKeyDown={handleFieldKeyDown}
+                />
+              </div>
+            )}
           </div>
         </>
       ) : (
@@ -633,7 +659,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               </div>
             </div>
 
-            <div className="p-2 dark:bg-dark-bg-card bg-gray-50 border-l dark:border-dark-border border-gray-200">
+            <div className="py-2 pl-2 pr-4 dark:bg-dark-bg-card bg-gray-50 border-l dark:border-dark-border border-gray-200">
               <div className="flex flex-col gap-1.5">
                 <NetAmountInput
                   formState={formState}
@@ -733,24 +759,28 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   const dropdownContent = (
     <div className="p-2 dark:bg-dark-bg-card bg-white border border-gray-300 dark:border md:border-t md:border-r md:border-l md:border-b-0 md:rounded-t-lg rounded-lg md:rounded-none">
       <div className="flex items-end gap-2 flex-wrap">
-        {/* <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
-          <PriceCategoryCombobox
-            formState={formState}
-            dispatch={dispatch}
-            t={t}
-            handleKeyDown={handleKeyDown}
-            handleFieldKeyDown={handleFieldKeyDown}
-          />
-        </div>
+        {clientSession.isAppGlobal && (
           <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
-          <SupplyTypeCombobox
-            formState={formState}
-            dispatch={dispatch}
-            t={t}
-            handleKeyDown={handleKeyDown}
-            handleFieldKeyDown={handleFieldKeyDown}
-          />
-          </div> */}
+            <PriceCategoryCombobox
+              formState={formState}
+              dispatch={dispatch}
+              t={t}
+              handleKeyDown={handleKeyDown}
+              handleFieldKeyDown={handleFieldKeyDown}
+            />
+          </div>
+        )}
+        {clientSession.isAppGlobal && (
+          <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
+            <SupplyTypeCombobox
+              formState={formState}
+              dispatch={dispatch}
+              t={t}
+              handleKeyDown={handleKeyDown}
+              handleFieldKeyDown={handleFieldKeyDown}
+            />
+          </div>
+        )}
         {!showWarehouseOutside && (
           <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
             {warehouseComponent}

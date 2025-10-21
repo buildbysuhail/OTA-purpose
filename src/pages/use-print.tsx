@@ -1773,8 +1773,6 @@ export const getTemplatesFromStore = async (templateGroup: string, customerType:
 }
 
 
-
-
 export const fetchDefaultTemplateFromApi = async (
   voucherType: string,
   formType?: string ,
@@ -1793,7 +1791,7 @@ export const fetchDefaultTemplateFromApi = async (
       return null;
     }
     const templateContent = await decompressData(res.content);
-    const parsedTemplate = parseTemplateContent<TemplateState<unknown>>({...res,content:templateContent});
+    const parsedTemplate = parseTemplateContent<TemplateState<unknown>>(res,templateContent);
     if (!parsedTemplate) {
       console.warn("Failed to parse default template.");
       return null;
@@ -1814,7 +1812,7 @@ export const fetchTemplateFromApiById = async (
     const api = new APIClient();
     const res = await api.getAsync(`${Urls.templates}${id}`);
     const templateContent = await decompressData(res.content);
-    const parsed = parseTemplateContent<TemplateState<unknown>>({...res,content:templateContent});
+    const parsed = parseTemplateContent<TemplateState<unknown>>(res,templateContent);
        if (!parsed) {
       console.warn("⚠️ Failed to parse template content.");
       return null;
@@ -1830,10 +1828,10 @@ export const fetchTemplateFromApiById = async (
 };
 
 export function parseTemplateContent<T extends object>(
-  templateRes: any
+  templateRes: any, parsed: any
 ): T | null {
   try {
-      let cc = templateRes.content;
+      let cc = parsed;
     
     // If for some reason it's still a string, parse it
     if (typeof cc === 'string') {
@@ -1852,15 +1850,15 @@ export function parseTemplateContent<T extends object>(
       }
       return obj;
     };
-    
+    debugger
     const camelCasedContent = convertToCamelCase(cc);
     const _template = {
       ...camelCasedContent,
       id: templateRes.id,
-      background_image: templateRes?.payload?.data?.background_image as string | undefined,
-      background_image_header: templateRes?.payload?.data?.background_image_header as string | undefined,
-      background_image_footer: templateRes?.payload?.data?.background_image_footer as string | undefined,
-      signature_image: templateRes?.payload?.data?.signature_image as string | undefined,
+      background_image: templateRes?.background_image as string | undefined,
+      background_image_header: templateRes?.background_image_header as string | undefined,
+      background_image_footer: templateRes?.background_image_footer as string | undefined,
+      signature_image: templateRes?.signature_image as string | undefined,
       branchId: templateRes.branchId,
       content: templateRes.content,
       isCurrent: templateRes.isCurrent,

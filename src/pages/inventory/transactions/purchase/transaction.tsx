@@ -2399,7 +2399,7 @@ const handleHeightChange =(height :number)=>{
             closeModal={() => {
               dispatch(
                 formStateHandleFieldChange({
-                  fields: { showbillwise: false, billwiseData: [] },
+                  fields: { showbillwise: false, billwiseData: [], ledgerBillWiseSaving: false },
                 })
               );
             }}

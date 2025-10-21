@@ -792,19 +792,22 @@ export const useTransaction = (
     voucherPrefix: string,
     isVoucherPrefix: boolean
   ) => {
+    // if (voucherType == "LPO") {
+    //   return 0;
+    // }
     isVoucherPrefix = isVoucherPrefix ? isVoucherPrefix : false;
     isVoucherPrefix =
       !clientSession.isAppGlobal && voucherType == VoucherType.PurchaseReturn
         ? true
         : isVoucherPrefix;
-    const response = await api.getAsync(
+    const response = voucherType !== "LPO" ?  await api.getAsync(
       `${Urls.inv_transaction_base}${transactionType}/GetNextVoucherNumber/`,
       `formType=${formType ? formType : ""}&voucherType=${
         voucherType ? voucherType : ""
       }&voucherPrefix=${voucherPrefix ? voucherPrefix : ""}&isVoucherPrefix=${
         isVoucherPrefix ? isVoucherPrefix : false
       }`
-    );
+    ) : undefined;
 
     const nextVoucherNumber = response || 1;
 
@@ -4272,6 +4275,9 @@ export const useTransaction = (
     _formState?: DeepPartial<TransactionFormState>,
     _dispatch?: any
   ) => {
+//     if (_formState?.transaction?.master?.voucherType == "LPO") {
+// return;
+//     }
     const ledgerID = (_formState ?? formState)?.transaction?.master?.ledgerID;
     const voucherType = (_formState ?? formState)?.transaction?.master
       ?.voucherType;
@@ -4421,6 +4427,11 @@ export const useTransaction = (
   }
   async function postBillWiseDetails(data: BillWiseRequest): Promise<any> {
     try {
+       dispatch(
+                      formStateHandleFieldChange({
+                        fields: { ledgerBillWiseSaving: true },
+                      })
+                    );
       const response = await api.postAsync(
         `${Urls.inv_transaction_base}${transactionType}/BillWiseDetail`,
         data
@@ -4428,7 +4439,7 @@ export const useTransaction = (
       dispatch(
         formStateHandleFieldChange({
           fields: {
-            showbillwise: false,
+            showbillwise: false, ledgerBillWiseSaving: false
           },
         })
       );

@@ -603,6 +603,7 @@ export interface TransactionFormState {
   billwiseDetails?: string;
   showbillwise?: boolean;
   ledgerBillWiseLoading?: boolean;
+  ledgerBillWiseSaving?: boolean;
   tenderOpen?: boolean;
 
   templateChooserModal?: boolean;

@@ -1,5 +1,4 @@
 import React, { FC, Fragment, useEffect, useMemo, useState, lazy, Suspense } from "react";
-import { connect, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import store, { RootState } from "../../../redux/store";
 
@@ -68,6 +67,35 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
         return []; // or some default menu items
     }
   });
+
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredMenuItems = useMemo(() => {
+    if (!searchTerm.trim()) {
+      return menuitems;
+    }
+
+    const filterItems = (items: any[]): any[] => {
+      return items
+        .map((item) => {
+          const matchingChildren = item.children ? filterItems(item.children) : [];
+          const itemMatches = item.title?.toLowerCase().includes(searchTerm.toLowerCase());
+          const hasMatchingChildren = matchingChildren.length > 0;
+
+          if (itemMatches || hasMatchingChildren) {
+            return {
+              ...item,
+              children: hasMatchingChildren ? matchingChildren : undefined,
+            };
+          }
+          return null;
+        })
+        .filter(Boolean);
+    };
+
+    return filterItems(menuitems);
+  }, [menuitems, searchTerm]);
+
   useEffect(() => {
     if (type == "settings") {
       let st = menuitems;
@@ -568,7 +596,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
   let hasParent = false;
   let hasParentLevel = 0;
 
-  function setSubmenu(event: any, targetObject: any, MENUITEMS = menuitems) {
+  function setSubmenu(event: any, targetObject: any, MENUITEMS = filteredMenuItems) {
     const theme = appState;
     if (
       (window.screen.availWidth <= 992 || theme.dataNavStyle != "icon-hover") &&
@@ -620,7 +648,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
   }
 
   function setMenuAncestorsActive(targetObject: any) {
-    const parent = getParentObject(menuitems, targetObject);
+    const parent = getParentObject(filteredMenuItems, targetObject);
     const theme = appState;
     if (parent) {
       if (hasParentLevel > 2) {
@@ -673,7 +701,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
         setSubmenuRecursively(item.children);
       });
     };
-    setSubmenuRecursively(menuitems);
+    setSubmenuRecursively(filteredMenuItems);
   }
   const [previousUrl, setPreviousUrl] = useState("/");
 
@@ -717,7 +745,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
   function toggleSidemenu(
     event: any,
     targetObject: any,
-    MENUITEMS = menuitems
+    MENUITEMS = filteredMenuItems
   ) {
     const theme = appState;
     let element = event.target;
@@ -930,16 +958,25 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
                   <path d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"></path>
                 </svg>
               </div>
+              <div className="search-bar mt-3 px-3">
+                <input
+                  type="text"
+                  placeholder="Search here"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
               {/* hasTopBorder */}
               <ul className="main-menu" onClick={() => Sideclick()}>
-                {menuitems.map((levelone: any) => (
+                {filteredMenuItems.map((levelone: any) => (
                   <Fragment key={Math.random()}>
                     <li
                       className={`${levelone.menutitle
-                          ? "slide__category"
-                          : levelone.menutitle_lg
-                            ? "slide__category slide__category__lg"
-                            : ""
+                        ? "slide__category"
+                        : levelone.menutitle_lg
+                          ? "slide__category slide__category__lg"
+                          : ""
                         } ${levelone.hasTopBorder === true
                           ? "border-t-[1px] border-solid border-t-white/10 pt-2"
                           : ""
@@ -1107,7 +1144,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
         </aside>
       </Fragment>
     );
-  }, [menuitems, t, appState]);
+  }, [filteredMenuItems, t, appState, searchTerm]);
   return renderNavItems;
 });
 

@@ -835,6 +835,25 @@ input, textarea {
 } */
 
 
+/* input[type="date"] {
+  text-align: center;
+  -moz-appearance: textfield;
+}
+
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+} */
+
+
+ /* @supports (-moz-appearance:none) {
+  input[type="date"] {
+    text-align: center !important;
+  }
+} */
+
+
 
 
 

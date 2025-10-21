@@ -12,7 +12,7 @@ import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import { UserCog, ChevronRight, Settings, Palette, Layout, Building2, RotateCcw, Grid, Mouse, Undo } from "lucide-react";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
-import { AppState, inputBox } from "../../../../redux/slices/app/types";
+import { AppState, inputBox, } from "../../../../redux/slices/app/types";
 import InputBoxStyling from "../../../../components/ERPComponents/erp-inputboxStyle-preference";
 import { hexToRgb } from "../../../../components/common/switcher/switcherdata/switcherdata";
 import { useTranslation } from "react-i18next";
@@ -23,6 +23,7 @@ import { ERPScrollArea } from "../../../../components/ERPComponents/erp-scrollba
 import { setStorageString } from "../../../../utilities/storage-utils";
 import { formStateHandleFieldChange, formStateMasterHandleFieldChange, formStateHandleFieldChangeKeysOnly } from "../reducer";
 import { UserConfig } from "../transaction-types";
+import { appInitialState } from "../../../../redux/slices/app/reducer";
 
 const api = new APIClient();
 
@@ -93,22 +94,20 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
   };
 
   const handleInputBoxChange = (field: keyof inputBox, value: any) => {
-    const updatedUserConfig = {
-      ...formState.userConfig,
+    const updatedUserConfig: UserConfig = {
+      ...(formState.userConfig || {}),
       inputBoxStyle: {
-        ...formState.userConfig?.inputBoxStyle,
+        ...appInitialState.inputBox,
+        ...(formState.userConfig?.inputBoxStyle || {}),
         [field]: value,
       },
     };
-    // dispatch(formStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }));
+    dispatch(formStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }));
   };
 
   const handleUndoClick = () => {
     undoEditMode?.(formState.transaction.master.invTransactionMasterID > 0, formState.transaction.master.invTransactionMasterID);
   }
-
-
-
 
   const postUserConfig = async () => {
     try {
@@ -134,8 +133,8 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
   };
 
   const handleFieldChange = (field: keyof UserConfig, value: any) => {
-    const updatedUserConfig = {
-      ...formState.userConfig,
+    const updatedUserConfig: UserConfig = {
+      ...(formState.userConfig || {}),
       [field]: value,
     };
     dispatch(formStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }));
@@ -270,6 +269,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                     data={formState.userConfig}
                     checked={formState?.userConfig?.useBarcode}
                     onChangeData={(e) => handleFieldChange("useBarcode", e.useBarcode)}
+                    
                   />
                   {/* <ERPCheckbox
                     id="resizeGrid"

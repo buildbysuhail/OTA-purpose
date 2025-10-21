@@ -2910,7 +2910,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                   height: `${totalHeight}px`,
                 }}
               >
-                {formState.transactionLoading ||
+                {
                 !columns ||
                 columns.length === 0 ||
                 !formState.transaction.details ||

@@ -101,11 +101,11 @@ const TransactionForm: React.FC<TransactionProps> = ({
     const fetchData = async () => {
       const storedUtc = await getStorageString(`${transactionType}_LocalSettings`); // use get, not set
       if (storedUtc &&
-  storedUtc !== "" &&
-  storedUtc !== "undefined" &&
-  storedUtc !== "null" &&
-  storedUtc !== undefined &&
-  storedUtc !== null) {
+        storedUtc !== "" &&
+        storedUtc !== "undefined" &&
+        storedUtc !== "null" &&
+        storedUtc !== undefined &&
+        storedUtc !== null) {
         const decoded = safeBase64Decode(storedUtc) ?? "{}";
         setSt(customJsonParse(decoded));
       }
@@ -537,7 +537,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const { hasRight } = useUserRights();
   const gridHeight = useMemo(() => {
     if (formState?.transaction?.master?.voucherType === "LPO") {
-      return window.innerHeight - 405;
+      return window.innerHeight - 425;
     }
 
     if (deviceInfo?.isMobile) {
@@ -552,7 +552,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     ) {
       height = window.innerHeight - 303;
     } else {
-      height = window.innerHeight - (505+23);
+      height = window.innerHeight - (505 + 23);
     }
 
     console.log('Max safe integer:', Number.MAX_SAFE_INTEGER);
@@ -597,12 +597,12 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   useEffect(() => {
     const initializeFormElements = async () => {
-      const dataWarranty = await api.getAsync(
+      const dataWarranty = voucherType != "LPO" ? await api.getAsync(
         `${Urls.inv_transaction_base}${transactionType}/data/warranty`
-      );
-      const dataBrands = await api.getAsync(
+      ) : [];
+      const dataBrands = voucherType != "LPO" ? await api.getAsync(
         `${Urls.inv_transaction_base}${transactionType}/data/brands`
-      );
+      ) : [];
       let _formState: TransactionFormState;
       const isInvoker = (voucherNo && voucherNo > 0) || (transactionMasterID && transactionMasterID > 0);
 
@@ -629,7 +629,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
       }
 
 
-      
+
       if (!isInvoker) {
         const voucher: TransactionData = transactionInitialData;
         _formState = {
@@ -652,7 +652,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     ? applicationSettings.inventorySettings?.defaultSalesAcc
                     : applicationSettings.inventorySettings?.defaultPurchaseAcc,
               ledgerID: applicationSettings.accountsSettings?.defaultCashAcc,
-             
+
             },
           },
           formElements: {
@@ -694,43 +694,43 @@ const TransactionForm: React.FC<TransactionProps> = ({
           _formState.userRightsFormCode = "PIIMPORT"
         }
       }
-debugger;
+      debugger;
       let __gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new APIClient()))
       debugger;
-      const _gridCols = __gridCols.columnPreferences.map(x => 
-          {
-            return {
-              ...x,
-              visible: (clientSession.isAppGlobal && (_formState.transaction.master.voucherForm.toUpperCase() == "INTERSTATE" ||
-          _formState.transaction.master.voucherForm.toUpperCase() == "INT" ||
-          _formState.transaction.master.voucherForm.toUpperCase() == "IMPORT") && ["cgst","sgst","sgstPerc","cgstPerc"].includes(x.dataField) ) ? false : x.visible
-          }});
+      const _gridCols = __gridCols.columnPreferences.map(x => {
+        return {
+          ...x,
+          visible: (clientSession.isAppGlobal && (_formState.transaction.master.voucherForm.toUpperCase() == "INTERSTATE" ||
+            _formState.transaction.master.voucherForm.toUpperCase() == "INT" ||
+            _formState.transaction.master.voucherForm.toUpperCase() == "IMPORT") && ["cgst", "sgst", "sgstPerc", "cgstPerc"].includes(x.dataField)) ? false : x.visible
+        }
+      });
       const accountKey =
         formType == "PI-IND" ? applicationSettings.accountsSettings.defaultIndirectExpenseAccount as keyof typeof LedgerType
           : formType == "PI-ASST" ? applicationSettings.accountsSettings.defaultPurchaseAssetsAccount as keyof typeof LedgerType : LedgerType.All;
-       const customerType = clientSession.isAppGlobal
+      const customerType = clientSession.isAppGlobal
         ? ["PI", "PR"].includes(voucherType ?? "")
           ? formType?.toUpperCase() === "PI-IND"
             ? "B2B"
             : formType?.toUpperCase() === "PI-ASST"
-            ? "B2B"
-            : formType?.toUpperCase() === "IMPORT"
-            ? "IMPORT"
-            : formType?.toUpperCase() === "INTERSTATE"
-            ? "Interstate"
-            : formType?.toUpperCase() === "INT"
-            ? "Int"
-            : ["WHOLESALE", "B2B"].includes(formType?.toUpperCase() ?? "")
-            ? "B2B"
-            : formType !== "BT"
-            ? "B2C"
-            : ""
+              ? "B2B"
+              : formType?.toUpperCase() === "IMPORT"
+                ? "IMPORT"
+                : formType?.toUpperCase() === "INTERSTATE"
+                  ? "Interstate"
+                  : formType?.toUpperCase() === "INT"
+                    ? "Int"
+                    : ["WHOLESALE", "B2B"].includes(formType?.toUpperCase() ?? "")
+                      ? "B2B"
+                      : formType !== "BT"
+                        ? "B2C"
+                        : ""
           : ""
         : VoucherType.PurchaseReturn
-        ? applicationSettings.branchSettings.maintainKSA_EInvoice
-          ? "B2C"
-          : ""
-        : "";
+          ? applicationSettings.branchSettings.maintainKSA_EInvoice
+            ? "B2C"
+            : ""
+          : "";
       _formState = {
         ..._formState,
         isInv: true,
@@ -1535,10 +1535,10 @@ debugger;
     return formState.userConfig?.inputBoxStyle?.inputSize == "sm" ? remToPx(0) : formState.userConfig?.inputBoxStyle?.inputSize == "md" ? remToPx(0.75) : formState.userConfig?.inputBoxStyle?.inputSize == "lg" ? remToPx(1.375) : formState.userConfig?.inputBoxStyle?.inputSize == "customize" ? (remToPx(formState.userConfig?.inputBoxStyle?.inputHeight) ?? 0) - 23 : 0
   }
 
-const [headerHeight ,setHeaderHeight] = useState<number>(0);
-const handleHeightChange =(height :number)=>{
-  setHeaderHeight(height)
-}
+  const [headerHeight, setHeaderHeight] = useState<number>(0);
+  const handleHeightChange = (height: number) => {
+    setHeaderHeight(height)
+  }
 
   return (
     <>
@@ -1615,7 +1615,7 @@ const handleHeightChange =(height :number)=>{
                     showValidation={showValidation}
                     goToPreviousPage={goToPreviousPage}
                     isHistorySidebarOpen={isHistorySidebarOpen}
-                    
+
                     onProcessSelected={onProcessSelected}
                     downloadImportTemplateHeadersOnly={downloadImportTemplateHeadersOnly}
                     importFromExcel={importFromExcel}
@@ -1647,6 +1647,7 @@ const handleHeightChange =(height :number)=>{
               footerLayout="vertical"
               userSession={userSession}
               refactorDetails={refactorDetails}
+              voucherType={voucherType}
             />
             {/* header ends here */}
 
@@ -1657,7 +1658,7 @@ const handleHeightChange =(height :number)=>{
               className="mj23stylecheck"
               style={{
                 // marginTop: `${123 + (appState?.inputBox?.inputHeight ?? 0)}px`,
-                marginTop: formState.transaction.master.voucherType === "LPO" ? `${150 + getInputHeight()}px` : `${headerHeight + 52 + getInputHeight()}px`,
+                marginTop: formState.transaction.master.voucherType === "LPO" ? `${160 + getInputHeight()}px` : `${headerHeight + 52 + getInputHeight()}px`,
                 width: isFooterOnRight ? "calc(100% - 300px)" : "100%",
                 // height: `${gridHeight}px`,
                 overflow: "auto",
@@ -1681,7 +1682,7 @@ const handleHeightChange =(height :number)=>{
                   <ErpPurchaseGrid
                     ref={purchaseGridRef}
                     onChange={handleTextDataChange}
-                    zIndexController ={40}
+                    zIndexController={40}
                     onKeyDown={(
                       value: any,
                       e: React.KeyboardEvent<any>,
@@ -1745,6 +1746,7 @@ const handleHeightChange =(height :number)=>{
                         applicationSettings={applicationSettings}
                         generateLPO={generateLPO}
                         generateLPQ={generateLPQ}
+                        clientSession={clientSession}
                       />
                     )}
                 </div>
@@ -1862,6 +1864,7 @@ const handleHeightChange =(height :number)=>{
                     footerLayout="vertical"
                     userSession={userSession}
                     refactorDetails={refactorDetails}
+                    voucherType={voucherType}
                   />
                 </div>
               </div>
@@ -1930,6 +1933,7 @@ const handleHeightChange =(height :number)=>{
                   applicationSettings={applicationSettings}
                   generateLPO={generateLPO}
                   generateLPQ={generateLPQ}
+                  clientSession={clientSession}
                   footerLayout={
                     ((formState.transactionLoading
                       ? _st.footerPosition
@@ -1962,44 +1966,41 @@ const handleHeightChange =(height :number)=>{
         )}
 
         {/* footer starts here */}
-        {(formState.transactionLoading && _st.footerPosition !== "right") ||
-          (!formState.transactionLoading &&
-            formState.userConfig?.footerPosition !== "right" && (
-              <TransactionFooter
-                transactionType={transactionType ?? ""}
-                calculateTotal={calculateTotal}
-                formState={formState}
-                dispatch={dispatch}
-                t={t}
-                handleKeyDown={handleKeyDown}
-                handleFieldKeyDown={handleFieldKeyDown}
-                focusDiscount={focusDiscount}
-                focusAmount={focusAmount}
-                goToPreviousPage={goToPreviousPage}
-                save={save}
-                selectAttachment={selectAttachment}
-                isDropUpOpen={isDropUpOpen}
-                toggleDropup={toggleFooterDropup}
-                footerLayout={"horizontal"}
-                applyDiscountsToItems={applyDiscountsToItems}
-                applicationSettings={applicationSettings}
-                generateLPO={generateLPO}
-                generateLPQ={generateLPQ}
-              />
-            ))}
+        {formState.userConfig?.footerPosition !== "right" && (
+          <TransactionFooter
+            transactionType={transactionType ?? ""}
+            calculateTotal={calculateTotal}
+            formState={formState}
+            dispatch={dispatch}
+            t={t}
+            handleKeyDown={handleKeyDown}
+            handleFieldKeyDown={handleFieldKeyDown}
+            focusDiscount={focusDiscount}
+            focusAmount={focusAmount}
+            goToPreviousPage={goToPreviousPage}
+            save={save}
+            selectAttachment={selectAttachment}
+            isDropUpOpen={isDropUpOpen}
+            toggleDropup={toggleFooterDropup}
+            footerLayout={"horizontal"}
+            applyDiscountsToItems={applyDiscountsToItems}
+            applicationSettings={applicationSettings}
+            generateLPO={generateLPO}
+            generateLPQ={generateLPQ}
+            clientSession={clientSession}
+          />
+        )}
         {/* footer ends here */}
 
         {formState.transaction && (
-
-
           <ERPModal
-            isOpen={formState.printPreview && (popupData.IsPrintPreviewPopup.isOpen??false)}
+            isOpen={formState.printPreview && (popupData.IsPrintPreviewPopup.isOpen ?? false)}
             title={t("template")}
             width={1000}
             height={700}
             isForm={true}
             closeModal={() => {
-               dispatch(toggleIsPrintPreviewPopup({ isOpen: true }));
+              dispatch(toggleIsPrintPreviewPopup({ isOpen: true }));
               dispatch(
                 formStateHandleFieldChange({ fields: { printPreview: false } })
               );
@@ -2021,6 +2022,7 @@ const handleHeightChange =(height :number)=>{
           // }
           />
         )}
+
         {formState.isFormStateDetailOpen && (
           <ERPModal
             isOpen={formState.isFormStateDetailOpen}
@@ -2045,6 +2047,7 @@ const handleHeightChange =(height :number)=>{
             }
           />
         )}
+
         {formState.isProductSummaryOpen && (
           <ERPModal
             isOpen={formState.isProductSummaryOpen}
@@ -2060,9 +2063,16 @@ const handleHeightChange =(height :number)=>{
                 })
               )
             }
-            content={<ProductSummaryMaster productID={formState.currentCell?.data.productID} productBatchID={formState.currentCell?.data.productBatchID} warehouseID={formState.transaction.master.fromWarehouseID} />}
+            content={
+              <ProductSummaryMaster
+                productID={formState.currentCell?.data.productID}
+                productBatchID={formState.currentCell?.data.productBatchID}
+                warehouseID={formState.transaction.master.fromWarehouseID}
+              />
+            }
           />
         )}
+
         {formState.userConfig?.barCodePrev && (
           <ERPModal
             isOpen={formState.barcodePrevOpen || false}
@@ -2101,7 +2111,11 @@ const handleHeightChange =(height :number)=>{
                 })
               )
             }
-            content={<PartySummaryMaster partyId={formState.transaction.master.ledgerID} />}
+            content={
+              <PartySummaryMaster
+                partyId={formState.transaction.master.ledgerID}
+              />
+            }
           />
         )}
 
@@ -2140,28 +2154,28 @@ const handleHeightChange =(height :number)=>{
           </div>
         </BottomSidebar>
 
-      <ERPResizableSidebar
-    minWidth={350}
-    isOpen={formState.templateChooserModal ?? false}
-    setIsOpen={() =>
-      dispatch(
-        formStateHandleFieldChange({ fields: { templateChooserModal: false } })
-      )
-    }
-  >
-    {formState.templateChooserModal &&(
-    <TemplatesView
-      voucherType={formState.transaction.master?.voucherType ?? ""}
-      formType={formState.transaction.master?.voucherForm}
-      customerType={formState.transaction.master?.customerType}
-      setIsOpen={() =>
-        dispatch(
-          formStateHandleFieldChange({ fields: { templateChooserModal: false } })
-        )
-      }
-    />
-    )}
-  </ERPResizableSidebar>
+        <ERPResizableSidebar
+          minWidth={350}
+          isOpen={formState.templateChooserModal ?? false}
+          setIsOpen={() =>
+            dispatch(
+              formStateHandleFieldChange({ fields: { templateChooserModal: false } })
+            )
+          }
+        >
+          {formState.templateChooserModal && (
+            <TemplatesView
+              voucherType={formState.transaction.master?.voucherType ?? ""}
+              formType={formState.transaction.master?.voucherForm}
+              customerType={formState.transaction.master?.customerType}
+              setIsOpen={() =>
+                dispatch(
+                  formStateHandleFieldChange({ fields: { templateChooserModal: false } })
+                )
+              }
+            />
+          )}
+        </ERPResizableSidebar>
 
         <ERPResizableSidebar
           minWidth={350}
@@ -2214,13 +2228,15 @@ const handleHeightChange =(height :number)=>{
             }}
           />
         )}
-        {transactionType !== "" && (
+
+        {transactionType !== "" && isHistorySidebarOpen && (
           <HistorySidebar
             transactionType={transactionType ?? ""}
             isOpen={isHistorySidebarOpen}
             onClose={() => setIsHistorySidebarOpen(false)}
           />
         )}
+
         {formState.showQuantityFactors.visible && (
           <QtyFactorsModal
             qtyDesc={formState.showQuantityFactors.qtyDesc}
@@ -2236,6 +2252,7 @@ const handleHeightChange =(height :number)=>{
             t={t}
           />
         )}
+
         {formState.showPcode && (
           <ItemListModal
             isOpen={formState.showPcode}
@@ -2249,6 +2266,7 @@ const handleHeightChange =(height :number)=>{
             t={t}
           />
         )}
+
         {formState.batchEntryData && formState.batchEntryData.visible && (
           <BatchEntryModal
             data={formState.batchEntryData.data}
@@ -2265,6 +2283,7 @@ const handleHeightChange =(height :number)=>{
             t={t}
           />
         )}
+
         {formState.serialNoEntryData && formState.serialNoEntryData.visible && (
           <Serials
             data={formState.serialNoEntryData.data}
@@ -2282,6 +2301,7 @@ const handleHeightChange =(height :number)=>{
             rowIndex={formState.serialNoEntryData.rowIndex}
           />
         )}
+
         {formState.productInfo && (
           <ProductInfoSlideUp
             isOpen={formState.productInfo}
@@ -2295,6 +2315,7 @@ const handleHeightChange =(height :number)=>{
             t={t}
           />
         )}
+
         {formState.ShowProductBatchUnitDetails && (
           <ProductBatchUnitDetails
             isOpen={formState.ShowProductBatchUnitDetails}
@@ -2308,11 +2329,12 @@ const handleHeightChange =(height :number)=>{
             t={t}
           />
         )}
+
         {formState.showProductInformation?.show && (
           <ProductInformation
             index={formState.showProductInformation.index}
             formState={formState}
-            isOpen={formState.showProductInformation.show}
+            isOpen={formState.showProductInformation?.show}
             transactionType={transactionType ?? formState.transactionType ?? ""}
             onClose={() =>
               dispatch(
@@ -2323,6 +2345,7 @@ const handleHeightChange =(height :number)=>{
             }
           />
         )}
+
         {formState.showGridTheme && (
           <GridTheme
             t={t}
@@ -2339,6 +2362,7 @@ const handleHeightChange =(height :number)=>{
             onClearThemeChangeInterval={onClearThemeChangeInterval}
           />
         )}
+
         {formState.documentModal && (
           <ERPModal
             isOpen={formState.documentModal}
@@ -2352,20 +2376,27 @@ const handleHeightChange =(height :number)=>{
           />
         )}
       </div>
+
       {formState.saving && (
-        <SavingOverlay saving={true} saveCompleted={formState.savingCompleted ?? false} savingSwitchAction={formStateHandleFieldChange({
-          fields: {
-            savingCompleted: undefined, saving: false
-          },
-        })}
+        <SavingOverlay
+          saving={true}
+          saveCompleted={formState.savingCompleted ?? false}
+          savingSwitchAction={formStateHandleFieldChange({
+            fields: { savingCompleted: undefined, saving: false },
+          })}
         />
       )}
+
       {formState.deleting && (
-        <DeletingOverlay deleting={true} deleteCompleted={formState.deletingCompleted ?? false} deletingSwitchAction={formStateHandleFieldChange({
-          fields: { deletingCompleted: undefined, deleting: false },
-        })}
+        <DeletingOverlay
+          deleting={true}
+          deleteCompleted={formState.deletingCompleted ?? false}
+          deletingSwitchAction={formStateHandleFieldChange({
+            fields: { deletingCompleted: undefined, deleting: false },
+          })}
         />
       )}
+
       {formState.memoEditor && formState.memoEditor.visible && (
         <MemoEditorModal
           data={formState.memoEditor.data}
@@ -2382,6 +2413,7 @@ const handleHeightChange =(height :number)=>{
           t={t}
         />
       )}
+
       {formState.showbillwise == true &&
         formState.billwiseData != undefined &&
         formState.billwiseData != null &&
@@ -2398,7 +2430,7 @@ const handleHeightChange =(height :number)=>{
             closeModal={() => {
               dispatch(
                 formStateHandleFieldChange({
-                  fields: { showbillwise: false, billwiseData: [] },
+                  fields: { showbillwise: false, billwiseData: [], ledgerBillWiseSaving: false },
                 })
               );
             }}

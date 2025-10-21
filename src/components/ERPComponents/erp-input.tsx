@@ -1053,7 +1053,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                   ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-100'}`}
                     onClick={() => {
                       if (disabled) return;
-                      setTimeout(() => {
                         const currentValue = parseFloat(value as string) || 0;
                         const newValue = currentValue - (step ? parseFloat(step.toString()) : 1);
                         if (min === undefined || newValue >= parseFloat(min.toString())) {
@@ -1064,7 +1063,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                           } as any;
                           handleChange(event);
                         }
-                      }, 200);
                     }}
                     style={{
                       borderTop: `1px solid ${borderStyles}`,
@@ -1090,7 +1088,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                   ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-100'}`}
                     onClick={() => {
                       if (disabled) return;
-                      setTimeout(() => {
                         const currentValue = parseFloat(value as string) || 0;
                         const newValue = currentValue + (step ? parseFloat(step.toString()) : 1);
                         if (max === undefined || newValue <= parseFloat(max.toString())) {
@@ -1101,7 +1098,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                           } as any;
                           handleChange(event);
                         }
-                      }, 200);
                     }}
                     style={{
                       borderTop: `1px solid ${borderStyles}`,

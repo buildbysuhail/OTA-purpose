@@ -112,7 +112,8 @@ export type LoadAndSetTransVoucherFn = (
   setVoucherNo?: boolean | false,
   loadVType?: string,
   loadFType?: string,
-  loadPrefix?: string
+  loadPrefix?: string,
+  showLoading?: boolean
 ) => Promise<boolean | undefined>; // ✅ fix return type
 
 const api = new APIClient();
@@ -374,7 +375,8 @@ export const useTransaction = (
     setVoucherNo = false,
     loadVType,
     loadFType,
-    loadPrefix
+    loadPrefix,
+    showLoading
   ) => {
     const _s_isDirty = isDirtyTransaction(
       formState.prev,
@@ -403,6 +405,14 @@ export const useTransaction = (
           },
         })
       );
+    }
+    debugger;
+    if(showLoading) {
+      dispatch(
+                          formStateHandleFieldChange({
+                            fields: { transactionLoading: true },
+                          })
+                        );
     }
     debugger;
     let _formState = await loadTransVoucher(
@@ -468,6 +478,13 @@ export const useTransaction = (
       },
     };
     await setTransVoucher(_formState);
+       if(showLoading) {
+      dispatch(
+                          formStateHandleFieldChange({
+                            fields: { transactionLoading: false },
+                          })
+                        );
+    }
     return true;
   };
   const setTransVoucher = async (

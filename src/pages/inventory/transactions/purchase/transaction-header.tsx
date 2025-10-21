@@ -38,6 +38,7 @@ import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import { formStateHandleFieldChange, formStateMasterHandleFieldChange } from "../reducer";
 import { TransactionFormState, TransactionDetail } from "../transaction-types";
 import LPOGeneration from "./LPOGeneration";
+import { LoadAndSetTransVoucherFn } from "./use-transaction";
 
 interface TransactionHeaderProps {
   formState: TransactionFormState;
@@ -48,7 +49,7 @@ interface TransactionHeaderProps {
     column: string,
     excludedColumns?: (keyof TransactionDetail)[]
   ) => { column: string; rowIndex: number } | null;
-  loadAndSetTransVoucher: any;
+  loadAndSetTransVoucher: LoadAndSetTransVoucherFn;
   t: any;
   handleLoadByRefNo: any;
   handleFieldChange: any;

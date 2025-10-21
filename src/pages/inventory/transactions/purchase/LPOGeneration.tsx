@@ -143,13 +143,13 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
                 showStockDetails: formStates.showStockDetails,
             };
             const encoded =
-                "method=" + encodeURIComponent(String(params.method ?? "0")) +
-                "&supplierId=" + encodeURIComponent(String(params.supplierId ?? "0")) +
-                "&productCategoryId=" + encodeURIComponent(String(params.productCategoryId ?? "0")) +
-                "&productGroupId=" + encodeURIComponent(String(params.productGroupId ?? "0")) +
-                "&groupCategoryId=" + encodeURIComponent(String(params.groupCategoryId ?? "0")) +
-                "&sectionId=" + encodeURIComponent(String(params.sectionId ?? "0")) +
-                "&productId=" + encodeURIComponent(String(params.productId ?? "0")) +
+                "method=" + encodeURIComponent(String(params.method ?? "all Products")) +
+                "&supplierId=" + encodeURIComponent(String(params.supplierId ?? "-1")) +
+                "&productCategoryId=" + encodeURIComponent(String(params.productCategoryId ?? "-1")) +
+                "&productGroupId=" + encodeURIComponent(String(params.productGroupId ?? "-1")) +
+                "&groupCategoryId=" + encodeURIComponent(String(params.groupCategoryId ?? "-1")) +
+                "&sectionId=" + encodeURIComponent(String(params.sectionId ?? "-1")) +
+                "&productId=" + encodeURIComponent(String(params.productId ?? "-1")) +
                 "&fromDate=" + encodeURIComponent(String(params.fromDate ?? "")) +
                 "&toDate=" + encodeURIComponent(String(params.toDate ?? "")) +
                 "&summaryAsOnDate=" + encodeURIComponent(String(params.summaryAsOnDate ?? "")) +
@@ -159,34 +159,34 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
             const response = await api.getAsync(Urls.localPurchaseOrder, encoded);
 
             const updatedInventory = response.map((row: any, i: number) => {
-                const avgSalesLast30Days = Number(row["SalesLast30Days"]) || 0;
+                const avgSalesLast30Days = Number(row["salesLast30Days"]) || 0;
                 const avgSales = avgSalesLast30Days / 30;
                 const item: any = {
-                    pCode: row["ProductCode"] ?? "",
-                    product: row["ProductName"] ?? "",
-                    productID: row["ProductID"] ?? "",
-                    barCode: row["AutoBarcode"] ?? "",
-                    manualBarCode: row["MannualBarcode"] ?? "",
-                    productBatchID: row["ProductBatchID"] ?? "",
-                    unit: row["UnitName"] ?? "",
-                    unitID: row["BasicUnitID"] ?? "",
-                    unitPrice: Number(row["StdPurchasePrice"] || 0).toFixed(2),
-                    salesPrice: Number(row["StdSalesPrice"] || 0).toFixed(2),
-                    mrp: Number(row["MRP"] || 0).toFixed(2),
-                    vatPerc: Number(row["PVAtPerc"] || 0).toFixed(2),
-                    supplierID: row["LedgerID"] ?? "",
-                    supplier: row["LedgerName"] ?? "",
-                    stock: Number(row["Stock"] || 0).toFixed(2),
+                    pCode: row["productCode"] ?? "",
+                    product: row["productName"] ?? "",
+                    productID: row["productID"] ?? "",
+                    barCode: row["autoBarcode"] ?? "",
+                    manualBarCode: row["mannualBarcode"] ?? "",
+                    productBatchID: row["productBatchID"] ?? "",
+                    unit: row["unitName"] ?? "",
+                    unitID: row["basicUnitID"] ?? "",
+                    unitPrice: Number(row["stdPurchasePrice"] || 0).toFixed(2),
+                    salesPrice: Number(row["stdSalesPrice"] || 0).toFixed(2),
+                    mrp: Number(row["mRP"] || 0).toFixed(2),
+                    vatPerc: Number(row["pVAtPerc"] || 0).toFixed(2),
+                    supplierID: row["ledgerID"] ?? "",
+                    supplier: row["ledgerName"] ?? "",
+                    stock: Number(row["stock"] || 0).toFixed(2),
                     avgSales: avgSales.toFixed(2),
-                    salesLast30Days: Number(row["SalesLast30Days"] || 0).toFixed(2),
-                    salesLast90Days: Number(row["SalesLast90Days"] || 0).toFixed(2),
-                    salesLast180Days: Number(row["SalesLast180Days"] || 0).toFixed(2),
-                    arabicName: row["ArabicName"] ?? "",
-                    supplierRefCode: row["SupplierRefCode"] ?? "",
-                    lastSoldDate: row["LastSoldDate"] ?? "",
-                    minSalePrice: Number(row["MinSalePrice"] || 0).toFixed(2),
-                    poPendingQty: row["PO_Pending_Qty"] ?? "",
-                    pqPendingQty: row["PQ_Pending_Qty"] ?? "",
+                    salesLast30Days: Number(row["salesLast30Days"] || 0).toFixed(2),
+                    salesLast90Days: Number(row["salesLast90Days"] || 0).toFixed(2),
+                    salesLast180Days: Number(row["salesLast180Days"] || 0).toFixed(2),
+                    arabicName: row["arabicName"] ?? "",
+                    supplierRefCode: row["supplierRefCode"] ?? "",
+                    lastSoldDate: row["lastSoldDate"] ?? "",
+                    minSalePrice: Number(row["minSalePrice"] || 0).toFixed(2),
+                    poPendingQty: row["pO_Pending_Qty"] ?? "",
+                    pqPendingQty: row["pQ_Pending_Qty"] ?? "",
                     qty: 0.0,
                     headerIndex: i + 1,
                 };
@@ -196,6 +196,7 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
                 // }
                 return item;
             });
+            debugger;
             dispatch(
                 formStateTransactionDetailsRowsAdd(
                     updatedInventory

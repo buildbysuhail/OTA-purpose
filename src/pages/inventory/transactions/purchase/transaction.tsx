@@ -550,9 +550,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
       (formState.transactionLoading && _st.footerPosition === "right") ||
       (!formState.transactionLoading && formState.userConfig?.footerPosition === "right")
     ) {
-      height = window.innerHeight - 303;
+      height = window.innerHeight - 296;
     } else {
-      height = window.innerHeight - (505 + 23);
+      height = window.innerHeight - (484 + 23);
     }
 
     console.log('Max safe integer:', Number.MAX_SAFE_INTEGER);

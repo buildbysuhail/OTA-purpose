@@ -1962,9 +1962,7 @@ const handleHeightChange =(height :number)=>{
         )}
 
         {/* footer starts here */}
-        {(formState.transactionLoading && _st.footerPosition !== "right") ||
-          (!formState.transactionLoading &&
-            formState.userConfig?.footerPosition !== "right" && (
+        {formState.userConfig?.footerPosition !== "right" && (
               <TransactionFooter
                 transactionType={transactionType ?? ""}
                 calculateTotal={calculateTotal}
@@ -1986,7 +1984,7 @@ const handleHeightChange =(height :number)=>{
                 generateLPO={generateLPO}
                 generateLPQ={generateLPQ}
               />
-            ))}
+            )}
         {/* footer ends here */}
 
         {formState.transaction && (

@@ -18,53 +18,25 @@ export const useDebounce = <T>(value: T, delay: number): T => {
 };
 
 
-export const useDebounceCallback = <T extends (...args: any[]) => any>(
-  callback: T,
-  delay: number
-): T => {
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  const debouncedCallback = useCallback(
-    (...args: Parameters<T>) => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-
-      timeoutRef.current = setTimeout(() => {
-        callback(...args);
-      }, delay);
-    },
-    [callback, delay]
-  ) as T;
-
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
-
-  return debouncedCallback;
-};
-
 
 // Alternative approach - more explicit control
 export const useDebouncedInput = <T>(
   initialValue: T,
-  onDebouncedChange: (value: T) => void,
-  delay: number = 300
+  onDebouncedChange: (value: T, e?: any) => void,
+  delay: number = 300,
+  e?: any
 ) => {
   const [value, setValue] = useState<T>(initialValue);
+  const eventRef = useRef<any>(null);
   const debouncedValue = useDebounce(value, delay);
   const hasUserInteracted = useRef(false);
 
   useEffect(() => {
     // Only trigger onDebouncedChange if user has actually interacted with the input
     if (hasUserInteracted.current && debouncedValue !== initialValue) {
-      onDebouncedChange(debouncedValue);
+      onDebouncedChange(debouncedValue, eventRef.current );
     }
-  }, [debouncedValue, onDebouncedChange, initialValue]);
+  }, [debouncedValue]);
 
   useEffect(() => {
     setValue(initialValue);
@@ -72,8 +44,9 @@ export const useDebouncedInput = <T>(
     hasUserInteracted.current = false;
   }, [initialValue]);
 
-  const handleChange = useCallback((newValue: T) => {
+  const handleChange = useCallback((newValue: T, e?: any) => {
     hasUserInteracted.current = true;
+     eventRef.current = e;
     setValue(newValue);
   }, []);
 

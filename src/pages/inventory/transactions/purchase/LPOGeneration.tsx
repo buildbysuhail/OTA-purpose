@@ -8,7 +8,7 @@ import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import { getApLocalDataByUrl } from "../../../../redux/cached-urls";
 import { LedgerType } from "../../../../enums/ledger-types";
 import { useDispatch } from "react-redux";
-import { formStateHandleFieldChange, formStateTransactionDetailsRowsAdd } from "../reducer";
+import { formStateHandleFieldChange, formStateTransactionDetailsRowsAdd, formStateTransactionDetailsRowsEmptyAdd } from "../reducer";
 import { APIClient } from "../../../../helpers/api-client";
 
 interface LPOGenerationProps {
@@ -198,7 +198,7 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
             });
             debugger;
             dispatch(
-                formStateTransactionDetailsRowsAdd(
+                formStateTransactionDetailsRowsEmptyAdd(
                     updatedInventory
                 )
             )

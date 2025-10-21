@@ -283,6 +283,18 @@ const InvTransactionSlice = createSlice({
       
     },
 
+    // Add multiple rows to the transaction details
+    formStateTransactionDetailsRowsEmptyAdd: (
+      state,
+      action: PayloadAction<TransactionDetail[]>
+    ) => {
+      state.transaction.details = []
+      action.payload.forEach((row: TransactionDetail) => {
+        state.transaction.details.push(row);  
+      })
+      
+    },
+
     formStateTransactionIvAccTransactionsRowsUpdate: (
       state,
       action: PayloadAction<InvAccTransaction[]>
@@ -804,6 +816,7 @@ export const {
   formStateTransactionMasterHandleFieldChange,
   formStateTransactionDetailsRowAdd,
   formStateTransactionDetailsRowsAdd,
+  formStateTransactionDetailsRowsEmptyAdd,
   formStateTransactionIvAccTransactionsRowsUpdate,
   formStateTransactionDetailsRowRemove,
   formStateReset,

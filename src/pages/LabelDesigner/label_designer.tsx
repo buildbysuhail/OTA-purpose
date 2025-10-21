@@ -1812,10 +1812,10 @@ debugger;
         thumbImage: dataUrl,
         content: JSON.stringify(templateToSave),
         isCurrent: false,
-        backgroundImage: tmpTemplate.background_image ?? "",
-        backgroundImageHeader: tmpTemplate.background_image_header ?? "",
-        backgroundImageFooter: tmpTemplate.background_image_footer ?? "",
-        signatureImage: tmpTemplate.signature_image ?? "",
+        background_image: tmpTemplate.background_image ?? "",
+        background_image_header: tmpTemplate.background_image_header ?? "",
+        background_image_footer: tmpTemplate.background_image_footer ?? "",
+        signature_image: tmpTemplate.signature_image ?? "",
         branchId: 0,
       };
 

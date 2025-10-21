@@ -28,10 +28,10 @@ type TemplateKindType =
     templateGroup?: string;
     templateName?: string;
     thumbImage?: string;
-    backgroundImage?: string;
-    backgroundImageHeader?: string;
-    backgroundImageFooter?: string;
-    signatureImage?: string;
+    background_image?: string;
+    background_image_header?: string;
+    background_image_footer?: string;
+    signature_image?: string;
     content?: string;
     isCurrent?: boolean;
     formType?:string;

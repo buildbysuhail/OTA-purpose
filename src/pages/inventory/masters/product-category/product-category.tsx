@@ -134,7 +134,7 @@ const ProductCategory = () => {
       allowFiltering: false,
       fixed: true,
       fixedPosition: document?.dir === "rtl" ? "left" : "right",
-      width: 100,
+      minWidth: 180,
       cellRender: (cellElement: any) => {
         return (
           <ERPGridActions

@@ -394,7 +394,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             </div>
             <div className="p-2 bg-[#eff6ff] dark:bg-[#1e3a8a33] rounded-lg border border-[#bfdbfe] dark:border-[#1e40af]">
               <p className="text-xs text-[#1d4ed8] dark:text-[#93c5fd]">
-                <span className="font-semibold">{t("note")}:</span> {t("alignment_issue_tip")}
+                <span className="font-semibold">{t("note")}</span> {t("alignment_issue_tip")}
               </p>
             </div>
           </div>

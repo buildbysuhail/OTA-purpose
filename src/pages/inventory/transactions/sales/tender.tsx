@@ -84,12 +84,12 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t, }) => {
       closeModal={onClose}
       title={t("tender")}
       width={480}
-      height={500}
+      height={400}
       content={
         <div className="space-y-3">
           {/* Total */}
           <div className="grid grid-cols-[120px_1fr] gap-4 items-center">
-            <label className="text-left font-bold text-sm">{t('total')}</label>
+            <label className="text-left text-[10px] leading-[12px] text-[#808080]">{t('total')}</label>
             <ERPInput
               id="total"
               type="number"
@@ -132,7 +132,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t, }) => {
 
           {/* Tax on Disc */}
           <div className="grid grid-cols-[120px_1fr] gap-4 items-center">
-            <label className="text-left font-bold text-sm">{t('tax_on_disc')}</label>
+            <label className="text-left text-[10px] leading-[12px] text-[#808080]">{t('tax_on_disc')}</label>
             <div className="flex gap-2 items-center">
               <ERPDataComboBox
                 id="taxOnDisc"
@@ -150,7 +150,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t, }) => {
 
           {/* Net Total */}
           <div className="grid grid-cols-[120px_1fr] gap-4 items-center">
-            <label className="text-left font-bold text-sm">{t('net_total')}</label>
+            <label className="text-left text-[10px] leading-[12px] text-[#808080]">{t('net_total')}</label>
             <ERPInput
               id="netTotal"
               type="text"
@@ -162,7 +162,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t, }) => {
 
           {/* Cash Received */}
           <div className="grid grid-cols-[120px_1fr] gap-4 items-center">
-            <label className="text-left font-bold text-sm">{t('cash_received')}</label>
+            <label className="text-left text-[10px] leading-[12px] text-[#808080]">{t('cash_received')}</label>
             <ERPInput
               id="cashRcvd"
               type="number"
@@ -177,10 +177,10 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t, }) => {
             <div className="flex items-center gap-2">
               <ERPCheckbox
                 id="cardAmtEnabled"
+                label={t('card_amount')}
                 checked={cardAmtEnabled}
                 onChange={(e) => setCardAmtEnabled(e.target.checked)}
               />
-              <label className="font-bold text-sm">{t('card_amount')}</label>
             </div>
             <div className="flex gap-2 items-center">
               <button className="px-2 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded">
@@ -202,10 +202,10 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t, }) => {
             <div className="flex items-center gap-2">
               <ERPCheckbox
                 id="bankAcEnabled"
+                label={t('bank_a/c')}
                 checked={bankAcEnabled}
                 onChange={(e) => setBankAcEnabled(e.target.checked)}
               />
-              <label className="font-bold text-sm">{t('bank_a/c')}</label>
             </div>
             <ERPDataComboBox
               id="bankAc"
@@ -219,7 +219,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t, }) => {
 
           {/* Balance */}
           <div className="grid grid-cols-[120px_1fr] gap-4 items-center">
-            <label className="text-left font-bold text-sm">{t('balance')}</label>
+            <label className="text-left text-[10px] leading-[12px] text-[#808080]">{t('balance')}</label>
             <ERPInput
               id="balance"
               type="text"
@@ -230,12 +230,11 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t, }) => {
           </div>
 
           {/* Apply Button */}
-          <div className="flex justify-center pt-4">
+          <div className="flex justify-end pt-4">
             <ERPButton
-              title={t("Apply")}
+              title={t("apply")}
               onClick={handleApply}
               variant="primary"
-              className="w-64"
             />
           </div>
         </div>

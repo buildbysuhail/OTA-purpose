@@ -7,9 +7,7 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import { useLocation } from "react-router-dom";
-import  {
-  GstReportFilterGstCatInitialState,
-} from "./gst-report-filter-gst";
+import { GstReportFilterGstCatInitialState } from "./gst-report-filter-gst";
 import GstReportFilterGstCat from "./gst-report-filter-gst";
 import { erpParseFloat } from "../../../../../utilities/Utils";
 
@@ -18,15 +16,9 @@ interface GSTDetailedProps {
   dataUrl: string;
   gridId: string;
 }
-const GSTDetailed: FC<GSTDetailedProps> = ({
-  gridHeader,
-  dataUrl,
-  gridId,
-}) => {
+const GSTDetailed: FC<GSTDetailedProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("inventory");
-  const [filter, setFilter] = useState<any>(
-    GstReportFilterGstCatInitialState
-  );
+  const [filter, setFilter] = useState<any>(GstReportFilterGstCatInitialState);
   const columns: DevGridColumn[] = [
     {
       dataField: "date",
@@ -118,7 +110,7 @@ const GSTDetailed: FC<GSTDetailedProps> = ({
         } else {
           return cellElement.data?.taxableValue == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.taxableValue));
+            : getFormattedValue(cellElement.data.taxableValue);
         }
       },
     },
@@ -150,7 +142,7 @@ const GSTDetailed: FC<GSTDetailedProps> = ({
         } else {
           return cellElement.data?.cgstPerc == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.cgstPerc));
+            : getFormattedValue(cellElement.data.cgstPerc);
         }
       },
     },
@@ -182,7 +174,7 @@ const GSTDetailed: FC<GSTDetailedProps> = ({
         } else {
           return cellElement.data?.cgst == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.cgst));
+            : getFormattedValue(cellElement.data.cgst);
         }
       },
     },
@@ -214,7 +206,7 @@ const GSTDetailed: FC<GSTDetailedProps> = ({
         } else {
           return cellElement.data?.sgstPerc == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.sgstPerc));
+            : getFormattedValue(cellElement.data.sgstPerc);
         }
       },
     },
@@ -246,7 +238,7 @@ const GSTDetailed: FC<GSTDetailedProps> = ({
         } else {
           return cellElement.data?.sgst == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.sgst));
+            : getFormattedValue(cellElement.data.sgst);
         }
       },
     },
@@ -278,7 +270,7 @@ const GSTDetailed: FC<GSTDetailedProps> = ({
         } else {
           return cellElement.data?.igstPerc == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.igstPerc));
+            : getFormattedValue(cellElement.data.igstPerc);
         }
       },
     },
@@ -310,7 +302,7 @@ const GSTDetailed: FC<GSTDetailedProps> = ({
         } else {
           return cellElement.data?.igst == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.igst));
+            : getFormattedValue(cellElement.data.igst);
         }
       },
     },
@@ -341,7 +333,7 @@ const GSTDetailed: FC<GSTDetailedProps> = ({
         } else {
           return cellElement.data?.cessPerc == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.cessPerc));
+            : getFormattedValue(cellElement.data.cessPerc);
         }
       },
     },
@@ -372,7 +364,7 @@ const GSTDetailed: FC<GSTDetailedProps> = ({
         } else {
           return cellElement.data?.cessAmt == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.cessAmt));
+            : getFormattedValue(cellElement.data.cessAmt);
         }
       },
     },
@@ -403,7 +395,7 @@ const GSTDetailed: FC<GSTDetailedProps> = ({
         } else {
           return cellElement.data?.addCessPerc == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.addCessPerc));
+            : getFormattedValue(cellElement.data.addCessPerc);
         }
       },
     },
@@ -434,7 +426,7 @@ const GSTDetailed: FC<GSTDetailedProps> = ({
         } else {
           return cellElement.data?.addCess == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.addCess));
+            : getFormattedValue(cellElement.data.addCess);
         }
       },
     },
@@ -466,7 +458,7 @@ const GSTDetailed: FC<GSTDetailedProps> = ({
         } else {
           return cellElement.data?.total == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.total));
+            : getFormattedValue(cellElement.data.total);
         }
       },
     },
@@ -556,8 +548,8 @@ const GSTDetailed: FC<GSTDetailedProps> = ({
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
       },
     },
     {
@@ -565,8 +557,8 @@ const GSTDetailed: FC<GSTDetailedProps> = ({
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
       },
     },
     {
@@ -574,8 +566,8 @@ const GSTDetailed: FC<GSTDetailedProps> = ({
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
       },
     },
     {
@@ -583,8 +575,8 @@ const GSTDetailed: FC<GSTDetailedProps> = ({
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
       },
     },
     {
@@ -592,8 +584,8 @@ const GSTDetailed: FC<GSTDetailedProps> = ({
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
       },
     },
     {
@@ -601,8 +593,8 @@ const GSTDetailed: FC<GSTDetailedProps> = ({
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
       },
     },
     {
@@ -610,8 +602,8 @@ const GSTDetailed: FC<GSTDetailedProps> = ({
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
       },
     },
   ];

@@ -100,6 +100,7 @@ export const useNumberFormat = (): UseNumberFormatResult => {
     return parseFloat(val.toFixed(decimalPlaces));
   }
   function getFormattedValueIgnoreRoundingToNumber(val: number): number {
+
     const cleaned = getFormattedValueIgnoreRounding(val).replace(/,/g, '');
     return parseFloat(cleaned);
   }
@@ -152,7 +153,8 @@ export const useNumberFormat = (): UseNumberFormatResult => {
   }
   function getFormattedValue(val: number, ignoreNullOrZero: boolean = false, decimalPoint: number|undefined = undefined, cuttingPoint: number = 0,
   numberOfZero: number = 0): string {
-    
+        // round to 2 decimals to avoid floating-point artifacts
+         val = Math.trunc(val * 100) / 100;
     if(cuttingPoint > 0) {
       
     

@@ -19,7 +19,7 @@ const CustomerVisitLastVisit = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      allowSorting: true,
+      allowSorting: false,
       visible: true,
       width: 120,
       groupIndex: 0,

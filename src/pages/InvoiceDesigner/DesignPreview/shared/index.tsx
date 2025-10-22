@@ -20,7 +20,15 @@ const SharedTemplatePreview = ({ data, template, qrCodeImages = {}}: AccountTran
    const headerState = template?.headerState;
   const propertiesState = template?.propertiesState;
   return (
-    <div  className="flex flex-col h-full w-full">
+    <div  className="flex flex-col h-full w-full"
+    style={{
+          backgroundColor: template?.propertiesState?.bg_color || "#fff",
+          paddingTop: `${propertiesState?.padding?.top ?? 0}pt`,
+          paddingRight: `${propertiesState?.padding?.right ?? 0}pt`,
+          paddingBottom: `${propertiesState?.padding?.bottom ?? 0}pt`,
+          paddingLeft: `${propertiesState?.padding?.left ?? 0}pt`,
+    }}
+    >
 
         {/* Header */}
         {headerState?.showHeader &&(
@@ -32,11 +40,7 @@ const SharedTemplatePreview = ({ data, template, qrCodeImages = {}}: AccountTran
         className=" relative  flex flex-col flex-grow-1 h-full w-full"
           style={{
           flex:1,
-          backgroundColor: template?.propertiesState?.bg_color || "#fff",
-          paddingTop: `${propertiesState?.padding?.top ?? 0}pt`,
-          paddingRight: `${propertiesState?.padding?.right ?? 0}pt`,
-          paddingBottom: `${propertiesState?.padding?.bottom ?? 0}pt`,
-          paddingLeft: `${propertiesState?.padding?.left ?? 0}pt`,
+
           backgroundImage: template?.background_image ? `url(${template?.background_image})` : "none",
           backgroundPosition: propertiesState?.bg_image_position ?? "center",
           backgroundSize: propertiesState?.bg_image_objectFit ?? "fill",   

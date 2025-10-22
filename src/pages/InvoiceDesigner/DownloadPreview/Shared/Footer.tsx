@@ -11,9 +11,9 @@ interface Props {
    AmountToEnglish?: any;
   AmountToArabic?: any;
 }
-
+    
 const ShardDownFooter: React.FC<Props> = ({ data, template, qrCodes = {},AmountToEnglish,AmountToArabic }) => {
-
+ 
   const footerState = template?.footerState;
   const customElements = footerState?.customElements?.elements ?? [];
   const customTopHeight = footerState?.customElements?.height ?? 0;

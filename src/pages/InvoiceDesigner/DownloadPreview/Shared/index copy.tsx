@@ -23,49 +23,43 @@ import { SharedDownTable } from "./Table"
               template?.propertiesState?.width,
               template?.propertiesState?.height,
             )
-    const pdfPageSize = getPageSizeForPDF(pageSize, selectedPageSize)
+      const pdfPageSize = getPageSizeForPDF(pageSize, selectedPageSize)
  return (
       <Document>
         <FontRegistration />
-        <Page size={pdfPageSize} orientation={pageOrientation} 
-        style={{ 
-          flexDirection: "column" ,
-           paddingTop,
-           paddingRight,
-           paddingBottom,
-           paddingLeft, 
-           backgroundColor: template?.propertiesState?.bg_color || "#fff",
-          }}>
+        <Page size={pdfPageSize} orientation={pageOrientation} style={{ flexDirection: "column" }}>
           {/* Header */}
           <ShardDowHeader data={data} template={template} qrCodes={qrCodeImages}AmountToEnglish={AmountToEnglish}  AmountToArabic={AmountToArabic}/> 
 
-        {/* ✅ Main Content (Table) - padding applied ONLY here */}
-        <View
-          style={{
+          {/* Main Content Container */}
+          <View
+            style={{
+            backgroundColor: template?.propertiesState?.bg_color || "#fff",
+            paddingTop,
+            paddingRight,
+            paddingBottom,
+            paddingLeft,
             flexGrow: 1,
-            position: "relative",
-          }}
-        
-        >
-          {/* Background Image */}
-          {template?.background_image && (
-            <Image
-              src={template.background_image || "/placeholder.svg"}
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                zIndex: -1,
-                objectPosition: template?.propertiesState?.bg_image_position ?? "center",
-              }}
-            />
-          )}
-
-            <SharedDownTable data={data?.details ?? []} template={template} />
-     
-        </View>
+            }}
+            wrap={true}
+          >
+            {/* Background Image */}
+            {template?.background_image && (
+              <Image
+                src={template.background_image || "/placeholder.svg"}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  zIndex: -1,
+                  objectPosition: template?.propertiesState?.bg_image_position ?? "center",
+                }}
+              />  
+            )}
+            <SharedDownTable data={data?.details??[]} template={template} />
+          </View>
 
           {/* Footer */}
           <ShardDownFooter data={data} template={template} qrCodes={qrCodeImages} AmountToEnglish={AmountToEnglish}  AmountToArabic={AmountToArabic} />   

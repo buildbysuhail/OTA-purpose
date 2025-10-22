@@ -23,9 +23,10 @@ import VoucherType from "../../../../enums/voucher-types";
 import React from "react";
 import { formStateHandleFieldChangeKeysOnly, formStateHandleFieldChange, formStateTransactionMasterHandleFieldChange } from "../reducer";
 import { TransactionFormState } from "../transaction-types";
-import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import PrivilegeCardEntry from "./privilege-card-entry";
-// import Tender from "./tender";
+import Tender from "./tender";
+import AutoCalculationCheckbox from "./components/AutoCalculationCheckbox";
+import IsLockedCheckbox from "./components/IsLockedCheckbox";
 
 interface TransactionFooterProps {
   formState: TransactionFormState;
@@ -335,765 +336,771 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
       })
     )
   }
-  // const handlePrivilegeCardClose = () => {
-  //   dispatch(
-  //     formStateHandleFieldChange({
-  //       fields: { privilegeCardOpen: false }
-  //     })
-  //   )
-  // }
+  const handlePrivilegeCardClose = () => {
+    dispatch(
+      formStateHandleFieldChange({
+        fields: { privilegeCardOpen: false }
+      })
+    )
+  }
 
-  // const handleTenderOpen = () => {
-  //   dispatch(
-  //     formStateHandleFieldChange({
-  //       fields: { tenderOpen: true }
-  //     })
-  //   )
-  // }
-  // const handleTenderClose = () => {
-  //   dispatch(
-  //     formStateHandleFieldChange({
-  //       fields: { tenderOpen: false }
-  //     })
-  //   )
-  // }
+  const handleTenderOpen = () => {
+    dispatch(
+      formStateHandleFieldChange({
+        fields: { tenderOpen: true }
+      })
+    )
+  }
+  const handleTenderClose = () => {
+    dispatch(
+      formStateHandleFieldChange({
+        fields: { tenderOpen: false }
+      })
+    )
+  }
 
-  // const warehouseComponent = (
-  //   <div className="w-full max-w-none sm:max-w-[180px]">
-  //     <WarehouseID
-  //       formState={formState}
-  //       dispatch={dispatch}
-  //       t={t}
-  //       handleKeyDown={handleKeyDown}
-  //       handleFieldKeyDown={handleFieldKeyDown}
-  //     />
-  //   </div>
-  // );
+  const warehouseComponent = (
+    <div className="w-full max-w-none sm:max-w-[180px]">
+      <WarehouseID
+        formState={formState}
+        dispatch={dispatch}
+        t={t}
+        handleKeyDown={handleKeyDown}
+        handleFieldKeyDown={handleFieldKeyDown}
+      />
+    </div>
+  );
 
-  // const costCentreComponent = (
-  //   <div className="w-full max-w-none sm:max-w-[180px]">
-  //     <CostCentreCombobox
-  //       formState={formState}
-  //       dispatch={dispatch}
-  //       t={t}
-  //       handleKeyDown={handleKeyDown}
-  //       handleFieldKeyDown={handleFieldKeyDown}
-  //     />
-  //   </div>
-  // );
+  const costCentreComponent = (
+    <div className="w-full max-w-none sm:max-w-[180px]">
+      <CostCentreCombobox
+        formState={formState}
+        dispatch={dispatch}
+        t={t}
+        handleKeyDown={handleKeyDown}
+        handleFieldKeyDown={handleFieldKeyDown}
+      />
+    </div>
+  );
 
-  // const adjustmentComponent = (
-  //   <div className="flex flex-col w-full max-w-none sm:max-w-[180px]">
-  //     <AdjustmentAmountInput
-  //       transactionType={transactionType}
-  //       formState={formState}
-  //       dispatch={dispatch}
-  //       t={t}
-  //       handleKeyDown={handleKeyDown}
-  //     />
-  //   </div>
-  // );
+  const adjustmentComponent = (
+    <div className="flex flex-col w-full max-w-none sm:max-w-[180px]">
+      <AdjustmentAmountInput
+        transactionType={transactionType}
+        formState={formState}
+        dispatch={dispatch}
+        t={t}
+        handleKeyDown={handleKeyDown}
+      />
+    </div>
+  );
 
-  // // const checkboxesComponent = (
-  // //   <div className="flex items-center gap-2 w-full justify-start sm:justify-center">
-  // //     <AutoCalculationCheckbox
-  // //       formState={formState}
-  // //       dispatch={dispatch}
-  // //       t={t}
-  // //     />
-  // //     <IsLockedCheckbox
-  // //       formState={formState}
-  // //       dispatch={dispatch}
-  // //       t={t}
-  // //     />
-  // //   </div>
-  // // );
+  const checkboxesComponent = (
+    <div className="flex items-center gap-2 w-full justify-start sm:justify-center">
+      <AutoCalculationCheckbox
+        formState={formState}
+        dispatch={dispatch}
+        t={t}
+      />
+      <IsLockedCheckbox
+        formState={formState}
+        dispatch={dispatch}
+        t={t}
+      />
+    </div>
+  );
 
-  // const attachmentComponent = (
-  //   applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && (
-  //     <button className="text-[#2563eb] dark:text-[#60a5fa] w-full text-left">
-  //       <span className="hover:underline text-[#0ea5e9] dark:text-[#60a5fa] capitalize" onClick={selectAttachment}>
-  //         {t("attachment")}
-  //       </span>
-  //     </button>
-  //   )
-  // );
+  const attachmentComponent = (
+    applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && (
+      <button className="text-[#2563eb] dark:text-[#60a5fa] w-full text-left">
+        <span className="hover:underline text-[#0ea5e9] dark:text-[#60a5fa] capitalize" onClick={selectAttachment}>
+          {t("attachment")}
+        </span>
+      </button>
+    )
+  );
 
-  // const outsideComponents = (
-  //   <div className="flex flex-col gap-1 pr-4">
-  //     {showCheckboxesOutside ? (
-  //       <>
-  //         <div className="flex flex-wrap items-end gap-1">
-  //           {showWarehouseOutside && warehouseComponent}
-  //           {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
-  //             <>
-  //               {showAdjustmentOutside && adjustmentComponent}
-  //             </>
-  //           )}
-  //         </div>
-  //         <div className="flex items-end gap-1">
-  //           {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
-  //             <>
-  //               {showCostCentreOutside && costCentreComponent}
-  //             </>
-  //           )}
-  //           {
-  //             (applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && showAttachmentOutside) && (
-  //               attachmentComponent
-  //             )
-  //           }
-  //           <ERPButton
-  //             title={t('privilege_card')}
-  //             onClick={handlePrivilegeCardOpen}
-  //           />
-  //           {
-  //             formState.privilegeCardOpen && (
-  //               <PrivilegeCardEntry
-  //                 isOpen={formState.privilegeCardOpen}
-  //                 onClose={handlePrivilegeCardClose}
-  //                 t={t}
-  //                 data={""}
-  //               />
-  //             )
-  //           }
-  //         </div>
-  //         <div>
-  //           <ERPButton
-  //             title={t('tender')}
-  //             onClick={handleTenderOpen}
-  //           />
-  //           {formState.tenderOpen && (
-  //             <Tender
-  //               isOpen={formState.tenderOpen}
-  //               onClose={handleTenderClose}
-  //               t={t}
-  //             />
-  //           )}
-  //         </div>
-  //       </>
-  //     ) : (
-  //       <>
-  //         {showWarehouseOutside && warehouseComponent}
-  //         {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
-  //           <>{showCostCentreOutside && costCentreComponent}</>
-  //         )}
-  //         {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
-  //           <>{showAdjustmentOutside && adjustmentComponent}</>
-  //         )}
-  //       </>
-  //     )}
-  //   </div>
-  // );
+  const outsideComponents = (
+    <div className="flex flex-col gap-1 pr-4">
+      {showCheckboxesOutside ? (
+        <>
+          <div className="flex flex-wrap items-end gap-1">
+            {showWarehouseOutside && warehouseComponent}
+            {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+              <>
+                {showAdjustmentOutside && adjustmentComponent}
+              </>
+            )}
+          </div>
+          <div className="flex items-end gap-1">
+            {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+              <>
+                {showCostCentreOutside && costCentreComponent}
+              </>
+            )}
+            {
+              (applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && showAttachmentOutside) && (
+                attachmentComponent
+              )
+            }
+            <ERPButton
+              title={t('privilege_card')}
+              onClick={handlePrivilegeCardOpen}
+            />
+            {
+              formState.privilegeCardOpen && (
+                <PrivilegeCardEntry
+                  isOpen={formState.privilegeCardOpen}
+                  onClose={handlePrivilegeCardClose}
+                  t={t}
+                  data={""}
+                />
+              )
+            }
+          </div>
+          <div className="flex items-center gap-1">
+            <ERPButton
+              title={t('tender')}
+              onClick={handleTenderOpen}
+            />
+            <ERPButton
+              title={t('pending')}
+            />
+            {formState.tenderOpen && (
+              <Tender
+                isOpen={formState.tenderOpen}
+                onClose={handleTenderClose}
+                t={t}
+              />
+            )}
+          </div>
+        </>
+      ) : (
+        <>
+          {showWarehouseOutside && warehouseComponent}
+          {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+            <>{showCostCentreOutside && costCentreComponent}</>
+          )}
+          {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+            <>{showAdjustmentOutside && adjustmentComponent}</>
+          )}
+        </>
+      )}
+    </div>
+  );
 
-  // const toggleFooterPosition = () => {
-  //   const newPosition: "bottom" | "right" = formState.userConfig?.footerPosition === "bottom" ? "right" : "bottom";
-  //   const updatedUserConfig = {
-  //     ...formState.userConfig,
-  //     footerPosition: newPosition,
-  //   };
-  //   dispatch(formStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }));
-  // };
+  const toggleFooterPosition = () => {
+    const newPosition: "bottom" | "right" = formState.userConfig?.footerPosition === "bottom" ? "right" : "bottom";
+    const updatedUserConfig = {
+      ...formState.userConfig,
+      footerPosition: newPosition,
+    };
+    dispatch(formStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }));
+  };
 
-  // const hasDropupContent = isNewFooter &&
-  //   !showWarehouseOutside ||
-  //   !showCostCentreOutside ||
-  //   !showAdjustmentOutside ||
-  //   !showAttachmentOutside ||
-  //   formState.formElements.printOnSave.visible
+  const hasDropupContent = isNewFooter &&
+    !showWarehouseOutside ||
+    !showCostCentreOutside ||
+    !showAdjustmentOutside ||
+    !showAttachmentOutside ||
+    formState.formElements.printOnSave.visible
 
-  // const renderSecondFooter = () => (
-  //   <div
-  //     className={`dark:bg-dark-bg ${footerLayout === "vertical" ? "flex flex-col justify-between h-full" : ""}`}
-  //     style={{ backgroundColor: formState.userConfig?.footerBg ? `rgb(${formState.userConfig.footerBg})` : undefined, }}>
-  //     <div className={`${footerLayout === "vertical" ? "relative block" : "hidden"}`}>
-  //       <div className="flex justify-between space-x-2">
-  //         <button onClick={toggleFooterPosition} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 dark:bg-dark-bg opacity-50 hover:opacity-100 transition-all duration-300" title={t("display_the_footer_at_the_bottom")}>
-  //           <PanelBottom className="text-[#b3b3b9] dark:text-dark-text w-4 h-4" />
-  //         </button>
+  const renderSecondFooter = () => (
+    <div
+      className={`dark:bg-dark-bg ${footerLayout === "vertical" ? "flex flex-col justify-between h-full" : ""}`}
+      style={{ backgroundColor: formState.userConfig?.footerBg ? `rgb(${formState.userConfig.footerBg})` : undefined, }}>
+      <div className={`${footerLayout === "vertical" ? "relative block" : "hidden"}`}>
+        <div className="flex justify-between space-x-2">
+          <button onClick={toggleFooterPosition} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 dark:bg-dark-bg opacity-50 hover:opacity-100 transition-all duration-300" title={t("display_the_footer_at_the_bottom")}>
+            <PanelBottom className="text-[#b3b3b9] dark:text-dark-text w-4 h-4" />
+          </button>
 
-  //         <button ref={buttonRef} onClick={() => setIsPopupVisible((prev) => !prev)} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 dark:bg-dark-bg opacity-50 hover:opacity-100 transition-all duration-300" title={t("more_options")} >
-  //           <EllipsisVertical className="w-4 h-4 text-gray-600 dark:text-dark-text" />
-  //         </button>
-  //       </div>
+          <button ref={buttonRef} onClick={() => setIsPopupVisible((prev) => !prev)} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 dark:bg-dark-bg opacity-50 hover:opacity-100 transition-all duration-300" title={t("more_options")} >
+            <EllipsisVertical className="w-4 h-4 text-gray-600 dark:text-dark-text" />
+          </button>
+        </div>
 
-  //       {isPopupVisible && (
-  //         <div
-  //           ref={popupRef}
-  //           className="absolute rounded-sm dark:bg-dark-bg-card dark:text-dark-text bg-gray-100 shadow-lg p-4 z-50"
-  //           style={{ top: "100%", right: "0", width: "251px", marginTop: "8px", }}>
-  //           <nav className="w-full dark:bg-dark-bg-card dark:text-dark-text bg-gray-100 text-black">
-  //             <ul className="space-y-1">
-  //               <li>
-  //                 {formState.formElements.printOnSave.visible && (
-  //                   <ERPCheckbox
-  //                     localInputBox={formState?.userConfig?.inputBoxStyle}
-  //                     id="printOnSave"
-  //                     label={t(formState.formElements.printOnSave.label)}
-  //                     checked={formState.printOnSave}
-  //                     onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { printOnSave: e.target.checked }, }))}
-  //                     disabled={formState.formElements.printOnSave?.disabled}
-  //                   />
-  //                 )}
-  //               </li>
-  //               {/* <li>
-  //                 <AutoCalculationCheckbox
-  //                   formState={formState}
-  //                   dispatch={dispatch}
-  //                   t={t}
-  //                 />
-  //               </li>
-  //               <li>
-  //                 <IsLockedCheckbox
-  //                   formState={formState}
-  //                   dispatch={dispatch}
-  //                   t={t}
-  //                 />
-  //               </li> */}
-  //               <li>
-  //                 <button className="text-[#2563eb]">
-  //                   {applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && (
-  //                     <span className="hover:underline text-[#0ea5e9] capitalize" onClick={selectAttachment}>
-  //                       {t("attachment")}
-  //                     </span>
-  //                   )}
-  //                 </button>
-  //               </li>
-  //               <li>
-  //                 <ERPButton
-  //                   title={t("grn_print")}
-  //                   variant="secondary"
-  //                   disabled={formState.transactionLoading}
-  //                 />
-  //               </li>
-  //             </ul>
-  //           </nav>
-  //         </div>
-  //       )}
-  //     </div>
+        {isPopupVisible && (
+          <div
+            ref={popupRef}
+            className="absolute rounded-sm dark:bg-dark-bg-card dark:text-dark-text bg-gray-100 shadow-lg p-4 z-50"
+            style={{ top: "100%", right: "0", width: "251px", marginTop: "8px", }}>
+            <nav className="w-full dark:bg-dark-bg-card dark:text-dark-text bg-gray-100 text-black">
+              <ul className="space-y-1">
+                <li>
+                  {formState.formElements.printOnSave.visible && (
+                    <ERPCheckbox
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                      id="printOnSave"
+                      label={t(formState.formElements.printOnSave.label)}
+                      checked={formState.printOnSave}
+                      onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { printOnSave: e.target.checked }, }))}
+                      disabled={formState.formElements.printOnSave?.disabled}
+                    />
+                  )}
+                </li>
+                <li>
+                  <AutoCalculationCheckbox
+                    formState={formState}
+                    dispatch={dispatch}
+                    t={t}
+                  />
+                </li>
+                <li>
+                  <IsLockedCheckbox
+                    formState={formState}
+                    dispatch={dispatch}
+                    t={t}
+                  />
+                </li>
+                <li>
+                  <button className="text-[#2563eb]">
+                    {applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && (
+                      <span className="hover:underline text-[#0ea5e9] capitalize" onClick={selectAttachment}>
+                        {t("attachment")}
+                      </span>
+                    )}
+                  </button>
+                </li>
+                <li>
+                  <ERPButton
+                    title={t("grn_print")}
+                    variant="secondary"
+                    disabled={formState.transactionLoading}
+                  />
+                </li>
+              </ul>
+            </nav>
+          </div>
+        )}
+      </div>
 
-  //     <div className={`dark:bg-dark-bg-card ${footerLayout === "vertical" ? "" : "bg-white shadow-lg border dark:border-dark-border border-gray-200 overflow-hidden"}`}>
-  //       <div className={`${footerLayout === "vertical" && !isSmallHeight ? "block" : "hidden"}`}>
-  //         <div className="mb-2">
-  //           <div className={`grid ${footerLayout === "vertical" ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 items-end"}`}>
-  //             <div className="w-full">
-  //               <WarehouseID
-  //                 formState={formState}
-  //                 dispatch={dispatch}
-  //                 t={t}
-  //                 handleKeyDown={handleKeyDown}
-  //                 handleFieldKeyDown={handleFieldKeyDown}
-  //               />
-  //             </div>
-  //             <div className="w-full">
-  //               <PriceCategoryCombobox
-  //                 formState={formState}
-  //                 dispatch={dispatch}
-  //                 t={t}
-  //                 handleKeyDown={handleKeyDown}
-  //                 handleFieldKeyDown={handleFieldKeyDown}
-  //               />
-  //             </div>
-  //             <div className="w-full">
-  //               <CostCentreCombobox
-  //                 formState={formState}
-  //                 dispatch={dispatch}
-  //                 t={t}
-  //                 handleKeyDown={handleKeyDown}
-  //                 handleFieldKeyDown={handleFieldKeyDown}
-  //               />
-  //             </div>
-  //             <div className="w-full">
-  //               <SupplyTypeCombobox
-  //                 formState={formState}
-  //                 dispatch={dispatch}
-  //                 t={t}
-  //                 handleKeyDown={handleKeyDown}
-  //                 handleFieldKeyDown={handleFieldKeyDown}
-  //               />
-  //             </div>
-  //             <div className="w-full">
-  //               <AdjustmentAmountInput
-  //                 transactionType={transactionType}
-  //                 formState={formState}
-  //                 dispatch={dispatch}
-  //                 t={t}
-  //                 handleKeyDown={handleKeyDown}
-  //               />
-  //             </div>
-  //           </div>
-  //         </div>
-  //       </div>
+      <div className={`dark:bg-dark-bg-card ${footerLayout === "vertical" ? "" : "bg-white shadow-lg border dark:border-dark-border border-gray-200 overflow-hidden"}`}>
+        <div className={`${footerLayout === "vertical" && !isSmallHeight ? "block" : "hidden"}`}>
+          <div className="mb-2">
+            <div className={`grid ${footerLayout === "vertical" ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 items-end"}`}>
+              <div className="w-full">
+                <WarehouseID
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  handleKeyDown={handleKeyDown}
+                  handleFieldKeyDown={handleFieldKeyDown}
+                />
+              </div>
+              <div className="w-full">
+                <PriceCategoryCombobox
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  handleKeyDown={handleKeyDown}
+                  handleFieldKeyDown={handleFieldKeyDown}
+                />
+              </div>
+              <div className="w-full">
+                <CostCentreCombobox
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  handleKeyDown={handleKeyDown}
+                  handleFieldKeyDown={handleFieldKeyDown}
+                />
+              </div>
+              <div className="w-full">
+                <SupplyTypeCombobox
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  handleKeyDown={handleKeyDown}
+                  handleFieldKeyDown={handleFieldKeyDown}
+                />
+              </div>
+              <div className="w-full">
+                <AdjustmentAmountInput
+                  transactionType={transactionType}
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  handleKeyDown={handleKeyDown}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
 
-  //       <div className={`grid ${footerLayout === "vertical" ? "grid-cols-1 gap-1" : "grid-cols-1 md:grid-cols-[1fr_400px]"}`}>
-  //         <div className={`flex ${footerLayout === "vertical" ? "flex-col items-start justify-start" : "p-2 flex-col md:flex-row items-end justify-end gap-4"}`}>
-  //           <div className={`${footerLayout === "vertical" ? "hidden" : "block"}`}>
-  //             <div className="absolute top-1.5 left-1">
-  //               <button onClick={toggleFooterPosition} className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 dark:bg-dark-bg opacity-50 hover:opacity-100 transition-all duration-300" title={t("display_the_footer_on_the_right")}>
-  //                 <PanelRight className="text-[#b3b3b9] dark:text-dark-text w-4 h-4" />
-  //               </button>
-  //             </div>
-  //           </div>
-  //           {footerLayout !== "vertical" && outsideComponents}
-  //           <div className={`hidden md:flex ${footerLayout === "vertical" ? "flex-col items-start w-full" : "flex-col items-start w-full md:w-auto"}`}>
-  //             <div className={`flex ${footerLayout === "vertical" ? "flex-col items-start" : "items-end"} gap-2 mb-2`}>
-  //               <div className={`flex items-center w-full ${footerLayout === "vertical" ? "justify-between" : "gap-2"}`}>
-  //                 {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && formState.transaction.master.voucherType !== VoucherType.PurchaseEstimate && (
-  //                   <CashPaidSection
-  //                     formState={formState}
-  //                     dispatch={dispatch}
-  //                     t={t}
-  //                     focusDiscount={focusDiscount}
-  //                     focusAmount={focusAmount}
-  //                   />
-  //                 )}
-  //                 <RoundOffInput
-  //                   formState={formState}
-  //                   dispatch={dispatch}
-  //                   t={t}
-  //                   handleKeyDown={handleKeyDown}
-  //                   focusDiscount={() => document.getElementById("discountID")?.focus()}
-  //                   focusAmount={() => document.getElementById("amountID")?.focus()}
-  //                 />
-  //               </div>
-  //               <div className="flex flex-col w-full">
-  //                 <BillDiscountInput
-  //                   formState={formState}
-  //                   dispatch={dispatch}
-  //                   t={t}
-  //                   handleKeyDown={handleKeyDown}
-  //                   footerLayout={footerLayout}
-  //                   applyDiscountsToItems={applyDiscountsToItems}
-  //                 />
-  //               </div>
-  //             </div>
+        <div className={`grid ${footerLayout === "vertical" ? "grid-cols-1 gap-1" : "grid-cols-1 md:grid-cols-[1fr_400px]"}`}>
+          <div className={`flex ${footerLayout === "vertical" ? "flex-col items-start justify-start" : "p-2 flex-col md:flex-row items-end justify-end gap-4"}`}>
+            <div className={`${footerLayout === "vertical" ? "hidden" : "block"}`}>
+              <div className="absolute top-1.5 left-1">
+                <button onClick={toggleFooterPosition} className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 dark:bg-dark-bg opacity-50 hover:opacity-100 transition-all duration-300" title={t("display_the_footer_on_the_right")}>
+                  <PanelRight className="text-[#b3b3b9] dark:text-dark-text w-4 h-4" />
+                </button>
+              </div>
+            </div>
+            {footerLayout !== "vertical" && outsideComponents}
+            <div className={`hidden md:flex ${footerLayout === "vertical" ? "flex-col items-start w-full" : "flex-col items-start w-full md:w-auto"}`}>
+              <div className={`flex ${footerLayout === "vertical" ? "flex-col items-start" : "items-end"} gap-2 mb-2`}>
+                <div className={`flex items-center w-full ${footerLayout === "vertical" ? "justify-between" : "gap-2"}`}>
+                  {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && formState.transaction.master.voucherType !== VoucherType.PurchaseEstimate && (
+                    <CashPaidSection
+                      formState={formState}
+                      dispatch={dispatch}
+                      t={t}
+                      focusDiscount={focusDiscount}
+                      focusAmount={focusAmount}
+                    />
+                  )}
+                  <RoundOffInput
+                    formState={formState}
+                    dispatch={dispatch}
+                    t={t}
+                    handleKeyDown={handleKeyDown}
+                    focusDiscount={() => document.getElementById("discountID")?.focus()}
+                    focusAmount={() => document.getElementById("amountID")?.focus()}
+                  />
+                </div>
+                <div className="flex flex-col w-full">
+                  <BillDiscountInput
+                    formState={formState}
+                    dispatch={dispatch}
+                    t={t}
+                    handleKeyDown={handleKeyDown}
+                    footerLayout={footerLayout}
+                    applyDiscountsToItems={applyDiscountsToItems}
+                  />
+                </div>
+              </div>
 
-  //             <div className={`${footerLayout === "vertical" ? "w-full max-w-[265px]" : "w-full md:w-[345px]"}`}>
-  //               <div className="flex flex-col">
-  //                 <ERPTextarea
-  //                   id="remarks"
-  //                   required={true}
-  //                   localInputBox={formState?.userConfig?.inputBoxStyle}
-  //                   label={t(formState.formElements.remarks.label)}
-  //                   value={formState.transaction.master.remarks}
-  //                   onChange={(e) => dispatch(formStateTransactionMasterHandleFieldChange({ fields: { remarks: e.target?.value }, }))}
-  //                   disabled={formState.formElements.remarks?.disabled || formState.formElements.pnlMasters?.disabled}
-  //                   className={`dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text ${isNewFooter ? "h-[42px]" : ""}`}
-  //                 />
-  //               </div>
-  //             </div>
-  //           </div>
-  //         </div>
+              <div className={`${footerLayout === "vertical" ? "w-full max-w-[265px]" : "w-full md:w-[345px]"}`}>
+                <div className="flex flex-col">
+                  <ERPTextarea
+                    id="remarks"
+                    required={true}
+                    localInputBox={formState?.userConfig?.inputBoxStyle}
+                    label={t(formState.formElements.remarks.label)}
+                    value={formState.transaction.master.remarks}
+                    onChange={(e) => dispatch(formStateTransactionMasterHandleFieldChange({ fields: { remarks: e.target?.value }, }))}
+                    disabled={formState.formElements.remarks?.disabled || formState.formElements.pnlMasters?.disabled}
+                    className={`dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text ${isNewFooter ? "h-[42px]" : ""}`}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
 
-  //         <div className="p-2 dark:bg-dark-bg-card bg-gray-50 border-l dark:border-dark-border border-gray-200">
-  //           <div className="flex flex-col gap-1.5">
-  //             <NetAmountInput
-  //               formState={formState}
-  //               dispatch={dispatch}
-  //               t={t}
-  //               handleKeyDown={handleKeyDown}
-  //             />
-  //             <VatAmountLabel
-  //               formState={formState}
-  //               dispatch={dispatch}
-  //               t={t}
-  //               taxData={taxData}
-  //             />
-  //             <BillDiscountLabel
-  //               formState={formState}
-  //               dispatch={dispatch}
-  //               t={t}
-  //             />
-  //             {/* <NetTotalLabel formState={formState} dispatch={dispatch} t={t} /> */}
-  //             {formState.formElements.grandTotalFc.visible && (
-  //               <div>
-  //                 <div className="flex items-center justify-between dark:text-dark-text">
-  //                   <span>{t(formState.formElements.grandTotalFc.label)}:</span>
-  //                   <span>{formState.transaction.master.grandTotalFc}</span>
-  //                 </div>
-  //               </div>
-  //             )}
-  //             <div className="flex justify-between items-center border-t-2 border-[#3b82f6] mt-1">
-  //               <span className="text-sm font-bold dark:text-dark-text text-gray-900 uppercase">
-  //                 {t(formState.formElements.grandTotal.label)}
-  //               </span>
-  //               <span className="text-lg font-bold text-[#3b82f6]">
-  //                 {getFormattedValue(formState.transaction.master?.grandTotal ?? 0)}
-  //               </span>
-  //             </div>
-  //           </div>
-  //         </div>
-  //       </div>
+          <div className="py-2 pl-2 pr-4 dark:bg-dark-bg-card bg-gray-50 border-l dark:border-dark-border border-gray-200">
+            <div className="flex flex-col gap-1.5">
+              <NetAmountInput
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                handleKeyDown={handleKeyDown}
+              />
+              <VatAmountLabel
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                taxData={taxData}
+              />
+              <BillDiscountLabel
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+              />
+              {/* <NetTotalLabel formState={formState} dispatch={dispatch} t={t} /> */}
+              {formState.formElements.grandTotalFc.visible && (
+                <div>
+                  <div className="flex items-center justify-between dark:text-dark-text">
+                    <span>{t(formState.formElements.grandTotalFc.label)}:</span>
+                    <span>{formState.transaction.master.grandTotalFc}</span>
+                  </div>
+                </div>
+              )}
+              <div className="flex justify-between items-center border-t-2 border-[#3b82f6] mt-1">
+                <span className="text-sm font-bold dark:text-dark-text text-gray-900 uppercase">
+                  {t(formState.formElements.grandTotal.label)}
+                </span>
+                <span className="text-lg font-bold text-[#3b82f6]">
+                  {getFormattedValue(formState.transaction.master?.grandTotal ?? 0)}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
 
-  //       <div className={`p-2 dark:bg-dark-bg-card bg-gray-100 border-t dark:border-dark-border border-gray-200 flex ${footerLayout === "vertical" ? "flex-col" : "flex-col md:flex-row justify-between items-center gap-4"}`}>
-  //         <div>
-  //           {/* {formState.formElements.printOnSave.visible && ( */}
-  //           <ERPCheckbox
-  //             localInputBox={formState?.userConfig?.inputBoxStyle}
-  //             id="printOnSave"
-  //             label={t(formState.formElements.printOnSave.label)}
-  //             checked={formState.printOnSave}
-  //             onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { printOnSave: e.target.checked }, }))}
-  //             disabled={formState.formElements.printOnSave?.disabled}
-  //             className="dark:text-dark-text"
-  //           />
-  //           {/* )} */}
-  //         </div>
-  //         <div className="flex justify-end gap-2 w-full sm:w-auto">
-  //           <ConfettiWrapper onOriginalClick={save} triggerConfetti={formState.savingCompleted}>
-  //             <ERPButton
-  //               variant="primary"
-  //               ref={btnSaveRef}
-  //               jumpTarget="save"
-  //               title={t("save")}
-  //               startIcon={<Check className="w-3.5 h-3.5" />}
-  //               localInputBox={formState?.userConfig?.inputBoxStyle}
-  //               disabled={formState.formElements.pnlMasters?.disabled || formState.transaction.details == null || formState.transaction.details.length == 0}
-  //               className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg flex-1 sm:flex-none"
-  //             />
-  //           </ConfettiWrapper>
-  //           <ERPButton
-  //             title={t("cancel")}
-  //             variant="secondary"
-  //             onClick={() => goToPreviousPage()}
-  //             localInputBox={formState?.userConfig?.inputBoxStyle}
-  //             startIcon={<X className="w-3.5 h-3.5" />}
-  //             className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg flex-1 sm:flex-none"
-  //           />
-  //         </div>
-  //       </div>
-  //     </div>
-  //   </div>
-  // );
+        <div className={`p-2 dark:bg-dark-bg-card bg-gray-100 border-t dark:border-dark-border border-gray-200 flex ${footerLayout === "vertical" ? "flex-col" : "flex-col md:flex-row justify-between items-center gap-4"}`}>
+          <div>
+            {/* {formState.formElements.printOnSave.visible && ( */}
+            <ERPCheckbox
+              localInputBox={formState?.userConfig?.inputBoxStyle}
+              id="printOnSave"
+              label={t(formState.formElements.printOnSave.label)}
+              checked={formState.printOnSave}
+              onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { printOnSave: e.target.checked }, }))}
+              disabled={formState.formElements.printOnSave?.disabled}
+              className="dark:text-dark-text"
+            />
+            {/* )} */}
+          </div>
+          <div className="flex justify-end gap-2 w-full sm:w-auto">
+            <ConfettiWrapper onOriginalClick={save} triggerConfetti={formState.savingCompleted}>
+              <ERPButton
+                variant="primary"
+                ref={btnSaveRef}
+                jumpTarget="save"
+                title={t("save")}
+                startIcon={<Check className="w-3.5 h-3.5" />}
+                localInputBox={formState?.userConfig?.inputBoxStyle}
+                disabled={formState.formElements.pnlMasters?.disabled || formState.transaction.details == null || formState.transaction.details.length == 0}
+                className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg flex-1 sm:flex-none"
+              />
+            </ConfettiWrapper>
+            <ERPButton
+              title={t("cancel")}
+              variant="secondary"
+              onClick={() => goToPreviousPage()}
+              localInputBox={formState?.userConfig?.inputBoxStyle}
+              startIcon={<X className="w-3.5 h-3.5" />}
+              className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg flex-1 sm:flex-none"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
-  // const dropdownContent = (
-  //   <div className="p-2 dark:bg-dark-bg-card bg-white border border-gray-300 dark:border md:border-t md:border-r md:border-l md:border-b-0 md:rounded-t-lg rounded-lg md:rounded-none">
-  //     <div className="flex items-end gap-2 flex-wrap">
-  //       {/* <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
-  //         <PriceCategoryCombobox
-  //           formState={formState}
-  //           dispatch={dispatch}
-  //           t={t}
-  //           handleKeyDown={handleKeyDown}
-  //           handleFieldKeyDown={handleFieldKeyDown}
-  //         />
-  //       </div>
-  //         <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
-  //         <SupplyTypeCombobox
-  //           formState={formState}
-  //           dispatch={dispatch}
-  //           t={t}
-  //           handleKeyDown={handleKeyDown}
-  //           handleFieldKeyDown={handleFieldKeyDown}
-  //         />
-  //         </div> */}
-  //       {!showWarehouseOutside && (
-  //         <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
-  //           {warehouseComponent}
-  //         </div>
-  //       )}
-  //       {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
-  //         <>
-  //           {!showCostCentreOutside && (
-  //             <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
-  //               {costCentreComponent}
-  //             </div>
-  //           )}
-  //         </>
-  //       )}
-  //       {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
-  //         <>
-  //           {!showAdjustmentOutside && (
-  //             <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
-  //               {adjustmentComponent}
-  //             </div>
-  //           )}
-  //         </>
-  //       )}
-  //       {applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && !showAttachmentOutside && (
-  //         <div className="w-full mb-2 sm:mb-0 sm:w-auto">
-  //           {attachmentComponent}
-  //         </div>
-  //       )}
-  //       <ERPButton
-  //         title={t('privilege_card')}
-  //         onClick={handlePrivilegeCardOpen}
-  //       />
-  //       <ERPButton
-  //         title={t('tender')}
-  //         onClick={handleTenderOpen}
-  //       />
-  //       {formState.tenderOpen && (
-  //         <Tender
-  //           isOpen={formState.tenderOpen}
-  //           onClose={handleTenderClose}
-  //           t={t}
-  //         />
-  //       )}
-  //       {
-  //         formState.privilegeCardOpen && (
-  //           <PrivilegeCardEntry
-  //             isOpen={formState.privilegeCardOpen}
-  //             onClose={handlePrivilegeCardClose}
-  //             t={t}
-  //             data={""}
-  //           />
-  //         )
-  //       }
-  //       {/* <div className="w-full mb-2 sm:mb-0 sm:w-auto">
-  //           {checkboxesComponent}
-  //         </div> */}
-  //       <div className="flex items-center justify-between w-full">
-  //         {formState.formElements.printOnSave.visible && (
-  //           <ERPCheckbox
-  //             localInputBox={formState?.userConfig?.inputBoxStyle}
-  //             id="printOnSave"
-  //             label={t(formState.formElements.printOnSave.label)}
-  //             checked={formState.printOnSave}
-  //             onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { printOnSave: e.target.checked }, }))}
-  //             disabled={formState.formElements.printOnSave?.disabled}
-  //             className="dark:text-dark-text"
-  //           />
-  //         )}
-  //       </div>
-  //       <div className="flex md:hidden flex-col w-full max-w-full">
-  //         <div className="flex flex-col gap-2 mb-2">
-  //           <div className="flex flex-wrap items-end gap-2 w-full">
-  //             {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && formState.transaction.master.voucherType !== VoucherType.PurchaseEstimate && (
-  //               <CashPaidSection
-  //                 formState={formState}
-  //                 dispatch={dispatch}
-  //                 t={t}
-  //                 focusDiscount={focusDiscount}
-  //                 focusAmount={focusAmount}
-  //               />
-  //             )}
-  //             <RoundOffInput
-  //               formState={formState}
-  //               dispatch={dispatch}
-  //               t={t}
-  //               handleKeyDown={handleKeyDown}
-  //               focusDiscount={() => document.getElementById("discountID")?.focus()}
-  //               focusAmount={() => document.getElementById("amountID")?.focus()}
-  //             />
-  //             <BillDiscountInput
-  //               formState={formState}
-  //               dispatch={dispatch}
-  //               t={t}
-  //               handleKeyDown={handleKeyDown}
-  //               applyDiscountsToItems={applyDiscountsToItems}
-  //             />
-  //           </div>
-  //           <ERPTextarea
-  //             id="remarks"
-  //             required={true}
-  //             localInputBox={formState?.userConfig?.inputBoxStyle}
-  //             label={t(formState.formElements.remarks.label)}
-  //             value={formState.transaction.master.remarks}
-  //             onChange={(e) => dispatch(formStateTransactionMasterHandleFieldChange({ fields: { remarks: e.target?.value }, }))}
-  //             disabled={formState.formElements.remarks?.disabled || formState.formElements.pnlMasters?.disabled}
-  //             className={`dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text ${isNewFooter ? "h-[42px]" : ""} w-full`}
-  //           />
-  //         </div>
-  //       </div>
-  //     </div>
-  //   </div>
-  // );
+  const dropdownContent = (
+    <div className="p-2 dark:bg-dark-bg-card bg-white border border-gray-300 dark:border md:border-t md:border-r md:border-l md:border-b-0 md:rounded-t-lg rounded-lg md:rounded-none">
+      <div className="flex items-end gap-2 flex-wrap">
+        {/* <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
+          <PriceCategoryCombobox
+            formState={formState}
+            dispatch={dispatch}
+            t={t}
+            handleKeyDown={handleKeyDown}
+            handleFieldKeyDown={handleFieldKeyDown}
+          />
+        </div>
+          <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
+          <SupplyTypeCombobox
+            formState={formState}
+            dispatch={dispatch}
+            t={t}
+            handleKeyDown={handleKeyDown}
+            handleFieldKeyDown={handleFieldKeyDown}
+          />
+          </div> */}
+        {!showWarehouseOutside && (
+          <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
+            {warehouseComponent}
+          </div>
+        )}
+        {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+          <>
+            {!showCostCentreOutside && (
+              <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
+                {costCentreComponent}
+              </div>
+            )}
+          </>
+        )}
+        {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+          <>
+            {!showAdjustmentOutside && (
+              <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
+                {adjustmentComponent}
+              </div>
+            )}
+          </>
+        )}
+        {applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && !showAttachmentOutside && (
+          <div className="w-full mb-2 sm:mb-0 sm:w-auto">
+            {attachmentComponent}
+          </div>
+        )}
+        <ERPButton
+          title={t('privilege_card')}
+          onClick={handlePrivilegeCardOpen}
+        />
+        <ERPButton
+          title={t('tender')}
+          onClick={handleTenderOpen}
+        />
+        <ERPButton
+          title={t('pending')}
+        // onClick={handleTenderOpen}
+        />
+        {formState.tenderOpen && (
+          <Tender
+            isOpen={formState.tenderOpen}
+            onClose={handleTenderClose}
+            t={t}
+          />
+        )}
+        {
+          formState.privilegeCardOpen && (
+            <PrivilegeCardEntry
+              isOpen={formState.privilegeCardOpen}
+              onClose={handlePrivilegeCardClose}
+              t={t}
+              data={""}
+            />
+          )
+        }
+        <div className="w-full mb-2 sm:mb-0 sm:w-auto">
+          {checkboxesComponent}
+        </div>
+        <div className="flex items-center justify-between w-full">
+          {formState.formElements.printOnSave.visible && (
+            <ERPCheckbox
+              localInputBox={formState?.userConfig?.inputBoxStyle}
+              id="printOnSave"
+              label={t(formState.formElements.printOnSave.label)}
+              checked={formState.printOnSave}
+              onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { printOnSave: e.target.checked }, }))}
+              disabled={formState.formElements.printOnSave?.disabled}
+              className="dark:text-dark-text"
+            />
+          )}
+        </div>
+        <div className="flex md:hidden flex-col w-full max-w-full">
+          <div className="flex flex-col gap-2 mb-2">
+            <div className="flex flex-wrap items-end gap-2 w-full">
+              {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && formState.transaction.master.voucherType !== VoucherType.PurchaseEstimate && (
+                <CashPaidSection
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  focusDiscount={focusDiscount}
+                  focusAmount={focusAmount}
+                />
+              )}
+              <RoundOffInput
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                handleKeyDown={handleKeyDown}
+                focusDiscount={() => document.getElementById("discountID")?.focus()}
+                focusAmount={() => document.getElementById("amountID")?.focus()}
+              />
+              <BillDiscountInput
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+                handleKeyDown={handleKeyDown}
+                applyDiscountsToItems={applyDiscountsToItems}
+              />
+            </div>
+            <ERPTextarea
+              id="remarks"
+              required={true}
+              localInputBox={formState?.userConfig?.inputBoxStyle}
+              label={t(formState.formElements.remarks.label)}
+              value={formState.transaction.master.remarks}
+              onChange={(e) => dispatch(formStateTransactionMasterHandleFieldChange({ fields: { remarks: e.target?.value }, }))}
+              disabled={formState.formElements.remarks?.disabled || formState.formElements.pnlMasters?.disabled}
+              className={`dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text ${isNewFooter ? "h-[42px]" : ""} w-full`}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
-  // const minimalContent = (
-  //   <div className="p-2 mt-1 mb-2 sm:mb-3 dark:bg-dark-bg-card bg-gray-50 border dark:border-dark-border border-gray-200 rounded-lg">
-  //     <div className="grid grid-cols-1 gap-1.5">
-  //       <NetAmountInput
-  //         formState={formState}
-  //         dispatch={dispatch}
-  //         t={t}
-  //         handleKeyDown={handleKeyDown}
-  //       />
-  //       <VatAmountLabel
-  //         formState={formState}
-  //         dispatch={dispatch}
-  //         t={t}
-  //         taxData={taxData}
-  //       />
-  //       <BillDiscountLabel
-  //         formState={formState}
-  //         dispatch={dispatch}
-  //         t={t}
-  //       />
-  //       {/* <NetTotalLabel
-  //         formState={formState}
-  //         dispatch={dispatch}
-  //         t={t}
-  //       /> */}
-  //       {formState.formElements.grandTotalFc.visible && (
-  //         <div>
-  //           <div className="flex items-center justify-between dark:text-dark-text">
-  //             <span>
-  //               {t(formState.formElements.grandTotalFc.label)}:
-  //             </span>
-  //             <span>{formState.transaction.master.grandTotalFc}</span>
-  //           </div>
-  //         </div>
-  //       )}
-  //     </div>
-  //   </div>
-  // );
+  const minimalContent = (
+    <div className="p-2 mt-1 mb-2 sm:mb-3 dark:bg-dark-bg-card bg-gray-50 border dark:border-dark-border border-gray-200 rounded-lg">
+      <div className="grid grid-cols-1 gap-1.5">
+        <NetAmountInput
+          formState={formState}
+          dispatch={dispatch}
+          t={t}
+          handleKeyDown={handleKeyDown}
+        />
+        <VatAmountLabel
+          formState={formState}
+          dispatch={dispatch}
+          t={t}
+          taxData={taxData}
+        />
+        <BillDiscountLabel
+          formState={formState}
+          dispatch={dispatch}
+          t={t}
+        />
+        {/* <NetTotalLabel
+          formState={formState}
+          dispatch={dispatch}
+          t={t}
+        /> */}
+        {formState.formElements.grandTotalFc.visible && (
+          <div>
+            <div className="flex items-center justify-between dark:text-dark-text">
+              <span>
+                {t(formState.formElements.grandTotalFc.label)}:
+              </span>
+              <span>{formState.transaction.master.grandTotalFc}</span>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 
-  // const selectedFooter = renderSecondFooter();
-  // const getInputHeight = () => {
-  //   return formState.userConfig?.inputBoxStyle?.inputSize == "sm" ? remToPx(0) : formState.userConfig?.inputBoxStyle?.inputSize == "md" ? remToPx(0.75) : formState.userConfig?.inputBoxStyle?.inputSize == "lg" ? remToPx(1.375) : formState.userConfig?.inputBoxStyle?.inputSize == "customize" ? (remToPx(formState.userConfig?.inputBoxStyle?.inputHeight) ?? 0) - 23 : 0
-  // }
+  const selectedFooter = renderSecondFooter();
+  const getInputHeight = () => {
+    return formState.userConfig?.inputBoxStyle?.inputSize == "sm" ? remToPx(0) : formState.userConfig?.inputBoxStyle?.inputSize == "md" ? remToPx(0.75) : formState.userConfig?.inputBoxStyle?.inputSize == "lg" ? remToPx(1.375) : formState.userConfig?.inputBoxStyle?.inputSize == "customize" ? (remToPx(formState.userConfig?.inputBoxStyle?.inputHeight) ?? 0) - 23 : 0
+  }
 
-  // if (formState.userConfig?.footerPosition === "right") {
-  //   return (
-  //     <div
-  //       className={`fixed ${isRtl ? "left-0" : "right-0"} h-[-webkit-fill-available] overflow-y-scroll w-[280px] sm:w-[300px] shadow-lg p-2 z-30`}
-  //       style={{ top: `${170 + (getInputHeight())}px`, backgroundColor: formState.userConfig?.footerBg ? `rgb(${formState.userConfig.footerBg})` : '#f8f8ff', }}>
-  //       {renderSecondFooter()}
-  //     </div>
-  //   );
-  // } else {
-  //   return (
-  //     <>
-  //       {dropupState !== 'closed' && hasDropupContent && (
-  //         <div className="fixed inset-0 bg-black/20 dark:bg-black/30 backdrop-blur-sm z-30" onClick={() => setDropupState('closed')} />
-  //       )}
-  //       {!deviceInfo?.isMobile && (
-  //         <div className={`fixed dark:bg-dark-bg ${footerLayout === "vertical" ? `top-[170px] ${isRtl ? "left-0" : "right-0"} h-[-webkit-fill-available] w-[280px] sm:w-[300px] overflow-y-auto p-2 z-20 bg-white border-l dark:border-dark-border border-l-slate-200` : "z-40 bottom-0 shadow-lg full-available-width dark:bg-dark-bg bg-[#f8f8ff]"}`}>
-  //           {hasDropupContent && (
-  //             <div className={`${footerLayout === "vertical" ? "hidden" : "block"}`}>
-  //               <div className="relative w-full">
-  //                 <div className="absolute left-1/2 transform -translate-x-1/2 top-[-18px]">
-  //                   <button onClick={handleIconClick} className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-[#f8f8ff] rounded-t-full border border-l-0 border-r-0 border-b-0 border-gray-300 transition-all duration-300 ${dropupState !== 'closed' ? "dark:bg-dark-hover-bg bg-gray-100" : ""}`} style={{ boxShadow: "0 -2px 2px rgba(0, 0, 0, 0.1)" }}>
-  //                     <ChevronUp className={`mx-2 transition-transform duration-500 dark:text-dark-text ${dropupState === 'full' ? "transform rotate-180" : hasAnimated ? "" : "animate-[bounce_2s_1]"}`} size={24} />
-  //                   </button>
-  //                 </div>
-  //               </div>
-  //               <div ref={dropUpRef} className={`w-full pt-2 transition-all duration-500 ease-in-out overflow-y-auto ${dropupState === 'full' ? "max-h-[50vh]" : "max-h-0"}`}>
-  //                 {dropdownContent}
-  //               </div>
-  //             </div>
-  //           )}
-  //           {selectedFooter}
-  //           {setIsOpentwo &&
-  //             <BottomSidebar
-  //               isOpen={isOpentwo}
-  //               setIsOpen={setIsOpentwo}
-  //               minHeight={200}
-  //               maxHeight={600}
-  //               initialHeight={400}>
-  //               <div>
-  //                 <div style={sidebarHeaderStyle}>
-  //                   <button style={{ ...closeButtonStyle, color: "var(--dark-text, #374151)", borderColor: "var(--dark-border, #e5e7eb)", }} onClick={() => setIsOpentwo(false)}>
-  //                     <X />
-  //                   </button>
-  //                 </div>
-  //               </div>
-  //             </BottomSidebar>
-  //           }
-  //         </div>
-  //       )}
-  //       {deviceInfo?.isMobile && (
-  //         <div className="z-40 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg full-available-width px-2 sm:px-3 py-2 mb-[65px]"
-  //           style={{ boxShadow: "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)", }}>
-  //           {hasDropupContent && (
-  //             <>
-  //               <div className="relative w-full">
-  //                 <div className="absolute left-1/2 transform -translate-x-1/2 -top-8">
-  //                   <button
-  //                     onClick={handleIconClick}
-  //                     className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-[#f8f8ff] rounded-t-lg border border-b-0 border-gray-300 transition-all duration-300 ${dropupState !== 'closed' ? "dark:bg-dark-hover-bg bg-gray-100" : ""}`}
-  //                     style={{ boxShadow: "0 -2px 4px rgba(0, 0, 0, 0.1)" }}>
-  //                     <ChevronUp className={`mx-2 transition-transform duration-500 dark:text-dark-text ${dropupState === 'full' ? "transform rotate-180" : hasAnimated ? "" : "animate-[bounce_2s_1]"}`} size={24} />
-  //                   </button>
-  //                 </div>
-  //               </div>
-  //               <div
-  //                 ref={dropUpRef}
-  //                 className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${dropupState !== 'closed' ? "max-h-[50vh] overflow-y-auto overflow-x-hidden" : "max-h-0 overflow-hidden"}`}
-  //                 style={{ width: "100%", boxSizing: "border-box" }}>
-  //                 {dropupState === 'minimal' ? minimalContent : <> {dropdownContent} {minimalContent} </>}
-  //               </div>
-  //             </>
-  //           )}
-  //           <div className="flex items-end justify-end gap-2 sm:gap-4">
-  //             <div className="grid grid-cols-1 gap-1">
-  //               {formState.formElements.grandTotalFc.visible && (
-  //                 <div>
-  //                   <div className="flex items-center justify-between dark:text-dark-text text-xs sm:text-sm">
-  //                     <span>
-  //                       {t(formState.formElements.grandTotalFc.label)}
-  //                     </span>
-  //                     <span>:{formState.transaction.master.grandTotalFc}</span>
-  //                   </div>
-  //                 </div>
-  //               )}
-  //             </div>
-  //             <div className="flex items-center gap-2">
-  //               {/* <div className="hidden sm:block mr-2">
-  //                 <h6 className="font-semibold whitespace-nowrap text-[18px] sm:text-[20px] dark:text-dark-text">
-  //                   <span className="!font-medium dark:!text-dark-text !text-gray-600 text-sm sm:text-base">
-  //                       {t("total")}:{" "}
-  //                     </span>
-  //                     {getFormattedValue(formState.transaction.master?.roundAmount ?? 0)}
-  //                   </h6>
-  //               </div> */}
-  //               <div className="fixed bottom-0 left-0 w-full dark:bg-dark-bg-card bg-[#f8f8ff] flex flex-col py-2 z-10">
-  //                 <div>
-  //                   <div className="flex justify-between items-center px-2">
-  //                     <span className="text-xs sm:text-sm font-bold dark:text-dark-text text-gray-900 uppercase">
-  //                       {t(formState.formElements.grandTotal.label)}
-  //                     </span>
-  //                     <span className="text-base sm:text-lg font-bold text-[#3b82f6]">
-  //                       {getFormattedValue(formState.transaction.master?.grandTotal ?? 0)}
-  //                     </span>
-  //                   </div>
-  //                 </div>
-  //                 <div className="flex gap-2 px-2 sm:px-4">
-  //                   <ERPButton
-  //                     title={t("close")}
-  //                     onClick={() => goToPreviousPage()}
-  //                     className="flex-1 rounded-none !m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg text-sm sm:text-base"
-  //                     localInputBox={formState?.userConfig?.inputBoxStyle}
-  //                   />
-  //                   <ConfettiWrapper onOriginalClick={save}>
-  //                     <ERPButton
-  //                       localInputBox={formState?.userConfig?.inputBoxStyle}
-  //                       ref={btnSaveRef}
-  //                       title={t("save")}
-  //                       jumpTarget="save"
-  //                       variant="primary"
-  //                       className="flex-1 rounded-none !m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg text-sm sm:text-base"
-  //                       disabled={formState.formElements.pnlMasters?.disabled || formState.transaction.details == null || formState.transaction.details.length == 0 || formState.transactionLoading}
-  //                     />
-  //                   </ConfettiWrapper>
-  //                 </div>
-  //               </div>
-  //             </div>
-  //           </div>
-  //           {setIsOpentwo &&
-  //             <BottomSidebar
-  //               isOpen={isOpentwo}
-  //               setIsOpen={setIsOpentwo}
-  //               minHeight={200}
-  //               maxHeight={600}
-  //               initialHeight={400}>
-  //               <div>
-  //                 <div style={sidebarHeaderStyle}>
-  //                   <button
-  //                     style={{ ...closeButtonStyle, color: "var(--dark-text, #374151)", borderColor: "var(--dark-border, #e5e7eb)", }}
-  //                     onClick={() => setIsOpentwo(false)} >
-  //                     <X />
-  //                   </button>
-  //                 </div>
-  //               </div>
-  //             </BottomSidebar>
-  //           }
-  //         </div>
-  //       )}
-  //     </>
-  //   );
-  // }
-  return (<></>)
+  if (formState.userConfig?.footerPosition === "right") {
+    return (
+      <div
+        className={`fixed ${isRtl ? "left-0" : "right-0"} h-[-webkit-fill-available] overflow-y-scroll w-[280px] sm:w-[300px] shadow-lg p-2 z-30`}
+        style={{ top: `${170 + (getInputHeight())}px`, backgroundColor: formState.userConfig?.footerBg ? `rgb(${formState.userConfig.footerBg})` : '#f8f8ff', }}>
+        {renderSecondFooter()}
+      </div>
+    );
+  } else {
+    return (
+      <>
+        {dropupState !== 'closed' && hasDropupContent && (
+          <div className="fixed inset-0 bg-black/20 dark:bg-black/30 backdrop-blur-sm z-30" onClick={() => setDropupState('closed')} />
+        )}
+        {!deviceInfo?.isMobile && (
+          <div className={`fixed dark:bg-dark-bg ${footerLayout === "vertical" ? `top-[170px] ${isRtl ? "left-0" : "right-0"} h-[-webkit-fill-available] w-[280px] sm:w-[300px] overflow-y-auto p-2 z-20 bg-white border-l dark:border-dark-border border-l-slate-200` : "z-40 bottom-0 shadow-lg full-available-width dark:bg-dark-bg bg-[#f8f8ff]"}`}>
+            {hasDropupContent && (
+              <div className={`${footerLayout === "vertical" ? "hidden" : "block"}`}>
+                <div className="relative w-full">
+                  <div className="absolute left-1/2 transform -translate-x-1/2 top-[-18px]">
+                    <button onClick={handleIconClick} className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-[#f8f8ff] rounded-t-full border border-l-0 border-r-0 border-b-0 border-gray-300 transition-all duration-300 ${dropupState !== 'closed' ? "dark:bg-dark-hover-bg bg-gray-100" : ""}`} style={{ boxShadow: "0 -2px 2px rgba(0, 0, 0, 0.1)" }}>
+                      <ChevronUp className={`mx-2 transition-transform duration-500 dark:text-dark-text ${dropupState === 'full' ? "transform rotate-180" : hasAnimated ? "" : "animate-[bounce_2s_1]"}`} size={24} />
+                    </button>
+                  </div>
+                </div>
+                <div ref={dropUpRef} className={`w-full pt-2 transition-all duration-500 ease-in-out overflow-y-auto ${dropupState === 'full' ? "max-h-[50vh]" : "max-h-0"}`}>
+                  {dropdownContent}
+                </div>
+              </div>
+            )}
+            {selectedFooter}
+            {setIsOpentwo &&
+              <BottomSidebar
+                isOpen={isOpentwo}
+                setIsOpen={setIsOpentwo}
+                minHeight={200}
+                maxHeight={600}
+                initialHeight={400}>
+                <div>
+                  <div style={sidebarHeaderStyle}>
+                    <button style={{ ...closeButtonStyle, color: "var(--dark-text, #374151)", borderColor: "var(--dark-border, #e5e7eb)", }} onClick={() => setIsOpentwo(false)}>
+                      <X />
+                    </button>
+                  </div>
+                </div>
+              </BottomSidebar>
+            }
+          </div>
+        )}
+        {deviceInfo?.isMobile && (
+          <div className="z-40 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg full-available-width px-2 sm:px-3 py-2 mb-[65px]"
+            style={{ boxShadow: "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)", }}>
+            {hasDropupContent && (
+              <>
+                <div className="relative w-full">
+                  <div className="absolute left-1/2 transform -translate-x-1/2 -top-8">
+                    <button
+                      onClick={handleIconClick}
+                      className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-[#f8f8ff] rounded-t-lg border border-b-0 border-gray-300 transition-all duration-300 ${dropupState !== 'closed' ? "dark:bg-dark-hover-bg bg-gray-100" : ""}`}
+                      style={{ boxShadow: "0 -2px 4px rgba(0, 0, 0, 0.1)" }}>
+                      <ChevronUp className={`mx-2 transition-transform duration-500 dark:text-dark-text ${dropupState === 'full' ? "transform rotate-180" : hasAnimated ? "" : "animate-[bounce_2s_1]"}`} size={24} />
+                    </button>
+                  </div>
+                </div>
+                <div
+                  ref={dropUpRef}
+                  className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${dropupState !== 'closed' ? "max-h-[50vh] overflow-y-auto overflow-x-hidden" : "max-h-0 overflow-hidden"}`}
+                  style={{ width: "100%", boxSizing: "border-box" }}>
+                  {dropupState === 'minimal' ? minimalContent : <> {dropdownContent} {minimalContent} </>}
+                </div>
+              </>
+            )}
+            <div className="flex items-end justify-end gap-2 sm:gap-4">
+              <div className="grid grid-cols-1 gap-1">
+                {formState.formElements.grandTotalFc.visible && (
+                  <div>
+                    <div className="flex items-center justify-between dark:text-dark-text text-xs sm:text-sm">
+                      <span>
+                        {t(formState.formElements.grandTotalFc.label)}
+                      </span>
+                      <span>:{formState.transaction.master.grandTotalFc}</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div className="flex items-center gap-2">
+                {/* <div className="hidden sm:block mr-2">
+                  <h6 className="font-semibold whitespace-nowrap text-[18px] sm:text-[20px] dark:text-dark-text">
+                    <span className="!font-medium dark:!text-dark-text !text-gray-600 text-sm sm:text-base">
+                        {t("total")}:{" "}
+                      </span>
+                      {getFormattedValue(formState.transaction.master?.roundAmount ?? 0)}
+                    </h6>
+                </div> */}
+                <div className="fixed bottom-0 left-0 w-full dark:bg-dark-bg-card bg-[#f8f8ff] flex flex-col py-2 z-10">
+                  <div>
+                    <div className="flex justify-between items-center px-2">
+                      <span className="text-xs sm:text-sm font-bold dark:text-dark-text text-gray-900 uppercase">
+                        {t(formState.formElements.grandTotal.label)}
+                      </span>
+                      <span className="text-base sm:text-lg font-bold text-[#3b82f6]">
+                        {getFormattedValue(formState.transaction.master?.grandTotal ?? 0)}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex gap-2 px-2 sm:px-4">
+                    <ERPButton
+                      title={t("close")}
+                      onClick={() => goToPreviousPage()}
+                      className="flex-1 rounded-none !m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg text-sm sm:text-base"
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                    />
+                    <ConfettiWrapper onOriginalClick={save}>
+                      <ERPButton
+                        localInputBox={formState?.userConfig?.inputBoxStyle}
+                        ref={btnSaveRef}
+                        title={t("save")}
+                        jumpTarget="save"
+                        variant="primary"
+                        className="flex-1 rounded-none !m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg text-sm sm:text-base"
+                        disabled={formState.formElements.pnlMasters?.disabled || formState.transaction.details == null || formState.transaction.details.length == 0 || formState.transactionLoading}
+                      />
+                    </ConfettiWrapper>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {setIsOpentwo &&
+              <BottomSidebar
+                isOpen={isOpentwo}
+                setIsOpen={setIsOpentwo}
+                minHeight={200}
+                maxHeight={600}
+                initialHeight={400}>
+                <div>
+                  <div style={sidebarHeaderStyle}>
+                    <button
+                      style={{ ...closeButtonStyle, color: "var(--dark-text, #374151)", borderColor: "var(--dark-border, #e5e7eb)", }}
+                      onClick={() => setIsOpentwo(false)} >
+                      <X />
+                    </button>
+                  </div>
+                </div>
+              </BottomSidebar>
+            }
+          </div>
+        )}
+      </>
+    );
+  }
 };
 
 export default TransactionFooter;

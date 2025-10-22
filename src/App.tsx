@@ -66,7 +66,7 @@ export const LoadingAnimation = () => {
   );
 };
 
-
+ 
 function App() {
    const [isOnline, setIsOnline] = useState(navigator.onLine);
    const location = useLocation();

@@ -4,9 +4,10 @@ import ErpDevGrid, { SummaryConfig, } from "../../../../../components/ERPCompone
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import Urls from "../../../../../redux/urls";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import { erpParseFloat } from "../../../../../utilities/Utils";
+import { Button } from "@mui/material";
 
 const CounterReport = () => {
   const { t } = useTranslation("accountsReport");
@@ -321,6 +322,19 @@ const CounterReport = () => {
     },
   ];
 
+
+  const [asonDate, setAsonDate] = useState(new Date());
+  const [filter, setFilter] = useState({ asonDate: new Date() });
+
+const handleChangeDate = (delta: number) => {
+    const newDate = new Date(asonDate);
+    newDate.setDate(newDate.getDate() + delta);
+    setAsonDate(newDate);
+    setFilter((prevFilter) => ({
+      ...prevFilter,
+      asonDate: newDate,
+    }));
+  };
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -328,6 +342,7 @@ const CounterReport = () => {
           <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
+                key={asonDate.toISOString()}
                 summaryItems={summaryItems}
                 remoteOperations={{
                   filtering: false,
@@ -335,15 +350,23 @@ const CounterReport = () => {
                   sorting: false,
                 }}
                 columns={columns}
-                filterInitialData={{ asonDate: new Date() }}
-                gridHeader={t("counter_report")}
-                filterText="On : {asonDate}"
+                filterInitialData={{ asonDate }}
+                // onFilterChanged={(newFilter: any) => setFilter(newFilter)}
+                // gridHeader={t("counter_report")}
+                // filterText="On : {asonDate}"
+                gridHeader={`${t("counter_report")} On: ${asonDate.toLocaleDateString()}`}
+                // filterText={`On: ${asonDate.toLocaleDateString()}`}
                 dataUrl={Urls.counter_report}
                 hideGridAddButton={true}
                 enablefilter={false}
                 method={ActionType.POST}
                 reload={true}
                 gridId="grd_counter_report"
+                showPlusMinusButton={true}
+                // postData={{ ...filter, asonDate }}
+                customToolbarItems={[
+                  { location: 'before', item: (<Button variant="contained" color="inherit" onClick={()=>handleChangeDate(-1)}> {t("-")}  </Button>) },
+                  { location: 'before', item: (<Button variant="contained" color="inherit" onClick={()=>handleChangeDate(1)}> {t("+")}  </Button>) },]}
               />
             </div>
           </div>

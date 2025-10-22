@@ -62,19 +62,32 @@ const CustomerVisitTotalVisitFilter = ({ getFieldProps, handleFieldChange, formS
           />
         </div> */}
 
-        <ERPCheckbox
+         {/* Not works as expected */}
+        {/* <ERPCheckbox
           id="zeroVisit"
           {...getFieldProps("zeroVisit")}
           label={t("zero_visit")}
           checked={formState.zeroVisit}
-          onChange={(e) => handleFieldChange("zeroVisit", e.target.checked)}
-        />
-        <ERPCheckbox
+          onChange={(data) => handleFieldChange("zeroVisit", data.target.checked)}
+        /> */}
+         {/* Not works as expected */}
+        {/* <ERPCheckbox
           id="showSupplier"
           {...getFieldProps("showSupplier")}
           label={t("include_suppliers")}
           checked={formState.showSupplier}
           onChange={(e) => handleFieldChange("showSupplier", e.target.checked)}
+        /> */}
+       <ERPCheckbox
+            {...getFieldProps("zeroVisit")}
+            label={t("zero_visit")}
+            onChangeData={(data) => handleFieldChange("zeroVisit", data.zeroVisit)}
+        />
+        
+        <ERPCheckbox
+            {...getFieldProps("showSupplier")}
+            label={t("include_suppliers")}
+            onChangeData={(data) => handleFieldChange("showSupplier", data.showSupplier)}
         />
       </div>
     </div >

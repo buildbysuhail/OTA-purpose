@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { ChevronDown, Search, X } from "lucide-react";
+import { ArrowBigDownDash, BadgePlus, ChevronDown, Ellipsis, Search, X } from "lucide-react";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
@@ -37,6 +37,8 @@ import axios from "axios";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import OrderNo from "./components/order-number";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
+import DraftMode from "./draft-mode";
+import ERPRadio from "../../../../components/ERPComponents/erp-radio";
 
 interface TransactionHeaderProps {
   formState: TransactionFormState;
@@ -141,6 +143,28 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
         fields: { ledgerDetails: false },
       })
     );
+  };
+
+  const handleDraftModeOpen = () => {
+    dispatch(
+      formStateHandleFieldChange({
+        fields: { draftModeModal: true },
+      })
+    );
+  };
+
+  const handleDraftModeClose = () => {
+    dispatch(
+      formStateHandleFieldChange({
+        fields: { draftModeModal: false },
+      })
+    );
+  };
+
+  const [paymentMethod, setPaymentMethod] = useState<"cash" | "credit" | null>(null);
+
+  const handleChange = (value: string) => {
+    setPaymentMethod(value as "cash" | "credit");
   };
 
   const handleApproveClick = async () => {
@@ -398,16 +422,16 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
           >
             <div className="p-4 md:p-2 dark:bg-dark-bg-card bg-white border-t dark:border-dark-border border-gray-300 shadow-lg">
               <div className="flex flex-wrap !items-end gap-1">
-                <Employee
+                {/* <Employee
                   dispatch={dispatch}
                   formState={formState}
                   t={t}
                   transactionType={transactionType}
                   handleKeyDown={handleKeyDown}
                   handleFieldKeyDown={handleFieldKeyDown}
-                />
+                /> */}
 
-                <div className={`${isRtl ? "mr-0 ml-3" : "mr-3 ml-0"}`}>
+                {/* <div className={`${isRtl ? "mr-0 ml-3" : "mr-3 ml-0"}`}>
                   <DebitAccount
                     dispatch={dispatch}
                     transactionType={transactionType}
@@ -416,35 +440,36 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     handleKeyDown={handleKeyDown}
                     handleFieldKeyDown={handleFieldKeyDown}
                   />
-                </div>
+                </div> */}
 
-                {formState.transaction.master.voucherType !==
-                  VoucherType.GoodsReceiptNote && (
-                    <Project
-                      dispatch={dispatch}
-                      formState={formState}
-                      t={t}
-                      handleKeyDown={handleKeyDown}
-                      handleFieldKeyDown={handleFieldKeyDown}
-                    />
-                  )}
-
-                <InvoiceValue
+                {/* {formState.transaction.master.voucherType !==
+                  VoucherType.GoodsReceiptNote && ( */}
+                <Project
                   dispatch={dispatch}
                   formState={formState}
                   t={t}
                   handleKeyDown={handleKeyDown}
+                  handleFieldKeyDown={handleFieldKeyDown}
                 />
+                {/* )} */}
 
-                <LedgerCode
+                {/* <InvoiceValue
+                  dispatch={dispatch}
+                  formState={formState}
+                  t={t}
+                  handleKeyDown={handleKeyDown}
+                /> */}
+
+                {/* <LedgerCode
                   ref={ledgerCodeRef}
                   handleKeyDown={handleKeyDown}
                   formState={formState}
                   dispatch={dispatch}
                   transactionType={transactionType}
                   t={t}
-                />
-                {formState.transaction.master.voucherType !==
+                /> */}
+
+                {/* {formState.transaction.master.voucherType !==
                   VoucherType.GoodsReceiptNote &&
                   formState.transaction.master.voucherType !==
                   VoucherType.PurchaseEstimate && (
@@ -455,9 +480,9 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       handleFieldKeyDown={handleFieldKeyDown}
                       handleKeyDown={handleKeyDown}
                     />
-                  )}
+                  )} */}
 
-                {formState.formElements.cbLabelDesign?.visible && (
+                {/* {formState.formElements.cbLabelDesign?.visible && (
                   <ERPDataCombobox
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     enableClearOption={false}
@@ -498,7 +523,19 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       handleKeyDown && handleKeyDown(e, "labelDesign");
                     }}
                   />
-                )}
+                )} */}
+
+                <ERPDataCombobox
+                  id="sm"
+                  field={{
+                    id: "sm",
+                    // getListUrl: Urls.,
+                    valueKey: "sm",
+                    labelKey: "smName",
+                  }}
+                  onChangeData={(data: any) => { handleFieldChange("sm", data.sm); }}
+                  label={t("sm")}
+                />
 
                 <ERPInput
                   localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -532,43 +569,46 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   disabled={formState.formElements.pnlMasters?.disabled}
                 />
 
-                {formState.transaction.master.voucherType !==
-                  VoucherType.PurchaseReturn && (
-                    <ERPInput
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      id="address2"
-                      label={t("address_2")}
-                      value={formState.transaction.master.address2}
-                      className="max-w-full"
-                      onChange={(e) =>
-                        dispatch(
-                          formStateMasterHandleFieldChange({
-                            fields: { address2: e.target?.value },
-                          })
-                        )
-                      }
-                      disabled={formState.formElements.pnlMasters?.disabled}
-                    />
-                  )}
+                <ERPInput
+                  localInputBox={formState?.userConfig?.inputBoxStyle}
+                  id="address4"
+                  label={t("mobile_number")}
+                  value={formState.transaction.master.address4}
+                  className="max-w-full"
+                  onChange={(e) =>
+                    dispatch(
+                      formStateMasterHandleFieldChange({
+                        fields: { address4: e.target?.value },
+                      })
+                    )
+                  }
+                  disabled={formState.formElements.pnlMasters?.disabled}
+                />
 
-                {formState.transaction.master.voucherType ===
-                  VoucherType.PurchaseReturn && (
-                    <ERPInput
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      id="address4"
-                      label={t("mobile_number")}
-                      value={formState.transaction.master.address4}
-                      className="max-w-full"
-                      onChange={(e) =>
-                        dispatch(
-                          formStateMasterHandleFieldChange({
-                            fields: { address4: e.target?.value },
-                          })
-                        )
-                      }
-                      disabled={formState.formElements.pnlMasters?.disabled}
-                    />
-                  )}
+                <ERPInput
+                  id="ordCardNo"
+                  label={t("ord_card_no")}
+                  placeholder={t("enter_ord_card_no")}
+                  onChangeData={(data: any) => handleFieldChange("ordCardNo", data.ordCardNo)}
+                />
+
+                <div className="flex items-end gap-2">
+                  <ERPDataCombobox
+                    id="customer"
+                    field={{
+                      id: "customer",
+                      // getListUrl: Urls.,
+                      valueKey: "customer",
+                      labelKey: "customerName",
+                    }}
+                    onChangeData={(data: any) => { handleFieldChange("customer", data.customer); }}
+                    label={t("customer")}
+                  />
+
+                  <button className="bg-gray-300 p-2 rounded-md transition duration-300 flex items-end gap-2 hover:shadow-md">
+                    {t('new')}<BadgePlus className="w-4 h-4" />
+                  </button>
+                </div>
 
                 {formState.transaction.master.voucherType ===
                   VoucherType.PurchaseOrder &&
@@ -637,6 +677,25 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   </div>
                 )} */}
 
+                <div className="flex items-end gap-3 ml-2">
+                  <ERPRadio
+                    id="cash"
+                    name="paymentMethod"
+                    value="cash"
+                    label={t("cash")}
+                    checked={paymentMethod === "cash"}
+                    onChange={(e) => handleChange(e.target.value)}
+                  />
+                  <ERPRadio
+                    id="credit"
+                    name="paymentMethod"
+                    value="credit"
+                    label={t("credit")}
+                    checked={paymentMethod === "credit"}
+                    onChange={(e) => handleChange(e.target.value)}
+                  />
+                </div>
+
                 {formState.formElements.inSearch?.visible && (
                   <ERPCheckbox
                     localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -654,6 +713,46 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     disabled={formState.formElements.pnlMasters?.disabled}
                   />
                 )}
+
+                <div className="flex items-end gap-2">
+                  <ERPCheckbox
+                    localInputBox={formState?.userConfig?.inputBoxStyle}
+                    id="draftMode"
+                    className="text-left !m-0 dark:text-dark-text"
+                    label={t(formState.formElements.draftMode.label)}
+                    checked={formState.draftMode}
+                    onChange={(e) => {
+                      dispatch(
+                        formStateHandleFieldChange({
+                          fields: { draftMode: e.target.checked },
+                        })
+                      );
+                    }}
+                    disabled={formState.formElements.pnlMasters?.disabled}
+                  />
+                  <button
+                    disabled={!formState.draftMode}
+                    onClick={handleDraftModeOpen}
+                    className={`bg-gray-300 p-2 rounded-md transition duration-300 flex-shrink-0   ${!formState.draftMode ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-md'}`}>
+                    <ArrowBigDownDash className="w-4 h-4" />
+                  </button>
+
+                  {formState.draftModeModal && (
+                    <ERPModal
+                      isOpen={formState.draftModeModal}
+                      closeModal={handleDraftModeClose}
+                      title={t('draft_mode')}
+                      width={800}
+                      height={500}
+                      content={
+                        <DraftMode
+                          closeModal={handleDraftModeClose}
+                          t={t}
+                        />
+                      }
+                    />
+                  )}
+                </div>
 
                 {formState.transaction.master.voucherType ===
                   VoucherType.PurchaseReturn && (
@@ -701,9 +800,9 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       />
                     </div>
                   )}
-                {formState.transaction.master.voucherType ===
-                  VoucherType.PurchaseReturn && (
 
+                {/* {formState.transaction.master.voucherType ===
+                  VoucherType.PurchaseReturn && (
                     <OrderNo
                       localInputBox={formState?.userConfig?.inputBoxStyle}
                       formState={formState}
@@ -713,7 +812,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       label={t("pi_ref")}
                       loadAndSetTransVoucher={loadAndSetTransVoucher}
                     />
-                  )}
+                  )} */}
 
                 {isModalOpen &&
                   isModalOpen.visible &&
@@ -788,6 +887,19 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     }
                   />
                 )}
+                <ERPButton
+                  title={t("w_stock")}
+                  variant="secondary"
+                  disabled={formState.transactionLoading}
+                  className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+                />
+
+                <ERPButton
+                  title={t("b_stock")}
+                  variant="secondary"
+                  disabled={formState.transactionLoading}
+                  className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+                />
               </div>
 
               {conditionalFooterComponents}

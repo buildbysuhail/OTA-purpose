@@ -5,7 +5,6 @@ import { thisYear } from "../utilities/ERPDateFilterData";
 import { RootState } from "../redux/store";
 import moment from "moment";
 import dayjs from "dayjs";
-import { TableColumn } from "../pages/InvoiceDesigner/Designer/interfaces";
 import { fetchTemplateFromApiById } from "../pages/use-print";
 import { isEqual, isObject } from "lodash";
 
@@ -29,7 +28,7 @@ export const formatDate = (dateStr: string): string => {
   } else {
     date = moment(dateStr, format).local();
   }
-  const str = date.format("DD/MM/YYYY");
+  const str = date.format("DD/MMM/YYYY");
   return str;
 };
 
@@ -1138,10 +1137,10 @@ export function removeDefaults(obj: any, defaults: any): any {
   return result;
 }
 export function erpParseFloat(value: string): number {
-    if (!value) return 0;
-    // Remove all commas
-    const cleaned = value.replace(/,/g, '');
-    // Parse as float
-    return parseFloat(cleaned) || 0;
+  if (!value) return 0;
+  // Remove all commas
+  const cleaned = value.replace(/,/g, '');
+  // Parse as float
+  return parseFloat(cleaned) || 0;
 }
 

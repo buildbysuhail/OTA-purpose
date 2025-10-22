@@ -1692,7 +1692,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
           labelState: {
             ...prevData?.barcodeState?.labelState,
             labelWidth: newWidthPt + (forCustomRows? ((template?.propertiesState?.padding?.right ?? 0) +(template?.propertiesState?.padding?.left ?? 0)) : 0),
-            labelHeight: newHeightPt ,
+            labelHeight: newHeightPt + (forCustomRows? (template?.propertiesState?.padding?.top ?? 0): 0),
           },
           placedComponents: prevData?.barcodeState?.placedComponents || [],
         },

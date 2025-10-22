@@ -339,7 +339,7 @@ export const useTransactionHelper = (transactionType: string) => {
     if (!(transactionDetail.productID > 0)) {
       return result;
     }
-
+debugger;
     try {
       // Initialize variables with proper null checks and defaults
 
@@ -703,7 +703,7 @@ export const useTransactionHelper = (transactionType: string) => {
       //   calculateAutoSummary(formState);
       //   calculateTotal(formState);
       // }
-
+debugger;
       result.transaction.details = [detail];
 
       if (!ignoreCalculateTotal && rowIndex >= 0) {
@@ -1326,12 +1326,12 @@ export const useTransactionHelper = (transactionType: string) => {
         (voucherType === "PO" ||
           voucherType === "PE" ||
           voucherType === "GRN" ||
-          voucherType === "PQ" ||
+          voucherType === "PQ") ||
           (formType === "VAT" &&
             voucherType !== "PO" &&
             voucherType !== "PE" &&
             voucherType !== "GRN" &&
-            voucherType !== "PQ"))
+            voucherType !== "PQ")
       ) {
         detail.vatPerc = row.vatPercentage;
         detail.vatAmount = getFormattedValueIgnoreRoundingToNumber(

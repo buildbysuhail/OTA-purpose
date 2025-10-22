@@ -63,7 +63,7 @@ export const TableColumnAddOrEdit: React.FC<TableManagerContentProps> = React.me
             label={t("width")}
             className="w-20"
             value={_column.width}
-            onChange={(e) => setColumn(prev => ({ ...prev, width: e.target.value }))}
+            onChange={(e) => setColumn(prev => ({ ...prev, width: e.target.value as any }))}
           />
           <ErpInput
             type="text"

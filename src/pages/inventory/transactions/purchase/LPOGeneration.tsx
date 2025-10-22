@@ -300,6 +300,7 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
                             { value: "re order level", label: "Re Order Level" },
                             { value: "sales analysis", label: "Sales Analysis" }
                         ]}
+                        enableClearOption={false}
                         onSelectItem={(data) => handleFieldChange({ method: data.value })}
                     />
                     <ERPDataCombobox

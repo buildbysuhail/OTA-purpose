@@ -264,6 +264,12 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
     template?.propertiesState?.height
   );
 
+  const customePageWidth = selectedPageSize.width - ((template?.propertiesState?.padding?.left??0) + (template?.propertiesState?.padding?.right??0)  )
+   const [customePageHeight, setCustomePageHeight] = useState(200);
+
+   
+
+
   // Components configuration
   const components = [
     {
@@ -1987,7 +1993,7 @@ debugger;
       }
       const loadedElements = nestedValue?.elements || [];
       const expandedComponents = expandContainerChildren(loadedElements);
-
+       setCustomePageHeight(( nestedValue?.height)-(template.propertiesState?.padding?.top??0));
       setTemplateData((prev: TemplateState<unknown>) => ({
         ...prev,
         barcodeState: {
@@ -1995,12 +2001,12 @@ debugger;
           placedComponents: expandedComponents || [],
           labelState: {
             ...prev.barcodeState?.labelState,
-            labelHeight: nestedValue?.height || 200,
-            labelWidth: selectedPageSize?.width,
+            labelHeight:( nestedValue?.height  || 200)+ (template.propertiesState?.padding?.top??0),
+            labelWidth:selectedPageSize.width,
           },
         },
       }));
-
+     
       setDesignerData((prev) => ({
         ...prev,
         background_image: nestedValue?.background_image || "",
@@ -2011,7 +2017,7 @@ debugger;
 
       }));
     }
-  }, []);
+  }, [templateData]);
 
   useEffect(() => {
     templateData?.barcodeState?.placedComponents?.forEach(generateBarcode);
@@ -2031,8 +2037,8 @@ debugger;
   // Computed values
   const labelWidthPt = templateData?.barcodeState?.labelState?.labelWidth ?? 300;
   const labelHeightPt = templateData?.barcodeState?.labelState?.labelHeight ?? 200;
-  const labelWidthPx = ptToPx(labelWidthPt);
-  const labelHeightPx = ptToPx(labelHeightPt);
+  const labelWidthPx = forCustomRows ?ptToPx(customePageWidth)  : ptToPx(labelWidthPt);
+  const labelHeightPx = forCustomRows ?ptToPx(customePageHeight)  : ptToPx(labelHeightPt) ;
 
   const bgImage = forCustomRows
     ? designerData?.background_image
@@ -2181,7 +2187,11 @@ debugger;
               ((templateData?.propertiesState?.gap?.hgap ?? 0) *
                 ((templateData?.barcodeState?.labelState?.rowsPerPage ?? 1) - 1))
               }pt`,
-            padding: `${templateData?.propertiesState?.padding?.top ?? 0}pt 
+            padding: forCustomRows? `${template?.propertiesState?.padding?.top ?? 0}pt 
+                      ${template?.propertiesState?.padding?.right ?? 0}pt 
+                      ${0}pt 
+                      ${template?.propertiesState?.padding?.left ?? 0}pt`
+                       : `${templateData?.propertiesState?.padding?.top ?? 0}pt 
                       ${templateData?.propertiesState?.padding?.right ?? 0}pt 
                       ${templateData?.propertiesState?.padding?.bottom ?? 0}pt 
                       ${templateData?.propertiesState?.padding?.left ?? 0}pt`,
@@ -2217,6 +2227,7 @@ debugger;
                 backgroundSize: bgSize || "cover",
                 backgroundRepeat: "no-repeat",
                 backgroundColor: forCustomRows ? `rgb(${designerData.background_color})` : "#fff",
+
               }}
             >
               {/* Render components using nested container support */}

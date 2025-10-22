@@ -13,7 +13,7 @@ interface ShardPrevHeaderPDFProps {
 }
 
 const ShardDowHeader = ({ data, template, qrCodes,AmountToEnglish,AmountToArabic }: ShardPrevHeaderPDFProps) => {
-
+ 
   const headerState = template?.headerState;
   const customElements: PlacedComponent[] = headerState?.customElements?.elements ?? [];
   const customTopHeight = headerState?.customElements?.height ?? 0;

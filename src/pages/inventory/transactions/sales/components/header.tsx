@@ -3,7 +3,7 @@ import React from "react";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import ERPModal from "../../../../../components/ERPComponents/erp-modal";
 import { TransactionUserConfig } from "../transaction-user-config";
-import { EllipsisVertical, KeyRound, Pencil, Printer, RefreshCw, Trash2, ChevronUp, BadgePlusIcon, Eraser, X, FileUp, History, AlignHorizontalSpaceBetween, Boxes, Group, DollarSign, Download, Package, ShoppingCart, Upload, } from "lucide-react";
+import { EllipsisVertical, KeyRound, Pencil, Printer, RefreshCw, Trash2, ChevronUp, BadgePlusIcon, Eraser, X, FileUp, History, Boxes, Group, DollarSign, Download, ShoppingCart, Upload, Barcode, Eye, FilePlus, FileText, Layout, PackageCheck, PackageSearch, Receipt, Users, } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import PendingOrderList from "../pending-order-list";
@@ -14,6 +14,7 @@ import Urls from "../../../../../redux/urls";
 import { APIClient } from "../../../../../helpers/api-client";
 import { formStateHandleFieldChange } from "../../reducer";
 import { VoucherElementProps, BillwiseData } from "../../transaction-types";
+import OrderLookup from "../order-lookup";
 import ShowEInvoice from "../show-e-invoice";
 import GiftOrCashCouponSelector from "../giftOrCash-Coupon-Selector";
 import PrintAddressLabel from "../print-address-label";
@@ -24,8 +25,8 @@ interface HeaderProps extends VoucherElementProps {
   handleRefresh: () => void;
   createNewVoucher: () => void;
   handleEdit: () => void;
-  printVoucher: ( masterID: number,transactionType: string,voucherType: string,formType:string,customerType:string,isInvTrans: boolean,printPreview:boolean, printTmeplate?:any ,transDate?: string,
-   ) => void;
+  printVoucher: (masterID: number, transactionType: string, voucherType: string, formType: string, customerType: string, isInvTrans: boolean, printPreview: boolean, printTmeplate?: any, transDate?: string,
+  ) => void;
   handleClearControls: () => void;
   handleHistoryClick: () => void;
   setIsHistorySidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -102,10 +103,13 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
     const popupStyle = {
       top: "45px",
       [isRtl ? "right" : "left"]: "-231px",
-      width: "273px",
+      // width: "273px",
+      minWidth: "273px",
+      maxWidth: "350px",
     };
+
     const selectTemplates = () => {
-      dispatch(formStateHandleFieldChange({ fields: {templateChooserModal: true }, }));
+      dispatch(formStateHandleFieldChange({ fields: { templateChooserModal: true }, }));
     }
     const closeMenuPopup = () => {
       dispatch(formStateHandleFieldChange({ fields: { headerMenuOpen: false }, }));
@@ -113,6 +117,14 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
 
     const openMenuPopup = () => {
       dispatch(formStateHandleFieldChange({ fields: { headerMenuOpen: true }, }));
+    };
+
+    const openCreateInterfaceFromOtherVoucher = () => {
+      dispatch(formStateHandleFieldChange({ fields: { createInterfaceFromOtherVoucher: true }, }));
+    };
+
+    const closeCreateInterfaceFromOtherVoucher = () => {
+      dispatch(formStateHandleFieldChange({ fields: { createInterfaceFromOtherVoucher: false }, }));
     };
 
     const handleBillwiseClick = useCallback(async () => {
@@ -189,29 +201,29 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
     const isAbove480 = useMediaQuery('(min-width: 480px)');
 
     const handleShowEInvoiceModal = () => {
-        dispatch(
-          formStateHandleFieldChange({
-            fields: { showEInvoice: true },
-          })
-        );
-      };
+      dispatch(
+        formStateHandleFieldChange({
+          fields: { showEInvoice: true },
+        })
+      );
+    };
 
-      const closeShowEInvoiceModal = () => {
-          dispatch(
-            formStateHandleFieldChange({
-              fields: { showEInvoice: false },
-            })
-          );
-        };
+    const closeShowEInvoiceModal = () => {
+      dispatch(
+        formStateHandleFieldChange({
+          fields: { showEInvoice: false },
+        })
+      );
+    };
 
     return (
       <>
         <div className={`!overflow-visible flex items-center justify-evenly md:justify-end space-x-2 p-1 w-full overflow-x-auto bg-[#f9fafb] md:bg-transparent`}>
           {/* SAMPLE BUTTONS CREATED FOR SHOW-E-INVOICE, GIFT/CASH COUPON SELECTOR, PRINT LABEL ADDRESS */}
           {/* ----------------------------------------------------------------------------------------- */}
-                   <button onClick={handleShowEInvoiceModal} className="bg-gray-300">Show E-inv</button>
-                   <button className="bg-gray-300">Gift</button>
-                   <button className="bg-gray-300">Print Address</button>
+          <button onClick={handleShowEInvoiceModal} className="bg-gray-300">Show E-inv</button>
+          <button className="bg-gray-300">Gift</button>
+          <button className="bg-gray-300">Print Address</button>
 
           {/* Load Temp Rows */}
           <div className="group relative inline-flex flex-col items-center ps-[5px]" title="Load Details">
@@ -271,22 +283,22 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
               <button
                 disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master.invTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
                 className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
-                        onClick={() =>
+                onClick={() =>
 
-                     printVoucher(
-                      formState.transaction?.master.invTransactionMasterID,  // masterID
-                      transactionType ?? "",                       // transactionType
-                      voucherType ?? "",        // voucherType
-                      formState.transaction?.master?.voucherForm?? "",           // formType
-                      formState.transaction?.master.customerType ?? "",       // customerType
-                      true,  
-                      formState.userConfig?.printPreview??false,
-                      undefined,                                            // printTmeplate (optional)
-                      formState.transaction?.master.transactionDate ?? "",
-                      
-                    )                           
-                          }
-                >
+                  printVoucher(
+                    formState.transaction?.master.invTransactionMasterID,  // masterID
+                    transactionType ?? "",                       // transactionType
+                    voucherType ?? "",        // voucherType
+                    formState.transaction?.master?.voucherForm ?? "",           // formType
+                    formState.transaction?.master.customerType ?? "",       // customerType
+                    true,
+                    formState.userConfig?.printPreview ?? false,
+                    undefined,                                            // printTmeplate (optional)
+                    formState.transaction?.master.transactionDate ?? "",
+
+                  )
+                }
+              >
                 <Printer className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
               </button>
             </div>
@@ -416,7 +428,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         disabled={formState.formElements?.pnlMasters?.disabled}
                         className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left  ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#fff7ed] hover:text-[#c2410c] dark:hover:bg-[#7c2d124d] dark:hover:text-[#fdba74]'}`}>
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200   ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#ffedd5] dark:bg-[#7c2d124d] group-hover:bg-[#fed7aa] dark:group-hover:bg-[#7c2d1299] group-hover:scale-110'}`}>
-                          <AlignHorizontalSpaceBetween className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#ea580c] dark:text-[#ffedd5]'}`} />
+                          <Layout className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#ea580c] dark:text-[#ffedd5]'}`} />
                         </div>
                         <span className="font-medium">{t("change_template")}</span>
                       </button>
@@ -427,7 +439,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         <div className="px-3 py-[5px] hover:bg-[#eef2ff] hover:text-[#4338ca] dark:hover:bg-[#312e814d] dark:hover:text-[#c7d2fe] transition-all duration-200 rounded-md group">
                           <div className="w-full flex items-center gap-3">
                             <div className="w-8 h-8 bg-[#eef2ff] dark:bg-[#312e81] rounded-full flex items-center justify-center group-hover:bg-[#c7d2fe] dark:group-hover:bg-[#312e81cc] group-hover:scale-110 transition-all duration-200">
-                              <Printer className="h-4 w-4 text-[#4338ca] dark:text-[#c7d2fe]" />
+                              <Eye className="h-4 w-4 text-[#4338ca] dark:text-[#c7d2fe]" />
                             </div>
                             <ERPCheckbox
                               localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -470,9 +482,9 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                               closeMenuPopup();
                               setIsPendingOrderOpen({ open: true, type: "GRN" });
                             }}
-                            className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#fefce8] hover:text-[#a16207] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047]'}`}>
+                            className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#fef3c7] hover:text-[#92400e] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047]'}`}>
                             <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#fef3c7] dark:bg-[#78350f4d] group-hover:bg-[#fde68a] dark:group-hover:bg-[#78350fcc] group-hover:scale-110'}`} >
-                              <Package className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#a16207] dark:text-[#fde047]'}`} />
+                              <PackageCheck className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#92400e] dark:text-[#fde047]'}`} />
                             </div>
                             <span className="font-medium">{t('pending_goods_receipt_list')}</span>
                           </button>
@@ -490,9 +502,9 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                               closeMenuPopup();
                               setIsPendingOrderOpen({ open: true, type: "POC" });
                             }}
-                            className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#fefce8] hover:text-[#a16207] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047]'}`}>
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#fef3c7] dark:bg-[#78350f4d] group-hover:bg-[#fde68a] dark:group-hover:bg-[#78350fcc] group-hover:scale-110'}`} >
-                              <Package className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#a16207] dark:text-[#fde047]'}`} />
+                            className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#e0e7ff] hover:text-[#4338ca] dark:hover:bg-[#312e814d] dark:hover:text-[#c7d2fe]'}`}>
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#e0e7ff] dark:bg-[#312e814d] group-hover:bg-[#c7d2fe] dark:group-hover:bg-[#312e81cc] group-hover:scale-110'}`} >
+                              <PackageSearch className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#4338ca] dark:text-[#c7d2fe]'}`} />
                             </div>
                             <span className="font-medium">{t('consolidated_all_branch_purchase_order_list')}</span>
                           </button>
@@ -510,9 +522,9 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                               closeMenuPopup();
                               setIsPendingOrderOpen({ open: true, type: "PQ" });
                             }}
-                            className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#fefce8] hover:text-[#a16207] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047]'}`}   >
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#fef3c7] dark:bg-[#78350f4d] group-hover:bg-[#fde68a] dark:group-hover:bg-[#78350fcc] group-hover:scale-110'}`}>
-                              <Package className={`h-4 w-4  ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#a16207] dark:text-[#fde047]'}`} />
+                            className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#fce7f3] hover:text-[#be185d] dark:hover:bg-[#831843]/30 dark:hover:text-[#f9a8d4]'}`}   >
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#fce7f3] dark:bg-[#831843]/30 group-hover:bg-[#fbcfe8] dark:group-hover:bg-[#831843]/50 group-hover:scale-110'}`}>
+                              <FileText className={`h-4 w-4  ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#be185d] dark:text-[#f9a8d4]'}`} />
                             </div>
                             <span className="font-medium">{t('pending_purchase_quotation_list')}</span>
                           </button>
@@ -557,14 +569,38 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
 
                     <li>
                       <button
-                        className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-lime-50 hover:text-lime-800 dark:hover:bg-lime-900/30 dark:hover:text-lime-300 transition-all duration-200 rounded-md group text-left"
+                        className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-amber-50 hover:text-amber-800 dark:hover:bg-amber-900/30 dark:hover:text-amber-300 transition-all duration-200 rounded-md group text-left"
                         onClick={() => { closeMenuPopup() }}>
-                        <div className="w-8 h-8 bg-lime-100 dark:bg-lime-900/30 rounded-full flex items-center justify-center group-hover:bg-lime-200 dark:group-hover:bg-lime-900/50 group-hover:scale-110 transition-all duration-200">
-                          <Printer className="h-4 w-4 text-lime-800 dark:text-lime-300" />
+                        <div className="w-8 h-8 bg-amber-100 dark:bg-amber-900/30 rounded-full flex items-center justify-center group-hover:bg-amber-200 dark:group-hover:bg-amber-900/50 group-hover:scale-110 transition-all duration-200">
+                          <Barcode className="h-4 w-4 text-amber-800 dark:text-amber-300" />
                         </div>
                         <span className="font-medium">{t("print_barcode")}</span>
                       </button>
                     </li>
+
+                    <li>
+                      <button
+                        className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-sky-50 hover:text-sky-800 dark:hover:bg-sky-900/30 dark:hover:text-sky-300 transition-all duration-200 rounded-md group text-left"
+                        onClick={() => { openCreateInterfaceFromOtherVoucher() }}>
+                        <div className="w-8 h-8 bg-sky-100 dark:bg-sky-900/30 rounded-full flex items-center justify-center group-hover:bg-sky-200 dark:group-hover:bg-sky-900/50 group-hover:scale-110 transition-all duration-200">
+                          <FilePlus className="h-4 w-4 text-sky-800 dark:text-sky-300" />
+                        </div>
+                        <span className="font-medium">{t("create_invoice_from_other_voucher")}</span>
+                      </button>
+                    </li>
+
+                    {formState.createInterfaceFromOtherVoucher && (
+                      <ERPModal
+                        isOpen={formState.createInterfaceFromOtherVoucher}
+                        closeModal={closeCreateInterfaceFromOtherVoucher}
+                        title={t("create_invoice_from_other_voucher")}
+                        width={400}
+                        height={350}
+                        content={
+                          <OrderLookup
+                            t={t} />}
+                      />
+                    )}
 
                     {formState.transaction.master.voucherType === 'PI' && (
                       <li>
@@ -583,12 +619,12 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                     {formState.transaction.master.invTransactionMasterID > 0 && formState.transaction.master.voucherType === 'PR' && applicationSettings.accountsSettings.maintainBillwiseAccount && (
                       <li>
                         <button
-                          className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f5f3ff] hover:text-[#6d28d9] dark:hover:bg-[#4c1d954d] dark:hover:text-[#ddd6fe] transition-all duration-200 rounded-md group text-left"
+                          className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fef2f2] hover:text-[#991b1b] dark:hover:bg-[#7f1d1d4d] dark:hover:text-[#fca5a5] transition-all duration-200 rounded-md group text-left"
                           onClick={() => { closeMenuPopup(); handleBillwiseClick() }}
                           disabled={formState.transactionLoading}
                         >
-                          <div className="w-8 h-8 bg-[#ede9fe] dark:bg-[#4c1d954d] rounded-full flex items-center justify-center group-hover:bg-[#ddd6fe] dark:group-hover:bg-[#4c1d9599] group-hover:scale-110 transition-all duration-200">
-                            <Printer className="h-4 w-4 text-[#6d28d9] dark:text-[#ddd6fe]" />
+                          <div className="w-8 h-8 bg-[#fee2e2] dark:bg-[#7f1d1d4d] rounded-full flex items-center justify-center group-hover:bg-[#fecaca] dark:group-hover:bg-[#7f1d1d99] group-hover:scale-110 transition-all duration-200">
+                            <Receipt className="h-4 w-4 text-[#991b1b] dark:text-[#fca5a5]" />
                           </div>
                           <span className="font-medium">{t("billwise")}</span>
                         </button>
@@ -611,20 +647,20 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         )}
                         <li>
                           <button
-                            className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#ecfdf5] hover:text-[#047857] dark:hover:bg-[#064e3b4d] dark:hover:text-[#6ee7b7] transition-all duration-200 rounded-md group text-left"
+                            className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#faf5ff] hover:text-[#7c3aed] dark:hover:bg-[#581c874d] dark:hover:text-[#d8b4fe] transition-all duration-200 rounded-md group text-left"
                             onClick={() => dispatch(formStateHandleFieldChange({ fields: { isPartyWiseSummaryOpen: true }, }))}>
-                            <div className="w-8 h-8 bg-[#d1fae5] dark:bg-[#064e3b4d] rounded-full flex items-center justify-center group-hover:bg-[#a7f3d0] dark:group-hover:bg-[#064e3b99] group-hover:scale-110 transition-all duration-200">
-                              <Group className="h-4 w-4 text-[#065f46] dark:text-[#6ee7b7]" />
+                            <div className="w-8 h-8 bg-[#f3e8ff] dark:bg-[#581c874d] rounded-full flex items-center justify-center group-hover:bg-[#e9d5ff] dark:group-hover:bg-[#581c8799] group-hover:scale-110 transition-all duration-200">
+                              <Users className="h-4 w-4 text-[#7c3aed] dark:text-[#d8b4fe]" />
                             </div>
                             <span className="font-medium">{t("party_wise_summary")}</span>
                           </button>
                         </li>
                         <li>
                           <button
-                            className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fefce8] hover:text-[#a16207] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047] transition-all duration-200 rounded-md group text-left"
+                            className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-slate-50 hover:text-slate-800 dark:hover:bg-slate-800/30 dark:hover:text-slate-300 transition-all duration-200 rounded-md group text-left"
                             onClick={handleHistoryClick}>
-                            <div className="w-8 h-8 bg-[#fef3c7] dark:bg-[#78350f4d] rounded-full flex items-center justify-center group-hover:bg-[#fde68a] dark:group-hover:bg-[#78350fcc] group-hover:scale-110 transition-all duration-200">
-                              <History className="h-4 w-4 text-[#a16207] dark:text-[#fde047]" />
+                            <div className="w-8 h-8 bg-slate-100 dark:bg-slate-800/30 rounded-full flex items-center justify-center group-hover:bg-slate-200 dark:group-hover:bg-slate-800/50 group-hover:scale-110 transition-all duration-200">
+                              <History className="h-4 w-4 text-slate-800 dark:text-slate-300" />
                             </div>
                             <span className="font-medium">{t("history")}</span>
                           </button>
@@ -636,10 +672,10 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                       <>
                         <li>
                           <button
-                            className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fff7ed] hover:text-[#c2410c] dark:hover:bg-[#7c2d124d] dark:hover:text-[#fdba74] transition-all duration-200 rounded-md group text-left"
+                            className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-orange-50 hover:text-orange-800 dark:hover:bg-orange-900/30 dark:hover:text-orange-300 transition-all duration-200 rounded-md group text-left"
                             onClick={handleClearControls}>
-                            <div className="w-8 h-8 bg-[#ffedd5] dark:bg-[#7c2d124d] rounded-full flex items-center justify-center group-hover:bg-[#fed7aa] dark:group-hover:bg-[#7c2d1299] group-hover:scale-110 transition-all duration-200">
-                              <Eraser className="h-4 w-4 text-[#ea580c] dark:text-[#ffedd5]" />
+                            <div className="w-8 h-8 bg-orange-100 dark:bg-orange-900/30 rounded-full flex items-center justify-center group-hover:bg-orange-200 dark:group-hover:bg-orange-900/50 group-hover:scale-110 transition-all duration-200">
+                              <Eraser className="h-4 w-4 text-orange-800 dark:text-orange-300" />
                             </div>
                             <span className="font-medium">{t("clear")}</span>
                           </button>
@@ -648,21 +684,21 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                           <button
                             disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master.invTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
                             className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f5f3ff] hover:text-[#6d28d9] dark:hover:bg-[#4c1d954d] dark:hover:text-[#ddd6fe] transition-all duration-200 rounded-md group text-left"
-                        onClick={() =>
-                    printVoucher(
-                      formState.transaction?.master.invTransactionMasterID,  // masterID
-                      transactionType ?? "",                       // transactionType
-                      voucherType ?? "",        // voucherType
-                      formState.transaction?.master?.voucherForm?? "",           // formType
-                      formState.transaction?.master.customerType ?? "",       // customerType
-                      true,  
-                      formState.userConfig?.printPreview??false,
-                      undefined,                                            // printTmeplate (optional)
-                      formState.transaction?.master.transactionDate ?? "",
-                      
-                    )
-                          }
-                            >
+                            onClick={() =>
+                              printVoucher(
+                                formState.transaction?.master.invTransactionMasterID,  // masterID
+                                transactionType ?? "",                       // transactionType
+                                voucherType ?? "",        // voucherType
+                                formState.transaction?.master?.voucherForm ?? "",           // formType
+                                formState.transaction?.master.customerType ?? "",       // customerType
+                                true,
+                                formState.userConfig?.printPreview ?? false,
+                                undefined,                                            // printTmeplate (optional)
+                                formState.transaction?.master.transactionDate ?? "",
+
+                              )
+                            }
+                          >
                             <div className="w-8 h-8 bg-[#ede9fe] dark:bg-[#4c1d954d] rounded-full flex items-center justify-center group-hover:bg-[#ddd6fe] dark:group-hover:bg-[#4c1d9599] group-hover:scale-110 transition-all duration-200">
                               <Printer className="h-4 w-4 text-[#6d28d9] dark:text-[#ddd6fe]" />
                             </div>
@@ -745,33 +781,33 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
           {/* ----------------------------------------------------------------------------------------- */}
           {/* THIS CREATED FOR MODAL SHOW-E-INVOICE, GIFT/CASH COUPON SELECTOR, PRINT LABEL ADDRESS */}
           {/* ----------------------------------------------------------------------------------------- */}
-            <ERPModal
-        isOpen={formState.showEInvoice}
-        title={t("Show_E_Invoice")}
-        width={650}
-        height={610}
-        closeModal={closeShowEInvoiceModal}
-        content={<ShowEInvoice t={t} closeModal={closeShowEInvoiceModal} /> }
-      /> 
-      {/* Need to add open, close functions */}
-      <ERPModal
-        isOpen={formState.giftOrCashCouponSelector}
-        title={t("Gift/Cash_Coupon_selector")}
-        width={700}
-        height={500}
-        closeModal={closeShowEInvoiceModal}
-        content={<GiftOrCashCouponSelector t={t} closeModal={closeShowEInvoiceModal} /> }
-      />
-      {/* Need to add open, close functions */}
-      <ERPModal
-        isOpen={formState.printAddressLabel}
-        title={t("Print_Address_Label")}
-        width={650}
-        height={500}
-        closeModal={closeShowEInvoiceModal}
-        content={<PrintAddressLabel t={t} closeModal={closeShowEInvoiceModal} /> }
-      />
-      {/* ----------------------------------------------------------------------------------------- */}
+          <ERPModal
+            isOpen={formState.showEInvoice}
+            title={t("Show_E_Invoice")}
+            width={650}
+            height={610}
+            closeModal={closeShowEInvoiceModal}
+            content={<ShowEInvoice t={t} closeModal={closeShowEInvoiceModal} />}
+          />
+          {/* Need to add open, close functions */}
+          <ERPModal
+            isOpen={formState.giftOrCashCouponSelector}
+            title={t("Gift/Cash_Coupon_selector")}
+            width={700}
+            height={500}
+            closeModal={closeShowEInvoiceModal}
+            content={<GiftOrCashCouponSelector t={t} closeModal={closeShowEInvoiceModal} />}
+          />
+          {/* Need to add open, close functions */}
+          <ERPModal
+            isOpen={formState.printAddressLabel}
+            title={t("Print_Address_Label")}
+            width={650}
+            height={500}
+            closeModal={closeShowEInvoiceModal}
+            content={<PrintAddressLabel t={t} closeModal={closeShowEInvoiceModal} />}
+          />
+          {/* ----------------------------------------------------------------------------------------- */}
           {/* THIS CREATED FOR MODAL SHOW-E-INVOICE, GIFT/CASH COUPON SELECTOR, PRINT LABEL ADDRESS */}
           {/* ----------------------------------------------------------------------------------------- */}
         </div>

@@ -64,23 +64,21 @@ const PartyLedger = React.forwardRef<HTMLInputElement, LedgerProps>(
                 formState.formElements.pnlMasters?.disabled
               }
               labelInfo={
-                formState.transaction.master.voucherType === VoucherType.PurchaseInvoice && (
-                  <>
-                    {formState.formElements.pnlMasters?.disabled == true ? null : (
-                      <div>
-                        <span className="text-primary" >
-                          <a type="popup" onClick={setIsPartyDetailsOpen} className="hover:underline text-[#0ea5e9] capitalize ml-1 pe-3 cursor-pointer">{t('details')}</a>
-                          {t("bal")}:{" "}
-                          {`${getFormattedValue(
-                            formState.ledgerBalance < 0
-                              ? -1 * formState.ledgerBalance
-                              : formState.ledgerBalance || 0
-                          )} ${(formState.ledgerBalance ?? 0) < 0 ? "Cr" : "Dr"}`}
-                        </span>
-                      </div>
-                    )}
-                  </>
-                )
+                <>
+                  {formState.formElements.pnlMasters?.disabled == true ? null : (
+                    <div>
+                      <span className="text-primary" >
+                        {/* <a type="popup" onClick={setIsPartyDetailsOpen} className="hover:underline text-[#0ea5e9] capitalize ml-1 pe-3 cursor-pointer">{t('details')}</a> */}
+                        {t("bal")}:{" "}
+                        {`${getFormattedValue(
+                          formState.ledgerBalance < 0
+                            ? -1 * formState.ledgerBalance
+                            : formState.ledgerBalance || 0
+                        )} ${(formState.ledgerBalance ?? 0) < 0 ? "Cr" : "Dr"}`}
+                      </span>
+                    </div>
+                  )}
+                </>
               }
             />
           </>

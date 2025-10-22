@@ -12,7 +12,6 @@ const DEFAULT_COLUMN_WIDTH = "10%";
  export const SharedDownTable: React.FC<DownTableProps> = ({ data, template }) => {
   const accTableState = (template as any)?.tableState as TableColumn<unknown>[] | undefined;
   const tableMasterState = (template as TemplateState<unknown>)?.itemTableMasterState;
-
   const HeadFontFamily = tableMasterState?.headerFontFamily || "Roboto";
   const arabicHeadFontFamily = tableMasterState?.arabicHeaderFontFamily?? "Amiri";
   const rowFontFamily = tableMasterState?.itemRowFontFamily || "Roboto";
@@ -24,7 +23,6 @@ const DEFAULT_COLUMN_WIDTH = "10%";
     container: {
       width: "100%",
       flexDirection: "column",
-      
 
     },
     thead: {
@@ -104,7 +102,7 @@ const DEFAULT_COLUMN_WIDTH = "10%";
       {renderHeader()}
       {/* ✅ Each row is a separate flowing block so page break works */}
       {data?.map((row, rowIndex) => (
-        <View key={rowIndex} style={styles.tr} wrap>
+        <View key={rowIndex} style={styles.tr} wrap={false}>
           {visibleColumns.map((col, idx) => {
    // Get cell value
       const cellValue = (row as Record<string, any>)?.[String(col.field)] ?? "";

@@ -608,7 +608,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     ) {
       height = window.innerHeight - 303;
     } else {
-      height = window.innerHeight - 500;
+      height = window.innerHeight - 505;
     }
 
     console.log("Max safe integer:", Number.MAX_SAFE_INTEGER);
@@ -1828,7 +1828,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               className="mj23stylecheck"
               style={{
                 // marginTop: `${123 + (appState?.inputBox?.inputHeight ?? 0)}px`,
-                marginTop: `${97 + getInputHeight()}px`,
+                marginTop: `${111 + getInputHeight()}px`,
                 width: isFooterOnRight ? "calc(100% - 300px)" : "100%",
                 // height: `${gridHeight}px`,
                 overflow: "auto",

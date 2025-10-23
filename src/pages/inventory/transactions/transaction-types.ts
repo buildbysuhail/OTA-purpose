@@ -696,6 +696,7 @@ export interface CurrentCell {
   column: string;
   rowIndex: number;
   data: TransactionDetail;
+  key?: string;
 }
 export type PartialTransactionFormFields = {
   [K in keyof TransactionFormState]?: TransactionFormState[K];

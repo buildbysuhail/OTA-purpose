@@ -617,8 +617,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     chequeStatusRef,
     handleKeyDown,
     formStateRef,
-    purchaseGridRef,
-    setIsDropUpOpen
+    purchaseGridRef
 
   );
 

@@ -59,13 +59,18 @@ interface TransactionHeaderProps {
   ledgerCodeRef: any;
   voucherNumberRef: any;
   refNoRef: any;
-  isDropDownOpen: boolean;
+  isDropDownOpen: {
+    open: boolean;
+    autoAddressFocus: boolean;
+};
   toggleDropdown: () => void;
   footerLayout: "horizontal" | "vertical";
   userSession: any;
   refactorDetails: any;
   onHeightChange?: (height: number) => void;
   voucherType?: string;
+  focusAdd1?:any;
+  inputRefs: Record<string, React.RefObject<HTMLInputElement>>
 }
 
 const TransactionHeader: React.FC<TransactionHeaderProps> = ({
@@ -89,8 +94,9 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   userSession,
   refactorDetails,
   onHeightChange,
-  voucherType
-}) => {
+  voucherType,
+  inputRefs 
+},ref) => {
   const { appState } = useAppState();
   const [isMoreModalOpen, setIsMoreModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState({ visible: false, type: "" });
@@ -98,7 +104,6 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   const [updateTriggered, setUpdateTriggered] = useState(false);
   const [isSmallHeight, setIsSmallHeight] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
-  const ledgerIdRef = useRef<any>(null);
   const isMinimized = appState.toggled && appState.toggled.includes("close");
   const sidebarWidth = isMinimized ? "80px" : "240px";
   const isLargeScreen = window.innerWidth >= 1000;
@@ -192,7 +197,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
-        isDropDownOpen &&
+        isDropDownOpen?.open &&
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target as Node) &&
         !(event.target as HTMLElement).closest("button") &&
@@ -216,7 +221,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isDropDownOpen, toggleDropdown]);
+  }, [isDropDownOpen.open, toggleDropdown]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -224,6 +229,13 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
     }, 2000);
     return () => clearTimeout(timer);
   }, []);
+  useEffect(() => {
+    if(isDropDownOpen.open && isDropDownOpen.autoAddressFocus)
+     if(inputRefs["address1"]?.current) {
+        inputRefs["address1"]?.current.focus()
+        inputRefs["address1"]?.current.select()
+      }
+  }, [isDropDownOpen.open, isDropDownOpen.autoAddressFocus]);
 
   useEffect(() => {
     if (updateTriggered) {
@@ -329,12 +341,13 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
 
   return (
     <div>
-      {isDropDownOpen && (
+      {isDropDownOpen.open && (
         <div
           className="fixed inset-0 bg-black/20 dark:bg-black/30 backdrop-blur-sm z-30"
           onClick={toggleDropdown}
         />
       )}
+
       {!deviceInfo?.isMobile && (
         <div
           style={headerStyle}
@@ -350,7 +363,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
             :
             <div ref={containerRef} className="flex items-end gap-1 relative px-2 !pb-3">
               <PartyLedger
-                ref={ledgerIdRef}
+                ref={inputRefs.ledgerID}
                 handleFieldKeyDown={handleFieldKeyDown}
                 transactionType={transactionType}
                 handleKeyDown={handleKeyDown}
@@ -403,24 +416,13 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 )}
 
               <ReferenceDate
+              
+                ref={inputRefs.refDate}
                 dispatch={dispatch}
                 formState={formState}
-                handleKeyDown={(e) => {
-                  if (isEnterKey(e.key)) {
-                    if (
-                      formState.currentCell &&
-                      formState.currentCell.rowIndex > 0 &&
-                      formState.currentCell.column != ""
-                    ) {
-                      focusToNextColumn(
-                        formState.currentCell.rowIndex,
-                        formState.currentCell.column
-                      );
-                    } else {
-                      focusToNextColumn(0, "slNo");
-                    }
-                  }
-                }}
+                
+                handleKeyDown={(e) => { handleKeyDown(e,"refDate")}}
+                
                 t={t}
               />
               <TransactionDate formState={formState} dispatch={dispatch} t={t} />
@@ -430,7 +432,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
           {/* Dropdown content */}
           <div
             ref={dropdownRef}
-            className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${formState.transaction.master.voucherType === "LPO" ? 'hidden' : 'block'} ${isDropDownOpen ? "max-h-[50vh]" : "max-h-0"}`}
+            className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${formState.transaction.master.voucherType === "LPO" ? 'hidden' : 'block'} ${isDropDownOpen.open ? "max-h-[50vh]" : "max-h-0"}`}
           >
             <div className="p-4 md:p-2 dark:bg-dark-bg-card bg-white border-t dark:border-dark-border border-gray-300 shadow-lg">
               <div className="flex flex-wrap !items-end gap-1">
@@ -571,11 +573,15 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     )
                   }
                   disabled={formState.formElements.pnlMasters?.disabled}
+                  ref={inputRefs.address1}
                 />
 
                 {formState.transaction.master.voucherType !==
                   VoucherType.PurchaseReturn && (
                     <ERPInput
+                    onKeyDown={(e) =>handleKeyDown(e,"address2")}
+                    disableEnterNavigation
+                    ref={inputRefs.address2}
                       localInputBox={formState?.userConfig?.inputBoxStyle}
                       id="address2"
                       label={t("address_2")}
@@ -918,7 +924,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
             <div className="absolute left-1/2 transform -translate-x-1/2 top-[-8px]">
               <button
                 onClick={toggleDropdown}
-                className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-white rounded-b-full border border-l-0 border-r-0 border-t-0 border-gray-300 transition-all duration-500 ${isDropDownOpen ? "dark:bg-dark-hover-bg bg-gray-100" : ""
+                className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-white rounded-b-full border border-l-0 border-r-0 border-t-0 border-gray-300 transition-all duration-500 ${isDropDownOpen.open ? "dark:bg-dark-hover-bg bg-gray-100" : ""
                   }`}
                 style={{
                   transform: isDropDownOpen ? "translateY(0)" : "translateY(0)",
@@ -926,7 +932,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 }}
               >
                 <ChevronDown
-                  className={`mx-2 transition-transform duration-500 dark:text-dark-text ${isDropDownOpen
+                  className={`mx-2 transition-transform duration-500 dark:text-dark-text ${isDropDownOpen.open
                     ? "transform rotate-180"
                     : hasAnimated
                       ? ""
@@ -948,7 +954,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
           {/* Top Section - Always visible */}
           <div className="flex items-end gap-1 border-b dark:border-dark-border border-gray-300 relative px-2 !pb-3">
             <PartyLedger
-              ref={ledgerIdRef}
+              ref={inputRefs.ledgerID}
               handleFieldKeyDown={handleFieldKeyDown}
               transactionType={transactionType}
               handleKeyDown={handleKeyDown}
@@ -962,8 +968,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
               }}
             />
 
-            {formState.transaction.master.voucherType !==
-              VoucherType.GoodsReceiptNote && (
+            {/* {formState.transaction.master.voucherType !==
+              VoucherType.GoodsReceiptNote && ( */}
                 <ReferenceNumber
                   formState={formState}
                   dispatch={dispatch}
@@ -971,13 +977,13 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   ref={refNoRef}
                   t={t}
                 />
-              )}
+              {/* )} */}
           </div>
 
           {/* Collapsible Dropdown Section */}
           <div
             ref={dropdownRef}
-            className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropDownOpen
+            className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropDownOpen.open
               ? "max-h-[50vh] overflow-y-auto overflow-x-hidden"
               : "max-h-0 overflow-hidden"
               }`}
@@ -1002,6 +1008,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   t={t}
                 />
                 <ReferenceDate
+                handleKeyDown={(e) => { handleKeyDown(e,"refDate")}}
+                ref={inputRefs.refDate}
                   dispatch={dispatch}
                   formState={formState}
                   t={t}
@@ -1091,6 +1099,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 />
 
                 <ERPInput
+                ref={inputRefs.address1}
                   localInputBox={formState?.userConfig?.inputBoxStyle}
                   id="address1"
                   label={t("address_1")}
@@ -1109,6 +1118,9 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 {formState.transaction.master.voucherType !==
                   VoucherType.PurchaseReturn && (
                     <ERPInput
+                    onKeyDown={(e) =>handleKeyDown(e,"address2")}
+                    disableEnterNavigation
+                    ref={inputRefs.address2}
                       localInputBox={formState?.userConfig?.inputBoxStyle}
                       id="address2"
                       label={t("address_2")}
@@ -1465,7 +1477,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
             <div className="absolute left-1/2 transform -translate-x-1/2 top-0">
               <button
                 onClick={toggleDropdown}
-                className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-white rounded-b-lg border border-t-0 border-gray-300 transition-all duration-500 ${isDropDownOpen ? "dark:bg-dark-hover-bg bg-gray-100" : ""
+                className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-white rounded-b-lg border border-t-0 border-gray-300 transition-all duration-500 ${isDropDownOpen.open ? "dark:bg-dark-hover-bg bg-gray-100" : ""
                   }`}
                 style={{
                   boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
@@ -1474,7 +1486,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 }}
               >
                 <ChevronDown
-                  className={`mx-2 transition-transform duration-500 dark:text-dark-text ${isDropDownOpen
+                  className={`mx-2 transition-transform duration-500 dark:text-dark-text ${isDropDownOpen.open
                     ? "transform rotate-180"
                     : hasAnimated
                       ? ""

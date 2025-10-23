@@ -2492,9 +2492,8 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
           dispatch(formStateTransactionDetailsRowsAdd(rows));
         }
       };
-
       runEffect();
-    }, [currentCell, currentCell?.rowIndex]);
+    }, [currentCell, currentCell?.rowIndex, currentCell?.key]);
     React.useImperativeHandle(ref, () => ({
       focusCell,
       nextCellFind,

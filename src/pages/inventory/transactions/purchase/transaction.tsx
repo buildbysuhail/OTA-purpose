@@ -9,7 +9,7 @@ import { ApplicationMainSettings, ApplicationMainSettingsInitialState, } from ".
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTransaction } from "./use-transaction";
 import CustomerDetailsSidebar from "../../../transaction-base/customer-details";
-import { generateUniqueKey, remToPx, } from "../../../../utilities/Utils";
+import { generateUniqueKey, isEnterKey, remToPx, } from "../../../../utilities/Utils";
 import { TemplateState } from "../../../InvoiceDesigner/Designer/interfaces";
 import ERPResizableSidebar from "../../../../components/ERPComponents/erp-resizable-sidebar";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
@@ -57,9 +57,9 @@ import DeletingOverlay from "../transaction-deleting";
 import { formStateHandleFieldChangeKeysOnly, resetState, formStateHandleFieldChange, updateFormElement } from "../reducer";
 import { TransactionProps, UserConfig, TransactionDetail, TransactionFormState, TransactionData, SummaryItems, GridQtyFactors, ColumnModel } from "../transaction-types";
 import { initialUserConfig, transactionInitialData, TransactionFormStateInitialData, initialFormElements, initialInventoryTotals } from "../transaction-type-data";
-import { getTemplatesFromStore } from "../../../use-print";
 import TemplatesView from "../../../transaction-base/template_picker";
 import { toggleIsPrintPreviewPopup } from "../../../../redux/slices/popup-reducer";
+import { faL } from "@fortawesome/free-solid-svg-icons";
 
 interface BilledItem {
   id?: number;
@@ -235,7 +235,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const isFooterOnRight = formState.transactionLoading
     ? _st.footerPosition === "right"
     : formState.userConfig?.footerPosition === "right";
-  const [isDropDownOpen, setIsDropDownOpen] = useState(false);
+  const [isDropDownOpen, setIsDropDownOpen] = useState<{open: boolean, autoAddressFocus: boolean}>({open: false, autoAddressFocus: false});
   const [isDropUpOpen, setIsDropUpOpen] = useState(false);
   const { appState } = useAppState();
   const isMinimized = appState.toggled && appState.toggled.includes("close");
@@ -259,6 +259,11 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const [countdown, setCountdown] = useState(8);
   const [startCountdown, setStartCountdown] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const cbLedger = useRef<HTMLInputElement>(null);
+  const address1 = useRef<HTMLInputElement>(null);
+  const address2 = useRef<HTMLInputElement>(null);
+  const referenceNumber = useRef<HTMLInputElement>(null);
+  const referenceDate = useRef<HTMLInputElement>(null);
 
   // Start countdown when a theme is selected
   useEffect(() => {
@@ -358,13 +363,13 @@ const TransactionForm: React.FC<TransactionProps> = ({
   }>(null);
 
   const toggleHeaderDropdown = () => {
-    setIsDropDownOpen((prev) => !prev);
+    setIsDropDownOpen((prev) => { return {open: !prev.open, autoAddressFocus: false}});
     setIsDropUpOpen(false);
   };
 
   const toggleFooterDropup = () => {
     setIsDropUpOpen((prev) => !prev);
-    setIsDropDownOpen(false);
+    setIsDropDownOpen({open: false, autoAddressFocus: false});
   };
 
   const SIDEBAR_WIDTH = "196px";
@@ -429,8 +434,93 @@ const TransactionForm: React.FC<TransactionProps> = ({
       })
     )
   };
+ const focusCBledger = () => {
+      if (cbLedger.current) {
+        cbLedger.current.focus();
+      }
+    };
+    
+    const focusAdd1 = () => {
+      if (address1.current) {
+        address1.current.focus();
+      }
+    };
 
-  const handleKeyDown = (e: any, field: string, rowIndex: number) => { };
+    const focusAdd2 = () => {
+      if (address2.current) {
+        address2.current.focus();
+      }
+    };
+
+    const focusReferenceNumber = () => {
+      if (referenceNumber.current) {
+        referenceNumber.current.focus();
+      }
+    };
+
+    const focusReferenceDate = () => {
+      if (referenceDate.current) {
+        referenceDate.current.focus();
+      }
+      
+
+    };
+      const inputRefs = {
+    ledgerID: useRef<HTMLInputElement>(null),
+    address1: useRef<HTMLInputElement>(null),
+    address2: useRef<HTMLInputElement>(null),
+    refDate: useRef<HTMLInputElement>(null),
+    refNo: useRef<HTMLInputElement>(null)
+  };
+
+  const focusInput = (refName: keyof typeof inputRefs) => {
+    if (inputRefs[refName]?.current) {
+      inputRefs[refName].current.focus();
+      inputRefs[refName].current.select();
+    }
+  };
+  const handleKeyDown = (e: any, field: string, rowIndex: number) => {
+    debugger;
+   if(field==="address2" && isEnterKey(e.key)){
+    if(refNoRef?.current) {
+      refNoRef?.current.focus();
+      refNoRef?.current.select();
+   }
+  }
+  debugger;
+   if(field==="refDate" && isEnterKey(e.key)){
+    const editableColumn = formState.gridColumns?.find(
+        (col: any) => col.visible !== false && col.dataField != null && col.allowEditing == true && col.readOnly !== true
+      );
+      
+      setIsDropDownOpen({open: false, autoAddressFocus: false})
+      debugger;
+   let currentCell = {
+        column: editableColumn?.dataField ?? "",
+        data: formState.transaction.details[0],
+        rowIndex: 0,
+        reCenterRow: false,
+        key: generateUniqueKey()
+      }
+    if (
+                      formState.currentCell &&
+                      formState.currentCell.rowIndex > 0 &&
+                      formState.currentCell.column != ""
+                    ) {
+                      currentCell = {
+                        column: formState.currentCell.column ?? "",
+                        data: formState.transaction.details[formState.currentCell.rowIndex],
+                        rowIndex: formState.currentCell.rowIndex,
+                        reCenterRow: false,
+                        key: generateUniqueKey()
+                      }
+                      focusCurrentColumn(formState.currentCell.rowIndex,formState.currentCell.column)
+                    } else {
+                      focusCurrentColumn(0,editableColumn?.dataField ?? "")
+                    }
+     dispatch(formStateHandleFieldChange({fields:{currentCell:currentCell}}))
+  }
+  };
   const formStateRef = useRef(formState);
   useEffect(() => {
     formStateRef.current = formState;
@@ -528,6 +618,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     handleKeyDown,
     formStateRef,
     purchaseGridRef,
+    setIsDropUpOpen
 
   );
 
@@ -582,7 +673,13 @@ const TransactionForm: React.FC<TransactionProps> = ({
   useEffect(() => {
     (async () => {
       if (formState.isInitialLedger != true) {
+        setIsDropDownOpen({open: true, autoAddressFocus: true})
         await loadLedgerData(undefined, dispatch);
+        
+        setTimeout(() => {
+          debugger;
+          focusAdd1();
+        }, 1000);
       } else {
         dispatch(
           formStateHandleFieldChange({
@@ -1539,6 +1636,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const handleHeightChange = (height: number) => {
     setHeaderHeight(height)
   }
+  
 
   return (
     <>
@@ -1627,6 +1725,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
             {/* header starts here */}
             <TransactionHeader
+            inputRefs={inputRefs}
               onHeightChange={handleHeightChange}
               formState={formState}
               dispatch={dispatch}
@@ -1648,6 +1747,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               userSession={userSession}
               refactorDetails={refactorDetails}
               voucherType={voucherType}
+              focusAdd1={focusAdd1}
             />
             {/* header ends here */}
 
@@ -1843,6 +1943,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
               <div className="flex items-center justify-between gap-2 bg-white px-4 py-2 shadow-md text-gray-600 h-[70px]">
                 <div className="flex items-center gap-2 flex-1">
                   <TransactionHeader
+                  
+            inputRefs={inputRefs}
                     focusToNextColumn={focusToNextColumn}
                     formState={formState}
                     dispatch={dispatch}

@@ -60,7 +60,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
       case "workspace-settings":
         return WorkspaceSettingsMenuItems;
       case "settings":
-        return SettingsMenuItems;
+        return userSession.userTypeCode.toUpperCase() == "CA" || userSession.userTypeCode.toUpperCase() == "BA" ? SettingsMenuItems : [];
       case "reports":
         return ReportsMenuItems;
       default:

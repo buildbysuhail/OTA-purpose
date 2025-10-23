@@ -453,14 +453,14 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       searchValue: value,
       searchByCode: false,
     });
-    
+      const [productGridReady, setProductGridReady] = useState<any>(false);
     const dataGridRef = useRef<any>(null);
     const batchGridRef = useRef<any>(null);
     const productIDRef = useRef<number | undefined>(undefined);
     const gridContainerRef = useRef<HTMLDivElement>(null);
     const internalRef = useRef<HTMLInputElement>(null);
     const inputRef = ref || internalRef;
-
+    const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
     const portalContainerRef = useRef<HTMLElement | null>(null);
     const formState = useSelector(
@@ -567,15 +567,21 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
         debounce(async (value: string, byCode: boolean) => {
           console.log("debouncedFetch");
           if (value.trim() == "" || value.trim() == "%") {
+        setIsLoading(false);
+        return;
           }
+          
+          setIsLoading(true); // Start loading
           let payload: any = {};
           if (searchType === "modal") {
+            setIsLoading(false);
             // dispatch(formStateHandleFieldChangeKeysOnly({fields: {formElements:{dgvProduct: {visible: true}}}}));
           } else if (searchType === "grid") {
             if (searchKey == "pCode") {
               payload.searchByCode = true;
               payload.searchByCodeAndName = false;
               if (value.trim() === "%") {
+                setIsLoading(false);
                 return null;
               }
 
@@ -591,6 +597,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
               payload.searchByCodeAndName = searchByCodeAndName;
               payload.searchByCode = false;
               if (value.trim() === "%") {
+                setIsLoading(false);
                 return null;
               }
 
@@ -611,7 +618,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
               payload.searchByCode = byCode;
               payload.productName = value;
             }
-
+      try {
             const store = await createStore(value, payload, productDataUrl, [
               {
                 selector:
@@ -631,7 +638,12 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
                 setStore(store);
                 setShowProductGrid(true);
               }
-          }
+          }catch (error) {
+            console.error("Fetch error:", error);
+        } finally {
+          setIsLoading(false); // Always clear loading
+        }
+      }
         }, 200),
       [productDataUrl, searchType]
     );
@@ -648,7 +660,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
         return;
       }
       setShowBatchGrid(false);
-      if (value.length >= 1) {      
+      if (value.length >= 1) {    
+        setIsLoading(true);   // Set loading immediately before debounce
         if (searchType !== "modal") {
           await debouncedFetch(value, inputValue.searchByCode);
 
@@ -662,6 +675,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
           }
         }
       } else {
+        setIsLoading(false);
         setStore({
           data: [],
           totalCount: 0,
@@ -686,6 +700,15 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
         inputRef.current.select();
       }
     }, [inputRef]);
+
+
+
+// Clear loading state when grid closes
+useEffect(() => {
+  if (!showProductGrid && !showBatchGrid) {
+    setIsLoading(false);
+  }
+}, [showProductGrid, showBatchGrid]);
 
     const handleGridKeyDown = useCallback(
       async (e: any) => {
@@ -836,32 +859,145 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       }, 0);
     }, []);
 
+    // const handleInputKeyDown = useCallback(
+    //   async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    //     if (disabled) return;
+    //     // e.preventDefault();   
+    //     // e.stopPropagation(); 
+    //     const value = e.currentTarget.value;
+    //     console.log(`Input key: ${value}`);
+    //     if (
+    //       [
+    //         "ArrowLeft",
+    //         "ArrowRight",
+    //         "ArrowUp",
+    //         "ArrowDown",
+    //         "Enter",
+    //         "Escape",
+    //       ].includes(e.key)&& !isLoading  &&
+    //       showProductGrid &&
+    //       dataGridRef.current  && productGridReady
+    //     ) {
+    //       if (e.key === "ArrowDown") {
+    //         const grid: any = dataGridRef.current.instance();
+    //         const rows = grid.getVisibleRows();
+    //         if (rows.length > 0 && productGridReady) {
+    //           grid.selectRowsByIndexes([0]);
+
+    //           grid.navigateToRow(grid.getKeyByRowIndex(0));
+    //           grid.focus();
+    //           e.preventDefault();
+    //         }
+    //       } else if (e.key === "ArrowUp") {
+    //         const grid: any = dataGridRef.current.instance();
+    //         const rows = grid.getVisibleRows();
+    //         if (rows.length > 0) {
+    //           grid.selectRowsByIndexes([0]);
+    //           grid.navigateToRow(grid.getKeyByRowIndex(0));
+    //           grid.option("focusedRowIndex", 0); // ✅ explicitly set focused row
+    //           grid.focus(); // optional: focus container
+    //           e.preventDefault();
+    //         }
+    //       } else if (e.key === "Enter" ) {
+    //         if (searchType !== "modal") {
+    //           rest?.onKeyDown && rest?.onKeyDown(value, e);
+    //         } else {
+    //           if (!isNullOrUndefinedOrEmpty(e.currentTarget.value)) {
+    //             if (searchKey == "product") {
+    //               dispatch(
+    //                 formStateHandleFieldChangeKeysOnly({
+    //                   fields: {
+    //                     formElements: {
+    //                       productSearchPopupWindow: {
+    //                         visible: true,
+    //                         data: {
+    //                           searchColumn: searchKey,
+    //                           rowIndex: rowIndex,
+    //                           searchCriteria: searchKey,
+    //                           searchText: e.currentTarget.value,
+    //                           voucherType:
+    //                             formState.transaction.master.voucherType,
+    //                           warehouseId: 1,
+    //                           inSearch: formState.inSearch,
+    //                         },
+    //                       },
+    //                     },
+    //                   },
+    //                 })
+    //               );
+    //               e.preventDefault();
+    //             } else {
+    //               rest?.onKeyDown && rest?.onKeyDown(value, e);
+    //             }
+    //           } else {
+    //             rest?.onKeyDown && rest?.onKeyDown(value, e);
+    //           }
+    //         }
+    //       } else if (e.key === "Escape") {
+    //         setShowProductGrid(false);
+    //         setShowBatchGrid(false);
+    //         e.preventDefault();
+    //       } else if (["ArrowLeft", "ArrowRight"].includes(e.key)) {
+    //         const input = e.target as HTMLInputElement;
+    //         const { selectionStart, selectionEnd, value } = input;
+    //         let shouldNavigate = true;
+    //         if (["ArrowLeft", "ArrowRight"].includes(e.key)) {
+    //           if (
+    //             e.key === "ArrowRight" &&
+    //             (selectionStart !== value.length ||
+    //               selectionEnd !== value.length)
+    //           ) {
+    //             shouldNavigate = false;
+    //           } else if (
+    //             e.key === "ArrowLeft" &&
+    //             (selectionStart !== 0 || selectionEnd !== 0)
+    //           ) {
+    //             shouldNavigate = false;
+    //           }
+    //         }
+    //         if (shouldNavigate && rest.onKeyDown) {
+    //           rest?.onKeyDown(value, e);
+    //           e.preventDefault();
+    //         }
+    //       }
+    //     } else {
+    //       if (rest.onKeyDown) {
+    //         rest?.onKeyDown(value, e);
+    //       }
+    //     }
+    //   },
+    //   [
+    //     showProductGrid,
+    //     setShowProductGrid,
+    //     searchType,
+    //     debouncedFetch,
+    //     rest.onKeyDown,
+    //   ]
+    // );
+
     const handleInputKeyDown = useCallback(
-      async (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (disabled) return;
-        const value = e.currentTarget.value;
-        console.log(`Input key: ${value}`);
-        if (
-          [
-            "ArrowLeft",
-            "ArrowRight",
-            "ArrowUp",
-            "ArrowDown",
-            "Enter",
-            "Escape",
-          ].includes(e.key) &&
-          showProductGrid &&
-          dataGridRef.current
-        ) {
+  async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (disabled) return;
+    const value = e.currentTarget.value;
+    console.log(`Input key: ${value}`);
+    
+    // ============================================================
+    // PHASE 1: Block arrow keys ONLY during loading/grid showing
+    // ============================================================
+    if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key)) {
+      if (isLoading || showProductGrid || showBatchGrid) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Handle grid navigation if NOT loading and grid is ready
+        if (!isLoading && showProductGrid && dataGridRef.current && productGridReady) {
           if (e.key === "ArrowDown") {
             const grid: any = dataGridRef.current.instance();
             const rows = grid.getVisibleRows();
-            if (rows.length > 0 && productGridReady) {
+            if (rows.length > 0) {
               grid.selectRowsByIndexes([0]);
-
               grid.navigateToRow(grid.getKeyByRowIndex(0));
               grid.focus();
-              e.preventDefault();
             }
           } else if (e.key === "ArrowUp") {
             const grid: any = dataGridRef.current.instance();
@@ -869,86 +1005,111 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
             if (rows.length > 0) {
               grid.selectRowsByIndexes([0]);
               grid.navigateToRow(grid.getKeyByRowIndex(0));
-              grid.option("focusedRowIndex", 0); // ✅ explicitly set focused row
-              grid.focus(); // optional: focus container
-              e.preventDefault();
+              grid.option("focusedRowIndex", 0);
+              grid.focus();
             }
-          } else if (e.key === "Enter") {
-            if (searchType !== "modal") {
-              rest?.onKeyDown && rest?.onKeyDown(value, e);
-            } else {
-              if (!isNullOrUndefinedOrEmpty(e.currentTarget.value)) {
-                if (searchKey == "product") {
-                  dispatch(
-                    formStateHandleFieldChangeKeysOnly({
-                      fields: {
-                        formElements: {
-                          productSearchPopupWindow: {
-                            visible: true,
-                            data: {
-                              searchColumn: searchKey,
-                              rowIndex: rowIndex,
-                              searchCriteria: searchKey,
-                              searchText: e.currentTarget.value,
-                              voucherType:
-                                formState.transaction.master.voucherType,
-                              warehouseId: 1,
-                              inSearch: formState.inSearch,
-                            },
-                          },
-                        },
-                      },
-                    })
-                  );
-                  e.preventDefault();
-                } else {
-                  rest?.onKeyDown && rest?.onKeyDown(value, e);
-                }
-              } else {
-                rest?.onKeyDown && rest?.onKeyDown(value, e);
-              }
-            }
-          } else if (e.key === "Escape") {
-            setShowProductGrid(false);
-            setShowBatchGrid(false);
-            e.preventDefault();
-          } else if (["ArrowLeft", "ArrowRight"].includes(e.key)) {
-            const input = e.target as HTMLInputElement;
-            const { selectionStart, selectionEnd, value } = input;
-            let shouldNavigate = true;
-            if (["ArrowLeft", "ArrowRight"].includes(e.key)) {
-              if (
-                e.key === "ArrowRight" &&
-                (selectionStart !== value.length ||
-                  selectionEnd !== value.length)
-              ) {
-                shouldNavigate = false;
-              } else if (
-                e.key === "ArrowLeft" &&
-                (selectionStart !== 0 || selectionEnd !== 0)
-              ) {
-                shouldNavigate = false;
-              }
-            }
-            if (shouldNavigate && rest.onKeyDown) {
-              rest?.onKeyDown(value, e);
-              e.preventDefault();
-            }
-          }
-        } else {
-          if (rest.onKeyDown) {
-            rest?.onKeyDown(value, e);
           }
         }
-      },
-      [
-        showProductGrid,
-        setShowProductGrid,
-        searchType,
-        debouncedFetch,
-        rest.onKeyDown,
-      ]
-    );
+        
+        return; // Exit early
+      }
+    }
+    
+    // ============================================================
+    // PHASE 2: Handle other keys when grid is visible
+    // ============================================================
+    if (
+      ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Enter", "Escape"].includes(e.key) &&
+      showProductGrid &&
+      dataGridRef.current &&
+      !isLoading
+    ) {
+      if (e.key === "Enter") {
+        if (searchType !== "modal") {
+          rest?.onKeyDown && rest?.onKeyDown(value, e);
+        } else {
+          if (!isNullOrUndefinedOrEmpty(e.currentTarget.value)) {
+            if (searchKey == "product") {
+              dispatch(
+                formStateHandleFieldChangeKeysOnly({
+                  fields: {
+                    formElements: {
+                      productSearchPopupWindow: {
+                        visible: true,
+                        data: {
+                          searchColumn: searchKey,
+                          rowIndex: rowIndex,
+                          searchCriteria: searchKey,
+                          searchText: e.currentTarget.value,
+                          voucherType: formState.transaction.master.voucherType,
+                          warehouseId: 1,
+                          inSearch: formState.inSearch,
+                        },
+                      },
+                    },
+                  },
+                })
+              );
+              e.preventDefault();
+            } else {
+              rest?.onKeyDown && rest?.onKeyDown(value, e);
+            }
+          } else {
+            rest?.onKeyDown && rest?.onKeyDown(value, e);
+          }
+        }
+      } else if (e.key === "Escape") {
+        setShowProductGrid(false);
+        setShowBatchGrid(false);
+        setIsLoading(false);
+        e.preventDefault();
+        e.stopPropagation();
+      } else if (["ArrowLeft", "ArrowRight"].includes(e.key)) {
+        const input = e.target as HTMLInputElement;
+        const { selectionStart, selectionEnd, value } = input;
+        let shouldNavigate = true;
+        
+        if (
+          e.key === "ArrowRight" &&
+          (selectionStart !== value.length || selectionEnd !== value.length)
+        ) {
+          shouldNavigate = false;
+        } else if (
+          e.key === "ArrowLeft" &&
+          (selectionStart !== 0 || selectionEnd !== 0)
+        ) {
+          shouldNavigate = false;
+        }
+        
+        if (shouldNavigate && rest.onKeyDown) {
+          rest?.onKeyDown(value, e);
+          e.preventDefault();
+        }
+      }
+    } 
+    // ============================================================
+    // PHASE 3: No grid showing, pass to parent
+    // ============================================================
+    else {
+      if (rest.onKeyDown) {
+        rest?.onKeyDown(value, e);
+      }
+    }
+  },
+  [
+    disabled,
+    isLoading,
+    showProductGrid,
+    showBatchGrid,
+    productGridReady,
+    dataGridRef,
+    searchType,
+    rest.onKeyDown,
+    formState,
+    searchKey,
+    rowIndex,
+  ]
+);
 
     useEffect(() => {
       const handleFocusTrap = (e: KeyboardEvent) => {
@@ -988,7 +1149,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       );
     }, []);
 
-    const [productGridReady, setProductGridReady] = useState<any>(false);
+  
     const handleProductFocusedRowChanged = useCallback((e: any) => {
       const gridInstance = e.component;
       if (e?.row?.key !== undefined) {

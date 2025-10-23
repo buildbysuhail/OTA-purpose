@@ -15,6 +15,7 @@ import dxTreeList from "devextreme/ui/tree_list";
 import { UserAction } from "../../../helpers/user-right-helper";
 import { RootState } from "../../../redux/store";
 import ERPFormButtons, { CustomButtonProps } from "../../../components/ERPComponents/erp-form-buttons";
+import { userRightsgcc } from "./data";
 
 type PrimitiveFormField = string | number | boolean | Date | null | undefined;
 type ArrayFormField = PrimitiveFormField[];
@@ -504,20 +505,26 @@ const onSelectionChanged = useCallback(
   const { t } = useTranslation("userManage");
   const [userRightsData, setUserRightsData] = useState<UserRight[]>();
   const clientSession = useSelector((state: RootState) => state.ClientSession);
+ 
   useEffect(() => {
-    const planRights = clientSession.planFormCodes?.split(",")
-    const allowedActions = Object.values(UserAction) as string[];
-    
-    const updated =  userRights.filter(item => planRights?.includes(item.formCode) ||  allowedActions.includes(item.formCode));
-    setUserRightsData(updated);
-  }, [userRights]);
+  debugger;
+  const filteredRights =
+    clientSession.isAppGlobal
+      ? userRights
+      : userRightsgcc;
+ const planRights = clientSession.planFormCodes?.split(",")
+ console.log( clientSession.planFormCodes);
+ 
+  const updated =  filteredRights.filter(item => planRights?.includes(item.formCode));
+  setUserRightsData(updated);
+}, [userRights, userRightsgcc, clientSession.isAppGlobal, userRights]);
   return (
     <div className="flex md:flex-row flex-col mb-[65px] w-full">
       <div className="bg-slate-50 dark:bg-dark-bg border-slate-400 dark:border-dark-border md:border-r w-full overflow-x-auto md:basis-1/2">
         <TreeList
         ref={gridRef}
         id="userRights"
-        dataSource={userRights}
+        dataSource={userRightsData}
         keyExpr="id"
         parentIdExpr="headId"
         rootValue={0}

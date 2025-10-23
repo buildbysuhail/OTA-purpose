@@ -3243,7 +3243,7 @@ export const useTransaction = (
             },
           })
         );
-      } else if (forImport != true) {
+      } else if (forImport != true && data.searchColumn != "product") {
         const res = focusToNextColumn(data.rowIndex, data.searchColumn, [
           "pCode",
           "product",

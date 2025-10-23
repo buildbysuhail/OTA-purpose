@@ -86,14 +86,14 @@ const Settings = () => {
 
   return (
     <Fragment>
-      <div className="dark:bg-dark-bg flex flex-col w-full h-full">
+      <div className="flex flex-col dark:bg-dark-bg w-full h-full">
         <div className="bg-[url('/settings_bg.png')]">
-          <div className="max-w-4xl mx-auto w-full h-full">
+          <div className="mx-auto w-full max-w-4xl h-full">
             <Header />
           </div>
         </div>
-        <div className="pt-8 pb-6 px-4 max-w-4xl mx-auto w-full h-full overflow-auto scrollbar-hide">
-          <div className="w-full flex flex-wrap gap-4 justify-center">
+        <div className="mx-auto px-4 pt-8 pb-6 w-full max-w-4xl h-full overflow-auto scrollbar-hide">
+          <div className="flex flex-wrap justify-center gap-4 w-full">
             {SettingsMenuItems?.map((item: any, idx: number) => {
               //  item.disabled = true;
               return <SettingsCard data={item} key={`QKLJM34${idx}`} />;
@@ -124,7 +124,7 @@ const Settings = () => {
         isOpen={rootState.PopupData.userTypePrivilege.isOpen || false}
         title={t("user_privilege")}
         width={1000}
-        height={300}
+        height={600}
         isForm={false}
         closeModal={() => {
           dispatch(toggleUserTypePrivilegePopup({ isOpen: false }));

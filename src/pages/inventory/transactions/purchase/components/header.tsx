@@ -708,7 +708,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                   partyLedgerID={formState.transaction.master.ledgerID}
                   branchID={formState.transaction.master.fromWarehouseID}
                   formType={formState.transaction.master.voucherForm ?? ""}
-
+                  toVoucherType={formState.transaction.master.voucherType ?? ""}
                   closeModal={() => setIsPendingOrderOpen({ open: false, type: "" })}
                   t={t}
                   voucherType={isPendingOrderOpen.type}

@@ -42,7 +42,27 @@ interface UserTypePrivilegeManageProps {
 }
 const api = new APIClient();
 const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized }: UserTypePrivilegeManageProps) => {
-  const expandedRowKeys = [1, 2, 10];
+const [expandedRowKeys] = useState([1, 101, 102, 103]);
+const getAllChildIds = (parentId: number, data: UserRight[]): number[] => {
+    const children = data.filter(item => item.headId === parentId);
+    let allChildIds: number[] = [];
+    
+    children.forEach(child => {
+      allChildIds.push(child.id);
+      const grandChildren = getAllChildIds(child.id, data);
+      allChildIds.push(...grandChildren);
+    });
+    
+    return allChildIds;
+  };
+   const getAllParentIds = (childId: number, data: UserRight[]): number[] => {
+    const item = data.find(x => x.id === childId);
+    if (!item || item.headId === 0) return [];
+    
+    const parentIds = [item.headId];
+    const grandParents = getAllParentIds(item.headId, data);
+    return [...parentIds, ...grandParents];
+  };
   const [postData, setPostData] = useState<UserTypePrivilegeManageData>(initialUserTypePrivilegeManageData);
   const gridRef = useRef<dxTreeList>(null);
   const [postDataLoading, setPostUserTypeLoading] = useState<boolean>(false);
@@ -247,23 +267,58 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
     setSelectedRowKeys(initialSelectedKeys); // This should now be number[]
   }, [userRightTypes, userRights]);
 
-  const onSelectionChanged = useCallback(
+
+const onSelectionChanged = useCallback(
     (e: TreeListTypes.SelectionChangedEvent) => {
-      const selectedData =
-        e.component?.getSelectedRowsData(selectionMode)?.map((x) => x.id) ?? [];
-      setSelectedRowKeys(selectedData);
-      if (e.currentSelectedRowKeys.length == 1) {
-        const key = e.currentSelectedRowKeys[0];
-        const parent = userRights.find((x) => x.id == key)?.headId;
-        if (
-          parent != undefined
-        ) {
-          attachParentToSelected(parent, selectedData);
-        }
+      const newSelected = new Set(e.selectedRowKeys as number[]);
+      const currentSelected = e.currentSelectedRowKeys as number[];
+      const currentDeselected = e.currentDeselectedRowKeys as number[];
+
+      // When selecting
+      if (currentSelected.length > 0) {
+        currentSelected.forEach(key => {
+          // Add the selected node
+          newSelected.add(key);
+          
+          // Add all children
+          const children = getAllChildIds(key, userRights);
+          children.forEach(childId => newSelected.add(childId));
+          
+          // Add all parents (so parent stays checked when child is selected)
+          const parents = getAllParentIds(key, userRights);
+          parents.forEach(parentId => newSelected.add(parentId));
+        });
       }
+
+      // When deselecting
+      if (currentDeselected.length > 0) {
+        currentDeselected.forEach(key => {
+          // Remove the deselected node
+          newSelected.delete(key);
+          
+          // Remove all children
+          const children = getAllChildIds(key, userRights);
+          children.forEach(childId => newSelected.delete(childId));
+          
+          // DON'T remove parents - this is the key difference
+          // Parents stay checked even when children are unchecked
+        });
+      }
+
+      setSelectedRowKeys(Array.from(newSelected));
     },
-    []
+    [userRights]
   );
+
+    const handleSelectAll = () => {
+    const allIds = userRights.map(item => item.id);
+    setSelectedRowKeys(allIds);
+  };
+
+  // Deselect All handler
+  const handleDeselectAll = () => {
+    setSelectedRowKeys([]);
+  };
 
   const attachParentToSelected = (id: number, selectedData: any[]): any[] => {
     selectedData.push(id);
@@ -457,27 +512,35 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
     setUserRightsData(updated);
   }, [userRights]);
   return (
-    <div className="w-full flex flex-col md:flex-row mb-[65px]">
-      <div className="w-full md:basis-1/2 dark:bg-dark-bg dark:border-dark-border bg-slate-50 md:border-r border-slate-400 overflow-x-auto">
+    <div className="flex md:flex-row flex-col mb-[65px] w-full">
+      <div className="bg-slate-50 dark:bg-dark-bg border-slate-400 dark:border-dark-border md:border-r w-full overflow-x-auto md:basis-1/2">
         <TreeList
-          height={treeHeight}
-          ref={gridRef}
-          id="userRights"
-          dataSource={userRightsData}
-          showRowLines={true}
-          showBorders={true}
-          columnAutoWidth={true}
-          defaultExpandedRowKeys={expandedRowKeys}
-          selectedRowKeys={selectedRowKeys}
-          keyExpr="id"
-          parentIdExpr="headId"
-          onSelectionChanged={onSelectionChanged}>
-          <Selection recursive={false} mode="multiple" />
-          <Column dataField="fullName" caption="" />
-        </TreeList>
+        ref={gridRef}
+        id="userRights"
+        dataSource={userRights}
+        keyExpr="id"
+        parentIdExpr="headId"
+        rootValue={0}
+        showRowLines={true}
+        showBorders={true}
+        columnAutoWidth={true}
+        defaultExpandedRowKeys={expandedRowKeys}
+        selectedRowKeys={selectedRowKeys}
+        onSelectionChanged={onSelectionChanged}
+      >
+        <Selection 
+          mode="multiple" 
+          recursive={false}  // We handle recursion manually
+        />
+        {/* <Column dataField="fullName" caption="Permission" />
+        <Column dataField="formCode" caption="Code" width={100} /> */}
+        <Column dataField="fullName" caption="Permission" />
+      </TreeList>
+
+
       </div>
 
-      <div className="w-full md:basis-1/2 flex flex-col px-4 md:px-24 py-4 md:py-10">
+      <div className="flex flex-col px-4 md:px-24 py-4 md:py-10 w-full md:basis-1/2">
         {/* User Type Combobox */}
         <ERPDataCombobox
           id="userType"
@@ -502,7 +565,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
         // }
         />
         {/* Checkbox options */}
-        <div className="grid grid-cols-1 sm:grid-cols-2  gap-3 py-4 mb-5 text-left">
+        <div className="gap-3 grid grid-cols-1 sm:grid-cols-2 mb-5 py-4 text-left">
           <ERPCheckbox
             id="showAllAdd"
             label={t("select_all_add")}
@@ -578,7 +641,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
         />
         {
           inherit_rights_from_usertype == true && (
-            <div className="flex flex-col gap-3 border border-gray-400 border-dotted rounded-md p-4 md:p-8">
+            <div className="flex flex-col gap-3 p-4 md:p-8 border border-gray-400 border-dotted rounded-md">
               <ERPDataCombobox
                 id="userTypeForClone"
                 field={{
@@ -612,7 +675,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
           )
         }
         {/* Form Buttons */}
-        {/* <div className="flex justify-end mt-6 space-x-2">
+        {/* <div className="flex justify-end space-x-2 mt-6">
           <ERPButton
             title={t("save")}
             variant="primary"

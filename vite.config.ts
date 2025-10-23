@@ -10,8 +10,8 @@ export default defineConfig({
     port: 5173, 
   },
   build: {
-    outDir: 'build',
-    // outDir: 'd:\\Host\\Polosys\\Ui',
+    // outDir: 'build',
+    outDir: 'd:\\Host\\Polosys\\Ui',
     chunkSizeWarningLimit: 50000,
     rollupOptions: {
       onwarn(warning, warn) {

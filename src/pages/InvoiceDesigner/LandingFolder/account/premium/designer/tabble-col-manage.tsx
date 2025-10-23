@@ -59,7 +59,7 @@ export const TableManagerContent = withGenericMemo(<T,>({ currentTableState}: Ta
               label={t("width")}
               className="w-20"
               value={item.width}
-              onChange={(e) =>handleChange(item.field as keyof T, {width: e.target.value})}  
+              onChange={(e) =>handleChange(item.field as keyof T, {width: e.target.value as any})}  
             />
             <ErpInput
             disabled={item.show != true}

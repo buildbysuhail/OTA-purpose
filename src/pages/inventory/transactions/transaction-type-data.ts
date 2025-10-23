@@ -723,6 +723,8 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   showEInvoice: false,
   giftOrCashCouponSelector: false,
   printAddressLabel: false,
+  draftMode: false,
+  skipZeroQty: false
 }
 
 export const initialProductData: BarcodeLabel = {

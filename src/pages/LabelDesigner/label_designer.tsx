@@ -1691,8 +1691,8 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
           ...prevData.barcodeState,
           labelState: {
             ...prevData?.barcodeState?.labelState,
-            labelWidth: newWidthPt,
-            labelHeight: newHeightPt,
+            labelWidth: newWidthPt + (forCustomRows? ((template?.propertiesState?.padding?.right ?? 0) +(template?.propertiesState?.padding?.left ?? 0)) : 0),
+            labelHeight: newHeightPt + (forCustomRows? (template?.propertiesState?.padding?.top ?? 0): 0),
           },
           placedComponents: prevData?.barcodeState?.placedComponents || [],
         },
@@ -1993,7 +1993,7 @@ debugger;
       }
       const loadedElements = nestedValue?.elements || [];
       const expandedComponents = expandContainerChildren(loadedElements);
-       setCustomePageHeight(( nestedValue?.height)-(template.propertiesState?.padding?.top??0));
+      setCustomePageHeight (( nestedValue?.height  || 200)-(template.propertiesState?.padding?.top??0));
       setTemplateData((prev: TemplateState<unknown>) => ({
         ...prev,
         barcodeState: {
@@ -2017,7 +2017,7 @@ debugger;
 
       }));
     }
-  }, [templateData]);
+  }, []);
 
   useEffect(() => {
     templateData?.barcodeState?.placedComponents?.forEach(generateBarcode);

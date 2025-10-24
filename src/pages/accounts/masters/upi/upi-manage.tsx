@@ -49,6 +49,7 @@ export const UpiManage: React.FC = React.memo(() => {
           }}
           onChange={(data: any) => {  handleFieldChange({ paymentType: data.value, paymentName: data.label })}}
           label={userSession.countryId == Countries.India ? t("upi") : t("qr_pay")}
+          disabled={rootState.PopupData.upi.mode == "view"}
           options={[
             { value: 'AMAZON_PAY', label: 'AMAZON PAY' },
             { value: 'GOOGLE_PAY', label: 'GOOGLE PAY' },
@@ -75,6 +76,7 @@ export const UpiManage: React.FC = React.memo(() => {
             { value: 'YUVAPAY', label: 'YUVAPAY' },
             { value: 'ZOMATO', label: 'ZOMATO' }
           ]}
+          autoFocus={true}
         />
 
         <ERPInput
@@ -82,6 +84,8 @@ export const UpiManage: React.FC = React.memo(() => {
           label={userSession.countryId == Countries.India ? t("upi_name") : t("qr_pay_name")}
           placeholder={userSession.countryId == Countries.India ? t("upi_name") : t("qr_pay_name")}
           onChangeData={(data: any) => handleFieldChange('paymentName', data.paymentName)}
+          readOnly={rootState.PopupData.upi.mode == "view"}
+          
         />
 
         <ERPDataCombobox
@@ -95,6 +99,7 @@ export const UpiManage: React.FC = React.memo(() => {
           }}
           onChangeData={(data: any) => {  handleFieldChange("ledgerID", data.ledgerID)}}
           label={t("ledger")}
+          disabled={rootState.PopupData.upi.mode == "view"}
         />
         
         <ERPInput
@@ -103,14 +108,15 @@ export const UpiManage: React.FC = React.memo(() => {
           placeholder={t("remarks")}
           // required={true}
           onChangeData={(data: any) => handleFieldChange('remark', data.remark)}
+          readOnly={rootState.PopupData.upi.mode == "view"}
         />
       </div>
       <ERPFormButtons
-        onClear={handleClear}
+        onClear={rootState.PopupData.upi.mode == "view" ? undefined : handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={handleSubmit}
+        onSubmit={rootState.PopupData.upi.mode == "view" ? undefined : handleSubmit}
       />
     </div>
   );

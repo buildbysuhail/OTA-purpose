@@ -43,6 +43,7 @@ export const TaxCategoryManage: React.FC = React.memo(() => {
             handleFieldChange("taxCategoryName", data.taxCategoryName);
           }}
           readOnly={rootState.PopupData.taxCategory.mode == "view"}
+          autoFocus={true}
         />
 
         <ERPInput

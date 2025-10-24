@@ -44,6 +44,7 @@ export const VehiclesManage: React.FC = React.memo(() => {
             handleFieldChange("vehicleName", data.vehicleName);
           }}
           readOnly={rootState.PopupData.vehicles.mode == "view"}
+          autoFocus={true}
         />
 
         <ERPInput

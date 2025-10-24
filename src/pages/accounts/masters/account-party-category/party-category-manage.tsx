@@ -40,6 +40,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => { handleFieldChange("partyCategoryName", data.partyCategoryName); }}
           readOnly={rootState.PopupData.partyCategory.mode == "view"}
+          autoFocus={true}
           
         />
 

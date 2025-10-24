@@ -57,6 +57,7 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange('cardNumber', data.cardNumber)}
           readOnly={rootState.PopupData.privilegeCard.mode == "view"}
+          autoFocus={true}
         />
 
         <ERPInput

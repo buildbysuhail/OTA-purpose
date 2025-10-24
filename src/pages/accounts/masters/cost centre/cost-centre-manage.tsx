@@ -40,6 +40,7 @@ export const CostCentreManage = () => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("costCentreName", data.costCentreName)}
           readOnly={rootState.PopupData.costCentre.mode == "view"}
+          autoFocus={true}
         />
 
         <ERPInput

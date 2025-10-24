@@ -139,6 +139,7 @@ const BranchManage: React.FC = React.memo(() => {
           }}
           onChangeData={(data: any) => handleFieldChange("companyID", data.companyID)}
           label={t("company_id")}
+          autoFocus={true}
         />
 
         <ERPDateInput
@@ -146,6 +147,7 @@ const BranchManage: React.FC = React.memo(() => {
           label={t("date_from")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("createdDate", data.createdDate)}
+          
         />
 
         <ERPDateInput

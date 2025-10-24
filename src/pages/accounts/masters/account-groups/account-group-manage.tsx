@@ -97,6 +97,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("arabicName", data.arabicName)}
           readOnly={rootState.PopupData.accountGroup.mode == "view"}
+          autoFocus={true}
         />
 
         <ERPInput

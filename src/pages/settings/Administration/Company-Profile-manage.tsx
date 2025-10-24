@@ -55,6 +55,7 @@ const CompanyProfileManage: React.FC = React.memo(() => {
           placeholder={t("registered_name")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("registeredName", data.registeredName)}
+          autoFocus={true}
         />
 
         <ERPInput

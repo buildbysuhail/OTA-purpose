@@ -149,6 +149,7 @@ const GeneralMaster: React.FC = () => {
           onChange={({ value }) => {
             setMasterType(value);
           }}
+          autoFocus={true}
         />
       </div>
 

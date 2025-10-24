@@ -288,6 +288,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 handleFieldChange("partyCode", data.partyCode)
               }
               readOnly={rootState.PopupData.parties.mode == "view"}
+              autoFocus={true}
             />
 
             <ERPInput

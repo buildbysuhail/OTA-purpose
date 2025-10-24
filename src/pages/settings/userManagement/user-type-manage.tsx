@@ -49,6 +49,7 @@ export const UserTypeManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => { handleFieldChange('userTypeName', data.userTypeName) }}
           readOnly={rootState.PopupData.userType.mode == "view"}
+          autoFocus={true}
         />
 
         <ERPInput

@@ -41,6 +41,7 @@ export const SectionManage: React.FC = React.memo(() => {
           placeholder={t("code")}
           onChangeData={(data: any) => handleFieldChange("sectionCode", data.sectionCode)}
           readOnly={rootState.PopupData.section.mode == "view"}
+          autoFocus={true}
         />
 
         <ERPInput

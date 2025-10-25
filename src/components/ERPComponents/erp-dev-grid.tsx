@@ -739,7 +739,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       () => filterInitialData || {},
       [filterInitialData]
     );
-    const [filter, setFilter] = useState<any>({});
+    const [filter, setFilter] = useState<any>(filterInitialData);
     const [filterValidations, setFilterValidations] = useState<any>({});
     const [filterShowCount, setFilterShowCount] = useState<number>(0);
     const [isChildOpen, setIsChildOpen] = useState<{
@@ -2652,7 +2652,22 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                   </Item>
                 )}
 
-                {enablefilter == true && (
+                {enablefilter === true && (
+                  <Item>
+                    <button
+                      onClick={()=>{
+                        console.log("button clicked", showFilter)
+                        setShowFilter((prev) => !prev
+                      )
+                      }}
+                      className="ti-btn rounded-[2px] dark:bg-dark-bg-header dark:text-dark-text"
+                    >
+                      <i className="ri-filter-line"></i>
+                    </button>
+                  </Item>
+                )}
+
+                {/* {enablefilter && (
                   <Item>
                     <div className="hidden sm:block">
                       <ErpGridGlobalFilter
@@ -2668,7 +2683,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                       />
                     </div>
                   </Item>
-                )}
+                )} */}
 
                 {ShowGridPreferenceChooser && !showChooserOnGridHead && (
                   <Item>
@@ -2801,6 +2816,25 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               />
             ))}
             {/* <Grouping autoExpandAll={true} allowCollapsing={false} /> */}
+
+            {enablefilter === true && (   
+            <div className="hidden sm:block">
+                      <ErpGridGlobalFilter
+                        width={filterWidth}
+                        height={filterHeight}
+                        title={gridHeader}
+                        gridId={gridId}
+                        validations={filterValidations}
+                        initialData={filter}
+                        content={filterContent}
+                        toogleFilter={showFilter}
+                        onApplyFilters={(filters) => onApplyFilter(filters)}
+                        onOpened={(status) => console.log("Modal opened:", status)}
+                        onClose={(status) => { if (status) {setShowFilter(false);
+                         }}} 
+                      />
+                    </div>
+            )} 
           </DataGrid>
 
           {showTotalCount == true && (

@@ -2216,7 +2216,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                       } else {
                         totalRowCountDisplayRef.current.textContent = "0"
                       }
-                    }
+                  }
                 }
                 if (selectionMode === "multiple") {
                   FilterRowKeyDown(e)
@@ -2764,8 +2764,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 dataType={column.dataType ?? "string"}
                 allowSorting={column.allowSorting}
                 allowSearch={column.allowSearch}
-                // allowResizing={column.allowResizing}
-                // allowResizing={column.allowResizing}
+                // allowResizing={column.allowResizing ?? column.dataField !== 'actions'}
+                // width={column.dataField === 'actions' ? 100 : column.width}
+                // minWidth={column.dataField === 'actions' ? 100 : column.width}
                 allowFiltering={column.allowFiltering ?? false}
                 // width={column.width}
                 // width={
@@ -2813,8 +2814,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 }
                 sortOrder={column.sortOrder}
                 sortIndex={column.sortIndex}
+                // fixed={column.dataField === 'actions' ? true : column.fixed}
+                // fixedPosition={column.dataField === 'actions' ? 'right' : column.fixedPosition}
               />
             ))}
+            
             {/* <Grouping autoExpandAll={true} allowCollapsing={false} /> */}
 
             {enablefilter === true && (   

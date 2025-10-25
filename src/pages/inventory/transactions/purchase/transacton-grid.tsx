@@ -610,9 +610,13 @@ const TransactionGrid: React.FC<{
         allowSearch: false,
         allowFiltering: false,
         allowSorting: false,
+        allowResizing: false,
+        // allowReordering: false,
         fixed: true,
         fixedPosition: document?.dir === "rtl" ? "left" : "right",
         width: 100,
+        minWidth: 100,
+        maxWidth: 100,
 
         cellRender: (cellElement: any) => {
           return (
@@ -707,6 +711,12 @@ const TransactionGrid: React.FC<{
   useEffect(() => {
     setReload(true);
   }, [location.pathname]);
+
+  // Instead of passing functions directly as children
+  const renderContent = () => {
+    // Your content rendering logic
+    return <span>{/* Your actual content */}</span>;
+  };
 
   return (
     <Fragment>

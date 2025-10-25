@@ -9,17 +9,25 @@ interface RouteGuardProps {
   action: UserAction;
 }
 
-const RouteGuard: React.FC<RouteGuardProps> = ({ children, formCode, action, redirectPath = '/login' }) => {
-  const {hasRight} = useUserRights();
+const RouteGuard: React.FC<RouteGuardProps> = ({ 
+  children, 
+  formCode, 
+  action, 
+  redirectPath = '/login' 
+}) => {
+  const { hasRight } = useUserRights();
   
-  if (formCode != undefined) {
-    const isAllowed = hasRight(formCode,action)
-    if(isAllowed != true)
-    {
-      return <Navigate to={redirectPath} replace />;
-    }
-    
+  // Early return if no formCode
+  if (!formCode) {
+    return <>{children}</>;
   }
+
+  const isAllowed = hasRight(formCode, action);
+  
+  if (!isAllowed) {
+    return <Navigate to={redirectPath} replace />;
+  }
+
   return <>{children}</>;
 };
 

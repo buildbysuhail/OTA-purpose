@@ -1,4 +1,4 @@
-import { Dispatch, FC, Fragment, lazy, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, FC, Fragment, lazy, SetStateAction, memo, useCallback, useEffect, useState } from "react";
 
 // Lazy load layout components
 const Header = lazy(() => import("../header/header"));
@@ -19,28 +19,27 @@ const Layout: FC<LayoutProps> = ({ setMyClass }) => {
   const [isDesktop, setIsDesktop] = useState(window.innerWidth > 992);
 
   useEffect(() => {
-    // const handleResize = () => {
-    //   setIsDesktop(window.innerWidth > 992);
-    // };
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth > 992);
+    };
 
-    // window.addEventListener("resize", handleResize);
-    // return () => {
-    //   window.removeEventListener("resize", handleResize);
-    // };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const Bodyclickk = async() => {
-     let isCheck = await getStorageString("ynexverticalstyles")
-        if (isCheck== "icontext") {
-        setMyClass("");
-       }
+  const handleBodyClick = useCallback(async () => {
+    const isCheck = await getStorageString("ynexverticalstyles");
+    if (isCheck === "icontext") {
+      setMyClass("");
+    }
     if (window.innerWidth > 992) {
-      let html = document.documentElement;
+      const html = document.documentElement;
       if (html.getAttribute("icon-overlay") === "open") {
         html.setAttribute("icon-overlay", "");
       }
     }
-  };
+  }, [setMyClass]);
+
   return (
     // <>
     //   <Header />
@@ -58,14 +57,13 @@ const Layout: FC<LayoutProps> = ({ setMyClass }) => {
     <>
       <Header />
       {/* {isDesktop && */}
-       <Sidebar type="erp" />
+      <Sidebar type="erp" />
        {/* } */}
       {/* <div className="w-full h-16 bg-black fixed top-0 left-0">
       {isDesktop && <ERPAttachment />}
       </div> */}
       <ERPScrollArea className="content main-index max-h-dvh overflow-y-auto">
-      {/* <div className=""> */}
-        <div className="main-content" onClick={Bodyclickk}>
+        <div className="main-content" onClick={handleBodyClick}>
           <Content />
         </div>
       {/* </div> */}
@@ -74,4 +72,5 @@ const Layout: FC<LayoutProps> = ({ setMyClass }) => {
     </>
   );
 };
-export default Layout;
+
+export default memo(Layout);

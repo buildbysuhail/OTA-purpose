@@ -12,6 +12,7 @@ import { formStateHandleFieldChange, formStateTransactionDetailsRowsAdd, formSta
 import { APIClient } from "../../../../helpers/api-client";
 import { generateUniqueKey } from "../../../../utilities/Utils";
 import { RootState } from "../../../../redux/store";
+import { merge } from 'lodash';
 
 interface LPOGenerationProps {
     t: any;
@@ -168,8 +169,7 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
 
                 netAmount =
                     netValue + cgst + sgst + igst + cess + addnlCess - schmeDiscAmt;
-
-                Object.assign(item, {
+const merged = merge({}, item, {
                     cgst,
                     sgst,
                     igst,
@@ -180,22 +180,23 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
                     gross,
                     total: netAmount,
                 });
+                
+            return merged;
             } else {
                 vat = (netValue * vatPerc) / 100;
                 cost =
                     rate - (rate * discPerc) / 100 + (rate * vatPerc) / 100;
                 netAmount = netValue + vat - schmeDiscAmt;
-
-                Object.assign(item, {
+const merged = merge({}, item, {
                     vatAmount: vat,
                     cost,
                     netValue,
                     gross,
                     total: netAmount,
-                });
+                })
+            return merged;
             }
 
-            return item;
         } catch (ex) {
             console.error("Error in calculateRowAmount:", ex);
             return item;
@@ -238,7 +239,7 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
             const updatedInventory = response.map((row: any, i: number) => {
                 const avgSalesLast30Days = Number(row["salesLast30Days"]) || 0;
                 const avgSales = avgSalesLast30Days / 30;
-                const item: any = {
+                let item: any = {
                     slNo: generateUniqueKey(),
                     pCode: row["productCode"] ?? "",
                     product: row["productName"] ?? "",
@@ -270,7 +271,7 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
                 };
                 if (formState.method !== "All Products") {
                     item.qty = Number(row["Qty"] || 0).toFixed(2);
-                    calculateRowAmount(item);
+                    item = calculateRowAmount(item);
                 }
                 return item;
             });

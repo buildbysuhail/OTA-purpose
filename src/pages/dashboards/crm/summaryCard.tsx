@@ -38,10 +38,10 @@ const SummaryCard: FC<SummaryProps> = (props) => {
               <div className="flex items-center justify-between flex-wrap">
                 
                   <h4 className="font-semibold  text-[1.5rem] !mb-2 ">
-                    <CurrencyFormatter
+                    {/* <CurrencyFormatter
                       amount={data.summary?.total}
                       currency={data.summary?.currency}
-                    ></CurrencyFormatter>
+                    ></CurrencyFormatter> */}
                   </h4>
                 <div id="crm-total-customers">
                   <ERPReactApexChartForSummaryCard

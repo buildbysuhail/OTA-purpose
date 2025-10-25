@@ -48,7 +48,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
   let applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
-
+debugger;
   const { hasRight } = useUserRights();
   const { getAllowedFormCodes } = useUserRights();
   const [menuitems, setMenuitems] = useState<any>(() => {

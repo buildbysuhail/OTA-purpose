@@ -1,6 +1,9 @@
 import { FC, Fragment, useEffect, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ErpDevGrid, { DrillDownCellTemplate, SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  DrillDownCellTemplate,
+  SummaryConfig,
+} from "../../../../../components/ERPComponents/erp-dev-grid";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../../redux/types";
@@ -10,15 +13,23 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import SummaryFilter from "./summary-report-filter";
 import { useLocation } from "react-router-dom";
-import { erpParseFloat, isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
+import {
+  erpParseFloat,
+  isNullOrUndefinedOrEmpty,
+} from "../../../../../utilities/Utils";
 interface SummaryProps {
   gridHeader: string;
   dataUrl: string;
   gridId: string;
-  voucherType?:string;
+  voucherType?: string;
 }
 
-const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId,voucherType }) => {
+const SummaryReport: FC<SummaryProps> = ({
+  gridHeader,
+  dataUrl,
+  gridId,
+  voucherType,
+}) => {
   const { t } = useTranslation("accountsReport");
   const [filter, setFilter] = useState<any>(SummaryFilterInitialState);
   const userSession = useSelector((state: RootState) => state.UserSession);
@@ -1091,9 +1102,6 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId,voucherTy
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction: (value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
       },
       {
         column: "vat",
@@ -1121,63 +1129,42 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId,voucherTy
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction: (value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
       },
       {
         column: "grandTotal",
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction: (value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
       },
       {
         column: "billDiscount",
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction: (value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
       },
       {
         column: "cashDiscount",
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction: (value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
       },
       {
         column: "cashAmt",
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction: (value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
       },
       {
         column: "creditAmt",
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction: (value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
       },
       {
         column: "bankAmt",
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction: (value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
       },
 
       {
@@ -1185,9 +1172,6 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId,voucherTy
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction: (value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
       },
       //only in multipayment and inventorysumary
       {
@@ -1195,9 +1179,6 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId,voucherTy
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction: (value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
       },
       //only in multipayment and inventorysumary
       {
@@ -1205,9 +1186,6 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId,voucherTy
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction: (value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
       },
       //not in inactive and nahla
       // usersession.dbIdValue!== "543140180640"&&(
@@ -1216,9 +1194,6 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId,voucherTy
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction: (value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
       },
       // )
       //not in inactive
@@ -1227,9 +1202,6 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId,voucherTy
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction: (value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
       },
       //not in inactive
       {
@@ -1237,9 +1209,6 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId,voucherTy
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction: (value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
       },
       //dbid value="489995732270"
       //asmari only
@@ -1248,9 +1217,6 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId,voucherTy
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction: (value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
       },
       //asmari only
       {
@@ -1258,9 +1224,6 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId,voucherTy
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction: (value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
       },
       // //inventory summary only+09
       {
@@ -1268,18 +1231,12 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId,voucherTy
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction: (value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
       },
       {
         column: "taxableValue",
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction: (value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
       },
     ];
     // Filter columns based on the `visible` property
@@ -1287,9 +1244,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId,voucherTy
       if (column.column == "salesAmount" || column.column == "totalProfit") {
         return userSession.dbIdValue == "489995732270";
       }
-      if (
-        column.column == "totalExciseTax"
-      ) {
+      if (column.column == "totalExciseTax") {
         return clientSession.isAppGlobal;
       }
       if (column.column == "srAmount") {
@@ -1374,7 +1329,7 @@ const SummaryReport: FC<SummaryProps> = ({ gridHeader, dataUrl, gridId,voucherTy
                     clientSession.softwareDate,
                     "DD/MM/YYYY"
                   ).local(),
-                  voucherType:voucherType
+                  voucherType: voucherType,
                 }}
                 onFilterChanged={(f: any) => {
                   setFilter(f);

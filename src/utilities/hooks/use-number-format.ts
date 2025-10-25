@@ -152,9 +152,14 @@ export const useNumberFormat = (): UseNumberFormatResult => {
     return parseFloat(cleaned);
   }
   function getFormattedValue(val: number, ignoreNullOrZero: boolean = false, decimalPoint: number|undefined = undefined, cuttingPoint: number = 0,
-  numberOfZero: number = 0): string {
-        // round to 2 decimals to avoid floating-point artifacts
-         val = Math.trunc(val * 100) / 100;
+  numberOfZero: number = 0,isDouble: boolean = false): string {
+    debugger;
+    //isdouble is for sum calculation using double in C# () binary floating-point type (IEEE 754 format).
+  if(!isDouble)
+  {
+    val = Math.round((val + Number.EPSILON) * 10000) / 10000
+  }
+ 
     if(cuttingPoint > 0) {
       
     
@@ -418,7 +423,8 @@ export interface UseNumberFormatResult {
     ignoreNullOrZero?: boolean,
     decimalPoint?: number,
     cuttingPoint?: number,
-    numberOfZero?: number
+    numberOfZero?: number,
+    isDouble?: boolean
   ) => string;
   getFormattedValueToNumber: (
     val: number,

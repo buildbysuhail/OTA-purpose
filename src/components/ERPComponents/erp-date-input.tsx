@@ -94,7 +94,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
     },
     ref
   ) => {
-    const formatDate = (date: string | undefined) => {
+    const _formatDate = (date: string | undefined) => {
       if (!date) return undefined;
       return moment(date).local().format("YYYY-MM-DD");
     };
@@ -354,24 +354,25 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
 
     const handleChangeNormal = (e: React.ChangeEvent<HTMLInputElement>) => {
       const inputValue = e.target.value;
-
+      debugger;
       const yearPattern = /^(\d{2})-(\d{2})-(\d{5,})$/;
       if (yearPattern.test(inputValue)) {
         return;
       }
 
       let newValue: string | null = null;
+      let parsedDate = new Date()
       if (inputValue !== "") {
-        const parsedDate = moment(inputValue, "DD-MM-YYYY", true);
-        newValue = parsedDate.isValid() ? parsedDate.format() : inputValue;
+        parsedDate = new Date(inputValue);
+        // newValue = parsedDate.isValid() ? parsedDate.format() : inputValue;
       }
 
       if (onChange) {
-        onChange({ ...e, target: { ...e.target, value: newValue ?? "" } });
+        onChange({ ...e, target: { ...e.target, value: parsedDate as any } });
       }
 
       if (onChangeData && data) {
-        onChangeData({ ...data, [id]: newValue });
+        onChangeData({ ...data, [id]: parsedDate });
       }
     };
 
@@ -455,7 +456,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
       );
     }
 
-    const displayValue = formatDate(value) || formatDate(defaultValue) || "";
+    const displayValue = _formatDate(value) || _formatDate(defaultValue) || "";
     if (_useMUI === undefined || _useMUI === false) {
       return (
         <div className={className}>
@@ -510,14 +511,14 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
               minDate
                 ? dateTrimmer(minDate)
                 : minDateKey
-                  ? formatDate(data?.[minDateKey])
+                  ? _formatDate(data?.[minDateKey])
                   : undefined
             }
             max={
               maxDate
                 ? dateTrimmer(maxDate)
                 : maxDateKey
-                  ? formatDate(data?.[maxDateKey])
+                  ? _formatDate(data?.[maxDateKey])
                   : undefined
             }
             value={displayValue}

@@ -458,36 +458,27 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
     },
     {
       column: "totQty",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       isGroupItem: true,
       showInGroupFooter: true,
       customizeText: customizeSummaryRow,
-      cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value));
-      },
     },
     {
       column: "totNetAmount",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       isGroupItem: true,
       showInGroupFooter: true,
       customizeText: customizeSummaryRow,
-      cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value));
-      },
     },
     {
       column: "totFree",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       isGroupItem: true,
       showInGroupFooter: true,
       customizeText: customizeSummaryRow,
-      cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value));
-      },
     },
     {
       column: "productName",
@@ -496,30 +487,21 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
     },
     {
       column: "totQty",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value));
-      },
     },
     {
       column: "totNetAmount",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value));
-      },
     },
     {
       column: "totFree",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value));
-      },
     },
   ];
 

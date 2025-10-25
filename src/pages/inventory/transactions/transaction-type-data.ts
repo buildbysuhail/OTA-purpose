@@ -272,7 +272,7 @@ export const initialTransactionDetailData: TransactionDetail = {
   sortOrder: 0,
   profitPercentage: 0,
   schemeDiscount: 0,
-  moreDetails: transactionInitialMoreDetails,
+  moreDetail: transactionInitialMoreDetails,
   memoEditor: '',
   rowNumber: 0,
   actualSalesPrice: 0,

@@ -3726,7 +3726,7 @@ export const useTransaction = (
             const data: TransactionDetail =
               formState.transaction.details[rowIndex];
             const memoDetails = {
-              memo: data.moreDetails.memo || "",
+              memo: data.moreDetail.memo || "",
             };
             dispatch(
               commonParams.formStateHandleFieldChangeKeysOnly({

@@ -86,6 +86,7 @@ export const purchaseGridCol = (
         dataType: "number",
         width: 100,
         readOnly: true,
+          decimalPoint:2,
         alignment: "right",
       },
       {
@@ -840,6 +841,7 @@ export const purchaseGridCol = (
         dataType: "number",
         visible: false,
         width: 150,
+          decimalPoint:2,
         alignment: "right",
       },
       {
@@ -847,6 +849,7 @@ export const purchaseGridCol = (
         caption: t("sales_last_90_days"),
         dataType: "number",
         visible: false,
+          decimalPoint:2,
         width: 150,
         alignment: "right",
       },
@@ -870,6 +873,7 @@ export const purchaseGridCol = (
         caption: t("po_pending_qty"),
         dataType: "number",
         visible: false,
+        decimalPoint: 4,
         width: 150,
         alignment: "right",
       },
@@ -878,6 +882,7 @@ export const purchaseGridCol = (
         caption: t("sales_last_180_days"),
         dataType: "number",
         width: 150,
+        decimalPoint:2,
         alignment: "right",
       },
       {
@@ -885,6 +890,7 @@ export const purchaseGridCol = (
         caption: t("pq_pending_qty"),
         dataType: "number",
         width: 150,
+        decimalPoint:4,
         alignment: "right",
       },
       {

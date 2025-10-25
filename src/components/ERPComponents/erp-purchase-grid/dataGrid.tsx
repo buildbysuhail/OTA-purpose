@@ -1242,7 +1242,7 @@ const VirtualRow = React.memo(
               const cellValue = ((isDetails2
                 ? item.details2?.[fieldKey as keyof TransactionDetails2]
                 : isMoreDetails
-                ? item.moreDetails?.[fieldKey as keyof TransactionDetailsMore]
+                ? item.moreDetail?.[fieldKey as keyof TransactionDetailsMore]
                 : item[fieldKey as keyof TransactionDetail]) ?? "") as
                 | string
                 | boolean;

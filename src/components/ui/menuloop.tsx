@@ -22,65 +22,60 @@ function Menuloop({ MENUITEMS, toggleSidemenu, level, t }: any) {
         </span>
         <i className="fe fe-chevron-right side-menu__angle"></i>
       </Link>
-      <ul className={`child${level} ${MENUITEMS.active ? "double-menu-active" : ""}`} 
-          style={MENUITEMS.active ? { display: "block" } : { display: "none" }}>
-        {level <= 1 && (
-          <li className="slide side-menu__label1" key="menu-title">
+      <ul className={`child${level}  ${MENUITEMS.active ? "double-menu-active" : ""}`} style={MENUITEMS.active ? { display: "block" } : { display: "none" }}>
+        {level <= 1 ? (
+          <li className="slide side-menu__label1">
             <Link to="#">{t(MENUITEMS.title)}</Link>
           </li>
+        ) : (
+          ""
         )}
         {MENUITEMS.children
-          ?.filter((x: { visible: boolean | undefined; }) => x.visible === undefined || x.visible === true)
-          .map((firstlevel: any, idx: number) => (
-            <li 
-              key={`${firstlevel.path || firstlevel.title}-${idx}`}
-              className={`relative ${firstlevel.menutitle ? 'slide__category' : ''} 
-                        ${firstlevel.menutitle_lg ? 'slide__category slide__category__lg' : ''} 
-                        ${firstlevel?.type === 'empty' ? 'slide' : ''} 
-                        ${firstlevel?.type === 'link' ? 'slide' : ''} 
-                        ${firstlevel?.type === 'sub' ? 'slide has-sub' : ''} 
-                        ${firstlevel?.active ? 'open' : ''} 
-                        ${firstlevel?.selected ? 'active' : ''}`}
-            >
+          ?.filter(
+            (x: any) =>
+              x.visible == undefined ||
+              (x.visible != undefined && x.visible == true)
+          )
+          .map((firstlevel: any) => (
+            <>
               {
                 firstlevel?.disabled ? (
-                  <div className={`menu-item ${firstlevel.menutitle ? 'slide__category' : ''}`}>
-                    <p className="text-xs cursor side-menu__item">
+                  <li className={`${firstlevel.menutitle ? 'slide__category' : firstlevel.menutitle_lg ? 'slide__category slide__category__lg' : ''} ${firstlevel?.type == 'empty' ? 'slide' : ''} ${firstlevel?.type == 'link' ? 'slide' : ''} ${firstlevel?.type == 'sub' ? 'slide has-sub' : ''} ${firstlevel?.active ? 'open' : ''} ${firstlevel?.selected ? 'active' : ''}`} key={Math.random()}>
+                    <p className="text-xs cursor  side-menu__item">
                       {t(firstlevel.title)}
                     </p>
-                  </div>
+                  </li>
                 ) : (
-                  <Fragment>
-                    {firstlevel.type === "link" && (
-                      <Link to={firstlevel.path} className={`side-menu__item ${firstlevel.selected ? 'active' : ''}`}>
-                        {firstlevel.icon && <firstlevel.icon className='w-[14px]' />}
-                        <span className="relative flex items-center">
-                          <div className="w-[148px] overflow-hidden text-ellipsis whitespace-nowrap ml-2 side-menu__label"
-                            title={t(firstlevel.title).length > 20 ? t(firstlevel.title) : undefined}>
-                            {t(firstlevel.title)}
-                          </div>
-                          {firstlevel.addPath != undefined && firstlevel.addPath != null && firstlevel.addPath != "" && (
-                            <span className="absolute ms-[147px] hidden bg-black text-white group-hover:block hover:bg-[#00000047] rounded-full">
-                              {/* Replace nested Link with a button or span */} 
-                              <button 
-                                onClick={() => window.location.href = firstlevel.addPath}
-                                className={`${firstlevel.selected ? 'active' : 'active'}`}
-                              >
-                                <CirclePlus className="text-[#ffffffa1] hover:text-white hover:w-[26px] hover:h-[26px] side-menu__label" />
-                              </button>
-                            </span>
-                          )}
-                          {firstlevel.badgetxt ? (
-                            <span className={firstlevel.class}>
-                              {firstlevel.badgetxt}
-                            </span>
-                          ) : (
-                            ""
-                          )}
-                        </span>
-                      </Link>
-                    )}
-                    {firstlevel.type === "empty" && (
+                  <li className={`relative ${firstlevel.menutitle ? 'slide__category' : firstlevel.menutitle_lg ? 'slide__category slide__category__lg' : ''} ${firstlevel?.type == 'empty' ? 'slide' : ''} ${firstlevel?.type == 'link' ? 'slide' : ''} ${firstlevel?.type == 'sub' ? 'slide has-sub' : ''} ${firstlevel?.active ? 'open' : ''} ${firstlevel?.selected ? 'active' : ''}`} key={Math.random()}>
+                    {firstlevel.type === "link" ?
+                      <Link to={firstlevel.path} className={`side-menu__item ${firstlevel.selected ? 'active' : ''} group `}>
+                      {firstlevel.icon && <firstlevel.icon className='w-[14px]' />}
+                      <span className="relative flex items-center">
+                        <div className="w-[148px] overflow-hidden text-ellipsis whitespace-nowrap ml-2 side-menu__label"
+                          title={t(firstlevel.title).length > 20 ? t(firstlevel.title) : undefined}>
+                          {t(firstlevel.title)}
+                        </div>
+                        {firstlevel.addPath != undefined && firstlevel.addPath != null && firstlevel.addPath != "" &&
+                          <span className=" absolute ms-[147px] hidden bg-black text-white  group-hover:block hover:bg-[#00000047] rounded-full">
+                            <Link to={firstlevel.addPath} className={` ${firstlevel.selected ? 'active' : 'active'}`}>
+                            <CirclePlus className="text-[#ffffffa1]  hover:text-white hover:w-[26px] hover:h-[26px] side-menu__label" />
+                              {/* <i className="side-menu__icon">
+                                <route.icon />
+                              </i> */}
+                            </Link>
+                          </span>
+                        }
+                        {firstlevel.badgetxt ? (
+                          <span className={firstlevel.class}>
+                            {firstlevel.badgetxt}
+                          </span>
+                        ) : (
+                          ""
+                        )}
+                      </span>
+                    </Link>
+                      : ""}
+                    {firstlevel.type === "empty" ?
                       <Link to="#" className='side-menu__item'>
                         {firstlevel.icon}
                         <span className="">
@@ -94,19 +89,14 @@ function Menuloop({ MENUITEMS, toggleSidemenu, level, t }: any) {
                           )}
                         </span>
                       </Link>
-                    )}
-                    {firstlevel.type === "sub" && (
-                      <Menuloop 
-                        MENUITEMS={firstlevel} 
-                        toggleSidemenu={toggleSidemenu} 
-                        level={level + 1}
-                        t={t}
-                      />
-                    )}
-                  </Fragment>
+                      : ""}
+                    {firstlevel.type === "sub" ?
+                      <Menuloop MENUITEMS={firstlevel} toggleSidemenu={toggleSidemenu} level={level + 1} />
+                      : ''}
+                  </li>
                 )
               }
-            </li>
+            </>
           ))}
       </ul>
     </Fragment>

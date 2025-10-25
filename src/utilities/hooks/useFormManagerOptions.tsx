@@ -38,7 +38,8 @@ export interface UseFormManagerOptions {
   loadInitialData?: boolean;
   useApiClient?: boolean;
   initialData?: any;
-  isMessages?: boolean
+  isMessages?: boolean;
+  isPut?: boolean
 }
 
 export function useFormManager<T>({
@@ -54,6 +55,7 @@ export function useFormManager<T>({
   useApiClient = false,
   initialData,
   isMessages = false,
+  isPut = false,
 }: UseFormManagerOptions) {
   const location = useLocation();
   const appDispatch = useAppDispatch();
@@ -213,6 +215,7 @@ export function useFormManager<T>({
   ]);
 
   const handleSubmit = useCallback(async () => {
+    debugger;
     setIsLoading(true);
     if (useApiClient) {
       try {
@@ -220,7 +223,7 @@ export function useFormManager<T>({
         let rawData = (useApiClient ? localFormState : reduxFormState)?.data
 
         const sanitizedData = sanitizeData(rawData, initialData?.data);
-        if (isEdit) {
+        if (isEdit || isPut) {
           response = await apiClient.put(
             `${url}`,
             sanitizedData
@@ -307,6 +310,7 @@ export function useFormManager<T>({
     rName,
     appDispatch,
     isEdit,
+    isPut,
     key,
     onSuccess,
     onError,

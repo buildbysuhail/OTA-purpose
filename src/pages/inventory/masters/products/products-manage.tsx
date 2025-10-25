@@ -38,12 +38,12 @@ import { handleResponse } from "../../../../utilities/HandleResponse";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import { DataGrid } from "devextreme-react";
-import { Column, Editing, KeyboardNavigation, Paging, RemoteOperations, Scrolling } from "devextreme-react/cjs/data-grid";
-import ERPSubmitButton from "../../../../components/ERPComponents/erp-submit-button";
-import { ProductMultiBarcodeManage } from "../products/product-multibarcode-manage";
 import MultiRatesGcc from "./products-gcc/products-multi-rates-gcc";
 import { loadMultiRateToGrid } from "./helper";
 import { Countries } from "../../../../redux/slices/user-session/reducer";
+import { Column, Editing, KeyboardNavigation, Paging, RemoteOperations, Scrolling } from "devextreme-react/cjs/data-grid";
+import ERPSubmitButton from "../../../../components/ERPComponents/erp-submit-button";
+import { ProductMultiBarcodeManage } from "../products/product-multibarcode-manage";
 
 export interface MultiBarcodeState {
   open: boolean;
@@ -73,6 +73,7 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
     onClose: undefined // Add onClose to the state
   });
 
+  const [isPut, setIsPut] = useState<boolean>(false);
   const {
     isEdit,
     handleSubmit,
@@ -92,6 +93,7 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
     keyField: "productID",
     isMessages: true,
     loadInitialData: false,
+    isPut: isPut,
     initialData: {
       data: initialProductData,
     },
@@ -129,6 +131,10 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
       }
     }
   };
+useEffect(() => {
+  debugger;
+ setIsPut(getFieldProps("batch.productBatchID").value > 0)
+}, [getFieldProps("batch.productBatchID").value])
 
   const updatePrice = async () => {
     const obj = getFieldProps("*") as productDto;
@@ -310,7 +316,7 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
         data = (await api.getAsync(
           `${Urls.products}${rootState.PopupData.products?.key}`
         )) as productDto;
-        nextProductCode = data.product.productCode ?? "";
+        nextProductCode = data?.product?.productCode ?? "";
         data.details = true;
         data.taxCategoryTaxPercentage = data?.product?.taxCategoryValue ?? 0
       } else {

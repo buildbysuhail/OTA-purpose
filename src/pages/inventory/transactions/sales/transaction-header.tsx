@@ -719,7 +719,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     id="draftMode"
                     className="text-left !m-0 dark:text-dark-text"
-                    label={t(formState.formElements.draftMode.label)}
+                    label={t(formState.formElements.draftMode?.label)}
                     checked={formState.draftMode}
                     onChange={(e) => {
                       dispatch(

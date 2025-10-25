@@ -3107,7 +3107,7 @@ export const useTransaction = (
           voucherType === "PE" ||
           voucherType === "GRN" ||
           voucherType === "PQ") ||
-          (formType === "VAT" &&
+          (formState.transaction.master.voucherForm === "VAT" &&
             voucherType !== "PO" &&
             voucherType !== "PE" &&
             voucherType !== "GRN" &&

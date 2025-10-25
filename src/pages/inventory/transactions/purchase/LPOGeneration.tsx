@@ -58,29 +58,29 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
             try {
                 const baseUrl = `${Urls.inv_transaction_base}${transactionType}/Data/`;
                 const endpoints = [
-                    { url: 'AccLedgers/', params: `ledgerType=${LedgerType.Supplier}`, key: 'supplierId' },
-                    { url: 'ProductCategory/', key: 'productCategoryId' },
-                    { url: 'ProductGroup/', key: 'productGroupId' },
-                    { url: 'GroupCategory/', key: 'groupCategoryId' },
-                    { url: 'Section/', key: 'sectionId' },
-                    { url: 'Product/', key: 'productId' },
-                    { url: 'ProductsCode/', key: 'productCode' }
+                    // { url: 'AccLedgers/', params: `ledgerType=${LedgerType.Supplier}`, key: 'supplierId' },
+                    // { url: 'ProductCategory/', key: 'productCategoryId' },
+                    // { url: 'ProductGroup/', key: 'productGroupId' },
+                    // { url: 'GroupCategory/', key: 'groupCategoryId' },
+                    // { url: 'Section/', key: 'sectionId' },
+                    // { url: 'Product/', key: 'productId' },
+                    // { url: 'ProductsCode/', key: 'productCode' }
                 ];
 
-                const results = await Promise.all(
-                    endpoints.map(({ url, params }) =>
-                        getApLocalDataByUrl(baseUrl + url, params)
-                    )
-                );
+                // const results = await Promise.all(
+                //     endpoints.map(({ url, params }) =>
+                //         getApLocalDataByUrl(baseUrl + url, params)
+                //     )
+                // );
 
-                const updates: Partial<FormStates> = {};
-                results.forEach((data, index) => {
-                    const { key } = endpoints[index];
-                    if (Array.isArray(data) && data.length > 0) {
-                        updates[key as keyof FormStates] = data[0].id || data[0].code || "";
-                    }
-                });
-                setFormStates(prev => ({ ...prev, ...updates }));
+                // const updates: Partial<FormStates> = {};
+                // results.forEach((data, index) => {
+                //     const { key } = endpoints[index];
+                //     if (Array.isArray(data) && data.length > 0) {
+                //         updates[key as keyof FormStates] = data[0].id || data[0].code || "";
+                //     }
+                // });
+                // setFormStates(prev => ({ ...prev, ...updates }));
 
 
                 dispatch(formStateHandleFieldChange({ fields: { loading: { isLoading: false, text: 'Please wait while LPO' } } }));

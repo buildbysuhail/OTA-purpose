@@ -92,14 +92,6 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
     (state: RootState) => state.InventoryTransaction
   );
   
-  // State management
-  const [toDate] = useState<string>(() => new Date().toISOString().split("T")[0]);
-  const [fromDate] = useState<string>(() => {
-    const date = new Date();
-    date.setMonth(date.getMonth() - 1);
-    return date.toISOString().split("T")[0];
-  });
-  
   const [selectedMaster, setSelectedMaster] = useState<{
     masterID: number;
     branchID: number;
@@ -108,8 +100,16 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
   const [lastShownMasterID, setLastShownMasterID] = useState<number>(0);
   const [isProcessButtonVisible, setIsProcessButtonVisible] = useState<boolean>(true);
   const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
-  
+
+const [selectedDate, setSelectedDate] = useState<any>(() => {
+  const now = new Date().toISOString();
+  return {
+    FromDate: now,
+    ToDate: now,
+  };
+});
   const gridRef = useRef<any>(null);
+    
   const detailGridRef = useRef<any>(null);
 
   // Determine which form object to use
@@ -128,9 +128,8 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
 
   // Determine API endpoint based on voucher type and special conditions
   const getApiEndpoint = useCallback(() => {
-   
     if (voucherType === "POC" && clickShowBtn) {
-      return `${Urls.inv_transaction_base}${formState.transactionType}/ConsolidatedOtherBranchPurchaseOrders/?fromDate=${selectedDate.FromDate}&toDate=${selectedDate.ToDate}&`;
+      return `${Urls.inv_transaction_base}${formState.transactionType}/ConsolidatedOtherBranchPurchaseOrders`;
       
     }
     
@@ -153,14 +152,21 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
     }
     
     return `${Urls.inv_transaction_base}${formState.transactionType}/PendingTransactionDetails/`;
-  }, [ voucherType, toVoucherType, branchID, formState.transactionType]);
+  }, [
+  voucherType, 
+  toVoucherType, 
+  branchID, 
+  formState.transactionType, 
+  clickShowBtn,
+  selectedDate.FromDate,  // Add this
+  selectedDate.ToDate,    // Add this
+  formState?.transaction?.master?.ledgerID  // Add this
+]);
 
   // Build post data for main grid
   const getMainGridPostData = useCallback(() => {
-    const baseData: any = {
+    let baseData: any = {
       voucherType: voucherType === "POC" ? "PO" : voucherType,
-      // fromDate,
-      // toDate,
     };
 
     if (partyLedgerID > 0) {
@@ -175,9 +181,13 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
     if (showAllBranchPending) {
       baseData.showAllBranch = true;
     }
+    if(voucherType === "POC") {
+      baseData.fromDate = selectedDate.FromDate;
+      baseData.toDate = selectedDate.ToDate;
+    }
 
     return baseData;
-  }, [voucherType, fromDate, toDate, partyLedgerID, branchID, showAllBranchPending]);
+  }, [voucherType, partyLedgerID, branchID, showAllBranchPending]);
 
   // Get voucher prefix for display
   const getVoucherPrefix = useCallback((vType: string): string => {
@@ -397,10 +407,7 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
     return baseColumns;
   }, [voucherType, toVoucherType, t]);
 
-  const [selectedDate, setSelectedDate] = useState<any>({
-      FromDate: new Date().toISOString(),
-      ToDate: new Date().toISOString(),
-    });
+
 
   const handleDateChange = (field: "FromDate" | "ToDate", value: string) => { 
     setSelectedDate((prev:any) => ({ ...prev, [field]: value }));
@@ -508,32 +515,59 @@ debugger;
     t,
   ]);
 
-  // Initialize process button visibility based on conditions
-  // useEffect(() => {
-    // Hide process button if no form object is provided
-  //   if (!activeFormObject) {
-  //     setIsProcessButtonVisible(false);
-  //   } else {
-  //     setIsProcessButtonVisible(true);
-  //   }
-  // }, [activeFormObject]);
-
-  // Build detail grid post data
   const getDetailGridPostData = useCallback(() => {
     const baseData: any = {
       transactionMasterID: selectedMaster.masterID,
     };
-
-    
-
     if ((voucherType === "GR" && toVoucherType === "BTO") || branchID) {
       baseData.branchID = branchID || selectedMaster.branchID;
     }
-
     return baseData;
   }, [selectedMaster, voucherType, toVoucherType, branchID]);
-  const memoDataUrl = useMemo(() => getApiEndpoint(), [voucherType]);
+  // const memoDataUrl = useMemo(() =>  getApiEndpoint(),[voucherType]);
+const memoDataUrl = useMemo(() => getApiEndpoint(), [
+  voucherType,
+  clickShowBtn,
+  selectedDate.FromDate,
+  selectedDate.ToDate,
+  formState?.transaction?.master?.ledgerID,
+  branchID,
+  toVoucherType,
+  formState.transactionType
+]);
   const memoPostData = useMemo(() => getMainGridPostData(), [voucherType]);
+// Add this before the return statement
+const memoizedMainGrid = useMemo(() => (
+  <ErpDevGrid
+    ref={gridRef}
+    columns={mainGridColumns}
+    dataUrl={memoDataUrl}
+    postData={memoPostData}
+    method={ActionType.POST}
+    gridId={`grd_pending_orders_${voucherType}`}
+    height={300}
+    hideGridAddButton={true}
+    enableScrollButton={false}
+    selectionMode="multiple"
+    scrolling={{
+      mode: 'virtual',
+      useNative: true,
+      showScrollbar: 'always'
+    }}
+    initialSort={[{ selector: "voucherNumber", desc: true }]}
+    onRowClick={handleMainGridRowClick}
+    showPrintButton={false}
+    allowExport={false}
+    allowSearching={false}
+    hideToolbar={true}
+  />
+), [
+  mainGridColumns,
+  memoDataUrl,
+  memoPostData,
+  voucherType,
+  handleMainGridRowClick
+]);
 
   return (
     <div className="pending-order-list-container">
@@ -577,7 +611,7 @@ debugger;
 
       {/* Main Grid - Pending Orders */}
       <div className="mb-4">
-        <ErpDevGrid
+        {/* <ErpDevGrid
           ref={gridRef}
           columns={mainGridColumns}
           dataUrl={memoDataUrl}
@@ -588,17 +622,22 @@ debugger;
           hideGridAddButton={true}
           enableScrollButton={false}
           selectionMode="multiple"
+          scrolling={{
+                mode: 'virtual',
+                useNative: true,
+                showScrollbar: 'always'
+              }}
           initialSort={[{ selector: "voucherNumber", desc: true }]}
           // gridHeader={t(`pending_${voucherType.toLowerCase()}_list`)}  
           onRowClick={handleMainGridRowClick}
-          // onSelectionChanged={handleSelectionChanged}
           showPrintButton={false}
-           allowExport={false}
+          allowExport={false}
           allowSearching={false}
           hideToolbar={true}
           // showRowIndex={true}
           
-        />
+        /> */}
+        {memoizedMainGrid}
       </div>
 
       {/* Detail Grid - Order Details */}

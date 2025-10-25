@@ -229,6 +229,7 @@ const CounterSettings: React.FC<CounterSettingsProps> = ({ token, isFromLogin, o
                 columns={columns}
                 dataUrl={Urls.counter_settings}
                 gridId="grid_counter_settings"
+                height={500}
                 hideGridAddButton={true}
                 hideDefaultExportButton={true}
                 onRowClick={handleRowClick}

@@ -1464,15 +1464,14 @@ export const purchaseGridCol = (
           visible: false,
         };
       }
-      if (voucherType == VoucherType.LPO &&
-        (
-          mi.dataField?.includes("cost") ||
-          mi.dataField?.includes("supplierID") 
-        )
+      if (voucherType == VoucherType.LPO
       ) {
         return {
           ...mi,
-          visible: false,
+          readOnly: mi.dataField?.includes("qty")?false:true,
+          allowEditing: mi.dataField?.includes("qty")?true:false,
+          visible: mi.dataField?.includes("cost") ||
+          mi.dataField?.includes("supplierID")? false:true,
         };
       }
        if (voucherType == VoucherType.LPO &&

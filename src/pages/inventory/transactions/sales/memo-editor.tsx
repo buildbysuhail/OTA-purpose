@@ -33,7 +33,7 @@ const MemoEditorModal: React.FC<MemoEditorModalProps> = ({ isOpen, onClose, t, r
         fields: {
           memoEditor: { visible: false, data: "", rowIndex: -1 },
           transaction: {
-            details: [{ moreDetails: {memo: memoText}, slNo: slNo }]
+            details: [{ moreDetail: {memo: memoText}, slNo: slNo }]
           }
         },
         updateOnlyGivenDetailsColumns: true,

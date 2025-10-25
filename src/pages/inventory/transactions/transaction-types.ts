@@ -339,7 +339,7 @@ export interface TransactionDetail {
   sortOrder: number;
   profitPercentage: number;
   schemeDiscount: number;
-  moreDetails: TransactionDetailsMore;
+  moreDetail: TransactionDetailsMore;
   memoEditor: string;
   rowNumber: number;
   actualSalesPrice: number;

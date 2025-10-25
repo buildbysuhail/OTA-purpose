@@ -135,10 +135,6 @@ const SuppliersCommon: React.FC<{
             height={gridHeight.windows}
           >
 
-            <Paging
-              defaultPageSize={5}
-            />
-
             <Editing
               mode="cell"
               allowUpdating={true}

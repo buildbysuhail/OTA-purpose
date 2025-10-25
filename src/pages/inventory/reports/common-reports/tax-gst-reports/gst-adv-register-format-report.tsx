@@ -1209,10 +1209,8 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({ gridHeader, dataU
     });
   }, [t, filter, location.pathname]);
   const { getFormattedValue } = useNumberFormat();
-  const customizeSummaryRow = useMemo(() => {
+ const customizeSummaryRow = useMemo(() => {
     return (itemInfo: any) => {
-      console.log("itemInfo");
-      console.log(itemInfo);
       const value = itemInfo.value;
       if (
         value === null ||
@@ -1222,7 +1220,7 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({ gridHeader, dataU
       ) {
         return "0";
       }
-      return getFormattedValue(value) || "0";
+      return getFormattedValue(value,false,undefined,0,0,true);
     };
   }, []);
   const customizeDate = (itemInfo: any) => `TOTAL`;

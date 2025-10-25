@@ -1798,14 +1798,14 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId,voucher
       },
       {
         column: "totalProfit",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
        
       },
       {
         column: "netAmount",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
         
@@ -1819,7 +1819,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId,voucher
       //is not is appglobal + 4 decimal
       {
         column: "vat",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: (itemInfo: { value: any }) => {
           return (
@@ -1838,56 +1838,43 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId,voucher
           return erpParseFloat(getFormattedValue(value, false, 4));
         },
       },
-      {
-        column: "stdPurchasePrice",
-        summaryType: "custom",
-        valueFormat: "currency",
-        customizeText: customizeSummaryRow,
+      // {
+      //   column: "stdPurchasePrice",
+      //   summaryType: "sum",
+      //   valueFormat: "currency",
+      //   customizeText: customizeSummaryRow,
       
-      },
-      {
-        column: "stdSalesPrice",
-        summaryType: "custom",
-        valueFormat: "currency",
-        customizeText: customizeSummaryRow,
+      // },
+      // {
+      //   column: "stdSalesPrice",
+      //   summaryType: "sum",
+      //   valueFormat: "currency",
+      //   customizeText: customizeSummaryRow,
       
-      },
+      // },
       {
         column: "quantity",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-           cellSummaryAction:(value: number) => {
-                     return erpParseFloat(getFormattedValue(value, false, 4));
-                   },
       },
       {
         column: "free",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
-        customizeText: customizeSummaryRowString,
-        cellSummaryAction:(value: number) => {
-                  return erpParseFloat(getFormattedValue(value, false, 4));
-                },
+        customizeText: customizeSummaryRowString
       },
       {
         column: "freeValue",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
-        customizeText: customizeSummaryRowString,
-        cellSummaryAction:(value: number) => {
-                  return erpParseFloat(getFormattedValue(value, false, 4));
-                },
-        
+        customizeText: customizeSummaryRowString
       },
       {
         column: "freeCost",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRowString,
-        cellSummaryAction:(value: number) => {
-                  return erpParseFloat(getFormattedValue(value, false, 8));
-                },
       },
       {
         column: "qtyNos",
@@ -1897,77 +1884,59 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId,voucher
       },
       {
         column: "xRate",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
-        customizeText: customizeSummaryRowString,
-         cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value, false, 6));
-        },
+        customizeText: customizeSummaryRowString
       },
       {
         column: "additionalExpense",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-      
       },
       //.DBID_VALUE == "543140180640"
       {
         column: "baseUnitQuantity",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-      
       },
       {
         column: "totalDiscount",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
       },
       {
         column: "grossValue",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-     
       },
       {
         column: "netValue",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
         
       },
       {
         column: "schemeDisc",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
       },
       {
         column: "exciseTax",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
       },
       {
         column: "taxableValue",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
       },
     ];
     return _summaryItems.filter((column) => {
@@ -2006,7 +1975,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId,voucher
                 filterWidth={700}
                 filterInitialData={{
                   ...RegisterFilterInitialState,
-                  fromDate: moment(
+                   fromDate: moment(
                     clientSession.softwareDate,
                     "DD/MM/YYYY"
                   ).local(),

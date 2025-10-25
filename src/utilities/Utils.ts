@@ -28,7 +28,7 @@ export const formatDate = (dateStr: string): string => {
   } else {
     date = moment(dateStr, format).local();
   }
-  const str = date.format("DD/MMM/YYYY");
+  const str = date.format("DD/MM/YYYY");
   return str;
 };
 

@@ -269,7 +269,7 @@ const merged = merge({}, item, {
                     qty: 0.0,
                     headerIndex: i + 1,
                 };
-                if (formState.method !== "All Products") {
+                if (formState.method !== "all products") {
                     item.qty = Number(row["qty"] || 0).toFixed(2);
                     item = calculateRowAmount(item);
                 }

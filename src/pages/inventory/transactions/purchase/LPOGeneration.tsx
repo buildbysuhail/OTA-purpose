@@ -270,7 +270,7 @@ const merged = merge({}, item, {
                     headerIndex: i + 1,
                 };
                 if (formState.method !== "All Products") {
-                    item.qty = Number(row["Qty"] || 0).toFixed(2);
+                    item.qty = Number(row["qty"] || 0).toFixed(2);
                     item = calculateRowAmount(item);
                 }
                 return item;

@@ -346,8 +346,7 @@ export type ProductNutrientsValidationsDto = {};
 export interface SupplierProductsInputDto {
   ledgerID: number;
   refCode: string;
-
-  supplierCode: string;
+  ledgerCode: string;
   supplier: string;
 }
 

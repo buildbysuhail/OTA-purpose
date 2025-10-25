@@ -24,7 +24,7 @@ const SuppliersCommon: React.FC<{
   {
     ledgerID: 0,
     refCode: "",
-    supplierCode: '',
+    ledgerCode: '',
     supplier: '',
   };
 
@@ -57,7 +57,7 @@ const SuppliersCommon: React.FC<{
           <div className="flex-1 min-w-[250px]">
             <ERPInput
               id="supplier_code"
-              value={data.supplierCode}
+              value={data.ledgerCode}
               label={t("supplier_code")}
               disabled={isView}
               placeholder={t("enter_supplier_code")}
@@ -65,7 +65,7 @@ const SuppliersCommon: React.FC<{
               onChange={(e) =>
                 setData((prev: any) => ({
                   ...prev,
-                  supplierCode: e.target.value,
+                  ledgerCode: e.target.value,
                 }))
               }
               className="w-full"
@@ -82,13 +82,16 @@ const SuppliersCommon: React.FC<{
                 getListUrl: Urls.data_CustSupp,
                 valueKey: "id",
                 labelKey: "name",
+                nameKey:"alias",
               }}
               onChange={(e) =>
                 setData((prev: any) => {
+                  debugger;
                   return {
                     ...prev,
                     ledgerID: e.value,
-                    supplier: e.name,
+                    supplier: e.label,
+                    ledgerCode:e.name
                   }
                 })
               }
@@ -147,7 +150,7 @@ const SuppliersCommon: React.FC<{
             />
 
             <Column
-              dataField="supplierCode"
+              dataField="ledgerCode"
               caption={t("supplier_code")}
             />
 

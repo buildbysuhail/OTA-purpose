@@ -3102,12 +3102,16 @@ export const useTransaction = (
           const { voucherType, voucherForm } = formState.transaction.master;
 
           if (
-            !clientSession.isAppGlobal &&
-            (voucherType === "PO" ||
-              voucherType === "PE" ||
-              (voucherForm === "VAT" &&
-                voucherType !== "PO" &&
-                voucherType !== "PE"))
+           !clientSession.isAppGlobal &&
+        (voucherType === "PO" ||
+          voucherType === "PE" ||
+          voucherType === "GRN" ||
+          voucherType === "PQ") ||
+          (formType === "VAT" &&
+            voucherType !== "PO" &&
+            voucherType !== "PE" &&
+            voucherType !== "GRN" &&
+            voucherType !== "PQ")
           ) {
             outDetail.vatPerc = Number(product.pVatPerc || 0);
             outDetail.cstPerc = Number(product.purchaseExciseTaxPerc || 0);

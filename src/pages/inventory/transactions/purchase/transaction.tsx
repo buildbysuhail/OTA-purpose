@@ -1201,6 +1201,7 @@ debugger;
     batchSelectionData();
   }, [formState.batchSelectionData]);
   useEffect(() => {
+    debugger;
     const fetchData = async () => {
       try {
         if (formState.popupSearchSelectionData != "") {

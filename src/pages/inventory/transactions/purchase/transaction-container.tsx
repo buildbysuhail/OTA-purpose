@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { useUnsavedChangesWarning } from "../../../use-unsaved-changes-warning";
 import VoucherType from "../../../../enums/voucher-types";
 import { TransactionProps } from "../transaction-types";
+import { resetState } from "../reducer";
 
 const api = new APIClient();
 const TransactionFormContainer: React.FC<TransactionProps> = (props) => {
@@ -102,6 +103,7 @@ const TransactionFormContainer: React.FC<TransactionProps> = (props) => {
   // };
   const initializeVoucher = async (_input: any, _data: any) => {
     try {
+      dispatch(resetState());
       setReadyToShowVoucher({ready: true, input: _input, data: _data});
     } catch (error) {
       console.error("Error initializing voucher:", error);
@@ -170,6 +172,7 @@ const TransactionFormContainer: React.FC<TransactionProps> = (props) => {
               ); // Call initializeVoucher here
             }
             else {
+              dispatch(resetState());
               setReadyToShowVoucher({ready:true,input: _input, data: {
                 formType: _input.formType,
               voucherNo: 0,

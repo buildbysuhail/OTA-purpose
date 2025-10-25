@@ -640,6 +640,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   useEffect(() => {
     (async () => {
+      if(formState.transaction.master.ledgerID < 1) {
+        return;
+      }
       if (formState.isInitialLedger != true) {
         await loadLedgerData(undefined, dispatch);
       } else {

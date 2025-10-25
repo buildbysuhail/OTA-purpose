@@ -671,6 +671,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   useEffect(() => {
     (async () => {
+      debugger;
+      if(formState.transaction.master.ledgerID < 1) {
+        return;
+      }
       if (formState.isInitialLedger != true) {
         setIsDropDownOpen({open: true, autoAddressFocus: true})
         await loadLedgerData(undefined, dispatch);

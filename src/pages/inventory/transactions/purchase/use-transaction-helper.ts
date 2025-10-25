@@ -1326,12 +1326,14 @@ debugger;
         (voucherType === "PO" ||
           voucherType === "PE" ||
           voucherType === "GRN" ||
-          voucherType === "PQ") ||
+          voucherType === "PQ" ||
+          voucherType === "LPO") ||
           (formType === "VAT" &&
             voucherType !== "PO" &&
             voucherType !== "PE" &&
             voucherType !== "GRN" &&
-            voucherType !== "PQ")
+            voucherType !== "PQ"&&
+            voucherType !== "LPO")
       ) {
         detail.vatPerc = row.vatPercentage;
         detail.vatAmount = getFormattedValueIgnoreRoundingToNumber(

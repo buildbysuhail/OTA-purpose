@@ -45,6 +45,7 @@ export const SchemesManage: React.FC = React.memo(() => {
             handleFieldChange("schemeCode", data.schemeCode);
           }}
           readOnly={rootState.PopupData.schemes.mode == "view"}
+          autoFocus={true}
         />
 
         <ERPInput

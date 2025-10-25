@@ -671,6 +671,19 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       return truncated;
     };
 
+    // This is done for autoFocus in combobox
+    const input__Ref = useRef<HTMLInputElement | null>(null);
+        useEffect(() => {
+          if (autoFocus) {
+            const timer = setTimeout(() => {
+              input__Ref.current?.focus();
+              input__Ref.current?.select();
+            }, 300); 
+            return () => clearTimeout(timer);
+          }
+        }, [autoFocus]);
+        // -------------------------------------
+
     useEffect(() => {
       if (initial?.label) {
         setDisplayValue(
@@ -1851,7 +1864,16 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
             <div className="flex" ref={comboboxRef}>
               <Combobox.Input
                 id={id}
-                ref={ref}
+                // This is done for autoFocus in combobox
+                ref={(r) => {
+                    input__Ref.current = r;
+                    if (typeof ref === "function") {
+                      ref(r);
+                    } else if (ref) {
+                      ref.current = r;
+                    }
+                  }}
+                // ref={ref}
                 style={{
                   height,
                   fontSize,

@@ -155,6 +155,7 @@ export const SalesmanRoute: React.FC = React.memo(() => {
           validation={formStateValidation?.salesManID}
           onChangeData={(data: any) => handleFieldChange("salesManID", data.salesManID)}
           disabled={rootState.PopupData.salesManRoute.mode == "view"}
+          autoFocus={true}
         />
 
         <ERPDataCombobox

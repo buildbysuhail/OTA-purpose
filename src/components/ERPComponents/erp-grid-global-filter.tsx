@@ -19,7 +19,7 @@ interface ErpGridGlobalFilterProps {
   content: React.ReactNode; // Pass pre-defined JSX for content
   onApplyFilters?: (filters: any) => void;
   toogleFilter?: boolean;
-  onClose?: () => void;
+  onClose?: ( status : boolean) => void;
   onOpened?: ( status : boolean) => void;
 }
 
@@ -112,6 +112,9 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
     if(isOpen) {
       onOpened && onOpened(true);
     }
+    else{
+      onClose && onClose(true)
+    }
   }, [isOpen]);
   useEffect(() => {
     setFormState((prev: any) => ({
@@ -122,9 +125,9 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
 
   return (
     <>
-      <button onClick={() => setIsOpen(true)} className="ti-btn rounded-[2px] dark:bg-dark-bg-header dark:text-dark-text ">
+      {/* <button onClick={() => setIsOpen(true)} className="ti-btn rounded-[2px] dark:bg-dark-bg-header dark:text-dark-text ">
         <i className="ri-filter-line"></i>
-      </button>
+      </button> */}
       <ERPModal
         isForm
         isFullHeight

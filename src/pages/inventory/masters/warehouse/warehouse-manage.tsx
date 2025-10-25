@@ -44,6 +44,7 @@ export const WarehouseManage: React.FC = React.memo(() => {
             handleFieldChange("warehouseName", data.warehouseName);
           }}
           readOnly={rootState.PopupData.warehouse.mode == "view"}
+          autoFocus={true}
         />
 
         <ERPInput

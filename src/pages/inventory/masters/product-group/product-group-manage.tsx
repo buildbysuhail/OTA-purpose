@@ -63,6 +63,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
             handleFieldChange("groupName", data.groupName);
           }}
           readOnly={rootState.PopupData.productGroup.mode == "view"}
+          autoFocus={true}
         />
 
         <ERPInput

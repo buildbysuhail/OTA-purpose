@@ -40,6 +40,7 @@ export const CurrencyMasterManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => { handleFieldChange("countryID", data.countryID); }}
           label={t("country")}
           disabled={rootState.PopupData.currencyMaster.mode == "view"}
+          autoFocus={true}
         />
 
         <ERPInput

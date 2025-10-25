@@ -875,5 +875,16 @@
   "b_stock": "مخزون الفرع",
   "new": "جديد",
   "ord_card_no": "رقم بطاقة الطلب",
-  "enter_ord_card_no": "أدخل رقم بطاقة الطلب"
+  "enter_ord_card_no": "أدخل رقم بطاقة الطلب",
+
+  "avg_sales": "متوسط المبيعات",
+  "supplier_id": "معرّف المورد",
+  "sold": "مُباع",
+  "sales_last_30_days": "مبيعات آخر 30 يومًا",
+  "sales_last_90_days": "مبيعات آخر 90 يومًا",
+  "supplier_ref_code": "رمز مرجع المورد",
+  "last_sold_date": "تاريخ آخر بيع",
+  "po_pending_qty": "الكمية المعلقة لأمر الشراء",
+  "sales_last_180_days": "مبيعات آخر 180 يومًا",
+  "pq_pending_qty": "الكمية المعلقة لعرض سعر الشراء"
 }

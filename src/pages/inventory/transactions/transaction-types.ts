@@ -466,8 +466,6 @@ export interface SummaryItems {
   grossFc: number;
   totalAddExpense: number;
   nosQty: number;
-  pCode: string;
-  barCode: string;
   margin: number;
   salesPrice: string;
   cgst: number;

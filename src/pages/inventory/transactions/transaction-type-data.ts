@@ -42,8 +42,6 @@ export const initialInventoryTotals: SummaryItems = {
   grossFc: 0,
   totalAddExpense: 0,
   nosQty: 0,
-  pCode: '',
-  barCode: '',
   margin: 0,
   salesPrice: '',
   cgst: 0,
@@ -571,16 +569,6 @@ export const TransactionFormStateInitialData: TransactionFormState = {
     {
       column: "nosQty",
       summaryType: "sum",
-      valueFormat: "decimal",
-    },
-    {
-      column: "pCode",
-      summaryType: "count",
-      valueFormat: "decimal",
-    },
-    {
-      column: "barCode",
-      summaryType: "count",
       valueFormat: "decimal",
     },
     {

@@ -5,10 +5,9 @@ import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import Urls from "../../../../redux/urls";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
-import { getApLocalDataByUrl } from "../../../../redux/cached-urls";
 import { LedgerType } from "../../../../enums/ledger-types";
 import { useDispatch, useSelector } from "react-redux";
-import { formStateHandleFieldChange, formStateTransactionDetailsRowsAdd, formStateTransactionDetailsRowsEmptyAdd } from "../reducer";
+import { formStateHandleFieldChange, formStateTransactionDetailsRowsEmptyAdd } from "../reducer";
 import { APIClient } from "../../../../helpers/api-client";
 import { generateUniqueKey } from "../../../../utilities/Utils";
 import { RootState } from "../../../../redux/store";
@@ -67,7 +66,6 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
                     // { url: 'Product/', key: 'productId' },
                     // { url: 'ProductsCode/', key: 'productCode' }
                 ];
-
                 // const results = await Promise.all(
                 //     endpoints.map(({ url, params }) =>
                 //         getApLocalDataByUrl(baseUrl + url, params)
@@ -82,10 +80,7 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
                 //     }
                 // });
                 // setFormStates(prev => ({ ...prev, ...updates }));
-
-
                 dispatch(formStateHandleFieldChange({ fields: { loading: { isLoading: false, text: 'Please wait while LPO' } } }));
-
             } catch (error) {
                 console.error('Failed to fetch data:', error);
                 ERPToast.show("Failed to load initial data", "error");
@@ -119,35 +114,30 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
     //     async (listOfData: string) => {
     //         if (listOfData.length > 0) {
     //             dispatch(formStateHandleFieldChange({ fields: { loading: { isLoading: true, text: '' } } }));
-
     //         }
     //     },
     //     [],
     // )
+
     const calculateRowAmount = (item: any) => {
         try {
             if (!item.product || item.product === "") return;
 
             const isAppGlobal = clientSession.isAppGlobal; // same as PolosysFrameWork.General.IS_APP_GLOBAL
-
             const qty = Number(item.qty) || 0;
             const rate = Number(item.unitPrice) || 0;
             const vatPerc = Number(item.vatPerc) || 0;
-
             const CGSTPerc = Number(item.cgstPerc) || 0;
             const SGSTPerc = Number(item.sgstPerc) || 0;
             const IGSTPerc = Number(item.igstPerc) || 0;
             const CessPerc = Number(item.cessPerc) || 0;
             const AddnlCessPerc = Number(item.addnlCessPerc) || 0;
-
             const discPerc = Number(item.discPerc) || 0;
             const disc = Number(item.discount) || 0;
             const schmeDiscPerc = Number(item.schemeDiscPerc) || 0;
             const schmeDiscAmt = Number(item.schemeDiscAmt) || 0;
-
             let gross = qty * rate;
             let netValue = gross - disc;
-
             let vat = 0;
             let netAmount = 0;
             let cost = 0;
@@ -159,17 +149,9 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
                 const igst = (netValue * IGSTPerc) / 100;
                 const cess = (netValue * CessPerc) / 100;
                 const addnlCess = (netValue * AddnlCessPerc) / 100;
-
-                cost =
-                    rate -
-                    (rate * discPerc) / 100 +
-                    (rate *
-                        (CGSTPerc + SGSTPerc + IGSTPerc + CessPerc + AddnlCessPerc)) /
-                    100;
-
-                netAmount =
-                    netValue + cgst + sgst + igst + cess + addnlCess - schmeDiscAmt;
-const merged = merge({}, item, {
+                cost = rate - (rate * discPerc) / 100 + (rate * (CGSTPerc + SGSTPerc + IGSTPerc + CessPerc + AddnlCessPerc)) / 100;
+                netAmount = netValue + cgst + sgst + igst + cess + addnlCess - schmeDiscAmt;
+                const merged = merge({}, item, {
                     cgst,
                     sgst,
                     igst,
@@ -180,23 +162,20 @@ const merged = merge({}, item, {
                     gross,
                     total: netAmount,
                 });
-                
-            return merged;
+                return merged;
             } else {
                 vat = (netValue * vatPerc) / 100;
-                cost =
-                    rate - (rate * discPerc) / 100 + (rate * vatPerc) / 100;
+                cost = rate - (rate * discPerc) / 100 + (rate * vatPerc) / 100;
                 netAmount = netValue + vat - schmeDiscAmt;
-const merged = merge({}, item, {
+                const merged = merge({}, item, {
                     vatAmount: vat,
                     cost,
                     netValue,
                     gross,
                     total: netAmount,
                 })
-            return merged;
+                return merged;
             }
-
         } catch (ex) {
             console.error("Error in calculateRowAmount:", ex);
             return item;
@@ -220,6 +199,7 @@ const merged = merge({}, item, {
                 skipZeroQty: formState.skipZeroQty,
                 showStockDetails: formStates.showStockDetails,
             };
+
             const encoded =
                 "method=" + encodeURIComponent(String(params.method ?? "all Products")) +
                 "&supplierId=" + encodeURIComponent(String(params.supplierId ?? "-1")) +
@@ -234,8 +214,8 @@ const merged = merge({}, item, {
                 "&productCode=" + encodeURIComponent(String(params.productCode ?? "")) +
                 "&skipZeroQty=" + encodeURIComponent(String(params.skipZeroQty ?? false)) +
                 "&showStockDetails=" + encodeURIComponent(String(params.showStockDetails ?? false));
-            const response = await api.getAsync(Urls.localPurchaseOrder, encoded);
 
+            const response = await api.getAsync(Urls.localPurchaseOrder, encoded);
             const updatedInventory = response.map((row: any, i: number) => {
                 const avgSalesLast30Days = Number(row["salesLast30Days"]) || 0;
                 const avgSales = avgSalesLast30Days / 30;

@@ -878,5 +878,16 @@
   "b_stock": "B Stock",
   "new": "New",
   "ord_card_no": "Ord Card No",
-  "enter_ord_card_no": "Enter Ord Card No"
+  "enter_ord_card_no": "Enter Ord Card No",
+
+  "avg_sales": "Avg Sales",
+  "supplier_id": "Supplier ID",
+  "sold": "Sold",
+  "sales_last_30_days": "Sales Last 30 Days",
+  "sales_last_90_days": "Sales Last 90 Days",
+  "supplier_ref_code": "Supplier Ref Code",
+  "last_sold_date": "Last Sold Date",
+  "po_pending_qty": "PO Pending Qty",
+  "sales_last_180_days": "Sales Last 180 Days",
+  "pq_pending_qty": "PQ Pending Qty"
 }

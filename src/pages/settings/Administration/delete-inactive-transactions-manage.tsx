@@ -42,6 +42,7 @@ const DeleteInactiveTransactionManage: React.FC = React.memo(() => {
           required
           label={t("till_date")}
           onChangeData={(data: any) => handleFieldChange("date", data.date)}
+          autoFocus={true}        
         />
         <ERPCheckbox
           {...getFieldProps("isAgree")}

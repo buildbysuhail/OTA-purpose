@@ -50,6 +50,7 @@ export const UnitOfMeasureManage: React.FC = React.memo(() => {
             handleFieldChange("unitCode", data.unitCode);
           }}
           readOnly={rootState.PopupData.unitOfMeasure.mode == "view"}
+          autoFocus={true}
         />
 
         <ERPInput

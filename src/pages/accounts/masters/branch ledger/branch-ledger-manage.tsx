@@ -47,6 +47,7 @@ export const BranchLedgerManage = () => {
           onChangeData={(data: any) => { handleFieldChange("refBranchID", data?.refBranchID) }}
           label={t("reference_branch")}
           disabled={rootState.PopupData.branchLedger.mode == "view"}
+          autoFocus={true}
         />
 
         <ERPDataCombobox

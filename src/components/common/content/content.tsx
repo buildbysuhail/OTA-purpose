@@ -1,4 +1,4 @@
-import { FC, lazy, Suspense, useState } from "react";
+import { FC, Fragment, lazy, Suspense, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
@@ -245,11 +245,11 @@ const Content: FC<ContentProps> = () => {
           /> */}
 
         {transactionRoutes.map((route, index) => (
-          <>
-            {route.transactionBase == TransactionBase.Accounts && (
+          <Fragment key={`transaction-route-${route.transactionBase}-${route.transactionType}-${index}`}>
+            {route.transactionBase === TransactionBase.Accounts && (
               <>
                 <Route
-                  key={index}
+                  key={`accounts-new-${route.transactionType}-${index}`}
                   path={`${route.transactionBase}/${route.transactionType}`}
                   element={
                     <RouteGuard formCode={route.formCode} action={route.action}>
@@ -267,7 +267,7 @@ const Content: FC<ContentProps> = () => {
                   }
                 />
                 <Route
-                  key={index}
+                  key={`accounts-list-${route.transactionType}-${index}`}
                   path={`${route.transactionBase}/${route.transactionType}List`}
                   element={
                     <RouteGuard formCode={route.formCode} action={route.action}>
@@ -283,7 +283,7 @@ const Content: FC<ContentProps> = () => {
                   }
                 />
                 <Route
-                  key={index}
+                  key={`accounts-view-${route.transactionType}-${index}`}
                   path={`${route.transactionBase}/${route.transactionType}/:voucherNo`}
                   element={
                     <RouteGuard formCode={route.formCode} action={route.action}>
@@ -490,7 +490,7 @@ const Content: FC<ContentProps> = () => {
                 /> */}
               </>
             )}
-          </>
+          </Fragment>
         ))}
        <Route
           path={`/accounts/transactions/BankReconciliation`}
@@ -513,30 +513,29 @@ const Content: FC<ContentProps> = () => {
         {/* Reports */}
         <Route path="/reports" element={<ReportList />} />
 
-         {ReportsMenuItems.map((route, index) => 
-          route?.children?.map((routeChild, indexChild) => {
-                const childPath = routeChild.path.includes("/_/")
-                  ? "/" + routeChild.path.split("/_/")[1]
-                  : routeChild.path;
+         {ReportsMenuItems.map((route, index) => (
+  <Fragment key={`route-group-${index}`}>
+    {route?.children?.map((routeChild, indexChild) => {
+      const childPath = routeChild.path.includes("/_/")
+        ? "/" + routeChild.path.split("/_/")[1]
+        : routeChild.path;
               // console.log(childPath);
               // console.log("path");
 
-        return (
-
-                <Route
-            key={childPath}
-            path={childPath}
-            element={
-                <RouteGuard  formCode={routeChild.formCode} action={routeChild.action} >
-                {routeChild.element}
-                </RouteGuard>} />
-                
-              ); 
-            })
-
-        
-      )
-      }
+      return (
+        <Route
+          key={`route-${index}-${indexChild}-${childPath}`}
+          path={childPath}
+          element={
+            <RouteGuard formCode={routeChild.formCode} action={routeChild.action}>
+              {routeChild.element}
+            </RouteGuard>
+          } 
+        />
+      );
+    })}
+  </Fragment>
+))}
       
 
         

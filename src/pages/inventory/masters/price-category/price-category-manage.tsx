@@ -43,6 +43,7 @@ export const PriceCategoryManage: React.FC = React.memo(() => {
           placeholder={t("name")}
           onChangeData={(data: any) => { handleFieldChange("priceCategoryName", data.priceCategoryName); }}
           readOnly={rootState.PopupData.priceCategory.mode == "view"}
+          autoFocus={true}
         />
 
         <ERPInput

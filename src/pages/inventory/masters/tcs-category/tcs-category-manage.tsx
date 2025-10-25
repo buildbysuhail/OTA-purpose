@@ -42,6 +42,7 @@ export const TcsCategoryManage: React.FC = React.memo(() => {
             handleFieldChange("tcsCategoryName", data.tcsCategoryName);
           }}
           readOnly={rootState.PopupData.tcsCategory.mode == "view"}
+          autoFocus={true}
         />
         <ERPInput
           {...getFieldProps("tcsCategoryPerc")}

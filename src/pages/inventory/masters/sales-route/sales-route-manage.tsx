@@ -55,6 +55,7 @@ export const SalesRouteManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("routeName", data.routeName)}
           readOnly={rootState.PopupData.salesRoute.mode == "view"}
+          autoFocus={true}
         />
 
         <ERPInput

@@ -296,6 +296,8 @@ const AccTransactionGrid: React.FC<{voucherType?: string
         // fixedPosition: "right",
         fixedPosition: document?.dir === "rtl" ? "left" : "right",
         width: 100,
+        minWidth: 100,
+        maxWidth: 100,
         
         cellRender: (cellElement: any) => {
           return (

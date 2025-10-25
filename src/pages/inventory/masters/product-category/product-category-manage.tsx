@@ -48,6 +48,7 @@ export const ProductCategoryManage: React.FC = React.memo(() => {
             handleFieldChange("productCategoryCode", data.productCategoryCode);
           }}
           readOnly={rootState.PopupData.productCategory.mode == "view"}
+          autoFocus={true}
         />
 
         <ERPInput

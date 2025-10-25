@@ -74,6 +74,7 @@ export const BankCardsManage: React.FC = React.memo(() => {
             { value: 'EASYSHOP_CARD', label: 'EASYSHOP CARD' },
             { value: 'PRESTIGE_CARD', label: 'PRESTIGE CARD' }
           ]}
+          autoFocus={true}
         />
 
         <ERPInput

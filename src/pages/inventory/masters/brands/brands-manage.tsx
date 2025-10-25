@@ -45,6 +45,7 @@ export const BrandsManage: React.FC = React.memo(() => {
             handleFieldChange("brandName", data.brandName);
           }}
           readOnly={rootState.PopupData.brands.mode == "view"}
+          autoFocus={true}
         />
 
         <ERPInput

@@ -69,6 +69,7 @@ const BankPosSettingsManage: React.FC = React.memo(() => {
           }}
           label={t("machine_brand")}
           onChangeData={(data: any) => handleFieldChange("machineBrand", data.machineBrand)}
+          autoFocus={true}
         />
 
         <ERPDataCombobox

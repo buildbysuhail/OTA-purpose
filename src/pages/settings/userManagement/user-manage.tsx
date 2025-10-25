@@ -45,6 +45,7 @@ export const UserManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => { handleFieldChange("userName", data.userName); }}
           readOnly={rootState.PopupData.user.mode == "view"}
+          autoFocus={true}
         />
 
         <ERPInput

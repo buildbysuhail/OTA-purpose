@@ -42,6 +42,7 @@ export const GroupCategoryManage: React.FC = React.memo(() => {
           placeholder={t("code")}
           onChangeData={(data: any) => handleFieldChange("groupCategoryCode", data.groupCategoryCode)}
           readOnly={rootState.PopupData.groupCategory.mode == "view"}
+          autoFocus={true}
         />
 
         <ERPInput

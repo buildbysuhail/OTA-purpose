@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { customJsonParse, modelToBase64, modelToBase64Unicode } from "../../../../utilities/jsonConverter";
+import { base64ToModelUnicode, customJsonParse, modelToBase64, modelToBase64Unicode } from "../../../../utilities/jsonConverter";
 import { APIClient } from "../../../../helpers/api-client";
 import Urls from "../../../../redux/urls";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
@@ -113,9 +113,10 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
 
   const postUserConfig = async () => {
     try {
-      const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, { ...formState.userConfig, themeName: 'Custom' });
+      
+        const base64 = modelToBase64Unicode({...formState.userConfig, themeName: 'Custom'});
+      const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, base64);
       handleResponse(response, async () => {
-        const base64 = modelToBase64Unicode(formState.userConfig);
         const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`) ;
         await setStorageString(key, base64);
         dispatch(
@@ -164,10 +165,11 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
         onConfirm: async (result: any) => {
           const res = await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/ResetLocalSettings`, {});
           handleResponse(res, async () => {
-            const st = modelToBase64Unicode(res.item);
+            debugger;
+            const st = base64ToModelUnicode(res.item);
              const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`) ;
-            await setStorageString(key, st);
-            dispatch(formStateHandleFieldChange({ fields: { userConfig: res.item } }));
+            await setStorageString(key, res.item);
+            dispatch(formStateHandleFieldChange({ fields: { userConfig: st } }));
           });
         },
       });

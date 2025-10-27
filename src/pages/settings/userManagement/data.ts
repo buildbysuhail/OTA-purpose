@@ -1406,30 +1406,38 @@ export const userRightsgcc: UserRight[] = [
   
   // Job Track Report
   { id: 20330, headId: 203, name: "JobTrackReport", fullName: "Job Track Report", formCode: "JTRPRT", treeNode: 3, description: "Manage Job Track Report" },
-  { id: 2033001, headId: 20330, name: "JobTrackReport_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Job Track Report Print" }
-
-
-
-
+  { id: 2033001, headId: 20330, name: "JobTrackReport_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Job Track Report Print" },
 
   //#endregion Itemwise Report
 
-
-
-
-
-
-
-
   //#endregion Inventory Reports
  //#endregion Inventory
- //customer supplier seperate for but both form code as parties
 
+  //#region Web dash board
+  { id: 3, headId: 0, name: "DashBoard", fullName: "DashBoard", formCode: "DBRD", treeNode: 2, description: "DashBoard Web" },
+
+  { id: 301, headId: 3, name: "DbSalesMonthlySummary", fullName: "DashBorad Sales Monthly Summary", formCode: "DBRDSIMS", treeNode: 3, description: "DashBorad Sales Monthly Summary" },
+  { id: 30101, headId: 301, name: "ShDbSalesMonthlySummary", fullName: "Show", formCode: "A", treeNode: 3, description: "Show DashBorad Sales Monthly Summary" },
+
+  { id: 302, headId: 3, name: "DbPurchaseMonthlySummary", fullName: "DashBorad Purchase Monthly Summary", formCode: "DBRDPIMS", treeNode: 4, description: "DashBorad Purchase Monthly Summary" },
+  { id: 30201, headId: 302, name: "ShDbPurchaseMonthlySummary", fullName: "Show", formCode: "A", treeNode: 4, description: "Show DashBorad Purchase Monthly Summary" },
   
-  // Reports
-  // Account Reports Main
+  { id: 303, headId: 3, name: "DbIncome", fullName: "DashBorad Income", formCode: "DBRDINCM", treeNode: 4, description: "DashBorad Income" },
+  { id: 30301, headId: 303, name: "Show", fullName: "Show", formCode: "A", treeNode: 4, description: "Show DashBorad Income" },
 
+  { id: 304, headId: 3, name: "DbExpense", fullName: "DashBorad Expense", formCode: "DBRDEXPS", treeNode: 4, description: "DashBorad Expense" },
+  { id: 30401, headId: 304, name: "Show", fullName: "Show", formCode: "A", treeNode: 4, description: "Show DashBorad Expense" },
 
-  
- 
+  { id: 305, headId: 3, name: "DbReceivable", fullName: "DashBorad Receivable", formCode: "DBRDRCVB", treeNode: 4, description: "DashBorad Receivable" },
+  { id: 30501, headId: 305, name: "Show", fullName: "Show", formCode: "A", treeNode: 4, description: "Show DashBorad Receivable" },
+
+  { id: 306, headId: 3, name: "DbPayable", fullName: "DashBorad Payable", formCode: "DBRDPAYB", treeNode: 4, description: "DashBorad Payable" },
+  { id: 30601, headId: 306, name: "Show", fullName: "Show", formCode: "A", treeNode: 4, description: "Show DashBorad Payable" },
+
+  { id: 307, headId: 3, name: "DbCashBankFlow", fullName: "DashBorad CashBank Flow", formCode: "DBRDCBFL", treeNode: 4, description: "DashBorad CashBank Flow" },
+  { id: 30701, headId: 307, name: "Show", fullName: "Show", formCode: "A", treeNode: 4, description: "Show DashBorad CashBank Flow" },
+
+  { id: 308, headId: 3, name: "DbTopExpenses", fullName: "DashBorad Top Expenses", formCode: "DBRDTEXP", treeNode: 4, description: "DashBorad Top Expenses" },
+  { id: 30801, headId: 308, name: "Show", fullName: "Show", formCode: "A", treeNode: 4, description: "Show DashBorad Top Expenses" },
+  //#endregion Web dash board
 ];

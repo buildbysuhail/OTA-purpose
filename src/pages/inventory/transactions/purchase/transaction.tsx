@@ -272,7 +272,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
       console.log('Theme selected, triggering countdown');
       setCountdown(8);
       setStartCountdown(true);
-
+debugger;
       // Apply the preview theme
       dispatch(formStateHandleFieldChangeKeysOnly({
         fields: {
@@ -308,7 +308,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           console.log('🛑 Countdown complete');
           clearInterval(timerRef.current!);
           setStartCountdown(false);
-
+debugger;
           dispatch(formStateHandleFieldChangeKeysOnly({
             fields: {
               userConfig: { ...formState.userConfig, ...formState.currentTheme },
@@ -481,21 +481,21 @@ const TransactionForm: React.FC<TransactionProps> = ({
     }
   };
   const handleKeyDown = (e: any, field: string, rowIndex: number) => {
-    debugger;
+    
    if(field==="address2" && isEnterKey(e.key)){
     if(refNoRef?.current) {
       refNoRef?.current.focus();
       refNoRef?.current.select();
    }
   }
-  debugger;
+  
    if(field==="refDate" && isEnterKey(e.key)){
     const editableColumn = formState.gridColumns?.find(
         (col: any) => col.visible !== false && col.dataField != null && col.allowEditing == true && col.readOnly !== true
       );
       
       setIsDropDownOpen({open: false, autoAddressFocus: false})
-      debugger;
+      
    let currentCell = {
         column: editableColumn?.dataField ?? "",
         data: formState.transaction.details[0],
@@ -672,7 +672,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   useEffect(() => {
     (async () => {
-      debugger;
+      
       if(formState.transaction.master.ledgerID < 1) {
         return;
       }
@@ -681,7 +681,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         await loadLedgerData(undefined, dispatch);
         
         setTimeout(() => {
-          debugger;
+          
           focusAdd1();
         }, 1000);
       } else {
@@ -795,9 +795,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
           _formState.userRightsFormCode = "PIIMPORT"
         }
       }
-      debugger;
+      
       let __gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new APIClient()))
-      debugger;
+      
       const _gridCols = __gridCols.columnPreferences.map(x => {
         return {
           ...x,
@@ -1018,7 +1018,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
       dispatch(formStateHandleFieldChange({ fields: { loading: { isLoading: true, text: `${loadType == "GRN" ? 'Please wait while loading GRN Items' : 'Please wait while loading Order Items'}` } } }));
       const PendingTransDetails: any = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/PendingTransactionsByMasterIds`, `masterIDs=${masterIds}`)
       if (PendingTransDetails && PendingTransDetails.details && PendingTransDetails.details.length > 0) {
-debugger;
+
         const calculatedDetails: TransactionDetail[] = [];
         const refactoredDetails = refactorDetails(PendingTransDetails.details?.map((x: any) => {
           return {...x, qty: x.pendingQty}
@@ -1206,7 +1206,7 @@ debugger;
     batchSelectionData();
   }, [formState.batchSelectionData]);
   useEffect(() => {
-    debugger;
+    
     const fetchData = async () => {
       try {
         if (formState.popupSearchSelectionData != "") {

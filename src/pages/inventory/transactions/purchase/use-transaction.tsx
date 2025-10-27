@@ -332,7 +332,7 @@ export const useTransaction = (
   const { hasRight, hasBlockedRight } = useUserRights();
   const fetchUserConfig = async () => {
     try {
-      debugger;
+      
        const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`) ;
       const savedPreferences = await api.getAsync(
         `${Urls.inv_transaction_base}${transactionType}/GetLocalSettings`
@@ -346,6 +346,7 @@ export const useTransaction = (
       ) {
         await setStorageString(key,savedPreferences );
         // Decode the base64 back to JSON string
+        debugger;
         const _userConfig = safeBase64Decode(savedPreferences ?? "");
         const userConfig: UserConfig = customJsonParse(_userConfig ?? "{}");
 
@@ -403,7 +404,7 @@ export const useTransaction = (
         })
       );
     }
-    debugger;
+    
     if(showLoading) {
       dispatch(
                           formStateHandleFieldChange({
@@ -411,7 +412,7 @@ export const useTransaction = (
                           })
                         );
     }
-    debugger;
+    
     let _formState = await loadTransVoucher(
       usingManualInvNumber,
       voucherNumber,
@@ -489,8 +490,8 @@ export const useTransaction = (
     loadUserConfig: boolean = false
   ) => {
     debugger;
-   const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`) ;
-    const Utc = await getStorageString(key);
+
+    const Utc = await getStorageString(`${transactionType}_LocalSettings`);
     let userConfig: UserConfig | undefined;
     if (Utc) {
       const decoded = safeBase64Decode(Utc) ?? "{}";
@@ -523,7 +524,7 @@ export const useTransaction = (
     _formState.prev = modelToBase64Unicode(
       setTransactionForHistory(_formState, "inv")
     );
-    debugger;
+    
     _formState.transactionLoading = false;
     dispatch(
       formStateHandleFieldChange({
@@ -822,7 +823,7 @@ export const useTransaction = (
   async function validate(): Promise<boolean> {
     const master = formState.transaction.master;
     const details = formState.transaction.details;
-    debugger;
+    
     // Stock update restriction
 
     const setting = applicationSettings.productsSettings.mRPLessThanSalesPrice;
@@ -1159,7 +1160,7 @@ export const useTransaction = (
     );
 
     const valid = await validate();
-    debugger;
+    
     if (valid == true) {
       const master = attachMaster(formState);
       const attachments = formState.transaction.attachments
@@ -1499,7 +1500,7 @@ export const useTransaction = (
     }
   };
   const handleRemoveItem = async (slNo: string) => {
-    debugger;
+    
     dispatch(
       formStateTransactionDetailsRowRemove({
         slNo: slNo,
@@ -4354,7 +4355,7 @@ export const useTransaction = (
             },
           },
         };
-        debugger;
+        
         if (!clientSession.isAppGlobal) {
           let customerType = "";
           if (["PR"].includes(voucherType ?? "")) {

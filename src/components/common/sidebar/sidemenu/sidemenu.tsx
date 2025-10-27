@@ -7,26 +7,26 @@ export const MENUITEMS = [
   {
     menutitle: "main",
   },
-  {
-    icon: <i className="side-menu__icon bx bx-home"></i>,
-    type: "link",
-    Name: "",
-    active: false,
-    selected: false,
-    title: "dashboard",
-    badge: "",
-    path: `${import.meta.env.BASE_URL}#`,
-    class: "badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2",
-    // children: [
-    //   {
-    //     path: `${import.meta.env.BASE_URL}dashboards/crm`,
-    //     type: "link",
-    //     active: false,
-    //     selected: false,
-    //     title: "crm",
-    //   },
-    // ],
-  },
+  // {
+  //   icon: <i className="side-menu__icon bx bx-home"></i>,
+  //   type: "link",
+  //   Name: "",
+  //   active: false,
+  //   selected: false,
+  //   title: "dashboard",
+  //   badge: "",
+  //   path: `${import.meta.env.BASE_URL}#`,
+  //   class: "badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2",
+  //   // children: [
+  //   //   {
+  //   //     path: `${import.meta.env.BASE_URL}dashboards/crm`,
+  //   //     type: "link",
+  //   //     active: false,
+  //   //     selected: false,
+  //   //     title: "crm",
+  //   //   },
+  //   // ],
+  // },
   {
     menutitle: "",
   },

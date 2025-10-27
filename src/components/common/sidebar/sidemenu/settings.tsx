@@ -6,6 +6,7 @@ import {
 } from "../../../../redux/slices/popup-reducer";
 import { BellDot, BellRing, BookOpenText, Calculator, CalendarDays, ChartNoAxesCombined, CircleDollarSign, ClipboardMinus, Cog, Component, Crown, FileUp, FolderCog, GitBranchPlus, GitMerge, Handshake, IdCard, Layers2, LayoutTemplate, Mail, MessageCircle, MonitorCog, QrCode, RefreshCw, RotateCcw, Ticket, Truck, UserCog, UserRound, UserRoundCheck, UsersRound } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
+import { UserAction } from "../../../../helpers/user-right-helper";
 export const SettingsMenuItems = [
   {
     menutitle: 'settings',
@@ -23,7 +24,7 @@ export const SettingsMenuItems = [
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     columns: 2,
     children: [
-      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/account-group`, type: 'link', active: false, selected: false, title: 'acc_group', icon: UserGroupIcon },
+      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/account-group`, type: 'link', active: false, selected: false ,title: 'acc_group', icon: UserGroupIcon },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/account-ledger`, type: 'link', active: false, selected: false, title: 'acc_ledger', icon: BookOpenText },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/currency-master`, type: 'link', active: false, selected: false, title: 'currency', icon: CircleDollarSign },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/cost-center`, type: 'link', active: false, selected: false, title: 'costcenter', icon: ClipboardDocumentListIcon },
@@ -36,8 +37,8 @@ export const SettingsMenuItems = [
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/privilege-cards`, type: 'link', active: false, selected: false, title: 'privilege_cards', icon: IdCard },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/customer-supplier-ledger`, type: 'link', active: false, selected: false, title: 'cust_supp_ledger', icon: Handshake },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/bank-cards`, type: 'link', active: false, selected: false, title: 'bank_card', icon: CreditCardIcon },
-      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/upi`, type: 'link', active: false, selected: false, title: 'upi' },
-      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/upi`, type: 'link', active: false, selected: false, title: 'qr_pay', icon: QrCode },
+      {formCode: "UPI", action: UserAction.Show,  path: `${import.meta.env.BASE_URL}settings/_/account-masters/upi`, type: 'link', active: false, selected: false, title: 'upi' },
+      {formCode: "UPI", action: UserAction.Show,  path: `${import.meta.env.BASE_URL}settings/_/account-masters/upi`, type: 'link', active: false, selected: false, title: 'qr_pay', icon: QrCode },
       { action: toggleHideAccLedger, type: 'popup', active: false, selected: false, title: 'hide_account_ledger' },
     ]
   },

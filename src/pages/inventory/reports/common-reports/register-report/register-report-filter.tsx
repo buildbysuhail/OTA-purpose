@@ -8,7 +8,11 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import { LedgerType } from "../../../../../enums/ledger-types";
 
-const RegisterFilter = ({ getFieldProps, handleFieldChange, formState, }: any) => {
+const RegisterFilter = ({
+  getFieldProps,
+  handleFieldChange,
+  formState,
+}: any) => {
   const { t } = useTranslation("accountsReport");
   const applicationSettings = useSelector(
     (state: RootState) => state.ApplicationSettings
@@ -34,7 +38,9 @@ const RegisterFilter = ({ getFieldProps, handleFieldChange, formState, }: any) =
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {location.pathname.includes("inventory/sales_transfer_register_report") && (
+        {location.pathname.includes(
+          "inventory/register_sales_transfer_register_report"
+        ) && (
           <ERPDataCombobox
             label={t("transfer_voucher")}
             {...getFieldProps("transferVoucher")}
@@ -196,52 +202,48 @@ const RegisterFilter = ({ getFieldProps, handleFieldChange, formState, }: any) =
               ? Urls.data_FormTypeByVoucherType
               : Urls.data_form_type,
             params: clientSession.isAppGlobal
-              ? `voucherType=${location.pathname.includes(
-                "inventory/purchase_register_report"
-              )
-                ? "PI"
-                : location.pathname.includes(
-                  "inventory/purchase_return_register"
-                )
-                  ? "PR"
-                  : location.pathname.includes(
-                    "inventory/purchase_estimate_register_report"
+              ? `voucherType=${
+                  location.pathname.includes(
+                    "inventory/purchase_register_report"
                   )
+                    ? "PI"
+                    : location.pathname.includes(
+                        "inventory/purchase_return_register"
+                      )
+                    ? "PR"
+                    : location.pathname.includes(
+                        "inventory/purchase_estimate_register_report"
+                      )
                     ? "PE"
                     : //  :location.pathname.includes("inventory/purchase_order_summary") ? "PO"
                     location.pathname.includes(
-                      "inventory/purchase_return_estimate_register_report"
-                    )
-                      ? "PRE"
-                      : location.pathname.includes(
+                        "inventory/purchase_return_estimate_register_report"
+                      )
+                    ? "PRE"
+                    : location.pathname.includes(
                         "inventory/sales_register_report"
                       )
-                        ? "SI"
-                        : location.pathname.includes(
-                          "inventory/sales_return_register"
-                        )
-                          ? "SR"
-                          : //  :location.pathname.includes("inventory/sales_order_summary_report") ? "SO"
-                          //  :location.pathname.includes("inventory/sales_estimate_summary_report") ? "SE"
-                          //  :location.pathname.includes("inventory/sales_quotation_summary_report") ? "SQ"
-                          //  :location.pathname.includes("inventory/substitute_report") ? "SUB"
-                          //  :location.pathname.includes("inventory/booking_summary_report") ? "SB"
-                          location.pathname.includes(
-                            "inventory/inventory_transaction_register_report"
-                          )
-                            ? ""
-                            : location.pathname.includes(
-                              "inventory/sales_transfer_register_report"
-                            )
-                              ? "ST"
-                              : // :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST"
-                              // :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST"
-                              // :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST"
-                              // :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST"
-                              // :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST"
-                              // :location.pathname.includes("inventory/sales_transfer_summary_report") ? "ST"
-                              ""
-              }`
+                    ? "SI"
+                    : location.pathname.includes(
+                        "inventory/sales_return_register"
+                      )
+                    ? "SR"
+                    : //  :location.pathname.includes("inventory/sales_order_summary_report") ? "SO"
+                    //  :location.pathname.includes("inventory/sales_estimate_summary_report") ? "SE"
+                    //  :location.pathname.includes("inventory/sales_quotation_summary_report") ? "SQ"
+                    //  :location.pathname.includes("inventory/substitute_report") ? "SUB"
+                    //  :location.pathname.includes("inventory/booking_summary_report") ? "SB"
+                    location.pathname.includes(
+                        "inventory/inventory_transaction_register_report"
+                      )
+                    ? ""
+                    : location.pathname.includes(
+                        "inventory/register_sales_transfer_register_report"
+                      )
+                    ? "SI-BT"
+                    : 
+                      ""
+                }`
               : undefined,
             valueKey: "name",
             labelKey: "name",
@@ -345,58 +347,59 @@ const RegisterFilter = ({ getFieldProps, handleFieldChange, formState, }: any) =
             }}
           />
         )}
-        {location.pathname.includes(
+        {/* added seperate navigation for all register reports */}
+        {/* {location.pathname.includes(
           "inventory/inventory_transaction_register_report"
         ) && (
-            <ERPDataCombobox
-              label={t("transaction_type")}
-              {...getFieldProps("voucherType")}
-              options={[
-                { value: "SI", label: "Sales Invoice" },
-                { value: "SR", label: "Sales Return" },
-                { value: "PI", label: "Purchase Invoice" },
-                { value: "PR", label: "Purchase Return" },
-                { value: "SO", label: "Sales Order" },
-                { value: "SQ", label: "Sales Quotation" },
-                { value: "SUB", label: "Substitute" },
-                { value: "PO", label: "Purchase Order" },
-                { value: "OS", label: "Opening Stock" },
-                { value: "PQ", label: "Purchase Quotation" },
-                { value: "GR", label: "Goods Request" },
-                { value: "BTO", label: "Branch Transfer Out" },
-                { value: "BTI", label: "Branch Transfer In" },
-                { value: "EX", label: "Excess Stock" },
-                { value: "SI-BT", label: "Sales Transfer To Branch" },
-                { value: "SE-BT", label: "Sales Estimate Transfer To Branch" },
-                { value: "SH", label: "Shortage Stock" },
-                { value: "DMG", label: "Damage Entry" },
-                { value: "ST", label: "Stock Transfer" },
-                { value: "GD", label: "Goods Delivery" },
-                { value: "DR", label: "Goods Delivery Return" },
-                { value: "GRN", label: "Goods Receipt" },
-                { value: "GRR", label: "Goods Receipt Return" },
-                { value: "SD", label: "Sales Discount" },
-                { value: "SVI", label: "Service Invoice" },
-                { value: "STF", label: "Staff Food" },
-                { value: "EX-SP", label: "Excess Stock(SP)" },
-                { value: "SH-SP", label: "Shortage Stock(SP)" },
-                { value: "PE", label: "Purchase Estimate" },
-                { value: "SE", label: "Sales Estimate" },
-                { value: "PRE", label: "Purchase Return Estimate" },
-                { value: "SRE", label: "Sales Return Estimate" },
-                { value: "ILR", label: "Item Load Request" },
-                { value: "DNS", label: "Debit Note Against Sales" },
-              ]}
-              field={{
-                id: "voucherType",
-                valueKey: "value",
-                labelKey: "label",
-              }}
-              onSelectItem={(data) => {
-                handleFieldChange("voucherType", data.value);
-              }}
-            />
-          )}
+          <ERPDataCombobox
+            label={t("transaction_type")}
+            {...getFieldProps("voucherType")}
+            options={[
+              { value: "SI", label: "Sales Invoice" },
+              { value: "SR", label: "Sales Return" },
+              { value: "PI", label: "Purchase Invoice" },
+              { value: "PR", label: "Purchase Return" },
+              { value: "SO", label: "Sales Order" },
+              { value: "SQ", label: "Sales Quotation" },
+              { value: "SUB", label: "Substitute" },
+              { value: "PO", label: "Purchase Order" },
+              { value: "OS", label: "Opening Stock" },
+              { value: "PQ", label: "Purchase Quotation" },
+              { value: "GR", label: "Goods Request" },
+              { value: "BTO", label: "Branch Transfer Out" },
+              { value: "BTI", label: "Branch Transfer In" },
+              { value: "EX", label: "Excess Stock" },
+              { value: "SI-BT", label: "Sales Transfer To Branch" },
+              { value: "SE-BT", label: "Sales Estimate Transfer To Branch" },
+              { value: "SH", label: "Shortage Stock" },
+              { value: "DMG", label: "Damage Entry" },
+              { value: "ST", label: "Stock Transfer" },
+              { value: "GD", label: "Goods Delivery" },
+              { value: "DR", label: "Goods Delivery Return" },
+              { value: "GRN", label: "Goods Receipt" },
+              { value: "GRR", label: "Goods Receipt Return" },
+              { value: "SD", label: "Sales Discount" },
+              { value: "SVI", label: "Service Invoice" },
+              { value: "STF", label: "Staff Food" },
+              { value: "EX-SP", label: "Excess Stock(SP)" },
+              { value: "SH-SP", label: "Shortage Stock(SP)" },
+              { value: "PE", label: "Purchase Estimate" },
+              { value: "SE", label: "Sales Estimate" },
+              { value: "PRE", label: "Purchase Return Estimate" },
+              { value: "SRE", label: "Sales Return Estimate" },
+              { value: "ILR", label: "Item Load Request" },
+              { value: "DNS", label: "Debit Note Against Sales" },
+            ]}
+            field={{
+              id: "voucherType",
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            onSelectItem={(data) => {
+              handleFieldChange("voucherType", data.value);
+            }}
+          />
+        )} */}
 
         {/* 
         not used any where always visible false

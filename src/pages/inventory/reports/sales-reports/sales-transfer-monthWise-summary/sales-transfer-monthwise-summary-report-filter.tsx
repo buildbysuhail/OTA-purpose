@@ -51,16 +51,16 @@ const SalesTransferMonthWiseSummaryReportFilter = ({ getFieldProps, handleFieldC
             }
             <ERPDataCombobox
                 label={t("sales_man")}
-                {...getFieldProps("salesmanID")}
+                {...getFieldProps("salemanID")}
                 field={{
-                    id: "salesmanID",
+                    id: "salemanID",
                     getListUrl: Urls.data_employees,
                     valueKey: "id",
                     labelKey: "name",
                 }}
                 onSelectItem={(data) => {
                     handleFieldChange({
-                        salesmanID: data.value,
+                        salemanID: data.value,
                         salesMan: data.label,
                     });
                 }}
@@ -125,7 +125,7 @@ export const SalesTransferMonthWiseSummaryReportFilterInitialState = {
     toDate: new Date(),
     salesRouteID: 0,
     counterID: 0,
-    salesManID: 0,
+    salemanID: 0,
     voucherForm: "",
     warehouseID: 0
 }

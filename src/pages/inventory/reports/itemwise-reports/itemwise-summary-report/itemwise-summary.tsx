@@ -516,7 +516,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
         0
       );
     }
-  }, [filter.isCategoryWise, dataGridRef.current?.instance()]);
+  }, [filter.isCategoryWise, dataGridRef.current?.instance]);
 
   const location = useLocation();
   const [key, setKey] = useState(1);
@@ -532,6 +532,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 key={key}
+                // enableScrollButton={false}
                 ref={dataGridRef}
                 summaryItems={summaryItems}
                 remoteOperations={{

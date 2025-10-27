@@ -603,7 +603,7 @@ const SalesTransferMonthWiseSummaryReport: FC<
                   filterText=" {voucherForm != ''&& , Voucher Form : [voucherForm]}
                   {salesRouteID > 0 && , Route Name : [routeName]} 
                   {counterID > 0 && , Counter : [counterName]} 
-                  {salesmanID > 0 && , Sales Man : [salesMan]} 
+                  {salemanID > 0 && , Sales Man : [salesMan]} 
                   From Date : {fromDate} To Date : {toDate}"
                   gridHeader={t(gridHeader)}
                   dataUrl={dataUrl}

@@ -49,7 +49,8 @@ const NetSalesReport: FC<NetSalesProps> = ({ gridHeader, dataUrl, gridId }) => {
       {
         dataField: "transDate",
         caption: t("trans_date"),
-        dataType: "string",
+        dataType: "date",
+        format: "dd-MMM-yyyy",
         allowSearch: true,
         allowFiltering: true,
         allowSorting: true,
@@ -415,6 +416,17 @@ const NetSalesReport: FC<NetSalesProps> = ({ gridHeader, dataUrl, gridId }) => {
           }
         },
       },
+      {
+        dataField: "createdDate",
+        caption: t("created_date"),
+        dataType: "datetime",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting: true,
+        width: 184,
+        format: "dd-MMM-yyyy hh:mm a",
+        showInPdf: true,
+      },
     ];
     // Filter columns based on the `visible` property
     return baseColumns.filter((column) => {
@@ -556,6 +568,9 @@ const NetSalesReport: FC<NetSalesProps> = ({ gridHeader, dataUrl, gridId }) => {
                 showFilterInitially={true}
                 method={ActionType.POST}
                 filterContent={<NetSalesReportFilter />}
+                onFilterChanged={(filter: any) => {
+                  setFilter(filter);
+                }}
                 filterWidth={790}
                 filterHeight={270}
                 filterInitialData={NetSalesReportFilterInitialState}

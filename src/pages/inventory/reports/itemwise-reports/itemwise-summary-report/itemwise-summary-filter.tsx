@@ -158,7 +158,9 @@ const ItemWiseSummaryFilter = ({ getFieldProps, handleFieldChange, formState, }:
                 />
 
                 <ERPDataCombobox
-                    disabled={true}
+                    disabled={!location.pathname.includes(
+                        "inventory/itemwise_sales_transfer_summary"
+                      )}
                     label={t("to_branch")}
                     {...getFieldProps("toBranchID")}
                     field={{
@@ -173,7 +175,9 @@ const ItemWiseSummaryFilter = ({ getFieldProps, handleFieldChange, formState, }:
                 />
 
                 <ERPDataCombobox
-                    disabled={true}
+                    disabled={!location.pathname.includes(
+                        "inventory/itemwise_sales_transfer_summary"
+                      )}
                     label={t("to_warehouse")}
                     {...getFieldProps("toWarehouseID")}
                     field={{

@@ -435,6 +435,7 @@ const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, transactionTy
 
   const handleSelectTheme = (theme: any) => {
     if (formState.selectedTheme?.themeName !== theme.themeName) {
+      debugger;
       dispatch(
         formStateHandleFieldChangeKeysOnly({
           fields: {
@@ -455,9 +456,10 @@ const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, transactionTy
  const handleSave = async () => {
     try {
       if (!formState.selectedTheme) return;
-      const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, { ...formState?.userConfig, ...formState.selectedTheme });
+      const base64 = modelToBase64Unicode({ ...formState?.userConfig, ...formState.selectedTheme });
+      const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, base64);
       handleResponse(response, async() => {
-        const base64 = modelToBase64Unicode({ ...formState?.userConfig, ...formState.selectedTheme });
+        
         await setStorageString(`${transactionType}_LocalSettings`, base64)
         dispatch(formStateHandleFieldChangeKeysOnly({ fields: { selectedTheme: null, themeChangeCountdown: undefined } }))
         onClearThemeChangeInterval && onClearThemeChangeInterval();

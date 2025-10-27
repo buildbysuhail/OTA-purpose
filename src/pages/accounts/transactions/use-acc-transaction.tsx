@@ -1236,7 +1236,17 @@ export const useAccTransaction = (
           ) {
             printPaymentReceiptAdvice("");
           } else {
-            printVoucher(formState.transaction.master.accTransactionMasterID, transactionType, formState.transaction.master.voucherType,formState.transaction.master.formType,formState.transaction.master.customerType,false,formState.userConfig?.printPreview,undefined, formState.transaction.master.transactionDate);
+
+            printVoucher(
+               saveRes?.item?.master.accTransactionMasterID,
+                transactionType,
+                formState.transaction.master.voucherType,
+                formState.transaction.master.formType,
+                formState.transaction.master.customerType,
+                false,
+                formState.userConfig?.printPreview,
+                undefined, 
+                formState.transaction.master.transactionDate);
           }
         }
 

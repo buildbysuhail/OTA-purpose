@@ -86,7 +86,7 @@ import {
   DataAutoBarcode,
   ExcelRowData,
 } from "../transaction-types";
-import { z } from "framer-motion/dist/types.d-6pKw1mTI";
+
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;
 //   clearDetailsAfterSaveAccounts: boolean;
@@ -1228,7 +1228,6 @@ export const useTransaction = (
                 `${Urls.inv_transaction_base}${transactionType}`,
                 params
               );
-              debugger
         if (saveRes.isOk == true) {
           dispatch(
             formStateTransactionUpdate({
@@ -1242,9 +1241,8 @@ export const useTransaction = (
           );
           if (formState.printOnSave == true) {
             // masterID: number,transactionType: string,printTmeplate?:any ,transDate?: string,voucherType?: string,formType?:string,customerType?:string,
-
             printVoucher(
-              formState.transaction?.master.invTransactionMasterID, // masterID
+              saveRes?.item?.master?.invTransactionMasterID, // masterID
               transactionType ?? "", // transactionType
               formState.transaction?.master.voucherType ?? "", // voucherType
               formState.transaction?.master?.voucherForm ?? "", // formType

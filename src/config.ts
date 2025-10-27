@@ -32,7 +32,7 @@ const config: Config = {
     // APP_API_URL: "https://192.65.25.12",/
     // APP_API_URL: "https://localhost:7213"
     // APP_API_URL: "http://192.168.20.199:1433"
-    APP_API_URL: "https://api.polerp.work",
+    APP_API_URL: "https://api.poldev.work",
       //  APP_API_URL: "http://192.168.20.211:81",
     //  APP_API_URL: "https://polosys-001-site1.ctempurl.com"
   },

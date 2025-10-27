@@ -15,18 +15,16 @@ import { addTemplateToStore, fetchTemplateFromApiById } from '../use-print';
 import { isNullOrUndefinedOrEmpty } from '../../utilities/Utils';
 import { useTemplateDesigner } from '../InvoiceDesigner/LandingFolder/useTemplateDesigner';
 import SharedTemplatePreview from '../InvoiceDesigner/DesignPreview/shared';
-
 interface TemplatesProps {
-  setIsOpen: () => void;
   voucherType: string;
-  isInvTrans: boolean;
+  isInvTrans?: boolean;
   transactionMasterID: number;
   transactionType: string
 }
 
 const api = new APIClient();
 
-export default function TemplatesPreView({ setIsOpen, voucherType, isInvTrans,transactionMasterID,transactionType }: TemplatesProps) {
+export default function TemplatesPreView({  voucherType, isInvTrans=false,transactionMasterID,transactionType }: TemplatesProps) {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 

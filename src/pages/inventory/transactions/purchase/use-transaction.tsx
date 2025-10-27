@@ -86,6 +86,7 @@ import {
   DataAutoBarcode,
   ExcelRowData,
 } from "../transaction-types";
+
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;
 //   clearDetailsAfterSaveAccounts: boolean;
@@ -332,6 +333,7 @@ export const useTransaction = (
   const fetchUserConfig = async () => {
     try {
       
+       const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`) ;
       const savedPreferences = await api.getAsync(
         `${Urls.inv_transaction_base}${transactionType}/GetLocalSettings`
       );
@@ -342,10 +344,7 @@ export const useTransaction = (
         savedPreferences != `""` &&
         savedPreferences != ""
       ) {
-        await setStorageString(
-          `${transactionType}_LocalSettings`,
-          savedPreferences
-        );
+        await setStorageString(key,savedPreferences );
         // Decode the base64 back to JSON string
         debugger;
         const _userConfig = safeBase64Decode(savedPreferences ?? "");
@@ -353,10 +352,8 @@ export const useTransaction = (
 
         return userConfig;
       }
-
-      const _bs64 = modelToBase64Unicode(initialUserConfig);
-      await setStorageString(`${transactionType}_LocalSettings`, _bs64);
-
+      const _bs64 = modelToBase64Unicode(initialUserConfig);   
+      await setStorageString(key, _bs64);
       return initialUserConfig;
     } catch (error) {
       console.error("Error fetching user config:", error);
@@ -492,8 +489,8 @@ export const useTransaction = (
     _formState: TransactionFormState,
     loadUserConfig: boolean = false
   ) => {
-    
-debugger;
+    debugger;
+
     const Utc = await getStorageString(`${transactionType}_LocalSettings`);
     let userConfig: UserConfig | undefined;
     if (Utc) {
@@ -1244,9 +1241,8 @@ debugger;
           );
           if (formState.printOnSave == true) {
             // masterID: number,transactionType: string,printTmeplate?:any ,transDate?: string,voucherType?: string,formType?:string,customerType?:string,
-
             printVoucher(
-              formState.transaction?.master.invTransactionMasterID, // masterID
+              saveRes?.item?.master?.invTransactionMasterID, // masterID
               transactionType ?? "", // transactionType
               formState.transaction?.master.voucherType ?? "", // voucherType
               formState.transaction?.master?.voucherForm ?? "", // formType

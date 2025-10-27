@@ -11,6 +11,8 @@ import { RootState } from "../../../../redux/store";
 import { setStorageString } from "../../../../utilities/storage-utils";
 import { formStateHandleFieldChangeKeysOnly } from "../reducer";
 import { TransactionFormState } from "../transaction-types";
+import { userSession } from "../../../../redux/slices/user-session/thunk";
+import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 
 interface GridThemeProps {
   isOpen: boolean;
@@ -388,6 +390,7 @@ const gridThemes = [
 const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, transactionType, onClearThemeChangeInterval }) => {
   const dispatch = useDispatch();
   const formState = useSelector((state: RootState) => state.InventoryTransaction);
+  const userSession = useAppSelector((state: RootState) => state.UserSession);
   const sidebarRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -460,7 +463,8 @@ const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, transactionTy
       const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, base64);
       handleResponse(response, async() => {
         
-        await setStorageString(`${transactionType}_LocalSettings`, base64)
+        const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`) ;
+        await setStorageString(key, base64)
         dispatch(formStateHandleFieldChangeKeysOnly({ fields: { selectedTheme: null, themeChangeCountdown: undefined } }))
         onClearThemeChangeInterval && onClearThemeChangeInterval();
         onClose();

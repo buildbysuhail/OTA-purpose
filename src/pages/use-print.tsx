@@ -1738,38 +1738,17 @@ export const addTemplateToStore = async (data: TemplateState<unknown>) => {
   }
   let key = btoa(`${data.templateGroup}-${data.customerType}-${data.formType}`)
 
-  let _templates = await getStorageString(key);
-  if (isNullOrUndefinedOrEmpty(_templates)) {
-    return
-  }
-  let templates: TemplateState<unknown>[] = base64ToModelUnicode(_templates ?? "") ?? "[]";
-  if (
-    !templates.some(
-      (template: TemplateState<unknown>) => template.templateGroup === data.templateGroup
-        && template.formType === data.formType
-        && template.customerType === data.customerType
-    )
-  ) {
-    templates.push(data);
-    const base64 = modelToBase64Unicode(templates)
-    await setStorageString("tds", base64);
-  } else {
-    templates = templates.filter((x: any) => x.templateGroup != data.templateGroup)
-    templates.push(data);
-    const base64 = modelToBase64Unicode(templates)
-    await setStorageString("tds", base64);
-  }
+   const base64 = modelToBase64Unicode(data)
+    await setStorageString(key, base64);
 }
-export const getTemplatesFromStore = async (templateGroup: string, customerType: string = "", formType: string = "") => {
-
-    let key = btoa(`${templateGroup}-${customerType}-${formType}`)
-  let _templates = await getStorageString(key);
-  if (isNullOrUndefinedOrEmpty(_templates)) {
+export const getTemplateFromStore = async (templateGroup: string, customerType: string = "", formType: string = "") => {
+  let key = btoa(`${templateGroup}-${customerType}-${formType}`)
+  let _template = await getStorageString(key)??'';
+  if (isNullOrUndefinedOrEmpty(_template)) {
     return
   }
-  const templates = base64UnicodeToModel(_templates ?? "") ?? "[]";
-
-  return templates
+  const template = base64UnicodeToModel(_template);
+  return template
 }
 
 
@@ -1778,6 +1757,7 @@ export const fetchDefaultTemplateFromApi = async (
   formType?: string ,
   customerType?: string ,
 ): Promise<TemplateState<unknown> | null> => {
+  debugger;
   try {
     const api = new APIClient();
     const res = await api.postAsync(`${Urls.default_template}`, {
@@ -1786,7 +1766,7 @@ export const fetchDefaultTemplateFromApi = async (
       customerType: customerType
     });
 
-    if (!res.id && res.id<=0) {
+    if (res == "" ||!res.id || res.id<=0) {
       console.warn("No default template response received.");
       return null;
     }
@@ -1899,14 +1879,9 @@ export const getOrFetchTemplate = async (
   formType?: string ,
   customerType?: string ,
 ) => {
-  const templates = await getTemplatesFromStore(voucherType, customerType, formType);
-  
-  const existingTemplate = templates?.find((template: TemplateState<unknown>) => template.templateGroup === voucherType
-    && template.formType === formType
-    && template.customerType === customerType)
-
-  if (existingTemplate) {
-    return existingTemplate
+  const template = await getTemplateFromStore(voucherType, customerType, formType);
+    if (template) {
+    return template
   } else {
     
     return await fetchDefaultTemplate(voucherType, formType, customerType)

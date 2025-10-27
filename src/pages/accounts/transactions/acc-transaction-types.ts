@@ -468,7 +468,6 @@ export interface AccTransactionFormState {
   total: number;
   printOnSave: boolean
   printPreview: boolean
-
   printCheque: boolean
   keepNarration: boolean
   amountInWords: string,

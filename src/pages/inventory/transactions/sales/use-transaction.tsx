@@ -1177,7 +1177,7 @@ export const useTransaction = (
           );
           if (formState.printOnSave == true) {
             printVoucher(
-              formState.transaction?.master.invTransactionMasterID, // masterID
+              saveRes?.item?.master?.invTransactionMasterID, // masterID
               transactionType ?? "", // transactionType
               formState.transaction?.master.voucherType ?? "", // voucherType
               formState.transaction?.master?.voucherForm ?? "", // formType

@@ -213,15 +213,37 @@ clearInFlightRequests = () => {
       ? await axios.post(`${url}?${params}`, data, config)
       : await axios.post(`${url}`, data, config);
 
-    return response;
-    // if (response?.status != undefined && response?.status != null) {
-    //   return response?.data;
-    // }
-    // else
-    // {
-    //   return response
-    // }
+    if (response?.status != undefined && response?.status != null
+      &&response?.request != undefined && response?.request != null
+      &&response?.headers != undefined && response?.headers != null
+    ) {
+      return response?.data;
+    }
+    else{
+      return response
+    }
   };
+
+//   postAsync = async (
+//   url: string,
+//   data: any,
+//   params?: any,
+//   config?: any
+// ): Promise<any> => {
+//   await setAuthorization();
+
+//   const finalUrl = params ? `${url}?${params}` : url;
+
+//   try {
+//     const response = await axios.post(finalUrl, data, config);
+//     return response.data; // return only data to keep it consistent
+//   } catch (error: any) {
+//     // Optional: standardize error structure
+//     console.error("API postAsync Error:", error);
+//     return null;
+//   }
+// };
+
   /**
    * Updates data
    */

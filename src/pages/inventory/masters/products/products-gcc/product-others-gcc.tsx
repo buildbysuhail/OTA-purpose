@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import Urls from "../../../../../redux/urls";
 import { APIClient } from "../../../../../helpers/api-client";
-import { customJsonParse } from "../../../../../utilities/jsonConverter";
+import { customJsonParse, modelToBase64Unicode } from "../../../../../utilities/jsonConverter";
 import { FormField } from "../../../../../utilities/form-types";
 import { ApplicationSettingsType } from "../../../../settings/system/application-settings-types/application-settings-types";
 import ERPModal from "../../../../../components/ERPComponents/erp-modal";
@@ -38,7 +38,7 @@ const ProductOthersGcc: React.FC<{
       value: any
     ) => {
       const prev = getFieldProps("*");
-      const pay = { ...prev.config, [fieldId]: value }
+      const pay = modelToBase64Unicode({ ...prev.config, [fieldId]: value })
       const res = await api.postAsync(Urls.update_product_config, pay);
       const _data = { ...prev }
       _data.config = pay

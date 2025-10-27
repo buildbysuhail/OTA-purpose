@@ -97,6 +97,7 @@ import { Countries } from "../../../redux/slices/user-session/reducer";
 import { useAppState } from "../../../utilities/hooks/useAppState";
 import { TransactionDetail } from "../../inventory/transactions/transaction-types";
 import { toggleIsPrintPreviewPopup } from "../../../redux/slices/popup-reducer";
+import TemplatesPreView from "../../transaction-base/transaction-print-preview";
 interface BilledItem {
   id?: number;
   name: string;
@@ -3289,23 +3290,17 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           height={700}
           isForm={true}
           closeModal={() => {
-            dispatch(
-              accFormStateHandleFieldChange({fields: { printPreview: false}})
-            );
-            dispatch(toggleIsPrintPreviewPopup({ isOpen: true }));
+            // dispatch(
+            //   accFormStateHandleFieldChange({fields: { printPreview: false}})
+            // );
+            dispatch(toggleIsPrintPreviewPopup({ isOpen: false }));
           }}
-          content={
-            <></>
-            //   <PDFViewer
-            //     className="pdf-viewer"
-            //     width="100%"
-            //     height={700}
-            //     style={{ padding: "10px" }}
-            //   >
-            // {renderSelectedTemplate({ template: formState.template, data: formState.transaction, })}
-
-            //   </PDFViewer>
-           
+          content={"NIzma"
+            // <TemplatesPreView
+            //   voucherType={formState.transaction.master?.voucherType ?? ""}
+            //   transactionMasterID={formState.transaction.master?.accTransactionMasterID ?? 0}
+            //   transactionType={formState.transactionType}
+            // />
           }
         />
       )}

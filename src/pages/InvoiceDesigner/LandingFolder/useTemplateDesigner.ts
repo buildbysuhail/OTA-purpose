@@ -131,7 +131,6 @@ export const useTemplateDesigner = ({
       setLoading(true);
       try {
         let data: PrintResponse = DummyVoucherData as any;
-
         if (MasterIDParam) {
           data = (await loadPrintData(
             MasterIDParam ?? 0,
@@ -158,15 +157,22 @@ export const useTemplateDesigner = ({
         }
 
         setPrintData(data);
-debugger;
+        debugger;
         // Fetch template if needed
         if (manuvalTemplateFeatch) {
-          const _template = await getOrFetchTemplate(
+          let _template = await getOrFetchTemplate(
             data?.master?.voucherType,
             data?.master?.voucherForm,
             data?.master?.customerType
           );
-
+           debugger
+          if (!_template){
+                _template = await getOrFetchTemplate(
+            data?.master?.voucherType,
+            "",
+            ""
+          );
+         };
           if (_template) {
             dispatch(setTemplate(_template));
           }

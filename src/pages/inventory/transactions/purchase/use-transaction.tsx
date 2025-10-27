@@ -86,6 +86,7 @@ import {
   DataAutoBarcode,
   ExcelRowData,
 } from "../transaction-types";
+import { z } from "framer-motion/dist/types.d-6pKw1mTI";
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;
 //   clearDetailsAfterSaveAccounts: boolean;
@@ -332,6 +333,7 @@ export const useTransaction = (
   const fetchUserConfig = async () => {
     try {
       debugger;
+       const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`) ;
       const savedPreferences = await api.getAsync(
         `${Urls.inv_transaction_base}${transactionType}/GetLocalSettings`
       );
@@ -342,20 +344,15 @@ export const useTransaction = (
         savedPreferences != `""` &&
         savedPreferences != ""
       ) {
-        await setStorageString(
-          `${transactionType}_LocalSettings`,
-          savedPreferences
-        );
+        await setStorageString(key,savedPreferences );
         // Decode the base64 back to JSON string
         const _userConfig = safeBase64Decode(savedPreferences ?? "");
         const userConfig: UserConfig = customJsonParse(_userConfig ?? "{}");
 
         return userConfig;
       }
-
-      const _bs64 = modelToBase64Unicode(initialUserConfig);
-      await setStorageString(`${transactionType}_LocalSettings`, _bs64);
-
+      const _bs64 = modelToBase64Unicode(initialUserConfig);   
+      await setStorageString(key, _bs64);
       return initialUserConfig;
     } catch (error) {
       console.error("Error fetching user config:", error);
@@ -492,8 +489,8 @@ export const useTransaction = (
     loadUserConfig: boolean = false
   ) => {
     debugger;
-
-    const Utc = await getStorageString(`${transactionType}_LocalSettings`);
+   const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`) ;
+    const Utc = await getStorageString(key);
     let userConfig: UserConfig | undefined;
     if (Utc) {
       const decoded = safeBase64Decode(Utc) ?? "{}";
@@ -1230,6 +1227,7 @@ export const useTransaction = (
                 `${Urls.inv_transaction_base}${transactionType}`,
                 params
               );
+              debugger
         if (saveRes.isOk == true) {
           dispatch(
             formStateTransactionUpdate({

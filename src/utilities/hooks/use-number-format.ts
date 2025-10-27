@@ -153,7 +153,7 @@ export const useNumberFormat = (): UseNumberFormatResult => {
   }
   function getFormattedValue(val: number, ignoreNullOrZero: boolean = false, decimalPoint: number|undefined = undefined, cuttingPoint: number = 0,
   numberOfZero: number = 0,isDouble: boolean = false): string {
-    debugger;
+   
     //isdouble is for sum calculation using double in C# () binary floating-point type (IEEE 754 format).
   if(!isDouble)
   {

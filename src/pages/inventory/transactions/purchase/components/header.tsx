@@ -13,7 +13,9 @@ import { useAppState } from "../../../../../utilities/hooks/useAppState";
 import Urls from "../../../../../redux/urls";
 import { APIClient } from "../../../../../helpers/api-client";
 import { formStateHandleFieldChange } from "../../reducer";
-import { VoucherElementProps, BillwiseData } from "../../transaction-types";
+import { VoucherElementProps, BillwiseData, UserConfig } from "../../transaction-types";
+import { update } from "lodash";
+import { up } from "../../../../../redux/slices/user-session/reducer";
 
 interface HeaderProps extends VoucherElementProps {
   loadTemporaryRows: () => Promise<void>;
@@ -408,8 +410,18 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                               id="printPreview"
                               className="flex-1"
                               label={t(formState.formElements.printPreview.label)}
-                              checked={formState.printPreview}
-                              onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { printPreview: e.target.checked, }, }))}
+                              checked={formState.userConfig?.printPreview || false}
+                                onChange={(e) => {
+                                const updatedUserConfig: UserConfig = {
+                                  ...(formState.userConfig || {}),
+                                  printPreview: e.target.checked,
+                                };
+                                dispatch(
+                                  formStateHandleFieldChange({
+                                    fields: { userConfig: updatedUserConfig },
+                                  })
+                                );
+                              }}
                               disabled={formState.formElements.printPreview?.disabled}
                             />
                           </div>

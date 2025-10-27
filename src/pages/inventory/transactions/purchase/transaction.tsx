@@ -99,7 +99,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   useEffect(() => {
     const fetchData = async () => {
-      const storedUtc = await getStorageString(`${transactionType}_LocalSettings`); // use get, not set
+       const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`) ;
+      const storedUtc = await getStorageString(key); // use get, not set
       if (storedUtc &&
         storedUtc !== "" &&
         storedUtc !== "undefined" &&
@@ -310,7 +311,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
           dispatch(formStateHandleFieldChangeKeysOnly({
             fields: {
-              userConfig: { ...formState.currentTheme },
+              userConfig: { ...formState.userConfig, ...formState.currentTheme },
               selectedTheme: formState.currentTheme,
               themeChangeCountdown: 0,
             }
@@ -2100,36 +2101,28 @@ debugger;
         )}
         {/* footer ends here */}
 
-        {formState.transaction && (
-          <ERPModal
-            isOpen={formState.printPreview && (popupData.IsPrintPreviewPopup.isOpen ?? false)}
-            title={t("template")}
-            width={1000}
-            height={700}
-            isForm={true}
-            closeModal={() => {
-              dispatch(toggleIsPrintPreviewPopup({ isOpen: true }));
-              dispatch(
-                formStateHandleFieldChange({ fields: { printPreview: false } })
-              );
-            }}
-          // content={
-          //   <PDFViewer
-          //     className="pdf-viewer"
-          //     width="100%"
-          //     height={700}
-          //     style={{ padding: "10px" }}
-          //   >
-          //     {renderSelectedTemplate({
-          //       template: formState.template,
-          //       data: formState.transaction,
-          //       // currentBranch: currentBranch,
-          //       // userSession: userSession,
-          //     })}
-          //   </PDFViewer>
-          // }
-          />
-        )}
+              {formState.transaction && (
+                <ERPModal
+                  isOpen={(formState.userConfig?.printPreview ?? false) && (popupData.IsPrintPreviewPopup.isOpen??false) }
+                  title={t("Template")}
+                  width={1000}
+                  height={700}
+                  isForm={true}
+                  closeModal={() => {
+                    // dispatch(
+                    //   accFormStateHandleFieldChange({fields: { printPreview: false}})
+                    // );
+                    dispatch(toggleIsPrintPreviewPopup({ isOpen: false }));
+                  }}
+                  content={"NIzma"
+                    // <TemplatesPreView
+                    //   voucherType={formState.transaction.master?.voucherType ?? ""}
+                    //   transactionMasterID={formState.transaction.master?.accTransactionMasterID ?? 0}
+                    //   transactionType={formState.transactionType}
+                    // />
+                  }
+                />
+              )}
 
         {formState.isFormStateDetailOpen && (
           <ERPModal

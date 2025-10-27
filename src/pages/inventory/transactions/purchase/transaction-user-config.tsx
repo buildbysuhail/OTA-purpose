@@ -24,6 +24,7 @@ import { setStorageString } from "../../../../utilities/storage-utils";
 import { formStateHandleFieldChange, formStateMasterHandleFieldChange, formStateHandleFieldChangeKeysOnly } from "../reducer";
 import { UserConfig } from "../transaction-types";
 import { appInitialState } from "../../../../redux/slices/app/reducer";
+import { userSession } from "../../../../redux/slices/user-session/thunk";
 
 const api = new APIClient();
 
@@ -72,6 +73,7 @@ const CollapsibleSection: React.FC<SectionProps> = ({ title, children, defaultEx
 
 export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ phone = false, transactionType, undoEditMode }) => {
   const formState = useAppSelector((state: RootState) => state.InventoryTransaction);
+  const userSession = useAppSelector((state: RootState) => state.UserSession);
   const dispatch = useDispatch();
   const { t } = useTranslation("transaction");
   const [isExpanded, setIsExpanded] = useState<boolean>(formState.userConfig?.isExpanded || false);
@@ -114,7 +116,8 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
       const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, { ...formState.userConfig, themeName: 'Custom' });
       handleResponse(response, async () => {
         const base64 = modelToBase64Unicode(formState.userConfig);
-        await setStorageString(`${transactionType}_LocalSettings`, base64);
+        const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`) ;
+        await setStorageString(key, base64);
         dispatch(
           formStateHandleFieldChangeKeysOnly({
             fields: {
@@ -162,7 +165,8 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
           const res = await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/ResetLocalSettings`, {});
           handleResponse(res, async () => {
             const st = modelToBase64Unicode(res.item);
-            await setStorageString(`${transactionType}_LocalSettings`, st);
+             const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`) ;
+            await setStorageString(key, st);
             dispatch(formStateHandleFieldChange({ fields: { userConfig: res.item } }));
           });
         },

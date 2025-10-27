@@ -515,7 +515,8 @@ const onSelectionChanged = useCallback(
  const planRights = clientSession.planFormCodes?.split(",")
  console.log( clientSession.planFormCodes);
  
-  const updated =  filteredRights.filter(item => planRights?.includes(item.formCode));
+    const allowedActions = Object.values(UserAction) as string[];
+  const updated =  filteredRights.filter(item =>planRights?.includes(item.formCode) ||  allowedActions.includes(item.formCode));
   setUserRightsData(updated);
 }, [userRights, userRightsgcc, clientSession.isAppGlobal, userRights]);
   return (

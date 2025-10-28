@@ -94,6 +94,7 @@ const FileUploadIntegration: React.FC = () => {
         apiKey: apiKey,
         apiSecret: apiSecret,
         cloudName: cloudName,
+        limit: item?.limit,
         // uploadPreset: parsedConfig?.uploadPreset ?? "",
       },
       id: item?.id,

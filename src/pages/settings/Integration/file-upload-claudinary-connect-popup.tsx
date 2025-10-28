@@ -52,7 +52,8 @@ const CloudinaryConnectPopup: React.FC<CloudinaryConnectPopupProps> = ({ data = 
                 channel: NotificationsChannel.FileUpload,
                 configJson: cloudinaryUrl,
                 isEnable: true,
-                id: id
+                id: id,
+                limit: 1000,
             };
             const response = await api.post(Urls.notification_provider_update, requestBody);
             handleResponse(response, () => { onSuccess && onSuccess() });
@@ -79,6 +80,7 @@ const CloudinaryConnectPopup: React.FC<CloudinaryConnectPopupProps> = ({ data = 
                 configJson: cloudinaryUrl,
                 file: formData,
                 isEnable: true,
+                limit: 1000,
             };
             const testUploadResponse = await api.post(Urls.notification_provider_test, payload);
             await handleResponse(testUploadResponse);

@@ -70,25 +70,30 @@ const FileUploadIntegration: React.FC = () => {
   };
 
   const handleOpen = (item: any) => {
-    let parsedConfig: any = {};
-
-    if (typeof item?.configJson === "string" && item?.configJson.trim() !== "") {
-      try {
-        parsedConfig = JSON.parse(item?.configJson);
-      } catch (error) {
-        console.error("Error parsing configJson:", error);
+    let apiKey = "";
+    let apiSecret = "";
+    let cloudName = "";
+  
+    if (typeof item?.configJson === "string") {
+      const url = item.configJson;
+      const match = url.match(/cloudinary:\/\/([^:]+):([^@]+)@(.+)/);
+      if (match) {
+        apiKey = match[1];
+        apiSecret = match[2];
+        cloudName = match[3];
+      } else {
+        // Fallback for old format if it was just the API key
+        apiKey = url;
       }
-    } else if (typeof item?.configJson === "object" && item?.configJson !== null) {
-      parsedConfig = item?.configJson;
     }
 
     setProvider({
       isOpen: true,
       provider: item?.provider,
       information: {
-        // cloudName: parsedConfig?.cloudName ?? "",
-        apiKey: parsedConfig?.apiKey ?? "",
-        // apiSecret: parsedConfig?.apiSecret ?? "",
+        apiKey: apiKey,
+        apiSecret: apiSecret,
+        cloudName: cloudName,
         // uploadPreset: parsedConfig?.uploadPreset ?? "",
       },
       id: item?.id,
@@ -166,7 +171,7 @@ const FileUploadIntegration: React.FC = () => {
           isOpen={provider.isOpen}
           title={t(provider.providerName?.toLowerCase() || "cloudinary")}
           width={600}
-          height={150}
+          height={300}
           isForm={true}
           closeModal={() => { setProvider({ isOpen: false, information: undefined, providerName: undefined }); }}
           content={

@@ -63,5 +63,9 @@
   "test_file_upload":"Test File Upload",
   "select_file":"Select File",
   "selected_file":"Selected File",
-  "size":"Size"
+  "size":"Size",
+  "api_secret": "API Secret",
+  "enter_api_secret": "Enter API Secret",
+  "cloud_name": "Cloud Name",
+  "enter_cloud_name": "Enter Cloud Name"
 }

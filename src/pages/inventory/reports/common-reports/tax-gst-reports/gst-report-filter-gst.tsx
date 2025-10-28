@@ -188,7 +188,7 @@ export default GstReportFilterGstCat;
 export const GstReportFilterGstCatInitialState = {
   fromDate: moment().local().toDate(),
   toDate: moment().local().toDate(),
-  gSTPerc: null,
+  gSTPerc: 0,
   isVchForm: false,
   voucherForm: "",
   isTransactionDate: false,

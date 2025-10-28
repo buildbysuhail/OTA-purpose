@@ -66,6 +66,7 @@ import {
   isNullOrUndefinedOrEmpty,
   mergeObjectsRemovingIdenticalKeys,
   formatDate as appFormatDate,
+  sanitizeDataAdvanced,
 } from "../../utilities/Utils";
 import { RootState } from "../../redux/store";
 import { arabicFontBase64 } from "./arabicFont";
@@ -341,7 +342,8 @@ const createStore = async (
   setShowFilter?: any,
   totalRowCountRef?: React.MutableRefObject<number>,
   onInitialDataLoad?: (e: any) => void,
-  onDataChanged?: (e: any) => void
+  onDataChanged?: (e: any) => void,
+  filterInitialData?: any
 ) => {
   let isInitialLoad = true; // Track initial load
   return new CustomStore({
@@ -392,8 +394,10 @@ const createStore = async (
       );
 
       // Append filterData to params
+        const sanitizedFilterData = sanitizeDataAdvanced(filterData,filterInitialData,{defaultNumber:null})
       if (enablefilter && filterData) {
-        Object.entries(filterData).forEach((x: any) => {
+        debugger;
+        Object.entries(sanitizedFilterData).forEach((x: any) => {
           if (
             x[1] instanceof Date ||
             x[0]?.includes("date") ||
@@ -411,7 +415,7 @@ const createStore = async (
 
       const postDataModified = formatDateFields(postData);
       const queryString = new URLSearchParams(method == ActionType.GET ? { ...params, ...postDataModified } : params).toString();
-      const updated = formatDateFields(filterData);
+      const updated = formatDateFields(sanitizedFilterData);
 
 
       try {
@@ -831,7 +835,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             setShowFilter,
             totalRowCountRef,
             onInitialDataLoad,
-            onDataChanged
+            onDataChanged,
+            filterInitialData
           );
           setCurrentStore(newStore);
           setStore(newStore);

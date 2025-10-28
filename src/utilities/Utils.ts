@@ -13,7 +13,9 @@ export function capitalizeFirstLetter(text: string) {
 }
 
 export function camelize(str: string) {
-  return str.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase());
+  return str
+    .toLowerCase()
+    .replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase());
 }
 
 export const formatDate = (dateStr: string): string => {
@@ -34,7 +36,7 @@ export const formatDate = (dateStr: string): string => {
 
 /**
  * Formats all date-related fields in an object to "YYYY-MM-DD".
- * 
+ *
  * @param {Object} postData - The input object containing key-value pairs.
  * @returns {Object} - A new object with date fields formatted while keeping other fields unchanged.
  */
@@ -43,7 +45,6 @@ export const formatDateFields = (data: any) => {
 
   return Object.fromEntries(
     Object.entries(data).map(([key, value]) => {
-
       if (
         (typeof value === "string" || value instanceof Date) && // Ensure it's a valid date input
         key.toLowerCase().includes("date") // Check if key includes "date"
@@ -57,7 +58,7 @@ export const formatDateFields = (data: any) => {
       return [key, value]; // Keep other values unchanged
     })
   );
-}
+};
 
 /**
  * Capitalizes the first letter of a string and adds a space before each capital letter (except the first).
@@ -65,24 +66,24 @@ export const formatDateFields = (data: any) => {
  * @returns A transformed string with the first letter capitalized and spaces before each subsequent capital letter.
  */
 export const capitalizeAndAddSpace = (input: string): string => {
-  if (!input) return '';
+  if (!input) return "";
 
   // Capitalize the first letter of the string
   const capitalized = input.charAt(0).toUpperCase() + input.slice(1);
 
   // Add space before each subsequent capital letter (except the first)
-  const result = capitalized.replace(/([A-Z])/g, ' $1').trim();
+  const result = capitalized.replace(/([A-Z])/g, " $1").trim();
 
   return result;
-}
+};
 export const lowercaseAndAddUnderscore = (input: string): string => {
-  if (!input) return '';
+  if (!input) return "";
 
   // Add underscores before each uppercase letter and convert the entire string to lowercase
-  const result = input.replace(/([A-Z])/g, '_$1').toLowerCase();
+  const result = input.replace(/([A-Z])/g, "_$1").toLowerCase();
 
   // Remove the leading underscore, if present
-  const ret = result.startsWith('_') ? result.slice(1) : result;
+  const ret = result.startsWith("_") ? result.slice(1) : result;
   return ret;
 };
 /**
@@ -91,18 +92,18 @@ export const lowercaseAndAddUnderscore = (input: string): string => {
  * @returns A camelCase or PascalCase string with no spaces.
  */
 export const removeSpacesAndCapitalize = (input: string): string => {
-  if (!input) return '';
+  if (!input) return "";
 
   return input
-    .split(' ') // Split the string by spaces
+    .split(" ") // Split the string by spaces
     .map((word, index) => {
       // Capitalize first letter of each word, except the first one
       return index === 0
         ? word.toLowerCase() // Keep the first word lowercase for camelCase
         : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
     })
-    .join(''); // Join the words back together without spaces
-}
+    .join(""); // Join the words back together without spaces
+};
 
 export const Decode = (token: string) => {
   var base64Url = token?.split(".")[1];
@@ -120,7 +121,7 @@ export const Decode = (token: string) => {
 };
 
 export const setNestedValue = (obj: any, path: string, value: any) => {
-  const keys = path.split('.');
+  const keys = path.split(".");
   const lastKey = keys.pop() as string;
   const deepClone = { ...obj }; // Create a shallow clone of the object
 
@@ -224,7 +225,12 @@ export const getOptions = (data: any, keyLabel: string) => {
 };
 
 // OPTION LISTER WITH IS_CASH
-export const getOptionsWithIsCash = (data: any, keyLabel: string, booleanKey: string, bankKey?: any) => {
+export const getOptionsWithIsCash = (
+  data: any,
+  keyLabel: string,
+  booleanKey: string,
+  bankKey?: any
+) => {
   let getter = keyLabel?.split(".");
   if (data?.length > 0) {
     let options;
@@ -247,7 +253,11 @@ export const getOptionsWithIsCash = (data: any, keyLabel: string, booleanKey: st
   }
 };
 
-export const getPriceListOptions = (data: any, keyLabel: string, booleanKey: string) => {
+export const getPriceListOptions = (
+  data: any,
+  keyLabel: string,
+  booleanKey: string
+) => {
   let getter = keyLabel?.split(".");
   if (data?.length > 0) {
     let options;
@@ -317,7 +327,8 @@ export const getFileType = (fileName: string) => {
 };
 
 export const interchangeArrayElements = (array: any, id1: any, id2: any) => {
-  const getIndex = (id: string) => array.findIndex((item: any) => item.id === id);
+  const getIndex = (id: string) =>
+    array.findIndex((item: any) => item.id === id);
   const isValidIndex = (index: number) => index !== -1;
 
   const index1 = getIndex(id1);
@@ -392,7 +403,10 @@ export const getTitleName = (string: any) => {
 
 // Warning Message
 export const warning = () => {
-  ERPToast.showWith("Sorry! This feature is not ready to use. Please try later", "warning");
+  ERPToast.showWith(
+    "Sorry! This feature is not ready to use. Please try later",
+    "warning"
+  );
 };
 
 // Get User Currency symbol
@@ -402,10 +416,19 @@ export const getCurrentCurrencySymbol = () => {
 };
 
 // Find Nearest Number
-export const findNearestNumber = (target: number, num1: number, num2: number, num3?: number) => {
+export const findNearestNumber = (
+  target: number,
+  num1: number,
+  num2: number,
+  num3?: number
+) => {
   let differences = [Math.abs(target - num1), Math.abs(target - num2)];
   if (num3) {
-    differences = [Math.abs(target - num1), Math.abs(target - num2), Math.abs(target - num3)];
+    differences = [
+      Math.abs(target - num1),
+      Math.abs(target - num2),
+      Math.abs(target - num3),
+    ];
   }
   const minDifference = Math.min(...differences);
   if (minDifference === Math.abs(target - num1)) {
@@ -536,8 +559,14 @@ export const SetDefaultFields = (data_1?: any, data_2?: any, id?: any) => {
   return defaultFields;
 };
 
-export const setUpDefaultEmailDatas = (params: any, profile: any, preference?: any) => {
-  let isStatement = params?.get("voucher_type") == "customer_statement" || params?.get("voucher_type") == "vendor_statement";
+export const setUpDefaultEmailDatas = (
+  params: any,
+  profile: any,
+  preference?: any
+) => {
+  let isStatement =
+    params?.get("voucher_type") == "customer_statement" ||
+    params?.get("voucher_type") == "vendor_statement";
   let data: any = {};
   if (params?.get("has_statement") == "true") {
     data = {
@@ -549,7 +578,11 @@ export const setUpDefaultEmailDatas = (params: any, profile: any, preference?: a
     };
   }
   if (!isStatement) {
-    data = { ...data, is_include_pdf: preference?.pdf_attachment ? "yes" : "no", voucher_pdf_name: params?.get("voucher_name") };
+    data = {
+      ...data,
+      is_include_pdf: preference?.pdf_attachment ? "yes" : "no",
+      voucher_pdf_name: params?.get("voucher_name"),
+    };
   }
   if (params?.get("voucher_type") == "sales_invoice") {
     let startDate = thisYear?.split("&")[0]?.split("=")[1];
@@ -561,7 +594,12 @@ export const setUpDefaultEmailDatas = (params: any, profile: any, preference?: a
   return data;
 };
 
-export const ReduceFields = (formFields: any[], keysToRemove: string[], is_registered: boolean, hasPriceList?: boolean) => {
+export const ReduceFields = (
+  formFields: any[],
+  keysToRemove: string[],
+  is_registered: boolean,
+  hasPriceList?: boolean
+) => {
   ////////////////////////// Removing Fields with Keys ////////////////////////
   const filteredForms = (fields: any) => {
     return fields?.filter((field: any) => !keysToRemove?.includes(field?.id));
@@ -579,7 +617,9 @@ export const ReduceFields = (formFields: any[], keysToRemove: string[], is_regis
     if (item?.fieldItems) {
       return {
         ...item,
-        fieldItems: item?.fieldItems?.filter((field: any) => field?.id != "price_list"),
+        fieldItems: item?.fieldItems?.filter(
+          (field: any) => field?.id != "price_list"
+        ),
       };
     }
   });
@@ -597,7 +637,9 @@ export const ReduceFields = (formFields: any[], keysToRemove: string[], is_regis
 };
 
 export const getBillableCustomers = (customers: any, bilableItems: any) => {
-  const billableCustomer = bilableItems?.map((item: any) => item?.customer && item?.customer?.id);
+  const billableCustomer = bilableItems?.map(
+    (item: any) => item?.customer && item?.customer?.id
+  );
   let allBillableCustomers = customers
     ?.filter((customer: any) => {
       return billableCustomer?.includes(customer?.id);
@@ -627,30 +669,55 @@ export const getItemRate = (data: any, pathName: any) => {
 export const identifyDateFormat = (dateString: string) => {
   const formats = [
     // Date only
-    "DD-MM-YYYY", "MM-DD-YYYY", "YYYY-MM-DD", "DD/MM/YYYY", "MM/DD/YYYY", "YYYY/MM/DD",
-    "DD.MM.YYYY", "YYYY.MM.DD",
-    "DD MMM YYYY", "MMM DD, YYYY", "YYYY MMM DD",
+    "DD-MM-YYYY",
+    "MM-DD-YYYY",
+    "YYYY-MM-DD",
+    "DD/MM/YYYY",
+    "MM/DD/YYYY",
+    "YYYY/MM/DD",
+    "DD.MM.YYYY",
+    "YYYY.MM.DD",
+    "DD MMM YYYY",
+    "MMM DD, YYYY",
+    "YYYY MMM DD",
 
     // Date and time without timezone
-    "DD-MM-YYYY HH:mm", "MM-DD-YYYY HH:mm", "YYYY-MM-DD HH:mm",
-    "DD/MM/YYYY HH:mm", "MM/DD/YYYY HH:mm", "YYYY/MM/DD HH:mm",
-    "DD.MM.YYYY HH:mm", "YYYY.MM.DD HH:mm",
+    "DD-MM-YYYY HH:mm",
+    "MM-DD-YYYY HH:mm",
+    "YYYY-MM-DD HH:mm",
+    "DD/MM/YYYY HH:mm",
+    "MM/DD/YYYY HH:mm",
+    "YYYY/MM/DD HH:mm",
+    "DD.MM.YYYY HH:mm",
+    "YYYY.MM.DD HH:mm",
 
     // Date and time with seconds
-    "DD-MM-YYYY HH:mm:ss", "MM-DD-YYYY HH:mm:ss", "YYYY-MM-DD HH:mm:ss",
-    "DD/MM/YYYY HH:mm:ss", "MM/DD/YYYY HH:mm:ss", "YYYY/MM/DD HH:mm:ss",
-    "DD.MM.YYYY HH:mm:ss", "YYYY.MM.DD HH:mm:ss",
+    "DD-MM-YYYY HH:mm:ss",
+    "MM-DD-YYYY HH:mm:ss",
+    "YYYY-MM-DD HH:mm:ss",
+    "DD/MM/YYYY HH:mm:ss",
+    "MM/DD/YYYY HH:mm:ss",
+    "YYYY/MM/DD HH:mm:ss",
+    "DD.MM.YYYY HH:mm:ss",
+    "YYYY.MM.DD HH:mm:ss",
 
     // Date and time with milliseconds
-    "DD-MM-YYYY HH:mm:ss.SSS", "MM-DD-YYYY HH:mm:ss.SSS", "YYYY-MM-DD HH:mm:ss.SSS",
-    "DD/MM/YYYY HH:mm:ss.SSS", "MM/DD/YYYY HH:mm:ss.SSS", "YYYY/MM/DD HH:mm:ss.SSS",
-    "DD.MM.YYYY HH:mm:ss.SSS", "YYYY.MM.DD HH:mm:ss.SSS",
+    "DD-MM-YYYY HH:mm:ss.SSS",
+    "MM-DD-YYYY HH:mm:ss.SSS",
+    "YYYY-MM-DD HH:mm:ss.SSS",
+    "DD/MM/YYYY HH:mm:ss.SSS",
+    "MM/DD/YYYY HH:mm:ss.SSS",
+    "YYYY/MM/DD HH:mm:ss.SSS",
+    "DD.MM.YYYY HH:mm:ss.SSS",
+    "YYYY.MM.DD HH:mm:ss.SSS",
 
     // Time only
-    "HH:mm", "HH:mm:ss", "HH:mm:ss.SSS",
+    "HH:mm",
+    "HH:mm:ss",
+    "HH:mm:ss.SSS",
 
     // ISO 8601 variants
-    moment.ISO_8601
+    moment.ISO_8601,
   ];
 
   // Check all formats
@@ -661,7 +728,7 @@ export const identifyDateFormat = (dateString: string) => {
   }
 
   return "Unknown format";
-}
+};
 export const getVoucherNameFromPath = (path: string) => {
   let voucherName: any;
   const index = path?.lastIndexOf("/");
@@ -700,7 +767,12 @@ export const isDiscountTypeTransactionLevel = (data: any, defaultData: any) => {
  *
  */
 
-export const customUnShift = (A: any[], B: any[], a_field_key: string, b_field_key: string) => {
+export const customUnShift = (
+  A: any[],
+  B: any[],
+  a_field_key: string,
+  b_field_key: string
+) => {
   const resultArray = B?.map((itemB) => {
     const key = itemB?.[b_field_key];
     const foundItem = A?.find((itemA) => itemA?.[a_field_key] === key);
@@ -708,7 +780,8 @@ export const customUnShift = (A: any[], B: any[], a_field_key: string, b_field_k
   }).filter(Boolean);
 
   A?.forEach((item) => {
-    if (!B?.find((itemB) => itemB?.[b_field_key] === item?.[a_field_key])) resultArray?.push(item);
+    if (!B?.find((itemB) => itemB?.[b_field_key] === item?.[a_field_key]))
+      resultArray?.push(item);
   });
 
   return resultArray;
@@ -718,32 +791,34 @@ export const isFile = (obj: any): obj is File => {
   return obj instanceof File;
 };
 export function isNullOrUndefinedOrEmpty(value: any): boolean {
-  return value === undefined || value === null || value === '';
+  return value === undefined || value === null || value === "";
 }
 export function isNullOrUndefinedOrZero(value: any): boolean {
-  return value === undefined || value === null || value === '' || value === 0;
+  return value === undefined || value === null || value === "" || value === 0;
 }
 export function hasValue(value: any): boolean {
-  return value !== undefined && value !== null && value !== '' && value !== 0;
+  return value !== undefined && value !== null && value !== "" && value !== 0;
 }
 export const setFgAccordingToBgPrimary = () => {
   // Create a temporary element to determine the color of bgPrimary
-  const tempElement = document.createElement('div');
-  tempElement.className = 'bg-primary';
+  const tempElement = document.createElement("div");
+  tempElement.className = "bg-primary";
   document.body.appendChild(tempElement);
   const bgColor = window.getComputedStyle(tempElement).backgroundColor;
   document.body.removeChild(tempElement);
 
   // Check if the background color is close to white
   const isW = isLightColor(bgColor);
-  const dfdfd = isW === true ? 'text-gray-900' : 'text-white';
+  const dfdfd = isW === true ? "text-gray-900" : "text-white";
   return dfdfd;
 };
 // Function to calculate the luminance of a color
 const calculateLuminance = (r: number, g: number, b: number) => {
   const normalize = (value: any) => {
     value /= 255;
-    return value <= 0.03928 ? value / 12.92 : Math.pow((value + 0.055) / 1.055, 2.4);
+    return value <= 0.03928
+      ? value / 12.92
+      : Math.pow((value + 0.055) / 1.055, 2.4);
   };
 
   const rNorm = normalize(r);
@@ -765,11 +840,13 @@ const isLightColor = (bgColor: any) => {
   return false;
 };
 
-export const mergeObjectsRemovingIdenticalKeys = <T extends object, U extends Record<string, any>>(
+export const mergeObjectsRemovingIdenticalKeys = <
+  T extends object,
+  U extends Record<string, any>
+>(
   obj1: T,
   obj2: U
 ): T & U => {
-
   if (obj1 == undefined || obj2 == undefined) {
     if (obj1 == undefined && obj2 != undefined) {
       const out2 = { ...obj2 } as T & U;
@@ -786,7 +863,14 @@ export const mergeObjectsRemovingIdenticalKeys = <T extends object, U extends Re
   }
   // Filter out keys with identical values
   const filteredObj2 = Object.fromEntries(
-    obj2 !== undefined && obj2 !== null ? Object.entries(obj2).filter(([key, value]) => key !== undefined && key !== null && obj1[key as keyof T] !== value) : obj1 !== undefined && obj1 !== null ? Object.entries(obj1) : []
+    obj2 !== undefined && obj2 !== null
+      ? Object.entries(obj2).filter(
+          ([key, value]) =>
+            key !== undefined && key !== null && obj1[key as keyof T] !== value
+        )
+      : obj1 !== undefined && obj1 !== null
+      ? Object.entries(obj1)
+      : []
   ) as Partial<U>; // Explicitly cast as Partial<U>
 
   // Merge the objects and cast to T & U
@@ -797,7 +881,7 @@ export const isEnterKey = (key: string | number) => {
   return (
     key === "Enter" ||
     key === "enter" ||
-    // key === "E" || 
+    // key === "E" ||
     key === 13 || // Numeric key code for Enter
     key === "NumpadEnter" // Numpad Enter key (for numeric keypad)
   );
@@ -816,7 +900,9 @@ export const decryptAES = async (encryptedText: string): Promise<string> => {
     ["decrypt"]
   );
 
-  const encryptedBytes = Uint8Array.from(atob(encryptedText), c => c.charCodeAt(0));
+  const encryptedBytes = Uint8Array.from(atob(encryptedText), (c) =>
+    c.charCodeAt(0)
+  );
   const subtleCrypto = window.crypto?.subtle || null;
   if (!subtleCrypto) throw new Error("Web Crypto API not available");
   const decryptedBuffer = await crypto.subtle.decrypt(
@@ -826,10 +912,19 @@ export const decryptAES = async (encryptedText: string): Promise<string> => {
   );
 
   return new TextDecoder().decode(decryptedBuffer);
-}
+};
 
-export const calculateMarkup = (purPrice: number, salesPrice: number, salesTaxPercentage: number, showRateBeforeTax: boolean, getFormattedValue: (val: number, ignoreNullOrZero?: boolean, decimalPoint?: number | undefined) => string) => {
-
+export const calculateMarkup = (
+  purPrice: number,
+  salesPrice: number,
+  salesTaxPercentage: number,
+  showRateBeforeTax: boolean,
+  getFormattedValue: (
+    val: number,
+    ignoreNullOrZero?: boolean,
+    decimalPoint?: number | undefined
+  ) => string
+) => {
   try {
     // Convert inputs to numbers
     let pp = purPrice || 0;
@@ -844,7 +939,7 @@ export const calculateMarkup = (purPrice: number, salesPrice: number, salesTaxPe
       }
 
       // Calculate markup percentage
-      mu = (sp - pp) / pp * 100;
+      mu = ((sp - pp) / pp) * 100;
       return getFormattedValue(mu, false, 4);
     }
     return getFormattedValue(0, false, 4);
@@ -852,11 +947,13 @@ export const calculateMarkup = (purPrice: number, salesPrice: number, salesTaxPe
     console.error("Error calculating markup:", error);
     return getFormattedValue(0, false, 4);
   }
-}
-export const calculateSalesPrice = (purchasePriceInput: number,
+};
+export const calculateSalesPrice = (
+  purchasePriceInput: number,
   markupPercentInput: number,
   salesTaxPercentage: number,
-  showRateBeforeTax: boolean): number => {
+  showRateBeforeTax: boolean
+): number => {
   const parseNumber = (val: string): number => parseFloat(val) || 0;
 
   let pp = purchasePriceInput;
@@ -870,8 +967,8 @@ export const calculateSalesPrice = (purchasePriceInput: number,
     sp = pp + (pp * mu) / 100;
   }
 
-  return pp > 0 ? isNaN(sp) ? 0 : sp : 0;
-}
+  return pp > 0 ? (isNaN(sp) ? 0 : sp) : 0;
+};
 export const generateUniqueKey = (): string => {
   const uuid = getUUID();
   const timestamp = Date.now();
@@ -882,14 +979,20 @@ export function getUUID() {
     return crypto.randomUUID();
   } else {
     // Polyfill fallback
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-      const r = Math.random() * 16 | 0;
-      const v = c == 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+      /[xy]/g,
+      function (c) {
+        const r = (Math.random() * 16) | 0;
+        const v = c == "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      }
+    );
   }
 }
-export const getPurchasePriceCode = (priceVal: string, priceCodeFromSettings: string): string => {
+export const getPurchasePriceCode = (
+  priceVal: string,
+  priceCodeFromSettings: string
+): string => {
   priceVal = priceVal.replace(/,/g, "");
   let priceCode = priceVal;
   let priceCodes: string;
@@ -902,7 +1005,10 @@ export const getPurchasePriceCode = (priceVal: string, priceCodeFromSettings: st
   }
 
   let l: number;
-  let pc = "", formatedCode = "", c = "", previousDigit = "";
+  let pc = "",
+    formatedCode = "",
+    c = "",
+    previousDigit = "";
   pc = priceVal;
   l = pc.length;
 
@@ -919,26 +1025,26 @@ export const getPurchasePriceCode = (priceVal: string, priceCodeFromSettings: st
       if (previousDigit === c && priceCodes.substring(11, 12) !== "") {
         formatedCode = formatedCode + priceCodes.substring(11, 12);
       } else {
-        formatedCode = formatedCode + priceCodes.substring(parseInt(c), parseInt(c) + 1);
+        formatedCode =
+          formatedCode + priceCodes.substring(parseInt(c), parseInt(c) + 1);
       }
     }
     previousDigit = c;
   }
 
   return formatedCode;
-}
+};
 
 export interface LoadTemplateParams {
   templateId: any;
 }
 
 export const loadTemplateById = async <T>(templateId: LoadTemplateParams) => {
-
   try {
     const _template = await fetchTemplateFromApiById(templateId);
-    return _template
+    return _template;
   } catch (error) {
-    console.error('Error loading template:', error);
+    console.error("Error loading template:", error);
     throw error;
   }
 };
@@ -949,12 +1055,12 @@ export const getExcelCellValue = (cell: any): string | null => {
 
   const value = cell.value;
 
-  if (typeof value === 'string' || typeof value === 'number') {
+  if (typeof value === "string" || typeof value === "number") {
     return value.toString();
   }
 
   // Handle formula cells
-  if (typeof value === 'object' && 'result' in value) {
+  if (typeof value === "object" && "result" in value) {
     return (value as any).result?.toString() || null;
   }
 
@@ -967,17 +1073,16 @@ export const getExcelCellValue = (cell: any): string | null => {
 };
 
 export const remToPx = (rem: number) => {
-  const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize); // usually 16px
+  const rootFontSize = parseFloat(
+    getComputedStyle(document.documentElement).fontSize
+  ); // usually 16px
   return rem * rootFontSize;
 };
 export const sanitizeData = (data: any, initialState: any): any => {
   const sanitized: any = { ...data };
 
   for (const key in sanitized) {
-    if (
-      sanitized[key] === "" &&
-      typeof initialState?.[key] === "number"
-    ) {
+    if (sanitized[key] === "" && typeof initialState?.[key] === "number") {
       sanitized[key] = 0;
     }
   }
@@ -989,7 +1094,7 @@ export const sanitizeDataAdvanced = (
   initialState: any,
   options?: {
     convertEmptyStrings?: boolean;
-    defaultNumber?: number;
+    defaultNumber?: number | undefined | null;
     preserveNull?: boolean;
     customConverter?: (value: any, initial: any) => any;
   }
@@ -999,7 +1104,7 @@ export const sanitizeDataAdvanced = (
     defaultNumber: 0,
     preserveNull: true,
     customConverter: undefined,
-    ...options
+    ...options,
   };
 
   // Handle null/undefined cases
@@ -1019,8 +1124,12 @@ export const sanitizeDataAdvanced = (
   }
 
   // Handle primitive types
-  if (typeof data !== 'object') {
-    if (opts.convertEmptyStrings && data === "" && typeof initialState === "number") {
+  if (typeof data !== "object") {
+    if (
+      opts.convertEmptyStrings &&
+      data === "" &&
+      typeof initialState === "number"
+    ) {
       return opts.defaultNumber;
     }
     return data;
@@ -1029,7 +1138,9 @@ export const sanitizeDataAdvanced = (
   // Handle arrays
   if (Array.isArray(data)) {
     return data.map((item, index) => {
-      const initialItem = Array.isArray(initialState) ? initialState[index] : undefined;
+      const initialItem = Array.isArray(initialState)
+        ? initialState[index]
+        : undefined;
       return sanitizeDataAdvanced(item, initialItem, opts);
     });
   }
@@ -1041,20 +1152,37 @@ export const sanitizeDataAdvanced = (
       const value = data[key];
       const initialValue = initialState?.[key];
       if (key == "qty") {
-
       }
       // Handle empty string to number conversion
-      if (opts.convertEmptyStrings && value === "" && typeof initialValue === "number") {
+      if (
+        opts.convertEmptyStrings &&
+        value === "" &&
+        typeof initialValue === "number"
+      ) {
         sanitized[key] = opts.defaultNumber;
-      }
-      else if (Number.isNaN(value) && typeof initialValue === "number") {
+      } else if (Number.isNaN(value) && typeof initialValue === "number") {
         sanitized[key] = opts.defaultNumber;
       }
       // Recursively sanitize nested structures
-      else if (typeof value === 'object' && value !== null) {
-
-
-        sanitized[key] = sanitizeDataAdvanced(value, initialValue, opts);
+      else if (typeof value === "object" && value !== null) {
+        if (
+          value instanceof Date ||
+          (typeof key === "string" &&
+            (key.toLowerCase().includes("date") ||
+              key.toLowerCase().includes("Date") ||
+              key.toLowerCase().includes("finFrom") ||
+              key.toLowerCase().includes("finTo")))
+        ) {
+          // Keep as-is or normalize to valid date
+          sanitized[key] = value;
+        } else {
+          // Recursively sanitize nested objects
+          sanitized[key] = sanitizeDataAdvanced(
+            value,
+            initialValue?.[key] ?? {},
+            opts
+          );
+        }
       }
       // Handle primitive values
       else {
@@ -1066,9 +1194,6 @@ export const sanitizeDataAdvanced = (
   return sanitized;
 };
 
-
-
-
 interface IdLabel {
   id: string;
   label: string;
@@ -1076,28 +1201,31 @@ interface IdLabel {
 
 // Helper function to convert camelCase/PascalCase to readable labels
 function toReadableLabel(key: string): string {
-  return key
-    // 1. Split lower-to-upper transitions: salesPrice -> sales Price
-    .replace(/([a-z])([A-Z])/g, '$1 $2')
-    // 2. Split acronym + normal word: VATCode -> VAT Code
-    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
-    // 3. Split digit-to-letter transitions: Price2With -> Price2 With
-    .replace(/([0-9])([A-Z])/g, '$1 $2')
-    // 4. Capitalize first letter
-    .replace(/^./, str => str.toUpperCase())
-    .trim();
+  return (
+    key
+      // 1. Split lower-to-upper transitions: salesPrice -> sales Price
+      .replace(/([a-z])([A-Z])/g, "$1 $2")
+      // 2. Split acronym + normal word: VATCode -> VAT Code
+      .replace(/([A-Z]+)([A-Z][a-z])/g, "$1 $2")
+      // 3. Split digit-to-letter transitions: Price2With -> Price2 With
+      .replace(/([0-9])([A-Z])/g, "$1 $2")
+      // 4. Capitalize first letter
+      .replace(/^./, (str) => str.toUpperCase())
+      .trim()
+  );
 }
 
-
 // More practical approach: convert from an object instance
-export function modelToListFromObject<T extends Record<string, any>>(obj: T, idPrefix?: string): IdLabel[] {
-
+export function modelToListFromObject<T extends Record<string, any>>(
+  obj: T,
+  idPrefix?: string
+): IdLabel[] {
   // initiallettee capitalize
   //cGST_5_Perc = CGST 5%
   // _Perc = %
-  return Object.keys(obj).map(key => ({
+  return Object.keys(obj).map((key) => ({
     id: `${idPrefix ?? ""}${key}`,
-    label: toReadableLabel(key)
+    label: toReadableLabel(key),
   }));
 }
 
@@ -1111,8 +1239,6 @@ export function modelToListFromObject<T extends Record<string, any>>(obj: T, idP
 // }
 
 // More practical approach: convert from an object instance
-
-
 
 export function removeDefaults(obj: any, defaults: any): any {
   if (!isObject(obj)) return obj;
@@ -1139,8 +1265,7 @@ export function removeDefaults(obj: any, defaults: any): any {
 export function erpParseFloat(value: string): number {
   if (!value) return 0;
   // Remove all commas
-  const cleaned = value.replace(/,/g, '');
+  const cleaned = value.replace(/,/g, "");
   // Parse as float
   return parseFloat(cleaned) || 0;
 }
-

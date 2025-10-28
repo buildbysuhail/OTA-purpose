@@ -413,7 +413,7 @@ const createStore = async (
         });
       }
 
-      const postDataModified = formatDateFields(postData);
+      const postDataModified = formatDateFields(sanitizedFilterData);
       const queryString = new URLSearchParams(method == ActionType.GET ? { ...params, ...postDataModified } : params).toString();
       const updated = formatDateFields(filterData);
 

@@ -148,11 +148,12 @@ const CloudinaryConnectPopup: React.FC<CloudinaryConnectPopupProps> = ({ data = 
                 isLoading={isSaving}
                 customButtons={[
                     
+                    // {
+                    // title: t("test_upload"),
+                    // variant: "secondary",
+                    // onClick: () => setIsPopupOpen(true),
+                    // },
                     {
-                    title: t("test_upload"),
-                    variant: "secondary",
-                    onClick: () => setIsPopupOpen(true),
-                    },{
                     title: id ? t("update") : t("save"),
                     variant: "primary",
                     disabled: isSaving,

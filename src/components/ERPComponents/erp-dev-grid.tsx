@@ -394,9 +394,9 @@ const createStore = async (
       );
 
       // Append filterData to params
+        const sanitizedFilterData = sanitizeDataAdvanced(filterData,filterInitialData,{defaultNumber:null})
       if (enablefilter && filterData) {
         debugger;
-        const sanitizedFilterData = sanitizeDataAdvanced(filterData,filterInitialData,{defaultNumber:null})
         Object.entries(sanitizedFilterData).forEach((x: any) => {
           if (
             x[1] instanceof Date ||

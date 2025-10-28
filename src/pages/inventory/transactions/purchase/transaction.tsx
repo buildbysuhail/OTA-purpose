@@ -99,7 +99,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   useEffect(() => {
     const fetchData = async () => {
-       const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`) ;
+      const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`);
       const storedUtc = await getStorageString(key); // use get, not set
       if (storedUtc &&
         storedUtc !== "" &&
@@ -236,7 +236,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const isFooterOnRight = formState.transactionLoading
     ? _st.footerPosition === "right"
     : formState.userConfig?.footerPosition === "right";
-  const [isDropDownOpen, setIsDropDownOpen] = useState<{open: boolean, autoAddressFocus: boolean}>({open: false, autoAddressFocus: false});
+  const [isDropDownOpen, setIsDropDownOpen] = useState<{ open: boolean, autoAddressFocus: boolean }>({ open: false, autoAddressFocus: false });
   const [isDropUpOpen, setIsDropUpOpen] = useState(false);
   const { appState } = useAppState();
   const isMinimized = appState.toggled && appState.toggled.includes("close");
@@ -265,6 +265,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const address2 = useRef<HTMLInputElement>(null);
   const referenceNumber = useRef<HTMLInputElement>(null);
   const referenceDate = useRef<HTMLInputElement>(null);
+  const marginOffset = appState.mode === 'dark' ? -7 : 0;
 
   // Start countdown when a theme is selected
   useEffect(() => {
@@ -272,7 +273,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
       console.log('Theme selected, triggering countdown');
       setCountdown(8);
       setStartCountdown(true);
-debugger;
+      debugger;
       // Apply the preview theme
       dispatch(formStateHandleFieldChangeKeysOnly({
         fields: {
@@ -308,7 +309,7 @@ debugger;
           console.log('🛑 Countdown complete');
           clearInterval(timerRef.current!);
           setStartCountdown(false);
-debugger;
+          debugger;
           dispatch(formStateHandleFieldChangeKeysOnly({
             fields: {
               userConfig: { ...formState.userConfig, ...formState.currentTheme },
@@ -364,13 +365,13 @@ debugger;
   }>(null);
 
   const toggleHeaderDropdown = () => {
-    setIsDropDownOpen((prev) => { return {open: !prev.open, autoAddressFocus: false}});
+    setIsDropDownOpen((prev) => { return { open: !prev.open, autoAddressFocus: false } });
     setIsDropUpOpen(false);
   };
 
   const toggleFooterDropup = () => {
     setIsDropUpOpen((prev) => !prev);
-    setIsDropDownOpen({open: false, autoAddressFocus: false});
+    setIsDropDownOpen({ open: false, autoAddressFocus: false });
   };
 
   const SIDEBAR_WIDTH = "196px";
@@ -435,38 +436,38 @@ debugger;
       })
     )
   };
- const focusCBledger = () => {
-      if (cbLedger.current) {
-        cbLedger.current.focus();
-      }
-    };
-    
-    const focusAdd1 = () => {
-      if (address1.current) {
-        address1.current.focus();
-      }
-    };
+  const focusCBledger = () => {
+    if (cbLedger.current) {
+      cbLedger.current.focus();
+    }
+  };
 
-    const focusAdd2 = () => {
-      if (address2.current) {
-        address2.current.focus();
-      }
-    };
+  const focusAdd1 = () => {
+    if (address1.current) {
+      address1.current.focus();
+    }
+  };
 
-    const focusReferenceNumber = () => {
-      if (referenceNumber.current) {
-        referenceNumber.current.focus();
-      }
-    };
+  const focusAdd2 = () => {
+    if (address2.current) {
+      address2.current.focus();
+    }
+  };
 
-    const focusReferenceDate = () => {
-      if (referenceDate.current) {
-        referenceDate.current.focus();
-      }
-      
+  const focusReferenceNumber = () => {
+    if (referenceNumber.current) {
+      referenceNumber.current.focus();
+    }
+  };
 
-    };
-      const inputRefs = {
+  const focusReferenceDate = () => {
+    if (referenceDate.current) {
+      referenceDate.current.focus();
+    }
+
+
+  };
+  const inputRefs = {
     ledgerID: useRef<HTMLInputElement>(null),
     address1: useRef<HTMLInputElement>(null),
     address2: useRef<HTMLInputElement>(null),
@@ -481,46 +482,46 @@ debugger;
     }
   };
   const handleKeyDown = (e: any, field: string, rowIndex: number) => {
-    
-   if(field==="address2" && isEnterKey(e.key)){
-    if(refNoRef?.current) {
-      refNoRef?.current.focus();
-      refNoRef?.current.select();
-   }
-  }
-  
-   if(field==="refDate" && isEnterKey(e.key)){
-    const editableColumn = formState.gridColumns?.find(
+
+    if (field === "address2" && isEnterKey(e.key)) {
+      if (refNoRef?.current) {
+        refNoRef?.current.focus();
+        refNoRef?.current.select();
+      }
+    }
+
+    if (field === "refDate" && isEnterKey(e.key)) {
+      const editableColumn = formState.gridColumns?.find(
         (col: any) => col.visible !== false && col.dataField != null && col.allowEditing == true && col.readOnly !== true
       );
-      
-      setIsDropDownOpen({open: false, autoAddressFocus: false})
-      
-   let currentCell = {
+
+      setIsDropDownOpen({ open: false, autoAddressFocus: false })
+
+      let currentCell = {
         column: editableColumn?.dataField ?? "",
         data: formState.transaction.details[0],
         rowIndex: 0,
         reCenterRow: false,
         key: generateUniqueKey()
       }
-    if (
-                      formState.currentCell &&
-                      formState.currentCell.rowIndex > 0 &&
-                      formState.currentCell.column != ""
-                    ) {
-                      currentCell = {
-                        column: formState.currentCell.column ?? "",
-                        data: formState.transaction.details[formState.currentCell.rowIndex],
-                        rowIndex: formState.currentCell.rowIndex,
-                        reCenterRow: false,
-                        key: generateUniqueKey()
-                      }
-                      focusCurrentColumn(formState.currentCell.rowIndex,formState.currentCell.column)
-                    } else {
-                      focusCurrentColumn(0,editableColumn?.dataField ?? "")
-                    }
-     dispatch(formStateHandleFieldChange({fields:{currentCell:currentCell}}))
-  }
+      if (
+        formState.currentCell &&
+        formState.currentCell.rowIndex > 0 &&
+        formState.currentCell.column != ""
+      ) {
+        currentCell = {
+          column: formState.currentCell.column ?? "",
+          data: formState.transaction.details[formState.currentCell.rowIndex],
+          rowIndex: formState.currentCell.rowIndex,
+          reCenterRow: false,
+          key: generateUniqueKey()
+        }
+        focusCurrentColumn(formState.currentCell.rowIndex, formState.currentCell.column)
+      } else {
+        focusCurrentColumn(0, editableColumn?.dataField ?? "")
+      }
+      dispatch(formStateHandleFieldChange({ fields: { currentCell: currentCell } }))
+    }
   };
   const formStateRef = useRef(formState);
   useEffect(() => {
@@ -643,7 +644,7 @@ debugger;
     ) {
       height = window.innerHeight - 296;
     } else {
-      height = window.innerHeight - (484 + 23);
+      height = window.innerHeight - (484 + 27);
     }
 
     console.log('Max safe integer:', Number.MAX_SAFE_INTEGER);
@@ -672,16 +673,16 @@ debugger;
 
   useEffect(() => {
     (async () => {
-      
-      if(formState.transaction.master.ledgerID < 1) {
+
+      if (formState.transaction.master.ledgerID < 1) {
         return;
       }
       if (formState.isInitialLedger != true) {
-        setIsDropDownOpen({open: true, autoAddressFocus: true})
+        setIsDropDownOpen({ open: true, autoAddressFocus: true })
         await loadLedgerData(undefined, dispatch);
-        
+
         setTimeout(() => {
-          
+
           focusAdd1();
         }, 1000);
       } else {
@@ -795,9 +796,9 @@ debugger;
           _formState.userRightsFormCode = "PIIMPORT"
         }
       }
-      
+
       let __gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new APIClient()))
-      
+
       const _gridCols = __gridCols.columnPreferences.map(x => {
         return {
           ...x,
@@ -1021,7 +1022,7 @@ debugger;
 
         const calculatedDetails: TransactionDetail[] = [];
         const refactoredDetails = refactorDetails(PendingTransDetails.details?.map((x: any) => {
-          return {...x, qty: x.pendingQty}
+          return { ...x, qty: x.pendingQty }
         }), formState.transaction.master.voucherForm, voucherType, { result: {} }, loadType);
         for (let index = 0; index < refactoredDetails.length; index++) {
           const _element = { ...refactoredDetails[index] };
@@ -1206,7 +1207,7 @@ debugger;
     batchSelectionData();
   }, [formState.batchSelectionData]);
   useEffect(() => {
-    
+
     const fetchData = async () => {
       try {
         if (formState.popupSearchSelectionData != "") {
@@ -1643,7 +1644,7 @@ debugger;
   const handleHeightChange = (height: number) => {
     setHeaderHeight(height)
   }
-  
+
 
   return (
     <>
@@ -1732,7 +1733,7 @@ debugger;
 
             {/* header starts here */}
             <TransactionHeader
-            inputRefs={inputRefs}
+              inputRefs={inputRefs}
               onHeightChange={handleHeightChange}
               formState={formState}
               dispatch={dispatch}
@@ -1765,7 +1766,7 @@ debugger;
               className="mj23stylecheck"
               style={{
                 // marginTop: `${123 + (appState?.inputBox?.inputHeight ?? 0)}px`,
-                marginTop: formState.transaction.master.voucherType === "LPO" ? `${160 + getInputHeight()}px` : `${headerHeight + 52 + getInputHeight()}px`,
+                marginTop: formState.transaction.master.voucherType === "LPO" ? `${160 + getInputHeight() + marginOffset}px` : `${headerHeight + 52 + getInputHeight() + marginOffset}px`,
                 width: isFooterOnRight ? "calc(100% - 300px)" : "100%",
                 // height: `${gridHeight}px`,
                 overflow: "auto",
@@ -1950,8 +1951,7 @@ debugger;
               <div className="flex items-center justify-between gap-2 bg-white px-4 py-2 shadow-md text-gray-600 h-[70px]">
                 <div className="flex items-center gap-2 flex-1">
                   <TransactionHeader
-                  
-            inputRefs={inputRefs}
+                    inputRefs={inputRefs}
                     focusToNextColumn={focusToNextColumn}
                     formState={formState}
                     dispatch={dispatch}
@@ -2101,28 +2101,28 @@ debugger;
         )}
         {/* footer ends here */}
 
-              {formState.transaction && (
-                <ERPModal
-                  isOpen={(formState.userConfig?.printPreview ?? false) && (popupData.IsPrintPreviewPopup.isOpen??false) }
-                  title={t("Template")}
-                  width={1000}
-                  height={700}
-                  isForm={true}
-                  closeModal={() => {
-                    // dispatch(
-                    //   accFormStateHandleFieldChange({fields: { printPreview: false}})
-                    // );
-                    dispatch(toggleIsPrintPreviewPopup({ isOpen: false }));
-                  }}
-                  content={"NIzma"
-                    // <TemplatesPreView
-                    //   voucherType={formState.transaction.master?.voucherType ?? ""}
-                    //   transactionMasterID={formState.transaction.master?.accTransactionMasterID ?? 0}
-                    //   transactionType={formState.transactionType}
-                    // />
-                  }
-                />
-              )}
+        {formState.transaction && (
+          <ERPModal
+            isOpen={(formState.userConfig?.printPreview ?? false) && (popupData.IsPrintPreviewPopup.isOpen ?? false)}
+            title={t("Template")}
+            width={1000}
+            height={700}
+            isForm={true}
+            closeModal={() => {
+              // dispatch(
+              //   accFormStateHandleFieldChange({fields: { printPreview: false}})
+              // );
+              dispatch(toggleIsPrintPreviewPopup({ isOpen: false }));
+            }}
+            content={"NIzma"
+              // <TemplatesPreView
+              //   voucherType={formState.transaction.master?.voucherType ?? ""}
+              //   transactionMasterID={formState.transaction.master?.accTransactionMasterID ?? 0}
+              //   transactionType={formState.transactionType}
+              // />
+            }
+          />
+        )}
 
         {formState.isFormStateDetailOpen && (
           <ERPModal

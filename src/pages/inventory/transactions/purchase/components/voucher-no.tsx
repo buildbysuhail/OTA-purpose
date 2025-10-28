@@ -10,131 +10,114 @@ interface AccVoucherNoProps {
   phone?: boolean;
 }
 
-interface VoucherNoPrefixProps extends VoucherElementProps, AccVoucherNoProps {
-  loadAndSetTransVoucher: LoadAndSetTransVoucherFn
-}
+interface VoucherNoPrefixProps extends VoucherElementProps, AccVoucherNoProps { loadAndSetTransVoucher: LoadAndSetTransVoucherFn }
+const AccVoucherNo = React.forwardRef<HTMLInputElement, VoucherNoPrefixProps>(({ formState, dispatch, handleKeyDown, loadAndSetTransVoucher, t, phone }, ref) => {
+  const { value, onChange } = useDebouncedInput(
+    formState.transaction.master.voucherNumber || '',
+    async (debouncedValue, e) => {
+      // Only update if the value is numeric or empty
+      if (e.isCustomNumberChangerEvent == true) {
+        const ret = await loadAndSetTransVoucher(
+          false,
+          parseFloat(debouncedValue as any),
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          e.mode == "down"
+            ? "decrement"
+            : e.mode == "up"
+              ? "increment"
+              : undefined,
+          false, false, "", "", "", true
+        );
+      } else {
+        const strValue = String(debouncedValue);
+        if (strValue === '' || /^\d+$/.test(strValue)) {
+          dispatch(
+            formStateMasterHandleFieldChange({
+              fields: { voucherNumber: strValue },
+            })
+          );
+        }
+      }
+    },
+    300
+  );
 
-const AccVoucherNo = React.forwardRef<HTMLInputElement, VoucherNoPrefixProps>(
-  (
-    { formState, dispatch, handleKeyDown, loadAndSetTransVoucher, t, phone },
-    ref
-  ) => {
-    const { value, onChange } = useDebouncedInput(
-      formState.transaction.master.voucherNumber || '',
-      async (debouncedValue, e) => {
-        debugger;
-        // Only update if the value is numeric or empty
-        if (e.isCustomNumberChangerEvent == true) {
-                const ret = await loadAndSetTransVoucher(
-                  false,
-                  parseFloat(debouncedValue as any),
-                  undefined,
-                  undefined,
-                  undefined,
-                  undefined,
-                  undefined,
-                  e.mode == "down"
-                    ? "decrement"
-                    : e.mode == "up"
+  return (
+    <>
+      {formState.formElements.voucherNumber.visible && (
+        <ERPInput
+          disableEnterNavigation={true}
+          ref={ref}
+          id="voucherNumber"
+          localInputBox={formState?.userConfig?.inputBoxStyle}
+          onKeyUp={async (e) => {
+            if (e.key == "Enter") {
+              await loadAndSetTransVoucher(
+                false,
+                parseFloat(e.target?.value),
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                e.mode == "down"
+                  ? "decrement"
+                  : e.mode == "up"
                     ? "increment"
                     : undefined,
-                  false,false,"","","", true
-                );
-              } else {
-                const strValue = String(debouncedValue);
-                if (strValue === '' || /^\d+$/.test(strValue)) {
-                  dispatch(
-                    formStateMasterHandleFieldChange({
-                      fields: { voucherNumber: strValue },
-                    })
-                  );
-                }
-              }
-        
-      },
-      300
-    );
-
-    return (
-      <>
-        {formState.formElements.voucherNumber.visible && (
-          <ERPInput
-            disableEnterNavigation={true}
-            ref={ref}
-            id="voucherNumber"
-            localInputBox={formState?.userConfig?.inputBoxStyle}
-            onKeyUp={async(e) => {
-              if(e.key == "Enter") {
-                await loadAndSetTransVoucher(
-                  false,
-                  parseFloat(e.target?.value),
-                  undefined,
-                  undefined,
-                  undefined,
-                  undefined,
-                  undefined,
-                  e.mode == "down"
-                    ? "decrement"
-                    : e.mode == "up"
-                    ? "increment"
-                    : undefined,
-                  false,false,"","","", true
-                );
-              }
-              handleKeyDown && handleKeyDown(e, "voucherNumber");
-            }}
-            min={1}
-            label={
-              phone
-                ? "Voucher No"
-                : t(formState.formElements.voucherNumber.label)
+                false, false, "", "", "", true
+              );
             }
-            value={value}
-            type="number"
-            required={true}
-            fetching={formState.transactionLoading}
-            // transactionLoading={true}
-            showCustomNumberChanger={
-              formState.formElements.voucherNumberUpDownBtns.visible == true
+            handleKeyDown && handleKeyDown(e, "voucherNumber");
+          }}
+          label={phone ? "Voucher No" : t(formState.formElements.voucherNumber.label)}
+          value={value}
+          type="number"
+          required={true}
+          fetching={formState.transactionLoading}
+          // transactionLoading={true}
+          showCustomNumberChanger={formState.formElements.voucherNumberUpDownBtns.visible == true}
+          numberChangerStyle="horizontal" // or "vertical"
+          className="w-full max-w-[150px]"
+          onChange={async (e: any) => {
+            // if (e.isCustomNumberChangerEvent == true) {
+            //   const ret = await loadAndSetTransVoucher(
+            //     false,
+            //     parseFloat(e.target?.value),
+            //     undefined,
+            //     undefined,
+            //     undefined,
+            //     undefined,
+            //     undefined,
+            //     e.mode == "down"
+            //       ? "decrement"
+            //       : e.mode == "up"
+            //       ? "increment"
+            //       : undefined,
+            //     false,false,"","",""
+            //   );
+            // } else {
+            // Only update if the value is numeric or empty
+            const newValue = e.target.value;
+            if (newValue === '' || /^\d+$/.test(newValue)) {
+              onChange(newValue, e);
             }
-            numberChangerStyle="horizontal" // or "vertical"
-            className="w-full max-w-[150px]"
-            onChange={async (e: any) => {
-              // if (e.isCustomNumberChangerEvent == true) {
-              //   const ret = await loadAndSetTransVoucher(
-              //     false,
-              //     parseFloat(e.target?.value),
-              //     undefined,
-              //     undefined,
-              //     undefined,
-              //     undefined,
-              //     undefined,
-              //     e.mode == "down"
-              //       ? "decrement"
-              //       : e.mode == "up"
-              //       ? "increment"
-              //       : undefined,
-              //     false,false,"","",""
-              //   );
-              // } else {
-                // Only update if the value is numeric or empty
-                const newValue = e.target.value;
-                if (newValue === '' || /^\d+$/.test(newValue)) {
-                  onChange(newValue,e);
-                }
-              // }
-            }}
-            disabled={formState.formElements.voucherNumber?.disabled}
-            labelInfo={
-              <button className={`pe-3`}>
-                <VoucherNumberDetailsSidebar displayType="link" />
-              </button>
-            }
-          />
-        )}
-      </>
-    );
-  }
-);
+            // }
+          }}
+          disabled={formState.formElements.voucherNumber?.disabled}
+          labelInfo={
+            <button className="flex items-center justify-end">
+              <VoucherNumberDetailsSidebar displayType="link" />
+            </button>
+          }
+        />
+      )}
+    </>
+  );
+});
 
 export default React.memo(AccVoucherNo);

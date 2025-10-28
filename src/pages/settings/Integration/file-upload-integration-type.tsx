@@ -33,9 +33,9 @@ export interface FileUploadIntegrationData {
 }
 
 export interface information {
-  cloudName: string;
   apiKey: string;
   apiSecret: string;
   uploadPreset: string;
+  cloudName: string;
   file?: File;
 }

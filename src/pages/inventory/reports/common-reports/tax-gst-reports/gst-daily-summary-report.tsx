@@ -279,7 +279,7 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
   const _summaryItems: SummaryConfig[] = [
     {
       column: "form",
-      summaryType: "custom",
+      summaryType: "max",
       customizeText: customizeDate,
     },
     {

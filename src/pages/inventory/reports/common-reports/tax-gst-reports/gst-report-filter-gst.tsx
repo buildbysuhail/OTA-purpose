@@ -57,10 +57,11 @@ const GstReportFilterGstCat = ({
           label={t("gst_percentage")}
           className="w-32"
           placeholder="0.00"
-          datatype="number"
+          type="number"
           onChangeData={(data) => handleFieldChange("gSTPerc", data.gSTPerc)}
         />
-        {(location.pathname.includes(
+        {/* visible false now */}
+        {/* {(location.pathname.includes(
           "inventory/sales_gst_daily_summary_report"
         ) ||
           location.pathname.includes("inventory/sales_gst_detailed_report") ||
@@ -112,7 +113,7 @@ const GstReportFilterGstCat = ({
               onChange={(e) => handleFieldChange("cashBank", "rdbBank")}
             />
           </div>
-        )}
+        )} */}
         {/* <ERPDataCombobox
           {...getFieldProps("taxCategoryID")} 
           label="taxCategory"
@@ -192,7 +193,7 @@ export const GstReportFilterGstCatInitialState = {
   voucherForm: "",
   isTransactionDate: false,
   taxCategory: "",
-  excludeNA: 0,
-  rdbCash: false,
-  rdbBank: false,
+  excludeNA: false,
+  // rdbCash: false,
+  // rdbBank: false,
 };

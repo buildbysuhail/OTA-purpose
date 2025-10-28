@@ -258,12 +258,12 @@ const GSTMonthlySummary: FC<GSTMonthlySummaryProps> = ({ gridHeader, dataUrl, gr
       return getFormattedValue(value) || "0";
     };
   }, []);
-  const customizeDate = (itemInfo: any) => `TOTAL`;
+  const customizeTotal = (itemInfo: any) => `TOTAL`;
   const _summaryItems: SummaryConfig[] = [
     {
       column: "form",
-      summaryType: "custom",
-      customizeText: customizeDate,
+      summaryType: "max",
+      customizeText: customizeTotal,
     },
     {
       column: "taxableValue",

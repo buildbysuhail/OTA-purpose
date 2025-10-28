@@ -43,7 +43,7 @@ const CloudinaryConnectPopup: React.FC<CloudinaryConnectPopupProps> = ({ data = 
             const requestBody = {
                 provider: NotificationsProvider.Cloudinary,
                 channel: NotificationsChannel.FileUpload,
-                configJson: information,
+                configJson: information.apiKey,
                 isEnable: true,
                 id: id
             };
@@ -54,7 +54,7 @@ const CloudinaryConnectPopup: React.FC<CloudinaryConnectPopupProps> = ({ data = 
         } finally {
             setIsSaving(false);
         }
-    };
+    }; 
 
     const handleTestUpload = async (e?: React.FormEvent) => {
         if (e) e.preventDefault();
@@ -68,7 +68,7 @@ const CloudinaryConnectPopup: React.FC<CloudinaryConnectPopupProps> = ({ data = 
             const payload = {
                 provider: NotificationsProvider.Cloudinary,
                 channel: NotificationsChannel.FileUpload,
-                configJson: information,
+                configJson: information.apiKey,
                 file: formData,
                 isEnable: true,
             };

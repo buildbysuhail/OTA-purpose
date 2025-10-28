@@ -342,7 +342,8 @@ const createStore = async (
   setShowFilter?: any,
   totalRowCountRef?: React.MutableRefObject<number>,
   onInitialDataLoad?: (e: any) => void,
-  onDataChanged?: (e: any) => void
+  onDataChanged?: (e: any) => void,
+  filterInitialData?: any
 ) => {
   let isInitialLoad = true; // Track initial load
   return new CustomStore({
@@ -395,7 +396,7 @@ const createStore = async (
       // Append filterData to params
       if (enablefilter && filterData) {
         debugger;
-        const sanitizedFilterData = sanitizeDataAdvanced(filterData,initialFilters,{defaultNumber:null})
+        const sanitizedFilterData = sanitizeDataAdvanced(filterData,filterInitialData,{defaultNumber:null})
         Object.entries(sanitizedFilterData).forEach((x: any) => {
           if (
             x[1] instanceof Date ||
@@ -834,7 +835,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             setShowFilter,
             totalRowCountRef,
             onInitialDataLoad,
-            onDataChanged
+            onDataChanged,
+            filterInitialData
           );
           setCurrentStore(newStore);
           setStore(newStore);

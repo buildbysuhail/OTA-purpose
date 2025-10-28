@@ -310,7 +310,7 @@ interface ReturnTaxGSTProps {
   const _summaryItems: SummaryConfig[] = [
     {
       column: "hsn",
-      summaryType: "custom",
+      summaryType: "max",
       customizeText: customizeDate,
     },
       {

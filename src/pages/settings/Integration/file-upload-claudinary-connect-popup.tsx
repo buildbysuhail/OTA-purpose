@@ -1,5 +1,5 @@
 import { Upload, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { NotificationsChannel, NotificationsProvider } from "../../../enums/notification-chanal";
 import Urls from "../../../redux/urls";
@@ -7,6 +7,7 @@ import { handleResponse } from "../../../utilities/HandleResponse";
 import { APIClient } from "../../../helpers/api-client";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import { useTranslation } from "react-i18next";
+import { information } from "./file-upload-integration-type";
 import ERPFormButtons from "../../../components/ERPComponents/erp-form-buttons";
 
 const api = new APIClient();
@@ -19,18 +20,23 @@ interface CloudinaryConnectPopupProps {
 
 const CloudinaryConnectPopup: React.FC<CloudinaryConnectPopupProps> = ({ data = {}, id, onSuccess }) => {
 
-    const [information, setInformation] = useState({
-        // cloudName: data?.cloudName || "",
+    const [information, setInformation] = useState<Partial<information>>({
         apiKey: data?.apiKey || "",
-        // apiSecret: data?.apiSecret || "",
+        apiSecret: data?.apiSecret || "",
+        cloudName: data?.cloudName || "",
         // uploadPreset: data?.uploadPreset || ""
     });
+
     const [testFile, setTestFile] = useState<File | null>(null);
     const [isSaving, setIsSaving] = useState(false);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [isTesting, setIsTesting] = useState(false);
 
-    const handleFieldChange = (fieldName: string, value: any) => {
+    useEffect(() => {
+        setInformation(data);
+    }, [data]);
+
+    const handleFieldChange = (fieldName: keyof information, value: any) => {
         setInformation(prev => ({
             ...prev,
             [fieldName]: value
@@ -40,12 +46,14 @@ const CloudinaryConnectPopup: React.FC<CloudinaryConnectPopupProps> = ({ data = 
     const handleSubmit = async () => {
         setIsSaving(true);
         try {
+            const cloudinaryUrl = `cloudinary://${information.apiKey}:${information.apiSecret}@${information.cloudName}`;
             const requestBody = {
                 provider: NotificationsProvider.Cloudinary,
                 channel: NotificationsChannel.FileUpload,
-                configJson: information,
+                configJson: cloudinaryUrl,
                 isEnable: true,
-                id: id
+                id: id,
+                limit: 1000,
             };
             const response = await api.post(Urls.notification_provider_update, requestBody);
             handleResponse(response, () => { onSuccess && onSuccess() });
@@ -54,7 +62,7 @@ const CloudinaryConnectPopup: React.FC<CloudinaryConnectPopupProps> = ({ data = 
         } finally {
             setIsSaving(false);
         }
-    };
+    }; 
 
     const handleTestUpload = async (e?: React.FormEvent) => {
         if (e) e.preventDefault();
@@ -62,15 +70,17 @@ const CloudinaryConnectPopup: React.FC<CloudinaryConnectPopupProps> = ({ data = 
 
         setIsTesting(true);
         try {
+            const cloudinaryUrl = `cloudinary://${information.apiKey}:${information.apiSecret}@${information.cloudName}`;
             const formData = new FormData();
             formData.append('file', testFile);
 
             const payload = {
                 provider: NotificationsProvider.Cloudinary,
                 channel: NotificationsChannel.FileUpload,
-                configJson: information,
+                configJson: cloudinaryUrl,
                 file: formData,
                 isEnable: true,
+                limit: 1000,
             };
             const testUploadResponse = await api.post(Urls.notification_provider_test, payload);
             await handleResponse(testUploadResponse);
@@ -92,13 +102,33 @@ const CloudinaryConnectPopup: React.FC<CloudinaryConnectPopupProps> = ({ data = 
     return (
         <div className="w-full h-full">
             <div className="grid grid-cols-1 gap-2">
-                <div className="space-y-6">
+                <div className="grid grid-cols-1 gap-2">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-dark-bg-header p-2 rounded-md break-all">
+                        <strong>Example:</strong> CLOUDINARY_URL=cloudinary://123456789012345:AbCdEfGhIjKlMnOpQrStUvWxYz@mycloudname
+                    </p>
+                   <p className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-dark-bg-header p-2 rounded-md break-words">
+                        <strong>Example:</strong> CLOUDINARY_URL=cloudinary://&lt;your_api_key&gt;:&lt;your_api_secret&gt;@&lt;Cloud_name&gt;
+                    </p>
                     <ERPInput
                         id="apiKey"
                         value={information.apiKey || ""}
                         label={t("api_key")}
                         placeholder={t("enter_api_key")}
                         onChange={(e) => handleFieldChange("apiKey", e.target.value)}
+                    />
+                    <ERPInput
+                        id="apiSecret"
+                        value={information.apiSecret || ""}
+                        label={t("api_secret")}
+                        placeholder={t("enter_api_secret")}
+                        onChange={(e) => handleFieldChange("apiSecret", e.target.value)}
+                    />
+                    <ERPInput
+                        id="cloudName"
+                        value={information.cloudName || ""}
+                        label={t("cloud_name")}
+                        placeholder={t("enter_cloud_name")}
+                        onChange={(e) => handleFieldChange("cloudName", e.target.value)}
                     />
                 </div>
 
@@ -120,11 +150,12 @@ const CloudinaryConnectPopup: React.FC<CloudinaryConnectPopupProps> = ({ data = 
                 isLoading={isSaving}
                 customButtons={[
                     
+                    // {
+                    // title: t("test_upload"),
+                    // variant: "secondary",
+                    // onClick: () => setIsPopupOpen(true),
+                    // },
                     {
-                    title: t("test_upload"),
-                    variant: "secondary",
-                    onClick: () => setIsPopupOpen(true),
-                    },{
                     title: id ? t("update") : t("save"),
                     variant: "primary",
                     disabled: isSaving,

@@ -114,7 +114,8 @@ export type LoadAndSetTransVoucherFn = (
   loadVType?: string,
   loadFType?: string,
   loadPrefix?: string,
-  showLoading?: boolean
+  showLoading?: boolean,
+    disablePnlMasters?: boolean
 ) => Promise<boolean | undefined>; // ✅ fix return type
 
 const api = new APIClient();
@@ -374,8 +375,10 @@ export const useTransaction = (
     loadVType,
     loadFType,
     loadPrefix,
-    showLoading
+    showLoading,
+    disablePnlMasters = true
   ) => {
+    debugger;
     const _s_isDirty = isDirtyTransaction(
       formState.prev,
       {
@@ -426,6 +429,7 @@ export const useTransaction = (
       loadPrefix
     );
 
+    debugger;
     if (loadVType == "GRN" || loadVType == "GRR") {
       _formState = merge({}, _formState, {
         transaction: { master: { deliveryNoteNumber: manualInvoiceNumber } },
@@ -465,7 +469,7 @@ export const useTransaction = (
         ..._formState.formElements.pnlMasters,
         disabled:
           _formState.transaction.master.invTransactionMasterID > 0 &&
-          !["GRN", "PO", "SO"].includes(loadVType ?? ""),
+          !["GRN", "PO", "SO"].includes(loadVType ?? "") && disablePnlMasters,
       },
       btnSave: {
         ..._formState.formElements.btnSave,
@@ -475,14 +479,11 @@ export const useTransaction = (
             : _formState.formElements.btnSave.disabled,
       },
     };
-    await setTransVoucher(_formState);
-       if(showLoading) {
-      dispatch(
-                          formStateHandleFieldChange({
-                            fields: { transactionLoading: false },
-                          })
-                        );
+      if(showLoading) {
+        _formState.transactionLoading = false;
     }
+    await setTransVoucher(_formState);
+     
     return true;
   };
   const setTransVoucher = async (
@@ -1027,6 +1028,7 @@ export const useTransaction = (
     // }
 
     // Gross amount zero validation
+    if(!formState.skipZeroQty) {
     for (let i = 0; i < details.length; i++) {
       const row = details[i];
       if (row.gross === 0 && row.productID > 0) {
@@ -1046,6 +1048,7 @@ export const useTransaction = (
         }
       }
     }
+  }
 
     // Check no items after blank rows
     // const firstFreeIndex = details.findIndex((x) => !x.productId);

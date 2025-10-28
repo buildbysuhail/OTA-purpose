@@ -73,7 +73,7 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
         false,
         "PI_Ref",
         "",
-        ""
+        "",true,false
       );
       } else {
         if (formState.transaction.master.orderNumber) {
@@ -96,7 +96,7 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
         false,
         "PO",
         loadData.formType ?? "",
-        loadData.vPrefix ?? ""
+        loadData.vPrefix ?? "",true,false
       );
       setShowLoadData(false);
     }, [

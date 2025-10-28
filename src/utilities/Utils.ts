@@ -989,7 +989,7 @@ export const sanitizeDataAdvanced = (
   initialState: any,
   options?: {
     convertEmptyStrings?: boolean;
-    defaultNumber?: number;
+    defaultNumber?: number |undefined | null;
     preserveNull?: boolean;
     customConverter?: (value: any, initial: any) => any;
   }

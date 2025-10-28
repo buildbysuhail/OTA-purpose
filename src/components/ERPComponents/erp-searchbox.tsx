@@ -565,7 +565,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     const debouncedFetch = useMemo(
       () =>
         debounce(async (value: string, byCode: boolean) => {
-          console.log("debouncedFetch");
+          console.log("debouncedFetch", value);
           if (value.trim() == "" || value.trim() == "%") {
         setIsLoading(false);
         return;
@@ -648,7 +648,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       [productDataUrl, searchType]
     );
 
-    const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {    
+
+const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {    
       if (disabled) return;
       const value = e.target.value;
       setProductGridReady(false)
@@ -660,12 +661,12 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
         return;
       }
       setShowBatchGrid(false);
+      debouncedFetch.cancel();
       if (value.length >= 1) {    
         setIsLoading(true);   // Set loading immediately before debounce
         if (searchType !== "modal") {
           await debouncedFetch(value, inputValue.searchByCode);
-
-          setShowProductGrid(false);
+          // setShowProductGrid(false);
           setProductInitialized(false); // Check It
           if (inputRef && "current" in inputRef && inputRef.current) {
             inputRef.current.focus();

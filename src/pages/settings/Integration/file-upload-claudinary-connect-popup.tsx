@@ -43,7 +43,7 @@ const CloudinaryConnectPopup: React.FC<CloudinaryConnectPopupProps> = ({ data = 
             const requestBody = {
                 provider: NotificationsProvider.Cloudinary,
                 channel: NotificationsChannel.FileUpload,
-                configJson: information.apiKey,
+                configJson: JSON.stringify(information),
                 isEnable: true,
                 id: id
             };
@@ -68,7 +68,7 @@ const CloudinaryConnectPopup: React.FC<CloudinaryConnectPopupProps> = ({ data = 
             const payload = {
                 provider: NotificationsProvider.Cloudinary,
                 channel: NotificationsChannel.FileUpload,
-                configJson: information.apiKey,
+                configJson: JSON.stringify(information),
                 file: formData,
                 isEnable: true,
             };

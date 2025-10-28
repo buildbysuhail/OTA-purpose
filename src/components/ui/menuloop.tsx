@@ -12,8 +12,10 @@ function Menuloop({ MENUITEMS, toggleSidemenu, level, t }: any) {
         }}
       >
         {MENUITEMS.icon}
-        <span className={`${level == 1 ? "side-menu__label" : ""}`}>
-          {t(MENUITEMS.title)}
+        <span className={`${level == 1 ? "side-menu__label" : ""} flex items-center`}>
+          <div className="overflow-hidden text-ellipsis whitespace-nowrap" style={{ maxWidth: '148px' }} title={t(MENUITEMS.title)}>
+            {t(MENUITEMS.title)}
+          </div>
           {MENUITEMS.badgetxt ? (
             <span className={MENUITEMS.class}>{MENUITEMS.badgetxt}</span>
           ) : (

@@ -6,20 +6,17 @@ import { AppState, languagesData } from "../redux/slices/app/types";
 import { ClientSessionModel } from "../redux/slices/client-session/reducer";
 import { UserTypeRights } from "../redux/slices/user-rights/reducer";
 import { UserModel } from "../redux/slices/user-session/reducer";
-import { customJsonParse } from "./jsonConverter";
+import { customJsonParse, modelToBase64 } from "./jsonConverter";
 import usFlag from "../assets/images/flags/us_flag.png";
 import { getStorageString, removeStorageString, setStorageString } from "./storage-utils";
-
 
 export const handleLoginSuccess = async (
   login: any,
   dispatch: any,
   load: () => Promise<void>,
   setIsLoggedToBranch: (v: boolean) => void,
-  setHasToChooseBranch: (v: boolean) => void
+  setHasToChooseBranch: (v: boolean) => void 
 ) => {
-  // let ass =await getStorageString("as");
-  let ass = localStorage.getItem("as");
 
   await removeStorageString("_token");
   // await setStorageString("token", login.item.token);
@@ -44,13 +41,7 @@ export const handleLoginSuccess = async (
   };
 
   await syncAppStates(dispatch, userThemes, clientSession, userProfileDetails, userRights, locale);
-
-  if (ass) {
-    const appSettings: ApplicationSettingsType = customJsonParse(atob(ass));
-    dispatch(setApplicationSettings({ ...appSettings, apiLoaded: false }));
-  } else {
-    await load();
-  }
+  await load();
 
   if (login.item.hasToChooseBranch) {
     setHasToChooseBranch(true);

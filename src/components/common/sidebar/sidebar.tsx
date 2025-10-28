@@ -960,10 +960,15 @@ debugger;
               </div>
               <div className="search-bar mt-3 px-3">
                 <input
+                  id="sidebar-menu-search"
+                  name="sidebar-menu-search"
                   type="text"
                   placeholder="Search here"
+                  readOnly
                   value={searchTerm}
+                  autoComplete="off"
                   onChange={(e) => setSearchTerm(e.target.value)}
+                  onFocus={(e) => e.target.removeAttribute('readonly')}
                   className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>

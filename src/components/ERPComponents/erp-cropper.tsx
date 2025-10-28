@@ -107,6 +107,7 @@ const ERPCropper: React.FC<ERPCropperProps> = ({
         }
       });
       reader.readAsDataURL(e.target.files[0]);
+      e.target.value = '';
     }
   }
 
@@ -293,7 +294,7 @@ const ERPCropper: React.FC<ERPCropperProps> = ({
         {(imgSrc == undefined || imgSrc != null || imgSrc != "") && (
           <ERPFileUploadButton
             buttonText={t("upload_image")}
-            handleFileChange={onSelectFile}
+            handleFileChange={onSelectFile} 
           />
         )}
         {imgSrc != undefined && imgSrc != null && imgSrc != "" && (

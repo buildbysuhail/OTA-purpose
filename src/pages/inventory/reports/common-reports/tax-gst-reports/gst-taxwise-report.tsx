@@ -610,7 +610,7 @@ const GSTTaxwise: FC<GSTTaxwiseProps> = ({ gridHeader, dataUrl, gridId }) => {
   const _summaryItems: SummaryConfig[] = [
     {
       column: "party",
-      summaryType: "custom",
+      summaryType: "max",
       customizeText: customizeDate,
     },
     {

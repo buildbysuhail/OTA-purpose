@@ -55,10 +55,11 @@ const GstReportFilter = ({
           label={t("gst_percentage")}
           className="w-32"
           placeholder="0.00"
-          datatype="number"
+          type="number"
           onChangeData={(data) => handleFieldChange("gSTPerc", data.gSTPerc)}
         />
-        {(location.pathname.includes("inventory/sales_gst_sales_and_return") ||
+        {/* always visible false now */}
+        {/* {(location.pathname.includes("inventory/sales_gst_sales_and_return") ||
           location.pathname.includes(
             "inventory/sales_gst_register_format_report"
           ) ||
@@ -107,7 +108,7 @@ const GstReportFilter = ({
               onChange={(e) => handleFieldChange("cashBank", e.target.value)}
             />
           </div>
-        )}
+        )} */}
         {/* <ERPDataCombobox
           {...getFieldProps("taxCategoryID")}
           field={{
@@ -175,7 +176,8 @@ export const GstReportFilterInitialState = {
   voucherForm: "",
   isTransactionDate: false,
   taxCategory: "",
-  excludeNA: 0,
-  rdbCash: false,
-  rdbBank: false,
+  excludeNA: false,
+  // rdbCash: false,
+  // rdbBank: false,
+  //ref date not passing only showing in purchase so hided
 };

@@ -540,7 +540,7 @@ const GSTDetailed: FC<GSTDetailedProps> = ({ gridHeader, dataUrl, gridId }) => {
   const _summaryItems: SummaryConfig[] = [
     {
       column: "form",
-      summaryType: "custom",
+      summaryType: "max",
       customizeText: customizeDate,
     },
     {

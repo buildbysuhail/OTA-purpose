@@ -25,7 +25,9 @@ const GSTRegisterFormat: FC<GSTRegisterFormatProps> = ({
 }) => {
   const { t } = useTranslation("inventory");
   const [filter, setFilter] = useState<any>(GstReportFilterInitialState);
-    const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
+  const applicationSettings = useSelector(
+    (state: RootState) => state.ApplicationSettings
+  );
   const location = useLocation();
   const columns: DevGridColumn[] = useMemo(() => {
     const baseColumns: DevGridColumn[] = [
@@ -1225,7 +1227,150 @@ const GSTRegisterFormat: FC<GSTRegisterFormatProps> = ({
           }
         },
       },
-
+      {
+        dataField: "taxable40",
+        caption: t("taxable_40"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.taxable40 == null
+                ? ""
+                : getFormattedValue(cellElement.data.taxable40, false, 6);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.taxable40 == null
+              ? ""
+              : getFormattedValue(
+                  parseFloat(cellElement.data.taxable40),
+                  false,
+                  6
+                );
+          }
+        },
+      },
+      {
+        dataField: "cgsT20",
+        caption: t("cgst_20"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.cgsT20 == null
+                ? ""
+                : getFormattedValue(cellElement.data.cgsT20, false, 6);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.cgsT20 == null
+              ? ""
+              : getFormattedValue(
+                  parseFloat(cellElement.data.cgsT20),
+                  false,
+                  6
+                );
+          }
+        },
+      },
+      {
+        dataField: "sgsT20",
+        caption: t("sgst_20"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.sgsT20 == null
+                ? ""
+                : getFormattedValue(cellElement.data.sgsT20, false, 6);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.sgsT20 == null
+              ? ""
+              : getFormattedValue(
+                  parseFloat(cellElement.data.sgsT20),
+                  false,
+                  6
+                );
+          }
+        },
+      },
+      {
+        dataField: "igsT40",
+        caption: t("igst_40"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.igsT40 == null
+                ? ""
+                : getFormattedValue(cellElement.data.igsT40, false, 6);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.igsT40 == null
+              ? ""
+              : getFormattedValue(
+                  parseFloat(cellElement.data.igsT40),
+                  false,
+                  6
+                );
+          }
+        },
+      },
       {
         dataField: "financialYearID",
         caption: t("financial_year_id"),
@@ -1233,23 +1378,33 @@ const GSTRegisterFormat: FC<GSTRegisterFormatProps> = ({
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        visible: false,
       },
     ];
     return baseColumns.filter((column) => {
-      if(location.pathname.includes(
+      if (
+        location.pathname.includes(
           "inventory/sales_return_gst_register_format_report"
-        )){
-          if(["voucherPrefix", "invoiceNo"].includes(column.dataField??"")) {
-            return true;
-          } else if(["voucherNo", "refNumber", "refDate", "party", "address", "gstin"].includes(column.dataField??"")) {
-            return false;
-          }
-        } else {
-           if(["voucherPrefix", "invoiceNo"].includes(column.dataField??"")) {
-            return false;
-          }
+        )
+      ) {
+        if (["voucherPrefix", "invoiceNo"].includes(column.dataField ?? "")) {
+          return true;
+        } else if (
+          [
+            "voucherNo",
+            "refNumber",
+            "refDate",
+            "party",
+            "address",
+            "gstin",
+          ].includes(column.dataField ?? "")
+        ) {
+          return false;
         }
+      } else {
+        if (["voucherPrefix", "invoiceNo"].includes(column.dataField ?? "")) {
+          return false;
+        }
+      }
       return true;
     });
   }, [t, filter, location.pathname]);
@@ -1266,15 +1421,15 @@ const GSTRegisterFormat: FC<GSTRegisterFormatProps> = ({
       ) {
         return "0";
       }
-      return getFormattedValue(value,false,undefined,0,0,true);
+      return getFormattedValue(value, false, undefined, 0, 0, true);
     };
   }, []);
-  const customizeDate = (itemInfo: any) => `TOTAL`;
+  const customizeTotal = (itemInfo: any) => `TOTAL`;
   const _summaryItems: SummaryConfig[] = [
     {
       column: "form",
-      summaryType: "custom",
-      customizeText: customizeDate,
+      summaryType: "max",
+      customizeText: customizeTotal,
     },
     {
       column: "total",
@@ -1398,74 +1553,98 @@ const GSTRegisterFormat: FC<GSTRegisterFormatProps> = ({
     },
     {
       column: "taxable18",
-      summaryType:"sum",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
       column: "cgsT9",
-      summaryType:"sum",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
       column: "sgsT9",
-      summaryType:"sum",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
       column: "igsT18",
-      summaryType:"sum",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
 
     {
       column: "taxable28",
-      summaryType:"sum",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
       column: "cgsT14",
-      summaryType:"sum",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
       column: "sgsT14",
-      summaryType:"sum",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
       column: "igsT28",
-      summaryType:"sum",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
       column: "taxable28_12",
-      summaryType:"sum",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
       column: "cgsT14_6",
-      summaryType:"sum",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
       column: "sgsT14_6",
-      summaryType:"sum",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
       column: "igsT28_12",
-      summaryType:"sum",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "taxable40",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "cgsT20",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "sgsT20",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "igsT40",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },

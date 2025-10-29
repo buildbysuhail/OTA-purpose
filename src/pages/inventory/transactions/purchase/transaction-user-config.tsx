@@ -25,6 +25,7 @@ import { formStateHandleFieldChange, formStateMasterHandleFieldChange, formState
 import { UserConfig } from "../transaction-types";
 import { appInitialState } from "../../../../redux/slices/app/reducer";
 import { userSession } from "../../../../redux/slices/user-session/thunk";
+import { use } from "i18next";
 
 const api = new APIClient();
 
@@ -77,10 +78,14 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
   const dispatch = useDispatch();
   const { t } = useTranslation("transaction");
   const [isExpanded, setIsExpanded] = useState<boolean>(formState.userConfig?.isExpanded || false);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+
   const { appState, updateAppState } = useAppState();
   const isRtl = appState.locale.rtl;
   const [stockUpdate, setStockUpdate] = useState<boolean>(false);
+useEffect(() => {
+  dispatch(formStateHandleFieldChange({ fields: { privConfig: JSON.stringify(formState.userConfig || {}) } }));
+}, []);
+
   const handleToggle = () => {
     const newValue = !isExpanded;
     setIsExpanded(newValue);
@@ -114,7 +119,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
   const postUserConfig = async () => {
     try {
       
-        const base64 = modelToBase64Unicode({...formState.userConfig, themeName: 'Custom'});
+      const base64 = modelToBase64Unicode({...formState.userConfig, themeName: 'Custom'});
       const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, base64);
       handleResponse(response, async () => {
         const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`) ;
@@ -131,8 +136,6 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
       });
     } catch (error) {
       console.error("Error post System Code settings:", error);
-    } finally {
-      setIsOpen(false);
     }
   };
 
@@ -178,6 +181,10 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
     }
   };
 
+  const previousThemeChange = async () => {
+      dispatch(formStateHandleFieldChange({ fields: { userConfig: JSON.parse(formState?.privConfig??"") ,isUserConfigOpen: false } }));
+  };
+
   const rgbToHex = (rgb: string): string => {
     if (!rgb) return "#000000";
     const [r, g, b] = rgb.split(',').map(Number);
@@ -186,22 +193,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
 
   return (
     <>
-      <div className="group relative inline-flex flex-col items-center" title={t("settings")}>
-        <button className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors ${phone ? "p-1.5" : "p-2"} `} onClick={() => setIsOpen(true)}>
-          <UserCog className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors duration-300" />
-        </button>
-      </div>
-
-      <ERPModal
-        isOpen={isOpen}
-        title={t("user_config")}
-        width={1000}
-        height={850}
-        isForm={true}
-        closeModal={() => setIsOpen(false)}
-        enableDynamicSize={false}
-        content={
-          <div className="space-y-2 max-h-[calc(100vh-200px)] overflow-y-auto p-2">
+        <div className="space-y-2 max-h-[calc(100vh-200px)] overflow-y-auto p-2">
             {/* View Toggle Section */}
             <div className="mb-2 p-3 sm:p-4 bg-gradient-to-br from-[#eff6ff] via-[#eef2ff] to-[#faf5ff] dark:from-dark-bg dark:via-dark-hover-bg dark:to-dark-border rounded-xl border border-[#bfdbfe] dark:border-dark-border shadow-sm">
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
@@ -335,7 +327,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                     id="printPreview"
                     label={t("print_preview")}
                     data={formState.userConfig}
-                    checked={formState?.userConfig?.printPreview}
+                    checked={formState?.userConfig?.printPreview??false}
                     onChangeData={(e) => handleFieldChange("printPreview", e.printPreview)}
                   />
                   <ERPCheckbox
@@ -981,14 +973,18 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
               </div>
             </div>
           </div>
-        }
-        footer={
-          <div className="w-full flex justify-end items-center gap-2 dark:!border-dark-border dark:!bg-dark-bg rounded-b-md">
+       <div className="w-full flex justify-end items-center gap-2 dark:!border-dark-border dark:!bg-dark-bg rounded-b-md">
+            <ERPButton
+              title={t("cancel")}
+              onClick={previousThemeChange}
+              variant="secondary"
+              className="min-w-[140px] bg-gradient-to-r from-[#2563eb] to-[#4f46e5] hover:from-[#1d4ed8] hover:to-[#4338ca] transition-all duration-300"
+            /> 
             <ERPButton
               title={t("reset_all")}
               onClick={resetThemeChange}
               type="reset"
-              variant="secondary"
+              variant="status"
               className="min-w-[100px] transition-all duration-300"
             />
             <ERPButton
@@ -998,8 +994,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
               className="min-w-[140px] bg-gradient-to-r from-[#2563eb] to-[#4f46e5] hover:from-[#1d4ed8] hover:to-[#4338ca] transition-all duration-300"
             />
           </div>
-        }
-      />
+      
     </>
   );
 };

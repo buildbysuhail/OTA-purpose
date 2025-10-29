@@ -491,8 +491,8 @@ export const useTransaction = (
     loadUserConfig: boolean = false
   ) => {
     debugger;
-
-    const Utc = await getStorageString(`${transactionType}_LocalSettings`);
+    const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`) ;
+    const Utc = await getStorageString(key);
     let userConfig: UserConfig | undefined;
     if (Utc) {
       const decoded = safeBase64Decode(Utc) ?? "{}";
@@ -1242,8 +1242,8 @@ export const useTransaction = (
             formState.transaction.master.invTransactionMasterID > 0,
             formState.transaction.master.invTransactionMasterID
           );
-          if (formState.printOnSave == true && saveMode != "LPO" && saveMode != "LPQ") {
-            // masterID: number,transactionType: string,printTmeplate?:any ,transDate?: string,voucherType?: string,formType?:string,customerType?:string,
+          if (formState.printOnSave == true && saveMode != "LPO" && saveMode != "LPQ"){
+    // masterID: number,transactionType: string,printTmeplate?:any ,transDate?: string,voucherType?: string,formType?:string,customerType?:string,
             printVoucher(
               saveRes?.item?.master?.invTransactionMasterID, // masterID
               transactionType ?? "", // transactionType
@@ -1253,8 +1253,7 @@ export const useTransaction = (
               true, //isInv
               formState.userConfig?.printPreview, // printPreview
               undefined, //template
-              formState.transaction?.master.transactionDate ?? "",
-              
+              formState.transaction?.master.transactionDate ?? "",      
             );
           }
           dispatch(

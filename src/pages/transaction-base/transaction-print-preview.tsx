@@ -67,16 +67,6 @@ export default function TemplatesPreView({  voucherType, isInvTrans=false,transa
             />
           </div>
         </div>
-
-        {/* Drop Shadow Effect */}
-        <div
-          className="absolute -bottom-2 -right-2 bg-gray-400/20 dark:bg-gray-600/20 rounded-lg -z-10"
-          style={{
-            width: `${templateStyleProperties.previewWidth}pt`,
-            height: `${templateStyleProperties.previewHeight}pt`,
-            minHeight: '400px',
-          }}
-        />
       </div>
     </div>
   );

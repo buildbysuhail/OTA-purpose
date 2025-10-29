@@ -415,6 +415,7 @@ export interface AccUserConfig {
   printPreview?:boolean,
   printCheque?:boolean,
   printOnSave?:boolean,
+  themeName?: string;
 }
 export interface AccTransactionFormState {
   store: any;

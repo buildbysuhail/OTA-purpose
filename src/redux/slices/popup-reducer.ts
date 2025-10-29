@@ -11,6 +11,7 @@ export interface popupDataProps {
   customTemplate?:string;
   template?:any;
   formState?:any;
+  masterId?:number;
 }
 interface popupData {
   onCloseWithUnsavedChange: { warn: boolean, succeeded: boolean, canceled: boolean }
@@ -82,7 +83,7 @@ interface popupData {
   IsPrintPreviewPopup : popupDataProps;
 }
 const initialState: popupData = {
-  IsPrintPreviewPopup:{isOpen:false},
+  IsPrintPreviewPopup:{isOpen:false,},
   printerList:{isOpen:false,template:null,data:null,formState:null},
   CustomDesignerPopup:{ isOpen: false, key: null,reload:false, mode: "edit" ,},
   onCloseWithUnsavedChange: { warn: false, succeeded: false, canceled: false },

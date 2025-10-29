@@ -60,6 +60,7 @@ import { initialUserConfig, transactionInitialData, TransactionFormStateInitialD
 import TemplatesView from "../../../transaction-base/template_picker";
 import { toggleIsPrintPreviewPopup } from "../../../../redux/slices/popup-reducer";
 import { faL } from "@fortawesome/free-solid-svg-icons";
+import TemplatesPreView from "../../../transaction-base/transaction-print-preview";
 
 interface BilledItem {
   id?: number;
@@ -2108,12 +2109,13 @@ const TransactionForm: React.FC<TransactionProps> = ({
               // );
               dispatch(toggleIsPrintPreviewPopup({ isOpen: false }));
             }}
-            content={"NIzma"
-              // <TemplatesPreView
-              //   voucherType={formState.transaction.master?.voucherType ?? ""}
-              //   transactionMasterID={formState.transaction.master?.accTransactionMasterID ?? 0}
-              //   transactionType={formState.transactionType}
-              // />
+            content={
+              <TemplatesPreView
+                voucherType={formState.transaction.master?.voucherType ?? ""}
+                transactionMasterID={popupData.IsPrintPreviewPopup.masterId?? 0}
+                transactionType={formState.transactionType}
+                isInvTrans
+              />
             }
           />
         )}

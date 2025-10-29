@@ -33,7 +33,7 @@ debugger;
     }
     // If template is valid, proceed with printing
     if (printPreview) {
-       dispatch(toggleIsPrintPreviewPopup({ isOpen: true }));
+       dispatch(toggleIsPrintPreviewPopup({ isOpen: true ,masterId: masterID,}));
     } else {
       await directPrint({template: template,masterIDParam: masterID, isInvTrans: isInvTrans,dbIdValue: userSession.dbIdValue,isAppGlobal: clientSession.isAppGlobal, printCopies:1, transactionType: transactionType,transDate: transDate})
     }

@@ -676,6 +676,8 @@ export interface TransactionFormState {
   draftModeModal?: boolean;
   createInterfaceFromOtherVoucher?: boolean;
   skipZeroQty: boolean;
+  isUserConfigOpen?: boolean;
+  privConfig?: string;
 }
 export interface GiftModel {
   productBatchId: number;

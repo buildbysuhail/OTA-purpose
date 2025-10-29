@@ -108,6 +108,7 @@ import {
 } from "../transaction-types";
 import TemplatesView from "../../../transaction-base/template_picker";
 import { toggleIsPrintPreviewPopup } from "../../../../redux/slices/popup-reducer";
+import TemplatesPreView from "../../../transaction-base/transaction-print-preview";
 
 interface BilledItem {
   id?: number;
@@ -2170,34 +2171,27 @@ const TransactionForm: React.FC<TransactionProps> = ({
             ))}
         {/* footer ends here */}
 
-        {formState.transaction && (
+         {formState.transaction && (
           <ERPModal
-            isOpen={formState.printPreview && (popupData.IsPrintPreviewPopup.isOpen??false)}
-            title={t("template")}
+            isOpen={(formState.userConfig?.printPreview ?? false) && (popupData.IsPrintPreviewPopup.isOpen ?? false)}
+            title={t("Template")}
             width={1000}
             height={700}
             isForm={true}
             closeModal={() => {
-               dispatch(toggleIsPrintPreviewPopup({ isOpen: true }));
-              dispatch(
-                formStateHandleFieldChange({ fields: { printPreview: false } })
-              );
+              // dispatch(
+              //   accFormStateHandleFieldChange({fields: { printPreview: false}})
+              // );
+              dispatch(toggleIsPrintPreviewPopup({ isOpen: false }));
             }}
-            // content={
-            //   <PDFViewer
-            //     className="pdf-viewer"
-            //     width="100%"
-            //     height={700}
-            //     style={{ padding: "10px" }}
-            //   >
-            //     {renderSelectedTemplate({
-            //       template: formState.template,
-            //       data: formState.transaction,
-            //       // currentBranch: currentBranch,
-            //       // userSession: userSession,
-            //     })}
-            //   </PDFViewer>
-            // }
+            content={
+              <TemplatesPreView
+                voucherType={formState.transaction.master?.voucherType ?? ""}
+                transactionMasterID={popupData.IsPrintPreviewPopup.masterId?? 0}
+                transactionType={formState.transactionType}
+                isInvTrans
+              />
+            }
           />
         )}
         {formState.isFormStateDetailOpen && (

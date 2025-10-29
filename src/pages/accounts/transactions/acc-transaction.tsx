@@ -3295,12 +3295,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             // );
             dispatch(toggleIsPrintPreviewPopup({ isOpen: false }));
           }}
-          content={"NIzma"
-            // <TemplatesPreView
-            //   voucherType={formState.transaction.master?.voucherType ?? ""}
-            //   transactionMasterID={formState.transaction.master?.accTransactionMasterID ?? 0}
-            //   transactionType={formState.transactionType}
-            // />
+          content={
+            <TemplatesPreView
+              voucherType={formState.transaction.master?.voucherType ?? ""}
+              transactionMasterID={popupData.IsPrintPreviewPopup.masterId?? 0}
+              transactionType={formState.transactionType}
+            />
           }
         />
       )}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { customJsonParse, modelToBase64 } from "../../../utilities/jsonConverter";
+import { base64ToModelUnicode, customJsonParse, modelToBase64, modelToBase64Unicode } from "../../../utilities/jsonConverter";
 import { APIClient } from "../../../helpers/api-client";
 import Urls from "../../../redux/urls";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
@@ -21,6 +21,8 @@ import { useTranslation } from "react-i18next";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
 import { useAppState } from "../../../utilities/hooks/useAppState";
 import { setStorageString } from "../../../utilities/storage-utils";
+import { userSession } from "../../../redux/slices/user-session/thunk";
+import { formStateHandleFieldChangeKeysOnly } from "../../inventory/transactions/reducer";
 
 const api = new APIClient();
 interface pageBgColor {
@@ -33,6 +35,7 @@ interface AccTransactionUserConfigProps {
 export const AccTransactionUserConfig: React.FC<AccTransactionUserConfigProps> = ({ phone = false }) => {
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const { appState } = useAppState();
+   const userSession = useAppSelector((state: RootState) => state.UserSession);
   const dispatch = useDispatch();
   const { t } = useTranslation("transaction");
   const [isExpanded, setIsExpanded] = useState<boolean>(formState.userConfig?.isExpanded || false);
@@ -61,19 +64,15 @@ export const AccTransactionUserConfig: React.FC<AccTransactionUserConfigProps> =
     dispatch(accFormStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }));
   };
 
-  useEffect(() => { }, []);
-  const postUserConfigOnOk = async (response: any) => {
-    const base64 = modelToBase64(response);
-     await setStorageString("utc", base64);
-  };
 
   const postUserConfig = async () => {
+    setIsLoading(true);
     try {
-      setIsLoading(true);
-      const response = await api.post(`${Urls.acc_transaction_base}${formState.transactionType}/UpdateLocalSettings`, formState.userConfig);
+      const base64 = modelToBase64Unicode({...formState.userConfig, themeName: 'Custom'});
+      const key = btoa(`${userSession.userId}-${formState.transactionType}_LocalSettings`) ;
+      const response = await api.post(`${Urls.acc_transaction_base}${formState.transactionType}/UpdateLocalSettings`, base64);
       handleResponse(response, async() => {
-        const base64 = modelToBase64(formState.userConfig);
-         await setStorageString("utc", base64);
+      await setStorageString(key, base64);
       });
     } catch (error) {
       console.error("Error post System Code settings:", error);
@@ -103,12 +102,12 @@ export const AccTransactionUserConfig: React.FC<AccTransactionUserConfigProps> =
         confirmButtonText: t("reset_now"),
         cancelButtonText: t("cancel"),
         onConfirm: async (result: any) => {
-          const res = await api.postAsync(`${Urls.acc_transaction_base}${formState.transactionType}/ResetLocalSettings`, formState.userConfig);
+          const res = await api.postAsync(`${Urls.acc_transaction_base}${formState.transactionType}/ResetLocalSettings`, {});
           handleResponse(res, async() => {
-            const st = atob(res.item);
-             await setStorageString("utc", res.item);
-            const _st: any = customJsonParse(st);
-            dispatch(accFormStateHandleFieldChange({ fields: { userConfig: _st } }));
+            const st = base64ToModelUnicode(res.item);
+            const key = btoa(`${userSession.userId}-${formState.transactionType}_LocalSettings`) ;
+             await setStorageString(key, res.item);
+            dispatch(accFormStateHandleFieldChange({ fields: { userConfig: st } }));
           });
         },
       });

@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { customJsonParse, modelToBase64Unicode, } from "../../../utilities/jsonConverter";
+import { customJsonParse, modelToBase64Unicode, safeBase64Decode, } from "../../../utilities/jsonConverter";
 import { APIClient } from "../../../helpers/api-client";
 import Urls from "../../../redux/urls";
 import { useAppDispatch, useAppSelector, } from "../../../utilities/hooks/useAppDispatch";
@@ -198,11 +198,11 @@ export const useAccTransaction = (
   const { hasRight, hasBlockedRight } = useUserRights();
   const fetchUserConfig = async () => {
     try {
-      const base64 = await api.get(`${Urls.acc_transaction_base}${transactionType}/GetLocalSettings`);
-      await setStorageString("utc", base64);
-      // Decode the base64 back to JSON string
-      const _userConfig = atob(base64);
-      const userConfig: AccUserConfig = customJsonParse(_userConfig);
+       const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`) ;
+      const base64 = await api.getAsync(`${Urls.acc_transaction_base}${transactionType}/GetLocalSettings`);
+      await setStorageString(key, base64);
+      const _userConfig = safeBase64Decode(base64);
+      const userConfig: AccUserConfig = customJsonParse(_userConfig ?? "{}");
 
       return userConfig;
     } catch (error) {
@@ -310,7 +310,8 @@ export const useAccTransaction = (
     _formState: AccTransactionFormState,
     loadUserConfig: boolean = false
   ) => {
-    const Utc = await getStorageString("utc");
+    const key = btoa(`${userSession.userId}-${formState.transactionType}_LocalSettings`) ;
+    const Utc = await getStorageString(key);
     let userConfig: AccUserConfig | undefined;
     if (Utc) {
       const _userConfig = atob(Utc);
@@ -1238,15 +1239,16 @@ export const useAccTransaction = (
           } else {
 
             printVoucher(
-               saveRes?.item?.master.accTransactionMasterID,
-                transactionType,
-                formState.transaction.master.voucherType,
-                formState.transaction.master.formType,
-                formState.transaction.master.customerType,
-                false,
-                formState.userConfig?.printPreview,
-                undefined, 
-                formState.transaction.master.transactionDate);
+               saveRes?.item?.master.accTransactionMasterID, // masterID
+                transactionType,// transactionType
+                formState.transaction.master.voucherType, // voucherType
+                formState.transaction.master.formType,// formType
+                formState.transaction.master.customerType, // customerType
+                false,//isInv
+                formState.userConfig?.printPreview, // printPreview
+                undefined,//template 
+                formState.transaction.master.transactionDate?? "" // transactionDate
+                );
           }
         }
 

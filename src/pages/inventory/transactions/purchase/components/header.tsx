@@ -3,7 +3,7 @@ import React from "react";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import ERPModal from "../../../../../components/ERPComponents/erp-modal";
 import { TransactionUserConfig } from "../../purchase/transaction-user-config";
-import { EllipsisVertical, KeyRound, Pencil, Printer, RefreshCw, Trash2, ChevronUp, BadgePlusIcon, Eraser, X, FileUp, History, Boxes, Group, DollarSign, Download, ShoppingCart, Upload, Barcode, Eye, FileText, Layout, PackageCheck, PackageSearch, Receipt, Users, } from "lucide-react";
+import { EllipsisVertical, KeyRound, Pencil, Printer, RefreshCw, Trash2, ChevronUp, BadgePlusIcon, Eraser, X, FileUp, History, Boxes, Group, DollarSign, Download, ShoppingCart, Upload, Barcode, Eye, FileText, Layout, PackageCheck, PackageSearch, Receipt, Users, UserCog, } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import PendingOrderList from "../pending-order-list";
@@ -317,10 +317,12 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
           )}
 
           {/* Settings Button */}
-          <button disabled={formState.transactionLoading} >
-            {phone ? (<TransactionUserConfig phone={true} transactionType={transactionType ?? ""} undoEditMode={undoEditMode} />) : (<TransactionUserConfig transactionType={transactionType ?? ""} undoEditMode={undoEditMode} />)}
-          </button>
-
+          <div className="group relative inline-flex flex-col items-center" title={t("settings")}>
+        <button className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors ${phone ? "p-1.5" : "p-2"} `} onClick={() => dispatch(formStateHandleFieldChange({ fields: { isUserConfigOpen: true } }))}>
+          <UserCog className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors duration-300" />
+        </button>
+      </div>
+          
           {/* Popup Menu */}
           <div className="relative">
             <button
@@ -741,6 +743,31 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
               </button>
             </div>
           )}
+          {/* <button disabled={formState.transactionLoading} >
+            {phone ? 
+            (
+            <TransactionUserConfig }phone={true} transactionType={transactionType ?? ""} undoEditMode={undoEditMode />
+            ) : 
+            (<TransactionUserConfig transactionType={transactionType ?? ""} undoEditMode={undoEditMode} />)}
+          </button> */}
+
+          {formState.isUserConfigOpen && (
+          <ERPModal
+            isOpen={formState.isUserConfigOpen}
+            title={t("formState_summary")}
+            width={2500}
+            height={2500}
+            isForm={true}
+            disableParentInteraction={false}
+            closeModal={() =>{dispatch(formStateHandleFieldChange({ fields: { userConfig: JSON.parse(formState?.privConfig??"") ,isUserConfigOpen: false } }));}
+            }
+            content={
+              <TransactionUserConfig
+               phone={phone} transactionType={transactionType ?? ""} undoEditMode={undoEditMode}
+              />
+            }
+          />
+        )}
         </div>
       </>
     );

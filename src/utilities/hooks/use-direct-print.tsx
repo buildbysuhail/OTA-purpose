@@ -83,8 +83,7 @@ export const useDirectPrint = () => {
   const fetchTemplateData = async (params: DirectPrintArgs) => {
     try {
       let printData = params.data;
-      
-      if (params.masterIDParam) {
+      if (params.masterIDParam){
         printData = (await loadPrintData(
           params.masterIDParam ?? 0,
           params.voucherTypeParam ?? "",
@@ -108,7 +107,6 @@ export const useDirectPrint = () => {
           params.isAppGlobal
         )) as any;
       }
-
       // Generate QR codes
       const elements: PlacedComponent[] = [
         ...(params.template?.headerState?.customElements?.elements ?? []),

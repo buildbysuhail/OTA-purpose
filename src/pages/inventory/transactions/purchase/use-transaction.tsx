@@ -1242,7 +1242,7 @@ export const useTransaction = (
             formState.transaction.master.invTransactionMasterID > 0,
             formState.transaction.master.invTransactionMasterID
           );
-          if (formState.printOnSave == true) {
+          if (formState.printOnSave == true && saveMode != "LPO" && saveMode != "LPQ") {
             // masterID: number,transactionType: string,printTmeplate?:any ,transDate?: string,voucherType?: string,formType?:string,customerType?:string,
             printVoucher(
               saveRes?.item?.master?.invTransactionMasterID, // masterID

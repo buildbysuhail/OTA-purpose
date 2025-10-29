@@ -1882,8 +1882,7 @@ export const getOrFetchTemplate = async (
   const template = await getTemplateFromStore(voucherType, customerType, formType);
     if (template) {
     return template
-  } else {
-    
+  } else {  
     return await fetchDefaultTemplate(voucherType, formType, customerType)
   }
 };

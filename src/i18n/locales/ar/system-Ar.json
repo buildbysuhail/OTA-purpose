@@ -524,5 +524,6 @@
   "primary_template_cannot_be_deleted": "لا يمكن حذف القالب الأساسي!",
   "confirm_delete_template": "هل أنت متأكد أنك تريد حذف هذا القالب؟ لا يمكن التراجع عن هذا الإجراء.",
   "template_deleted_successfully": "تم حذف القالب بنجاح!",
-  "failed_to_delete_template": "فشل في حذف القالب!"
+  "failed_to_delete_template": "فشل في حذف القالب!",
+  "customer_balance_report": "تقرير رصيد العميل"
 }

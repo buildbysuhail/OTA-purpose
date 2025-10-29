@@ -124,6 +124,91 @@ const Content: FC<ContentProps> = () => {
   const [myClass, setMyClass] = useState("");
   const userSession = useSelector((state: RootState) => state.UserSession);
   const clientSession = useSelector((state: RootState) => state.ClientSession);
+  const guardedRoutes = [
+    // Profile
+    { path: "/profile/workspace-logo", element: <WorkSpaceSettings /> },
+    { path: "/profile/workspace-basic-information", element: <WorkSpaceSettings /> },
+    { path: "/profile/primary-email", element: <WorkSpaceSettings /> },
+    { path: "/profile/business-number", element: <WorkSpaceSettings /> },
+    { path: "/security/deleteWorkspace", element: <WorkspaceSettingsSecurity /> },
+
+    // User Management
+    { path: "/user-management/users", element: <Users /> },
+    { path: "/user-management/userstypes", element: <UserTypes /> },
+
+    // Administration
+    { path: "/administration/branch", element: <BranchGrid /> },
+
+    // System
+    { path: "/system/counters", element: <SystemCounters /> },
+    { path: "/system/vouchers", element: <SystemVoucher /> },
+    { path: "/system/financial-year", element: <FinancialYear /> },
+    { path: "/system/reminders", element: <Reminders /> },
+    { path: "/system/user-actions", element: <UserActionReport /> },
+    { path: "/system/application-settings", element: <ApplicationSettingsVirtual /> },
+    { path: "/system/revert-bill-modifications", element: <RevertBillModifications /> },
+    { path: "/system/notification-settings", element: <NotificationSettings /> },
+    { path: "/system/counter-settings", element: <CounterSettings /> },
+    { path: "settings", element: <Settings /> },
+
+    // Integration
+    { path: "/integration/sms", element: <SmsIntegration /> },
+    { path: "/integration/whatsapp", element: <WhatsappIntegration /> },
+    { path: "/integration/email", element: <EmailIntegration /> },
+    { path: "/integration/file-upload", element: <FileUploadIntegration /> },
+    { path: "/integration/test", element: <Test /> },
+    { path: "/integration/total-summary", element: <TotalSummary /> },
+    { path: "/integration/shortkeys_settings", element: <ShortkeysSettings defaultShortcuts={[]} /> },
+    { path: "/integration/test-input-button", element: <TestInputButton /> },
+    { path: "/integration/fcm_push_notification_test", element: <FcmPushNotificationTest /> },
+
+    // Templates
+    { path: "/templates", element: <Templates /> },
+    { path: "/templates/invoice_designer/*", element: <TemplateDesignerLayout /> },
+
+    // Accounts
+    { path: "/account-masters/account-group", element: <AccountsMasters /> },
+    { path: "/account-masters/Bank-Cards", element: <BankCards /> },
+    { path: "/account-masters/upi", element: <Upi /> },
+    { path: "/account-masters/privilege-cards", element: <PrivilegeCard /> },
+    { path: "/account-masters/account-ledger", element: <AccountsLedger /> },
+    { path: "/account-masters/party-category", element: <PartyCategory /> },
+    { path: "/account-masters/currency-master", element: <CurrencyMaster /> },
+    { path: "/account-masters/cost-center", element: <CostCenter /> },
+    { path: "/account-masters/branch-ledgers", element: <BranchLedger /> },
+    { path: "/account-masters/chart-of-accounts", element: <ChartOfAccounts /> },
+    { path: "/account-masters/suppliers", element: <Suppliers /> },
+    { path: "/account-masters/customers", element: <Customers /> },
+    { path: "/account-masters/customer-supplier-ledger", element: <CustomerSupplierLedger /> },
+
+    // Inventory
+    { path: "/inventory-masters/products", element: <Products /> },
+    { path: "/inventory-masters/product-group", element: <ProductGroup /> },
+    { path: "/inventory-masters/product-category", element: <ProductCategory /> },
+    { path: "/inventory-masters/brands", element: <Brands /> },
+    { path: "/inventory-masters/price-category", element: <PriceCategory /> },
+    { path: "/inventory-masters/unit-of-measure", element: <UnitOfMeasure /> },
+    { path: "/inventory-masters/vehicles", element: <Vehicles /> },
+    { path: "/inventory-masters/warehouse", element: <WareHouse /> },
+    {
+      path: "/inventory-masters/tax-category",
+      element: clientSession.isAppGlobal ? <TaxCategoryIndia /> : <TaxCategory />,
+    },
+    { path: "/inventory-masters/tcs-category", element: <TcsCategory /> },
+    { path: "/inventory-masters/salesman-route", element: <SalesmanRoute /> },
+    { path: "/inventory-masters/section", element: <Section /> },
+    { path: "/inventory-masters/schemes", element: <Schemes /> },
+    { path: "/inventory-masters/scheme_settings_special", element: <SchemeSettingsSpecial /> },
+    { path: "/inventory-masters/scheme_settings_discount", element: <SchemeSettingsDiscount /> },
+    {
+      path: "/inventory-masters/product_price_settings",
+      element: clientSession.isAppGlobal ? <ProductPricesIndia /> : <ProductPricesGCC />,
+    },
+    { path: "/inventory-masters/sales-route", element: <SalesRoute /> },
+    { path: "/inventory-masters/group-category", element: <GroupCategory /> },
+    { path: "/inventory-masters/general_master", element: <GeneralMaster /> },
+  ];
+
   return (
     <Suspense fallback={loading}>
       <Routes>
@@ -139,91 +224,17 @@ const Content: FC<ContentProps> = () => {
         <Route path="/sessions" element={<AccountSettingsSessions />} />
         
         <Route path="/members" element={<WorkspaceSettingsMembers />} />
-{/* <RouteGuard  formCode={""} action={UserAction.Show} onlyBaCa={true}> */}
-<Route path="/profile/workspace-logo" element={<WorkSpaceSettings />} />
-        <Route path="/profile/workspace-basic-information" element={<WorkSpaceSettings />} />
-        <Route path="/profile/primary-email" element={<WorkSpaceSettings />} />
-        <Route path="/profile/business-number" element={<WorkSpaceSettings />} />
-        <Route path="/security/deleteWorkspace" element={<WorkspaceSettingsSecurity />} />
-      {/* settings user */}
-        <Route path="/user-management/users" element={<Users />} />
-        <Route path="/user-management/userstypes" element={<UserTypes />} />
-{/* settings Administer*/}
-        <Route path="/administration/branch" element={<BranchGrid />} />
-
-        {/* settings Systems */}
-        <Route path="/system/counters" element={<SystemCounters />} />
-        <Route path="/system/vouchers" element={<SystemVoucher />} />
-        <Route path="/system/financial-year" element={<FinancialYear />} />
-        <Route path="/system/reminders" element={<Reminders />} />
-        <Route path="/system/user-actions" element={<UserActionReport />} />
-        <Route path="/system/application-settings" element={<ApplicationSettingsVirtual />} />
-        <Route path="/system/revert-bill-modifications" element={<RevertBillModifications />} />
-        <Route path="/system/notification-settings" element={<NotificationSettings />} />
-        <Route path="/system/counter-settings" element={<CounterSettings />} />
-        <Route path="settings" element={<Settings />} />
-
-        {/* Integration Start */}
-        <Route path="/integration/sms" element={<SmsIntegration />} />
-        <Route path="/integration/whatsapp" element={<WhatsappIntegration />} />
-        <Route path="/integration/email" element={<EmailIntegration />} />
-        <Route path="/integration/file-upload" element={<FileUploadIntegration />} />
-        <Route path="/integration/test" element={<Test />} />
-        {/* <Route path="/integration/account_group_test" element={<AccountGroupTypeTest />} /> */}
-        <Route path="/integration/total-summary" element={<TotalSummary />} />
-        <Route path="/integration/shortkeys_settings" element={<ShortkeysSettings defaultShortcuts={[]} />} />
-        <Route path="/integration/test-input-button" element={<TestInputButton />} />
-        <Route path="/integration/fcm_push_notification_test" element={<FcmPushNotificationTest />} />
-        {/* Integration End */}
-
-        {/* Templates starts */}
-        <Route path="/templates" element={<Templates />} />
-        <Route path="/templates/invoice_designer/*" element={<TemplateDesignerLayout />} />
-        {/* Templates ends */}
-
-        {/* Inventory Starts */}
-        {/* <Route path="sales/new" element={<InvTransactionMobile />} /> */}
-        {/* Inventory End */}
-
-        {/* Accounts Start */}
-        {/* Accounts Masters */}
-        <Route path="account-masters/account-group" element={<AccountsMasters />} />
-        <Route path="account-masters/Bank-Cards" element={<BankCards />} />
-        <Route path="account-masters/upi" element={<Upi />} />
-        <Route path="account-masters/privilege-cards" element={<PrivilegeCard />} />
-        <Route path="account-masters/account-ledger" element={<AccountsLedger />} />
-        <Route path="account-masters/party-category" element={<PartyCategory />} />
-        <Route path="/account-masters/currency-master" element={<CurrencyMaster />} />
-        <Route path="/account-masters/cost-center" element={<CostCenter />} />
-        <Route path="account-masters/branch-ledgers" element={<BranchLedger />} />
-        <Route path="account-masters/chart-of-accounts" element={<ChartOfAccounts />} />
-        <Route path="account-masters/suppliers" element={<Suppliers />} />
-        <Route path="account-masters/customers" element={<Customers />} />
-        <Route path="/account-masters/customer-supplier-ledger" element={<CustomerSupplierLedger />} />
-        {/* Accounts Masters End */}
-
-<Route path="/inventory-masters/products" element={<Products />} />
-        <Route path="/inventory-masters/product-group" element={<ProductGroup />} />
-        <Route path="/inventory-masters/product-category" element={<ProductCategory />} />
-        <Route path="/inventory-masters/brands" element={<Brands />} />
-        <Route path="/inventory-masters/price-category" element={<PriceCategory />} />
-        <Route path="/inventory-masters/unit-of-measure" element={<UnitOfMeasure />} />
-        <Route path="/inventory-masters/vehicles" element={<Vehicles />} />
-        <Route path="/inventory-masters/warehouse" element={<WareHouse />} />
-        <Route path="/inventory-masters/tax-category" element={clientSession.isAppGlobal ? <TaxCategoryIndia /> : <TaxCategory />} />
-        <Route path="/inventory-masters/tcs-category" element={<TcsCategory />} />
-        <Route path="/inventory-masters/salesman-route" element={<SalesmanRoute />} />
-        <Route path="/inventory-masters/section" element={<Section />} />
-        <Route path="/inventory-masters/schemes" element={<Schemes />} />
-        <Route path="/inventory-masters/scheme_settings_special" element={<SchemeSettingsSpecial />} />
-        <Route path="/inventory-masters/scheme_settings_discount" element={<SchemeSettingsDiscount />} />
-        <Route path="/inventory-masters/product_price_settings" element={clientSession.isAppGlobal ? <ProductPricesIndia /> : <ProductPricesGCC />} />
-        <Route path="/inventory-masters/sales-route" element={<SalesRoute />} />
-        <Route path="/inventory-masters/group-category" element={<GroupCategory />} />
-        <Route path="/inventory-masters/general_master" element={<GeneralMaster />} />
-
-
-{/* </RouteGuard> */}
+{guardedRoutes.map(({ path, element }, idx) => (
+        <Route
+          key={idx}
+          path={path}
+          element={
+            <RouteGuard formCode="" action={UserAction.Show} onlyBaCa={true}>
+              {element}
+            </RouteGuard>
+          }
+        />
+      ))}
   
         
         <Route path="/pdf" element={<TwilioPdfDownloader  />} />

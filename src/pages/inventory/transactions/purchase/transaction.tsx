@@ -265,7 +265,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const address2 = useRef<HTMLInputElement>(null);
   const referenceNumber = useRef<HTMLInputElement>(null);
   const referenceDate = useRef<HTMLInputElement>(null);
-  const marginOffset = appState.mode === 'dark' ? -7 : 0;
 
   // Start countdown when a theme is selected
   useEffect(() => {
@@ -273,7 +272,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
       console.log('Theme selected, triggering countdown');
       setCountdown(8);
       setStartCountdown(true);
-      debugger;
+
       // Apply the preview theme
       dispatch(formStateHandleFieldChangeKeysOnly({
         fields: {
@@ -309,7 +308,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           console.log('🛑 Countdown complete');
           clearInterval(timerRef.current!);
           setStartCountdown(false);
-          debugger;
+
           dispatch(formStateHandleFieldChangeKeysOnly({
             fields: {
               userConfig: { ...formState.userConfig, ...formState.currentTheme },
@@ -644,7 +643,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     ) {
       height = window.innerHeight - 296;
     } else {
-      height = window.innerHeight - (484 + 27);
+      height = window.innerHeight - (484 + 23);
     }
 
     console.log('Max safe integer:', Number.MAX_SAFE_INTEGER);
@@ -673,7 +672,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   useEffect(() => {
     (async () => {
-
       if (formState.transaction.master.ledgerID < 1) {
         return;
       }
@@ -682,7 +680,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
         await loadLedgerData(undefined, dispatch);
 
         setTimeout(() => {
-
           focusAdd1();
         }, 1000);
       } else {
@@ -798,7 +795,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
       }
 
       let __gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new APIClient()))
-
       const _gridCols = __gridCols.columnPreferences.map(x => {
         return {
           ...x,
@@ -1019,7 +1015,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
       dispatch(formStateHandleFieldChange({ fields: { loading: { isLoading: true, text: `${loadType == "GRN" ? 'Please wait while loading GRN Items' : 'Please wait while loading Order Items'}` } } }));
       const PendingTransDetails: any = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/PendingTransactionsByMasterIds`, `masterIDs=${masterIds}`)
       if (PendingTransDetails && PendingTransDetails.details && PendingTransDetails.details.length > 0) {
-
         const calculatedDetails: TransactionDetail[] = [];
         const refactoredDetails = refactorDetails(PendingTransDetails.details?.map((x: any) => {
           return { ...x, qty: x.pendingQty }
@@ -1207,7 +1202,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
     batchSelectionData();
   }, [formState.batchSelectionData]);
   useEffect(() => {
-
     const fetchData = async () => {
       try {
         if (formState.popupSearchSelectionData != "") {
@@ -1766,7 +1760,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               className="mj23stylecheck"
               style={{
                 // marginTop: `${123 + (appState?.inputBox?.inputHeight ?? 0)}px`,
-                marginTop: formState.transaction.master.voucherType === "LPO" ? `${160 + getInputHeight() + marginOffset}px` : `${headerHeight + 52 + getInputHeight() + marginOffset}px`,
+                marginTop: formState.transaction.master.voucherType === "LPO" ? `${160 + getInputHeight()}px` : `${headerHeight + 52 + getInputHeight()}px`,
                 width: isFooterOnRight ? "calc(100% - 300px)" : "100%",
                 // height: `${gridHeight}px`,
                 overflow: "auto",

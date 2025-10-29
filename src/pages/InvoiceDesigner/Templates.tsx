@@ -710,7 +710,7 @@ const Templates = () => {
             </div>
             {/* New Header creation for formtype */}
             {/* Initial first list selection required */}
-            <div className="border-2 bg-white h-fit p-2 flex gap-8">
+            <div className="border-b-1 bg-white h-fit p-2 flex gap-8">
               <ERPDataCombobox
                   id="Form Type"
                   labelDirection="horizontal"

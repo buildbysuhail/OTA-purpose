@@ -324,7 +324,7 @@ export const AccTransactionUserConfig: React.FC<AccTransactionUserConfigProps> =
             </div>
 
             <div className="flex flex-col">
-              <p className="switcher-style-head">{t("input_box_style")}:</p>
+              <p className="switcher-style-head mb-2">{t("input_box_style")}:</p>
               <InputBoxStyling
                 isInputBgColor
                 inputBox={formState.userConfig?.inputBoxStyle}

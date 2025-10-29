@@ -1490,7 +1490,7 @@ const VirtualRow = React.memo(
                     currentCell?.column === column.dataField &&
                     currentCell?.rowIndex === index ? (
                     <ERPProductSearch
-                      showInputSymbol={false}
+                      showInputSymbol={true}
                       customStyle={customStyle}
                       appState={appState}
                       zIndexController={zIndexController}

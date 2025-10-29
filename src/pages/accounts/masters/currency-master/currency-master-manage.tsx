@@ -13,7 +13,7 @@ import { CurrencyData, initialCurrency } from "./currency-master-manage-type";
 export const CurrencyMasterManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
-  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading, handleClose } =
+  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading, handleClose, formState } =
     useFormManager<CurrencyData>({
       url: Urls.account_currency_master,
       onClose: useCallback(() => dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null, reload: false })), [dispatch]),
@@ -41,6 +41,7 @@ export const CurrencyMasterManage: React.FC = React.memo(() => {
           label={t("country")}
           disabled={rootState.PopupData.currencyMaster.mode == "view"}
           autoFocus={true}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -50,6 +51,7 @@ export const CurrencyMasterManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("currencyCode", data.currencyCode)}
           readOnly={rootState.PopupData.currencyMaster.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -59,6 +61,7 @@ export const CurrencyMasterManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("currencyName", data.currencyName)}
           readOnly={rootState.PopupData.currencyMaster.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -68,6 +71,7 @@ export const CurrencyMasterManage: React.FC = React.memo(() => {
           required={false}
           onChangeData={(data: any) => handleFieldChange("currencySymbol", data.currencySymbol)}
           readOnly={rootState.PopupData.currencyMaster.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -77,6 +81,7 @@ export const CurrencyMasterManage: React.FC = React.memo(() => {
           required={false}
           onChangeData={(data: any) => handleFieldChange("subUnit", data.subUnit)}
           readOnly={rootState.PopupData.currencyMaster.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -86,6 +91,7 @@ export const CurrencyMasterManage: React.FC = React.memo(() => {
           required={false}
           onChangeData={(data: any) => handleFieldChange("subUnitSymbol", data.subUnitSymbol)}
           readOnly={rootState.PopupData.currencyMaster.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         {/* <ERPCheckbox
@@ -101,11 +107,11 @@ export const CurrencyMasterManage: React.FC = React.memo(() => {
 
       </div>
       <ERPFormButtons
-        onClear={rootState.PopupData.currencyMaster.mode == "view"? undefined : handleClear}
+        onClear={rootState.PopupData.currencyMaster.mode == "view"? undefined : formState?.loading !== false ? undefined : handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={rootState.PopupData.currencyMaster.mode == "view"? undefined :  handleSubmit}
+        onSubmit={rootState.PopupData.currencyMaster.mode == "view"? undefined : formState?.loading !== false ? undefined :  handleSubmit}
       />
     </div>
   );

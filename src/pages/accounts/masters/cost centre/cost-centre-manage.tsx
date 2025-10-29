@@ -20,6 +20,7 @@ export const CostCentreManage = () => {
     getFieldProps,
     handleClose,
     isLoading,
+    formState
   } = useFormManager<CostCentreData>({
     url: Urls.cost_center,
     onSuccess: useCallback(() => dispatch(toggleCostCentrePopup({ isOpen: false, key: null, reload: true })), [dispatch]),
@@ -41,6 +42,7 @@ export const CostCentreManage = () => {
           onChangeData={(data: any) => handleFieldChange("costCentreName", data.costCentreName)}
           readOnly={rootState.PopupData.costCentre.mode == "view"}
           autoFocus={true}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -49,6 +51,7 @@ export const CostCentreManage = () => {
           placeholder={t("enter_short_name")}
           onChangeData={(data: any) => handleFieldChange("shortName", data.shortName)}
           readOnly={rootState.PopupData.costCentre.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -57,16 +60,17 @@ export const CostCentreManage = () => {
           placeholder={t("enter_remarks")}
           onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
           readOnly={rootState.PopupData.costCentre.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
       </div>
 
       <div className="">
         <ERPFormButtons
-          onClear={rootState.PopupData.costCentre.mode == "view"? undefined :handleClear}
+          onClear={rootState.PopupData.costCentre.mode == "view"? undefined : formState?.loading !== false ? undefined : handleClear}
           isEdit={isEdit}
           isLoading={isLoading}
           onCancel={handleClose}
-          onSubmit={rootState.PopupData.costCentre.mode == "view"? undefined :handleSubmit}
+          onSubmit={rootState.PopupData.costCentre.mode == "view"? undefined : formState?.loading !== false ? undefined : handleSubmit}
         />
       </div>
     </div>

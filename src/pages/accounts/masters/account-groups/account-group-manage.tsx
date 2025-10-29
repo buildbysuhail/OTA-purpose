@@ -87,6 +87,8 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => { handleFieldChange("accGroupName", data.accGroupName); }}
           disabled={formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 && formState?.data?.isEditable != true}
           readOnly={rootState.PopupData.accountGroup.mode == "view"}
+          autoFocus={true}
+          fetching={formState?.loading !== false ? true : false}    
         />
 
         <ERPInput
@@ -97,7 +99,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("arabicName", data.arabicName)}
           readOnly={rootState.PopupData.accountGroup.mode == "view"}
-          autoFocus={true}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -108,6 +110,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => handleFieldChange("shortName", data.shortName)}
           disabled={(formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 && formState?.data?.isEditable != true)}
           readOnly={rootState.PopupData.accountGroup.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPDataCombobox
@@ -122,6 +125,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => { handleFieldChange("parentGroupID", data.parentGroupID); }}
           disabled={(formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 && formState?.data?.isEditable != true) || (rootState.PopupData.accountGroup.data != undefined && rootState.PopupData.accountGroup.data != null && rootState.PopupData.accountGroup.data.groupId != undefined && rootState.PopupData.accountGroup.data.groupId != null) || rootState.PopupData.accountGroup.mode == "view"}
           label={t("group_under")}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -132,6 +136,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
           disabled={formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 && formState?.data?.isEditable != true}
           readOnly={rootState.PopupData.accountGroup.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         {
@@ -143,6 +148,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
             required={true}
             onChangeData={(data: any) => handleFieldChange("reasonForModification", data.reasonForModification)}
             readOnly={rootState.PopupData.accountGroup.mode == "view"}
+            fetching={formState?.loading !== false ? true : false}
           />
         }
 
@@ -154,12 +160,14 @@ export const AccountGroupManage: React.FC = React.memo(() => {
               label={t("editable")}
               onChangeData={(data: any) => handleFieldChange("isEditable", data.isEditable)}
               disabled={rootState.PopupData.accountGroup.mode == "view"}
+              fetching={formState?.loading !== false ? true : false}
             />
             <ERPCheckbox
               {...getFieldProps("isDeletable")}
               label={t("deletable")}
               onChangeData={(data: any) => handleFieldChange("isDeletable", data.isDeletable)}
               disabled={rootState.PopupData.accountGroup.mode == "view"}
+              fetching={formState?.loading !== false ? true : false}
             />
           </>
         }
@@ -176,12 +184,12 @@ export const AccountGroupManage: React.FC = React.memo(() => {
       </div>
       {/* Link that triggers the modal */}
       <ERPFormButtons
-        onClear={rootState.PopupData.accountGroup.mode == "view" ? undefined : handleClear}
+        onClear={rootState.PopupData.accountGroup.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleClear}
         submitDisabled={!formState?.data?.isEditable || isLoading}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={rootState.PopupData.accountGroup.mode == "view" ? undefined : handleSubmit}
+        onSubmit={rootState.PopupData.accountGroup.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleSubmit}
       />
 
       <ERPModal

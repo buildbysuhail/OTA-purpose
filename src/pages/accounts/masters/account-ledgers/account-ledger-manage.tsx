@@ -85,6 +85,7 @@ export const AccountLedgerManage = () => {
           readOnly={rootState.PopupData.accountLedger.mode == "view"}
           onChangeData={(data: any) => handleFieldChange("ledgerCode", data.ledgerCode)}
           autoFocus={true}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -94,6 +95,7 @@ export const AccountLedgerManage = () => {
           required={true}
           readOnly={rootState.PopupData.accountLedger.mode == "view"}
           onChangeData={(data: any) => handleFieldChange("ledgerName", data.ledgerName)}
+          fetching={formState?.loading !== false ? true : false}         
         />
 
         <ERPInput
@@ -102,6 +104,7 @@ export const AccountLedgerManage = () => {
           placeholder={t("enter_alias_name")}
           onChangeData={(data: any) => handleFieldChange("aliasName", data.aliasName)}
           readOnly={rootState.PopupData.accountLedger.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -110,6 +113,7 @@ export const AccountLedgerManage = () => {
           placeholder={t("enter_name_in_arabic")}
           onChangeData={(data: any) => handleFieldChange("arabicName", data.arabicName)}
           readOnly={rootState.PopupData.accountLedger.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPDataCombobox
@@ -130,6 +134,7 @@ export const AccountLedgerManage = () => {
             rootState.PopupData.accountLedger.mode == "view"
           }
           label={t("group_under")}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         {/* <div className="w-full max-w-md mx-auto"> */}
@@ -146,6 +151,7 @@ export const AccountLedgerManage = () => {
                     type="number"
                     onChangeData={(data: any) => handleFieldChange("opBalance", (data.opBalance))}
                     readOnly={rootState.PopupData.accountLedger.mode == "view"}
+                    fetching={formState?.loading !== false ? true : false}
                   />
                 </div>
                 <div className="">
@@ -164,6 +170,7 @@ export const AccountLedgerManage = () => {
                       { value: "Cr", label: t("Cr") },
                     ]}
                     disabled={rootState.PopupData.accountLedger.mode == "view"}
+                    fetching={formState?.loading !== false ? true : false}
                   />
                 </div>
               </>
@@ -180,6 +187,7 @@ export const AccountLedgerManage = () => {
             placeholder={t("enter_remarks")}
             onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
             readOnly={rootState.PopupData.accountLedger.mode == "view"}
+            fetching={formState?.loading !== false ? true : false}
           />
         </div>
       </div>
@@ -190,12 +198,14 @@ export const AccountLedgerManage = () => {
           label={t("bill_wise_applicable")}
           onChangeData={(data: any) => handleFieldChange("isBillwiseApplicable", data.isBillwiseApplicable)}
           disabled={rootState.PopupData.accountLedger.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
         <ERPCheckbox
           {...getFieldProps("isActive")}
           label={t("active")}
           onChangeData={(data: any) => handleFieldChange("isActive", data.isActive)}
           disabled={rootState.PopupData.accountLedger.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
         {/* <ERPCheckbox
           {...getFieldProps("isEditable")}
@@ -212,20 +222,22 @@ export const AccountLedgerManage = () => {
           label={t("cost_center_applicable")}
           onChangeData={(data: any) => handleFieldChange("isCostCentreApplicable", data.isCostCentreApplicable)}
           disabled={rootState.PopupData.accountLedger.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
         <ERPCheckbox
           {...getFieldProps("isCommon")}
           label={t("is_common")}
           onChangeData={(data: any) => handleFieldChange("isCommon", data.isCommon)}
           disabled={rootState.PopupData.accountLedger.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
       </div>
       <ERPFormButtons
-        onClear={rootState.PopupData.accountLedger.mode == "view"? undefined :handleClear}
+        onClear={rootState.PopupData.accountLedger.mode == "view"? undefined : formState?.loading !== false ? undefined : handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={rootState.PopupData.accountLedger.mode == "view"? undefined : handleSubmit}
+        onSubmit={rootState.PopupData.accountLedger.mode == "view"? undefined : formState?.loading !== false ? undefined : handleSubmit}
       />
     </div>
   );

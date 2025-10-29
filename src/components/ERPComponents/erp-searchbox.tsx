@@ -1399,7 +1399,7 @@ useEffect(() => {
               {productInitialized && showInputSymbol &&(
               <div className="absolute inset-0 flex items-center px-3 pointer-events-none">
                 <span className="invisible">{inputValue.searchValue}</span>
-                <span className="animate-blink text-black">|A</span>
+                <span className="animate-blink text-black">|</span>
               </div>
               )}                   
           </div>

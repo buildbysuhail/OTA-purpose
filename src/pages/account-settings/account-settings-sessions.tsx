@@ -25,7 +25,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
   const [gridHeight, setGridHeight] = useState<number>(500);
   useEffect(() => {
     let wh = window.innerHeight;
-    let gridHeight = wh - 180;
+    let gridHeight = wh - 230;
     setGridHeight(gridHeight);
   }, []);
 
@@ -79,15 +79,11 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
   const { t } = useTranslation('main')
   const handleLogout = async (deviceId: string) => {
     setLoadingLogout({ loading: true, deviceId: deviceId });
-    const response: ResponseModelWithValidation<any, any> = await dispatch(
-      postAction({
-        apiUrl: Urls.logoutUserSession,
-        data: {
+    const response: ResponseModelWithValidation<any, any> = await  api.postAsync(Urls.logoutUserSession, {
           deviceId: deviceId
-        },
-      }) as any
-    ).unwrap();
+        });
     setLoadingLogout({ loading: false, deviceId: deviceId });
+    debugger;
     handleResponse(response, () => {
       store.load();
     });
@@ -289,7 +285,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                           />
                         </>
                       )}
-                      width={50}
+                      width={70}
                     />
                     {/* <Column allowSearch={true} allowFiltering={true} dataField="IsActive" caption={'isActive'} dataType="boolean" /> */}
                     {/* <Column dataField="isDefault" caption={'Is Default'} cellRender={({ data }) => (

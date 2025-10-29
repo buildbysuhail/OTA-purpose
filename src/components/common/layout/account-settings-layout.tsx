@@ -34,7 +34,7 @@ const AccountSettingsLayout: FC<LayoutProps> = ({setMyClass}) => {
                 <Content />
               </div>
             </div>
-            <Footer />
+            {/* <Footer /> */}
     </>
   );
 }

@@ -892,7 +892,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               </label>
             )}
             <label
-              className={`capitalize block text-right rtl:text-left ${appState?.mode == "dark" ? "form-label" : ""
+              className={`capitalize block text-right rtl:text-left ${appState?.mode == "dark" ? "" : ""
                 }`}
               style={{
                 fontSize: _customSize

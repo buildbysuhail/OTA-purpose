@@ -7,13 +7,15 @@ interface RouteGuardProps {
   formCode: string;
   redirectPath?: string;
   action: UserAction;
+  onlyBaCa?: boolean;
 }
 
 const RouteGuard: React.FC<RouteGuardProps> = ({ 
   children, 
   formCode, 
   action, 
-  redirectPath = '/login' 
+  redirectPath = '/login' ,
+  onlyBaCa = false
 }) => {
   const { hasRight } = useUserRights();
   
@@ -22,7 +24,7 @@ const RouteGuard: React.FC<RouteGuardProps> = ({
     return <>{children}</>;
   }
 
-  const isAllowed = hasRight(formCode, action);
+  const isAllowed = hasRight(formCode, action,onlyBaCa);
   
   if (!isAllowed) {
     return <Navigate to={redirectPath} replace />;

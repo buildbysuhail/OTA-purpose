@@ -47,7 +47,7 @@ export const useUserRights = () => {
   },[])
 
 
-  const hasRight = (formCode: string, action: UserAction): boolean => {
+  const hasRight = (formCode: string, action: UserAction, onlyBaCa?: boolean): boolean => {
     let result = false;
 
     
@@ -60,7 +60,9 @@ export const useUserRights = () => {
     if (userTypeCode === "BA" || userTypeCode === "CA") {
       return planRights?.includes(formCode) ?? false;
     }
-
+    if(onlyBaCa) {
+      return false
+    }
     try {
       let dtUserRights: UserTypeRights[] = __userRights;
 

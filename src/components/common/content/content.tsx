@@ -137,18 +137,18 @@ const Content: FC<ContentProps> = () => {
         <Route path="/preferences/language" element={<AccountSettingsPreference />} />
         <Route path="/preferences/system-preferences" element={<AccountSettingsPreference />} />
         <Route path="/sessions" element={<AccountSettingsSessions />} />
-        <Route path="/profile/workspace-logo" element={<WorkSpaceSettings />} />
+        
+        <Route path="/members" element={<WorkspaceSettingsMembers />} />
+<RouteGuard  formCode={""} action={UserAction.Show} onlyBaCa={true}>
+<Route path="/profile/workspace-logo" element={<WorkSpaceSettings />} />
         <Route path="/profile/workspace-basic-information" element={<WorkSpaceSettings />} />
         <Route path="/profile/primary-email" element={<WorkSpaceSettings />} />
         <Route path="/profile/business-number" element={<WorkSpaceSettings />} />
         <Route path="/security/deleteWorkspace" element={<WorkspaceSettingsSecurity />} />
-        <Route path="/members" element={<WorkspaceSettingsMembers />} />
-
-        {/* settings user */}
+      {/* settings user */}
         <Route path="/user-management/users" element={<Users />} />
         <Route path="/user-management/userstypes" element={<UserTypes />} />
-
-        {/* settings Administer*/}
+{/* settings Administer*/}
         <Route path="/administration/branch" element={<BranchGrid />} />
 
         {/* settings Systems */}
@@ -222,6 +222,10 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory-masters/group-category" element={<GroupCategory />} />
         <Route path="/inventory-masters/general_master" element={<GeneralMaster />} />
 
+
+</RouteGuard>
+  
+        
         <Route path="/pdf" element={<TwilioPdfDownloader  />} />
 
         {/* Accounts Transaction */}

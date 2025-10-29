@@ -32,6 +32,7 @@ const Crm: FC<CrmProps> = () => {
   const [bankSummary, setBankSummary] = useState<ItemSummaryCard>(new ItemSummaryCard());
   const [topExpenses, setTopExpenses] = useState<[]>([]);
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
+  const userSession = useSelector((state: RootState) => state.UserSession);
   useEffect(() => {
     api.post('/Accounts/Dashboard/GetTopExpense',{offset: 0,pageSize: 6}).then(res =>{
       setTopExpenses(res);
@@ -224,12 +225,12 @@ const Crm: FC<CrmProps> = () => {
             </div>
             <div className="xxl:col-span-8  xl:col-span-8  col-span-12">
               <div className="grid grid-cols-12 gap-x-6">
-              <SummaryCard  summary={salesSummary??new ItemSummaryCard()} icon="ti ti-wave-square" color='success'></SummaryCard>
-              <SummaryCard  summary={purchaseSummary??new ItemSummaryCard()} icon="ti ti-wave-square" color='secondary'></SummaryCard>
-              <SummaryCard  summary={incomeSummary??new ItemSummaryCard()} icon="ti ti-wave-square" color='warning'></SummaryCard>
-              <SummaryCard  summary={receivableSummary??new ItemSummaryCard()} icon="ti ti-wave-square" color='success'></SummaryCard>
-              <SummaryCard  summary={expenseSummary??new ItemSummaryCard()} icon="ti ti-wave-square" color='success'></SummaryCard>
-              <SummaryCard  summary={PayableSummary??new ItemSummaryCard()} icon="ti ti-wave-square" color='success'></SummaryCard>
+              <SummaryCard currency={userSession?.currency}  summary={salesSummary??new ItemSummaryCard()} icon="ti ti-wave-square" color='success'></SummaryCard>
+              <SummaryCard currency={userSession?.currency}  summary={purchaseSummary??new ItemSummaryCard()} icon="ti ti-wave-square" color='secondary'></SummaryCard>
+              <SummaryCard currency={userSession?.currency}  summary={incomeSummary??new ItemSummaryCard()} icon="ti ti-wave-square" color='warning'></SummaryCard>
+              <SummaryCard currency={userSession?.currency}  summary={receivableSummary??new ItemSummaryCard()} icon="ti ti-wave-square" color='success'></SummaryCard>
+              <SummaryCard currency={userSession?.currency}  summary={expenseSummary??new ItemSummaryCard()} icon="ti ti-wave-square" color='success'></SummaryCard>
+              <SummaryCard currency={userSession?.currency}  summary={PayableSummary??new ItemSummaryCard()} icon="ti ti-wave-square" color='success'></SummaryCard>
                 
                 
                 <div className="xxl:col-span-12 xl:col-span-12 col-span-12">

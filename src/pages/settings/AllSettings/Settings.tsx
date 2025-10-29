@@ -29,6 +29,8 @@ import {
 } from "../../../redux/slices/popup-reducer";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../../redux/store";
+import { getFilteredReports } from "../../../components/ERPComponents/reports/reports-list-filter";
+import { useUserRights } from "../../../helpers/user-right-helper";
 
 const HideAccountLedger = lazy(() => import("../../accounts/masters/hide-account-ledger/hide-acc-ledger"));
 const DeleteInactiveTransactionManage = lazy(() => import("../Administration/delete-inactive-transactions-manage"));
@@ -56,7 +58,10 @@ const Settings = () => {
   const { t } = useTranslation();
   const rootState = useRootState();
   const dispatch = useAppDispatch();
-  const [settingsRoutes, setSettingRoutes] = useState(SettingsMenuItems);
+    const { hasRight } = useUserRights();
+    let clientSession = useAppSelector((state: RootState) => state.ClientSession);
+    let applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
+  const [settingsRoutes, setSettingRoutes] = useState(getFilteredReports(SettingsMenuItems, clientSession, applicationSettings, hasRight) as any);
   let sds = jwtHelper.getLoggedInUserRole();
   const preloadComponents = () => {
     import("../Administration/delete-inactive-transactions-manage");

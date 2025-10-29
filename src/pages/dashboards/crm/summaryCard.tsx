@@ -11,6 +11,13 @@ interface SummaryProps {
   summary: ItemSummaryCard;
   icon: string;
   color: string;
+  currency: {
+    currencyName: string;
+    subUnit: string;
+    currencySymbol: string;
+    subUnitSymbol: string;
+    currencyCode: string;
+  };
 }
 
 const SummaryCard: FC<SummaryProps> = (props) => {
@@ -40,7 +47,7 @@ const SummaryCard: FC<SummaryProps> = (props) => {
                   <h4 className="font-semibold  text-[1.5rem] !mb-2 ">
                     <CurrencyFormatter
                       amount={data.summary?.total}
-                      currency={data.summary?.currency == "QR" ? "QAR" : data.summary?.currency}
+                      currency={props?.currency?.currencyCode == "QR" ? "QAR" : props?.currency?.currencyCode}
                     ></CurrencyFormatter>
                   </h4>
                 <div id="crm-total-customers">

@@ -44,9 +44,9 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
         groupCategoryId: "",
         sectionId: "",
         productId: "",
-      fromDate:new Date(new Date().setMonth(new Date().getMonth() - 6)).toLocaleDateString(),
-        toDate: new Date().toLocaleDateString(),
-        summaryAsOnDate: new Date().toLocaleDateString(),
+        fromDate:new Date(new Date().setMonth(new Date().getMonth() - 6)).toISOString(),
+        toDate: new Date().toISOString(),
+        summaryAsOnDate: new Date().toISOString(),
         //   fromDate:  moment(new Date()).subtract(6, 'months').toDate(),
         // toDate: moment().local().toDate(),
         // summaryAsOnDate: moment().local().toDate(),
@@ -105,9 +105,9 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
             groupCategoryId: "",
             sectionId: "",
             productId: "",
-            fromDate: "",
-            toDate: "",
-            summaryAsOnDate: "",
+            fromDate:new Date(new Date().setMonth(new Date().getMonth() - 6)).toISOString(),
+            toDate: new Date().toISOString(),
+            summaryAsOnDate: new Date().toISOString(),
             productCode: "",
             showStockDetails: false,
         });
@@ -370,19 +370,19 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
                         id="fromDate"
                         label={t('from')}
                         value={formStates.fromDate}
-                        onChange={(e) => handleFieldChange({ fromDate: e.target.value })}
+                        onChange={(e) => handleFieldChange({ fromDate: new Date(e.target.value).toISOString() })}
                     />
                     <ERPDateInput
                         id="toDate"
                         label={t('to')}
                         value={formStates.toDate}
-                        onChange={(e) => handleFieldChange({ toDate: e.target.value })}
+                        onChange={(e) => handleFieldChange({ toDate: new Date(e.target.value).toISOString()  })}
                     />
                     <ERPDateInput
                         id="summaryAsOnDate"
                         label={t('summary_as_on')}
                         value={formStates.summaryAsOnDate}
-                        onChange={(e) => handleFieldChange({ summaryAsOnDate: e.target.value })}
+                        onChange={(e) => handleFieldChange({ summaryAsOnDate: new Date(e.target.value).toISOString()  })}
                     />
                     <ERPDataCombobox
                         id="productCode"

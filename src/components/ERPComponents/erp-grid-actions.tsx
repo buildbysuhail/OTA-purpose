@@ -67,15 +67,14 @@ const ERPGridActions: React.FC<ERPGridActionsProps> = ({
     setIsDeleting(true);
     try {
       if (deleteAction.action) {
-         deleteAction.action();
+        deleteAction.action();
       } else if (deleteAction.url) {
         let res;
-        if((deleteAction.postData)){
-                 res = await api.delete(`${deleteAction.url}`,{data: deleteAction.postData});
-        }else{
-               res = await api.delete(`${deleteAction.url}${deleteAction.key || itemId}`);
+        if (deleteAction.postData) {
+          res = await api.delete(`${deleteAction.url}`, { data: deleteAction.postData });
+        } else {
+          res = await api.delete(`${deleteAction.url}${deleteAction.key || itemId}`);
         }
-  
         handleResponse(res, () => { deleteAction.onSuccess && deleteAction.onSuccess() });
       }
     } catch (error) {
@@ -87,11 +86,10 @@ const ERPGridActions: React.FC<ERPGridActionsProps> = ({
 
   const renderActionButton = (type: "view" | "edit" | "delete", action: ActionType | DeleteActionType) => {
     const icons = {
-      view: "ri-eye-2-line view-icon",
-      edit: "ri-edit-line edit-icon",
-      delete: "ri-delete-bin-5-line delete-icon"
+      view: "ri-eye-2-line view-icon dark:text-dark-text",
+      edit: "ri-edit-line edit-icon dark:text-dark-text",
+      delete: "ri-delete-bin-5-line delete-icon dark:text-dark-text"
     };
-
     const titles = {
       view: t("view"),
       edit: t("edit"),
@@ -111,21 +109,20 @@ const ERPGridActions: React.FC<ERPGridActionsProps> = ({
           dispatch((action as ActionType).action?.(payload) as any);
         }
       };
-
       return (
         <>
           <button
             onClick={handleClick}
             disabled={type === "delete" && isDeleting}
-            className="ti-btn-link"
-            type="button">
+            className="ti-btn-link dark:text-dark-text dark:hover:text-dark-text-hover"
+            type="button"
+          >
             {isDeleting && type === "delete" ? (
-              <CircularProgress size={20} />
+              <CircularProgress size={20} className="dark:text-dark-text" />
             ) : (
               <i className={icons[type]} title={titles[type]}></i>
             )}
           </button>
-
           {showDeleteConfirmation && (
             <ERPAlert
               title={t("are_you_sure")}
@@ -140,16 +137,15 @@ const ERPGridActions: React.FC<ERPGridActionsProps> = ({
         </>
       );
     }
-
     return (
-      <Link to={(action as ActionType).path || "#"}>
+      <Link to={(action as ActionType).path || "#"} className="dark:text-dark-text dark:hover:text-dark-text-hover">
         <i className={icons[type]} title={titles[type]}></i>
       </Link>
     );
   };
 
   return (
-    <div className="action-field actions-padding">
+    <div className="action-field actions-padding dark:bg-dark-bg dark:border-dark-border">
       {view?.visible != false ? renderActionButton("view", view) : null}
       {edit?.visible != false ? renderActionButton("edit", edit) : null}
       {deleteAction.visible != false ? renderActionButton("delete", deleteAction) : null}

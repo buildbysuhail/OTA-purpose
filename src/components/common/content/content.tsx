@@ -139,7 +139,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/sessions" element={<AccountSettingsSessions />} />
         
         <Route path="/members" element={<WorkspaceSettingsMembers />} />
-<RouteGuard  formCode={""} action={UserAction.Show} onlyBaCa={true}>
+{/* <RouteGuard  formCode={""} action={UserAction.Show} onlyBaCa={true}> */}
 <Route path="/profile/workspace-logo" element={<WorkSpaceSettings />} />
         <Route path="/profile/workspace-basic-information" element={<WorkSpaceSettings />} />
         <Route path="/profile/primary-email" element={<WorkSpaceSettings />} />
@@ -223,7 +223,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory-masters/general_master" element={<GeneralMaster />} />
 
 
-</RouteGuard>
+{/* </RouteGuard> */}
   
         
         <Route path="/pdf" element={<TwilioPdfDownloader  />} />

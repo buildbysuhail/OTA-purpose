@@ -119,10 +119,11 @@ export const RenderPreviewComponent: React.FC<Props> = ({
 
 
     case DesignerElementType.image:
+      const imgUrl = component?.imgFromDevice ?component.content : bindDataForPrint(component.content, data);
       return (
         <div key={component.id} style={baseStyle}>
           <img
-            src={component.content}
+            src={imgUrl}
             alt="dynamic"
             style={{
               width: "100%",

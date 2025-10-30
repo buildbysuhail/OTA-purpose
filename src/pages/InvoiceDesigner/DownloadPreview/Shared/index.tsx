@@ -9,8 +9,6 @@ import { AccountTransactionProps } from "../../DesignPreview/shared"
 import ShardDownFooter from "./Footer"
 import { SharedDownTable } from "./Table"
 
-
-
   const SharedDownloadTemplate = ({ data, template,qrCodeImages={},AmountToEnglish,AmountToArabic}: AccountTransactionProps) => {
     const pageOrientation = template?.propertiesState?.orientation === "landscape" ? "landscape" : "portrait"
     const paddingLeft = template?.propertiesState?.padding?.left || 10

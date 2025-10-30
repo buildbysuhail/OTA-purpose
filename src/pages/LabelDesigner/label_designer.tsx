@@ -68,7 +68,7 @@ import VoucherType, {
   salesVoucherTypes,
   accountsVoucherTypes,
 } from "../../enums/voucher-types";
-import { accountsFields, inventoryFields, barCodeField } from "./fields";
+import { accountsFields, inventoryFields, barCodeField, imgField } from "./fields";
 import { containsArabicString, getPageDimensions, ptToPx, pxToPt } from "../InvoiceDesigner/utils/pdf-util";
 import { QRCodeComponent } from "./QRCodeComponent";
 import GroupedComboBox from "../../components/ERPComponents/erp-grouped-combo";
@@ -206,7 +206,7 @@ const objectPosition = [
   { label: "Bottom Right", value: "bottom right" },
 ];
 
-const imgContent = [{ label: "img1", value: usFlag }];
+// const imgContent = [{ label: "img1", value: usFlag }];
 
 // Utility functions
 
@@ -2481,94 +2481,85 @@ debugger;
                         }
                       />
                       {!selectedComponent?.imgFromDevice && (
-                        <ERPDataCombobox
-                          id="content"
-                          data={selectedComponent}
-                          label="Content"
-                          field={{
-                            id: "content",
-                            valueKey: "value",
-                            labelKey: "label",
-                          }}
-                          options={imgContent}
-                          onChangeData={(data) => {
-                            handlePropertyChange("content", data.content);
-
-                          }}
-                        />
+                            <GroupedComboBox
+                              options={imgField}
+                              value={selectedComponent.content}
+                              onChange={(selectedId) => {
+                                if (selectedId) {
+                                  handlePropertyChange("content", selectedId)
+                                }
+                              }}
+                              label="Image field"
+                              placeholder="Select content field..."
+                              className="w-full"
+                            />                        
                       )}
 
-                      {selectedComponent?.imgFromDevice && (
-                        <>
-                          <ERPInput
-                            id="content"
-                            type="file"
-                            ref={inputImgFile}
-                            onChange={(e: any) => {
-                              if (e.target.files[0].size > 2097152) {
-                                ERPToast.showWith(
-                                  "Maximum file size allowed is 2 MB, please try with different file.",
-                                  "warning"
-                                );
-                              } else {
-                                handleImagePropsChange(
-                                  "content",
-                                  e.target.files[0]
-                                );
-                                // Set imgFromDevice to true when an image is selected from device
-                                // handlePropertyChange("imgFromDevice", true);
-                              }
-                            }}
-                            className={"hidden"}
-                            accept="image/png,image/jpeg"
-                            label="Image"
-                            placeholder=" "
-                          />
-                          <label htmlFor="content">
-                            <div
-                              onClick={() => inputImgFile?.current?.click()}
-                              className={`text-xs border rounded px-1 py-2 text-center bg-[#F1F5F9] cursor-pointer ${selectedComponent?.content
-                                  ? "hidden"
-                                  : ""
-                                }`}
-                            >
-                              Choose from Desktop
-                            </div>
-                          </label>
-
-                          {selectedComponent?.content && (
+                        {/* File upload (when uploading from device) */}
+                          {selectedComponent?.imgFromDevice && (
                             <>
-                              <div className="text-xs bg-[#FEF4EA] px-2 py-2 rounded">
-                                Click Save to apply the selected background image
-                              </div>
+                              <ERPInput
+                                id="content"
+                                type="file"
+                                ref={inputImgFile}
+                                onChange={(e: any) => {
+                                  const file = e.target.files?.[0];
+                                  if (!file) return;
 
-                              <img
-                                draggable={false}
-                                src={
-                                  templateData?.barcodeState?.labelState
-                                    ?.background_image
-                                }
-                                alt="background_image"
-                                height={100}
-                                width={100}
-                                className="size-5"
+                                  if (file.size > 2097152) {
+                                    ERPToast.showWith(
+                                      "Maximum file size allowed is 2 MB, please try with different file.",
+                                      "warning"
+                                    );
+                                    return;
+                                  }
+
+                                  handleImagePropsChange("content", file);
+                                }}
+                                className="hidden"
+                                accept="image/png,image/jpeg"
+                                label="Image"
+                                placeholder=" "
                               />
 
-                              <div
-                                className="text-accent text-xs cursor-pointer  max-w-min"
-                                onClick={handleRemoveImage}
-                              >
-                                Remove
-                              </div>
+                              {/* Check for Base64 image */}
+                              {selectedComponent?.content &&
+                              typeof selectedComponent.content === "string" &&
+                              selectedComponent.content.startsWith("data:image") ? (
+                                <>
+                                  <div className="text-xs bg-[#FEF4EA] px-2 py-2 rounded">
+                                    Click Save to apply the selected background image
+                                  </div>
 
+                                  <img
+                                    draggable={false}
+                                    src={selectedComponent.content}
+                                    alt="background_image"
+                                    height={100}
+                                    width={100}
+                                    className="size-5"
+                                  />
 
+                                  <div
+                                    className="text-accent text-xs cursor-pointer max-w-min"
+                                    onClick={handleRemoveImage}
+                                  >
+                                    Remove
+                                  </div>
+                                </>
+                              ) : (
+                                <label htmlFor="content">
+                                  <div
+                                    onClick={() => inputImgFile?.current?.click()}
+                                    className="text-xs border rounded px-1 py-2 text-center bg-[#F1F5F9] cursor-pointer"
+                                  >
+                                    Choose from Desktop
+                                  </div>
+                                </label>
+                              )}
                             </>
                           )}
 
-                        </>
-                      )}
-                      {selectedComponent?.content && (
-                        <>
                           <ERPDataCombobox
                             id="imgFit"
                             data={selectedComponent}
@@ -2584,7 +2575,7 @@ debugger;
                             }
                           />
                           <ERPDataCombobox
-                            noLabel
+                            label="Image Position"
                             id="imgPosition"
                             data={selectedComponent}
                             defaultValue={
@@ -2600,12 +2591,9 @@ debugger;
                             }}
                             options={objectPosition}
                           />
-                        </>
+                        </Box>
                       )}
-
-                    </Box>
-                  )}
-
+                      
                   <Box sx={{ mb: 1 }}>
                     <ERPInput
                       id="x"

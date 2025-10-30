@@ -29,9 +29,17 @@ export const accountsFields: OptionGroup[] = [
 export const barCodeField: OptionGroup[] = [
   { groupName: "BarCodeField", options: modelToListFromObject<BarcodeLabel>(initialProductData, "barcode___") }
 ]
+// export const imgField: OptionGroup[] = [
+//   { groupName: 'Organization', options: modelToListFromObject<CompanyDetailsForPrint>(initialCompanyDetailsForPrint, "org___") },
+// ]
 export const imgField: OptionGroup[] = [
-  { groupName: 'Organization', options: modelToListFromObject<CompanyDetailsForPrint>(initialCompanyDetailsForPrint, "org___") },
-]
+  {
+    groupName: "Organization",
+    options: modelToListFromObject<CompanyDetailsForPrint>(initialCompanyDetailsForPrint, "org___")
+      .filter(opt => opt.id === "org___companyLogo"),
+  },
+];
+
 export const qrCodeField: OptionGroup[] = [
   { groupName: 'Master', options: modelToListFromObject<TransactionMaster>(TransactionMasterInitialData, "master___") },
 ]

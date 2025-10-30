@@ -1616,8 +1616,8 @@ export const getCommonValues = (field: string,
 };
 
 export function bindDataForPrint(field: string, printData: PrintResponse,
-  convertAmountToEnglish: (amount: number, currency?: Currencies | undefined) => string,
-  convertAmountToArabic: (amount: number, currency?: Currencies | undefined) => string,
+  convertAmountToEnglish?: (amount: number, currency?: Currencies | undefined) => string,
+  convertAmountToArabic?: (amount: number, currency?: Currencies | undefined) => string,
   rowIndex: number = 0): any {
   const splitData = field.split("___");
   const group = splitData[0] as any;

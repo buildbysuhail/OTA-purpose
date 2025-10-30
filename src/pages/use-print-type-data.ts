@@ -71,7 +71,7 @@ export const initialPartyDetailsForPrint: PartyDetailsForPrint = {
 };
 
 export const initialCompanyDetailsForPrint: CompanyDetailsForPrint = {
- registeredName: "",
+  registeredName: "",
   registeredNameArabic: "",
   taxRegNo: "",
   crNumber: "",

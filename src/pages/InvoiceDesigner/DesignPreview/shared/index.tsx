@@ -29,7 +29,6 @@ const SharedTemplatePreview = ({ data, template, qrCodeImages = {}}: AccountTran
           paddingLeft: `${propertiesState?.padding?.left ?? 0}pt`,
     }}
     >
-
         {/* Header */}
         {headerState?.showHeader &&(
          <ShardPrevHeader data={data} template={template} qrCodes={qrCodeImages}/>

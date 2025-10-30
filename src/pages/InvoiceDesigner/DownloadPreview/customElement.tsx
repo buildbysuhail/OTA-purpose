@@ -103,18 +103,39 @@ const getJustifyContent = () => {
           </Text>
         </View>
       );
-
+    
     case DesignerElementType.image:
+      const imgUrl = component?.imgFromDevice ?component.content : bindDataForPrint(component.content, data);
       return (
         <View style={baseStyle}>
-          <Image
-            src={component.content}
+          {/* <Image
+            src={imgUrl}
             style={{
               width: "100%",
               height: "100%",
               objectFit: component.imgFit || "contain",
             }}
-          />
+          /> */}
+             {imgUrl ? (
+      <Image
+        src={imgUrl}
+        style={{
+          width: "100%",
+          height: "100%",
+          objectFit: component.imgFit || "contain",
+        }}
+      />
+    ) : (
+        <Text style={{
+              width: "100%",
+              height: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+        }}>
+          |{"Image not available"}
+        </Text>
+      
+    )}
         </View>
       );
 

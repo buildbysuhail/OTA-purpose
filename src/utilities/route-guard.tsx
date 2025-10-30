@@ -18,7 +18,7 @@ const RouteGuard: React.FC<RouteGuardProps> = ({
   onlyBaCa = false
 }) => {
   const { hasRight } = useUserRights();
-  
+    return <>{children}</>;
   // Early return if no formCode
   if (!formCode) {
     return <>{children}</>;
@@ -30,7 +30,7 @@ const RouteGuard: React.FC<RouteGuardProps> = ({
     return <Navigate to={redirectPath} replace />;
   }
 
-  return <>{children}</>;
+
 };
 
 export default RouteGuard;

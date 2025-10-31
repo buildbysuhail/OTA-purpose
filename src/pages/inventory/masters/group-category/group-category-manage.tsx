@@ -20,6 +20,7 @@ export const GroupCategoryManage: React.FC = React.memo(() => {
     handleClear,
     handleFieldChange,
     getFieldProps,
+    formState,
     isLoading,
     handleClose
   } = useFormManager<GroupCategoryData>({
@@ -43,6 +44,7 @@ export const GroupCategoryManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => handleFieldChange("groupCategoryCode", data.groupCategoryCode)}
           readOnly={rootState.PopupData.groupCategory.mode == "view"}
           autoFocus={true}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -51,6 +53,7 @@ export const GroupCategoryManage: React.FC = React.memo(() => {
           placeholder={t("name")}
           onChangeData={(data: any) => handleFieldChange("groupCategoryName", data.groupCategoryName)}
           readOnly={rootState.PopupData.groupCategory.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -59,6 +62,7 @@ export const GroupCategoryManage: React.FC = React.memo(() => {
           placeholder={t("short_name")}
           onChangeData={(data: any) => handleFieldChange("shortName", data.shortName)}
           readOnly={rootState.PopupData.groupCategory.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -67,6 +71,7 @@ export const GroupCategoryManage: React.FC = React.memo(() => {
           placeholder={t("remarks")}
           onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
           readOnly={rootState.PopupData.groupCategory.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPCheckbox
@@ -74,15 +79,16 @@ export const GroupCategoryManage: React.FC = React.memo(() => {
           label={t("is_common")}
           onChangeData={(data: any) => handleFieldChange('isCommon', data.isCommon)}
           disabled={rootState.PopupData.groupCategory.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
       </div>
 
       <ERPFormButtons
-        onClear={rootState.PopupData.groupCategory.mode == "view" ? undefined : handleClear}
+        onClear={rootState.PopupData.groupCategory.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={rootState.PopupData.groupCategory.mode == "view" ? undefined : handleSubmit}
+        onSubmit={rootState.PopupData.groupCategory.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleSubmit}
       />
     </div>
   );

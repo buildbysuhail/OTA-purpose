@@ -25,6 +25,7 @@ export const UpiManage: React.FC = React.memo(() => {
     handleClear,
     isLoading,
     handleClose,
+    formState
   } = useFormManager<UpiData>({
     url: Urls.upi,
     onClose: useCallback(() => dispatch(toggleUpi({ isOpen: false, key: null,reload: false })), [dispatch]),
@@ -77,6 +78,7 @@ export const UpiManage: React.FC = React.memo(() => {
             { value: 'ZOMATO', label: 'ZOMATO' }
           ]}
           autoFocus={true}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -85,7 +87,7 @@ export const UpiManage: React.FC = React.memo(() => {
           placeholder={userSession.countryId == Countries.India ? t("upi_name") : t("qr_pay_name")}
           onChangeData={(data: any) => handleFieldChange('paymentName', data.paymentName)}
           readOnly={rootState.PopupData.upi.mode == "view"}
-          
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPDataCombobox
@@ -100,6 +102,7 @@ export const UpiManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => {  handleFieldChange("ledgerID", data.ledgerID)}}
           label={t("ledger")}
           disabled={rootState.PopupData.upi.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
         
         <ERPInput
@@ -109,14 +112,15 @@ export const UpiManage: React.FC = React.memo(() => {
           // required={true}
           onChangeData={(data: any) => handleFieldChange('remark', data.remark)}
           readOnly={rootState.PopupData.upi.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
       </div>
       <ERPFormButtons
-        onClear={rootState.PopupData.upi.mode == "view" ? undefined : handleClear}
+        onClear={rootState.PopupData.upi.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={rootState.PopupData.upi.mode == "view" ? undefined : handleSubmit}
+        onSubmit={rootState.PopupData.upi.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleSubmit}
       />
     </div>
   );

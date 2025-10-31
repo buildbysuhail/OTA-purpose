@@ -48,6 +48,7 @@ export const BranchLedgerManage = () => {
           label={t("reference_branch")}
           disabled={rootState.PopupData.branchLedger.mode == "view"}
           autoFocus={true}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPDataCombobox
@@ -65,6 +66,7 @@ export const BranchLedgerManage = () => {
           onChangeData={(data: any) => { handleFieldChange("purchaseLedgerID", data?.purchaseLedgerID) }}
           label={t("purchase_ledger")}
           disabled={rootState.PopupData.branchLedger.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPDataCombobox
@@ -79,6 +81,7 @@ export const BranchLedgerManage = () => {
           onChangeData={(data: any) => { handleFieldChange("receivableLedgerID", data?.receivableLedgerID) }}
           label={t("receivable_ledger")}
           disabled={rootState.PopupData.branchLedger.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPDataCombobox
@@ -96,16 +99,17 @@ export const BranchLedgerManage = () => {
           onChangeData={(data: any) => { handleFieldChange("branchPayableLedgerID", data?.branchPayableLedgerID) }}
           label={t("branch_payable_ledger")}
           disabled={rootState.PopupData.branchLedger.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
       </div>
 
       <div className="w-full  flex justify-center space-x-2 ">
         <ERPFormButtons
-          onClear={rootState.PopupData.branchLedger.mode == "view"?undefined:handleClear}
+          onClear={rootState.PopupData.branchLedger.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleClear}
           isEdit={isEdit}
           isLoading={isLoading}
           onCancel={handleClose}
-          onSubmit={rootState.PopupData.branchLedger.mode == "view"?undefined:handleSubmit}
+          onSubmit={rootState.PopupData.branchLedger.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleSubmit}
         />
       </div>
     </div>

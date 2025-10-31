@@ -289,6 +289,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               }
               readOnly={rootState.PopupData.parties.mode == "view"}
               autoFocus={true}
+              fetching={formState?.loading !== false ? true : false}
             />
 
             <ERPInput
@@ -304,6 +305,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   ledgerName: data.partyName,
                 });
               }}
+              fetching={formState?.loading !== false ? true : false}
             />
 
             <ERPInput
@@ -315,6 +317,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               onChangeData={(data: any) =>
                 handleFieldChange("displayName", data.displayName)
               }
+              fetching={formState?.loading !== false ? true : false}
             />
 
             <ERPInput
@@ -326,6 +329,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               onChangeData={(data: any) =>
                 handleFieldChange("arabicName", data.arabicName)
               }
+              fetching={formState?.loading !== false ? true : false}
             />
 
             <ERPInput
@@ -338,6 +342,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               onChangeData={(data: any) =>
                 handleFieldChange("ledger_name", data.ledgerName)
               }
+              fetching={formState?.loading !== false ? true : false}
             />
 
             <ERPDataCombobox
@@ -355,6 +360,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               label={t("party_category")}
               disabled={rootState.PopupData.parties.mode == "view"}
             // disabled={true}
+              fetching={formState?.loading !== false ? true : false}
             />
 
             <ERPDataCombobox
@@ -371,6 +377,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               }}
               label={t("acc_group")}
               disabled={rootState.PopupData.parties.mode == "view"}
+              fetching={formState?.loading !== false ? true : false}
               // readonly={true}
             />
 
@@ -383,6 +390,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               onChangeData={(data: any) =>
                 handleFieldChange("address1", data.address1)
               }
+              fetching={formState?.loading !== false ? true : false}
             />
 
             <ERPInput
@@ -394,6 +402,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               onChangeData={(data: any) =>
                 handleFieldChange("mobilePhone", data.mobilePhone)
               }
+              fetching={formState?.loading !== false ? true : false}
             />
 
             <ERPDataCombobox
@@ -410,6 +419,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               }}
               label={t("sales_route")}
               disabled={rootState.PopupData.parties.mode == "view"}
+              fetching={formState?.loading !== false ? true : false}
             />
 
             <ERPInput
@@ -421,6 +431,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 handleFieldChange("taxNumber", data.taxNumber)
               }
               readOnly={rootState.PopupData.parties.mode == "view"}
+              fetching={formState?.loading !== false ? true : false}
             />
 
             <ERPInput
@@ -432,6 +443,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 handleFieldChange("cstNumber", data.cstNumber)
               }
               readOnly={rootState.PopupData.parties.mode == "view"}
+              fetching={formState?.loading !== false ? true : false}
             />
 
             <ERPInput
@@ -445,6 +457,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 handleFieldChange("creditDays", parseInt(data.creditDays))
               }
               readOnly={rootState.PopupData.parties.mode == "view"}
+              fetching={formState?.loading !== false ? true : false}
             />
 
             <ERPInput
@@ -458,6 +471,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 handleFieldChange("creditAmount", (data.creditAmount))
               }
               readOnly={rootState.PopupData.parties.mode == "view"}
+              fetching={formState?.loading !== false ? true : false}
             />
 
             <div className="flex gap-4">
@@ -473,6 +487,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   handleFieldChange("opBalance", (data.opBalance))
                 }
                 readOnly={rootState.PopupData.parties.mode == "view"}
+                fetching={formState?.loading !== false ? true : false}
               />
 
               <div className="">
@@ -493,6 +508,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     { value: "Cr", label: t("Cr") },
                   ]}
                   disabled={rootState.PopupData.parties.mode == "view"}
+                  fetching={formState?.loading !== false ? true : false}
                 />
               </div>
             </div>
@@ -507,6 +523,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   data.billwiseBillApplicable
                 )
               }
+              fetching={formState?.loading !== false ? true : false}
             />
 
             <ERPCheckbox
@@ -516,6 +533,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               onChangeData={(data: any) =>
                 handleFieldChange("isActive", data.isActive)
               }
+              fetching={formState?.loading !== false ? true : false}
             />
 
             <ERPCheckbox
@@ -525,6 +543,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               onChangeData={(data: any) =>
                 handleFieldChange("isCommon", data.isCommon)
               }
+              fetching={formState?.loading !== false ? true : false}
             />
           </div>
 
@@ -545,6 +564,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   }}
                   label={t("referred_by")}
                   disabled={rootState.PopupData.parties.mode == "view"}
+                  fetching={formState?.loading !== false ? true : false}
                 />
 
                 <ERPInput
@@ -556,6 +576,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     handleFieldChange("address4", data.address4)
                   }
                   readOnly={rootState.PopupData.parties.mode == "view"}
+                  fetching={formState?.loading !== false ? true : false}
                 />
 
                 <ERPInput
@@ -567,6 +588,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     handleFieldChange("panNo", data.panNo)
                   }
                   readOnly={rootState.PopupData.parties.mode == "view"}
+                  fetching={formState?.loading !== false ? true : false}
                 />
 
                 <ERPInput
@@ -578,6 +600,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     handleFieldChange("aadharNo", data.aadharNo)
                   }
                   readOnly={rootState.PopupData.parties.mode == "view"}
+                  fetching={formState?.loading !== false ? true : false}
                 />
 
                 <ERPDataCombobox
@@ -614,6 +637,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   ]}
                   defaultValue={{ value: "Regular", label: "Regular" }}
                   disabled={rootState.PopupData.parties.mode == "view"}
+                  fetching={formState?.loading !== false ? true : false}
                 />
               </>
             )}
@@ -690,6 +714,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   handleFieldChange("address2", data.address2)
                 }
                 readOnly={rootState.PopupData.parties.mode == "view"}
+                fetching={formState?.loading !== false ? true : false}
               />
 
               {userSession.countryId != Countries.India && (
@@ -702,6 +727,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     handleFieldChange("address3", data.address3)
                   }
                   readOnly={rootState.PopupData.parties.mode == "view"}
+                  fetching={formState?.loading !== false ? true : false}
                 />
               )}
 
@@ -715,6 +741,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     handleFieldChange("address3", data.address3)
                   }
                   readOnly={rootState.PopupData.parties.mode == "view"}
+                  fetching={formState?.loading !== false ? true : false}
                 />
               )}
 
@@ -728,6 +755,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     handleFieldChange("address4", data.address4)
                   }
                   readOnly={rootState.PopupData.parties.mode == "view"}
+                  fetching={formState?.loading !== false ? true : false}
                 />
               )}
 
@@ -740,6 +768,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   handleFieldChange("officePhone", data.officePhone)
                 }
                 readOnly={rootState.PopupData.parties.mode == "view"}
+                fetching={formState?.loading !== false ? true : false}
               />
 
               <ERPInput
@@ -751,6 +780,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   handleFieldChange("workPhone", data.workPhone)
                 }
                 readOnly={rootState.PopupData.parties.mode == "view"}
+                fetching={formState?.loading !== false ? true : false}
               />
 
               <ERPInput
@@ -762,6 +792,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   handleFieldChange("contactPhone", data.contactPhone)
                 }
                 readOnly={rootState.PopupData.parties.mode == "view"}
+                fetching={formState?.loading !== false ? true : false}
               />
 
               <ERPInput
@@ -774,6 +805,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   handleFieldChange("email", data.email)
                 }
                 readOnly={rootState.PopupData.parties.mode == "view"}
+                fetching={formState?.loading !== false ? true : false}
               />
 
               <ERPInput
@@ -785,6 +817,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   handleFieldChange("webURL", data.webURL)
                 }
                 readOnly={rootState.PopupData.parties.mode == "view"}
+                fetching={formState?.loading !== false ? true : false}
               />
 
               <ERPInput
@@ -796,6 +829,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   handleFieldChange("postalCode", data.postalCode)
                 }
                 readOnly={rootState.PopupData.parties.mode == "view"}
+                fetching={formState?.loading !== false ? true : false}
               />
             </div>
           )}
@@ -817,6 +851,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                         handleFieldChange("bankAcNumber1", data.bankAcNumber1)
                       }
                       readOnly={rootState.PopupData.parties.mode == "view"}
+                      fetching={formState?.loading !== false ? true : false}
                     />
 
                     <ERPInput
@@ -828,6 +863,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                         handleFieldChange("bankAcName1", data.bankAcName1)
                       }
                       readOnly={rootState.PopupData.parties.mode == "view"}
+                      fetching={formState?.loading !== false ? true : false}
                     />
 
                     <ERPInput
@@ -839,6 +875,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                         handleFieldChange("bankDetails1", data.bankDetails1)
                       }
                       readOnly={rootState.PopupData.parties.mode == "view"}
+                      fetching={formState?.loading !== false ? true : false}
                     />
                   </div>
                 </div>
@@ -857,6 +894,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                         handleFieldChange("bankAcNumber2", data.bankAcNumber2)
                       }
                       readOnly={rootState.PopupData.parties.mode == "view"}
+                      fetching={formState?.loading !== false ? true : false}
                     />
 
                     <ERPInput
@@ -868,6 +906,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                         handleFieldChange("bankAcName2", data.bankAcName2)
                       }
                       readOnly={rootState.PopupData.parties.mode == "view"}
+                      fetching={formState?.loading !== false ? true : false}
                     />
 
                     <ERPInput
@@ -879,6 +918,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                         handleFieldChange("bankDetails2", data.bankDetails2)
                       }
                       readOnly={rootState.PopupData.parties.mode == "view"}
+                      fetching={formState?.loading !== false ? true : false}
                     />
                   </div>
                 </div>
@@ -898,6 +938,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                         required={true}
                         onChangeData={(data) => handleFieldChange("startDate", data.startDate)}
                         readOnly={rootState.PopupData.parties.mode == "view"}
+                        fetching={formState?.loading !== false ? true : false}
                       />
                     </div>
 
@@ -908,6 +949,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                         required={true}
                         onChangeData={(data) => handleFieldChange("expiryDate", data.expiryDate)}
                         readOnly={rootState.PopupData.parties.mode == "view"}
+                        fetching={formState?.loading !== false ? true : false}
                       />
                     </div>
 
@@ -972,6 +1014,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                         }}
                         disabled={rootState.PopupData.parties.mode == "view"}
                         
+                        
                         className="w-full border rounded-lg p-2 text-sm"
                       />
 
@@ -1001,6 +1044,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                             setIsTCSApplicable(data.isTCSApplicable);
                           }}
                           disabled={rootState.PopupData.parties.mode == "view"}
+                          fetching={formState?.loading !== false ? true : false}
                         />
                       </div>
 
@@ -1017,6 +1061,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                           onChangeData={(data) => handleFieldChange("tcsCategoryID", data.tcsCategoryID)}
                           label={t("tcs_category")}
                           disabled={!isTCSApplicable || rootState.PopupData.parties.mode === "view"}
+                          fetching={formState?.loading !== false ? true : false}
                         />
                       </div>
 
@@ -1038,6 +1083,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                           }}
                           label={t("state_name")}
                           disabled={rootState.PopupData.parties.mode == "view"}
+                          fetching={formState?.loading !== false ? true : false}
                         />
                       </div>
 
@@ -1051,6 +1097,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                           required={false}
                           onChangeData={(data) => handleFieldChange("stateCode", data.stateCode)}
                           readOnly={rootState.PopupData.parties.mode == "view"}
+                          fetching={formState?.loading !== false ? true : false}
                         />
                       </div>
 
@@ -1060,6 +1107,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                           label={t("stop_credit")}
                           onChangeData={(data) => handleFieldChange("stopCredit", data.stopCredit)}
                           disabled={rootState.PopupData.parties.mode == "view"}
+                          fetching={formState?.loading !== false ? true : false}
                         />
                       </div>
                     </div>
@@ -1127,6 +1175,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     }
                     label={t("price_category")}
                     disabled={rootState.PopupData.parties.mode == "view"}
+                    fetching={formState?.loading !== false ? true : false}
                   />
 
                   <ERPDataCombobox
@@ -1143,6 +1192,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     }
                     label={t("form_type")}
                     disabled={rootState.PopupData.parties.mode == "view"}
+                    fetching={formState?.loading !== false ? true : false}
                   />
 
                   <ERPInput
@@ -1156,6 +1206,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                       handleFieldChange("visitSequenceNo", data.visitSequenceNo)
                     }
                     readOnly={rootState.PopupData.parties.mode == "view"}
+                    fetching={formState?.loading !== false ? true : false}
                   />
 
                   {isIndianCompany && (
@@ -1169,6 +1220,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                           handleFieldChange("legalName", data.legalName)
                         }
                         readOnly={rootState.PopupData.parties.mode == "view"}
+                        fetching={formState?.loading !== false ? true : false}
                       />
 
                       <ERPInput
@@ -1180,6 +1232,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                           handleFieldChange("tradeName", data.tradeName)
                         }
                         readOnly={rootState.PopupData.parties.mode == "view"}
+                        fetching={formState?.loading !== false ? true : false}
                       />
                     </>
                   )}
@@ -1219,6 +1272,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                         })
                       }
                       readOnly={rootState.PopupData.parties.mode == "view"}
+                      fetching={formState?.loading !== false ? true : false}
                     />
 
                     <ERPInput
@@ -1234,6 +1288,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                         })
                       }
                       readOnly={rootState.PopupData.parties.mode == "view"}
+                      fetching={formState?.loading !== false ? true : false}
                     />
 
                     <ERPInput
@@ -1249,10 +1304,11 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                         })
                       }
                       readOnly={rootState.PopupData.parties.mode == "view"}
+                      fetching={formState?.loading !== false ? true : false}
                     />
 
                     <div className="flex items-end mt-2 gap-2">
-                      {rootState.PopupData.parties.mode == "view"?"":
+                      {rootState.PopupData.parties.mode == "view"?"": formState?.loading !== false ? "" :
                         <ERPButton
                         type="button"
                         disabled={projectOnAction}
@@ -1265,7 +1321,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                             : t("Save")
                         }
                       />}
-                      {rootState.PopupData.parties.mode == "view"?"":
+                      {rootState.PopupData.parties.mode == "view"?"": formState?.loading !== false ? "" :
                       <ERPButton
                         type="button"
                         title={t("clear")}
@@ -1332,6 +1388,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   { value: "OTH", label: "OTH" },
                 ]}
                 disabled={rootState.PopupData.parties.mode == "view"}
+                fetching={formState?.loading !== false ? true : false}
               />
 
               <ERPInput
@@ -1343,6 +1400,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   handleFieldChange("buildingNumber", data.buildingNumber)
                 }
                 readOnly={rootState.PopupData.parties.mode == "view"}
+                fetching={formState?.loading !== false ? true : false}
               />
 
               <ERPInput
@@ -1357,6 +1415,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   )
                 }
                 readOnly={rootState.PopupData.parties.mode == "view"}
+                fetching={formState?.loading !== false ? true : false}
               />
 
               <ERPInput
@@ -1368,6 +1427,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   handleFieldChange("citySubDivision", data.citySubDivision)
                 }
                 readOnly={rootState.PopupData.parties.mode == "view"}
+                fetching={formState?.loading !== false ? true : false}
               />
 
               <ERPInput
@@ -1379,6 +1439,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   handleFieldChange("postalCode", data.postalCode)
                 }
                 readOnly={rootState.PopupData.parties.mode == "view"}
+                fetching={formState?.loading !== false ? true : false}
               />
 
               <ERPDataCombobox
@@ -1394,6 +1455,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   labelKey: "name",
                 }}
                 disabled={rootState.PopupData.parties.mode == "view"}
+                fetching={formState?.loading !== false ? true : false}
               />
 
               <ERPInput
@@ -1405,6 +1467,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   handleFieldChange("countrySubEntity", data.countrySubEntity)
                 }
                 readOnly={rootState.PopupData.parties.mode == "view"}
+                fetching={formState?.loading !== false ? true : false}
               />
             </div>
           )}
@@ -1413,11 +1476,11 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
         <div className="fixed bottom-0 left-0 right-0 bg-white px-4 py-1 z-50 rounded-b-lg">
           <div className="max-w-screen-2xl mx-auto">
             <ERPFormButtons
-              onClear={rootState.PopupData.parties.mode == "view" ? undefined : handleClear}
+              onClear={rootState.PopupData.parties.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleClear}
               isEdit={isEdit}
               isLoading={isLoading}
               onCancel={handleClose}
-              onSubmit={rootState.PopupData.parties.mode == "view"? undefined : handleSubmit}
+              onSubmit={rootState.PopupData.parties.mode == "view"? undefined : formState?.loading !== false ? undefined : handleSubmit}
             />
           </div>
         </div>

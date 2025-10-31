@@ -195,6 +195,7 @@ const Users = () => {
                 reload={rootState?.PopupData?.user?.reload}
                 gridAddButtonIcon="ri-add-line"
                 pageSize={40}
+                showFilterRow={false}
             //            initialFilters={
             //   [
             //     {

@@ -20,6 +20,7 @@ export const WarehouseManage: React.FC = React.memo(() => {
     handleClear,
     handleFieldChange,
     getFieldProps,
+    formState,
     isLoading,
     handleClose
   } = useFormManager<WarehouseData>({
@@ -45,6 +46,7 @@ export const WarehouseManage: React.FC = React.memo(() => {
           }}
           readOnly={rootState.PopupData.warehouse.mode == "view"}
           autoFocus={true}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -54,6 +56,7 @@ export const WarehouseManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("shortName", data.shortName)}
           readOnly={rootState.PopupData.warehouse.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPCheckbox
@@ -61,6 +64,7 @@ export const WarehouseManage: React.FC = React.memo(() => {
           label={t("is_stock_warehouse")}
           onChangeData={(data: any) => handleFieldChange('isStockWarehouse', data.isStockWarehouse)}
           disabled={rootState.PopupData.warehouse.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPDataCombobox
@@ -77,6 +81,7 @@ export const WarehouseManage: React.FC = React.memo(() => {
             { value: 'Van', label: t('van') },
           ]}
           disabled={rootState.PopupData.warehouse.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -85,6 +90,7 @@ export const WarehouseManage: React.FC = React.memo(() => {
           placeholder={t("remarks")}
           onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
           readOnly={rootState.PopupData.warehouse.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPDataCombobox
@@ -100,14 +106,15 @@ export const WarehouseManage: React.FC = React.memo(() => {
           label={t("cash_ledger")}
           onChangeData={(data: any) => handleFieldChange("cashLedgerID", data.cashLedgerID)}
           disabled={rootState.PopupData.warehouse.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
       </div>
       <ERPFormButtons
-        onClear={rootState.PopupData.warehouse.mode == "view" ? undefined : handleClear}
+        onClear={rootState.PopupData.warehouse.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={rootState.PopupData.warehouse.mode == "view" ? undefined : handleSubmit}
+        onSubmit={rootState.PopupData.warehouse.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleSubmit}
       />
     </div>
   );

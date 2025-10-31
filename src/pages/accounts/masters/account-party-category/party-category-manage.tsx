@@ -19,6 +19,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
     handleSubmit,
     handleFieldChange,
     getFieldProps,
+    formState,
     isLoading,
     handleClose
   } = useFormManager<PartyCategoryData>({
@@ -41,6 +42,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => { handleFieldChange("partyCategoryName", data.partyCategoryName); }}
           readOnly={rootState.PopupData.partyCategory.mode == "view"}
           autoFocus={true}
+          fetching={formState?.loading !== false ? true : false}
           
         />
 
@@ -50,6 +52,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
           placeholder={t("remarks")}
           onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
           readOnly={rootState.PopupData.partyCategory.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
         {/* <ERPDataCombobox
           {...getFieldProps("partyColor")}
@@ -72,20 +75,22 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
           label={t("is_editable")}
           onChangeData={(data: any) => handleFieldChange("isEdit", data.isEdit)}
           disabled={rootState.PopupData.partyCategory.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
         <ERPCheckbox
           {...getFieldProps("isDelete")}
           label={t("is_deletable")}
           onChangeData={(data: any) => handleFieldChange("isDelete", data.isDelete)}
           disabled={rootState.PopupData.partyCategory.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
       </div>
       <ERPFormButtons
-        onClear={rootState.PopupData.partyCategory.mode == "view"? undefined : handleClear}
+        onClear={rootState.PopupData.partyCategory.mode == "view"? undefined : formState?.loading !== false ? undefined : handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={rootState.PopupData.partyCategory.mode == "view" ? undefined : handleSubmit}
+        onSubmit={rootState.PopupData.partyCategory.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleSubmit}
       />
     </div>
   );

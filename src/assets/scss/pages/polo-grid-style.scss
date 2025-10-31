@@ -1349,3 +1349,12 @@ $dark-grid-selection: #000000;
 .custom-data-grid.hide-toolbar .dx-datagrid-toolbar {
   display: none;
 }
+
+// .mainGridStyle .dx-scrollbar-hoverable{
+//     background-color: #c40101 !important;
+//     // display: none !important;
+//     scrollbar-color: unset;
+// }
+*{
+  scrollbar-color: unset;
+}

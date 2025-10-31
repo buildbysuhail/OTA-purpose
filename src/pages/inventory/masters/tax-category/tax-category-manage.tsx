@@ -18,6 +18,7 @@ export const TaxCategoryManage: React.FC = React.memo(() => {
     handleClear,
     handleFieldChange,
     getFieldProps,
+    formState,
     isLoading,
     handleClose
   } = useFormManager<TaxCategoryData>({
@@ -44,6 +45,7 @@ export const TaxCategoryManage: React.FC = React.memo(() => {
           }}
           readOnly={rootState.PopupData.taxCategory.mode == "view"}
           autoFocus={true}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -54,6 +56,7 @@ export const TaxCategoryManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("sVatPerc", data.sVatPerc)}
           readOnly={rootState.PopupData.taxCategory.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -63,6 +66,7 @@ export const TaxCategoryManage: React.FC = React.memo(() => {
           placeholder={t("purchase_VAT_%")}
           onChangeData={(data: any) => handleFieldChange("pVatPerc", data.pVatPerc)}
           readOnly={rootState.PopupData.taxCategory.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -72,6 +76,7 @@ export const TaxCategoryManage: React.FC = React.memo(() => {
           placeholder={t("purchase_excise_tax_%")}
           onChangeData={(data: any) => handleFieldChange("pCstPerc", data.pCstPerc)}
           readOnly={rootState.PopupData.taxCategory.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -81,14 +86,15 @@ export const TaxCategoryManage: React.FC = React.memo(() => {
           placeholder={t("sales_excise_tax_%")}
           onChangeData={(data: any) => handleFieldChange("sCstPerc", data.sCstPerc)}
           readOnly={rootState.PopupData.taxCategory.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
       </div>
       <ERPFormButtons
-        onClear={rootState.PopupData.taxCategory.mode == "view" ? undefined : handleClear}
+        onClear={rootState.PopupData.taxCategory.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={rootState.PopupData.taxCategory.mode == "view" ? undefined : handleSubmit}
+        onSubmit={rootState.PopupData.taxCategory.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleSubmit}
       />
     </div>
   );

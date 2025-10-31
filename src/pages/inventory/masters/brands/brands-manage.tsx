@@ -20,6 +20,7 @@ export const BrandsManage: React.FC = React.memo(() => {
     handleFieldChange,
     getFieldProps,
     isLoading,
+    formState,
     handleClose
   } = useFormManager<BrandsData>({
     url: Urls.brands,
@@ -46,6 +47,7 @@ export const BrandsManage: React.FC = React.memo(() => {
           }}
           readOnly={rootState.PopupData.brands.mode == "view"}
           autoFocus={true}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -54,6 +56,7 @@ export const BrandsManage: React.FC = React.memo(() => {
           placeholder={t("short_name")}
           onChangeData={(data: any) => handleFieldChange("brandShortName", data.brandShortName)}
           readOnly={rootState.PopupData.brands.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -62,6 +65,7 @@ export const BrandsManage: React.FC = React.memo(() => {
           placeholder={t("remarks")}
           onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
           readOnly={rootState.PopupData.brands.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPCheckbox
@@ -69,14 +73,15 @@ export const BrandsManage: React.FC = React.memo(() => {
           label={t("is_common")}
           onChangeData={(data: any) => handleFieldChange('isCommon', data.isCommon)}
           disabled={rootState.PopupData.brands.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
       </div>
       <ERPFormButtons
-        onClear={rootState.PopupData.brands.mode == "view" ? undefined : handleClear}
+        onClear={rootState.PopupData.brands.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={rootState.PopupData.brands.mode == "view" ? undefined : handleSubmit}
+        onSubmit={rootState.PopupData.brands.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleSubmit}
       />
     </div>
   );

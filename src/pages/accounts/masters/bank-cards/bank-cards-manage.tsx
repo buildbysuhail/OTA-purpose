@@ -20,7 +20,8 @@ export const BankCardsManage: React.FC = React.memo(() => {
     getFieldProps,
     handleClear,
     isLoading,
-    handleClose
+    handleClose,
+    formState
   } = useFormManager<BankCardsData>({
     url: Urls.bankCards,
     onSuccess: useCallback(() => dispatch(toggleBankCardsPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
@@ -75,6 +76,7 @@ export const BankCardsManage: React.FC = React.memo(() => {
             { value: 'PRESTIGE_CARD', label: 'PRESTIGE CARD' }
           ]}
           autoFocus={true}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -84,6 +86,7 @@ export const BankCardsManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => { handleFieldChange('paymentName', data.paymentName) }}
           readOnly={rootState.PopupData.bankCard.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPDataCombobox
@@ -98,6 +101,7 @@ export const BankCardsManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => { handleFieldChange("ledgerID", data.ledgerID) }}
           label={t("ledger")}
           disabled={rootState.PopupData.bankCard.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -106,14 +110,15 @@ export const BankCardsManage: React.FC = React.memo(() => {
           placeholder={t("remarks")}
           onChangeData={(data: any) => handleFieldChange('remark', data.remark)}
           readOnly={rootState.PopupData.bankCard.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
       </div>
       <ERPFormButtons
-        onClear={rootState.PopupData.bankCard.mode == "view" ? undefined : handleClear}
+        onClear={rootState.PopupData.bankCard.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={rootState.PopupData.bankCard.mode == "view" ? undefined : handleSubmit}
+        onSubmit={rootState.PopupData.bankCard.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleSubmit}
       />
     </div>
   );

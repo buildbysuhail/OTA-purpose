@@ -26,6 +26,7 @@ export const UserTypeManage: React.FC = React.memo(() => {
     handleClear,
     handleFieldChange,
     getFieldProps,
+    formState,
     handleClose,
     isLoading,
   } = useFormManager<UserTypeData>({
@@ -50,6 +51,7 @@ export const UserTypeManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => { handleFieldChange('userTypeName', data.userTypeName) }}
           readOnly={rootState.PopupData.userType.mode == "view"}
           autoFocus={true}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -60,6 +62,7 @@ export const UserTypeManage: React.FC = React.memo(() => {
           disabled={isEdit}
           onChangeData={(data: any) => handleFieldChange('userTypeCode', data.userTypeCode)}
           readOnly={rootState.PopupData.userType.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -69,6 +72,7 @@ export const UserTypeManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange('remarks', data.remarks)}
           readOnly={rootState.PopupData.userType.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <div className="flex space-x-4">
@@ -77,6 +81,7 @@ export const UserTypeManage: React.FC = React.memo(() => {
             label={t("is_editable")}
             onChangeData={(data: any) => handleFieldChange('isEditable', data.isEditable)}
             disabled={rootState.PopupData.userType.mode == "view"}
+            fetching={formState?.loading !== false ? true : false}
           />
 
           <ERPCheckbox
@@ -84,15 +89,16 @@ export const UserTypeManage: React.FC = React.memo(() => {
             label={t("is_deletable")}
             onChangeData={(data: any) => handleFieldChange('isDeletable', data.isDeletable)}
             disabled={rootState.PopupData.userType.mode == "view"}
+            fetching={formState?.loading !== false ? true : false}
           />
         </div>
       </div>
       <ERPFormButtons
-        onClear={rootState.PopupData.userType.mode == "view"? undefined:handleClear}
+        onClear={rootState.PopupData.userType.mode == "view"? undefined : formState?.loading !== false ? undefined : handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={rootState.PopupData.userType.mode == "view"? undefined: handleSubmit}
+        onSubmit={rootState.PopupData.userType.mode == "view"? undefined: formState?.loading !== false ? undefined : handleSubmit}
       />
     </div>
   );

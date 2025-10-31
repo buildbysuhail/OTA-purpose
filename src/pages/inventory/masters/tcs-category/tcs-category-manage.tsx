@@ -18,6 +18,7 @@ export const TcsCategoryManage: React.FC = React.memo(() => {
     handleClear,
     handleFieldChange,
     getFieldProps,
+    formState,
     isLoading,
     handleClose
   } = useFormManager<TcsCategoryData>({
@@ -43,6 +44,7 @@ export const TcsCategoryManage: React.FC = React.memo(() => {
           }}
           readOnly={rootState.PopupData.tcsCategory.mode == "view"}
           autoFocus={true}
+          fetching={formState?.loading !== false ? true : false}
         />
         <ERPInput
           {...getFieldProps("tcsCategoryPerc")}
@@ -52,15 +54,16 @@ export const TcsCategoryManage: React.FC = React.memo(() => {
             handleFieldChange("tcsCategoryPerc", data.tcsCategoryPerc);
           }}
           readOnly={rootState.PopupData.tcsCategory.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
       </div>
 
       <ERPFormButtons
-        onClear={rootState.PopupData.tcsCategory.mode == "view" ? undefined : handleClear}
+        onClear={rootState.PopupData.tcsCategory.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={rootState.PopupData.tcsCategory.mode == "view" ? undefined : handleSubmit}
+        onSubmit={rootState.PopupData.tcsCategory.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleSubmit}
       />
     </div>
   );

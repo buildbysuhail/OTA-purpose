@@ -52,7 +52,7 @@ const UserTypes = () => {
       allowFiltering: false,
       fixed: true,
       fixedPosition: document?.dir === "rtl" ? "left" : "right",
-      width: 100,
+      minWidth: 200,
       
       cellRender: (cellElement: any, cellInfo: any) => {
         return (

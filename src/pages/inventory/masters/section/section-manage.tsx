@@ -20,6 +20,7 @@ export const SectionManage: React.FC = React.memo(() => {
     handleFieldChange,
     getFieldProps,
     isLoading,
+    formState,
     handleClose
   } = useFormManager<SectionData>({
     url: Urls.section,
@@ -42,6 +43,7 @@ export const SectionManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => handleFieldChange("sectionCode", data.sectionCode)}
           readOnly={rootState.PopupData.section.mode == "view"}
           autoFocus={true}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -50,6 +52,7 @@ export const SectionManage: React.FC = React.memo(() => {
           placeholder={t("name")}
           onChangeData={(data: any) => handleFieldChange("sectionName", data.sectionName)}
           readOnly={rootState.PopupData.section.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -58,6 +61,7 @@ export const SectionManage: React.FC = React.memo(() => {
           placeholder={t("short_name")}
           onChangeData={(data: any) => handleFieldChange("shortName", data.shortName)}
           readOnly={rootState.PopupData.section.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -66,6 +70,7 @@ export const SectionManage: React.FC = React.memo(() => {
           placeholder={t("remarks")}
           onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
           readOnly={rootState.PopupData.section.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPCheckbox
@@ -73,15 +78,16 @@ export const SectionManage: React.FC = React.memo(() => {
           label={t("common")}
           onChangeData={(data: any) => handleFieldChange('isCommon', data.isCommon)}
           disabled={rootState.PopupData.section.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
       </div>
       
       <ERPFormButtons
-        onClear={rootState.PopupData.section.mode == "view" ? undefined : handleClear}
+        onClear={rootState.PopupData.section.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={rootState.PopupData.section.mode == "view" ? undefined : handleSubmit}
+        onSubmit={rootState.PopupData.section.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleSubmit}
       />
     </div>
   );

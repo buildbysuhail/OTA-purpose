@@ -25,6 +25,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
     handleClear,
     handleFieldChange,
     getFieldProps,
+    formState,
     isLoading,
     handleClose,
   } = useFormManager<ProductGroupData>({
@@ -64,6 +65,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
           }}
           readOnly={rootState.PopupData.productGroup.mode == "view"}
           autoFocus={true}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -74,6 +76,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
             handleFieldChange("arabicName", data.arabicName)
           }
           readOnly={rootState.PopupData.productGroup.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -84,6 +87,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
             handleFieldChange("shortName", data.shortName)
           }
           readOnly={rootState.PopupData.productGroup.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPDataCombobox
@@ -101,6 +105,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
             handleFieldChange("parentGroupID", data.parentGroupID)
           }
           disabled={rootState.PopupData.productGroup.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPDataCombobox
@@ -117,6 +122,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
             handleFieldChange("groupCategoryID", data.groupCategoryID)
           }
           disabled={rootState.PopupData.productGroup.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPDataCombobox
@@ -133,6 +139,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
             handleFieldChange("sectionID", data.sectionID)
           }
           disabled={rootState.PopupData.productGroup.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         {appSettings.mainSettings.maintainBusinessType ==
@@ -151,6 +158,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
               handleFieldChange("kitchenID", data.kitchenID)
             }
             disabled={rootState.PopupData.productGroup.mode == "view"}
+            fetching={formState?.loading !== false ? true : false}
           />
         )}
 
@@ -170,6 +178,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
             { value: "Inactive", label: t("inactive") },
           ]}
           disabled={rootState.PopupData.productGroup.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -180,6 +189,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
             handleFieldChange("remarks", data.remarks)
           }
           readOnly={rootState.PopupData.productGroup.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -190,6 +200,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
             handleFieldChange("marginPerc", data.marginPerc)
           }
           readOnly={rootState.PopupData.productGroup.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPCheckbox
@@ -199,6 +210,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
             handleFieldChange("isEditable", data.isEditable)
           }
           disabled={rootState.PopupData.productGroup.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPCheckbox
@@ -208,14 +220,15 @@ export const ProductGroupManage: React.FC = React.memo(() => {
             handleFieldChange("isDeletable", data.isDeletable)
           }
           disabled={rootState.PopupData.productGroup.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
       </div>
       <ERPFormButtons
-        onClear={rootState.PopupData.productGroup.mode == "view" ? undefined : handleClear}
+        onClear={rootState.PopupData.productGroup.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={rootState.PopupData.productGroup.mode == "view" ? undefined : handleSubmit}
+        onSubmit={rootState.PopupData.productGroup.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleSubmit}
       />
     </div>
   );

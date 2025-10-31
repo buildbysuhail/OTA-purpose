@@ -19,6 +19,7 @@ export const UnitOfMeasureManage: React.FC = React.memo(() => {
     handleClear,
     handleFieldChange,
     getFieldProps,
+    formState,
     isLoading,
     handleClose
   } = useFormManager<MeasureData>({
@@ -51,6 +52,7 @@ export const UnitOfMeasureManage: React.FC = React.memo(() => {
           }}
           readOnly={rootState.PopupData.unitOfMeasure.mode == "view"}
           autoFocus={true}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -60,6 +62,7 @@ export const UnitOfMeasureManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("unitName", data.unitName)}
           readOnly={rootState.PopupData.unitOfMeasure.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPDataCombobox
@@ -76,6 +79,7 @@ export const UnitOfMeasureManage: React.FC = React.memo(() => {
             { value: 'Compound', label: t('compound') },
           ]}
           disabled={rootState.PopupData.unitOfMeasure.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -85,6 +89,7 @@ export const UnitOfMeasureManage: React.FC = React.memo(() => {
           placeholder={t("decimal_points")}
           onChangeData={(data: any) => handleFieldChange("decimalPoints", data.decimalPoints)}
           readOnly={rootState.PopupData.unitOfMeasure.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -93,14 +98,15 @@ export const UnitOfMeasureManage: React.FC = React.memo(() => {
           placeholder={t("remarks")}
           onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
           readOnly={rootState.PopupData.unitOfMeasure.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
       </div>
       <ERPFormButtons
-        onClear={rootState.PopupData.unitOfMeasure.mode == "view" ? undefined : handleClear}
+        onClear={rootState.PopupData.unitOfMeasure.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={rootState.PopupData.unitOfMeasure.mode == "view" ? undefined : handleSubmit}
+        onSubmit={rootState.PopupData.unitOfMeasure.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleSubmit}
       />
     </div>
   );

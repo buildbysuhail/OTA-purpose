@@ -32,6 +32,7 @@ export const SalesRouteManage: React.FC = React.memo(() => {
     handleFieldChange,
     getFieldProps,
     isLoading,
+    formState,
     handleClose
   } = useFormManager<SalesRouteData>({
     url: Urls.salesRoute,
@@ -56,6 +57,7 @@ export const SalesRouteManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => handleFieldChange("routeName", data.routeName)}
           readOnly={rootState.PopupData.salesRoute.mode == "view"}
           autoFocus={true}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -64,6 +66,7 @@ export const SalesRouteManage: React.FC = React.memo(() => {
           placeholder={t("short_name")}
           onChangeData={(data: any) => handleFieldChange("shortName", data.shortName)}
           readOnly={rootState.PopupData.salesRoute.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPDataCombobox
@@ -79,6 +82,7 @@ export const SalesRouteManage: React.FC = React.memo(() => {
           label={t("parent_route")}
           onChangeData={(data: any) => handleFieldChange("parentRouteID", data.parentRouteID)}
           disabled={rootState.PopupData.salesRoute.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -87,6 +91,7 @@ export const SalesRouteManage: React.FC = React.memo(() => {
           placeholder={t("remarks")}
           onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
           readOnly={rootState.PopupData.salesRoute.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPInput
@@ -95,6 +100,7 @@ export const SalesRouteManage: React.FC = React.memo(() => {
           placeholder={t("credit_limit")}
           onChangeData={(data: any) => handleFieldChange("creditLimit", data.creditLimit)}
           readOnly={rootState.PopupData.salesRoute.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPDataCombobox
@@ -110,6 +116,7 @@ export const SalesRouteManage: React.FC = React.memo(() => {
           label={t("salesman")}
           onChangeData={(data: any) => handleFieldChange("salesManID", data.salesManID)}
           disabled={rootState.PopupData.salesRoute.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
 
         <ERPDataCombobox
@@ -125,6 +132,7 @@ export const SalesRouteManage: React.FC = React.memo(() => {
           label={t("warehouse")}
           onChangeData={(data: any) => handleFieldChange("warehouseID", data.warehouseID)}
           disabled={rootState.PopupData.salesRoute.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
       </div>
 
@@ -137,6 +145,7 @@ export const SalesRouteManage: React.FC = React.memo(() => {
           onChange={() => setGridType({ mainRoute: true, subRoute: false })}
           label={t("main_route")}
           disabled={rootState.PopupData.salesRoute.mode == "view"}
+          
         />
 
         <ERPRadio
@@ -154,15 +163,16 @@ export const SalesRouteManage: React.FC = React.memo(() => {
           label={t("is_active")}
           onChangeData={(data: any) => handleFieldChange("isActive", data.isActive)}
           disabled={rootState.PopupData.salesRoute.mode == "view"}
+          fetching={formState?.loading !== false ? true : false}
         />
       </div>
 
       <ERPFormButtons
-        onClear={rootState.PopupData.salesRoute.mode == "view"? undefined : handleClear}
+        onClear={rootState.PopupData.salesRoute.mode == "view"? undefined : formState?.loading !== false ? undefined : handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={rootState.PopupData.salesRoute.mode == "view"? undefined : handleSubmit}
+        onSubmit={rootState.PopupData.salesRoute.mode == "view"? undefined : formState?.loading !== false ? undefined : handleSubmit}
       />
     </div>
   );

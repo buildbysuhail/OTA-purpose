@@ -391,6 +391,122 @@ const ProductModalGrid = ({
         setUnitPriceData(unitPriceDetails)
     }
 
+  const [dataUrl, setDataUrl] = useState("");
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDataUrl(`${popupSearchUrl}/${warehouseId}/true/true`);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [popupSearchUrl, warehouseId]);
+
+//   useEffect(() => {
+//   const handleKeyDown = (e: KeyboardEvent) => {
+//     if (e.key === "ArrowDown") {
+//       e.preventDefault();
+
+//       // ✅ Find the first visible checkbox in the DataGrid
+//       const checkboxDiv = document.querySelector(
+//         ".dx-select-checkbox[tabindex='0']"
+//       ) as HTMLElement;
+
+//       if (checkboxDiv) {
+//         checkboxDiv.focus();
+//         console.log("✅ Focused the checkbox cell");
+//       } else {
+//         console.log("⚠️ No focusable checkbox found");
+//       }
+//     }
+//   };
+
+//   document.addEventListener("keydown", handleKeyDown);
+//   return () => document.removeEventListener("keydown", handleKeyDown);
+// }, []);
+
+
+// The below useEffect is used for managing the focus to the first column when click down arrow key grid filter column
+const [firstCol, setFirstCol] = useState(0);
+const focusIndexRef = useRef<number>(-1);
+useEffect(() => {
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+
+      // Collect all focusable elements
+      const focusable = Array.from(
+        document.querySelectorAll<HTMLElement>(
+          'input, button, select, textarea, [tabindex]:not([tabindex="-1"])'
+        )
+      ).filter(el => !el.hasAttribute("disabled") && el.offsetParent !== null);
+
+      if (focusable.length === 0) return;
+
+      // If first time (firstCol == 0), find the current index
+      if (firstCol === 0) {
+        const activeIndex = focusable.indexOf(document.activeElement as HTMLElement);
+        focusIndexRef.current = activeIndex >= 0 ? activeIndex : -1;
+        setFirstCol(1);
+      }
+
+      // Move to next focusable element
+      focusIndexRef.current += 0; // Not need in this case
+      if (focusIndexRef.current >= focusable.length) {
+        focusIndexRef.current = 0; // loop to top if needed
+      }
+      focusable[focusIndexRef.current]?.focus();
+    }
+  };
+
+  document.addEventListener("keydown", handleKeyDown);
+  return () => document.removeEventListener("keydown", handleKeyDown);
+}, [firstCol]);
+
+  const memoizedGrid = useMemo(() => (
+    <ErpDevGrid
+                ref={gridRef}
+                hideGridAddButton
+                enableScrollButton={false}
+                pageSize={30}
+                className="mainGridStyle"
+                columns={columns}
+                heightToAdjustOnWindowsInModal={gridHeight.windows-50}
+                dataUrl={dataUrl}
+                gridId="grd_acc_group"
+                gridAddButtonType="popup"
+                reload
+                scrolling={{
+                  mode: "virtual",
+                  showScrollbar: "always",
+                  useNative: true
+                }}
+                gridAddButtonIcon="ri-add-line"
+                selectionMode="multiple"
+                onKeyDown={handleEnterKeyDown}
+                onRowClick={handleRowClick}
+                tabIndex="0"
+                initialFilters={
+                  searchCriteria == "pCode"
+                    ? [
+                      {
+                        field: "productCode",
+                        value: searchCriteria == "pCode" ? searchText : "",
+                        operation: "startswith",
+                        initialFocus: searchCriteria == "pCode" ? true : true,
+                      },
+                    ] : [
+                      {
+                        field: "productName",
+                        value: searchCriteria == "product" ? searchText : "",
+                        operation: "startswith",
+                        initialFocus:
+                          searchCriteria == "product" ? true : false,
+                      },
+                    ]
+                }
+              />
+
+     ), [dataUrl,columns,]);
+
 
   return (
     <Fragment>
@@ -412,41 +528,9 @@ const ProductModalGrid = ({
               onNextCellFind={onNextCellFind}
               onClose={onClose}
             /> */}
-            <ErpDevGrid
-                ref={gridRef}
-                hideGridAddButton
-                enableScrollButton={false}
-                pageSize={30}
-                columns={columns}
-                heightToAdjustOnWindowsInModal={gridHeight.windows-50}
-                dataUrl={`${popupSearchUrl}/${warehouseId}/true/true`}
-                gridId="grd_acc_group"
-                gridAddButtonType="popup"
-                reload
-                gridAddButtonIcon="ri-add-line"
-                selectionMode="multiple"
-                onKeyDown={handleEnterKeyDown}
-                onRowClick={handleRowClick}
-                initialFilters={
-                  searchCriteria == "pCode"
-                    ? [
-                      {
-                        field: "productCode",
-                        value: searchCriteria == "pCode" ? searchText : "",
-                        operation: "startswith",
-                        initialFocus: searchCriteria == "pCode" ? true : false,
-                      },
-                    ] : [
-                      {
-                        field: "productName",
-                        value: searchCriteria == "product" ? searchText : "",
-                        operation: "startswith",
-                        initialFocus:
-                          searchCriteria == "product" ? true : false,
-                      },
-                    ]
-                }
-              />
+
+            {/* Searchbox modal Main Grid */}
+            <div>{memoizedGrid}</div> 
 
             {relatedInfo.showStockDetails &&
               <div className="flex justify-between items-start gap-5">

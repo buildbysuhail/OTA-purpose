@@ -9,6 +9,8 @@ import ERPInput from "../../../components/ERPComponents/erp-input";
 import { useTranslation } from "react-i18next";
 import { information } from "./email-integration-type";
 import ERPFormButtons from "../../../components/ERPComponents/erp-form-buttons";
+import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
+import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 
 const api = new APIClient();
 
@@ -20,7 +22,13 @@ interface EmailSmtpConnectPopupProps {
 }
 
 const EmailSmtpConnectPopup: React.FC<EmailSmtpConnectPopupProps> = ({ data = {}, id, onSuccess }) => {
-  const [information, setInformation] = useState<Partial<information>>(data);
+  const [information, setInformation] = useState<Partial<information>>({
+    limitType: 1,
+    hasLimit: false,
+    limit: 0,
+    ...data
+  
+  });
   const [email, setEmail] = useState<string>("");
   const [message, setMessage] = useState<string>("");
   const [isSaving, setIsSaving] = useState(false);
@@ -30,7 +38,12 @@ const EmailSmtpConnectPopup: React.FC<EmailSmtpConnectPopupProps> = ({ data = {}
 
   useEffect(() => {
     if (data) {
-      setInformation(data);
+      setInformation({
+         limitType: 1,
+        hasLimit: false,
+        limit: 0,
+        ...data
+      });
     }
   }, [data]);
 
@@ -58,7 +71,9 @@ const EmailSmtpConnectPopup: React.FC<EmailSmtpConnectPopupProps> = ({ data = {}
         channel: NotificationsChannel.Email,
         configJson: JSON.stringify(configData),
         isEnable: true,
-        name: "SMTP"
+        name: "SMTP",
+        limit: information.limit || 0,
+        limitType: information.limitType,
       };
 
       const response = await api.post(Urls.notification_provider_update, requestBody);
@@ -90,7 +105,9 @@ const EmailSmtpConnectPopup: React.FC<EmailSmtpConnectPopupProps> = ({ data = {}
         to: email,
         message: message,
         isEnable: true,
-        id: id
+        id: id,
+        limit: information.limit || 0,
+        limitType: information.limitType,
       };
 
       const demoMessageResponse = await api.post(Urls.notification_provider_test, payload);
@@ -143,6 +160,7 @@ const EmailSmtpConnectPopup: React.FC<EmailSmtpConnectPopupProps> = ({ data = {}
               placeholder={t("username")}
               onChangeData={(data) => handleFieldChange("userName", data.userName)}
             />
+            
 
             <ERPInput
               id="password"
@@ -153,6 +171,43 @@ const EmailSmtpConnectPopup: React.FC<EmailSmtpConnectPopupProps> = ({ data = {}
               type="password"
               onChangeData={(data) => handleFieldChange("password", data.password)}
             />
+          </div>
+          <div className="h-[100px] mt-2">
+
+          
+          <ERPCheckbox
+            id="hasLimit"
+            label={t("has_limit")}
+            checked={information.hasLimit || false}
+            onChange={(e) => handleFieldChange("hasLimit", e.target.checked)}
+          />
+          {information.hasLimit && (
+            <div className="grid grid-cols-2 gap-2">
+              <ERPInput
+                id="limit"
+                label={t("limit")}
+                type="number"
+                value={information.limit || ""}
+                placeholder={t("limit")}
+                onChange={(e: any) => handleFieldChange("limit", e.target.value)}
+              />
+              <ERPDataCombobox
+                id="limitType"
+                label={t("limit_type")}
+                value={information.limitType || 1}
+                onChange={(item) => handleFieldChange("limitType", item.value)}
+                options={[
+                  { value: 1, label: t("daily") },
+                  { value: 2, label: t("monthly") },
+                ]}
+                field={{
+                  id: "limitType",
+                  valueKey: "value",
+                  labelKey: "label",
+                }}
+              />
+            </div>
+          )}
           </div>
         </div>
         {/* <div className="flex items-center justify-end gap-2 mt-4">

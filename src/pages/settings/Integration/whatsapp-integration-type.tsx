@@ -39,6 +39,9 @@ export interface information {
   phoneNumber?: string;
   message?: string;
   url?: string;
+  hasLimit?: boolean;
+  limit?: number;
+  limitType?: number;
 }
 // channel
 // :

@@ -41,6 +41,9 @@ export interface information {
   password: string;
   email?: string;
   message?: string;
+  hasLimit?: boolean;
+  limit?: number;
+  limitType?: number;
 }
 
 // channel

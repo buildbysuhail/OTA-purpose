@@ -38,4 +38,7 @@ export interface information {
   uploadPreset: string;
   cloudName: string;
   file?: File;
+  hasLimit?: boolean;
+  limit?: number;
+  limitType?: number;
 }

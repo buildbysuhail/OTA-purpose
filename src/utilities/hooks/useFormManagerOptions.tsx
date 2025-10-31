@@ -215,7 +215,7 @@ export function useFormManager<T>({
   ]);
 
   const handleSubmit = useCallback(async () => {
-    debugger;
+    
     setIsLoading(true);
     if (useApiClient) {
       try {

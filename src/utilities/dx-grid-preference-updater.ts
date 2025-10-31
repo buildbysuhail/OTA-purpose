@@ -89,7 +89,7 @@ export const getInitialPreference = async (
   api: APIClient
 ) => {
   if (gridId == "grd_inv_transaction_GRN") {
-    debugger;
+    
   }
   const savedPreferences = await getStorageString(`gridPreferences_${gridId}`);
 

@@ -48,7 +48,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
   let applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
-debugger;
+
   const { hasRight } = useUserRights();
   const { getAllowedFormCodes } = useUserRights();
   const [menuitems, setMenuitems] = useState<any>(() => {
@@ -95,7 +95,13 @@ debugger;
 
     return filterItems(menuitems);
   }, [menuitems, searchTerm]);
-
+const extractRights = (items: any[]): string[] => {
+  return items.flatMap((item) => {
+    const rights = item.rights ? [item.rights] : [];
+    const childRights = item.children ? extractRights(item.children) : [];
+    return [...rights, ...childRights];
+  });
+};
   useEffect(() => {
     if (type == "settings") {
       let st = menuitems;
@@ -182,58 +188,52 @@ debugger;
       let st: [] = [];
 
       st = menuitems;
-       
-      // const allowedFormCodes = getAllowedFormCodes(
-      //   menuitems.flatMap((item: any) =>
-      //     item.children
-      //       ? item.children
-      //         .filter((child: any) => child.rights !== undefined)
-      //         .map((child: any) => child.rights)
-      //       : []
-      //   ),
-      //   UserAction.Show
-      // );
-      // const sd = st
-      //   .map((x: any) => {
-      //     const filteredChildren = x.children
-      //       ?.map((item: any) => {
-      //         item.visible = true;
-      //         item.disabled = false;
+      
+ const allRights = extractRights(menuitems).filter((r) => r && r.trim() !== "");
+const allowedFormCodes = getAllowedFormCodes(allRights, UserAction.Show);
+     
 
-      //         if (!allowedFormCodes.includes(item.rights)) {
-      //           item.visible = false;
-      //         }
+      const sd = st
+        .map((x: any) => {
+          const filteredChildren = x.children
+            ?.map((item: any) => {
+              item.visible = true;
+              item.disabled = false;
 
-      //         const isExcluded = exludedRoutes.find(
-      //           (route) =>
-      //             route.title === item.title &&
-      //             route.countries.find((x) => x == userSession.countryId) !=
-      //             undefined
-      //         )
+              if (!allowedFormCodes.includes(item.rights)) {
+                item.visible = false;
+              }
 
-      //         if (isExcluded) {
-      //           item.visible = false;
-      //         }
+              const isExcluded = exludedRoutes.find(
+                (route) =>
+                  route.title === item.title &&
+                  route.countries.find((x) => x == userSession.countryId) !=
+                  undefined
+              )
 
-      //         return item; // <-- Make sure this is not on a new line after `return`
-      //       })
-      //       ?.filter((child: any) => child.visible); // Only keep visible ones
+              if (isExcluded) {
+                item.visible = false;
+              }
 
-      //     if (filteredChildren && filteredChildren.length > 0) {
-      //       return {
-      //         ...x,
-      //         children: filteredChildren,
-      //       };
-      //     }
-      //     if (!filteredChildren && x.type == "link") {
-      //       return {
-      //         ...x
-      //       };
-      //     }
+              return item; // <-- Make sure this is not on a new line after `return`
+            })
+            ?.filter((child: any) => child.visible); // Only keep visible ones
 
-      //     return null;
-      //   })
-      //   .filter((x) => x !== null);
+          if (filteredChildren && filteredChildren.length > 0) {
+            return {
+              ...x,
+              children: filteredChildren,
+            };
+          }
+          if (!filteredChildren && x.type == "link") {
+            return {
+              ...x
+            };
+          }
+
+          return null;
+        })
+        .filter((x) => x !== null);
       // const sd = st.map((x: any) =>
       //   x.children?.map((item: any) => {
       //     item.visible = true;

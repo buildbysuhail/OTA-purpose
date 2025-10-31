@@ -507,7 +507,7 @@ const onSelectionChanged = useCallback(
   const clientSession = useSelector((state: RootState) => state.ClientSession);
  
   useEffect(() => {
-  debugger;
+  
   const filteredRights =
     clientSession.isAppGlobal
       ? userRights

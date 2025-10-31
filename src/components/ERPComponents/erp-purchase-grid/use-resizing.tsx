@@ -77,7 +77,7 @@ export const useTableResizeAndReorder = (gridID: string, onApplyPreferences: any
       newWidths.find((x: any) => x.field == currentColumnIndex.current.field)!.width = newWidth;
       }
       } catch (error) {
-        debugger;
+        
         
       }
       columnWidthsRef.current = newWidths;

@@ -28,7 +28,7 @@ const usePreferenceData = (columns: DevGridColumn[], gridId?: string) => {
 
  const onApplyPreferences = useCallback(
       (pref: GridPreference) => {
-        debugger;
+        
         setPreferences(pref);
         const updatedColumns = applyGridColumnPreferences(columns, pref);
         setGridCols(updatedColumns);

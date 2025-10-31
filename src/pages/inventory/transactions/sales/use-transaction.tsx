@@ -405,7 +405,7 @@ export const useTransaction = (
         })
       );
     }
-    debugger;
+    
     let _formState = await loadTransVoucher(
       usingManualInvNumber,
       voucherNumber,
@@ -803,7 +803,7 @@ export const useTransaction = (
   async function validate(): Promise<boolean> {
     const master = formState.transaction.master;
     const details = formState.transaction.details;
-    debugger;
+    
     // Stock update restriction
     if (
       !formState.transaction.master.stockUpdate &&
@@ -1108,7 +1108,7 @@ export const useTransaction = (
     );
 
     const valid = await validate();
-    debugger;
+    
     if (valid == true) {
       const master = attachMaster(formState);
       const attachments = formState.transaction.attachments
@@ -1431,7 +1431,7 @@ export const useTransaction = (
     }
   };
   const handleRemoveItem = async (slNo: string) => {
-    debugger;
+    
     dispatch(
       formStateTransactionDetailsRowRemove({
         slNo: slNo,

@@ -132,7 +132,7 @@ export const ProductMaster: React.FC<ProductManageProps> = React.memo(({ isMaxim
     }
   };
 useEffect(() => {
-  debugger;
+  
  setIsPut(getFieldProps("batch.productBatchID").value > 0)
 }, [getFieldProps("batch.productBatchID").value])
 

@@ -83,7 +83,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
           deviceId: deviceId
         });
     setLoadingLogout({ loading: false, deviceId: deviceId });
-    debugger;
+    
     handleResponse(response, () => {
       store.load();
     });

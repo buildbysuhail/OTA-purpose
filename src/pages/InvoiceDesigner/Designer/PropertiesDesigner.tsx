@@ -176,7 +176,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
           value={propertiesState?.template_formType}
           data={propertiesState}
           onChangeData={(data: any) => {
-            debugger;
+            
             onChange?.({ ...propertiesState, template_formType: data.template_formType })
           }}
           label={t("from_type")}

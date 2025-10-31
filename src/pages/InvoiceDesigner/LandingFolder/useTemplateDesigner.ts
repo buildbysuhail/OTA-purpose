@@ -157,7 +157,7 @@ export const useTemplateDesigner = ({
         }
 
         setPrintData(data);
-        debugger;
+        
         // Fetch template if needed
         if (manuvalTemplateFeatch) {
           let _template = await getOrFetchTemplate(
@@ -269,7 +269,7 @@ export const useTemplateDesigner = ({
   // Fetch template data for existing templates
   const getPDFTemplateData = useCallback(async () => {
     if (id !== "new") {
-      debugger;
+      
       try {
         setLoading(true);
         

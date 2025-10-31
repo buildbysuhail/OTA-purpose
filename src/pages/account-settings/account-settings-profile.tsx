@@ -155,7 +155,7 @@ const AccountSettingsProfile: FC<AccountSettingsProps> = (props) => {
 
   /////////////////////////////////////////////////////////////////////
   const onImageSuccess = useMemo(() => {
-    debugger;
+    
     return (url: string) => {
       setImage(url);
       appDispatch(userSession());

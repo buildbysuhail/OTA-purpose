@@ -18,7 +18,7 @@ interface TableManagerContentProps {
 
 export const TableColumnAddOrEdit: React.FC<TableManagerContentProps> = React.memo(
   ({ index, column, onClose }) => {
-    debugger;
+    
     const dispatch = useDispatch();
     const { t } = useTranslation("masters");
     const [_column, setColumn] = useState<TableColumn<PrintDetailDto>>(column || initialTableColumn);
@@ -55,7 +55,7 @@ export const TableColumnAddOrEdit: React.FC<TableManagerContentProps> = React.me
                                   }
                                   options={options}
                                   value={_column.field}
-                                  onChange={(e) =>{ debugger; setColumn(prev => ({ ...prev, field: e.value, label: e.label }))}}
+                                  onChange={(e) =>{  setColumn(prev => ({ ...prev, field: e.value, label: e.label }))}}
                                 />
           <ErpInput
             type="number"

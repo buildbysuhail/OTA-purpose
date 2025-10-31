@@ -354,7 +354,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
 
     const handleChangeNormal = (e: React.ChangeEvent<HTMLInputElement>) => {
       const inputValue = e.target.value;
-      debugger;
+      
       const yearPattern = /^(\d{2})-(\d{2})-(\d{5,})$/;
       if (yearPattern.test(inputValue)) {
         return;

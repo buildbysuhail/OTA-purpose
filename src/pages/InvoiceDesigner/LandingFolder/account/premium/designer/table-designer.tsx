@@ -99,7 +99,7 @@ const LabelsEditor = <T,>({
     };
   
     const handleDropping = (eFromDataGrid: boolean = false, startIndex?: number | null, endIndex?: number | null) => {
-      debugger;
+      
       const draggedDataField = dragItem.current ? dragItem.current : null;
       const targetDataField = dragOverItem.current ? dragOverItem.current: null;
       startIndex = startIndex != null ? startIndex : currentTableState?.findIndex((fld: any) => fld?.key === draggedDataField);
@@ -126,7 +126,7 @@ const LabelsEditor = <T,>({
         <ERPButton
           title={t("new")}
           variant="primary"
-          onClick={() => {debugger; setOpenTableCol((prev: any) => {return {
+          onClick={() => { setOpenTableCol((prev: any) => {return {
             ...prev,
             show: true, index: undefined, column: undefined
           }})}}

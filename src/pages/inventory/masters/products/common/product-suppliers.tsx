@@ -86,7 +86,7 @@ const SuppliersCommon: React.FC<{
               }}
               onChange={(e) =>
                 setData((prev: any) => {
-                  debugger;
+                  
                   return {
                     ...prev,
                     ledgerID: e.value,

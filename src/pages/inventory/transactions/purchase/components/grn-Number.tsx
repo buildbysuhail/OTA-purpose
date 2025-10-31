@@ -37,9 +37,9 @@ const VoucherLoader = React.forwardRef<HTMLInputElement, GrnNumberProps>((props,
     vNumber: props.updateDeliveryNoteNumber ? formState.transaction.master.deliveryNoteNumber : "",
     vType: props.fromVoucherType ?? ""
   });
-debugger;
+
   const handleLoadByRefNo = useCallback(async () => {
-    debugger;
+    
     await props.loadAndSetTransVoucher(
       true,
       undefined,
@@ -128,7 +128,7 @@ debugger;
             // value={orderNumberValue}
             value={props.updateDeliveryNoteNumber ? formState.transaction.master.deliveryNoteNumber : loadData.vNumber}
             onChange={(e) => {
-              debugger;
+              
               if (props.updateDeliveryNoteNumber) {
                 dispatch(formStateHandleFieldChangeKeysOnly({ fields: { transaction: { master: { deliveryNoteNumber: e.target?.value } } } }))
               } else {

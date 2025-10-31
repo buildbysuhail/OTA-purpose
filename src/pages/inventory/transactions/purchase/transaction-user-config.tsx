@@ -168,7 +168,7 @@ useEffect(() => {
         onConfirm: async (result: any) => {
           const res = await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/ResetLocalSettings`, {});
           handleResponse(res, async () => {
-            debugger;
+            
             const st = base64ToModelUnicode(res.item);
              const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`) ;
             await setStorageString(key, res.item);

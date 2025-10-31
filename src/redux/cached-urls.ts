@@ -73,7 +73,7 @@ type CachedKeys = keyof typeof CachedUrls;
 
 export const getApLocalDataByUrl = async (url: string,
   queryString: string = "",) => {
-  debugger;
+  
   const encoded = url.startsWith("/") ? btoa(url) : url;
   const key = getCacheKey(encoded);
   if (key) {
@@ -97,7 +97,7 @@ export const getApLocalData = async (groupKey: keyof typeof CachedUrls,
     return null;
   }
   const val = JSON.parse(df);
-  debugger;
+  
   const filtered = filterData(val, queryString);
   return filtered;
 };

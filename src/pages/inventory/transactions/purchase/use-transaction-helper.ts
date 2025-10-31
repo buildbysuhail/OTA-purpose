@@ -339,7 +339,7 @@ export const useTransactionHelper = (transactionType: string) => {
     if (!(transactionDetail.productID > 0)) {
       return result;
     }
-debugger;
+
     try {
       // Initialize variables with proper null checks and defaults
 
@@ -535,7 +535,7 @@ debugger;
         //   // }
         // } else {
         // === Case 3: Tax on NetValue ===
-        debugger;
+        
         detail.details2.cgst =
           (netValue * (transactionDetail.details2!.cgstPerc || 0)) / 100;
         detail.details2.sgst =
@@ -703,7 +703,7 @@ debugger;
       //   calculateAutoSummary(formState);
       //   calculateTotal(formState);
       // }
-debugger;
+
       result.transaction.details = [detail];
 
       if (!ignoreCalculateTotal && rowIndex >= 0) {
@@ -1563,7 +1563,7 @@ debugger;
       // Supplier reference
       outputRow.supplierProductReferenceCode =
         detail.supplierReferenceProductCode;
-      debugger;
+      
       // GR Transaction details
       // outputRow.gRTransDetailID = detail.grTransDetailsID;
 

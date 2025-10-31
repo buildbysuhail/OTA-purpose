@@ -762,7 +762,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           _formState.userRightsFormCode = "PIIMPORT";
         }
       }
-      debugger;
+      
 
       const _gridCols = await getInitialPreference(
         gridCode,
@@ -1026,7 +1026,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           PendingTransDetails.details &&
           PendingTransDetails.details.length > 0
         ) {
-          debugger;
+          
           const calculatedDetails: TransactionDetail[] = [];
           const refactoredDetails = refactorDetails(
             PendingTransDetails.details,
@@ -1037,7 +1037,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           );
           for (let index = 0; index < refactoredDetails.length; index++) {
             const _element = { ...refactoredDetails[index] };
-            debugger;
+            
             const element = { ..._element };
             element.gRTransDetailID =
               loadType == "GRN" ? _element.invTransactionDetailID ?? 0 : 0;
@@ -1499,7 +1499,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     }
   }, [formState.quantityFactorData]);
 
-  debugger;
+  
   const _purchaseGridCol: ColumnModel[] =
     purchaseGridCol(
       applicationSettings,

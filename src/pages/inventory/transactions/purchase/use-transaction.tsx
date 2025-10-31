@@ -347,7 +347,7 @@ export const useTransaction = (
       ) {
         await setStorageString(key,savedPreferences );
         // Decode the base64 back to JSON string
-        debugger;
+        
         const _userConfig = safeBase64Decode(savedPreferences ?? "");
         const userConfig: UserConfig = customJsonParse(_userConfig ?? "{}");
 
@@ -378,7 +378,7 @@ export const useTransaction = (
     showLoading,
     disablePnlMasters = true
   ) => {
-    debugger;
+    
     const _s_isDirty = isDirtyTransaction(
       formState.prev,
       {
@@ -429,7 +429,7 @@ export const useTransaction = (
       loadPrefix
     );
 
-    debugger;
+    
     if (loadVType == "GRN" || loadVType == "GRR") {
       _formState = merge({}, _formState, {
         transaction: { master: { deliveryNoteNumber: manualInvoiceNumber } },
@@ -490,7 +490,7 @@ export const useTransaction = (
     _formState: TransactionFormState,
     loadUserConfig: boolean = false
   ) => {
-    debugger;
+    
     const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`) ;
     const Utc = await getStorageString(key);
     let userConfig: UserConfig | undefined;

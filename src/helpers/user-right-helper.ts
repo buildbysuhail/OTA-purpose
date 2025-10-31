@@ -133,7 +133,7 @@ export const useUserRights = () => {
     action: UserAction
   ): string[] => {
     const userTypeCode = __userSession?.userTypeCode;
-
+debugger;
     const planRights = __clientSession.planFormCodes?.split(",");
 
     // Automatically grant rights if userTypeCode is "BA" or "CA"

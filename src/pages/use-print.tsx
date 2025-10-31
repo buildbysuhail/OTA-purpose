@@ -1757,7 +1757,7 @@ export const fetchDefaultTemplateFromApi = async (
   formType?: string ,
   customerType?: string ,
 ): Promise<TemplateState<unknown> | null> => {
-  debugger;
+  
   try {
     const api = new APIClient();
     const res = await api.postAsync(`${Urls.default_template}`, {

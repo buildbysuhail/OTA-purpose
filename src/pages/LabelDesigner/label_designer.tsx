@@ -1770,7 +1770,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
     setLoading(true);
     try {
       const consolidatedComponents = consolidateContainerChildren();
-debugger;
+
       if (forCustomRows) {
         dispatch(
           setTemplateCustomElements({

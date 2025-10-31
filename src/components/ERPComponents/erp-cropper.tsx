@@ -84,7 +84,7 @@ const ERPCropper: React.FC<ERPCropperProps> = ({
     //  dispatch(
     //   postAction({ apiUrl: apiUrl, data: { base64: base64String } }) as any
     // );
-    debugger;
+    
     setIsLoading(false);
     handleResponse(res, () => {
       setIsOpen(false);

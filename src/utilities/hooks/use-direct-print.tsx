@@ -180,7 +180,7 @@ export const useDirectPrint = () => {
         console.warn("Cheque template handling not yet implemented");
         return { success: false, reason: "not-implemented" };
       } else {
-        debugger;
+        
         // For standard templates, fetch the data
         console.log("Fetching template data for printing...");
         const templateData = await fetchTemplateData(params);

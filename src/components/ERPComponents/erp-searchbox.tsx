@@ -629,7 +629,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
                 desc: true,
               },
             ]);
-            debugger;
+            
             const result: any = await store.load();
 
               if (result.data.length === 0 && closeIfNodata) {

@@ -117,7 +117,7 @@ const BillwiseComponent = ({
     }
   }, []);
   useEffect(() => {
-    debugger;
+    
     let billwiseDetails: string | undefined = undefined;
     if (isAccTransactionFormState(formState)) {
       billwiseDetails = formState.row.billwiseDetails;
@@ -364,7 +364,7 @@ const BillwiseComponent = ({
     fromAutoPost?: boolean | false
   ) => {
     try {
-      debugger;
+      
 
       // if (dataGridRef.current?.instance) {
       //   dataGridRef.current.instance.saveEditData();
@@ -417,7 +417,7 @@ const BillwiseComponent = ({
               },
             })
           );
-          debugger;
+          
           onSave &&
             onSave(
               billwiseString.billwiseString,
@@ -432,7 +432,7 @@ const BillwiseComponent = ({
         } else if (isFromCashTender) {
           if (!validate()) return;
         } else {
-          debugger;
+          
           onSave &&
             onSave(
               "",

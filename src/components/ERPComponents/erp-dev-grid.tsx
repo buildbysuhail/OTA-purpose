@@ -396,7 +396,7 @@ const createStore = async (
       // Append filterData to params
         const sanitizedFilterData = sanitizeDataAdvanced(filterData,filterInitialData,{defaultNumber:null})
       if (enablefilter && filterData) {
-        debugger;
+        
         Object.entries(sanitizedFilterData).forEach((x: any) => {
           if (
             x[1] instanceof Date ||
@@ -1999,7 +1999,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     const handleOptionChanged = (e: any) => {
       if (e.fullName?.startsWith("columns")) {
         if (e.fullName.endsWith("visibleIndex")) {
-          debugger;
+          
           preferenceChooserRef.current?.handleDropping(
             true,
             e.previousValue,

@@ -22,7 +22,7 @@ export const useCommenPrint = () => {
   const clientSession = useAppSelector((state: RootState) => state.ClientSession)
 
   const printVoucher = async (masterID: number,transactionType: string,voucherType: string,formType:string,customerType:string,isInvTrans: boolean= false,printPreview:boolean=false, printTmeplate?:any ,transDate?: string,) => {
-debugger;
+
     transDate = transDate??(new Date()).toISOString();
    
     const template =printTmeplate? printTmeplate : await getOrFetchTemplate(voucherType??'', formType,customerType);

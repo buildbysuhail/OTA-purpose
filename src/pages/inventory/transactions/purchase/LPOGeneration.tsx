@@ -258,7 +258,7 @@ const LPOGeneration: React.FC<LPOGenerationProps> = ({ t, transactionType, refac
                 }
                 return item;
             });
-            debugger;
+            
             dispatch(
                 formStateTransactionDetailsRowsEmptyAdd(
                     updatedInventory

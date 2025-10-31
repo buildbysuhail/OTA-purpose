@@ -438,7 +438,7 @@ const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, transactionTy
 
   const handleSelectTheme = (theme: any) => {
     if (formState.selectedTheme?.themeName !== theme.themeName) {
-      debugger;
+      
       dispatch(
         formStateHandleFieldChangeKeysOnly({
           fields: {

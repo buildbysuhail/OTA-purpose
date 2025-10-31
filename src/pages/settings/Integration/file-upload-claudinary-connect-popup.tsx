@@ -9,6 +9,8 @@ import ERPInput from "../../../components/ERPComponents/erp-input";
 import { useTranslation } from "react-i18next";
 import { information } from "./file-upload-integration-type";
 import ERPFormButtons from "../../../components/ERPComponents/erp-form-buttons";
+import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
+import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 
 const api = new APIClient();
 
@@ -24,6 +26,10 @@ const CloudinaryConnectPopup: React.FC<CloudinaryConnectPopupProps> = ({ data = 
         apiKey: data?.apiKey || "",
         apiSecret: data?.apiSecret || "",
         cloudName: data?.cloudName || "",
+        limitType: 1,
+        hasLimit: false,
+        limit: 0,
+        ...data
         // uploadPreset: data?.uploadPreset || ""
     });
 
@@ -33,7 +39,14 @@ const CloudinaryConnectPopup: React.FC<CloudinaryConnectPopupProps> = ({ data = 
     const [isTesting, setIsTesting] = useState(false);
 
     useEffect(() => {
-        setInformation(data);
+        if (data) {
+        setInformation({
+            limitType: 1,
+            hasLimit: false,
+            limit: 0,
+            ...data
+        });
+        }
     }, [data]);
 
     const handleFieldChange = (fieldName: keyof information, value: any) => {
@@ -53,7 +66,8 @@ const CloudinaryConnectPopup: React.FC<CloudinaryConnectPopupProps> = ({ data = 
                 configJson: cloudinaryUrl,
                 isEnable: true,
                 id: id,
-                limit: 1000,
+                limit: information.limit || 0,
+                limitType: information.limitType,
             };
             const response = await api.post(Urls.notification_provider_update, requestBody);
             handleResponse(response, () => { onSuccess && onSuccess() });
@@ -80,7 +94,8 @@ const CloudinaryConnectPopup: React.FC<CloudinaryConnectPopupProps> = ({ data = 
                 configJson: cloudinaryUrl,
                 file: formData,
                 isEnable: true,
-                limit: 1000,
+                limit: information.limit || 0,
+                limitType: information.limitType,
             };
             const testUploadResponse = await api.post(Urls.notification_provider_test, payload);
             await handleResponse(testUploadResponse);
@@ -130,6 +145,43 @@ const CloudinaryConnectPopup: React.FC<CloudinaryConnectPopupProps> = ({ data = 
                         placeholder={t("enter_cloud_name")}
                         onChange={(e) => handleFieldChange("cloudName", e.target.value)}
                     />
+                    <div className="h-[100px] mt-2">
+
+                    
+                    <ERPCheckbox
+                        id="hasLimit"
+                        label={t("has_limit")}
+                        checked={information.hasLimit || false}
+                        onChange={(e) => handleFieldChange("hasLimit", e.target.checked)}
+                    />
+                    {information.hasLimit && (
+                        <div className="grid grid-cols-2 gap-2">
+                        <ERPInput
+                            id="limit"
+                            label={t("limit")}
+                            type="number"
+                            value={information.limit || ""}
+                            placeholder={t("limit")}
+                            onChange={(e: any) => handleFieldChange("limit", e.target.value)}
+                        />
+                        <ERPDataCombobox
+                            id="limitType"
+                            label={t("limit_type")}
+                            value={information.limitType || 1}
+                            onChange={(item) => handleFieldChange("limitType", item.value)}
+                            options={[
+                            { value: 1, label: t("daily") },
+                            { value: 2, label: t("monthly") },
+                            ]}
+                            field={{
+                            id: "limitType",
+                            valueKey: "value",
+                            labelKey: "label",
+                            }}
+                        />
+                        </div>
+                    )}
+                    </div>                    
                 </div>
 
                 {/* <div className="flex items-center justify-end gap-2 mt-4">

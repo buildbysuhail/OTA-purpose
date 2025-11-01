@@ -1,8 +1,11 @@
 import { CirclePlus } from "lucide-react";
 import { Fragment } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { RootState } from "../../redux/store";
 
 function Menuloop({ MENUITEMS, toggleSidemenu, level, t }: any) {
+  const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
   return (
     <Fragment>
       <Link to="#!" className={`side-menu__item ${MENUITEMS?.selected ? "active" : ""}`}
@@ -51,31 +54,28 @@ function Menuloop({ MENUITEMS, toggleSidemenu, level, t }: any) {
                   <li className={`relative ${firstlevel.menutitle ? 'slide__category' : firstlevel.menutitle_lg ? 'slide__category slide__category__lg' : ''} ${firstlevel?.type == 'empty' ? 'slide' : ''} ${firstlevel?.type == 'link' ? 'slide' : ''} ${firstlevel?.type == 'sub' ? 'slide has-sub' : ''} ${firstlevel?.active ? 'open' : ''} ${firstlevel?.selected ? 'active' : ''}`} key={Math.random()}>
                     {firstlevel.type === "link" ?
                       <Link to={firstlevel.path} className={`side-menu__item ${firstlevel.selected ? 'active' : ''} group `}>
-                      {firstlevel.icon && <firstlevel.icon className='w-[14px]' />}
-                      <span className="relative flex items-center">
-                        <div className="w-[148px] overflow-hidden text-ellipsis whitespace-nowrap ml-2 side-menu__label"
-                          title={t(firstlevel.title).length > 20 ? t(firstlevel.title) : undefined}>
-                          {t(firstlevel.title)}
-                        </div>
-                        {firstlevel.addPath != undefined && firstlevel.addPath != null && firstlevel.addPath != "" &&
-                          <span className=" absolute ms-[147px] hidden bg-black text-white  group-hover:block hover:bg-[#00000047] rounded-full">
-                            <Link to={firstlevel.addPath} className={` ${firstlevel.selected ? 'active' : 'active'}`}>
-                            <CirclePlus className="text-[#ffffffa1]  hover:text-white hover:w-[26px] hover:h-[26px] side-menu__label" />
-                              {/* <i className="side-menu__icon">
-                                <route.icon />
-                              </i> */}
-                            </Link>
-                          </span>
-                        }
-                        {firstlevel.badgetxt ? (
-                          <span className={firstlevel.class}>
-                            {firstlevel.badgetxt}
-                          </span>
-                        ) : (
-                          ""
-                        )}
-                      </span>
-                    </Link>
+                        {firstlevel.icon && <firstlevel.icon className='w-[14px]' />}
+                        <span className={`relative flex items-center ${deviceInfo?.isMobile ? 'justify-between w-full' : ''}`}>
+                          <div className="w-[148px] overflow-hidden text-ellipsis whitespace-nowrap ml-2 side-menu__label"
+                            title={t(firstlevel.title).length > 20 ? t(firstlevel.title) : undefined}>
+                            {t(firstlevel.title)}
+                          </div>
+                          {firstlevel.addPath != undefined && firstlevel.addPath != null && firstlevel.addPath != "" && (
+                            <span className={`absolute ${deviceInfo?.isMobile ? 'right-0' : 'left-full ml-1'} md:ms-[147px] md:left-auto  bg-black text-white hover:bg-[#00000047] rounded-full  block md:hidden md:group-hover:block z-10`} >
+                              <Link to={firstlevel.addPath} className="flex items-center justify-center w-7 h-7" onClick={(e) => e.stopPropagation()}>
+                                <CirclePlus className={`w-5 h-5 text-[#ffffffa1]  transition-all duration-200  group-hover:text-white group-hover:w-6 group-hover:h-6`} />
+                              </Link>
+                            </span>
+                          )}
+                          {firstlevel.badgetxt ? (
+                            <span className={firstlevel.class}>
+                              {firstlevel.badgetxt}
+                            </span>
+                          ) : (
+                            ""
+                          )}
+                        </span>
+                      </Link>
                       : ""}
                     {firstlevel.type === "empty" ?
                       <Link to="#" className='side-menu__item'>

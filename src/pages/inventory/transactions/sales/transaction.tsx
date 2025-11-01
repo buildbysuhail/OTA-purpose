@@ -1980,7 +1980,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     left: 0,
                     right: 0,
                     padding: 0,
-                    zIndex: 40,
+                    zIndex: 39,
                   }}
                 >
                   {formState.isEdit}

@@ -33,7 +33,7 @@ import localforage from "localforage";
 
 // UI & components
 import { Button } from "../../../dark/Button";
-import { Moon, RefreshCcw, Sun } from "lucide-react";
+import { Menu, Moon, RefreshCcw, Sun } from "lucide-react";
 import LanguageSwitcher from "./language-switcher";
 import * as switcherdata from "../switcher/switcherdata/switcherdata";
 
@@ -80,7 +80,7 @@ const Header: FC<HeaderProps> = () => {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
     };
   }, []);
-  
+
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const handleToggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -279,7 +279,8 @@ const Header: FC<HeaderProps> = () => {
                 >
                   <span></span>
                 </Link> */}
-                <i className=" dark:text-dark-text ri-menu-2-line text-2xl mr-2 cursor-pointer" onClick={() => toggleSidebar(appState, updateAppState)}></i>
+                <Menu className="dark:text-dark-text text-2xl mr-2 cursor-pointer" onClick={() => toggleSidebar(appState, updateAppState)} />
+                {/* <i className=" dark:text-dark-text ri-menu-2-line text-2xl mr-2 cursor-pointer" onClick={() => toggleSidebar(appState, updateAppState)}></i> */}
               </div>
             </div>
 
@@ -531,10 +532,10 @@ const Header: FC<HeaderProps> = () => {
               <div className="flex items-center">
                 {/* <span className="mr-2">{appState.mode === 'dark' ? 'Dark' : 'Light'} Mode</span> */}
                 <Button
-                  onClick={async() => {
+                  onClick={async () => {
                     appState.mode === "light"
                       ? await switcherdata.Dark(updateAppState, appState)
-                      :await switcherdata.Light(updateAppState, appState);
+                      : await switcherdata.Light(updateAppState, appState);
                   }}
                   variant="ghost"
                   size="icon">

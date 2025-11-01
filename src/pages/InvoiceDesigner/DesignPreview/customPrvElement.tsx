@@ -63,7 +63,7 @@ export const RenderPreviewComponent: React.FC<Props> = ({
     const finalContent = 
       component.type === DesignerElementType.text 
         ? component.content 
-        : (bindDataForPrint(component.content, data, convertAmountToEnglish, convertAmountToArabic) || "N/A");
+        : (bindDataForPrint(component.content, data, convertAmountToEnglish, convertAmountToArabic) );
 
     const isArabic = containsArabicString(finalContent ?? "");
     const textDirection =  component.direction ?? isArabic ? "rtl" : "ltr";

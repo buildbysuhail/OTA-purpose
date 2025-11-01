@@ -11,7 +11,7 @@ export interface Locale {
 
 
 export const languagesData: Locale[] = [
-  { code: 'en', name: 'English', flag: usFlag, rtl: false },
+  { code: 'en', name: 'English', flag: "EN", rtl: false },
   { code: 'ar', name: 'Arabic', flag: arFlag, rtl: true },
 ]
 export interface TableState {

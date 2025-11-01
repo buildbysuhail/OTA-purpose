@@ -92,9 +92,10 @@ const SMSIntegration: React.FC = () => {
       setProvider({
         isOpen: true,
         provider: item?.provider,
-        information:
-        {
-          configJson: parsedConfig
+        information: {
+          url: parsedConfig,
+          limit: item?.limit,
+          hasLimit: item?.limit > 0,
         },
         id: item?.id,
         providerName: item?.name ?? "",
@@ -108,6 +109,8 @@ const SMSIntegration: React.FC = () => {
           authToken: parsedConfig?.authToken ?? "",
           verifyServiceSid: parsedConfig?.verifyServiceSid ?? "",
           fromPhone: parsedConfig?.fromPhone ?? "",
+          limit: item?.limit,
+          hasLimit: item?.limit > 0,
         },
         id: item.id,
         providerName: item?.name ?? "",

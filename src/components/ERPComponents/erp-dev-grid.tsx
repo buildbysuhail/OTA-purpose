@@ -394,9 +394,9 @@ const createStore = async (
       );
 
       // Append filterData to params
-        const sanitizedFilterData = sanitizeDataAdvanced(filterData,filterInitialData,{defaultNumber:null})
+      const sanitizedFilterData = sanitizeDataAdvanced(filterData, filterInitialData, { defaultNumber: null })
       if (enablefilter && filterData) {
-        
+
         Object.entries(sanitizedFilterData).forEach((x: any) => {
           if (
             x[1] instanceof Date ||
@@ -517,7 +517,7 @@ const createStore = async (
     },
   });
 };
- 
+
 const isNotEmpty = (value: any) =>
   value !== undefined && value !== null && value !== "";
 // Forward the ref
@@ -665,7 +665,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
   ) => {
     const totalRowCountDisplayRef = useRef<HTMLSpanElement>(null);
     const totalRowCountRef = useRef<number>(0);
-    const { onApplyPreferences, gridCols,preferences } = usePreferenceData(columns, gridId);
+    const { onApplyPreferences, gridCols, preferences } = usePreferenceData(columns, gridId);
     const actionColumn = gridCols.find((col) => col.Actionswidth !== undefined);
     const actionsWidth = actionColumn?.Actionswidth || 123; // Default width if not found
     const [isMoreOptionVisible, setMoreOptionVisible] = useState(false);
@@ -1025,7 +1025,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         }
         return "";
       }).replace(/\s+/g, " ")   // collapse multiple spaces/newlines
-  .trim();                // remove extra leading/trailing spaces
+        .trim();                // remove extra leading/trailing spaces
     };
 
     const header = useMemo(() => {
@@ -1463,31 +1463,31 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       [onExporting, gridId, preferences, gridCols, header]
     );
 
-  const handlePrintPdf = async () => {
-    if (gridRef.current) {
-      // Mark export mode ON so cell renderers can degrade without using <Link>
-      (window as any).__DX_PDF_EXPORTING__ = true;
-      try {
-        const gridInstance = gridRef.current.instance();
-        const doc = await generatePdf(gridInstance, true);
-        doc?.setProperties({ title: gridHeader });
-        if (doc) {
-          doc.autoPrint();
-          const blob = doc.output("blob");
-          const url = URL.createObjectURL(blob);
-          const newWindow = window.open(url, "_blank");
-          if (newWindow) {
-            newWindow.onload = () => {
-              URL.revokeObjectURL(url);
-            };
+    const handlePrintPdf = async () => {
+      if (gridRef.current) {
+        // Mark export mode ON so cell renderers can degrade without using <Link>
+        (window as any).__DX_PDF_EXPORTING__ = true;
+        try {
+          const gridInstance = gridRef.current.instance();
+          const doc = await generatePdf(gridInstance, true);
+          doc?.setProperties({ title: gridHeader });
+          if (doc) {
+            doc.autoPrint();
+            const blob = doc.output("blob");
+            const url = URL.createObjectURL(blob);
+            const newWindow = window.open(url, "_blank");
+            if (newWindow) {
+              newWindow.onload = () => {
+                URL.revokeObjectURL(url);
+              };
+            }
           }
+        } finally {
+          // Always turn export mode OFF
+          (window as any).__DX_PDF_EXPORTING__ = false;
         }
-      } finally {
-        // Always turn export mode OFF
-        (window as any).__DX_PDF_EXPORTING__ = false;
       }
-    }
-  };
+    };
 
     const handlePrintMobilePdf = async () => {
       if (gridRef.current) {
@@ -1743,54 +1743,54 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       }
     }, [dataUrl]);
     const handleCalculateSummary = (options: any) => {
-      
-      let cellSummaryAction = summaryItems.find((x: SummaryConfig)=> x.column === options.name && x.cellSummaryAction != undefined )?.cellSummaryAction;
+
+      let cellSummaryAction = summaryItems.find((x: SummaryConfig) => x.column === options.name && x.cellSummaryAction != undefined)?.cellSummaryAction;
       if (summaryItems && summaryItems.length > 0 && cellSummaryAction != undefined) {
         switch (options.summaryProcess) {
-        case "start":
-          options.totalValue = 0;
-          break;
+          case "start":
+            options.totalValue = 0;
+            break;
 
-        case "calculate":
-          if (options.value != null) {
-        
-            console.log(options.value);
-            
-            const roundedSaleAmount = cellSummaryAction  && cellSummaryAction(options.value);
-            options.totalValue += roundedSaleAmount;
-            console.log(options.totalValue + roundedSaleAmount);
-          }
-          break;
+          case "calculate":
+            if (options.value != null) {
 
-        case "finalize":
-          options.totalValue = Number(options.totalValue);
-          // console.log(options.totalValue, "TOTAL");
-          break;
-      }
+              console.log(options.value);
+
+              const roundedSaleAmount = cellSummaryAction && cellSummaryAction(options.value);
+              options.totalValue += roundedSaleAmount;
+              console.log(options.totalValue + roundedSaleAmount);
+            }
+            break;
+
+          case "finalize":
+            options.totalValue = Number(options.totalValue);
+            // console.log(options.totalValue, "TOTAL");
+            break;
+        }
       } else {
         switch (options.summaryProcess) {
-        case "start":
-          options.totalValue = 0;
-          break;
+          case "start":
+            options.totalValue = 0;
+            break;
 
-        case "calculate":
-          if (options.value != null) {
-            options.totalValue += options.value;
-          }
-          break;
+          case "calculate":
+            if (options.value != null) {
+              options.totalValue += options.value;
+            }
+            break;
 
-        case "finalize":
-          options.totalValue = Number(options.totalValue);
-          // console.log(options.totalValue, "TOTAL");
-          break;
+          case "finalize":
+            options.totalValue = Number(options.totalValue);
+            // console.log(options.totalValue, "TOTAL");
+            break;
+        }
       }
-      }
-      
-    // }
-  }
+
+      // }
+    }
     // Memoize the entire Summary component
     const MemoizedSummary = useMemo(() => {
-      
+
       return (
         <Summary
           recalculateWhileEditing={true}
@@ -1999,7 +1999,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     const handleOptionChanged = (e: any) => {
       if (e.fullName?.startsWith("columns")) {
         if (e.fullName.endsWith("visibleIndex")) {
-          
+
           preferenceChooserRef.current?.handleDropping(
             true,
             e.previousValue,
@@ -2074,25 +2074,25 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           try {
             // Get the toolbar container
             const toolbar = headerRef.current.closest('.dx-toolbar');
-            
+
             if (toolbar) {
               const toolbarWidth = toolbar.clientWidth;
-              
+
               // Find all toolbar items on the right side (after items)
               const afterItems = toolbar.querySelectorAll('.dx-toolbar-after .dx-toolbar-item');
-              
+
               // Calculate total width of all right-side buttons
               let rightSideWidth = 0;
               afterItems.forEach((item) => {
                 rightSideWidth += (item as HTMLElement).offsetWidth;
               });
-              
+
               // Add padding/margin buffer
               const buffer = 40;
-              
+
               // Calculate available width for header
               const availableWidth = toolbarWidth - rightSideWidth - buffer;
-              
+
               setHeaderMaxWidth(`${Math.max(availableWidth, 150)}px`);
             }
           } catch (error) {
@@ -2105,39 +2105,39 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     useEffect(() => {
       // Initial calculation with delay to ensure DOM is ready
       const initialTimer = setTimeout(updateHeaderWidth, 400);
-      
+
       // Listen to window resize events
       window.addEventListener('resize', updateHeaderWidth);
-      
+
       // Listen to sidebar transitions using MutationObserver on app-content
-      const appContent = document.querySelector('.app-content') || 
-                        document.querySelector('.main-content') ||
-                        document.querySelector('body');
-      
+      const appContent = document.querySelector('.app-content') ||
+        document.querySelector('.main-content') ||
+        document.querySelector('body');
+
       if (appContent) {
         observerRef.current = new MutationObserver(() => {
           updateHeaderWidth();
         });
-        
+
         observerRef.current.observe(appContent, {
           attributes: true,
           attributeFilter: ['class', 'style'],
           subtree: false
         });
       }
-      
+
       // Also listen for transitions on sidebar itself
-      const sidebar = document.querySelector('.app-sidebar') || 
-                      document.querySelector('.sidebar');
-      
+      const sidebar = document.querySelector('.app-sidebar') ||
+        document.querySelector('.sidebar');
+
       const handleTransitionEnd = () => {
         updateHeaderWidth();
       };
-      
+
       if (sidebar) {
         sidebar.addEventListener('transitionend', handleTransitionEnd);
       }
-      
+
       // Cleanup function
       return () => {
         clearTimeout(initialTimer);
@@ -2168,9 +2168,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           />
         )}
         <div
-          className={`custom-data-grid ${
-            showChooserOnGridHead ? "toolbar-expanded" : ""
-          } ${!hideToolbar ? "hide-toolbar" : ""} ${className}`}
+          className={`custom-data-grid ${showChooserOnGridHead ? "toolbar-expanded" : ""
+            } ${!hideToolbar ? "hide-toolbar" : ""} ${className}`}
           style={gridStyle}
         >
           <DataGrid
@@ -2178,7 +2177,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             loadPanel={{ enabled: loadPanelEnabled }}
             onOptionChanged={handleOptionChanged}
             onRowUpdating={onRowUpdating}
-            rtlEnabled={direction??appState?.dir === "rtl"}
+            rtlEnabled={direction ?? appState?.dir === "rtl"}
             ref={gridRef}
             onInitialized={onGridReady}
             dataSource={memoizedStore}
@@ -2205,7 +2204,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             onKeyDown={onKeyDown}
             onRowUpdated={onRowUpdated}
             onExporting={onExportingHandler}
-           onContentReady={(e) => {
+            onContentReady={(e) => {
               if (e.component) {
                 const instance = e.component;
                 const totalCount = instance.totalCount();
@@ -2213,14 +2212,14 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                   totalRowCountRef.current = totalRowCountRef.current
                     ? totalRowCountRef.current
                     : totalCount;
-                 if (totalRowCountDisplayRef.current) {
-                    if(typeof totalRowCountRef.current === "number"
-                      ) {
-                        totalRowCountDisplayRef.current.textContent =
-                          totalRowCountRef.current.toString();
-                      } else {
-                        totalRowCountDisplayRef.current.textContent = "0"
-                      }
+                  if (totalRowCountDisplayRef.current) {
+                    if (typeof totalRowCountRef.current === "number"
+                    ) {
+                      totalRowCountDisplayRef.current.textContent =
+                        totalRowCountRef.current.toString();
+                    } else {
+                      totalRowCountDisplayRef.current.textContent = "0"
+                    }
                   }
                 }
                 if (selectionMode === "multiple") {
@@ -2321,72 +2320,72 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             {!hideToolbar && (
               <Toolbar>
                 {!hideGridHeader && (
-                <Item location="before">
-                  <div 
-                    ref={headerRef}
-                    style={{ 
-                      maxWidth: headerMaxWidth,
-                      minWidth: 0,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      overflow: 'hidden'
-                    }}
-                  >
-                    <div 
-                      className="box-title !text-xs !font-medium" 
-                      style={{ 
-                        display: 'flex', 
-                        alignItems: 'center',
+                  <Item location="before">
+                    <div
+                      ref={headerRef}
+                      style={{
+                        maxWidth: headerMaxWidth,
                         minWidth: 0,
-                        width: '100%',
-                        overflow: 'hidden',
-                        gap: '4px'
+                        display: 'flex',
+                        flexDirection: 'column',
+                        overflow: 'hidden'
                       }}
                     >
-                      {gridHeader && (
-                        <span
-                          className="text-sm dark:!text-dark-text"
-                          title={gridHeader}
-                          style={{ 
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap',
-                            flexShrink: 0,
-                            maxWidth: gridHeader.length > 50 ? '45%' : 'auto'  // Dynamic max-width
-                          }}
-                        >
-                          {gridHeader}
-                        </span>
-                      )}
-                      {header && (
-                        <span
-                          className="text-sm dark:!text-dark-text"
-                          title={header}
-                          style={{ 
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap',
-                            minWidth: 0,
-                            flex: gridHeader ? '1 1 auto' : 'none',  // Only flex if gridHeader exists
-                            flexBasis: 0
-                          }}
-                        >
-                          {header}
-                        </span>
-                      )}
+                      <div
+                        className="box-title !text-xs !font-medium"
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          minWidth: 0,
+                          width: '100%',
+                          overflow: 'hidden',
+                          gap: '4px'
+                        }}
+                      >
+                        {gridHeader && (
+                          <span
+                            className="text-sm dark:!text-dark-text"
+                            title={gridHeader}
+                            style={{
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                              flexShrink: 0,
+                              maxWidth: gridHeader.length > 50 ? '45%' : 'auto'  // Dynamic max-width
+                            }}
+                          >
+                            {gridHeader}
+                          </span>
+                        )}
+                        {header && (
+                          <span
+                            className="text-sm dark:!text-dark-text"
+                            title={header}
+                            style={{
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                              minWidth: 0,
+                              flex: gridHeader ? '1 1 auto' : 'none',  // Only flex if gridHeader exists
+                              flexBasis: 0
+                            }}
+                          >
+                            {header}
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </Item>
+                  </Item>
                 )}
 
                 <Item>
                   <div className="block sm:hidden relative">
                     <button
                       onClick={handleMobileMenuClick}
-                      className="ti-btn bg-gradient-to-r from-[#6366f1] to-[#7e22ce] text-white rounded-lg p-2.5 shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                      className="ti-btn bg-[#e5e5e5] text-black rounded-lg !p-1.5 shadow hover:shadow-md transition-shadow duration-200"
                       aria-label="Open menu"
                     >
-                      <Menu className="w-4 h-4" />
+                      <Menu className="w-3 h-3" />
                     </button>
 
                     {isMobileMenuOpen && (
@@ -2660,10 +2659,10 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 {enablefilter === true && (
                   <Item>
                     <button
-                      onClick={()=>{
+                      onClick={() => {
                         console.log("button clicked", showFilter)
                         setShowFilter((prev) => !prev
-                      )
+                        )
                       }}
                       className="ti-btn rounded-[2px] dark:bg-dark-bg-header dark:text-dark-text"
                     >
@@ -2819,31 +2818,34 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 }
                 sortOrder={column.sortOrder}
                 sortIndex={column.sortIndex}
-                // fixed={column.dataField === 'actions' ? true : column.fixed}
-                // fixedPosition={column.dataField === 'actions' ? 'right' : column.fixedPosition}
+              // fixed={column.dataField === 'actions' ? true : column.fixed}
+              // fixedPosition={column.dataField === 'actions' ? 'right' : column.fixedPosition}
               />
             ))}
-            
+
             {/* <Grouping autoExpandAll={true} allowCollapsing={false} /> */}
 
-            {enablefilter === true && (   
-            <div className="hidden sm:block">
-                      <ErpGridGlobalFilter
-                        width={filterWidth}
-                        height={filterHeight}
-                        title={gridHeader}
-                        gridId={gridId}
-                        validations={filterValidations}
-                        initialData={filter}
-                        content={filterContent}
-                        toogleFilter={showFilter}
-                        onApplyFilters={(filters) => onApplyFilter(filters)}
-                        onOpened={(status) => console.log("Modal opened:", status)}
-                        onClose={(status) => { if (status) {setShowFilter(false);
-                         }}} 
-                      />
-                    </div>
-            )} 
+            {enablefilter === true && (
+              <div className="hidden sm:block">
+                <ErpGridGlobalFilter
+                  width={filterWidth}
+                  height={filterHeight}
+                  title={gridHeader}
+                  gridId={gridId}
+                  validations={filterValidations}
+                  initialData={filter}
+                  content={filterContent}
+                  toogleFilter={showFilter}
+                  onApplyFilters={(filters) => onApplyFilter(filters)}
+                  onOpened={(status) => console.log("Modal opened:", status)}
+                  onClose={(status) => {
+                    if (status) {
+                      setShowFilter(false);
+                    }
+                  }}
+                />
+              </div>
+            )}
           </DataGrid>
 
           {showTotalCount == true && (

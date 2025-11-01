@@ -19,7 +19,7 @@ import { Countries } from "../../../redux/slices/user-session/reducer";
 import { UserAction, useUserRights } from "../../../helpers/user-right-helper";
 import { exludedRoutes } from "../content/transaction-routes";
 import { getFilteredReports } from "../../ERPComponents/reports/reports-list-filter";
-import { ArrowBigLeftDash } from "lucide-react";
+import { ArrowBigLeftDash, X } from "lucide-react";
 
 // Lazy-loaded components
 const SimpleBar = lazy(() => import("simplebar-react"));
@@ -48,7 +48,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
   let applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
-
+  const deviceInfo = useAppSelector((state: RootState) => state.DeviceInfo);
   const { hasRight } = useUserRights();
   const { getAllowedFormCodes } = useUserRights();
   const [menuitems, setMenuitems] = useState<any>(() => {
@@ -95,13 +95,13 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
 
     return filterItems(menuitems);
   }, [menuitems, searchTerm]);
-const extractRights = (items: any[]): string[] => {
-  return items.flatMap((item) => {
-    const rights = item.rights ? [item.rights] : [];
-    const childRights = item.children ? extractRights(item.children) : [];
-    return [...rights, ...childRights];
-  });
-};
+  const extractRights = (items: any[]): string[] => {
+    return items.flatMap((item) => {
+      const rights = item.rights ? [item.rights] : [];
+      const childRights = item.children ? extractRights(item.children) : [];
+      return [...rights, ...childRights];
+    });
+  };
   useEffect(() => {
     if (type == "settings") {
       let st = menuitems;
@@ -188,10 +188,10 @@ const extractRights = (items: any[]): string[] => {
       let st: [] = [];
 
       st = menuitems;
-      
- const allRights = extractRights(menuitems).filter((r) => r && r.trim() !== "");
-const allowedFormCodes = getAllowedFormCodes(allRights, UserAction.Show);
-     
+
+      const allRights = extractRights(menuitems).filter((r) => r && r.trim() !== "");
+      const allowedFormCodes = getAllowedFormCodes(allRights, UserAction.Show);
+
 
       const sd = st
         .map((x: any) => {
@@ -738,10 +738,13 @@ const allowedFormCodes = getAllowedFormCodes(allRights, UserAction.Show);
     if (currentPath !== previousUrl) {
       setMenuUsingUrl(currentPath);
       setPreviousUrl(currentPath);
+      if (deviceInfo?.isMobile) {
+        menuClose();
+      }
     }
 
     // ... the rest of your useEffect code
-  }, [location]);
+  }, [location, deviceInfo]);
   function toggleSidemenu(
     event: any,
     targetObject: any,
@@ -914,6 +917,11 @@ const allowedFormCodes = getAllowedFormCodes(allRights, UserAction.Show);
       }
     }
   }
+
+  const handleCloseSideBar = () => {
+    menuClose();
+  }
+
   const renderNavItems = useMemo(() => {
     return (
       <Fragment>
@@ -924,7 +932,7 @@ const allowedFormCodes = getAllowedFormCodes(allRights, UserAction.Show);
           }}
         ></div>
         <aside
-          className="app-sidebar"
+          className={`app-sidebar ${deviceInfo?.isMobile ? "w-full" : ""}`}
           id="sidebar"
           onMouseEnter={() => Onhover()}
           onMouseLeave={() => Outhover()}
@@ -959,18 +967,26 @@ const allowedFormCodes = getAllowedFormCodes(allRights, UserAction.Show);
                 </svg>
               </div>
               <div className="search-bar mt-3 px-3">
-                <input
-                  id="sidebar-menu-search"
-                  name="sidebar-menu-search"
-                  type="text"
-                  placeholder="Search here"
-                  readOnly
-                  value={searchTerm}
-                  autoComplete="off"
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  onFocus={(e) => e.target.removeAttribute('readonly')}
-                  className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+                <div className="flex items-center gap-2">
+                  <input
+                    id="sidebar-menu-search"
+                    name="sidebar-menu-search"
+                    type="text"
+                    placeholder="Search here"
+                    readOnly
+                    value={searchTerm}
+                    autoComplete="off"
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onFocus={(e) => e.target.removeAttribute('readonly')}
+                    className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  {
+                    deviceInfo?.isMobile &&
+                    <div onClick={handleCloseSideBar} className="flex h-6 w-6 items-center justify-center rounded-full bg-red-700 text-white cursor-pointer transition-all duration-300 hover:bg-white hover:text-red-700">
+                      <X className="h-3.5 w-3.5" />
+                    </div>
+                  }
+                </div>
               </div>
               {/* hasTopBorder */}
               <ul className="main-menu" onClick={() => Sideclick()}>

@@ -37,17 +37,14 @@ export const RenderComponentPDF: React.FC<Props> = ({
     if (component.type !== DesignerElementType.container || !component.containerProps?.autoResize || !component.children?.length) {
       return component.height;
     }
-
     let maxBottom = 0;
     component.children.forEach(child => {
       const childBottom = child.y + child.height;
       if (childBottom > maxBottom) maxBottom = childBottom;
     });
-
     const padding = component.containerProps?.padding || 0;
     const minHeight = component.containerProps?.minHeight || 50;
     const maxHeight = component.containerProps?.maxHeight || 500;
-
     return Math.min(Math.max(maxBottom + padding, minHeight), maxHeight);
   };
 
@@ -57,10 +54,10 @@ export const RenderComponentPDF: React.FC<Props> = ({
   const textContent =
   component.type === DesignerElementType.text
     ? component.content
-    : bindDataForPrint(component.content, data, convertAmountToEnglish, convertAmountToArabic) || "N/A";
+    : bindDataForPrint(component.content, data, convertAmountToEnglish, convertAmountToArabic) ;
 
-const isArabicText = typeof textContent === "string" && containsArabicString(textContent);
-const pdfDirection = component.direction ?? (isArabicText ? "rtl" : "ltr");
+ const isArabicText = typeof textContent === "string" && containsArabicString(textContent);
+ const pdfDirection = component.direction ?? (isArabicText ? "rtl" : "ltr");
 
 // Map textAlign to PDF justifyContent
 const getJustifyContent = () => {

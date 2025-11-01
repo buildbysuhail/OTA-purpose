@@ -69,8 +69,8 @@ const styles = StyleSheet.create({
 
 
 const Table = ({ data, getFormattedValue }: { data: any , getFormattedValue: any}) => {
-  const ob = data.find((x: any) => x.particulars == "Opening Balance")
-  const tot = data.find((x: any) => x.particulars == "TOTAL")
+  const ob = data && data.length > 0 ?  data[0].balance : 0
+  const tot = data && data.length > 0 ?  data[data.length - 1].balance : 0
   return (
     <View style={styles.tableContainer}>
       {/* Table Header */}
@@ -147,12 +147,12 @@ const Table = ({ data, getFormattedValue }: { data: any , getFormattedValue: any
                 </Text>
                 <Text style={[styles.tableCell, styles.poNumberCell]}></Text>
                 <Text style={[styles.tableCell, styles.debitCell]}>
-                  {ob.debit == null && ob.credit == null
+                  {ob == null && ob == null
               ? ""
-              : ob.debit > 0
-                ?getFormattedValue(ob.debit, false, 3) + " Dr" 
-              : ob.credit > 0
-                ?getFormattedValue(ob.credit, false, 3) + " Cr" : "0"}
+              : ob > 0
+                ?getFormattedValue(ob, false, 3) + " Dr" 
+              : ob > 0
+                ?getFormattedValue(ob, false, 3) + " Cr" : "0"}
                 </Text>
                 <Text style={[styles.tableCell, styles.creditCell]}>
                    
@@ -168,12 +168,12 @@ const Table = ({ data, getFormattedValue }: { data: any , getFormattedValue: any
                 </Text>
                 <Text style={[styles.tableCell, styles.poNumberCell]}></Text>
                 <Text style={[styles.tableCell, styles.debitCell]}>
-                  {tot.debit == null && tot.credit == null
+                  {tot == null && tot == null
               ? ""
-              : tot.debit > 0
-                ?getFormattedValue(tot.debit, false, 3) + " Dr" 
-              : tot.credit > 0
-                ?getFormattedValue(tot.credit, false, 3) + " Cr" : "0"}
+              : tot > 0
+                ?getFormattedValue(tot, false, 3) + " Dr" 
+              : tot > 0
+                ?getFormattedValue(tot, false, 3) + " Cr" : "0"}
                 </Text>
                 <Text style={[styles.tableCell, styles.creditCell]}>
                    

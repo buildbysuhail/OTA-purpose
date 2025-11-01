@@ -328,6 +328,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
           
           {/* Popup Menu */}
           <div className="relative">
+            {/* {formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && ( */}
             <button
               ref={buttonRef}
               onClick={openMenuPopup}
@@ -336,6 +337,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
               title={t("more")}>
               <EllipsisVertical className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
             </button>
+            {/* )} */}
 
             {formState.headerMenuOpen && (
               <div

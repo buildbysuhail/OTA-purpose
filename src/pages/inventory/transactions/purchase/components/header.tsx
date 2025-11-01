@@ -186,11 +186,13 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
     const isAbove768 = useMediaQuery('(min-width: 768px)');
     const isAbove640 = useMediaQuery('(min-width: 640px)');
     const isAbove480 = useMediaQuery('(min-width: 480px)');
+     
 
     return (
       <>
         <div className={`!overflow-visible flex items-center justify-evenly md:justify-end space-x-2 p-1 w-full overflow-x-auto bg-[#f9fafb] md:bg-transparent`}>
           {/* Load Temp Rows */}
+          {formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
           <div className="group relative inline-flex flex-col items-center ps-[5px]" title="Load Details">
             <button
               disabled={formState.formElements.pnlMasters?.disabled}
@@ -199,9 +201,10 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
               <ChevronUp className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
             </button>
           </div>
+         )}
 
           {/* Delete Button */}
-          {isAbove480 && (
+          {isAbove480 && formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
             <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("delete")}>
               <button
                 disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master?.invTransactionMasterID > 0 && formState.formElements?.pnlMasters?.disabled !== true)}
@@ -231,7 +234,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
           </div>
 
           {/* Edit Button */}
-          {formState.formElements.lnkUnlockVoucher?.visible !== true && isAbove480 && (
+          {formState.formElements.lnkUnlockVoucher?.visible !== true && isAbove480 && formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
             <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("edit")}>
               <button
                 disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master.invTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
@@ -305,7 +308,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
           )}
 
           {/* History Button */}
-          {isAbove768 && (
+          {isAbove768 && formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
             <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("history")}>
               <button
                 disabled={formState.transactionLoading}
@@ -325,6 +328,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
           
           {/* Popup Menu */}
           <div className="relative">
+            {/* {formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && ( */}
             <button
               ref={buttonRef}
               onClick={openMenuPopup}
@@ -333,6 +337,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
               title={t("more")}>
               <EllipsisVertical className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
             </button>
+            {/* )} */}
 
             {formState.headerMenuOpen && (
               <div
@@ -387,7 +392,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         </div>
                       </li>
                     )}
-
+                  {formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
                     <li>
                       <button
                         onClick={selectTemplates}
@@ -399,8 +404,9 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         <span className="font-medium">{t("change_template")}</span>
                       </button>
                     </li>
+                  )}
 
-                    {formState.formElements.printPreview?.visible && (
+                    {formState.formElements.printPreview?.visible && formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
                       <li>
                         <div className="px-3 py-[5px] hover:bg-[#eef2ff] hover:text-[#4338ca] dark:hover:bg-[#312e814d] dark:hover:text-[#c7d2fe] transition-all duration-200 rounded-md group">
                           <div className="w-full flex items-center gap-3">
@@ -431,7 +437,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                       </li>
                     )}
 
-                    {["PI", "GRN"].includes(formState.transaction.master.voucherType) && (
+                    {["PI", "GRN"].includes(formState.transaction.master.voucherType) && formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" &&  (
                       <li>
                         <button
                           disabled={formState.formElements?.pnlMasters?.disabled}
@@ -449,7 +455,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                     )}
 
                     {
-                      formState.transaction.master.voucherType == 'PI' &&
+                      formState.transaction.master.voucherType == 'PI' && 
                       (
                         <li>
                           <button
@@ -507,7 +513,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         </li>
                       )
                     }
-
+                  {formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
                     <li>
                       <button
                         disabled={formState.formElements?.pnlMasters?.disabled}
@@ -522,7 +528,8 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         <span className="font-medium">{t("download_excel_template")}</span>
                       </button>
                     </li>
-
+                  )}
+                   {formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
                     <li>
                       <button
                         disabled={formState.formElements?.pnlMasters?.disabled}
@@ -542,7 +549,8 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         />
                       </button>
                     </li>
-
+                  )}
+                  {formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
                     <li>
                       <button
                         className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-amber-50 hover:text-amber-800 dark:hover:bg-amber-900/30 dark:hover:text-amber-300 transition-all duration-200 rounded-md group text-left"
@@ -553,6 +561,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         <span className="font-medium">{t("print_barcode")}</span>
                       </button>
                     </li>
+                  )}
 
                     {formState.transaction.master.voucherType === 'PI' && (
                       <li>
@@ -621,6 +630,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                             <span className="font-medium">{t("party_wise_summary")}</span>
                           </button>
                         </li>
+                        {!isAbove640 && formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
                         <li>
                           <button
                             className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-slate-50 hover:text-slate-800 dark:hover:bg-slate-800/30 dark:hover:text-slate-300 transition-all duration-200 rounded-md group text-left"
@@ -631,11 +641,13 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                             <span className="font-medium">{t("history")}</span>
                           </button>
                         </li>
+                        )}
                       </>
                     )}
 
-                    {!isAbove640 && (
+                    
                       <>
+                      {!isAbove640 && formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
                         <li>
                           <button
                             className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-orange-50 hover:text-orange-800 dark:hover:bg-orange-900/30 dark:hover:text-orange-300 transition-all duration-200 rounded-md group text-left"
@@ -646,6 +658,8 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                             <span className="font-medium">{t("clear")}</span>
                           </button>
                         </li>
+                        )}
+                        {!isAbove640 && formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
                         <li>
                           <button
                             disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master.invTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
@@ -662,8 +676,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                                 undefined,                                            // printTmeplate (optional)
                                 formState.transaction?.master.transactionDate ?? "",
 
-                              )
-                            }
+                              )}
                           >
                             <div className="w-8 h-8 bg-[#ede9fe] dark:bg-[#4c1d954d] rounded-full flex items-center justify-center group-hover:bg-[#ddd6fe] dark:group-hover:bg-[#4c1d9599] group-hover:scale-110 transition-all duration-200">
                               <Printer className="h-4 w-4 text-[#6d28d9] dark:text-[#ddd6fe]" />
@@ -671,8 +684,8 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                             <span className="font-medium">{t("print")}</span>
                           </button>
                         </li>
+                        )}
                       </>
-                    )}
 
                     {!isAbove480 && (
                       <>

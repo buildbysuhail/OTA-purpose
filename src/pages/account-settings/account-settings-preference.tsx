@@ -328,7 +328,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               name="ltr"
                               value="ltr"
                               checked={appState.dir === "ltr"}
-                              onClick={async() => {await  switcherdata.Ltr(updateAppState, appState); }}
+                              onChange={async() => {await  switcherdata.Ltr(updateAppState, appState); }}
                               label={t("ltr")}
                             />  
                             <ERPRadio
@@ -336,105 +336,66 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               name="rtl"
                               value="rtl"
                               checked={appState.dir === "rtl"}
-                              onClick={ async() => { await  switcherdata.Rtl(updateAppState, appState); }}  
+                              onChange={ async() => { await  switcherdata.Rtl(updateAppState, appState); }}  
                               label={t("rtl")}
                             />                                                      
                           </div>
                         </div>
 
-                        <div className=" sidemenu-layout-styles">
+                        <div className="">
                           <p className="switcher-style-head">
                             {t("side_menu_layout_styles")}
                           </p>
                           <div className="grid grid-cols-2 gap-2 switcher-style">
-                            <div className="flex">
-                              <input
-                                type="radio"
-                                name="sidemenu-layout-styles"
-                                className="ti-form-radio"
-                                id="switcher-default-menu"
-                                checked={appState.dataMenuStyles == "defaultmenu"}
-                                onChange={(_e) => { }}
-                                onClick={async() => { await switcherdata.Defaultmenu(updateAppState, appState); }}
-                              />
-                              <label htmlFor="switcher-default-menu" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold ">
-                                {t("default_menu")}
-                              </label>
-                            </div>
+                             <ERPRadio
+                              id="defaultmenu"
+                              name="defaultmenu"
+                              value="defaultmenu"
+                              checked={appState.dataMenuStyles === "defaultmenu"}
+                              onChange={async() => { await switcherdata.Defaultmenu(updateAppState, appState); }}  
+                              label={t("default_menu")}
+                            /> 
+                            <ERPRadio
+                              id="closedmenu"
+                              name="closedmenu"
+                              value="closedmenu"
+                              checked={appState.dataMenuStyles === "closedmenu"}
+                              onChange={async() => { await switcherdata.Closedmenu(updateAppState, appState); }}  
+                              label={t("closed_menu")}
+                            />  
+                              <ERPRadio
+                              id="iconTextfn"
+                              name="iconTextfn"
+                              value="iconTextfn"
+                              checked={appState.dataMenuStyles === "iconTextfn"}
+                              onChange={async() => { await switcherdata.iconTextfn(updateAppState, appState); }}  
+                              label={t("icon_text")}
+                            /> 
+                            <ERPRadio
+                              id="iconOverayFn"
+                              name="iconOverayFn"
+                              value="iconOverayFn"
+                              checked={appState.dataMenuStyles === "iconOverayFn"}
+                              onChange={async() => { await switcherdata.iconOverayFn(updateAppState, appState); }}  
+                              label={t("icon_overlay")}
+                            />                             
+                              <ERPRadio
+                              id="detachedFn"
+                              name="detachedFn"
+                              value="detachedFn"
+                              checked={appState.dataMenuStyles === "detachedFn"}
+                              onChange={async() => { await switcherdata.DetachedFn(updateAppState, appState); }}  
+                              label={t("detached")}
+                            /> 
+                            <ERPRadio
+                              id="doubletFn"
+                              name="doubletFn"
+                              value="doubletFn"
+                              checked={appState.dataMenuStyles === "doubletFn"}
+                              onChange={async() => { await switcherdata.DoubletFn(updateAppState, appState); }}  
+                              label={t("double_menu")}
+                            />                                                                                      
 
-                            <div className="flex">
-                              <input
-                                type="radio"
-                                name="sidemenu-layout-styles"
-                                className="ti-form-radio"
-                                id="switcher-closed-menu"
-                                checked={appState.dataMenuStyles == "closedmenu"}
-                                onChange={(_e) => { }}
-                                onClick={async() => { await switcherdata.Closedmenu(updateAppState, appState); }}
-                              />
-                              <label htmlFor="switcher-closed-menu" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold ">
-                                {t("closed_menu")}
-                              </label>
-                            </div>
-
-                            <div className="flex">
-                              <input
-                                type="radio"
-                                name="sidemenu-layout-styles"
-                                className="ti-form-radio"
-                                id="switcher-icontext-menu"
-                                checked={appState.dataMenuStyles == "iconTextfn"}
-                                onChange={(_e) => { }}
-                                onClick={async() => { await switcherdata.iconTextfn(updateAppState, appState); }}
-                              />
-                              <label htmlFor="switcher-icontext-menu" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold ">
-                                {t("icon_text")}
-                              </label>
-                            </div>
-
-                            <div className="flex">
-                              <input
-                                type="radio"
-                                name="sidemenu-layout-styles"
-                                className="ti-form-radio"
-                                id="switcher-icon-overlay"
-                                checked={appState.dataMenuStyles == "iconOverayFn"}
-                                onClick={async() => { await switcherdata.iconOverayFn(updateAppState, appState); }}
-                              />
-                              <label htmlFor="switcher-icon-overlay" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold ">
-                                {t("icon_overlay")}
-                              </label>
-                            </div>
-
-                            <div className="flex">
-                              <input
-                                type="radio"
-                                name="sidemenu-layout-styles"
-                                className="ti-form-radio"
-                                id="switcher-detached"
-                                checked={appState.dataMenuStyles == "detachedFn"}
-                                onChange={(_e) => { }}
-                                onClick={async() => {await  switcherdata.DetachedFn(updateAppState, appState); }}
-                              />
-                              <label htmlFor="switcher-detached" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold ">
-                                {t("detached")}
-                              </label>
-                            </div>
-
-                            <div className="flex">
-                              <input
-                                type="radio"
-                                name="sidemenu-layout-styles"
-                                className="ti-form-radio"
-                                id="switcher-double-menu"
-                                checked={appState.dataMenuStyles == "doubletFn"}
-                                onChange={(_e) => { }}
-                                onClick={async() => {await  switcherdata.DoubletFn(updateAppState, appState); }}
-                              />
-                              <label htmlFor="switcher-double-menu" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold" >
-                                {t("double_menu")}
-                              </label>
-                            </div>
                           </div>
 
                           <div className="px-4 text-secondary text-xs">
@@ -446,57 +407,30 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                         <div>
                           <p className="switcher-style-head">{t("page_styles")}</p>
                           <div className="grid grid-cols-3 switcher-style">
-                            <div className="flex">
-                              <input
-                                type="radio"
-                                name="data-page-styles"
-                                className="ti-form-radio"
-                                id="switcher-regular"
-                                checked={appState.dataPageStyle == "regular"}
-                                onChange={(_e) => { }}
-                                onClick={async(e) => {
-                                  if (true == true) {
-                                     await switcherdata.Regular(
-                                      updateAppState,
-                                      appState
-                                    );
-                                  }
-                                }}
-                              />
-                              <label htmlFor="switcher-regular" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">
-                                {t("regular")}
-                              </label>
-                            </div>
-
-                            <div className="flex">
-                              <input
-                                type="radio"
-                                name="data-page-styles"
-                                className="ti-form-radio"
-                                id="switcher-classic"
-                                checked={appState.dataPageStyle == "classic"}
-                                onChange={(_e) => { }}
-                                onClick={async() => {await switcherdata.Classic(updateAppState, appState); }}
-                              />
-                              <label htmlFor="switcher-classic" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">
-                                {t("classic")}
-                              </label>
-                            </div>
-
-                            <div className="flex">
-                              <input
-                                type="radio"
-                                name="data-page-styles"
-                                className="ti-form-radio"
-                                id="switcher-modern"
-                                checked={appState.dataPageStyle == "modern"}
-                                onChange={(_e) => { }}
-                                onClick={async() => {await switcherdata.Modern(updateAppState, appState); }}
-                              />
-                              <label htmlFor="switcher-modern" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">
-                                {t("modern")}
-                              </label>
-                            </div>
+                            <ERPRadio
+                              id="regular"
+                              name="regular"
+                              value="regular"
+                              checked={appState.dataPageStyle === "regular"}
+                              onChange={async() => { await switcherdata.Regular(updateAppState, appState); }}  
+                              label={t("regular")}
+                            />                             
+                              <ERPRadio
+                              id="classic"
+                              name="classic"
+                              value="classic"
+                              checked={appState.dataPageStyle == "classic"}
+                              onChange={async() => { await switcherdata.Classic(updateAppState, appState); }}  
+                              label={t("classic")}
+                            /> 
+                            <ERPRadio
+                              id="modern"
+                              name="modern"
+                              value="modern"
+                              checked={appState.dataPageStyle == "modern"}
+                              onChange={async() => { await switcherdata.Modern(updateAppState, appState); }}  
+                              label={t("modern")}
+                            />                                
                           </div>
                         </div>
                       </div>
@@ -618,8 +552,6 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                           {t("theme_color_picker")}
                         </div>
                       </div>
-{appState.colorPrimaryRgb}
-{appState.colorPrimary}
                       <div className="theme-colors">
                         <p className="switcher-style-head">{t("header_colors")}</p>
                         <div className="flex switcher-style space-x-3 rtl:space-x-reverse">
@@ -820,22 +752,19 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                             <h6 className="switcher-style-head ">
                               {t("scrollbar_width")}
                             </h6>
-                            <div className="flex flex-col gap-2">
+                            <div className="flex flex-col gap-2">                            
                               {
                                 ["md", "sm"].map((width) => (
-                                  <div key={width} className="flex items-center">
-                                    <input
-                                      type="radio"
-                                      name="data-page-scrollbar"
-                                      className="ti-form-radio"
-                                      id={`scrollbar-${width}`}
-                                      checked={appState.scrollbarWidth === width}
-                                      onChange={() => { debouncedHandleChange("scrollbarWidth", width); }}
-                                    />
-                                    <label htmlFor={`scrollbar-${width}`} className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
-                                      {width === "md" ? t("normal") : t("thin")}
-                                    </label>
-                                  </div>
+                                <div key={width} className="flex items-center">
+                                <ERPRadio
+                                  id={width}
+                                  name={width}
+                                  value={width}
+                                  checked={appState.scrollbarWidth === width}
+                                  onChange={() => { debouncedHandleChange("scrollbarWidth", width); }} 
+                                  label={width === "md" ? t("normal") : t("thin")}
+                                />   
+                                </div>
                                 ))
                               }
                              </div>

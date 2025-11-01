@@ -8,16 +8,19 @@ import store from './redux/store'
 import App from './App'
 import { ToastContainer } from 'react-toastify'
 import { history as _history } from './history';
+import RootWrapper from './Rootwrapper';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.Fragment>
     <BrowserRouter >
+
       <div className="scrollbar-hide">
         <Provider store={store}>
+          <RootWrapper>
           <App />
           {/* <PopModelContainer /> */}
           <ToastContainer />
-         
+         </RootWrapper>
           {/* <ERPAlertContainer /> */}
         </Provider>
       </div>

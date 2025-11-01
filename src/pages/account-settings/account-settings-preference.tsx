@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
 import "./profile.css";
 import { handleResponse } from "../../utilities/HandleResponse";
 import { APIClient } from "../../helpers/api-client";
-import { ColorPicker, hexToRgb, } from "../../components/common/switcher/switcherdata/switcherdata";
+import Themeprimarycolor, { ColorPicker, hexToRgb, } from "../../components/common/switcher/switcherdata/switcherdata";
 import * as switcherdata from "../../components/common/switcher/switcherdata/switcherdata";
 import { useAppState } from "../../utilities/hooks/useAppState";
 import { AppState, inputBox, Theme, } from "../../redux/slices/app/types";
@@ -17,11 +17,13 @@ import { reducerNameFromUrl } from "../../redux/actions/AppActions";
 import { reduxManager } from "../../redux/dynamic-store-manager-pro";
 import ERPDataCombobox from "../../components/ERPComponents/erp-data-combobox";
 import { ERPScrollArea } from "../../components/ERPComponents/erp-scrollbar";
-import InputBoxStyling from "../../components/ERPComponents/erp-inputboxStyle-preference";
+import InputBoxStyling, { ColorPickerInput } from "../../components/ERPComponents/erp-inputboxStyle-preference";
 import ERPAlert from "../../components/ERPComponents/erp-sweet-alert";
 import { changeLanguage } from "../../utilities/languageUtils";
 import { useTranslation } from "react-i18next";
 import { setStorageString } from "../../utilities/storage-utils";
+import useDebounce from "../inventory/transactions/purchase/use-debounce";
+import ERPRadio from "../../components/ERPComponents/erp-radio";
 
 interface AccountSettingsProps { }
 interface UserLanguage {
@@ -164,7 +166,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
     }
   };
 
-  const handleScrollbarChange = (field: keyof AppState, value: any) => {
+  const handleChange = (field: keyof AppState, value: any) => {
     const _appState = {
       ...appState,
       [field]: value,
@@ -172,15 +174,8 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
     updateAppState(_appState);
   };
 
-  // const handleScrollbarChange = (key: string, value: any) => {
-  //   if (key === 'scrollbarWidth') {
-  //     dispatch(setScrollbarWidth(value));
-  //   } else if (key === 'scrollbarColor') {
-  //     dispatch(setScrollbarColor(value));
-  //   }
-  // };
-
   const saveThemeChange = async () => {
+    debugger;
     try{
     setIsSaving(true);
     const res = await api.postAsync(Urls.updateUserThemes, {
@@ -217,7 +212,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
       console.error("Error getInputBox data:", error);
     }
   };
-
+ const debouncedHandleChange = useDebounce(handleChange, 300);
   return (
     <Fragment>
       <ERPButton
@@ -225,7 +220,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
         onClick={resetThemeChange}
         type="reset"
       />
-      <div className="grid grid-cols-12 gap-x-6">
+      <div   className="grid grid-cols-12 gap-x-6 mt-[2px]">
         <div className="xxl:col-span-6 xl:col-span-12  col-span-12 ">
           <div className="grid grid-cols-12 gap-x-6">
             <div id="avatar" className={`xxl:col-span-12 xl:col-span-12 ${path === "avatar" ? "blink" : ""} col-span-12`}>
@@ -301,68 +296,49 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                             {t("theme_color_mode")}
                           </p>
                           <div className="grid grid-cols-3 switcher-style">
-                            <div className="flex items-center">
-                              <input
-                                type="radio"
-                                name="theme-style"
-                                className="ti-form-radio"
-                                id="switcher-light-theme"
-                                checked={appState.mode === "light"}
-                                onChange={async() => {await switcherdata.Light(updateAppState, appState); }}
-                              />
-                              <label htmlFor="switcher-light-theme" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">
-                                {t("light")}
-                              </label>
-                            </div>
+                            <ERPRadio
+                              id="light"
+                              name="light"
+                              value="light"
+                              checked={appState.mode === "light"}
+                              onChange={async () => {
+                                await switcherdata.Light(updateAppState, appState);
+                              }}
+                              label={t("light")}
+                            />
 
-                            <div className="flex items-center">
-                              <input
-                                type="radio"
-                                name="theme-style"
-                                className="ti-form-radio"
-                                id="switcher-dark-theme"
-                                checked={appState.mode === "dark"}
-                                onChange={async() => {await  switcherdata.Dark(updateAppState, appState); }}
-                              />
-                              <label htmlFor="switcher-dark-theme" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold" >
-                                {t("dark")}
-                              </label>
-                            </div>
+                            <ERPRadio
+                              id="dark"
+                              name="dark"
+                              value="dark"
+                              checked={appState.mode === "dark"}
+                              onChange={async () => {
+                                await switcherdata.Dark(updateAppState, appState);
+                              }}
+                              label={t("dark")}
+                            />
                           </div>
                         </div>
 
                         <div>
                           <p className="switcher-style-head">{t("directions")}</p>
                           <div className="grid grid-cols-3  switcher-style">
-                            <div className="flex items-center">
-                              <input
-                                type="radio"
-                                name="direction"
-                                className="ti-form-radio"
-                                id="switcher-ltr"
-                                checked={appState.dir != "rtl"}
-                                onChange={(e) => { }}
-                                onClick={async() => {await  switcherdata.Ltr(updateAppState, appState); }}
-                              />
-                              <label htmlFor="switcher-ltr" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">
-                                {t("ltr")}
-                              </label>
-                            </div>
-
-                            <div className="flex items-center">
-                              <input
-                                type="radio"
-                                name="direction"
-                                className="ti-form-radio"
-                                id="switcher-rtl"
-                                checked={appState.dir == "rtl"}
-                                onChange={(e) => { }}
-                                onClick={ async() => { await  switcherdata.Rtl(updateAppState, appState); }}
-                              />
-                              <label htmlFor="switcher-rtl" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">
-                                {t("rtl")}
-                              </label>
-                            </div>
+                            <ERPRadio
+                              id="ltr"
+                              name="ltr"
+                              value="ltr"
+                              checked={appState.dir === "ltr"}
+                              onClick={async() => {await  switcherdata.Ltr(updateAppState, appState); }}
+                              label={t("ltr")}
+                            />  
+                            <ERPRadio
+                              id="rtl"
+                              name="rtl"
+                              value="rtl"
+                              checked={appState.dir === "rtl"}
+                              onClick={ async() => { await  switcherdata.Rtl(updateAppState, appState); }}  
+                              label={t("rtl")}
+                            />                                                      
                           </div>
                         </div>
 
@@ -642,7 +618,8 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                           {t("theme_color_picker")}
                         </div>
                       </div>
-
+{appState.colorPrimaryRgb}
+{appState.colorPrimary}
                       <div className="theme-colors">
                         <p className="switcher-style-head">{t("header_colors")}</p>
                         <div className="flex switcher-style space-x-3 rtl:space-x-reverse">
@@ -732,6 +709,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
 
                       <div className="theme-colors">
                         <p className="switcher-style-head">{t("theme_primary")}</p>
+
                         <div className="flex switcher-style space-x-3 rtl:space-x-reverse">
                           <div className="ti-form-radio switch-select">
                             <input
@@ -766,7 +744,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               id="switcher-primary2"
                               onClick={async() => {await switcherdata.primaryColor3(updateAppState, appState); }}
                             />
-                          </div>
+                         </div>
 
                           <div className="ti-form-radio switch-select">
                             <input
@@ -819,6 +797,8 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                             appState,
                                             `${r},  ${g},  ${b}`
                                           );
+                                          console.log("rgb pass",rgb);
+                                          
                                         }
                                       }}
                                       value={"#FFFFFF"}
@@ -830,6 +810,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                           </div>
                           <div className="ti-form-radio switch-select ps-0 mt-1 color-primary-light"></div>
                         </div>
+
                       </div>
 
                       <div className="sidemenu-layout-styles">
@@ -849,7 +830,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                       className="ti-form-radio"
                                       id={`scrollbar-${width}`}
                                       checked={appState.scrollbarWidth === width}
-                                      onChange={() => { handleScrollbarChange("scrollbarWidth", width); }}
+                                      onChange={() => { debouncedHandleChange("scrollbarWidth", width); }}
                                     />
                                     <label htmlFor={`scrollbar-${width}`} className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
                                       {width === "md" ? t("normal") : t("thin")}
@@ -857,35 +838,13 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                   </div>
                                 ))
                               }
-                            </div>
-
-                            <div className="flex  ">
-                              <div className="ti-form-radio -translate-x-1">
-                                <div className="  relative theme-container h-6 w-6 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden" style={{ backgroundColor: `rgb(${appState.scrollbarColor ?? "128, 128, 128"})`, }}>
-                                  <i className="ri-palette-line text-white text-sm absolute pointer-events-none"></i>
-                                  <input
-                                    type="color"
-                                    value={appState.scrollbarColor}
-                                    onChange={(e) => {
-                                      const rgb = hexToRgb(e.target?.value);
-                                      if (rgb) {
-                                        handleScrollbarChange(
-                                          "scrollbarColor",
-                                          `${rgb?.r},${rgb?.g},${rgb?.b}`
-                                        );
-                                      }
-                                    }}
-                                    className="opacity-0 w-full h-full cursor-pointer "
-                                  />
-                                </div>
-                              </div>
-
-                              <label htmlFor="selectColor" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70  font-semibold  self-center">
-                                {t("scrollbar_color")}
-                              </label>
-                            </div>
-                          </div>
-
+                             </div>
+                                       <ColorPickerInput
+                                        label={t("scrollbar_color")}
+                                        value={appState.scrollbarColor}
+                                        onChange={(value) => debouncedHandleChange("scrollbarColor", value)}
+                                      />
+                             </div>
                           {/* Preview Section */}
                           <ERPScrollArea className="w-full h-64 border border-gray-300 overflow-y-auto rounded-md">
                             <div className="h-96 p-2">
@@ -903,10 +862,10 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                       <div className="">
                         <p className="switcher-style-head mb-2">{t("input_box_style")}</p>
                         <div className="flex justify-end items-center mt-3"></div>
-                        <InputBoxStyling
-                          inputBox={appState.inputBox}
-                          onInputBoxChange={handleInputBoxStyleChange}
-                        />
+                          <InputBoxStyling
+                            inputBox={appState.inputBox}
+                            onInputBoxChange={handleInputBoxStyleChange}
+                          />
                       </div>
                     </div>
                   </div>

@@ -58,7 +58,7 @@ const ERPRadio = forwardRef<HTMLInputElement, ERPRadioProps>(
 
     // Use localInputBox if provided, otherwise fall back to global inputBox state
     const inputBoxState = localInputBox || appState?.inputBox;
-
+    const isRtl = appState?.dir =="rtl" ;
     const [_customSize, setCustomSize] = useState(
       customSize ? customSize : inputBoxState?.checkButtonInputSize
     );
@@ -121,8 +121,8 @@ const ERPRadio = forwardRef<HTMLInputElement, ERPRadioProps>(
     const sizeStyles = getSizeStyles();
 
     return (
-      <div className={className}>
-        <div className="form-check flex items-center">
+    <div className={className}>
+    <div className={`form-check flex items-center ${isRtl ? 'flex-row-reverse' : ''}`}>
           <input
             id={id}
             name={name}
@@ -148,7 +148,7 @@ const ERPRadio = forwardRef<HTMLInputElement, ERPRadioProps>(
             }}
             className={`form-check-input appearance-none rounded-full border 
               checked:bg-blue-500 checked:border-blue-500 focus:outline-none transition duration-200 
-              align-top bg-no-repeat bg-center bg-contain float-left cursor-pointer
+              align-top bg-no-repeat bg-center bg-contain ${isRtl ? '' : 'float-left'} cursor-pointer
               ${inputClassName} 
               ${disabled ? "opacity-50" : "hover:border-blue-500"}`}
             {...props}
@@ -164,7 +164,7 @@ const ERPRadio = forwardRef<HTMLInputElement, ERPRadioProps>(
             className={`form-check-label ${labelClassName}  ${
               _customSize == "sm" ? "-translate-y-[4.5px]" :_customSize == "md" ? "-translate-y-[3px]": "-translate-y-[1px]"
             } 
-              capitalize rtl:text-right select-none ${inputBoxState.bold? "font-bold":"font-normal"}
+              capitalize ${isRtl ? 'text-right ' : 'text-left '} select-none ${inputBoxState?.bold? "font-bold":"font-normal"}
               ${disabled ? "text-gray-400" : "dark:!text-dark-text text-gray-900"}`}
           >
             {iLabel}

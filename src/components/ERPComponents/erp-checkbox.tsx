@@ -57,9 +57,9 @@ const ERPCheckbox = forwardRef<HTMLInputElement, ERPCheckboxProps>(
     const appState = useAppSelector(
       (state: RootState) => state.AppState.appState
     );
-    const isRtl = appState.locale.rtl;
+    const isRtl = appState.locale?.rtl || false;
     // Use localInputBox if provided, otherwise fall back to global inputBox state
-    const inputBoxState = localInputBox || appState?.inputBox;
+    const inputBoxState = localInputBox || appState?.inputBox ;
 
     const [_customSize, setCustomSize] = useState(
       customSize ? customSize : inputBoxState?.checkButtonInputSize
@@ -125,7 +125,7 @@ const ERPCheckbox = forwardRef<HTMLInputElement, ERPCheckboxProps>(
     return (
       <div className={className}>
         <label
-          className={`inline-flex items-center ${inputBoxState.bold ? "font-bold" : "font-normal"} ${disabled ? "cursor-not-allowed" : "cursor-pointer"
+          className={`inline-flex items-center ${inputBoxState?.bold ? "font-bold" : "font-normal"} ${disabled ? "cursor-not-allowed" : "cursor-pointer"
             }`}
         >
           <input

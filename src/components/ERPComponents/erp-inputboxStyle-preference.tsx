@@ -57,13 +57,12 @@ const StyleSection: React.FC<SectionProps> = ({ title, children, icon, className
   );
 };
 
-const ColorPicker: React.FC<{
+ export const ColorPickerInput: React.FC<{
   label: string
   value?: string
   onChange: (value: string) => void
   defaultColor?: string
 }> = ({ label, value, onChange, defaultColor = "128, 128, 128" }) => {
-  const debouncedOnChange = useDebounce(onChange, 300);
 
   return (
     <div className="space-y-2">
@@ -78,8 +77,8 @@ const ColorPicker: React.FC<{
             value={value}
             onChange={(e) => {
               const rgb = hexToRgb(e.target?.value)
-              if (rgb) {
-                debouncedOnChange(`${rgb.r},${rgb.g},${rgb.b}`)
+              if (rgb){
+                 onChange(`${rgb.r},${rgb.g},${rgb.b}`)
               }
             }}
             className="opacity-0 w-full h-full cursor-pointer"
@@ -594,50 +593,50 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
       >
        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {isInputBgColor && (
-            <ColorPicker
+            <ColorPickerInput
               label={t("input_background_color")}
               value={inputBox?.inputBgColor}
               onChange={(value) => debouncedOnInputBoxChange("inputBgColor", value)}
             />
           )}
-          <ColorPicker
+          <ColorPickerInput
             label={t("border_color")}
             value={inputBox?.borderColor}
             onChange={(value) => debouncedOnInputBoxChange("borderColor", value)}
           />
-          <ColorPicker
+          <ColorPickerInput
             label={t("font_color")}
             value={inputBox?.fontColor}
             onChange={(value) => debouncedOnInputBoxChange("fontColor", value)}
           />
-          <ColorPicker
+          <ColorPickerInput
             label={t("label_color")}
             value={inputBox?.labelColor}
             onChange={(value) => debouncedOnInputBoxChange("labelColor", value)}
           />
-          <ColorPicker
+          <ColorPickerInput
             label={t("border_focus")}
             value={inputBox?.borderFocus}
             onChange={(value) => debouncedOnInputBoxChange("borderFocus", value)}
           />
-          <ColorPicker
+          <ColorPickerInput
             label={t("active_select_box")}
             value={inputBox?.selectColor}
             onChange={(value) => debouncedOnInputBoxChange("selectColor", value)}
           />
-          <ColorPicker
+          <ColorPickerInput
             label={t("focus_background")}
             value={inputBox?.focusBgColor}
             onChange={(value) => debouncedOnInputBoxChange("focusBgColor", value)}
             defaultColor="255, 204, 88"
           />
-          <ColorPicker
+          <ColorPickerInput
             label={t("focus_fore_color")}
             value={inputBox?.focusForeColor}
             onChange={(value) => debouncedOnInputBoxChange("focusForeColor", value)}
             defaultColor="0, 0, 0"
           />
-          <ColorPicker
+          <ColorPickerInput
             label={t("focus_button_color")}
             value={inputBox?.buttonFocusBg}
             onChange={(value) => debouncedOnInputBoxChange("buttonFocusBg", value)}

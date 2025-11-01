@@ -9,6 +9,8 @@ import ERPInput from "../../../components/ERPComponents/erp-input";
 import { information } from "./sms-integration-type";
 import { useTranslation } from "react-i18next";
 import ERPFormButtons from "../../../components/ERPComponents/erp-form-buttons";
+import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
+import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 
 const api = new APIClient();
 
@@ -20,33 +22,34 @@ interface SMSGatewayCenterPopupProps {
 
 const SMSGatewayCenterPopup: React.FC<SMSGatewayCenterPopupProps> = ({ data = {}, id, onSuccess }) => {
 
-  const [information, setInformation] = useState(data?.configJson);
+  const [information, setInformation] = useState<Partial<information>>({ ...{ limitType: 1 }, ...data });
   const [phone, setPhone] = useState<string>("");
   const [message, setMessage] = useState<string>("");
   const [isSaving, setIsSaving] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isSendingDemo, setIsSendingDemo] = useState(false);
 
-  const handleFieldChange = (settingName: string, value: any) => {
-    setInformation(value);
+  const handleFieldChange = (settingName: keyof information, value: any) => {
+    setInformation((prev) => ({ ...prev, [settingName]: value }));
   };
-  // useEffect(()=> {
-  // setInformation(
-  //   {
-  //     ...data,
-  //     url: data.configJson
-  //   }
-  // )
-  // },[])
+
+  useEffect(() => {
+    if (data) {
+      setInformation({ ...{ limitType: 1 }, ...data });
+    }
+  }, [data]);
+
   const handleSubmit = async () => {
     setIsSaving(true);
     try {
       const requestBody = {
         provider: NotificationsProvider.SmsGateway,
         channel: NotificationsChannel.Sms,
-        configJson: information,
+        configJson: information.url,
         isEnable: true,
-        id: id
+        id: id,
+        limit: information.limit || 0,
+        limitType: information.limitType,
       };
       const response = await api.post(Urls.notification_provider_update, requestBody);
       handleResponse(response, () => { onSuccess && onSuccess() });
@@ -64,10 +67,12 @@ const SMSGatewayCenterPopup: React.FC<SMSGatewayCenterPopupProps> = ({ data = {}
       const payload = {
         provider: NotificationsProvider.SmsGateway,
         channel: NotificationsChannel.Sms,
-        configJson: information,
+        configJson: information.url,
         to: phone,
         message: message,
         isEnable: true,
+        limit: information.limit || 0,
+        limitType: information.limitType,
       };
       const demoMessageResponse = await api.post(Urls.notification_provider_test, payload);
       await handleResponse(demoMessageResponse);
@@ -85,12 +90,49 @@ const SMSGatewayCenterPopup: React.FC<SMSGatewayCenterPopupProps> = ({ data = {}
       <div className="grid grid-cols-1 gap-3">
         <div className="flex flex-col">
           <ERPInput
-            id="configJson"
-            value={information || ""}
+            id="url"
+            value={information.url || ""}
             label={t("url")}
             placeholder={t("url")}
-            onChange={(e) => handleFieldChange("configJson", e.target.value)}
+            onChange={(e) => handleFieldChange("url", e.target.value)}
           />
+          {/* <div className="h-[100px] mt-2"> */}
+
+          
+          {/* <ERPCheckbox
+            id="hasLimit"
+            label={t("has_limit")}
+            checked={information.hasLimit || false}
+            onChange={(e) => handleFieldChange("hasLimit", e.target.checked)}
+          /> */}
+          {/* {information.hasLimit && ( */}
+            <div className="grid grid-cols-2 gap-2">
+              <ERPInput
+                id="limit"
+                label={t("limit")}
+                type="number"
+                value={information.limit || ""}
+                placeholder={t("limit")}
+                onChange={(e: any) => handleFieldChange("limit", e.target.value)}
+              />
+              <ERPDataCombobox
+                id="limitType"
+                label={t("limit_type")}
+                value={information.limitType || 1}
+                onChange={(item) => handleFieldChange("limitType", item.value)}
+                options={[
+                  { value: 1, label: t("daily") },
+                  { value: 2, label: t("monthly") },
+                ]}
+                field={{
+                  id: "limitType",
+                  valueKey: "value",
+                  labelKey: "label",
+                }}
+              />
+            {/* </div> */}
+          {/* )} */}
+          </div>
 
           {/* <div className="flex items-center justify-end gap-2 mt-4">
             <ERPButton

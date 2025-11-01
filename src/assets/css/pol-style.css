@@ -30,6 +30,12 @@
   z-index: 51 !important;
 }
 
+@media (max-width: 768px) {
+  .app-sidebar {
+    width: 100% !important;
+  }
+}
+
 .erp-modal {
   z-index: 52 !important;
 }
@@ -187,33 +193,41 @@ div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=tip] {
 @font-face {
   font-family: 'Roboto';
   src: url('../../assets/font/Roboto/Roboto-Light.ttf') format('truetype');
-  font-weight: 300; /* Light/Small */
+  font-weight: 300;
+  /* Light/Small */
   font-style: normal;
 }
+
 @font-face {
   font-family: 'Roboto';
   src: url('../../assets/font/Roboto/Roboto-Regular.ttf') format('truetype');
-  font-weight: 400; /* Regular */
+  font-weight: 400;
+  /* Regular */
   font-style: normal;
 }
+
 @font-face {
   font-family: 'Roboto';
   src: url('../../assets/font/Roboto/Roboto-Medium.ttf') format('truetype');
-  font-weight: 500; /* Medium */
+  font-weight: 500;
+  /* Medium */
   font-style: normal;
 }
+
 @font-face {
   font-family: 'Roboto';
   /* 600 uses the Bold file as a fallback/synthesis point, matching the JS register */
   src: url('../../assets/font/Roboto/Roboto-Bold.ttf') format('truetype');
-  font-weight: 600; /* SemiBold (Synthesized) */
+  font-weight: 600;
+  /* SemiBold (Synthesized) */
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Roboto';
   src: url('../../assets/font/Roboto/Roboto-Bold.ttf') format('truetype');
-  font-weight: 700; /* Bold */
+  font-weight: 700;
+  /* Bold */
   font-style: normal;
 }
 
@@ -224,25 +238,29 @@ div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=tip] {
   font-weight: 300;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'Roboto';
   src: url('../../assets/font/Roboto/Roboto-Italic.ttf') format('truetype');
   font-weight: 400;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'Roboto';
   src: url('../../assets/font/Roboto/Roboto-MediumItalic.ttf') format('truetype');
   font-weight: 500;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'Roboto';
   /* 600 Italic uses the base Italic file, matching the JS register (Synthesized) */
   src: url('../../assets/font/Roboto/Roboto-Italic.ttf') format('truetype');
-  font-weight: 600; 
+  font-weight: 600;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'Roboto';
   src: url('../../assets/font/Roboto/Roboto-BoldItalic.ttf') format('truetype');
@@ -263,24 +281,28 @@ div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=tip] {
   font-weight: 300;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'FiraSans';
   src: url('../../assets/font/FiraSans/FiraSans-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'FiraSans';
   src: url('../../assets/font/FiraSans/FiraSans-Medium.ttf') format('truetype');
   font-weight: 500;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'FiraSans';
   src: url('../../assets/font/FiraSans/FiraSans-SemiBold.ttf') format('truetype');
   font-weight: 600;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'FiraSans';
   src: url('../../assets/font/FiraSans/FiraSans-Bold.ttf') format('truetype');
@@ -295,24 +317,28 @@ div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=tip] {
   font-weight: 300;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'FiraSans';
   src: url('../../assets/font/FiraSans/FiraSans-Italic.ttf') format('truetype');
   font-weight: 400;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'FiraSans';
   src: url('../../assets/font/FiraSans/FiraSans-MediumItalic.ttf') format('truetype');
   font-weight: 500;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'FiraSans';
   src: url('../../assets/font/FiraSans/FiraSans-SemiBoldItalic.ttf') format('truetype');
   font-weight: 600;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'FiraSans';
   src: url('../../assets/font/FiraSans/FiraSans-BoldItalic.ttf') format('truetype');
@@ -333,24 +359,28 @@ div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=tip] {
   font-weight: 300;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'RobotoMono';
   src: url('../../assets/font/RobotMono/RobotoMono-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'RobotoMono';
   src: url('../../assets/font/RobotMono/RobotoMono-Medium.ttf') format('truetype');
   font-weight: 500;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'RobotoMono';
   src: url('../../assets/font/RobotMono/RobotoMono-SemiBold.ttf') format('truetype');
   font-weight: 600;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'RobotoMono';
   src: url('../../assets/font/RobotMono/RobotoMono-Bold.ttf') format('truetype');
@@ -365,24 +395,28 @@ div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=tip] {
   font-weight: 300;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'RobotoMono';
   src: url('../../assets/font/RobotMono/RobotoMono-Italic.ttf') format('truetype');
   font-weight: 400;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'RobotoMono';
   src: url('../../assets/font/RobotMono/RobotoMono-MediumItalic.ttf') format('truetype');
   font-weight: 500;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'RobotoMono';
   src: url('../../assets/font/RobotMono/RobotoMono-SemiBoldItalic.ttf') format('truetype');
   font-weight: 600;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'RobotoMono';
   src: url('../../assets/font/RobotMono/RobotoMono-BoldItalic.ttf') format('truetype');
@@ -403,24 +437,28 @@ div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=tip] {
   font-weight: 300;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'Poppins';
   src: url('../../assets/font/Poppins/Poppins-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'Poppins';
   src: url('../../assets/font/Poppins/Poppins-Medium.ttf') format('truetype');
   font-weight: 500;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'Poppins';
   src: url('../../assets/font/Poppins/Poppins-SemiBold.ttf') format('truetype');
   font-weight: 600;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'Poppins';
   src: url('../../assets/font/Poppins/Poppins-Bold.ttf') format('truetype');
@@ -435,24 +473,28 @@ div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=tip] {
   font-weight: 300;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'Poppins';
   src: url('../../assets/font/Poppins/Poppins-Italic.ttf') format('truetype');
   font-weight: 400;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'Poppins';
   src: url('../../assets/font/Poppins/Poppins-MediumItalic.ttf') format('truetype');
   font-weight: 500;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'Poppins';
   src: url('../../assets/font/Poppins/Poppins-SemiBoldItalic.ttf') format('truetype');
   font-weight: 600;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'Poppins';
   src: url('../../assets/font/Poppins/Poppins-BoldItalic.ttf') format('truetype');
@@ -472,27 +514,31 @@ div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=tip] {
   font-family: 'NotoNaskhArabic';
   /* 300 (Light) uses Regular file (Synthesized) */
   src: url('../../assets/font/NotoNaskhArabic/NotoNaskhArabic-Regular.ttf') format('truetype');
-  font-weight: 300; 
+  font-weight: 300;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'NotoNaskhArabic';
   src: url('../../assets/font/NotoNaskhArabic/NotoNaskhArabic-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'NotoNaskhArabic';
   src: url('../../assets/font/NotoNaskhArabic/NotoNaskhArabic-Medium.ttf') format('truetype');
   font-weight: 500;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'NotoNaskhArabic';
   src: url('../../assets/font/NotoNaskhArabic/NotoNaskhArabic-SemiBold.ttf') format('truetype');
   font-weight: 600;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'NotoNaskhArabic';
   src: url('../../assets/font/NotoNaskhArabic/NotoNaskhArabic-Bold.ttf') format('truetype');
@@ -508,24 +554,28 @@ div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=tip] {
   font-weight: 300;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'NotoNaskhArabic';
   src: url('../../assets/font/NotoNaskhArabic/NotoNaskhArabic-Medium.ttf') format('truetype');
   font-weight: 400;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'NotoNaskhArabic';
   src: url('../../assets/font/NotoNaskhArabic/NotoNaskhArabic-Medium.ttf') format('truetype');
   font-weight: 500;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'NotoNaskhArabic';
   src: url('../../assets/font/NotoNaskhArabic/NotoNaskhArabic-Medium.ttf') format('truetype');
   font-weight: 600;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'NotoNaskhArabic';
   src: url('../../assets/font/NotoNaskhArabic/NotoNaskhArabic-Medium.ttf') format('truetype');
@@ -545,21 +595,24 @@ div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=tip] {
   font-family: 'Amiri';
   /* 300, 400, 500 all use Regular file (300 & 500 are synthesized) */
   src: url('../../assets/font/Amiri/Amiri-Regular.ttf') format('truetype');
-  font-weight: 300; 
+  font-weight: 300;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'Amiri';
   src: url('../../assets/font/Amiri/Amiri-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'Amiri';
   src: url('../../assets/font/Amiri/Amiri-Regular.ttf') format('truetype');
   font-weight: 500;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'Amiri';
   /* 600 and 700 use Bold file (600 is synthesized) */
@@ -567,6 +620,7 @@ div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=tip] {
   font-weight: 600;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'Amiri';
   src: url('../../assets/font/Amiri/Amiri-Bold.ttf') format('truetype');
@@ -582,28 +636,32 @@ div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=tip] {
   font-weight: 300;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'Amiri';
   src: url('../../assets/font/Amiri/Amiri-Italic.ttf') format('truetype');
   font-weight: 400;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'Amiri';
   src: url('../../assets/font/Amiri/Amiri-Italic.ttf') format('truetype');
   font-weight: 500;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'Amiri';
   src: url('../../assets/font/Amiri/Amiri-Italic.ttf') format('truetype');
   font-weight: 600;
   font-style: italic;
 }
+
 @font-face {
   font-family: 'Amiri';
   /* 700 uses dedicated BoldItalic file */
-  src: url('../../assets/font/Amiri/Amiri-BoldItalic.ttf') format('truetype'); 
+  src: url('../../assets/font/Amiri/Amiri-BoldItalic.ttf') format('truetype');
   font-weight: 700;
   font-style: italic;
 }
@@ -766,21 +824,21 @@ div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=tip] {
 }
 
 .mobile-screen .combo-box-opened {
-
   position: fixed;
-    width: 100%;
-    top: 35px;
-    padding-left: 10px;
-    padding-right: 10px;
-    margin-top: 15px !important;
-    /* margin-bottom: 15px !important; */
-    left: 0;
-    /* background: #f1f1f1; */
-    height: 100%;
-    z-index: 55;
-    background-color: rgb(241 241 241 / 44%);
-    backdrop-filter: blur(3px);
+  width: 100%;
+  top: 35px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-top: 15px !important;
+  /* margin-bottom: 15px !important; */
+  left: 0;
+  /* background: #f1f1f1; */
+  height: 100%;
+  z-index: 55;
+  background-color: rgb(241 241 241 / 44%);
+  backdrop-filter: blur(3px);
 }
+
 .combo-box-closed {
 
   position: relative;
@@ -788,14 +846,14 @@ div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=tip] {
 
 .number-input-spinner::-webkit-inner-spin-button,
 .number-input-spinner::-webkit-outer-spin-button {
-  width: 13px !important; 
+  width: 13px !important;
   /* height: 100% !important;  */
   height: 100%;
-  top: 51%; 
+  top: 51%;
   transform: translateY(-50%);
-  position: absolute !important; 
-  right: 0 !important; 
-  margin: 0 !important; 
+  position: absolute !important;
+  right: 0 !important;
+  margin: 0 !important;
   /* padding-right: 3px !important; */
   /* margin-bottom: 1px !important; */
 }
@@ -808,12 +866,13 @@ div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=tip] {
   margin: 0;
   transform: translateY(-50%);
 } */
- 
+
 * {
   user-select: none;
 }
 
-input, textarea {
+input,
+textarea {
   user-select: text;
 }
 
@@ -847,15 +906,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 } */
 
 
- /* @supports (-moz-appearance:none) {
+/* @supports (-moz-appearance:none) {
   input[type="date"] {
     text-align: center !important;
   }
 } */
 
-
-
-
-
-
-
+.ti-dropdown-toggle {
+  border: 0 1px solid #ccc !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}

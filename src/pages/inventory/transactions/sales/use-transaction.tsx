@@ -1,91 +1,34 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { useSalesPrint } from "./use-print";
+import { usePurchasePrint } from "./use-print";
+import { useCommenPrint } from "../../../transaction-base/use-commen-print";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
-import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import VoucherType from "../../../../enums/voucher-types";
 import { APIClient } from "../../../../helpers/api-client";
 import { merge } from "lodash";
-import {
-  useUserRights,
-  UserAction,
-} from "../../../../helpers/user-right-helper";
+import { useUserRights, UserAction, } from "../../../../helpers/user-right-helper";
 import { RootState } from "../../../../redux/store";
 import Urls from "../../../../redux/urls";
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "../../../../utilities/hooks/useAppDispatch";
-import {
-  customJsonParse,
-  modelToBase64Unicode,
-  safeBase64Decode,
-} from "../../../../utilities/jsonConverter";
-import {
-  isNullOrUndefinedOrZero,
-  isNullOrUndefinedOrEmpty,
-  isEnterKey,
-  getExcelCellValue,
-  generateUniqueKey,
-} from "../../../../utilities/Utils";
-import {
-  Attachments,
-  BillwiseData,
-  FormElementsState,
-} from "../../../accounts/transactions/acc-transaction-types";
+import { useAppDispatch, useAppSelector, } from "../../../../utilities/hooks/useAppDispatch";
+import { customJsonParse, modelToBase64Unicode, safeBase64Decode, } from "../../../../utilities/jsonConverter";
+import { isNullOrUndefinedOrZero, isNullOrUndefinedOrEmpty, getExcelCellValue, generateUniqueKey, } from "../../../../utilities/Utils";
+import { Attachments, FormElementsState, } from "../../../accounts/transactions/acc-transaction-types";
 import { ApplicationSettingsType } from "../../../settings/system/application-settings-types/application-settings-types";
-import { deleteAccVoucher, unlockTransactionMaster } from "./thunk";
 import { updateTransactionEditMode } from "./transaction-functions";
-import {
-  isDirtyTransaction,
-  setTransactionForHistory,
-} from "../../../../helpers/transaction-modified-util";
+import { isDirtyTransaction, setTransactionForHistory, } from "../../../../helpers/transaction-modified-util";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { useTransactionHelper } from "./use-transaction-helper";
 import { DeepPartial } from "redux";
 import ExcelJS from "exceljs";
 import { sanitizeDataAdvanced } from "../../../../utilities/Utils";
-import {
-  getStorageString,
-  setStorageString,
-} from "../../../../utilities/storage-utils";
+import { getStorageString, setStorageString, } from "../../../../utilities/storage-utils";
 import { getApLocalDataByUrl } from "../../../../redux/cached-urls";
-import {
-  formStateHandleFieldChangeKeysOnly,
-  formStateHandleFieldChange,
-  formStateTransactionMasterHandleFieldChange,
-  formStateTransactionUpdate,
-  clearState,
-  formStateMasterHandleFieldChange,
-  formStateClearDetails,
-  formStateClearAttachments,
-  formStateTransactionDetailsRowRemove,
-  formStateSetDetails,
-  updateFormElement,
-} from "../reducer";
-import {
-  transactionInitialData,
-  initialInventoryTotals,
-  TransactionMasterInitialData,
-  initialTransactionDetailData,
-  initialTransactionDetails2,
-  initialUserConfig,
-} from "../transaction-type-data";
-import {
-  TransactionDetail,
-  UserConfig,
-  TransactionFormState,
-  SummaryItems,
-  TransactionMaster,
-  TransactionData,
-  LoadProductDetailsByAutoBarcodeProps,
-  CommonParams,
-  DataAutoBarcode,
-  ExcelRowData,
-} from "../transaction-types";
-import {  useCommenPrint } from "../../../transaction-base/use-commen-print";
+import { formStateHandleFieldChangeKeysOnly, formStateHandleFieldChange, formStateTransactionMasterHandleFieldChange, formStateTransactionUpdate, clearState, formStateMasterHandleFieldChange, formStateClearDetails, formStateClearAttachments, formStateTransactionDetailsRowRemove, formStateSetDetails, updateFormElement, } from "../reducer";
+import { transactionInitialData, initialInventoryTotals, TransactionMasterInitialData, initialTransactionDetailData, initialTransactionDetails2, initialUserConfig, } from "../transaction-type-data";
+import { TransactionDetail, UserConfig, TransactionFormState, SummaryItems, TransactionMaster, TransactionData, LoadProductDetailsByAutoBarcodeProps, CommonParams, DataAutoBarcode, ExcelRowData, } from "../transaction-types";
+
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;
 //   clearDetailsAfterSaveAccounts: boolean;
@@ -112,7 +55,9 @@ export type LoadAndSetTransVoucherFn = (
   setVoucherNo?: boolean | false,
   loadVType?: string,
   loadFType?: string,
-  loadPrefix?: string
+  loadPrefix?: string,
+  showLoading?: boolean,
+  disablePnlMasters?: boolean
 ) => Promise<boolean | undefined>; // ✅ fix return type
 
 const api = new APIClient();
@@ -182,7 +127,8 @@ export const useTransaction = (
   const clientSession = useAppSelector(
     (state: RootState) => state.ClientSession
   );
-  const { printBarcode } = useSalesPrint();
+  const { printBarcode } = usePurchasePrint();
+
   const { printVoucher } = useCommenPrint();
   const formState = useAppSelector(
     (state: RootState) => state.InventoryTransaction
@@ -329,6 +275,8 @@ export const useTransaction = (
   const { hasRight, hasBlockedRight } = useUserRights();
   const fetchUserConfig = async () => {
     try {
+
+      const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`);
       const savedPreferences = await api.getAsync(
         `${Urls.inv_transaction_base}${transactionType}/GetLocalSettings`
       );
@@ -339,24 +287,17 @@ export const useTransaction = (
         savedPreferences != `""` &&
         savedPreferences != ""
       ) {
-        await setStorageString(
-          `${transactionType}_LocalSettings`,
-          savedPreferences
-        );
+        await setStorageString(key, savedPreferences);
         // Decode the base64 back to JSON string
+
         const _userConfig = safeBase64Decode(savedPreferences ?? "");
         const userConfig: UserConfig = customJsonParse(_userConfig ?? "{}");
 
         return userConfig;
       }
-
-      const _bs64 = modelToBase64Unicode(initialUserConfig) 
-       await setStorageString(
-          `${transactionType}_LocalSettings`,
-          _bs64
-        );
-
-        return initialUserConfig;
+      const _bs64 = modelToBase64Unicode(initialUserConfig);
+      await setStorageString(key, _bs64);
+      return initialUserConfig;
     } catch (error) {
       console.error("Error fetching user config:", error);
     }
@@ -375,8 +316,11 @@ export const useTransaction = (
     setVoucherNo = false,
     loadVType,
     loadFType,
-    loadPrefix
+    loadPrefix,
+    showLoading,
+    disablePnlMasters = true
   ) => {
+
     const _s_isDirty = isDirtyTransaction(
       formState.prev,
       {
@@ -405,7 +349,15 @@ export const useTransaction = (
         })
       );
     }
-    
+
+    if (showLoading) {
+      dispatch(
+        formStateHandleFieldChange({
+          fields: { transactionLoading: true },
+        })
+      );
+    }
+
     let _formState = await loadTransVoucher(
       usingManualInvNumber,
       voucherNumber,
@@ -418,6 +370,7 @@ export const useTransaction = (
       loadFType,
       loadPrefix
     );
+
 
     if (loadVType == "GRN" || loadVType == "GRR") {
       _formState = merge({}, _formState, {
@@ -458,7 +411,7 @@ export const useTransaction = (
         ..._formState.formElements.pnlMasters,
         disabled:
           _formState.transaction.master.invTransactionMasterID > 0 &&
-          !["GRN", "PO", "SO"].includes(loadVType ?? ""),
+          !["GRN", "PO", "SO"].includes(loadVType ?? "") && disablePnlMasters,
       },
       btnSave: {
         ..._formState.formElements.btnSave,
@@ -468,14 +421,20 @@ export const useTransaction = (
             : _formState.formElements.btnSave.disabled,
       },
     };
+    if (showLoading) {
+      _formState.transactionLoading = false;
+    }
     await setTransVoucher(_formState);
+
     return true;
   };
   const setTransVoucher = async (
     _formState: TransactionFormState,
     loadUserConfig: boolean = false
   ) => {
-    const Utc = await getStorageString(`${transactionType}_LocalSettings`);
+
+    const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`);
+    const Utc = await getStorageString(key);
     let userConfig: UserConfig | undefined;
     if (Utc) {
       const decoded = safeBase64Decode(Utc) ?? "{}";
@@ -702,7 +661,7 @@ export const useTransaction = (
     voucher.formElements.lblPosted.visible = voucher.isPostedTransaction;
     voucher.formElements.cbCostCentre.disabled =
       voucher.transaction.master.costCentreID <= 0 &&
-      (formState.userConfig?.presetCostenterId ?? 0) > 0
+        (formState.userConfig?.presetCostenterId ?? 0) > 0
         ? true
         : false;
     // voucher.transaction = vch;
@@ -774,19 +733,20 @@ export const useTransaction = (
     voucherPrefix: string,
     isVoucherPrefix: boolean
   ) => {
+    // if (voucherType == "LPO") {
+    //   return 0;
+    // }
     isVoucherPrefix = isVoucherPrefix ? isVoucherPrefix : false;
     isVoucherPrefix =
       !clientSession.isAppGlobal && voucherType == VoucherType.PurchaseReturn
         ? true
         : isVoucherPrefix;
-    const response = await api.getAsync(
+    const response = voucherType !== "LPO" ? await api.getAsync(
       `${Urls.inv_transaction_base}${transactionType}/GetNextVoucherNumber/`,
-      `formType=${formType ? formType : ""}&voucherType=${
-        voucherType ? voucherType : ""
-      }&voucherPrefix=${voucherPrefix ? voucherPrefix : ""}&isVoucherPrefix=${
-        isVoucherPrefix ? isVoucherPrefix : false
+      `formType=${formType ? formType : ""}&voucherType=${voucherType ? voucherType : ""
+      }&voucherPrefix=${voucherPrefix ? voucherPrefix : ""}&isVoucherPrefix=${isVoucherPrefix ? isVoucherPrefix : false
       }`
-    );
+    ) : undefined;
 
     const nextVoucherNumber = response || 1;
 
@@ -800,11 +760,37 @@ export const useTransaction = (
     return response;
   };
 
+
   async function validate(): Promise<boolean> {
     const master = formState.transaction.master;
     const details = formState.transaction.details;
-    
+
     // Stock update restriction
+
+    const setting = applicationSettings.productsSettings.mRPLessThanSalesPrice;
+
+    // Equivalent condition:
+    // if ((setting is not "Block" && UserSession.IsAPPGlobal) || !UserSession.IsAPPGlobal)
+    if (setting == "Block" && clientSession.isAppGlobal) {
+      // Find invalid rows (Sales price greater than MRP)
+      const invalidRows = details
+        .map((item, index) => ({ item, index }))
+        .filter(({ item }) => item.salesPrice > item.mrp)
+        .map(({ index }) => index + 1);
+
+      if (invalidRows.length > 0) {
+        await ERPAlert.show({
+          icon: "error",
+          title: t("validation_error"),
+          text: t(
+            `Sales price greater than MRP at rows: ${invalidRows.join(", ")}`
+          ),
+          confirmButtonText: t("ok"),
+        });
+        return false;
+      }
+    }
+
     if (
       !formState.transaction.master.stockUpdate &&
       (formState.transaction.master.voucherType === "PI" ||
@@ -818,8 +804,8 @@ export const useTransaction = (
           voucherType === "PI"
             ? "Stock cannot be updated in this invoice.In goods Receipt voucher stock already updated. Do you want to continue?"
             : voucherType === "PR"
-            ? "Stock cannot be updated in this invoice.In Goods Receipt Return voucher stock already updated. Do you want to continue?"
-            : "",
+              ? "Stock cannot be updated in this invoice.In Goods Receipt Return voucher stock already updated. Do you want to continue?"
+              : "",
         confirmButtonText: t("yes"),
         cancelButtonText: t("no"),
         showCancelButton: true,
@@ -982,22 +968,24 @@ export const useTransaction = (
     // }
 
     // Gross amount zero validation
-    for (let i = 0; i < details.length; i++) {
-      const row = details[i];
-      if (row.gross === 0 && row.productID > 0) {
-        const confirm = await ERPAlert.show({
-          icon: "question",
-          title: t("zero_rate_or_qty"),
-          text: `${t("zero_rate_or_qty_entered_in_row")} row: ${i + 1}`,
-          confirmButtonText: t("yes"),
-          cancelButtonText: t("no"),
-          showCancelButton: true,
-        });
-        if (!confirm) {
-          const rowIndex = details.findIndex((x) => x.slNo == row.slNo);
-          const res = focusColumn(rowIndex, "qty");
-          setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
-          return false;
+    if (!formState.skipZeroQty) {
+      for (let i = 0; i < details.length; i++) {
+        const row = details[i];
+        if (row.gross === 0 && row.productID > 0) {
+          const confirm = await ERPAlert.show({
+            icon: "question",
+            title: t("zero_rate_or_qty"),
+            text: `${t("zero_rate_or_qty_entered_in_row")} row: ${i + 1}`,
+            confirmButtonText: t("yes"),
+            cancelButtonText: t("no"),
+            showCancelButton: true,
+          });
+          if (!confirm) {
+            const rowIndex = details.findIndex((x) => x.slNo == row.slNo);
+            const res = focusColumn(rowIndex, "qty");
+            setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
+            return false;
+          }
         }
       }
     }
@@ -1078,6 +1066,13 @@ export const useTransaction = (
     return { firstDebitLedgerID, firstCreditLedgerID };
   };
 
+  const generateLPO = async () => {
+    await save("LPO");
+  };
+  const generateLPQ = async () => {
+    await save("LPQ");
+  };
+
   const preSave = async () => {
     if (
       formState.isEdit &&
@@ -1098,7 +1093,7 @@ export const useTransaction = (
       await save();
     }
   };
-  const save = async () => {
+  const save = async (saveMode: "" | "LPO" | "LPQ" = "") => {
     dispatch(
       formStateHandleFieldChange({
         fields: {
@@ -1108,7 +1103,7 @@ export const useTransaction = (
     );
 
     const valid = await validate();
-    
+
     if (valid == true) {
       const master = attachMaster(formState);
       const attachments = formState.transaction.attachments
@@ -1141,7 +1136,19 @@ export const useTransaction = (
       let params = {
         master: {
           ...master,
-          customerType: !clientSession.isAppGlobal && master.voucherType == "PR" && master.customerType == "" && applicationSettings.branchSettings.maintainKSA_EInvoice ?  "B2C"  : master.customerType,
+          voucherType:
+            saveMode === "LPO"
+              ? "PO"
+              : saveMode === "LPQ"
+                ? "PQ"
+                : master.voucherType,
+          customerType:
+            !clientSession.isAppGlobal &&
+              master.voucherType == "PR" &&
+              master.customerType == "" &&
+              applicationSettings.branchSettings.maintainKSA_EInvoice
+              ? "B2C"
+              : master.customerType,
           transactionDate:
             master.transactionDate == "" ? null : master.transactionDate,
         },
@@ -1157,13 +1164,13 @@ export const useTransaction = (
         const saveRes =
           formState.transaction.master.invTransactionMasterID > 0
             ? await api.putAsync(
-                `${Urls.inv_transaction_base}${transactionType}`,
-                params
-              )
+              `${Urls.inv_transaction_base}${transactionType}`,
+              params
+            )
             : await api.postAsync(
-                `${Urls.inv_transaction_base}${transactionType}`,
-                params
-              );
+              `${Urls.inv_transaction_base}${transactionType}`,
+              params
+            );
         if (saveRes.isOk == true) {
           dispatch(
             formStateTransactionUpdate({
@@ -1175,7 +1182,8 @@ export const useTransaction = (
             formState.transaction.master.invTransactionMasterID > 0,
             formState.transaction.master.invTransactionMasterID
           );
-          if (formState.printOnSave == true) {
+          if (formState.printOnSave == true && saveMode != "LPO" && saveMode != "LPQ") {
+            // masterID: number,transactionType: string,printTmeplate?:any ,transDate?: string,voucherType?: string,formType?:string,customerType?:string,
             printVoucher(
               saveRes?.item?.master?.invTransactionMasterID, // masterID
               transactionType ?? "", // transactionType
@@ -1186,7 +1194,6 @@ export const useTransaction = (
               formState.userConfig?.printPreview, // printPreview
               undefined, //template
               formState.transaction?.master.transactionDate ?? "",
-              
             );
           }
           dispatch(
@@ -1282,7 +1289,7 @@ export const useTransaction = (
     );
     let employeeID = userSession.employeeId ?? 0;
     if (
-      ["PR", "PQ", "PO"].includes(
+      ["PR", "PQ", "wPO"].includes(
         formState.transaction.master.voucherType ?? ("" as any)
       ) &&
       employeeID <= 0
@@ -1304,7 +1311,9 @@ export const useTransaction = (
       inventoryLedgerID:
         formState.transaction.master.voucherType == VoucherType.PurchaseReturn
           ? applicationSettings.inventorySettings?.defaultPurchaseReturnAcc
-          : applicationSettings.inventorySettings?.defaultPurchaseAcc,
+          : formState.transaction.master.voucherType == "DNS"
+            ? applicationSettings.inventorySettings?.defaultSalesAcc
+            : applicationSettings.inventorySettings?.defaultPurchaseAcc,
       ledgerID: applicationSettings.accountsSettings.defaultCashAcc,
       isLocked: false,
       grandTotal: 0,
@@ -1431,7 +1440,7 @@ export const useTransaction = (
     }
   };
   const handleRemoveItem = async (slNo: string) => {
-    
+
     dispatch(
       formStateTransactionDetailsRowRemove({
         slNo: slNo,
@@ -2341,6 +2350,12 @@ export const useTransaction = (
       });
 
       if (deleteConfirmResult) {
+        dispatch(
+          formStateHandleFieldChange({
+            fields: { deleting: true, deletingCompleted: false },
+          })
+        );
+
         try {
           // Begin transaction and delete
           const deleteResult = (await api.delete(
@@ -2355,13 +2370,28 @@ export const useTransaction = (
           )) as any;
 
           if (deleteResult && deleteResult?.isOk) {
+            dispatch(
+              formStateHandleFieldChange({
+                fields: { deletingCompleted: true },
+              })
+            );
+
             ERPAlert.show({
               title: t("success"),
               text: t("transaction_deleted_successfully"),
               icon: "success",
+              showCancelButton: false,
+              confirmButtonText: t("close"),
             });
+
             clearControls(false);
           } else {
+            dispatch(
+              formStateHandleFieldChange({
+                fields: { deleting: false, deletingCompleted: false },
+              })
+            );
+
             ERPAlert.show({
               title: t("delete_operation_failed"),
               text: deleteResult?.message,
@@ -2384,6 +2414,12 @@ export const useTransaction = (
           );
         } catch (deleteError) {
           console.error("Error during delete operation:", deleteError);
+          dispatch(
+            formStateHandleFieldChange({
+              fields: { deleting: false, deletingCompleted: false },
+            })
+          );
+
           ERPAlert.show({
             title: t("error"),
             text: t("delete_operation_failed"),
@@ -2402,6 +2438,12 @@ export const useTransaction = (
       // }
     } catch (error) {
       console.error("Error handling delete:", error);
+      dispatch(
+        formStateHandleFieldChange({
+          fields: { deleting: false, deletingCompleted: false },
+        })
+      );
+
       ERPAlert.show({
         title: t("error"),
         text: t("server_busy_or_system_issue"),
@@ -2498,11 +2540,11 @@ export const useTransaction = (
           fields: {
             // voucherPrefix: lastPrefix,
             voucherNumber: getVoucherNumber,
+            purchaseInvoiceNumber: "",
             // transactionMasterID: 0,
-            transactionDate: moment(
-              clientSession.softwareDate,
-              "DD/MM/YYYY"
-            ).local(),
+            transactionDate: moment(clientSession.softwareDate, "DD/MM/YYYY")
+              .local()
+              .toISOString(),
           },
         })
       );
@@ -2617,7 +2659,19 @@ export const useTransaction = (
         calculateSummaryAndTotal = true;
       } else if (columnName === "margin") {
         outDetail.margin = value;
-        outState.transaction?.details?.push(outDetail);
+        outState = calculateRowAmount(
+          Object.assign(detail, outDetail),
+          columnName,
+          {
+            result: {
+              transaction: {
+                details: [outDetail],
+              },
+            },
+          },
+          true
+        );
+        calculateSummaryAndTotal = true;
       } else if (columnName === "salesPrice") {
         outDetail.salesPrice = value;
         const sp = Number(outDetail.salesPrice || 0);
@@ -2633,7 +2687,19 @@ export const useTransaction = (
         }
 
         outDetail.margin = round(marginPerc, 6);
-        outState.transaction!.details = [outDetail];
+        outState = calculateRowAmount(
+          Object.assign(detail, outDetail),
+          columnName,
+          {
+            result: {
+              transaction: {
+                details: [outDetail],
+              },
+            },
+          },
+          true
+        );
+        calculateSummaryAndTotal = true;
       }
 
       if (calculateSummaryAndTotal) {
@@ -2737,8 +2803,7 @@ export const useTransaction = (
         }
       });
       const res: DataAutoBarcode = await api.getAsync(
-        `${
-          Urls.inv_transaction_base
+        `${Urls.inv_transaction_base
         }${transactionType}/LoadProductDetailsByAutoBarCode?${queryParams.toString()}`
       );
 
@@ -2775,11 +2840,11 @@ export const useTransaction = (
         const _index =
           forImport != true
             ? formState.transaction.details.findIndex(
-                (x) =>
-                  x.barCode == product.autoBarcode &&
-                  x.productID > 0 &&
-                  x.slNo != detail.slNo
-              )
+              (x) =>
+                x.barCode == product.autoBarcode &&
+                x.productID > 0 &&
+                x.slNo != detail.slNo
+            )
             : -1;
         if (
           product.autoBarcode != "" &&
@@ -2948,13 +3013,11 @@ export const useTransaction = (
           // if (formState.transaction.master.voucherType !== "PI") {
           outDetail.details2!.cgstPerc = Number(product.p_CGSTPerc || 0);
           outDetail.details2!.sgstPerc = Number(product.p_SGSTPerc || 0);
-          outDetail.details2!.igstPerc = 0;
 
           if (
             formState.transaction.master.voucherForm.toLowerCase() ===
-              "interstate" ||
-            formState.transaction.master.voucherForm.toLowerCase() ===
-              "int" ||
+            "interstate" ||
+            formState.transaction.master.voucherForm.toLowerCase() === "int" ||
             formState.transaction.master.voucherForm.toLowerCase() === "import"
           ) {
             outDetail.details2!.cgstPerc = 0;
@@ -2980,9 +3043,15 @@ export const useTransaction = (
             !clientSession.isAppGlobal &&
             (voucherType === "PO" ||
               voucherType === "PE" ||
-              (voucherForm === "VAT" &&
-                voucherType !== "PO" &&
-                voucherType !== "PE"))
+              voucherType === "GRN" ||
+              voucherType === "PQ" ||
+              voucherType === "LPO") ||
+            (formState.transaction.master.voucherForm === "VAT" &&
+              voucherType !== "PO" &&
+              voucherType !== "PE" &&
+              voucherType !== "GRN" &&
+              voucherType !== "PQ" &&
+              voucherType !== "LPO")
           ) {
             outDetail.vatPerc = Number(product.pVatPerc || 0);
             outDetail.cstPerc = Number(product.purchaseExciseTaxPerc || 0);
@@ -3046,9 +3115,9 @@ export const useTransaction = (
           ];
           let final =
             _res?.transaction?.details != undefined &&
-            _res?.transaction?.details.length > 0
+              _res?.transaction?.details.length > 0
               ? (_res?.transaction
-                  ?.details[0] as DeepPartial<TransactionDetail>)
+                ?.details[0] as DeepPartial<TransactionDetail>)
               : latestData;
           currentDetails[data.rowIndex] = final as TransactionDetail;
           const summaryRes = calculateSummary(currentDetails, formState, {
@@ -3118,7 +3187,7 @@ export const useTransaction = (
             },
           })
         );
-      } else if (forImport != true) {
+      } else if (forImport != true && data.searchColumn != "product") {
         const res = focusToNextColumn(data.rowIndex, data.searchColumn, [
           "pCode",
           "product",
@@ -3252,7 +3321,7 @@ export const useTransaction = (
           false
         );
       }
-    } catch (error) {}
+    } catch (error) { }
   };
   const handleTextDataKeyDown = async (
     value: any,
@@ -3510,6 +3579,28 @@ export const useTransaction = (
               const res = focusToNextColumn(rowIndex, columnName);
               setCurrentCell(res, data, false);
             }
+          } else if (columnName == "product") {
+            data.product = value;
+            if (!isNullOrUndefinedOrEmpty(value)) {
+              await loadProductDetailsByAutoBarcode(
+                {
+                  productCode: data.pCode,
+                  autoBarcode: data.barCode,
+                  productBatchID: 0,
+                  searchText: data.product,
+                  detail: data,
+                  useProductCode: false,
+                  rowIndex: rowIndex,
+                  searchColumn: "product",
+                  setFocusToNextColumn: true,
+                },
+                { result: {}, formStateHandleFieldChangeKeysOnly },
+                true
+              );
+            } else {
+              const res = focusToNextColumn(rowIndex, columnName);
+              setCurrentCell(res, data, false);
+            }
           } else if (columnName == "barCode") {
             data.barCode = value;
             if (!isNullOrUndefinedOrEmpty(value)) {
@@ -3532,18 +3623,21 @@ export const useTransaction = (
               const res = focusToNextColumn(rowIndex, columnName);
               setCurrentCell(res, data, rowIndex != res?.rowIndex);
             }
-          }
-          // else if (columnName == "unitPrice") {
-          // dispatch(
-          //   commonParams.formStateHandleFieldChangeKeysOnly({
-          //     fields: {
-          //       productInfo: true,
-          //     },
-          //   })
-          // );
-          // return { handled: true };
-          // }
-          else if (columnName == "unitPriceFC") {
+          } else if (columnName == "unitPrice") {
+            if (!formState.productInfo == true) {
+              if (formState.userConfig?.showProductInfoPopup) {
+                dispatch(
+                  commonParams.formStateHandleFieldChangeKeysOnly({
+                    fields: {
+                      productInfo: true,
+                    },
+                  })
+                );
+              }
+            }
+            const res = focusToNextColumn(rowIndex, columnName);
+            setCurrentCell(res, data, rowIndex != res?.rowIndex);
+          } else if (columnName == "unitPriceFC") {
             if (
               (() => {
                 try {
@@ -3579,23 +3673,30 @@ export const useTransaction = (
             data.salesPrice =
               columnName == "salesPrice" ? value : data.salesPrice;
 
-            calculateRowAmount(data, columnName, {
-              result: {
-                transaction: {
-                  details: [data],
+            calculateRowAmount(
+              data,
+              columnName,
+              {
+                result: {
+                  transaction: {
+                    details: [data],
+                  },
                 },
+                formStateHandleFieldChangeKeysOnly:
+                  formStateHandleFieldChangeKeysOnly,
               },
-              formStateHandleFieldChangeKeysOnly:
-                formStateHandleFieldChangeKeysOnly,
-            });
+              false
+            );
 
             if (
               applicationSettings.inventorySettings?.showRateWarning.toUpperCase() ==
-                "WARN" &&
+              "WARN" &&
               data.salesPrice > 0
             ) {
               if (data.unitPrice > data.salesPrice) {
                 // event.preventDefault();
+                event.preventDefault();
+                event.stopPropagation();
                 const confirm = await ERPAlert.show({
                   icon: "info",
                   title: t("warning"),
@@ -3620,7 +3721,7 @@ export const useTransaction = (
               }
             } else if (
               applicationSettings.inventorySettings?.showRateWarning.toUpperCase() ==
-                "BLOCK" &&
+              "BLOCK" &&
               data.salesPrice > 0
             ) {
               if (data.unitPrice > data.salesPrice) {
@@ -3631,7 +3732,7 @@ export const useTransaction = (
           } else if (columnName == "btnPrintBarcode") {
             if (
               formState.transaction.details[rowIndex].qty +
-                formState.transaction.details[rowIndex].stickerQty <=
+              formState.transaction.details[rowIndex].stickerQty <=
               0
             ) {
               break;
@@ -3870,9 +3971,8 @@ export const useTransaction = (
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `Purchase_Import_Template_${
-        new Date().toISOString().split("T")[0]
-      }.xlsx`;
+      link.download = `Purchase_Import_Template_${new Date().toISOString().split("T")[0]
+        }.xlsx`;
       link.style.display = "none";
 
       document.body.appendChild(link);
@@ -4119,7 +4219,12 @@ export const useTransaction = (
     _formState?: DeepPartial<TransactionFormState>,
     _dispatch?: any
   ) => {
+    //     if (_formState?.transaction?.master?.voucherType == "LPO") {
+    // return;
+    //     }
     const ledgerID = (_formState ?? formState)?.transaction?.master?.ledgerID;
+    const voucherType = (_formState ?? formState)?.transaction?.master
+      ?.voucherType;
     _formState = _formState ?? {};
     dispatch(
       formStateHandleFieldChange({
@@ -4132,18 +4237,32 @@ export const useTransaction = (
 
     try {
       if (!isNullOrUndefinedOrZero(ledgerID)) {
-        const [ledgerBalance, ledgerData] = await Promise.all([
-          (ledgerID ?? 0) > 0
-            ? api.getAsync(
+        let ledgerBalance: any;
+        let ledgerData: any;
+
+        if (_formState?.transaction?.master?.voucherType === "LPO") {
+          // ✅ Manually assign values when voucher type is LPO
+          ledgerBalance = 0; // or any default value you want
+          ledgerData = {
+            ledgerName: "",
+            ledgerId: ledgerID,
+            // ...other manual fields
+          };
+        } else {
+          // ✅ Fetch from API for other voucher types
+          [ledgerBalance, ledgerData] = await Promise.all([
+            (ledgerID ?? 0) > 0
+              ? api.getAsync(
                 `${Urls.inv_transaction_base}${transactionType}/LedgerBalance/${ledgerID}`
               )
-            : 0,
-          api.getAsync(
-            `${Urls.inv_transaction_base}${transactionType}/LedgerDetails?LedgerId=${ledgerID}`
-          ),
-        ]);
+              : 0,
+            api.getAsync(
+              `${Urls.inv_transaction_base}${transactionType}/LedgerDetails?LedgerId=${ledgerID}`
+            ),
+          ]);
+        }
 
-        let ret: DeepPartial<TransactionFormState> = {
+        let ret = {
           ..._formState,
           formElements: {
             ..._formState.formElements,
@@ -4174,11 +4293,10 @@ export const useTransaction = (
             },
           },
         };
+
         if (!clientSession.isAppGlobal) {
           let customerType = "";
-          if (
-            ["PR"].includes(_formState.transaction?.master?.voucherType ?? "")
-          ) {
+          if (["PR"].includes(voucherType ?? "")) {
             if (applicationSettings.branchSettings.maintainKSA_EInvoice) {
               if (
                 ledgerData?.taxNumber != null &&
@@ -4267,6 +4385,11 @@ export const useTransaction = (
   }
   async function postBillWiseDetails(data: BillWiseRequest): Promise<any> {
     try {
+      dispatch(
+        formStateHandleFieldChange({
+          fields: { ledgerBillWiseSaving: true },
+        })
+      );
       const response = await api.postAsync(
         `${Urls.inv_transaction_base}${transactionType}/BillWiseDetail`,
         data
@@ -4274,7 +4397,7 @@ export const useTransaction = (
       dispatch(
         formStateHandleFieldChange({
           fields: {
-            showbillwise: false,
+            showbillwise: false, ledgerBillWiseSaving: false
           },
         })
       );
@@ -4297,6 +4420,8 @@ export const useTransaction = (
     validate,
     refactorDetails,
     save: preSave,
+    generateLPQ: generateLPQ,
+    generateLPO: generateLPO,
     clearControls,
     addOrEditRow,
     handleRemoveItem,

@@ -1,31 +1,18 @@
-import { useState } from "react";
-import { APIClient } from "../../../../helpers/api-client";
-import { useUserRights } from "../../../../helpers/user-right-helper";
-import { RootState } from "../../../../redux/store";
-import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
-import {
-  getPurchasePriceCode,
-  isNullOrUndefinedOrEmpty,
-  sanitizeDataAdvanced,
-} from "../../../../utilities/Utils";
-import {
-  BarcodeLabel,
-  TransactionDetail,
-} from "../transaction-types";
-import { useDispatch } from "react-redux";
-import {
-  formStateHandleFieldChange,
-  formStateHandleFieldChangeKeysOnly,
-} from '../reducer';
-import { DeepPartial } from "redux";
-import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
-import { initialProductData } from "../transaction-type-data";;
+import { useDispatch } from "react-redux";
+import { DeepPartial } from "redux";
+import { APIClient } from "../../../../helpers/api-client";
+import { RootState } from "../../../../redux/store";
+import Urls from "../../../../redux/urls";
 import { useDirectPrint } from "../../../../utilities/hooks/use-direct-print";
-
+import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
+import { isNullOrUndefinedOrEmpty, sanitizeDataAdvanced, getPurchasePriceCode } from "../../../../utilities/Utils";
+import { formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly } from "../reducer";
+import { initialProductData } from "../transaction-type-data";
+import { TransactionDetail, BarcodeLabel } from "../transaction-types";
 
 const api = new APIClient();
-export const useSalesPrint = () => {
+export const usePurchasePrint = () => {
   const { t } = useTranslation('system');
     const { directPrint } = useDirectPrint();
   const dispatch = useDispatch();

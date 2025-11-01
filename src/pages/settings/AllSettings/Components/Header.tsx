@@ -1,10 +1,11 @@
 import { Cog6ToothIcon, MagnifyingGlassIcon, XMarkIcon, } from "@heroicons/react/24/outline";
 import React, { useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import { SettingsMenuItems } from "../../../../components/common/sidebar/sidemenu/settings";
 import { useTranslation } from "react-i18next";
+import { RootState } from "../../../../redux/store";
 
 interface MenuItem {
   title: string;
@@ -28,6 +29,7 @@ const Header: React.FC = () => {
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const handleNavigation = () => { navigate("/"); };
   const { t } = useTranslation('main')
+  const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
 
   useEffect(() => {
     if (search) {
@@ -98,15 +100,18 @@ const Header: React.FC = () => {
 
   const searchInputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
-    searchInputRef.current?.focus();
-  }, []);
+    if (!deviceInfo?.isMobile) {
+      searchInputRef.current?.focus();
+    }
+  }, [deviceInfo]);
+
 
   // const appState = useAppSelector(
   //   (state: RootState) => state.AppState.appState
   // );
 
   return (
-    <div className="py-6 px-4 flex flex-col gap-4 ">
+    <div className={`px-4 flex flex-col gap-4 transition-all duration-300 ease-in-out bg-white ${deviceInfo?.isMobile ? `fixed top-[60px] py-2 left-0 w-full z-50` : "py-6 relative bg-transparent"}`}>
       <div className="flex justify-between">
         <div className="flex items-center gap-1">
           <Cog6ToothIcon className="w-5 aspect-square" />

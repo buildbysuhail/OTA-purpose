@@ -97,7 +97,7 @@ const Settings = () => {
             <Header />
           </div>
         </div>
-        <div className="mx-auto px-4 pt-8 pb-6 w-full max-w-4xl h-full overflow-auto scrollbar-hide">
+        <div className="mx-auto px-4 pt-[110px] md:pt-8 pb-6 w-full max-w-4xl h-full overflow-auto scrollbar-hide">
           <div className="flex flex-wrap justify-center gap-4 w-full">
             {SettingsMenuItems?.map((item: any, idx: number) => {
               //  item.disabled = true;

@@ -2096,28 +2096,25 @@ const TransactionForm: React.FC<TransactionProps> = ({
         {/* footer ends here */}
 
         {formState.transaction && (
-          <ERPModal
-            isOpen={(formState.userConfig?.printPreview ?? false) && (popupData.IsPrintPreviewPopup.isOpen ?? false)}
-            title={t("Template")}
-            width={1000}
-            height={700}
-            isForm={true}
-            closeModal={() => {
-              // dispatch(
-              //   accFormStateHandleFieldChange({fields: { printPreview: false}})
-              // );
-              dispatch(toggleIsPrintPreviewPopup({ isOpen: false }));
-            }}
-            content={
-              <TemplatesPreView
-                voucherType={formState.transaction.master?.voucherType ?? ""}
-                transactionMasterID={popupData.IsPrintPreviewPopup.masterId ?? 0}
-                transactionType={formState.transactionType}
-                isInvTrans
-              />
-            }
-          />
-        )}
+            <ERPModal
+              isOpen={(formState.userConfig?.printPreview ?? false) && (popupData.IsPrintPreviewPopup.isOpen ?? false)}
+              title={t("Template")}
+              width={1000}
+              height={700}
+              isForm={true}
+              isPrintButton={true}
+              closeModal={() => {
+                dispatch(toggleIsPrintPreviewPopup({ isOpen: false }));
+              }}
+              content={
+                <TemplatesPreView
+                  voucherType={formState.transaction.master?.voucherType ?? ""}
+                  transactionMasterID={popupData.IsPrintPreviewPopup.masterId?? 0}
+                  transactionType={formState.transactionType}
+                />
+              }
+            />
+          )}
 
         {formState.isFormStateDetailOpen && (
           <ERPModal

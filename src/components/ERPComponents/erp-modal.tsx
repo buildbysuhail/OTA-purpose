@@ -5,7 +5,7 @@ import {
   Transition,
   TransitionChild,
 } from "@headlessui/react";
-import React, { cloneElement, Fragment, useEffect, useState } from "react";
+import React, { cloneElement, Fragment, useEffect, useRef, useState } from "react";
 import ERPButton from "../../components/ERPComponents/erp-button";
 import ERPSubmitButton from "../../components/ERPComponents/erp-submit-button";
 import {
@@ -14,10 +14,11 @@ import {
   removePopupFromStack,
 } from "../../utilities/shortKeys";
 import { ERPScrollArea } from "./erp-scrollbar";
-import { Minimize2, Maximize2, X } from "lucide-react";
+import { Minimize2, Maximize2, X, Printer } from "lucide-react";
 import { mergeObjectsRemovingIdenticalKeys } from "../../utilities/Utils";
 import { Rnd } from "react-rnd";
 import { useDynamicModalSize } from "../../utilities/hooks/useDynamicModalSize";
+import { useCommenPrint } from "../../pages/transaction-base/use-commen-print";
 
 type ModalPosition = "center" | "left" | "right" | "top" | "bottom" | "top-left" | "top-right" | "bottom-left" | "bottom-right";
 
@@ -39,6 +40,7 @@ type ERPModalProps = {
   isForm?: boolean;
   isButton?: boolean;
   isMaximize?: boolean;
+  isPrintButton?: boolean;
   initialMaximize?: boolean;
   closeTitle?: string;
   className?: string;
@@ -82,6 +84,7 @@ const ERPModal = React.memo(
     isButton = false,
     isMaximize = true,
     initialMaximize = false,
+    isPrintButton=false,
     onSubmitModel,
     hasSubmit = true,
     closeButton = "LeftArrow",
@@ -127,7 +130,8 @@ const ERPModal = React.memo(
       initialHeight,
       isForm
     );
-
+    // Inside ERPModal component
+    const printtRef = useRef<any>(null);
     const [isMaximized, setIsMaximized] = useState(initialMaximize);
     const [modalHeight, setModalHeight] = useState(0);
     const [modalWidth, setModalWidth] = useState(0);
@@ -135,7 +139,7 @@ const ERPModal = React.memo(
     const [initPosition, setInitPosition] = useState({ x: 0, y: 0 });
     const [isPositionCalculated, setIsPositionCalculated] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-
+     const { printVoucher} = useCommenPrint();
     // Dynamic sizing effects
     useEffect(() => {
       if (enableDynamicSize && isOpen) {
@@ -405,6 +409,37 @@ const ERPModal = React.memo(
                       >
                         <div>{title}</div>
                         <div className="flex items-center space-x-2">
+                          {/* Add this in the DialogTitle buttons section */}
+                          {isPrintButton && (
+                            <div className="group relative inline-flex flex-col items-center ps-[5px]" title={"print"}>
+                              <button
+                                className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
+                                onClick={async() => {
+                                    console.log("Print button clicked");
+                                    console.log("printtRef.current:", printtRef.current);
+                                  const printData = printtRef.current?.getPrintData?.();
+                                  console.log("printData:", printData);
+                                  if (printData) {
+                                    await printVoucher(
+                                          0,                           // masterID (not needed, data already loaded)
+                                          "",                          // transactionType (not needed)
+                                          "",                          // voucherType (not needed)
+                                          "",                          // formType (not needed)
+                                          "",                          // customerType (not needed)
+                                          false,                       // isInvTrans (not needed)
+                                          false,                       // printPreview (false to actually print/download)
+                                          printData.template,          // printTemplate (the actual template)
+                                          undefined,                   // transDate
+                                          printData.data               // printData (the actual data)
+                                        );
+                                  }
+                                }}
+                              >
+                                <Printer className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+                              </button>
+                            </div>
+                          )}
+
                           {closeButton === "Button" && (
                             <ERPButton
                               type="button"
@@ -482,6 +517,7 @@ const ERPModal = React.memo(
                                   isTransactionScreen
                                     ? {
                                         ...contentProps,
+                                        ...(isPrintButton && { ref: printtRef }),
                                         isMaximized: isMaximized,
                                         modalHeight: modalHeight,
                                         rowData: rowData,
@@ -493,6 +529,7 @@ const ERPModal = React.memo(
                                       }
                                     : {
                                         contentProps: contentProps ? contentProps : {},
+                                        ...(isPrintButton && { ref: printtRef }),
                                         isMaximized: isMaximized,
                                         modalHeight: modalHeight,
                                         rowData: rowData,

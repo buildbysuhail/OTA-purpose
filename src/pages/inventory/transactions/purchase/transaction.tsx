@@ -2103,10 +2103,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
             width={1000}
             height={700}
             isForm={true}
+            isPrintButton={true}
             closeModal={() => {
-              // dispatch(
-              //   accFormStateHandleFieldChange({fields: { printPreview: false}})
-              // );
               dispatch(toggleIsPrintPreviewPopup({ isOpen: false }));
             }}
             content={

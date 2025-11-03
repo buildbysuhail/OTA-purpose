@@ -21,8 +21,8 @@ export const useCommenPrint = () => {
   // const formState = useAppSelector((state: RootState) => state.AccTransaction) 
   const clientSession = useAppSelector((state: RootState) => state.ClientSession)
 
-  const printVoucher = async (masterID: number,transactionType: string,voucherType: string,formType:string,customerType:string,isInvTrans: boolean= false,printPreview:boolean=false, printTmeplate?:any ,transDate?: string,) => {
-
+  const printVoucher = async (masterID: number,transactionType: string,voucherType: string,formType:string,customerType:string,isInvTrans: boolean= false,printPreview:boolean=false, printTmeplate?:any ,transDate?: string,printData?:any) => {
+debugger
     transDate = transDate??(new Date()).toISOString();
    
     const template =printTmeplate? printTmeplate : await getOrFetchTemplate(voucherType??'', formType,customerType);
@@ -35,7 +35,7 @@ export const useCommenPrint = () => {
     if (printPreview) {
        dispatch(toggleIsPrintPreviewPopup({ isOpen: true ,masterId: masterID,}));
     } else {
-      await directPrint({template: template,masterIDParam: masterID, isInvTrans: isInvTrans,dbIdValue: userSession.dbIdValue,isAppGlobal: clientSession.isAppGlobal, printCopies:1, transactionType: transactionType,transDate: transDate})
+      await directPrint({template: template,data:printData,masterIDParam: masterID, isInvTrans: isInvTrans,dbIdValue: userSession.dbIdValue,isAppGlobal: clientSession.isAppGlobal, printCopies:1, transactionType: transactionType,transDate: transDate})
     }
   }
 

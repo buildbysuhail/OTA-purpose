@@ -78,7 +78,6 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
   const dispatch = useDispatch();
   const { t } = useTranslation("transaction");
   const [isExpanded, setIsExpanded] = useState<boolean>(formState.userConfig?.isExpanded || false);
-
   const { appState, updateAppState } = useAppState();
   const isRtl = appState.locale.rtl;
   const [stockUpdate, setStockUpdate] = useState<boolean>(false);
@@ -124,12 +123,12 @@ useEffect(() => {
       handleResponse(response, async () => {
         const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`) ;
         await setStorageString(key, base64);
+
         dispatch(
           formStateHandleFieldChangeKeysOnly({
             fields: {
-              userConfig: {
-                themeName: 'Custom',
-              },
+              userConfig: {themeName: 'Custom',},
+              isUserConfigOpen: false 
             },
           })
         );
@@ -172,7 +171,7 @@ useEffect(() => {
             const st = base64ToModelUnicode(res.item);
              const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`) ;
             await setStorageString(key, res.item);
-            dispatch(formStateHandleFieldChange({ fields: { userConfig: st } }));
+            dispatch(formStateHandleFieldChange({ fields: { userConfig: st ,isUserConfigOpen: false} }));
           });
         },
       });
@@ -951,7 +950,7 @@ useEffect(() => {
             </CollapsibleSection>
 
             {/* Reset Section */}
-            <div className="bg-gradient-to-r from-[#fef2f2] to-[#fdf2f8] dark:from-[#7f1d1d33] dark:to-[#83184333] border border-[#fecaca] dark:border-[#991b1b] rounded-xl p-2 shadow-sm">
+            {/* <div className="bg-gradient-to-r from-[#fef2f2] to-[#fdf2f8] dark:from-[#7f1d1d33] dark:to-[#83184333] border border-[#fecaca] dark:border-[#991b1b] rounded-xl p-2 shadow-sm">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-[#fee2e2] dark:bg-[#7f1d1d4D]">
@@ -971,27 +970,28 @@ useEffect(() => {
                   onClick={resetThemeChange}
                 />
               </div>
-            </div>
+            </div> */}
           </div>
        <div className="w-full flex justify-end items-center gap-2 dark:!border-dark-border dark:!bg-dark-bg rounded-b-md">
             <ERPButton
               title={t("cancel")}
               onClick={previousThemeChange}
               variant="secondary"
-              className="min-w-[140px] bg-gradient-to-r from-[#2563eb] to-[#4f46e5] hover:from-[#1d4ed8] hover:to-[#4338ca] transition-all duration-300"
+              className="min-w-[100px] transition-all duration-300"             
+
             /> 
             <ERPButton
               title={t("reset_all")}
               onClick={resetThemeChange}
               type="reset"
-              variant="status"
-              className="min-w-[100px] transition-all duration-300"
+              variant="custom"
+              className="min-w-[140px] bg-gradient-to-r from-[#2563eb] to-[#4f46e5] hover:from-[#1d4ed8] hover:to-[#4338ca] transition-all duration-300"
             />
             <ERPButton
               title={t("save_changes")}
               onClick={postUserConfig}
               variant="primary"
-              className="min-w-[140px] bg-gradient-to-r from-[#2563eb] to-[#4f46e5] hover:from-[#1d4ed8] hover:to-[#4338ca] transition-all duration-300"
+              className="min-w-[140px] transition-all duration-300"
             />
           </div>
       

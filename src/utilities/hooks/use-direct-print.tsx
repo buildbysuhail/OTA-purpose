@@ -83,7 +83,7 @@ export const useDirectPrint = () => {
   const fetchTemplateData = async (params: DirectPrintArgs) => {
     try {
       let printData = params.data;
-      if (params.masterIDParam){
+      if (params.masterIDParam && params.masterIDParam !=0){
         printData = (await loadPrintData(
           params.masterIDParam ?? 0,
           params.voucherTypeParam ?? "",

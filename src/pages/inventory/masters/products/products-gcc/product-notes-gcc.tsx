@@ -40,18 +40,18 @@ const ProductNotesGcc: React.FC<ProductNotesGccProps> = ({ getFieldProps, handle
     const { t } = useTranslation('inventory')
 
     return (
-        <div className="border border-[#ccc] rounded-md p-4 inline-block w-1/2">
+        <div className="border border-[#ccc] rounded-md p-4 w-full lg:w-1/2">
             {[1, 3, 5, 7, 9].map((i, rowIndex) => {
                 const leftKey = `notes${i}`;
                 const rightKey = `notes${i + 1}`;
                 return (
-                    <div key={rowIndex} className="grid grid-cols-2">
+                    <div key={rowIndex} className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         <ERPInput
                             disabled={isView}
                             label={`${t('note')} ${i}`}
                             value={notes[leftKey] || ""}
                             onChange={(e) => handleNoteChange(leftKey, e.target.value)}
-                            className="w-11/12"
+                            className="w-full"
                             id=""
                         />
                         <div className="flex items-end gap-2 w-full">
@@ -59,6 +59,7 @@ const ProductNotesGcc: React.FC<ProductNotesGccProps> = ({ getFieldProps, handle
                                 disabled={isView}
                                 title=">ar"
                                 onClick={() => handleTransformToUpper(leftKey, rightKey)}
+                                className="flex-shrink-0"
                             />
                             <ERPInput
                                 disabled={isView}

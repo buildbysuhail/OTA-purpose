@@ -209,7 +209,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
           fixedPosition: document?.dir === "rtl" ? "left" : "right",
           width: 50,
           cellRender: (cellElement: any, cellInfo: any) => {
-            
+
             return (
               <ERPGridActions
                 view={{ visible: false, type: "link" }}
@@ -359,7 +359,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               }}
               label={t("party_category")}
               disabled={rootState.PopupData.parties.mode == "view"}
-            // disabled={true}
+              // disabled={true}
               fetching={formState?.loading !== false ? true : false}
             />
 
@@ -378,7 +378,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               label={t("acc_group")}
               disabled={rootState.PopupData.parties.mode == "view"}
               fetching={formState?.loading !== false ? true : false}
-              // readonly={true}
+            // readonly={true}
             />
 
             <ERPInput
@@ -836,8 +836,8 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
 
           {activeTab === "bank" && (
             <>
-              <div className="flex align-center gap-3">
-                <div className="w-1/2 dark:!border-dark-border border rounded-lg p-4">
+              <div className="flex flex-col lg:flex-row align-center gap-3">
+                <div className="w-full lg:w-1/2 dark:!border-dark-border border rounded-lg p-4">
                   <h6 className=" dark:!border-dark-border border-b pb-2 mb-2 text-sm font-bold">
                     {t("bank_1")}
                   </h6>
@@ -880,7 +880,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   </div>
                 </div>
 
-                <div className="w-1/2 dark:!border-dark-border border rounded-lg p-4">
+                <div className="w-full lg:w-1/2 dark:!border-dark-border border rounded-lg p-4">
                   <h6 className="dark:!border-dark-border  border-b pb-2 mb-2 text-sm font-bold">
                     {t("bank_2")}
                   </h6>
@@ -1013,8 +1013,8 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                           }
                         }}
                         disabled={rootState.PopupData.parties.mode == "view"}
-                        
-                        
+
+
                         className="w-full border rounded-lg p-2 text-sm"
                       />
 
@@ -1238,14 +1238,14 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   )}
 
                   <div className="md:mt-2">
-                    {rootState.PopupData.parties.mode == "view"?
-                    "":<ErpCropper
-                      apiUrl="/Subscription/Profile/UploadUserImage"
-                      onImageSuccess={onImageSuccess}
-                      useCircle
-                      
-                    />}
-                    
+                    {rootState.PopupData.parties.mode == "view" ?
+                      "" : <ErpCropper
+                        apiUrl="/Subscription/Profile/UploadUserImage"
+                        onImageSuccess={onImageSuccess}
+                        useCircle
+
+                      />}
+
                   </div>
                 </div>
               </div>
@@ -1308,33 +1308,33 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     />
 
                     <div className="flex items-end mt-2 gap-2">
-                      {rootState.PopupData.parties.mode == "view"?"": formState?.loading !== false ? "" :
+                      {rootState.PopupData.parties.mode == "view" ? "" : formState?.loading !== false ? "" :
                         <ERPButton
-                        type="button"
-                        disabled={projectOnAction}
-                        variant="primary"
-                        onClick={saveProject}
-                        loading={projectOnAction}
-                        title={
-                          project && project.projectId > 0
-                            ? t("update")
-                            : t("Save")
-                        }
-                      />}
-                      {rootState.PopupData.parties.mode == "view"?"": formState?.loading !== false ? "" :
-                      <ERPButton
-                        type="button"
-                        title={t("clear")}
-                        variant="secondary"
-                        className="mr-2"
-                        onClick={() => {
-                          clearForm();
-                        }}
-                        disabled={projectOnAction}
-                      />
-                     }
+                          type="button"
+                          disabled={projectOnAction}
+                          variant="primary"
+                          onClick={saveProject}
+                          loading={projectOnAction}
+                          title={
+                            project && project.projectId > 0
+                              ? t("update")
+                              : t("Save")
+                          }
+                        />}
+                      {rootState.PopupData.parties.mode == "view" ? "" : formState?.loading !== false ? "" :
+                        <ERPButton
+                          type="button"
+                          title={t("clear")}
+                          variant="secondary"
+                          className="mr-2"
+                          onClick={() => {
+                            clearForm();
+                          }}
+                          disabled={projectOnAction}
+                        />
+                      }
 
-                    
+
                     </div>
                   </div>
                 </div>
@@ -1480,7 +1480,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               isEdit={isEdit}
               isLoading={isLoading}
               onCancel={handleClose}
-              onSubmit={rootState.PopupData.parties.mode == "view"? undefined : formState?.loading !== false ? undefined : handleSubmit}
+              onSubmit={rootState.PopupData.parties.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleSubmit}
             />
           </div>
         </div>

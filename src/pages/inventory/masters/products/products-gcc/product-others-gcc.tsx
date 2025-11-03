@@ -69,21 +69,21 @@ const ProductOthersGcc: React.FC<{
     const openPopup = (popupType: string) => setActivePopup(popupType);
     const closePopup = () => setActivePopup(null);
     return (
-      <div className="grid grid-cols-2 gap-4 border border-[#ccc] inline-block rounded-md p-4">
-        <div className="flex items-center gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 border border-[#ccc] rounded-md p-4">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
           <ERPButton
             title={t("pos_fast_moving_items")}
             variant="secondary"
             onClick={() => openPopup("fastMoving")}
             disabled={isView}
-            className="flex-grow min-w-[180px] sm:flex-grow-0"
+            className="w-full sm:w-auto min-w-[180px]"
           />
           <ERPButton
             title={t("change_autobarcode")}
             variant="secondary"
             disabled={isView}
             onClick={() => openPopup("autoBarcode")}
-            className="flex-grow min-w-[180px] sm:flex-grow-0"
+            className="w-full sm:w-auto min-w-[180px]"
           />
         </div>
         <div className="flex flex-wrap gap-4">

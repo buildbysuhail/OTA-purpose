@@ -33,7 +33,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
   const { t } = useTranslation("masters");
   return (
     <div className="w-full modal-content">
-      <div className="grid grid-cols-2 gap-3 ps-1 text-left">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 ps-1 text-left">
         <ERPInput
           {...getFieldProps("partyCategoryName")}
           label={t("name")}
@@ -43,7 +43,6 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
           readOnly={rootState.PopupData.partyCategory.mode == "view"}
           autoFocus={true}
           fetching={formState?.loading !== false ? true : false}
-          
         />
 
         <ERPInput
@@ -54,6 +53,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
           readOnly={rootState.PopupData.partyCategory.mode == "view"}
           fetching={formState?.loading !== false ? true : false}
         />
+
         {/* <ERPDataCombobox
           {...getFieldProps("partyColor")}
           field={{
@@ -77,6 +77,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
           disabled={rootState.PopupData.partyCategory.mode == "view"}
           fetching={formState?.loading !== false ? true : false}
         />
+
         <ERPCheckbox
           {...getFieldProps("isDelete")}
           label={t("is_deletable")}
@@ -86,7 +87,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
         />
       </div>
       <ERPFormButtons
-        onClear={rootState.PopupData.partyCategory.mode == "view"? undefined : formState?.loading !== false ? undefined : handleClear}
+        onClear={rootState.PopupData.partyCategory.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}

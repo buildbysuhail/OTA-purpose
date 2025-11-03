@@ -5,7 +5,7 @@ import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import { useTranslation } from "react-i18next";
 import { APIClient } from "../../../../../helpers/api-client";
 import Urls from "../../../../../redux/urls";
-import {  isNullOrUndefinedOrEmpty,  isNullOrUndefinedOrZero,} from "../../../../../utilities/Utils";
+import { isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero, } from "../../../../../utilities/Utils";
 import { handleResponse } from "../../../../../utilities/HandleResponse";
 
 interface ButtonData {
@@ -49,7 +49,7 @@ const POSFastMovingItems: React.FC = () => {
         const responseData: FastMovingProductsDto[] = response || [];
 
         const buttonData: FastMovingProductsDto[] = [];
-        
+
         for (let i = 1; i <= 12; i++) {
           if (Array.isArray(responseData)) {
             const match = responseData.find((item) => item.displayOrder === i);
@@ -63,7 +63,6 @@ const POSFastMovingItems: React.FC = () => {
             }
           } else {
             console.error('Expected array, got:', responseData);
-            // You can also decide what to do here. Maybe fallback to default?
             buttonData.push({
               ...defaultItem,
               displayOrder: i,
@@ -80,7 +79,6 @@ const POSFastMovingItems: React.FC = () => {
     changeBarcode();
   }, [formData.keypadGroup]);
 
-  // Handle button click
   const handleButtonClick = (buttonId: number) => {
     const button = buttons.find((b) => b.displayOrder === buttonId);
     if (button) {
@@ -96,7 +94,6 @@ const POSFastMovingItems: React.FC = () => {
     }
   };
 
-  // Handle form input changes
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -108,7 +105,6 @@ const POSFastMovingItems: React.FC = () => {
     });
   };
 
-  // Handle Show button click
   const handleShow = async (displayOrder?: number) => {
     if (
       formData?.barcode == undefined ||
@@ -121,7 +117,7 @@ const POSFastMovingItems: React.FC = () => {
       const response = await api.getAsync(
         `${Urls.fast_moving_products}ByBarcode/${formData?.barcode}`
       );
-      
+
       if (response) {
         setFormData((prev) => ({
           ...response,
@@ -135,7 +131,6 @@ const POSFastMovingItems: React.FC = () => {
     }
   };
 
-  // Handle Reset button click
   const handleReset = () => {
     setFormData({
       ...formData,
@@ -148,7 +143,7 @@ const POSFastMovingItems: React.FC = () => {
   };
 
   const handleSet = async () => {
-    
+
     if (
       !isNullOrUndefinedOrZero(formData.displayOrder) &&
       !isNullOrUndefinedOrZero(formData.keypadGroup)
@@ -186,10 +181,9 @@ const POSFastMovingItems: React.FC = () => {
   }));
   return (
     <div>
-      {/* Content Area */}
-      <div className="flex p-5 bg-gray-100 rounded-md">
-        {/* Left side - 12 buttons in 3x4 grid */}
-        <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 w-[350px] text-white">
+      <div className="flex flex-col lg:flex-row gap-4 p-5 bg-gray-100 rounded-md">
+        {/* Left side - 12 buttons in grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-3 w-full lg:w-[350px] text-white">
           {buttons.map((button) => (
             <ERPButton
               className={`${button.displayOrder === formData.displayOrder
@@ -208,16 +202,15 @@ const POSFastMovingItems: React.FC = () => {
         </div>
 
         {/* Right side - Form */}
-        <div className="flex flex-col gap-2 rounded-md p-4">
-          <div className="flex items-end gap-2">
+        <div className="flex flex-col gap-2 rounded-md p-4 w-full lg:w-auto">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-end gap-2">
             <ERPDataCombobox
               label={t("group")}
               name="keypadGroup"
               id="keypadGroup"
-              className="min-w-[250px]"
+              className="w-full sm:min-w-[250px]"
               value={formData.keypadGroup}
               onChange={(e: any) => {
-                
                 handleInputChange({
                   ...e,
                   target: { ...e.target, value: e.value, name: "keypadGroup" },
@@ -230,10 +223,10 @@ const POSFastMovingItems: React.FC = () => {
             </span>
           </div>
 
-          <div className="flex items-end gap-2">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-end gap-2">
             <ERPInput
               label={t("barcode")}
-              className="min-w-[250px]"
+              className="w-full sm:min-w-[250px]"
               type="text"
               name="barcode"
               value={formData.barcode}
@@ -244,12 +237,13 @@ const POSFastMovingItems: React.FC = () => {
               onClick={() => handleShow()}
               title={t("show")}
               variant="secondary"
+              className="w-full sm:w-auto"
             />
           </div>
 
           <ERPInput
             label={t("auto_barcode")}
-            className="min-w-[250px]"
+            className="w-full sm:min-w-[250px]"
             type="text"
             disabled
             name="autoBarcode"
@@ -261,7 +255,7 @@ const POSFastMovingItems: React.FC = () => {
             type="text"
             name="name"
             disabled
-            className="max-w-[250px]"
+            className="w-full sm:max-w-[250px]"
             value={formData.productName}
             onChange={handleInputChange}
             label={t("product_name")}
@@ -272,19 +266,19 @@ const POSFastMovingItems: React.FC = () => {
             type="text"
             name="arabicName"
             disabled
-            className="max-w-[250px]"
+            className="w-full sm:max-w-[250px]"
             value={formData.arabicName}
             onChange={handleInputChange}
             label={t("foreign_language")}
             id={""}
           />
 
-          <div className="flex items-end gap-2">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-end gap-2">
             <ERPInput
               disabled
               type="number"
               name="stdSalesPrice"
-              className="min-w-[250px]"
+              className="w-full sm:min-w-[250px]"
               value={formData.stdSalesPrice}
               onChange={handleInputChange}
               label={t("std_sales_price")}
@@ -294,14 +288,15 @@ const POSFastMovingItems: React.FC = () => {
               title={t("reset")}
               variant="secondary"
               onClick={handleReset}
+              className="w-full sm:w-auto"
             />
           </div>
 
-          <div className="flex items-end gap-2">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-end gap-2">
             <ERPInput
               type="text"
               name="productShortName"
-              className="min-w-[250px]"
+              className="w-full sm:min-w-[250px]"
               value={formData.productShortName}
               onChange={handleInputChange}
               label={t("short_name")}
@@ -311,6 +306,7 @@ const POSFastMovingItems: React.FC = () => {
               title={t("set")}
               onClick={handleSet}
               variant="primary"
+              className="w-full sm:w-auto"
             />
           </div>
         </div>

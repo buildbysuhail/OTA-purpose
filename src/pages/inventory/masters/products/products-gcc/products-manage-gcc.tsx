@@ -70,7 +70,8 @@ export const ProductManageGcc: React.FC<{
     return (
       <div className="w-full modal-content">
         <div className="flex flex-col gap-1">
-          {/* <div className="flex justify-end">
+          <div className="flex flex-col lg:flex-row flex-wrap gap-1">
+            {/* <div className="flex justify-end">
             <ERPInput
               {...getFieldProps("barcode")}
               label={t("barcode")}
@@ -95,10 +96,9 @@ export const ProductManageGcc: React.FC<{
               }
             />
           </div> */}
-
-          <div className="flex flex-wrap gap-1">
-            <div className="flex-1 min-w-[300px] border border-[#ccc] rounded-md p-2">
-              <div className="flex flex-wrap items-end gap-2">
+            {/* Left Section */}
+            <div className="flex-1 min-w-[280px] border border-[#ccc] rounded-md p-2">
+              <div className="flex flex-col sm:flex-row flex-wrap items-end gap-2">
                 <div className="flex flex-1 min-w-[200px] items-center gap-2">
                   <ERPInput
                     ref={productCodeRef}
@@ -117,7 +117,7 @@ export const ProductManageGcc: React.FC<{
                   />
                   <button
                     disabled={isView}
-                    className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300"
+                    className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300 flex-shrink-0"
                     onClick={async () => {
                       const nextProductCode = await api.getAsync(`${Urls.products}SelectNextProductCode`);
                       handleFieldChange(
@@ -129,7 +129,7 @@ export const ProductManageGcc: React.FC<{
                   </button>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-4">
+                <div className="flex flex-col sm:flex-row flex-wrap items-center gap-4 w-full sm:w-auto">
                   <ERPCheckbox
                     disabled={isView}
                     {...getFieldProps("product.manual")}
@@ -215,7 +215,6 @@ export const ProductManageGcc: React.FC<{
                 required={true}
               /> */}
 
-
               <div className="flex flex-1 min-w-[200px] items-center gap-2">
                 <ERPDataCombobox
                   disabled={isView}
@@ -249,10 +248,11 @@ export const ProductManageGcc: React.FC<{
                 {/* <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
                     <Ellipsis className="w-4 h-4" />
                   </button> */}
+
               </div>
 
-              <div className="flex flex-wrap gap-2">
-                <div className="flex flex-1 min-w-[150px] lg:max-w-[150px] sm:max-w-full items-center gap-2">
+              <div className="flex flex-col sm:flex-row flex-wrap gap-2">
+                <div className="flex flex-1 min-w-[150px] items-center gap-2">
                   <ERPDataCombobox
                     disabled={isView}
                     {...getFieldProps("product.basicUnitID")}
@@ -287,7 +287,7 @@ export const ProductManageGcc: React.FC<{
                   </button> */}
                 </div>
 
-                <div className="flex flex-1 min-w-[150px] max-w-[150px]">
+                <div className="flex flex-1 min-w-[150px] max-w-full sm:max-w-[150px]">
                   <ERPInput
                     disabled={isView}
                     {...getFieldProps("product.unitQty")}
@@ -303,7 +303,7 @@ export const ProductManageGcc: React.FC<{
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-end gap-2">
+              <div className="flex flex-col sm:flex-row flex-wrap items-end gap-2">
                 <ERPCheckbox
                   disabled={isView}
                   {...getFieldProps("upcBarcode")}
@@ -336,7 +336,7 @@ export const ProductManageGcc: React.FC<{
                   placeholder=""
                   // type="string"
                   required={false}
-                  className="flex-1 min-w-[140px] max-w-[140px]"
+                  className="flex-1 min-w-[140px] max-w-full sm:max-w-[140px]"
                   onChange={(data: any) =>
                     handleFieldChange(
                       "batch.manualBarcode",
@@ -344,6 +344,7 @@ export const ProductManageGcc: React.FC<{
                     )
                   }
                 />
+
                 {/* <p>{getFieldProps("product.unitQty")?.value}</p>
                 <p>next</p>
                 <p>{getFieldProps("batch.manualBarcode")?.value}</p> */}
@@ -390,201 +391,186 @@ export const ProductManageGcc: React.FC<{
                     className="w-full"
                   />
                 </div> */}
-
-                {appSettings.mainSettings?.maintainBusinessType ==
+                {(appSettings.mainSettings?.maintainBusinessType ==
                   BusinessType.Hypermarket ||
-                  (appSettings.mainSettings?.maintainBusinessType ==
-                    BusinessType.Supermarket && (
-                      <div className="flex flex-1 min-w-[200px] items-center">
-                        <ERPCheckbox
-                          {...getFieldProps("product.isWeighingScale")}
-                          label={t("is_weighing_scale_item")}
-                          onChange={(data) => {
-                            handleFieldChange(
-                              "product.isWeighingScale",
-                              data.target.checked
-                            );
-                          }}
-                        />
-                      </div>
-                    ))}
+                  appSettings.mainSettings?.maintainBusinessType ==
+                  BusinessType.Supermarket) && (
+                    <div className="flex flex-1 min-w-[200px] items-center">
+                      <ERPCheckbox
+                        {...getFieldProps("product.isWeighingScale")}
+                        label={t("is_weighing_scale_item")}
+                        onChange={(data) => {
+                          handleFieldChange(
+                            "product.isWeighingScale",
+                            data.target.checked
+                          );
+                        }}
+                      />
+                    </div>
+                  )}
               </div>
             </div>
 
-            <div className="flex-1 min-w-[300px] border border-[#ccc] rounded-md p-2">
-              <div className="flex flex-wrap gap-2">
-                <div className="flex-1 min-w-[120px] max-w-[120px]">
-                  <ERPInput
-                    {...getFieldProps("product.stdPurchasePrice")}
-                    disabled={getFieldProps("product.itemType").value === "Dummy" || isView}
-                    label={t("purchase_price")}
-                    placeholder="0.00"
-                    type="number"
-                    required={false}
-                    onChangeData={(data: any) =>
-                      handleFieldChange(
-                        { "product.stdPurchasePrice": data.product.stdPurchasePrice, "batch.stdPurchasePrice": data.product.stdPurchasePrice }
-                      )
-                    }
-                  />
-                </div>
-                <div className="flex-1 min-w-[120px] max-w-[120px]">
-                  <ERPInput
-                    {...getFieldProps("product.stdSalesPrice")}
-                    disabled={getFieldProps("product.itemType").value === "Dummy" || isView}
-                    label={t("sales_price")}
-                    placeholder="0.00"
-                    type="number"
-                    required={false}
-                    onChangeData={(data: any) => {
-                      const markupPercentage = calculateMarkup(
-                        parseFloat((data.product.stdPurchasePrice ?? 0).toString()),
-                        parseFloat((data.product.stdSalesPrice ?? 0).toString()),
-                        data.taxCategoryTaxPercentage,
-                        appSettings.productsSettings.showRateBeforeTax,
-                        getFormattedValue
-                      );
-                      const prev = getFieldProps("*");
-                      const _data = {
-                        ...prev,
-                        batch: {
-                          ...prev.batch,
-                          stdSalesPrice: data.product.stdSalesPrice,
-                        },
-                        product: {
-                          ...prev.product,
-                          stdSalesPrice: data.product.stdSalesPrice,
-                        },
-                        markup: markupPercentage,
-                      };
-                      handleDataChange(_data);
-                    }}
-                  />
-                </div>
-                <div className="flex-1 min-w-[120px] max-w-[120px]">
-                  <ERPInput
-                    disabled={isView}
-                    {...getFieldProps("markup")}
-                    label={t("markup") + "%"}
-                    placeholder="0.00"
-                    type="number"
-                    required={false}
-                    onChangeData={(data: any) => {
-                      const stdSalesPrice = getFormattedValue(calculateSalesPrice(
-                        parseFloat((data.product.stdPurchasePrice ?? 0).toString()),
-                        parseFloat((data.markup ?? 0).toString()),
-                        data.taxCategoryTaxPercentage,
-                        appSettings.productsSettings.showRateBeforeTax
-                      ), false, 4);
-                      const prev = getFieldProps("*");
-                      const _data = {
-                        ...prev,
-                        product: {
-                          ...prev.product,
-                          stdSalesPrice: stdSalesPrice ?? 0,
-                        },
-                        batch: {
-                          ...prev.batch,
-                          stdSalesPrice: stdSalesPrice ?? 0,
-                        },
-                        markup: data.markup ?? 0,
-                      };
-                      handleDataChange(_data);
-                      // const stdSalesPrice =calculateSalesPrice(data.product.stdPurchasePrice, data.markup, data.taxCategoryTaxPercentage,appSettings?.productsSettings.showRateBeforeTax)
-                      // handleFieldChange("product.stdSalesPrice", stdSalesPrice)
-                    }}
-                  />
-                </div>
-                <div className="flex-1 min-w-[120px] max-w-[120px]">
-                  <ERPInput
-                    disabled={isView}
-                    {...getFieldProps("batch.displayCost")}
-                    label={t("display_cost")}
-                    placeholder="0.00"
-                    type="number"
-                    required={false}
-                    onChangeData={(data: any) =>
-                      handleFieldChange(
-                        "batch.displayCost",
-                        data.batch.displayCost
-                      )
-                    }
-                  />
-                </div>
+            {/* Right Section */}
+            <div className="flex-1 min-w-[280px] border border-[#ccc] rounded-md p-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
+                <ERPInput
+                  {...getFieldProps("product.stdPurchasePrice")}
+                  disabled={getFieldProps("product.itemType").value === "Dummy" || isView}
+                  label={t("purchase_price")}
+                  placeholder="0.00"
+                  type="number"
+                  required={false}
+                  onChangeData={(data: any) =>
+                    handleFieldChange(
+                      { "product.stdPurchasePrice": data.product.stdPurchasePrice, "batch.stdPurchasePrice": data.product.stdPurchasePrice }
+                    )
+                  }
+                />
+                <ERPInput
+                  {...getFieldProps("product.stdSalesPrice")}
+                  disabled={getFieldProps("product.itemType").value === "Dummy" || isView}
+                  label={t("sales_price")}
+                  placeholder="0.00"
+                  type="number"
+                  required={false}
+                  onChangeData={(data: any) => {
+                    const markupPercentage = calculateMarkup(
+                      parseFloat((data.product.stdPurchasePrice ?? 0).toString()),
+                      parseFloat((data.product.stdSalesPrice ?? 0).toString()),
+                      data.taxCategoryTaxPercentage,
+                      appSettings.productsSettings.showRateBeforeTax,
+                      getFormattedValue
+                    );
+                    const prev = getFieldProps("*");
+                    const _data = {
+                      ...prev,
+                      batch: {
+                        ...prev.batch,
+                        stdSalesPrice: data.product.stdSalesPrice,
+                      },
+                      product: {
+                        ...prev.product,
+                        stdSalesPrice: data.product.stdSalesPrice,
+                      },
+                      markup: markupPercentage,
+                    };
+                    handleDataChange(_data);
+                  }}
+                />
+                <ERPInput
+                  disabled={isView}
+                  {...getFieldProps("markup")}
+                  label={t("markup") + "%"}
+                  placeholder="0.00"
+                  type="number"
+                  required={false}
+                  onChangeData={(data: any) => {
+                    const stdSalesPrice = getFormattedValue(calculateSalesPrice(
+                      parseFloat((data.product.stdPurchasePrice ?? 0).toString()),
+                      parseFloat((data.markup ?? 0).toString()),
+                      data.taxCategoryTaxPercentage,
+                      appSettings.productsSettings.showRateBeforeTax
+                    ), false, 4);
+                    const prev = getFieldProps("*");
+                    const _data = {
+                      ...prev,
+                      product: {
+                        ...prev.product,
+                        stdSalesPrice: stdSalesPrice ?? 0,
+                      },
+                      batch: {
+                        ...prev.batch,
+                        stdSalesPrice: stdSalesPrice ?? 0,
+                      },
+                      markup: data.markup ?? 0,
+                    };
+                    handleDataChange(_data);
+                    // const stdSalesPrice =calculateSalesPrice(data.product.stdPurchasePrice, data.markup, data.taxCategoryTaxPercentage,appSettings?.productsSettings.showRateBeforeTax)
+                    // handleFieldChange("product.stdSalesPrice", stdSalesPrice)
+                  }}
+                />
+                <ERPInput
+                  disabled={isView}
+                  {...getFieldProps("batch.displayCost")}
+                  label={t("display_cost")}
+                  placeholder="0.00"
+                  type="number"
+                  required={false}
+                  onChangeData={(data: any) =>
+                    handleFieldChange(
+                      "batch.displayCost",
+                      data.batch.displayCost
+                    )
+                  }
+                />
 
-                <div className="flex-1 min-w-[120px] max-w-[120px]">
-                  <ERPInput
-                    disabled={isView}
-                    {...getFieldProps("batch.msp")}
-                    label={t("min_sale_price")}
-                    placeholder="0.00"
-                    type="number"
-                    required={false}
-                    onChangeData={(data: any) =>
-                      handleFieldChange("batch.msp", data.batch.msp)
-                    }
-                  />
-                </div>
+                <ERPInput
+                  disabled={isView}
+                  {...getFieldProps("batch.msp")}
+                  label={t("min_sale_price")}
+                  placeholder="0.00"
+                  type="number"
+                  required={false}
+                  onChangeData={(data: any) =>
+                    handleFieldChange("batch.msp", data.batch.msp)
+                  }
+                />
 
-                <div className="flex-1 min-w-[120px] max-w-[120px]">
-                  <ERPInput
-                    {...getFieldProps("batch.openingStock")}
-                    disabled={getFieldProps("product.itemType").value === "Dummy" || isView}
-                    label={t("op_stock")}
-                    placeholder="0.00"
-                    type="number"
-                    required={false}
-                    onChangeData={(data: any) =>
-                      handleFieldChange("batch.openingStock", data.batch.openingStock)
+                <ERPInput
+                  {...getFieldProps("batch.openingStock")}
+                  disabled={getFieldProps("product.itemType").value === "Dummy" || isView}
+                  label={t("op_stock")}
+                  placeholder="0.00"
+                  type="number"
+                  required={false}
+                  onChangeData={(data: any) =>
+                    handleFieldChange("batch.openingStock", data.batch.openingStock)
+                  }
+                  onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                    if (
+                      e.key === "Enter" &&
+                      getFieldProps("mr")?.value === true &&
+                      switchToMultiRatesTab
+                    ) {
+                      console.log("Enter pressed, calling switchToMultiRatesTab");
+                      e.preventDefault();
+                      switchToMultiRatesTab();
                     }
-                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                      if (
-                        e.key === "Enter" &&
-                        getFieldProps("mr")?.value === true &&
-                        switchToMultiRatesTab
-                      ) {
-                        console.log("Enter pressed, calling switchToMultiRatesTab");
-                        e.preventDefault();
-                        switchToMultiRatesTab();
-                      }
-                    }}
-                    disableEnterNavigation
-                  />
-                </div>
+                  }}
+                  disableEnterNavigation
+                />
 
                 {userSession.dbIdValue == "SEMAKA" && (
                   <>
-                    <div className="flex-1 min-w-[120px] max-w-[120px]">
-                      <ERPInput
-                        disabled={isView}
-                        {...getFieldProps("batch.aPC")}
-                        label={t("avg_cost")}
-                        placeholder="0.00"
-                        type="number"
-                        required={false}
-                        onChangeData={(data: any) =>
-                          handleFieldChange("batch.aPC", data.batch.aPC)
-                        }
-                      />
-                    </div>
-                    <div className="flex-1 min-w-[120px] max-w-[120px]">
-                      <ERPInput
-                        disabled={isView}
-                        {...getFieldProps("batch.stock")}
-                        label={t("stock")}
-                        placeholder="0.00"
-                        type="number"
-                        required={false}
-                        onChangeData={(data: any) =>
-                          handleFieldChange("batch.stock", data.batch.stock)
-                        }
-                      />
-                    </div>
+                    <ERPInput
+                      disabled={isView}
+                      {...getFieldProps("batch.aPC")}
+                      label={t("avg_cost")}
+                      placeholder="0.00"
+                      type="number"
+                      required={false}
+                      onChangeData={(data: any) =>
+                        handleFieldChange("batch.aPC", data.batch.aPC)
+                      }
+                    />
+                    <ERPInput
+                      disabled={isView}
+                      {...getFieldProps("batch.stock")}
+                      label={t("stock")}
+                      placeholder="0.00"
+                      type="number"
+                      required={false}
+                      onChangeData={(data: any) =>
+                        handleFieldChange("batch.stock", data.batch.stock)
+                      }
+                    />
                   </>
                 )}
               </div>
+
               {appSettings.mainSettings.maintainMultilanguage__ == true && (
-                <div>
+                <div className="mt-2">
                   <ERPInput
                     disabled={isView}
                     {...getFieldProps("product.secondLanguage")}
@@ -601,7 +587,7 @@ export const ProductManageGcc: React.FC<{
                 </div>
               )}
 
-              <div className="flex flex-wrap items-center gap-1">
+              <div className="flex flex-col sm:flex-row flex-wrap items-center gap-1 mt-2">
                 <div className="flex items-center">
                   <ERPCheckbox
                     disabled={isView}
@@ -636,8 +622,8 @@ export const ProductManageGcc: React.FC<{
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-4">
-                <div className="flex-1 min-w-[200px] max-w-[200px]">
+              <div className="flex flex-col sm:flex-row flex-wrap gap-4 mt-2">
+                <div className="flex-1 min-w-[200px]">
                   <ERPDataCombobox
                     disabled={isView}
                     {...getFieldProps("product.itemType")}
@@ -670,7 +656,7 @@ export const ProductManageGcc: React.FC<{
                     ]}
                   />
                 </div>
-                <div className="flex-1 min-w-[200px] max-w-[200px]">
+                <div className="flex-1 min-w-[200px]">
                   <ERPDataCombobox
                     disabled={isView}
                     {...getFieldProps("product.taxCategoryID")}
@@ -687,12 +673,13 @@ export const ProductManageGcc: React.FC<{
                     className="w-full"
                   />
                 </div>
-                <div className="flex flex-wrap items-end gap-4">
+                <div className="flex flex-col sm:flex-row flex-wrap items-end gap-4 w-full sm:w-auto">
                   {getFieldProps("product.itemType").value == "KIT" && (
                     <ERPButton
                       title={t("kit")}
                       disabled={isView}
                       variant="secondary"
+                      className="w-full sm:w-auto"
                     />
                   )}
                   <ERPCheckbox

@@ -22,8 +22,8 @@ export const ProductDetailsGcc: React.FC<{
     <>
       {getFieldProps("details").value == true && (
         <div className="flex flex-col gap-4 border border-gray-200 rounded-md p-2">
-          <div className="grid grid-cols-4 gap-1 items-end border border-gray-200 rounded-md p-2">
-            <div className="grid grid-cols-3 gap-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-1 items-end border border-gray-200 rounded-md p-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:col-span-2 lg:col-span-3 xl:col-span-1">
               <ERPInput
                 disabled={isView}
                 {...getFieldProps("product.minimumStock")}
@@ -87,9 +87,6 @@ export const ProductDetailsGcc: React.FC<{
                 className="w-full"
                 label={t("warehouse")}
               />
-              {/* <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
-                <Ellipsis className="w-4 h-4" />
-              </button> */}
             </div>
 
             <div className="flex items-center gap-1">
@@ -108,11 +105,7 @@ export const ProductDetailsGcc: React.FC<{
                 }
                 className="w-full"
                 label={t("brand_mfg")}
-              // options={[]}
               />
-              {/* <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
-                <Ellipsis className="w-4 h-4" />
-              </button> */}
             </div>
 
             <ERPInput
@@ -144,7 +137,6 @@ export const ProductDetailsGcc: React.FC<{
               }
               label={t("product_category")}
               className="w-full"
-            // options={[]}
             />
 
             <ERPInput
@@ -216,7 +208,6 @@ export const ProductDetailsGcc: React.FC<{
               onChangeData={(data: productDto) =>
                 handleFieldChange("product.netWt", data.product.netWt)
               }
-              className="truncate flex-1 min-w-[100px]"
             />
 
             <ERPInput
@@ -231,7 +222,6 @@ export const ProductDetailsGcc: React.FC<{
                   data.product.netWeightUnit
                 )
               }
-              className="flex-1 min-w-[80px]"
             />
 
             <ERPDateInput
@@ -254,15 +244,6 @@ export const ProductDetailsGcc: React.FC<{
               }
             />
 
-            {/* <ERPInput
-              {...getFieldProps("product.mrp")}
-              label={t("mrp")}
-              placeholder="0.00"
-              type="number"
-              required={false}
-              onChangeData={(data: any) => handleFieldChange("product.mrp", data.product.mrp)}
-            /> */}
-
             <ERPDataCombobox
               disabled={isView}
               {...getFieldProps("batch.locationId")}
@@ -277,8 +258,7 @@ export const ProductDetailsGcc: React.FC<{
                 handleFieldChange({ "batch.locationId": data.value, "batch.location": data.label })
               }
               label={t("location")}
-              // options={[]}
-              className="flex-2 min-w-[200px]"
+              className="w-full"
             />
 
             <ERPCheckbox
@@ -345,9 +325,6 @@ export const ProductDetailsGcc: React.FC<{
                 onChange={(e) =>
                   handleFieldChange("batch.gatePass", e.target.checked)
                 }
-              // onChangeData={(data: productDto) =>
-              //   handleFieldChange("product.gatePass", data.gatePass)
-              // }
               />
 
               {clientSession.dbIdValue == "543140180640" && (

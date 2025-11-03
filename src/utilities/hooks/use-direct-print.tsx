@@ -22,6 +22,7 @@ import { generateQRCodeDataUrl } from "../../pages/InvoiceDesigner/utils/qrSvgTo
 import { useNumberToWords } from "../number-to-words";
 import { saveAs } from "file-saver";
 interface DirectPrintArgs {
+  
   template?: any;
   data?: any;
   page?: any;
@@ -46,6 +47,7 @@ interface DirectPrintArgs {
   dbIdValue?: string;
   voucherType?: string;
   isAppGlobal?: boolean;
+  isDirectDownload?: boolean;
 }
 
 export const useDirectPrint = () => {
@@ -138,7 +140,7 @@ export const useDirectPrint = () => {
       let pdfDocument;
       let noDefaultPrint: boolean = false;
       let setPrinter: boolean = false;
-
+debugger
       const {
         template,
         data,
@@ -197,6 +199,15 @@ export const useDirectPrint = () => {
       }
         
         // 2️⃣ Convert the React PDF document into a Blob
+        if(params.isDirectDownload){
+        const blob = await pdf(pdfDocument).toBlob();
+                // 3️⃣ Download the file using FileSaver
+       const fileName =
+        template?.propertiesState?.fileName ||
+        `${template?.templateGroup || "document"}.pdf`;
+         saveAs(blob, fileName);
+        return { success: true };
+        }
       const blob = await pdf(pdfDocument).toBlob();
 
       // 3️⃣ Download the file using FileSaver

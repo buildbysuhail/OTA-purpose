@@ -1,20 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { Download, FileText, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
+import Urls from '../../../redux/urls';
+import { APIClient } from '../../../helpers/api-client';
+import { t } from 'i18next';
+import { fetchDefaultTemplateFromApi, fetchDefaultTemplateFromToken } from '../../use-print';
+import { useCommenPrint } from '../../transaction-base/use-commen-print';
+import { useDirectPrint } from '../../../utilities/hooks/use-direct-print';
+import { de } from 'date-fns/locale';
 
 const TwilioPdfDownloader = ({ 
   fileName = 'document.pdf',
   apiEndpoint = 'https://your-api-endpoint.com/api/download', // Replace with your actual API endpoint
   autoDownload = true
 }) => {
+  const api = new APIClient();
+     const { directPrint } = useDirectPrint();
+  const location = useLocation();
   const [downloadStatus, setDownloadStatus] = useState('idle'); // idle, fetching, generating, success, error
   const [error, setError] = useState("null");
   const [token, setToken] = useState("");
-
+   
   // Extract token from query parameters
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
+    const urlParams = new URLSearchParams(location.search);
     const tokenFromUrl = urlParams.get('token');
-    
     if (tokenFromUrl) {
       setToken(tokenFromUrl);
       console.log('Token extracted from URL:', tokenFromUrl);
@@ -22,61 +32,10 @@ const TwilioPdfDownloader = ({
       setError('No token found in URL parameters');
       setDownloadStatus('error');
     }
-  }, []);
-
-  // Function to call API and get PDF data
-  const fetchPdfData = async (authToken: any) => {
-    try {
-      const response = await fetch(apiEndpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          token: authToken
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error(`API request failed: ${response.status} ${response.statusText}`);
-      }
-
-      // Check if response is PDF
-      const contentType = response.headers.get('content-type');
-      
-      if (contentType && contentType.includes('application/pdf')) {
-        // If API returns PDF directly
-        return await response.blob();
-      } else {
-        // If API returns JSON or other data
-        const data = await response.json();
-        return data;
-      }
-    } catch (err) {
-      throw new Error(`Failed to fetch PDF data: `);
-    }
-  };
-
-  // Function to download PDF
-  const downloadPdf = (blob: any, filename: any) => {
-    try {
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = filename;
-      
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      
-      window.URL.revokeObjectURL(url);
-    } catch (err) {
-      throw new Error(`Failed to download PDF: ${err}`);
-    }
-  };
+  }, [location.search]);
 
   // Main function to fetch and download PDF
-  const generateAndDownloadPdf = async () => {
+  const generateAndDownloadPdf = async (token:string) => {
     if (!token) {
       setError('No token available');
       setDownloadStatus('error');
@@ -86,38 +45,15 @@ const TwilioPdfDownloader = ({
     try {
       setDownloadStatus('fetching');
       setError("");
-
       // Call API to get PDF data
-      const pdfData = await fetchPdfData(token);
-      
-      setDownloadStatus('generating');
-      
-      let blob;
-      
-      // Handle different response types
-      if (pdfData instanceof Blob) {
-        // If already a blob (PDF was returned directly)
-        blob = pdfData;
-      } else if (pdfData.pdfContent) {
-        // If PDF content is in base64
-        const binaryString = atob(pdfData.pdfContent);
-        const bytes = new Uint8Array(binaryString.length);
-        for (let i = 0; i < binaryString.length; i++) {
-          bytes[i] = binaryString.charCodeAt(i);
-        }
-        blob = new Blob([bytes], { type: 'application/pdf' });
-      } else if (pdfData.url) {
-        // If API returns a URL to the PDF
-        const response = await fetch(pdfData.url);
-        blob = await response.blob();
-      } else {
-        throw new Error('Unexpected API response format');
-      }
-      
-      // Download the PDF
-      const finalFileName = pdfData.fileName || fileName;
-      downloadPdf(blob, finalFileName);
-      
+       const Data= await fetchDefaultTemplateFromToken(token);
+     if(Data){
+      debugger;
+       const Template =await fetchDefaultTemplateFromApi (Data.master?.voucherType, Data.master?.voucherForm, Data.master?.customerType);
+        await directPrint({isDirectDownload:true ,template: Template,data:Data,})
+    }
+     
+      setDownloadStatus('generating')
       setDownloadStatus('success');
     } catch (err: any) {
       console.error('PDF generation error:', err);
@@ -128,10 +64,11 @@ const TwilioPdfDownloader = ({
 
   // Auto-download when token is available
   useEffect(() => {
-    if (autoDownload && token && downloadStatus === 'idle') {
-      generateAndDownloadPdf();
+    debugger;
+    if ( token ) {
+      generateAndDownloadPdf(token);
     }
-  }, [token, autoDownload]);
+  }, [token]);
 
   const getStatusIcon = () => {
     switch (downloadStatus) {
@@ -224,7 +161,7 @@ const TwilioPdfDownloader = ({
           )}
           
           <button
-            onClick={generateAndDownloadPdf}
+            onClick={()=>generateAndDownloadPdf(token)}
             disabled={!token || downloadStatus === 'fetching' || downloadStatus === 'generating'}
             className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all font-medium shadow-md hover:shadow-lg"
           >
@@ -253,3 +190,4 @@ const TwilioPdfDownloader = ({
 };
 
 export default TwilioPdfDownloader;
+

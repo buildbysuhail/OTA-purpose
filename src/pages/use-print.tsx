@@ -12,13 +12,36 @@ import { getStorageString, setStorageString } from '../utilities/storage-utils';
 import { base64ToModelUnicode, base64UnicodeToModel, modelToBase64Unicode, safeBase64Decode, toCamelCase } from '../utilities/jsonConverter';
 import { decompressData } from '../utilities/compression';
 import { templateInitialState } from '../redux/reducers/TemplateReducer';
+import VoucherType, { purchaseVoucherTypes, salesVoucherTypes } from '../enums/voucher-types';
+import { is } from 'date-fns/locale';
 
 
-type VoucherType = {
-  voucherType: string;
-  transactionType: string;
-};
+// type VoucherType = {
+//   voucherType: string;
+//   transactionType: string;
+// };
 
+interface ProcessPrintOptions {
+  MasterIDParam: number;
+  voucherTypeParam: string;
+  isInvTrans?: boolean;
+  isSalesView?: boolean;
+  isServiceTrans?: boolean;
+  transDate?: string;
+  printCopies?: number;
+  isReprint?: boolean;
+  isPOSPrinting?: boolean;
+  isFromSalesReceipt?: boolean;
+  isPackingSlipPrint?: boolean;
+  warehouseID?: number;
+  kitchenIDParam?: number;
+  kitchenPrinterNameParam?: string;
+  kitchenNameParam?: string;
+  commonKitchenProductGroupIDParam?: number;
+  dbIdValue?: string;
+  isAppGlobal?: boolean;
+
+}
 
 export function getKsaQrCode(transDate: Date, totalWithVat: string, vat: string, companyData: CompanyDetailsForPrint): string {
   const sellerName = companyData.registeredName; // replace with config/company profile
@@ -248,7 +271,152 @@ const updateDetailsAndSummary = async (printData: PrintResponse, fields: (keyof 
 
   return printData;
 };
-export const loadPrintData = async (MasterIDParam: number, voucherTypeParam: string,
+
+
+
+export const processPrintResponse = async (
+  printData: PrintResponse,
+  options: ProcessPrintOptions
+): Promise<PrintResponse> => {
+  const {
+    MasterIDParam,
+    voucherTypeParam,
+    isInvTrans = false,
+    isSalesView = false,
+    isServiceTrans = false,
+    transDate = "2014-1-1",
+    printCopies = 1,
+    isReprint = false,
+    isPOSPrinting = false,
+    isFromSalesReceipt = false,
+    isPackingSlipPrint = false,
+    warehouseID = 0,
+    kitchenIDParam = 0,
+    kitchenPrinterNameParam = "",
+    kitchenNameParam = "",
+    commonKitchenProductGroupIDParam = 0,
+    dbIdValue = "",
+    isAppGlobal = false,
+  } = options;
+
+  let returnData: PrintResponse = merge({}, initialPrintResponse, printData);
+  returnData.custom = returnData.custom ?? initialPrintCustomFields;
+
+  if (isNullOrUndefinedOrEmpty(printData?.master)) return returnData;
+
+  // Kitchen Print
+  const isKitchenPrint =
+    !isNullOrUndefinedOrZero(kitchenIDParam) ||
+    !isNullOrUndefinedOrZero(commonKitchenProductGroupIDParam) ||
+    !isNullOrUndefinedOrEmpty(kitchenPrinterNameParam) ||
+    !isNullOrUndefinedOrEmpty(kitchenNameParam);
+
+  if (isKitchenPrint) {
+    returnData.custom.kitchenID = kitchenIDParam;
+    returnData.custom.kitchenPrinterName = kitchenPrinterNameParam ?? "";
+    returnData.custom.printerName = kitchenPrinterNameParam ?? "";
+    returnData.custom.kitchenName = kitchenNameParam;
+    returnData.custom.commonKitchenProductGroupID = commonKitchenProductGroupIDParam;
+  }
+
+  // Barcode
+  let barcode = "";
+  if (MasterIDParam < 10) barcode = `*00000${MasterIDParam}*`;
+  else if (MasterIDParam < 100) barcode = `*0000${MasterIDParam}*`;
+  else if (MasterIDParam < 1000) barcode = `*000${MasterIDParam}*`;
+  else barcode = `*${MasterIDParam}*`;
+
+  returnData.custom.transactionBarcode = barcode;
+
+  // Skip kitchen-only prints
+  if (isKitchenPrint) {
+    returnData.custom.transactionTime = printData?.master?.systemDateTime.toString();
+    return returnData;
+  }
+
+  if (isServiceTrans) return returnData;
+
+  if (printData && printData.master) {
+    const voucherNumber = printData.master?.voucherNumber || "";
+    const voucherTypeCode = printData.master?.voucherType || "";
+    const voucherPrefix = printData.master?.voucherPrefix || "";
+
+    returnData.custom.billNumberBarcode = `(1${voucherTypeCode}${voucherNumber})`;
+    returnData.custom.tokenBarcode = `(${voucherNumber})`;
+
+    if (voucherNumber.toString().length < 2)
+      returnData.custom.voucherNumberBarcode = `(00${voucherNumber})`;
+    else if (voucherNumber.toString().length < 3)
+      returnData.custom.voucherNumberBarcode = `(0${voucherNumber})`;
+    else returnData.custom.voucherNumberBarcode = `(${voucherNumber})`;
+
+    returnData.custom.billNumberPrefBarcode = `(${voucherPrefix}.1${voucherTypeCode}${voucherNumber})`;
+    returnData.custom.transactionTimeGate = new Date(
+      printData.master?.transactionDateWithTime || new Date()
+    ).toISOString();
+
+    returnData.custom.isFromSalesReceipt = isFromSalesReceipt;
+    if (printCopies > 0) returnData.custom.noOfCopies = printCopies;
+    returnData.custom.transactionDate = transDate;
+    returnData.custom.isPOSPrinting = isPOSPrinting;
+    returnData.custom.isInvTrans = isInvTrans;
+    returnData.custom.isSalesView = isSalesView;
+    returnData.custom.isReprint = isReprint;
+
+    // Inventory
+    if (isInvTrans) {
+      if (isPackingSlipPrint) {
+        let totalBillQtyCalc = 0;
+        if (printData.details) {
+          for (let i = 0; i < printData.details.length; i++) {
+            totalBillQtyCalc += printData.details[i].quantity || 0;
+          }
+        }
+        returnData.custom.totalBillQty = totalBillQtyCalc;
+        returnData.custom.billDiscount = printData.details ? printData.details.length : 0;
+
+        if (dbIdValue === "SUBAI_SWEETS") {
+          const sorted = [...(printData.details || [])].sort((a, b) => {
+            const groupCompare = (a.groupName || "").localeCompare(b.groupName || "");
+            if (groupCompare !== 0) return groupCompare;
+            const unitCompare = (a.unitName || "").localeCompare(b.unitName || "");
+            if (unitCompare !== 0) return unitCompare;
+            return (a.invTransactionDetailID || 0) - (b.invTransactionDetailID || 0);
+          });
+          returnData.details = sorted;
+        } else if (warehouseID > 0) {
+          const filtered = (printData.details || []).filter(
+            (item: PrintDetailDto) => (item.warehouseID || 0) === warehouseID
+          );
+          returnData.details = filtered;
+        }
+      }
+    } else {
+      returnData.custom.totalItems = printData.details ? printData.details.length : 0;
+      const grandTotalValue =
+        printData.master?.totalDebit && printData.master?.totalDebit > 0
+          ? printData.master.totalDebit
+          : printData.master?.totalCredit || 0;
+      returnData.master.grandTotal = grandTotalValue;
+      returnData.custom.jvTotalDebit = 0;
+      returnData.custom.jvTotalCredit = 0;
+
+      if (voucherTypeParam === "JV" && printData?.master) {
+        if (printData.master.drCr === "Dr") {
+          returnData.custom.jvTotalCredit = grandTotalValue;
+        } else {
+          returnData.custom.jvTotalDebit = grandTotalValue;
+        }
+      }
+    }
+  }
+
+  return returnData;
+};
+
+export const loadPrintData = async (
+  MasterIDParam: number,
+  voucherTypeParam: string,
   isInvTrans = false,
   isSalesView = false,
   isServiceTrans = false,
@@ -263,203 +431,89 @@ export const loadPrintData = async (MasterIDParam: number, voucherTypeParam: str
   kitchenPrinterNameParam?: string,
   kitchenNameParam = "",
   commonKitchenProductGroupIDParam = 0,
-  
   transactionType: string = "",
   dbIdValue: string = "",
   voucherType: string = "",
   isAppGlobal: boolean = false,
   template?: TemplateState<unknown>,
-  // isReprintFlag = false,
-  // isPdf = false,
-  // filepath = "",
-  // gatePassItems = [],
-  // printDesignType = "",
-  // showPreview = false,
-  // formType: string
 ): Promise<PrintResponse> => {
+  const api = new APIClient();
+  // let returnData: PrintResponse = initialPrintResponse;
+
+  try {
+  console.log(`${MasterIDParam}-MasterIDParam`);
   let fields: (keyof any)[] = []; // deepPartial PrintResponse
   const multiPayment = fields.includes("custom.bankCard") || fields.includes("qrPay")
   const printCount = fields.includes("printCount")
   const privilageCardBalance = fields.includes("privilageCardBalance") //&& PrivCardNumber
   const taxAmountIncludingTaxOnDiscount = fields.includes("total5PercTaxValue") || fields.includes("total15PercTaxValue") || fields.includes("totalzeroPercentTaxValue")
   const taxableAmountIncludingTaxOnDiscount = fields.includes("total5PerctaxableValue") || fields.includes("total15PerctaxableValue") || fields.includes("totalzeroPercentTaxableValue")
-  let returnData: PrintResponse = initialPrintResponse;
-  try {
-
-    // PrevoiusDayLedgerBalance
-    // LedgerBalance
-    // IsLedgerUnderBank
-    // IsLedgerUnderCashOrBank
-    // IsCashInHandLedger
-    // IsBankLedger
-    // ProductStockdetails
-    if (template == undefined) {
-      // template = getTemplaate
-    }
-
-    // ///fields
-    // const customElementsTop1 = template?.headerState?.customTop?.customElements ?? [];
-    // const customElementsTop2 = template?.headerState?.customBottom?.customElements ?? [];
-
-    // const fieldsTable = template?.tableState ?? [];
-    // const mergedCustomElements: PlacedComponent[] = [
-    //   ...customElementsTop1,
-    //   ...customElementsTop2,
-    // ].filter(
-    //   (item, index, self) =>
-    //     index === self.findIndex((el) => el.content === item.content)
-    // );
-    // console.log(fieldsTable);
-    // console.log(mergedCustomElements);
-    console.log(`${MasterIDParam}-MasterIDParam`);
-    const api = new APIClient();
-    let printData: PrintResponse = await api.getAsync(`${isInvTrans ? Urls.inv_transaction_base : Urls.acc_transaction_base}${transactionType}/print/?
+    const printData: PrintResponse = await api.getAsync(`${isInvTrans ? Urls.inv_transaction_base : Urls.acc_transaction_base}${transactionType}/print/?
         KitchenId=${0}&CommonKitchenProductGroupId=${0}&IncludeStockDetails=${true}&IncludePreviousLedgerBalance=${true}
         &IncludeLoyaltyCardBalance=${true}&masterId=${MasterIDParam}&multiPayment=${multiPayment}
                                             &printCount= ${printCount}
                                             &taxableAmountIncludingTaxOnDiscount= ${taxableAmountIncludingTaxOnDiscount}
                                             &taxAmountIncludingTaxOnDiscount= ${taxAmountIncludingTaxOnDiscount}
                                             &privilageCardBalance= ${privilageCardBalance}`);
-    console.log(printData);
-    if (isNullOrUndefinedOrEmpty(printData?.master))
-      return printData;
-    printData.master.customerType = printData.master?.customerType ?? ""
-    printData.master.voucherForm = printData.master?.voucherForm ?? ""
-    returnData = merge({}, returnData, printData);
-    returnData.custom = returnData.custom ?? initialPrintCustomFields;
-    const isKitchenPrint = !isNullOrUndefinedOrZero(kitchenIDParam) || !isNullOrUndefinedOrZero(commonKitchenProductGroupIDParam) ||
-      !isNullOrUndefinedOrEmpty(kitchenPrinterNameParam) || !isNullOrUndefinedOrEmpty(kitchenNameParam)
-    if (isKitchenPrint) {
-      returnData.custom.kitchenID = kitchenIDParam;
-      returnData.custom.kitchenPrinterName = kitchenPrinterNameParam ?? "";
-      returnData.custom.printerName = kitchenPrinterNameParam ?? "";
-      returnData.custom.kitchenName = kitchenNameParam;
-      returnData.custom.commonKitchenProductGroupID = commonKitchenProductGroupIDParam;
-    }
-    let barcode = "";
-    if (MasterIDParam < 10) {
-      barcode = `*00000${MasterIDParam}*`;
-    } else if (MasterIDParam < 100) {
-      barcode = `*0000${MasterIDParam}*`;
-    } else if (MasterIDParam < 1000) {
-      barcode = `*000${MasterIDParam}*`;
-    } else {
-      barcode = `*${MasterIDParam}*`;
-    }
+    const processed = await processPrintResponse(printData, {
+      MasterIDParam,
+      voucherTypeParam,
+      isInvTrans,
+      isSalesView,
+      isServiceTrans,
+      transDate,
+      printCopies,
+      isReprint,
+      isPOSPrinting,
+      isFromSalesReceipt,
+      isPackingSlipPrint,
+      warehouseID,
+      kitchenIDParam,
+      kitchenPrinterNameParam,
+      kitchenNameParam,
+      commonKitchenProductGroupIDParam,
+      dbIdValue,
 
-    returnData.custom.transactionBarcode = barcode;
+    });
 
-    if (isKitchenPrint) {
-      returnData.custom.transactionTime = printData?.master?.systemDateTime.toString();
-      return returnData;
-    }
-    if (isServiceTrans) {
-      return returnData;
-    }
-    if (printData && printData.master && printData.master) {
-      const voucherNumber = printData.master?.voucherNumber || "";
-      const voucherTypeCode = printData.master?.voucherType || "";
-      const voucherPrefix = printData.master?.voucherPrefix || "";
-
-      returnData.custom.billNumberBarcode = `(1${voucherTypeCode}${voucherNumber})`
-      returnData.custom.tokenBarcode = `(${voucherNumber})`
-
-      if (voucherNumber.toString().length < 2) {
-        returnData.custom.voucherNumberBarcode = `(00${voucherNumber})`
-      } else if (voucherNumber.toString().length < 3) {
-        returnData.custom.voucherNumberBarcode = `(0${voucherNumber})`
-      } else {
-        returnData.custom.voucherNumberBarcode = `(${voucherNumber})`
-      }
-
-      returnData.custom.billNumberPrefBarcode = `(${voucherPrefix}.1${voucherTypeCode}${voucherNumber})`
-
-      returnData.custom.transactionTimeGate = new Date(printData.master?.transactionDateWithTime || new Date()).toISOString()
-
-      returnData.custom.isFromSalesReceipt = isFromSalesReceipt
-      if (printCopies > 0) {
-        returnData.custom.noOfCopies = printCopies
-      }
-      returnData.custom.transactionDate = transDate
-      returnData.custom.isPOSPrinting = isPOSPrinting
-      returnData.custom.isInvTrans = isInvTrans
-      returnData.custom.isSalesView = isSalesView
-      returnData.custom.isReprint = isReprint
-
-
-      if (isInvTrans) {
-
-        // Handle packing slip print
-        if (isPackingSlipPrint) {
-          let totalBillQtyCalc = 0;
-          if (printData.details) {
-            for (let i = 0; i < printData.details.length; i++) {
-              totalBillQtyCalc += printData.details[i].quantity || 0;
-            }
-          }
-          returnData.custom.totalBillQty = totalBillQtyCalc;
-          returnData.custom.billDiscount = printData.details ? printData.details.length : 0;
-
-          // Filter by warehouse or sort by group
-          if (dbIdValue === "SUBAI_SWEETS") {
-            const sorted = [...(printData.details || [])].sort((a, b) => {
-              const groupCompare = (a.groupName || "").localeCompare(b.groupName || "");
-              if (groupCompare !== 0) return groupCompare;
-              const unitCompare = (a.unitName || "").localeCompare(b.unitName || "");
-              if (unitCompare !== 0) return unitCompare;
-              return (a.invTransactionDetailID || 0) - (b.invTransactionDetailID || 0);
-            });
-
-            returnData.details = sorted;
-          } else {
-            if (warehouseID > 0) {
-              const filtered = (printData.details || []).filter((item: PrintDetailDto) =>
-                (item.warehouseID || 0) === warehouseID
-              );
-              returnData.details = filtered;
-            }
-          }
-        }
-
-      } else {
-        returnData.custom.totalItems = printData.details ? printData.details.length : 0;
-
-        const grandTotalValue = printData?.master ?
-          (printData?.master.totalDebit || 0 > 0 ?
-            printData?.master.totalDebit || 0 :
-            printData?.master.totalCredit || 0) : 0;
-        returnData.master.grandTotal = grandTotalValue;
-        returnData.custom.jvTotalDebit = 0;
-        returnData.custom.jvTotalCredit = 0;
-
-        if (printData?.master) {
-          returnData.custom.drCr = printData?.master.drCr || "";
-          if (voucherTypeParam === "JV") {
-            if (printData?.master.drCr === "Dr") {
-              returnData.custom.jvTotalCredit = grandTotalValue;
-              returnData.custom.jvTotalCredit = 0;
-            } else {
-              returnData.custom.jvTotalCredit = 0;
-              returnData.custom.jvTotalCredit = grandTotalValue;
-            }
-          }
-        }
-      }
-
-      const resUpdateDetailsAndSummary = await updateDetailsAndSummary(returnData, [], voucherType, isAppGlobal);
-      returnData = resUpdateDetailsAndSummary ?? returnData
-
-      return returnData;
-    }
-
+    return processed;
   } catch (error) {
-    console.error("Error loading inventory data:", error);
+    console.error("Error loading print data:", error);
     throw error;
-  } finally {
-    return returnData;
   }
 };
 
+export const fetchDefaultTemplateFromToken = async (
+  token: string,
+)=> {
+  
+  try {
+    const api = new APIClient();
+    const res = await api.postAsync(Urls.print_helper_byToken, {
+      token: token,
+    });
+     let resDate:PrintResponse = res.item;
+     const isInv =
+    purchaseVoucherTypes.includes(resDate.master?.voucherType as VoucherType) ||
+    salesVoucherTypes.includes(resDate.master?.voucherType  as VoucherType);
+    const masterID  = isInv? resDate.master?.invTransactionMasterID : resDate.master?.accTransactionMasterID;
+    if (res.isOk && resDate) {
+    const processed = await processPrintResponse(resDate, {
+      MasterIDParam: masterID || 0,
+      voucherTypeParam:resDate.master?.voucherType || "",
+      isInvTrans: isInv,
+      isSalesView: false,
+      isServiceTrans:false,
+      transDate:new Date(resDate.master?.transactionDate).toISOString(), 
+    });
+    return processed;
+    }
+
+  } catch (error) {
+    console.error("Error fetching default template:", error);
+    return null;
+  }
+};
 // Check if field should be hidden based on hide codes
 // const checkForHide = useCallback((fldHideCodes: string, data: any) => {
 //   let result = false;
@@ -1784,6 +1838,7 @@ export const fetchDefaultTemplateFromApi = async (
     return null;
   }
 };
+
 
 export const fetchTemplateFromApiById = async (
   id: any

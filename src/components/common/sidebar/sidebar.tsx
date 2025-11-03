@@ -923,6 +923,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
   }
 
   const renderNavItems = useMemo(() => {
+    const inputClassName = `w-full px-3 py-2 ${appState.mode === "light" ? "bg-white" : "!bg-gray-800"} border rounded-md ${appState.mode === "light" ? "border-gray-300" : "border-gray-600"} placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[rgb(${appState.colorPrimaryRgb})] dark:focus:ring-[rgb(${appState.colorPrimaryRgb}/0.5)] focus:border-[rgb(${appState.inputBox.borderFocus})] ${appState.mode === "light" ? "text-gray-800" : "text-gray-200"}`;
     return (
       <Fragment>
         <div
@@ -978,7 +979,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
                     autoComplete="off"
                     onChange={(e) => setSearchTerm(e.target.value)}
                     onFocus={(e) => e.target.removeAttribute('readonly')}
-                    className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className={inputClassName}
                   />
                   {
                     deviceInfo?.isMobile &&

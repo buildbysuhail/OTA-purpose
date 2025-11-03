@@ -17,6 +17,7 @@ const LanguageSwitcher: FC<HeaderProps> = ({ className }) => {
   const [reloading, setReloading] = useState(false);
   const { appState, updateAppState } = useAppState();
   let dispatch = useAppDispatch();
+
   const handleLanguageSelect = async (language: Locale) => {
     language.rtl ? await switcherdata.Rtl(updateAppState, appState) : await switcherdata.Ltr(updateAppState, appState);
     await changeLanguage(language.code, dispatch, i18n);
@@ -25,37 +26,34 @@ const LanguageSwitcher: FC<HeaderProps> = ({ className }) => {
 
   return (
     <div className={`header-element py-[1rem] md:px-[0.65rem] px-2 header-country hs-dropdown ti-dropdown hidden sm:block [--placement:bottom-left] ${className || ''}`}>
-      <button id="dropdown-flag" type="button"
-        className="hs-dropdown-toggle ti-dropdown-toggle !p-0 flex-shrink-0  !border-0 !rounded-full !shadow-none">
-        {typeof appState?.locale?.flag === "string" && appState.locale.flag.length <= 3 ?
-          (
-            <span className="h-[33px] w-[33px] flex items-center justify-center rounded-full bg-gray-200 text-xs font-bold text-gray-800">  {appState.locale.flag}</span>
-          ) : (
-            <img src={appState?.locale?.flag} alt="flag-img" className="h-[1.25rem] w-[1.25rem] rounded-full" />
-          )}
+      <button id="dropdown-flag" type="button" className="hs-dropdown-toggle ti-dropdown-toggle !p-0 flex-shrink-0 !border-0 !rounded-full !shadow-none dark:bg-dark-bg-card dark:border-dark-border">
+        {typeof appState?.locale?.flag === "string" && appState.locale.flag.length <= 3 ? (
+          <span className="h-[33px] w-[33px] flex items-center justify-center rounded-full bg-gray-200 dark:bg-dark-bg-card text-xs font-bold text-gray-800 dark:text-dark-text">
+            {appState.locale.flag}
+          </span>
+        ) : (
+          <img src={appState?.locale?.flag} alt="flag-img" className="h-[1.25rem] w-[1.25rem] rounded-full" />
+        )}
       </button>
-
-      <div className="hs-dropdown-menu ti-dropdown-menu min-w-[10rem] hidden !-mt-3" aria-labelledby="dropdown-flag">
+      <div className="hs-dropdown-menu ti-dropdown-menu min-w-[10rem] hidden !-mt-3 dark:bg-dark-bg-card dark:border dark:border-dark-border">
         <div className="ti-dropdown-divider divide-y divide-gray-200 dark:divide-white/10">
           <div className="py-2 first:pt-0 last:pb-0">
             {languagesData.map((language, index) => (
-              <div key={index} className="ti-dropdown-item !p-[0.65rem] ">
-                <a onClick={() => handleLanguageSelect(language)} className="flex items-center cursor-pointer space-x-2 rtl:space-x-reverse w-full">
+              <div key={index} className="ti-dropdown-item !p-[0.65rem] hover:bg-gray-100 dark:hover:bg-dark-bg-hover">
+                <a onClick={() => handleLanguageSelect(language)} className="flex items-center cursor-pointer space-x-2 rtl:space-x-reverse w-full dark:text-dark-text">
                   <div className="h-[1.375rem] flex items-center w-[1.375rem] rounded-full justify-center">
-                    {typeof language.flag === "string" && language.flag.length <= 3 ?
-                      (
-                        <span className="text-xs font-bold">{language.flag}</span>
-                      ) : (
-                        <img src={language.flag} alt="flag-img" className="h-[1rem] w-[1rem] rounded-full" />
-                      )}
+                    {typeof language.flag === "string" && language.flag.length <= 3 ? (
+                      <span className="text-xs font-bold dark:text-dark-text">{language.flag}</span>
+                    ) : (
+                      <img src={language.flag} alt="flag-img" className="h-[1rem] w-[1rem] rounded-full" />
+                    )}
                   </div>
                   <div>
-                    <p className="!text-[0.8125rem] font-medium">  {language.name}</p>
+                    <p className="!text-[0.8125rem] font-medium dark:text-dark-text">{language.name}</p>
                   </div>
                 </a>
               </div>
             ))}
-
           </div>
         </div>
       </div>

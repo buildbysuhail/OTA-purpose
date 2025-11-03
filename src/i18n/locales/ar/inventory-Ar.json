@@ -525,5 +525,13 @@
   "validation_failed": "فشل التحقق من الصحة",
   "hsn_code_missing_are_you_sure_to_continue": "رمز HSN مفقود، هل أنت متأكد من المتابعة؟",
   "update_price": "تحديث السعر",
-  "flavors": "النكهات"
+  "flavors": "النكهات",
+   "serial_no": "الرقم التسلسلي",
+  "unit2_barcode": "باركود الوحدة 2",
+  "unit3_barcode": "باركود الوحدة 3",
+  "standard_sales_price": "سعر البيع القياسي",
+  "warning": "تحذير",
+  "please_select_both_product_group_and_scheme_before_saving": "الرجاء تحديد كلاً من مجموعة المنتج والمخطط قبل الحفظ",
+  "failed_to_get_selected_rows": "فشل في الحصول على الصفوف المحددة"
+
 }

@@ -525,5 +525,13 @@
   "validation_failed": "Validation Failed",
   "hsn_code_missing_are_you_sure_to_continue": "HSN Code missing, Are you sure to continue?",
   "update_price": "Update Price",
-  "flavors": "Flavors"
+  "flavors": "Flavors",
+
+  "serial_no": "Serial No",
+  "unit2_barcode": "Unit 2 Barcode",
+  "unit3_barcode":" Unit 3 Barcode",
+  "standard_sales_price": "Standard Sales Price",
+  "warning":"Warning",
+  "please_select_both_product_group_and_scheme_before_saving":"Please select both Product Group and Scheme before saving",
+  "failed_to_get_selected_rows":"Failed to get selected rows"
 }

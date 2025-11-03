@@ -5,7 +5,7 @@
   "user": "User",
   "password": "Password",
   "counter": "Counter",
-  "usertype": "UserType",
+  "usertype": "Usertype",
   "created_user": "Created User",
   "created_date": "Created Date",
   "modified_user": "Modified User",
@@ -26,8 +26,8 @@
   "code": "Code",
   "remarks": "Remarks",
 
-  "user_type_name": "User Type Name",
-  "user_type_code": "UserTypeCode",
+  "user_type_name": "Usertype Name",
+  "user_type_code": "Usertype Code",
   "is_editable": "Is Editable",
   "is_deletable": "Is Deletable",
 
@@ -37,7 +37,7 @@
   "select_all_edit": "Select All Edit",
   "select_all_export": "Select All Export",
   "select_all_delete": "Select All Delete",
-  "inherit_rights_from_usertype": "Inherit Rights From UserType",
+  "inherit_rights_from_usertype": "Inherit Rights From Usertype",
 
   "save": "Save",
   "close": "Close",

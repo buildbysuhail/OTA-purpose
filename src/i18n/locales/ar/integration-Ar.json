@@ -63,5 +63,9 @@
   "test_file_upload": "اختبار تحميل الملف",
   "select_file": "اختر ملف",
   "selected_file": "الملف المحدد",
-  "size": "الحجم"
+  "size": "الحجم",
+
+  "sms_gateway_center_integration": "تكامل بوابة مركز الرسائل القصيرة (SMS Gateway Center)",
+  "limit_type": "نوع الحد",
+  "has_limit": "يحتوي على حد"
 }

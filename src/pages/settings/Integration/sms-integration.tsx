@@ -218,7 +218,7 @@ const SMSIntegration: React.FC = () => {
           isOpen={provider.isOpen && provider.provider != undefined}
           title={
             provider.provider === NotificationsProvider.SmsGateway
-              ? "SMSGatewayCenter Integration"
+              ? t("sms_gateway_center_integration")
               : t(provider.providerName?.toLowerCase() || "twilio")
           }
           width={provider.provider === NotificationsProvider.SmsGateway ? 500 : 600}

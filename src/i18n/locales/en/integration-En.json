@@ -67,5 +67,9 @@
   "api_secret": "API Secret",
   "enter_api_secret": "Enter API Secret",
   "cloud_name": "Cloud Name",
-  "enter_cloud_name": "Enter Cloud Name"
+  "enter_cloud_name": "Enter Cloud Name",
+
+  "sms_gateway_center_integration": "SMS Gateway Center Integration",
+  "limit_type": "Limit Type",
+  "has_limit": "Has Limit"
 }

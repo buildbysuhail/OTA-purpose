@@ -1958,6 +1958,14 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       }
     }, [isMobileMenuOpen]);
 
+    const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
+
+    useEffect(() => {
+      if (isMobileSearchOpen && mobileSearchRef.current) {
+        mobileSearchRef.current.focus();
+      }
+    }, [isMobileSearchOpen, searchText]);
+
     // Add this effect to update total count when data source changes
     useEffect(() => {
       if (memoizedStore && "totalCount" in memoizedStore) {
@@ -2344,7 +2352,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                       >
                         {gridHeader && (
                           <span
-                            className="text-sm dark:!text-dark-text"
+                            className={`text-sm dark:!text-dark-text ${isMobileSearchOpen ? 'hidden' : 'block'}`}
                             title={gridHeader}
                             style={{
                               overflow: 'hidden',
@@ -2377,6 +2385,71 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                     </div>
                   </Item>
                 )}
+
+                <Item>
+                  <div className="block sm:hidden">
+                    <div className="flex items-center justify-end gap-2">
+                      <div className={`relative overflow-hidden transition-all duration-500 ease-in-out ${isMobileSearchOpen ? 'w-full opacity-100' : 'w-0 opacity-0 pointer-events-none'}`}>
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <Search className="w-4 h-4 text-gray-400" />
+                        </div>
+                        <input
+                          ref={mobileSearchRef}
+                          type="text"
+                          value={searchText}
+                          autoFocus={isMobileSearchOpen}
+                          onChange={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setSearchText(e.target.value);
+                            if (gridRef.current) {
+                              gridRef.current.instance().searchByText(e.target.value);
+                            }
+                          }}
+                          placeholder={t("search")}
+                          className="w-full pl-10 pr-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700 text-sm transition-all duration-200"
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                      </div>
+                      {/* Search Icon Button */}
+                      <button
+                        onClick={() => {
+                          setIsMobileSearchOpen(!isMobileSearchOpen);
+                          if (isMobileSearchOpen) {
+                            setSearchText('');
+                            if (gridRef.current) {
+                              gridRef.current.instance().searchByText('');
+                            }
+                          }
+                        }}
+                        className="ti-btn bg-[#e5e5e5] text-black rounded-lg !p-1.5 shadow hover:shadow-md transition-shadow duration-200"
+                      >
+                        {isMobileSearchOpen ? (
+                          <X className="w-3 h-3" />
+                        ) : (
+                          <Search className="w-3 h-3" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                </Item>
+
+                <Item>
+                  {!hideGridAddButton && (
+                    <button
+                      onClick={() =>
+                        gridAddButtonType === "link"
+                          ? (window.location.href = gridAddButtonLink)
+                          : onPopupOpenClick()
+                      }
+                      className="ti-btn bg-[#e5e5e5] text-black rounded-lg !p-1.5 shadow hover:shadow-md transition-shadow duration-200  block sm:hidden"
+                      aria-label={addButtonText || t('new')}
+                    >
+                      <Plus className="w-3 h-3" />
+                    </button>
+                  )}
+
+                </Item>
 
                 <Item>
                   <div className="block sm:hidden relative">
@@ -2452,31 +2525,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                               </li>
                             )}
 
-                            <li className="mb-3">
-                              <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                  <Search className="w-4 h-4 text-gray-400" />
-                                </div>
-                                <input
-                                  // ref={mobileSearchRef}
-                                  autoFocus
-                                  type="text"
-                                  value={searchText}
-                                  onChange={(e) => {
-                                    setSearchText(e.target.value);
-                                    if (gridRef.current) {
-                                      gridRef.current
-                                        .instance()
-                                        .searchByText(e.target.value);
-                                    }
-                                  }}
-                                  placeholder={t("search")}
-                                  className="w-full pl-10 pr-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700 text-sm transition-all duration-200"
-                                  onClick={(e) => e.stopPropagation()}
-                                />
-                              </div>
-                            </li>
-
                             {!hideDefaultExportButton && allowExport && (
                               <li className="py-1">
                                 <div className="bg-gray-50 dark:bg-gray-700 rounded-lg overflow-hidden">
@@ -2546,20 +2594,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                                 </li>
                               )}
 
-                            {!hideGridAddButton && (
-                              <button
-                                onClick={() =>
-                                  gridAddButtonType === "link"
-                                    ? (window.location.href = gridAddButtonLink)
-                                    : onPopupOpenClick()
-                                }
-                                className="absolute bottom-[25px] right-[25px] w-12 h-12 rounded-full bg-gradient-to-r from-[#4f46e5] to-[#7e22ce] text-white shadow-lg hover:shadow-xl flex items-center justify-center z-50 transform hover:scale-110 transition-all duration-300"
-                                aria-label={addButtonText || t("new")}
-                              >
-                                <Plus className="w-6 h-6" />
-                              </button>
-                            )}
-
                             {customToolbarItems
                               ?.filter(
                                 (item: any) =>
@@ -2608,9 +2642,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                   <Item cssClass="!hidden sm:!block" name="searchPanel" />
                 )}
 
-                {!hideDefaultExportButton && allowExport && (
+                {/* {!hideDefaultExportButton && allowExport && (
                   <Item cssClass="!hidden sm:!block" name="exportButton" />
-                )}
+                )} */}
 
                 {showPrintButton && (
                   <Item>
@@ -2664,9 +2698,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                         setShowFilter((prev) => !prev
                         )
                       }}
-                      className="ti-btn rounded-[2px] dark:bg-dark-bg-header dark:text-dark-text"
+                      className="ti-btn rounded-lg !p-1.5 shadow hover:shadow-md transition-shadow duration-200 bg-[#e5e5e5] text-black md:rounded-[2px] md:dark:bg-dark-bg-header md:dark:text-dark-text md:!p-0 md:shadow-none md:hover:shadow-none md:bg-transparent md:text-inherit flex items-center justify-center"
                     >
-                      <i className="ri-filter-line"></i>
+                      <i className="ri-filter-line w-3 h-3 md:w-auto md:h-auto"></i>
                     </button>
                   </Item>
                 )}

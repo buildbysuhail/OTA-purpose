@@ -303,6 +303,7 @@ export const processPrintResponse = async (
   returnData.custom = returnData.custom ?? initialPrintCustomFields;
 
   if (isNullOrUndefinedOrEmpty(printData?.master)) return returnData;
+//template decode if it from in token
 
   // Kitchen Print
   const isKitchenPrint =
@@ -492,36 +493,58 @@ export const fetchDefaultTemplateFromToken = async (
     const res = await api.postAsync(Urls.print_helper_byToken, {
       token: token,
     });
-     let resDate:PrintResponse = res.item;
-     const isInv =
-    purchaseVoucherTypes.includes(resDate.master?.voucherType as VoucherType) ||
-    salesVoucherTypes.includes(resDate.master?.voucherType  as VoucherType);
-    const masterID  = isInv? resDate.master?.invTransactionMasterID : resDate.master?.accTransactionMasterID;
+    // const { createdUser, modifiedUser, ...template } = Data;
+  
+     const resDate = res.item.printData;
+     const { template, ...rest } = resDate;
+     let Template = template;
+     const PrintResponse: PrintResponse = rest;
+     const resTokenInfo = res.item.token;
     if (res.isOk && resDate) {
-    const processed = await processPrintResponse(resDate, {
-      MasterIDParam: masterID || 0,
-      voucherTypeParam:resDate.master?.voucherType || "",
-      isInvTrans: isInv,
-      // isSalesView: resDate.isSalesView,
-      // isServiceTrans:resDate.isServiceTrans,
-      transDate:new Date(resDate.master?.transactionDate).toISOString(), 
-      // printCopies:resDate.printCopies || 1,
-      // isReprint:resData.isReprint,
-      // isPOSPrinting:resDate.isPOSPrinting,
-      // isFromSalesReceipt:resDate.isFromSalesReceipt,
-      // isPackingSlipPrint:resDate.isPackingSlipPrint,
-      // warehouseID:resDate.warehouseID || 0,
-      // kitchenIDParam:resDate.kitchenID || 0,
-      // kitchenPrinterNameParam:resDate.kitchenPrinterName || "",
-      // kitchenNameParam:resDate.kitchenName || "",
-      // commonKitchenProductGroupIDParam:resDate.commonKitchenProductGroupID || 0,
-      // dbIdValue:resDate.dbIdValue || "",
-      // isAppGlobal: resDate.isAppGlobal || false,
+    const processed = await processPrintResponse(PrintResponse, {
+      MasterIDParam: resTokenInfo?.masterId || 0,
+      voucherTypeParam:resTokenInfo?.voucherType || "",
+      isInvTrans:resTokenInfo?.type =="inv"? true : false,
+      isSalesView: resTokenInfo?.isSalesView,
+      isServiceTrans:resTokenInfo.isServiceTrans,
+      transDate:new Date(resTokenInfo?.transactionDate).toISOString(), 
+      printCopies:resTokenInfo?.printCopies,
+      isReprint:resTokenInfo?.isReprint,
+      isPOSPrinting:resTokenInfo?.isPOSPrinting,
+      isFromSalesReceipt:resTokenInfo?.isFromSalesReceipt,
+      isPackingSlipPrint:resTokenInfo?.isPackingSlipPrint,
+      warehouseID:resTokenInfo?.warehouseID,
+      kitchenIDParam:resTokenInfo?.kitchenId,
+      kitchenPrinterNameParam:resTokenInfo?.kitchenPrinterName,
+      kitchenNameParam:resTokenInfo?.kitchenName,
+      commonKitchenProductGroupIDParam:resTokenInfo?.commonKitchenProductGroupId ,
+      dbIdValue:resTokenInfo?.dbIdValue,
+      isAppGlobal: resTokenInfo?.isAppGlobal ,
     });
-    return processed;
+
+      if(Template){
+        if (Template == "" ||!Template.id|| Template.id<=0) {
+          console.warn("No default template response received.");
+          return Template = null;
+        }
+        const templateContent = await decompressData(Template.content);
+            const parsedTemplate = parseTemplateContent<TemplateState<unknown>>(Template,templateContent);
+        if (!parsedTemplate) {
+          console.warn("Failed to parse default template.");
+          Template = null;
+        }
+        const initial = templateInitialState().activeTemplate;
+        const merged = merge({}, initial, parsedTemplate);
+        
+        Template= merged;
+      }
+    return  {
+      data: processed,
+      template: Template
     }
 
-  } catch (error) {
+  } 
+ }catch (error) {
     console.error("Error fetching default template:", error);
     return null;
   }

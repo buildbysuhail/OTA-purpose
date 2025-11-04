@@ -181,7 +181,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
     const res = await api.postAsync(Urls.updateUserThemes, {
       userThemes: btoa(JSON.stringify(appState)),
     });
-    await setStorageString("ut", btoa(JSON.stringify(appState)));
+    // await setStorageString("ut", btoa(JSON.stringify(appState)));
     handleResponse(res, async() => {
       await setStorageString("ut", btoa(JSON.stringify(appState)));
     });}

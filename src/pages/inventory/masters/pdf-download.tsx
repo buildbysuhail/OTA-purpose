@@ -46,15 +46,17 @@ const TwilioPdfDownloader = ({
       setDownloadStatus('fetching');
       setError("");
       // Call API to get PDF data
-       const Data= await fetchDefaultTemplateFromToken(token);
+       const Data = await fetchDefaultTemplateFromToken(token);
      if(Data){
       debugger;
-       const Template =Data?.template;
-        await directPrint({isDirectDownload:true ,template: Template,data:Data,})
-    }
-     
       setDownloadStatus('generating')
+       const { template, data } = Data; 
+        await directPrint({isDirectDownload:true ,template,data,})
       setDownloadStatus('success');
+    }else{
+      setDownloadStatus('error');
+      setError('No data received from server');
+    }
     } catch (err: any) {
       console.error('PDF generation error:', err);
       setError(err.message);
@@ -148,7 +150,7 @@ const TwilioPdfDownloader = ({
             </div>
           </div>
           
-          {error && (
+          {error && downloadStatus !== "error" && (
             <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-left">
               <div className="flex items-start gap-2">
                 <AlertCircle className="w-4 h-4 text-red-600 mt-0.5 flex-shrink-0" />

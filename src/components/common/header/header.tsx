@@ -45,6 +45,9 @@ import { menuClose, toggleSidebar } from "./toggle-sidebar";
 
 // Config
 import config from "../../../config";
+import Urls from "../../../redux/urls";
+import { handleResponse } from "../../../utilities/HandleResponse";
+import { modelToBase64Unicode } from "../../../utilities/jsonConverter";
 
 
 
@@ -56,8 +59,6 @@ const Header: FC<HeaderProps> = () => {
   const [languages, setLanguages] = useState<Locale[]>(languagesData);
   const { t } = useTranslation('main');
   const { appState, updateAppState } = useAppState();
-  const _appState = useSelector((state: RootState) => state.AppState?.appState);
-  let dispatch = useAppDispatch();
   //Fullscvreen
   const [fullScreen, setFullScreen] = useState(false);
   const toggleFullScreen = () => {
@@ -201,38 +202,26 @@ const Header: FC<HeaderProps> = () => {
     updatedNotifications.splice(index, 1);
     setNotifications(updatedNotifications);
   };
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     const windowObject = window;
-  //     if (windowObject.innerWidth <= 991) {
-  //       // ThemeChanger({ ...local_varaiable, "dataToggled": "close" })
-  //     } else {
-  //       // ThemeChanger({...local_varaiable,"dataToggled":""})
-  //     }
-  //   };
-  //   handleResize(); // Check on component mount
-  //   window.addEventListener("resize", handleResize);
-  //   return () => {
-  //     window.removeEventListener("resize", handleResize);
-  //   };
-  // }, []);
 
-  const updateAppStateValues = (appState: AppState): AppState => {
-    return {
-      ...appState,
-      mode: appState?.mode === "dark" ? "light" : "dark",
-      class: appState?.class === "dark" ? "light" : "dark",
-      dataHeaderStyles: appState?.class === "dark" ? "light" : "dark",
-      dataMenuStyles:
-        appState?.dataNavLayout === "horizontal"
-          ? appState?.class === "dark"
-            ? "light"
-            : "dark"
-          : "dark",
+
+
+
+  const saveThemeChange = async () => {
+      debugger;
+      try{
+      const res = await api.postAsync(Urls.updateUserThemes,{
+        userThemes: btoa(JSON.stringify(appState)),
+      });
+      await setStorageString("ut", modelToBase64Unicode(appState));
+      // await setStorageString("ut", btoa(JSON.stringify(appState)));
+      // handleResponse(res, async() => {
+      //   await setStorageString("ut", btoa(JSON.stringify(appState)));
+      // });
+      }
+      catch(error) {
+      console.log("error in dark mode settion",error);
+      }
     };
-  };
-
-
 
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
 
@@ -531,11 +520,14 @@ const Header: FC<HeaderProps> = () => {
               </div>
               <div className="flex items-center">
                 {/* <span className="mr-2">{appState.mode === 'dark' ? 'Dark' : 'Light'} Mode</span> */}
+
+                
                 <Button
                   onClick={async () => {
                     appState.mode === "light"
                       ? await switcherdata.Dark(updateAppState, appState)
                       : await switcherdata.Light(updateAppState, appState);
+                      saveThemeChange();
                   }}
                   variant="ghost"
                   size="icon">

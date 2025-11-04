@@ -502,9 +502,21 @@ export const fetchDefaultTemplateFromToken = async (
       MasterIDParam: masterID || 0,
       voucherTypeParam:resDate.master?.voucherType || "",
       isInvTrans: isInv,
-      isSalesView: false,
-      isServiceTrans:false,
+      // isSalesView: resDate.isSalesView,
+      // isServiceTrans:resDate.isServiceTrans,
       transDate:new Date(resDate.master?.transactionDate).toISOString(), 
+      // printCopies:resDate.printCopies || 1,
+      // isReprint:resData.isReprint,
+      // isPOSPrinting:resDate.isPOSPrinting,
+      // isFromSalesReceipt:resDate.isFromSalesReceipt,
+      // isPackingSlipPrint:resDate.isPackingSlipPrint,
+      // warehouseID:resDate.warehouseID || 0,
+      // kitchenIDParam:resDate.kitchenID || 0,
+      // kitchenPrinterNameParam:resDate.kitchenPrinterName || "",
+      // kitchenNameParam:resDate.kitchenName || "",
+      // commonKitchenProductGroupIDParam:resDate.commonKitchenProductGroupID || 0,
+      // dbIdValue:resDate.dbIdValue || "",
+      // isAppGlobal: resDate.isAppGlobal || false,
     });
     return processed;
     }

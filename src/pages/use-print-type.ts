@@ -545,7 +545,7 @@ export interface InvDetail2ForPrint {
 export interface PrintResponse {
   master: PrintMasterDto;
   details: PrintDetailDto[];
-
+  template:any;
   ledgerBalance: number;
   previousLedgerBalance: number;
   loyaltyCardBalance: number;

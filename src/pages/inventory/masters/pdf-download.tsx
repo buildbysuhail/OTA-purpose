@@ -49,7 +49,7 @@ const TwilioPdfDownloader = ({
        const Data= await fetchDefaultTemplateFromToken(token);
      if(Data){
       debugger;
-       const Template =await fetchDefaultTemplateFromApi (Data.master?.voucherType, Data.master?.voucherForm, Data.master?.customerType);
+       const Template =Data?.template;
         await directPrint({isDirectDownload:true ,template: Template,data:Data,})
     }
      

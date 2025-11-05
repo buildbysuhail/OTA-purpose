@@ -36,7 +36,7 @@ const SalesAndSalesReturn = () => {
   const summaryColumns: DevGridColumn[] = [
     {
       dataField: "slNo",
-      caption: t("sl_no"),
+      caption: t("SiNo"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -301,7 +301,7 @@ const SalesAndSalesReturn = () => {
   const detailedColumns: DevGridColumn[] = [
     {
       dataField: "slNo",
-      caption: t("sl_no"),
+      caption: t("SiNo"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,

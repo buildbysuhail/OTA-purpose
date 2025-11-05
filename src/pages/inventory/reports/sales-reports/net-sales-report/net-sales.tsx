@@ -28,7 +28,7 @@ const NetSalesReport: FC<NetSalesProps> = ({ gridHeader, dataUrl, gridId }) => {
     const baseColumns: DevGridColumn[] = [
       {
         dataField: "slNo",
-        caption: t("sl_no"),
+        caption: t("SiNo"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,

@@ -18,7 +18,7 @@ const PendingOrderReport = () => {
     const baseColumns: DevGridColumn[] = [
       {
         dataField: "si",
-        caption: t("sl_no"),
+        caption: t("SiNo"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,

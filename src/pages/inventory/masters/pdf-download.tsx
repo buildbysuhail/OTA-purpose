@@ -96,19 +96,19 @@ const TwilioPdfDownloader: React.FC<TwilioPdfDownloaderProps> = ({
     }
   };
 
-  // Convert Blob to Base64
-  const blobToBase64 = (blob: Blob): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64String = reader.result as string;
-        const base64 = base64String.split(',')[1]; // Remove data URL prefix
-        resolve(base64);
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  };
+
+const blobToBase64 = async (blob: Blob): Promise<string> => {
+  const buffer = await blob.arrayBuffer();
+  const bytes = new Uint8Array(buffer);
+
+  let binary = "";
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+
+  return btoa(binary);
+};
+
 
   // Send Base64 to WEBHOOK (separate from main server)
   const sendToTwilioWebhook = async (token: string, pdfBase64: string, fileName: string) => {

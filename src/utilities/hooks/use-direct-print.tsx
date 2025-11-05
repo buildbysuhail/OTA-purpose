@@ -175,12 +175,12 @@ debugger
         // Handle advice templates
         // TODO: Implement advice template handling
         console.warn("Advice template handling not yet implemented");
-        return { success: false, reason: "not-implemented" };
+        // return { success: false, reason: "not-implemented" };
       } else if (template?.templateGroup === "Cheque") {
         // Handle cheque templates
         // TODO: Implement cheque template handling
         console.warn("Cheque template handling not yet implemented");
-        return { success: false, reason: "not-implemented" };
+        // return { success: false, reason: "not-implemented" };
       } else {
         
         // For standard templates, fetch the data
@@ -198,48 +198,36 @@ debugger
         );
       }
         
-        // 2️⃣ Convert the React PDF document into a Blob
-      //   if(params.isDirectDownload){
-      //   const blob = await pdf(pdfDocument).toBlob();
-      //           // 3️⃣ Download the file using FileSaver
-      //  const fileName =
-      //   template?.propertiesState?.fileName ||
-      //   `${template?.templateGroup || "document"}.pdf`;
-      //    saveAs(blob, fileName);
-      //   return { success: true };
-      //   }
+  const blob = await pdf(pdfDocument).toBlob(); 
 
         if (params.isDirectDownload) {
           // 2️⃣ Convert the React PDF document into a Blob
-          const blob = await pdf(pdfDocument).toBlob();
+            
+          // // 3️⃣ Download using native browser approach (same as your demo)
+          // const url = window.URL.createObjectURL(blob);
+          // const link = document.createElement('a');
+          // link.href = url;
           
-          // 3️⃣ Download using native browser approach (same as your demo)
-          const url = window.URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
+          // const fileName = `${template?.templateGroup || "document"}.pdf`;
           
-          const fileName = `${template?.templateGroup || "document"}.pdf`;
+          // link.download = fileName;
           
-          link.download = fileName;
+          // // Trigger download
+          // document.body.appendChild(link);
+          // link.click();
+          // document.body.removeChild(link);
           
-          // Trigger download
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          
-          // Clean up
-          window.URL.revokeObjectURL(url);
-          
-          return { success: true };
+          // // Clean up
+          // window.URL.revokeObjectURL(url);       
+          return blob;
         }
-      const blob = await pdf(pdfDocument).toBlob();
 
       // 3️⃣ Download the file using FileSaver
       const fileName =
         template?.propertiesState?.fileName ||
         `${template?.templateGroup || "document"}.pdf`;
-      saveAs(blob, fileName);
-      return { success: true };
+        saveAs(blob, fileName);
+         return blob; 
 
         // const pdfUrl = URL.createObjectURL(blob);
         // const printWindow = window.open(pdfUrl);
@@ -327,9 +315,9 @@ debugger
       // await cpj.sendToClient();
 
       // return { success: true, reason: "printed" };
-    } catch (error) {
+    }catch (error) {
       console.error("Error printing:", error);
-      return { success: false, reason: "error", error };
+      throw error;    // ✅ throw, don’t return object
     }
   }, []);
 

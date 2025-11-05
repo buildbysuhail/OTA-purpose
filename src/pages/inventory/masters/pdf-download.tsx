@@ -8,34 +8,45 @@ import { fetchDefaultTemplateFromApi, fetchDefaultTemplateFromToken } from '../.
 import { useCommenPrint } from '../../transaction-base/use-commen-print';
 import { useDirectPrint } from '../../../utilities/hooks/use-direct-print';
 import { de } from 'date-fns/locale';
+import { handleResponse } from '../../../utilities/HandleResponse';
 
-const TwilioPdfDownloader = ({ 
+interface TwilioPdfDownloaderProps {
+  fileName?: string;
+  autoDownload?: boolean;
+  mode?: 'twilio' | 'browser';
+}
+
+const TwilioPdfDownloader: React.FC<TwilioPdfDownloaderProps> = ({ 
   fileName = 'document.pdf',
-  apiEndpoint = 'https://your-api-endpoint.com/api/download', // Replace with your actual API endpoint
-  autoDownload = true
+  autoDownload = true,
+  mode='twilio',
 }) => {
-  const api = new APIClient();
-     const { directPrint } = useDirectPrint();
+   const api = new APIClient();
+  const { directPrint } = useDirectPrint();
   const location = useLocation();
-  const [downloadStatus, setDownloadStatus] = useState('idle'); // idle, fetching, generating, success, error
-  const [error, setError] = useState("null");
-  const [token, setToken] = useState("");
+  const [downloadStatus, setDownloadStatus] = useState<'idle' | 'fetching' | 'generating' | 'converting' | 'sending' | 'success' | 'error'>('idle');
+  const [error, setError] = useState<string>('');
+  const [token, setToken] = useState<string>('');
+  const [isTwilioMode, setIsTwilioMode] = useState(false);
    
-  // Extract token from query parameters
+  // Extract token and detect mode
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const tokenFromUrl = urlParams.get('token');
+    
     if (tokenFromUrl) {
       setToken(tokenFromUrl);
-      console.log('Token extracted from URL:', tokenFromUrl);
+      setIsTwilioMode(mode === 'twilio');
+      console.log('Token extracted:', tokenFromUrl);
+      console.log('Twilio mode:', mode === 'twilio');
     } else {
       setError('No token found in URL parameters');
       setDownloadStatus('error');
     }
   }, [location.search]);
 
-  // Main function to fetch and download PDF
-  const generateAndDownloadPdf = async (token:string) => {
+  // Main function to generate and process PDF
+  const generateAndProcessPdf = async (token: string) => {
     if (!token) {
       setError('No token available');
       setDownloadStatus('error');
@@ -44,34 +55,94 @@ const TwilioPdfDownloader = ({
 
     try {
       setDownloadStatus('fetching');
-      setError("");
-      // Call API to get PDF data
-       const Data = await fetchDefaultTemplateFromToken(token);
-     if(Data){
-      debugger;
-      setDownloadStatus('generating')
-       const { template, data } = Data; 
-        let res =  await directPrint({isDirectDownload:true ,template,data,})
-        if(res.success){
-          setDownloadStatus('success');
-        }
+      setError('');
+
+      // Step 1: Fetch template and data from YOUR MAIN SERVER
+      // This validates the token and retrieves data
+      const Data = await fetchDefaultTemplateFromToken(token);
       
-    }else{
-      setDownloadStatus('error');
-      setError('No data received from server');
-    }
+      if (!Data) {
+        setDownloadStatus('error');
+        setError('No data received from server');
+        return;
+      }
+
+      setDownloadStatus('generating');
+      const { template, data } = Data;
+
+      // Step 2: Generate PDF in browser (client-side)
+      const pdfBlob =  await directPrint({isDirectDownload:true ,template,data,})
+      const pdfFileName = `${template?.templateGroup || 'document'}.pdf`;
+      setDownloadStatus('converting');
+      // Step 3: Convert to Base64
+      const base64String = await blobToBase64(pdfBlob);
+
+      // Step 4: Handle based on mode
+      if (isTwilioMode) {
+        // For Twilio: Send Base64 to WEBHOOK (not main server)
+        setDownloadStatus('sending');
+        await sendToTwilioWebhook(token, base64String, pdfFileName);
+      } else {
+        // For Browser: Direct download
+        downloadPdfToUser(pdfBlob, pdfFileName);
+      }
+
+      setDownloadStatus('success');
+
     } catch (err: any) {
-      console.error('PDF generation error:', err);
-      setError(err.message);
+      console.error('PDF processing error:', err);
+      setError(err.message || 'An error occurred');
       setDownloadStatus('error');
     }
   };
 
-  // Auto-download when token is available
+  // Convert Blob to Base64
+  const blobToBase64 = (blob: Blob): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        const base64 = base64String.split(',')[1]; // Remove data URL prefix
+        resolve(base64);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
+
+  // Send Base64 to WEBHOOK (separate from main server)
+  const sendToTwilioWebhook = async (token: string, pdfBase64: string, fileName: string) => {
+    try {
+      // IMPORTANT: This is a SEPARATE webhook endpoint
+      // NOT your main server API
+         const res = await api.postAsync(Urls.print_streme, {
+            Base64 : pdfBase64,
+            FileName : fileName
+          });
+        handleResponse(res);
+
+    } catch (error: any) {
+      console.error('Error sending to webhook:', error);
+      throw error;
+    }
+  };
+
+  // Download PDF to user's browser
+  const downloadPdfToUser = (blob: Blob, fileName: string) => {
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  };
+
+  // Auto-process when token is available
   useEffect(() => {
-    debugger;
-    if ( token ) {
-      generateAndDownloadPdf(token);
+    if (token) {
+      generateAndProcessPdf(token);
     }
   }, [token]);
 
@@ -79,6 +150,8 @@ const TwilioPdfDownloader = ({
     switch (downloadStatus) {
       case 'fetching':
       case 'generating':
+      case 'converting':
+      case 'sending':
         return <Loader2 className="w-6 h-6 text-blue-500 animate-spin" />;
       case 'success':
         return <CheckCircle className="w-6 h-6 text-green-500" />;
@@ -92,15 +165,19 @@ const TwilioPdfDownloader = ({
   const getStatusText = () => {
     switch (downloadStatus) {
       case 'fetching':
-        return 'Fetching PDF data from server...';
+        return 'Fetching PDF data...';
       case 'generating':
-        return 'Preparing download...';
+        return 'Generating PDF...';
+      case 'converting':
+        return 'Converting to Base64...';
+      case 'sending':
+        return 'Sending to WhatsApp...';
       case 'success':
-        return 'PDF downloaded successfully!';
+        return isTwilioMode ? 'PDF sent to WhatsApp!' : 'PDF downloaded successfully!';
       case 'error':
         return `Error: ${error}`;
       default:
-        return 'Ready to download PDF';
+        return 'Ready to process PDF';
     }
   };
 
@@ -108,6 +185,8 @@ const TwilioPdfDownloader = ({
     switch (downloadStatus) {
       case 'fetching':
       case 'generating':
+      case 'converting':
+      case 'sending':
         return 'text-blue-600';
       case 'success':
         return 'text-green-600';
@@ -118,6 +197,28 @@ const TwilioPdfDownloader = ({
     }
   };
 
+  // Minimal UI for Twilio mode
+  if (isTwilioMode) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="text-center">
+          <div className="mb-4">
+            {getStatusIcon()}
+          </div>
+          <p className={`text-lg font-medium ${getStatusColor()}`}>
+            {getStatusText()}
+          </p>
+          {downloadStatus === 'success' && (
+            <p className="mt-2 text-sm text-gray-600">
+              You can close this window
+            </p>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // Full UI for browser users
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-xl shadow-xl border border-gray-200 p-8">
@@ -146,14 +247,14 @@ const TwilioPdfDownloader = ({
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Auto-download:</span>
+              <span className="text-gray-600">Mode:</span>
               <span className="font-medium text-gray-900">
-                {autoDownload ? 'Enabled' : 'Disabled'}
+                {isTwilioMode ? 'Twilio' : 'Browser'}
               </span>
             </div>
           </div>
           
-          {error && downloadStatus !== "error" && (
+          {error && (
             <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-left">
               <div className="flex items-start gap-2">
                 <AlertCircle className="w-4 h-4 text-red-600 mt-0.5 flex-shrink-0" />
@@ -166,11 +267,11 @@ const TwilioPdfDownloader = ({
           )}
           
           <button
-            onClick={()=>generateAndDownloadPdf(token)}
-            disabled={!token || downloadStatus === 'fetching' || downloadStatus === 'generating'}
+            onClick={() => generateAndProcessPdf(token)}
+            disabled={!token || ['fetching', 'generating', 'converting', 'sending'].includes(downloadStatus)}
             className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all font-medium shadow-md hover:shadow-lg"
           >
-            {downloadStatus === 'fetching' || downloadStatus === 'generating' ? (
+            {['fetching', 'generating', 'converting', 'sending'].includes(downloadStatus) ? (
               <>
                 <Loader2 className="w-5 h-5 animate-spin" />
                 Processing...
@@ -195,4 +296,5 @@ const TwilioPdfDownloader = ({
 };
 
 export default TwilioPdfDownloader;
+
 

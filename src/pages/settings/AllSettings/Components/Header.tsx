@@ -111,7 +111,7 @@ const Header: React.FC = () => {
   // );
 
   return (
-    <div className={`px-4 flex flex-col gap-4 transition-all duration-300 ease-in-out bg-white ${deviceInfo?.isMobile ? `fixed top-[60px] py-2 left-0 w-full z-50` : "py-6 relative bg-transparent"}`}>
+    <div className={`px-4 flex flex-col gap-4 transition-all duration-300 ease-in-out bg-transparent dark:bg-dark-bg-card ${deviceInfo?.isMobile ? `fixed top-[60px] py-2 left-0 w-full z-50` : "py-6 relative"}`}>
       <div className="flex justify-between">
         <div className="flex items-center gap-1">
           <Cog6ToothIcon className="w-5 aspect-square" />

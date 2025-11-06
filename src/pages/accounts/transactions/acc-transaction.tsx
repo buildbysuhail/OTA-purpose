@@ -678,7 +678,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           transactionMasterID
         );
       }
-
       _formState = {
         ..._formState,
         isAcc: true,
@@ -1609,7 +1608,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         return false;
       return true;
     });
-    console.log(cols);
+    console.log("Acc col",cols);
     setKey(modelToBase64Unicode(cols));
     return cols;
   }, [formState.formElements.gridColumns]);
@@ -2549,7 +2548,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               keyExpr="slNo"
               columns={columns}
               allowFiltering={false}
-              dataUrl={Urls.acc_reports_ledger}
+              // dataUrl={Urls.acc_reports_ledger}
               hideGridAddButton={true}
               hideDefaultExportButton={true}
               hideDefaultSearchPanel={true}
@@ -2557,7 +2556,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               allowExport={false}
               hideGridHeader={true}
               enablefilter={false}
-              remoteOperations={false}
+               remoteOperations={{ filtering: false, paging: false, sorting: false }}
               data={formState.transaction.details}
               gridId={`${gridCode}-grid`}
               onClickByRootState={(e: any, state: RootState) => {
@@ -2569,10 +2568,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 onSelectionChanged(e, state, false)
               }
               enableScrollButton={false}
-              ShowGridPreferenceChooser={false}
               showPrintButton={false}
               className="pb-14"
             ></ErpDevGrid>
+
           </div>
           {formState.showSaveDialog && (
             <ERPAlert
@@ -2813,7 +2812,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
               <ErpDevGrid
                 key={key}
-                GridPreferenceChooserAccTrance={true}
+                showChooserOnGridHead
                 heightToAdjustOnMobile={
                   formState.userConfig?.gridHeight ??
                   (isChequeSectionVisible ? 650 : 600)

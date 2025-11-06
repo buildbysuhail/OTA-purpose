@@ -206,17 +206,19 @@ const Header: FC<HeaderProps> = () => {
 
 
 
-  const saveThemeChange = async () => {
-      debugger;
+  const saveThemeChange = async (newState:any) => {
+
       try{
       const res = await api.postAsync(Urls.updateUserThemes,{
-        userThemes: btoa(JSON.stringify(appState)),
+        userThemes:btoa(JSON.stringify(newState)), 
       });
-      await setStorageString("ut", modelToBase64Unicode(appState));
-      // await setStorageString("ut", btoa(JSON.stringify(appState)));
-      // handleResponse(res, async() => {
-      //   await setStorageString("ut", btoa(JSON.stringify(appState)));
-      // });
+  
+      
+      // await setStorageString("ut", btoa(JSON.stringify(newState)));
+      handleResponse(res, async() => {
+    
+         await setStorageString("ut", modelToBase64Unicode(newState));
+      });
       }
       catch(error) {
       console.log("error in dark mode settion",error);
@@ -522,13 +524,14 @@ const Header: FC<HeaderProps> = () => {
                 {/* <span className="mr-2">{appState.mode === 'dark' ? 'Dark' : 'Light'} Mode</span> */}
 
                 
-                <Button
-                  onClick={async () => {
-                    appState.mode === "light"
-                      ? await switcherdata.Dark(updateAppState, appState)
-                      : await switcherdata.Light(updateAppState, appState);
-                      saveThemeChange();
-                  }}
+              <Button
+                onClick={async () => {
+                  const newState = appState.mode === "light"
+                    ? await switcherdata.Dark(updateAppState, appState)
+                    : await switcherdata.Light(updateAppState, appState);
+                  
+                  await saveThemeChange(newState);
+                }}
                   variant="ghost"
                   size="icon">
                   {

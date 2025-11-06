@@ -18,7 +18,7 @@ export const setLanguage = async (dispatch: AppDispatch, locale: Locale) => {
   await removeStorageString(locale.rtl ? "ynexltr" : "ynexrtl");
 
 }
-export const syncAppStates = async (dispatch: AppDispatch, res: AppState, clientSession: ClientSessionModel, userSession: UserModel,  userRights: UserTypeRights[], locale: Locale) => {
+export const syncAppStates = async (dispatch: AppDispatch, res: AppState, clientSession: ClientSessionModel, userSession: UserModel,  userRights: UserTypeRights[], locale: Locale,) => {
 
   dispatch(setUserBranches(userSession.branches));
   dispatch(setUserSession({...userSession, branches:[]}));
@@ -33,8 +33,9 @@ export const syncAppStates = async (dispatch: AppDispatch, res: AppState, client
   dispatch(setScrollbarColor(res.scrollbarColor));
  
   dispatch(setMode(res.mode ?? "light"));
-  if (res.mode == "light") {
-    dispatch(setMode(res.mode ?? "light"));
+
+ if (res.mode == "light") {
+    // dispatch(setMode(res.mode ?? "light"));
     await setStorageString("ynexlighttheme", "light");
     await removeStorageString("ynexdarktheme");
     await removeStorageString("Light");
@@ -46,7 +47,6 @@ export const syncAppStates = async (dispatch: AppDispatch, res: AppState, client
     await removeStorageString("ynexlighttheme");
     await removeStorageString("darkBgRGB");
   }
-
   dispatch(setColorPrimaryRgb(res.colorPrimaryRgb));
   dispatch(setColorPrimary(res.colorPrimaryRgb));
   await setStorageString("primaryRGB", res.colorPrimaryRgb);

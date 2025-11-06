@@ -95,9 +95,7 @@ useEffect(() => {
     window.removeEventListener('offline', handleOffline);
   };
 }, []);
-
-
-  const { appState, updateAppState } = useAppState();
+const { appState, updateAppState } = useAppState();
   useEffect(() => {
     const sd = moment().local(); // Ensure local time is used
     const asd = sd.format("DD/MM/YYYY");
@@ -189,7 +187,6 @@ useEffect(() => {
       userRights,
       locale,
     } = await getUserSessionData();
-
     await syncAppStates(dispatch, userThemes, clientSession, userProfileDetails, userRights, locale);
 
     const language = userProfileDetails?.language;

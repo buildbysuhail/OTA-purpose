@@ -6,13 +6,8 @@ import ERPDateInput from "../../../../../components/ERPComponents/erp-date-input
 import Urls from "../../../../../redux/urls";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import ERPMultiSelect from "../../../../../components/ERPComponents/erp-multi-select";
-import ERPRadio from "../../../../../components/ERPComponents/erp-radio";
 
-const GstReportFilterGstCat = ({
-  getFieldProps,
-  handleFieldChange,
-  formState,
-}: any) => {
+const GstReportFilterGstCat = ({ getFieldProps, handleFieldChange, formState, }: any) => {
   const { t } = useTranslation("accountsReport");
 
   return (
@@ -176,7 +171,7 @@ const GstReportFilterGstCat = ({
           placeholder={t("select_gst_category")}
           searchPlaceholder={t("search_gst_category")}
           outputFormat="string"
-          //@TaxCategory=N'2, 9, 4'
+        //@TaxCategory=N'2, 9, 4'
         />
       </div>
     </div>

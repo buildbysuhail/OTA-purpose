@@ -5,13 +5,8 @@ import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-co
 import ERPDateInput from "../../../../../components/ERPComponents/erp-date-input";
 import Urls from "../../../../../redux/urls";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
-import ERPRadio from "../../../../../components/ERPComponents/erp-radio";
 
-const GstReportFilter = ({
-  getFieldProps,
-  handleFieldChange,
-  formState,
-}: any) => {
+const GstReportFilter = ({ getFieldProps, handleFieldChange, formState, }: any) => {
   const { t } = useTranslation("accountsReport");
   return (
     <div className="grid grid-cols-1 gap-2 md:gap-4 overflow-y-auto overflow-x-hidden">
@@ -26,7 +21,6 @@ const GstReportFilter = ({
               handleFieldChange("fromDate", data.fromDate)
             }
           />
-
           <ERPDateInput
             label={t("date_to")}
             {...getFieldProps("toDate")}
@@ -36,7 +30,6 @@ const GstReportFilter = ({
               handleFieldChange("toDate", data.toDate)
             }
           />
-
           <ERPCheckbox
             {...getFieldProps("isTransactionDate")}
             label={t("trans_date")}
@@ -167,7 +160,6 @@ const GstReportFilter = ({
 };
 
 export default GstReportFilter;
-
 export const GstReportFilterInitialState = {
   fromDate: moment().local().toDate(),
   toDate: moment().local().toDate(),

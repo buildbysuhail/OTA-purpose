@@ -1,29 +1,21 @@
 import { FC, Fragment, useEffect, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
-import PurchaseGstReportFilter, { GstReportFilterInitialState } from "./gst-report-filter";
+import { GstReportFilterInitialState } from "./gst-report-filter";
 import { useLocation } from "react-router-dom";
 import GstReportFilter from "./gst-report-filter";
-import { erpParseFloat } from "../../../../../utilities/Utils";
 interface GSTTaxwiseWithHSNProps {
   gridHeader: string;
   dataUrl: string;
   gridId: string;
 }
-const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
-  gridHeader,
-  dataUrl,
-  gridId,
-}) => {
+
+const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({ gridHeader, dataUrl, gridId, }) => {
   const { t } = useTranslation("accountsReport");
-  const [filter, setFilter] = useState<any>(
-    GstReportFilterInitialState
-  );
+  const [filter, setFilter] = useState<any>(GstReportFilterInitialState);
   const columns: DevGridColumn[] = [
     {
       dataField: "gstPercentage",
@@ -67,9 +59,7 @@ const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
       ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.qty == null
-              ? ""
-              : getFormattedValue(cellElement.data.qty);
+            cellElement.data?.qty == null ? "" : getFormattedValue(cellElement.data.qty);
           return {
             ...exportCell,
             text: value,
@@ -77,9 +67,7 @@ const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
             alignmentExcel: { horizontal: "right" },
           };
         } else {
-          return cellElement.data?.qty == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.qty));
+          return cellElement.data?.qty == null ? "" : getFormattedValue(parseFloat(cellElement.data.qty));
         }
       },
     },
@@ -108,9 +96,7 @@ const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
       ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.taxableValue == null
-              ? ""
-              : getFormattedValue(cellElement.data.taxableValue);
+            cellElement.data?.taxableValue == null ? "" : getFormattedValue(cellElement.data.taxableValue);
           return {
             ...exportCell,
             text: value,
@@ -118,9 +104,7 @@ const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
             alignmentExcel: { horizontal: "right" },
           };
         } else {
-          return cellElement.data?.taxableValue == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.taxableValue));
+          return cellElement.data?.taxableValue == null ? "" : getFormattedValue(parseFloat(cellElement.data.taxableValue));
         }
       },
     },
@@ -140,9 +124,7 @@ const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
       ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.cgstPerc == null
-              ? ""
-              : getFormattedValue(cellElement.data.cgstPerc);
+            cellElement.data?.cgstPerc == null ? "" : getFormattedValue(cellElement.data.cgstPerc);
           return {
             ...exportCell,
             text: value,
@@ -150,9 +132,7 @@ const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
             alignmentExcel: { horizontal: "right" },
           };
         } else {
-          return cellElement.data?.cgstPerc == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.cgstPerc));
+          return cellElement.data?.cgstPerc == null ? "" : getFormattedValue(parseFloat(cellElement.data.cgstPerc));
         }
       },
     },
@@ -172,9 +152,7 @@ const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
       ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.cgst == null
-              ? ""
-              : getFormattedValue(cellElement.data.cgst);
+            cellElement.data?.cgst == null ? "" : getFormattedValue(cellElement.data.cgst);
           return {
             ...exportCell,
             text: value,
@@ -182,9 +160,7 @@ const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
             alignmentExcel: { horizontal: "right" },
           };
         } else {
-          return cellElement.data?.cgst == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.cgst));
+          return cellElement.data?.cgst == null ? "" : getFormattedValue(parseFloat(cellElement.data.cgst));
         }
       },
     },
@@ -204,9 +180,7 @@ const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
       ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.sgstPerc == null
-              ? ""
-              : getFormattedValue(cellElement.data.sgstPerc);
+            cellElement.data?.sgstPerc == null ? "" : getFormattedValue(cellElement.data.sgstPerc);
           return {
             ...exportCell,
             text: value,
@@ -214,9 +188,7 @@ const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
             alignmentExcel: { horizontal: "right" },
           };
         } else {
-          return cellElement.data?.sgstPerc == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.sgstPerc));
+          return cellElement.data?.sgstPerc == null ? "" : getFormattedValue(parseFloat(cellElement.data.sgstPerc));
         }
       },
     },
@@ -236,9 +208,7 @@ const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
       ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.sgst == null
-              ? ""
-              : getFormattedValue(cellElement.data.sgst);
+            cellElement.data?.sgst == null ? "" : getFormattedValue(cellElement.data.sgst);
           return {
             ...exportCell,
             text: value,
@@ -246,9 +216,7 @@ const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
             alignmentExcel: { horizontal: "right" },
           };
         } else {
-          return cellElement.data?.sgst == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.sgst));
+          return cellElement.data?.sgst == null ? "" : getFormattedValue(parseFloat(cellElement.data.sgst));
         }
       },
     },
@@ -268,9 +236,7 @@ const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
       ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.igstPerc == null
-              ? ""
-              : getFormattedValue(cellElement.data.igstPerc);
+            cellElement.data?.igstPerc == null ? "" : getFormattedValue(cellElement.data.igstPerc);
           return {
             ...exportCell,
             text: value,
@@ -278,9 +244,7 @@ const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
             alignmentExcel: { horizontal: "right" },
           };
         } else {
-          return cellElement.data?.igstPerc == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.igstPerc));
+          return cellElement.data?.igstPerc == null ? "" : getFormattedValue(parseFloat(cellElement.data.igstPerc));
         }
       },
     },
@@ -300,9 +264,7 @@ const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
       ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.igst == null
-              ? ""
-              : getFormattedValue(cellElement.data.igst);
+            cellElement.data?.igst == null ? "" : getFormattedValue(cellElement.data.igst);
           return {
             ...exportCell,
             text: value,
@@ -310,9 +272,7 @@ const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
             alignmentExcel: { horizontal: "right" },
           };
         } else {
-          return cellElement.data?.igst == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.igst));
+          return cellElement.data?.igst == null ? "" : getFormattedValue(parseFloat(cellElement.data.igst));
         }
       },
     },
@@ -332,9 +292,7 @@ const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
       ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.cessPerc == null
-              ? ""
-              : getFormattedValue(cellElement.data.cessPerc);
+            cellElement.data?.cessPerc == null ? "" : getFormattedValue(cellElement.data.cessPerc);
           return {
             ...exportCell,
             text: value,
@@ -342,9 +300,7 @@ const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
             alignmentExcel: { horizontal: "right" },
           };
         } else {
-          return cellElement.data?.cessPerc == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.cessPerc));
+          return cellElement.data?.cessPerc == null ? "" : getFormattedValue(parseFloat(cellElement.data.cessPerc));
         }
       },
     },
@@ -364,9 +320,7 @@ const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
       ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.cessAmt == null
-              ? ""
-              : getFormattedValue(cellElement.data.cessAmt);
+            cellElement.data?.cessAmt == null ? "" : getFormattedValue(cellElement.data.cessAmt);
           return {
             ...exportCell,
             text: value,
@@ -374,9 +328,7 @@ const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
             alignmentExcel: { horizontal: "right" },
           };
         } else {
-          return cellElement.data?.cessAmt == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.cessAmt));
+          return cellElement.data?.cessAmt == null ? "" : getFormattedValue(parseFloat(cellElement.data.cessAmt));
         }
       },
     },
@@ -396,9 +348,7 @@ const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
       ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.addCessPerc == null
-              ? ""
-              : getFormattedValue(cellElement.data.addCessPerc);
+            cellElement.data?.addCessPerc == null ? "" : getFormattedValue(cellElement.data.addCessPerc);
           return {
             ...exportCell,
             text: value,
@@ -406,9 +356,7 @@ const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
             alignmentExcel: { horizontal: "right" },
           };
         } else {
-          return cellElement.data?.addCessPerc == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.addCessPerc));
+          return cellElement.data?.addCessPerc == null ? "" : getFormattedValue(parseFloat(cellElement.data.addCessPerc));
         }
       },
     },
@@ -428,9 +376,7 @@ const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
       ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.addCess == null
-              ? ""
-              : getFormattedValue(cellElement.data.addCess);
+            cellElement.data?.addCess == null ? "" : getFormattedValue(cellElement.data.addCess);
           return {
             ...exportCell,
             text: value,
@@ -438,9 +384,7 @@ const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
             alignmentExcel: { horizontal: "right" },
           };
         } else {
-          return cellElement.data?.addCess == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.addCess));
+          return cellElement.data?.addCess == null ? "" : getFormattedValue(parseFloat(cellElement.data.addCess));
         }
       },
     },
@@ -460,9 +404,7 @@ const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
       ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.total == null
-              ? ""
-              : getFormattedValue(cellElement.data.total);
+            cellElement.data?.total == null ? "" : getFormattedValue(cellElement.data.total);
           return {
             ...exportCell,
             text: value,
@@ -470,9 +412,7 @@ const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
             alignmentExcel: { horizontal: "right" },
           };
         } else {
-          return cellElement.data?.total == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.total));
+          return cellElement.data?.total == null ? "" : getFormattedValue(parseFloat(cellElement.data.total));
         }
       },
     },
@@ -513,6 +453,7 @@ const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
       return getFormattedValue(value) || "0";
     };
   }, []);
+
   const customizeDate = (itemInfo: any) => `TOTAL`;
   const customizeDateGroup = (itemInfo: any) => `Group Total`;
   const _summaryItems: SummaryConfig[] = [
@@ -544,35 +485,30 @@ const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-     
     },
     {
       column: "igst",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-     
     },
     {
       column: "total",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-     
     },
     {
       column: "cessAmt",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-     
     },
     {
       column: "addCess",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-     
     },
     {
       column: "form",
@@ -646,11 +582,13 @@ const GSTTaxwiseWithHSN: FC<GSTTaxwiseWithHSNProps> = ({
       customizeText: customizeSummaryRow,
     },
   ];
+
   const location = useLocation();
   const [key, setKey] = useState(1);
   useEffect(() => {
     setKey((prev: any) => prev + 1);
   }, [location]);
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">

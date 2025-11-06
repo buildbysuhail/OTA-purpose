@@ -1,12 +1,11 @@
 import { FC, Fragment, useEffect, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import ErpDevGrid, { SummaryConfig } from "../../../../../components/ERPComponents/erp-dev-grid";
-import Urls from "../../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import { useLocation } from "react-router-dom";
-import PurchaseGstReportFilterGstCat, { GstReportFilterGstCatInitialState} from "./gst-report-filter-gst";
+import { GstReportFilterGstCatInitialState } from "./gst-report-filter-gst";
 import GstReportFilterGstCat from "./gst-report-filter-gst";
 import { erpParseFloat } from "../../../../../utilities/Utils";
 interface GSTMonthlySummaryProps {
@@ -14,6 +13,7 @@ interface GSTMonthlySummaryProps {
   dataUrl: string;
   gridId: string;
 }
+
 const GSTMonthlySummary: FC<GSTMonthlySummaryProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("inventory");
   const [filter, setFilter] = useState<any>(GstReportFilterGstCatInitialState);
@@ -47,7 +47,7 @@ const GSTMonthlySummary: FC<GSTMonthlySummaryProps> = ({ gridHeader, dataUrl, gr
     },
     {
       dataField: "gstPercentage",
-      caption: t("gstpercentage"),
+      caption: t("gst_percentage"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -175,7 +175,7 @@ const GSTMonthlySummary: FC<GSTMonthlySummaryProps> = ({ gridHeader, dataUrl, gr
     },
     {
       dataField: "addCess",
-      caption: t("addcess_amount"),
+      caption: t("add_cess_amount"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -242,10 +242,6 @@ const GSTMonthlySummary: FC<GSTMonthlySummaryProps> = ({ gridHeader, dataUrl, gr
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: any) => {
-      console.log('itemInfo');
-
-      console.log(itemInfo);
-
       const value = itemInfo.value;
       if (
         value === null ||
@@ -258,6 +254,7 @@ const GSTMonthlySummary: FC<GSTMonthlySummaryProps> = ({ gridHeader, dataUrl, gr
       return getFormattedValue(value) || "0";
     };
   }, []);
+
   const customizeTotal = (itemInfo: any) => `TOTAL`;
   const _summaryItems: SummaryConfig[] = [
     {
@@ -270,26 +267,26 @@ const GSTMonthlySummary: FC<GSTMonthlySummaryProps> = ({ gridHeader, dataUrl, gr
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-                  return erpParseFloat(getFormattedValue(value));
-            },
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "totalGST",
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-                  return erpParseFloat(getFormattedValue(value));
-            },
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "total",
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
       },
     },
     {
@@ -297,8 +294,8 @@ const GSTMonthlySummary: FC<GSTMonthlySummaryProps> = ({ gridHeader, dataUrl, gr
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
       },
     },
     {
@@ -306,17 +303,18 @@ const GSTMonthlySummary: FC<GSTMonthlySummaryProps> = ({ gridHeader, dataUrl, gr
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
       },
     },
-
   ];
+
   const location = useLocation();
   const [key, setKey] = useState(1);
   useEffect(() => {
-      setKey((prev: any) => prev+1)
-  },[location]);
+    setKey((prev: any) => prev + 1)
+  }, [location]);
+  
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">

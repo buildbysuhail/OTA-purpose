@@ -1,8 +1,6 @@
 import { FC, Fragment, useEffect, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
@@ -16,6 +14,7 @@ interface GSTDetailedProps {
   dataUrl: string;
   gridId: string;
 }
+
 const GSTDetailed: FC<GSTDetailedProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { t } = useTranslation("inventory");
   const [filter, setFilter] = useState<any>(GstReportFilterGstCatInitialState);
@@ -49,7 +48,7 @@ const GSTDetailed: FC<GSTDetailedProps> = ({ gridHeader, dataUrl, gridId }) => {
     },
     {
       dataField: "party",
-      caption: t("Party"),
+      caption: t("party"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -58,7 +57,7 @@ const GSTDetailed: FC<GSTDetailedProps> = ({ gridHeader, dataUrl, gridId }) => {
     },
     {
       dataField: "address1",
-      caption: t("Address1"),
+      caption: t("address1"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -67,7 +66,7 @@ const GSTDetailed: FC<GSTDetailedProps> = ({ gridHeader, dataUrl, gridId }) => {
     },
     {
       dataField: "address2",
-      caption: t("Address2"),
+      caption: t("address2"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -75,7 +74,7 @@ const GSTDetailed: FC<GSTDetailedProps> = ({ gridHeader, dataUrl, gridId }) => {
     },
     {
       dataField: "form",
-      caption: t("From"),
+      caption: t("from"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -116,7 +115,7 @@ const GSTDetailed: FC<GSTDetailedProps> = ({ gridHeader, dataUrl, gridId }) => {
     },
     {
       dataField: "cgstPerc",
-      caption: t("cgstperc"),
+      caption: t("cgst_perc"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -180,7 +179,7 @@ const GSTDetailed: FC<GSTDetailedProps> = ({ gridHeader, dataUrl, gridId }) => {
     },
     {
       dataField: "sgstPerc",
-      caption: t("sgstperc"),
+      caption: t("sgst_%"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -244,7 +243,7 @@ const GSTDetailed: FC<GSTDetailedProps> = ({ gridHeader, dataUrl, gridId }) => {
     },
     {
       dataField: "igstPerc",
-      caption: t("igstperc"),
+      caption: t("igst_%"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -308,7 +307,7 @@ const GSTDetailed: FC<GSTDetailedProps> = ({ gridHeader, dataUrl, gridId }) => {
     },
     {
       dataField: "cessPerc",
-      caption: t("cessperc"),
+      caption: t("cess_%"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -370,7 +369,7 @@ const GSTDetailed: FC<GSTDetailedProps> = ({ gridHeader, dataUrl, gridId }) => {
     },
     {
       dataField: "addCessPerc",
-      caption: t("addcessperc"),
+      caption: t("add_cess_%"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -401,7 +400,7 @@ const GSTDetailed: FC<GSTDetailedProps> = ({ gridHeader, dataUrl, gridId }) => {
     },
     {
       dataField: "addCess",
-      caption: t("addcess"),
+      caption: t("add_cess"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -491,7 +490,7 @@ const GSTDetailed: FC<GSTDetailedProps> = ({ gridHeader, dataUrl, gridId }) => {
     },
     {
       dataField: "id",
-      caption: t("MasterId"),
+      caption: t("master_id"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -520,10 +519,6 @@ const GSTDetailed: FC<GSTDetailedProps> = ({ gridHeader, dataUrl, gridId }) => {
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: any) => {
-      console.log("itemInfo");
-
-      console.log(itemInfo);
-
       const value = itemInfo.value;
       if (
         value === null ||
@@ -536,6 +531,7 @@ const GSTDetailed: FC<GSTDetailedProps> = ({ gridHeader, dataUrl, gridId }) => {
       return getFormattedValue(value) || "0";
     };
   }, []);
+
   const customizeDate = (itemInfo: any) => `TOTAL`;
   const _summaryItems: SummaryConfig[] = [
     {
@@ -607,11 +603,13 @@ const GSTDetailed: FC<GSTDetailedProps> = ({ gridHeader, dataUrl, gridId }) => {
       },
     },
   ];
+
   const location = useLocation();
   const [key, setKey] = useState(1);
   useEffect(() => {
     setKey((prev: any) => prev + 1);
   }, [location]);
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">

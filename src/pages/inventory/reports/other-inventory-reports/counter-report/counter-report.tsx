@@ -8,6 +8,7 @@ import { useMemo, useState } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import { erpParseFloat } from "../../../../../utilities/Utils";
 import { Button } from "@mui/material";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const CounterReport = () => {
   const { t } = useTranslation("accountsReport");
@@ -326,7 +327,7 @@ const CounterReport = () => {
   const [asonDate, setAsonDate] = useState(new Date());
   const [filter, setFilter] = useState({ asonDate: new Date() });
 
-const handleChangeDate = (delta: number) => {
+  const handleChangeDate = (delta: number) => {
     const newDate = new Date(asonDate);
     newDate.setDate(newDate.getDate() + delta);
     setAsonDate(newDate);
@@ -365,8 +366,81 @@ const handleChangeDate = (delta: number) => {
                 showPlusMinusButton={true}
                 // postData={{ ...filter, asonDate }}
                 customToolbarItems={[
-                  { location: 'before', item: (<Button variant="contained" color="inherit" onClick={()=>handleChangeDate(-1)}> {t("-")}  </Button>) },
-                  { location: 'before', item: (<Button variant="contained" color="inherit" onClick={()=>handleChangeDate(1)}> {t("+")}  </Button>) },]}
+                  {
+                    location: 'before',
+                    item: (
+                      <Button
+                        variant="outlined"
+                        onClick={() => handleChangeDate(-1)}
+                        sx={{
+                          minWidth: 33,
+                          width: 33,
+                          height: 33,
+                          borderRadius: '50%',
+                          padding: 0,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: 'rgb(243 244 246)',
+                          borderColor: 'rgb(209 213 219)',
+                          color: 'rgb(55 65 81)',
+                          '&:hover': {
+                            backgroundColor: 'rgb(229 231 235)',
+                            borderColor: 'rgb(156 163 175)',
+                          },
+                          '.dark &': {
+                            backgroundColor: 'rgb(31 41 55)',
+                            borderColor: 'rgb(75 85 99)',
+                            color: 'rgb(229 231 235)',
+                            '&:hover': {
+                              backgroundColor: 'rgb(55 65 81)',
+                              borderColor: 'rgb(107 114 128)',
+                            }
+                          }
+                        }}
+                      >
+                        <ChevronLeft className="w-4 h-4" />
+                      </Button>
+                    )
+                  },
+                  {
+                    location: 'before',
+                    item: (
+                      <Button
+                        variant="outlined"
+                        onClick={() => handleChangeDate(1)}
+                        sx={{
+                          minWidth: 33,
+                          width: 33,
+                          height: 33,
+                          borderRadius: '50%',
+                          padding: 0,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: 'rgb(243 244 246)',
+                          borderColor: 'rgb(209 213 219)',
+                          color: 'rgb(55 65 81)',
+                          '&:hover': {
+                            backgroundColor: 'rgb(229 231 235)',
+                            borderColor: 'rgb(156 163 175)',
+                          },
+                          '.dark &': {
+                            backgroundColor: 'rgb(31 41 55)',
+                            borderColor: 'rgb(75 85 99)',
+                            color: 'rgb(229 231 235)',
+                            '&:hover': {
+                              backgroundColor: 'rgb(55 65 81)',
+                              borderColor: 'rgb(107 114 128)',
+                            }
+                          }
+                        }}
+                      >
+                        <ChevronRight className="w-4 h-4" />
+                      </Button>
+                    )
+                  },
+                ]}
               />
             </div>
           </div>

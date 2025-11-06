@@ -3,7 +3,7 @@ import { Fragment } from "react/jsx-runtime";
 import ErpDevGrid, { SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
-import { FC, useMemo } from "react";
+import { useMemo } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../../redux/urls";
 import SalesmanwiseSalesAndCollectionFilter, { SalesmanwiseSalesAndCollectionFilterInitialState, } from "./salesman-wise-sales-and-collection-filter";
@@ -394,63 +394,63 @@ const SalesmanwiseSalesAndCollection = () => {
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "totSales",
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "profit",
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "totCollection",
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "profitAsPerCollection",
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "incentiveAsPerProfit",
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "incentiveAsPerCollection",
       summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
+      cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
+      },
     },
   ];
 

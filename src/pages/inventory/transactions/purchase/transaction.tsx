@@ -1886,11 +1886,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
         {deviceInfo?.isMobile && (
           <div className="fixed inset-0 z-50 flex flex-col bg-gray-100 w-full h-full font-sans overflow-hidden">
             {/* Sale Header */}
-            <div className="flex items-center bg-white shadow-sm p-3 border-b-2 fixed top-0 left-0 w-full z-50 h-12">
+            <div className="flex items-center bg-white dark:bg-dark-bg-card shadow-sm p-3 border-b-2 dark:border-dark-border fixed top-0 left-0 w-full z-50 h-12">
               <ERPPreviousUrlButton />
               {/* test mj23 */}
-              <h1 className="flex-grow font-semibold text-lg text-zinc-800">
-                {/* {t("cash_payment")} */}
+              <h1 className="flex-grow font-semibold text-lg text-zinc-800 dark:text-dark-text">
                 {t(formState.title)}
               </h1>
             </div>
@@ -2110,7 +2109,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
             content={
               <TemplatesPreView
                 voucherType={formState.transaction.master?.voucherType ?? ""}
-                transactionMasterID={popupData.IsPrintPreviewPopup.masterId?? 0}
+                transactionMasterID={popupData.IsPrintPreviewPopup.masterId ?? 0}
                 transactionType={formState.transactionType}
                 isInvTrans
               />

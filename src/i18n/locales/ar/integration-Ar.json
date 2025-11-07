@@ -67,5 +67,11 @@
 
   "sms_gateway_center_integration": "تكامل بوابة مركز الرسائل القصيرة (SMS Gateway Center)",
   "limit_type": "نوع الحد",
-  "has_limit": "يحتوي على حد"
+  "has_limit": "يحتوي على حد",
+  "close_all_popups": "إغلاق جميع النوافذ المنبثقة",
+  "close_the_top_popup": "إغلاق النافذة المنبثقة العلوية",
+  "go_to_previous_page": "الذهاب إلى الصفحة السابقة",
+  "go_to_next_page": "الذهاب إلى الصفحة التالية",
+  "go_to_home": "الذهاب إلى الصفحة الرئيسية",
+  "focus_the_searchbar": "التركيز على شريط البحث"
 }

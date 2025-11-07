@@ -1182,5 +1182,19 @@
   "taxable_40": "خاضع للضريبة 40",
   "cgst_20": "ضريبة السلع والخدمات المركزية (CGST) 20 %",
   "sgst_20": "ضريبة السلع والخدمات الحكومية (SGST) 20 %",
-  "igst_40": "ضريبة السلع والخدمات المتكاملة (IGST) 40 %"
+  "igst_40": "ضريبة السلع والخدمات المتكاملة (IGST) 40 %",
+
+  "sales_tax_reports": "تقارير ضريبة المبيعات",
+  "daily_summary": "ملخص يومي",
+  "sales_and_return": "المبيعات والمرتجعات",
+  "taxwise": "حسب الضريبة",
+  "taxwise_with_hsn": "حسب الضريبة مع رمز HSN",
+  "monthly_summary": "ملخص شهري",
+  "detailed": "مفصل",
+  "register_format": "صيغة السجل",
+  "adv_register_format": "صيغة السجل المتقدمة",
+  "sales_return_tax_reports": "تقارير ضريبة مرتجعات المبيعات",
+  "purchase_tax_reports": "تقارير ضريبة المشتريات",
+  "purchase_return_tax_reports": "تقارير ضريبة مرتجعات المشتريات",
+  "inventory_price_reports": "تقارير أسعار المخزون"
 }

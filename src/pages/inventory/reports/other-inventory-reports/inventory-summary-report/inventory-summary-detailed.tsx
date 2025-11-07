@@ -1313,6 +1313,11 @@ const InventorySummaryReportDetailed: FC<
                 hideGridAddButton={true}
                 method={ActionType.POST}
                 reload={true}
+                scrolling={{
+                  mode: "virtual",
+                  showScrollbar: "always",
+                  useNative: true
+                }}
                 gridId="grd_inventory_summary_drilldown"
                 childPopupProps={{
                   content: null,

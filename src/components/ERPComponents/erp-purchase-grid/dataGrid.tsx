@@ -1750,6 +1750,8 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
     const popupRef = useRef<HTMLDivElement | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const virtualContainerRef = useRef<HTMLDivElement>(null);
+    // This state is used for grid resizer showing when hovering the fields header ( not using this now)
+    const [hoverFieldHeader, setHoverFieldHeader] = useState<{column: string, hovered: boolean}>({column: '', hovered: false})
 
     const totalGridWidth = useMemo(() => {
       console.log(columnWidths);
@@ -2762,6 +2764,9 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                         onDragEnd={handleDragEnd}
                         onDragOver={(e) => handleDragOver(e, index)}
                         onDrop={(e) => handleDrop(e, index)}
+                        // Not using the below now(used for grid resizer showing when hovering)
+                        onMouseEnter={()=> setHoverFieldHeader({column: column?.dataField??"", hovered: true})}
+                        onMouseLeave={()=> setHoverFieldHeader({column: column?.dataField??"", hovered: false})}
                         style={{
                           width: `${
                             columnWidths?.find(
@@ -2795,7 +2800,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                                       gridBorderColor || "226,232,240"
                                     }, 0.8)`
                               }`
-                            : "none",
+                            :"none",
                           borderLeft: isLastColumn
                             ? `2px solid ${
                                 appState.mode === "dark"
@@ -2878,16 +2883,21 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                               right: "-2px",
                               top: 0,
                               bottom: 0,
-                              width: "4px",
+                              width: "7px",
+                              marginTop:"3px",
+                              marginBottom:"3px",
                               cursor: "col-resize",
                               backgroundColor: "transparent",
+                              transition: "background-color 0.1s ease-out",
                               zIndex: 10,
+                              // backgroundColor: hoverFieldHeader.hovered && hoverFieldHeader.column === column.dataField ? `rgb(${gridHeaderFontColor})` :"transparent", 
+                              // The above will show the resizer when hovering column header
                             }}
                             onMouseEnter={(e) => {
                               (e.target as HTMLElement).style.backgroundColor =
                                 appState.mode === "dark"
-                                  ? "#e0e0e0"
-                                  : "#007bff";
+                                  ? `rgb(${gridHeaderFontColor})`
+                                  : `rgb(${gridHeaderFontColor})`;
                             }}
                             onMouseLeave={(e) => {
                               (e.target as HTMLElement).style.backgroundColor =

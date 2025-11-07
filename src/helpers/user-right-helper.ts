@@ -47,7 +47,7 @@ export const useUserRights = () => {
   },[])
 
 
-  const hasRight = (formCode: string, action: UserAction, onlyBaCa?: boolean): boolean => {
+  const hasRight = (formCode: string, action?: UserAction, onlyBaCa?: boolean): boolean => {
     let result = false;
 
     
@@ -71,8 +71,14 @@ export const useUserRights = () => {
         const filteredRows = dtUserRights.filter(
           (row: any) => row.formCode === formCode
         );
+        if(!action) {
+           if (
+          filteredRows.length > 0){
+            return true
+          }
+        }
 
-        if (
+        if ( action &&
           filteredRows.length > 0 &&
           filteredRows[0]?.userRights?.split("").includes(action)
         ) {

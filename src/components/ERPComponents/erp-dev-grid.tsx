@@ -2165,6 +2165,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     return (
       <Fragment>
         {showChooserOnGridHead && (
+
           <GridPreferenceChooser
             initialPreferences={preferences}
             ref={preferenceChooserRef}
@@ -2589,7 +2590,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                                     columns={columns}
                                     gridId={gridId}
                                     onApplyPreferences={onApplyPreferences}
-                                    showChooserOnGridHead={showChooserOnGridHead}
+                                  
                                   />
                                 </li>
                               )}
@@ -2732,7 +2733,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                         columns={columns}
                         gridId={gridId}
                         onApplyPreferences={onApplyPreferences}
-                        showChooserOnGridHead={showChooserOnGridHead}
                       />
                     </div>
                   </Item>

@@ -1,31 +1,24 @@
 import { useEffect, useState } from "react";
-import { base64ToModelUnicode, customJsonParse, modelToBase64, modelToBase64Unicode } from "../../../../utilities/jsonConverter";
 import { APIClient } from "../../../../helpers/api-client";
 import Urls from "../../../../redux/urls";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
 import { useDispatch } from "react-redux";
-import { handleResponse } from "../../../../utilities/HandleResponse";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
-import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
-import { UserCog, ChevronRight, Settings, Palette, Layout, Building2, RotateCcw, Grid, Mouse, Undo } from "lucide-react";
+import { ChevronRight, Settings, Palette, Layout, Building2, Grid, Mouse, Undo } from "lucide-react";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import { AppState, inputBox, } from "../../../../redux/slices/app/types";
 import InputBoxStyling from "../../../../components/ERPComponents/erp-inputboxStyle-preference";
 import { hexToRgb } from "../../../../components/common/switcher/switcherdata/switcherdata";
 import { useTranslation } from "react-i18next";
-import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import useDebounce from "./use-debounce";
 import { useAppState } from "../../../../utilities/hooks/useAppState";
 import { ERPScrollArea } from "../../../../components/ERPComponents/erp-scrollbar";
-import { setStorageString } from "../../../../utilities/storage-utils";
-import { formStateHandleFieldChange, formStateMasterHandleFieldChange, formStateHandleFieldChangeKeysOnly } from "../reducer";
+import { formStateHandleFieldChange, formStateMasterHandleFieldChange } from "../reducer";
 import { UserConfig } from "../transaction-types";
 import { appInitialState } from "../../../../redux/slices/app/reducer";
-import { userSession } from "../../../../redux/slices/user-session/thunk";
-import { use } from "i18next";
 
 const api = new APIClient();
 
@@ -115,28 +108,26 @@ useEffect(() => {
     undoEditMode?.(formState.transaction.master.invTransactionMasterID > 0, formState.transaction.master.invTransactionMasterID);
   }
 
-  const postUserConfig = async () => {
-    try {
-      
-      const base64 = modelToBase64Unicode({...formState.userConfig, themeName: 'Custom'});
-      const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, base64);
-      handleResponse(response, async () => {
-        const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`) ;
-        await setStorageString(key, base64);
-
-        dispatch(
-          formStateHandleFieldChangeKeysOnly({
-            fields: {
-              userConfig: {themeName: 'Custom',},
-              isUserConfigOpen: false 
-            },
-          })
-        );
-      });
-    } catch (error) {
-      console.error("Error post System Code settings:", error);
-    }
-  };
+  // const postUserConfig = async () => {
+  //   try {
+  //     const base64 = modelToBase64Unicode({...formState.userConfig, themeName: 'Custom'});
+  //     const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, base64);
+  //     handleResponse(response, async () => {
+  //       const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`) ;
+  //       await setStorageString(key, base64);
+  //       dispatch(
+  //         formStateHandleFieldChangeKeysOnly({
+  //           fields: {
+  //             userConfig: {themeName: 'Custom',},
+  //             isUserConfigOpen: false 
+  //           },
+  //         })
+  //       );
+  //     });
+  //   } catch (error) {
+  //     console.error("Error post System Code settings:", error);
+  //   }
+  // };
 
   const handleFieldChange = (field: keyof UserConfig, value: any) => {
     const updatedUserConfig: UserConfig = {
@@ -156,33 +147,33 @@ useEffect(() => {
 
   const debouncedHandleScrollbarChange = useDebounce(handleScrollbarChange, 300);
   const debouncedHandleFieldChange = useDebounce(handleFieldChange, 300);
-  const resetThemeChange = async () => {
-    try {
-      ERPAlert.show({
-        title: t("are_you_sure_reset_now"),
-        icon: "warning",
-        confirmButtonText: t("reset_now"),
-        cancelButtonText: t("cancel"),
-        showCancelButton: true,
-        onConfirm: async (result: any) => {
-          const res = await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/ResetLocalSettings`, {});
-          handleResponse(res, async () => {
+  // const resetThemeChange = async () => {
+  //   try {
+  //     ERPAlert.show({
+  //       title: t("are_you_sure_reset_now"),
+  //       icon: "warning",
+  //       confirmButtonText: t("reset_now"),
+  //       cancelButtonText: t("cancel"),
+  //       showCancelButton: true,
+  //       onConfirm: async (result: any) => {
+  //         const res = await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/ResetLocalSettings`, {});
+  //         handleResponse(res, async () => {
             
-            const st = base64ToModelUnicode(res.item);
-             const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`) ;
-            await setStorageString(key, res.item);
-            dispatch(formStateHandleFieldChange({ fields: { userConfig: st ,isUserConfigOpen: false} }));
-          });
-        },
-      });
-    } catch (error) {
-      console.error("Error getInputBox data:", error);
-    }
-  };
+  //           const st = base64ToModelUnicode(res.item);
+  //            const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`) ;
+  //           await setStorageString(key, res.item);
+  //           dispatch(formStateHandleFieldChange({ fields: { userConfig: st ,isUserConfigOpen: false} }));
+  //         });
+  //       },
+  //     });
+  //   } catch (error) {
+  //     console.error("Error getInputBox data:", error);
+  //   }
+  // };
 
-  const previousThemeChange = async () => {
-      dispatch(formStateHandleFieldChange({ fields: { userConfig: JSON.parse(formState?.privConfig??"") ,isUserConfigOpen: false } }));
-  };
+  // const previousThemeChange = async () => {
+  //     dispatch(formStateHandleFieldChange({ fields: { userConfig: JSON.parse(formState?.privConfig??"") ,isUserConfigOpen: false } }));
+  // };
 
   const rgbToHex = (rgb: string): string => {
     if (!rgb) return "#000000";
@@ -192,7 +183,7 @@ useEffect(() => {
 
   return (
     <>
-        <div className="space-y-2 max-h-[calc(100vh-200px)] overflow-y-auto p-2">
+        <div className="space-y-2 max-h-[calc(100vh-200px)] overflow-y-auto p-2" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
             {/* View Toggle Section */}
             <div className="mb-2 p-3 sm:p-4 bg-gradient-to-br from-[#eff6ff] via-[#eef2ff] to-[#faf5ff] dark:from-dark-bg dark:via-dark-hover-bg dark:to-dark-border rounded-xl border border-[#bfdbfe] dark:border-dark-border shadow-sm">
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
@@ -224,7 +215,7 @@ useEffect(() => {
                       <label
                         htmlFor="toggle-view"
                         className={`block cursor-pointer rounded-full p-1 transition-all duration-300 ease-in-out shadow-inner ${isExpanded ? "bg-gradient-to-r from-[#3b82f6] to-[#4f46e5] shadow-[#bfdbfe]" : "bg-gray-300 dark:bg-gray-600 shadow-gray-200"}`}>
-                        <div className={`w-6 h-6 bg-white rounded-full shadow-lg transform transition-all duration-300 ease-in-out ${isExpanded ? isRtl ? "translate-x-[-2rem] shadow-[#93c5fd]" : "translate-x-8 shadow-[#93c5fd]" : "translate-x-0 shadow-gray-300"}`} ></div>
+                        <div className={`w-6 h-6 bg-white rounded-full shadow-lg transform transition-all duration-300 ease-in-out ${isExpanded ? isRtl ? "translate-x-[-2rem]" : "translate-x-8" : "translate-x-0"}`} ></div>
                       </label>
                     </div>
                   </div>
@@ -245,7 +236,7 @@ useEffect(() => {
                       <label
                         htmlFor="footer-position"
                         className={`block cursor-pointer rounded-full p-1 transition-all duration-300 ease-in-out shadow-inner ${formState.userConfig?.footerPosition === 'right' ? 'bg-gradient-to-r from-[#3b82f6] to-[#4f46e5] shadow-[#bfdbfe]' : 'bg-gray-300 dark:bg-gray-600 shadow-gray-200'}`}>
-                        <div className={`w-6 h-6 bg-white rounded-full shadow-lg transform transition-all duration-300 ease-in-out ${formState.userConfig?.footerPosition === "right" ? isRtl ? "-translate-x-8 shadow-[#93c5fd]" : "translate-x-8 shadow-[#93c5fd]" : "translate-x-0 shadow-gray-300"}`}></div>
+                        <div className={`w-6 h-6 bg-white rounded-full shadow-lg transform transition-all duration-300 ease-in-out ${formState.userConfig?.footerPosition === "right" ? isRtl ? "-translate-x-8" : "translate-x-8" : "translate-x-0"}`}></div>
                       </label>
                     </div>
                     <span className="text-sm text-gray-700 dark:text-dark-text font-medium">
@@ -564,7 +555,7 @@ useEffect(() => {
                             {t("scrollbar_preview")}
                           </h6>
                         </div>
-                        <ERPScrollArea className="w-full h-48 sm:h-64 border border-gray-300 overflow-y-auto rounded-md">
+                        <ERPScrollArea className="w-full h-48 sm:h-64 overflow-y-auto rounded-md">
                           <div className="space-y-2 p-4 text-sm text-gray-600 dark:text-dark-text/70">
                             <p className="font-medium text-gray-800 dark:text-dark-text">
                               {t("scroll_down_to_see_the_effect")}
@@ -972,7 +963,7 @@ useEffect(() => {
               </div>
             </div> */}
           </div>
-       <div className="w-full flex justify-end items-center gap-2 dark:!border-dark-border dark:!bg-dark-bg rounded-b-md">
+       {/* <div className="w-full flex justify-end items-center gap-2 dark:!border-dark-border dark:!bg-dark-bg rounded-b-md">
             <ERPButton
               title={t("cancel")}
               onClick={previousThemeChange}
@@ -993,7 +984,7 @@ useEffect(() => {
               variant="primary"
               className="min-w-[140px] transition-all duration-300"
             />
-          </div>
+          </div> */}
       
     </>
   );

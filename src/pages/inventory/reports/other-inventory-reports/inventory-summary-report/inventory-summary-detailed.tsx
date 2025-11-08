@@ -752,6 +752,38 @@ const InventorySummaryReportDetailed: FC<
         },
       },
       {
+        dataField: "taxableValue",
+        caption: t("taxable_value"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 80,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.netValue == null
+                ? 0
+                : getFormattedValue(cellElement.data.netValue);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.netValue == null
+              ? 0
+              : getFormattedValue(cellElement.data.netValue);
+          }
+        },
+      },
+      {
         dataField: "createdDate",
         caption: t("created_date"),
         dataType: "date",
@@ -855,6 +887,22 @@ const InventorySummaryReportDetailed: FC<
         dataField: "toWarehouseName",
         caption: t("to_warehouse_name"),
         dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "counterName",
+        caption: t("counter_name"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "systemDateTime",
+        caption: t("system_date_time"),
+        dataType: "datetime",
         allowSearch: true,
         allowFiltering: true,
         width: 100,
@@ -991,7 +1039,8 @@ const InventorySummaryReportDetailed: FC<
       if (
         column.dataField == "mobileNumber" ||
         column.dataField == "totalExciseTax" ||
-        column.dataField == "toWarehouseName"
+        column.dataField == "toWarehouseName" ||
+        column.dataField == "taxableValue"
       ) {
         return (
           clientSession.isAppGlobal &&
@@ -1049,16 +1098,13 @@ const InventorySummaryReportDetailed: FC<
       },
       {
         column: "gross",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
       },
       {
         column: "vat",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: (itemInfo: { value: any }) => {
           return (
@@ -1073,166 +1119,124 @@ const InventorySummaryReportDetailed: FC<
             ) || "0"
           );
         },
-         cellSummaryAction:(value: number) => {
+        cellSummaryAction: (value: number) => {
           return erpParseFloat(getFormattedValue(value, false, 4));
-      },
+        },
       },
       {
         column: "disc",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
       },
       {
         column: "grandTotal",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
       },
       {
         column: "billDiscount",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
       },
       {
         column: "cashDiscount",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
       },
       {
         column: "cashAmt",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
       },
       {
         column: "creditAmt",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
       },
       {
         column: "bankAmt",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
       },
 
       {
         column: "adjustmentAmount",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
       },
       //only in multipayment and inventorysumary
       {
         column: "netValue",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
       },
       //only in multipayment and inventorysumary
       {
         column: "srAmount",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
       },
       //not in inactive and nahla
       // usersession.dbIdValue!== "543140180640"&&(
       {
         column: "couponAmt",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
       },
       // )
       //not in inactive
       {
         column: "taxOnDiscount",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
       },
       //not in inactive
       {
         column: "roundAmount",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
       },
 
       //dbid value="489995732270"
       //asmari only
       {
         column: "salesAmount",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
       },
       //asmari only
       {
         column: "totalProfit",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
       },
       // //inventory summary only+09
       {
         column: "totalExciseTax",
+        summaryType: "sum",
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
+      {
+        column: "taxableValue",
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
       },
     ];
     // Filter columns based on the `visible` property

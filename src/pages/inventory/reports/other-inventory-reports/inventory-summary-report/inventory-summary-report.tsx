@@ -226,7 +226,7 @@ const InventorySummaryReport = () => {
                   isForm: false,
                   width: 1000,
                   drillDownCells: "voucherTypeName",
-                  bodyProps: "voucherType,branchID,formType,voucherTypeName,branchName",
+                  bodyProps: "voucherType,branchID,voucherForm,voucherTypeName,branchName",
                 }}
                 postData={{
                   ...filter,

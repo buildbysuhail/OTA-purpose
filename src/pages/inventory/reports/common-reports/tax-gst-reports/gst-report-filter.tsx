@@ -41,16 +41,26 @@ const GstReportFilter = ({ getFieldProps, handleFieldChange, formState, }: any) 
           />
         </div>
       </div>
-
-      <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 items-end gap-4">
-        <ERPInput
+ <div className="flex items-end gap-2">
+           <ERPCheckbox
+            {...getFieldProps("isGSTPerc")}
+            label={t("")}
+            noLabel
+            onChangeData={(data) =>
+              handleFieldChange("isGSTPerc", data.isGSTPerc)
+            }
+          />
+          <ERPInput
           {...getFieldProps("gSTPerc")}
+            disabled={getFieldProps("isGSTPerc").value != true}
           label={t("gst_percentage")}
           className="w-32"
           placeholder="0.00"
           type="number"
           onChangeData={(data) => handleFieldChange("gSTPerc", data.gSTPerc)}
         />
+        {/* </div> */}
+     
         {/* always visible false now */}
         {/* {(location.pathname.includes("inventory/sales_gst_sales_and_return") ||
           location.pathname.includes(
@@ -118,7 +128,7 @@ const GstReportFilter = ({ getFieldProps, handleFieldChange, formState, }: any) 
             });
           }}
         /> */}
-        <div className="flex items-end gap-2">
+        {/* <div className="flex items-end gap-2"> */}
           <ERPCheckbox
             {...getFieldProps("isVchForm")}
             label={t("")}
@@ -154,7 +164,6 @@ const GstReportFilter = ({ getFieldProps, handleFieldChange, formState, }: any) 
             handleFieldChange("excludeNA", data.excludeNA)
           }
         />
-      </div>
     </div>
   );
 };
@@ -163,7 +172,8 @@ export default GstReportFilter;
 export const GstReportFilterInitialState = {
   fromDate: moment().local().toDate(),
   toDate: moment().local().toDate(),
-  gSTPerc: null,
+  gSTPerc: 0,
+  isGSTPerc: false,
   isVchForm: false,
   voucherForm: "",
   isTransactionDate: false,

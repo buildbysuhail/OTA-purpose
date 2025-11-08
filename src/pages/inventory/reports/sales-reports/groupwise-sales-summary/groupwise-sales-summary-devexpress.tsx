@@ -383,6 +383,20 @@ const GroupwiseSalesSummaryDevexpress = () => {
       return getFormattedValue(value) || "0";
     };
   }, [getFormattedValue]);
+   const customizeSummaryRow4 = useMemo(() => {
+    return (itemInfo: { value: any }) => {
+      const value = itemInfo.value;
+      if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        isNaN(value)
+      ) {
+        return "0";
+      }
+      return getFormattedValue(value,false,4) || "0";
+    };
+  }, [getFormattedValue]);
 
   const summaryItems: SummaryConfig[] = [
     {
@@ -413,7 +427,7 @@ const GroupwiseSalesSummaryDevexpress = () => {
       column: "netValue",
       summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeSummaryRow,
+      customizeText: customizeSummaryRow4,
     },
     {
       column: "netAmount",
@@ -431,7 +445,7 @@ const GroupwiseSalesSummaryDevexpress = () => {
       column: "cost",
       summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeSummaryRow,
+      customizeText: customizeSummaryRow4,
     },
     {
       column: "profit",

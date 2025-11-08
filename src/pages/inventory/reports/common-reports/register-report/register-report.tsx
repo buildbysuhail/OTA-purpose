@@ -1868,13 +1868,13 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId,voucher
         column: "freeValue",
         summaryType: "sum",
         valueFormat: "currency",
-        customizeText: customizeSummaryRowString
+        customizeText: customizeSummaryRow
       },
       {
         column: "freeCost",
         summaryType: "sum",
         valueFormat: "currency",
-        customizeText: customizeSummaryRowString,
+        customizeText: customizeSummaryRow,
       },
       {
         column: "qtyNos",

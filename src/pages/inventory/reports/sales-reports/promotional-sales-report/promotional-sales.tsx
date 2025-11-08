@@ -524,49 +524,34 @@ const PromotionalSalesReport = () => {
     },
     {
       column: "quantity",
-      summaryType: "custom",
+      summaryType:"sum",
       valueFormat: "fixedPoint",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
       
     },
     {
       column: "netAmount",
-      summaryType: "custom",
+      summaryType:"sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
     },
     {
       column: "grossValue",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
     },
     {
       column: "stdGross",
-      summaryType: "custom",
+      summaryType:"sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
     },
     {
       column: "priceDiff",
-      summaryType: "custom",
+      summaryType:"sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
     },
   ];
 

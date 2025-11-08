@@ -56,11 +56,13 @@ export const useUserRights = () => {
     const userTypeCode = __userSession.userTypeCode;
     const branchId = __userSession.currentBranchId;
     const userId = __userSession.userId;
-
+debugger;
     if (userTypeCode === "BA" || userTypeCode === "CA") {
-      return planRights?.includes(formCode) ?? false;
-    }
-    if(onlyBaCa) {
+      
+      let has = planRights?.includes(formCode) ?? false; 
+      if((!formCode && onlyBaCa) || has) {
+        return true
+      }  
       return false
     }
     try {

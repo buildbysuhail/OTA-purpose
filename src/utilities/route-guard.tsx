@@ -18,15 +18,19 @@ const RouteGuard: React.FC<RouteGuardProps> = ({
   onlyBaCa = false
 }) => {
   const { hasRight } = useUserRights();
-    return <>{children}</>;
+  debugger;
+    // return <>{children}</>;
   // Early return if no formCode
-  if (!formCode) {
+  if (!formCode && onlyBaCa) {
     return <>{children}</>;
   }
 
   const isAllowed = hasRight(formCode, action,onlyBaCa);
   
-  if (!isAllowed) {
+  if (isAllowed) {
+     return <>{children}</>;
+  }
+  else {
     return <Navigate to={redirectPath} replace />;
   }
 

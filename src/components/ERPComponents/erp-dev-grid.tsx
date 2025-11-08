@@ -2643,9 +2643,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                   <Item cssClass="!hidden sm:!block" name="searchPanel" />
                 )}
 
-                {/* {!hideDefaultExportButton && allowExport && (
+                {!hideDefaultExportButton && allowExport && (
                   <Item cssClass="!hidden sm:!block" name="exportButton" />
-                )} */}
+                )}
 
                 {showPrintButton && (
                   <Item>

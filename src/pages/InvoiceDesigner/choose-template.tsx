@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next"
 import type VoucherType from "../../enums/voucher-types"
 import { Badge, FileSpreadsheet, Gem, LayoutList, ShoppingBag, Search, Sparkles, Grid3X3, List } from "lucide-react"
 import { useAppDispatch } from "../../utilities/hooks/useAppDispatch"
-import { fetchTemplateFromApiById } from "../use-print"
+import { fetchCRMTemplateFromApiById, fetchTemplateFromApiById } from "../use-print"
 import { merge } from "lodash"
 import { templateInitialState } from "../../redux/reducers/TemplateReducer"
 
@@ -194,7 +194,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
 
   const handleChooseTemplate = async (template: TemplateState<unknown>) => {
     const length = tempData?.length || 0
-     const _template = await fetchTemplateFromApiById(template.id);
+     const _template = await fetchCRMTemplateFromApiById(template.id);
           if(!_template) return null;
             const initial = templateInitialState().activeTemplate;
     const _returnData = merge({}, initial, _template);

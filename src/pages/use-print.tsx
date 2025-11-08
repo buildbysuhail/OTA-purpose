@@ -1875,6 +1875,28 @@ export const fetchDefaultTemplateFromApi = async (
 };
 
 
+export const fetchCRMTemplateFromApiById = async (
+  id: any
+): Promise<TemplateState<unknown> | null> => {
+  try {
+    const api = new APIClient();
+    const res = await api.getAsync(`${Urls.crm_templates}${id}`);
+    const templateContent = await decompressData(res.content);
+    const parsed = parseTemplateContent<TemplateState<unknown>>(res,templateContent);
+       if (!parsed) {
+      console.warn("⚠️ Failed to parse template content.");
+      return null;
+    }
+
+    const initial = templateInitialState().activeTemplate;
+    const _merged = merge({}, initial, parsed);
+    return _merged;
+  } catch (error) {
+    console.error("Error fetching template:", error);
+    return null;
+  }
+};
+
 export const fetchTemplateFromApiById = async (
   id: any
 ): Promise<TemplateState<unknown> | null> => {

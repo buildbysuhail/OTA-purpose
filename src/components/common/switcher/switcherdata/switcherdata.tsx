@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { MENUITEMS } from '../../sidebar/sidemenu/sidemenu';
 import { clearStorage, getStorageString, removeStorageString, setStorageString } from '../../../../utilities/storage-utils';
 
+
 export async function Dark(actionfunction: any, appState: any) {
-    actionfunction({
+    const newState = {
         ...appState,
         "class": "dark",
         "mode": "dark",
@@ -13,16 +14,17 @@ export async function Dark(actionfunction: any, appState: any) {
         "darkBg": "",
         "inputBorder": "",
         "Light": "",
-    });
+    };
+    
+    actionfunction(newState);
     await setStorageString("ynexdarktheme", "dark");
     await removeStorageString("ynexlighttheme");
-    await removeStorageString("ynexlighttheme");
     await removeStorageString('darkBgRGB');
-
-
+    
+    return newState; // Return the new state
 }
 export async function Light(actionfunction: any, appState: any) {
-    actionfunction({
+        const newState = {
         ...appState,
         "class": "light",
         "mode": "light",
@@ -32,13 +34,14 @@ export async function Light(actionfunction: any, appState: any) {
         "inputBorder": "",
         "Light": "",
         "dataMenuStyles": appState?.dataNavLayout == 'horizontal' ? 'light' : "dark"
-
-    });
+    };
+    actionfunction(newState);
     await setStorageString("ynexlighttheme", "light");
     await removeStorageString("ynexdarktheme");
     await removeStorageString('Light');
     await removeStorageString('bodyBgRGB');
     await removeStorageString('darkBgRGB');
+     return newState; // Return the new state
 }
 export async function Ltr(actionfunction: any, appState: any) {
     actionfunction({ ...appState, dir: "ltr" });

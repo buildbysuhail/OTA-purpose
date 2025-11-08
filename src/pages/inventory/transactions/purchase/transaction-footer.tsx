@@ -307,23 +307,23 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
 
   const generateLPOLPQ = () => {
     const master = formState.transaction.master;
-  const details = formState.transaction.details;
+    const details = formState.transaction.details;
 
-  // Check if "Skip Zero Quantity Validation" is unchecked
-  // if (!formState.chkSkipZeroQtyValidation) {
-  //   for (let i = 0; i < details.length; i++) {
-  //     const qty = Number(details[i].qty) || 0;
+    // Check if "Skip Zero Quantity Validation" is unchecked
+    // if (!formState.chkSkipZeroQtyValidation) {
+    //   for (let i = 0; i < details.length; i++) {
+    //     const qty = Number(details[i].qty) || 0;
 
-  //     if (qty === 0) {
-  //       ERPAlert.show(
-  //         {text:`Please set quantity in row ${i + 1}. Please correct it or remove the row.`, title:"Failed"}
-  //       );
-  //       return false;
-  //     }
-  //   }
-  // }
+    //     if (qty === 0) {
+    //       ERPAlert.show(
+    //         {text:`Please set quantity in row ${i + 1}. Please correct it or remove the row.`, title:"Failed"}
+    //       );
+    //       return false;
+    //     }
+    //   }
+    // }
 
-  return true;
+    return true;
   };
 
   const taxData = [
@@ -496,7 +496,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   const renderSecondFooter = () => (
     <div
       className={`dark:bg-dark-bg ${footerLayout === "vertical" ? "flex flex-col justify-between h-full" : ""}`}
-      style={{ backgroundColor: formState.userConfig?.footerBg ? `rgb(${formState.userConfig.footerBg})` : undefined, }}>
+      style={{ backgroundColor: formState.userConfig?.footerBg ? `rgb(${formState.userConfig.footerBg}) dark:bg-dark-bg` : undefined }}>
       {formState.transaction.master.voucherType !== "LPO" && (
         <div className={`${footerLayout === "vertical" ? "relative block" : "hidden"}`}>
           <div className="flex justify-between space-x-2">
@@ -881,7 +881,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               localInputBox={formState?.userConfig?.inputBoxStyle}
               label={t(formState.formElements.remarks.label)}
               value={formState.transaction.master.remarks}
-              onChange={(e) => dispatch(formStateTransactionMasterHandleFieldChange({ fields: { remarks: e.target?.value }, }))}
+              onChange={(e) => dispatch(formStateTransactionMasterHandleFieldChange({ fields: { remarks: e.target?.value } }))}
               disabled={formState.formElements.remarks?.disabled || formState.formElements.pnlMasters?.disabled}
               className={`dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text ${isNewFooter ? "h-[42px]" : ""} w-full`}
             />
@@ -938,8 +938,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   if (formState.userConfig?.footerPosition === "right") {
     return (
       <div
-        className={`fixed ${isRtl ? "left-0" : "right-0"} h-[-webkit-fill-available] overflow-y-scroll w-[280px] sm:w-[300px] shadow-lg p-2 z-30`}
-        style={{ top: `${170 + (getInputHeight())}px`, backgroundColor: formState.userConfig?.footerBg ? `rgb(${formState.userConfig.footerBg})` : '#f8f8ff', }}>
+        className={`fixed ${isRtl ? "left-0" : "right-0"} h-[-webkit-fill-available] overflow-y-scroll w-[280px] sm:w-[300px] shadow-lg p-2 z-30 dark:bg-dark-bg`}
+        style={{ top: `${170 + (getInputHeight())}px`, backgroundColor: formState.userConfig?.footerBg ? `rgb(${formState.userConfig.footerBg}) dark:bg-dark-bg` : '#f8f8ff', }}>
         {renderSecondFooter()}
       </div>
     );

@@ -2165,6 +2165,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     return (
       <Fragment>
         {showChooserOnGridHead && (
+
           <GridPreferenceChooser
             initialPreferences={preferences}
             ref={preferenceChooserRef}
@@ -2589,7 +2590,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                                     columns={columns}
                                     gridId={gridId}
                                     onApplyPreferences={onApplyPreferences}
-                                    showChooserOnGridHead={showChooserOnGridHead}
+                                  
                                   />
                                 </li>
                               )}
@@ -2694,13 +2695,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                   <Item>
                     <button
                       onClick={() => {
-                        console.log("button clicked", showFilter)
-                        setShowFilter((prev) => !prev
-                        )
+                        setShowFilter((prev) => !prev)
                       }}
-                      className="ti-btn rounded-lg !p-1.5 shadow hover:shadow-md transition-shadow duration-200 bg-[#e5e5e5] text-black md:rounded-[2px] md:dark:bg-dark-bg-header md:dark:text-dark-text md:!p-0 md:shadow-none md:hover:shadow-none md:bg-transparent md:text-inherit flex items-center justify-center"
+                      className="ti-btn rounded-lg w-[26px] h-[26px] shadow hover:shadow-md transition-shadow duration-200 bg-[#e5e5e5] text-black flex items-center justify-center md:w-8 md:h-8 md:rounded-[2px] md:shadow-none md:hover:shadow-none md:bg-transparent md:text-inherit dark:md:bg-dark-bg-header dark:md:text-dark-text"
                     >
-                      <i className="ri-filter-line w-3 h-3 md:w-auto md:h-auto"></i>
+                      <i className="ri-filter-line text-sm md:text-base"></i>
                     </button>
                   </Item>
                 )}
@@ -2732,7 +2731,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                         columns={columns}
                         gridId={gridId}
                         onApplyPreferences={onApplyPreferences}
-                        showChooserOnGridHead={showChooserOnGridHead}
                       />
                     </div>
                   </Item>

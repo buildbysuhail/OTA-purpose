@@ -1,16 +1,10 @@
 import { FC, Fragment, useEffect, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../../components/ERPComponents/erp-dev-grid";
-import Urls from "../../../../../redux/urls";
+import ErpDevGrid, { SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
-import moment from "moment";
-import PurchaseGstReportFilter, {
-  GstReportFilterInitialState,
-} from "./gst-report-filter";
+import { GstReportFilterInitialState, } from "./gst-report-filter";
 import { useLocation } from "react-router-dom";
 import GstReportFilter from "./gst-report-filter";
 import { erpParseFloat } from "../../../../../utilities/Utils";
@@ -19,11 +13,7 @@ interface GSTAdvRegisterFormatProps {
   dataUrl: string;
   gridId: string;
 }
-const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
-  gridHeader,
-  dataUrl,
-  gridId,
-}) => {
+const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({ gridHeader, dataUrl, gridId, }) => {
   const { t } = useTranslation("inventory");
   const location = useLocation();
   const [filter, setFilter] = useState<any>(GstReportFilterInitialState);
@@ -165,7 +155,7 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
       },
       {
         dataField: "addnlCessAmt",
-        caption: t("addcess_amount"),
+        caption: t("add_cess_amount"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -192,16 +182,16 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
             return cellElement.data?.addnlCessAmt == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.addnlCessAmt),
-                  false,
-                  4
-                );
+                parseFloat(cellElement.data.addnlCessAmt),
+                false,
+                4
+              );
           }
         },
       },
       {
         dataField: "addnlCessPerc",
-        caption: t("addcessperc"),
+        caption: t("add_cess_%"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -228,10 +218,10 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
             return cellElement.data?.addnlCessPerc == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.addnlCessPerc),
-                  false,
-                  4
-                );
+                parseFloat(cellElement.data.addnlCessPerc),
+                false,
+                4
+              );
           }
         },
       },
@@ -264,10 +254,10 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
             return cellElement.data?.taxable0 == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.taxable0),
-                  false,
-                  6
-                );
+                parseFloat(cellElement.data.taxable0),
+                false,
+                6
+              );
           }
         },
       },
@@ -300,10 +290,10 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
             return cellElement.data?.taxAmt0 == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.taxAmt0),
-                  false,
-                  2
-                );
+                parseFloat(cellElement.data.taxAmt0),
+                false,
+                2
+              );
           }
         },
       },
@@ -336,10 +326,10 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
             return cellElement.data?.taxable3 == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.taxable3),
-                  false,
-                  6
-                );
+                parseFloat(cellElement.data.taxable3),
+                false,
+                6
+              );
           }
         },
       },
@@ -372,10 +362,10 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
             return cellElement.data?.cgsT1_5 == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.cgsT1_5),
-                  false,
-                  6
-                );
+                parseFloat(cellElement.data.cgsT1_5),
+                false,
+                6
+              );
           }
         },
       },
@@ -408,10 +398,10 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
             return cellElement.data?.sgsT1_5 == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.sgsT1_5),
-                  false,
-                  6
-                );
+                parseFloat(cellElement.data.sgsT1_5),
+                false,
+                6
+              );
           }
         },
       },
@@ -476,10 +466,10 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
             return cellElement.data?.taxable5 == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.taxable5),
-                  false,
-                  6
-                );
+                parseFloat(cellElement.data.taxable5),
+                false,
+                6
+              );
           }
         },
       },
@@ -512,10 +502,10 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
             return cellElement.data?.cgsT2_5 == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.cgsT2_5),
-                  false,
-                  6
-                );
+                parseFloat(cellElement.data.cgsT2_5),
+                false,
+                6
+              );
           }
         },
       },
@@ -548,10 +538,10 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
             return cellElement.data?.sgsT2_5 == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.sgsT2_5),
-                  false,
-                  6
-                );
+                parseFloat(cellElement.data.sgsT2_5),
+                false,
+                6
+              );
           }
         },
       },
@@ -616,10 +606,10 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
             return cellElement.data?.taxable6 == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.taxable6),
-                  false,
-                  6
-                );
+                parseFloat(cellElement.data.taxable6),
+                false,
+                6
+              );
           }
         },
       },
@@ -748,10 +738,10 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
             return cellElement.data?.taxable12 == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.taxable12),
-                  false,
-                  6
-                );
+                parseFloat(cellElement.data.taxable12),
+                false,
+                6
+              );
           }
         },
       },
@@ -848,10 +838,10 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
             return cellElement.data?.igsT12 == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.igsT12),
-                  false,
-                  6
-                );
+                parseFloat(cellElement.data.igsT12),
+                false,
+                6
+              );
           }
         },
       },
@@ -884,10 +874,10 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
             return cellElement.data?.taxable18 == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.taxable18),
-                  false,
-                  6
-                );
+                parseFloat(cellElement.data.taxable18),
+                false,
+                6
+              );
           }
         },
       },
@@ -984,10 +974,10 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
             return cellElement.data?.igsT18 == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.igsT18),
-                  false,
-                  6
-                );
+                parseFloat(cellElement.data.igsT18),
+                false,
+                6
+              );
           }
         },
       },
@@ -1020,10 +1010,10 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
             return cellElement.data?.taxable28 == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.taxable28),
-                  false,
-                  6
-                );
+                parseFloat(cellElement.data.taxable28),
+                false,
+                6
+              );
           }
         },
       },
@@ -1056,10 +1046,10 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
             return cellElement.data?.cgsT14 == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.cgsT14),
-                  false,
-                  6
-                );
+                parseFloat(cellElement.data.cgsT14),
+                false,
+                6
+              );
           }
         },
       },
@@ -1092,10 +1082,10 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
             return cellElement.data?.sgsT14 == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.sgsT14),
-                  false,
-                  6
-                );
+                parseFloat(cellElement.data.sgsT14),
+                false,
+                6
+              );
           }
         },
       },
@@ -1128,10 +1118,10 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
             return cellElement.data?.igsT28 == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.igsT28),
-                  false,
-                  6
-                );
+                parseFloat(cellElement.data.igsT28),
+                false,
+                6
+              );
           }
         },
       },
@@ -1164,10 +1154,10 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
             return cellElement.data?.taxable28_12 == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.taxable28_12),
-                  false,
-                  6
-                );
+                parseFloat(cellElement.data.taxable28_12),
+                false,
+                6
+              );
           }
         },
       },
@@ -1200,10 +1190,10 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
             return cellElement.data?.cgsT14_6 == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.cgsT14_6),
-                  false,
-                  6
-                );
+                parseFloat(cellElement.data.cgsT14_6),
+                false,
+                6
+              );
           }
         },
       },
@@ -1236,10 +1226,10 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
             return cellElement.data?.sgsT14_6 == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.sgsT14_6),
-                  false,
-                  6
-                );
+                parseFloat(cellElement.data.sgsT14_6),
+                false,
+                6
+              );
           }
         },
       },
@@ -1272,10 +1262,10 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
             return cellElement.data?.igsT28_12 == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.igsT28_12),
-                  false,
-                  6
-                );
+                parseFloat(cellElement.data.igsT28_12),
+                false,
+                6
+              );
           }
         },
       },
@@ -1308,10 +1298,10 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
             return cellElement.data?.taxable40 == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.taxable40),
-                  false,
-                  6
-                );
+                parseFloat(cellElement.data.taxable40),
+                false,
+                6
+              );
           }
         },
       },
@@ -1344,10 +1334,10 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
             return cellElement.data?.cgsT20 == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.cgsT20),
-                  false,
-                  6
-                );
+                parseFloat(cellElement.data.cgsT20),
+                false,
+                6
+              );
           }
         },
       },
@@ -1380,10 +1370,10 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
             return cellElement.data?.sgsT20 == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.sgsT20),
-                  false,
-                  6
-                );
+                parseFloat(cellElement.data.sgsT20),
+                false,
+                6
+              );
           }
         },
       },
@@ -1416,14 +1406,13 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
             return cellElement.data?.igsT40 == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.igsT40),
-                  false,
-                  6
-                );
+                parseFloat(cellElement.data.igsT40),
+                false,
+                6
+              );
           }
         },
       },
-
       {
         dataField: "financialYearID",
         caption: t("financial_year_id"),
@@ -1436,9 +1425,7 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
     ];
     return baseColumns.filter((column) => {
       if (
-        location.pathname.includes(
-          "inventory/sales_return_gst_adv_register_format_report"
-        )
+        location.pathname.includes("inventory/sales_return_gst_adv_register_format_report")
       ) {
         if (["voucherPrefix", "invoiceNo"].includes(column.dataField ?? "")) {
           return true;
@@ -1462,6 +1449,7 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
       return true;
     });
   }, [t, filter, location.pathname]);
+
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: any) => {
@@ -1477,6 +1465,7 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
       return getFormattedValue(value, false, undefined, 0, 0, true);
     };
   }, []);
+
   const customizeTotal = (itemInfo: any) => `TOTAL`;
   const _summaryItems: SummaryConfig[] = [
     {
@@ -1725,6 +1714,7 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({
   useEffect(() => {
     setKey((prev: any) => prev + 1);
   }, [location]);
+  
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">

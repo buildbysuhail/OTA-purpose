@@ -1,7 +1,6 @@
 import { FC, Fragment, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import ErpDevGrid, { SummaryConfig } from "../../../../../components/ERPComponents/erp-dev-grid";
-import Urls from "../../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
@@ -12,11 +11,7 @@ interface ReturnTaxGSTProps {
   dataUrl: string;
   gridId: string;
 }
-  const ReturnTaxGSTSalesAndReturn: FC<ReturnTaxGSTProps> = ({
-    gridHeader,
-    dataUrl,
-    gridId,
-  }) => {
+  const ReturnTaxGSTSalesAndReturn: FC<ReturnTaxGSTProps> = ({  gridHeader,  dataUrl,  gridId,}) => {
   const [filter, setFilter] = useState<any>(GstReportFilterInitialState);
   const { t } = useTranslation("accountsReport");
   const columns: DevGridColumn[] = [
@@ -216,7 +211,7 @@ interface ReturnTaxGSTProps {
     },
     {
       dataField: "addCess",
-      caption: t("addcess"),
+      caption: t("add_cess"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -290,10 +285,6 @@ interface ReturnTaxGSTProps {
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: any) => {
-      console.log('itemInfo');
-
-      console.log(itemInfo);
-
       const value = itemInfo.value;
       if (
         value === null ||
@@ -306,6 +297,7 @@ interface ReturnTaxGSTProps {
       return getFormattedValue(value) || "0";
     };
   }, []);
+  
   const customizeDate = (itemInfo: any) => `TOTAL`;
   const _summaryItems: SummaryConfig[] = [
     {

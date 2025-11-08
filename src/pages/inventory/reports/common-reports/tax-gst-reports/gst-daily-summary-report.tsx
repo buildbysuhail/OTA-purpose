@@ -1,8 +1,6 @@
 import { FC, Fragment, useEffect, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
@@ -17,11 +15,7 @@ interface GSTDailySummaryProps {
   dataUrl: string;
   gridId: string;
 }
-const GSTDailySummary: FC<GSTDailySummaryProps> = ({
-  gridHeader,
-  dataUrl,
-  gridId,
-}) => {
+const GSTDailySummary: FC<GSTDailySummaryProps> = ({ gridHeader, dataUrl, gridId, }) => {
   const { t } = useTranslation("accountsReport");
   const [filter, setFilter] = useState<any>(GstReportFilterGstCatInitialState);
   const columns: DevGridColumn[] = [
@@ -39,9 +33,7 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
         filter: any,
         exportCell: any
       ) => {
-        return cellElement.data.date == null || cellElement.data.date == ""
-          ? ""
-          : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY"); // Ensures proper formatting
+        return cellElement.data.date == null || cellElement.data.date == "" ? "" : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY"); // Ensures proper formatting
       },
     },
     {
@@ -78,9 +70,7 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
       ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.gstPercentage == null
-              ? ""
-              : getFormattedValue(cellElement.data.gstPercentage);
+            cellElement.data?.gstPercentage == null ? "" : getFormattedValue(cellElement.data.gstPercentage);
           return {
             ...exportCell,
             text: value,
@@ -88,9 +78,7 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
             alignmentExcel: { horizontal: "right" },
           };
         } else {
-          return cellElement.data?.gstPercentage == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.gstPercentage));
+          return cellElement.data?.gstPercentage == null ? "" : getFormattedValue(parseFloat(cellElement.data.gstPercentage));
         }
       },
     },
@@ -110,9 +98,7 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
       ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.taxableValue == null
-              ? ""
-              : getFormattedValue(cellElement.data.taxableValue);
+            cellElement.data?.taxableValue == null ? "" : getFormattedValue(cellElement.data.taxableValue);
           return {
             ...exportCell,
             text: value,
@@ -120,9 +106,7 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
             alignmentExcel: { horizontal: "right" },
           };
         } else {
-          return cellElement.data?.taxableValue == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.taxableValue));
+          return cellElement.data?.taxableValue == null ? "" : getFormattedValue(parseFloat(cellElement.data.taxableValue));
         }
       },
     },
@@ -142,9 +126,7 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
       ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.totalGST == null
-              ? ""
-              : getFormattedValue(cellElement.data.totalGST);
+            cellElement.data?.totalGST == null ? "" : getFormattedValue(cellElement.data.totalGST);
           return {
             ...exportCell,
             text: value,
@@ -152,9 +134,7 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
             alignmentExcel: { horizontal: "right" },
           };
         } else {
-          return cellElement.data?.totalGST == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.totalGST));
+          return cellElement.data?.totalGST == null ? "" : getFormattedValue(parseFloat(cellElement.data.totalGST));
         }
       },
     },
@@ -174,9 +154,7 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
       ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.cess == null
-              ? ""
-              : getFormattedValue(cellElement.data.cess);
+            cellElement.data?.cess == null ? "" : getFormattedValue(cellElement.data.cess);
           return {
             ...exportCell,
             text: value,
@@ -184,9 +162,7 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
             alignmentExcel: { horizontal: "right" },
           };
         } else {
-          return cellElement.data?.cess == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.cess));
+          return cellElement.data?.cess == null ? "" : getFormattedValue(parseFloat(cellElement.data.cess));
         }
       },
     },
@@ -206,9 +182,7 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
       ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.addCess == null
-              ? ""
-              : getFormattedValue(cellElement.data.addCess);
+            cellElement.data?.addCess == null ? "" : getFormattedValue(cellElement.data.addCess);
           return {
             ...exportCell,
             text: value,
@@ -216,9 +190,7 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
             alignmentExcel: { horizontal: "right" },
           };
         } else {
-          return cellElement.data?.addCess == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.addCess));
+          return cellElement.data?.addCess == null ? "" : getFormattedValue(parseFloat(cellElement.data.addCess));
         }
       },
     },
@@ -238,9 +210,7 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
       ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.total == null
-              ? ""
-              : getFormattedValue(cellElement.data.total);
+            cellElement.data?.total == null ? "" : getFormattedValue(cellElement.data.total);
           return {
             ...exportCell,
             text: value,
@@ -248,9 +218,7 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
             alignmentExcel: { horizontal: "right" },
           };
         } else {
-          return cellElement.data?.total == null
-            ? ""
-            : getFormattedValue(cellElement.data.total);
+          return cellElement.data?.total == null ? "" : getFormattedValue(cellElement.data.total);
         }
       },
     },
@@ -259,10 +227,6 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: any) => {
-      console.log("itemInfo");
-
-      console.log(itemInfo);
-
       const value = itemInfo.value;
       if (
         value === null ||
@@ -275,6 +239,7 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
       return getFormattedValue(value) || "0";
     };
   }, []);
+
   const customizeDate = (itemInfo: any) => `TOTAL`;
   const _summaryItems: SummaryConfig[] = [
     {
@@ -328,11 +293,13 @@ const GSTDailySummary: FC<GSTDailySummaryProps> = ({
       },
     },
   ];
+
   const location = useLocation();
   const [key, setKey] = useState(1);
   useEffect(() => {
     setKey((prev: any) => prev + 1);
   }, [location]);
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">

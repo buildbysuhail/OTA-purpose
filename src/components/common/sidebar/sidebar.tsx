@@ -102,6 +102,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
       return [...rights, ...childRights];
     });
   };
+
   useEffect(() => {
     if (type == "settings") {
       let st = menuitems;
@@ -192,7 +193,6 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
       const allRights = extractRights(menuitems).filter((r) => r && r.trim() !== "");
       const allowedFormCodes = getAllowedFormCodes(allRights, UserAction.Show);
 
-
       const sd = st
         .map((x: any) => {
           const filteredChildren = x.children
@@ -258,7 +258,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
       setMenuitems(st);
     }
   }, [userSession.countryId, userSession.userTypeCode, MENUITEMS, SettingsMenuItems]);
-  const { t } = useTranslation();
+  const { t } = useTranslation('main');
   const [companyLogo, setCompanyLogo] = useState<string>("");
   const { appState, updateAppState } = useAppState();
 
@@ -973,7 +973,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
                     id="sidebar-menu-search"
                     name="sidebar-menu-search"
                     type="text"
-                    placeholder="Search here"
+                    placeholder={t("search_here")}
                     readOnly
                     value={searchTerm}
                     autoComplete="off"

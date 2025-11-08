@@ -71,5 +71,11 @@
 
   "sms_gateway_center_integration": "SMS Gateway Center Integration",
   "limit_type": "Limit Type",
-  "has_limit": "Has Limit"
+  "has_limit": "Has Limit",
+  "close_all_popups": "Close all popups",
+  "close_the_top_popup": "Close the top popup",
+  "go_to_previous_page": "Go to previous page",
+  "go_to_next_page": "Go to next page",
+  "go_to_home": "Go to Home",
+  "focus_the_searchbar": "Focus the searchbar"
 }

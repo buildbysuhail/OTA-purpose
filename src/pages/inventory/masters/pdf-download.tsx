@@ -51,11 +51,8 @@ const TwilioPdfDownloader = ({
       debugger;
       setDownloadStatus('generating')
        const { template, data } = Data; 
-        let res =  await directPrint({isDirectDownload:true ,template,data,})
-        if(res.success){
-          setDownloadStatus('success');
-        }
-      
+      await directPrint({isDirectDownload:true ,template,data,})
+      setDownloadStatus('success');
     }else{
       setDownloadStatus('error');
       setError('No data received from server');

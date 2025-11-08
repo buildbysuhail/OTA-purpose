@@ -26,7 +26,7 @@ interface GridPreferenceChooserProps {
 }
 
 const api = new APIClient();
-const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId, columns, onApplyPreferences, showChooserOnGridHead, eclipseClass, showChooserName,initialPreferences }: GridPreferenceChooserProps, ref: Ref<any>) {
+const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId, columns, onApplyPreferences, showChooserOnGridHead = false, eclipseClass, showChooserName,initialPreferences }: GridPreferenceChooserProps, ref: Ref<any>) {
   const dragItem = useRef<string | null>(null);
   const dragOverItem = useRef<string | null>(null);
   const [searchCols, setSearchCols] = useState<string>("");
@@ -83,13 +83,16 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
   useEffect(() => {
 
     const fetchPreferences = async () => {
-
-      // const initialPreferences = await getInitialPreference(gridId, columns, new APIClient());
-      // onApplyPreferences && onApplyPreferences(initialGridPreference)
-      // setPreferences(initialPreferences);
+      const initialPreferences = await getInitialPreference(gridId, columns, new APIClient());
+      onApplyPreferences && onApplyPreferences(initialGridPreference)
+      setPreferences(initialPreferences);
     };
-    fetchPreferences();
+    if(showChooserOnGridHead){
+     fetchPreferences();
+    }
+   
   }, [gridId, columns, onApplyPreferences]);
+  
 
   const getDefaultColumnPreference = (column: DevGridColumn, index: number): ColumnPreference => ({
     ...column,

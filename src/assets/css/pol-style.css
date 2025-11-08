@@ -917,3 +917,37 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   border-radius: 0 !important;
   box-shadow: none !important;
 }
+
+/* Light mode (default) */
+.dx-datagrid-search-panel.dx-texteditor.dx-editor-outlined,
+.dx-datagrid-search-panel.dx-texteditor.dx-editor-outlined.dx-state-focused {
+  background-color: #ffffff;
+  border-color: #d1d5db;
+  color: #1f2937;
+}
+
+.dx-datagrid-search-panel.dx-texteditor.dx-editor-outlined .dx-texteditor-input {
+  background-color: #ffffff;
+  color: #1f2937;
+}
+
+.dx-datagrid-search-panel.dx-texteditor.dx-editor-outlined .dx-placeholder {
+  color: #9ca3af;
+}
+
+/* Dark mode */
+.dark .dx-datagrid-search-panel.dx-texteditor.dx-editor-outlined,
+.dark .dx-datagrid-search-panel.dx-texteditor.dx-editor-outlined.dx-state-focused {
+  background-color: #374151 !important;
+  border-color: #4b5563 !important;
+  color: #d1d5db !important;
+}
+
+.dark .dx-datagrid-search-panel.dx-texteditor.dx-editor-outlined .dx-texteditor-input {
+  background-color: #374151 !important;
+  color: #d1d5db !important;
+}
+
+.dark .dx-datagrid-search-panel.dx-texteditor.dx-editor-outlined .dx-placeholder {
+  color: #9ca3af !important;
+}

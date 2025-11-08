@@ -656,6 +656,7 @@ const Urls = {
   template_FormTypeByVoucherType: "/Core/Template/Data/FormTypeByVoucherType",
   //Print Helpers
   print_helper_byToken: "/PrintHelper/PrintData",
+   print_streme: "/PrintHelper/stream",
   // Tax Treatments
   tax_treatment: "api/tax_treatment/",
 

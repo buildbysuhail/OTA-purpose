@@ -1,6 +1,7 @@
 import { Keyboard, RefreshCw, AlertTriangle, Edit2, CheckCircle } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { getStorageString, setStorageString } from "../../../utilities/storage-utils";
+import { useTranslation } from "react-i18next";
 
 interface ShortcutConfig {
   event: string;
@@ -26,44 +27,45 @@ const ShortcutSettings: React.FC<ShortcutSettingsProps> = ({
 }) => {
 
   const [shortcuts, setShortcuts] = useState<EditableShortcut[]>(() =>
-  defaultShortcuts.map(({ event, key, description }) => ({
-    event,
-    key,
-    description,
-  }))
-);
+    defaultShortcuts.map(({ event, key, description }) => ({
+      event,
+      key,
+      description,
+    }))
+  );
 
-useEffect(() => {
-  const fetchShortcuts = async () => {
-    const savedShortcuts = await getStorageString("keyboard-shortcuts");
-    if (savedShortcuts) {
-      try {
-        const parsed = JSON.parse(savedShortcuts);
-        if (
-          Array.isArray(parsed) &&
-          parsed.every(
-            (s) =>
-              typeof s.event === "string" &&
-              typeof s.key === "string" &&
-              typeof s.description === "string"
-          )
-        ) {
-          setShortcuts(parsed);
+  useEffect(() => {
+    const fetchShortcuts = async () => {
+      const savedShortcuts = await getStorageString("keyboard-shortcuts");
+      if (savedShortcuts) {
+        try {
+          const parsed = JSON.parse(savedShortcuts);
+          if (
+            Array.isArray(parsed) &&
+            parsed.every(
+              (s) =>
+                typeof s.event === "string" &&
+                typeof s.key === "string" &&
+                typeof s.description === "string"
+            )
+          ) {
+            setShortcuts(parsed);
+          }
+        } catch (err) {
+          console.error("Failed to parse shortcuts:", err);
         }
-      } catch (err) {
-        console.error("Failed to parse shortcuts:", err);
       }
-    }
-  };
+    };
 
-  fetchShortcuts();
-}, []);
+    fetchShortcuts();
+  }, []);
 
 
   const [editingKey, setEditingKey] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const { t } = useTranslation("main");
   const [serialNumbers, setSerialNumbers] = useState<number[]>(() =>
     shortcuts.map((_, index) => index + 1)
   );
@@ -123,51 +125,51 @@ useEffect(() => {
 
 
   useEffect(() => {
-  const saveShortcuts = async () => {
-    try {
-      if (error) return;
+    const saveShortcuts = async () => {
+      try {
+        if (error) return;
 
-      await setStorageString("keyboard-shortcuts", JSON.stringify(shortcuts));
+        await setStorageString("keyboard-shortcuts", JSON.stringify(shortcuts));
 
-      window.dispatchEvent(
-        new CustomEvent("shortcuts-updated", {
-          detail: { shortcuts },
-        })
-      );
+        window.dispatchEvent(
+          new CustomEvent("shortcuts-updated", {
+            detail: { shortcuts },
+          })
+        );
 
-      onShortcutsChange?.(
-        defaultShortcuts.map((shortcut) => {
-          const updatedShortcut = shortcuts.find(
-            (s) => s.event === shortcut.event
-          );
-          return updatedShortcut
-            ? { ...shortcut, key: updatedShortcut.key }
-            : shortcut;
-        })
-      );
+        onShortcutsChange?.(
+          defaultShortcuts.map((shortcut) => {
+            const updatedShortcut = shortcuts.find(
+              (s) => s.event === shortcut.event
+            );
+            return updatedShortcut
+              ? { ...shortcut, key: updatedShortcut.key }
+              : shortcut;
+          })
+        );
 
-      setSuccess("Shortcuts updated successfully");
-      setIsVisible(true);
+        setSuccess("Shortcuts updated successfully");
+        setIsVisible(true);
 
-      const showTimer = setTimeout(() => {
-        setIsVisible(false);
-      }, 2000);
+        const showTimer = setTimeout(() => {
+          setIsVisible(false);
+        }, 2000);
 
-      const removeTimer = setTimeout(() => {
-        setSuccess(null);
-      }, 2300);
+        const removeTimer = setTimeout(() => {
+          setSuccess(null);
+        }, 2300);
 
-      return () => {
-        clearTimeout(showTimer);
-        clearTimeout(removeTimer);
-      };
-    } catch (err) {
-      console.error("Failed to save shortcuts:", err);
-    }
-  };
+        return () => {
+          clearTimeout(showTimer);
+          clearTimeout(removeTimer);
+        };
+      } catch (err) {
+        console.error("Failed to save shortcuts:", err);
+      }
+    };
 
-  saveShortcuts();
-}, [shortcuts, defaultShortcuts, onShortcutsChange, error]);
+    saveShortcuts();
+  }, [shortcuts, defaultShortcuts, onShortcutsChange, error]);
 
 
   const resetToDefaults = () => {
@@ -183,10 +185,10 @@ useEffect(() => {
   };
 
   return (
-    <div className="p-6 dark:bg-dark-bg  bg-white relative">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold dark:text-dark-label text-gray-800 flex items-center gap-3">
-          <Keyboard className="dark:text-dark-text text-black" size={28} />
+    <div className="p-3 sm:p-4 md:p-6 dark:bg-dark-bg bg-white relative">
+      <div className="flex justify-between items-center mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-bold dark:text-dark-label text-gray-800 flex items-center gap-2 sm:gap-3">
+          <Keyboard className="dark:text-dark-text text-black" size={24} />
           Keyboard Shortcuts
         </h1>
         {/* <button
@@ -198,9 +200,9 @@ useEffect(() => {
         </button> */}
       </div>
 
-      <div className="h-10 mb-4  fixed top-[15%] left-0 right-0">
+      <div className="h-10 mb-4 fixed top-[15%] left-2 right-2 sm:left-0 sm:right-0 z-50">
         {error && (
-          <div className="flex items-center justify-center w-fit mx-auto gap-3  bg-[#fef2f2] text-[#b91c1c] p-3 rounded-md border border-[#fecaca] animate-pulse">
+          <div className="flex items-center justify-center w-full sm:w-fit mx-auto gap-2 sm:gap-3 bg-[#fef2f2] text-[#b91c1c] p-2 sm:p-3 rounded-md border border-[#fecaca] animate-pulse text-sm sm:text-base">
             <AlertTriangle size={20} />
             {error}
           </div>
@@ -208,7 +210,7 @@ useEffect(() => {
 
         {success && (
           <div
-            className={`flex items-center justify-center w-fit mx-auto gap-3 bg-[#f0fdf4] text-[#166534] p-3 rounded-md border border-[#bbf7d0] transition-all duration-300 
+            className={`flex items-center justify-center w-full sm:w-fit mx-auto gap-2 sm:gap-3 bg-[#f0fdf4] text-[#166534] p-2 sm:p-3 rounded-md border border-[#bbf7d0] transition-all duration-300 text-sm sm:text-base
               ${isVisible
                 ? "translate-y-0 opacity-100"
                 : "-translate-y-full opacity-0"
@@ -221,66 +223,68 @@ useEffect(() => {
         )}
       </div>
 
-      <table className="w-full border-collapse rounded-lg overflow-hidden shadow-md">
-        <thead>
-          <tr className="dark:bg-dark-bg-header bg-[#eff6ff] dark:text-dark-label text-gray-700">
-            <th className="px-4 py-3 text-left font-semibold border-b border-gray-200">
-              SI.NO
-            </th>
-            <th className="px-4 py-3 text-left font-semibold border-b border-gray-200">
-              Description
-            </th>
-            <th className="px-4 py-3 text-left font-semibold border-b border-gray-200">
-              Event
-            </th>
-            <th className="px-4 py-3 text-left font-semibold border-b border-gray-200">
-              Shortcut
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {shortcuts.map((shortcut, index) => (
-            <tr
-              key={shortcut.event}
-              className="hover:dark:bg-dark-bg-header hover:bg-[#eff6ff] transition-colors duration-200"
-            >
-              <td className="px-4 py-3 dark:text-dark-text border-b border-gray-200 font-bold">
-                {serialNumbers[index]}
-              </td>
-              <td className="px-4 py-3 border-b border-gray-200">
-                {shortcut.description}
-              </td>
-              <td className="px-4 py-3 border-b border-gray-200">
-                {shortcut.event}
-              </td>
-              <td className="px-4 py-3 border-b border-gray-200 text-right">
-                <div className="w-40 h-10 relative">
-                  {editingKey === shortcut.event ? (
-                    <input
-                      type="text"
-                      value={shortcut.key}
-                      onKeyDown={(e) => handleKeyDown(e, index)}
-                      onBlur={() => setEditingKey(null)}
-                      autoFocus
-                      className="absolute inset-0 w-full h-full px-3 py-2 text-center border dark:bg-dark-bg-header dark:text-dark-text  border-[#93c5fd] rounded-md focus:outline-none focus:ring-2 focus:ring-[#3b82f6] transition-all duration-300"
-                      placeholder="Press keys..."
-                      readOnly
-                    />
-                  ) : (
-                    <button
-                      onClick={() => setEditingKey(shortcut.event)}
-                      className="absolute inset-0 w-full h-full flex items-center justify-center gap-2 px-3 py-2 dark:bg-dark-bg-header bg-white dark:text-dark-text text-gray-700 border border-gray-300 rounded-md hover:shadow-md transition-all duration-300 ease-in-out"
-                    >
-                      <Edit2 size={16} className=" text-gray-500" />
-                      {shortcut.key}
-                    </button>
-                  )}
-                </div>
-              </td>
+      <div className="overflow-x-auto -mx-3 sm:-mx-4 md:-mx-6 px-3 sm:px-4 md:px-6">
+        <table className="w-full border-collapse rounded-lg overflow-hidden shadow-md min-w-[640px]">
+          <thead>
+            <tr className="dark:bg-dark-bg-header bg-[#eff6ff] dark:text-dark-label text-gray-700">
+              <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-semibold border-b border-gray-200">
+                SI.NO
+              </th>
+              <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-semibold border-b border-gray-200">
+                Description
+              </th>
+              <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-semibold border-b border-gray-200">
+                Event
+              </th>
+              <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-semibold border-b border-gray-200">
+                Shortcut
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {shortcuts.map((shortcut, index) => (
+              <tr
+                key={shortcut.event}
+                className="hover:dark:bg-dark-bg-header hover:bg-[#eff6ff] transition-colors duration-200"
+              >
+                <td className="px-2 sm:px-4 py-2 sm:py-3 dark:text-dark-text text-gray-900 border-b border-gray-200 font-bold text-xs sm:text-base">
+                  {serialNumbers[index]}
+                </td>
+                <td className="px-2 sm:px-4 py-2 sm:py-3 border-b border-gray-200 text-xs sm:text-base dark:text-dark-text">
+                  {t(shortcut.description)}
+                </td>
+                <td className="px-2 sm:px-4 py-2 sm:py-3 border-b border-gray-200 text-xs sm:text-base dark:text-dark-text">
+                  {t(shortcut.event)}
+                </td>
+                <td className="px-2 sm:px-4 py-2 sm:py-3 border-b border-gray-200 text-right">
+                  <div className="w-32 sm:w-40 h-8 sm:h-10 relative">
+                    {editingKey === shortcut.event ? (
+                      <input
+                        type="text"
+                        value={shortcut.key}
+                        onKeyDown={(e) => handleKeyDown(e, index)}
+                        onBlur={() => setEditingKey(null)}
+                        autoFocus
+                        className="absolute inset-0 w-full h-full px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-base text-center border dark:bg-dark-bg-header dark:text-dark-text border-[#93c5fd] rounded-md focus:outline-none focus:ring-2 focus:ring-[#3b82f6] transition-all duration-300"
+                        placeholder="Press keys..."
+                        readOnly
+                      />
+                    ) : (
+                      <button
+                        onClick={() => setEditingKey(shortcut.event)}
+                        className="absolute inset-0 w-full h-full flex items-center justify-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-base dark:bg-dark-bg-header bg-white dark:text-dark-text text-gray-700 border border-gray-300 rounded-md hover:shadow-md transition-all duration-300 ease-in-out"
+                      >
+                        <Edit2 size={14} className="text-gray-500" />
+                        {shortcut.key}
+                      </button>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

@@ -12,11 +12,15 @@ import VoucherType from "../../../../../enums/voucher-types";
 import { useAppState } from "../../../../../utilities/hooks/useAppState";
 import Urls from "../../../../../redux/urls";
 import { APIClient } from "../../../../../helpers/api-client";
-import { formStateHandleFieldChange } from "../../reducer";
+import { formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly } from "../../reducer";
 import { VoucherElementProps, BillwiseData, UserConfig } from "../../transaction-types";
-import { update } from "lodash";
-import { up } from "../../../../../redux/slices/user-session/reducer";
+import ERPButton from "../../../../../components/ERPComponents/erp-button";
+import ERPAlert from "../../../../../components/ERPComponents/erp-sweet-alert";
+import { handleResponse } from "../../../../../utilities/HandleResponse";
+import { base64ToModelUnicode, modelToBase64Unicode } from "../../../../../utilities/jsonConverter";
+import { setStorageString } from "../../../../../utilities/storage-utils";
 
+const api = new APIClient();
 interface HeaderProps extends VoucherElementProps {
   loadTemporaryRows: () => Promise<void>;
   deleteTransVoucher: () => void;
@@ -30,7 +34,9 @@ interface HeaderProps extends VoucherElementProps {
   setIsHistorySidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   transactionType?: string;
   voucherType: string;
-  userSession: { dbIdValue: string };
+  userSession: {
+    userId: any; dbIdValue: string
+  };
   unlockVoucher: () => void;
   setShowValidation: React.Dispatch<React.SetStateAction<boolean>>;
   showValidation: boolean;
@@ -186,22 +192,72 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
     const isAbove768 = useMediaQuery('(min-width: 768px)');
     const isAbove640 = useMediaQuery('(min-width: 640px)');
     const isAbove480 = useMediaQuery('(min-width: 480px)');
-     
+
+    const postUserConfig = async () => {
+      try {
+
+        const base64 = modelToBase64Unicode({ ...formState.userConfig, themeName: 'Custom' });
+        const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, base64);
+        handleResponse(response, async () => {
+          const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`);
+          await setStorageString(key, base64);
+
+          dispatch(
+            formStateHandleFieldChangeKeysOnly({
+              fields: {
+                userConfig: { themeName: 'Custom', },
+                isUserConfigOpen: false
+              },
+            })
+          );
+        });
+      } catch (error) {
+        console.error("Error post System Code settings:", error);
+      }
+    };
+
+    const resetThemeChange = async () => {
+      try {
+        ERPAlert.show({
+          title: t("are_you_sure_reset_now"),
+          icon: "warning",
+          confirmButtonText: t("reset_now"),
+          cancelButtonText: t("cancel"),
+          showCancelButton: true,
+          onConfirm: async (result: any) => {
+            const res = await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/ResetLocalSettings`, {});
+            handleResponse(res, async () => {
+
+              const st = base64ToModelUnicode(res.item);
+              const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`);
+              await setStorageString(key, res.item);
+              dispatch(formStateHandleFieldChange({ fields: { userConfig: st, isUserConfigOpen: false } }));
+            });
+          },
+        });
+      } catch (error) {
+        console.error("Error getInputBox data:", error);
+      }
+    };
+
+    const previousThemeChange = async () => {
+      dispatch(formStateHandleFieldChange({ fields: { userConfig: JSON.parse(formState?.privConfig ?? ""), isUserConfigOpen: false } }));
+    };
 
     return (
       <>
-        <div className={`!overflow-visible flex items-center justify-evenly md:justify-end space-x-2 p-1 w-full overflow-x-auto bg-[#f9fafb] md:bg-transparent`}>
+        <div className={`!overflow-visible flex items-center justify-evenly md:justify-end space-x-2 p-1 w-full overflow-x-auto bg-[#f9fafb] md:bg-transparent dark:bg-dark-bg-card`}>
           {/* Load Temp Rows */}
           {formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
-          <div className="group relative inline-flex flex-col items-center ps-[5px]" title="Load Details">
-            <button
-              disabled={formState.formElements.pnlMasters?.disabled}
-              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
-              onClick={loadTemporaryRows}>
-              <ChevronUp className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-            </button>
-          </div>
-         )}
+            <div className="group relative inline-flex flex-col items-center ps-[5px]" title="Load Details">
+              <button
+                disabled={formState.formElements.pnlMasters?.disabled}
+                className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg dark:hover:border-warmGray-100 bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
+                onClick={loadTemporaryRows}>
+                <ChevronUp className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+              </button>
+            </div>
+          )}
 
           {/* Delete Button */}
           {isAbove480 && formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
@@ -321,11 +377,11 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
 
           {/* Settings Button */}
           <div className="group relative inline-flex flex-col items-center" title={t("settings")}>
-        <button className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors ${phone ? "p-1.5" : "p-2"} `} onClick={() => dispatch(formStateHandleFieldChange({ fields: { isUserConfigOpen: true } }))}>
-          <UserCog className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors duration-300" />
-        </button>
-      </div>
-          
+            <button className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors ${phone ? "p-1.5" : "p-2"} `} onClick={() => dispatch(formStateHandleFieldChange({ fields: { isUserConfigOpen: true } }))}>
+              <UserCog className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors duration-300" />
+            </button>
+          </div>
+
           {/* Popup Menu */}
           <div className="relative">
             {/* {formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && ( */}
@@ -392,19 +448,19 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         </div>
                       </li>
                     )}
-                  {formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
-                    <li>
-                      <button
-                        onClick={selectTemplates}
-                        disabled={formState.formElements?.pnlMasters?.disabled}
-                        className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left  ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#fff7ed] hover:text-[#c2410c] dark:hover:bg-[#7c2d124d] dark:hover:text-[#fdba74]'}`}>
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200   ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#ffedd5] dark:bg-[#7c2d124d] group-hover:bg-[#fed7aa] dark:group-hover:bg-[#7c2d1299] group-hover:scale-110'}`}>
-                          <Layout className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#ea580c] dark:text-[#ffedd5]'}`} />
-                        </div>
-                        <span className="font-medium">{t("change_template")}</span>
-                      </button>
-                    </li>
-                  )}
+                    {formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
+                      <li>
+                        <button
+                          onClick={selectTemplates}
+                          disabled={formState.formElements?.pnlMasters?.disabled}
+                          className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left  ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#fff7ed] hover:text-[#c2410c] dark:hover:bg-[#7c2d124d] dark:hover:text-[#fdba74]'}`}>
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200   ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#ffedd5] dark:bg-[#7c2d124d] group-hover:bg-[#fed7aa] dark:group-hover:bg-[#7c2d1299] group-hover:scale-110'}`}>
+                            <Layout className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#ea580c] dark:text-[#ffedd5]'}`} />
+                          </div>
+                          <span className="font-medium">{t("change_template")}</span>
+                        </button>
+                      </li>
+                    )}
 
                     {formState.formElements.printPreview?.visible && formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
                       <li>
@@ -419,7 +475,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                               className="flex-1"
                               label={t(formState.formElements.printPreview.label)}
                               checked={formState.userConfig?.printPreview || false}
-                                onChange={(e) => {
+                              onChange={(e) => {
                                 const updatedUserConfig: UserConfig = {
                                   ...(formState.userConfig || {}),
                                   printPreview: e.target.checked,
@@ -437,7 +493,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                       </li>
                     )}
 
-                    {["PI", "GRN"].includes(formState.transaction.master.voucherType) && formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" &&  (
+                    {["PI", "GRN"].includes(formState.transaction.master.voucherType) && formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
                       <li>
                         <button
                           disabled={formState.formElements?.pnlMasters?.disabled}
@@ -455,7 +511,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                     )}
 
                     {
-                      formState.transaction.master.voucherType == 'PI' && 
+                      formState.transaction.master.voucherType == 'PI' &&
                       (
                         <li>
                           <button
@@ -513,55 +569,55 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         </li>
                       )
                     }
-                  {formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
-                    <li>
-                      <button
-                        disabled={formState.formElements?.pnlMasters?.disabled}
-                        onClick={(e) => {
-                          closeMenuPopup();
-                          onChooseTemplate();
-                        }}
-                        className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#ecfeff] hover:text-[#0e7490] dark:hover:bg-[#164e634d] dark:hover:text-[#67e8f9]'}`}>
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#cffafe] dark:bg-[#164e634d] group-hover:bg-[#a5f3fc] dark:group-hover:bg-[#164e6399] group-hover:scale-110'}`}>
-                          <Download className={`h-4 w-4  ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#0e7490] dark:text-[#67e8f9]'}`} />
-                        </div>
-                        <span className="font-medium">{t("download_excel_template")}</span>
-                      </button>
-                    </li>
-                  )}
-                   {formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
-                    <li>
-                      <button
-                        disabled={formState.formElements?.pnlMasters?.disabled}
-                        onClick={(e) => {
-                          closeMenuPopup();
-                        }}
-                        className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#ecfdf5] hover:text-[#047857] dark:hover:bg-[#064e3b4d] dark:hover:text-[#6ee7b7]'}`}   >
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200  ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#d1fae5] dark:bg-[#065f46]/30 group-hover:bg-[#a7f3d0] dark:group-hover:bg-[#065f46]/50 group-hover:scale-110'}`}        >
-                          <Upload className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#065f46] dark:text-[#6ee7b7]'}`} />
-                        </div>
-                        <ERPFileUploadButton
-                          buttonText={t("import_from_excel")}
-                          handleFileChange={onSelectExcel}
-                          hideIcon={true}
-                          buttonClassName={`font-medium bg-transparent border-none p-0 hover:bg-transparent ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500 cursor-not-allowed' : ''}`}
+                    {formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
+                      <li>
+                        <button
                           disabled={formState.formElements?.pnlMasters?.disabled}
-                        />
-                      </button>
-                    </li>
-                  )}
-                  {formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
-                    <li>
-                      <button
-                        className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-amber-50 hover:text-amber-800 dark:hover:bg-amber-900/30 dark:hover:text-amber-300 transition-all duration-200 rounded-md group text-left"
-                        onClick={() => { closeMenuPopup() }}>
-                        <div className="w-8 h-8 bg-amber-100 dark:bg-amber-900/30 rounded-full flex items-center justify-center group-hover:bg-amber-200 dark:group-hover:bg-amber-900/50 group-hover:scale-110 transition-all duration-200">
-                          <Barcode className="h-4 w-4 text-amber-800 dark:text-amber-300" />
-                        </div>
-                        <span className="font-medium">{t("print_barcode")}</span>
-                      </button>
-                    </li>
-                  )}
+                          onClick={(e) => {
+                            closeMenuPopup();
+                            onChooseTemplate();
+                          }}
+                          className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#ecfeff] hover:text-[#0e7490] dark:hover:bg-[#164e634d] dark:hover:text-[#67e8f9]'}`}>
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#cffafe] dark:bg-[#164e634d] group-hover:bg-[#a5f3fc] dark:group-hover:bg-[#164e6399] group-hover:scale-110'}`}>
+                            <Download className={`h-4 w-4  ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#0e7490] dark:text-[#67e8f9]'}`} />
+                          </div>
+                          <span className="font-medium">{t("download_excel_template")}</span>
+                        </button>
+                      </li>
+                    )}
+                    {formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
+                      <li>
+                        <button
+                          disabled={formState.formElements?.pnlMasters?.disabled}
+                          onClick={(e) => {
+                            closeMenuPopup();
+                          }}
+                          className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#ecfdf5] hover:text-[#047857] dark:hover:bg-[#064e3b4d] dark:hover:text-[#6ee7b7]'}`}   >
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200  ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#d1fae5] dark:bg-[#065f46]/30 group-hover:bg-[#a7f3d0] dark:group-hover:bg-[#065f46]/50 group-hover:scale-110'}`}        >
+                            <Upload className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#065f46] dark:text-[#6ee7b7]'}`} />
+                          </div>
+                          <ERPFileUploadButton
+                            buttonText={t("import_from_excel")}
+                            handleFileChange={onSelectExcel}
+                            hideIcon={true}
+                            buttonClassName={`font-medium bg-transparent border-none p-0 hover:bg-transparent ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500 cursor-not-allowed' : ''}`}
+                            disabled={formState.formElements?.pnlMasters?.disabled}
+                          />
+                        </button>
+                      </li>
+                    )}
+                    {formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
+                      <li>
+                        <button
+                          className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-amber-50 hover:text-amber-800 dark:hover:bg-amber-900/30 dark:hover:text-amber-300 transition-all duration-200 rounded-md group text-left"
+                          onClick={() => { closeMenuPopup() }}>
+                          <div className="w-8 h-8 bg-amber-100 dark:bg-amber-900/30 rounded-full flex items-center justify-center group-hover:bg-amber-200 dark:group-hover:bg-amber-900/50 group-hover:scale-110 transition-all duration-200">
+                            <Barcode className="h-4 w-4 text-amber-800 dark:text-amber-300" />
+                          </div>
+                          <span className="font-medium">{t("print_barcode")}</span>
+                        </button>
+                      </li>
+                    )}
 
                     {formState.transaction.master.voucherType === 'PI' && (
                       <li>
@@ -631,22 +687,22 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                           </button>
                         </li>
                         {!isAbove640 && formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
-                        <li>
-                          <button
-                            className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-slate-50 hover:text-slate-800 dark:hover:bg-slate-800/30 dark:hover:text-slate-300 transition-all duration-200 rounded-md group text-left"
-                            onClick={handleHistoryClick}>
-                            <div className="w-8 h-8 bg-slate-100 dark:bg-slate-800/30 rounded-full flex items-center justify-center group-hover:bg-slate-200 dark:group-hover:bg-slate-800/50 group-hover:scale-110 transition-all duration-200">
-                              <History className="h-4 w-4 text-slate-800 dark:text-slate-300" />
-                            </div>
-                            <span className="font-medium">{t("history")}</span>
-                          </button>
-                        </li>
+                          <li>
+                            <button
+                              className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-slate-50 hover:text-slate-800 dark:hover:bg-slate-800/30 dark:hover:text-slate-300 transition-all duration-200 rounded-md group text-left"
+                              onClick={handleHistoryClick}>
+                              <div className="w-8 h-8 bg-slate-100 dark:bg-slate-800/30 rounded-full flex items-center justify-center group-hover:bg-slate-200 dark:group-hover:bg-slate-800/50 group-hover:scale-110 transition-all duration-200">
+                                <History className="h-4 w-4 text-slate-800 dark:text-slate-300" />
+                              </div>
+                              <span className="font-medium">{t("history")}</span>
+                            </button>
+                          </li>
                         )}
                       </>
                     )}
 
-                    
-                      <>
+
+                    <>
                       {!isAbove640 && formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
                         <li>
                           <button
@@ -658,8 +714,8 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                             <span className="font-medium">{t("clear")}</span>
                           </button>
                         </li>
-                        )}
-                        {!isAbove640 && formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
+                      )}
+                      {!isAbove640 && formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
                         <li>
                           <button
                             disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master.invTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
@@ -684,8 +740,8 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                             <span className="font-medium">{t("print")}</span>
                           </button>
                         </li>
-                        )}
-                      </>
+                      )}
+                    </>
 
                     {!isAbove480 && (
                       <>
@@ -765,22 +821,48 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
           </button> */}
 
           {formState.isUserConfigOpen && (
-          <ERPModal
-            isOpen={formState.isUserConfigOpen}
-            title={t("formState_summary")}
-            width={2500}
-            height={2500}
-            isForm={true}
-            disableParentInteraction={false}
-            closeModal={() =>{dispatch(formStateHandleFieldChange({ fields: { userConfig: JSON.parse(formState?.privConfig??"") ,isUserConfigOpen: false } }));}
-            }
-            content={
-              <TransactionUserConfig
-               phone={phone} transactionType={transactionType ?? ""} undoEditMode={undoEditMode}
-              />
-            }
-          />
-        )}
+            <ERPModal
+              isOpen={formState.isUserConfigOpen}
+              title={t("formState_summary")}
+              width={2500}
+              height={2500}
+              isForm={true}
+              disableParentInteraction={false}
+              closeModal={() => { dispatch(formStateHandleFieldChange({ fields: { userConfig: JSON.parse(formState?.privConfig ?? ""), isUserConfigOpen: false } })); }
+              }
+              content={
+                <TransactionUserConfig
+                  phone={phone}
+                  transactionType={transactionType ?? ""}
+                  undoEditMode={undoEditMode}
+                />
+              }
+              footer={
+                <div className="w-full flex justify-end items-center gap-2 dark:!border-dark-border dark:!bg-dark-bg rounded-b-md">
+                  <ERPButton
+                    title={t("cancel")}
+                    onClick={previousThemeChange}
+                    variant="secondary"
+                    className="min-w-[100px] transition-all duration-300"
+
+                  />
+                  <ERPButton
+                    title={t("reset_all")}
+                    onClick={resetThemeChange}
+                    type="reset"
+                    variant="custom"
+                    className="min-w-[140px] bg-gradient-to-r from-[#2563eb] to-[#4f46e5] hover:from-[#1d4ed8] hover:to-[#4338ca] transition-all duration-300"
+                  />
+                  <ERPButton
+                    title={t("save_changes")}
+                    onClick={postUserConfig}
+                    variant="primary"
+                    className="min-w-[140px] transition-all duration-300"
+                  />
+                </div>
+              }
+            />
+          )}
         </div>
       </>
     );

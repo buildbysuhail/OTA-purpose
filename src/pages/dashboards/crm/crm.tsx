@@ -12,15 +12,18 @@ import { RootState } from '../../../redux/store';
 import QuickCreate from './quick-create';
 import MobileFooter from './mobile-footer';
 import ERPModalResizable from '../../../components/ERPComponents/erp-modal-resizle';
+import { useUserRights } from '../../../helpers/user-right-helper';
 
 interface CrmProps { }
-class ItemSummaryCard {total: number = 0; currency: string = ""; summary:ItemSummaryCardStateSummary[] = new Array<ItemSummaryCardStateSummary>();monthVariation: number=0; for:string=""; branchData:ItemSummaryCardBranchSummary[] = new Array<ItemSummaryCardBranchSummary>; totalBranches: number = 0; contextBranches: number = 0; branches:string[] = new Array<string>;}
-class ItemSummaryCardBranchSummary {branchId: number = 0; branchName: string = ""; total: number = 0; currency: string = ""; summary:ItemSummaryCardStateSummary[] = [];}
-class ItemSummaryCardStateSummary {amount: number = 0; monthAndYear: string = ""; currency: string = ""; }
+class ItemSummaryCard { total: number = 0; currency: string = ""; summary: ItemSummaryCardStateSummary[] = new Array<ItemSummaryCardStateSummary>(); monthVariation: number = 0; for: string = ""; branchData: ItemSummaryCardBranchSummary[] = new Array<ItemSummaryCardBranchSummary>; totalBranches: number = 0; contextBranches: number = 0; branches: string[] = new Array<string>; }
+class ItemSummaryCardBranchSummary { branchId: number = 0; branchName: string = ""; total: number = 0; currency: string = ""; summary: ItemSummaryCardStateSummary[] = []; }
+class ItemSummaryCardStateSummary { amount: number = 0; monthAndYear: string = ""; currency: string = ""; }
 
 const Crm: FC<CrmProps> = () => {
   let api = new APIClient();
   // for User search function
+
+  const { hasRight } = useUserRights();
   const [Data, setData] = useState(Dealsstatistics);
   const [salesSummary, setSalesSummary] = useState<ItemSummaryCard>();
   const [purchaseSummary, setPurchaseSummary] = useState<ItemSummaryCard>();
@@ -34,31 +37,33 @@ const Crm: FC<CrmProps> = () => {
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
   const userSession = useSelector((state: RootState) => state.UserSession);
   useEffect(() => {
-    api.post('/Accounts/Dashboard/GetTopExpense',{offset: 0,pageSize: 6}).then(res =>{
-      setTopExpenses(res);
-    });
-    api.get('/Inventory/Dashboard/GetSalesMonthwiseSummary').then(res =>{
+    if (hasRight("DBRDEXPS")) {
+      api.post('/Accounts/Dashboard/GetTopExpense', { offset: 0, pageSize: 6 }).then(res => {
+        setTopExpenses(res);
+      });
+    }
+    api.get('/Inventory/Dashboard/GetSalesMonthwiseSummary').then(res => {
       setSalesSummary(res);
     });
-    api.get('/Inventory/Dashboard/GetPurchaseMonthwiseSummary').then(res =>{
+    api.get('/Inventory/Dashboard/GetPurchaseMonthwiseSummary').then(res => {
       setPurchaseSummary(res);
     });
-    api.get('/Accounts/Dashboard/GetIncomeMonthly').then(res =>{
+    api.get('/Accounts/Dashboard/GetIncomeMonthly').then(res => {
       setIncomeSummary(res);
     });
-    api.get('/Accounts/Dashboard/GetExpenseMonthly').then(res =>{
+    api.get('/Accounts/Dashboard/GetExpenseMonthly').then(res => {
       setExpenseSummary(res);
     });
-    api.get('/Accounts/Dashboard/GetReceivableMonthly').then(res =>{
+    api.get('/Accounts/Dashboard/GetReceivableMonthly').then(res => {
       setReceivableSummary(res);
     });
-    api.get('/Accounts/Dashboard/GetPayableMonthly').then(res =>{
+    api.get('/Accounts/Dashboard/GetPayableMonthly').then(res => {
       setPayableSummary(res);
     });
-    api.get('/Accounts/Dashboard/GetCashMonthwiseSummary').then(res =>{
+    api.get('/Accounts/Dashboard/GetCashMonthwiseSummary').then(res => {
       setCashSummary(res);
     });
-    api.get('/Accounts/Dashboard/GetBankMonthwiseSummary').then(res =>{
+    api.get('/Accounts/Dashboard/GetBankMonthwiseSummary').then(res => {
       setBankSummary(res);
     });
     ///
@@ -138,10 +143,11 @@ const Crm: FC<CrmProps> = () => {
                 )}
               </div> */}
               {deviceInfo?.isMobile && (
-              <div>
-              <QuickCreate/>
-              </div>
+                <div>
+                  <QuickCreate />
+                </div>
               )}
+{hasRight("DBRDEXPS") &&
               <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
                 <div className="box">
                   <div className="box-header flex justify-between">
@@ -165,37 +171,38 @@ const Crm: FC<CrmProps> = () => {
                     </div>
                   </div>
                   <div className="box-body">
-                      {topExpenses != undefined && topExpenses != null && topExpenses.length > 0 ?(
-                        <ul className="list-none crm-top-deals mb-0">
-                        {topExpenses.map((item: any, index) => (
-                           <li key={'topExpenses_'+index} className="mb-[0.9rem]">
-                           <div className="flex items-start flex-wrap">
-                             <div className="me-2">
-                               <span className=" inline-flex items-center justify-center">
-                                 <img src={face10} alt=""
-                                   className="w-[1.75rem] h-[1.75rem] leading-[1.75rem] text-[0.65rem]  rounded-full" />
-                               </span>
-                             </div>
-                             <div className="flex-grow">
-                               <p className="font-semibold mb-[1.4px]  text-[0.813rem]">{item.ledgerName}
-                               </p>
-                             </div>
-                             <div className="font-semibold text-[0.9375rem] "><CurrencyFormatter currency='' amount={item.indirectExpenses}></CurrencyFormatter></div>
-                           </div>
-                         </li>
-                          ))}
-
-                        </ul>
-                      ):
+                    {topExpenses != undefined && topExpenses != null && topExpenses.length > 0 ? (
                       <ul className="list-none crm-top-deals mb-0">
-                         <li  className="mb-[0.9rem]">
+                        {topExpenses.map((item: any, index) => (
+                          <li key={'topExpenses_' + index} className="mb-[0.9rem]">
+                            <div className="flex items-start flex-wrap">
+                              <div className="me-2">
+                                <span className=" inline-flex items-center justify-center">
+                                  <img src={face10} alt=""
+                                    className="w-[1.75rem] h-[1.75rem] leading-[1.75rem] text-[0.65rem]  rounded-full" />
+                                </span>
+                              </div>
+                              <div className="flex-grow">
+                                <p className="font-semibold mb-[1.4px]  text-[0.813rem]">{item.ledgerName}
+                                </p>
+                              </div>
+                              <div className="font-semibold text-[0.9375rem] "><CurrencyFormatter currency='' amount={item.indirectExpenses}></CurrencyFormatter></div>
+                            </div>
+                          </li>
+                        ))}
+
+                      </ul>
+                    ) :
+                      <ul className="list-none crm-top-deals mb-0">
+                        <li className="mb-[0.9rem]">
                           No item loaded
-                         </li>
-                         </ul>
-                          }
+                        </li>
+                      </ul>
+                    }
                   </div>
                 </div>
               </div>
+}
               {/* <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
                 <div className="box">
                   <div className="box-header justify-between">
@@ -225,14 +232,14 @@ const Crm: FC<CrmProps> = () => {
             </div>
             <div className="xxl:col-span-8  xl:col-span-8  col-span-12">
               <div className="grid grid-cols-12 gap-x-6">
-              <SummaryCard currency={userSession?.currency}  summary={salesSummary??new ItemSummaryCard()} icon="ti ti-wave-square" color='success'></SummaryCard>
-              <SummaryCard currency={userSession?.currency}  summary={purchaseSummary??new ItemSummaryCard()} icon="ti ti-wave-square" color='secondary'></SummaryCard>
-              <SummaryCard currency={userSession?.currency}  summary={incomeSummary??new ItemSummaryCard()} icon="ti ti-wave-square" color='warning'></SummaryCard>
-              <SummaryCard currency={userSession?.currency}  summary={receivableSummary??new ItemSummaryCard()} icon="ti ti-wave-square" color='success'></SummaryCard>
-              <SummaryCard currency={userSession?.currency}  summary={expenseSummary??new ItemSummaryCard()} icon="ti ti-wave-square" color='success'></SummaryCard>
-              <SummaryCard currency={userSession?.currency}  summary={PayableSummary??new ItemSummaryCard()} icon="ti ti-wave-square" color='success'></SummaryCard>
-                
-                
+                <SummaryCard currency={userSession?.currency} summary={salesSummary ?? new ItemSummaryCard()} icon="ti ti-wave-square" color='success'></SummaryCard>
+                <SummaryCard currency={userSession?.currency} summary={purchaseSummary ?? new ItemSummaryCard()} icon="ti ti-wave-square" color='secondary'></SummaryCard>
+                <SummaryCard currency={userSession?.currency} summary={incomeSummary ?? new ItemSummaryCard()} icon="ti ti-wave-square" color='warning'></SummaryCard>
+                <SummaryCard currency={userSession?.currency} summary={receivableSummary ?? new ItemSummaryCard()} icon="ti ti-wave-square" color='success'></SummaryCard>
+                <SummaryCard currency={userSession?.currency} summary={expenseSummary ?? new ItemSummaryCard()} icon="ti ti-wave-square" color='success'></SummaryCard>
+                <SummaryCard currency={userSession?.currency} summary={PayableSummary ?? new ItemSummaryCard()} icon="ti ti-wave-square" color='success'></SummaryCard>
+
+
                 <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
                   <div className="box">
                     <div className="box-header !gap-0 !m-0 justify-between">

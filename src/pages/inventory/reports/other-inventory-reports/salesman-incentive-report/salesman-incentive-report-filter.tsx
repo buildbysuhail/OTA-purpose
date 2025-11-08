@@ -37,11 +37,11 @@ const SalesmanIncentiveReportFilter = ({ getFieldProps, handleFieldChange, formS
                                 labelKey: "name",
                             }}
                             onSelectItem={(data) => {
-                                 handleFieldChange({
-            employee: data.value,
-            employeeName: data.label,
-          })
-                                }}
+                                handleFieldChange({
+                                    employee: data.value,
+                                    employeeName: data.label,
+                                })
+                            }}
                         />
                     </div>
                 </div>

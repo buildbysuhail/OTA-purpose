@@ -379,11 +379,11 @@ export default function SettingsPage() {
 
   const handleButtonClick = async () => {
     if (isButtonDisabled) return;
-    setIsButtonDisabled(true); 
+    setIsButtonDisabled(true);
     try {
-      await handleSubmit(); 
+      await handleSubmit();
     } finally {
-      setIsButtonDisabled(false); 
+      setIsButtonDisabled(false);
     }
   };
 
@@ -492,7 +492,7 @@ export default function SettingsPage() {
       )}
       {/* main */}
       <main className="flex-1 md:ml-[200px] lg:ml-[300px] relative transition-all duration-300 overflow-y-auto scrollbar-thin scrollbar-track-gray scrollbar-thumb-gray hover:scrollbar-thumb-gray dark:scrollbar-track-gray dark:scrollbar-thumb-gray dark:hover:scrollbar-thumb-gray scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
-        <div className={`flex items-center justify-between z-[49] fixed  dark:!bg-dark-bg bg-white shadow w-[-webkit-fill-available] p-2`}>
+        <div className={`flex items-center justify-between z-[49] fixed dark:!bg-dark-bg bg-white shadow w-[-webkit-fill-available] p-2`}>
           <button
             className="md:hidden mr-2 p-1"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -504,11 +504,13 @@ export default function SettingsPage() {
             id="search-input"
             type="search"
             placeholder="Search (Ctrl+Shift+F)"
-            className={`w-2/5 rounded-md dark:placeholder-dark-text focus:border-accent focus:outline-accent dark:!bg-dark-bg dark:border-dark-border  active:border-accent active:outline-accent`}
+            className={`md:w-2/5 w-full rounded-md dark:placeholder-dark-text focus:border-accent focus:outline-accent dark:!bg-dark-bg dark:border-dark-border active:border-accent active:outline-accent`}
             onChange={onFilterChange}
             autoFocus
           />
-          <LayoutToggle onToggle={setIsCompactView} />
+          <div className="hidden md:block">
+            <LayoutToggle onToggle={setIsCompactView} />
+          </div>
         </div>
         <div className={`p-4 dark:!bg-dark-bg`}>
           <style>{`@keyframes blink {0%, 100% { background-color: #f1f1f1; }50% { background-color: rgb(var(--primary)); }  }.blink-animation {animation: blink 2s ease-in-out;}`}</style>

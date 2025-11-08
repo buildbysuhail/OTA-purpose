@@ -260,8 +260,8 @@ const LedgerReport = () => {
             balance == null
               ? ""
               : balance < 0
-                ? getFormattedValue(-1 * balance, false, 3) + " Cr"
-                : getFormattedValue(balance, false, 3) + " Dr";
+                ? getFormattedValue(-1 * balance, false, 4) + " Cr"
+                : getFormattedValue(balance, false, 4) + " Dr";
           return {
             ...exportCell,
             text: value,
@@ -285,8 +285,8 @@ const LedgerReport = () => {
             {`${cellElement.data?.balance == null
               ? ''
               : cellElement.data.balance < 0
-                ? getFormattedValue(-1 * cellElement.data.balance, false, 3) + ' Cr'
-                : getFormattedValue(cellElement.data.balance, false, 3) + ' Dr'}`}
+                ? getFormattedValue(-1 * cellElement.data.balance, false, 4) + ' Cr'
+                : getFormattedValue(cellElement.data.balance, false, 4) + ' Dr'}`}
           </span>)
         }
       }

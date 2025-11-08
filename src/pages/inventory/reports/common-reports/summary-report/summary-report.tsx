@@ -883,22 +883,7 @@ const SummaryReport: FC<SummaryProps> = ({
           }
         },
       },
-      {
-        dataField: "counterName",
-        caption: t("counter_name"),
-        dataType: "string",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "systemDateTime",
-        caption: t("system_date_time"),
-        dataType: "datetime",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
+   
       //in 1050 shown only on summary calculation
       {
         dataField: "toWarehouseName",
@@ -1022,6 +1007,22 @@ const SummaryReport: FC<SummaryProps> = ({
         allowFiltering: true,
         width: 100,
       },
+         {
+        dataField: "counterName",
+        caption: t("counter_name"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "systemDateTime",
+        caption: t("system_date_time"),
+        dataType: "datetime",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
     ];
     // Filter columns based on the `visible` property
     return baseColumns
@@ -1071,7 +1072,7 @@ const SummaryReport: FC<SummaryProps> = ({
       });
   }, [t, filter, userSession.dbIdValue]);
 
-  const { getFormattedValue, formatNumberByDecimalPoint } = useNumberFormat();
+  const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: any) => {
       console.log("itemInfo");

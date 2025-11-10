@@ -8,6 +8,7 @@ import { useNumberFormat } from "../../../../../utilities/hooks/use-number-forma
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import CashSummaryReportFilter, { CashSummaryReportFilterInitialState, } from "../../../../accounts/reports/cashSummary/cash-summary-report-filter";
+import { getArabicNumber } from "../../../../../utilities/Utils";
 
 const VatReturnFormArabic = () => {
   const { t } = useTranslation("accountsReport");
@@ -488,28 +489,4 @@ return (
 
 export default VatReturnFormArabic;
 
-export function getArabicNumber(number: string): string {
-  const arabicDigits = "٠١٢٣٤٥٦٧٨٩";
-  let arabicNumber = "";
 
-  try {
-    for (let i = 0; i < number.length; i++) {
-      const digit = number.charAt(i);
-      if (digit !== "." && digit !== "-" && digit !== ",") {
-        const index = parseInt(digit, 10);
-        if (!isNaN(index)) {
-          arabicNumber += arabicDigits.charAt(index);
-        } else {
-          arabicNumber += digit;
-        }
-      } else {
-        arabicNumber += digit;
-      }
-    }
-  } catch (error) {
-    // Optionally handle error
-    console.error("Error converting to Arabic number:", error);
-  }
-
-  return arabicNumber;
-}

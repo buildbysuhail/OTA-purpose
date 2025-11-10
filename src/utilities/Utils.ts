@@ -1269,3 +1269,53 @@ export function erpParseFloat(value: string): number {
   // Parse as float
   return parseFloat(cleaned) || 0;
 }
+export function getArabicNumber(number: string): string {
+  const arabicDigits = "٠١٢٣٤٥٦٧٨٩";
+  let arabicNumber = "";
+
+  try {
+    for (let i = 0; i < number.length; i++) {
+      const digit = number.charAt(i);
+      if (digit !== "." && digit !== "-" && digit !== ",") {
+        const index = parseInt(digit, 10);
+        if (!isNaN(index)) {
+          arabicNumber += arabicDigits.charAt(index);
+        } else {
+          arabicNumber += digit;
+        }
+      } else {
+        arabicNumber += digit;
+      }
+    }
+  } catch (error) {
+    // Optionally handle error
+    console.error("Error converting to Arabic number:", error);
+  }
+
+  return arabicNumber;
+}
+/**
+ * Equivalent of:
+ * public static double Val(object obj)
+ */
+export function val(obj: any): number {
+  let r = 0;
+
+  if (obj === null || obj === undefined || obj.toString().trim() === '') {
+    r = 0;
+  } else {
+    try {
+      const num = parseFloat(obj.toString());
+      if (!isNaN(num)) {
+        // round to 5 decimal places (same as Math.Round(value, 5) in C#)
+        r = parseFloat(num.toFixed(5));
+      } else {
+        r = 0;
+      }
+    } catch {
+      r = 0;
+    }
+  }
+
+  return r;
+}

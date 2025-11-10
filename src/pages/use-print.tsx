@@ -3,7 +3,7 @@ import { HeaderFooter } from '../redux/slices/user-session/reducer';
 import Urls from '../redux/urls';
 import { APIClient } from '../helpers/api-client';
 import { DeepPartial } from 'redux';
-import { getAmountInWords, isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from '../utilities/Utils';
+import { getAmountInWords, getArabicNumber, isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero, val } from '../utilities/Utils';
 import { PrintResponse, PrintDetailDto, PrintMasterDto, CompanyDetailsForPrint, PartyDetailsForPrint } from './use-print-type';
 import { initialPrintCustomFields, initialPrintResponse } from './use-print-type-data';
 import { merge } from 'lodash';
@@ -47,7 +47,7 @@ export function getKsaQrCode(transDate: Date, totalWithVat: string, vat: string,
   const sellerName = companyData.registeredName; // replace with config/company profile
   const vatRegNo = companyData.taxRegNo;        // replace with config/company profile
 
-  // Format datetime like "YYYY-MM-DDTHH:mm:ssZ"
+  // format datetime like "YYYY-MM-DDTHH:mm:ssZ"
   const dateStr = transDate.getUTCFullYear().toString().padStart(4, "0")
     + "-" + (transDate.getUTCMonth() + 1).toString().padStart(2, "0")
     + "-" + transDate.getUTCDate().toString().padStart(2, "0");
@@ -58,7 +58,7 @@ export function getKsaQrCode(transDate: Date, totalWithVat: string, vat: string,
 
   const datetime = `${dateStr}T${timeStr}Z`;
 
-  // Tag-Length-Value (TLV) encoding
+  // Tag-Length-value (TLV) encoding
   const tlv: [number, string][] = [
     [1, sellerName],
     [2, vatRegNo],
@@ -1741,7 +1741,7 @@ export function bindDataForPrint(field: string, printData: PrintResponse,
     return printData?.master?.partyData?.[key as keyof PartyDetailsForPrint]
   }
 }
-// Format field values based on format specification
+// format field values based on format specification
 // const getFormatedValues = useCallback((value, format) => {
 //   let t = "";
 //   const ws = " ".repeat(200);
@@ -1998,3 +1998,133 @@ export const getOrFetchTemplate = async (
     return await fetchDefaultTemplate(voucherType, formType, customerType)
   }
 };
+export const formatValue = (value: any, format: string, opts: any) => {
+    let t = '';
+  const ws =
+    ' '.repeat(400); // Same as long ws string in C#
+  const { fldFont, fldAlign, fldLength } = opts;
+
+  // QR Code fonts: return directly
+  if (fldFont === 'QR Code-Polosys' || fldFont === 'QR Code-Polosys-2') return value;
+
+  const fmt = format.toUpperCase();
+
+  try {
+    if (fmt === 'C###0.00') {
+      t = val(value).toFixed(2);
+    } else if (fmt === 'C###0.000') {
+      t = val(value).toFixed(3);
+    } else if (format.includes('#') && !format.includes('**')) {
+      t = val(value).toString();
+    } else if (fmt === 'QTY') {
+      t = val(value).toFixed(0);
+    } else if (fmt === 'QTY1') {
+      const t1 = val(value);
+      const t2 = Math.trunc(t1);
+      t = t1 !== t2 ? t1.toFixed(1) : t1.toFixed(0);
+    } else if (fmt === 'QTY2') {
+      const t1 = val(value);
+      const t2 = Math.trunc(t1);
+      t = t1 !== t2 ? t1.toFixed(2) : t1.toFixed(0);
+    } else if (fmt === 'QTY3') {
+      const t1 = val(value);
+      const t2 = Math.trunc(t1);
+      t = t1 !== t2 ? t1.toFixed(3) : t1.toFixed(0);
+    } else if (fmt === 'AR_NUM') {
+      t = getArabicNumber(val(value).toFixed(0));
+    } else if (fmt === 'SHRINK') {
+      t = value;
+    } else if (fmt === 'AR_DIG2') {
+      t = getArabicNumber(val(value).toFixed(2));
+    } else if (fmt === 'AR_DATE') {
+      // const date = TransDate ? TransDate : new Date(value);
+      // const formatted = date.toLocaleDateString('en-GB', {
+      //   day: '2-digit',
+      //   month: '2-digit',
+      //   year: 'numeric',
+      // });
+      // t = GetArabicDateNumer(formatted.replace(/\//g, '-'));
+    } else if (fmt === 'AR_DIG3') {
+      t = getArabicNumber(val(value).toFixed(3));
+    } else if (
+      format.includes('d') ||
+      format.includes('M') ||
+      format.includes('y') ||
+      format.includes('H') ||
+      format.includes('h') ||
+      format.includes('m') ||
+      format.includes('s')
+    ) {
+      const date = new Date(value);
+      if (!isNaN(date.getTime())) {
+        // interpret C#-style format tokens manually
+        const pad = (n: number) => n.toString().padStart(2, '0');
+        const replacements: Record<string, string> = {
+          dd: pad(date.getDate()),
+          MM: pad(date.getMonth() + 1),
+          yyyy: date.getFullYear().toString(),
+          HH: pad(date.getHours()),
+          mm: pad(date.getMinutes()),
+          ss: pad(date.getSeconds()),
+        };
+        t = format.replace(/dd|MM|yyyy|HH|mm|ss/g, (m) => replacements[m] || m);
+      } else {
+        t = value;
+      }
+    } else if (fmt === 'NONE') {
+      t = value;
+    } else if (fmt === 'BIZ') {
+      const v = val(value);
+      t = v === 0 ? '' : v.toFixed(2);
+    } else {
+      t = value;
+    }
+
+    // Apply alignment and field length
+    if (fldAlign === 'Left') {
+      t = (t + ws).substring(0, fldLength);
+    } else if (fldAlign === 'Right' || fldAlign === 'Right Justify') {
+      t = (ws + t).slice(-fldLength);
+    } else if (fldAlign === 'Center') {
+      const total = ws + t + ws;
+      const start = Math.max(0, Math.floor(total.length / 2 - fldLength / 2));
+      t = total.substring(start, start + fldLength);
+    } else {
+      try {
+        t = (t + ws).substring(0, fldLength);
+      } catch {
+        // ignore
+      }
+    }
+  } catch {
+    t = value;
+  }
+
+  return t;
+  }
+
+  const formatDate = (value: any, format: string) => {
+    const date = new Date(value);
+    if (isNaN(date.getTime())) return value.toString();
+
+    const pad = (n: number) => n.toString().padStart(2, '0');
+
+    const map: Record<string, string> = {
+      dd: pad(date.getDate()),
+      d: date.getDate().toString(),
+      MM: pad(date.getMonth() + 1),
+      yy: date.getFullYear().toString().slice(2),
+      yyyy: date.getFullYear().toString(),
+      HH: pad(date.getHours()),
+      hh: pad(date.getHours() % 12 || 12),
+      mm: pad(date.getMinutes()),
+      ss: pad(date.getSeconds()),
+      a: date.getHours() >= 12 ? 'PM' : 'AM',
+      MMM: date.toLocaleString('en-US', { month: 'short' }),
+    };
+
+    return format.replace(
+      /(yyyy|yy|dd|d|MM|HH|hh|mm|ss|a|MMM)/g,
+      (token) => map[token] || token
+    );
+  }

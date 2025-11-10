@@ -1712,7 +1712,7 @@ export function bindDataForPrint(field: string, printData: PrintResponse,
   const splitData = field.split("___");
   const group = splitData[0] as any;
   const key = splitData[1];
-  
+
   if (isNullOrUndefinedOrEmpty(printData?.master))
     return "";
   const master = printData?.master
@@ -2002,6 +2002,7 @@ export const getOrFetchTemplate = async (
   }
 };
 export const formatValue = (value: any, format: string,) => {
+
     let t = '';
   const ws =
     ' '.repeat(400); // Same as long ws string in C#
@@ -2009,7 +2010,7 @@ export const formatValue = (value: any, format: string,) => {
 
   // QR Code fonts: return directly
   // if (fldFont === 'QR Code-Polosys' || fldFont === 'QR Code-Polosys-2') return value;
-
+if(!format) return  value;
   const fmt = format.toUpperCase();
 
   try {

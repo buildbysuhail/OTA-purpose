@@ -3,6 +3,7 @@ import type { CSSProperties } from "react";
 import type { TableColumn, TemplateState } from "../../Designer/interfaces";
 import { PrintDetailDto } from "../../../use-print-type";
 import { containsArabicString } from "../../utils/pdf-util";
+import { formatValue } from "../../../use-print";
 
 const DEFAULT_COLUMN_WIDTH = "10%";
 
@@ -220,7 +221,7 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
                   ...styles.cellText 
                 }}>
                   {/* safely access value */}
-                  {cellValue}
+                  {formatValue(cellValue,col.format)} 
                 </span>
               </div>
               )

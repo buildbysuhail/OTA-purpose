@@ -573,7 +573,7 @@ export interface TableColumn<T> {
   label: string;
   width: number;
   field: keyof T;
-  format?: string;
+  format: string;
   show: boolean;
   key: string;
 }

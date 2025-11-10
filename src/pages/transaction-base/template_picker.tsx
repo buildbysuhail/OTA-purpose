@@ -98,12 +98,13 @@ const loadTemplateId = useCallback(
                         className="flex-1 rounded-none !m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg text-sm sm:text-base"
                         disabled={formState.formElements.pnlMasters?.disabled || formState.transaction.details == null || formState.transaction.details.length == 0 || formState.transactionLoading}
                       />
+              
                     </ConfettiWrapper>
                   </div> */}
        <div className='flex gap-2'>
                             <ERPButton
                       title={t("add_new")}
-                      onClick={()=>navigate("/templates")}
+                      onClick={()=>navigate(`/invoice_designer/new?template_group=${voucherType}`)}
                       className=" rounded-none  !m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
                  
                     />

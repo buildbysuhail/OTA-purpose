@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { PlusIcon, TrashIcon, PencilIcon, XMarkIcon, Squares2X2Icon, ListBulletIcon, Bars3Icon, } from "@heroicons/react/24/outline"
 import { StarIcon as StarIconSolid } from "@heroicons/react/24/solid"
@@ -149,6 +149,38 @@ const Templates = () => {
       setLoading(false)
     }
   }
+
+  // When Click arrows it helps to navigate through item using keyboard
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+      if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+      e.preventDefault(); // prevent page scroll
+
+      // Select only valid focusable elements
+      const focusableSelector =
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+      // Collect all focusable elements
+      const allFocusable = Array.from(
+        document.querySelectorAll(focusableSelector)
+      ) as HTMLElement[];
+
+      // Filter out unwanted elements like your clear (X) button
+      const focusable = allFocusable.filter(
+        (el) => !el.classList.contains("skip-focus")
+      );
+
+      if (focusable.length === 0) return;
+
+      const active = document.activeElement as HTMLElement | null;
+      const currentIndex = active ? focusable.indexOf(active) : -1;
+
+      const nextIndex =
+        e.key === "ArrowDown"
+          ? (currentIndex + 1) % focusable.length
+          : (currentIndex - 1 + focusable.length) % focusable.length;
+
+      focusable[nextIndex]?.focus();
+    };
 
   useEffect(() => {
     setTempData([])
@@ -403,9 +435,15 @@ const Templates = () => {
                     <input
                       type="text"
                       value={searchQuery}
+                      autoFocus={true}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
+                        if (e.key === 'ArrowDown') {
+                          e.preventDefault();
+                          // It focuses the first one
+                          document.getElementById("template-list")?.focus();
+                        }
+                        else if (e.key === 'Enter') {
                           // Search is handled by filtering below
                           e.preventDefault();
                         }
@@ -416,7 +454,8 @@ const Templates = () => {
                     {searchQuery && (
                       <button
                         onClick={() => setSearchQuery('')}
-                        className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                        className="absolute inset-y-0 right-0 pr-3 flex items-center skip-focus"
+                        tabIndex={-1}                    
                       >
                         <svg
                           className="h-4 w-4 text-slate-400 hover:text-slate-600"
@@ -444,6 +483,9 @@ const Templates = () => {
                     return (
                       <button
                         key={`tt_${index}`}
+                        id="template-list"
+                        tabIndex={0}
+                        onKeyDown={handleKeyDown}
                         onClick={() => {
                           setSearchParams({ template_group: template?.template_group_id });
                           setTemplateGroup(template?.template_group_id);

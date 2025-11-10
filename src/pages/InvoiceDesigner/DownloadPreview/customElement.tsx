@@ -54,7 +54,7 @@ export const RenderComponentPDF: React.FC<Props> = ({
   const textContent =
   component.type === DesignerElementType.text
     ? component.content
-    : bindDataForPrint(component.content, data, convertAmountToEnglish, convertAmountToArabic) ;
+    : bindDataForPrint(component.content, data,component.format,convertAmountToEnglish, convertAmountToArabic) ;
 
  const isArabicText = typeof textContent === "string" && containsArabicString(textContent);
  const pdfDirection = component.direction ?? (isArabicText ? "rtl" : "ltr");

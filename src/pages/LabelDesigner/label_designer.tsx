@@ -54,6 +54,7 @@ import {
   PlacedComponent,
   PropertiesState,
   QRCodeProps,
+  templateDesignerFormatOptions,
   TemplateDto,
   TemplateState,
 } from "../InvoiceDesigner/Designer/interfaces";
@@ -440,10 +441,10 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
           arabicFont:"Amiri",
           fontStyle: "normal",
           width: componentType === DesignerElementType.container ? 200 : 100,
-          height: componentType === DesignerElementType.container ? 150 :
+          height: componentType === DesignerElementType.container ? 100 :
             componentType === DesignerElementType.barcode ? 80 :
               componentType === DesignerElementType.line ? 10 : 30,
-          lineThickness: "1",
+          lineThickness: 1,
           lineColor: "#000000",
           lineType: "solid",
           lineWidth: 100,
@@ -477,14 +478,14 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
         // Add container-specific properties if it's a container
         if (componentType === DesignerElementType.container) {
           newComponent.containerProps = {
-            backgroundColor: "#f0f0f0",
-            borderColor: "#a5a4a4ff",
+            backgroundColor: "#fafafa",
+            borderColor: "#d0d0d0",
             borderWidth: 1,
-            borderStyle: "solid",
-            padding: 10,
+            borderStyle: "dashed",
+            padding: 0,
             autoResize: false,
-            minHeight: 80,
-            maxHeight: 400,
+            minHeight: 100,
+            maxHeight: 500,
             borderRound: 1,
           };
           newComponent.children = [];
@@ -543,7 +544,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
           direction:"ltr",
           font: "Roboto",
           fontStyle: "normal",
-          lineThickness: "1",
+          lineThickness: 1,
           lineColor: "#000000",
           lineType: "solid",
           lineWidth: 150,
@@ -1320,46 +1321,93 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
           </ResizableBox>
         );
 
+
       case DesignerElementType.line:
         return (
-          <div
+          <ResizableBox
             key={component.id}
-            id={`component-${component.id}`}
+            width={ptToPx(component.lineWidth)}
+            height={ptToPx(component.lineThickness || 2)}
+            minConstraints={[ptToPx(10), ptToPx(1)]}
+            maxConstraints={[ptToPx(1500), ptToPx(50)]}
+            resizeHandles={
+              isSelected 
+                ? ['e', 'w', ]   // ✅ horizontal + vertical resize
+                : []
+            }
+            onResize={(e, { size }) => {
+              const widthPt = pxToPt(size.width);
+              const thicknessPt = pxToPt(size.height); // ✅ vertical resize = thickness
+
+              const updatedComponents =
+                templateData?.barcodeState?.placedComponents?.map((comp) =>
+                  comp.id === component.id
+                    ? { 
+                        ...comp, 
+                        lineWidth: widthPt,
+                        lineThickness: thicknessPt   // ✅ update thickness
+                      }
+                    : comp
+                ) || [];
+
+              setTemplateData((prev) => ({
+                ...prev,
+                barcodeState: {
+                  ...prev.barcodeState,
+                  placedComponents: updatedComponents,
+                },
+              }));
+
+              if (selectedComponent?.id === component.id) {
+                setSelectedComponent((prev) => ({
+                  ...prev!,
+                  lineWidth: widthPt,
+                  lineThickness: thicknessPt,
+                }));
+              }
+            }}
             style={{
-              ...style,
-              width: `${component.lineWidth}pt`,
-              height: "auto",
-              padding: 2,
-              position: "relative",
-              overflow: "visible",
-              border:
-                selectedComponent?.id === component.id
-                  ? "2px solid #2196f3"
-                  : "none",
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleComponentClick(e, component);
-            }}
-            onMouseDown={(e) => {
-              e.stopPropagation();
-              handleMouseDown(e, component);
+              position: "absolute",
+              left: `${component.x}pt`,
+              top: `${component.y}pt`,
+              zIndex: 5,
             }}
           >
             <div
-              style={{
-                borderTop: `${component?.lineThickness || 1}px ${component?.lineType || "solid"
-                  } ${component?.lineColor || "black"}`,
-                width: `${component.lineWidth}pt`,
-                margin: 0,
+              id={`component-${component.id}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleComponentClick(e, component);
               }}
-            />
+              onMouseDown={(e) => {
+                e.stopPropagation();
+                handleMouseDown(e, component);
+              }}
+              style={{
+                width: "100%",
+                height: "100%",
+                border:
+                  selectedComponent?.id === component.id
+                    ? "2px solid #2196f3"
+                    : "none",
+                boxSizing: "border-box",
+              }}
+            >
+              <div
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  borderTop: `${component.lineThickness || 1}pt ${component.lineType || "solid"} ${component.lineColor || "black"}`,
+                }}
+              />
+            </div>
+
             <DeleteButton
               id={component.id}
               isSelected={isSelected}
               handleDelete={handleDelete}
             />
-          </div>
+          </ResizableBox>
         );
 
       case DesignerElementType.image:
@@ -1772,6 +1820,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
       const consolidatedComponents = consolidateContainerChildren();
 
       if (forCustomRows) {
+        debugger
         dispatch(
           setTemplateCustomElements({
             payload: {
@@ -2411,7 +2460,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
                         {selectedComponent.type ===
                           DesignerElementType.field ? (
                           <>
-                            {selectedComponent.content}
+                            {/* {selectedComponent.content} */}
                             <GroupedComboBox
                               options={getFieldContent()}
                               value={selectedComponent.content}
@@ -2424,6 +2473,46 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
                               placeholder="Select content field..."
                               className="w-full"
                             />
+                            {forCustomRows && (
+                            // <ERPDataCombobox
+                            //   id="arabicFont"
+                            //   data={selectedComponent}
+                            //   defaultValue={"Amiri"}
+                            //   label="arabicFont"
+                            //   field={{
+                            //     id: "arabicFont",
+                            //     valueKey: "value",
+                            //     labelKey: "label",
+                            //   }}
+                            //   options={[
+                            //     { value: "NotoNaskhArabic", label: "NotoNaskhArabic" },
+                            //     { value: "Amiri", label: "Amiri" },
+                            //   ]}
+                            //   onChange={(e) =>
+                            //     handlePropertyChange("arabicFont", e.value)
+                            //   }{ label: "NONE", value: "NONE" },
+                            // />
+                              <ERPDataCombobox
+                               
+                                id="format"
+                                label={t("format")}
+                                field={
+                                  {
+                                    id: "format",
+                                    labelKey:"label",
+                                    valueKey:"value",
+                                    
+                                  }
+                                }
+                                data={selectedComponent}
+                                options={templateDesignerFormatOptions}
+                                defaultValue={"NONE"}
+                                // value={selectedComponent.format}
+                                onChange={(e) =>
+                                  handlePropertyChange("format", e.value)
+                                }
+                               />
+                            )}
                           </>
 
                         ) : selectedComponent.type ===

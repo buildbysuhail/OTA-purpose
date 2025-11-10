@@ -127,6 +127,18 @@ const templateSlice = createSlice({
     // };
   }
 },
+removeTemplateTableColumn: (
+  state: any,
+  action: PayloadAction<{ key: string }>
+) => {
+  const { key } = action.payload;
+
+  state.activeTemplate.tableState =
+    state.activeTemplate.tableState.filter(
+      (column: any) => column.key !== key
+    );
+},
+
 addTemplateTableColumn: (
   state: any,
   action: PayloadAction<{
@@ -341,6 +353,7 @@ export const {
   setTemplateTableMasterState,
   addTemplateTableColumn,
   editTemplateTableColumn,
+  removeTemplateTableColumn,
   updateTemplateTableState
 } = templateSlice.actions;
 

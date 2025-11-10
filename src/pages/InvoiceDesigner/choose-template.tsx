@@ -222,7 +222,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
     templateGroup == "barcode"
       ? navigate(`/label-designer/new?template_group=${templateGroup}`)
       : navigate(`/invoice_designer/new?template_group=${templateGroup}`, { state })
-  }
+   }
 
   const renderTemplateCard = (template: TemplateState<unknown>, index: number) => {
     const isDefault = template?.isCurrent

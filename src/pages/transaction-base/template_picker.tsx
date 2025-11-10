@@ -7,6 +7,8 @@ import Urls from '../../redux/urls';
 import { TemplateState } from '../InvoiceDesigner/Designer/interfaces';
 import { addTemplateToStore, fetchTemplateFromApiById } from '../use-print';
 import { isNullOrUndefinedOrEmpty } from '../../utilities/Utils';
+import { useNavigate } from 'react-router-dom';
+import ERPButton from '../../components/ERPComponents/erp-button';
 
 interface TemplatesProps {
   setIsOpen: () => void; 
@@ -14,23 +16,31 @@ interface TemplatesProps {
   formType:string;
   customerType:string;
 }
-const api = new APIClient();
+
 export default function TemplatesView ({ setIsOpen, voucherType,formType,customerType}: TemplatesProps) {
 const { t } = useTranslation("system");
+const navigate = useNavigate();
 const [templates, setTemplate] =useState<[]>([])
 const [templateLoad, setTemplateLoad] = useState(false);
-
+ const api = new APIClient();
 useEffect(() => {
   const fetchTemplates = async () => {
     try {
       setTemplateLoad(true)
-      const api = new APIClient();
+     
       const payload = {
       template_group: voucherType,
       formType: formType,
       customerType: customerType
       }
-      const response = await api.postAsync(`${Urls.templates}Filtered`,payload);
+      let response = await api.postAsync(`${Urls.templates}Filtered`,payload);
+      if (!response || response.length === 0) {
+     response =   await api.postAsync(`${Urls.templates}Filtered`,{
+          template_group: voucherType,
+          formType: "",
+          customerType: ""
+        });
+      }
       setTemplate(response);
     } catch (error) {
       console.error("Error fetching templates:", error);
@@ -55,7 +65,7 @@ const loadTemplateId = useCallback(
         return;
       }
 
-      addTemplateToStore(_template);
+     await addTemplateToStore(_template);
       setIsOpen();
     } catch (error) {
       console.error(error);
@@ -71,18 +81,49 @@ const loadTemplateId = useCallback(
       {/* Header */}
       <div className="flex items-center justify-between mb-6 sticky top-0  ml-[5px] dark:!bg-dark-bg  bg-[#f9fafb] h-20 p-4 z-50">
        <h1 className=" font-medium text-xl dark:text-dark-text  capitalize">{t("templates")}</h1>
+                         {/* <div className="flex gap-2 px-2 sm:px-4">
+                    <ERPButton
+                      title={t("cancel")}
+                      onClick={() => goToPreviousPage()}
+                      className="flex-1 rounded-none !m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg text-sm sm:text-base"
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                    />
+                    <ConfettiWrapper onOriginalClick={save}>
+                      <ERPButton
+                        localInputBox={formState?.userConfig?.inputBoxStyle}
+                        ref={btnSaveRef}
+                        title={formState.transaction.master.voucherType === "LPO" ? t("generate_lpo") : t("save")}
+                        jumpTarget="save"
+                        variant="primary"
+                        className="flex-1 rounded-none !m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg text-sm sm:text-base"
+                        disabled={formState.formElements.pnlMasters?.disabled || formState.transaction.details == null || formState.transaction.details.length == 0 || formState.transactionLoading}
+                      />
+                    </ConfettiWrapper>
+                  </div> */}
+       <div className='flex gap-2'>
+                            <ERPButton
+                      title={t("add_new")}
+                      onClick={()=>navigate("/templates")}
+                      className=" rounded-none  !m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+                 
+                    />
+        {/* <button className="dark:text-dark-text text-gray-500 dark:hover:text-dark-text  hover:text-gray-700" onClick={()=>navigate("/templates")} >
+         {t("add_new")} 
+        </button> */}
         <button className="dark:text-dark-text text-gray-500 dark:hover:text-dark-text  hover:text-gray-700" onClick={setIsOpen} >
           <X className="h-5 w-5" />
         </button>
+       </div>
+
       </div>
 
-      <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 my-4 items-center p-4'>
-        {/* {loading && (
-                  <>
-                    <div className="md:w-[140px] lg:w-[200px] aspect-[2.3/3] shimmer bg-gray-200 rounded text-xs flex justify-center items-center h-full"></div>
-                  </>
-                )} */}
-             {templates?.map((temp: any) => {
+       <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 my-4 items-center p-4 relative'>
+             {templateLoad  ? (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                      </div>
+                    ) :(<>
+              {templates?.map((temp: any) => {
                   return (
                     <div
                       key={`ti_${temp?.id}`}
@@ -116,7 +157,11 @@ const loadTemplateId = useCallback(
                       </div>
                     </div>
                   );
-                })}
+                })}                   
+                    </>
+
+                    )}
+
         </div>
               
     </div>

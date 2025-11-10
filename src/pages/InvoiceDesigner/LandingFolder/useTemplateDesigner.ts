@@ -169,8 +169,7 @@ export const useTemplateDesigner = ({
           if (!_template){
                 _template = await getOrFetchTemplate(
             data?.master?.voucherType,
-            "",
-            ""
+            "",""
           );
          };
           if (_template) {

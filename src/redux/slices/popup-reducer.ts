@@ -14,6 +14,7 @@ export interface popupDataProps {
   masterId?:number;
 }
 interface popupData {
+  printJobLoader:{isPrinting:boolean}
   onCloseWithUnsavedChange: { warn: boolean, succeeded: boolean, canceled: boolean }
   section: popupDataProps
   salesManRoute: popupDataProps
@@ -87,6 +88,7 @@ const initialState: popupData = {
   printerList:{isOpen:false,template:null,data:null,formState:null},
   CustomDesignerPopup:{ isOpen: false, key: null,reload:false, mode: "edit" ,},
   onCloseWithUnsavedChange: { warn: false, succeeded: false, canceled: false },
+  printJobLoader:{isPrinting:false},
   testPopup: { isOpen: false, key: null, mode: "edit", reload: true },
   groupOrder: { isOpen: false, key: null, mode: "edit", reload: true },
   groupCategory: { isOpen: false, key: null, mode: "edit", reload: true },
@@ -162,6 +164,10 @@ const popupDataSlice = createSlice({
     },
     toggleCustomDesignerPopup: (state, action: PayloadAction<popupDataProps>) => {
       state.CustomDesignerPopup = action.payload;
+    },
+    
+    printJobLoaderReducer: (state, action: PayloadAction<{ isPrinting: boolean}>) => {
+      state.printJobLoader = action.payload;
     },
     onCloseWithUnsavedChange: (state, action: PayloadAction<{ warn: boolean, succeeded: boolean, canceled: boolean }>) => {
       state.onCloseWithUnsavedChange = action.payload;
@@ -383,6 +389,7 @@ export const {
   toggleSelectPrinterPopup,
   toggleCustomDesignerPopup,
   onCloseWithUnsavedChange,
+  printJobLoaderReducer,
   toggleTestPopup,
   toggleGroupOrder,
   toggleGroupCategory,

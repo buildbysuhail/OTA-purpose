@@ -101,7 +101,7 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
           {currentSection?.type === "header" && <HeaderDesigner />}
 
           {
-            currentSection?.type === "table"  &&(
+            currentSection?.type === "table"  && (
               <TablePremiumDesigner<PrintDetailDto> tableState={tableColumns} />
             )
           }

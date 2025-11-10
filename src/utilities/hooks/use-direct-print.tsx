@@ -13,7 +13,7 @@ import { generateBarcodeDataUrl, generateBarcodePages } from "../barcode";
 import { DesignerElementType, PlacedComponent } from "../../pages/InvoiceDesigner/Designer/interfaces";
 import { BarcodePDFDocument } from "../../pages/LabelDesigner/download-preview-barcode";
 import ERPAlert from "../../components/ERPComponents/erp-sweet-alert";
-import { toggleSelectPrinterPopup } from "../../redux/slices/popup-reducer";
+import { printJobLoaderReducer, toggleSelectPrinterPopup } from "../../redux/slices/popup-reducer";
 import { useTranslation } from "react-i18next";
 import { useCallback } from "react";
 import SharedDownloadTemplate from "../../pages/InvoiceDesigner/DownloadPreview/Shared";
@@ -80,7 +80,12 @@ export const useDirectPrint = () => {
     }
     return images;
   };
-
+  const startPrintJob = ()=>{
+     dispatch(printJobLoaderReducer({ isPrinting: true }));
+  }
+  const closePrintJob = ()=>{
+    dispatch(printJobLoaderReducer({ isPrinting: false }));
+  }
   // Function to fetch template data (extracted from useTemplateDesigner)
   const fetchTemplateData = async (params: DirectPrintArgs) => {
     try {
@@ -137,10 +142,11 @@ export const useDirectPrint = () => {
 
   const directPrint = useCallback(async (params: DirectPrintArgs) => {
     try {
+      startPrintJob();
       let pdfDocument;
       let noDefaultPrint: boolean = false;
       let setPrinter: boolean = false;
-debugger
+      
       const {
         template,
         data,
@@ -303,9 +309,12 @@ debugger
       // await cpj.sendToClient();
 
       // return { success: true, reason: "printed" };
+      
     } catch (error) {
       console.error("Error printing:", error);
       return { success: false, reason: "error", error };
+    }finally{
+      closePrintJob();
     }
   }, []);
 

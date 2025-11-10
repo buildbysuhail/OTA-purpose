@@ -59,6 +59,16 @@
   padding-left: .5rem !important;
   padding-right: .5rem !important;
 } */
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.print-indicator {
+  animation: slideUp 0.25s ease-out;
+}
+
 .drill-down-link {
   color: #1976d2;
   /* Link color */

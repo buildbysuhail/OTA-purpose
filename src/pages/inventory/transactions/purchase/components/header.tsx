@@ -448,19 +448,19 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         </div>
                       </li>
                     )}
-                    {formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
-                      <li>
-                        <button
-                          onClick={selectTemplates}
-                          disabled={formState.formElements?.pnlMasters?.disabled}
-                          className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left  ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#fff7ed] hover:text-[#c2410c] dark:hover:bg-[#7c2d124d] dark:hover:text-[#fdba74]'}`}>
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200   ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#ffedd5] dark:bg-[#7c2d124d] group-hover:bg-[#fed7aa] dark:group-hover:bg-[#7c2d1299] group-hover:scale-110'}`}>
-                            <Layout className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#ea580c] dark:text-[#ffedd5]'}`} />
-                          </div>
-                          <span className="font-medium">{t("change_template")}</span>
-                        </button>
-                      </li>
-                    )}
+                 {formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
+                    <li>
+                      <button
+                        onClick={selectTemplates}
+                        // disabled={formState.formElements?.pnlMasters?.disabled}
+                        className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left  hover:bg-[#fff7ed] hover:text-[#c2410c] dark:hover:bg-[#7c2d124d] dark:hover:text-[#fdba74]`}>
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 bg-[#ffedd5] dark:bg-[#7c2d124d] group-hover:bg-[#fed7aa] dark:group-hover:bg-[#7c2d1299] group-hover:scale-110`}>
+                          <Layout className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#ea580c] dark:text-[#ffedd5]'}`} />
+                        </div>
+                        <span className="font-medium">{t("change_template")}</span>
+                      </button>
+                    </li>
+                  )}
 
                     {formState.formElements.printPreview?.visible && formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
                       <li>

@@ -122,8 +122,19 @@ const loading = (
 
 const Content: FC<ContentProps> = () => {
   const [myClass, setMyClass] = useState("");
+   const popupData = useSelector((state: RootState) => state?.PopupData);
   const userSession = useSelector((state: RootState) => state.UserSession);
   const clientSession = useSelector((state: RootState) => state.ClientSession);
+  
+const PrintJobIndicator = () => {
+  if (!popupData.printJobLoader?.isPrinting) return null; 
+
+  return (
+  <div className="fixed bottom-5 right-5 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg z-[99999] print-indicator">
+  🖨️ Printing…
+  </div>
+  );
+};
   const guardedRoutes = [
     // Profile
     { path: "/profile/workspace-logo", element: <WorkSpaceSettings /> },
@@ -210,6 +221,8 @@ const Content: FC<ContentProps> = () => {
   ];
 
   return (
+    <>
+      <PrintJobIndicator />
     <Suspense fallback={loading}>
       <Routes>
         <Route path="/" element={<Dashboard />} />
@@ -224,7 +237,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/sessions" element={<AccountSettingsSessions />} />
         
         <Route path="/members" element={<WorkspaceSettingsMembers />} />
-{guardedRoutes.map(({ path, element }, idx) => (
+        {guardedRoutes.map(({ path, element }, idx) => (
         <Route
           key={idx}
           path={path}
@@ -528,7 +541,7 @@ const Content: FC<ContentProps> = () => {
         {/* Reports */}
         <Route path="/reports" element={<ReportList />} />
 
-         {ReportsMenuItems.map((route, index) => (
+ {ReportsMenuItems.map((route, index) => (
   <Fragment key={`route-group-${index}`}>
     {route?.children?.map((routeChild, indexChild) => {
       const childPath = routeChild.path.includes("/_/")
@@ -556,6 +569,7 @@ const Content: FC<ContentProps> = () => {
         
       </Routes>
     </Suspense>
+    </>
   );
 };
 export default Content;

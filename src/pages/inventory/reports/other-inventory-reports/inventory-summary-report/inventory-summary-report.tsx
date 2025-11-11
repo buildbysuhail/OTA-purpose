@@ -198,7 +198,7 @@ const InventorySummaryReport = () => {
                 columns={columns}
                 
                 filterText="{branchID > 0 &&   Branch : [branch]} 
-                            {branchID <= 0 &&   of All Branch}"
+                            {branchID <= 0 &&   of All Branch}  "
                 gridHeader={t("inventory_summary_report")}
                 dataUrl={Urls.inventory_summary_report}
                 hideGridAddButton={true}

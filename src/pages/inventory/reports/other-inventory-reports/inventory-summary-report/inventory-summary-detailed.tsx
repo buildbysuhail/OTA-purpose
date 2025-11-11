@@ -12,7 +12,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import { useLocation } from "react-router-dom";
 import {
-  erpParseFloat,
   isNullOrUndefinedOrEmpty,
   mergeObjectsRemovingIdenticalKeys,
 } from "../../../../../utilities/Utils";
@@ -1118,9 +1117,6 @@ const InventorySummaryReportDetailed: FC<
               4
             ) || "0"
           );
-        },
-        cellSummaryAction: (value: number) => {
-          return erpParseFloat(getFormattedValue(value, false, 4));
         },
       },
       {

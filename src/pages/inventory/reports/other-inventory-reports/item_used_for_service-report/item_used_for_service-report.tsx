@@ -1,14 +1,17 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, { SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import Urls from "../../../../../redux/urls";
 import { useMemo } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import GridId from "../../../../../redux/gridId";
-import ItemUsedForServiceFilter, { ItemUsedForServiceFilterInitialState, } from "./item_used_for_service-report-filter";
-import { erpParseFloat } from "../../../../../utilities/Utils";
+import ItemUsedForServiceFilter, {
+  ItemUsedForServiceFilterInitialState,
+} from "./item_used_for_service-report-filter";
 
 const ItemUsedForService = () => {
   const { t } = useTranslation("accountsReport");
@@ -243,21 +246,15 @@ const ItemUsedForService = () => {
     },
     {
       column: "qty",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "fixedPoint",
       customizeText: customizeSummaryRow,
-      cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value, false, 4));
-      },
     },
     {
       column: "netAmount",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "fixedPoint",
       customizeText: customizeSummaryRow,
-      cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value, false, 4));
-      },
     },
   ];
   return (

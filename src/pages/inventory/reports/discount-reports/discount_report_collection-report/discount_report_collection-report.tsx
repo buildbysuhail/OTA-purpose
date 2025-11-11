@@ -7,7 +7,7 @@ import Urls from "../../../../../redux/urls";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import GridId from "../../../../../redux/gridId";
 import DiscountReportCollectionFilter, { DiscountReportCollectionFilterInitialState, } from "./discount_report_collection-report-filter";
-import { erpParseFloat, isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
+import {  isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
 
 const DiscountReportCollection = () => {
   const { t } = useTranslation("accountsReport");
@@ -148,7 +148,7 @@ const DiscountReportCollection = () => {
     },
     {
       column: "discount",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "fixedPoint",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -164,7 +164,7 @@ const DiscountReportCollection = () => {
         );
       },
       cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value, false, 4));
+        return getFormattedValue(value, false, 4);
       },
     },
   ];

@@ -8,7 +8,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import ItemWiseSummaryFilter, { ItemWiseSummaryFilterInitialState, } from "./itemwise-summary-filter";
 import { useLocation } from "react-router-dom";
-import { erpParseFloat } from "../../../../../utilities/Utils";
 
 interface ItemWiseSummaryReportProps {
   gridHeader: string;

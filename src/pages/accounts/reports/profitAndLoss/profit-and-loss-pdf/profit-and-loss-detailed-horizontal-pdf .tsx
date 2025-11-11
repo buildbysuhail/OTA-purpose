@@ -2,7 +2,6 @@ import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/renderer';
 import FontRegistration from '../../../../LabelDesigner/fontRegister';
 import { useTranslation } from 'react-i18next';
-import { erpParseFloat } from '../../../../../utilities/Utils';
 
 const styles = StyleSheet.create({
   page: {
@@ -199,7 +198,7 @@ const ProfitAndLossDetailedPDFTemplate: React.FC<{ data: any[], filter: any, get
                         {
                           item.total < 0
                             ? "(-)" + getFormattedValue(-1 * item.total)
-                            : erpParseFloat(getFormattedValue(item.total)) === 0
+                            : getFormattedValue(item.total) === 0
                               ? ''
                               : getFormattedValue(item.total)
                         }
@@ -250,7 +249,7 @@ const ProfitAndLossDetailedPDFTemplate: React.FC<{ data: any[], filter: any, get
                         {
                           item.total < 0
                             ? "(-)" + getFormattedValue(-1 * item.total)
-                            : erpParseFloat(getFormattedValue(item.total)) === 0
+                            : getFormattedValue(item.total) === 0
                               ? ''
                               : getFormattedValue(item.total)
                         }

@@ -1,13 +1,16 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {  SummaryConfig,} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import { useMemo } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../../redux/urls";
-import ItemWiseGroupedBrandwiseSalesFilter, {  ItemWiseGroupedBrandwiseSalesFilterInitialState,} from "./itemwise-grouped-brandwise-sales-filter";
-import { erpParseFloat } from "../../../../../utilities/Utils";
+import ItemWiseGroupedBrandwiseSalesFilter, {
+  ItemWiseGroupedBrandwiseSalesFilterInitialState,
+} from "./itemwise-grouped-brandwise-sales-filter";
 
 const ItemWiseGroupedBrandwiseSales = () => {
   const { t } = useTranslation("accountsReport");
@@ -330,39 +333,27 @@ const ItemWiseGroupedBrandwiseSales = () => {
     },
     {
       column: "total",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value, false, 4));
-      },
     },
     {
       column: "qty",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value, false, 3));
-      },
     },
     {
       column: "unitPrice",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value, false, 2));
-      },
     },
     {
       column: "stdPurchasePrice",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value, false, 2));
-      },
     },
   ];
 

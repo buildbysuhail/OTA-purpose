@@ -63,47 +63,47 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
       }
     } = {
       standard: {
-        bg: "bg-gradient-to-br from-blue-50 via-blue-50 to-indigo-100",
-        text: "text-blue-700",
-        border: "border-blue-200",
+        bg: "bg-gradient-to-br from-blue-50 via-blue-50 to-indigo-100 dark:from-blue-950 dark:via-blue-950 dark:to-indigo-900",
+        text: "text-blue-700 dark:text-blue-300",
+        border: "border-blue-200 dark:border-blue-800",
         accent: "bg-gradient-to-r from-blue-500 to-indigo-600",
-        light: "bg-blue-50",
+        light: "bg-blue-50 dark:bg-blue-950",
         gradient: "from-blue-500 to-indigo-600",
         shadow: "shadow-blue-500/25",
       },
       premium: {
-        bg: "bg-gradient-to-br from-purple-50 via-purple-50 to-pink-100",
-        text: "text-purple-700",
-        border: "border-purple-200",
+        bg: "bg-gradient-to-br from-purple-50 via-purple-50 to-pink-100 dark:from-purple-950 dark:via-purple-950 dark:to-pink-900",
+        text: "text-purple-700 dark:text-purple-300",
+        border: "border-purple-200 dark:border-purple-800",
         accent: "bg-gradient-to-r from-purple-500 to-pink-600",
-        light: "bg-purple-50",
+        light: "bg-purple-50 dark:bg-purple-950",
         gradient: "from-purple-500 to-pink-600",
         shadow: "shadow-purple-500/25",
       },
       spreadsheet: {
-        bg: "bg-gradient-to-br from-emerald-50 via-emerald-50 to-teal-100",
-        text: "text-emerald-700",
-        border: "border-emerald-200",
+        bg: "bg-gradient-to-br from-emerald-50 via-emerald-50 to-teal-100 dark:from-emerald-950 dark:via-emerald-950 dark:to-teal-900",
+        text: "text-emerald-700 dark:text-emerald-300",
+        border: "border-emerald-200 dark:border-emerald-800",
         accent: "bg-gradient-to-r from-emerald-500 to-teal-600",
-        light: "bg-emerald-50",
+        light: "bg-emerald-50 dark:bg-emerald-950",
         gradient: "from-emerald-500 to-teal-600",
         shadow: "shadow-emerald-500/25",
       },
       retail: {
-        bg: "bg-gradient-to-br from-orange-50 via-orange-50 to-amber-100",
-        text: "text-orange-700",
-        border: "border-orange-200",
+        bg: "bg-gradient-to-br from-orange-50 via-orange-50 to-amber-100 dark:from-orange-950 dark:via-orange-950 dark:to-amber-900",
+        text: "text-orange-700 dark:text-orange-300",
+        border: "border-orange-200 dark:border-orange-800",
         accent: "bg-gradient-to-r from-orange-500 to-amber-600",
-        light: "bg-orange-50",
+        light: "bg-orange-50 dark:bg-orange-950",
         gradient: "from-orange-500 to-amber-600",
         shadow: "shadow-orange-500/25",
       },
       default: {
-        bg: "bg-gradient-to-br from-slate-50 via-slate-50 to-gray-100",
-        text: "text-slate-700",
-        border: "border-slate-200",
+        bg: "bg-gradient-to-br from-slate-50 via-slate-50 to-gray-100 dark:from-slate-900 dark:via-slate-900 dark:to-gray-800",
+        text: "text-slate-700 dark:!text-dark-text",
+        border: "border-slate-200 dark:border-dark-border",
         accent: "bg-gradient-to-r from-slate-500 to-gray-600",
-        light: "bg-slate-50",
+        light: "bg-slate-50 dark:bg-dark-bg-card",
         gradient: "from-slate-500 to-gray-600",
         shadow: "shadow-slate-500/25",
       },
@@ -194,9 +194,9 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
 
   const handleChooseTemplate = async (template: TemplateState<unknown>) => {
     const length = tempData?.length || 0
-     const _template = await fetchCRMTemplateFromApiById(template.id);
-          if(!_template) return null;
-            const initial = templateInitialState().activeTemplate;
+    const _template = await fetchCRMTemplateFromApiById(template.id);
+    if (!_template) return null;
+    const initial = templateInitialState().activeTemplate;
     const _returnData = merge({}, initial, _template);
     const propertiesState = {
       ..._template.propertiesState,
@@ -222,7 +222,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
     templateGroup == "barcode"
       ? navigate(`/label-designer/new?template_group=${templateGroup}`)
       : navigate(`/invoice_designer/new?template_group=${templateGroup}`, { state })
-   }
+  }
 
   const renderTemplateCard = (template: TemplateState<unknown>, index: number) => {
     const isDefault = template?.isCurrent
@@ -232,12 +232,12 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
       return (
         <div
           key={`ti_${template.id}_${index}`}
-          className="w-full group flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 bg-white rounded-xl border border-slate-200 hover:border-slate-300 hover:shadow-lg transition-all duration-300 relative overflow-hidden"
+          className="w-full group flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 bg-white dark:bg-dark-bg-card rounded-xl border border-slate-200 dark:border-dark-border hover:border-slate-300 dark:hover:border-dark-border hover:shadow-lg transition-all duration-300 relative overflow-hidden"
         >
           {/* Subtle background animation */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-50/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-50/30 dark:via-blue-950/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-          <div className="relative flex-shrink-0 w-24 h-24 sm:w-20 sm:h-20 rounded-lg overflow-hidden bg-slate-50 border border-slate-200 shadow-sm">
+          <div className="relative flex-shrink-0 w-24 h-24 sm:w-20 sm:h-20 rounded-lg overflow-hidden bg-slate-50 dark:bg-dark-bg-card border border-slate-200 dark:border-dark-border shadow-sm">
             <img
               src={template?.thumbImage || "/placeholder.svg?height=96&width=80"}
               alt={template?.templateName}
@@ -252,22 +252,22 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
 
           <div className="relative flex-1 min-w-0">
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-2 gap-2">
-              <h3 className="font-semibold text-slate-900 text-base lg:text-lg truncate" title={template?.templateKind}>
+              <h3 className="font-semibold text-slate-900 dark:!text-dark-text text-base lg:text-lg truncate" title={template?.templateKind}>
                 {template?.templateKind}
               </h3>
               {isDefault && (
-                <span className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-xs px-2 sm:px-3 py-1 rounded-full font-medium border border-blue-200 flex items-center gap-1 flex-shrink-0 w-fit">
+                <span className="bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-950 dark:to-indigo-950 text-blue-800 dark:text-blue-200 text-xs px-2 sm:px-3 py-1 rounded-full font-medium border border-blue-200 dark:border-blue-800 flex items-center gap-1 flex-shrink-0 w-fit">
                   <StarIconSolid className="w-3 h-3" />
                   <span>{t("default")}</span>
                 </span>
               )}
             </div>
-            <p className="text-sm text-slate-500 capitalize mb-2">{template?.templateType || "Standard"} {t('template')}</p>
+            <p className="text-sm text-slate-500 dark:text-gray-400 capitalize mb-2">{template?.templateType || "Standard"} {t('template')}</p>
           </div>
 
           <div className="relative flex items-center gap-2 w-full sm:w-auto justify-end sm:justify-end">
             <button
-              className="bg-gradient-to-r from-blue-100 to-indigo-200 hover:from-blue-500 hover:to-indigo-600 hover:text-white text-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 hover:shadow-lg hover:scale-105 whitespace-nowrap"
+              className="bg-gradient-to-r from-blue-100 to-indigo-200 dark:from-blue-950 dark:to-indigo-950 hover:from-blue-500 hover:to-indigo-600 hover:text-white text-slate-700 dark:text-gray-300 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 hover:shadow-lg hover:scale-105 whitespace-nowrap"
               onClick={() => handleChooseTemplate(template)}
             >
               {t("use_this")}
@@ -283,8 +283,8 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
         className="
           group relative w-full max-w-[200px] sm:max-w-[220px] md:max-w-[240px] lg:max-w-[200px] 
           h-[250px] xs:h-[260px] sm:h-[280px] md:h-[300px] lg:h-[280px] 
-          aspect-[4/5] bg-white rounded-xl sm:rounded-2xl 
-          border border-slate-200 hover:border-slate-300 hover:shadow-lg 
+          aspect-[4/5] bg-white dark:bg-dark-bg-card rounded-xl sm:rounded-2xl 
+          border border-slate-200 dark:border-dark-border hover:border-slate-300 dark:hover:border-dark-border hover:shadow-lg 
           transition-all duration-500 transform hover:scale-[0.99] hover:-translate-y-1 overflow-hidden 
           mx-auto sm:mx-0
         "
@@ -294,7 +294,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
           <div className="absolute inset-0 bg-gradient-to-br from-amber-400/10 via-orange-400/10 to-pink-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         )}
 
-        <div className="relative w-full h-[80%] bg-gradient-to-br from-slate-50 to-slate-100 rounded-t-xl overflow-hidden">
+        <div className="relative w-full h-[80%] bg-gradient-to-br from-slate-50 dark:from-slate-800 to-slate-100 dark:to-slate-700 rounded-t-xl overflow-hidden">
           <img
             src={template?.thumbImage || "/placeholder.svg?height=300&width=240"}
             alt={template?.templateName}
@@ -333,11 +333,11 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
           </div>
         </div>
 
-        <div className="p-4 relative z-30 bg-white rounded-b-xl min-h-[20%] overflow-hidden">
+        <div className="p-4 relative z-30 bg-white dark:bg-dark-bg-card rounded-b-xl min-h-[20%] overflow-hidden">
           <div className="flex items-start justify-between mb-0">
             <div className="flex-1 min-w-0 max-w-full">
               <h3
-                className="font-semibold text-slate-900 text-sm line-clamp-2 leading-tight block overflow-hidden text-ellipsis"
+                className="font-semibold text-slate-900 dark:!text-dark-text text-sm line-clamp-2 leading-tight block overflow-hidden text-ellipsis"
                 title={template?.templateKind}
               >
                 {template?.templateKind}
@@ -347,7 +347,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
 
           <div className="flex items-center justify-between">
             {isDefault && (
-              <span className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-xs px-2 py-1 rounded-full font-medium border border-blue-200 flex items-center gap-1">
+              <span className="bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-950 dark:to-indigo-950 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded-full font-medium border border-blue-200 dark:border-blue-800 flex items-center gap-1">
                 <StarIconSolid className="w-2.5 h-2.5" />
                 <span>{t('default')}</span>
               </span>
@@ -359,20 +359,20 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
   }
 
   return (
-    <div className="flex bg-gradient-to-br from-slate-50 to-blue-50/30 w-full">
+    <div className="flex bg-gradient-to-br from-slate-50 to-blue-50/30 dark:from-slate-900 dark:to-slate-800 w-full">
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         {/* Enhanced Header - Matching Templates.tsx style */}
-        <div className="bg-white/80 backdrop-blur-xl shadow-sm border-b border-slate-200 p-2">
+        <div className="bg-white/80 dark:bg-dark-bg-card/80 backdrop-blur-xl shadow-sm border-b border-slate-200 dark:border-dark-border p-2">
           <div className="flex flex-col gap-3">
             {/* Mobile Layout (< 640px) */}
             <div className="sm:hidden">
               {/* Title and Close Button */}
               <div className="flex items-center justify-between gap-3 mb-3">
                 <div className="flex items-center gap-2 min-w-0 flex-1">
-                  <h1 className="text-base font-bold text-slate-900 capitalize truncate">
+                  <h1 className="text-base font-bold text-slate-900 dark:!text-dark-text capitalize truncate">
                     {t("choose_a_template")}
                   </h1>
-                  <span className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-xs w-6 h-6 rounded-full font-medium flex items-center justify-center flex-shrink-0">
+                  <span className="bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-950 dark:to-indigo-950 text-blue-800 dark:text-blue-200 text-xs w-6 h-6 rounded-full font-medium flex items-center justify-center flex-shrink-0">
                     {filteredTemplates.length}
                   </span>
                 </div>
@@ -387,22 +387,22 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
               {/* Search and View Toggle */}
               <div className="flex items-center gap-2">
                 <div className="relative flex-1 min-w-0">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 dark:text-gray-500 w-4 h-4" />
                   <input
                     type="text"
                     placeholder={t("search_templates")}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-9 pr-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-200"
+                    className="w-full pl-9 pr-4 py-2.5 border border-slate-300 dark:border-dark-border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white/80 dark:bg-dark-bg-card/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-200 dark:text-dark-text dark:placeholder-gray-500"
                   />
                 </div>
-                <div className="flex bg-white/80 backdrop-blur-sm rounded-lg p-1 border border-slate-200 shadow-sm flex-shrink-0">
+                <div className="flex bg-white/80 dark:bg-dark-bg-card/80 backdrop-blur-sm rounded-lg p-1 border border-slate-200 dark:border-dark-border shadow-sm flex-shrink-0">
                   <button
                     type="button"
                     onClick={() => setViewMode("grid")}
                     className={`p-2 rounded-md transition-all duration-200 ${viewMode === "grid"
                       ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                      : "text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-gray-200 hover:bg-slate-100 dark:hover:bg-dark-hover"
                       }`}
                   >
                     <Grid3X3 className="w-4 h-4" />
@@ -412,7 +412,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
                     onClick={() => setViewMode("list")}
                     className={`p-2 rounded-md transition-all duration-200 ${viewMode === "list"
                       ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                      : "text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-gray-200 hover:bg-slate-100 dark:hover:bg-dark-hover"
                       }`}
                   >
                     <List className="w-4 h-4" />
@@ -426,10 +426,10 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
               {/* Title and Close Button */}
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2 min-w-0 flex-1">
-                  <h1 className="text-lg font-bold text-slate-900 capitalize truncate">
+                  <h1 className="text-lg font-bold text-slate-900 dark:!text-dark-text capitalize truncate">
                     {t("choose_a_template")}
                   </h1>
-                  <span className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-xs w-6 h-6 rounded-full font-medium flex items-center justify-center flex-shrink-0">
+                  <span className="bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-950 dark:to-indigo-950 text-blue-800 dark:text-blue-200 text-xs w-6 h-6 rounded-full font-medium flex items-center justify-center flex-shrink-0">
                     {filteredTemplates.length}
                   </span>
                 </div>
@@ -444,22 +444,22 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
               {/* Search and View Toggle */}
               <div className="flex items-center gap-3">
                 <div className="relative flex-1 min-w-0">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 dark:text-gray-500 w-4 h-4" />
                   <input
                     type="text"
                     placeholder={t("search_templates")}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-9 pr-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-200"
+                    className="w-full pl-9 pr-4 py-2.5 border border-slate-300 dark:border-dark-border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white/80 dark:bg-dark-bg-card/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-200 dark:text-dark-text dark:placeholder-gray-500"
                   />
                 </div>
-                <div className="flex bg-white/80 backdrop-blur-sm rounded-lg p-1 border border-slate-200 shadow-sm flex-shrink-0">
+                <div className="flex bg-white/80 dark:bg-dark-bg-card/80 backdrop-blur-sm rounded-lg p-1 border border-slate-200 dark:border-dark-border shadow-sm flex-shrink-0">
                   <button
                     type="button"
                     onClick={() => setViewMode("grid")}
                     className={`p-2 rounded-md transition-all duration-200 ${viewMode === "grid"
                       ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                      : "text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-gray-200 hover:bg-slate-100 dark:hover:bg-dark-hover"
                       }`}
                   >
                     <Grid3X3 className="w-4 h-4" />
@@ -469,7 +469,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
                     onClick={() => setViewMode("list")}
                     className={`p-2 rounded-md transition-all duration-200 ${viewMode === "list"
                       ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                      : "text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-gray-200 hover:bg-slate-100 dark:hover:bg-dark-hover"
                       }`}
                   >
                     <List className="w-4 h-4" />
@@ -482,10 +482,10 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
             <div className="hidden lg:flex items-center justify-between gap-4">
               {/* Title and Count */}
               <div className="flex items-center gap-3 flex-shrink-0">
-                <h1 className="text-base font-bold text-slate-900 capitalize whitespace-nowrap">
+                <h1 className="text-base font-bold text-slate-900 dark:!text-dark-text capitalize whitespace-nowrap">
                   {t("choose_a_template")}
                 </h1>
-                <span className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-xs w-6 h-6 rounded-full font-medium flex items-center justify-center">
+                <span className="bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-950 dark:to-indigo-950 text-blue-800 dark:text-blue-200 text-xs w-6 h-6 rounded-full font-medium flex items-center justify-center">
                   {filteredTemplates.length}
                 </span>
               </div>
@@ -496,7 +496,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none h-[38px]">
                     <svg
-                      className="h-4 w-4 text-slate-400"
+                      className="h-4 w-4 text-slate-400 dark:text-gray-500"
                       fill="none"
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -518,7 +518,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
                       }
                     }}
                     placeholder={t("search_templates")}
-                    className="block w-full pl-10 pr-3 border border-slate-300 rounded-lg text-xs placeholder-slate-400 focus:outline-none transition-all duration-200 h-[38px]"
+                    className="block w-full pl-10 pr-3 border border-slate-300 dark:border-dark-border rounded-lg text-xs placeholder-slate-400 dark:placeholder-gray-500 focus:outline-none transition-all duration-200 h-[38px] dark:bg-dark-bg-card dark:text-dark-text"
                   />
                   {searchQuery && (
                     <button
@@ -526,7 +526,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
                       className="absolute inset-y-0 right-0 pr-3 flex items-center"
                     >
                       <svg
-                        className="h-4 w-4 text-slate-400 hover:text-slate-600"
+                        className="h-4 w-4 text-slate-400 dark:text-gray-500 hover:text-slate-600 dark:hover:text-gray-400"
                         fill="none"
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -541,13 +541,13 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
                 </div>
 
                 {/* View Toggle */}
-                <div className="flex bg-white/80 backdrop-blur-sm rounded-lg p-1 border border-slate-200 shadow-sm">
+                <div className="flex bg-white/80 dark:bg-dark-bg-card/80 backdrop-blur-sm rounded-lg p-1 border border-slate-200 dark:border-dark-border shadow-sm">
                   <button
                     type="button"
                     onClick={() => setViewMode("grid")}
                     className={`p-[6px] rounded-md transition-all duration-200 ${viewMode === "grid"
                       ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                      : "text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-gray-200 hover:bg-slate-100 dark:hover:bg-dark-hover"
                       }`}
                   >
                     <Grid3X3 className="w-4 h-4" />
@@ -557,7 +557,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
                     onClick={() => setViewMode("list")}
                     className={`p-[6px] rounded-md transition-all duration-200 ${viewMode === "list"
                       ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                      : "text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-gray-200 hover:bg-slate-100 dark:hover:bg-dark-hover"
                       }`}
                   >
                     <List className="w-4 h-4" />
@@ -577,7 +577,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
         </div>
 
         {/* Enhanced Template Type Tabs - Matching Templates.tsx style */}
-        <div className="bg-white/80 backdrop-blur-xl shadow-sm border-b border-slate-200 p-2">
+        <div className="bg-white/80 dark:bg-dark-bg-card/80 backdrop-blur-xl shadow-sm border-b border-slate-200 dark:border-dark-border p-2">
           <div className="flex flex-wrap gap-2">
             {templateTypes.map((type) => {
               const colors = getTemplateTypeColor(type.key)
@@ -587,7 +587,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
                   onClick={() => setActiveTab(type.key)}
                   className={`p-2 rounded-md font-medium text-sm transition-all duration-300 whitespace-nowrap relative overflow-hidden ${activeTab === type.key
                     ? `bg-gradient-to-r ${colors.gradient} text-white shadow-lg ${colors.shadow} transform scale-105`
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 hover:shadow-md"
+                    : "text-slate-600 dark:!text-dark-text hover:text-slate-900 dark:hover:text-gray-200 hover:bg-slate-100 dark:hover:bg-dark-hover hover:shadow-md"
                     }`}
                 >
                   <span className="relative z-10 flex items-center gap-1 sm:gap-2 text-[11px]">
@@ -596,7 +596,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
                     <span className="xs:hidden">{type.label}</span>( {type.count} )
                   </span>
                   {activeTab !== type.key && (
-                    <div className="absolute inset-0 bg-gradient-to-r from-slate-100 to-slate-50 opacity-0 hover:opacity-100 transition-opacity duration-200" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-slate-100 to-slate-50 dark:from-dark-hover dark:to-dark-bg-card opacity-0 hover:opacity-100 transition-opacity duration-200" />
                   )}
                 </button>
               )
@@ -605,7 +605,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
         </div>
 
         {/* Enhanced Content - Fixed for full width list view */}
-        <div className="flex-1 overflow-auto bg-gradient-to-br from-slate-50/50 to-blue-50/30">
+        <div className="flex-1 overflow-auto bg-gradient-to-br from-slate-50/50 to-blue-50/30 dark:from-slate-900/50 dark:to-slate-800/50">
           <div className="p-2 w-full">
             {activeTab === "all" ? (
               // Render grouped templates for "All" tab
@@ -615,17 +615,17 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
                   return (
                     <div key={templateType} className="w-full">
                       <div className="mb-2 w-full">
-                        <div className="border rounded-md p-2 bg-white border-slate-200">
+                        <div className="border rounded-md p-2 bg-white dark:bg-dark-bg-card border-slate-200 dark:border-dark-border">
                           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                             {/* parent */}
                             <div className="w-full">
                               {/* header */}
-                              <div className="flex items-center gap-2 border-b pb-2 border-slate-200">
-                                <div className={`${colors.text} p-2 bg-gray-200 rounded-md`}>
+                              <div className="flex items-center gap-2 border-b pb-2 border-slate-200 dark:border-dark-border">
+                                <div className={`${colors.text} p-2 bg-gray-200 dark:bg-dark-bg-card rounded-md`}>
                                   {getTemplateTypeIcon(templateType)}
                                 </div>
                                 <div>
-                                  <h2 className="text-sm font-bold text-gray-800 uppercase">
+                                  <h2 className="text-sm font-bold text-gray-800 dark:!text-dark-text uppercase">
                                     {templateType} ( {(templates as TemplateState<unknown>[]).length} )
                                   </h2>
                                   {/* <p className="text-xs font-medium text-gray-500">
@@ -682,8 +682,8 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
             {filteredTemplates.length === 0 && (
               <div className="text-center py-16 sm:py-20 px-4 w-full">
                 <div className="text-4xl sm:text-6xl mb-4 sm:mb-6">🎨</div>
-                <h3 className="text-lg sm:text-2xl font-bold text-slate-900 mb-3">{t('no_templates_found')}</h3>
-                <p className="text-slate-600 mb-6 text-sm sm:text-base max-w-sm mx-auto leading-relaxed">
+                <h3 className="text-lg sm:text-2xl font-bold text-slate-900 dark:!text-dark-text mb-3">{t('no_templates_found')}</h3>
+                <p className="text-slate-600 dark:text-gray-400 mb-6 text-sm sm:text-base max-w-sm mx-auto leading-relaxed">
                   {searchQuery
                     ? `We couldn't find any templates matching "${searchQuery}".`
                     : "No templates are available for this category."}
@@ -692,7 +692,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
                   {searchQuery && (
                     <button
                       onClick={() => setSearchQuery("")}
-                      className="w-full sm:w-auto bg-gradient-to-r from-slate-500 to-slate-600 hover:from-slate-600 hover:to-slate-700 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                      className="w-full sm:w-auto bg-gradient-to-r from-slate-500 to-slate-600 dark:from-gray-600 dark:to-gray-700 hover:from-slate-600 hover:to-slate-700 dark:hover:from-gray-700 dark:hover:to-gray-600 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
                     >
                       {t('clear_search')}
                     </button>

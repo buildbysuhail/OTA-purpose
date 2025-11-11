@@ -14,7 +14,7 @@ import { useLocation } from "react-router-dom";
 import RegisterFilter, {
   RegisterFilterInitialState,
 } from "./register-report-filter";
-import { erpParseFloat, isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
+import { isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
 
 interface RegisterProps {
   gridHeader: string;
@@ -23,7 +23,12 @@ interface RegisterProps {
   voucherType?: string;
 }
 
-const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId,voucherType }) => {
+const RegisterReport: FC<RegisterProps> = ({
+  gridHeader,
+  dataUrl,
+  gridId,
+  voucherType,
+}) => {
   const { t } = useTranslation("accountsReport");
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [filter, setFilter] = useState<any>(RegisterFilterInitialState);
@@ -1801,14 +1806,12 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId,voucher
         summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-       
       },
       {
         column: "netAmount",
         summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        
       },
       {
         column: "additionalExpenses",
@@ -1834,8 +1837,8 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId,voucher
             ) || "0"
           );
         },
-           cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value, false, 4));
+        cellSummaryAction: (value: number) => {
+          return getFormattedValue(value, false, 4);
         },
       },
       // {
@@ -1843,14 +1846,14 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId,voucher
       //   summaryType: "sum",
       //   valueFormat: "currency",
       //   customizeText: customizeSummaryRow,
-      
+
       // },
       // {
       //   column: "stdSalesPrice",
       //   summaryType: "sum",
       //   valueFormat: "currency",
       //   customizeText: customizeSummaryRow,
-      
+
       // },
       {
         column: "quantity",
@@ -1862,13 +1865,13 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId,voucher
         column: "free",
         summaryType: "sum",
         valueFormat: "currency",
-        customizeText: customizeSummaryRowString
+        customizeText: customizeSummaryRowString,
       },
       {
         column: "freeValue",
         summaryType: "sum",
         valueFormat: "currency",
-        customizeText: customizeSummaryRow
+        customizeText: customizeSummaryRow,
       },
       {
         column: "freeCost",
@@ -1886,7 +1889,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId,voucher
         column: "xRate",
         summaryType: "sum",
         valueFormat: "currency",
-        customizeText: customizeSummaryRowString
+        customizeText: customizeSummaryRowString,
       },
       {
         column: "additionalExpense",
@@ -1918,7 +1921,6 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId,voucher
         summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        
       },
       {
         column: "schemeDisc",
@@ -1964,6 +1966,7 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId,voucher
                   sorting: false,
                 }}
                 columns={columns}
+                scrollingMode="virtual"
                 gridHeader={t(gridHeader)}
                 dataUrl={dataUrl}
                 hideGridAddButton={true}
@@ -1975,11 +1978,11 @@ const RegisterReport: FC<RegisterProps> = ({ gridHeader, dataUrl, gridId,voucher
                 filterWidth={700}
                 filterInitialData={{
                   ...RegisterFilterInitialState,
-                   fromDate: moment(
+                  fromDate: moment(
                     clientSession.softwareDate,
                     "DD/MM/YYYY"
                   ).local(),
-                  voucherType:voucherType,
+                  voucherType: voucherType,
                 }}
                 onFilterChanged={(f: any) => setFilter(f)}
                 reload={true}

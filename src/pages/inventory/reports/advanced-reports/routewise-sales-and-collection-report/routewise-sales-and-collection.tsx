@@ -1,17 +1,19 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, { SummaryConfig } from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import Urls from "../../../../../redux/urls";
 import { useMemo } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
-import RouteWiseSalesAndCollectionFilter, { RouteWiseSalesAndCollectionFilterInitialState } from "./routewise-sales-and-collection-filter";
-import { erpParseFloat } from "../../../../../utilities/Utils";
-
+import RouteWiseSalesAndCollectionFilter, {
+  RouteWiseSalesAndCollectionFilterInitialState,
+} from "./routewise-sales-and-collection-filter";
 
 const RouteWiseSalesAndCollection = () => {
-  const { t } = useTranslation('accountsReport');
+  const { t } = useTranslation("accountsReport");
   const columns: DevGridColumn[] = [
     {
       dataField: "transactionDate",
@@ -22,7 +24,7 @@ const RouteWiseSalesAndCollection = () => {
       allowSorting: true,
       width: 100,
       showInPdf: true,
-      format:"dd-MMM-yyyy"
+      format: "dd-MMM-yyyy",
     },
     {
       dataField: "routeName",
@@ -43,7 +45,7 @@ const RouteWiseSalesAndCollection = () => {
       allowSorting: true,
       width: 100,
       showInPdf: true,
-     cellRender: (
+      cellRender: (
         cellElement: any,
         cellInfo: any,
         filter: any,
@@ -76,7 +78,7 @@ const RouteWiseSalesAndCollection = () => {
       allowSorting: true,
       width: 100,
       showInPdf: true,
-     cellRender: (
+      cellRender: (
         cellElement: any,
         cellInfo: any,
         filter: any,
@@ -119,7 +121,7 @@ const RouteWiseSalesAndCollection = () => {
       allowSorting: true,
       width: 120,
       showInPdf: true,
-    cellRender: (
+      cellRender: (
         cellElement: any,
         cellInfo: any,
         filter: any,
@@ -162,61 +164,62 @@ const RouteWiseSalesAndCollection = () => {
       allowSorting: true,
       width: 80,
       showInPdf: true,
-    }
+    },
   ];
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) => {
       const value = itemInfo.value;
-      if (value === null || value === undefined || value === "" || isNaN(value)) {
+      if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        isNaN(value)
+      ) {
         return "0";
       }
       return getFormattedValue(value) || "0";
     };
   }, [getFormattedValue]);
-   const customizeSummaryRow2 = useMemo(() => {
+  const customizeSummaryRow2 = useMemo(() => {
     return (itemInfo: { value: any }) => {
       const value = itemInfo.value;
-      if (value === null || value === undefined || value === "" || isNaN(value)) {
+      if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        isNaN(value)
+      ) {
         return "0";
       }
-      return getFormattedValue(value,false,2) || "0";
+      return getFormattedValue(value, false, 2) || "0";
     };
   }, [getFormattedValue]);
   const customizeTotal = (itemInfo: any) => `TOTAL`;
   const summaryItems: SummaryConfig[] = [
-     {
+    {
       column: "routeName",
       summaryType: "max",
-    customizeText: customizeTotal,
+      customizeText: customizeTotal,
     },
     {
       column: "salesTarget",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow2,
-      cellSummaryAction:(value: number) => {
-                return erpParseFloat(getFormattedValue(value, false, 2));
-              },
     },
     {
       column: "total_Sales",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-        },
     },
     {
       column: "total_Collection",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-                return erpParseFloat(getFormattedValue(value));
-              },
-    }
+    },
   ];
 
   return (
@@ -227,7 +230,11 @@ const RouteWiseSalesAndCollection = () => {
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 summaryItems={summaryItems}
-                remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                remoteOperations={{
+                  filtering: false,
+                  paging: false,
+                  sorting: false,
+                }}
                 columns={columns}
                 filterText="Between : {fromDate} - {toDate} "
                 gridHeader={t("routewise_sales_collection_report")}
@@ -239,7 +246,9 @@ const RouteWiseSalesAndCollection = () => {
                 filterContent={<RouteWiseSalesAndCollectionFilter />}
                 filterWidth={600}
                 filterHeight={150}
-                filterInitialData={RouteWiseSalesAndCollectionFilterInitialState}
+                filterInitialData={
+                  RouteWiseSalesAndCollectionFilterInitialState
+                }
                 reload={true}
                 gridId="grd_routewise_sales_collection"
               />

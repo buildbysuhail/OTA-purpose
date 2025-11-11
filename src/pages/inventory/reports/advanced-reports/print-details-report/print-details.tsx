@@ -1,16 +1,16 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, { SummaryConfig } from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import Urls from "../../../../../redux/urls";
-import { useMemo } from "react";
+import PrintDetailsFilter, {
+  PrintDetailsFilterInitialState,
+} from "./print-details-filter";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
-import PrintDetailsFilter, { PrintDetailsFilterInitialState } from "./print-details-filter";
-import { erpParseFloat } from "../../../../../utilities/Utils";
 
 const PrintDetails = () => {
-  const { t } = useTranslation('accountsReport');
+  const { t } = useTranslation("accountsReport");
   const columns: DevGridColumn[] = [
     {
       dataField: "partyName",
@@ -122,30 +122,9 @@ const PrintDetails = () => {
       width: 100,
       visible: true,
       showInPdf: true,
-    }
+    },
   ];
   const { getFormattedValue } = useNumberFormat();
-  const customizeSummaryRow = useMemo(() => {
-    return (itemInfo: { value: any }) => {
-      const value = itemInfo.value;
-      if (value === null || value === undefined || value === "" || isNaN(value)) {
-        return "0";
-      }
-      return getFormattedValue(value) || "0";
-    };
-  }, [getFormattedValue]);
-
-  const summaryItems: SummaryConfig[] = [
-    {
-      column: "grandTotal",
-      summaryType: "custom",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-      cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value, false, 4));
-      },
-    }
-  ];
 
   return (
     <Fragment>
@@ -154,8 +133,11 @@ const PrintDetails = () => {
           <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
-                summaryItems={summaryItems}
-                remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                remoteOperations={{
+                  filtering: false,
+                  paging: false,
+                  sorting: false,
+                }}
                 columns={columns}
                 filterText=": {dateFrom} - {dateTo}"
                 gridHeader={t("invoice_print_details_report")}

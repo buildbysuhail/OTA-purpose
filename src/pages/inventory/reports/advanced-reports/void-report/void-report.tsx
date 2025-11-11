@@ -1,14 +1,16 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, { SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import Urls from "../../../../../redux/urls";
 import { useMemo } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
-import VoidReportFilter, { VoidReportFilterInitialState, } from "./void-report-filter";
-import moment from "moment";
-import { erpParseFloat } from "../../../../../utilities/Utils";
+import VoidReportFilter, {
+  VoidReportFilterInitialState,
+} from "./void-report-filter";
 
 const VoidReport = () => {
   const { t } = useTranslation("accountsReport");
@@ -216,7 +218,7 @@ const VoidReport = () => {
       ) {
         return "0";
       }
-      return getFormattedValue(value) || "0";
+      return getFormattedValue(value,false,undefined,0,0,true) || "0";
     };
   }, [getFormattedValue]);
 
@@ -228,21 +230,15 @@ const VoidReport = () => {
     },
     {
       column: "total",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value));
-      },
     },
     {
       column: "qty",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value));
-      },
     },
   ];
 

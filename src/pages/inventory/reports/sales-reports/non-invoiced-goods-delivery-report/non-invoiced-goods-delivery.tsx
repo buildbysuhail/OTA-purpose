@@ -14,7 +14,7 @@ import NonInvoicedGoodsDeliveryFilter, {
 } from "./non-invloced-goods-deliveryfilter";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
-import { erpParseFloat } from "../../../../../utilities/Utils";
+import {  isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
 
 const NonInvoicedGoodsDelivery = () => {
   const { t } = useTranslation("accountsReport");
@@ -169,20 +169,6 @@ const NonInvoicedGoodsDelivery = () => {
   ];
 
   const { getFormattedValue } = useNumberFormat();
-  const customizeSummaryRow = useMemo(() => {
-    return (itemInfo: { value: any }) => {
-      const value = itemInfo.value;
-      if (
-        value === null ||
-        value === undefined ||
-        value === "" ||
-        isNaN(value)
-      ) {
-        return "0";
-      }
-      return getFormattedValue(value) || "0";
-    };
-  }, [getFormattedValue]);
   const customizeDate = (itemInfo: any) => `TOTAL`;
   const summaryItems: SummaryConfig[] = [
     {
@@ -192,12 +178,21 @@ const NonInvoicedGoodsDelivery = () => {
     },
     {
       column: "grandTotal",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-      cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value, false, 4));
-      },
+       customizeText: (itemInfo: { value: any }) => {
+              return (
+                getFormattedValue(
+                  parseFloat(
+                    getFormattedValue(
+                      isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value
+                    ).replace(/,/g, "") || "0"
+                  ),
+                  false,
+                  2
+                ) || "0"
+              );
+            },
     },
   ];
 

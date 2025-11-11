@@ -7,7 +7,6 @@ import { useNumberFormat } from "../../../../../utilities/hooks/use-number-forma
 import { GstReportFilterInitialState, } from "./gst-report-filter";
 import { useLocation } from "react-router-dom";
 import GstReportFilter from "./gst-report-filter";
-import { erpParseFloat } from "../../../../../utilities/Utils";
 interface GSTAdvRegisterFormatProps {
   gridHeader: string;
   dataUrl: string;
@@ -1478,27 +1477,18 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({ gridHeader, dataU
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value, false, 4));
-      },
     },
     {
       column: "cess",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value, false, 4));
-      },
     },
     {
       column: "addnlCessAmt",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value, false, 4));
-      },
     },
     {
       column: "taxable0",
@@ -1511,9 +1501,6 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({ gridHeader, dataU
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value, false, 2));
-      },
     },
     {
       column: "taxable3",

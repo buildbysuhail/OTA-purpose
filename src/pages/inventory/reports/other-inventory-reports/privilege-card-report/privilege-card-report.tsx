@@ -14,7 +14,6 @@ import PrivilegeCardReportFilter, {
 import moment from "moment";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
-import { erpParseFloat } from "../../../../../utilities/Utils";
 
 const PrivilegeCardReport = () => {
   const userSession = useSelector((state: RootState) => state.UserSession);
@@ -50,7 +49,7 @@ const PrivilegeCardReport = () => {
       allowSorting: true,
       width: 80,
       showInPdf: true,
-   cellRender: (
+      cellRender: (
         cellElement: any,
         cellInfo: any,
         filter: any,
@@ -59,8 +58,8 @@ const PrivilegeCardReport = () => {
         if (exportCell != undefined) {
           const value =
             cellElement.data?.billAmount == null
-              ? 0
-              : getFormattedValue(cellElement.data.billAmount,false,4);
+              ? ""
+              : getFormattedValue(cellElement.data.billAmount, false, 4);
           return {
             ...exportCell,
             text: value,
@@ -69,8 +68,8 @@ const PrivilegeCardReport = () => {
           };
         } else {
           return cellElement.data?.billAmount == null
-            ? 0
-            : getFormattedValue(cellElement.data.billAmount,false,4);
+            ? ""
+            : getFormattedValue(cellElement.data.billAmount, false, 4);
         }
       },
     },
@@ -209,30 +208,21 @@ const PrivilegeCardReport = () => {
     },
     {
       column: "addAmt",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
     },
     {
       column: "redeem",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
     },
     {
       column: "balance",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
     },
   ];
 

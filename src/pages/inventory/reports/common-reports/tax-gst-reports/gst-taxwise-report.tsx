@@ -557,18 +557,15 @@ const GSTTaxwise: FC<GSTTaxwiseProps> = ({ gridHeader, dataUrl, gridId }) => {
     },
     {
       column: "qty",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
       column: "taxableValue",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      // cellSummaryAction: (value: number) => {
-      //   return erpParseFloat(getFormattedValue(value));
-      // },
     },
     {
       column: "cgst",
@@ -623,14 +620,11 @@ const GSTTaxwise: FC<GSTTaxwiseProps> = ({ gridHeader, dataUrl, gridId }) => {
     },
     {
       column: "taxableValue",
-      summaryType: "custom",
+      summaryType:"sum",
       isGroupItem: true,
       showInGroupFooter: true,
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      // cellSummaryAction: (value: number) => {
-      //   return erpParseFloat(getFormattedValue(value));
-      // },
     },
     {
       column: "cgst",

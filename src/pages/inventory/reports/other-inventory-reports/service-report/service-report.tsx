@@ -12,7 +12,6 @@ import ServiceReportFilter, {
 } from "./service-report-filter";
 import Urls from "../../../../../redux/urls";
 import moment from "moment";
-import { erpParseFloat } from "../../../../../utilities/Utils";
 
 const ServiceReport = () => {
   const { t } = useTranslation("accountsReport");
@@ -301,30 +300,21 @@ const ServiceReport = () => {
     },
     {
       column: "billedRate",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value, false, 2));
-      },
     },
     {
       column: "invSpareTotal",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value, false, 2));
-      },
     },
     {
       column: "profit",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value, false, 2));
-      },
     },
   ];
 
@@ -341,9 +331,8 @@ const ServiceReport = () => {
                   paging: false,
                   sorting: false,
                 }}
-                  filterText="Between : {fromDate} - {toDate} {serviceID > 0 &&  Service : [service]} {isWarrantyService=='Y' &&  Warranty Only} {isWarrantyService=='N' && Non Warranty Only}"
+                filterText="Between : {fromDate} - {toDate} {serviceID > 0 &&  Service : [service]} {isWarrantyService=='Y' &&  Warranty Only} {isWarrantyService=='N' && Non Warranty Only}"
                 columns={columns}
-                
                 gridHeader={t("service_report")}
                 dataUrl={Urls.service_report}
                 hideGridAddButton={true}

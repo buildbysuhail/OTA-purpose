@@ -2,9 +2,12 @@ import { useTranslation } from "react-i18next";
 import ERPDateInput from "../../../../../components/ERPComponents/erp-date-input";
 import moment from "moment";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../../redux/store";
 
 const SalesmanwiseSalesAndCollectionFilter = ({ getFieldProps, handleFieldChange, formState, }: any) => {
   const { t } = useTranslation("accountsReport");
+    const clientSession = useSelector((state: RootState) => state.ClientSession);
   return (
     <div className="grid grid-cols-1 gap-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
@@ -30,7 +33,7 @@ const SalesmanwiseSalesAndCollectionFilter = ({ getFieldProps, handleFieldChange
       <div className="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-2">
         <ERPCheckbox
           {...getFieldProps("isVatIncluded")}
-          label={t("vat_included")}
+          label={clientSession.isAppGlobal? t("gst_included"):t("vat_included")}
           onChangeData={(data) =>
             handleFieldChange("isVatIncluded", data.isVatIncluded)
           }

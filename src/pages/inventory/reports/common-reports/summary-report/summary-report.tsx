@@ -13,10 +13,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import SummaryFilter from "./summary-report-filter";
 import { useLocation } from "react-router-dom";
-import {
-  erpParseFloat,
-  isNullOrUndefinedOrEmpty,
-} from "../../../../../utilities/Utils";
+import { isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
 interface SummaryProps {
   gridHeader: string;
   dataUrl: string;
@@ -883,7 +880,7 @@ const SummaryReport: FC<SummaryProps> = ({
           }
         },
       },
-   
+
       //in 1050 shown only on summary calculation
       {
         dataField: "toWarehouseName",
@@ -1007,7 +1004,7 @@ const SummaryReport: FC<SummaryProps> = ({
         allowFiltering: true,
         width: 100,
       },
-         {
+      {
         dataField: "counterName",
         caption: t("counter_name"),
         dataType: "string",
@@ -1106,7 +1103,7 @@ const SummaryReport: FC<SummaryProps> = ({
       },
       {
         column: "vat",
-        summaryType: "custom",
+        summaryType: "sum",
         valueFormat: "currency",
         customizeText: (itemInfo: { value: any }) => {
           return (
@@ -1122,7 +1119,7 @@ const SummaryReport: FC<SummaryProps> = ({
           );
         },
         cellSummaryAction: (value: number) => {
-          return erpParseFloat(getFormattedValue(value, false, 4));
+          return getFormattedValue(value, false, 4);
         },
       },
       {

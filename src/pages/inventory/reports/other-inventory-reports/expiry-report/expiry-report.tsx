@@ -11,7 +11,6 @@ import ExpiryReportFilter, {
   ExpiryReportFilterInitialState,
 } from "./expiry-report-filter";
 import Urls from "../../../../../redux/urls";
-import { erpParseFloat } from "../../../../../utilities/Utils";
 
 const ExpiryReport = () => {
   const { t } = useTranslation("accountsReport");
@@ -342,25 +341,19 @@ const ExpiryReport = () => {
     },
     {
       column: "stock",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "fixedPoint",
       isGroupItem: true,
       showInGroupFooter: true,
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
     },
     {
       column: "stockValue",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       isGroupItem: true,
       showInGroupFooter: true,
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
     },
 
     {
@@ -370,21 +363,15 @@ const ExpiryReport = () => {
     },
     {
       column: "stock",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "fixedPoint",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
     },
     {
       column: "stockValue",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
     },
   ];
 

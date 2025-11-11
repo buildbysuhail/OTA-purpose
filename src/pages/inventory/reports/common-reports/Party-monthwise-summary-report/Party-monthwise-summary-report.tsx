@@ -7,7 +7,6 @@ import ErpDevGrid, {
 import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import PartyMonthwiseSummaryReportFilter, { PartyMonthwiseSummaryReportFilterInitialState } from "./Party-monthwise-summary-report-filter";
-import { erpParseFloat } from "../../../../../utilities/Utils";
 
 interface PartyMonthwiseSummaryReportProps {
   gridHeader: string;

@@ -8,7 +8,6 @@ import Urls from "../../../../redux/urls"
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format"
 import { DevGridColumn } from "../../../../components/types/dev-grid-column"
 import DailyStatementReportFilter from "./daily-statement-report -filter"
-import { erpParseFloat } from "../../../../utilities/Utils"
 
 const DailyStatementAllReport = () => {
   const { t } = useTranslation("accountsReport")
@@ -34,6 +33,8 @@ const DailyStatementAllReport = () => {
       visible: true,
       groupIndex: 0,
       showInPdf: true,
+      // allowSorting:false,
+      // sortOrder:"None",
     },
     {
       dataField: "vchNo",
@@ -221,50 +222,9 @@ const DailyStatementAllReport = () => {
       return value >= 0 ? getFormattedValue(value, false, 2) : getFormattedValue(-1 * value, false, 2) || "0"; // Ensure formatted output or fallback to "0"
     };
   }, []);
-  const customizeDate = (itemInfo: any) => `TOTAL`;
+  // const customizeDate = (itemInfo: any) => `TOTAL`;
   const customizeGroup = (itemInfo: any) => `Group Total`;
   const summaryItems: SummaryConfig[] = [
-    {
-      column: "party",
-      summaryType: "max",
-      customizeText: customizeDate,
-    },
-    {
-      column: "cash",
-      summaryType: "custom",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
-    },
-    {
-      column: "credit",
-      summaryType: "custom",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
-    },
-    {
-      column: "bank",
-      summaryType: "custom",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
-    },
-    {
-      column: "total",
-      summaryType: "custom",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
-    },
     {
       column: "party",
       summaryType: "max",
@@ -274,47 +234,35 @@ const DailyStatementAllReport = () => {
     },
     {
       column: "cash",
-      summaryType: "custom",
+      summaryType: "sum",
       isGroupItem: true,
       valueFormat: "currency",
       showInGroupFooter: true,
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
     },
     {
       column: "credit",
-      summaryType: "custom",
+      summaryType: "sum",
       isGroupItem: true,
       valueFormat: "currency",
       showInGroupFooter: true,
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
     },
     {
       column: "bank",
-      summaryType: "custom",
+      summaryType: "sum",
       isGroupItem: true,
       valueFormat: "currency",
       showInGroupFooter: true,
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
     },
     {
       column: "total",
-      summaryType: "custom",
+      summaryType: "sum",
       isGroupItem: true,
       valueFormat: "currency",
       showInGroupFooter: true,
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
     },
   ];
   return (

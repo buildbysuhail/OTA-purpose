@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { ERPScrollArea } from "../../../../../../components/ERPComponents/erp-scrollbar";
 import {
+  removeTemplateTableColumn,
   setTemplateTableMasterState,
   setTemplateTableState,
   updateTemplateTableState,
@@ -12,6 +13,7 @@ import {
 import {
   ItemTableMasterState,
   TableColumn,
+  templateDesignerFormatOptions,
 } from "../../../../Designer/interfaces";
 import ERPCheckbox from "../../../../../../components/ERPComponents/erp-checkbox";
 import ErpInput from "../../../../../../components/ERPComponents/erp-input";
@@ -28,6 +30,7 @@ import { generateUniqueKey, moveArrayElement } from "../../../../../../utilities
 import ERPDataCombobox from "../../../../../../components/ERPComponents/erp-data-combobox";
 import ERPInput from "../../../../../../components/ERPComponents/erp-input";
 import ERPSlider from "../../../../../../components/ERPComponents/erp-slider";
+import { Trash } from "lucide-react";
 interface ItemTableDesignerProps<T> {
   tableState: TableColumn<T>[];
 }
@@ -50,43 +53,7 @@ const LabelsEditor = <T,>({
   const dispatch = useDispatch();
   const [openTableCol, setOpenTableCol] = useState({show: false, index: undefined, column: undefined} as {show: boolean, index?: number, column?: TableColumn<PrintDetailDto>});
 
-  // useEffect(() => {
-  //   const updatedCurrentTableState = currentTableState
-  //     .map((currentItem) => {
-  //       // Find matching item in tableState by field variable
-  //       const matchingTableItem = tableState.find(
-  //         (tableItem) => tableItem.field === currentItem.field
-  //       );
-
-  //       // If matching item exists in tableState, keep the current item
-  //       // Otherwise, it will be filtered out
-  //       return matchingTableItem ? currentItem : null;
-  //     })
-  //     .filter(Boolean); // Remove null items
-
-  //   // Add items from tableState that don't exist in currentTableState
-  //   const fieldsInCurrent = new Set(
-  //     currentTableState.map((item) => item.field)
-  //   );
-  //   const itemsToAdd = tableState.filter(
-  //     (tableItem) => !fieldsInCurrent.has(tableItem.field)
-  //   );
-
-  //   // Combine filtered current items with new items from tableState
-  //   const finalTableState = [...updatedCurrentTableState, ...itemsToAdd];
-
-  //   // Only update if there are actual changes
-  //   if (JSON.stringify(finalTableState) !== JSON.stringify(currentTableState)) {
-  //     dispatch(
-  //       setTemplateTableState({
-  //         fields: {},
-  //         key: "",
-  //         templateState: finalTableState as any,
-  //         updateAll: true,
-  //       })
-  //     );
-  //   }
-  // }, [tableState, currentTableState, onChange]);
+ 
  const dragItem = useRef<string | null>(null);
   const dragOverItem = useRef<string | null>(null);
    const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
@@ -118,7 +85,9 @@ const LabelsEditor = <T,>({
       dragOverItem.current = null;
     };
   
-  
+    const removeColumn = (item: TableColumn<T>) => {
+      dispatch(removeTemplateTableColumn({ key: item.key }));
+    };
 
   return (
     <>
@@ -151,6 +120,7 @@ const LabelsEditor = <T,>({
                 <ERPCheckbox
                   id="tb_col_show"
                   noLabel
+                  className=""
                   // label={t(item.label)}
                   checked={item.show}
                   onChange={(e) =>
@@ -180,6 +150,27 @@ const LabelsEditor = <T,>({
                     onChange(item.field as keyof T, { label: e.target.value })
                   }
                 />
+                <ERPDataCombobox
+                 disabled={item.show != true}
+                  id="tb_col_format"
+                  label={t("format")}
+                  field={
+                    {
+                      labelKey:"label",
+                      valueKey:"value"
+                    }
+                  }
+                  options={templateDesignerFormatOptions}
+                  value={item.format}
+                  onChange={(e) =>
+                  onChange &&
+                  onChange(item.field as keyof T, { format: e.target.value })
+                }
+                />          
+
+                  <div className="w-3 h-3 cursor-pointer self-center" title={t("remove")} onClick={()=>removeColumn(item)}>
+                    <Trash />
+                  </div>
               </div>
             );
           })}

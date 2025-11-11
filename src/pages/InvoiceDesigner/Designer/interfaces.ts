@@ -104,6 +104,7 @@ export interface PlacedComponent {
   id: string;
   type: DesignerElementType;
   content: string;
+  format?:string;
   x: number;
   y: number;
   textAlign?: "left" | "center" | "right";
@@ -118,7 +119,7 @@ export interface PlacedComponent {
   width: number;
   height: number;
   rotate:number;
-  lineThickness?:string;
+  lineThickness?:number;
   lineColor?:string;
   lineWidth?:number;
   lineType?:"solid"|"dotted"|"dashed";
@@ -572,6 +573,7 @@ export interface TableColumn<T> {
   label: string;
   width: number;
   field: keyof T;
+  format: string;
   show: boolean;
   key: string;
 }
@@ -580,8 +582,44 @@ export const initialTableColumn: TableColumn<PrintDetailDto> = {
   width: 50,
   field: "slNo",
   show: true,
-  key:""
+  key:"",
+  format: "NONE"
 }
+
+export const templateDesignerFormatOptions = [
+  { label: "NONE", value: "NONE" },
+  { label: "###", value: "###" },
+  { label: "###0", value: "###0" },
+  { label: "###0.0", value: "###0.0" },
+  { label: "###0.00", value: "###0.00" },
+  { label: "C###0.00", value: "C###0.00" },
+  { label: "###0.000", value: "###0.000" },
+  { label: "###0.0000", value: "###0.0000" },
+  { label: "###,###0.00", value: "###,###0.00" },
+  { label: "***###0.00/-***", value: "***###0.00/-***" },
+  { label: "hh:mm:ss tt", value: "hh:mm:ss tt" },
+  { label: "HH:mm:ss", value: "HH:mm:ss" },
+  { label: "dd-MM-yyyy", value: "dd-MM-yyyy" },
+  { label: "dd-MM-yyyy HH:mm:ss", value: "dd-MM-yyyy HH:mm:ss" },
+  { label: "d-M-yyyy", value: "d-M-yyyy" },
+  { label: "dd-MMM-yyyy", value: "dd-MMM-yyyy" },
+  { label: "MM/yy", value: "MM/yy" },
+  { label: "dd", value: "dd" },
+  { label: "MM", value: "MM" },
+  { label: "yyyy", value: "yyyy" },
+  { label: "yyyy-MM-dd", value: "yyyy-MM-dd" },
+  { label: "MM-dd-yyyy", value: "MM-dd-yyyy" },  
+  { label: "BIZ", value: "BIZ" },
+  { label: "SHRINK", value: "SHRINK" },
+  { label: "Qty", value: "Qty" },
+  { label: "Qty1", value: "Qty1" },
+  { label: "Qty2", value: "Qty2" },
+  { label: "Qty3", value: "Qty3" },
+  { label: "AR_NUM", value: "AR_NUM" },
+  { label: "AR_DIG2", value: "AR_DIG2" },
+  { label: "AR_DIG3", value: "AR_DIG3" },
+  { label: "AR_DATE", value: "AR_DATE" }
+];
 
 export interface TotalState {
   showTotalSection?: boolean;

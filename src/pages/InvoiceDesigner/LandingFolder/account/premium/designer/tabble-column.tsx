@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import { initialTableColumn, TableColumn } from "../../../../Designer/interfaces";
+import { initialTableColumn, TableColumn, templateDesignerFormatOptions } from "../../../../Designer/interfaces";
 import { addTemplateTableColumn, editTemplateTableColumn } from "../../../../../../redux/slices/templates/reducer";
 import { PrintDetailDto } from "../../../../../use-print-type";
 import ErpInput from "../../../../../../components/ERPComponents/erp-input";
@@ -44,19 +44,19 @@ export const TableColumnAddOrEdit: React.FC<TableManagerContentProps> = React.me
     return (
       <>
         <div className="px-1 py-3 flex gap-1 items-center justify-center">
-                                <ERPDataCombobox
-                                  id="unit"
-                                  label="Unit"
-                                  field={
-                                    {
-                                      labelKey:"label",
-                                      valueKey:"id"
-                                    }
-                                  }
-                                  options={options}
-                                  value={_column.field}
-                                  onChange={(e) =>{  setColumn(prev => ({ ...prev, field: e.value, label: e.label }))}}
-                                />
+          <ERPDataCombobox
+            id="unit"
+            label="Unit"
+            field={
+              {
+                labelKey:"label",
+                valueKey:"id"
+              }
+            }
+            options={options}
+            value={_column.field}
+            onChange={(e) =>{  setColumn(prev => ({ ...prev, field: e.value, label: e.label }))}}
+          />
           <ErpInput
             type="number"
             id="tb_col_width"
@@ -73,20 +73,44 @@ export const TableColumnAddOrEdit: React.FC<TableManagerContentProps> = React.me
             placeholder={t("col_name")}
             onChange={(e) => setColumn(prev => ({ ...prev, label: e.target.value }))}
           />
+          <ERPDataCombobox
+            id="format"
+            label={t("format")}
+            field={
+              {
+                labelKey:"label",
+                valueKey:"value"
+              }
+            }
+            options={templateDesignerFormatOptions}
+            value={_column.format}
+            onChange={(e) =>{  setColumn(prev => ({ ...prev, format: e.value}))}}
+          />          
         </div>
 
-        <div className="flex gap-10 justify-between border-t dark:!border-dark-border mt-0">
-          <ERPButton type="button" variant="primary" onClick={onSave}>
-            {t("save")}
-          </ERPButton>
-
+        <div className="flex  border-t justify-end  px-4">
           <ERPButton
+            type="button"
+            variant="primary"
+            onClick={onSave}
+            title={t("save")}
+          />
+           <ERPButton
+            type="button"
+            className="secondary"
+            onClick={onCancel}
+            title={t("cancel")}
+            // className="w-28 dark:text-dark-hover-text bg-[#e5e7eb] text-[#404040]"
+          />
+
+
+          {/* <ERPButton
             type="reset"
             onClick={onCancel}
             className="w-28 dark:text-dark-hover-text bg-[#e5e7eb] text-[#404040]"
           >
             {t("cancel")}
-          </ERPButton>
+          </ERPButton> */}
         </div>
       </>
     );

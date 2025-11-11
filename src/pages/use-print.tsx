@@ -1705,41 +1705,44 @@ export const getCommonValues = (field: string,
 };
 
 export function bindDataForPrint(field: string, printData: PrintResponse,
+  format:string ="NONE",
   convertAmountToEnglish?: (amount: number, currency?: Currencies | undefined) => string,
   convertAmountToArabic?: (amount: number, currency?: Currencies | undefined) => string,
   rowIndex: number = 0): any {
   const splitData = field.split("___");
   const group = splitData[0] as any;
   const key = splitData[1];
-  if (field == "custom___transactionBarcode") {
 
-  }
   if (isNullOrUndefinedOrEmpty(printData?.master))
     return "";
   const master = printData?.master
   const details = printData?.details
-
+let val;
   if (group == "master") {
-    return master[key as (keyof PrintMasterDto)]
+     val =  master[key as (keyof PrintMasterDto)]
+
   }
   else if (group == "details") {
-    return details[rowIndex]?.[key as (keyof PrintDetailDto)]
+      val =  details[rowIndex]?.[key as (keyof PrintDetailDto)]
+
   }
   else if (group == "custom") {
-    return getCommonValues(key as any, printData, convertAmountToArabic)
+    val = getCommonValues(key as any, printData, convertAmountToArabic)
   }
   // else if (group == "branch") {
   //   return userSession.currentBranchDetails?.[key as keyof BranchDetails]
   // }
   else if (group == "org") {
-    return printData.companyDetails?.[key as (keyof CompanyDetailsForPrint)]
+      val = printData.companyDetails?.[key as (keyof CompanyDetailsForPrint)]
   }
   else if (group == "headerFooter") {
-    return printData.headerFooter?.[key as keyof HeaderFooter]
+       val = printData.headerFooter?.[key as keyof HeaderFooter]       
   }
   else if (group == "customer") {
-    return printData?.master?.partyData?.[key as keyof PartyDetailsForPrint]
+       val = printData?.master?.partyData?.[key as keyof PartyDetailsForPrint]   
   }
+    return val = formatValue(val,format)
+     
 }
 // format field values based on format specification
 // const getFormatedValues = useCallback((value, format) => {
@@ -1998,15 +2001,16 @@ export const getOrFetchTemplate = async (
     return await fetchDefaultTemplate(voucherType, formType, customerType)
   }
 };
-export const formatValue = (value: any, format: string, opts: any) => {
+export const formatValue = (value: any, format: string,) => {
+
     let t = '';
   const ws =
     ' '.repeat(400); // Same as long ws string in C#
-  const { fldFont, fldAlign, fldLength } = opts;
+  // const { fldFont, fldAlign, fldLength } = opts;
 
   // QR Code fonts: return directly
-  if (fldFont === 'QR Code-Polosys' || fldFont === 'QR Code-Polosys-2') return value;
-
+  // if (fldFont === 'QR Code-Polosys' || fldFont === 'QR Code-Polosys-2') return value;
+if(!format) return  value;
   const fmt = format.toUpperCase();
 
   try {
@@ -2081,21 +2085,21 @@ export const formatValue = (value: any, format: string, opts: any) => {
     }
 
     // Apply alignment and field length
-    if (fldAlign === 'Left') {
-      t = (t + ws).substring(0, fldLength);
-    } else if (fldAlign === 'Right' || fldAlign === 'Right Justify') {
-      t = (ws + t).slice(-fldLength);
-    } else if (fldAlign === 'Center') {
-      const total = ws + t + ws;
-      const start = Math.max(0, Math.floor(total.length / 2 - fldLength / 2));
-      t = total.substring(start, start + fldLength);
-    } else {
-      try {
-        t = (t + ws).substring(0, fldLength);
-      } catch {
-        // ignore
-      }
-    }
+    // if (fldAlign === 'Left') {
+    //   t = (t + ws).substring(0, fldLength);
+    // } else if (fldAlign === 'Right' || fldAlign === 'Right Justify') {
+    //   t = (ws + t).slice(-fldLength);
+    // } else if (fldAlign === 'Center') {
+    //   const total = ws + t + ws;
+    //   const start = Math.max(0, Math.floor(total.length / 2 - fldLength / 2));
+    //   t = total.substring(start, start + fldLength);
+    // } else {
+    //   try {
+    //     t = (t + ws).substring(0, fldLength);
+    //   } catch {
+    //     // ignore
+    //   }
+    // }
   } catch {
     t = value;
   }

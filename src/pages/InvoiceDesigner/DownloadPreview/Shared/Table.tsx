@@ -2,6 +2,7 @@ import { PrintDetailDto } from "../../../use-print-type";
 import { ItemTableMasterState, TableColumn, TemplateState } from "../../Designer/interfaces";
 import { View, Text, StyleSheet } from "@react-pdf/renderer";
 import { containsArabicString } from "../../utils/pdf-util";
+import { formatValue } from "../../../use-print";
 
 type DownTableProps = {
   data: PrintDetailDto[];
@@ -120,7 +121,7 @@ const DEFAULT_COLUMN_WIDTH = "10%";
                 borderRightColor: tableMasterState?.tableColBorderColor || "#000",
               }}
             >
-             <Text>{cellValue}</Text>
+             <Text>{formatValue(cellValue,col.format)}</Text>
 
             </View>
             )

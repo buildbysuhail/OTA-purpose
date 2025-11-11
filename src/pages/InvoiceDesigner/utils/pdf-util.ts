@@ -126,8 +126,11 @@ export const PAGE_DIMENSIONS = {
 
   //point covertion util
   // ==================
-  export const ptToPx = (pt?: number): number => (pt ? (pt * 96) / 72 : 0);
-  export const pxToPt = (px?: number): number => (px ? (px * 72) / 96 : 0);  
+  export const PDF_DPI = 72;
+  export const BROWSER_DPI = 96;
+  export const PDF_SCALE_FACTOR = PDF_DPI / BROWSER_DPI; // 0.75
+  export const ptToPx = (pt?: number): number => (pt ? (pt * BROWSER_DPI ) / PDF_DPI  : 0);
+  export const pxToPt = (px?: number): number => (px ? (px * PDF_DPI ) / BROWSER_DPI : 0);  
 
 // =======================================================
 //Check Arabic String

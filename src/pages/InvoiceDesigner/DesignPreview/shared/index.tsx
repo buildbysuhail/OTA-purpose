@@ -27,6 +27,7 @@ const SharedTemplatePreview = ({ data, template, qrCodeImages = {}}: AccountTran
           paddingRight: `${propertiesState?.padding?.right ?? 0}pt`,
           paddingBottom: `${propertiesState?.padding?.bottom ?? 0}pt`,
           paddingLeft: `${propertiesState?.padding?.left ?? 0}pt`,
+          boxSizing: "border-box",
     }}
     >
         {/* Header */}
@@ -44,6 +45,7 @@ const SharedTemplatePreview = ({ data, template, qrCodeImages = {}}: AccountTran
           backgroundPosition: propertiesState?.bg_image_position ?? "center",
           backgroundSize: propertiesState?.bg_image_objectFit ?? "fill",   
           backgroundRepeat: "no-repeat",
+          boxSizing: "border-box",
 
           }}>
           <SharedPrvTable data={data?.details??[]} template={template} />

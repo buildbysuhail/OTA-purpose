@@ -6,6 +6,8 @@ import { containsArabicString } from "../../utils/pdf-util";
 import { formatValue } from "../../../use-print";
 
 const DEFAULT_COLUMN_WIDTH = "10%";
+const TABLE_CELL_PADDING = 4; // Must match PDF padding: 4
+const BORDER_WIDTH = 1; // Must match PDF borderWidth: 1
 
 type AccPrvTableProps = {
   data: PrintDetailDto[];
@@ -26,6 +28,7 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
     fontStyle: tableMasterState?.headerFontStyle?? undefined,
     color: tableMasterState?.headerFontColor || "#000",
     fontSize: `${tableMasterState?.headerFontSize??12}pt`,
+    lineHeight: 1.2,
   };
 
     const RowFontBase: CSSProperties = {
@@ -33,6 +36,7 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
     fontStyle: tableMasterState?.itemRowFontStyle?? undefined,
     color: tableMasterState?.itemRowFontColor || "#000",
     fontSize: `${tableMasterState?.itemRowFontSize??12}pt`,
+    lineHeight: 1.2,
   };
 
 
@@ -45,28 +49,32 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
   // component-level styles (DOM-friendly)
   const styles = useMemo(() => {
     const borderTop = tableMasterState?.showTableRowBorder
-      ? `1pt solid ${tableMasterState?.tableRowBorderColor || "#000"}`
+      ? `${BORDER_WIDTH}pt  solid ${tableMasterState?.tableRowBorderColor || "#000"}`
       : undefined;
     const borderBottom = tableMasterState?.showTableRowBorder
-      ? `1pt solid ${tableMasterState?.tableRowBorderColor || "#000"}`
+      ? `${BORDER_WIDTH}pt  solid ${tableMasterState?.tableRowBorderColor || "#000"}`
       : undefined;
     const borderLeft = tableMasterState?.showTableColBorder
-      ? `1pt solid ${tableMasterState?.tableColBorderColor || "#000"}`
+      ? `${BORDER_WIDTH}pt  solid ${tableMasterState?.tableColBorderColor || "#000"}`
       : undefined;
     const borderRight = tableMasterState?.showTableColBorder
-      ? `1pt solid ${tableMasterState?.tableColBorderColor || "#000"}`
+      ? `${BORDER_WIDTH}pt  solid ${tableMasterState?.tableColBorderColor || "#000"}`
       : undefined;
 
     const commonTh: CSSProperties = {
-      padding: 6,
+      padding:`${TABLE_CELL_PADDING}pt`,
       textAlign: "center",
       display: "flex",
       flexDirection: "column",
       justifyContent: "center",
+      alignItems: "center",
       flexWrap: "wrap",
       // prevent overflow and allow wrapping
       overflow: "hidden",
       boxSizing: "border-box",
+      // Prevent flex from changing dimensions
+      flexShrink: 0,
+      flexGrow: 0,      
     };
 
     return {
@@ -74,8 +82,8 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
         width: "100%",
         display: "flex",
         flexDirection: "column",
-        marginBottom: 10,
-        marginTop: 10,
+        marginBottom: 0,
+        marginTop: 0,
         borderTop,
         borderBottom,
         borderLeft,
@@ -90,7 +98,7 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
           : "#fff",
 
          borderBottom: tableMasterState?.showTableRowBorder
-          ? `1pt solid ${tableMasterState?.tableRowBorderColor || "#000"}`
+          ? `${BORDER_WIDTH}pt solid ${tableMasterState?.tableRowBorderColor || "#000"}`
           : undefined,  
                           
       } as CSSProperties,
@@ -106,10 +114,15 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
         backgroundColor: tableMasterState?.showRowBg ? tableMasterState?.itemRowBgColor : "#fff",
       } as CSSProperties,
       td: {
-        padding: 6,
+        padding: `${TABLE_CELL_PADDING}pt`,
         textAlign: "center",
         overflow: "hidden",
+        display: "flex",
+        justifyContent: "center",
         boxSizing: "border-box",
+         // Prevent flex from changing dimensions
+        flexShrink: 0,
+        flexGrow: 0,       
       } as CSSProperties,
       // cellText for DOM: allow wrapping and hyphenation
       cellText: {
@@ -117,6 +130,8 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
         overflowWrap: "break-word",
         wordBreak: "break-word",
         hyphens: "auto" as CSSProperties["hyphens"],
+        margin: 0,
+        padding: 0,
       } as CSSProperties,
     };
   }, [tableMasterState]);
@@ -130,7 +145,7 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
         {visibleColumns.map((col, idx) => {
           const borderRight =
             tableMasterState?.showTableColBorder && idx + 1 < visibleColumns.length
-              ? `1pt solid ${tableMasterState?.tableColBorderColor || "#000"}`
+              ? `${BORDER_WIDTH}pt solid ${tableMasterState?.tableColBorderColor || "#000"}`
               : undefined;
               const text =col.label?? String(col.field) 
           const isArabic = containsArabicString(text)
@@ -192,13 +207,13 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
           <div key={rowIndex}
            style={{...styles.tr,
            borderBottom: tableMasterState?.showTableRowBorder && rowIndex + 1 < data.length
-          ? `1pt solid ${tableMasterState?.tableRowBorderColor || "#000"}`
+          ? `${BORDER_WIDTH}pt solid ${tableMasterState?.tableRowBorderColor || "#000"}`
           : undefined,
            }}>
             {visibleColumns.map((col,index) => {
           const borderRight =
             tableMasterState?.showTableColBorder && index + 1 < visibleColumns.length
-              ? `1pt solid ${tableMasterState?.tableColBorderColor || "#000"}`
+              ? `${BORDER_WIDTH}pt solid ${tableMasterState?.tableColBorderColor || "#000"}`
               : undefined;
       // Get cell value
         const cellValue = row?.[String(col.field)] ?? "";

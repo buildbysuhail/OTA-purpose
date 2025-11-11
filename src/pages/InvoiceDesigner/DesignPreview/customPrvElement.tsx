@@ -14,9 +14,6 @@ interface Props {
   convertAmountToArabic: any;
 }
 
-const pxToPt = (px: number) => px * (72 / 96);
-
-
 export const RenderPreviewComponent: React.FC<Props> = ({
   component,
   data,
@@ -29,9 +26,10 @@ export const RenderPreviewComponent: React.FC<Props> = ({
     left: `${component.x}pt`,
     top: `${component.y}pt`,
     transform: `rotate(${component.rotate || 0}deg)`,
-    height: `${component.height}pt` || 50,
-    width: `${component.width}pt` || 50,
+    height: `${component.height || 50}pt`,  
+    width: `${component.width || 50}pt`, 
     zIndex:  component.containerId ? 10 : 1,
+    boxSizing: "border-box", 
   };
   
   // Calculate dynamic height for containers
@@ -73,23 +71,13 @@ export const RenderPreviewComponent: React.FC<Props> = ({
               key={component.id}
               style={{
                 ...baseStyle,
-                display: "flex",
-                alignItems: "flex-start",
+            display: "flex",
+            flexDirection: "column", // FIXED: Match PDF
+            alignItems: "stretch",   // FIXED: Match PDF
+            justifyContent: "flex-start", // FIXED: Match PDF
 
-                // Critical: apply the direction
-                // direction: textDirection,
                overflow:"hidden"
-                // Adjust justifyContent based on textAlign and direction
-                // justifyContent:
-                //   component.textAlign === "left"
-                //     ? textDirection === "rtl"
-                //       ? "flex-end"
-                //       : "flex-start"
-                //     : component.textAlign === "right"
-                //     ? textDirection === "rtl"
-                //       ? "flex-start"
-                //       : "flex-end"
-                //     : "center",
+
               }}
             >
               <span
@@ -104,11 +92,12 @@ export const RenderPreviewComponent: React.FC<Props> = ({
                   textAlign: component.textAlign || "center",
                   color: `rgb(${component.fontColor || "0,0,0"})`,
                   fontWeight: component.fontWeight ?? "normal",
-                  whiteSpace: "pre-wrap",
+                  whiteSpace:  "normal",
                   margin: 0,
                   padding: 0,
                   width: "100%",
-                  verticalAlign: "top",
+                  verticalAlign: "baseline",
+                  boxSizing: "border-box",
                 }}
               >
                 {finalContent}
@@ -143,6 +132,7 @@ export const RenderPreviewComponent: React.FC<Props> = ({
           key={component.id}
           style={{
             ...baseStyle,
+            height: 0, 
             width: component.lineWidth
               ? `${component.lineWidth}pt`
               : "100%",
@@ -162,8 +152,8 @@ export const RenderPreviewComponent: React.FC<Props> = ({
           key={component.id}
           style={{
             ...baseStyle,
-            width:  `${pxToPt(wPx)}`,
-           height:`${pxToPt(hPx)}` ,
+            width: `${wPx}pt`,
+           height: `${hPx}pt`,
           }}
         >
           <img
@@ -172,6 +162,7 @@ export const RenderPreviewComponent: React.FC<Props> = ({
             style={{
               width: "100%",
               height: "100%",
+              objectFit: "contain",
             }}
           />
         </div>
@@ -191,6 +182,7 @@ export const RenderPreviewComponent: React.FC<Props> = ({
     autoResize: false,
     minHeight: 100,
     maxHeight: 500,
+    borderRound: 0,
   };
 
   return (
@@ -203,12 +195,14 @@ export const RenderPreviewComponent: React.FC<Props> = ({
         height:`${containerHeight}pt`,
         width:`${component.width}pt`,
         backgroundColor: containerProps.backgroundColor,
-        border: `${containerProps.borderWidth}pt ${containerProps.borderStyle} ${containerProps.borderColor}`,
+            borderWidth: `${containerProps.borderWidth || 1}pt`, // FIXED: Explicit border properties
+            borderStyle: (containerProps.borderStyle || "solid") as CSSProperties["borderStyle"],
+            borderColor: containerProps.borderColor || "#d0d0d0",
         padding: `${containerProps.padding}pt`,
         boxSizing: "border-box",
         transform: `rotate(${component.rotate || 0}deg)`,
         overflow: containerProps.autoResize ? "visible" : "hidden",
-          borderRadius: `${containerProps?.borderRound || 1}pt`
+        borderRadius: `${containerProps?.borderRound || 1}pt`
       }}
     >
       {containerChildren.map((child) => (

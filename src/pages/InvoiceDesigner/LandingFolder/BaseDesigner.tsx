@@ -13,6 +13,7 @@ import TablePremiumDesigner from "./account/premium/designer/table-designer"
 import { PrintDetailDto } from "../../use-print-type"
 import SharedTemplatePreview from "../DesignPreview/shared"
 import { TableColumn } from "../Designer/interfaces"
+import { PDF_SCALE_FACTOR, ptToPx } from "../utils/pdf-util"
 
 interface BaseDesignerProps {
   designerType: string
@@ -43,6 +44,8 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
      masterId
     } = useTemplateDesigner({ templateGroup, templateKind: designerKind, designerType })
   const tableColumns: TableColumn<PrintDetailDto>[] = [];
+    const previewWidth = templateStyleProperties.previewWidth ?? 500;
+  const previewHeight = templateStyleProperties.previewHeight ?? 500;
     return (
       <div className="flex h-full text-black dark:text-white bg-white dark:bg-body_dark">
         {/* Mini Tab Icons */}
@@ -115,7 +118,7 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
             <div className="flex items-center gap-2">
               <h2 className="text-sm font-medium text-gray-700 dark:text-gray-300">Preview</h2>
               <div className="text-xs text-gray-500 dark:text-gray-400">
-                {templateStyleProperties.previewWidth}pt × {templateStyleProperties.previewHeight}pt
+                {previewWidth }pt × {previewHeight }pt
               </div>
             </div>
 
@@ -148,7 +151,8 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
                   style={{
                     width: `${templateStyleProperties.previewWidth??500}pt`,
                     height: `${templateStyleProperties.previewHeight??500}pt`,
-      
+                  // transform: `scale(${PDF_SCALE_FACTOR})`,
+                  transformOrigin: 'top left',
                   }}
                 >
                 {loading ? (

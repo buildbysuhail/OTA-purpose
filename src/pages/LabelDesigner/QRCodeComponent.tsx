@@ -41,11 +41,11 @@ export const QRCodeComponent: React.FC<QRCodeComponentProps> = ({
     if (!container || !props) return;
    
       const qrCode = new QRCodeStyling({
-      width: props.width ||128,
-      height: props.height || 128,
+      width: ptToPx(props.width) ||ptToPx(128),
+      height: ptToPx(props.height) ||ptToPx(128),
       data: props.value || "https://example.com",
       type: props.type || "svg",
-      margin: props.margin ?? 0,
+      margin:ptToPx(props.margin)  ?? 0,
       qrOptions: {
         errorCorrectionLevel: props.level || "M",
       },
@@ -54,8 +54,8 @@ export const QRCodeComponent: React.FC<QRCodeComponentProps> = ({
         ? {
             crossOrigin: props.imageOptions.crossOrigin || "anonymous",
             hideBackgroundDots: props.imageOptions.hideBackgroundDots,
-            imageSize: props.imageOptions.imageSize,
-            margin: props.imageOptions.margin,
+            imageSize:ptToPx(props.imageOptions.imageSize) ,
+            margin:ptToPx(props.imageOptions.margin) ,
           }
         : undefined,
       backgroundOptions: props.backgroundOptions

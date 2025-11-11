@@ -3,6 +3,7 @@ import { ItemTableMasterState, TableColumn, TemplateState } from "../../Designer
 import { View, Text, StyleSheet } from "@react-pdf/renderer";
 import { containsArabicString } from "../../utils/pdf-util";
 import { formatValue } from "../../../use-print";
+import { CSSProperties, useMemo } from "react";
 
 type DownTableProps = {
   data: PrintDetailDto[];
@@ -17,8 +18,9 @@ const DEFAULT_COLUMN_WIDTH = "10%";
   const arabicHeadFontFamily = tableMasterState?.arabicHeaderFontFamily?? "Amiri";
   const rowFontFamily = tableMasterState?.itemRowFontFamily || "Roboto";
   const arabicrowFontFamily = tableMasterState?.arabicItemRowFontFamily?? "Amiri";
- const property =  template?.propertiesState
-  const visibleColumns = accTableState?.filter((c) => c.show) ?? [];
+
+ // compute visible columns once
+const visibleColumns = accTableState?.filter((c) => c.show) ?? [];
 
   const styles = StyleSheet.create({
     container: {
@@ -49,6 +51,7 @@ const DEFAULT_COLUMN_WIDTH = "10%";
       fontSize: tableMasterState?.headerFontSize || 12,
       fontWeight: tableMasterState?.headerFontWeight || 400,
       fontStyle:  tableMasterState?.headerFontStyle || "normal",
+      lineHeight:1.2
     },
     tr: {
       flexDirection: "row",
@@ -65,11 +68,12 @@ const DEFAULT_COLUMN_WIDTH = "10%";
     td: {
       padding: 4,
       textAlign: "center",
-      flexGrow: 1,
+      // flexGrow: 1,
       fontSize: tableMasterState?.itemRowFontSize || 12,
       color: tableMasterState?.itemRowFontColor || "#000",
       fontWeight: tableMasterState?.itemRowFontWeight || 400,
-      fontStyle:  tableMasterState?.itemRowFontStyle || "normal",      
+      fontStyle:  tableMasterState?.itemRowFontStyle || "normal",  
+      lineHeight: 1.2,    
     },
   });
 
@@ -83,7 +87,8 @@ const DEFAULT_COLUMN_WIDTH = "10%";
           style={{
             ...styles.th,
             fontFamily:isArabic ? arabicHeadFontFamily: HeadFontFamily,
-            flex: 1,
+            width: col.width || DEFAULT_COLUMN_WIDTH,
+            minWidth: col.width || DEFAULT_COLUMN_WIDTH,
             maxWidth:col.width || DEFAULT_COLUMN_WIDTH,
             borderRightWidth:(tableMasterState?.showTableColBorder && idx + 1 < visibleColumns.length ) ? 1 : 0,
             borderRightColor: tableMasterState?.tableColBorderColor || "#000",
@@ -116,6 +121,8 @@ const DEFAULT_COLUMN_WIDTH = "10%";
               style={{
                 ...styles.td,
                 fontFamily:isArabic ? arabicrowFontFamily: rowFontFamily,
+                   width:  col.width || DEFAULT_COLUMN_WIDTH,
+                  minWidth:  col.width || DEFAULT_COLUMN_WIDTH,
                 maxWidth: col.width || DEFAULT_COLUMN_WIDTH,
                 borderRightWidth:tableMasterState?.showTableColBorder && idx + 1 < visibleColumns.length ? 1 : 0,
                 borderRightColor: tableMasterState?.tableColBorderColor || "#000",

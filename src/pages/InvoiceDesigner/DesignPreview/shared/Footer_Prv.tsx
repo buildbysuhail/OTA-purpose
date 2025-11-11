@@ -24,13 +24,19 @@ const ShardPrevFooter = ({
   const bgImage = footerState?.customElements?.background_image 
   return (
     <div
-    className="w-full h-auto relative flex flex-col flex-wrap " >
+    className="w-full relative flex flex-col  " 
+          style={{
+        minHeight: `${customTopHeight}pt`,
+        height: `${customTopHeight}pt`,
+        maxHeight: `${customTopHeight}pt`,      
+      }}
+    >
 
 
- {Array.isArray(customElements) && (
+          {Array.isArray(customElements) && (
               <div
                 style={{
-                minHeight: `${customTopHeight}pt`, height:`${customTopHeight}pt`,
+                minHeight: `${customTopHeight}pt`, height:`${customTopHeight}pt`,maxHeight: `${customTopHeight}pt`,
                 width: "100%",
                 backgroundImage: bgImage ? `url(${bgImage})` : "none",
                 backgroundPosition: footerState?.customElements?.bg_image_position || "center", // fallback default
@@ -38,6 +44,8 @@ const ShardPrevFooter = ({
                 backgroundRepeat: "no-repeat",
                 backgroundColor: `rgb(${footerState?.customElements?.background_color ?? "255,255,255"})`,
                 position: "relative",
+                boxSizing: "border-box",
+                overflow: "hidden",
                 }}
               >
                  {customElements.filter(comp => !comp.containerId).map((component) => (

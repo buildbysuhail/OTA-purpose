@@ -2566,6 +2566,19 @@ export const useTransaction = (
     // }
   };
 
+ type LogUserActionParams = {
+  action: string;
+  actionForm: string;
+};
+
+const logUserAction = async (input: LogUserActionParams) => {
+  const response = await api.postAsync(
+    `${Urls.log_user_action}`, input as any
+  );
+  return response;
+};
+
+
   const handleTextDataChange = async (
     value: any,
     columnName: string,
@@ -4407,6 +4420,132 @@ export const useTransaction = (
       throw error;
     }
   }
+  interface LoadInvTransactionMasterParams {
+  voucherNumber: string;
+  voucherPrefix: string;
+  voucherType: string;
+  voucherForm: string;
+}
+
+const loadInvTransactionMasterByVouchNo = async (input: LoadInvTransactionMasterParams) => {
+  if(!isNullOrUndefinedOrEmpty(input.voucherNumber)){
+  const query = new URLSearchParams(input as any).toString();
+  let srAmount = 0;
+  const response = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/loadInvTransactionMasterByVouchNo}?${query}`);
+  if(response && !response.isInvoiced){
+    srAmount = response.grandTotal;
+    dispatch(formStateMasterHandleFieldChange({
+      fields: {
+        srAmount: srAmount,  
+      },
+    }));
+  } else  {
+    dispatch(formStateMasterHandleFieldChange({
+      fields: {
+        srAmount: srAmount,  
+      },
+    }));
+    ERPAlert.show({
+      icon: "warning",
+      title: t("sales_return"),
+      text: t("This Voucher is already Cleared.."),
+      confirmButtonText: t("ok"), 
+    });
+  }
+  } else {
+    dispatch(formStateMasterHandleFieldChange({
+      fields: {
+        srAmount: 0,  
+      },
+    }));
+    ERPAlert.show({
+      icon: "warning",
+      title: t("sales_return"),
+      text: t("voucher_number_cannot_be_empty"),
+      confirmButtonText: t("ok"),
+    });
+    return null;
+  }
+};
+
+const handleDiscountSlab = async() => {
+  if (
+    applicationSettings.inventorySettings.enableDiscountSlabOffer &&
+    applicationSettings.accountsSettings.showTenderDialogInSales === false
+  ) {
+    try {
+      let outState: DeepPartial<TransactionFormState> = {
+        transaction: { master: {}, details: [] },
+      };
+      let discPerc = 0;
+
+      let details = formState.transaction.details.filter(
+        (x) => x.productID > 0
+      );
+      // Apply discount to each item with productID > 0
+      if (details.length > 0) {
+        const api = new APIClient()
+        const pids = formState.transaction.details.filter(x => x.productID && x.productID > 0).map(x => Number(x.productID)).join(',');
+      const res = await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/isDiscountable`, { productIDs: pids });
+        let lastRowIndex = -1
+      if(res && res.pids?.lengh > 0){
+        const netPerc = res.netPerc;
+        const _pids:number[] = res.pids.split(',').map((id: string) => Number(id.trim()));
+        details = details.filter(x => _pids.includes(x.productID)).map((item, i) => {
+          lastRowIndex = details.findIndex(x => x.slNo === item.slNo);
+          const detail = { slNo: item.slNo, discPerc: res.discPerc??0 };
+          const updatedRow = calculateRowAmount(
+            item,
+            "discPerc",
+            { result: { transaction: { details: [detail] } } },
+            true
+          );
+          if (updatedRow?.transaction?.details?.length ?? 0 > 0) {
+            outState.transaction!.details!.push(
+              updatedRow.transaction!.details![0]
+            );
+            return { ...item, ...updatedRow.transaction!.details![0] };
+          }
+          return item;
+        });
+
+        const summaryRes = calculateSummary(details, formState, {
+          result: {},
+        });
+        let totalRes = calculateTotal(
+          formState.transaction.master,
+          summaryRes
+            ? (summaryRes.summary as SummaryItems)
+            : initialInventoryTotals,
+          formState.formElements,
+          {
+            result: {},
+          }
+        );
+        if (totalRes) {
+          totalRes.summary = summaryRes.summary;
+          totalRes.transaction = totalRes.transaction ?? {};
+          totalRes.transaction.master = totalRes.transaction.master ?? {};
+          totalRes.transaction.master.billDiscount = 0;
+          totalRes.transaction.details = outState?.transaction
+            ?.details as TransactionDetail[];
+
+          dispatch(
+            formStateHandleFieldChangeKeysOnly({
+              fields: totalRes,
+              updateOnlyGivenDetailsColumns: true,
+            })
+          );
+           const res = focusCurrentColumn(lastRowIndex, "qty");
+            setCurrentCell(res, details[lastRowIndex], lastRowIndex != res?.rowIndex);
+        }
+      }
+      }
+    } catch (ex: any) {
+      console.error("Error applying discounts:", ex);
+    }
+  }
+  };
   return {
     downloadImportTemplateHeadersOnly,
     importFromExcel,
@@ -4452,5 +4591,8 @@ export const useTransaction = (
     handlePrintBarcode,
     loadLedgerData,
     postBillWiseDetails,
+    logUserAction,
+    loadInvTransactionMasterByVouchNo,
+    handleDiscountSlab
   };
 };

@@ -169,6 +169,7 @@ export interface UserModel {
   employeeId: number | 0;
   productVersion: string | "";
   dbIdValue: string | "";
+  isMaintainShift: boolean | false;
   counterwiseCashLedgerId: number | 0; // Adjust the type as per your requirements (e.g., string, number, etc.)
   counterAssignedCashLedgerId: number | 0;
   systemCode: string | "";
@@ -206,6 +207,7 @@ export const initialUserSessionData: UserModel = {
   employeeId: 0,
   counterwiseCashLedgerId: 0,
   counterAssignedCashLedgerId: 0,
+  isMaintainShift: false,
   systemCode: "",
   systemName: "",
   financialYearStatus: "Closed",

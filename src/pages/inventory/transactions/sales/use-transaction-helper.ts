@@ -1439,6 +1439,7 @@ export const useTransactionHelper = (transactionType: string) => {
       outputRow.unitPrice = detail.unitPrice;
       outputRow.transDate = transDate;
       outputRow.unitID = detail.unitID;
+      outputRow.SalesManID = detail.SalesManID > 0 ? detail.SalesManID : formState.transaction.master.employeeID;
 
       // Discounts
       outputRow.discountPer1 = detail.discPerc;
@@ -1631,6 +1632,7 @@ export const useTransactionHelper = (transactionType: string) => {
         formState.transaction.master.voucherType == VoucherType.PurchaseReturn
           ? formState.transaction.master.address4
           : "",
+        salesManID: formState.transaction.master.employeeID
     };
 
     master.partyName = !isNullOrUndefinedOrEmpty(master.displayName)

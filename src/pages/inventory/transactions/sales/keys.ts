@@ -42,3 +42,8 @@
 // PI_Ref
 //billwise
 //zero_qty_in_row
+
+
+//This Voucher is already Cleared..
+//invalid_input
+//voucher_number_cannot_be_empty

@@ -409,6 +409,11 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   cbLabelDesign: { visible: true, disabled: false, label: "label_design" },
   orderStatus: { visible: false, disabled: false, label: "order_status" },
   orderApprovalStatus: { visible: false, disabled: false, label: "" },
+  btnSettings: { visible: false, disabled: false, label: "" },
+  chkPrintGatepass: { visible: false, disabled: false, label: "" },
+  btnSrAmtPnlsShow: { visible: false, disabled: false, label: "" },
+  btnDiscountSlab: { visible: false, disabled: false, label: "" },
+  chkUserSalesPriceForTransfer: { visible: false, disabled: false, label: "" },
 
 };export const initialUserConfig: UserConfig = {
     clearDetailsAfterSaveAccounts: true,

@@ -593,7 +593,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
     downloadImportTemplateHeadersOnly,
     importFromExcel,
     loadLedgerData,
-    postBillWiseDetails
+    postBillWiseDetails,
+    logUserAction,
+    loadInvTransactionMasterByVouchNo,
+    handleDiscountSlab
   } = useTransaction(
     transactionType ?? "",
     btnSaveRef,
@@ -787,6 +790,282 @@ const TransactionForm: React.FC<TransactionProps> = ({
         applicationSettings.productsSettings?.batchCriteria != "NB"
           ? false
           : true;
+
+/////////////////////////
+// 1️⃣ Project visibility
+  if (applicationSettings.accountsSettings.maintainProjectSite) {
+    _formState.formElements = {
+      ..._formState.formElements,
+      lblProject: {
+        ...initialFormElements.lblProject,
+        visible: true
+      },
+      cbProject: {
+        ...initialFormElements.cbProject,
+        visible: true
+      }
+    };
+  }
+
+  // 2️⃣ KSA E-Invoice logic
+  if (applicationSettings.branchSettings.maintainKSA_EInvoice && formType === "VAT") {
+    _formState.formElements = {
+      ..._formState.formElements,
+      btnEdit: {
+        ...initialFormElements.btnEdit,
+        visible: false
+      },
+      btnDelete: {
+        ...initialFormElements.btnDelete,
+        visible: false
+      }
+    };
+
+    if (applicationSettings.branchSettings.createCreditNoteAutomaticallyOnSalesEdit) {
+      _formState.formElements.btnEdit = {
+        ..._formState.formElements.btnEdit,
+        visible: true
+      };
+    }
+  }
+
+  // 3️⃣ Initial date and field setup
+  if (!isInvoker) {
+    const today = softwareDate;
+
+    _formState.transaction.master.transactionDate = today.toISOString();
+    _formState.transaction.master.purchaseInvoiceDate = today.toISOString();
+
+    _formState.transaction.master.priceCategoryID = 0;
+
+
+      // 4️⃣ Party assignment logic
+      const g = userSession;
+
+      if (g.counterwiseCashLedgerId > 0 && applicationSettings.accountsSettings.allowSalesCounter) {
+        _formState.transaction.master.ledgerID = g.counterwiseCashLedgerId;
+        _formState.formElements.cbParty = {
+          ...initialFormElements.cbParty,
+          disabled: formType !== "BT" && !g.isMaintainShift
+        };
+      } else {
+        
+        _formState.transaction.master.ledgerID = applicationSettings.accountsSettings.defaultCashAcc;
+      }
+
+      const dbid = g.dbIdValue?.trim();
+      if (["543140180640", "BAHAMDOON", "HANAPLASTICS"].includes(dbid)) {
+        _formState.transaction.master.ledgerID = applicationSettings.accountsSettings.defaultCustomerLedgerID;
+      }
+
+      if (applicationSettings.accountsSettings.setDefaultCustomerInSales && !_formState.userConfig?.notSetDefaultCustomer) {
+        _formState.transaction.master.ledgerID = applicationSettings.accountsSettings.defaultCustomerLedgerID;
+      }
+
+      // 5️⃣ Salesman assignment
+      _formState.transaction.master.employeeID = 0;
+
+      if (g.employeeId > 0) {
+        _formState.transaction.master.employeeID = g.employeeId;
+        _formState.formElements.cbSalesMan = {
+          ..._formState.formElements.cbSalesMan,
+          disabled: ["BAHAMDOON", "DURRAH_RYD"].includes(dbid)
+        };
+      }
+    
+
+    // 6️⃣ Checkbox defaults
+      _formState.userConfig?.print: applicationSettings.inventorySettings.printInvAfterSave
+
+    _formState.formElements.chkDuplicationMessage = {
+      ...initialFormElements.chkDuplicationMessage,
+      checked: applicationSettings.inventorySettings.showProductDuplicationMessage
+    };
+
+    _formState.formElements.chkQtyAfterBarcode = {
+      ...initialFormElements.chkQtyAfterBarcode,
+      checked: applicationSettings.inventory.focusToQtyAfterBarcode
+    };
+
+    // 7️⃣ Tender button visibility
+    _formState.formElements.btnTender = {
+      ...initialFormElements.btnTender,
+      visible: applicationSettings.accounts.showTenderDialogInSales
+    };
+  }
+//////////////////////
+          
+if (userSession.dbIdValue?.trim() === "SEMAKA") {
+  _formState.formElements = {
+    ..._formState.formElements,
+    rbCash: {
+      ...initialFormElements.rbCash,
+      visible: true
+    },
+    rbCredit: {
+      ...initialFormElements.rbCredit,
+      visible: true
+    }
+  } as any;
+}
+
+if (userSession.dbIdValue === "543140180640") {
+  if (
+    userSession.userTypeCode === "BA" ||
+    userSession.userTypeCode === "CA"
+  ) {
+    _formState.formElements = {
+      ..._formState.formElements,
+      btnSettings: {
+        ...initialFormElements.btnSettings,
+        visible: true
+      }
+    } as any;
+  } else {
+    _formState.formElements = {
+      ..._formState.formElements,
+      btnSettings: {
+        ...initialFormElements.btnSettings,
+        visible: false
+      }
+    } as any;
+  }
+}
+
+if (
+  applicationSettings.inventorySettings?.blockBillDiscount === "On Standard Sales" ||
+  applicationSettings.inventorySettings?.blockBillDiscount === "On Both"
+) {
+  _formState.formElements = {
+    ..._formState.formElements,
+    txtBillDiscount: {
+      ...initialFormElements.txtBillDiscount,
+      disabled: true
+    },
+    txtBillDiscPerc: {
+      ...initialFormElements.txtBillDiscPerc,
+      disabled: true
+    }
+  } as any;
+}
+
+// if (hasBlockedDiscountRight(_formState.transaction.master.voucherForm) === true) {
+//   // txtBillDiscount.Enabled = txtBillDiscPerc.Enabled = false;
+//   _formState.formElements = {
+//     ..._formState.formElements,
+//     txtBillDiscount: {
+//       ...initialFormElements.txtBillDiscount,
+//       disabled: true
+//     },
+//     txtBillDiscPerc: {
+//       ...initialFormElements.txtBillDiscPerc,
+//       disabled: true
+//     }
+//   } as any;
+// }
+
+if (!isInvoker) {
+  // C# logic: if (PolosysFrameWork.General.DBID_VALUE.Trim() == "543140180640" || PolosysFrameWork.General.DBID_VALUE.Trim() == "BAHAMDOON" || PolosysFrameWork.General.DBID_VALUE.Trim() == "HANAPLASTICS")
+  if (
+    userSession.dbIdValue?.trim() === "543140180640" ||
+    userSession.dbIdValue?.trim() === "BAHAMDOON" ||
+    userSession.dbIdValue?.trim() === "HANAPLASTICS"
+  ) {
+    _formState.transaction.master.ledgerID = applicationSettings.accountsSettings?.defaultCustomerLedgerID;
+  }
+  
+  if (applicationSettings.accountsSettings?.setDefaultCustomerInSales) {
+    if (_formState.userConfig?.notSetDefaultCustomer !== true) {
+      _formState.transaction.master.ledgerID = applicationSettings.accountsSettings?.defaultCustomerLedgerID;
+    }
+  }
+}
+if (userSession.dbIdValue === "SAMAPLASTICS") {
+  _formState.formElements = {
+    ..._formState.formElements,
+    chkPrintAfterSave: {
+      ...initialFormElements.chkPrintAfterSave,
+      disabled: true
+    }
+  } as any;
+}
+  logUserAction({
+        action: `User Printed Voucher ${formState.transaction.master.voucherType}:${formState.transaction.master.voucherForm}:${formState.transaction.master.voucherPrefix}${formState.transaction.master.voucherNumber}`,
+        actionForm: formState.transaction.master.voucherType
+      });
+
+if (
+  applicationSettings.printerSettings?.printSelectedGatePass ||
+  applicationSettings.printerSettings?.printGatePass
+) {
+  _formState.printGatepass = true;
+  _formState.formElements = {
+    ..._formState.formElements,
+    chkPrintGatepass: {
+      ...initialFormElements.chkPrintGatepass,
+      disabled: false
+    }
+  } as any;
+} else {
+  _formState.printGatepass = false;
+  _formState.formElements = {
+    ..._formState.formElements,
+    chkPrintGatepass: {
+      ...initialFormElements.chkPrintGatepass,
+      disabled: true,
+    }
+  } as any;
+}
+
+if (userSession?.countryId === 1) {
+  _formState.formElements = {
+    ..._formState.formElements,
+    btnSrAmtPnlsShow: {
+      ...initialFormElements.btnSrAmtPnlsShow,
+      visible: false
+    }
+  } as any;
+}
+
+if (
+  applicationSettings.inventorySettings?.enableDiscountSlabOffer &&
+  applicationSettings.accountsSettings?.showTenderDialogInSales === false
+) {
+  _formState.formElements = {
+    ..._formState.formElements,
+    btnDiscountSlab: {
+      ...initialFormElements.btnDiscountSlab,
+      visible: true
+    }
+  } as any;
+}
+
+if (formType === "BT") {
+  _formState.formElements = {
+    ..._formState.formElements,
+    chkUserSalesPriceForTransfer: {
+      ...initialFormElements.chkUserSalesPriceForTransfer,
+      visible: true
+    }
+  } as any;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          /////////////////////////////////////////////////////////////////////////////
       _formState.userRightsFormCode = formCode ?? "";
       if (voucherType == "PI") {
         if (isInvoker && formType == "IMPORT") {

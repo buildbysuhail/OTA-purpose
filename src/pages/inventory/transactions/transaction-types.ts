@@ -442,6 +442,7 @@ export interface UserConfig {
   showSearchPopupWindowAutomatically?: boolean;
   enableVoucherPrefixAndDate?: boolean;
   showCustomersAfterSales?: boolean;
+  UserSalesPriceForTransfer?: boolean;
 }
 
 export type FormElementsState = {
@@ -678,6 +679,7 @@ export interface TransactionFormState {
   skipZeroQty: boolean;
   isUserConfigOpen?: boolean;
   privConfig?: string;
+  printGatepass?: boolean;
 }
 export interface GiftModel {
   productBatchId: number;

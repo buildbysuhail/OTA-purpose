@@ -12,12 +12,12 @@ export interface loadAccVoucherInput {
   voucherNumber: string; // Unique identifier for the voucher
   type?: string;         // Optional field to specify the type of action (e.g., Print, Edit)
 }
-export const logUserAction = createAsyncThunk<any, loadAccVoucherInput>('logUserAction', async (input) => {
+// export const logUserAction = createAsyncThunk<any, loadAccVoucherInput>('logUserAction', async (input) => {
 
   
-  const response = await api.getAsync(
-    `${Urls.log_user_action}`,
-    new URLSearchParams(input as any).toString()
-  );
-  return response;
-});
+//   const response = await api.getAsync(
+//     `${Urls.log_user_action}`,
+//     new URLSearchParams(input as any).toString()
+//   );
+//   return response;
+// });

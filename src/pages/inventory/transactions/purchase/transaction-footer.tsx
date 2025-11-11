@@ -522,7 +522,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                         localInputBox={formState?.userConfig?.inputBoxStyle}
                         id="printOnSave"
                         label={t(formState.formElements.printOnSave.label)}
-                        checked={formState.printOnSave}
+                        checked={formState.userConfig?.printOnSave}
                         onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { printOnSave: e.target.checked }, }))}
                         disabled={formState.formElements.printOnSave?.disabled}
                       />

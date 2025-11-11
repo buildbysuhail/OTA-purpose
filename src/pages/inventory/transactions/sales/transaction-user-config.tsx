@@ -159,9 +159,9 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
         onConfirm: async (result: any) => {
           const res = await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/ResetLocalSettings`, {});
           handleResponse(res, async () => {
-           const st = modelToBase64Unicode(res.item);
-                       await setStorageString(`${transactionType}_LocalSettings`, st);
-                       dispatch(formStateHandleFieldChange({ fields: { userConfig: res.item } }));
+            const st = modelToBase64Unicode(res.item);
+            await setStorageString(`${transactionType}_LocalSettings`, st);
+            dispatch(formStateHandleFieldChange({ fields: { userConfig: res.item } }));
           });
         },
       });
@@ -386,6 +386,16 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                     checked={formState?.userConfig?.blockZeroFigureEntry}
                     onChangeData={(e) => handleFieldChange("blockZeroFigureEntry", e.blockZeroFigureEntry)}
                   />
+                  {/* {formState.formElements.printOnSave.visible && ( */}
+                  <ERPCheckbox
+                    localInputBox={formState?.userConfig?.inputBoxStyle}
+                    id="printOnSave"
+                    label={t(formState.formElements.printOnSave.label)}
+                    checked={formState.userConfig?.printOnSave}
+                    onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { printOnSave: e.target.checked }, }))}
+                    disabled={formState.formElements.printOnSave?.disabled}
+                  />
+                  {/* )} */}
                 </div>
 
                 <div className="space-y-2">

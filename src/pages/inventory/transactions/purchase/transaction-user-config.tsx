@@ -74,9 +74,9 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
   const { appState, updateAppState } = useAppState();
   const isRtl = appState.locale.rtl;
   const [stockUpdate, setStockUpdate] = useState<boolean>(false);
-useEffect(() => {
-  dispatch(formStateHandleFieldChange({ fields: { privConfig: JSON.stringify(formState.userConfig || {}) } }));
-}, []);
+  useEffect(() => {
+    dispatch(formStateHandleFieldChange({ fields: { privConfig: JSON.stringify(formState.userConfig || {}) } }));
+  }, []);
 
   const handleToggle = () => {
     const newValue = !isExpanded;
@@ -158,7 +158,7 @@ useEffect(() => {
   //       onConfirm: async (result: any) => {
   //         const res = await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/ResetLocalSettings`, {});
   //         handleResponse(res, async () => {
-            
+
   //           const st = base64ToModelUnicode(res.item);
   //            const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`) ;
   //           await setStorageString(key, res.item);
@@ -183,425 +183,363 @@ useEffect(() => {
 
   return (
     <>
-        <div className="space-y-2 max-h-[calc(100vh-200px)] overflow-y-auto p-2" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
-            {/* View Toggle Section */}
-            <div className="mb-2 p-3 sm:p-4 bg-gradient-to-br from-[#eff6ff] via-[#eef2ff] to-[#faf5ff] dark:from-dark-bg dark:via-dark-hover-bg dark:to-dark-border rounded-xl border border-[#bfdbfe] dark:border-dark-border shadow-sm">
-              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-[#dbeafe] dark:bg-[#1e3a8a4D] flex-shrink-0">
-                    <Layout className="w-4 h-4 text-[#2563eb] dark:text-[#60a5fa]" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <h3 className="text-sm font-semibold text-gray-800 dark:text-dark-text">
-                      {t("view_settings")}
-                    </h3>
-                    <p className="text-xs text-gray-600 dark:text-dark-text/70">
-                      {t("choose_between_compact_or_expanded_view")}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-row gap-4 lg:gap-6">
-                  <div className="flex items-center justify-between sm:justify-start gap-3">
-                    <span className="text-sm text-gray-700 dark:text-dark-text font-medium">{isExpanded ? t("expanded_view") : t("compact_view")}</span>
-                    <div className="relative inline-block w-16 h-8 flex-shrink-0">
-                      <input
-                        type="checkbox"
-                        id="toggle-view"
-                        className="sr-only"
-                        checked={isExpanded}
-                        onChange={handleToggle}
-                      />
-                      <label
-                        htmlFor="toggle-view"
-                        className={`block cursor-pointer rounded-full p-1 transition-all duration-300 ease-in-out shadow-inner ${isExpanded ? "bg-gradient-to-r from-[#3b82f6] to-[#4f46e5] shadow-[#bfdbfe]" : "bg-gray-300 dark:bg-gray-600 shadow-gray-200"}`}>
-                        <div className={`w-6 h-6 bg-white rounded-full shadow-lg transform transition-all duration-300 ease-in-out ${isExpanded ? isRtl ? "translate-x-[-2rem]" : "translate-x-8" : "translate-x-0"}`} ></div>
-                      </label>
-                    </div>
-                  </div>
-
-                  <div className={`flex items-center justify-between sm:justify-start ${formState.transaction.master.voucherType === "LPO" ? "hidden" : "block"} gap-3`}>
-                    <span className="text-sm text-gray-700 dark:text-dark-text font-medium">{t("footer_position")}</span>
-                    <div className="relative inline-block w-16 h-8 flex-shrink-0">
-                      <input
-                        type="checkbox"
-                        id="footer-position"
-                        className="sr-only"
-                        checked={formState.userConfig?.footerPosition === 'right'}
-                        onChange={() => {
-                          const newPosition = formState.userConfig?.footerPosition === 'bottom' ? 'right' : 'bottom';
-                          handleFieldChange('footerPosition', newPosition);
-                        }}
-                      />
-                      <label
-                        htmlFor="footer-position"
-                        className={`block cursor-pointer rounded-full p-1 transition-all duration-300 ease-in-out shadow-inner ${formState.userConfig?.footerPosition === 'right' ? 'bg-gradient-to-r from-[#3b82f6] to-[#4f46e5] shadow-[#bfdbfe]' : 'bg-gray-300 dark:bg-gray-600 shadow-gray-200'}`}>
-                        <div className={`w-6 h-6 bg-white rounded-full shadow-lg transform transition-all duration-300 ease-in-out ${formState.userConfig?.footerPosition === "right" ? isRtl ? "-translate-x-8" : "translate-x-8" : "translate-x-0"}`}></div>
-                      </label>
-                    </div>
-                    <span className="text-sm text-gray-700 dark:text-dark-text font-medium">
-                      {formState.userConfig?.footerPosition === 'bottom' ? t('bottom') : t('right')}
-                    </span>
-                  </div>
-                </div>
+      <div className="space-y-2 max-h-[calc(100vh-200px)] overflow-y-auto p-2" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+        {/* View Toggle Section */}
+        <div className="mb-2 p-3 sm:p-4 bg-gradient-to-br from-[#eff6ff] via-[#eef2ff] to-[#faf5ff] dark:from-dark-bg dark:via-dark-hover-bg dark:to-dark-border rounded-xl border border-[#bfdbfe] dark:border-dark-border shadow-sm">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-[#dbeafe] dark:bg-[#1e3a8a4D] flex-shrink-0">
+                <Layout className="w-4 h-4 text-[#2563eb] dark:text-[#60a5fa]" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h3 className="text-sm font-semibold text-gray-800 dark:text-dark-text">
+                  {t("view_settings")}
+                </h3>
+                <p className="text-xs text-gray-600 dark:text-dark-text/70">
+                  {t("choose_between_compact_or_expanded_view")}
+                </p>
               </div>
             </div>
 
-            {/* Main Configuration Options - All checkboxes in one section */}
-            <CollapsibleSection title={t("configuration_options")} defaultExpanded={true} icon={<Settings className="w-4 h-4 text-[#2563eb] dark:text-[#60a5fa]" />}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6 relative">
-                <div className="space-y-2">
-                  <ERPCheckbox
-                    id="useBarcode"
-                    label={t("use_barcode")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.useBarcode}
-                    onChangeData={(e) => handleFieldChange("useBarcode", e.useBarcode)}
-                    
+            <div className="flex flex-col sm:flex-row gap-4 lg:gap-6">
+              <div className="flex items-center justify-between sm:justify-start gap-3">
+                <span className="text-sm text-gray-700 dark:text-dark-text font-medium">{isExpanded ? t("expanded_view") : t("compact_view")}</span>
+                <div className="relative inline-block w-16 h-8 flex-shrink-0">
+                  <input
+                    type="checkbox"
+                    id="toggle-view"
+                    className="sr-only"
+                    checked={isExpanded}
+                    onChange={handleToggle}
                   />
-                  {/* <ERPCheckbox
+                  <label
+                    htmlFor="toggle-view"
+                    className={`block cursor-pointer rounded-full p-1 transition-all duration-300 ease-in-out shadow-inner ${isExpanded ? "bg-gradient-to-r from-[#3b82f6] to-[#4f46e5] shadow-[#bfdbfe]" : "bg-gray-300 dark:bg-gray-600 shadow-gray-200"}`}>
+                    <div className={`w-6 h-6 bg-white rounded-full shadow-lg transform transition-all duration-300 ease-in-out ${isExpanded ? isRtl ? "translate-x-[-2rem]" : "translate-x-8" : "translate-x-0"}`} ></div>
+                  </label>
+                </div>
+              </div>
+
+              <div className={`flex items-center justify-between sm:justify-start ${formState.transaction.master.voucherType === "LPO" ? "hidden" : "block"} gap-3`}>
+                <span className="text-sm text-gray-700 dark:text-dark-text font-medium">{t("footer_position")}</span>
+                <div className="relative inline-block w-16 h-8 flex-shrink-0">
+                  <input
+                    type="checkbox"
+                    id="footer-position"
+                    className="sr-only"
+                    checked={formState.userConfig?.footerPosition === 'right'}
+                    onChange={() => {
+                      const newPosition = formState.userConfig?.footerPosition === 'bottom' ? 'right' : 'bottom';
+                      handleFieldChange('footerPosition', newPosition);
+                    }}
+                  />
+                  <label
+                    htmlFor="footer-position"
+                    className={`block cursor-pointer rounded-full p-1 transition-all duration-300 ease-in-out shadow-inner ${formState.userConfig?.footerPosition === 'right' ? 'bg-gradient-to-r from-[#3b82f6] to-[#4f46e5] shadow-[#bfdbfe]' : 'bg-gray-300 dark:bg-gray-600 shadow-gray-200'}`}>
+                    <div className={`w-6 h-6 bg-white rounded-full shadow-lg transform transition-all duration-300 ease-in-out ${formState.userConfig?.footerPosition === "right" ? isRtl ? "-translate-x-8" : "translate-x-8" : "translate-x-0"}`}></div>
+                  </label>
+                </div>
+                <span className="text-sm text-gray-700 dark:text-dark-text font-medium">
+                  {formState.userConfig?.footerPosition === 'bottom' ? t('bottom') : t('right')}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Configuration Options - All checkboxes in one section */}
+        <CollapsibleSection title={t("configuration_options")} defaultExpanded={true} icon={<Settings className="w-4 h-4 text-[#2563eb] dark:text-[#60a5fa]" />}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6 relative">
+            <div className="space-y-2">
+              <ERPCheckbox
+                id="useBarcode"
+                label={t("use_barcode")}
+                data={formState.userConfig}
+                checked={formState?.userConfig?.useBarcode}
+                onChangeData={(e) => handleFieldChange("useBarcode", e.useBarcode)}
+
+              />
+              {/* <ERPCheckbox
                     id="resizeGrid"
                     label={t("resize_grid")}
                     data={formState.userConfig}
                     checked={formState?.userConfig?.resizeGrid}
                     onChangeData={(e) => handleFieldChange("resizeGrid", e.resizeGrid)}
                   /> */}
-                  <ERPCheckbox
-                    id="showProductInfoPopup"
-                    label={t("show_product_info_popup")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.showProductInfoPopup}
-                    onChangeData={(e) => handleFieldChange("showProductInfoPopup", e.showProductInfoPopup)}
-                  />
-                  <ERPCheckbox
-                    id="showPurchaserOnly"
-                    label={t("show_purchaser_only")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.showPurchaserOnly}
-                    onChangeData={(e) => handleFieldChange("showPurchaserOnly", e.showPurchaserOnly)}
-                  />
-                  <ERPCheckbox
-                    id="useSupplierProductCode"
-                    label={t("use_supplier_product_code")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.useSupplierProductCode}
-                    onChangeData={(e) => handleFieldChange("useSupplierProductCode", e.useSupplierProductCode)}
-                  />
-                  {formState.transaction.master.voucherType === 'PR' && (
-                    <ERPCheckbox
-                      id="enableVoucherPrefix"
-                      label={t("enable_voucher_prefix")}
-                      data={formState.userConfig}
-                      checked={formState.userConfig?.enableVoucherPrefix}
-                      onChangeData={(e) => handleFieldChange("enableVoucherPrefix", e.enableVoucherPrefix)}
-                    />
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <ERPCheckbox
-                    id="enableItemCodeSearchInNameColumn"
-                    label={t("enable_item_code_search_in_name_column")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.enableItemCodeSearchInNameColumn}
-                    onChangeData={(e) => handleFieldChange("enableItemCodeSearchInNameColumn", e.enableItemCodeSearchInNameColumn)}
-                  />
-                  <ERPCheckbox
-                    id="holdSameCode"
-                    label={t("hold_same_code")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.holdSameCode}
-                    onChangeData={(e) => handleFieldChange("holdSameCode", e.holdSameCode)}
-                  />
-                  <ERPCheckbox
-                    id="printPreview"
-                    label={t("print_preview")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.printPreview??false}
-                    onChangeData={(e) => handleFieldChange("printPreview", e.printPreview)}
-                  />
-                  <ERPCheckbox
-                    id="dummyProducts"
-                    label={t("dummy_products")}
-                    data={formState}
-                    checked={formState?.dummyProducts}
-                    onChangeData={(e) => dispatch(formStateHandleFieldChange({ fields: { dummyProducts: e.dummyProducts } }))}
-                  />
-                  <ERPCheckbox
-                    id="duplicationMessage"
-                    label={t("duplication_message")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.duplicationMessage}
-                    onChangeData={(e) => handleFieldChange("duplicationMessage", e.duplicationMessage)}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <ERPCheckbox
-                    id="setDefaultQuantity"
-                    label={t("set_default_quantity")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.setDefaultQuantity}
-                    onChangeData={(e) => handleFieldChange("setDefaultQuantity", e.setDefaultQuantity)}
-                  />
-                  <ERPCheckbox
-                    id="useInSearch"
-                    label={t("use_in_search")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.useInSearch}
-                    onChangeData={(e) => handleFieldChange("useInSearch", e.useInSearch)}
-                  />
-                  <ERPCheckbox
-                    id="useCodeSearch"
-                    label={t("use_code_search")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.useCodeSearch}
-                    onChangeData={(e) => handleFieldChange("useCodeSearch", e.useCodeSearch)}
-                  />
-                  <ERPCheckbox
-                    id="barCodePrev"
-                    label={t("show_barcode_preview")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.barCodePrev}
-                    onChangeData={(e) => handleFieldChange("barCodePrev", e.barCodePrev)}
-                  />
-                  <ERPCheckbox
-                    id="stockUpdate"
-                    label={t("stock_update")}
-                    data={formState.transaction.master}
-                    checked={formState.transaction.master.stockUpdate}
-                    onChangeData={(e) => handleStockUpdateChange(e.stockUpdate)}
-                  />
-                </div>
-              </div>
-              <div className="absolute top-[200px] right-[30px]">
-                {formState.transaction.master.invTransactionMasterID > 0 && (
-                  <button
-                    className="w-10 h-10 rounded-full flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-md transition-all duration-200 ease-in-out hover:scale-105 active:scale-95"
-                    onClick={handleUndoClick}
-                    title="undo"
-                  >
-                    <Undo className="w-4 h-4 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200" />
-                  </button>
-                )}
-              </div>
-            </CollapsibleSection>
-
-
-            {/* Cost Center Settings */}
-            <CollapsibleSection title={t("cost_center_settings")} defaultExpanded={false} icon={<Building2 className="w-4 h-4 text-[#7c3aed] dark:text-[#a78bfa]" />}>
-              <ERPDataCombobox
-                id="presetCostenterId"
+              <ERPCheckbox
+                id="showProductInfoPopup"
+                label={t("show_product_info_popup")}
                 data={formState.userConfig}
-                label={t("preset_cost_center")}
-                field={{
-                  id: "presetCostenterId",
-                  getListUrl: Urls.data_costcentres,
-                  valueKey: "id",
-                  labelKey: "name",
-                }}
-                onChangeData={(e) => handleFieldChange("presetCostenterId", e.presetCostenterId)}
+                checked={formState?.userConfig?.showProductInfoPopup}
+                onChangeData={(e) => handleFieldChange("showProductInfoPopup", e.showProductInfoPopup)}
               />
-            </CollapsibleSection>
+              <ERPCheckbox
+                id="showPurchaserOnly"
+                label={t("show_purchaser_only")}
+                data={formState.userConfig}
+                checked={formState?.userConfig?.showPurchaserOnly}
+                onChangeData={(e) => handleFieldChange("showPurchaserOnly", e.showPurchaserOnly)}
+              />
+              <ERPCheckbox
+                id="useSupplierProductCode"
+                label={t("use_supplier_product_code")}
+                data={formState.userConfig}
+                checked={formState?.userConfig?.useSupplierProductCode}
+                onChangeData={(e) => handleFieldChange("useSupplierProductCode", e.useSupplierProductCode)}
+              />
+              {formState.transaction.master.voucherType === 'PR' && (
+                <ERPCheckbox
+                  id="enableVoucherPrefix"
+                  label={t("enable_voucher_prefix")}
+                  data={formState.userConfig}
+                  checked={formState.userConfig?.enableVoucherPrefix}
+                  onChangeData={(e) => handleFieldChange("enableVoucherPrefix", e.enableVoucherPrefix)}
+                />
+              )}
+              {/* {formState.formElements.printOnSave.visible && ( */}
+                <ERPCheckbox
+                  localInputBox={formState?.userConfig?.inputBoxStyle}
+                  id="printOnSave"
+                  label={t(formState.formElements.printOnSave.label)}
+                  checked={formState.userConfig?.printOnSave}
+                  onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { printOnSave: e.target.checked }, }))}
+                  disabled={formState.formElements.printOnSave?.disabled}
+                />
+              {/* )} */}
+            </div>
 
-            {/* Layout & Dimensions */}
-            <CollapsibleSection title={t("layout_dimensions")} defaultExpanded={false} icon={<Layout className="w-4 h-4 text-[#0891b2] dark:text-[#22d3ee]" />}>
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 items-end gap-4">
-                  <ERPInput
-                    id="maxWidth"
-                    label={t("max_width")}
-                    placeholder={t("max_width_eg")}
-                    type="number"
-                    className="w-full"
-                    data={formState.userConfig}
-                    value={formState?.userConfig?.maxWidth}
-                    onChangeData={(e: { maxWidth: any }) => handleFieldChange("maxWidth", e.maxWidth)}
-                  />
-                  <ERPInput
-                    id="gridMaxWidth"
-                    label={t("grid_max_width")}
-                    placeholder={t("max_width_eg")}
-                    type="number"
-                    className="w-full"
-                    data={formState.userConfig}
-                    value={formState?.userConfig?.gridMaxWidth}
-                    onChangeData={(e: { gridMaxWidth: any }) => handleFieldChange("gridMaxWidth", e.gridMaxWidth)}
-                  />
-                  <ERPInput
-                    id="gridHeight"
-                    label={t("grid_height")}
-                    placeholder={t("grid_height_eg")}
-                    type="number"
-                    className="w-full"
-                    data={formState.userConfig}
-                    value={formState?.userConfig?.gridHeight}
-                    onChangeData={(e: { gridHeight: any }) => handleFieldChange("gridHeight", e.gridHeight)}
-                  />
-                  <ERPCheckbox
-                    id="useNewFooter"
-                    label={t("use_new_footer")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.useNewFooter ?? false}
-                    onChangeData={(e) => handleFieldChange("useNewFooter", e.useNewFooter)}
-                  />
+            <div className="space-y-2">
+              <ERPCheckbox
+                id="enableItemCodeSearchInNameColumn"
+                label={t("enable_item_code_search_in_name_column")}
+                data={formState.userConfig}
+                checked={formState?.userConfig?.enableItemCodeSearchInNameColumn}
+                onChangeData={(e) => handleFieldChange("enableItemCodeSearchInNameColumn", e.enableItemCodeSearchInNameColumn)}
+              />
+              <ERPCheckbox
+                id="holdSameCode"
+                label={t("hold_same_code")}
+                data={formState.userConfig}
+                checked={formState?.userConfig?.holdSameCode}
+                onChangeData={(e) => handleFieldChange("holdSameCode", e.holdSameCode)}
+              />
+              <ERPCheckbox
+                id="printPreview"
+                label={t("print_preview")}
+                data={formState.userConfig}
+                checked={formState?.userConfig?.printPreview ?? false}
+                onChangeData={(e) => handleFieldChange("printPreview", e.printPreview)}
+              />
+              <ERPCheckbox
+                id="dummyProducts"
+                label={t("dummy_products")}
+                data={formState}
+                checked={formState?.dummyProducts}
+                onChangeData={(e) => dispatch(formStateHandleFieldChange({ fields: { dummyProducts: e.dummyProducts } }))}
+              />
+              <ERPCheckbox
+                id="duplicationMessage"
+                label={t("duplication_message")}
+                data={formState.userConfig}
+                checked={formState?.userConfig?.duplicationMessage}
+                onChangeData={(e) => handleFieldChange("duplicationMessage", e.duplicationMessage)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <ERPCheckbox
+                id="setDefaultQuantity"
+                label={t("set_default_quantity")}
+                data={formState.userConfig}
+                checked={formState?.userConfig?.setDefaultQuantity}
+                onChangeData={(e) => handleFieldChange("setDefaultQuantity", e.setDefaultQuantity)}
+              />
+              <ERPCheckbox
+                id="useInSearch"
+                label={t("use_in_search")}
+                data={formState.userConfig}
+                checked={formState?.userConfig?.useInSearch}
+                onChangeData={(e) => handleFieldChange("useInSearch", e.useInSearch)}
+              />
+              <ERPCheckbox
+                id="useCodeSearch"
+                label={t("use_code_search")}
+                data={formState.userConfig}
+                checked={formState?.userConfig?.useCodeSearch}
+                onChangeData={(e) => handleFieldChange("useCodeSearch", e.useCodeSearch)}
+              />
+              <ERPCheckbox
+                id="barCodePrev"
+                label={t("show_barcode_preview")}
+                data={formState.userConfig}
+                checked={formState?.userConfig?.barCodePrev}
+                onChangeData={(e) => handleFieldChange("barCodePrev", e.barCodePrev)}
+              />
+              <ERPCheckbox
+                id="stockUpdate"
+                label={t("stock_update")}
+                data={formState.transaction.master}
+                checked={formState.transaction.master.stockUpdate}
+                onChangeData={(e) => handleStockUpdateChange(e.stockUpdate)}
+              />
+            </div>
+          </div>
+          <div className="absolute top-[200px] right-[30px]">
+            {formState.transaction.master.invTransactionMasterID > 0 && (
+              <button
+                className="w-10 h-10 rounded-full flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-md transition-all duration-200 ease-in-out hover:scale-105 active:scale-95"
+                onClick={handleUndoClick}
+                title="undo"
+              >
+                <Undo className="w-4 h-4 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200" />
+              </button>
+            )}
+          </div>
+        </CollapsibleSection>
+
+
+        {/* Cost Center Settings */}
+        <CollapsibleSection title={t("cost_center_settings")} defaultExpanded={false} icon={<Building2 className="w-4 h-4 text-[#7c3aed] dark:text-[#a78bfa]" />}>
+          <ERPDataCombobox
+            id="presetCostenterId"
+            data={formState.userConfig}
+            label={t("preset_cost_center")}
+            field={{
+              id: "presetCostenterId",
+              getListUrl: Urls.data_costcentres,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(e) => handleFieldChange("presetCostenterId", e.presetCostenterId)}
+          />
+        </CollapsibleSection>
+
+        {/* Layout & Dimensions */}
+        <CollapsibleSection title={t("layout_dimensions")} defaultExpanded={false} icon={<Layout className="w-4 h-4 text-[#0891b2] dark:text-[#22d3ee]" />}>
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 items-end gap-4">
+              <ERPInput
+                id="maxWidth"
+                label={t("max_width")}
+                placeholder={t("max_width_eg")}
+                type="number"
+                className="w-full"
+                data={formState.userConfig}
+                value={formState?.userConfig?.maxWidth}
+                onChangeData={(e: { maxWidth: any }) => handleFieldChange("maxWidth", e.maxWidth)}
+              />
+              <ERPInput
+                id="gridMaxWidth"
+                label={t("grid_max_width")}
+                placeholder={t("max_width_eg")}
+                type="number"
+                className="w-full"
+                data={formState.userConfig}
+                value={formState?.userConfig?.gridMaxWidth}
+                onChangeData={(e: { gridMaxWidth: any }) => handleFieldChange("gridMaxWidth", e.gridMaxWidth)}
+              />
+              <ERPInput
+                id="gridHeight"
+                label={t("grid_height")}
+                placeholder={t("grid_height_eg")}
+                type="number"
+                className="w-full"
+                data={formState.userConfig}
+                value={formState?.userConfig?.gridHeight}
+                onChangeData={(e: { gridHeight: any }) => handleFieldChange("gridHeight", e.gridHeight)}
+              />
+              <ERPCheckbox
+                id="useNewFooter"
+                label={t("use_new_footer")}
+                data={formState.userConfig}
+                checked={formState?.userConfig?.useNewFooter ?? false}
+                onChangeData={(e) => handleFieldChange("useNewFooter", e.useNewFooter)}
+              />
+            </div>
+
+            <div className="bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] dark:from-dark-hover-bg dark:to-dark-border rounded-xl p-4 border border-gray-200 dark:border-dark-border shadow-sm">
+              <div className="flex gap-2 mb-2">
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-[#dbeafe] dark:bg-[#1e3a8a4D] shadow-sm">
+                  <Layout className="w-4 h-4 text-[#2563eb] dark:text-[#60a5fa]" />
                 </div>
-
-                <div className="bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] dark:from-dark-hover-bg dark:to-dark-border rounded-xl p-4 border border-gray-200 dark:border-dark-border shadow-sm">
-                  <div className="flex gap-2 mb-2">
-                    <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-[#dbeafe] dark:bg-[#1e3a8a4D] shadow-sm">
-                      <Layout className="w-4 h-4 text-[#2563eb] dark:text-[#60a5fa]" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <h4 className="font-semibold text-gray-800 dark:text-dark-text text-base">
-                        {t("alignment")}
-                      </h4>
-                      <p className="text-sm text-gray-600 dark:text-dark-text/70">
-                        {t("choose_content_alignment_preference")}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap gap-2 sm:gap-3">
-                    <ERPButton
-                      title={t("left")}
-                      variant={formState?.userConfig?.alignment === "left" ? "primary" : "secondary"}
-                      onClick={() => handleFieldChange("alignment", "left")}
-                      className="flex-1 sm:flex-none min-w-[80px] sm:min-w-[100px] transition-all duration-300"
-                    />
-                    <ERPButton
-                      title={t("center")}
-                      variant={formState?.userConfig?.alignment === "center" ? "primary" : "secondary"}
-                      onClick={() => handleFieldChange("alignment", "center")}
-                      className="flex-1 sm:flex-none min-w-[80px] sm:min-w-[100px] transition-all duration-300"
-                    />
-                    <ERPButton
-                      title={t("right")}
-                      variant={formState?.userConfig?.alignment === "right" ? "primary" : "secondary"}
-                      onClick={() => handleFieldChange("alignment", "right")}
-                      className="flex-1 sm:flex-none min-w-[80px] sm:min-w-[100px] transition-all duration-300"
-                    />
-                  </div>
+                <div className="min-w-0 flex-1">
+                  <h4 className="font-semibold text-gray-800 dark:text-dark-text text-base">
+                    {t("alignment")}
+                  </h4>
+                  <p className="text-sm text-gray-600 dark:text-dark-text/70">
+                    {t("choose_content_alignment_preference")}
+                  </p>
                 </div>
               </div>
-            </CollapsibleSection>
 
-            {/* Scrollbar Settings */}
-            <CollapsibleSection title={t("scrollbar_settings")} defaultExpanded={false} icon={<Mouse className="w-4 h-4 text-[#8b5cf6] dark:text-[#a78bfa]" />}>
-              <div className="space-y-4">
-                <div className="p-4">
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <h6 className="font-semibold text-gray-700 dark:text-dark-text text-sm flex items-center space-x-2">
-                        <span>{t("scrollbar_width")}</span>
-                      </h6>
-                      <div className="space-y-1">
-                        {["md", "sm"].map((width) => (
-                          <div key={width} className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-dark-hover-bg transition-all duration-200">
-                            <input
-                              type="radio"
-                              name="data-page-scrollbar"
-                              className="ti-form-radio w-4 h-4 text-[#8b5cf6] focus:ring-[#8b5cf6] focus:ring-2"
-                              id={`scrollbar-${width}`}
-                              checked={appState.scrollbarWidth === width}
-                              onChange={() => { handleScrollbarChange("scrollbarWidth", width); }}
-                            />
-                            <label htmlFor={`scrollbar-${width}`} className="text-sm font-medium text-gray-700 dark:text-dark-text cursor-pointer">
-                              {width === "md" ? t("normal") : t("thin")}
-                            </label>
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* Scrollbar Color Picker */}
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2">
-                          <div
-                            className="relative h-12 w-12 flex-shrink-0 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                            style={{ backgroundColor: `rgb(${appState.scrollbarColor ?? "128, 128, 128"})` }}>
-                            <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
-                            <input
-                              type="color"
-                              value={rgbToHex(appState.scrollbarColor || "128,128,128")}
-                              onChange={(e) => {
-                                const rgb = hexToRgb(e.target?.value);
-                                if (rgb) {
-                                  debouncedHandleScrollbarChange(
-                                    "scrollbarColor",
-                                    `${rgb?.r},${rgb?.g},${rgb?.b}`
-                                  );
-                                }
-                              }}
-                              className="opacity-0 w-full h-full cursor-pointer"
-                            />
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <label className="text-xs font-semibold text-gray-700 dark:text-dark-text block mb-1">
-                              {t("scrollbar_color")}
-                            </label>
-                            <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-2 rounded-md break-all">
-                              rgb({appState.scrollbarColor || "128,128,128"})
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Preview Section */}
-                    <div className="space-y-3">
-                      <div className="bg-white dark:bg-dark-bg-card rounded-lg border border-gray-200 dark:border-dark-border shadow-sm overflow-hidden">
-                        <div className="p-3 bg-gray-50 dark:bg-dark-hover-bg border-b border-gray-200 dark:border-dark-border">
-                          <h6 className="text-sm font-medium text-gray-700 dark:text-dark-text">
-                            {t("scrollbar_preview")}
-                          </h6>
-                        </div>
-                        <ERPScrollArea className="w-full h-48 sm:h-64 overflow-y-auto rounded-md">
-                          <div className="space-y-2 p-4 text-sm text-gray-600 dark:text-dark-text/70">
-                            <p className="font-medium text-gray-800 dark:text-dark-text">
-                              {t("scroll_down_to_see_the_effect")}
-                            </p>
-                            <p>{t("normal_and_thin_options_are_available")}</p>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                            <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
-                            <p>Laboris nisi ut aliquip ex ea commodo consequat.</p>
-                            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse.</p>
-                            <p>Cillum dolore eu fugiat nulla pariatur.</p>
-                            <p>Excepteur sint occaecat cupidatat non proident.</p>
-                            <p>Sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                            <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur.</p>
-                            <p>Aut odit aut fugit, sed quia consequuntur magni dolores.</p>
-                            <p>Eos qui ratione voluptatem sequi nesciunt.</p>
-                            <p>Neque porro quisquam est, qui dolorem ipsum quia.</p>
-                            <p>Dolor sit amet, consectetur, adipisci velit.</p>
-                            <p>Sed quia non numquam eius modi tempora incidunt.</p>
-                            <p>Ut labore et dolore magnam aliquam quaerat voluptatem.</p>
-                          </div>
-                        </ERPScrollArea>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <div className="flex flex-wrap gap-2 sm:gap-3">
+                <ERPButton
+                  title={t("left")}
+                  variant={formState?.userConfig?.alignment === "left" ? "primary" : "secondary"}
+                  onClick={() => handleFieldChange("alignment", "left")}
+                  className="flex-1 sm:flex-none min-w-[80px] sm:min-w-[100px] transition-all duration-300"
+                />
+                <ERPButton
+                  title={t("center")}
+                  variant={formState?.userConfig?.alignment === "center" ? "primary" : "secondary"}
+                  onClick={() => handleFieldChange("alignment", "center")}
+                  className="flex-1 sm:flex-none min-w-[80px] sm:min-w-[100px] transition-all duration-300"
+                />
+                <ERPButton
+                  title={t("right")}
+                  variant={formState?.userConfig?.alignment === "right" ? "primary" : "secondary"}
+                  onClick={() => handleFieldChange("alignment", "right")}
+                  className="flex-1 sm:flex-none min-w-[80px] sm:min-w-[100px] transition-all duration-300"
+                />
               </div>
-            </CollapsibleSection>
+            </div>
+          </div>
+        </CollapsibleSection>
 
-            {/* Color & Theme Settings */}
-            <CollapsibleSection title={t("color_theme_settings")} defaultExpanded={false} icon={<Palette className="w-4 h-4 text-[#db2777] dark:text-[#f472b6]" />}>
-              <div className="space-y-2">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {/* Scrollbar Settings */}
+        <CollapsibleSection title={t("scrollbar_settings")} defaultExpanded={false} icon={<Mouse className="w-4 h-4 text-[#8b5cf6] dark:text-[#a78bfa]" />}>
+          <div className="space-y-4">
+            <div className="p-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <h6 className="font-semibold text-gray-700 dark:text-dark-text text-sm flex items-center space-x-2">
+                    <span>{t("scrollbar_width")}</span>
+                  </h6>
                   <div className="space-y-1">
+                    {["md", "sm"].map((width) => (
+                      <div key={width} className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-dark-hover-bg transition-all duration-200">
+                        <input
+                          type="radio"
+                          name="data-page-scrollbar"
+                          className="ti-form-radio w-4 h-4 text-[#8b5cf6] focus:ring-[#8b5cf6] focus:ring-2"
+                          id={`scrollbar-${width}`}
+                          checked={appState.scrollbarWidth === width}
+                          onChange={() => { handleScrollbarChange("scrollbarWidth", width); }}
+                        />
+                        <label htmlFor={`scrollbar-${width}`} className="text-sm font-medium text-gray-700 dark:text-dark-text cursor-pointer">
+                          {width === "md" ? t("normal") : t("thin")}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Scrollbar Color Picker */}
+                  <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <div
-                        className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                        style={{ backgroundColor: `rgb(${formState.userConfig?.outerPageBg})` }}>
+                        className="relative h-12 w-12 flex-shrink-0 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
+                        style={{ backgroundColor: `rgb(${appState.scrollbarColor ?? "128, 128, 128"})` }}>
                         <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
                         <input
                           type="color"
-                          value={formState.userConfig?.outerPageBg}
+                          value={rgbToHex(appState.scrollbarColor || "128,128,128")}
                           onChange={(e) => {
                             const rgb = hexToRgb(e.target?.value);
                             if (rgb) {
-                              debouncedHandleFieldChange("outerPageBg", `${rgb.r},${rgb.g},${rgb.b}`);
+                              debouncedHandleScrollbarChange(
+                                "scrollbarColor",
+                                `${rgb?.r},${rgb?.g},${rgb?.b}`
+                              );
                             }
                           }}
                           className="opacity-0 w-full h-full cursor-pointer"
@@ -609,339 +547,411 @@ useEffect(() => {
                       </div>
                       <div className="min-w-0 flex-1">
                         <label className="text-xs font-semibold text-gray-700 dark:text-dark-text block mb-1">
-                          {t("page_background_color")}
+                          {t("scrollbar_color")}
                         </label>
-                        <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md break-all">
-                          rgb({formState.userConfig?.outerPageBg})
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                        style={{ backgroundColor: `rgb(${formState.userConfig?.innerPageBg})` }}>
-                        <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
-                        <input
-                          type="color"
-                          value={formState.userConfig?.innerPageBg}
-                          onChange={(e) => {
-                            const rgb = hexToRgb(e.target?.value);
-                            if (rgb) {
-                              debouncedHandleFieldChange("innerPageBg", `${rgb.r},${rgb.g},${rgb.b}`);
-                            }
-                          }}
-                          className="opacity-0 w-full h-full cursor-pointer"
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <label className="text-xs font-semibold text-gray-700 dark:text-dark-text block mb-1">
-                          {t("form_background_color")}
-                        </label>
-                        <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
-                          rgb({formState.userConfig?.innerPageBg})
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                        style={{ backgroundColor: `rgb(${formState.userConfig?.footerBg || '248,248,255'})` }}>
-                        <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
-                        <input
-                          type="color"
-                          value={formState.userConfig?.footerBg ? rgbToHex(formState.userConfig.footerBg) : '#f8f8ff'}
-                          onChange={(e) => {
-                            const rgb = hexToRgb(e.target?.value);
-                            if (rgb) {
-                              debouncedHandleFieldChange("footerBg", `${rgb.r},${rgb.g},${rgb.b}`);
-                            }
-                          }}
-                          className="opacity-0 w-full h-full cursor-pointer"
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <label className="text-xs font-semibold text-gray-700 dark:text-dark-text block mb-1">
-                          {t("footer_background_color")}
-                        </label>
-                        <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
-                          rgb({formState.userConfig?.footerBg || "248,248,255"})
+                        <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-2 rounded-md break-all">
+                          rgb({appState.scrollbarColor || "128,128,128"})
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="border-t border-gray-200 dark:border-dark-border pt-2">
-                  <h4 className="font-semibold text-gray-700 dark:text-dark-text mb-2 flex items-center gap-2">
-                    <Settings className="w-4 h-4" />
-                    <span className="text-sm">{t("input_box_style")}</span>
-                  </h4>
-                  <div className="bg-gray-50 dark:bg-dark-hover-bg rounded-lg p-2">
-                    <InputBoxStyling
-                      isInputBgColor
-                      inputBox={formState.userConfig?.inputBoxStyle}
-                      onInputBoxChange={handleInputBoxChange}
-                    />
+                {/* Preview Section */}
+                <div className="space-y-3">
+                  <div className="bg-white dark:bg-dark-bg-card rounded-lg border border-gray-200 dark:border-dark-border shadow-sm overflow-hidden">
+                    <div className="p-3 bg-gray-50 dark:bg-dark-hover-bg border-b border-gray-200 dark:border-dark-border">
+                      <h6 className="text-sm font-medium text-gray-700 dark:text-dark-text">
+                        {t("scrollbar_preview")}
+                      </h6>
+                    </div>
+                    <ERPScrollArea className="w-full h-48 sm:h-64 overflow-y-auto rounded-md">
+                      <div className="space-y-2 p-4 text-sm text-gray-600 dark:text-dark-text/70">
+                        <p className="font-medium text-gray-800 dark:text-dark-text">
+                          {t("scroll_down_to_see_the_effect")}
+                        </p>
+                        <p>{t("normal_and_thin_options_are_available")}</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+                        <p>Laboris nisi ut aliquip ex ea commodo consequat.</p>
+                        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse.</p>
+                        <p>Cillum dolore eu fugiat nulla pariatur.</p>
+                        <p>Excepteur sint occaecat cupidatat non proident.</p>
+                        <p>Sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                        <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur.</p>
+                        <p>Aut odit aut fugit, sed quia consequuntur magni dolores.</p>
+                        <p>Eos qui ratione voluptatem sequi nesciunt.</p>
+                        <p>Neque porro quisquam est, qui dolorem ipsum quia.</p>
+                        <p>Dolor sit amet, consectetur, adipisci velit.</p>
+                        <p>Sed quia non numquam eius modi tempora incidunt.</p>
+                        <p>Ut labore et dolore magnam aliquam quaerat voluptatem.</p>
+                      </div>
+                    </ERPScrollArea>
                   </div>
                 </div>
               </div>
-            </CollapsibleSection>
+            </div>
+          </div>
+        </CollapsibleSection>
 
-            <CollapsibleSection title={t("grid_settings")} defaultExpanded={false} icon={<Grid className="w-4 h-4 text-[#059669] dark:text-[#34d399]" />}>
-              <div className="space-y-4">
-                {/* Existing grid settings fields */}
-                <div className="flex flex-wrap items-end gap-2">
-                  <div className="w-full sm:w-32">
-                    <ERPInput
-                      id="gridFontSize"
-                      label={t("font_size")}
-                      type="number"
-                      data={formState.userConfig}
-                      value={formState.userConfig?.gridFontSize || 0}
-                      onChangeData={(e: { gridFontSize: any }) => handleFieldChange("gridFontSize", parseInt(e.gridFontSize))}
+        {/* Color & Theme Settings */}
+        <CollapsibleSection title={t("color_theme_settings")} defaultExpanded={false} icon={<Palette className="w-4 h-4 text-[#db2777] dark:text-[#f472b6]" />}>
+          <div className="space-y-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <div
+                    className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
+                    style={{ backgroundColor: `rgb(${formState.userConfig?.outerPageBg})` }}>
+                    <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
+                    <input
+                      type="color"
+                      value={formState.userConfig?.outerPageBg}
+                      onChange={(e) => {
+                        const rgb = hexToRgb(e.target?.value);
+                        if (rgb) {
+                          debouncedHandleFieldChange("outerPageBg", `${rgb.r},${rgb.g},${rgb.b}`);
+                        }
+                      }}
+                      className="opacity-0 w-full h-full cursor-pointer"
                     />
                   </div>
-                  <div className="w-full sm:w-32">
-                    <ERPInput
-                      id="gridRowHeight"
-                      type="number"
-                      label={t("row_height")}
-                      data={formState.userConfig}
-                      value={formState.userConfig?.gridRowHeight || 0}
-                      onChangeData={(e: { gridRowHeight: any }) => handleFieldChange("gridRowHeight", parseInt(e.gridRowHeight))}
-                    />
-                  </div>
-                  <div className="w-full sm:w-32">
-                    <ERPInput
-                      type="number"
-                      id="gridHeaderRowHeight"
-                      label={t("header_row_height")}
-                      data={formState.userConfig}
-                      value={formState.userConfig?.gridHeaderRowHeight || 0}
-                      onChangeData={(e: { gridHeaderRowHeight: any }) => handleFieldChange("gridHeaderRowHeight", parseInt(e.gridHeaderRowHeight))}
-                    />
-                  </div>
-                  <div className="w-full sm:w-32">
-                    <ERPInput
-                      min={0}
-                      step={1}
-                      type="number"
-                      id="gridBorderRadius"
-                      label={t("grid_border_radius_px")}
-                      data={formState.userConfig}
-                      value={formState.userConfig?.gridBorderRadius ?? 0}
-                      onChangeData={(e: { gridBorderRadius: any }) => handleFieldChange("gridBorderRadius", parseInt(e.gridBorderRadius))}
-                    />
-                  </div>
-                  <ERPCheckbox
-                    id="gridIsBold"
-                    label={t("bold")}
-                    data={formState.userConfig}
-                    checked={formState.userConfig?.gridIsBold || false}
-                    onChangeData={(e: { gridIsBold: boolean }) => handleFieldChange("gridIsBold", e.gridIsBold)}
-                  />
-                  <ERPCheckbox
-                    id="showColumnBorder"
-                    label={t("show_column_border")}
-                    data={formState.userConfig}
-                    checked={formState.userConfig?.showColumnBorder ?? true}
-                    onChangeData={(e: { showColumnBorder: boolean }) => handleFieldChange("showColumnBorder", e.showColumnBorder)}
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {/* Compact gridBorderColor field */}
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                        style={{ backgroundColor: formState.userConfig?.gridBorderColor ? `rgb(${formState.userConfig.gridBorderColor})` : "#000000" }}>
-                        <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
-                        <input
-                          type="color"
-                          value={formState.userConfig?.gridBorderColor ? rgbToHex(formState.userConfig.gridBorderColor) : "#000000"}
-                          onChange={(e) => {
-                            const rgb = hexToRgb(e.target?.value);
-                            if (rgb) {
-                              debouncedHandleFieldChange("gridBorderColor", `${rgb.r},${rgb.g},${rgb.b}`);
-                            }
-                          }}
-                          className="opacity-0 w-full h-full cursor-pointer"
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <label className="text-xs font-semibold text-gray-700 dark:text-dark-text block mb-1">
-                          {t("grid_border_color")}
-                        </label>
-                        <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
-                          rgb({formState.userConfig?.gridBorderColor || "0,0,0"})
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Compact gridHeaderBg field */}
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                        style={{ backgroundColor: formState.userConfig?.gridHeaderBg ? `rgb(${formState.userConfig.gridHeaderBg})` : "#ffffff" }}>
-                        <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
-                        <input
-                          type="color"
-                          value={formState.userConfig?.gridHeaderBg ? rgbToHex(formState.userConfig.gridHeaderBg) : "#ffffff"}
-                          onChange={(e) => {
-                            const rgb = hexToRgb(e.target?.value);
-                            if (rgb) {
-                              debouncedHandleFieldChange("gridHeaderBg", `${rgb.r},${rgb.g},${rgb.b}`);
-                            }
-                          }}
-                          className="opacity-0 w-full h-full cursor-pointer"
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <label className="text-xs font-semibold text-gray-700 dark:text-dark-text block mb-1">
-                          {t("grid_header_background_color")}
-                        </label>
-                        <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
-                          rgb({formState.userConfig?.gridHeaderBg || "255,255,255"})
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Compact gridHeaderFontColor field */}
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                        style={{ backgroundColor: formState.userConfig?.gridHeaderFontColor ? `rgb(${formState.userConfig.gridHeaderFontColor})` : "#1f2937" }}
-                      >
-                        <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
-                        <input
-                          type="color"
-                          value={formState.userConfig?.gridHeaderFontColor ? rgbToHex(formState.userConfig.gridHeaderFontColor) : "#1f2937"}
-                          onChange={(e) => {
-                            const rgb = hexToRgb(e.target?.value);
-                            if (rgb) {
-                              debouncedHandleFieldChange("gridHeaderFontColor", `${rgb.r},${rgb.g},${rgb.b}`);
-                            }
-                          }}
-                          className="opacity-0 w-full h-full cursor-pointer"
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <label className="text-xs font-semibold text-gray-700 dark:text-dark-text block mb-1">
-                          {t("grid_header_font_color")}
-                        </label>
-                        <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
-                          rgb({formState.userConfig?.gridHeaderFontColor || "31,41,55"})
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Compact activeRowBg field */}
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                        style={{ backgroundColor: formState.userConfig?.activeRowBg ? `rgb(${formState.userConfig.activeRowBg})` : "#e3f2fd" }}
-                      >
-                        <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
-                        <input
-                          type="color"
-                          value={formState.userConfig?.activeRowBg ? rgbToHex(formState.userConfig.activeRowBg) : "#e3f2fd"}
-                          onChange={(e) => {
-                            const rgb = hexToRgb(e.target?.value);
-                            if (rgb) {
-                              debouncedHandleFieldChange("activeRowBg", `${rgb.r},${rgb.g},${rgb.b}`);
-                            }
-                          }}
-                          className="opacity-0 w-full h-full cursor-pointer"
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <label className="text-xs font-semibold text-gray-700 dark:text-dark-text block mb-1">
-                          {t("active_row_background_color")}
-                        </label>
-                        <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
-                          rgb({formState.userConfig?.activeRowBg || "227,242,253"})
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                        style={{ backgroundColor: formState.userConfig?.gridFooterBg ? `rgb(${formState.userConfig.gridFooterBg})` : "#f8f9fa" }}
-                      >
-                        <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
-                        <input
-                          type="color"
-                          value={formState.userConfig?.gridFooterBg ? rgbToHex(formState.userConfig.gridFooterBg) : "#f8f9fa"}
-                          onChange={(e) => {
-                            const rgb = hexToRgb(e.target?.value);
-                            if (rgb) {
-                              debouncedHandleFieldChange("gridFooterBg", `${rgb.r},${rgb.g},${rgb.b}`);
-                            }
-                          }}
-                          className="opacity-0 w-full h-full cursor-pointer"
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <label className="text-xs font-semibold text-gray-700 dark:text-dark-text block mb-1">
-                          {t("grid_footer_background_color")}
-                        </label>
-                        <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
-                          rgb({formState.userConfig?.gridFooterBg || "248,249,250"})
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                        style={{ backgroundColor: formState.userConfig?.gridFooterFontColor ? `rgb(${formState.userConfig.gridFooterFontColor})` : "#000000" }}
-                      >
-                        <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
-                        <input
-                          type="color"
-                          value={formState.userConfig?.gridFooterFontColor ? rgbToHex(formState.userConfig.gridFooterFontColor) : "#000000"}
-                          onChange={(e) => {
-                            const rgb = hexToRgb(e.target?.value);
-                            if (rgb) {
-                              debouncedHandleFieldChange("gridFooterFontColor", `${rgb.r},${rgb.g},${rgb.b}`);
-                            }
-                          }}
-                          className="opacity-0 w-full h-full cursor-pointer"
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <label className="text-xs font-semibold text-gray-700 dark:text-dark-text block mb-1">
-                          {t("grid_footer_font_color")}
-                        </label>
-                        <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
-                          rgb({formState.userConfig?.gridFooterFontColor || "0,0,0"})
-                        </div>
-                      </div>
+                  <div className="min-w-0 flex-1">
+                    <label className="text-xs font-semibold text-gray-700 dark:text-dark-text block mb-1">
+                      {t("page_background_color")}
+                    </label>
+                    <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md break-all">
+                      rgb({formState.userConfig?.outerPageBg})
                     </div>
                   </div>
                 </div>
               </div>
-            </CollapsibleSection>
 
-            {/* Reset Section */}
-            {/* <div className="bg-gradient-to-r from-[#fef2f2] to-[#fdf2f8] dark:from-[#7f1d1d33] dark:to-[#83184333] border border-[#fecaca] dark:border-[#991b1b] rounded-xl p-2 shadow-sm">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <div
+                    className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
+                    style={{ backgroundColor: `rgb(${formState.userConfig?.innerPageBg})` }}>
+                    <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
+                    <input
+                      type="color"
+                      value={formState.userConfig?.innerPageBg}
+                      onChange={(e) => {
+                        const rgb = hexToRgb(e.target?.value);
+                        if (rgb) {
+                          debouncedHandleFieldChange("innerPageBg", `${rgb.r},${rgb.g},${rgb.b}`);
+                        }
+                      }}
+                      className="opacity-0 w-full h-full cursor-pointer"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <label className="text-xs font-semibold text-gray-700 dark:text-dark-text block mb-1">
+                      {t("form_background_color")}
+                    </label>
+                    <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
+                      rgb({formState.userConfig?.innerPageBg})
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <div
+                    className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
+                    style={{ backgroundColor: `rgb(${formState.userConfig?.footerBg || '248,248,255'})` }}>
+                    <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
+                    <input
+                      type="color"
+                      value={formState.userConfig?.footerBg ? rgbToHex(formState.userConfig.footerBg) : '#f8f8ff'}
+                      onChange={(e) => {
+                        const rgb = hexToRgb(e.target?.value);
+                        if (rgb) {
+                          debouncedHandleFieldChange("footerBg", `${rgb.r},${rgb.g},${rgb.b}`);
+                        }
+                      }}
+                      className="opacity-0 w-full h-full cursor-pointer"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <label className="text-xs font-semibold text-gray-700 dark:text-dark-text block mb-1">
+                      {t("footer_background_color")}
+                    </label>
+                    <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
+                      rgb({formState.userConfig?.footerBg || "248,248,255"})
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="border-t border-gray-200 dark:border-dark-border pt-2">
+              <h4 className="font-semibold text-gray-700 dark:text-dark-text mb-2 flex items-center gap-2">
+                <Settings className="w-4 h-4" />
+                <span className="text-sm">{t("input_box_style")}</span>
+              </h4>
+              <div className="bg-gray-50 dark:bg-dark-hover-bg rounded-lg p-2">
+                <InputBoxStyling
+                  isInputBgColor
+                  inputBox={formState.userConfig?.inputBoxStyle}
+                  onInputBoxChange={handleInputBoxChange}
+                />
+              </div>
+            </div>
+          </div>
+        </CollapsibleSection>
+
+        <CollapsibleSection title={t("grid_settings")} defaultExpanded={false} icon={<Grid className="w-4 h-4 text-[#059669] dark:text-[#34d399]" />}>
+          <div className="space-y-4">
+            {/* Existing grid settings fields */}
+            <div className="flex flex-wrap items-end gap-2">
+              <div className="w-full sm:w-32">
+                <ERPInput
+                  id="gridFontSize"
+                  label={t("font_size")}
+                  type="number"
+                  data={formState.userConfig}
+                  value={formState.userConfig?.gridFontSize || 0}
+                  onChangeData={(e: { gridFontSize: any }) => handleFieldChange("gridFontSize", parseInt(e.gridFontSize))}
+                />
+              </div>
+              <div className="w-full sm:w-32">
+                <ERPInput
+                  id="gridRowHeight"
+                  type="number"
+                  label={t("row_height")}
+                  data={formState.userConfig}
+                  value={formState.userConfig?.gridRowHeight || 0}
+                  onChangeData={(e: { gridRowHeight: any }) => handleFieldChange("gridRowHeight", parseInt(e.gridRowHeight))}
+                />
+              </div>
+              <div className="w-full sm:w-32">
+                <ERPInput
+                  type="number"
+                  id="gridHeaderRowHeight"
+                  label={t("header_row_height")}
+                  data={formState.userConfig}
+                  value={formState.userConfig?.gridHeaderRowHeight || 0}
+                  onChangeData={(e: { gridHeaderRowHeight: any }) => handleFieldChange("gridHeaderRowHeight", parseInt(e.gridHeaderRowHeight))}
+                />
+              </div>
+              <div className="w-full sm:w-32">
+                <ERPInput
+                  min={0}
+                  step={1}
+                  type="number"
+                  id="gridBorderRadius"
+                  label={t("grid_border_radius_px")}
+                  data={formState.userConfig}
+                  value={formState.userConfig?.gridBorderRadius ?? 0}
+                  onChangeData={(e: { gridBorderRadius: any }) => handleFieldChange("gridBorderRadius", parseInt(e.gridBorderRadius))}
+                />
+              </div>
+              <ERPCheckbox
+                id="gridIsBold"
+                label={t("bold")}
+                data={formState.userConfig}
+                checked={formState.userConfig?.gridIsBold || false}
+                onChangeData={(e: { gridIsBold: boolean }) => handleFieldChange("gridIsBold", e.gridIsBold)}
+              />
+              <ERPCheckbox
+                id="showColumnBorder"
+                label={t("show_column_border")}
+                data={formState.userConfig}
+                checked={formState.userConfig?.showColumnBorder ?? true}
+                onChangeData={(e: { showColumnBorder: boolean }) => handleFieldChange("showColumnBorder", e.showColumnBorder)}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {/* Compact gridBorderColor field */}
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <div
+                    className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
+                    style={{ backgroundColor: formState.userConfig?.gridBorderColor ? `rgb(${formState.userConfig.gridBorderColor})` : "#000000" }}>
+                    <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
+                    <input
+                      type="color"
+                      value={formState.userConfig?.gridBorderColor ? rgbToHex(formState.userConfig.gridBorderColor) : "#000000"}
+                      onChange={(e) => {
+                        const rgb = hexToRgb(e.target?.value);
+                        if (rgb) {
+                          debouncedHandleFieldChange("gridBorderColor", `${rgb.r},${rgb.g},${rgb.b}`);
+                        }
+                      }}
+                      className="opacity-0 w-full h-full cursor-pointer"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <label className="text-xs font-semibold text-gray-700 dark:text-dark-text block mb-1">
+                      {t("grid_border_color")}
+                    </label>
+                    <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
+                      rgb({formState.userConfig?.gridBorderColor || "0,0,0"})
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Compact gridHeaderBg field */}
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <div
+                    className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
+                    style={{ backgroundColor: formState.userConfig?.gridHeaderBg ? `rgb(${formState.userConfig.gridHeaderBg})` : "#ffffff" }}>
+                    <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
+                    <input
+                      type="color"
+                      value={formState.userConfig?.gridHeaderBg ? rgbToHex(formState.userConfig.gridHeaderBg) : "#ffffff"}
+                      onChange={(e) => {
+                        const rgb = hexToRgb(e.target?.value);
+                        if (rgb) {
+                          debouncedHandleFieldChange("gridHeaderBg", `${rgb.r},${rgb.g},${rgb.b}`);
+                        }
+                      }}
+                      className="opacity-0 w-full h-full cursor-pointer"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <label className="text-xs font-semibold text-gray-700 dark:text-dark-text block mb-1">
+                      {t("grid_header_background_color")}
+                    </label>
+                    <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
+                      rgb({formState.userConfig?.gridHeaderBg || "255,255,255"})
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Compact gridHeaderFontColor field */}
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <div
+                    className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
+                    style={{ backgroundColor: formState.userConfig?.gridHeaderFontColor ? `rgb(${formState.userConfig.gridHeaderFontColor})` : "#1f2937" }}
+                  >
+                    <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
+                    <input
+                      type="color"
+                      value={formState.userConfig?.gridHeaderFontColor ? rgbToHex(formState.userConfig.gridHeaderFontColor) : "#1f2937"}
+                      onChange={(e) => {
+                        const rgb = hexToRgb(e.target?.value);
+                        if (rgb) {
+                          debouncedHandleFieldChange("gridHeaderFontColor", `${rgb.r},${rgb.g},${rgb.b}`);
+                        }
+                      }}
+                      className="opacity-0 w-full h-full cursor-pointer"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <label className="text-xs font-semibold text-gray-700 dark:text-dark-text block mb-1">
+                      {t("grid_header_font_color")}
+                    </label>
+                    <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
+                      rgb({formState.userConfig?.gridHeaderFontColor || "31,41,55"})
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Compact activeRowBg field */}
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <div
+                    className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
+                    style={{ backgroundColor: formState.userConfig?.activeRowBg ? `rgb(${formState.userConfig.activeRowBg})` : "#e3f2fd" }}
+                  >
+                    <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
+                    <input
+                      type="color"
+                      value={formState.userConfig?.activeRowBg ? rgbToHex(formState.userConfig.activeRowBg) : "#e3f2fd"}
+                      onChange={(e) => {
+                        const rgb = hexToRgb(e.target?.value);
+                        if (rgb) {
+                          debouncedHandleFieldChange("activeRowBg", `${rgb.r},${rgb.g},${rgb.b}`);
+                        }
+                      }}
+                      className="opacity-0 w-full h-full cursor-pointer"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <label className="text-xs font-semibold text-gray-700 dark:text-dark-text block mb-1">
+                      {t("active_row_background_color")}
+                    </label>
+                    <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
+                      rgb({formState.userConfig?.activeRowBg || "227,242,253"})
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <div
+                    className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
+                    style={{ backgroundColor: formState.userConfig?.gridFooterBg ? `rgb(${formState.userConfig.gridFooterBg})` : "#f8f9fa" }}
+                  >
+                    <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
+                    <input
+                      type="color"
+                      value={formState.userConfig?.gridFooterBg ? rgbToHex(formState.userConfig.gridFooterBg) : "#f8f9fa"}
+                      onChange={(e) => {
+                        const rgb = hexToRgb(e.target?.value);
+                        if (rgb) {
+                          debouncedHandleFieldChange("gridFooterBg", `${rgb.r},${rgb.g},${rgb.b}`);
+                        }
+                      }}
+                      className="opacity-0 w-full h-full cursor-pointer"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <label className="text-xs font-semibold text-gray-700 dark:text-dark-text block mb-1">
+                      {t("grid_footer_background_color")}
+                    </label>
+                    <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
+                      rgb({formState.userConfig?.gridFooterBg || "248,249,250"})
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <div
+                    className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
+                    style={{ backgroundColor: formState.userConfig?.gridFooterFontColor ? `rgb(${formState.userConfig.gridFooterFontColor})` : "#000000" }}
+                  >
+                    <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
+                    <input
+                      type="color"
+                      value={formState.userConfig?.gridFooterFontColor ? rgbToHex(formState.userConfig.gridFooterFontColor) : "#000000"}
+                      onChange={(e) => {
+                        const rgb = hexToRgb(e.target?.value);
+                        if (rgb) {
+                          debouncedHandleFieldChange("gridFooterFontColor", `${rgb.r},${rgb.g},${rgb.b}`);
+                        }
+                      }}
+                      className="opacity-0 w-full h-full cursor-pointer"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <label className="text-xs font-semibold text-gray-700 dark:text-dark-text block mb-1">
+                      {t("grid_footer_font_color")}
+                    </label>
+                    <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
+                      rgb({formState.userConfig?.gridFooterFontColor || "0,0,0"})
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </CollapsibleSection>
+
+        {/* Reset Section */}
+        {/* <div className="bg-gradient-to-r from-[#fef2f2] to-[#fdf2f8] dark:from-[#7f1d1d33] dark:to-[#83184333] border border-[#fecaca] dark:border-[#991b1b] rounded-xl p-2 shadow-sm">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-[#fee2e2] dark:bg-[#7f1d1d4D]">
@@ -962,8 +972,8 @@ useEffect(() => {
                 />
               </div>
             </div> */}
-          </div>
-       {/* <div className="w-full flex justify-end items-center gap-2 dark:!border-dark-border dark:!bg-dark-bg rounded-b-md">
+      </div>
+      {/* <div className="w-full flex justify-end items-center gap-2 dark:!border-dark-border dark:!bg-dark-bg rounded-b-md">
             <ERPButton
               title={t("cancel")}
               onClick={previousThemeChange}
@@ -985,7 +995,7 @@ useEffect(() => {
               className="min-w-[140px] transition-all duration-300"
             />
           </div> */}
-      
+
     </>
   );
 };

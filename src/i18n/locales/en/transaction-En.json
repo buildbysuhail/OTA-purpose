@@ -889,5 +889,25 @@
   "last_sold_date": "Last Sold Date",
   "po_pending_qty": "PO Pending Qty",
   "sales_last_180_days": "Sales Last 180 Days",
-  "pq_pending_qty": "PQ Pending Qty"
+  "pq_pending_qty": "PQ Pending Qty",
+
+  "inv_transaction_master_id": "Inv Transaction Master ID",
+  "total_gross": "Total Gross",
+  "total_discount": "Total Discount",
+  "adjustment_amount": "Adjustment Amount",
+  "advance_amount": "Advance Amount",
+  "bank_amount": "Bank Amount",
+  "cash_amount": "Cash Amount",
+  "cash_discount": "Cash Discount",
+  "cash_returned": "Cash Returned",
+  "cash_or_credit": "Cash or Credit",
+  "despatch_document_number": "Despatch Document Number",
+  "modified_date": "Modified Date",
+  "priv_add_amount": "Privilege Add Amount",
+  "priv_redeem": "Privilege Redeem",
+  "round_amount": "Round Amount",
+  "shortage_amount": "Shortage Amount",
+  "sr_amount": "SR Amount",
+  "system_datetime": "System Date Time",
+  "token_number": "Token Number"
 }

@@ -886,5 +886,25 @@
   "last_sold_date": "تاريخ آخر بيع",
   "po_pending_qty": "الكمية المعلقة لأمر الشراء",
   "sales_last_180_days": "مبيعات آخر 180 يومًا",
-  "pq_pending_qty": "الكمية المعلقة لعرض سعر الشراء"
+  "pq_pending_qty": "الكمية المعلقة لعرض سعر الشراء",
+
+  "inv_transaction_master_id": "معرّف المعاملة الرئيسية للمخزون",
+  "total_gross": "الإجمالي الكلي",
+  "total_discount": "إجمالي الخصم",
+  "adjustment_amount": "مبلغ التسوية",
+  "advance_amount": "مبلغ السلفة/المقدم",
+  "bank_amount": "مبلغ البنك",
+  "cash_amount": "المبلغ النقدي",
+  "cash_discount": "الخصم النقدي",
+  "cash_returned": "المبلغ النقدي المرتجع",
+  "cash_or_credit": "نقدًا أو ائتمانًا",
+  "despatch_document_number": "رقم مستند الإرسال",
+  "modified_date": "تاريخ التعديل",
+  "priv_add_amount": "مبلغ إضافة الامتيازات",
+  "priv_redeem": "استرداد الامتيازات",
+  "round_amount": "مبلغ التقريب",
+  "shortage_amount": "مبلغ النقص",
+  "sr_amount": "مبلغ مرتجع المبيعات (SR Amount)",
+  "system_datetime": "تاريخ ووقت النظام",
+  "token_number": "رقم الرمز (Token Number)"
 }

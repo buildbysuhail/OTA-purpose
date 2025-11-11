@@ -742,5 +742,7 @@
   "sales_other_reports": "تقارير مبيعات أخرى",
   "customer_visit_reports": "تقارير زيارات العملاء",
   "discount_reports": "تقارير الخصم",
-  "inventory_price_reports": "تقارير أسعار المخزون"
+  "inventory_price_reports": "تقارير أسعار المخزون",
+  "fcm_push_notification_test": "اختبار إشعار FCM الفوري",
+  "refresh_cache": "تحديث ذاكرة التخزين المؤقت"
 }

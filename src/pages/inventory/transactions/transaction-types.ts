@@ -422,6 +422,7 @@ export interface UserConfig {
   gridFooterBg?: string;
   gridFooterFontColor?: string;
   enableVoucherPrefix?: boolean;
+  printOnSave?: boolean;
   // sales
   askConfirmationForRemoveItem?: boolean;
   allowExcessCashReceipt?: boolean;

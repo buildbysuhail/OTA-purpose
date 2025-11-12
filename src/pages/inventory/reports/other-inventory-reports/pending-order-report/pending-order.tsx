@@ -1,15 +1,16 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, { SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import { useMemo } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../../redux/urls";
-import PendingOrderReportFilter, { PendingOrderReportFilterInitialState, } from "./pending-order-filter";
+import PendingOrderReportFilter, {
+  PendingOrderReportFilterInitialState,
+} from "./pending-order-filter";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
-import { erpParseFloat } from "../../../../../utilities/Utils";
 
 const PendingOrderReport = () => {
   const { t } = useTranslation("accountsReport");
@@ -176,10 +177,10 @@ const PendingOrderReport = () => {
             return cellElement.data?.pendingQty == null
               ? ""
               : getFormattedValue(
-                parseFloat(cellElement.data.pendingQty),
-                false,
-                4
-              );
+                  parseFloat(cellElement.data.pendingQty),
+                  false,
+                  4
+                );
           }
         },
       },
@@ -223,10 +224,10 @@ const PendingOrderReport = () => {
             return cellElement.data?.quantity == null
               ? ""
               : getFormattedValue(
-                parseFloat(cellElement.data.quantity),
-                false,
-                4
-              );
+                  parseFloat(cellElement.data.quantity),
+                  false,
+                  4
+                );
           }
         },
       },
@@ -292,10 +293,10 @@ const PendingOrderReport = () => {
             return cellElement.data?.unitPrice == null
               ? ""
               : getFormattedValue(
-                parseFloat(cellElement.data.unitPrice),
-                false,
-                3
-              );
+                  parseFloat(cellElement.data.unitPrice),
+                  false,
+                  3
+                );
           }
         },
       },
@@ -329,10 +330,10 @@ const PendingOrderReport = () => {
             return cellElement.data?.grossValue == null
               ? ""
               : getFormattedValue(
-                parseFloat(cellElement.data.grossValue),
-                false,
-                4
-              );
+                  parseFloat(cellElement.data.grossValue),
+                  false,
+                  4
+                );
           }
         },
       },
@@ -366,10 +367,10 @@ const PendingOrderReport = () => {
             return cellElement.data?.totalGross == null
               ? ""
               : getFormattedValue(
-                parseFloat(cellElement.data.totalGross),
-                false,
-                4
-              );
+                  parseFloat(cellElement.data.totalGross),
+                  false,
+                  4
+                );
           }
         },
       },
@@ -403,10 +404,10 @@ const PendingOrderReport = () => {
             return cellElement.data?.totalVatAmount == null
               ? ""
               : getFormattedValue(
-                parseFloat(cellElement.data.totalVatAmount),
-                false,
-                4
-              );
+                  parseFloat(cellElement.data.totalVatAmount),
+                  false,
+                  4
+                );
           }
         },
       },
@@ -440,10 +441,10 @@ const PendingOrderReport = () => {
             return cellElement.data?.totalTAX == null
               ? ""
               : getFormattedValue(
-                parseFloat(cellElement.data.totalTAX),
-                false,
-                4
-              );
+                  parseFloat(cellElement.data.totalTAX),
+                  false,
+                  4
+                );
           }
         },
       },
@@ -477,10 +478,10 @@ const PendingOrderReport = () => {
             return cellElement.data?.netAmount == null
               ? ""
               : getFormattedValue(
-                parseFloat(cellElement.data.netAmount),
-                false,
-                4
-              );
+                  parseFloat(cellElement.data.netAmount),
+                  false,
+                  4
+                );
           }
         },
       },
@@ -560,86 +561,13 @@ const PendingOrderReport = () => {
         return clientSession.isAppGlobal;
       }
 
-      if (column.dataField == "totalGross") {
+      if (column.dataField == "totalGross" ||column.dataField=="routeName") {
         return !clientSession.isAppGlobal;
       }
       return true;
     });
   }, [t]);
-
   const { getFormattedValue } = useNumberFormat();
-  const customizeSummaryRow = useMemo(() => {
-    return (itemInfo: { value: any }) => {
-      const value = itemInfo.value;
-      if (
-        value === null ||
-        value === undefined ||
-        value === "" ||
-        isNaN(value)
-      ) {
-        return "0";
-      }
-      return getFormattedValue(value) || "0";
-    };
-  }, [getFormattedValue]);
-
-  const summaryItems: SummaryConfig[] = [
-    {
-      column: "pendingQty",
-      summaryType: "custom",
-      valueFormat: "fixedPoint",
-      customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value, false, 4));
-      },
-    },
-    {
-      column: "quantity",
-      summaryType: "custom",
-      valueFormat: "fixedPoint",
-      customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value, false, 4));
-      },
-    },
-    {
-      column: "free",
-      summaryType: "custom",
-      valueFormat: "fixedPoint",
-      customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value, false, 4));
-      },
-    },
-    {
-      column: "totalGross",
-      summaryType: "custom",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value, false, 4));
-      },
-    },
-    {
-      column: "totalVatAmount",
-      summaryType: "custom",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value, false, 4));
-      },
-    },
-    {
-      column: "netAmount",
-      summaryType: "custom",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value, false, 4));
-      },
-    },
-  ];
-
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -647,7 +575,6 @@ const PendingOrderReport = () => {
           <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
-                summaryItems={summaryItems}
                 remoteOperations={{
                   filtering: false,
                   paging: false,

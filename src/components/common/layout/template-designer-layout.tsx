@@ -1,9 +1,7 @@
-
 import {
   Dispatch,
   FC,
   Fragment,
-  SetStateAction,
   Suspense,
   useEffect,
   useState,
@@ -23,20 +21,20 @@ interface LayoutProps {
   // setMyClass: Dispatch<SetStateAction<string>>;
 }
 const loading = (
-  <div className="w-full h-full bg-transparent flex items-center justify-center">
+  <div className="w-full h-full bg-transparent dark:bg-body_dark flex items-center justify-center">
     <div className="h-6 w-6 rounded-full bg-blue-700 animate-ping"></div>
   </div>
 );
-const TemplateDesignerLayout: FC<LayoutProps> = ({  }) => {
+const TemplateDesignerLayout: FC<LayoutProps> = ({ }) => {
 
   return (
     <>
-      <div className="w-full h-full absolute top-0 left-0 z-50">
-      <Suspense fallback={loading}>
-      <Routes>
-      <Route path="/:id" element={<InvoiceDesigner />} />
-      </Routes>
-      </Suspense>
+      <div className="w-full h-full absolute top-0 left-0 z-50 bg-white dark:bg-body_dark">
+        <Suspense fallback={loading}>
+          <Routes>
+            <Route path="/:id" element={<InvoiceDesigner />} />
+          </Routes>
+        </Suspense>
       </div>
     </>
   );

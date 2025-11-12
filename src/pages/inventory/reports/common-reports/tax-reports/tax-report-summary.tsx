@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import moment from "moment";
-import { erpParseFloat, isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
+import {  isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
 import TaxReportDetailedFilter, {
   TaxReportDetailedFilterInitialState,
 } from "./tax-report-detailed-filter";
@@ -268,9 +268,6 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({
           ) || "0"
         );
       },
-      // cellSummaryAction:(value: number) => {
-      //             return erpParseFloat(getFormattedValue(value, false, 4));
-      //       },
     },
     {
       column: "totalVAT",
@@ -289,9 +286,6 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({
           ) || "0"
         );
       },
-      //    cellSummaryAction:(value: number) => {
-      //       return erpParseFloat(getFormattedValue(value, false, 4));
-      // },
     },
     {
       column: "total",

@@ -6,7 +6,6 @@ import { ActionType } from "../../../../../redux/types";
 import Urls from "../../../../../redux/urls";
 import { useMemo, useState } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
-import { erpParseFloat } from "../../../../../utilities/Utils";
 import { Button } from "@mui/material";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -269,57 +268,39 @@ const CounterReport = () => {
     },
     {
       column: "cashSalesAmt",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value, false, 4));
-      },
     },
     {
       column: "cardSalesAmt",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value, false, 4));
-      },
     },
     {
       column: "saleReturnAmt",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value, false, 4));
-      },
     },
     {
       column: "netSales",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value, false, 4));
-      },
     },
     {
       column: "counterBalance",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value, false, 4));
-      },
     },
     {
       column: "creditAmt",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value, false, 4));
-      },
     },
   ];
 

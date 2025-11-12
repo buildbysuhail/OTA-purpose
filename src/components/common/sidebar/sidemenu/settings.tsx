@@ -169,7 +169,7 @@ export const SettingsMenuItems = [
       // { path: `${import.meta.env.BASE_URL}settings/_/integration/test-input-button`, type: 'link', active: false, selected: false, title: 'Test Input Button' },
       // { path: `${import.meta.env.BASE_URL}settings/_/integration/account_group_test`, type: 'link', active: false, selected: false, title: 'Account Group test' },
       { path: `${import.meta.env.BASE_URL}settings/_/integration/shortkeys_settings`, type: 'link', active: false, selected: false, title: 'shortkey_settings', icon: Layers2 },
-      { path: `${import.meta.env.BASE_URL}settings/_/integration/fcm_push_notification_test`, type: 'link', active: false, selected: false, title: 'fcm_push_notification_test', icon: Layers2 },
+      // { path: `${import.meta.env.BASE_URL}settings/_/integration/fcm_push_notification_test`, type: 'link', active: false, selected: false, title: 'fcm_push_notification_test', icon: Layers2 },
       // { action: toggleTestPopup, type: 'popup', active: false, selected: false, title: 'test popup' },
 
     ]

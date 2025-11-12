@@ -1,14 +1,22 @@
 import React, { Fragment, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ErpDevGrid, { SummaryConfig } from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import { ProductSummaryFilter } from "./product-summary-master";
-import { erpParseFloat } from "../../../../../utilities/Utils";
+import { isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
 
-const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter; setFilter: React.Dispatch<React.SetStateAction<any>>; onReloadChange: () => void; reloadBase: boolean; voucherType: string }> = ({ filter, setFilter, onReloadChange, reloadBase, voucherType }) => {
+const ProductSummaryReportByTransaction: React.FC<{
+  filter: ProductSummaryFilter;
+  setFilter: React.Dispatch<React.SetStateAction<any>>;
+  onReloadChange: () => void;
+  reloadBase: boolean;
+  voucherType: string;
+}> = ({ filter, setFilter, onReloadChange, reloadBase, voucherType }) => {
   const { t } = useTranslation("accountsReport");
   const columns: DevGridColumn[] = useMemo(() => {
     const baseColumns: DevGridColumn[] = [
@@ -19,7 +27,7 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
         allowSearch: true,
         allowFiltering: true,
         width: 60,
-      showInPdf:true,
+        showInPdf: true,
       },
       {
         dataField: "vPrefix",
@@ -28,7 +36,7 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
         allowSearch: true,
         allowFiltering: true,
         width: 70,
-      showInPdf:true,
+        showInPdf: true,
       },
       {
         dataField: "date",
@@ -37,8 +45,8 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
         allowSearch: true,
         allowFiltering: true,
         width: 75,
-      showInPdf:true,
-        format: "dd-MMM-yyyy"
+        showInPdf: true,
+        format: "dd-MMM-yyyy",
       },
       {
         dataField: "ledgerName",
@@ -47,7 +55,7 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
         allowSearch: true,
         allowFiltering: true,
         width: 75,
-      showInPdf:true,
+        showInPdf: true,
       },
       {
         dataField: "partyName",
@@ -64,7 +72,7 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
         allowSearch: true,
         allowFiltering: true,
         width: 80,
-      showInPdf:true,
+        showInPdf: true,
       },
       {
         dataField: "voucherForm",
@@ -73,7 +81,7 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
         allowSearch: true,
         allowFiltering: true,
         width: 75,
-      showInPdf:true,
+        showInPdf: true,
       },
       {
         dataField: "quantity",
@@ -82,7 +90,7 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
         allowSearch: true,
         allowFiltering: true,
         width: 48,
-      showInPdf:true,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -114,7 +122,7 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
         allowSearch: true,
         allowFiltering: true,
         width: 50,
-      showInPdf:true,
+        showInPdf: true,
       },
       {
         dataField: "unitPrice",
@@ -123,7 +131,7 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
         allowSearch: true,
         allowFiltering: true,
         width: 60,
-      showInPdf:true,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -155,7 +163,7 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
         allowSearch: true,
         allowFiltering: true,
         width: 70,
-      showInPdf:true,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -187,7 +195,7 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
         allowSearch: true,
         allowFiltering: true,
         width: 70,
-      showInPdf:true,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -219,7 +227,7 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
         allowSearch: true,
         allowFiltering: true,
         width: 70,
-      showInPdf:true,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -251,7 +259,7 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-      showInPdf:true,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -283,7 +291,7 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-      showInPdf:true,
+        showInPdf: true,
         cellRender: (
           cellElement: any,
           cellInfo: any,
@@ -348,19 +356,19 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-      showInPdf:true,
-      }];
-    return baseColumns
-      .filter((column) => {
-        if (column.dataField == "voucherType") {
-          return voucherType == "OT";
-        }
-        if (column.dataField == "xRate") {
-          return voucherType !== "OT";
-        }
+        showInPdf: true,
+      },
+    ];
+    return baseColumns.filter((column) => {
+      if (column.dataField == "voucherType") {
+        return voucherType == "OT";
+      }
+      if (column.dataField == "xRate") {
+        return voucherType !== "OT";
+      }
 
-        return true;
-      })
+      return true;
+    });
     // .map((column) => {
     //   if (column.dataField == "uPI" && !clientSession.isAppGlobal) {
     //     return {
@@ -400,8 +408,20 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
       column: "netAmount",
       summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    }
+      customizeText: (itemInfo: { value: any }) => {
+        return (
+          getFormattedValue(
+            parseFloat(
+              getFormattedValue(
+                isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value
+              ).replace(/,/g, "") || "0"
+            ),
+            false,
+            2
+          ) || "0"
+        );
+      },
+    },
   ];
 
   return (
@@ -412,7 +432,12 @@ const ProductSummaryReportByTransaction: React.FC<{ filter: ProductSummaryFilter
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 summaryItems={summaryItems}
-                remoteOperations={{ filtering: true, paging: true, sorting: true, summary: true }}
+                remoteOperations={{
+                  filtering: true,
+                  paging: true,
+                  sorting: true,
+                  summary: true,
+                }}
                 columns={columns}
                 gridHeader={t("product_summary_report_by_transaction")}
                 dataUrl={Urls.product_summary_transaction}

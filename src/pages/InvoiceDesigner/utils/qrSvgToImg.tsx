@@ -1,5 +1,6 @@
 import QRCodeStyling, { Gradient } from "qr-code-styling";
 import { QRCodeProps } from "../Designer/interfaces";
+import { ptToPx } from "./pdf-util";
 
 interface MyGradient {
   type?: "linear" | "radial";
@@ -21,11 +22,11 @@ export const generateQRCodeDataUrl = async (
 ): Promise<string> => {
   try {
     const qrCode = new QRCodeStyling({
-      width: qrProps.width || 128,
-      height: qrProps.height || 128,
+      width: ptToPx(qrProps.width) ||ptToPx(128),
+      height: ptToPx(qrProps.height) ||ptToPx(128),
       type: qrProps.type || "canvas",
       data: qrProps.value || "",
-      margin: qrProps.margin ?? 0,
+      margin:ptToPx( qrProps.margin) ?? 0,
       qrOptions: {
         errorCorrectionLevel: qrProps.level || "M",
       },
@@ -33,8 +34,8 @@ export const generateQRCodeDataUrl = async (
       imageOptions: qrProps.imageOptions
         ? {
             hideBackgroundDots: qrProps.imageOptions.hideBackgroundDots,
-            imageSize: qrProps.imageOptions.imageSize,
-            margin: qrProps.imageOptions.margin,
+            imageSize:ptToPx(qrProps.imageOptions.imageSize) ,
+            margin:ptToPx(qrProps.imageOptions.margin) ,
             crossOrigin: qrProps.imageOptions.crossOrigin,
           }
         : undefined,

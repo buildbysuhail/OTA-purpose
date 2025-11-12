@@ -5,14 +5,14 @@ import ErpDevGrid, {
 } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
-import { FC, useMemo, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import NetSalesReportFilter, {
   NetSalesReportFilterInitialState,
 } from "./net-sales-filter";
 import { RootState } from "../../../../../redux/store";
 import { useSelector } from "react-redux";
-import { erpParseFloat } from "../../../../../utilities/Utils";
+import { useLocation } from "react-router-dom";
 
 interface NetSalesProps {
   gridHeader: string;
@@ -433,17 +433,22 @@ const NetSalesReport: FC<NetSalesProps> = ({ gridHeader, dataUrl, gridId }) => {
       if (
         column.dataField == "slNo" ||
         column.dataField == "vNo" ||
-        column.dataField == "transDate" ||
-        column.dataField == "createdDate"
+        column.dataField == "transDate"
       ) {
         return filter.groupByParty == false;
+      }
+      if (column.dataField == "createdDate") {
+        return (
+          location.pathname.includes("inventory/net_sales_transfer_report") &&
+          filter.groupByParty==false
+        );
       }
       if (
         column.dataField == "grossValue" ||
         column.dataField == "vatAmount" ||
         column.dataField == "netSales"
       ) {
-        return clientSession.isAppGlobal == false;
+        return location.pathname.includes("inventory/net_sales_report");
       }
       return true;
     });
@@ -545,6 +550,12 @@ const NetSalesReport: FC<NetSalesProps> = ({ gridHeader, dataUrl, gridId }) => {
       return true;
     });
   }, [clientSession]);
+  const locationn = useLocation();
+  const [key, setKey] = useState(1);
+
+  useEffect(() => {
+    setKey((prev: any) => prev + 1);
+  }, [locationn]);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -552,6 +563,7 @@ const NetSalesReport: FC<NetSalesProps> = ({ gridHeader, dataUrl, gridId }) => {
           <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
+                key={key}
                 summaryItems={summaryItems}
                 remoteOperations={{
                   filtering: true,

@@ -13,7 +13,7 @@
   "suppliers": "Suppliers",
   "cash_bank_master": "Cash/Bank Master",
   "privilege_cards": "Privilege Cards",
-  "cust_supp_ledger": "Customer/Supplier Ledger",
+  "cust_supp_ledger": "Customer / Supplier Ledger",
   "bank_card": "Bank Card",
   "upi": "UPI (Unified Payments Interface)",
 
@@ -742,5 +742,7 @@
   "sales_other_reports": "Sales Other Reports",
   "customer_visit_reports": "Customer Visit Reports",
   "discount_reports": "Discount Reports",
-  "inventory_price_reports": "Inventory Price Reports"
+  "inventory_price_reports": "Inventory Price Reports",
+  "fcm_push_notification_test": "FCM Push Notification Test",
+  "refresh_cache": "Refresh Cache"
 }

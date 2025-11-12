@@ -7,7 +7,6 @@ import { useMemo } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../../redux/urls";
 import SalesmanwiseSalesAndCollectionFilter, { SalesmanwiseSalesAndCollectionFilterInitialState, } from "./salesman-wise-sales-and-collection-filter";
-import { erpParseFloat } from "../../../../../utilities/Utils";
 
 const SalesmanwiseSalesAndCollection = () => {
   const { t } = useTranslation("accountsReport");
@@ -391,66 +390,45 @@ const SalesmanwiseSalesAndCollection = () => {
     },
     {
       column: "salesTarget",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value));
-      },
     },
     {
       column: "totSales",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value));
-      },
     },
     {
       column: "profit",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value));
-      },
     },
     {
       column: "totCollection",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value));
-      },
     },
     {
       column: "profitAsPerCollection",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value));
-      },
     },
     {
       column: "incentiveAsPerProfit",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value));
-      },
     },
     {
       column: "incentiveAsPerCollection",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value));
-      },
     },
   ];
 

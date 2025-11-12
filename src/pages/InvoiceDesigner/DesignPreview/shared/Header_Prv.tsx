@@ -24,15 +24,19 @@ const ShardPrevHeader = ({
 
   return (
     <div
-    className="w-full h-auto relative flex flex-col flex-wrap z-10"
-      // fixed={!headerState?.isFirstOnly}
+    className="w-full  relative flex flex-col  z-10"
+       style={{
+        minHeight: `${customTopHeight}pt`,
+        height: `${customTopHeight}pt`,
+        maxHeight: `${customTopHeight}pt`,
+      }}
     >
       {/* Background Image */}
 
           {Array.isArray(customElements) && (
               <div
                 style={{
-                minHeight: `${customTopHeight}pt`, height:`${customTopHeight}pt`,
+                minHeight: `${customTopHeight}pt`, height:`${customTopHeight}pt`,maxHeight: `${customTopHeight}pt`,
                 width: "100%",
                 backgroundImage: bgImage ? `url(${bgImage})` : "none",
                 backgroundPosition: headerState?.customElements?.bg_image_position || "center", // fallback default
@@ -41,6 +45,7 @@ const ShardPrevHeader = ({
                 backgroundColor: `rgb(${headerState?.customElements?.background_color ?? "255,255,255"})`,
                 position: "relative",
                 overflow: "hidden",
+                boxSizing: "border-box",
                 }}
               >
                 {customElements.map((component) => (

@@ -171,7 +171,7 @@ const PrintJobIndicator = () => {
     { path: "/integration/total-summary", element: <TotalSummary /> },
     { path: "/integration/shortkeys_settings", element: <ShortkeysSettings defaultShortcuts={[]} /> },
     { path: "/integration/test-input-button", element: <TestInputButton /> },
-    { path: "/integration/fcm_push_notification_test", element: <FcmPushNotificationTest /> },
+    // { path: "/integration/fcm_push_notification_test", element: <FcmPushNotificationTest /> },
 
     // Templates
     { path: "/templates", element: <Templates /> },

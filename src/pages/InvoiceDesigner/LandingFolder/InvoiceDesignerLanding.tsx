@@ -1,6 +1,3 @@
-
-
-
 import { useLocation, useSearchParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
@@ -20,8 +17,8 @@ export interface TemplateImagesTypes {
   background_image_footer: string | null;
 }
 
-interface LocationState { 
-templateType?: string;
+interface LocationState {
+  templateType?: string;
   templateKind?: string;
 }
 const InvoiceDesigner = () => {
@@ -32,16 +29,16 @@ const InvoiceDesigner = () => {
   const templateData = useSelector((state: RootState) => state.Template);
   const rootState = useRootState();
   const tg = searchParams.get("template_group");
-  const templateGroup = tg && Object.values(VoucherType).includes(tg as VoucherType)? (tg as VoucherType): ""; 
-  const { templateKind,templateType} = (location.state as LocationState) || {};
+  const templateGroup = tg && Object.values(VoucherType).includes(tg as VoucherType) ? (tg as VoucherType) : "";
+  const { templateKind, templateType } = (location.state as LocationState) || {};
 
   return (
-    <div className="h-full">
-        <BaseDesigner
-          designerType={templateType || "STANDARD"}
-          designerKind={templateKind ||"standard"}
-          templateGroup={templateGroup}
-        />
+    <div className="h-full bg-white dark:bg-body_dark">
+      <BaseDesigner
+        designerType={templateType || "STANDARD"}
+        designerKind={templateKind || "standard"}
+        templateGroup={templateGroup}
+      />
       <ERPModal
         isForm={true}
         isOpen={rootState.PopupData.CustomDesignerPopup.isOpen ?? false}
@@ -61,4 +58,5 @@ const InvoiceDesigner = () => {
     </div>
   );
 };
+
 export default InvoiceDesigner;

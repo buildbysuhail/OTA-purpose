@@ -1,22 +1,12 @@
-import React, {
-  useCallback,
-  useMemo,
-  useState,
-  useRef,
-  useEffect,
-} from "react";
+import React, { useCallback, useMemo, useState, useRef, useEffect, } from "react";
 import { useSearchParams, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import {
-  Box,
-  Tooltip,
-} from "@mui/material";
+import { Box, Tooltip, } from "@mui/material";
 import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import urls from "../../../redux/urls";
 import { ActionType } from "../../../redux/types";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import { useSearch } from "./search-context.tsx";
-// import { useAccPrint } from "./use-print";
 import AccTransactionFormContainerViewContent from "./acc-transaction-View-container-content";
 
 export interface TransactionViewProps {
@@ -35,18 +25,16 @@ export interface TransactionViewProps {
   isTeller?: boolean | false;
 }
 
-const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (
-  props
-) => {
+const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (props) => {
   // const [searchQuery, setSearchQuery] = useState<string>('');
   //   const handleSearch = (query: string) => {
   //   setSearchQuery(query);
   // };
-// const { printVoucher } = useAccPrint();
+  // const { printVoucher } = useAccPrint();
   const [searchParams] = useSearchParams();
   const { voucherNo: voucherNoParam } = useParams<{ voucherNo: string }>();
   const { searchQuery } = useSearch();
-  
+
   const getParamOrProp = <T extends string | number>(
     key: keyof TransactionViewProps,
     isNumber: boolean = false
@@ -61,32 +49,20 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (
   // State initialization
   const [input, setInput] = useState({
     voucherType: getParamOrProp<string>("voucherType") || props.voucherType,
-    transactionType:
-      getParamOrProp<string>("transactionType") || props.transactionType,
+    transactionType: getParamOrProp<string>("transactionType") || props.transactionType,
     isInvTrans: (props.isInvTrans) as boolean,
     formCode: getParamOrProp<string>("formCode") || props.formCode,
-    voucherPrefix:
-      getParamOrProp<string>("voucherPrefix") || props.voucherPrefix,
+    voucherPrefix: getParamOrProp<string>("voucherPrefix") || props.voucherPrefix,
     formType: getParamOrProp<string>("formType") || props.formType,
     title: getParamOrProp<string>("title") || props.title,
     drCr: getParamOrProp<string>("drCr") || props.drCr,
     voucherNo: Number(voucherNoParam) || props.voucherNo || 0,
-    transactionMasterID:
-      getParamOrProp<number>("transactionMasterID", true) ||
-      props.transactionMasterID ||
-      0,
-    financialYearID:
-      getParamOrProp<number>("financialYearID", true) ||
-      props.financialYearID ||
-      0,
+    transactionMasterID: getParamOrProp<number>("transactionMasterID", true) || props.transactionMasterID || 0,
+    financialYearID: getParamOrProp<number>("financialYearID", true) || props.financialYearID || 0,
   });
 
   const { t } = useTranslation("transaction");
-  
-  // Use ref to track selected row without causing re-renders
   const selectedRowIdRef = useRef<number>(0);
-
-  // Add CSS for selection - this runs once on mount
   useEffect(() => {
     const style = document.createElement('style');
     style.textContent = `
@@ -96,9 +72,16 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (
       .grid-row-item:hover {
         background-color: #f8f9fa !important;
       }
+      .dark .grid-row-item:hover {
+        background-color: #374151 !important;
+      }
       .grid-row-item.selected {
         background-color: #f0f4ff !important;
         border-left: 3px solid #2563eb !important;
+      }
+      .dark .grid-row-item.selected {
+        background-color: #1e3a8a !important;
+        border-left: 3px solid #3b82f6 !important;
       }
     `;
     document.head.appendChild(style);
@@ -111,12 +94,10 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (
   useEffect(() => {
     if (input.transactionMasterID && input.transactionMasterID !== selectedRowIdRef.current) {
       selectedRowIdRef.current = input.transactionMasterID;
-      
       requestAnimationFrame(() => {
         document.querySelectorAll('.grid-row-item.selected').forEach(el => {
           el.classList.remove('selected');
         });
-
         document.querySelectorAll('.grid-row-item').forEach(el => {
           const rowId = el.getAttribute('data-row-id');
           if (rowId === String(input.transactionMasterID)) {
@@ -135,22 +116,18 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (
         (input.isInvTrans ? clickedRow.invTransactionMasterID : clickedRow.accTransactionMasterID) || "0",
         10
       );
-
       // Update ref without causing re-render
       selectedRowIdRef.current = transactionMasterID;
-
       // Update state to pass to child component
       setInput((prev) => ({
         ...prev,
         transactionMasterID: transactionMasterID
       }));
-
       // Update UI directly without re-render
       requestAnimationFrame(() => {
         document.querySelectorAll('.grid-row-item.selected').forEach(el => {
           el.classList.remove('selected');
         });
-
         document.querySelectorAll('.grid-row-item').forEach(el => {
           const rowId = el.getAttribute('data-row-id');
           if (rowId === String(transactionMasterID)) {
@@ -173,7 +150,6 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (
   const columnstwo: DevGridColumn[] = useMemo(() => {
     const isPurchase = (input.isInvTrans && (input.transactionType?.toLowerCase() === "purchase"));
     const idField = input.isInvTrans ? "invTransactionMasterID" : "accTransactionMasterID";
-
     const CardCol: DevGridColumn = {
       dataField: idField,
       caption: t("Actions"),
@@ -187,15 +163,12 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (
         const rowId = parseInt(String(d[idField] ?? "0"), 10);
         const dateStr = new Date(d?.transactionDate).toLocaleDateString("en-GB", { day: "2-digit", month: "2-digit", year: "numeric" });
         const voucher = d?.voucherPrefix ? `${d.voucherPrefix}-${d.voucherNumber}` : `${d?.voucherNumber}`;
-
-
         const overdueDays = calculateOverdueDays(d?.transactionDate);
         // const isOverdue = overdueDays > 0;
         const isSelected = rowId === selectedRowIdRef.current;
-
         return (
           <Box
-            className={`grid-row-item ${isSelected ? 'selected' : ''}`}
+            className={`grid-row-item ${isSelected ? 'selected' : ''} dark:bg-dark-bg-card dark:border-dark-border`}
             data-row-id={rowId}
             sx={{
               display: "flex",
@@ -206,11 +179,16 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (
               borderBottom: "1px solid #e5e7eb",
               cursor: "pointer",
               backgroundColor: "#ffffff",
+              '.dark &': {
+                backgroundColor: '#1f2937',
+                borderBottom: '1px solid #374151',
+              }
             }}
           >
             {/* Title/Party Name */}
             <Tooltip title={isPurchase ? (d?.partyName || "") : (d?.particulars || "")} arrow placement="top-start">
               <Box
+                className="dark:!text-dark-text"
                 sx={{
                   fontSize: "14px",
                   fontWeight: 500,
@@ -220,6 +198,9 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (
                   whiteSpace: "nowrap",
                   display: "block",
                   width: "100%",
+                  '.dark &': {
+                    color: '#f3f4f6',
+                  }
                 }}
               >
                 {isPurchase ? d?.partyName : d?.particulars}
@@ -230,6 +211,7 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (
             <Box sx={{ display: "flex", alignItems: "center", gap: 1, overflow: "hidden" }}>
               <Tooltip title={voucher} arrow placement="top-start">
                 <Box
+                  className="dark:!text-dark-text"
                   sx={{
                     fontSize: "13px",
                     fontWeight: 400,
@@ -239,14 +221,25 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (
                     whiteSpace: "nowrap",
                     display: "inline-block",
                     width: "25%",
+                    '.dark &': {
+                      color: '#9ca3af',
+                    }
                   }}
                 >
                   {voucher}
                 </Box>
               </Tooltip>
-              <Box sx={{ fontSize: "13px", color: "#cbd5e1", flexShrink: 0 }}>•</Box>
+              <Box sx={{
+                fontSize: "13px",
+                color: "#cbd5e1",
+                flexShrink: 0,
+                '.dark &': {
+                  color: '#6b7280',
+                }
+              }}>•</Box>
               <Tooltip title={dateStr} arrow placement="top-start">
                 <Box
+                  className="dark:!text-dark-text"
                   sx={{
                     fontSize: "13px",
                     fontWeight: 400,
@@ -256,39 +249,38 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (
                     whiteSpace: "nowrap",
                     display: "inline-block",
                     width: "30%",
+                    '.dark &': {
+                      color: '#9ca3af',
+                    }
                   }}
                 >
                   {dateStr}
                 </Box>
               </Tooltip>
-              <Tooltip 
-              title={Math.abs(
-                Number(isPurchase ? d?.grandTotal ?? 0 : d?.amount ?? 0)
-              ).toLocaleString("en-IN", { style: "currency", currency: "INR" })}
-              arrow 
-              placement="top-start"
-            >
-              <Box
-                sx={{
-                  fontSize: "14px",
-                  fontWeight: 600,
-                  color: "#1e293b",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                  display: "block",
-                  width: "45%",
-                }}
-              >
-                {Math.abs(
-                  Number(isPurchase ? d?.grandTotal ?? 0 : d?.amount ?? 0)
-                ).toLocaleString("en-IN", { style: "currency", currency: "INR" })}
-              </Box>
-            </Tooltip>
+              <Tooltip title={Math.abs(Number(isPurchase ? d?.grandTotal ?? 0 : d?.amount ?? 0)).toLocaleString("en-IN", { style: "currency", currency: "INR" })} arrow placement="top-start">
+                <Box
+                  className="dark:!text-dark-text"
+                  sx={{
+                    fontSize: "14px",
+                    fontWeight: 600,
+                    color: "#1e293b",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    display: "block",
+                    width: "45%",
+                    '.dark &': {
+                      color: '#f3f4f6',
+                    }
+                  }}
+                >
+                  {Math.abs(
+                    Number(isPurchase ? d?.grandTotal ?? 0 : d?.amount ?? 0)
+                  ).toLocaleString("en-IN", { style: "currency", currency: "INR" })}
+                </Box>
+              </Tooltip>
             </Box>
-
-           
-
+            
             {/* Amount */}
             {/* <Tooltip 
               title={Math.abs(
@@ -315,7 +307,7 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (
               </Box>
             </Tooltip> */}
 
-             {/* Overdue Status */}
+            {/* Overdue Status */}
             {/* {isOverdue && (
               <Box
                 sx={{
@@ -398,13 +390,18 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (
   return (
     <>
       <Box
+        className="dark:bg-dark-bg-card"
         sx={{
           display: "flex",
           height: "100vh",
+          '.dark &': {
+            backgroundColor: '#111827',
+          }
         }}
       >
         {/* Sidebar */}
         <Box
+          className="dark:bg-dark-bg-card dark:border-dark-border"
           width={349}
           bgcolor="#fafbfc"
           borderRight="1px solid #eee"
@@ -419,9 +416,13 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (
               lg: "block",
               xl: "block",
             },
+            '.dark &': {
+              backgroundColor: '#1f2937',
+              borderRight: '1px solid #374151',
+            }
           }}
         >
-          <div className="py-0 bg-gray-50 h-[94vh]">
+          <div className="py-0 bg-gray-50 dark:bg-dark-bg-card h-[94vh]">
             <div className="flex items-center justify-between px-3">
             </div>
 
@@ -433,10 +434,13 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (
 
         {/* Main Content */}
         <Box
+          className="dark:bg-dark-bg-card"
           sx={{
             flex: 1,
             overflowY: "auto",
-            // marginLeft: { lg: "349px", xl: "349px" },
+            '.dark &': {
+              backgroundColor: '#111827',
+            }
           }}
         >
           <AccTransactionFormContainerViewContent

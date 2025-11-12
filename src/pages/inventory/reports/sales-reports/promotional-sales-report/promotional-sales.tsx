@@ -8,7 +8,6 @@ import { useNumberFormat } from "../../../../../utilities/hooks/use-number-forma
 import Urls from "../../../../../redux/urls";
 import PromotionalSalesReportFilter, { PromotionalSalesReportFilterInitialState, } from "./promotional-sales-filter";
 import moment from "moment";
-import { erpParseFloat } from "../../../../../utilities/Utils";
 
 const PromotionalSalesReport = () => {
   const { t } = useTranslation("accountsReport");

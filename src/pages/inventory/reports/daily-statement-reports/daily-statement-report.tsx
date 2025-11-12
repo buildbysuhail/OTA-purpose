@@ -1,23 +1,30 @@
-import { useTranslation } from "react-i18next"
-import { FC, Fragment, useEffect, useMemo, useState } from "react"
-import { useNumberFormat } from "../../../../utilities/hooks/use-number-format"
-import { DevGridColumn } from "../../../../components/types/dev-grid-column"
-import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid"
-import Urls from "../../../../redux/urls"
-import { ActionType } from "../../../../redux/types"
-import GridId from "../../../../redux/gridId"
-import DailyStatementReportFilter, { DailyStatementReportInitialState } from "./daily-statement-report -filter"
-import { useLocation } from "react-router-dom"
-import { erpParseFloat } from "../../../../utilities/Utils"
+import { useTranslation } from "react-i18next";
+import { FC, Fragment, useEffect, useMemo, useState } from "react";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import { DevGridColumn } from "../../../../components/types/dev-grid-column";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
+import Urls from "../../../../redux/urls";
+import { ActionType } from "../../../../redux/types";
+import GridId from "../../../../redux/gridId";
+import DailyStatementReportFilter, {
+  DailyStatementReportInitialState,
+} from "./daily-statement-report -filter";
+import { useLocation } from "react-router-dom";
 interface DailyStatementReportProps {
   gridHeader: string;
   dataUrl: string;
   gridId: string;
 }
 // const DailyStatementReport = () => {
-  const DailyStatementReport: FC<DailyStatementReportProps> = ({ gridHeader, dataUrl, gridId }) => {
-  const { t } = useTranslation("accountsReport")
-  const { getFormattedValue } = useNumberFormat()
+const DailyStatementReport: FC<DailyStatementReportProps> = ({
+  gridHeader,
+  dataUrl,
+  gridId,
+}) => {
+  const { t } = useTranslation("accountsReport");
+  const { getFormattedValue } = useNumberFormat();
   const columns: DevGridColumn[] = [
     {
       dataField: "form",
@@ -75,22 +82,31 @@ interface DailyStatementReportProps {
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.cash == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.cash))
+            cellElement.data?.cash == null
+              ? ""
+              : getFormattedValue(Number.parseFloat(cellElement.data.cash));
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+          };
         } else {
           return (
             <span>
-              {cellElement.data?.cash == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.cash))}
+              {cellElement.data?.cash == null
+                ? ""
+                : getFormattedValue(Number.parseFloat(cellElement.data.cash))}
             </span>
-          )
+          );
         }
       },
     },
@@ -104,22 +120,31 @@ interface DailyStatementReportProps {
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.credit == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.credit))
+            cellElement.data?.credit == null
+              ? ""
+              : getFormattedValue(Number.parseFloat(cellElement.data.credit));
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+          };
         } else {
           return (
             <span>
-              {cellElement.data?.credit == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.credit))}
+              {cellElement.data?.credit == null
+                ? ""
+                : getFormattedValue(Number.parseFloat(cellElement.data.credit))}
             </span>
-          )
+          );
         }
       },
     },
@@ -133,22 +158,31 @@ interface DailyStatementReportProps {
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.bank == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.bank))
+            cellElement.data?.bank == null
+              ? ""
+              : getFormattedValue(Number.parseFloat(cellElement.data.bank));
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+          };
         } else {
           return (
             <span>
-              {cellElement.data?.bank == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.bank))}
+              {cellElement.data?.bank == null
+                ? ""
+                : getFormattedValue(Number.parseFloat(cellElement.data.bank))}
             </span>
-          )
+          );
         }
       },
     },
@@ -162,22 +196,31 @@ interface DailyStatementReportProps {
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.total == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.total))
+            cellElement.data?.total == null
+              ? ""
+              : getFormattedValue(Number.parseFloat(cellElement.data.total));
           return {
             ...exportCell,
             text: value,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+          };
         } else {
           return (
             <span>
-              {cellElement.data?.total == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.total))}
+              {cellElement.data?.total == null
+                ? ""
+                : getFormattedValue(Number.parseFloat(cellElement.data.total))}
             </span>
-          )
+          );
         }
       },
     },
@@ -191,7 +234,7 @@ interface DailyStatementReportProps {
       visible: false,
       showInPdf: true,
     },
-  ]
+  ];
 
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) => {
@@ -204,7 +247,9 @@ interface DailyStatementReportProps {
       ) {
         return "0"; // Ensure "0" is displayed when value is missing
       }
-      return value >= 0 ? getFormattedValue(value, false, 2) : getFormattedValue(-1 * value, false, 2) || "0"; // Ensure formatted output or fallback to "0"
+      return value >= 0
+        ? getFormattedValue(value, false, 2)
+        : getFormattedValue(-1 * value, false, 2) || "0"; // Ensure formatted output or fallback to "0"
     };
   }, []);
   const customizeDate = (itemInfo: any) => `TOTAL`;
@@ -216,42 +261,30 @@ interface DailyStatementReportProps {
     },
     {
       column: "cash",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-                return erpParseFloat(getFormattedValue(value));
-            },
     },
     {
       column: "credit",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-                return erpParseFloat(getFormattedValue(value));
-            },
     },
     {
       column: "bank",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-                return erpParseFloat(getFormattedValue(value));
-            },
     },
     {
       column: "total",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-                return erpParseFloat(getFormattedValue(value));
-            },
     },
   ];
- const location = useLocation();
+  const location = useLocation();
   const [key, setKey] = useState(1);
   useEffect(() => {
     setKey((prev: any) => prev + 1);
@@ -264,14 +297,21 @@ interface DailyStatementReportProps {
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                 key={key}
+                  key={key}
                   autoExpandAll={true}
                   columns={columns}
                   gridHeader={t(gridHeader)}
                   filterText=" From {fromDate} To {toDate}"
                   dataUrl={dataUrl}
                   summaryItems={summaryItems}
-                  remoteOperations={{ filtering: false, paging: false, sorting: false, summary: false, grouping: false, groupPaging: false }}
+                  remoteOperations={{
+                    filtering: false,
+                    paging: false,
+                    sorting: false,
+                    summary: false,
+                    grouping: false,
+                    groupPaging: false,
+                  }}
                   allowGrouping={true}
                   groupPanelVisible={true}
                   method={ActionType.POST}
@@ -291,8 +331,7 @@ interface DailyStatementReportProps {
         </div>
       </div>
     </Fragment>
-  )
-}
+  );
+};
 
-export default DailyStatementReport
-
+export default DailyStatementReport;

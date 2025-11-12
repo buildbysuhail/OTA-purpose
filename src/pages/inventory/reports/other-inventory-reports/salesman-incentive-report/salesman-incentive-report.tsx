@@ -10,7 +10,7 @@ import Urls from "../../../../../redux/urls";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import moment from "moment";
-import { erpParseFloat, isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
+import { isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
 
 const SalesmanIncentiveReport = () => {
   const { t } = useTranslation('accountsReport');
@@ -117,7 +117,7 @@ const SalesmanIncentiveReport = () => {
     },
     {
       column: "smIncentive",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -133,7 +133,7 @@ const SalesmanIncentiveReport = () => {
         );
       },
       cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value, false, 4));
+        return getFormattedValue(value, false, 4);
       },
     }
   ];

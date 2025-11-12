@@ -1,12 +1,11 @@
 import React, { Fragment } from "react";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ErpDevGrid, { SummaryConfig } from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import { ProductSummaryFilter } from "./product-summary-master";
-import { erpParseFloat } from "../../../../../utilities/Utils";
 
 interface ProductSummaryReport {
   productID: string;
@@ -69,7 +68,7 @@ const ProductSummaryReport2: React.FC<{
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "sPrice",
@@ -78,8 +77,8 @@ const ProductSummaryReport2: React.FC<{
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
-    cellRender: (
+      showInPdf: true,
+      cellRender: (
         cellElement: any,
         cellInfo: any,
         filter: any,
@@ -110,7 +109,7 @@ const ProductSummaryReport2: React.FC<{
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-  cellRender: (
+      cellRender: (
         cellElement: any,
         cellInfo: any,
         filter: any,
@@ -141,7 +140,7 @@ const ProductSummaryReport2: React.FC<{
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-    cellRender: (
+      cellRender: (
         cellElement: any,
         cellInfo: any,
         filter: any,
@@ -172,8 +171,8 @@ const ProductSummaryReport2: React.FC<{
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
-  cellRender: (
+      showInPdf: true,
+      cellRender: (
         cellElement: any,
         cellInfo: any,
         filter: any,
@@ -204,7 +203,7 @@ const ProductSummaryReport2: React.FC<{
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-  cellRender: (
+      cellRender: (
         cellElement: any,
         cellInfo: any,
         filter: any,
@@ -235,8 +234,8 @@ const ProductSummaryReport2: React.FC<{
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
-    cellRender: (
+      showInPdf: true,
+      cellRender: (
         cellElement: any,
         cellInfo: any,
         filter: any,
@@ -267,7 +266,7 @@ const ProductSummaryReport2: React.FC<{
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "batchNo",
@@ -276,52 +275,19 @@ const ProductSummaryReport2: React.FC<{
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-    }
+    },
   ];
   // useEffect(() => {
   //   if (batchID !== null) {
   //     onBatchIDChange(batchID);
   //   }
   // }, [batchID, onBatchIDChange]);
-  const onInitialDataLoad = (loadedData: ProductSummaryReport[]) => { updateFilterWithBatchID(loadedData); };
-  const onRowClick = (e: any) => { updateFilterWithBatchID(undefined, e.data); };
-  const customizeSummaryRow = (itemInfo: { value: any }) => {
-    const value = itemInfo.value;
-    if (value === null || value === undefined || value === "" || isNaN(value)) {
-      return "0";
-    }
-    return getFormattedValue(value) || "0";
+  const onInitialDataLoad = (loadedData: ProductSummaryReport[]) => {
+    updateFilterWithBatchID(loadedData);
   };
-
-  const batchInfoSummaryItems: SummaryConfig[] = [
-    {
-      column: "stockIn",
-      summaryType: "custom",
-      valueFormat: "number",
-      customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-                return erpParseFloat(getFormattedValue(value, false, 2));
-            },
-    },
-    {
-      column: "stockOut",
-      summaryType: "custom",
-      valueFormat: "number",
-      customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-                return erpParseFloat(getFormattedValue(value, false, 2));
-            },
-    },
-    {
-      column: "stock",
-      summaryType: "custom",
-      valueFormat: "number",
-      customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-                return erpParseFloat(getFormattedValue(value, false, 2));
-            },
-    }
-  ];
+  const onRowClick = (e: any) => {
+    updateFilterWithBatchID(undefined, e.data);
+  };
   return (
     <Fragment>
       <div className="grid grid-cols-12">
@@ -330,10 +296,14 @@ const ProductSummaryReport2: React.FC<{
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 key="grd_product_summary_batch_info"
-                summaryItems={batchInfoSummaryItems}
+                // summaryItems={batchInfoSummaryItems}
                 onInitialDataLoad={onInitialDataLoad}
                 onRowClick={onRowClick}
-                remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                remoteOperations={{
+                  filtering: false,
+                  paging: false,
+                  sorting: false,
+                }}
                 columns={batchInfoColumns}
                 dataUrl={Urls.product_summary_basic_info_batch_details}
                 method={ActionType.POST}
@@ -349,7 +319,7 @@ const ProductSummaryReport2: React.FC<{
                 postData={filter?.filter}
                 reload={reloadBase2}
                 changeReload={() => {
-                  console.log('onReloadChange2');
+                  console.log("onReloadChange2");
                   onReloadChange2 && onReloadChange2();
                 }}
                 heightToAdjustOnWindows={800}

@@ -471,7 +471,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
             height: 150,
             level: "M",
             type: "svg",
-            margin: 10,
+            margin: 0,
           },
         };
 
@@ -574,7 +574,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
             height: 150,
             level: "M",
             type: "svg",
-            margin: 10,
+            margin: 0,
             image: "",
             imageOptions: {
               hideBackgroundDots: true,
@@ -2474,24 +2474,6 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
                               className="w-full"
                             />
                             {forCustomRows && (
-                            // <ERPDataCombobox
-                            //   id="arabicFont"
-                            //   data={selectedComponent}
-                            //   defaultValue={"Amiri"}
-                            //   label="arabicFont"
-                            //   field={{
-                            //     id: "arabicFont",
-                            //     valueKey: "value",
-                            //     labelKey: "label",
-                            //   }}
-                            //   options={[
-                            //     { value: "NotoNaskhArabic", label: "NotoNaskhArabic" },
-                            //     { value: "Amiri", label: "Amiri" },
-                            //   ]}
-                            //   onChange={(e) =>
-                            //     handlePropertyChange("arabicFont", e.value)
-                            //   }{ label: "NONE", value: "NONE" },
-                            // />
                               <ERPDataCombobox
                                
                                 id="format"

@@ -414,6 +414,12 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   btnSrAmtPnlsShow: { visible: false, disabled: false, label: "" },
   btnDiscountSlab: { visible: false, disabled: false, label: "" },
   chkUserSalesPriceForTransfer: { visible: false, disabled: false, label: "" },
+  btnTender: { visible: false, disabled: false, label: "" },
+  btnPartySearch: { visible: false, disabled: false, label: "" },
+  btnDraftList: { visible: false, disabled: false, label: "" },
+  chkDraftMode: { visible: false, disabled: false, label: "" },
+  importFromExcelToolStripMenuItem: { visible: false, disabled: false, label: "" },
+  lblLedgerBal: { visible: false, disabled: false, label: "" },
 
 };export const initialUserConfig: UserConfig = {
     clearDetailsAfterSaveAccounts: true,
@@ -434,7 +440,6 @@ export const initialFormElements: { [key: string]: FormElementState } = {
     enableItemCodeSearchInNameColumn: false,
     holdSameCode: false,
     printPreview: false,
-    duplicationMessage: false,
     setDefaultQuantity: false,
     inputBoxStyle: {
       inputStyle: "normal",

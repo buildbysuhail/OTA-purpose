@@ -4546,6 +4546,57 @@ const handleDiscountSlab = async() => {
     }
   }
   };
+  function getCustomerTypeAndTitle(
+  formType: string,
+  title: string,
+  isAppGlobal: boolean,
+  maintainKSAEInvoice: boolean
+) {
+  let CUSTOMER_TYPE = "";
+  let formTitle = title;
+
+  // 🔹 When not global app, override logic
+  if (!isAppGlobal) {
+    if (maintainKSAEInvoice) {
+      CUSTOMER_TYPE = "B2C";
+    } else {
+      CUSTOMER_TYPE = "";
+    }
+    return { CUSTOMER_TYPE, formTitle };
+  }
+
+  // 🔹 Normal logic based on form type
+  switch (formType.toUpperCase()) {
+    case "INTERSTATE":
+      formTitle = `${title}[${formType}][Ctrl+F2]`;
+      CUSTOMER_TYPE = "Interstate";
+      break;
+
+    case "INT":
+      formTitle = `${title}[${formType}][Ctrl+F2]`;
+      CUSTOMER_TYPE = "Int";
+      break;
+
+    case "WHOLESALE":
+    case "B2B":
+      formTitle = `${title}[${formType}][B2B][F2]`;
+      CUSTOMER_TYPE = "B2B";
+      break;
+
+    default:
+      if (formType.toUpperCase() !== "BT") {
+        formTitle = `${title}[${formType}][B2C][F3]`;
+        CUSTOMER_TYPE = "B2C";
+      } else {
+        formTitle = `${title}[${formType}]`;
+        CUSTOMER_TYPE = "";
+      }
+      break;
+  }
+
+  return { CUSTOMER_TYPE, formTitle };
+}
+
   return {
     downloadImportTemplateHeadersOnly,
     importFromExcel,
@@ -4593,6 +4644,7 @@ const handleDiscountSlab = async() => {
     postBillWiseDetails,
     logUserAction,
     loadInvTransactionMasterByVouchNo,
-    handleDiscountSlab
+    handleDiscountSlab,
+    getCustomerTypeAndTitle
   };
 };

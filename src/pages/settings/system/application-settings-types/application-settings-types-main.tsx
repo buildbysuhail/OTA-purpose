@@ -29,6 +29,7 @@ export interface ApplicationMainSettings {
   maintainMultilanguage__: boolean;
   showUserMessages: boolean;
   maintainBusinessType: string;
+  cashSalesVoucherPrefix?: boolean;
 }
 export const ApplicationMainSettingsInitialState: ApplicationMainSettings = {
   currency: "2",

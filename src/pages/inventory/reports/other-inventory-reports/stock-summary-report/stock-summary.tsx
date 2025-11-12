@@ -15,7 +15,6 @@ import Urls from "../../../../../redux/urls";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import StockSummaryLedgerReport from "./stock-summary-ledger-report";
-import { erpParseFloat } from "../../../../../utilities/Utils";
 
 const StockSummary = () => {
   const { t } = useTranslation("accountsReport");
@@ -470,21 +469,15 @@ const StockSummary = () => {
     },
     {
       column: "stock",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "fixedPoint",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
     },
     {
       column: "stockValue",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
     },
     {
       column: "product",
@@ -495,25 +488,19 @@ const StockSummary = () => {
     },
     {
       column: "stock",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "fixedPoint",
       isGroupItem: true,
       showInGroupFooter: true,
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
     },
     {
       column: "stockValue",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       isGroupItem: true,
       showInGroupFooter: true,
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value));
-      },
     },
   ];
 

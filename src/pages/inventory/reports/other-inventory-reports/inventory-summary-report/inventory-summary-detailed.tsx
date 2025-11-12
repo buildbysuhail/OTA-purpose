@@ -1264,6 +1264,7 @@ const InventorySummaryReportDetailed: FC<
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
+
               <ErpDevGrid
                 key={key}
                 groupPanelVisible={true}
@@ -1310,6 +1311,7 @@ const InventorySummaryReportDetailed: FC<
               {**** (voucherType =='SB' && Booking Summary Report)}
               From Date : {**** (fromDate) }To Date : {**** (toDate)}"
                 dataUrl={Urls.inventory_summary_report_detailed}
+                 gridHeader={" "}
                 hideGridAddButton={true}
                 method={ActionType.POST}
                 reload={true}

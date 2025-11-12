@@ -1,15 +1,12 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import { ActionType } from "../../../../../redux/types";
 import Urls from "../../../../../redux/urls";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import GSTR1B2BFilter, { GSTR1B2BFilterInitialState } from "./gstr1-b2b-filter";
-import { erpParseFloat } from "../../../../../utilities/Utils";
 
 const GSTR1B2CSmall = () => {
   const { t } = useTranslation("accountsReport");
@@ -54,10 +51,10 @@ const GSTR1B2CSmall = () => {
             cellElement.data?.applicablePercentOfTaxRate == null
               ? ""
               : getFormattedValue(
-                cellElement.data.applicablePercentOfTaxRate,
-                false,
-                2
-              );
+                  cellElement.data.applicablePercentOfTaxRate,
+                  false,
+                  2
+                );
           return {
             ...exportCell,
             text: value,
@@ -68,10 +65,10 @@ const GSTR1B2CSmall = () => {
           return cellElement.data?.applicablePercentOfTaxRate == null
             ? ""
             : getFormattedValue(
-              parseFloat(cellElement.data.applicablePercentOfTaxRate),
-              false,
-              2
-            );
+                parseFloat(cellElement.data.applicablePercentOfTaxRate),
+                false,
+                2
+              );
         }
       },
     },
@@ -138,10 +135,10 @@ const GSTR1B2CSmall = () => {
           return cellElement.data?.taxableValue == null
             ? ""
             : getFormattedValue(
-              parseFloat(cellElement.data.taxableValue),
-              false,
-              2
-            );
+                parseFloat(cellElement.data.taxableValue),
+                false,
+                2
+              );
         }
       },
     },
@@ -175,10 +172,10 @@ const GSTR1B2CSmall = () => {
           return cellElement.data?.cessAmount == null
             ? ""
             : getFormattedValue(
-              parseFloat(cellElement.data.cessAmount),
-              false,
-              2
-            );
+                parseFloat(cellElement.data.cessAmount),
+                false,
+                2
+              );
         }
       },
     },
@@ -195,41 +192,35 @@ const GSTR1B2CSmall = () => {
   ];
 
   const { getFormattedValue } = useNumberFormat();
-  const customizeSummaryRow = useMemo(() => {
-    return (itemInfo: { value: any }) => {
-      const value = itemInfo.value;
-      if (
-        value === null ||
-        value === undefined ||
-        value === "" ||
-        isNaN(value)
-      ) {
-        return "0";
-      }
-      return getFormattedValue(value) || "0";
-    };
-  }, [getFormattedValue]);
+  // const customizeSummaryRow = useMemo(() => {
+  //   return (itemInfo: { value: any }) => {
+  //     const value = itemInfo.value;
+  //     if (
+  //       value === null ||
+  //       value === undefined ||
+  //       value === "" ||
+  //       isNaN(value)
+  //     ) {
+  //       return "0";
+  //     }
+  //     return getFormattedValue(value) || "0";
+  //   };
+  // }, [getFormattedValue]);
 
-  const summaryItems: SummaryConfig[] = [
-    {
-      column: "taxableValue",
-      summaryType: "custom",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value, false, 2));
-        },
-    },
-    {
-      column: "cessAmount",
-      summaryType: "custom",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value, false, 2));
-        },
-    },
-  ];
+  // const summaryItems: SummaryConfig[] = [
+  //   {
+  //     column: "taxableValue",
+  //     summaryType: "sum",
+  //     valueFormat: "currency",
+  //     customizeText: customizeSummaryRow,
+  //   },
+  //   {
+  //     column: "cessAmount",
+  //     summaryType: "sum",
+  //     valueFormat: "currency",
+  //     customizeText: customizeSummaryRow,
+  //   },
+  // ];
 
   return (
     <Fragment>
@@ -238,14 +229,13 @@ const GSTR1B2CSmall = () => {
           <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
-                summaryItems={summaryItems}
+                // summaryItems={summaryItems}
                 remoteOperations={{
                   filtering: false,
                   paging: false,
                   sorting: false,
                 }}
                 columns={columns}
-                
                 gridHeader={t("gstr1b2c_small_report")}
                 dataUrl={Urls.gstr1b2cSmall}
                 hideGridAddButton={true}

@@ -12,7 +12,6 @@ import GridId from "../../../../redux/gridId";
 import { ActionType } from "../../../../redux/types";
 import Urls from "../../../../redux/urls";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import { erpParseFloat } from "../../../../utilities/Utils";
 
 const PurchaseTaxReport = () => {
   const { t } = useTranslation("accountsReport");
@@ -21,7 +20,7 @@ const PurchaseTaxReport = () => {
   const columns: DevGridColumn[] = [
     {
       dataField: "date",
-      caption: t("date"),
+      caption: t("ref_date"),
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
@@ -281,6 +280,16 @@ const PurchaseTaxReport = () => {
       width: 100,
       showInPdf: true,
     },
+    {
+      dataField: "transactionDate",
+      caption: t("transaction_date"),
+      dataType: "date",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      showInPdf: true,
+       format: "dd-MMM-yyyy",
+    },
   ];
 
   const customizeSummaryRow = useMemo(() => {
@@ -308,7 +317,7 @@ const PurchaseTaxReport = () => {
       ) {
         return "0"; // Ensure "0" is displayed when value is missing
       }
-      return getFormattedValue(value, false, 4) || "0"; // Ensure formatted output or fallback to "0"
+      return value|| "0"; // Ensure formatted output or fallback to "0"
     };
   }, []);
   const summaryItems: SummaryConfig[] = [
@@ -320,30 +329,21 @@ const PurchaseTaxReport = () => {
     },
     {
       column: "taxableAmount",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
     },
     {
       column: "vatAmount",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow1,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value, false, 4));
-        },
     },
     {
       column: "amount",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
     },
   ];
   return (
@@ -357,12 +357,11 @@ const PurchaseTaxReport = () => {
                   columns={columns}
                   summaryItems={summaryItems}
                   filterText="from {fromDate} to {toDate}"
-                  gridHeader={t("purchase_tax_report")}
+                  gridHeader={t("monthly_vat_purchase_statement")}
                   dataUrl={Urls.Purchase_tax}
                   method={ActionType.POST}
                   gridId={GridId.Purchase_tax}
                   enablefilter={true}
-                  showFilterInitially={true}
                   filterWidth={400}
                   filterHeight={200}
                   filterContent={<PurchaseTaxReportFilter />}

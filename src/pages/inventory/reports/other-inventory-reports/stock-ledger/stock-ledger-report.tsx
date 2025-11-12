@@ -12,7 +12,6 @@ import Urls from "../../../../../redux/urls";
 import StockLedgerFilter, {
   StockLedgerFilterInitialState,
 } from "./stock-ledger-report-filter";
-import { erpParseFloat } from "../../../../../utilities/Utils";
 
 const StockLedger = () => {
   const { t } = useTranslation("accountsReport");
@@ -297,12 +296,9 @@ const StockLedger = () => {
     },
     {
       column: "balance",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "fixedPoint",
       customizeText: customizeSummaryRow1,
-      cellSummaryAction:(value: number) => {
-          return erpParseFloat(getFormattedValue(value, false, 3));
-      },
     },
   ];
 

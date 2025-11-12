@@ -154,8 +154,8 @@ const InventorySummaryReportMonthwise: FC<
                   sorting: false,
                 }}
                 columns={columns}
-                filterText='Inventory Report (Month View) of {**** (voucherTypeName)} : Branch : {**** (branchName)} , As On Date : {**** (asonDate)}'
-                // gridHeader={t("inventory_summary_report")}
+                filterText=' of {**** (voucherTypeName)} : Branch : {**** (branchName)} , As On Date : {**** (asonDate)}'
+                gridHeader={t("Inventory Report (Month View)")}
                 dataUrl={Urls.inventory_summary_report_monthwise}
                 hideGridAddButton={true}
                 method={ActionType.POST}

@@ -203,7 +203,6 @@ const InventorySummaryReport = () => {
                 dataUrl={Urls.inventory_summary_report}
                 hideGridAddButton={true}
                 enablefilter={true}
-                showFilterInitially={true}
                 method={ActionType.POST}
                 filterContent={<InventorySummaryReportFilter />}
                 filterWidth={350}

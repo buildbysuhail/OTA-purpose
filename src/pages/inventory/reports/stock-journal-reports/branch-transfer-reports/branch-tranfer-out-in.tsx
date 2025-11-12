@@ -11,7 +11,6 @@ import { useNumberFormat } from "../../../../../utilities/hooks/use-number-forma
 import { BranchTransferFilterInitialState } from "./branch-transfer-filter";
 import { useLocation } from "react-router-dom";
 import BranchTransferFilter from "./branch-transfer-filter";
-import { erpParseFloat } from "../../../../../utilities/Utils";
 interface BranchTransferInOutProps {
   gridHeader: string;
   dataUrl: string;
@@ -256,21 +255,15 @@ const BranchTransferOutIn: FC<BranchTransferInOutProps> = ({
     },
     {
       column: "quantity",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
     },
     {
       column: "netAmount",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
     },
     {
       column: "productName",
@@ -284,23 +277,17 @@ const BranchTransferOutIn: FC<BranchTransferInOutProps> = ({
       isGroupItem: true,
       showInGroupFooter: true,
       column: "quantity",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
     },
     {
       isGroupItem: true,
       showInGroupFooter: true,
       column: "netAmount",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
     },
   ];
   const location = useLocation();

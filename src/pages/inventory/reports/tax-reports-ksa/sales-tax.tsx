@@ -1,13 +1,16 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
 import { FC, useMemo } from "react";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../redux/urls";
-import PurchaseTaxReportFilter, { PurchaseTaxReportFilterInitialState, } from "./Purchase-Tax-report-filter";
-import { erpParseFloat } from "../../../../utilities/Utils";
+import PurchaseTaxReportFilter, {
+  PurchaseTaxReportFilterInitialState,
+} from "./Purchase-Tax-report-filter";
 
 const SalesTax = () => {
   const { t } = useTranslation("accountsReport");
@@ -73,8 +76,8 @@ const SalesTax = () => {
             cellElement.data?.taxableAmount == null
               ? ""
               : getFormattedValue(
-                Number.parseFloat(cellElement.data.taxableAmount)
-              );
+                  Number.parseFloat(cellElement.data.taxableAmount)
+                );
           return {
             ...exportCell,
             text: value,
@@ -87,8 +90,8 @@ const SalesTax = () => {
               {cellElement.data?.taxableAmount == null
                 ? ""
                 : getFormattedValue(
-                  Number.parseFloat(cellElement.data.taxableAmount)
-                )}
+                    Number.parseFloat(cellElement.data.taxableAmount)
+                  )}
             </span>
           );
         }
@@ -114,10 +117,10 @@ const SalesTax = () => {
             cellElement.data?.vatPercentage == null
               ? ""
               : getFormattedValue(
-                Number.parseFloat(cellElement.data.vatPercentage),
-                false,
-                2
-              );
+                  Number.parseFloat(cellElement.data.vatPercentage),
+                  false,
+                  2
+                );
           return {
             ...exportCell,
             text: value,
@@ -130,10 +133,10 @@ const SalesTax = () => {
               {cellElement.data?.vatPercentage == null
                 ? ""
                 : getFormattedValue(
-                  Number.parseFloat(cellElement.data.vatPercentage),
-                  false,
-                  2
-                )}
+                    Number.parseFloat(cellElement.data.vatPercentage),
+                    false,
+                    2
+                  )}
             </span>
           );
         }
@@ -159,10 +162,10 @@ const SalesTax = () => {
             cellElement.data?.vatAmount == null
               ? ""
               : getFormattedValue(
-                Number.parseFloat(cellElement.data.vatAmount),
-                false,
-                4
-              );
+                  Number.parseFloat(cellElement.data.vatAmount),
+                  false,
+                  4
+                );
           return {
             ...exportCell,
             text: value,
@@ -175,10 +178,10 @@ const SalesTax = () => {
               {cellElement.data?.vatAmount == null
                 ? ""
                 : getFormattedValue(
-                  Number.parseFloat(cellElement.data.vatAmount),
-                  false,
-                  4
-                )}
+                    Number.parseFloat(cellElement.data.vatAmount),
+                    false,
+                    4
+                  )}
             </span>
           );
         }
@@ -291,8 +294,8 @@ const SalesTax = () => {
             cellElement.data?.grandTotal == null
               ? ""
               : getFormattedValue(
-                Number.parseFloat(cellElement.data.grandTotal)
-              );
+                  Number.parseFloat(cellElement.data.grandTotal)
+                );
           return {
             ...exportCell,
             text: value,
@@ -305,8 +308,8 @@ const SalesTax = () => {
               {cellElement.data?.grandTotal == null
                 ? ""
                 : getFormattedValue(
-                  Number.parseFloat(cellElement.data.grandTotal)
-                )}
+                    Number.parseFloat(cellElement.data.grandTotal)
+                  )}
             </span>
           );
         }
@@ -331,6 +334,8 @@ const SalesTax = () => {
   }, [getFormattedValue]);
   const customizeSummaryRow4 = useMemo(() => {
     return (itemInfo: { value: any }) => {
+      
+      itemInfo.value = Math.round((itemInfo.value + Number.EPSILON) * 10000) / 10000
       const value = itemInfo.value;
       if (
         value === null ||
@@ -343,49 +348,36 @@ const SalesTax = () => {
       return value || "0";
     };
   }, []);
-
+  const customizeDate = (itemInfo: any) => `TOTAL`;
   const summaryItems: SummaryConfig[] = [
     {
       column: "customerName",
-      summaryType: "custom",
-      valueFormat: "string",
-      displayFormat: "TOTAL",
+      summaryType: "max",
+      customizeText: customizeDate,
     },
     {
       column: "taxableAmount",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
     },
     {
       column: "vatAmount",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow4,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value, false, 4));
-        },
     },
     {
       column: "amount",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
     },
     {
       column: "grandTotal",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-            return erpParseFloat(getFormattedValue(value));
-        },
     },
   ];
 
@@ -404,13 +396,11 @@ const SalesTax = () => {
                   summary: false,
                 }}
                 columns={columns}
-                
                 filterText=":{fromDate} - {toDate}"
                 gridHeader={t("monthly_vat_sales_statement_report")}
                 dataUrl={Urls.sales_tax}
                 hideGridAddButton={true}
                 enablefilter={true}
-                showFilterInitially={true}
                 method={ActionType.POST}
                 filterContent={<PurchaseTaxReportFilter />}
                 filterWidth={400}

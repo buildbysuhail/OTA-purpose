@@ -148,8 +148,8 @@ const SalesmanIncentiveReport = () => {
                 summaryItems={summaryItems}
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={columns}
-                filterText="{employee > 0 && : [employeeName]} {employee <= 0 && : All} From {fromDate} To {toDate}"
-                gridHeader={t("salesman_incentive_report_of_salesman")}
+                filterText="of salesman{employee > 0 && : [employeeName]} {employee <= 0 && : All} From {fromDate} To {toDate}"
+                gridHeader={t("salesman_incentive_report")}
                 dataUrl={Urls.salesman_incentive_report}
                 hideGridAddButton={true}
                 enablefilter={true}

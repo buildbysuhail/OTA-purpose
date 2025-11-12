@@ -11,7 +11,7 @@ import GridId from "../../../../../redux/gridId";
 import { ActionType } from "../../../../../redux/types";
 import Urls from "../../../../../redux/urls";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
-import { erpParseFloat, isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
+import { isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
 // import ProductInventoryReportFilter, {
 //   ProductInventoryReportFilterInitialState,
 // } from "./product-inventory-report-filter"
@@ -283,7 +283,7 @@ const PurchaseOrderTransitReport = () => {
     },
     {
       column: "stockInWarehouse",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -298,13 +298,10 @@ const PurchaseOrderTransitReport = () => {
           ) || "0"
         );
       },
-      cellSummaryAction:(value: number) => {
-                return erpParseFloat(getFormattedValue(value, false, 4));
-            },
     },
     {
       column: "stockInTransit",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "number",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -319,13 +316,10 @@ const PurchaseOrderTransitReport = () => {
           ) || "0"
         );
       },
-      cellSummaryAction:(value: number) => {
-                return erpParseFloat(getFormattedValue(value, false, 4));
-            },
     },
     {
       column: "orderPending",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "number",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -340,13 +334,10 @@ const PurchaseOrderTransitReport = () => {
           ) || "0"
         );
       },
-      cellSummaryAction:(value: number) => {
-                return erpParseFloat(getFormattedValue(value, false, 4));
-            },
     },
     {
       column: "total",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "number",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -361,13 +352,10 @@ const PurchaseOrderTransitReport = () => {
           ) || "0"
         );
       },
-      cellSummaryAction:(value: number) => {
-                return erpParseFloat(getFormattedValue(value, false, 4));
-            },
     },
     {
       column: "orderManual",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "number",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -382,9 +370,6 @@ const PurchaseOrderTransitReport = () => {
           ) || "0"
         );
       },
-      cellSummaryAction:(value: number) => {
-                return erpParseFloat(getFormattedValue(value, false, 4));
-            },
     },
   ];
   return (

@@ -28,6 +28,6 @@ const PurchaseTaxReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
 
 export default PurchaseTaxReportFilter;
 export const PurchaseTaxReportFilterInitialState = {
-  fromDate: moment().local().toDate(),
+  fromDate: moment().startOf('month').toDate(),
   toDate: new Date(),
 };

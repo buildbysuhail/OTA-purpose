@@ -1,13 +1,17 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, { SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import { useMemo } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../../redux/urls";
-import GroupedBrandwiseSalesFilter, { GroupedBrandwiseSalesFilterInitialState, } from "./grouped-brandwise-sales-filter";
-import { erpParseFloat, isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
+import GroupedBrandwiseSalesFilter, {
+  GroupedBrandwiseSalesFilterInitialState,
+} from "./grouped-brandwise-sales-filter";
+import { isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
 
 const GroupedBrandwiseSales = () => {
   const { t } = useTranslation("accountsReport");
@@ -159,9 +163,17 @@ const GroupedBrandwiseSales = () => {
             alignmentExcel: { horizontal: "right" },
           };
         } else {
-          return cellElement.data?.total == null
-            ? ""
-            : getFormattedValue(parseFloat(cellElement.data.total), false, 2);
+          return (
+            <span className={"font-bold text-[#DC143C]"}>
+              {cellElement.data?.total == null
+                ? ""
+                : getFormattedValue(
+                    parseFloat(cellElement.data.total),
+                    false,
+                    2
+                  )}
+            </span>
+          );
         }
       },
     },
@@ -178,20 +190,20 @@ const GroupedBrandwiseSales = () => {
   ];
 
   const { getFormattedValue } = useNumberFormat();
-  const customizeSummaryRow = useMemo(() => {
-    return (itemInfo: { value: any }) => {
-      const value = itemInfo.value;
-      if (
-        value === null ||
-        value === undefined ||
-        value === "" ||
-        isNaN(value)
-      ) {
-        return "0";
-      }
-      return getFormattedValue(value, false, 2) || "0";
-    };
-  }, [getFormattedValue]);
+  // const customizeSummaryRow = useMemo(() => {
+  //   return (itemInfo: { value: any }) => {
+  //     const value = itemInfo.value;
+  //     if (
+  //       value === null ||
+  //       value === undefined ||
+  //       value === "" ||
+  //       isNaN(value)
+  //     ) {
+  //       return "0";
+  //     }
+  //     return getFormattedValue(value, false, 2) || "0";
+  //   };
+  // }, [getFormattedValue]);
   const customizeDate = (itemInfo: any) => `TOTAL`;
   const summaryItems: SummaryConfig[] = [
     {
@@ -201,7 +213,7 @@ const GroupedBrandwiseSales = () => {
     },
     {
       column: "total",
-      summaryType: "custom",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: (itemInfo: { value: any }) => {
         return (
@@ -215,9 +227,6 @@ const GroupedBrandwiseSales = () => {
             2
           ) || "0"
         );
-      },
-      cellSummaryAction: (value: number) => {
-        return erpParseFloat(getFormattedValue(value, false, 2));
       },
     },
   ];
@@ -241,7 +250,6 @@ const GroupedBrandwiseSales = () => {
                 dataUrl={Urls.grouped_brandwise_sales}
                 hideGridAddButton={true}
                 enablefilter={true}
-                showFilterInitially={true}
                 method={ActionType.POST}
                 filterContent={<GroupedBrandwiseSalesFilter />}
                 filterWidth={350}

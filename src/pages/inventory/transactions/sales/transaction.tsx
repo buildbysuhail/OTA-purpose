@@ -60,6 +60,7 @@ import UnsavedChangesModal from "./unsavedChangesModal";
 import { useTransaction } from "./use-transaction";
 import BillWisePopup from "../../../transaction-base/billwise-popup";
 import ErpPurchaseGrid from "../../../../components/ERPComponents/erp-purchase-grid/dataGrid";
+import { a } from "framer-motion/dist/types.d-6pKw1mTI";
 
 interface BilledItem {
   id?: number;
@@ -596,7 +597,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
     postBillWiseDetails,
     logUserAction,
     loadInvTransactionMasterByVouchNo,
-    handleDiscountSlab
+    handleDiscountSlab,
+    getCustomerTypeAndTitle
   } = useTransaction(
     transactionType ?? "",
     btnSaveRef,
@@ -790,6 +792,185 @@ const TransactionForm: React.FC<TransactionProps> = ({
         applicationSettings.productsSettings?.batchCriteria != "NB"
           ? false
           : true;
+_formState.userConfig = {
+          ...formState.userConfig,
+        }
+
+
+          ////////////////////////////////////////////////////
+_formState.transaction.master.fromWarehouseID =
+      applicationSettings.inventorySettings.maintainWarehouse
+        ? _formState.userConfig?.presetWarehouseId??0 > 0
+          ? _formState.userConfig?.presetWarehouseId
+          : applicationSettings.accountsSettings.allowSalesCounter &&
+            (_formState.userConfig?.counterWiseWarehouseId??0) > 0
+          ? _formState.userConfig?.counterWiseWarehouseId??0
+          : applicationSettings.inventorySettings.defaultWareHouse
+        : _formState.formElements.cbWarehouse?.selectedValue
+
+  _formState.transaction.master.employeeID = userSession.employeeId > 0
+        ? userSession.employeeId.toString()
+        : _formState.formElements.cbSalesMan?.selectedValue,
+
+  _formState.transaction.master.hasroundOff = !(
+      applicationSettings.mainSettings.pOSRoundingMethod === "No Rounding" ||
+      (applicationSettings.mainSettings.pOSRoundingMethod === "Not Set" &&
+        applicationSettings.mainSettings.roundingMethod === "No Rounding")
+    )
+  _formState.transaction.master.costCentreID = _formState.userConfig?.presetCostenterId??0 > 0
+        ? _formState.userConfig?.presetCostenterId??0
+        : _formState.formElements.cbCostCentre?.selectedValue,
+   _formState.transaction.master.inventoryLedgerID = Number(applicationSettings.inventorySettings.defaultSalesAcc || 0),
+_formState.formElements = {
+  ..._formState.formElements,
+////////////////////////
+cbWarehouse: {
+    ..._formState.formElements.cbWarehouse,
+    visible: applicationSettings.inventorySettings.maintainWarehouse,
+    disabled: 
+      (_formState.userConfig?.presetWarehouseId??0) > 0 ||
+      (
+        applicationSettings.accountsSettings.allowSalesCounter &&
+        (_formState.userConfig?.counterWiseWarehouseId??0) > 0 &&
+        userSession.dbIdValue.trim() === "BAHAMDOON"
+      )
+  },
+
+
+
+  // 🔘 Round Off checkbox logic
+  chkRound: {
+    ..._formState.formElements.chkRound,
+    enabled:
+      applicationSettings.mainSettings.pOSRoundingMethod === "No Rounding" ||
+      (applicationSettings.mainSettings.pOSRoundingMethod === "Not Set" &&
+        applicationSettings.mainSettings.roundingMethod === "No Rounding"),
+  },
+
+  // 🧾 Cost Centre
+  cbCostCentre: {
+    ..._formState.formElements.cbCostCentre,
+    disabled: (_formState.userConfig?.presetCostenterId??0) > 0,
+  },
+
+  // 🧾 Credit Account default
+  
+  /////////////////////////////////
+  // Reset initial states
+  lblCustomerType: { ..._formState.formElements.lblCustomerType, text: "" },
+  txtPartyName: { ..._formState.formElements.txtPartyName, text: "" },
+  txtAddress: { ..._formState.formElements.txtAddress, text: "" },
+
+  // Hide or disable elements based on settings
+  btnSave: { 
+    ..._formState.formElements.btnSave, 
+    enabled: applicationSettings.branchSettings.maintainInventoryTransactionsEntry 
+  },
+  btnEdit: { 
+    ..._formState.formElements.btnEdit, 
+    enabled: applicationSettings.branchSettings.maintainInventoryTransactionsEntry 
+  },
+  btnDelete: { 
+    ..._formState.formElements.btnDelete, 
+    enabled: applicationSettings.branchSettings.maintainInventoryTransactionsEntry 
+  },
+
+  // By default
+  btnPartySearch: { 
+    ..._formState.formElements.btnPartySearch, 
+    visible: _formState.transaction.master.voucherForm !== "BT" 
+  },
+
+  // Prefix handling
+  
+  txtVrPrefix: {
+  ..._formState.formElements.voucherPrefix,
+  readOnly:
+    (_formState.transaction.master.voucherForm === "CSI" &&
+      applicationSettings.mainSettings.maintainSeperatePrefixforCashSales &&
+      !applicationSettings.branchSettings.maintainKSA_EInvoice) ||
+    (applicationSettings.branchSettings.maintainCounterWisePrefixForTransaction &&
+      userSession.counter_vr_prefix !== "" &&
+      !applicationSettings.branchSettings.maintainKSA_EInvoice),
+},
+chkEnableVrPrefix: {
+  ..._formState.formElements.chkEnableVrPrefix,
+  checked:
+    applicationSettings.branchSettings.maintainCounterWisePrefixForTransaction &&
+    userSession.counter_vr_prefix !== "" &&
+    !applicationSettings.branchSettings.maintainKSA_EInvoice,
+},
+
+  // Default customer handling
+  cbParty: (() => {
+    let selectedValue = _formState.formElements.cbParty?.selectedValue;
+
+    if (
+      ["543140180640", "BAHAMDOON", "HANAPLASTICS"].includes(
+        userSession.dbIdValue.trim()
+      )
+    ) {
+      selectedValue = applicationSettings.accountsSettings.defaultCustomerLedgerID;
+    }
+
+    if (applicationSettings.accountsSettings.setDefaultCustomerInSales) {
+      if (!_formState.formElements.chkNotSetDefaultCustomer?.checked) {
+        selectedValue = applicationSettings.accountsSettings.defaultCustomerLedgerID;
+      }
+    }
+
+    return {
+      ..._formState.formElements.cbParty,
+      selectedValue
+    };
+  })(),
+
+  // Draft mode and import options
+  btnDraftList: {
+    ..._formState.formElements.btnDraftList,
+    visible: applicationSettings.inventorySettings.enableSalesInvoiceDraftOption === true
+  },
+  chkDraftMode: {
+    ..._formState.formElements.chkDraftMode,
+    visible: _formState.transaction.master.voucherForm !== "BT"  &&  applicationSettings.inventorySettings.enableSalesInvoiceDraftOption === true
+  },
+  importFromExcelToolStripMenuItem: {
+    ..._formState.formElements.importFromExcelToolStripMenuItem,
+    visible: applicationSettings.inventorySettings.enableImportSales??false
+  },
+
+  // Salesman handling
+  cbSalesMan: (() => {
+    let selectedIndex = -1;
+    if (!_formState.formElements.chkHoldSalesman?.checked) {
+      selectedIndex = -1;
+    }
+    return {
+      ..._formState.formElements.cbSalesMan,
+      selectedIndex,
+      focus: !_formState.formElements.chkHoldSalesman?.checked
+    };
+  })(),
+};
+_formState.transaction.master.ledgerID =
+    ["543140180640", "BAHAMDOON", "HANAPLASTICS"].includes(userSession.dbIdValue.trim())
+      ? applicationSettings.accountsSettings.defaultCustomerLedgerID
+      : applicationSettings.accountsSettings.setDefaultCustomerInSales &&
+        !_formState.formElements.chkNotSetDefaultCustomer?.checked
+      ? applicationSettings.accountsSettings.defaultCustomerLedgerID
+      : _formState.transaction.master.ledgerID
+_formState. transaction.master.voucherPrefix = _formState.transaction.master.voucherForm === "CSI" &&
+    applicationSettings.mainSettings.maintainSeperatePrefixforCashSales &&
+    !applicationSettings.branchSettings.maintainKSA_EInvoice
+      ? applicationSettings.mainSettings.cashSalesVoucherPrefix
+      : applicationSettings.branchSettings.maintainCounterWisePrefixForTransaction &&
+        userSession.counter_vr_prefix !== "" &&
+        !applicationSettings.branchSettings.maintainKSA_EInvoice
+      ? userSession.counter_vr_prefix
+      : _formState.formElements.voucherPrefix.text
+
+          /////////////////////////////////////////////////
+
 
 /////////////////////////
 // 1️⃣ Project visibility
@@ -875,24 +1056,18 @@ const TransactionForm: React.FC<TransactionProps> = ({
     
 
     // 6️⃣ Checkbox defaults
-      _formState.userConfig?.print: applicationSettings.inventorySettings.printInvAfterSave
+      _formState.userConfig!.printOnSave = _formState.userConfig!.printOnSave ?? applicationSettings.inventorySettings.printInvAfterSave
 
-    _formState.formElements.chkDuplicationMessage = {
-      ...initialFormElements.chkDuplicationMessage,
-      checked: applicationSettings.inventorySettings.showProductDuplicationMessage
-    };
-
-    _formState.formElements.chkQtyAfterBarcode = {
-      ...initialFormElements.chkQtyAfterBarcode,
-      checked: applicationSettings.inventory.focusToQtyAfterBarcode
+    _formState.userConfig!.duplicationMessage = _formState.userConfig!.duplicationMessage ??applicationSettings.inventorySettings.showProductDuplicationMessage
+    _formState.userConfig!.focusToQtyAfterBarcode = _formState.userConfig!.focusToQtyAfterBarcode ??applicationSettings.productsSettings.focusToQtyAfterBarcode
     };
 
     // 7️⃣ Tender button visibility
     _formState.formElements.btnTender = {
       ...initialFormElements.btnTender,
-      visible: applicationSettings.accounts.showTenderDialogInSales
+      visible: applicationSettings.accountsSettings.showTenderDialogInSales
     };
-  }
+  
 //////////////////////
           
 if (userSession.dbIdValue?.trim() === "SEMAKA") {
@@ -1065,14 +1240,6 @@ if (formType === "BT") {
 
 
 
-          /////////////////////////////////////////////////////////////////////////////
-      _formState.userRightsFormCode = formCode ?? "";
-      if (voucherType == "PI") {
-        if (isInvoker && formType == "IMPORT") {
-          _formState.userRightsFormCode = "PIIMPORT"
-        }
-      }
-
       let __gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new APIClient()))
       const _gridCols = __gridCols.columnPreferences.map(x => {
         return {
@@ -1082,32 +1249,6 @@ if (formType === "BT") {
             _formState.transaction.master.voucherForm.toUpperCase() == "IMPORT") && ["cgst", "sgst", "sgstPerc", "cgstPerc"].includes(x.dataField)) ? false : x.visible
         }
       });
-      const accountKey =
-        formType == "PI-IND" ? applicationSettings.accountsSettings.defaultIndirectExpenseAccount as keyof typeof LedgerType
-          : formType == "PI-ASST" ? applicationSettings.accountsSettings.defaultPurchaseAssetsAccount as keyof typeof LedgerType : LedgerType.All;
-      const customerType = clientSession.isAppGlobal
-        ? ["PI", "PR"].includes(voucherType ?? "")
-          ? formType?.toUpperCase() === "PI-IND"
-            ? "B2B"
-            : formType?.toUpperCase() === "PI-ASST"
-              ? "B2B"
-              : formType?.toUpperCase() === "IMPORT"
-                ? "IMPORT"
-                : formType?.toUpperCase() === "INTERSTATE"
-                  ? "Interstate"
-                  : formType?.toUpperCase() === "INT"
-                    ? "Int"
-                    : ["WHOLESALE", "B2B"].includes(formType?.toUpperCase() ?? "")
-                      ? "B2B"
-                      : formType !== "BT"
-                        ? "B2C"
-                        : ""
-          : ""
-        : VoucherType.PurchaseReturn
-          ? applicationSettings.branchSettings.maintainKSA_EInvoice
-            ? "B2C"
-            : ""
-          : "";
       _formState = {
         ..._formState,
         isInv: true,
@@ -1115,12 +1256,8 @@ if (formType === "BT") {
           ..._formState.transaction,
           master: {
             ..._formState.transaction.master,
-            costCentreID: applicationSettings.accountsSettings?.defaultCostCenterID,
-            hasroundOff:
-              formType == "Import"
-                ? true
-                : _formState.transaction.master.hasroundOff,
-            customerType: customerType
+          
+            customerType: getCustomerTypeAndTitle(_formState.transaction.master.voucherForm, _formState.title,clientSession.isAppGlobal, applicationSettings.branchSettings.maintainKSA_EInvoice).CUSTOMER_TYPE,
           },
         },
         gridColumns: _gridCols,
@@ -1135,12 +1272,7 @@ if (formType === "BT") {
           (formType == undefined || formType.trim() == ""
             ? t(title)
             : clientSession.isAppGlobal ?
-              formType.toUpperCase() === "INTERSTATE" ? `${t(title)}[${formType}][Ctrl+F2]` :
-                formType.toUpperCase() === "INT" ? `${t(title)}[${formType}][Ctrl+F2]` :
-                  ["WHOLESALE", "B2B"].includes(formType.toUpperCase())
-                    ? `${t(title)}[${formType}][B2B][F2]` :
-                    formType !== "BT" && formType !== "IMPORT" ? `${t(title)}[${formType}][B2C][F3]` :
-                      `${t(title)}[${formType}]`
+              getCustomerTypeAndTitle(_formState.transaction.master.voucherForm, _formState.title,clientSession.isAppGlobal, applicationSettings.branchSettings.maintainKSA_EInvoice).formTitle
               :
               t(title) + "[" + formType + "]") ?? "",
       };
@@ -1154,115 +1286,30 @@ if (formType === "BT") {
       _formState.formElements = {
         ..._formState.formElements,
         pnlMasters: { ...initialFormElements.pnlMasters, disabled: isInvoker },
-        pnlImport: {
-          ...initialFormElements.pnlImport,
-          visible:
-            formType == "Import"
-              ? true
-              : _formState.formElements.pnlImport.visible,
-        },
-        grandTotalFc: {
-          ...initialFormElements.grandTotalFc,
-          visible:
-            formType == "Import"
-              ? true
-              : _formState.formElements.grandTotalFc.visible,
-        },
-        chkDebitAccount: {
-          ...initialFormElements.chkDebitAccount,
-          label:
-            voucherType == "PR"
-              ? "credit_account"
-              : initialFormElements.chkDebitAccount?.label,
-        },
+        
         hasCashPaid: {
           ...initialFormElements.hasCashPaid,
           label:
-            voucherType == "PR"
-              ? "cash_received"
+            voucherType == "SR"
+              ? "cash_paid"
               : initialFormElements.hasCashPaid?.label,
         },
-        cbCostCentre: {
-          ...initialFormElements.cbCostCentre,
-          visible:
-            applicationSettings?.accountsSettings?.maintainCostCenter,
-          disabled: _formState.userConfig?.presetCostenterId ?? 0 > 0 ? true : initialFormElements.cbCostCentre.disabled
-        },
-        cbWarehouse: {
-          ...initialFormElements.cbWarehouse,
-          visible: applicationSettings.inventorySettings?.maintainWarehouse,
-          disabled: _formState.userConfig?.presetWarehouseId ?? 0 > 0 ? true : initialFormElements.cbWarehouse.disabled
-        },
-        // cbEmployee: {
-        //   ...initialFormElements.cbEmployee,
-        //   employeeType: _formState.userConfig
-        //     ?.showPurchaserOnly
-        //     ? EmployeeType.Purchaser
-        //     : _formState.formElements.cbEmployee.employeeType
-        // },
         ledgerID: {
           ...initialFormElements.ledgerID,
-          accLedgerType:
-            voucherType == VoucherType.PurchaseReturn
-              ?
-              LedgerType.Cash_Bank_Suppliers_Customers
-              :
-              formType == "BT"
-                ? LedgerType.Branch_Recv_Payable
-                : !applicationSettings.inventorySettings
-                  ?.showAccountReceivableInPurchase
-                  ? LedgerType.Cash_Bank_Suppliers
-                  : LedgerType.Cash_Bank_Suppliers_Customers,
+          accLedgerType: applicationSettings.inventorySettings.showAccountPayableInSales ?
+            LedgerType.Cash_Bank_Suppliers_Customers_Employees
+            : applicationSettings.accountsSettings.showEmployeesInSales ?
+              LedgerType.Cash_Bank_Customers_Employees : LedgerType.Cash_Bank_Suppliers_Customers_Employees
+              
         },
         chkTaxNumber: {
           ...initialFormElements.chkTaxNumber,
           label: clientSession.isAppGlobal ? "GSTIN" : "VAT",
         },
-        orderApprovalStatus: {
-          ...initialFormElements.orderApprovalStatus,
-          visible: _formState.transaction.master.voucherType == VoucherType.PurchaseOrder,
-          label: _formState.transaction.master.voucherType == VoucherType.PurchaseOrder && _formState.transaction.master.gatePassNo == "Approved"
-            ? t("po_approved")
-            : _formState.transaction.master.voucherType == VoucherType.PurchaseOrder && _formState.transaction.master.gatePassNo != "Approved"
-              ? t("po_not_approved")
-              : ""
-        }
+        
+        
       } as any;
-      _formState.transaction.master.costCentreID =
-        applicationSettings.accountsSettings?.defaultCostCenterID;
-      if (applicationSettings.accountsSettings?.maintainCostCenter) {
-
-
-        if (_formState.userConfig?.presetCostenterId ?? 0 > 0) {
-          _formState.transaction.master.costCentreID =
-            _formState.userConfig?.presetCostenterId ?? 0;
-        }
-      }
-      _formState.transaction.master.fromWarehouseID =
-        applicationSettings.inventorySettings?.defaultWareHouse;
-      if (applicationSettings.inventorySettings?.maintainWarehouse) {
-
-
-        if (_formState.userConfig?.presetWarehouseId ?? 0 > 0) {
-          _formState.transaction.master.fromWarehouseID =
-            _formState.userConfig?.presetWarehouseId ?? 0;
-
-        } else {
-          if (applicationSettings.mainSettings?.maintainBusinessType != BusinessType.Distribution) {
-            if (
-              applicationSettings.accountsSettings?.allowSalesCounter &&
-              (_formState.userConfig?.counterWiseWarehouseId ?? 0) > 0
-            ) {
-              _formState.transaction.master.fromWarehouseID =
-                _formState.userConfig?.counterWiseWarehouseId ?? 0;
-            } else {
-              _formState.transaction.master.fromWarehouseID =
-                applicationSettings.inventorySettings?.defaultWareHouse;
-            }
-          }
-        }
-      }
-
+     
       const editableColumn = _formState.gridColumns?.find(
         (col) => col.visible !== false && col.dataField != null && col.allowEditing == true && col.readOnly !== true
       );
@@ -2007,7 +2054,7 @@ if (formType === "BT") {
             {/* header starts here */}
             <TransactionHeader
               // inputRefs={inputRefs}
-              // onHeightChange={handleHeightChange}
+              onHeightChange={handleHeightChange}
               formState={formState}
               dispatch={dispatch}
               handleKeyDown={handleKeyDown}

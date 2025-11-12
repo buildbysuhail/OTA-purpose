@@ -174,6 +174,7 @@ export interface UserModel {
   counterAssignedCashLedgerId: number | 0;
   systemCode: string | "";
   systemName: string | "";
+  counter_vr_prefix?: string | "";
 }
 export const initialUserSessionData: UserModel = {
   userId: 0,

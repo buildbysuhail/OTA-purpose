@@ -55,6 +55,7 @@ export interface ApplicationInventorySettings {
     holdSalesMan: boolean;
     mobileNumberMandotryInSales: boolean;
     blockUnitOnDecimalPoint:boolean
+    enableImportSales?:boolean
   }
   export const ApplicationInventorySettingsInitialState: ApplicationInventorySettings = {
       defaultSalesAcc: 1,

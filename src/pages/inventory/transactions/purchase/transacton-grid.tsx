@@ -8,30 +8,16 @@ import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import ERPDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import {  TransactionBase,  transactionRoutes,} from "../../../../components/common/content/transaction-routes";
+import { TransactionBase, transactionRoutes, } from "../../../../components/common/content/transaction-routes";
 import { Link, useLocation } from "react-router-dom";
 
-const toggleTransactionPopup = (payload: {
-  isOpen: boolean;
-  key: string | null;
-  reload: boolean;
-}) => ({
-  type: "TOGGLE_TRANSACTION_POPUP",
-  payload,
-});
-
-const TransactionGrid: React.FC<{
-  voucherType?: string;
-  transactionType?: string;
-  title?: string;
-  addTitle?: string;
-}> = ({ voucherType, transactionType, title, addTitle }) => {
+const toggleTransactionPopup = (payload: { isOpen: boolean; key: string | null; reload: boolean; }) => ({ type: "TOGGLE_TRANSACTION_POPUP", payload, });
+const TransactionGrid: React.FC<{ voucherType?: string; transactionType?: string; title?: string; addTitle?: string; }> = ({ voucherType, transactionType, title, addTitle }) => {
   const dispatch = useAppDispatch();
   const { getFormattedValue } = useNumberFormat();
   const { t } = useTranslation("transaction");
   const [reload, setReload] = useState<boolean>(true);
   const location = useLocation();
-
   // Normalize and map row data to route/query payload
   const buildTransactionData = (row: any) => {
     const transactionMasterID = parseInt(row.invTransactionMasterID || "0", 10);
@@ -228,8 +214,7 @@ const TransactionGrid: React.FC<{
         alignment: "right",
         showInPdf: true,
         visible: false,
-        cellRender: (cellInfo: any) =>
-          `${getFormattedValue(cellInfo.value, false, 4)}`,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
       {
         dataField: "totalDiscount",
@@ -241,8 +226,7 @@ const TransactionGrid: React.FC<{
         alignment: "right",
         showInPdf: true,
         visible: false,
-        cellRender: (cellInfo: any) =>
-          `${getFormattedValue(cellInfo.value, false, 4)}`,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
       {
         dataField: "grandTotal",
@@ -253,8 +237,7 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "right",
         showInPdf: true,
-        cellRender: (cellInfo: any) =>
-          `${getFormattedValue(cellInfo.value, false, 4)}`,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
       {
         dataField: "remarks",
@@ -276,8 +259,7 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "right",
         visible: false,
-        cellRender: (cellInfo: any) =>
-          `${getFormattedValue(cellInfo.value, false, 4)}`,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
       {
         dataField: "advanceAmt",
@@ -288,8 +270,7 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "right",
         visible: false,
-        cellRender: (cellInfo: any) =>
-          `${getFormattedValue(cellInfo.value, false, 4)}`,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
       {
         dataField: "bankAmt",
@@ -300,8 +281,7 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "right",
         visible: false,
-        cellRender: (cellInfo: any) =>
-          `${getFormattedValue(cellInfo.value, false, 4)}`,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
       {
         dataField: "billDiscount",
@@ -312,8 +292,7 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "right",
         visible: false,
-        cellRender: (cellInfo: any) =>
-          `${getFormattedValue(cellInfo.value, false, 4)}`,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
       {
         dataField: "cashAmt",
@@ -324,8 +303,7 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "right",
         visible: false,
-        cellRender: (cellInfo: any) =>
-          `${getFormattedValue(cellInfo.value, false, 4)}`,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
       {
         dataField: "cashDiscount",
@@ -336,8 +314,7 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "right",
         visible: false,
-        cellRender: (cellInfo: any) =>
-          `${getFormattedValue(cellInfo.value, false, 4)}`,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
       {
         dataField: "cashReceived",
@@ -348,8 +325,7 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "right",
         visible: false,
-        cellRender: (cellInfo: any) =>
-          `${getFormattedValue(cellInfo.value, false, 4)}`,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
       {
         dataField: "cashReturned",
@@ -360,8 +336,7 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "right",
         visible: false,
-        cellRender: (cellInfo: any) =>
-          `${getFormattedValue(cellInfo.value, false, 4)}`,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
       {
         dataField: "cashrOrCredit",
@@ -372,8 +347,7 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "left",
         visible: false,
-        cellRender: (cellInfo: any) =>
-          `${getFormattedValue(cellInfo.value, false, 4)}`,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
       {
         dataField: "createdDate",
@@ -395,8 +369,7 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "right",
         visible: false,
-        cellRender: (cellInfo: any) =>
-          `${getFormattedValue(cellInfo.value, false, 4)}`,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
       {
         dataField: "deliveryDate",
@@ -504,8 +477,7 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "right",
         visible: false,
-        cellRender: (cellInfo: any) =>
-          `${getFormattedValue(cellInfo.value, false, 4)}`,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
       {
         dataField: "privRedeem",
@@ -516,8 +488,7 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "right",
         visible: false,
-        cellRender: (cellInfo: any) =>
-          `${getFormattedValue(cellInfo.value, false, 4)}`,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
       {
         dataField: "quotationDate",
@@ -543,8 +514,7 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "right",
         visible: false,
-        cellRender: (cellInfo: any) =>
-          `${getFormattedValue(cellInfo.value, false, 4)}`,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
       {
         dataField: "shortageAmount",
@@ -555,8 +525,7 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "right",
         visible: false,
-        cellRender: (cellInfo: any) =>
-          `${getFormattedValue(cellInfo.value, false, 4)}`,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
       {
         dataField: "srAmount",
@@ -567,8 +536,7 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "right",
         visible: false,
-        cellRender: (cellInfo: any) =>
-          `${getFormattedValue(cellInfo.value, false, 4)}`,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
       {
         dataField: "systemDateTime",
@@ -600,13 +568,11 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "right",
         visible: false,
-        cellRender: (cellInfo: any) =>
-          `${getFormattedValue(cellInfo.value, false, 4)}`,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
-
       {
         dataField: "actions",
-        caption: t("Actions"),
+        caption: t("actions"),
         allowSearch: false,
         allowFiltering: false,
         allowSorting: false,
@@ -617,7 +583,6 @@ const TransactionGrid: React.FC<{
         width: 100,
         minWidth: 100,
         maxWidth: 100,
-
         cellRender: (cellElement: any) => {
           return (
             <ERPGridActions
@@ -625,36 +590,19 @@ const TransactionGrid: React.FC<{
                 visible: false,
                 type: "popup",
                 action: () =>
-                  dispatch(
-                    toggleTransactionPopup({
-                      isOpen: true,
-                      key: cellElement?.data?.accTransactionDetailID,
-                      reload: false,
-                    })
-                  ),
+                  dispatch(toggleTransactionPopup({ isOpen: true, key: cellElement?.data?.accTransactionDetailID, reload: false, })),
               }}
               edit={{
                 type: "popup",
                 action: () => {
                   const row = cellElement.data;
-                  const transactionMasterID = parseInt(
-                    row.invTransactionMasterID || "0",
-                    10
-                  );
-
+                  const transactionMasterID = parseInt(row.invTransactionMasterID || "0", 10);
                   const vchtype = row.voucherType;
                   const voucherform = row.voucherForm;
-
                   const prefix = row.voucherPrefix;
                   const vchno = row.voucherNumber;
-                  const financialYearID = parseInt(
-                    row.financialYearID || "0",
-                    10
-                  );
-
-                  const tr = transactionRoutes.find(
-                    (x: any) => x.voucherType === vchtype
-                  );
+                  const financialYearID = parseInt(row.financialYearID || "0", 10);
+                  const tr = transactionRoutes.find((x: any) => x.voucherType === vchtype);
 
                   let transactionData = {};
                   if (parseInt(vchno, 10) > 0) {
@@ -690,13 +638,11 @@ const TransactionGrid: React.FC<{
                   setReload(true);
                 },
                 confirmationRequired: true,
-                confirmationMessage:
-                  "Are you sure you want to delete this transaction?",
+                confirmationMessage: t('deleting_transaction_question'),
                 url: `${urls.inv_transaction_base}${transactionType}/`,
                 key: cellElement?.data?.invTransactionMasterID,
                 postData: {
-                  invTransactionMasterID:
-                    cellElement?.data?.invTransactionMasterID,
+                  invTransactionMasterID: cellElement?.data?.invTransactionMasterID,
                   transactionType: transactionType,
                 },
               }}
@@ -726,8 +672,7 @@ const TransactionGrid: React.FC<{
             <div className="grid grid-cols-1 gap-3">
               <ERPDevGrid
                 gridAddButtonType={"link"}
-                gridAddButtonLink={`${import.meta.env.BASE_URL
-                  }${TransactionBase.Purchase}/${transactionType}`}
+                gridAddButtonLink={`${import.meta.env.BASE_URL}${TransactionBase.Purchase}/${transactionType}`}
                 columns={columns}
                 dataUrl={`${urls.inv_transaction_base}${transactionType}/List/`}
                 method={ActionType.GET}
@@ -738,9 +683,8 @@ const TransactionGrid: React.FC<{
                 pageSize={40}
                 allowExport={true}
                 reload={reload}
-                changeReload={() => {
-                  setReload(false);
-                }}
+                changeReload={() => { setReload(false); }}
+                remoteOperations={false}
               />
             </div>
           </div>

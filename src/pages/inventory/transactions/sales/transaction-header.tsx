@@ -61,6 +61,7 @@ interface TransactionHeaderProps {
   refNoRef: any;
   isDropDownOpen: boolean;
   toggleDropdown: () => void;
+  onHeightChange?: (height: number) => void;
   footerLayout: "horizontal" | "vertical";
   userSession: any;
 }
@@ -81,6 +82,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   refNoRef,
   isDropDownOpen,
   toggleDropdown,
+  onHeightChange,
   footerLayout,
   focusToNextColumn,
   userSession,
@@ -322,6 +324,27 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
       </>
     ) : null;
 
+    const containerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const height = entry.contentRect.height;
+        if (typeof onHeightChange === "function") {
+          onHeightChange(height); 
+        }
+      }
+    });
+
+    observer.observe(containerRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [onHeightChange]);
+
   return (
     <div>
       {isDropDownOpen && (
@@ -335,7 +358,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
           style={headerStyle}
           className="fixed top-[110px] z-[39] dark:bg-dark-bg bg-white shadow-md transition-all duration-300"
         >
-          <div className="flex items-end gap-1 relative px-2 !pb-3">
+          <div  ref={containerRef} className="flex items-end gap-1 relative px-2 !pb-3">
             <PartyLedger
               ref={ledgerIdRef}
               handleFieldKeyDown={handleFieldKeyDown}

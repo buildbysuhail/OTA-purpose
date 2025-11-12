@@ -2054,7 +2054,7 @@ if (formType === "BT") {
             {/* header starts here */}
             <TransactionHeader
               // inputRefs={inputRefs}
-              // onHeightChange={handleHeightChange}
+              onHeightChange={handleHeightChange}
               formState={formState}
               dispatch={dispatch}
               handleKeyDown={handleKeyDown}

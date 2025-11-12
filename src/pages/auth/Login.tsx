@@ -17,6 +17,7 @@ import polo from "../../assets/images/brand-logos/polo_logo.png";
 import loginBg from "../../assets/images/login.jpg";
 import { handleLoginSuccess } from "../../utilities/handles-login-success-utils";
 import { getStorageString, setStorageString } from "../../utilities/storage-utils";
+import WinnerEffectBackground from "./WinnerEffectBackground";
 // import * as switcherdata from "../../components/common/switcher/switcherdata/switcherdata";
 
 // Lazy loaded components
@@ -24,7 +25,7 @@ const LanguageSwitcher = lazy(() => import("../../components/common/header/langu
 const ERPModal = lazy(() => import("../../components/ERPComponents/erp-modal"));
 const CounterSettings = lazy(() => import("../settings/system/counter-settings"));
 const ForgotPassword = lazy(() => import("./ForgetPassword"));
-const ConfettiEffect = lazy(() => import("./confetti-effect"));
+// const ConfettiEffect = lazy(() => import("./confetti-effect"));
 const Button = lazy(() => import("../../dark/Button").then(module => ({ default: module.Button })));
 
 const api = new APIClient()
@@ -158,7 +159,8 @@ const Login = () => {
           {
             showConfetti && (
               <div className="fixed inset-0 z-50 pointer-events-none">
-                <ConfettiEffect />
+                {/* <ConfettiEffect /> */}
+                <WinnerEffectBackground isActive={true}  />
               </div>
             )
           }

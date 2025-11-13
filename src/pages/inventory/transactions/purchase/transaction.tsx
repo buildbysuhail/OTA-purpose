@@ -61,6 +61,7 @@ import TemplatesView from "../../../transaction-base/template_picker";
 import { toggleIsPrintPreviewPopup } from "../../../../redux/slices/popup-reducer";
 import { faL } from "@fortawesome/free-solid-svg-icons";
 import TemplatesPreView from "../../../transaction-base/transaction-print-preview";
+// import { fetchUserConfig } from "../transaction-utils";
 
 interface BilledItem {
   id?: number;
@@ -594,7 +595,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
     downloadImportTemplateHeadersOnly,
     importFromExcel,
     loadLedgerData,
-    postBillWiseDetails
+    postBillWiseDetails,
+    // fetchUserConfig
   } = useTransaction(
     transactionType ?? "",
     btnSaveRef,
@@ -697,6 +699,17 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   useEffect(() => {
     const initializeFormElements = async () => {
+
+      //  const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`) ;
+      //     const Utc = await getStorageString(key);
+      //     let userConfig: UserConfig | undefined;
+      //     if (Utc) {
+      //       const decoded = safeBase64Decode(Utc) ?? "{}";
+      //       userConfig = customJsonParse(decoded ?? "{}");
+      //     } else {
+      //       userConfig = await fetchUserConfig();
+      //     }
+
       const dataWarranty = voucherType != "LPO" ? await api.getAsync(
         `${Urls.inv_transaction_base}${transactionType}/data/warranty`
       ) : [];
@@ -847,6 +860,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         },
         gridColumns: _gridCols,
         userConfig: {
+        // userConfig: userConfig ? userConfig : {
           ...formState.userConfig,
         },
         transactionType: transactionType ?? "",

@@ -441,6 +441,7 @@ export const initialFormElements: { [key: string]: FormElementState } = {
     holdSameCode: false,
     printPreview: false,
     setDefaultQuantity: false,
+    editInNewTab:true,
     inputBoxStyle: {
       inputStyle: "normal",
       inputSize: "sm",

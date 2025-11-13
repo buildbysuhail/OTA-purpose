@@ -41,6 +41,7 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
     MasterIDParam: props.transactionMasterID,
     transactionType: props.transactionType
   })
+  
 
   return (
     <>
@@ -58,13 +59,14 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
       >
         <header className="fixed z-40 w-[-webkit-fill-available] h-[52px] bg-white dark:bg-dark-bg-card flex items-center justify-between gap-4 px-6 py-3 border-b border-gray-200 dark:border-dark-border">
           <h1 className="text-sm md:text-sm font-semibold tracking-tight text-[color:var(--color-foreground)] dark:!text-dark-text">
-            {`INV-${String(stableTemplateProps?.data?.master?.voucherNumber || "").padStart(6, "0")}`}
+            {`INV-${String(stableTemplateProps?.data?.master?.voucherNumber || "")}`}
           </h1>
 
           <div className="flex items-center gap-1 border border-gray-200 dark:border-dark-border rounded-md bg-white dark:bg-dark-bg-card p-0.5">
             {/* Edit Button */}
             <button
               disabled={loading}
+
               type="button"
               className="h-8 px-3 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded inline-flex items-center gap-1.5 transition-all duration-200"
               title="Edit"

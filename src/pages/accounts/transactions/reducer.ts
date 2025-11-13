@@ -196,6 +196,13 @@ const accTransactionSlice = createSlice({
       Object.keys(fields).forEach((key) => {
         // Update the corresponding field in the state
         const fieldValue = fields[key as keyof AccTransactionFormState];
+        //   if (key === "userConfig" && typeof fieldValue === "object" && fieldValue !== null) {
+        //   state.userConfig = {
+        //     ...state.userConfig,
+        //     ...fieldValue,
+        //   };
+        // } else {
+          // formStateHandleFieldChangeKeysOnly
         const isDateField =
           (state[
             key as keyof AccTransactionFormState
@@ -203,7 +210,8 @@ const accTransactionSlice = createSlice({
         // Convert Date fields to ISO strings
         (state[key as keyof AccTransactionFormState] as typeof fieldValue) =
           isDateField ? new Date(fieldValue).toISOString() : fieldValue;
-      });
+      // }
+    });
     },
     // Inside the createSlice, update the reducer
     acctemplatesData: (state, action: PayloadAction<TemplateState<AccTransactionRow>>) => {

@@ -86,6 +86,7 @@ import {
   DataAutoBarcode,
   ExcelRowData,
 } from "../transaction-types";
+import { fetchUserConfig } from "../transaction-utils";
 
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;
@@ -331,35 +332,7 @@ export const useTransaction = (
     }
   };
   const { hasRight, hasBlockedRight } = useUserRights();
-  const fetchUserConfig = async () => {
-    try {
-      
-       const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`) ;
-      const savedPreferences = await api.getAsync(
-        `${Urls.inv_transaction_base}${transactionType}/GetLocalSettings`
-      );
-      if (
-        savedPreferences != "undefined" &&
-        savedPreferences != undefined &&
-        savedPreferences != null &&
-        savedPreferences != `""` &&
-        savedPreferences != ""
-      ) {
-        await setStorageString(key,savedPreferences );
-        // Decode the base64 back to JSON string
-        
-        const _userConfig = safeBase64Decode(savedPreferences ?? "");
-        const userConfig: UserConfig = customJsonParse(_userConfig ?? "{}");
-
-        return userConfig;
-      }
-      const _bs64 = modelToBase64Unicode(initialUserConfig);   
-      await setStorageString(key, _bs64);
-      return initialUserConfig;
-    } catch (error) {
-      console.error("Error fetching user config:", error);
-    }
-  };
+  
 
   const loadAndSetTransVoucher: LoadAndSetTransVoucherFn = async (
     usingManualInvNumber = false,
@@ -498,7 +471,7 @@ export const useTransaction = (
       const decoded = safeBase64Decode(Utc) ?? "{}";
       userConfig = customJsonParse(decoded ?? "{}");
     } else {
-      userConfig = await fetchUserConfig();
+      userConfig = await fetchUserConfig(userSession.userId,transactionType);
     }
     const ct = {
       themeName: userConfig?.themeName ?? "Custom",
@@ -1243,7 +1216,7 @@ export const useTransaction = (
             formState.transaction.master.invTransactionMasterID
           );
           if (formState.printOnSave == true && saveMode != "LPO" && saveMode != "LPQ"){
-
+    // masterID: number,transactionType: string,printTmeplate?:any ,transDate?: string,voucherType?: string,formType?:string,customerType?:string,
           await  printVoucher(
               saveRes?.item?.master?.invTransactionMasterID, // masterID
               transactionType ?? "", // transactionType
@@ -4516,5 +4489,6 @@ export const useTransaction = (
     handlePrintBarcode,
     loadLedgerData,
     postBillWiseDetails,
+    fetchUserConfig
   };
 };

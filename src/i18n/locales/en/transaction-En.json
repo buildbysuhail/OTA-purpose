@@ -723,6 +723,7 @@
   "address_1": "Address 1",
   "address_2": "Address 2",
   "stock_update": "Stock update",
+  "edit_in_new_tab": "Edit in new tab",
 
   "supplier_pcode": "Supplier PCode",
   "pb": "PB",

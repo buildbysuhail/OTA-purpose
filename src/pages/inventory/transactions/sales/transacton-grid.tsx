@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import urls from "../../../../redux/urls";
-import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
+import { useAppDispatch, useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import ERPDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
@@ -12,7 +12,14 @@ import {
   TransactionBase,
   transactionRoutes,
 } from "../../../../components/common/content/transaction-routes";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { RootState } from "../../../../redux/store";
+import { useSelector } from "react-redux";
+import { safeBase64Decode, customJsonParse } from "../../../../utilities/jsonConverter";
+import { getStorageString } from "../../../../utilities/storage-utils";
+import { formStateHandleFieldChangeKeysOnly } from "../reducer";
+import { UserConfig } from "../transaction-types";
+import { fetchUserConfig } from "../transaction-utils";
 
 const toggleTransactionPopup = (payload: {
   isOpen: boolean;
@@ -32,7 +39,43 @@ const TransactionGrid: React.FC<{
   const dispatch = useAppDispatch();
   const { getFormattedValue } = useNumberFormat();
   const { t } = useTranslation("transaction");
-
+  const formState = useAppSelector(
+    (state: RootState) => state.InventoryTransaction
+  );
+  const navigate = useNavigate();
+  const userSession = useSelector((state:RootState) => state.UserSession)
+      useEffect(() => {
+        if (!userSession?.userId || !transactionType) return;
+        const loadUserConfig = async () => {
+          try {
+            const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`);
+            const Utc = await getStorageString(key);
+  
+            let userConfig: UserConfig | undefined;
+  
+            if (Utc) {
+              const decoded = safeBase64Decode(Utc) ?? "{}";
+              userConfig = customJsonParse(decoded ?? "{}");
+            } else {
+              userConfig = await fetchUserConfig(userSession.userId, transactionType);
+            }
+            
+            // dispatch(forhanfich({ fie: { userConfig } }));
+             dispatch(
+                        formStateHandleFieldChangeKeysOnly({
+                          fields: {
+                            userConfig: userConfig
+                        }})
+                      );
+            
+          } catch (error) {
+            console.error("Error loading user config:", error);
+          }
+        };
+  
+        loadUserConfig();
+      }, []);
+  
   const [reload, setReload] = useState<boolean>(true);
   const columns: DevGridColumn[] = useMemo(
     () => [
@@ -653,8 +696,12 @@ const TransactionGrid: React.FC<{
                     url.searchParams.append(key, String(value));
                   });
 
-                  // Open the URL in a new tab
+                  if(formState?.userConfig?.editInNewTab) {
                   window.open(url.toString(), "_blank");
+                  } else {
+                  const path = url.pathname + url.search;
+                      navigate(path);
+                  }
                 },
               }}
               delete={{

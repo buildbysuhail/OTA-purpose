@@ -404,6 +404,7 @@ export interface UserConfig {
   setDefaultQuantity?: boolean;
   useInSearch?: boolean;
   useCodeSearch?: boolean;
+  editInNewTab?: boolean;
   gridFontSize?: number;
   gridIsBold?: boolean;
   gridRowHeight?: number;

@@ -16,7 +16,7 @@ import { useTranslation } from "react-i18next";
 import useDebounce from "./use-debounce";
 import { useAppState } from "../../../../utilities/hooks/useAppState";
 import { ERPScrollArea } from "../../../../components/ERPComponents/erp-scrollbar";
-import { formStateHandleFieldChange, formStateMasterHandleFieldChange } from "../reducer";
+import { formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly, formStateMasterHandleFieldChange } from "../reducer";
 import { UserConfig } from "../transaction-types";
 import { appInitialState } from "../../../../redux/slices/app/reducer";
 
@@ -108,6 +108,8 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
     undoEditMode?.(formState.transaction.master.invTransactionMasterID > 0, formState.transaction.master.invTransactionMasterID);
   }
 
+  console.log("uc mjjjjjjjjj22222:", formState?.userConfig?.editInNewTab);
+
   // const postUserConfig = async () => {
   //   try {
   //     const base64 = modelToBase64Unicode({...formState.userConfig, themeName: 'Custom'});
@@ -134,7 +136,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
       ...(formState.userConfig || {}),
       [field]: value,
     };
-    dispatch(formStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }));
+    dispatch(formStateHandleFieldChangeKeysOnly({ fields: { userConfig: {[field]: value} } }));
   };
 
   const handleScrollbarChange = (field: keyof AppState, value: any) => {
@@ -381,6 +383,13 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                 data={formState.transaction.master}
                 checked={formState.transaction.master.stockUpdate}
                 onChangeData={(e) => handleStockUpdateChange(e.stockUpdate)}
+              />
+              <ERPCheckbox
+                id="editInNewTab"
+                label={t("edit_in_new_tab")}
+                data={formState.transaction.master}
+                checked={formState?.userConfig?.editInNewTab}
+                onChangeData={(e) => handleFieldChange("editInNewTab", e.editInNewTab)}
               />
             </div>
           </div>

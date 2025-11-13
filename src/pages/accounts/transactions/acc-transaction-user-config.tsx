@@ -90,7 +90,7 @@ export const AccTransactionUserConfig: React.FC<AccTransactionUserConfigProps> =
       ...formState.userConfig,
       [field]: value,
     };
-    dispatch(accFormStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }));
+    dispatch(formStateHandleFieldChangeKeysOnly({ fields: { userConfig: updatedUserConfig } }));
   };
   // const [phone , setphone ] = useState(false)
 
@@ -205,6 +205,14 @@ export const AccTransactionUserConfig: React.FC<AccTransactionUserConfigProps> =
                 data={formState.userConfig}
                 checked={formState?.userConfig?.printCheque}
                 onChangeData={(e) => handleFieldChange("printCheque", e.printCheque)}
+              />
+              <ERPCheckbox
+                id="editInNewTab"
+                label={t("edit_in_new_tab")}
+                // data={formState.transaction.master}
+                data={formState.userConfig}
+                checked={formState?.userConfig?.editInNewTab}
+                onChangeData={(e) => handleFieldChange("editInNewTab", e.editInNewTab)}
               />
 
               <ERPDataCombobox

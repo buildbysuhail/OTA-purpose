@@ -133,6 +133,12 @@ const InvTransactionSlice = createSlice({
       Object.keys(fields).forEach((key) => {
         // Update the corresponding field in the state
         const fieldValue = fields[key as keyof TransactionFormState];
+    //     if (key === "userConfig" && typeof fieldValue === "object" && fieldValue !== null) {
+    //   state.userConfig = {
+    //     ...state.userConfig,
+    //     ...fieldValue,
+    //   };
+    // } else {
         const isDateField =
           (state[
             key as keyof TransactionFormState
@@ -140,7 +146,8 @@ const InvTransactionSlice = createSlice({
         // Convert Date fields to ISO strings
         (state[key as keyof TransactionFormState] as typeof fieldValue) =
           isDateField ? new Date(fieldValue).toISOString() : fieldValue;
-      });
+    // }
+  });
     },
 
     // Inside the createSlice, update the reducer

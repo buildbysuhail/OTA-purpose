@@ -774,9 +774,9 @@ div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=tip] {
   color-scheme: dark;
 }
 
-.dx-checkbox-indeterminate .dx-checkbox-icon::before {
+/* .dx-checkbox-indeterminate .dx-checkbox-icon::before {
   background-color: transparent !important;
-}
+} */
 
 /* .bg-report {
   position: relative;

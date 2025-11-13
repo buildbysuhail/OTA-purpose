@@ -119,22 +119,22 @@ const getAllChildIds = (parentId: number, data: UserRight[]): number[] => {
   const handleSelectSpecific = (permission: string, checked: boolean) => {
     // Map of permissions to user rights IDs
     const permissionMap: Record<string, number[]> = {
-      A: userRights
+      A: (userRightsData??[])
         .filter((item) => item.formCode === "A")
         .map((item) => item.id),
-      P: userRights
+      P: (userRightsData??[])
         .filter((item) => item.formCode === "P")
         .map((item) => item.id),
-      E: userRights
+      E: (userRightsData??[])
         .filter((item) => item.formCode === "E")
         .map((item) => item.id),
-      X: userRights
+      X: (userRightsData??[])
         .filter((item) => item.formCode === "X")
         .map((item) => item.id),
-      D: userRights
+      D: (userRightsData??[])
         .filter((item) => item.formCode === "D")
         .map((item) => item.id),
-      S: userRights
+      S: (userRightsData??[])
         .filter((item) => item.formCode === "S")
         .map((item) => item.id),
       // 'S': userRights.filter(item => item.formCode === 'S').map(item => item.id),
@@ -196,6 +196,9 @@ const getAllChildIds = (parentId: number, data: UserRight[]): number[] => {
     userRightTypes: UserRightData[],
     userRights: UserRight[]
   ) => {
+    // const formCodes =  userRightTypes.map( x=> x.formCode);
+    // const headIds = userRightsData?.map(x => x.headId)
+    // return userRightsData?.filter(x => formCodes.includes(x.formCode) && !headIds?.includes(x.id))?.map(x => x.id)??[]
     const immediateParentsOfEndNodes =
       getImmediateParentsOfEndNodes(userRights);
 
@@ -218,14 +221,19 @@ const getAllChildIds = (parentId: number, data: UserRight[]): number[] => {
       return ancestorIds;
     };
 
-    return userRightTypes
+    const rightsData = userRightTypes
       ?.map((item: UserRightData) => {
         const matchingParent = immediateParentsOfEndNodes.find(
           (parent) => parent.formCode === item.formCode
         );
+        debugger;
         if (matchingParent && typeof item.userRights === "string") {
-          const rightsIds = Array.from(item.userRights).map(
+          const hasbd =  item.userRights.includes(UserAction.BlockedDiscount)
+          const finalrights = hasbd ? item.userRights.replace(UserAction.BlockedDiscount,"") : item.userRights
+          const rightsIds = Array.from(finalrights).map(
             (permission: string) => {
+              
+        debugger;
               const permissionRight = userRights.find(
                 (right) =>
                   right.headId === matchingParent.id &&
@@ -234,19 +242,31 @@ const getAllChildIds = (parentId: number, data: UserRight[]): number[] => {
               return permissionRight ? permissionRight.id : null;
             }
           );
-          // Include matchingParent.id if it's not already in rightsIds
-          if (!rightsIds.includes(matchingParent.id)) {
-            rightsIds.push(matchingParent.id);
+          if(hasbd) {
+            const _permissionRight = userRights.find(
+                (right) =>
+                  right.headId === matchingParent.id &&
+                  right.formCode === UserAction.BlockedDiscount
+              );
+              if(_permissionRight?.id) {
+              rightsIds.push(_permissionRight?.id);
+              }
           }
+          // Include matchingParent.id if it's not already in rightsIds
+          // if (!rightsIds.includes(matchingParent.id)) {
+          //   rightsIds.push(matchingParent.id);
+          // }
           // Add all ancestors of the matching parent up to the root node
           const ancestorIds = getAncestorIds(matchingParent.headId);
-          rightsIds.push(...ancestorIds);
+          // Only push the immediate parent, not all ancestors
+          // rightsIds.push(matchingParent.id);
           // Filter out null values and return
           return rightsIds.filter((id): id is number => id !== null); // Type predicate to filter null
         }
         return [];
       })
       .flat(); // Flatten the array
+      return rightsData;
   };
   const getSelectedKeys = () => {
     return gridRef.current
@@ -254,6 +274,8 @@ const getAllChildIds = (parentId: number, data: UserRight[]): number[] => {
       ?.getSelectedRowsData(selectionMode)
       ?.map((x) => x.id) ?? []
   }
+
+  const [userRightsData, setUserRightsData] = useState<UserRight[]>();
   const selectedKeys =
     gridRef.current
       ?.instance()
@@ -263,10 +285,10 @@ const getAllChildIds = (parentId: number, data: UserRight[]): number[] => {
     // Calculate initial selected keys and set state
     const initialSelectedKeys = calculateInitialSelectedKeys(
       userRightTypes,
-      userRights
+      (userRightsData??[])
     );
     setSelectedRowKeys(initialSelectedKeys); // This should now be number[]
-  }, [userRightTypes, userRights]);
+  }, [userRightTypes, userRightsData]);
 
 
 const onSelectionChanged = useCallback(
@@ -282,12 +304,12 @@ const onSelectionChanged = useCallback(
           newSelected.add(key);
           
           // Add all children
-          const children = getAllChildIds(key, userRights);
+          const children = getAllChildIds(key, (userRightsData??[]));
           children.forEach(childId => newSelected.add(childId));
           
           // Add all parents (so parent stays checked when child is selected)
-          const parents = getAllParentIds(key, userRights);
-          parents.forEach(parentId => newSelected.add(parentId));
+          // const parents = getAllParentIds(key, userRights);
+          // parents.forEach(parentId => newSelected.add(parentId));
         });
       }
 
@@ -298,7 +320,7 @@ const onSelectionChanged = useCallback(
           newSelected.delete(key);
           
           // Remove all children
-          const children = getAllChildIds(key, userRights);
+          const children = getAllChildIds(key, (userRightsData??[]));
           children.forEach(childId => newSelected.delete(childId));
           
           // DON'T remove parents - this is the key difference
@@ -308,11 +330,11 @@ const onSelectionChanged = useCallback(
 
       setSelectedRowKeys(Array.from(newSelected));
     },
-    [userRights]
+    [(userRightsData??[])]
   );
 
     const handleSelectAll = () => {
-    const allIds = userRights.map(item => item.id);
+    const allIds = (userRightsData??[]).map(item => item.id);
     setSelectedRowKeys(allIds);
   };
 
@@ -323,7 +345,7 @@ const onSelectionChanged = useCallback(
 
   const attachParentToSelected = (id: number, selectedData: any[]): any[] => {
     selectedData.push(id);
-    const parent = userRights.find((x) => x.id == id)?.headId;
+    const parent = (userRightsData??[]).find((x) => x.id == id)?.headId;
     if (
       parent != undefined
     ) {
@@ -340,7 +362,7 @@ const onSelectionChanged = useCallback(
     if (keys.find(x => x == node.id) == undefined) {
       return true;
     }
-    const parentNode = userRights.find(x => x.id == node.headId);
+    const parentNode = (userRightsData??[]).find(x => x.id == node.headId);
     if (parentNode != undefined) {
       const hasMissing = hasAnyMissingParent(parentNode);
       return hasMissing;
@@ -365,7 +387,7 @@ const onSelectionChanged = useCallback(
       treeNodeIndex: number;
     }[] = [];
     const immediateParentsOfEndNodes =
-      getImmediateParentsOfEndNodes(userRights);
+      getImmediateParentsOfEndNodes(userRightsData??[]);
     // Map to aggregate data by formCode
     const groupedDataMap = new Map<
       string,
@@ -373,14 +395,24 @@ const onSelectionChanged = useCallback(
     >();
 
     immediateParentsOfEndNodes.forEach((parent) => {
-      const childNodes = userRights.filter(
+      const childNodes = (userRightsData??[]).filter(
         (child) => child.headId === parent.id
       );
-      const hasMissing = hasAnyMissingParent(parent);
+      const hasMissing = false; // CheckIt
+      // const hasMissing = hasAnyMissingParent(parent);
       const keys = getSelectedKeys();
       let parentUserRights = keys.find(x => x == parent.id) != undefined && !hasMissing ? "S" : "";
       let hasSelectedRights = false;
       if (parentUserRights == "S") {
+        childNodes.forEach((child) => {
+          if (keys.includes(child.id)) {
+            hasSelectedRights = true;
+            parentUserRights += child.formCode;
+          }
+        });
+      }
+      // Verify the working of S
+      else{
         childNodes.forEach((child) => {
           if (keys.includes(child.id)) {
             hasSelectedRights = true;
@@ -405,7 +437,7 @@ const onSelectionChanged = useCallback(
 
         let currentParentId = parent.headId;
         while (currentParentId) {
-          const grandParent = userRights.find(
+          const grandParent = (userRightsData??[]).find(
             (right) => right.id === currentParentId
           );
           if (grandParent) {
@@ -448,6 +480,18 @@ const onSelectionChanged = useCallback(
       `${Urls.user_rights}${postData.data.userType}`
     );
     setUserRightTypes(res);
+//     setUserRightTypes([{
+//     "userRightID": 55369,
+//     "branchID": 1,
+//     "createdUserID": 1,
+//     "createdDate": "2025-11-12T13:06:57.94",
+//     "modifiedUserID": 1,
+//     "modifiedDate": "2025-11-12T13:06:57.94",
+//     "userTypeCode": "A2",
+//     "formCode": "SO",
+//     "userRights": "SAEDPBD",
+//     "treeNodeIndex": 3
+// }]);
   };
   const handleSubmit = useCallback(async () => {
     setPostUserTypeLoading(true);
@@ -492,7 +536,7 @@ const onSelectionChanged = useCallback(
     );
     if (res) {
       // Calculate initial selected keys and set state
-      const initialSelectedKeys = calculateInitialSelectedKeys(res, userRights);
+      const initialSelectedKeys = calculateInitialSelectedKeys(res, (userRightsData??[]));
       setSelectedRowKeys(initialSelectedKeys); // This should now be number[]
     }
     setCloning(false);
@@ -503,7 +547,6 @@ const onSelectionChanged = useCallback(
     );
   }, []);
   const { t } = useTranslation("userManage");
-  const [userRightsData, setUserRightsData] = useState<UserRight[]>();
   const clientSession = useSelector((state: RootState) => state.ClientSession);
  
   useEffect(() => {
@@ -518,7 +561,7 @@ const onSelectionChanged = useCallback(
     const allowedActions = Object.values(UserAction) as string[];
   const updated =  filteredRights.filter(item =>planRights?.includes(item.formCode) ||  allowedActions.includes(item.formCode));
   setUserRightsData(updated);
-}, [userRights, userRightsgcc, clientSession.isAppGlobal, userRights]);
+}, [userRights, userRightsgcc, clientSession.isAppGlobal]);
   return (
     <div className="flex md:flex-row flex-col mb-[65px] w-full">
       <div className="bg-slate-50 dark:bg-dark-bg border-slate-400 dark:border-dark-border md:border-r w-full overflow-x-auto md:basis-1/2">
@@ -538,7 +581,7 @@ const onSelectionChanged = useCallback(
       >
         <Selection 
           mode="multiple" 
-          recursive={false}  // We handle recursion manually
+          recursive={true}  // We handle recursion manually  CheckIt
         />
         {/* <Column dataField="fullName" caption="Permission" />
         <Column dataField="formCode" caption="Code" width={100} /> */}

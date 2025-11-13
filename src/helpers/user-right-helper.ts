@@ -10,7 +10,7 @@ export enum UserAction {
   Edit = "E",
   Delete = "D",
   Blocked = "B",
-  BlockedDiscount = "B",
+  BlockedDiscount = "BD",
   Export = "X",
   Print = "P",
   Show = "S",

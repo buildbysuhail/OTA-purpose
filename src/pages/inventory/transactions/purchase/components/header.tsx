@@ -27,8 +27,7 @@ interface HeaderProps extends VoucherElementProps {
   handleRefresh: () => void;
   createNewVoucher: () => void;
   handleEdit: () => void;
-  printVoucher: (masterID: number, transactionType: string, voucherType: string, formType: string, customerType: string, isInvTrans: boolean, printPreview: boolean, printTmeplate?: any, transDate?: string,
-  ) => void;
+  printVoucher: (masterID: number, transactionType: string, voucherType: string, formType: string, customerType: string, isInvTrans?: boolean, printPreview?: boolean, printTmeplate?: any, transDate?: string | undefined, printData?: any, templateId?: number | undefined ) => void;
   handleClearControls: () => void;
   handleHistoryClick: () => void;
   setIsHistorySidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -317,7 +316,9 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                     true,
                     formState.userConfig?.printPreview ?? false,
                     undefined,                                            // printTmeplate (optional)
-                    formState.transaction?.master.transactionDate ?? "",
+                    formState.transaction?.master.transactionDate ?? "", 
+                    undefined,  //tmepData
+                    formState?.lastChoosedTemplate?.id  //lastchoose tempId
 
                   )
                 }
@@ -634,7 +635,9 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                               true,
                               formState.userConfig?.printPreview ?? false,
                               undefined,                                            // printTmeplate (optional)
-                              formState.transaction?.master.transactionDate ?? "",
+                              formState.transaction?.master.transactionDate ?? "", // transactionDate
+                               undefined,  //tempData
+                               formState?.lastChoosedTemplate?.id //lastchoosedTempId
                             );
                             closeMenuPopup();
                           }
@@ -730,7 +733,9 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                                 true,
                                 formState.userConfig?.printPreview ?? false,
                                 undefined,                                            // printTmeplate (optional)
-                                formState.transaction?.master.transactionDate ?? "",
+                                formState.transaction?.master.transactionDate ?? ""  //transactinDate
+                                , undefined,  //tempData 
+                                formState?.lastChoosedTemplate?.id //lastChooseTempId
 
                               )}
                           >

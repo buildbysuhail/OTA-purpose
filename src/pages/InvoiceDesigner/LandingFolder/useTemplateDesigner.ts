@@ -158,6 +158,7 @@ export const useTemplateDesigner = ({
 
         setPrintData(data);
         
+           debugger
         // Fetch template if needed
         if (manuvalTemplateFeatch) {
           let _template = await getOrFetchTemplate(
@@ -166,7 +167,7 @@ export const useTemplateDesigner = ({
             data?.master?.customerType
           );
            debugger
-          if (!_template){
+          if (!_template || _template.content == null){
                 _template = await getOrFetchTemplate(
             data?.master?.voucherType,
             "",""

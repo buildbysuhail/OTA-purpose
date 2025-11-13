@@ -5,19 +5,21 @@ import { useTranslation } from 'react-i18next';
 import { APIClient } from '../../helpers/api-client';
 import Urls from '../../redux/urls';
 import { TemplateState } from '../InvoiceDesigner/Designer/interfaces';
-import { addTemplateToStore, fetchTemplateFromApiById } from '../use-print';
+import { addTemplateToStore, fetchTemplateById, fetchTemplateFromApiById } from '../use-print';
 import { isNullOrUndefinedOrEmpty } from '../../utilities/Utils';
 import { useNavigate } from 'react-router-dom';
 import ERPButton from '../../components/ERPComponents/erp-button';
+import { removeStorageString } from '../../utilities/storage-utils';
 
 interface TemplatesProps {
   setIsOpen: () => void; 
   voucherType: string;
   formType:string;
   customerType:string;
+  onTemplateChoosed?: (template: any) => void;
 }
 
-export default function TemplatesView ({ setIsOpen, voucherType,formType,customerType}: TemplatesProps) {
+export default function TemplatesView ({ setIsOpen, onTemplateChoosed, voucherType,formType,customerType}: TemplatesProps) {
 const { t } = useTranslation("system");
 const navigate = useNavigate();
 const [templates, setTemplate] =useState<[]>([])
@@ -58,14 +60,23 @@ const loadTemplateId = useCallback(
   async (template: TemplateState<unknown> | null) => {
     try {
       if (!template || isNullOrUndefinedOrEmpty(template.id)) return null;
-
-      const _template = await fetchTemplateFromApiById(template.id);
+      debugger;
+      const _template =await fetchTemplateById(template.id, template.templateGroup??"", template.customerType, template.formType);
       if (!_template) {
         console.warn("Template not found or failed to parse.");
         return;
       }
+debugger;
+     await addTemplateToStore(_template, template.id);
 
-     await addTemplateToStore(_template);
+     if (onTemplateChoosed && _template.id) {
+  onTemplateChoosed({
+    id: template?.id,
+    group: template?.templateGroup,
+    formType: template?.formType,
+    customerType: template?.customerType,
+  });
+}
       setIsOpen();
     } catch (error) {
       console.error(error);
@@ -102,12 +113,12 @@ const loadTemplateId = useCallback(
                     </ConfettiWrapper>
                   </div> */}
        <div className='flex gap-2'>
-                            <ERPButton
+                            {/* <ERPButton
                       title={t("add_new")}
                       onClick={()=>navigate(`/invoice_designer/new?template_group=${voucherType}`)}
                       className=" rounded-none  !m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
                  
-                    />
+                    /> */}
         {/* <button className="dark:text-dark-text text-gray-500 dark:hover:text-dark-text  hover:text-gray-700" onClick={()=>navigate("/templates")} >
          {t("add_new")} 
         </button> */}

@@ -14,7 +14,7 @@ import {
   removePopupFromStack,
 } from "../../utilities/shortKeys";
 import { ERPScrollArea } from "./erp-scrollbar";
-import { Minimize2, Maximize2, X, Printer } from "lucide-react";
+import { Minimize2, Maximize2, X, Printer, Layout } from "lucide-react";
 import { mergeObjectsRemovingIdenticalKeys } from "../../utilities/Utils";
 import { Rnd } from "react-rnd";
 import { useDynamicModalSize } from "../../utilities/hooks/useDynamicModalSize";
@@ -411,12 +411,11 @@ const ERPModal = React.memo(
                         <div className="flex items-center space-x-2">
                           {/* Add this in the DialogTitle buttons section */}
                           {isPrintButton && (
+                            <>
                             <div className="group relative inline-flex flex-col items-center ps-[5px]" title={"print"}>
                               <button
                                 className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
                                 onClick={async() => {
-                                    console.log("Print button clicked");
-                                    console.log("printtRef.current:", printtRef.current);
                                   const printData = printtRef.current?.getPrintData?.();
                                   console.log("printData:", printData);
                                   if (printData) {
@@ -430,7 +429,8 @@ const ERPModal = React.memo(
                                           false,                       // printPreview (false to actually print/download)
                                           printData.template,          // printTemplate (the actual template)
                                           undefined,                   // transDate
-                                          printData.data               // printData (the actual data)
+                                          printData.data,               // printData (the actual data)
+                           
                                         );
                                   }
                                 }}
@@ -438,6 +438,19 @@ const ERPModal = React.memo(
                                 <Printer className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                               </button>
                             </div>
+                             <div className="group relative inline-flex flex-col items-center ps-[5px]" title={"templates"}>
+                              <button
+                                className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
+                                onClick={async() => {
+                                 printtRef.current?.openTemplateChooser?.()
+                                      console.log("Print  Chooser clicked");                             
+
+                                }}
+                              >
+                                <Layout className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+                              </button>
+                            </div>
+                            </>
                           )}
 
                           {closeButton === "Button" && (

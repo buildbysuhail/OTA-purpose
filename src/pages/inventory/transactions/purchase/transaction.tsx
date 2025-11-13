@@ -1974,6 +1974,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
               {/* Form Section */}
               <div className="flex-1 bg-white text-zinc-800 overflow-y-auto">
+                {formState.lastChoosedTemplate?.id?.toString()}
                 <div className="space-y-2"></div>
                 <ErpPurchaseGrid
                   isMobile={true}
@@ -2109,9 +2110,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
             content={
               <TemplatesPreView
                 voucherType={formState.transaction.master?.voucherType ?? ""}
-                transactionMasterID={popupData.IsPrintPreviewPopup.masterId ?? 0}
+                printPreviwPopupInfo={popupData.IsPrintPreviewPopup}
                 transactionType={formState.transactionType}
                 isInvTrans
+                lastChooseTemp={formState.lastChoosedTemplate}
               />
             }
           />
@@ -2262,6 +2264,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
               voucherType={formState.transaction.master?.voucherType ?? ""}
               formType={formState.transaction.master?.voucherForm}
               customerType={formState.transaction.master?.customerType}
+              onTemplateChoosed={(template: any) => {
+                  dispatch(formStateHandleFieldChange({fields:{lastChoosedTemplate: template}}))
+              }}
               setIsOpen={() =>
                 dispatch(
                   formStateHandleFieldChange({ fields: { templateChooserModal: false } })

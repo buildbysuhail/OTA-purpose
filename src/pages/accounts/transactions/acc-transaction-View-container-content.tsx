@@ -80,7 +80,37 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
               type="button"
               disabled={loading}
               className="h-8 px-3 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/30 rounded inline-flex items-center gap-1.5 transition-all duration-200"
-              title="PDF/Print"
+
+                onClick={ async() =>
+                // await printVoucher(
+                //                   0,                           // masterID (not needed, data already loaded)
+                //                   "",                          // transactionType (not needed)
+                //                   "",                          // voucherType (not needed)
+                //                   "",                          // formType (not needed)
+                //                   "",                          // customerType (not needed)
+                //                   props.isInvTrans,                       // isInvTrans (not needed)
+                //                   false,                       // printPreview (false to actually print/download)
+                //                   stableTemplateProps?.template ?? "",          // printTemplate (the actual template)
+                //                   undefined,                   // transDate
+                //                   stableTemplateProps?.data,               // printData (the actual data)
+                //                   undefined                   //lastchoose tempId
+                //                 )
+                 await printVoucher(
+                    props.transactionMasterID??0,  // masterID
+                    props.transactionType ?? "",                       // transactionType
+                    props.voucherType??'',        // voucherType
+                    props.formType??'',           // formType
+                    props.customerType??'',       // customerType
+                    props.isInvTrans,        //isInv
+                    false,        //print privew
+                    undefined,        // printTemplate (the actual template)                                    // printTmeplate (optional)
+                    undefined,   // transDate
+                    undefined,  //tmepData
+                    stableTemplateProps?.template?.id //lastchoose tempId
+
+                  )
+                }
+               title="PDF/Print"
               aria-label="PDF/Print"
             >
               <Printer className="w-4 h-4" />

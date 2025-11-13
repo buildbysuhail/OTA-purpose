@@ -8,12 +8,11 @@ import { PrintResponse, PrintDetailDto, PrintMasterDto, CompanyDetailsForPrint, 
 import { initialPrintCustomFields, initialPrintResponse } from './use-print-type-data';
 import { merge } from 'lodash';
 import { TemplateState } from './InvoiceDesigner/Designer/interfaces';
-import { getStorageString, setStorageString } from '../utilities/storage-utils';
-import { base64ToModelUnicode, base64UnicodeToModel, modelToBase64Unicode, safeBase64Decode, toCamelCase } from '../utilities/jsonConverter';
+import { getStorageString, removeStorageString, setStorageString } from '../utilities/storage-utils';
+import { base64UnicodeToModel, modelToBase64Unicode, toCamelCase } from '../utilities/jsonConverter';
 import { decompressData } from '../utilities/compression';
 import { templateInitialState } from '../redux/reducers/TemplateReducer';
-import VoucherType, { purchaseVoucherTypes, salesVoucherTypes } from '../enums/voucher-types';
-import { is } from 'date-fns/locale';
+import localforage from 'localforage';
 
 
 // type VoucherType = {
@@ -303,7 +302,7 @@ export const processPrintResponse = async (
   returnData.custom = returnData.custom ?? initialPrintCustomFields;
 
   if (isNullOrUndefinedOrEmpty(printData?.master)) return returnData;
-//template decode if it from in token
+  //template decode if it from in token
 
   // Kitchen Print
   const isKitchenPrint =
@@ -442,13 +441,13 @@ export const loadPrintData = async (
   // let returnData: PrintResponse = initialPrintResponse;
 
   try {
-  console.log(`${MasterIDParam}-MasterIDParam`);
-  let fields: (keyof any)[] = []; // deepPartial PrintResponse
-  const multiPayment = fields.includes("custom.bankCard") || fields.includes("qrPay")
-  const printCount = fields.includes("printCount")
-  const privilageCardBalance = fields.includes("privilageCardBalance") //&& PrivCardNumber
-  const taxAmountIncludingTaxOnDiscount = fields.includes("total5PercTaxValue") || fields.includes("total15PercTaxValue") || fields.includes("totalzeroPercentTaxValue")
-  const taxableAmountIncludingTaxOnDiscount = fields.includes("total5PerctaxableValue") || fields.includes("total15PerctaxableValue") || fields.includes("totalzeroPercentTaxableValue")
+    console.log(`${MasterIDParam}-MasterIDParam`);
+    let fields: (keyof any)[] = []; // deepPartial PrintResponse
+    const multiPayment = fields.includes("custom.bankCard") || fields.includes("qrPay")
+    const printCount = fields.includes("printCount")
+    const privilageCardBalance = fields.includes("privilageCardBalance") //&& PrivCardNumber
+    const taxAmountIncludingTaxOnDiscount = fields.includes("total5PercTaxValue") || fields.includes("total15PercTaxValue") || fields.includes("totalzeroPercentTaxValue")
+    const taxableAmountIncludingTaxOnDiscount = fields.includes("total5PerctaxableValue") || fields.includes("total15PerctaxableValue") || fields.includes("totalzeroPercentTaxableValue")
     const printData: PrintResponse = await api.getAsync(`${isInvTrans ? Urls.inv_transaction_base : Urls.acc_transaction_base}${transactionType}/print/?
         KitchenId=${0}&CommonKitchenProductGroupId=${0}&IncludeStockDetails=${true}&IncludePreviousLedgerBalance=${true}
         &IncludeLoyaltyCardBalance=${true}&masterId=${MasterIDParam}&multiPayment=${multiPayment}
@@ -486,65 +485,65 @@ export const loadPrintData = async (
 
 export const fetchDefaultTemplateFromToken = async (
   token: string,
-)=> {
-  
+) => {
+
   try {
     const api = new APIClient();
     const res = await api.postAsync(Urls.print_helper_byToken, {
       token: token,
     });
     // const { createdUser, modifiedUser, ...template } = Data;
-  
-     const resDate = res.item.printData;
-     const { template, ...rest } = resDate;
-     let Template = template;
-     const PrintResponse: PrintResponse = rest;
-     const resTokenInfo = res.item.token;
-    if (res.isOk && resDate) {
-    const processed = await processPrintResponse(PrintResponse, {
-      MasterIDParam: resTokenInfo?.masterId || 0,
-      voucherTypeParam:resTokenInfo?.voucherType || "",
-      isInvTrans:resTokenInfo?.type =="inv"? true : false,
-      isSalesView: resTokenInfo?.isSalesView,
-      isServiceTrans:resTokenInfo.isServiceTrans,
-      transDate:new Date(resTokenInfo?.transactionDate).toISOString(), 
-      printCopies:resTokenInfo?.printCopies,
-      isReprint:resTokenInfo?.isReprint,
-      isPOSPrinting:resTokenInfo?.isPOSPrinting,
-      isFromSalesReceipt:resTokenInfo?.isFromSalesReceipt,
-      isPackingSlipPrint:resTokenInfo?.isPackingSlipPrint,
-      warehouseID:resTokenInfo?.warehouseID,
-      kitchenIDParam:resTokenInfo?.kitchenId,
-      kitchenPrinterNameParam:resTokenInfo?.kitchenPrinterName,
-      kitchenNameParam:resTokenInfo?.kitchenName,
-      commonKitchenProductGroupIDParam:resTokenInfo?.commonKitchenProductGroupId ,
-      dbIdValue:resTokenInfo?.dbIdValue,
-      isAppGlobal: resTokenInfo?.isAppGlobal ,
-    });
 
-      if(Template){
-        if (Template == "" ||!Template.id|| Template.id<=0) {
+    const resDate = res.item.printData;
+    const { template, ...rest } = resDate;
+    let Template = template;
+    const PrintResponse: PrintResponse = rest;
+    const resTokenInfo = res.item.token;
+    if (res.isOk && resDate) {
+      const processed = await processPrintResponse(PrintResponse, {
+        MasterIDParam: resTokenInfo?.masterId || 0,
+        voucherTypeParam: resTokenInfo?.voucherType || "",
+        isInvTrans: resTokenInfo?.type == "inv" ? true : false,
+        isSalesView: resTokenInfo?.isSalesView,
+        isServiceTrans: resTokenInfo.isServiceTrans,
+        transDate: new Date(resTokenInfo?.transactionDate).toISOString(),
+        printCopies: resTokenInfo?.printCopies,
+        isReprint: resTokenInfo?.isReprint,
+        isPOSPrinting: resTokenInfo?.isPOSPrinting,
+        isFromSalesReceipt: resTokenInfo?.isFromSalesReceipt,
+        isPackingSlipPrint: resTokenInfo?.isPackingSlipPrint,
+        warehouseID: resTokenInfo?.warehouseID,
+        kitchenIDParam: resTokenInfo?.kitchenId,
+        kitchenPrinterNameParam: resTokenInfo?.kitchenPrinterName,
+        kitchenNameParam: resTokenInfo?.kitchenName,
+        commonKitchenProductGroupIDParam: resTokenInfo?.commonKitchenProductGroupId,
+        dbIdValue: resTokenInfo?.dbIdValue,
+        isAppGlobal: resTokenInfo?.isAppGlobal,
+      });
+
+      if (Template) {
+        if (Template == "" || !Template.id || Template.id <= 0) {
           console.warn("No default template response received.");
           return Template = null;
         }
         const templateContent = await decompressData(Template.content);
-            const parsedTemplate = parseTemplateContent<TemplateState<unknown>>(Template,templateContent);
+        const parsedTemplate = parseTemplateContent<TemplateState<unknown>>(Template, templateContent);
         if (!parsedTemplate) {
           console.warn("Failed to parse default template.");
           Template = null;
         }
         const initial = templateInitialState().activeTemplate;
         const merged = merge({}, initial, parsedTemplate);
-        
-        Template= merged;
-      }
-    return  {
-      data: processed,
-      template: Template
-    }
 
-  } 
- }catch (error) {
+        Template = merged;
+      }
+      return {
+        data: processed,
+        template: Template
+      }
+
+    }
+  } catch (error) {
     console.error("Error fetching default template:", error);
     return null;
   }
@@ -1705,7 +1704,7 @@ export const getCommonValues = (field: string,
 };
 
 export function bindDataForPrint(field: string, printData: PrintResponse,
-  format:string ="NONE",
+  format: string = "NONE",
   convertAmountToEnglish?: (amount: number, currency?: Currencies | undefined) => string,
   convertAmountToArabic?: (amount: number, currency?: Currencies | undefined) => string,
   rowIndex: number = 0): any {
@@ -1717,13 +1716,13 @@ export function bindDataForPrint(field: string, printData: PrintResponse,
     return "";
   const master = printData?.master
   const details = printData?.details
-let val;
+  let val;
   if (group == "master") {
-     val =  master[key as (keyof PrintMasterDto)]
+    val = master[key as (keyof PrintMasterDto)]
 
   }
   else if (group == "details") {
-      val =  details[rowIndex]?.[key as (keyof PrintDetailDto)]
+    val = details[rowIndex]?.[key as (keyof PrintDetailDto)]
 
   }
   else if (group == "custom") {
@@ -1733,16 +1732,16 @@ let val;
   //   return userSession.currentBranchDetails?.[key as keyof BranchDetails]
   // }
   else if (group == "org") {
-      val = printData.companyDetails?.[key as (keyof CompanyDetailsForPrint)]
+    val = printData.companyDetails?.[key as (keyof CompanyDetailsForPrint)]
   }
   else if (group == "headerFooter") {
-       val = printData.headerFooter?.[key as keyof HeaderFooter]       
+    val = printData.headerFooter?.[key as keyof HeaderFooter]
   }
   else if (group == "customer") {
-       val = printData?.master?.partyData?.[key as keyof PartyDetailsForPrint]   
+    val = printData?.master?.partyData?.[key as keyof PartyDetailsForPrint]
   }
-    return val = formatValue(val,format)
-     
+  return val = formatValue(val, format)
+
 }
 // format field values based on format specification
 // const getFormatedValues = useCallback((value, format) => {
@@ -1824,20 +1823,53 @@ let val;
 // Detail printing functions
 
 
-export const addTemplateToStore = async (data: TemplateState<unknown>) => {
+export const addTemplateToStore = async (data: TemplateState<unknown>, id?: number) => {
   if (!data) {
     return
   }
   let key = btoa(`${data.templateGroup}-${data.customerType}-${data.formType}`)
-
-   const base64 = modelToBase64Unicode(data)
-    await setStorageString(key, base64);
+  let idKey = getTemplateStoreKey(id ?? data.id ?? 0, data.templateGroup ?? "", data.customerType, data.formType);
+  const prnt = getTemplateStoreKeyParent(data.templateGroup ?? "", data.customerType, data.formType);
+  const keys = (await localforage.keys())
+    .map(x => {
+      try {
+        return atob(x);
+      } catch {
+        return null; // skip invalid base64 keys
+      }
+    })
+    .filter(x => x && x.startsWith(prnt));
+  debugger;
+  for (const x of keys ?? []) {
+    if (!x) continue; // skip null or undefined
+    const base64 = btoa(x);
+    await removeStorageString(base64);
+  }
+  const base64 = modelToBase64Unicode(data)
+  await setStorageString(key, base64);
+  await setStorageString(idKey, key);
 }
 export const getTemplateFromStore = async (templateGroup: string, customerType: string = "", formType: string = "") => {
   let key = btoa(`${templateGroup}-${customerType}-${formType}`)
-  let _template = await getStorageString(key)??'';
+  let _template = await getStorageString(key) ?? '';
   if (isNullOrUndefinedOrEmpty(_template)) {
     return
+  }
+  const template = base64UnicodeToModel(_template);
+  return template
+}
+
+export const getTemplateStoreKeyParent = (templateGroup: string, customerType: string = "", formType: string = "") => {
+  return `store_temp_${templateGroup}-${customerType}-${formType}-`;
+}
+export const getTemplateStoreKey = (id: number, templateGroup: string, customerType: string = "", formType: string = "") => {
+  return btoa(`${getTemplateStoreKeyParent(templateGroup, customerType, formType)}${id}_`);
+}
+export const getTemplateFromStoreById = async (id: number, templateGroup: string, customerType: string = "", formType: string = "") => {
+  const key = await getStorageString(getTemplateStoreKey(id, templateGroup, customerType, formType));
+  let _template = await getStorageString(key ?? "") ?? '';
+  if (isNullOrUndefinedOrEmpty(_template)) {
+    return null
   }
   const template = base64UnicodeToModel(_template);
   return template
@@ -1846,10 +1878,10 @@ export const getTemplateFromStore = async (templateGroup: string, customerType: 
 
 export const fetchDefaultTemplateFromApi = async (
   voucherType: string,
-  formType?: string ,
-  customerType?: string ,
+  formType?: string,
+  customerType?: string,
 ): Promise<TemplateState<unknown> | null> => {
-  
+
   try {
     const api = new APIClient();
     const res = await api.postAsync(`${Urls.default_template}`, {
@@ -1858,12 +1890,12 @@ export const fetchDefaultTemplateFromApi = async (
       customerType: customerType
     });
 
-    if (res == "" ||!res.id || res.id<=0) {
+    if (res == "" || !res.id || res.id <= 0 || res.content == null) {
       console.warn("No default template response received.");
       return null;
     }
     const templateContent = await decompressData(res.content);
-    const parsedTemplate = parseTemplateContent<TemplateState<unknown>>(res,templateContent);
+    const parsedTemplate = parseTemplateContent<TemplateState<unknown>>(res, templateContent);
     if (!parsedTemplate) {
       console.warn("Failed to parse default template.");
       return null;
@@ -1877,6 +1909,33 @@ export const fetchDefaultTemplateFromApi = async (
   }
 };
 
+export const fetchTemplateById = async (
+  id: any, templateGroup: string, customerType: string = "", formType: string = ""
+): Promise<TemplateState<unknown> | null> => {
+  try {
+
+    debugger;
+    const template = await getTemplateFromStoreById(id, templateGroup, customerType, formType);
+    if (template) {
+      return template
+    } else {
+      if (id > 0) {
+        return fetchTemplateFromApiById(id)
+      } else if (id < 0) {
+        console.log('fetchCRMTemplateFromApiByIdSafvan');
+
+        return fetchCRMTemplateFromApiById(-1 * id)
+      } else
+        return null
+    }
+
+
+  } catch (error) {
+    console.error("Error fetching template:", error);
+    return null;
+  }
+};
+
 
 export const fetchCRMTemplateFromApiById = async (
   id: any
@@ -1885,8 +1944,8 @@ export const fetchCRMTemplateFromApiById = async (
     const api = new APIClient();
     const res = await api.getAsync(`${Urls.crm_templates}${id}`);
     const templateContent = await decompressData(res.content);
-    const parsed = parseTemplateContent<TemplateState<unknown>>(res,templateContent);
-       if (!parsed) {
+    const parsed = parseTemplateContent<TemplateState<unknown>>(res, templateContent);
+    if (!parsed) {
       console.warn("⚠️ Failed to parse template content.");
       return null;
     }
@@ -1907,8 +1966,8 @@ export const fetchTemplateFromApiById = async (
     const api = new APIClient();
     const res = await api.getAsync(`${Urls.templates}${id}`);
     const templateContent = await decompressData(res.content);
-    const parsed = parseTemplateContent<TemplateState<unknown>>(res,templateContent);
-       if (!parsed) {
+    const parsed = parseTemplateContent<TemplateState<unknown>>(res, templateContent);
+    if (!parsed) {
       console.warn("⚠️ Failed to parse template content.");
       return null;
     }
@@ -1926,8 +1985,8 @@ export function parseTemplateContent<T extends object>(
   templateRes: any, parsed: any
 ): T | null {
   try {
-      let cc = parsed;
-    
+    let cc = parsed;
+
     // If for some reason it's still a string, parse it
     if (typeof cc === 'string') {
       cc = JSON.parse(cc);
@@ -1975,8 +2034,8 @@ export function parseTemplateContent<T extends object>(
 
 export const fetchDefaultTemplate = async (
   voucherType: string,
-  formType?: string ,
-  customerType?: string ,
+  formType?: string,
+  customerType?: string,
 ) => {
   try {
 
@@ -1991,26 +2050,26 @@ export const fetchDefaultTemplate = async (
 
 export const getOrFetchTemplate = async (
   voucherType: string,
-  formType?: string ,
-  customerType?: string ,
+  formType?: string,
+  customerType?: string,
 ) => {
   const template = await getTemplateFromStore(voucherType, customerType, formType);
-    if (template) {
+  if (template) {
     return template
-  } else {  
+  } else {
     return await fetchDefaultTemplate(voucherType, formType, customerType)
   }
 };
 export const formatValue = (value: any, format: string,) => {
 
-    let t = '';
+  let t = '';
   const ws =
     ' '.repeat(400); // Same as long ws string in C#
   // const { fldFont, fldAlign, fldLength } = opts;
 
   // QR Code fonts: return directly
   // if (fldFont === 'QR Code-Polosys' || fldFont === 'QR Code-Polosys-2') return value;
-if(!format) return  value;
+  if (!format) return value;
   const fmt = format.toUpperCase();
 
   try {
@@ -2105,30 +2164,30 @@ if(!format) return  value;
   }
 
   return t;
-  }
+}
 
-  const formatDate = (value: any, format: string) => {
-    const date = new Date(value);
-    if (isNaN(date.getTime())) return value.toString();
+const formatDate = (value: any, format: string) => {
+  const date = new Date(value);
+  if (isNaN(date.getTime())) return value.toString();
 
-    const pad = (n: number) => n.toString().padStart(2, '0');
+  const pad = (n: number) => n.toString().padStart(2, '0');
 
-    const map: Record<string, string> = {
-      dd: pad(date.getDate()),
-      d: date.getDate().toString(),
-      MM: pad(date.getMonth() + 1),
-      yy: date.getFullYear().toString().slice(2),
-      yyyy: date.getFullYear().toString(),
-      HH: pad(date.getHours()),
-      hh: pad(date.getHours() % 12 || 12),
-      mm: pad(date.getMinutes()),
-      ss: pad(date.getSeconds()),
-      a: date.getHours() >= 12 ? 'PM' : 'AM',
-      MMM: date.toLocaleString('en-US', { month: 'short' }),
-    };
+  const map: Record<string, string> = {
+    dd: pad(date.getDate()),
+    d: date.getDate().toString(),
+    MM: pad(date.getMonth() + 1),
+    yy: date.getFullYear().toString().slice(2),
+    yyyy: date.getFullYear().toString(),
+    HH: pad(date.getHours()),
+    hh: pad(date.getHours() % 12 || 12),
+    mm: pad(date.getMinutes()),
+    ss: pad(date.getSeconds()),
+    a: date.getHours() >= 12 ? 'PM' : 'AM',
+    MMM: date.toLocaleString('en-US', { month: 'short' }),
+  };
 
-    return format.replace(
-      /(yyyy|yy|dd|d|MM|HH|hh|mm|ss|a|MMM)/g,
-      (token) => map[token] || token
-    );
-  }
+  return format.replace(
+    /(yyyy|yy|dd|d|MM|HH|hh|mm|ss|a|MMM)/g,
+    (token) => map[token] || token
+  );
+}

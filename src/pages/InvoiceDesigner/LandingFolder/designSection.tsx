@@ -177,7 +177,7 @@ export const designerSectionsConfig: Record<string, Record<string, string[]>> = 
     "retail-standard": ["properties", "header",  "table", "footer", ],
     "2inch":["properties", "header",  "table", "footer", ],
   },
-  ADVANCE: {
+  ADVICE: {
     advice: ["properties", "header",  "table", "footer", ],
   },
   CHEQUE: {

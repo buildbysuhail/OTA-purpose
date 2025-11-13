@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect, useCallback, forwardRef, useImperativeHandle } from 'react';
+import React, { useState, useEffect, useCallback, forwardRef, useImperativeHandle, useRef } from 'react';
 import { ChevronRight, X, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { PlusIcon, TrashIcon, PencilIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
@@ -11,26 +11,32 @@ import Urls from '../../redux/urls';
 import { accFormStateHandleFieldChange } from '../accounts/transactions/reducer';
 import { handleResponse } from '../../utilities/HandleResponse';
 import { TemplateState } from '../InvoiceDesigner/Designer/interfaces';
-import { addTemplateToStore, fetchTemplateFromApiById } from '../use-print';
+import { addTemplateToStore, fetchTemplateById, fetchTemplateFromApiById } from '../use-print';
 import { isNullOrUndefinedOrEmpty } from '../../utilities/Utils';
 import { useTemplateDesigner } from '../InvoiceDesigner/LandingFolder/useTemplateDesigner';
 import SharedTemplatePreview from '../InvoiceDesigner/DesignPreview/shared';
+import { formStateHandleFieldChange } from '../inventory/transactions/reducer';
+import { popupDataProps } from '../../redux/slices/popup-reducer';
 
 export type TemplatesPreViewHandle = {
   getPrintData: () => {
     template: any;
     printData?:any
   } | null;
+  openTemplateChooser:()=>{}
 };
 type TemplatesProps = {
   voucherType: string;
   isInvTrans?: boolean;
-  transactionMasterID: number;
+  printPreviwPopupInfo:popupDataProps ;
   transactionType: string;
+  lastChooseTemp:any;
 };
-
+// 
 const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
-  ({ voucherType, isInvTrans = false, transactionMasterID, transactionType }, ref) => {
+  ({ voucherType, isInvTrans = false, printPreviwPopupInfo, transactionType,lastChooseTemp }, ref) => {
+    const [activeTemplate,setActiveTemplate] = useState<TemplateState<unknown>>(printPreviwPopupInfo.template)
+    const prevTemplateIdRef  = useRef<number | null>(null);
     const dispatch = useDispatch();
     const { t } = useTranslation();
     const {
@@ -40,19 +46,38 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
     } = useTemplateDesigner({
       manuvalTemplateFeatch: true,
       isInvTrans: isInvTrans,
-      MasterIDParam: transactionMasterID,
+      MasterIDParam: printPreviwPopupInfo.masterId??0,
       transactionType: transactionType,
     });
 
+    useEffect(() => {
+      if (prevTemplateIdRef.current === null) {
+        prevTemplateIdRef.current = lastChooseTemp?.id;
+        return;
+      }
+      if (lastChooseTemp?.id !== prevTemplateIdRef.current) {
+        prevTemplateIdRef.current = lastChooseTemp?.id; // update ref
+
+        if (lastChooseTemp?.id) {
+          const fetchNewTemplate = async () => {
+            const tem = await fetchTemplateById(lastChooseTemp?.id, lastChooseTemp?.group??"", lastChooseTemp?.customerType, lastChooseTemp?.formType);
+            if (tem) setActiveTemplate(tem);
+          };
+          fetchNewTemplate();
+        }
+      }
+    }, [lastChooseTemp]);
+
     useImperativeHandle(ref, () => ({
       getPrintData: () => {
-        if (!stableTemplateProps?.data || !stableTemplateProps?.template) return null;
+        if (!stableTemplateProps?.data || !activeTemplate) return null;
         
         return {
-          template: stableTemplateProps.template,
+          template: activeTemplate,
           data: stableTemplateProps.data,
         };
-      }
+      },
+      openTemplateChooser:()=>dispatch(formStateHandleFieldChange({ fields: { templateChooserModal: true } })),
     }));
 
     if (loading) {
@@ -75,7 +100,7 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
           >
             <div className="relative h-full w-full">
               <SharedTemplatePreview
-                template={stableTemplateProps?.template}
+                template={activeTemplate}
                 data={stableTemplateProps?.data}
                 qrCodeImages={stableTemplateProps?.qrCodeImages}
               />

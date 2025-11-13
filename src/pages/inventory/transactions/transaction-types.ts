@@ -682,6 +682,7 @@ export interface TransactionFormState {
   isUserConfigOpen?: boolean;
   privConfig?: string;
   printGatepass?: boolean;
+  lastChoosedTemplate?: {id?: number, group?: string,formType?: string, customerType?: string}; // nizam
 }
 export interface GiftModel {
   productBatchId: number;

@@ -29,7 +29,7 @@ const InvoiceDesigner = () => {
   const templateData = useSelector((state: RootState) => state.Template);
   const rootState = useRootState();
   const tg = searchParams.get("template_group");
-  const templateGroup = tg && Object.values(VoucherType).includes(tg as VoucherType) ? (tg as VoucherType) : "";
+  const templateGroup = tg && Object.values(VoucherType).includes(tg as VoucherType) ? (tg as VoucherType) : tg??"";
   const { templateKind, templateType } = (location.state as LocationState) || {};
 
   return (

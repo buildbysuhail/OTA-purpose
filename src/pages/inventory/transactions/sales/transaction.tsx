@@ -2433,11 +2433,13 @@ if (formType === "BT") {
                 dispatch(toggleIsPrintPreviewPopup({ isOpen: false }));
               }}
               content={
-                <TemplatesPreView
-                  voucherType={formState.transaction.master?.voucherType ?? ""}
-                  transactionMasterID={popupData.IsPrintPreviewPopup.masterId?? 0}
-                  transactionType={formState.transactionType}
-                />
+              <TemplatesPreView
+                voucherType={formState.transaction.master?.voucherType ?? ""}
+                printPreviwPopupInfo={popupData.IsPrintPreviewPopup}
+                transactionType={formState.transactionType}
+                isInvTrans
+                lastChooseTemp={formState.lastChoosedTemplate}
+              />
               }
             />
           )}
@@ -2587,6 +2589,9 @@ if (formType === "BT") {
               voucherType={formState.transaction.master?.voucherType ?? ""}
               formType={formState.transaction.master?.voucherForm}
               customerType={formState.transaction.master?.customerType}
+              onTemplateChoosed={(template: any) => {
+                  dispatch(formStateHandleFieldChange({fields:{lastChoosedTemplate: template}}))
+              }}              
               setIsOpen={() =>
                 dispatch(
                   formStateHandleFieldChange({ fields: { templateChooserModal: false } })

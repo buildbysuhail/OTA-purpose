@@ -18,8 +18,19 @@ interface AccHeaderProps extends AccVoucherElementProps {
   handleRefresh: () => void;
   createNewVoucher: () => void;
   handleEdit: () => void;
-  printVoucher: ( masterID: number,transactionType: string,voucherType: string,formType:string,customerType:string,isInvTrans: boolean,printPreview:boolean, printTmeplate?:any ,transDate?: string,
-   ) => void;
+  printVoucher: (
+  masterID: number,
+  transactionType: string,
+  voucherType: string,
+  formType: string,
+  customerType: string,
+  isInvTrans?: boolean,
+  printPreview?: boolean,
+  printTmeplate?: any,
+  transDate?: string,
+  printData?: any,
+  templateId?: number
+) => Promise<void>;
   handleClearControls: () => void;
   handleHistoryClick: () => void;
   setIsHistorySidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -166,8 +177,23 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
           <button
             disabled={formState.transaction.master.accTransactionMasterID < 1 || (formState.transaction.master.accTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
             className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`}
-            onClick={() => printVoucher(formState.transaction.master.accTransactionMasterID, transactionType ?? "", voucherType,formState.transaction.master.formType??"",formState.transaction.master.customerType??"",false,formState.userConfig?.printPreview??false,undefined, formState.transaction.master.transactionDate,)}
-          >
+
+               onClick={async() =>
+                  await  printVoucher(
+                    formState.transaction.master.accTransactionMasterID,  // masterID
+                    transactionType ?? "",                       // transactionType
+                    voucherType ?? "",        // voucherType
+                    formState.transaction?.master?.formType ?? "",           // formType
+                    formState.transaction?.master.customerType ?? "",       // customerType
+                    false,//is inv
+                    formState.userConfig?.printPreview ?? false,  //priview
+                    undefined,                                            // printTmeplate (optional)
+                    formState.transaction?.master.transactionDate ?? "",  
+                    undefined,  //tmepData
+                    formState?.lastChoosedTemplate?.id  //lastchoose tempId
+                  )
+                }
+              >  
             <Printer className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
           </button>
         </div>

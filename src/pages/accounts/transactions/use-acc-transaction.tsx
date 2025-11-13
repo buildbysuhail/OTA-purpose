@@ -1237,18 +1237,19 @@ export const useAccTransaction = (
           ) {
             printPaymentReceiptAdvice("");
           } else {
-
-            printVoucher(
-               saveRes?.item?.master.accTransactionMasterID, // masterID
-                transactionType,// transactionType
-                formState.transaction.master.voucherType, // voucherType
-                formState.transaction.master.formType,// formType
-                formState.transaction.master.customerType, // customerType
-                false,//isInv
-                formState.userConfig?.printPreview, // printPreview
-                undefined,//template 
-                formState.transaction.master.transactionDate?? "" // transactionDate
-                );
+            await  printVoucher(
+                    formState.transaction.master.accTransactionMasterID,  // masterID
+                    transactionType ?? "",                       // transactionType
+                    formState.transaction.master.voucherType ?? "",        // voucherType
+                    formState.transaction?.master?.formType ?? "",           // formType
+                    formState.transaction?.master.customerType ?? "",       // customerType
+                    false,//is inv
+                    formState.userConfig?.printPreview ?? false,  //priview
+                    undefined,                                            // printTmeplate (optional)
+                    formState.transaction?.master.transactionDate ?? "",  
+                    undefined,  //tmepData
+                    formState?.lastChoosedTemplate?.id  //lastchoose tempId
+                  )
           }
         }
 

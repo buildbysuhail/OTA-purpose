@@ -2040,6 +2040,7 @@ export const fetchDefaultTemplate = async (
   try {
 
     const _template = await fetchDefaultTemplateFromApi(voucherType, formType, customerType);
+  debugger
     if (!_template) return null;
     await addTemplateToStore(_template)
     return _template
@@ -2053,6 +2054,7 @@ export const getOrFetchTemplate = async (
   formType?: string,
   customerType?: string,
 ) => {
+  debugger
   const template = await getTemplateFromStore(voucherType, customerType, formType);
   if (template) {
     return template

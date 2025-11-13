@@ -3295,8 +3295,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               content={
                 <TemplatesPreView
                   voucherType={formState.transaction.master?.voucherType ?? ""}
-                  transactionMasterID={popupData.IsPrintPreviewPopup.masterId?? 0}
+                  printPreviwPopupInfo={popupData.IsPrintPreviewPopup}
                   transactionType={formState.transactionType}
+                  isInvTrans
+                  lastChooseTemp={formState.lastChoosedTemplate}
                 />
               }
             />
@@ -3322,6 +3324,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       voucherType={formState.transaction.master?.voucherType ?? ""}
       formType={formState.transaction.master?.formType}
       customerType={formState.transaction.master?.customerType}
+      onTemplateChoosed={(template: any) => {
+          dispatch(accFormStateHandleFieldChange({fields:{lastChoosedTemplate: template}}))
+      }}      
       setIsOpen={() =>
         dispatch(
           accFormStateHandleFieldChange({ fields: { templateChooserModal: false } })

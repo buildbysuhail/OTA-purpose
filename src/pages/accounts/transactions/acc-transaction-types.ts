@@ -484,6 +484,7 @@ export interface AccTransactionFormState {
   masterAccountActive?: boolean
   isAcc?: boolean
   templateChooserModal?: boolean
+   lastChoosedTemplate?: {id?: number, group?: string,formType?: string, customerType?: string};
 }
 export const initialFormElements: { [key: string]: FormElementState } = {
   foreignCurrency: {

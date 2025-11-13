@@ -22,7 +22,19 @@ export const useCommenPrint = () => {
   // const formState = useAppSelector((state: RootState) => state.AccTransaction) 
   const clientSession = useAppSelector((state: RootState) => state.ClientSession)
 
-  const printVoucher = async (masterID: number, transactionType: string, voucherType: string, formType: string, customerType: string, isInvTrans: boolean = false, printPreview: boolean = false, printTmeplate?: any, transDate?: string, printData?: any, templateId?: number) => {
+  const printVoucher = async (
+  masterID: number,
+  transactionType: string,
+  voucherType: string,
+  formType: string,
+  customerType: string,
+  isInvTrans: boolean = false,
+  printPreview: boolean = false,
+  printTmeplate?: any,
+  transDate?: string,
+  printData?: any,
+  templateId?: number
+): Promise<void> => {
     transDate = transDate ?? (new Date()).toISOString();
     let template;
     debugger;

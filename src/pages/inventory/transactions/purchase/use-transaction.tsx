@@ -1243,17 +1243,19 @@ export const useTransaction = (
             formState.transaction.master.invTransactionMasterID
           );
           if (formState.printOnSave == true && saveMode != "LPO" && saveMode != "LPQ"){
-    // masterID: number,transactionType: string,printTmeplate?:any ,transDate?: string,voucherType?: string,formType?:string,customerType?:string,
-            printVoucher(
+
+          await  printVoucher(
               saveRes?.item?.master?.invTransactionMasterID, // masterID
               transactionType ?? "", // transactionType
               formState.transaction?.master.voucherType ?? "", // voucherType
               formState.transaction?.master?.voucherForm ?? "", // formType
               formState.transaction?.master.customerType ?? "", // customerType
               true, //isInv
-              formState.userConfig?.printPreview, // printPreview
+              formState.userConfig?.printPreview?? false, // printPreview
               undefined, //template
-              formState.transaction?.master.transactionDate ?? "",      
+              formState.transaction?.master.transactionDate ?? "",    
+              undefined,  //tempData   
+              formState?.lastChoosedTemplate?.id //lastChooseTempId
             );
           }
           dispatch(

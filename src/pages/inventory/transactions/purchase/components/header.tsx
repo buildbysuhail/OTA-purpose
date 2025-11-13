@@ -27,7 +27,20 @@ interface HeaderProps extends VoucherElementProps {
   handleRefresh: () => void;
   createNewVoucher: () => void;
   handleEdit: () => void;
-  printVoucher: (masterID: number, transactionType: string, voucherType: string, formType: string, customerType: string, isInvTrans?: boolean, printPreview?: boolean, printTmeplate?: any, transDate?: string | undefined, printData?: any, templateId?: number | undefined ) => void;
+  printVoucher: (
+  masterID: number,
+  transactionType: string,
+  voucherType: string,
+  formType: string,
+  customerType: string,
+  isInvTrans?: boolean,
+  printPreview?: boolean,
+  printTmeplate?: any,
+  transDate?: string,
+  printData?: any,
+  templateId?: number
+) => Promise<void>;
+
   handleClearControls: () => void;
   handleHistoryClick: () => void;
   setIsHistorySidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -306,8 +319,8 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
               <button
                 disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master.invTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
                 className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
-                onClick={() =>
-                  printVoucher(
+                onClick={async() =>
+                  await  printVoucher(
                     formState.transaction?.master.invTransactionMasterID,  // masterID
                     transactionType ?? "",                       // transactionType
                     voucherType ?? "",        // voucherType
@@ -625,8 +638,8 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         <button
                           className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f5f3ff] hover:text-[#6d28d9] dark:hover:bg-[#4c1d954d] dark:hover:text-[#ddd6fe] transition-all duration-200 rounded-md group text-left"
 
-                          onClick={() => {
-                            printVoucher(
+                          onClick={async() => {
+                           await printVoucher(
                               formState.transaction?.master.invTransactionMasterID,  // masterID
                               "GoodsReceipt",                       // transactionType
                               "GRN",        // voucherType
@@ -723,15 +736,15 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                           <button
                             disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master.invTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
                             className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f5f3ff] hover:text-[#6d28d9] dark:hover:bg-[#4c1d954d] dark:hover:text-[#ddd6fe] transition-all duration-200 rounded-md group text-left"
-                            onClick={() =>
-                              printVoucher(
+                            onClick={async() =>
+                            await  printVoucher(
                                 formState.transaction?.master.invTransactionMasterID,  // masterID
                                 transactionType ?? "",                       // transactionType
                                 voucherType ?? "",        // voucherType
                                 formState.transaction?.master?.voucherForm ?? "",           // formType
                                 formState.transaction?.master.customerType ?? "",       // customerType
-                                true,
-                                formState.userConfig?.printPreview ?? false,
+                                true,   //isInv
+                                formState.userConfig?.printPreview ?? false,  // print privew
                                 undefined,                                            // printTmeplate (optional)
                                 formState.transaction?.master.transactionDate ?? ""  //transactinDate
                                 , undefined,  //tempData 

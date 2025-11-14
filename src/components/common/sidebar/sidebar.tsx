@@ -75,26 +75,27 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
       return menuitems;
     }
 
-    const filterItems = (items: any[]): any[] => {
-      return items
-        .map((item) => {
-          const matchingChildren = item.children ? filterItems(item.children) : [];
-          const itemMatches = item.title?.toLowerCase().includes(searchTerm.toLowerCase());
-          const hasMatchingChildren = matchingChildren.length > 0;
+  const filterItems = (items: any[]): any[] => {
+    const result: any[] = [];
+    for (const item of items) {
+      if (item.menutitle !== undefined) {
+        result.push(item);
+        continue;
+      }
+      const matches = item.title?.toLowerCase().includes(searchTerm.toLowerCase());
+      const childMatches = item.children ? filterItems(item.children) : [];
+      if (matches || childMatches.length > 0) {
+        if (childMatches.length > 0) {
+          item.children = childMatches; // preserve same object reference
+        }
+        result.push(item);
+      }
+    }
+    return result;
+  };
 
-          if (itemMatches || hasMatchingChildren) {
-            return {
-              ...item,
-              children: hasMatchingChildren ? matchingChildren : undefined,
-            };
-          }
-          return null;
-        })
-        .filter(Boolean);
-    };
-
-    return filterItems(menuitems);
-  }, [menuitems, searchTerm]);
+  return filterItems(menuitems);
+}, [menuitems, searchTerm]);
   const extractRights = (items: any[]): string[] => {
     return items.flatMap((item) => {
       const rights = item.rights ? [item.rights] : [];
@@ -922,11 +923,37 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
     menuClose();
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLAnchorElement>) => {
+    const focusableSelector =
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+    // Get all visible and focusable elements
+    const focusable = Array.from(
+      document.querySelectorAll<HTMLElement>(focusableSelector)
+    ).filter((el) => el.offsetParent !== null);
+
+    const currentIndex = focusable.indexOf(document.activeElement as HTMLElement);
+
+    if (e.key === "ArrowUp") {
+      e.preventDefault();
+      const prevIndex = (currentIndex - 1 + focusable.length) % focusable.length;
+      focusable[prevIndex]?.focus();
+    } 
+    else if (e.key === "ArrowDown") {
+      e.preventDefault();
+    } 
+    else if (e.key === "Enter") {
+      e.preventDefault();
+      const current = focusable[currentIndex];
+      current?.click();
+    }
+  };
+
   const renderNavItems = useMemo(() => {
     const inputClassName = `w-full px-3 py-1 ${appState.mode === "light" ? "bg-white" : "!bg-gray-800"} border rounded-md ${appState.mode === "light" ? "border-gray-300" : "border-gray-600"} text-xs placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[rgb(${appState.colorPrimaryRgb})] dark:focus:ring-[rgb(${appState.colorPrimaryRgb}/0.5)] focus:border-[rgb(${appState.inputBox.borderFocus})] ${appState.mode === "light" ? "text-gray-800" : "text-gray-200"}`;
     return (
       <Fragment>
-        <div
+        <div 
           id="responsive-overlay"
           onClick={() => {
             menuClose();
@@ -980,6 +1007,18 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     onFocus={(e) => e.target.removeAttribute('readonly')}
                     className={inputClassName}
+                    autoFocus={true}
+                    onKeyDown={(e) => {
+                      if (e.key === "ArrowDown") {
+                        e.preventDefault();
+                        const elmnts = document.getElementsByClassName("first-menu-link-navigate-helper");
+                        if(elmnts && elmnts.length > 0) {
+                          const fdf = elmnts[0] as any;
+                          fdf?.focus(); 
+                        }
+                        
+                      }
+                    }}
                   />
                   {
                     deviceInfo?.isMobile &&
@@ -1040,6 +1079,8 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
                       )}
                       {levelone.type === "link" ? (
                         <Link
+                          tabIndex={0}
+                          onKeyDown={handleKeyDown}
                           to={levelone.path}
                           className={`side-menu__item ${levelone.selected ? "active" : ""
                             }`}
@@ -1090,7 +1131,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
 
                     {levelone.menutitle_lg && levelone.showUserMiniCard && (
                       <li className="slide__category_Detail">
-                        <div className="sm:flex items-start items-center">
+                        <div className="sm:flex items-center">
                           <div>
                             <span className="avatar avatar-md avatar-rounded dark:bg-[#f2f2f28a] ">
                               <img
@@ -1115,7 +1156,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
                     {levelone.menutitle_lg &&
                       levelone.showWorkspaceMiniCard && (
                         <li className="slide__category_Detail">
-                          <div className="sm:flex items-start items-center">
+                          <div className="sm:flex items-center">
                             <div>
                               <span className="avatar avatar-md avatar-badge ">
                                 <ErpAvatar

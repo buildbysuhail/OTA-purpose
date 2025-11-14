@@ -46,13 +46,23 @@ const StockSummary = () => {
         allowSorting: true,
         width: 150,
         showInPdf: true,
-        cellRender: (cellElement: any, cellInfo: any) => {
-          return (
-            <DrillDownCellTemplate
-              data={cellElement}
-              field="product"
-            ></DrillDownCellTemplate>
-          );
+        cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+          if (exportCell !== undefined) {
+            const value = cellElement.data?.product == null ? "0" : cellElement.data.product.toString();
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return (
+              <DrillDownCellTemplate
+                data={cellElement}
+                field="product"
+              />
+            );
+          }
         },
       },
       {
@@ -325,7 +335,7 @@ const StockSummary = () => {
           if (exportCell != undefined) {
             const value =
               cellElement.data?.reOrderQty == null ||
-              cellElement.data?.reOrderQty == 0
+                cellElement.data?.reOrderQty == 0
                 ? ""
                 : cellElement.data.reOrderQty;
             return {

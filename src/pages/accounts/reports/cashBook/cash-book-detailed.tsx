@@ -52,7 +52,7 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
       allowFiltering: true,
       width: 100,
       showInPdf: true,
-     format:"dd-MMM-yyyy"
+      format: "dd-MMM-yyyy"
     },
     {
       dataField: "vchNo",
@@ -61,13 +61,23 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
       allowSearch: true,
       allowFiltering: true,
       showInPdf: true,
-      cellRender: (cellElement: any, cellInfo: any) => {
-        return (
-          <DrillDownCellTemplate
-            data={cellElement}
-            field="vchNo"
-          ></DrillDownCellTemplate>
-        )
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell !== undefined) {
+          const value = cellElement.data?.vchNo == null ? "0" : cellElement.data.vchNo.toString();
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return (
+            <DrillDownCellTemplate
+              data={cellElement}
+              field="vchNo"
+            />
+          );
+        }
       },
     },
     {
@@ -121,8 +131,8 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
         else {
           return (<span
             className={`${cellElement.data.particulars === "TOTAL"
-                ? "font-bold text-[#DC143C]"
-                : ""
+              ? "font-bold text-[#DC143C]"
+              : ""
               }`}
           >
             {cellElement.data.particulars}
@@ -168,15 +178,15 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
         else {
           return (<span
             className={`${cellElement.data.particulars === "TOTAL"
-                ? "font-bold text-[#DC143C] "
-                : ""
+              ? "font-bold text-[#DC143C] "
+              : ""
               }`}
           >
             {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null
-                ? ""
-                : cellElement.data.debit < 0
-                  ? getFormattedValue(-1 * cellElement.data.debit)
-                  : getFormattedValue(cellElement.data.debit)
+              ? ""
+              : cellElement.data.debit < 0
+                ? getFormattedValue(-1 * cellElement.data.debit)
+                : getFormattedValue(cellElement.data.debit)
               } `}
           </span>)
         }
@@ -217,15 +227,15 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
         else {
           return (<span
             className={`${cellElement.data.particulars === "TOTAL"
-                ? "font-bold text-[#DC143C]"
-                : ""
+              ? "font-bold text-[#DC143C]"
+              : ""
               }`}
           >
             {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null
-                ? ""
-                : cellElement.data.credit < 0
-                  ? getFormattedValue(-1 * cellElement.data.credit)
-                  : getFormattedValue(cellElement.data.credit)
+              ? ""
+              : cellElement.data.credit < 0
+                ? getFormattedValue(-1 * cellElement.data.credit)
+                : getFormattedValue(cellElement.data.credit)
               } `}
           </span>)
         }
@@ -267,15 +277,15 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
         else {
           return (<span
             className={`${cellElement.data.particulars === "TOTAL"
-                ? "font-bold text-[#DC143C] "
-                : ""
+              ? "font-bold text-[#DC143C] "
+              : ""
               }`}
           >
             {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null
-                ? ""
-                : cellElement.data.balance < 0
-                  ? getFormattedValue(-1 * cellElement.data.balance)
-                  : getFormattedValue(cellElement.data.balance)
+              ? ""
+              : cellElement.data.balance < 0
+                ? getFormattedValue(-1 * cellElement.data.balance)
+                : getFormattedValue(cellElement.data.balance)
               } ${cellElement.data?.balance == 0 || cellElement.data?.balance == null
                 ? ""
                 : cellElement.data?.balance >= 0

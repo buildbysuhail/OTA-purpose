@@ -35,7 +35,7 @@ const StockLedger = () => {
       allowSorting: true,
       width: 80,
       showInPdf: true,
-      format:"dd-MMM-yyyy"
+      format: "dd-MMM-yyyy"
     },
     {
       dataField: "particulars",
@@ -76,13 +76,23 @@ const StockLedger = () => {
       allowSorting: true,
       width: 80,
       showInPdf: true,
-    cellRender: (cellElement: any, cellInfo: any) => {
-        return (
-          <DrillDownCellTemplate
-            data={cellElement}
-            field="voucherNo"
-          ></DrillDownCellTemplate>
-        );
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell !== undefined) {
+          const value = cellElement.data?.voucherNo == null ? "0" : cellElement.data.voucherNo.toString();
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return (
+            <DrillDownCellTemplate
+              data={cellElement}
+              field="voucherNo"
+            />
+          );
+        }
       },
     },
     {
@@ -114,30 +124,30 @@ const StockLedger = () => {
       allowSorting: true,
       width: 80,
       showInPdf: true,
-     cellRender: (
-          cellElement: any,
-          cellInfo: any,
-          filter: any,
-          exportCell: any
-        ) => {
-          if (exportCell != undefined) {
-            const value =
-              cellElement.data?.balance == null
-                ? ""
-                : getFormattedValue(cellElement.data.balance,false,3);
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
-          } else {
-            return cellElement.data?.balance == null
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.balance == null
               ? ""
-              : getFormattedValue(cellElement.data.balance,false,3);
-          }
-        },
+              : getFormattedValue(cellElement.data.balance, false, 3);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.balance == null
+            ? ""
+            : getFormattedValue(cellElement.data.balance, false, 3);
+        }
       },
+    },
     {
       dataField: "quantity",
       caption: t("qty"),
@@ -147,30 +157,30 @@ const StockLedger = () => {
       allowSorting: true,
       width: 80,
       showInPdf: true,
-     cellRender: (
-          cellElement: any,
-          cellInfo: any,
-          filter: any,
-          exportCell: any
-        ) => {
-          if (exportCell != undefined) {
-            const value =
-              cellElement.data?.quantity == null
-                ? ""
-                : getFormattedValue(cellElement.data.quantity,false,4);
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
-          } else {
-            return cellElement.data?.quantity == null
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.quantity == null
               ? ""
-              : getFormattedValue(cellElement.data.quantity,false,4);
-          }
-        },
+              : getFormattedValue(cellElement.data.quantity, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.quantity == null
+            ? ""
+            : getFormattedValue(cellElement.data.quantity, false, 4);
+        }
       },
+    },
     {
       dataField: "unit",
       caption: t("unit"),
@@ -210,30 +220,30 @@ const StockLedger = () => {
       allowSorting: true,
       width: 65,
       showInPdf: true,
-       cellRender: (
-          cellElement: any,
-          cellInfo: any,
-          filter: any,
-          exportCell: any
-        ) => {
-          if (exportCell != undefined) {
-            const value =
-              cellElement.data?.unitPrice == null
-                ? ""
-                : getFormattedValue(cellElement.data.unitPrice,false,3);
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
-          } else {
-            return cellElement.data?.unitPrice == null
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.unitPrice == null
               ? ""
-              : getFormattedValue(cellElement.data.unitPrice,false,3);
-          }
-        },
+              : getFormattedValue(cellElement.data.unitPrice, false, 3);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.unitPrice == null
+            ? ""
+            : getFormattedValue(cellElement.data.unitPrice, false, 3);
+        }
       },
+    },
     {
       dataField: "createdDate",
       caption: t("created_date"),
@@ -258,10 +268,10 @@ const StockLedger = () => {
       ) {
         return "0";
       }
-      return getFormattedValue(value,false,3) || "0";
+      return getFormattedValue(value, false, 3) || "0";
     };
   }, [getFormattedValue]);
-   const customizeSummaryRow1 = useMemo(() => {
+  const customizeSummaryRow1 = useMemo(() => {
     return (itemInfo: { value: any }) => {
       const value = itemInfo.value;
       if (
@@ -277,7 +287,7 @@ const StockLedger = () => {
   }, [getFormattedValue]);
   const customizeDate = (itemInfo: any) => `Total`;
   const summaryItems: SummaryConfig[] = [
-     {
+    {
       column: "particulars",
       summaryType: "max",
       customizeText: customizeDate,
@@ -315,9 +325,9 @@ const StockLedger = () => {
                   paging: false,
                   sorting: false,
                 }}
-                   filterText="{id > 0 && , of Product : [product]}{warehouseID > 0 && , Warehouse : [warehouse]} Date From : {fromDate} To {toDate}"
+                filterText="{id > 0 && , of Product : [product]}{warehouseID > 0 && , Warehouse : [warehouse]} Date From : {fromDate} To {toDate}"
                 columns={columns}
-                
+
                 gridHeader={t("stock_ledger_report")}
                 dataUrl={Urls.stock_ledger}
                 hideGridAddButton={true}
@@ -330,13 +340,13 @@ const StockLedger = () => {
                 filterInitialData={StockLedgerFilterInitialState}
                 reload={true}
                 gridId="grd_stock_ledger"
-                 childPopupProps={{
-                    content: null,
-                    title: "",
-                    isForm: false,
-                    isTransactionScreen: true,
-                    drillDownCells: "voucherNo,",
-                  }}
+                childPopupProps={{
+                  content: null,
+                  title: "",
+                  isForm: false,
+                  isTransactionScreen: true,
+                  drillDownCells: "voucherNo,",
+                }}
               />
             </div>
           </div>

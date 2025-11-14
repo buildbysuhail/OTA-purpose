@@ -51,13 +51,23 @@ const StockFlowReport = () => {
         allowSorting: true,
         width: 130,
         showInPdf: true,
-        cellRender: (cellElement: any, cellInfo: any) => {
-          return (
-            <DrillDownCellTemplate
-              data={cellElement}
-              field="productName"
-            ></DrillDownCellTemplate>
-          );
+        cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+          if (exportCell !== undefined) {
+            const value = cellElement.data?.productName == null ? "0" : cellElement.data.productName.toString();
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return (
+              <DrillDownCellTemplate
+                data={cellElement}
+                field="productName"
+              />
+            );
+          }
         },
       },
       {

@@ -14,7 +14,7 @@ import NonInvoicedGoodsDeliveryFilter, {
 } from "./non-invloced-goods-deliveryfilter";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
-import {  isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
+import { isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
 
 const NonInvoicedGoodsDelivery = () => {
   const { t } = useTranslation("accountsReport");
@@ -90,13 +90,23 @@ const NonInvoicedGoodsDelivery = () => {
       allowSorting: true,
       width: 100,
       showInPdf: true,
-      cellRender: (cellElement: any, cellInfo: any) => {
-        return (
-          <DrillDownCellTemplate
-            data={cellElement}
-            field="voucherNumber"
-          ></DrillDownCellTemplate>
-        );
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell !== undefined) {
+          const value = cellElement.data?.voucherNumber == null ? "0" : cellElement.data.voucherNumber.toString();
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return (
+            <DrillDownCellTemplate
+              data={cellElement}
+              field="voucherNumber"
+            />
+          );
+        }
       },
     },
     {
@@ -150,10 +160,10 @@ const NonInvoicedGoodsDelivery = () => {
           return cellElement.data?.grandTotal == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.grandTotal),
-                false,
-                4
-              );
+              parseFloat(cellElement.data.grandTotal),
+              false,
+              4
+            );
         }
       },
     },
@@ -180,19 +190,19 @@ const NonInvoicedGoodsDelivery = () => {
       column: "grandTotal",
       summaryType: "sum",
       valueFormat: "currency",
-       customizeText: (itemInfo: { value: any }) => {
-              return (
-                getFormattedValue(
-                  parseFloat(
-                    getFormattedValue(
-                      isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value
-                    ).replace(/,/g, "") || "0"
-                  ),
-                  false,
-                  2
-                ) || "0"
-              );
-            },
+      customizeText: (itemInfo: { value: any }) => {
+        return (
+          getFormattedValue(
+            parseFloat(
+              getFormattedValue(
+                isNullOrUndefinedOrEmpty(itemInfo.value) ? 0 : itemInfo.value
+              ).replace(/,/g, "") || "0"
+            ),
+            false,
+            2
+          ) || "0"
+        );
+      },
     },
   ];
 

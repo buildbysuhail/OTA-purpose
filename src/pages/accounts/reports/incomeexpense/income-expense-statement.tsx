@@ -140,15 +140,23 @@ const IncomExpenseStatement = () => {
       allowSearch: true,
       allowFiltering: true,
       showInPdf: true,
-      cellRender: (cellElement: any, cellInfo: any) => {
-        return cellElement.data.ledgerName !== "" || cellElement.data.ledgerName !== null ? (
-          <DrillDownCellTemplate
-            data={cellElement}
-            field="ledgerName"
-          ></DrillDownCellTemplate>
-        ) : (
-          cellElement.value
-        );
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell !== undefined) {
+          const value = cellElement.data?.ledgerName == null ? "0" : cellElement.data.ledgerName.toString();
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return (
+            <DrillDownCellTemplate
+              data={cellElement}
+              field="ledgerName"
+            />
+          );
+        }
       },
     },
     {
@@ -311,7 +319,7 @@ const IncomExpenseStatement = () => {
                   hideGridAddButton={true}
                   reload={true}
                   childPopupProps={{
-                    content: <CashBookMonthWise/>,
+                    content: <CashBookMonthWise />,
                     title: t("cash_book_monthwise"),
                     isForm: true,
                     width: 1500,

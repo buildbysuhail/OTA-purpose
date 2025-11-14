@@ -1,10 +1,10 @@
 import { FC, Fragment, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ErpDevGrid, {  DrillDownCellTemplate, SummaryConfig,} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { DrillDownCellTemplate, SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
-import PartyWiseReportFilter, {  PartyWiseReportFilterInitialState,} from "./party-wise-report-filter";
+import PartyWiseReportFilter, { PartyWiseReportFilterInitialState, } from "./party-wise-report-filter";
 import moment from "moment";
 
 interface PartyWiseReportProps {
@@ -59,15 +59,25 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({
       allowFiltering: true,
       width: 50,
       showInPdf: true,
-       cellRender: (cellElement: any, cellInfo: any) => {
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell !== undefined) {
+          const value = cellElement.data?.vchNo == null ? "0" : cellElement.data.vchNo.toString();
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
           return (
             <DrillDownCellTemplate
               data={cellElement}
               field="vchNo"
-            ></DrillDownCellTemplate>
+            />
           );
-        },
+        }
       },
+    },
     {
       dataField: "form",
       caption: t("form"),
@@ -190,7 +200,7 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({
       caption: t("ref_date"),
       dataType: "date",
       allowSearch: true,
-      format:'dd-MMM-yyyy',
+      format: 'dd-MMM-yyyy',
       allowFiltering: true,
       width: 100,
       showInPdf: true,
@@ -271,13 +281,13 @@ const PartyWiseReport: FC<PartyWiseReportProps> = ({
                 }}
                 reload={true}
                 gridId={gridId}
-                    childPopupProps={{
-                    content: null,
-                    title: "",
-                    isForm: false,
-                    isTransactionScreen: true,
-                    drillDownCells: "vchNo,",
-                  }}
+                childPopupProps={{
+                  content: null,
+                  title: "",
+                  isForm: false,
+                  isTransactionScreen: true,
+                  drillDownCells: "vchNo,",
+                }}
               />
             </div>
           </div>

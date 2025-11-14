@@ -83,19 +83,28 @@ const IncomeReportDetailed = () => {
     },
     {
       dataField: "vchNo",
-      caption: t("voucherNumber"),
+      caption: t("voucher_no"),
       dataType: "string",
       allowSearch: true,
-      width: 80,
       allowFiltering: true,
       showInPdf: true,
-      cellRender: (cellElement: any, cellInfo: any) => {
-        return (
-          <DrillDownCellTemplate
-            data={cellElement}
-            field="vchNo"
-          ></DrillDownCellTemplate>
-        )
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell !== undefined) {
+          const value = cellElement.data?.vchNo == null ? "0" : cellElement.data.vchNo.toString();
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return (
+            <DrillDownCellTemplate
+              data={cellElement}
+              field="vchNo"
+            />
+          );
+        }
       },
     },
     {

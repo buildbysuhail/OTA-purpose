@@ -89,7 +89,24 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
       allowSearch: true,
       allowFiltering: true,
       showInPdf: true,
-      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement} field="month"></DrillDownCellTemplate>
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell !== undefined) {
+          const value = cellElement.data?.month == null ? "0" : cellElement.data.month.toString();
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return (
+            <DrillDownCellTemplate
+              data={cellElement}
+              field="month"
+            />
+          );
+        }
+      },
     },
     {
       dataField: "debit",
@@ -104,7 +121,7 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
           const balance = cellElement.data?.debit;
           const isDebit = balance >= 0;
           const value =
-            balance == null||balance==0
+            balance == null || balance == 0
               ? ""
               : balance < 0
                 ? getFormattedValue(-1 * balance)
@@ -242,7 +259,7 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
         }
         else {
           return (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-            {`${ cellElement.data?.closingBalance == null ? '' : cellElement.data.closingBalance < 0 ? getFormattedValue(-1 * cellElement.data.closingBalance) : getFormattedValue(cellElement.data.closingBalance)} ${cellElement.data?.closingBalance == 0 || cellElement.data?.closingBalance == null ? '' : cellElement.data?.closingBalance >= 0 ? 'Dr' : 'Cr'}`}
+            {`${cellElement.data?.closingBalance == null ? '' : cellElement.data.closingBalance < 0 ? getFormattedValue(-1 * cellElement.data.closingBalance) : getFormattedValue(cellElement.data.closingBalance)} ${cellElement.data?.closingBalance == 0 || cellElement.data?.closingBalance == null ? '' : cellElement.data?.closingBalance >= 0 ? 'Dr' : 'Cr'}`}
           </span>)
         }
       }

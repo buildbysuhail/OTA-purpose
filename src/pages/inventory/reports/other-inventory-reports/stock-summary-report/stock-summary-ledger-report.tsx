@@ -9,7 +9,7 @@ import { ActionType } from "../../../../../redux/types";
 import { FC, useMemo } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../../redux/urls";
-import {mergeObjectsRemovingIdenticalKeys } from "../../../../../utilities/Utils";
+import { mergeObjectsRemovingIdenticalKeys } from "../../../../../utilities/Utils";
 interface StockSummaryLedgerProps {
   postData?: any;
   groupName?: string;
@@ -85,15 +85,23 @@ const StockSummaryLedgerReport: FC<StockSummaryLedgerProps> = ({
       allowSorting: true,
       width: 80,
       showInPdf: true,
-      cellRender: (cellElement: any, cellInfo: any) => {
-        return cellElement.data.voucherNo == "0" ? (
-          <></>
-        ) : (
-          <DrillDownCellTemplate
-            data={cellElement}
-            field="voucherNo"
-          ></DrillDownCellTemplate>
-        );
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell !== undefined) {
+          const value = cellElement.data?.voucherNo == null ? "0" : cellElement.data.voucherNo.toString();
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return (
+            <DrillDownCellTemplate
+              data={cellElement}
+              field="voucherNo"
+            />
+          );
+        }
       },
     },
     {
@@ -326,11 +334,10 @@ const StockSummaryLedgerReport: FC<StockSummaryLedgerProps> = ({
                   paging: false,
                   sorting: false,
                 }}
-                filterText={`of product: ${
-                  origin == "stockflow"
-                    ? "{**** (productName)}"
-                    : "{**** [(code)]} {**** (product)} : Warehouse : {**** (wareHouse)}"
-                }: Date From :{**** (fromDate)} To {**** (toDate)}`}
+                filterText={`of product: ${origin == "stockflow"
+                  ? "{**** (productName)}"
+                  : "{**** [(code)]} {**** (product)} : Warehouse : {**** (wareHouse)}"
+                  }: Date From :{**** (fromDate)} To {**** (toDate)}`}
                 columns={columns}
                 gridHeader={t("stock_ledger_report")}
                 dataUrl={Urls.stock_ledger}

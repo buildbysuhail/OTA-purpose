@@ -62,15 +62,25 @@ const CreditPurchaseSummaryReport = () => {
       allowFiltering: true,
       width: 100,
       showInPdf: true,
-     cellRender: (cellElement: any, cellInfo: any) => {
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell !== undefined) {
+          const value = cellElement.data?.vchNo == null ? "0" : cellElement.data.vchNo.toString();
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
           return (
             <DrillDownCellTemplate
               data={cellElement}
               field="vchNo"
-            ></DrillDownCellTemplate>
+            />
           );
-        },
+        }
       },
+    },
     {
       dataField: "form",
       caption: t("form"),
@@ -128,10 +138,10 @@ const CreditPurchaseSummaryReport = () => {
             cellElement.data?.gross == null
               ? ""
               : getFormattedValue(
-                  Number.parseFloat(cellElement.data.gross),
-                  false,
-                  4
-                );
+                Number.parseFloat(cellElement.data.gross),
+                false,
+                4
+              );
           return {
             ...exportCell,
             text: value,
@@ -142,10 +152,10 @@ const CreditPurchaseSummaryReport = () => {
           return cellElement.data?.gross == null
             ? ""
             : getFormattedValue(
-                Number.parseFloat(cellElement.data.gross),
-                false,
-                4
-              );
+              Number.parseFloat(cellElement.data.gross),
+              false,
+              4
+            );
         }
       },
     },
@@ -170,10 +180,10 @@ const CreditPurchaseSummaryReport = () => {
             cellElement.data?.disc == null
               ? ""
               : getFormattedValue(
-                  Number.parseFloat(cellElement.data.disc),
-                  false,
-                  4
-                );
+                Number.parseFloat(cellElement.data.disc),
+                false,
+                4
+              );
           return {
             ...exportCell,
             text: value,
@@ -184,10 +194,10 @@ const CreditPurchaseSummaryReport = () => {
           return cellElement.data?.disc == null
             ? ""
             : getFormattedValue(
-                Number.parseFloat(cellElement.data.disc),
-                false,
-                4
-              );
+              Number.parseFloat(cellElement.data.disc),
+              false,
+              4
+            );
         }
       },
     },
@@ -212,10 +222,10 @@ const CreditPurchaseSummaryReport = () => {
             cellElement.data?.billDiscount == null
               ? ""
               : getFormattedValue(
-                  Number.parseFloat(cellElement.data.billDiscount),
-                  false,
-                  2
-                );
+                Number.parseFloat(cellElement.data.billDiscount),
+                false,
+                2
+              );
           return {
             ...exportCell,
             text: value,
@@ -226,10 +236,10 @@ const CreditPurchaseSummaryReport = () => {
           return cellElement.data?.billDiscount == null
             ? ""
             : getFormattedValue(
-                Number.parseFloat(cellElement.data.billDiscount),
-                false,
-                2
-              );
+              Number.parseFloat(cellElement.data.billDiscount),
+              false,
+              2
+            );
         }
       },
     },
@@ -255,10 +265,10 @@ const CreditPurchaseSummaryReport = () => {
             cellElement.data?.vat == null
               ? ""
               : getFormattedValue(
-                  Number.parseFloat(cellElement.data.vat),
-                  false,
-                  4
-                );
+                Number.parseFloat(cellElement.data.vat),
+                false,
+                4
+              );
           return {
             ...exportCell,
             text: value,
@@ -269,10 +279,10 @@ const CreditPurchaseSummaryReport = () => {
           return cellElement.data?.vat == null
             ? ""
             : getFormattedValue(
-                Number.parseFloat(cellElement.data.vat),
-                false,
-                4
-              );
+              Number.parseFloat(cellElement.data.vat),
+              false,
+              4
+            );
         }
       },
     },
@@ -297,10 +307,10 @@ const CreditPurchaseSummaryReport = () => {
             cellElement.data?.grandTotal == null
               ? ""
               : getFormattedValue(
-                  Number.parseFloat(cellElement.data.grandTotal),
-                  false,
-                  4
-                );
+                Number.parseFloat(cellElement.data.grandTotal),
+                false,
+                4
+              );
           return {
             ...exportCell,
             text: value,
@@ -311,10 +321,10 @@ const CreditPurchaseSummaryReport = () => {
           return cellElement.data?.grandTotal == null
             ? ""
             : getFormattedValue(
-                Number.parseFloat(cellElement.data.grandTotal),
-                false,
-                4
-              );
+              Number.parseFloat(cellElement.data.grandTotal),
+              false,
+              4
+            );
         }
       },
     },
@@ -339,10 +349,10 @@ const CreditPurchaseSummaryReport = () => {
             cellElement.data?.cashDiscount == null
               ? ""
               : getFormattedValue(
-                  Number.parseFloat(cellElement.data.cashDiscount),
-                  false,
-                  4
-                );
+                Number.parseFloat(cellElement.data.cashDiscount),
+                false,
+                4
+              );
           return {
             ...exportCell,
             text: value,
@@ -353,10 +363,10 @@ const CreditPurchaseSummaryReport = () => {
           return cellElement.data?.cashDiscount == null
             ? ""
             : getFormattedValue(
-                Number.parseFloat(cellElement.data.cashDiscount),
-                false,
-                4
-              );
+              Number.parseFloat(cellElement.data.cashDiscount),
+              false,
+              4
+            );
         }
       },
     },
@@ -382,10 +392,10 @@ const CreditPurchaseSummaryReport = () => {
             cellElement.data?.adjustmentAmount == null
               ? ""
               : getFormattedValue(
-                  Number.parseFloat(cellElement.data.adjustmentAmount),
-                  false,
-                  4
-                );
+                Number.parseFloat(cellElement.data.adjustmentAmount),
+                false,
+                4
+              );
           return {
             ...exportCell,
             text: value,
@@ -396,10 +406,10 @@ const CreditPurchaseSummaryReport = () => {
           return cellElement.data?.adjustmentAmount == null
             ? ""
             : getFormattedValue(
-                Number.parseFloat(cellElement.data.adjustmentAmount),
-                false,
-                4
-              );
+              Number.parseFloat(cellElement.data.adjustmentAmount),
+              false,
+              4
+            );
         }
       },
     },
@@ -424,10 +434,10 @@ const CreditPurchaseSummaryReport = () => {
             cellElement.data?.cashReceived == null
               ? ""
               : getFormattedValue(
-                  Number.parseFloat(cellElement.data.cashReceived),
-                  false,
-                  4
-                );
+                Number.parseFloat(cellElement.data.cashReceived),
+                false,
+                4
+              );
           return {
             ...exportCell,
             text: value,
@@ -438,10 +448,10 @@ const CreditPurchaseSummaryReport = () => {
           return cellElement.data?.cashReceived == null
             ? ""
             : getFormattedValue(
-                Number.parseFloat(cellElement.data.cashReceived),
-                false,
-                4
-              );
+              Number.parseFloat(cellElement.data.cashReceived),
+              false,
+              4
+            );
         }
       },
     },
@@ -475,10 +485,10 @@ const CreditPurchaseSummaryReport = () => {
             cellElement.data?.exchangeRate == null
               ? ""
               : getFormattedValue(
-                  Number.parseFloat(cellElement.data.exchangeRate),
-                  false,
-                  6
-                );
+                Number.parseFloat(cellElement.data.exchangeRate),
+                false,
+                6
+              );
           return {
             ...exportCell,
             text: value,
@@ -489,10 +499,10 @@ const CreditPurchaseSummaryReport = () => {
           return cellElement.data?.exchangeRate == null
             ? ""
             : getFormattedValue(
-                Number.parseFloat(cellElement.data.exchangeRate),
-                false,
-                6
-              );
+              Number.parseFloat(cellElement.data.exchangeRate),
+              false,
+              6
+            );
         }
       },
     },

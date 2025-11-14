@@ -15,8 +15,8 @@ interface CashBookMonthDayWiseProps {
   groupName?: string;
   contentProps?: any;
   rowData?: any;
-  isMaximized?: boolean; 
-  modalHeight?:any
+  isMaximized?: boolean;
+  modalHeight?: any
 }
 // interface CashBookMonthWiseProps {
 //   postData: any;
@@ -24,10 +24,10 @@ interface CashBookMonthDayWiseProps {
 //   contentProps?: any;
 // }
 
-const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps,rowData,isMaximized,modalHeight }) => {
-// const CashBookDayWise = ({ contentProps, enablefilter = false,}: CashBookMonthDayWiseProps) => {
+const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps, rowData, isMaximized, modalHeight }) => {
+  // const CashBookDayWise = ({ contentProps, enablefilter = false,}: CashBookMonthDayWiseProps) => {
   // 
-  
+
   const dispatch = useAppDispatch();
   const { t } = useTranslation('accountsReport');
   const { getFormattedValue } = useNumberFormat()
@@ -39,10 +39,10 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
   }>({ mobile: 500, windows: 500 });
 
   useEffect(() => {
-    let gridHeightMobile = modalHeight - 50; 
-    let gridHeightWindows = modalHeight - 135; 
+    let gridHeightMobile = modalHeight - 50;
+    let gridHeightWindows = modalHeight - 135;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
-  }, [isMaximized,modalHeight]);
+  }, [isMaximized, modalHeight]);
 
   const columns: DevGridColumn[] = [
     {
@@ -51,9 +51,26 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width:100,
-      showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}  field="transactionDate" ></DrillDownCellTemplate>
+      width: 100,
+      showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell !== undefined) {
+          const value = cellElement.data?.transactionDate == null ? "0" : cellElement.data.transactionDate.toString();
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return (
+            <DrillDownCellTemplate
+              data={cellElement}
+              field="transactionDate"
+            />
+          );
+        }
+      },
     },
     {
       dataField: "ledgerName",
@@ -61,14 +78,14 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
         filter: any,
         exportCell: any
       ) => {
-        
+
         if (exportCell != undefined) {
           const balance = cellElement.data?.balance;
           const isDebit = balance >= 0;
@@ -87,19 +104,20 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
             font: {
               ...exportCell.font,
               // color: isDebit ? "#129151" : "#DC143C",
-               color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:"",
+              color: cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' } : "",
               size: 10,
-              style:cellElement.data.ledgerName === "TOTAL"?'bold':'normal',
-              bold: cellElement.data.ledgerName === "TOTAL"?true:false,
+              style: cellElement.data.ledgerName === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.ledgerName === "TOTAL" ? true : false,
             }
           } : undefined;
         }
         else {
-          return(  <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+          return (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
             {cellElement.data.ledgerName}
           </span>)
-      
-          }}
+
+        }
+      }
     },
     {
       dataField: "debit",
@@ -108,7 +126,7 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.debit;
@@ -127,18 +145,19 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
             textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-              color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              color: cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' } : '',
               size: 10,
-              style:cellElement.data.ledgerName === "TOTAL"?'bold':'normal',
-              bold: cellElement.data.ledgerName === "TOTAL"?true:false,
+              style: cellElement.data.ledgerName === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.ledgerName === "TOTAL" ? true : false,
             },
           };
         }
         else {
-          return ( <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+          return (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
             {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
           </span>)
-          }}
+        }
+      }
     },
     {
       dataField: "credit",
@@ -147,7 +166,7 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.credit;
@@ -166,20 +185,21 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
             alignment: "right",
             textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
             font: {
-              color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              color: cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' } : '',
               ...exportCell.font,
               size: 10,
-              style:cellElement.data.ledgerName === "TOTAL"?'bold':'normal',
-              bold: cellElement.data.ledgerName === "TOTAL"?true:false,
+              style: cellElement.data.ledgerName === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.ledgerName === "TOTAL" ? true : false,
             },
           };
         }
         else {
-          return ( <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+          return (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
             {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
           </span>)
-       
-          }}
+
+        }
+      }
     },
     // {
     //   dataField: "monthBal",
@@ -218,7 +238,7 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
     //       return ( <span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57] ' : cellElement.data.ledgerName == "TOTAL" ? 'pl-4 font-bold text-[#DC143C]' : ''}`}>
     //         {`${cellElement.data?.monthBal == 0 || cellElement.data?.monthBal == null ? '' : cellElement.data.monthBal < 0 ? getFormattedValue(-1 * cellElement.data.monthBal) : getFormattedValue(cellElement.data.monthBal)} ${cellElement.data?.monthBal == 0 || cellElement.data?.monthBal == null ? '' : cellElement.data?.monthBal >= 0 ? 'Dr' : 'Cr'}`}
     //       </span>)
-       
+
     //       }}
     // },
     {
@@ -228,7 +248,7 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
 
     {
@@ -238,7 +258,7 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.closingBalance;
@@ -247,8 +267,8 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
             balance == null
               ? ""
               : balance < 0
-              ? getFormattedValue(-1 * balance) + " Cr"
-              : getFormattedValue(balance) + " Dr";
+                ? getFormattedValue(-1 * balance) + " Cr"
+                : getFormattedValue(balance) + " Dr";
           return {
             ...exportCell,
             text: value,
@@ -256,20 +276,20 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
             alignment: "right",
             textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
             font: {
-              color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              color: cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' } : '',
               ...exportCell.font,
               size: 10,
-              style:cellElement.data.ledgerName === "TOTAL"?'bold':'normal',
-              bold: cellElement.data.ledgerName === "TOTAL"?true:false,
+              style: cellElement.data.ledgerName === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.ledgerName === "TOTAL" ? true : false,
             },
           };
         }
         else {
-          return( <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+          return (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
             {`${cellElement.data?.closingBalance == 0 || cellElement.data?.closingBalance == null ? '' : cellElement.data.closingBalance < 0 ? getFormattedValue(-1 * cellElement.data.closingBalance) : getFormattedValue(cellElement.data.closingBalance)} ${cellElement.data?.closingBalance == 0 || cellElement.data?.closingBalance == null ? '' : cellElement.data?.closingBalance >= 0 ? 'Dr' : 'Cr'}`}
           </span>)
-          }
         }
+      }
     },
   ];
   // const [gridHeight, setGridHeight] = useState<number>(() => {
@@ -305,10 +325,10 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
                   reload={true}
                   rowData={rowData}
                   childPopupProps={{
-                    content: <CashBookDetailed postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps)}}/>,
+                    content: <CashBookDetailed postData={{ ...mergeObjectsRemovingIdenticalKeys(postData, contentProps) }} />,
                     title: t("acc_group_detailed"),
                     isForm: false,
-                    width:1300,
+                    width: 1300,
                     drillDownCells: "transactionDate",
                     bodyProps: "transactionDate",
                   }}

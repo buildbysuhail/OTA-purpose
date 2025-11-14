@@ -2590,7 +2590,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                                     columns={columns}
                                     gridId={gridId}
                                     onApplyPreferences={onApplyPreferences}
-                                  
+
                                   />
                                 </li>
                               )}
@@ -2948,34 +2948,42 @@ const _DrillDownCellTemplate = ({
   data,
   field,
   inputFormat = "DD-MM-YYYY",
+  exportCell,
 }: {
   data: any;
   field: string;
   inputFormat?: string;
+  exportCell?: any;
 }) => {
-  if (
-    data.value !== undefined &&
-    data.value !== null &&
-    data.value !== "" &&
-    data.value !== 0
-  ) {
-    return (
-      <a
-        href="#"
-        style={{ color: "#1976d2", textDecoration: "underline" }}
-        onClick={(e) => {
-          e.preventDefault();
-          // Handle drill-down logic here
-        }}
-      >
-        {data.column.dataType === "date"
-          ? moment(data.data[field], inputFormat).local().format("DD/MMM/YYYY") // Change this format as needed
-          : data.value.toString()}
-      </a>
-    );
+  if (exportCell !== undefined) {
+    const value = data?.data?.[field] == null ? "0" : data.data[field].toString();
+    return {
+      ...exportCell,
+      text: value,
+      alignment: "right",
+      alignmentExcel: { horizontal: "right" },
+    };
   }
-  return <span>{data.value}</span>;
+  const value = data?.value;
+  if (value === undefined || value === null || value === "" || value === 0) {
+    return <span>{value}</span>;
+  }
+  return (
+    <a
+      href="#"
+      style={{ color: "#1976d2", textDecoration: "underline" }}
+      onClick={(e) => {
+        e.preventDefault();
+        // Handle drill-down logic here
+      }}
+    >
+      {data.column.dataType === "date"
+          ? moment(data.data[field], inputFormat).local().format("DD/MMM/YYYY") // Change this format as needed
+        : data.value.toString()}
+    </a>
+  );
 };
+
 
 const DrillDownCellTemplate = React.memo(_DrillDownCellTemplate);
 export default React.memo(ERPDevGrid);

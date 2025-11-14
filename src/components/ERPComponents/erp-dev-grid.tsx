@@ -65,7 +65,7 @@ import {
   formatDateFields,
   isNullOrUndefinedOrEmpty,
   mergeObjectsRemovingIdenticalKeys,
-  formatDate as appFormatDate,
+  formatDateFoHeader,
   sanitizeDataAdvanced,
 } from "../../utilities/Utils";
 import { RootState } from "../../redux/store";
@@ -913,7 +913,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             if (
               innerPlaceholder.toLowerCase().includes("date")
             ) {
-              return appFormatDate(data[innerPlaceholder]);
+              return formatDateFoHeader(data[innerPlaceholder]);
             }
             return data[innerPlaceholder] ?? "";
           }
@@ -942,7 +942,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 ) {
                   // If the placeholder is a date, format it
                   return rowData != undefined
-                    ? appFormatDate(rowData[innerPlaceholder])
+                    ? formatDateFoHeader(rowData[innerPlaceholder])
                     : "";
                 }
                 return rowData != undefined
@@ -969,7 +969,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                   innerPlaceholder.includes("Date")
                 ) {
                   // If the placeholder is a date, format it
-                  return appFormatDate(postData[innerPlaceholder]);
+                  return formatDateFoHeader(postData[innerPlaceholder]);
                 }
                 return postData != undefined
                   ? postData[innerPlaceholder] || ""
@@ -997,7 +997,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                   innerPlaceholder.includes("finTo")
                 ) {
                   // If the placeholder is a date, format it
-                  return appFormatDate(userSession[innerPlaceholder]);
+                  return formatDateFoHeader(userSession[innerPlaceholder]);
                 }
                 return userSession != undefined
                   ? userSession[innerPlaceholder] || ""
@@ -1017,7 +1017,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               // Handle regular placeholders
               if (placeholder.includes("date") || placeholder.includes("Date")) {
                 // If the placeholder is a date, format it
-                return appFormatDate(formState[placeholder]);
+                return formatDateFoHeader(formState[placeholder]);
               }
               return formState[placeholder] || "";
             }

@@ -381,15 +381,15 @@ export const userRights: UserRight[] = [
   
     // Income Report Group
     { id: 10322, headId: 103, name: "TrReports_Income", fullName: "Income Report", formCode: "IcmRpt", treeNode: 3, description: "View Income Report" },
-    { id: 1033201, headId: 10322, name: "TrReports_Income_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Income Report" },
-    { id: 1033202, headId: 10322, name: "TrReports_Income_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Income Report" },
-    { id: 1033203, headId: 10322, name: "TrReports_Income_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Income Report" },
+    { id: 1032201, headId: 10322, name: "TrReports_Income_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Income Report" },
+    { id: 1032202, headId: 10322, name: "TrReports_Income_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Income Report" },
+    { id: 1032203, headId: 10322, name: "TrReports_Income_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Income Report" },
   
     // Daily Summary Report Group
     { id: 10323, headId: 103, name: "TrReports_DailyAccStatement", fullName: "Daily Summary Report", formCode: "DSUMRPT", treeNode: 3, description: "View Daily Summary Report" },
-    { id: 1033301, headId: 10323, name: "TrReports_DailyAccStatement_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Daily Summary Report" },
-    { id: 1033302, headId: 10323, name: "TrReports_DailyAccStatement_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Daily Summary Report" },
-    { id: 1033303, headId: 10323, name: "TrReports_DailyAccStatement_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Daily Summary Report" },
+    { id: 1032301, headId: 10323, name: "TrReports_DailyAccStatement_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Daily Summary Report" },
+    { id: 1032302, headId: 10323, name: "TrReports_DailyAccStatement_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Daily Summary Report" },
+    { id: 1032303, headId: 10323, name: "TrReports_DailyAccStatement_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Daily Summary Report" },
   
     // Profit Report Group
     { id: 10324, headId: 103, name: "TrReports_Profit", fullName: "Profit Report", formCode: "PFTRPT", treeNode: 3, description: "View Profit Report" },
@@ -1473,9 +1473,9 @@ export const userRights: UserRight[] = [
 //#region NOT IN 1050
  // Branch Transfer Out Summary
   { id: 2031210, headId: 20312, name: "BranchTransferOutSummary", fullName: "Branch Transfer Out Summary", formCode: "BTOSRPT", treeNode: 4, description: "Manage Branch Transfer Out Summary" },
-  { id: 203120601, headId: 2031210, name: "BranchTransferOutSummary_Print", fullName: "Print", formCode: "P", treeNode: 5, description: "Branch Transfer Out Summary Print" },
-  { id: 203120602, headId: 2031210, name: "BranchTransferOutSummary_Settings", fullName: "Settings", formCode: "S", treeNode: 5, description: "Branch Transfer Out Summary Settings" },
-  { id: 203120603, headId: 2031210, name: "BranchTransferOutSummary_Export", fullName: "Export", formCode: "X", treeNode: 5, description: "Branch Transfer Out Summary Export" },
+  { id: 203121001, headId: 2031210, name: "BranchTransferOutSummary_Print", fullName: "Print", formCode: "P", treeNode: 5, description: "Branch Transfer Out Summary Print" },
+  { id: 203121002, headId: 2031210, name: "BranchTransferOutSummary_Settings", fullName: "Settings", formCode: "S", treeNode: 5, description: "Branch Transfer Out Summary Settings" },
+  { id: 203121003, headId: 2031210, name: "BranchTransferOutSummary_Export", fullName: "Export", formCode: "X", treeNode: 5, description: "Branch Transfer Out Summary Export" },
   
   // Branch Transfer In Summary
   { id: 2031211, headId: 20312, name: "BranchTransferInSummary", fullName: "Branch Transfer In Summary", formCode: "BTISRPT", treeNode: 4, description: "Manage Branch Transfer In Summary" },

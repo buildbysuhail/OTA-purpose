@@ -8,6 +8,7 @@ import { useMemo, useState } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import { Button } from "@mui/material";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { formatDateFoHeader } from "../../../../../utilities/Utils";
 
 const CounterReport = () => {
   const { t } = useTranslation("accountsReport");
@@ -336,7 +337,7 @@ const CounterReport = () => {
                 // onFilterChanged={(newFilter: any) => setFilter(newFilter)}
                 // gridHeader={t("counter_report")}
                 // filterText="On : {asonDate}"
-                gridHeader={`${t("counter_report")} On: ${asonDate.toLocaleDateString()}`}
+                gridHeader={`${t("counter_report")} On: ${formatDateFoHeader(asonDate.toISOString())}`}
                 // filterText={`On: ${asonDate.toLocaleDateString()}`}
                 dataUrl={Urls.counter_report}
                 hideGridAddButton={true}

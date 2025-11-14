@@ -4,6 +4,8 @@ import ERPDateInput from "../../../../../components/ERPComponents/erp-date-input
 import moment from "moment";
 import Urls from "../../../../../redux/urls";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../../redux/store";
 
 const GroupwiseSalesSummaryFilter = ({
   getFieldProps,
@@ -11,6 +13,7 @@ const GroupwiseSalesSummaryFilter = ({
   formState,
 }: any) => {
   const { t } = useTranslation("accountsReport");
+   const clientSession = useSelector((state: RootState) => state.ClientSession);
   return (
     <div className="grid grid-cols-1 gap-4 overflow-y-hidden overflow-x-hidden">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
@@ -83,6 +86,7 @@ const GroupwiseSalesSummaryFilter = ({
             })
           }}
         />
+           {clientSession.isAppGlobal && (
         <ERPDataCombobox
           label={t("salesman")}
           {...getFieldProps("salesmanID")}
@@ -99,6 +103,7 @@ const GroupwiseSalesSummaryFilter = ({
             })
           }}
         />
+           )}
       </div>
 
       <div className="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-2">

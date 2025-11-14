@@ -61,16 +61,6 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({
       // width: 100,
       showInPdf: true,
       format:'dd-MMM-yyyy',
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        return cellElement.data.date == null || cellElement.data.date == ""
-          ? ""
-          : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY");
-      },
     },
     {
       dataField: "taxCategory",
@@ -319,7 +309,7 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({
                 remoteOperations={{
                   filtering: true,
                   paging: true,
-                  sorting: false,
+                  sorting: true,
                   summary: true,
                 }}
                 columns={columns}

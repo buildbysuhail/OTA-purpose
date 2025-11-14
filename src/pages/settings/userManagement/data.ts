@@ -332,9 +332,9 @@ export const userRightsgcc: UserRight[] = [
   
     // Income Report Group
     { id: 10322, headId: 103, name: "TrReports_Income", fullName: "Income Report", formCode: "IcmRpt", treeNode: 3, description: "View Income Report" },
-    { id: 1033201, headId: 10322, name: "TrReports_Income_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Income Report" },
-    { id: 1033202, headId: 10322, name: "TrReports_Income_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Income Report" },
-    { id: 1033203, headId: 10322, name: "TrReports_Income_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Income Report" },
+    { id: 1032201, headId: 10322, name: "TrReports_Income_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Income Report" },
+    { id: 1032202, headId: 10322, name: "TrReports_Income_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Income Report" },
+    { id: 1032203, headId: 10322, name: "TrReports_Income_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Income Report" },
   
     // Daily Summary Report Group
     { id: 10323, headId: 103, name: "TrReports_DailyAccStatement", fullName: "Daily Summary Report", formCode: "DSUMRPT", treeNode: 3, description: "View Daily Summary Report" },

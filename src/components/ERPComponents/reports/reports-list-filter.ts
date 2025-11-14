@@ -88,6 +88,7 @@ export const getFilteredReports = (
       "daily_summary_report___",
 
       "sales_return_estimate_register",
+      "salesmanwise_sales_summary_report",
 
       "purchase_estimate_register_report",
       "purchase_return_estimate_register_report",

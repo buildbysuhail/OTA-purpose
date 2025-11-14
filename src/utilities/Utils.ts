@@ -34,6 +34,22 @@ export const formatDate = (dateStr: string): string => {
   return str;
 };
 
+export const formatDateFoHeader = (dateStr: string): string => {
+  const format = identifyDateFormat(dateStr);
+  let date;
+
+  // Explicit handling for ISO 8601
+  if (format == "Unknown format") {
+    date = moment(dateStr).local();
+  } else if (format === "ISO 8601") {
+    date = moment(dateStr).local(); // ISO 8601 is natively supported
+  } else {
+    date = moment(dateStr, format).local();
+  }
+  const str = date.format("DD/MMM/YYYY");
+  return str;
+};
+
 /**
  * Formats all date-related fields in an object to "YYYY-MM-DD".
  *

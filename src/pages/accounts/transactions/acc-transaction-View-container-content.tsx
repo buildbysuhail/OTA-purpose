@@ -1,5 +1,5 @@
 import React, { act, useEffect, useRef, useState } from "react";
-import { useSearchParams, useParams } from "react-router-dom";
+import { useSearchParams, useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useTemplateDesigner } from "../../InvoiceDesigner/LandingFolder/useTemplateDesigner"
 import { Box, Paper, } from "@mui/material";
@@ -11,7 +11,10 @@ import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../redux/store";
 import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
 import { fetchTemplateById } from "../../use-print";
-
+import { TransactionBase, transactionRoutes } from "../../../components/common/content/transaction-routes";
+import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
+import { APIClient } from "../../../helpers/api-client";
+import urls from "../../../redux/urls";
 
 export interface TransactionViewProps {
   voucherType?: string;
@@ -32,6 +35,10 @@ export interface TransactionViewProps {
 const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (props) => {
   const [searchParams] = useSearchParams();
   const { voucherNo: voucherNoParam } = useParams<{ voucherNo: string }>();
+  const navigate = useNavigate();
+  // const formState = useAppSelector(
+  //   (state: RootState) => state.AccTransaction
+  // );
   const { searchQuery } = useSearch();
   const { t } = useTranslation("transaction");
   const { printVoucher, } = useCommenPrint();
@@ -49,7 +56,7 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
     transactionType: props.transactionType,
     
   })
-  
+
   const [activeTemplate, setActiveTemplate] =
   useState<TemplateState<unknown> | null>(null);
 
@@ -59,7 +66,6 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
     setActiveTemplate(stableTemplateProps.template);
   }
 }, [stableTemplateProps?.template, activeTemplate]);
-
 
   useEffect(() => {
   const newId = lastChooseTemp?.id ?? null;
@@ -89,6 +95,135 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
   }
 
 }, [lastChooseTemp]);
+
+//   const handleEditClick = () => {
+    
+//   const master = stableTemplateProps?.data?.master;
+//   if (!master) return;
+
+//   const transactionMasterID = master.accTransactionMasterID || 0;
+//   const vchtype = master.voucherType;
+//   const voucherform = master.formType;
+//   const prefix = master.voucherPrefix;
+//   const vchno = master.voucherNumber;
+//   const financialYearID = master.financialYearID || 0;
+
+//   const tr = transactionRoutes.find(
+//     (x: any) => x.voucherType === vchtype
+//   );
+
+//   let transactionData: any = {};
+//   if (parseInt(vchno, 10) > 0) {
+//     transactionData = {
+//       transactionMasterID,
+//       formType: voucherform,
+//       voucherPrefix: prefix,
+//       voucherType: vchtype,
+//       financialYearID,
+//       voucherNo: parseInt(vchno, 10),
+//       formCode: tr?.formCode,
+//       transactionType: tr?.transactionType,
+//       transactionBase: tr?.transactionBase,
+//       title: tr?.title,
+//       drCr: tr?.drCr,
+//     };
+//   }
+
+//   const url = new URL(
+//     // `${window.location.origin}/${TransactionBase.Accounts}/${props.transactionType}`
+//     `${window.location.origin}/${TransactionBase.Purchase}/${props.transactionType}`
+//   );
+
+//   Object.entries(transactionData).forEach(([key, value]) => {
+//     url.searchParams.append(key, String(value));
+//   });
+
+//   const path = url.pathname + url.search;
+//   navigate(path);
+// };
+ const handleEditClick = () => {
+    const master = stableTemplateProps?.data?.master;
+    if (!master) return;
+
+    const transactionMasterID = props.isInvTrans
+      ? master.invTransactionMasterID || 0
+      : master.accTransactionMasterID || 0;
+    const vchtype = master.voucherType;
+    const voucherform = master.formType || "";
+    const prefix = master.voucherPrefix || "";
+    const vchno = master.voucherNumber;
+    const financialYearID = master.financialYearID || 0;
+
+    const tr = transactionRoutes.find((x: any) => x.voucherType === vchtype);
+
+    let transactionData: any = {};
+    if (parseInt(vchno, 10) > 0) {
+      transactionData = {
+        transactionMasterID,
+        formType: voucherform,
+        voucherPrefix: prefix,
+        voucherType: vchtype,
+        financialYearID,
+        voucherNo: parseInt(vchno, 10),
+        formCode: tr?.formCode,
+        transactionType: tr?.transactionType,
+        transactionBase: tr?.transactionBase,
+        title: tr?.title,
+        drCr: tr?.drCr,
+      };
+    }
+
+    const url = new URL(
+      `${window.location.origin}/${transactionData.transactionBase}/${transactionData.transactionType}`
+    );
+
+    Object.entries(transactionData).forEach(([key, value]) => {
+      if (value !== null && value !== undefined) {
+        url.searchParams.append(key, String(value));
+      }
+    });
+
+    if (formState?.userConfig?.editInNewTab) {
+      window.open(url.toString(), "_blank");
+    } else {
+      const path = url.pathname + url.search;
+      navigate(path);
+    }
+  };
+
+  // const handleDeleteClick = async () => {
+  //   const master = stableTemplateProps?.data?.master;
+  //   if (!master) return;
+
+  //   const confirmed = await ERPAlert.show({
+  //     title: t("deleting_transaction_question"),
+  //     text: t("once_deleting_this_transaction_cannot_be_recovered"), // Corrected typo here
+  //     icon: "question",
+  //     showCancelButton: true,
+  //     confirmButtonText: t("yes"),
+  //     cancelButtonText: t("no"),
+  //   });
+
+  //   if (confirmed) {
+  //     const apiClient = new APIClient();
+  //     try {
+  //       const response = await apiClient.delete(
+  //         `${urls.acc_transaction_base}${props.transactionType}/`, {
+  //           data: {
+  //             accTransactionMasterID: master.accTransactionMasterID,
+  //             transactionType: props.transactionType,
+  //           },
+  //         }
+  //       );
+  //       if (response.isOk) {
+  //         navigate(-1); // Go back to the previous page
+  //       }
+  //     } catch (error) {
+  //       console.error("Failed to delete transaction", error);
+  //     }
+  //   }
+  // };
+
   return (
     <>
       <Box
@@ -117,6 +252,7 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
               className="h-8 px-3 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded inline-flex items-center gap-1.5 transition-all duration-200"
               title="Edit"
               aria-label="Edit"
+              onClick={handleEditClick}
             >
               <Pencil className="w-4 h-4" />
             </button>
@@ -172,6 +308,7 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
               className="h-8 px-3 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded inline-flex items-center gap-1.5 transition-all duration-200"
               title="Delete"
               aria-label="Delete"
+              // onClick={handleDeleteClick}
             >
               <Trash2 className="w-4 h-4" />
             </button>

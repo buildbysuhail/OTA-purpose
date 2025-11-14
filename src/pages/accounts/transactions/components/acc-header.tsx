@@ -106,7 +106,7 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
     }, []);
     const selectTemplates = useCallback(async () => {
       dispatch(
-        toggleTemplateChooserModal({ isOpen: true, templateGroup: formState.transaction.master?.voucherType, customerType: formState.transaction.master?.customerType, formType: formState.transaction.master?.formType })
+        toggleTemplateChooserModal({ isOpen: true, templateGroup: formState.transaction.master?.voucherType, customerType: formState.transaction.master?.customerType, formType: formState.transaction.master?.formType,isInv:false })
       );
     }, [formState.transaction.master?.voucherType]);
     const handleFieldChange = (field: keyof AccUserConfig, value: any) => {

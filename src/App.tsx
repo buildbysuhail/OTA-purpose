@@ -51,6 +51,8 @@ import UnsavedChangesModal from "./pages/accounts/transactions/unsavedChangesMod
 import { setSoftwareDate } from "./redux/slices/client-session/reducer";
 import ERPResizableSidebar from "./components/ERPComponents/erp-resizable-sidebar";
 import TemplatesView from "./pages/transaction-base/template_picker";
+import { formStateHandleFieldChange } from "./pages/inventory/transactions/reducer";
+import { accFormStateHandleFieldChange } from "./pages/accounts/transactions/reducer";
 // ====
 // import ERPModal from "./components/ERPComponents/erp-modal";
 // import 'devextreme/dist/css/dx.dark.css';  
@@ -376,6 +378,12 @@ function App() {
               voucherType={popupData.TemplateChooserModal?.templateGroup ?? ""}
               formType={popupData.TemplateChooserModal?.formType ?? ""}
               customerType={popupData.TemplateChooserModal?.customerType ?? ''}
+              onTemplateChoosed={(template: any) => {
+                popupData.TemplateChooserModal?.isInv?
+                  dispatch(formStateHandleFieldChange({fields:{lastChoosedTemplate: template}}))
+                  :
+                  dispatch(accFormStateHandleFieldChange({fields:{lastChoosedTemplate: template}}))
+               }} 
               setIsOpen={() =>
                 dispatch(
                   toggleTemplateChooserModal({ isOpen: false, templateGroup: "", customerType: "", formType: "" })

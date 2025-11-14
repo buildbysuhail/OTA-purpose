@@ -2,7 +2,7 @@ import SharedPrvTable from "./Table_Prv";
 import ShardPrevHeader from "./Header_Prv";
 import SharedPrvFooter from "./Footer_Prv";
 import { TemplateState } from "../../Designer/interfaces";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useImperativeHandle } from "react";
 import { PrintResponse } from "../../../use-print-type";
 import { ChevronDown, Edit3, RefreshCw, Settings } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
@@ -18,12 +18,18 @@ export interface AccountTransactionProps {
   qrCodeImages?: { [key: string]: string };
   AmountToEnglish?: any;
   AmountToArabic?: any;
+  isTemplateDesigner:boolean
+  isInvTrans?: boolean;
 }
-
+export type TemplateChangeHandler = {
+  openTemplateChooser:()=>{}
+};
 const SharedTemplatePreview = ({
   data,
   template,
   qrCodeImages = {},
+  isTemplateDesigner = true,
+  isInvTrans
 }: AccountTransactionProps) => {
   const headerState = template?.headerState;
   const propertiesState = template?.propertiesState;
@@ -96,6 +102,7 @@ const SharedTemplatePreview = ({
           <SharedPrvTable data={data?.details ?? []} template={template} />
         </div>
         {/* Hoverable Customize Button */}
+        {!isTemplateDesigner&&(
         <div className="absolute top-0 right-0 rounded-bl-md shadow-md overflow-hidden opacity-0 z-[39] group-hover:opacity-100 transition-opacity duration-300">
           <button
             ref={buttonRef}
@@ -110,6 +117,8 @@ const SharedTemplatePreview = ({
             </div>
           </button>
         </div>
+        )}
+
         {isPopupOpen && (
           <div
             ref={popupRef}
@@ -130,7 +139,7 @@ const SharedTemplatePreview = ({
                   onClick={() => {
                     debugger;
                     dispatch(
-                      toggleTemplateChooserModal({ isOpen: true, templateGroup: template?.templateGroup, customerType: template?.customerType, formType: template?.formType })
+                      toggleTemplateChooserModal({ isOpen: true, templateGroup: template?.templateGroup, customerType: template?.customerType, formType: template?.formType ,isInv:isInvTrans})
                     );
                   }}>
                   <RefreshCw className="w-4 h-4 text-gray-500" />

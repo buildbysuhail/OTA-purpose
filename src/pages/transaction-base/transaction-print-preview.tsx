@@ -52,6 +52,7 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
       isInvTrans: isInvTrans,
       MasterIDParam: printPreviwPopupInfo.masterId??0,
       transactionType: transactionType,
+      
     });
 
     useEffect(() => {
@@ -83,8 +84,8 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
       },
       openTemplateChooser:()=>  
         dispatch(
-                   toggleTemplateChooserModal({ isOpen: true, templateGroup: formState.transaction.master?.voucherType, customerType: formState.transaction.master?.customerType, formType: formState.transaction.master?.voucherForm})
-                 )
+                toggleTemplateChooserModal({ isOpen: true, templateGroup: formState.transaction.master?.voucherType, customerType: formState.transaction.master?.customerType, formType: formState.transaction.master?.voucherForm})
+              )
     }));
 
     if (loading) {
@@ -110,6 +111,8 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
                 template={activeTemplate}
                 data={stableTemplateProps?.data}
                 qrCodeImages={stableTemplateProps?.qrCodeImages}
+                isTemplateDesigner={false}
+                isInvTrans={isInvTrans}
               />
             </div>
           </div>

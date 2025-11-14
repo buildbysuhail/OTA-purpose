@@ -15,6 +15,7 @@ export interface popupDataProps {
   templateGroup?: string
   customerType?: string
   formType?: string
+  isInv?:any
 }
 interface popupData {
   printJobLoader: { isPrinting: boolean }
@@ -88,7 +89,7 @@ interface popupData {
   TemplateChooserModal: popupDataProps;
 }
 const initialState: popupData = {
-  IsPrintPreviewPopup: { isOpen: false, },
+  IsPrintPreviewPopup: { isOpen: false, templateGroup:"",formState:"",customerType:""},
   printerList: { isOpen: false, template: null, data: null, formState: null },
   CustomDesignerPopup: { isOpen: false, key: null, reload: false, mode: "edit", },
   onCloseWithUnsavedChange: { warn: false, succeeded: false, canceled: false },
@@ -156,7 +157,7 @@ const initialState: popupData = {
   products: { isOpen: false, key: null, mode: "edit", reload: true },
   productSummaryReport: { isOpen: false, key: null, mode: "edit", reload: true },
   GrnNumber: { isOpen: false, key: null, mode: "edit", reload: true },
-  TemplateChooserModal: { isOpen: false, key: null, mode: "edit", reload: true },
+  TemplateChooserModal: { isOpen: false,},
 };
 
 const popupDataSlice = createSlice({

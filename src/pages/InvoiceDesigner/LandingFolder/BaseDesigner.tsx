@@ -151,6 +151,7 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
                         template={stableTemplateProps?.template}
                         data={stableTemplateProps?.data}
                         qrCodeImages={stableTemplateProps?.qrCodeImages}
+                        isTemplateDesigner={true}
                       />
                     </div>
                   )}

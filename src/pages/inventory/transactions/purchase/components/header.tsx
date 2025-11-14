@@ -128,7 +128,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
     };
     const selectTemplates = () => {
       dispatch(
-        toggleTemplateChooserModal({ isOpen: true, templateGroup: formState.transaction.master?.voucherType, customerType: formState.transaction.master?.customerType, formType: formState.transaction.master?.voucherForm })
+        toggleTemplateChooserModal({ isOpen: true, templateGroup: formState.transaction.master?.voucherType, customerType: formState.transaction.master?.customerType, formType: formState.transaction.master?.voucherForm,isInv:true})
       );
     }
     const openMenuPopup = () => {

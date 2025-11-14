@@ -59,14 +59,25 @@ enum VoucherType {
 
 export default VoucherType;
 
-export const purchaseVoucherTypes=[
+export const purchaseVoucherTypes = [
   VoucherType.GoodsReceiptNote,
   VoucherType.LPO,
-  VoucherType.PurchaseInvoice,VoucherType.PurchaseOrder,VoucherType.PurchaseQuotation,VoucherType.PurchaseEstimate,VoucherType.PurchaseReturn,VoucherType.PurchaseReturnEstimate,VoucherType.PurchaseOrderTransist
+  VoucherType.PurchaseInvoice,
+  VoucherType.PurchaseOrder,
+  VoucherType.PurchaseQuotation,
+  VoucherType.PurchaseEstimate,
+  VoucherType.PurchaseReturn,
+  VoucherType.PurchaseReturnEstimate,
+  VoucherType.PurchaseOrderTransist
 ]
-export const salesVoucherTypes=[
-  VoucherType.SalesInvoice,VoucherType.SalesOrder,VoucherType.SalesQuotation,VoucherType.SalesEstimate,VoucherType.SalesReturn,VoucherType.SaleReturnEstimate
+export const salesVoucherTypes = [
+  VoucherType.SalesInvoice,
+  VoucherType.SalesOrder,
+  VoucherType.SalesQuotation,
+  VoucherType.SalesEstimate,
+  VoucherType.SalesReturn,
+  VoucherType.SaleReturnEstimate
 ]
-export const accountsVoucherTypes=[
+export const accountsVoucherTypes = [
   VoucherType.CashPayment
 ]

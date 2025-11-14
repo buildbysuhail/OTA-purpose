@@ -1,4 +1,4 @@
-import config from "../config";
+import config from "../../public/config.json";
 
 export const domain = config.api.APP_API_URL;
 export const signupUrl = import.meta.env.VITE_SIGNUP;

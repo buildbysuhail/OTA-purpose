@@ -77,6 +77,11 @@ const TransactionGrid: React.FC<{
     loadUserConfig();
   }, []);
 
+  useEffect (()=>{
+    console.log("tg s : ",formState?.userConfig?.editInNewTab);
+    
+  })
+
   const [reload, setReload] = useState<boolean>(true);
   const columns: DevGridColumn[] = useMemo(
     () => [
@@ -725,7 +730,7 @@ const TransactionGrid: React.FC<{
         },
       },
     ],
-    [t, dispatch]
+    [t, dispatch , formState.userConfig?.editInNewTab]
   );
   useEffect(() => {
     setReload(true);

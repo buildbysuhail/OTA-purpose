@@ -13,12 +13,13 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSearch } from "./search-context.tsx";
 import { erpParseFloat } from "../../../utilities/Utils";
 import { RootState } from "../../../redux/store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getStorageString } from "../../../utilities/storage-utils";
 import { UserConfig } from "../../inventory/transactions/transaction-types";
 import { customJsonParse, safeBase64Decode } from "../../../utilities/jsonConverter";
 import { fetchUserConfig } from "../../inventory/transactions/transaction-utils";
-import { formStateHandleFieldChangeKeysOnly } from "../../inventory/transactions/reducer";
+import { formStateHandleFieldChangeKeysOnly } from "./reducer";
+// import { formStateHandleFieldChangeKeysOnly } from "../../inventory/transactions/reducer";
 
 const toggleTransactionPopup = (payload: {
   isOpen: boolean;
@@ -51,13 +52,13 @@ const AccTransactionGrid: React.FC<{voucherType?: string
   // onSearch,
 }) => {
   // const dispatch = useAppDispatch();
-    const dispatch = useAppDispatch();
+    const dispatch = useDispatch();
        const formState = useAppSelector((state: RootState) => state.AccTransaction);
       // console.log(" atg mjjjjjjjjj22222:", formState?.userConfig?.editInNewTab);
       const navigate = useNavigate();
 
       useEffect (()=>{
-        console.log("test mj233:", formState?.userConfig?.editInNewTab);
+        console.log("acr test mj233:", formState?.userConfig?.editInNewTab);
         
       })
 
@@ -410,6 +411,7 @@ const AccTransactionGrid: React.FC<{voucherType?: string
     
                   // Open the URL in a new tab
                   //  window.open(url.toString(), formState?.userConfig?.editInNewTab ? "_blank" : "_self");
+                  //  console.log("g insisde acr test mj233:", formState?.userConfig?.editInNewTab);
                   if(formState?.userConfig?.editInNewTab) {
                   window.open(url.toString(), "_blank");
                 } else {
@@ -433,7 +435,7 @@ const AccTransactionGrid: React.FC<{voucherType?: string
         },
       },
     ],
-    [t, dispatch]
+    [t, dispatch, formState.userConfig?.editInNewTab]
   );
   useEffect(() => {
     setReload(true);
@@ -500,6 +502,8 @@ const AccTransactionGrid: React.FC<{voucherType?: string
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="px-4 pt-4 pb-2">
             <div className="grid grid-cols-1 gap-3">
+              {/* safvan
+              {formState?.userConfig?.editInNewTab?.toString()} */}
               <ERPDevGrid
                 gridAddButtonType={"link"}
                 // allowGrouping={true}

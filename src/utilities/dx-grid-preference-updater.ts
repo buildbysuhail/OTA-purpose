@@ -40,6 +40,7 @@ export function applyGridColumnPreferences(
         displayOrder: preference.displayOrder,
         showInPdf: preference.showInPdf,
         allowEditing: column.allowEditing ?? false,
+        pdfWidth : preference.pdfWidth,
         // Apply other preferences as needed
       };
     }
@@ -81,6 +82,7 @@ export function getDefaultColumnPreference(
     readOnly: column.readOnly ?? false,
     allowEditing: column.allowEditing ?? false,
     decimalPoint: column.decimalPoint,
+    pdfWidth: column.pdfWidth,
   };
 }
 export const getInitialPreference = async (

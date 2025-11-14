@@ -28,6 +28,7 @@ export interface DevGridColumn {
     isLocked?: boolean | false;
     fixedPosition?: 'left' | 'right';
     width?: number;
+    pdfWidth?: number;
     Actionswidth?: number;
     alignment?: "center" | "left" | "right";
     showInPdf?: boolean | false;
@@ -50,6 +51,7 @@ export interface DevGridColumn {
     cellRender?: (cellElement: any, cellInfo: any, filter?: any, pdfCell?: any) => any;
     cellRenderDynamic?: (cellElement: any, cellInfo: any, filter?: any, pdfCell?: any) => React.ReactNode;
     cellRenderDynamicRootState?: (cellElement: any, cellInfo: any, state?: any) => React.ReactNode;
+    calculateGroupValue?: (rowData: any) => any;
   }
   const initialColumnPreference: ColumnPreference = {
     dataField: '',
@@ -67,7 +69,8 @@ export interface DevGridColumn {
     showInPdf: true, // number: font size
     displayOrder: 1, // number: the order in which the column appears
     groupIndex: 0,
-    allowEditing: false
+    allowEditing: false, 
+    pdfWidth: 150,
   };
   export interface Preferences {
     [dataField: string]: ColumnPreference;
@@ -92,7 +95,8 @@ export interface DevGridColumn {
     decimalPoint?: number;
     groupIndex?:any
     order?:number
-    type?:string
+    type?:string;
+    pdfWidth?: number;
   }
   export interface  GridPreference {
     font: string;

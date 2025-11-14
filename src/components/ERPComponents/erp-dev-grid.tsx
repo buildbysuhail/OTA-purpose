@@ -1148,10 +1148,10 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       const pdfColumnsWidths = preferences
         ? preferences.columnPreferences
           .filter((colPref) => colPref.showInPdf)
-          .map((colPref) => colPref.width || 0)
+          .map((colPref) => colPref.pdfWidth || colPref.width || 0)
         : gridCols
           .filter((col) => col.showInPdf)
-          .map((col) => col.width || 100);
+          .map((col) => col.pdfWidth || col.width || 100);
 
       if (columnsWithoutWidth.length > 0) {
         const specifiedWidthTotal = pdfColumnsWidths
@@ -2784,6 +2784,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               <Column
                 buttons={column?.buttons}
                 customizeText={column.customizeText}
+                calculateGroupValue={column.calculateGroupValue}
                 editorOptions={column.editorOptions}
                 validationRules={column.validationRules}
                 allowEditing={column.allowEditing || false}

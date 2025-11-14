@@ -110,6 +110,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
     showInPdf: column.showInPdf || false,
     groupIndex: undefined,
     allowEditing: column.allowEditing ?? true,
+    pdfWidth: column.pdfWidth || 100,
   });
 
   const handlePreferenceChange = (key: string, value: any) => {
@@ -261,11 +262,12 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
               prefix={<MagnifyingGlassIcon className="w-4 h-4" />}
             />
             <div className="grid-preference-form">
-              <div className="header-row dark:bg-dark-bg-header dark:text-dark-text bg-gray-100 px-4 py-2 font-bold text-sm grid grid-cols-5 gap-2 items-center">
+              <div className="header-row dark:bg-dark-bg-header dark:text-dark-text bg-gray-100 px-4 py-2 font-bold text-sm grid grid-cols-6 gap-2 items-center">
                 <span className="col-span-2">{t("column")}</span>
                 <span>{t("width")}</span>
                 <span>{t("read_only")}</span>
                 <span>{t("pdf")}</span>
+                <span>{t("pdf-width")}</span>
               </div>
               {preferences.columnPreferences.length}
               {preferences &&
@@ -284,7 +286,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
                         onDragStart={handleDragStart}
                         onDragEnter={handleDragEnd}
                         onDragEnd={() => handleDropping(false)}>
-                        <div className="dark:bg-dark-bg-header dark:text-dark-text bg-[#F9F9FB] w-full px-1 rounded grid grid-cols-5 !items-center pl-4">
+                        <div className="dark:bg-dark-bg-header dark:text-dark-text bg-[#F9F9FB] w-full px-1 rounded grid grid-cols-6 !items-center pl-4">
                           <label className="col-span-2 items-center py-1 capitalize text-sm dark:text-dark-text text-slate-800 cursor-move">
                             ⋮⋮
                             {column?.isLocked ? (
@@ -328,6 +330,14 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
                             checked={column.showInPdf}
                             onChange={(e) => handleColumnPreferenceChange(column.dataField, "showInPdf", e.target.checked)}
                             disabled={column.isLocked}
+                          />
+                          <input
+                            type="number"
+                            value={column.pdfWidth || ""}
+                            onFocus={(e) => e.target.select()}
+                            onChange={(e) => handleColumnPreferenceChange(column.dataField, "pdfWidth", Math.max(0, parseInt(e.target.value)) || 100 )}
+                            disabled={column.isLocked}
+                            className="dark:bg-dark-bg-card border dark:border-dark-border rounded p-1 w-16 mh-[27px]"
                           />
                         </div>
                       </div>

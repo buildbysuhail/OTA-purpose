@@ -2,11 +2,10 @@ import React from "react";
 import "devextreme/dist/css/dx.light.css";
 import { Fragment, Suspense, useEffect, useState } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
-import { BrowserRouter as Router, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import store, { RootState } from "./redux/store";
 import moment from "moment";
-import { de } from "date-fns/locale";
 
 // Components / Pages (lazy-loaded)
 const Layout = React.lazy(() => import("./components/common/layout/layout"));
@@ -28,14 +27,10 @@ const Switcher = React.lazy(() => import("./components/common/switcher/switcher"
 const Loader = React.lazy(() => import("./components/common/loader/loader"));
 
 // Redux / Utilities / Helpers / Hooks (regular imports)
-import { initialUserSessionData, UserModel } from "./redux/slices/user-session/reducer";
-import { customJsonParse, modelToBase64 } from "./utilities/jsonConverter";
+import { modelToBase64 } from "./utilities/jsonConverter";
 import { syncAppStates } from "./pages/auth/syncSettings";
-import { AppState, languagesData } from "./redux/slices/app/types";
 import { setDeviceInfo } from "./redux/slices/device/reducer";
-import { onCloseWithUnsavedChange, toggleSelectPrinterPopup } from "./redux/slices/popup-reducer";
-import { appInitialState } from "./redux/slices/app/reducer";
-import { UserTypeRights } from "./redux/slices/user-rights/reducer";
+import { onCloseWithUnsavedChange, toggleSelectPrinterPopup, toggleTemplateChooserModal } from "./redux/slices/popup-reducer";
 import Urls from "./redux/urls";
 import { setApplicationSettings } from "./redux/slices/app/application-settings-reducer";
 import AutoClicker from "./Nodevwatermark";
@@ -43,7 +38,7 @@ import { useAppState } from "./utilities/hooks/useAppState";
 import { getUserSessionData } from "./session-data";
 import { useRootState } from "./utilities/hooks/useRootState";
 import { AccessPrinterList } from "./pages/InvoiceDesigner/utils/get_printers";
-import { getStorageString, setStorageString } from "./utilities/storage-utils";
+import { getStorageString } from "./utilities/storage-utils";
 import { setLightStatusBar } from "./Android/lib/statusBar";
 import { registerPush } from "./Android/lib/push";
 import { Device } from "@capacitor/device";
@@ -54,6 +49,8 @@ import { useTranslation } from "react-i18next";
 import { useUnsavedChangesWarning } from "./pages/use-unsaved-changes-warning";
 import UnsavedChangesModal from "./pages/accounts/transactions/unsavedChangesModal";
 import { setSoftwareDate } from "./redux/slices/client-session/reducer";
+import ERPResizableSidebar from "./components/ERPComponents/erp-resizable-sidebar";
+import TemplatesView from "./pages/transaction-base/template_picker";
 // ====
 // import ERPModal from "./components/ERPComponents/erp-modal";
 // import 'devextreme/dist/css/dx.dark.css';  
@@ -66,36 +63,36 @@ export const LoadingAnimation = () => {
   );
 };
 
- 
-function App() {
-   const [isOnline, setIsOnline] = useState(navigator.onLine);
-   const location = useLocation();
 
-    useEffect(() => {
+function App() {
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const location = useLocation();
+
+  useEffect(() => {
     // Example: default UI is light background
     setLightStatusBar();
   }, []);
 
-   useEffect(() => {
+  useEffect(() => {
     registerPush((token) => {
       // Send token to backend for targeting
       console.log('Device token:', token);
     });
   }, []);
 
-useEffect(() => {
-  const handleOnline = () => setIsOnline(true);
-  const handleOffline = () => setIsOnline(false);
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
 
-  window.addEventListener('online', handleOnline);
-  window.addEventListener('offline', handleOffline);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
 
-  return () => {
-    window.removeEventListener('online', handleOnline);
-    window.removeEventListener('offline', handleOffline);
-  };
-}, []);
-const { appState, updateAppState } = useAppState();
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+  const { appState, updateAppState } = useAppState();
   useEffect(() => {
     const sd = moment().local(); // Ensure local time is used
     const asd = sd.format("DD/MM/YYYY");
@@ -103,20 +100,20 @@ const { appState, updateAppState } = useAppState();
   }, []);
 
   useEffect(() => {
-    
-    if(!isOnline) {return}
+
+    if (!isOnline) { return }
     const fetchSettings = async () => {
       try {
         const settings = await api.getAsync(Urls.application_setting);
         // const token =   await getStorageString("token");
         const token = localStorage.getItem("token")
-        if(token) {
-          
+        if (token) {
+
           console.log(token);
           localStorage.setItem("as", modelToBase64(settings))
           // await setStorageString("as", modelToBase64(settings))
-    
-        dispatch(setApplicationSettings({ ...settings, apiLoaded: true }));
+
+          dispatch(setApplicationSettings({ ...settings, apiLoaded: true }));
         }
       } catch (error) {
         console.error("Error fetching application settings:", error);
@@ -150,20 +147,20 @@ const { appState, updateAppState } = useAppState();
   const { i18n } = useTranslation()
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const { isModalOpen, handleStay, handleLeave } = useUnsavedChangesWarning();
-useEffect(() => {
+  useEffect(() => {
     // Simulate app initialization process
     const initializeApp = async () => {
       try {
-       
+
         await new Promise(resolve => setTimeout(resolve, 500));
-       
+
         setIsAppReady(true);
-        
+
         // Small delay for smooth transition
         setTimeout(() => {
           setIsLoading(false);
         }, 500);
-        
+
       } catch (error) {
         console.error('App initialization failed:', error);
         // Handle initialization errors
@@ -175,35 +172,35 @@ useEffect(() => {
 
 
 
-useEffect(() => {
-  if (!isOnline) return;
+  useEffect(() => {
+    if (!isOnline) return;
 
-  const fetchSession = async () => {
-    const {
-      token,
-      userThemes,
-      clientSession,
-      userProfileDetails,
-      userRights,
-      locale,
-    } = await getUserSessionData();
-    await syncAppStates(dispatch, userThemes, clientSession, userProfileDetails, userRights, locale);
+    const fetchSession = async () => {
+      const {
+        token,
+        userThemes,
+        clientSession,
+        userProfileDetails,
+        userRights,
+        locale,
+      } = await getUserSessionData();
+      await syncAppStates(dispatch, userThemes, clientSession, userProfileDetails, userRights, locale);
 
-    const language = userProfileDetails?.language;
+      const language = userProfileDetails?.language;
 
-    if (!token && !["/login", "/shared-view", "accept-user-invitation"].includes(pathname)) {
-      navigate("/login");
-    }
+      if (!token && !["/login", "/shared-view", "accept-user-invitation"].includes(pathname)) {
+        navigate("/login");
+      }
 
-    if (locale && i18n && typeof i18n.changeLanguage === "function") {
-      i18n.changeLanguage(language);
-    } else {
-      console.error("i18n is not properly initialized:", i18n);
-    }
-  };
+      if (locale && i18n && typeof i18n.changeLanguage === "function") {
+        i18n.changeLanguage(language);
+      } else {
+        console.error("i18n is not properly initialized:", i18n);
+      }
+    };
 
-  fetchSession();
-}, [isOnline]);
+    fetchSession();
+  }, [isOnline]);
 
   // useEffect(() => {
   //   if (locale && i18n && typeof i18n.changeLanguage === "function") {
@@ -218,8 +215,8 @@ useEffect(() => {
   //   } else {
   //   }
   // }, [token]);
-  const Bodyclickk = async() => {
-      let isCheck = await getStorageString("ynexverticalstyles")
+  const Bodyclickk = async () => {
+    let isCheck = await getStorageString("ynexverticalstyles")
     if (isCheck == "icontext") {
       setMyClass("");
     }
@@ -235,19 +232,19 @@ useEffect(() => {
     import("preline");
   }, []);
   useEffect(() => {
-    
-   if (typeof window === 'undefined') {
-			// Handle the case where window is not available (server-side rendering)
-			return;
-		}
 
-		const theme = store.getState();
-			if (window.innerWidth < 992) {
-				// less than 992;
-        updateAppState({ ...theme.AppState.appState, toggled: "close" });
-				// ThemeChanger({ ...theme, dataToggled: "close" });
-			}
-  },[])
+    if (typeof window === 'undefined') {
+      // Handle the case where window is not available (server-side rendering)
+      return;
+    }
+
+    const theme = store.getState();
+    if (window.innerWidth < 992) {
+      // less than 992;
+      updateAppState({ ...theme.AppState.appState, toggled: "close" });
+      // ThemeChanger({ ...theme, dataToggled: "close" });
+    }
+  }, [])
 
   useEffect(() => {
     // Dynamically add or remove the 'isMobile' class on the body
@@ -258,8 +255,8 @@ useEffect(() => {
     }
   }, [deviceInfo?.isMobile]); // Run this effect when isMobile changes
   const { t } = useTranslation('main')
-   if (isLoading || isOnline != true) {
-    return <><Loader isOnline = {isOnline}/></>;
+  if (isLoading || isOnline != true) {
+    return <><Loader isOnline={isOnline} /></>;
   }
 
   return (
@@ -283,7 +280,7 @@ useEffect(() => {
         <AutoClicker />
         <div className={`page dark:!bg-dark-bg  `} onClick={Bodyclickk}>
           <Suspense fallback={LoadingAnimation()}>
-          
+
             <Routes>
               <Route path="login" element={<Login />} />
               <Route path="accept-user-invitation" element={<AcceptInvitation />} />
@@ -302,7 +299,7 @@ useEffect(() => {
               <Route path="/*" element={<Layout setMyClass={setMyClass} />} />
               {/* <Route path="*" element={<NotFound />} /> */}
             </Routes>
-            
+
           </Suspense>
         </div>
       </HelmetProvider>
@@ -344,7 +341,7 @@ useEffect(() => {
           />
         )
       }
-   <ERPModal
+      <ERPModal
         isOpen={popupData.printerList.isOpen || false}
         title={t("set_default-printer")}
         width={800}
@@ -352,24 +349,43 @@ useEffect(() => {
         isForm={true}
         closeModal={() => {
           dispatch(toggleSelectPrinterPopup({ isOpen: false }));
-          
+
         }}
         content={
-        <AccessPrinterList 
-        templateData={popupData.printerList?.template} 
-        data={popupData.printerList?.data??[]}
-        formState={[popupData.printerList?.formState]}
-        restInRoot
-        // onChange={(propertiesState) => dispatch(setTemplatePropertiesState(propertiesState))}
-        />
+          <AccessPrinterList
+            templateData={popupData.printerList?.template}
+            data={popupData.printerList?.data ?? []}
+            formState={[popupData.printerList?.formState]}
+            restInRoot
+          // onChange={(propertiesState) => dispatch(setTemplatePropertiesState(propertiesState))}
+          />
+        }
+      />
+      {popupData.TemplateChooserModal.isOpen &&
+        <ERPResizableSidebar
+          minWidth={350}
+          isOpen={popupData.TemplateChooserModal.isOpen ?? false}
+          setIsOpen={() =>
+            dispatch(
+              toggleTemplateChooserModal({ isOpen: false, templateGroup: "", customerType: "", formType: "" })
+            )
+          }
+        >
+          {popupData.TemplateChooserModal.isOpen && (
+            <TemplatesView
+              voucherType={popupData.TemplateChooserModal?.templateGroup ?? ""}
+              formType={popupData.TemplateChooserModal?.formType ?? ""}
+              customerType={popupData.TemplateChooserModal?.customerType ?? ''}
+              setIsOpen={() =>
+                dispatch(
+                  toggleTemplateChooserModal({ isOpen: false, templateGroup: "", customerType: "", formType: "" })
+                )
+            }
+          />
+        )}
+        </ERPResizableSidebar>
       }
-      /> 
-    
-
- 
     </Fragment>
   );
 }
 export default App;
-
-

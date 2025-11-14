@@ -3,7 +3,7 @@ import React from "react";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import ERPModal from "../../../../../components/ERPComponents/erp-modal";
 import { TransactionUserConfig } from "../transaction-user-config";
-import { EllipsisVertical, KeyRound, Pencil, Printer, RefreshCw, Trash2, ChevronUp, BadgePlusIcon, Eraser, X, FileUp, History, Boxes, Group, DollarSign, Download, ShoppingCart, Upload, Barcode, Eye, FilePlus, FileText, Layout, PackageCheck, PackageSearch, Receipt, Users, } from "lucide-react";
+import { EllipsisVertical, KeyRound, Pencil, Printer, RefreshCw, Trash2, ChevronUp, BadgePlusIcon, Eraser, X, FileUp, History, Boxes, Group, DollarSign, Download, ShoppingCart, Upload, Barcode, Eye, FilePlus, FileText, Layout, PackageCheck, PackageSearch, Receipt, Users, Gift, MapPinHouse, ReceiptText, } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import PendingOrderList from "../pending-order-list";
@@ -18,6 +18,7 @@ import OrderLookup from "../order-lookup";
 import ShowEInvoice from "../show-e-invoice";
 import GiftOrCashCouponSelector from "../giftOrCash-Coupon-Selector";
 import PrintAddressLabel from "../print-address-label";
+import { toggleTemplateChooserModal } from "../../../../../redux/slices/popup-reducer";
 
 interface HeaderProps extends VoucherElementProps {
   loadTemporaryRows: () => Promise<void>;
@@ -25,19 +26,19 @@ interface HeaderProps extends VoucherElementProps {
   handleRefresh: () => void;
   createNewVoucher: () => void;
   handleEdit: () => void;
- printVoucher: (
-  masterID: number,
-  transactionType: string,
-  voucherType: string,
-  formType: string,
-  customerType: string,
-  isInvTrans?: boolean,
-  printPreview?: boolean,
-  printTmeplate?: any,
-  transDate?: string,
-  printData?: any,
-  templateId?: number
-) => Promise<void>;
+  printVoucher: (
+    masterID: number,
+    transactionType: string,
+    voucherType: string,
+    formType: string,
+    customerType: string,
+    isInvTrans?: boolean,
+    printPreview?: boolean,
+    printTmeplate?: any,
+    transDate?: string,
+    printData?: any,
+    templateId?: number
+  ) => Promise<void>;
   handleClearControls: () => void;
   handleHistoryClick: () => void;
   setIsHistorySidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -120,7 +121,9 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
     };
 
     const selectTemplates = () => {
-      dispatch(formStateHandleFieldChange({ fields: { templateChooserModal: true }, }));
+      dispatch(
+        toggleTemplateChooserModal({ isOpen: true, templateGroup: formState.transaction.master?.voucherType, customerType: formState.transaction.master?.customerType, formType: formState.transaction.master?.voucherForm })
+      );
     }
     const closeMenuPopup = () => {
       dispatch(formStateHandleFieldChange({ fields: { headerMenuOpen: false }, }));
@@ -232,11 +235,35 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
         <div className={`!overflow-visible flex items-center justify-evenly md:justify-end space-x-2 p-1 w-full overflow-x-auto bg-[#f9fafb] md:bg-transparent`}>
           {/* SAMPLE BUTTONS CREATED FOR SHOW-E-INVOICE, GIFT/CASH COUPON SELECTOR, PRINT LABEL ADDRESS */}
           {/* ----------------------------------------------------------------------------------------- */}
-          <button onClick={handleShowEInvoiceModal} className="bg-gray-300">Show E-inv</button>
+          {/* <button onClick={handleShowEInvoiceModal} className="bg-gray-300">Show E-inv</button>
           <button className="bg-gray-300">Gift</button>
-          <button className="bg-gray-300">Print Address</button>
+          <button className="bg-gray-300">Print Address</button> */}
 
           {/* Load Temp Rows */}
+          <div className="group relative inline-flex flex-col items-center ps-[5px]" title="Load Details">
+            <button
+              disabled={formState.formElements.pnlMasters?.disabled}
+              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
+              onClick={handleShowEInvoiceModal}>
+              <ReceiptText className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+            </button>
+          </div>
+          <div className="group relative inline-flex flex-col items-center ps-[5px]" title="Load Details">
+            <button
+              disabled={formState.formElements.pnlMasters?.disabled}
+              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
+              onClick={loadTemporaryRows}>
+              <Gift className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+            </button>
+          </div>
+          <div className="group relative inline-flex flex-col items-center ps-[5px]" title="Load Details">
+            <button
+              disabled={formState.formElements.pnlMasters?.disabled}
+              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
+              onClick={loadTemporaryRows}>
+              <MapPinHouse className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+            </button>
+          </div>
           <div className="group relative inline-flex flex-col items-center ps-[5px]" title="Load Details">
             <button
               disabled={formState.formElements.pnlMasters?.disabled}
@@ -294,8 +321,8 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
               <button
                 disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master.invTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
                 className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
-                onClick={async() =>
-                  await  printVoucher(
+                onClick={async () =>
+                  await printVoucher(
                     formState.transaction?.master.invTransactionMasterID,  // masterID
                     transactionType ?? "",                       // transactionType
                     voucherType ?? "",        // voucherType
@@ -304,7 +331,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                     true,
                     formState.userConfig?.printPreview ?? false,
                     undefined,                                            // printTmeplate (optional)
-                    formState.transaction?.master.transactionDate ?? "", 
+                    formState.transaction?.master.transactionDate ?? "",
                     undefined,  //tmepData
                     formState?.lastChoosedTemplate?.id  //lastchoose tempId
 
@@ -696,8 +723,8 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                           <button
                             disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master.invTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
                             className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f5f3ff] hover:text-[#6d28d9] dark:hover:bg-[#4c1d954d] dark:hover:text-[#ddd6fe] transition-all duration-200 rounded-md group text-left"
-                             onClick={async() =>
-                            await  printVoucher(
+                            onClick={async () =>
+                              await printVoucher(
                                 formState.transaction?.master.invTransactionMasterID,  // masterID
                                 transactionType ?? "",                       // transactionType
                                 voucherType ?? "",        // voucherType
@@ -711,7 +738,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                                 formState?.lastChoosedTemplate?.id //lastChooseTempId
 
                               )}
-                           >                           
+                          >
                             <div className="w-8 h-8 bg-[#ede9fe] dark:bg-[#4c1d954d] rounded-full flex items-center justify-center group-hover:bg-[#ddd6fe] dark:group-hover:bg-[#4c1d9599] group-hover:scale-110 transition-all duration-200">
                               <Printer className="h-4 w-4 text-[#6d28d9] dark:text-[#ddd6fe]" />
                             </div>

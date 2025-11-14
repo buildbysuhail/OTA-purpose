@@ -6,15 +6,18 @@ export interface popupDataProps {
   data?: any | undefined;
   mode?: "add" | "edit" | "view";
   reload?: boolean;
-  id?:number;
-  name?:string;
-  customTemplate?:string;
-  template?:any;
-  formState?:any;
-  masterId?:number;
+  id?: number;
+  name?: string;
+  customTemplate?: string;
+  template?: any;
+  formState?: any;
+  masterId?: number;
+  templateGroup?: string
+  customerType?: string
+  formType?: string
 }
 interface popupData {
-  printJobLoader:{isPrinting:boolean}
+  printJobLoader: { isPrinting: boolean }
   onCloseWithUnsavedChange: { warn: boolean, succeeded: boolean, canceled: boolean }
   section: popupDataProps
   salesManRoute: popupDataProps
@@ -78,17 +81,18 @@ interface popupData {
   testPopup: popupDataProps
   products: popupDataProps
   productSummaryReport: popupDataProps
-  printerList:popupDataProps
+  printerList: popupDataProps
   GrnNumber: popupDataProps
   CustomDesignerPopup: popupDataProps;
-  IsPrintPreviewPopup : popupDataProps;
+  IsPrintPreviewPopup: popupDataProps;
+  TemplateChooserModal: popupDataProps;
 }
 const initialState: popupData = {
-  IsPrintPreviewPopup:{isOpen:false,},
-  printerList:{isOpen:false,template:null,data:null,formState:null},
-  CustomDesignerPopup:{ isOpen: false, key: null,reload:false, mode: "edit" ,},
+  IsPrintPreviewPopup: { isOpen: false, },
+  printerList: { isOpen: false, template: null, data: null, formState: null },
+  CustomDesignerPopup: { isOpen: false, key: null, reload: false, mode: "edit", },
   onCloseWithUnsavedChange: { warn: false, succeeded: false, canceled: false },
-  printJobLoader:{isPrinting:false},
+  printJobLoader: { isPrinting: false },
   testPopup: { isOpen: false, key: null, mode: "edit", reload: true },
   groupOrder: { isOpen: false, key: null, mode: "edit", reload: true },
   groupCategory: { isOpen: false, key: null, mode: "edit", reload: true },
@@ -119,7 +123,7 @@ const initialState: popupData = {
   accountGroup: { isOpen: false, key: null, mode: "edit", reload: true },
   accountLedger: { isOpen: false, key: null, mode: "edit", reload: true },
   costCentre: { isOpen: false, key: null, mode: "edit", reload: true },
-  priceList: { isOpen: false, key: null, mode: "edit", reload: true ,},
+  priceList: { isOpen: false, key: null, mode: "edit", reload: true, },
   branchLedger: { isOpen: false, key: null, mode: "edit", reload: true },
   authorizationSettings: { isOpen: false, key: null, mode: "edit", reload: true },
   barcodeprint: { isOpen: false, key: null, mode: "edit", reload: true },
@@ -138,13 +142,13 @@ const initialState: popupData = {
   eInvoiceGST: { isOpen: false, key: null, mode: "edit", reload: true },
   productGroup: { isOpen: false, key: null, mode: "edit", reload: true, id: 0, name: "" },
   productCategory: { isOpen: false, key: null, mode: "edit", reload: true, id: 0, name: "" },
-  brands: { isOpen: false, key: null, mode: "edit", reload: true ,id: 0, name: ""},
+  brands: { isOpen: false, key: null, mode: "edit", reload: true, id: 0, name: "" },
   priceCategory: { isOpen: false, key: null, mode: "edit", reload: true },
-  unitOfMeasure: { isOpen: false, key: null, mode: "edit", reload: true,id: 0, name: "" },
+  unitOfMeasure: { isOpen: false, key: null, mode: "edit", reload: true, id: 0, name: "" },
   vehicles: { isOpen: false, key: null, mode: "edit", reload: true },
-  warehouse: { isOpen: false, key: null, mode: "edit", reload: true ,id: 0, name: "" },
-  taxCategory: { isOpen: false, key: null, mode: "edit", reload: true ,id: 0, name: "" },
-  taxCategoryIndia: { isOpen: false, key: null, mode: "edit", reload: true ,id: 0, name: "" },
+  warehouse: { isOpen: false, key: null, mode: "edit", reload: true, id: 0, name: "" },
+  taxCategory: { isOpen: false, key: null, mode: "edit", reload: true, id: 0, name: "" },
+  taxCategoryIndia: { isOpen: false, key: null, mode: "edit", reload: true, id: 0, name: "" },
   tcsCategory: { isOpen: false, key: null, mode: "edit", reload: true },
   schemes: { isOpen: false, key: null, mode: "edit", reload: true },
   salesRoute: { isOpen: false, key: null, mode: "edit", reload: true },
@@ -152,21 +156,22 @@ const initialState: popupData = {
   products: { isOpen: false, key: null, mode: "edit", reload: true },
   productSummaryReport: { isOpen: false, key: null, mode: "edit", reload: true },
   GrnNumber: { isOpen: false, key: null, mode: "edit", reload: true },
+  TemplateChooserModal: { isOpen: false, key: null, mode: "edit", reload: true },
 };
 
 const popupDataSlice = createSlice({
   name: 'popupData',
   initialState,
   reducers: {
-    
+
     toggleIsPrintPreviewPopup: (state, action: PayloadAction<popupDataProps>) => {
       state.IsPrintPreviewPopup = action.payload;
     },
     toggleCustomDesignerPopup: (state, action: PayloadAction<popupDataProps>) => {
       state.CustomDesignerPopup = action.payload;
     },
-    
-    printJobLoaderReducer: (state, action: PayloadAction<{ isPrinting: boolean}>) => {
+
+    printJobLoaderReducer: (state, action: PayloadAction<{ isPrinting: boolean }>) => {
       state.printJobLoader = action.payload;
     },
     onCloseWithUnsavedChange: (state, action: PayloadAction<{ warn: boolean, succeeded: boolean, canceled: boolean }>) => {
@@ -381,6 +386,9 @@ const popupDataSlice = createSlice({
     toggleSelectPrinterPopup: (state, action: PayloadAction<popupDataProps>) => {
       state.printerList = action.payload;
     },
+    toggleTemplateChooserModal: (state, action: PayloadAction<popupDataProps>) => {
+      state.TemplateChooserModal = action.payload;
+    },
   },
 });
 
@@ -454,6 +462,7 @@ export const {
   updateProductSummaryData,
   toggleGrnNumber,
   toggleIsPrintPreviewPopup,
+  toggleTemplateChooserModal,
 } = popupDataSlice.actions;
 
 export default popupDataSlice.reducer;

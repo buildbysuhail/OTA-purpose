@@ -446,6 +446,7 @@ export interface UserConfig {
   enableVoucherPrefixAndDate?: boolean;
   showCustomersAfterSales?: boolean;
   UserSalesPriceForTransfer?: boolean;
+  gatePass?: boolean;
 }
 
 export type FormElementsState = {
@@ -607,8 +608,8 @@ export interface TransactionFormState {
   ledgerBillWiseLoading?: boolean;
   ledgerBillWiseSaving?: boolean;
   tenderOpen?: boolean;
-
   templateChooserModal?: boolean;
+  srOpen?: boolean;
 
   //Sales
   privilegeCardOpen?: boolean;
@@ -683,7 +684,7 @@ export interface TransactionFormState {
   isUserConfigOpen?: boolean;
   privConfig?: string;
   printGatepass?: boolean;
-  lastChoosedTemplate?: {id?: number, group?: string,formType?: string, customerType?: string}; // nizam
+  lastChoosedTemplate?: { id?: number, group?: string, formType?: string, customerType?: string }; // nizam
 }
 export interface GiftModel {
   productBatchId: number;

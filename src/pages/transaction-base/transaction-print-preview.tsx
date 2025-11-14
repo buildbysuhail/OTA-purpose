@@ -16,7 +16,8 @@ import { isNullOrUndefinedOrEmpty } from '../../utilities/Utils';
 import { useTemplateDesigner } from '../InvoiceDesigner/LandingFolder/useTemplateDesigner';
 import SharedTemplatePreview from '../InvoiceDesigner/DesignPreview/shared';
 import { formStateHandleFieldChange } from '../inventory/transactions/reducer';
-import { popupDataProps } from '../../redux/slices/popup-reducer';
+import { popupDataProps, toggleTemplateChooserModal } from '../../redux/slices/popup-reducer';
+import { useAppSelector } from '../../utilities/hooks/useAppDispatch';
 
 export type TemplatesPreViewHandle = {
   getPrintData: () => {
@@ -38,6 +39,9 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
     const [activeTemplate,setActiveTemplate] = useState<TemplateState<unknown>>(printPreviwPopupInfo.template)
     const prevTemplateIdRef  = useRef<number | null>(null);
     const dispatch = useDispatch();
+    const formState = useAppSelector(
+        (state: RootState) => state.InventoryTransaction
+      );
     const { t } = useTranslation();
     const {
       stableTemplateProps,
@@ -77,7 +81,10 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
           data: stableTemplateProps.data,
         };
       },
-      openTemplateChooser:()=>dispatch(formStateHandleFieldChange({ fields: { templateChooserModal: true } })),
+      openTemplateChooser:()=>  
+        dispatch(
+                   toggleTemplateChooserModal({ isOpen: true, templateGroup: formState.transaction.master?.voucherType, customerType: formState.transaction.master?.customerType, formType: formState.transaction.master?.voucherForm})
+                 )
     }));
 
     if (loading) {

@@ -14,6 +14,7 @@ import { fetchTemplateById } from "../../use-print";
 import { TransactionBase, transactionRoutes } from "../../../components/common/content/transaction-routes";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
 import { APIClient } from "../../../helpers/api-client";
+import ERPToast from "../../../components/ERPComponents/erp-toast";
 import urls from "../../../redux/urls";
 
 export interface TransactionViewProps {
@@ -191,38 +192,58 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
     }
   };
 
-  // const handleDeleteClick = async () => {
-  //   const master = stableTemplateProps?.data?.master;
-  //   if (!master) return;
+  const handleDeleteClick = async () => {
+    const master = stableTemplateProps?.data?.master;
+    if (!master) return;
 
-  //   const confirmed = await ERPAlert.show({
-  //     title: t("deleting_transaction_question"),
-  //     text: t("once_deleting_this_transaction_cannot_be_recovered"), // Corrected typo here
-  //     icon: "question",
-  //     showCancelButton: true,
-  //     confirmButtonText: t("yes"),
-  //     cancelButtonText: t("no"),
-  //   });
+    const confirmed = await ERPAlert.show({
+      title: t("deleting_transaction_question"),
+      text: t("once_deleting_this_transaction_cannot_be_recovered"), // Corrected typo here
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: t("yes"),
+      cancelButtonText: t("no"),
+    });
 
-  //   if (confirmed) {
-  //     const apiClient = new APIClient();
-  //     try {
-  //       const response = await apiClient.delete(
-  //         `${urls.acc_transaction_base}${props.transactionType}/`, {
-  //           data: {
-  //             accTransactionMasterID: master.accTransactionMasterID,
-  //             transactionType: props.transactionType,
-  //           },
-  //         }
-  //       );
-  //       if (response.isOk) {
-  //         navigate(-1); // Go back to the previous page
-  //       }
-  //     } catch (error) {
-  //       console.error("Failed to delete transaction", error);
-  //     }
-  //   }
-  // };
+    if (confirmed) {
+      const apiClient = new APIClient();
+      try {
+        let response;
+        if (props.isInvTrans) {
+          // Inventory transaction: DELETE with data in the body
+          response = await apiClient.delete(
+            `${urls.inv_transaction_base}${props.transactionType}/`,
+            {
+              data: {
+                invTransactionMasterID: master.invTransactionMasterID,
+                transactionType: props.transactionType,
+              },
+            }
+          );
+        } else {
+          // Account transaction: DELETE with ID in the URL
+          const masterId = master.accTransactionMasterID;
+          if (!masterId) {
+            console.error("Transaction master ID is missing.");
+            return;
+          }
+          response = await apiClient.delete(
+            `${urls.acc_transaction_base}${props.transactionType}/${masterId}`
+          );
+        }
+
+        if (response.status === 200) {
+          ERPToast.show(t("transaction_deleted_successfully"), "success");
+          setTimeout(() => {
+            navigate(-1); // Go back to the previous page
+          }, 500); // Delay navigation to allow toast to be seen
+        }
+      } catch (error) {
+        console.error("Failed to delete transaction", error);
+        ERPToast.show(t("delete_operation_failed"), "error");
+      }
+    }
+  };
 
   return (
     <>
@@ -308,7 +329,7 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
               className="h-8 px-3 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded inline-flex items-center gap-1.5 transition-all duration-200"
               title="Delete"
               aria-label="Delete"
-              // onClick={handleDeleteClick}
+              onClick={handleDeleteClick}
             >
               <Trash2 className="w-4 h-4" />
             </button>

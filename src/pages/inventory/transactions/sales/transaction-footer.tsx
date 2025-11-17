@@ -22,7 +22,7 @@ import { useAppState } from "../../../../utilities/hooks/useAppState";
 import VoucherType from "../../../../enums/voucher-types";
 import React from "react";
 import { formStateHandleFieldChangeKeysOnly, formStateHandleFieldChange, formStateTransactionMasterHandleFieldChange } from "../reducer";
-import { TransactionFormState } from "../transaction-types";
+import { TransactionFormState, UserConfig } from "../transaction-types";
 import PrivilegeCardEntry from "./privilege-card-entry";
 import Tender from "./tender";
 import AutoCalculationCheckbox from "./components/AutoCalculationCheckbox";
@@ -196,6 +196,14 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   const [dropupState, setDropupState] = useState<'closed' | 'minimal' | 'full'>('closed');
   const [isSmallDevice, setIsSmallDevice] = useState(false);
 
+  const handleFieldChange = (field: keyof UserConfig, value: any) => {
+    const updatedUserConfig = {
+      ...formState.userConfig,
+      [field]: value,
+    };
+    dispatch(formStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }));
+  };
+
   const remToPx = (rem: number) => rem * 16;
 
   useEffect(() => {
@@ -359,6 +367,10 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
     )
   }
 
+  const handleSalesReturn =()=>{
+    
+  }
+
   const warehouseComponent = (
     <div className="w-full max-w-none sm:max-w-[180px]">
       <WarehouseID
@@ -458,13 +470,20 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               )
             }
           </div>
-          <div className="flex items-center gap-1">
+          <div className="flex items-end gap-1">
             <ERPButton
               title={t('tender')}
               onClick={handleTenderOpen}
             />
             <ERPButton
               title={t('pending')}
+            />
+            <ERPCheckbox
+              id="gatePass"
+              label={t("gate_pass")}
+              data={formState.userConfig}
+              checked={formState?.userConfig?.gatePass}
+              onChangeData={(e) => handleFieldChange("gatePass", e.gatePass)}
             />
             {formState.tenderOpen && (
               <Tender
@@ -829,6 +848,17 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         <ERPButton
           title={t('pending')}
         // onClick={handleTenderOpen}
+        />
+        <ERPButton
+          title={t('sr')}
+        // onClick={handleTenderOpen}
+        />
+        <ERPCheckbox
+          id="gatePass"
+          label={t("gate_pass")}
+          data={formState.userConfig}
+          checked={formState?.userConfig?.gatePass}
+          onChangeData={(e) => handleFieldChange("gatePass", e.gatePass)}
         />
         {formState.tenderOpen && (
           <Tender

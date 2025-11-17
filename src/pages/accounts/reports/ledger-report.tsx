@@ -71,13 +71,23 @@ const LedgerReport = () => {
       allowFiltering: true,
       width: 150,
       showInPdf: true,
-      cellRender: (cellElement: any, cellInfo: any) => {
-        return (
-          <DrillDownCellTemplate
-            data={cellElement}
-            field="vchNo"
-          ></DrillDownCellTemplate>
-        )
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell !== undefined) {
+          const value = cellElement.data?.vchNo == null ? "0" : cellElement.data.vchNo.toString();
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return (
+            <DrillDownCellTemplate
+              data={cellElement}
+              field="vchNo"
+            />
+          );
+        }
       },
     },
     {
@@ -319,23 +329,23 @@ const LedgerReport = () => {
       width: 150,
     },
   ];
-  
+
   const dataRef = useRef<any[]>([]);
-   // Function to update data without causing re-render
+  // Function to update data without causing re-render
   const updateData = useCallback((newData: any[]) => {
     dataRef.current = newData;
     // If you need to access the data elsewhere, you can use dataRef.current
   }, []);
   const pStatement = () => {
-    
+
     printStatement({
-                                    orientation:
-                                       "portrait",
-                                    data: {data: dataRef.current, filter: filter},
-                                    clickedItem: "statement",
-                                  })
+      orientation:
+        "portrait",
+      data: { data: dataRef.current, filter: filter },
+      clickedItem: "statement",
+    })
   };
-    const { printStatement, printCB } = useReportPrint();
+  const { printStatement, printCB } = useReportPrint();
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -345,53 +355,53 @@ const LedgerReport = () => {
               <div className="grid grid-cols-1 gap-3">
                 <button className="flex items-center bg-gray-100 p-0 rounded-md"></button>
                 <ErpDevGrid
-                summaryItems={[]}
+                  summaryItems={[]}
                   remoteOperations={{ filtering: false, paging: false, sorting: false }}
                   columns={columns}
                   showMoreOption
                   moreOptions={[<li key="statement">
-                              <button
-                                className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                                onClick={() =>
-                                  pStatement()
-                                }
-                              >
-                                <FileUp className="pe-2" />
-                                <span className="text-sm font-semibold ">
-                                  {t("statement")}
-                                </span>
-                              </button>
-                            </li>,
+                    <button
+                      className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                      onClick={() =>
+                        pStatement()
+                      }
+                    >
+                      <FileUp className="pe-2" />
+                      <span className="text-sm font-semibold ">
+                        {t("statement")}
+                      </span>
+                    </button>
+                  </li>,
 
-                            <li>
-                              <button
-                                className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                                onClick={() =>
-                                  printCB({
-                                    orientation:
-                                     "portrait",
-                                    data: filter.ledgerID,
-                                    clickedItem: "customer_balance",
-                                  })
-                                }
-                              >
-                                <FileUp className="pe-2" />
-                                <span className="text-sm font-semibold ">
-                                  {t("customer_balance")}
-                                </span>
-                              </button>
-                            </li>,
+                  <li>
+                    <button
+                      className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                      onClick={() =>
+                        printCB({
+                          orientation:
+                            "portrait",
+                          data: filter.ledgerID,
+                          clickedItem: "customer_balance",
+                        })
+                      }
+                    >
+                      <FileUp className="pe-2" />
+                      <span className="text-sm font-semibold ">
+                        {t("customer_balance")}
+                      </span>
+                    </button>
+                  </li>,
 
-                            <li>
-                              <button
-                                className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                              >
-                                <FileUp className="pe-2" />
-                                <span className="text-sm font-semibold ">
-                                  {t("billwise_details")}
-                                </span>
-                              </button>
-                            </li>]}
+                  <li>
+                    <button
+                      className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                    >
+                      <FileUp className="pe-2" />
+                      <span className="text-sm font-semibold ">
+                        {t("billwise_details")}
+                      </span>
+                    </button>
+                  </li>]}
                   // remoteOperations={{filtering:false,paging:false,sorting:false}}
                   filterText="of {showAll == true && All} {showAll == false && [ledgerName]
                    ([ledgerCode])}, from {dateFrom} to {dateTo} {costCentreID > 0 && ,
@@ -407,7 +417,7 @@ const LedgerReport = () => {
                   filterWidth={650}
                   filterInitialData={LedgerReportFilterInitialState}
                   onFilterChanged={(filter: any) => { setFilter(filter) }}
-                   onDataChanged={updateData}
+                  onDataChanged={updateData}
                   reload={true}
                   gridId="grd_ledger_report"
                   childPopupProps={{

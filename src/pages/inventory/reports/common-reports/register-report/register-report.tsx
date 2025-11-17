@@ -84,15 +84,26 @@ const RegisterReport: FC<RegisterProps> = ({
         allowFiltering: true,
         width: 50,
         showInPdf: true,
-        cellRender: (cellElement: any, cellInfo: any) => {
-          return (
-            <DrillDownCellTemplate
-              data={cellElement}
-              field="vchNo"
-            ></DrillDownCellTemplate>
-          );
+        cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+          if (exportCell !== undefined) {
+            const value = cellElement.data?.vchNo == null ? "0" : cellElement.data.vchNo.toString();
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return (
+              <DrillDownCellTemplate
+                data={cellElement}
+                field="vchNo"
+              />
+            );
+          }
         },
       },
+
       {
         dataField: "form",
         caption: t("form"),
@@ -234,10 +245,10 @@ const RegisterReport: FC<RegisterProps> = ({
             return cellElement.data?.quantity == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.quantity),
-                  false,
-                  4
-                );
+                parseFloat(cellElement.data.quantity),
+                false,
+                4
+              );
           }
         },
       },
@@ -309,10 +320,10 @@ const RegisterReport: FC<RegisterProps> = ({
             return cellElement.data?.unitPrice == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.unitPrice),
-                  false,
-                  3
-                );
+                parseFloat(cellElement.data.unitPrice),
+                false,
+                3
+              );
           }
         },
       },
@@ -408,10 +419,10 @@ const RegisterReport: FC<RegisterProps> = ({
             return cellElement.data?.freeValue == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.freeValue),
-                  false,
-                  7
-                );
+                parseFloat(cellElement.data.freeValue),
+                false,
+                7
+              );
           }
         },
       },
@@ -475,10 +486,10 @@ const RegisterReport: FC<RegisterProps> = ({
             return cellElement.data?.freeCost == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.freeCost),
-                  false,
-                  8
-                );
+                parseFloat(cellElement.data.freeCost),
+                false,
+                8
+              );
           }
         },
       },
@@ -619,8 +630,8 @@ const RegisterReport: FC<RegisterProps> = ({
             return cellElement.data?.additionalExpense == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.additionalExpense)
-                );
+                parseFloat(cellElement.data.additionalExpense)
+              );
           }
         },
       },
@@ -764,8 +775,8 @@ const RegisterReport: FC<RegisterProps> = ({
             return cellElement.data?.stdPurchasePrice == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.stdPurchasePrice)
-                );
+                parseFloat(cellElement.data.stdPurchasePrice)
+              );
           }
         },
       },
@@ -1077,10 +1088,10 @@ const RegisterReport: FC<RegisterProps> = ({
             return cellElement.data?.cgstPerc == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.cgstPerc),
-                  false,
-                  4
-                );
+                parseFloat(cellElement.data.cgstPerc),
+                false,
+                4
+              );
           }
         },
       },
@@ -1144,10 +1155,10 @@ const RegisterReport: FC<RegisterProps> = ({
             return cellElement.data?.sgstPerc == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.sgstPerc),
-                  false,
-                  4
-                );
+                parseFloat(cellElement.data.sgstPerc),
+                false,
+                4
+              );
           }
         },
       },
@@ -1211,10 +1222,10 @@ const RegisterReport: FC<RegisterProps> = ({
             return cellElement.data?.igstPerc == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.igstPerc),
-                  false,
-                  4
-                );
+                parseFloat(cellElement.data.igstPerc),
+                false,
+                4
+              );
           }
         },
       },
@@ -1278,10 +1289,10 @@ const RegisterReport: FC<RegisterProps> = ({
             return cellElement.data?.gstPercent == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.gstPercent),
-                  false,
-                  4
-                );
+                parseFloat(cellElement.data.gstPercent),
+                false,
+                4
+              );
           }
         },
       },
@@ -1314,10 +1325,10 @@ const RegisterReport: FC<RegisterProps> = ({
             return cellElement.data?.gstAmt == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.gstAmt),
-                  false,
-                  4
-                );
+                parseFloat(cellElement.data.gstAmt),
+                false,
+                4
+              );
           }
         },
       },
@@ -1399,10 +1410,10 @@ const RegisterReport: FC<RegisterProps> = ({
             return cellElement.data?.cessPerc == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.cessPerc),
-                  false,
-                  2
-                );
+                parseFloat(cellElement.data.cessPerc),
+                false,
+                2
+              );
           }
         },
       },
@@ -1435,10 +1446,10 @@ const RegisterReport: FC<RegisterProps> = ({
             return cellElement.data?.cessAmt == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.cessAmt),
-                  false,
-                  4
-                );
+                parseFloat(cellElement.data.cessAmt),
+                false,
+                4
+              );
           }
         },
       },
@@ -1460,10 +1471,10 @@ const RegisterReport: FC<RegisterProps> = ({
               cellElement.data?.additionalCessPerc == null
                 ? ""
                 : getFormattedValue(
-                    cellElement.data.additionalCessPerc,
-                    false,
-                    4
-                  );
+                  cellElement.data.additionalCessPerc,
+                  false,
+                  4
+                );
             return {
               ...exportCell,
               text: value,
@@ -1474,10 +1485,10 @@ const RegisterReport: FC<RegisterProps> = ({
             return cellElement.data?.additionalCessPerc == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.additionalCessPerc),
-                  false,
-                  4
-                );
+                parseFloat(cellElement.data.additionalCessPerc),
+                false,
+                4
+              );
           }
         },
       },
@@ -1510,10 +1521,10 @@ const RegisterReport: FC<RegisterProps> = ({
             return cellElement.data?.additionalCess == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.additionalCess),
-                  false,
-                  4
-                );
+                parseFloat(cellElement.data.additionalCess),
+                false,
+                4
+              );
           }
         },
       },
@@ -1658,8 +1669,8 @@ const RegisterReport: FC<RegisterProps> = ({
             return cellElement.data?.baseUnitQuantity == null
               ? ""
               : getFormattedValue(
-                  parseFloat(cellElement.data.baseUnitQuantity)
-                );
+                parseFloat(cellElement.data.baseUnitQuantity)
+              );
           }
         },
       },

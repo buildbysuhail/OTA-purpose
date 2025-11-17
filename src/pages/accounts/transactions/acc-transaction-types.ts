@@ -599,6 +599,7 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
     printCheque:false,
     printOnSave:false,
     alignment: "center",
+    editInNewTab:true,
     presetCostenterId: 0,
     counterAssignedCashLedgerId: 0,
     maxWidth: "",

@@ -14,7 +14,7 @@ import InventorySummaryReportFilter, {
 import Urls from "../../../../../redux/urls";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
-import {  mergeObjectsRemovingIdenticalKeys } from "../../../../../utilities/Utils";
+import { mergeObjectsRemovingIdenticalKeys } from "../../../../../utilities/Utils";
 import InventorySummaryReportDetailed from "./inventory-summary-detailed";
 
 interface InventorySummaryReportMonthwiseProps {
@@ -62,15 +62,25 @@ const InventorySummaryReportMonthwise: FC<
       width: 100,
       showInPdf: true,
       visible: true,
-       cellRender: (cellElement: any, cellInfo: any) => {
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell !== undefined) {
+          const value = cellElement.data?.month == null ? "0" : cellElement.data.month.toString();
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
           return (
             <DrillDownCellTemplate
               data={cellElement}
               field="month"
-            ></DrillDownCellTemplate>
+            />
           );
-        },
+        }
       },
+    },
 
     {
       dataField: "grandTotal",
@@ -134,8 +144,8 @@ const InventorySummaryReportMonthwise: FC<
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-      cellSummaryAction:(value: number) => {
-         getFormattedValue(value, false, 4);
+      cellSummaryAction: (value: number) => {
+        getFormattedValue(value, false, 4);
       },
     },
   ];
@@ -165,14 +175,14 @@ const InventorySummaryReportMonthwise: FC<
                   postData,
                   contentProps
                 )}
-                 childPopupProps={{
-                    content: <InventorySummaryReportDetailed postData={{ ...mergeObjectsRemovingIdenticalKeys(postData, contentProps) }} />,
-                    title: t("inventory_summary_report"),
-                    isForm: false,
-                    width: 1300,
-                    drillDownCells: "month",
-                    bodyProps: "month",
-                  }}
+                childPopupProps={{
+                  content: <InventorySummaryReportDetailed postData={{ ...mergeObjectsRemovingIdenticalKeys(postData, contentProps) }} />,
+                  title: t("inventory_summary_report"),
+                  isForm: false,
+                  width: 1300,
+                  drillDownCells: "month",
+                  bodyProps: "month",
+                }}
               />
             </div>
           </div>

@@ -19,6 +19,7 @@ import ERPAlert from "../../../../../components/ERPComponents/erp-sweet-alert";
 import { handleResponse } from "../../../../../utilities/HandleResponse";
 import { base64ToModelUnicode, modelToBase64Unicode } from "../../../../../utilities/jsonConverter";
 import { setStorageString } from "../../../../../utilities/storage-utils";
+import { toggleTemplateChooserModal } from "../../../../../redux/slices/popup-reducer";
 
 const api = new APIClient();
 interface HeaderProps extends VoucherElementProps {
@@ -28,18 +29,18 @@ interface HeaderProps extends VoucherElementProps {
   createNewVoucher: () => void;
   handleEdit: () => void;
   printVoucher: (
-  masterID: number,
-  transactionType: string,
-  voucherType: string,
-  formType: string,
-  customerType: string,
-  isInvTrans?: boolean,
-  printPreview?: boolean,
-  printTmeplate?: any,
-  transDate?: string,
-  printData?: any,
-  templateId?: number
-) => Promise<void>;
+    masterID: number,
+    transactionType: string,
+    voucherType: string,
+    formType: string,
+    customerType: string,
+    isInvTrans?: boolean,
+    printPreview?: boolean,
+    printTmeplate?: any,
+    transDate?: string,
+    printData?: any,
+    templateId?: number
+  ) => Promise<void>;
 
   handleClearControls: () => void;
   handleHistoryClick: () => void;
@@ -126,7 +127,9 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
       dispatch(formStateHandleFieldChange({ fields: { headerMenuOpen: false }, }));
     };
     const selectTemplates = () => {
-      dispatch(formStateHandleFieldChange({ fields: { templateChooserModal: true }, }));
+      dispatch(
+        toggleTemplateChooserModal({ isOpen: true, templateGroup: formState.transaction.master?.voucherType, customerType: formState.transaction.master?.customerType, formType: formState.transaction.master?.voucherForm,isInv:true})
+      );
     }
     const openMenuPopup = () => {
       dispatch(formStateHandleFieldChange({ fields: { headerMenuOpen: true }, }));
@@ -319,8 +322,8 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
               <button
                 disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master.invTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
                 className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
-                onClick={async() =>
-                  await  printVoucher(
+                onClick={async () =>
+                  await printVoucher(
                     formState.transaction?.master.invTransactionMasterID,  // masterID
                     transactionType ?? "",                       // transactionType
                     voucherType ?? "",        // voucherType
@@ -329,7 +332,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                     true,
                     formState.userConfig?.printPreview ?? false,
                     undefined,                                            // printTmeplate (optional)
-                    formState.transaction?.master.transactionDate ?? "", 
+                    formState.transaction?.master.transactionDate ?? "",
                     undefined,  //tmepData
                     formState?.lastChoosedTemplate?.id  //lastchoose tempId
 
@@ -462,19 +465,19 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         </div>
                       </li>
                     )}
-                 {formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
-                    <li>
-                      <button
-                        onClick={selectTemplates}
-                        // disabled={formState.formElements?.pnlMasters?.disabled}
-                        className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left  hover:bg-[#fff7ed] hover:text-[#c2410c] dark:hover:bg-[#7c2d124d] dark:hover:text-[#fdba74]`}>
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 bg-[#ffedd5] dark:bg-[#7c2d124d] group-hover:bg-[#fed7aa] dark:group-hover:bg-[#7c2d1299] group-hover:scale-110`}>
-                          <Layout className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#ea580c] dark:text-[#ffedd5]'}`} />
-                        </div>
-                        <span className="font-medium">{t("change_template")}</span>
-                      </button>
-                    </li>
-                  )}
+                    {formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
+                      <li>
+                        <button
+                          onClick={selectTemplates}
+                          // disabled={formState.formElements?.pnlMasters?.disabled}
+                          className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left  hover:bg-[#fff7ed] hover:text-[#c2410c] dark:hover:bg-[#7c2d124d] dark:hover:text-[#fdba74]`}>
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 bg-[#ffedd5] dark:bg-[#7c2d124d] group-hover:bg-[#fed7aa] dark:group-hover:bg-[#7c2d1299] group-hover:scale-110`}>
+                            <Layout className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#ea580c] dark:text-[#ffedd5]'}`} />
+                          </div>
+                          <span className="font-medium">{t("change_template")}</span>
+                        </button>
+                      </li>
+                    )}
 
                     {formState.formElements.printPreview?.visible && formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
                       <li>
@@ -638,8 +641,8 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         <button
                           className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f5f3ff] hover:text-[#6d28d9] dark:hover:bg-[#4c1d954d] dark:hover:text-[#ddd6fe] transition-all duration-200 rounded-md group text-left"
 
-                          onClick={async() => {
-                           await printVoucher(
+                          onClick={async () => {
+                            await printVoucher(
                               formState.transaction?.master.invTransactionMasterID,  // masterID
                               "GoodsReceipt",                       // transactionType
                               "GRN",        // voucherType
@@ -649,8 +652,8 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                               formState.userConfig?.printPreview ?? false,
                               undefined,                                            // printTmeplate (optional)
                               formState.transaction?.master.transactionDate ?? "", // transactionDate
-                               undefined,  //tempData
-                               formState?.lastChoosedTemplate?.id //lastchoosedTempId
+                              undefined,  //tempData
+                              formState?.lastChoosedTemplate?.id //lastchoosedTempId
                             );
                             closeMenuPopup();
                           }
@@ -736,8 +739,8 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                           <button
                             disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master.invTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
                             className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f5f3ff] hover:text-[#6d28d9] dark:hover:bg-[#4c1d954d] dark:hover:text-[#ddd6fe] transition-all duration-200 rounded-md group text-left"
-                            onClick={async() =>
-                            await  printVoucher(
+                            onClick={async () =>
+                              await printVoucher(
                                 formState.transaction?.master.invTransactionMasterID,  // masterID
                                 transactionType ?? "",                       // transactionType
                                 voucherType ?? "",        // voucherType

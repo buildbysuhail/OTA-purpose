@@ -11,6 +11,7 @@ import { useAppState } from "../../../../utilities/hooks/useAppState";
 import { APIClient } from "../../../../helpers/api-client";
 import Urls from "../../../../redux/urls";
 import { setTemplate } from "../../../../redux/slices/templates/reducer";
+import { toggleTemplateChooserModal } from "../../../../redux/slices/popup-reducer";
 
 interface AccHeaderProps extends AccVoucherElementProps {
   loadTemporaryRows: () => Promise<void>;
@@ -19,18 +20,18 @@ interface AccHeaderProps extends AccVoucherElementProps {
   createNewVoucher: () => void;
   handleEdit: () => void;
   printVoucher: (
-  masterID: number,
-  transactionType: string,
-  voucherType: string,
-  formType: string,
-  customerType: string,
-  isInvTrans?: boolean,
-  printPreview?: boolean,
-  printTmeplate?: any,
-  transDate?: string,
-  printData?: any,
-  templateId?: number
-) => Promise<void>;
+    masterID: number,
+    transactionType: string,
+    voucherType: string,
+    formType: string,
+    customerType: string,
+    isInvTrans?: boolean,
+    printPreview?: boolean,
+    printTmeplate?: any,
+    transDate?: string,
+    printData?: any,
+    templateId?: number
+  ) => Promise<void>;
   handleClearControls: () => void;
   handleHistoryClick: () => void;
   setIsHistorySidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -105,7 +106,7 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
     }, []);
     const selectTemplates = useCallback(async () => {
       dispatch(
-        accFormStateHandleFieldChange({ fields: { templateChooserModal: true } })
+        toggleTemplateChooserModal({ isOpen: true, templateGroup: formState.transaction.master?.voucherType, customerType: formState.transaction.master?.customerType, formType: formState.transaction.master?.formType,isInv:false })
       );
     }, [formState.transaction.master?.voucherType]);
     const handleFieldChange = (field: keyof AccUserConfig, value: any) => {
@@ -178,22 +179,22 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
             disabled={formState.transaction.master.accTransactionMasterID < 1 || (formState.transaction.master.accTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
             className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`}
 
-               onClick={async() =>
-                  await  printVoucher(
-                    formState.transaction.master.accTransactionMasterID,  // masterID
-                    transactionType ?? "",                       // transactionType
-                    voucherType ?? "",        // voucherType
-                    formState.transaction?.master?.formType ?? "",           // formType
-                    formState.transaction?.master.customerType ?? "",       // customerType
-                    false,//is inv
-                    formState.userConfig?.printPreview ?? false,  //priview
-                    undefined,                                            // printTmeplate (optional)
-                    formState.transaction?.master.transactionDate ?? "",  
-                    undefined,  //tmepData
-                    formState?.lastChoosedTemplate?.id  //lastchoose tempId
-                  )
-                }
-              >  
+            onClick={async () =>
+              await printVoucher(
+                formState.transaction.master.accTransactionMasterID,  // masterID
+                transactionType ?? "",                       // transactionType
+                voucherType ?? "",        // voucherType
+                formState.transaction?.master?.formType ?? "",           // formType
+                formState.transaction?.master.customerType ?? "",       // customerType
+                false,//is inv
+                formState.userConfig?.printPreview ?? false,  //priview
+                undefined,                                            // printTmeplate (optional)
+                formState.transaction?.master.transactionDate ?? "",
+                undefined,  //tmepData
+                formState?.lastChoosedTemplate?.id  //lastchoose tempId
+              )
+            }
+          >
             <Printer className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
           </button>
         </div>
@@ -237,7 +238,7 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
               <nav className="w-full dark:bg-dark-bg dark:text-dark-text bg-gray-100 text-black">
                 <ul className="space-y-1">
                   <li>
-                    <button className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-400 hover:text-black transition-colors rounded-sm" onClick={(e) => { printPaymentReceiptAdvice( voucherType,); }}>
+                    <button className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-400 hover:text-black transition-colors rounded-sm" onClick={(e) => { printPaymentReceiptAdvice(voucherType,); }}>
                       <Printer className="h-4 w-4" />
                       <span>{t("print_payment_advise")}</span>
                     </button>

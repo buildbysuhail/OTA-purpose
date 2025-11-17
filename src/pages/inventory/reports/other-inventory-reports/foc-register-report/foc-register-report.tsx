@@ -14,7 +14,7 @@ import FOCRegisterReportFilter, {
 } from "./foc-register-report-filter";
 import GridId from "../../../../../redux/gridId";
 import moment from "moment";
-import {  isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
+import { isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
 
 const FOCRegisterReport = () => {
   const { t } = useTranslation("accountsReport");
@@ -58,13 +58,24 @@ const FOCRegisterReport = () => {
       allowSorting: true,
       visible: true,
       width: 50,
-      cellRender: (cellElement: any, cellInfo: any) => {
-        return (
-          <DrillDownCellTemplate
-            data={cellElement}
-            field="vchNo"
-          ></DrillDownCellTemplate>
-        );
+      showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell !== undefined) {
+          const value = cellElement.data?.vchNo == null ? "0" : cellElement.data.vchNo.toString();
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return (
+            <DrillDownCellTemplate
+              data={cellElement}
+              field="vchNo"
+            />
+          );
+        }
       },
     },
     {

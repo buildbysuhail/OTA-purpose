@@ -57,9 +57,7 @@ import DeletingOverlay from "../transaction-deleting";
 import { formStateHandleFieldChangeKeysOnly, resetState, formStateHandleFieldChange, updateFormElement } from "../reducer";
 import { TransactionProps, UserConfig, TransactionDetail, TransactionFormState, TransactionData, SummaryItems, GridQtyFactors, ColumnModel } from "../transaction-types";
 import { initialUserConfig, transactionInitialData, TransactionFormStateInitialData, initialFormElements, initialInventoryTotals } from "../transaction-type-data";
-import TemplatesView from "../../../transaction-base/template_picker";
 import { toggleIsPrintPreviewPopup } from "../../../../redux/slices/popup-reducer";
-import { faL } from "@fortawesome/free-solid-svg-icons";
 import TemplatesPreView from "../../../transaction-base/transaction-print-preview";
 // import { fetchUserConfig } from "../transaction-utils";
 
@@ -860,7 +858,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         },
         gridColumns: _gridCols,
         userConfig: {
-        // userConfig: userConfig ? userConfig : {
+          // userConfig: userConfig ? userConfig : {
           ...formState.userConfig,
         },
         transactionType: transactionType ?? "",
@@ -2264,7 +2262,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           </div>
         </BottomSidebar>
 
-        <ERPResizableSidebar
+        {/* <ERPResizableSidebar
           minWidth={350}
           isOpen={formState.templateChooserModal ?? false}
           setIsOpen={() =>
@@ -2288,7 +2286,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               }
             />
           )}
-        </ERPResizableSidebar>
+        </ERPResizableSidebar> */}
 
         <ERPResizableSidebar
           minWidth={350}

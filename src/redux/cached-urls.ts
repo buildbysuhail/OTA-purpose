@@ -7,7 +7,6 @@ import { APIClient } from "../helpers/api-client";
 import { getStorageString } from "../utilities/storage-utils";
 import Urls from "./urls";
 
-export const domain = config.api.APP_API_URL;
 export const signupUrl = import.meta.env.VITE_SIGNUP;
 export const companyName = import.meta.env.VITE_COMPANY_NAME;
 

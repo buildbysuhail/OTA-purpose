@@ -17,7 +17,7 @@ import { RootState } from "../../../../../redux/store";
 import InventorySummaryReportMonthwise from "./inventory-summary-report-monthwise";
 
 const InventorySummaryReport = () => {
-   const[filter, setFilter] = useState<any>(InventorySummaryReportFilterInitialState);
+  const [filter, setFilter] = useState<any>(InventorySummaryReportFilterInitialState);
   const userSession = useSelector((state: RootState) => state.UserSession);
   const clientSession = useSelector((state: RootState) => state.ClientSession);
   const { t } = useTranslation("accountsReport");
@@ -32,13 +32,23 @@ const InventorySummaryReport = () => {
         allowSorting: true,
         width: 250,
         showInPdf: true,
-         cellRender: (cellElement: any, cellInfo: any) => {
-          return (
-            <DrillDownCellTemplate
-              data={cellElement}
-              field="voucherTypeName"
-            ></DrillDownCellTemplate>
-          );
+        cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+          if (exportCell !== undefined) {
+            const value = cellElement.data?.voucherTypeName == null ? "0" : cellElement.data.voucherTypeName.toString();
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return (
+              <DrillDownCellTemplate
+                data={cellElement}
+                field="voucherTypeName"
+              />
+            );
+          }
         },
       },
       {
@@ -51,7 +61,7 @@ const InventorySummaryReport = () => {
         width: 100,
         showInPdf: true,
 
-        visible:true,
+        visible: true,
       },
       {
         dataField: "voucherForm",
@@ -62,7 +72,7 @@ const InventorySummaryReport = () => {
         allowSorting: true,
         width: 100,
         showInPdf: true,
-        visible:true,
+        visible: true,
       },
       {
         dataField: "branchName",
@@ -131,10 +141,10 @@ const InventorySummaryReport = () => {
     ];
     return baseColumns
       .filter((column) => {
-        if (column.dataField == "formType"&&clientSession.isAppGlobal) {
+        if (column.dataField == "formType" && clientSession.isAppGlobal) {
           return false;
         }
-         if (column.dataField == "voucherForm"&&!clientSession.isAppGlobal) {
+        if (column.dataField == "voucherForm" && !clientSession.isAppGlobal) {
           return false;
         }
         return true;
@@ -196,7 +206,7 @@ const InventorySummaryReport = () => {
                   sorting: false,
                 }}
                 columns={columns}
-                
+
                 filterText="{branchID > 0 &&   Branch : [branch]} 
                             {branchID <= 0 &&   of All Branch}  "
                 gridHeader={t("inventory_summary_report")}
@@ -215,11 +225,11 @@ const InventorySummaryReport = () => {
                       : userSession.currentBranchId,
                 }}
                 reload={true}
-                                onFilterChanged={(filter: any) => {
+                onFilterChanged={(filter: any) => {
                   setFilter(filter);
                 }}
                 gridId="grd_inventory_summary_report"
-                 childPopupProps={{
+                childPopupProps={{
                   content: <InventorySummaryReportMonthwise />,
                   title: "Inventory Report (Month View)",
                   isForm: false,
@@ -230,7 +240,7 @@ const InventorySummaryReport = () => {
                 postData={{
                   ...filter,
                   toDate: filter.asonDate,
-                  fromDate:userSession.finFrom
+                  fromDate: userSession.finFrom
                 }}
               />
             </div>

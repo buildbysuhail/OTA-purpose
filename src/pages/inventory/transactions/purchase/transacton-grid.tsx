@@ -736,7 +736,7 @@ const userSession = useSelector((state:RootState) => state.UserSession)
                 allowExport={true}
                 reload={reload}
                 changeReload={() => { setReload(false); }}
-                remoteOperations={false}
+                remoteOperations={true}
               />
             </div>
           </div>

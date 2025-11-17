@@ -16,28 +16,32 @@ import { isNullOrUndefinedOrEmpty } from '../../utilities/Utils';
 import { useTemplateDesigner } from '../InvoiceDesigner/LandingFolder/useTemplateDesigner';
 import SharedTemplatePreview from '../InvoiceDesigner/DesignPreview/shared';
 import { formStateHandleFieldChange } from '../inventory/transactions/reducer';
-import { popupDataProps } from '../../redux/slices/popup-reducer';
+import { popupDataProps, toggleTemplateChooserModal } from '../../redux/slices/popup-reducer';
+import { useAppSelector } from '../../utilities/hooks/useAppDispatch';
 
 export type TemplatesPreViewHandle = {
   getPrintData: () => {
     template: any;
-    printData?:any
+    printData?: any
   } | null;
-  openTemplateChooser:()=>{}
+  openTemplateChooser: () => {}
 };
 type TemplatesProps = {
   voucherType: string;
   isInvTrans?: boolean;
-  printPreviwPopupInfo:popupDataProps ;
+  printPreviwPopupInfo: popupDataProps;
   transactionType: string;
-  lastChooseTemp:any;
+  lastChooseTemp: any;
 };
 // 
 const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
-  ({ voucherType, isInvTrans = false, printPreviwPopupInfo, transactionType,lastChooseTemp }, ref) => {
-    const [activeTemplate,setActiveTemplate] = useState<TemplateState<unknown>>(printPreviwPopupInfo.template)
-    const prevTemplateIdRef  = useRef<number | null>(null);
+  ({ voucherType, isInvTrans = false, printPreviwPopupInfo, transactionType, lastChooseTemp }, ref) => {
+    const [activeTemplate, setActiveTemplate] = useState<TemplateState<unknown>>(printPreviwPopupInfo.template)
+    const prevTemplateIdRef = useRef<number | null>(null);
     const dispatch = useDispatch();
+    const formState = useAppSelector(
+      (state: RootState) => state.InventoryTransaction
+    );
     const { t } = useTranslation();
     const {
       stableTemplateProps,
@@ -46,8 +50,9 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
     } = useTemplateDesigner({
       manuvalTemplateFeatch: true,
       isInvTrans: isInvTrans,
-      MasterIDParam: printPreviwPopupInfo.masterId??0,
+      MasterIDParam: printPreviwPopupInfo.masterId ?? 0,
       transactionType: transactionType,
+
     });
 
     useEffect(() => {
@@ -60,7 +65,7 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
 
         if (lastChooseTemp?.id) {
           const fetchNewTemplate = async () => {
-            const tem = await fetchTemplateById(lastChooseTemp?.id, lastChooseTemp?.group??"", lastChooseTemp?.customerType, lastChooseTemp?.formType);
+            const tem = await fetchTemplateById(lastChooseTemp?.id, lastChooseTemp?.group ?? "", lastChooseTemp?.customerType, lastChooseTemp?.formType);
             if (tem) setActiveTemplate(tem);
           };
           fetchNewTemplate();
@@ -71,13 +76,16 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
     useImperativeHandle(ref, () => ({
       getPrintData: () => {
         if (!stableTemplateProps?.data || !activeTemplate) return null;
-        
+
         return {
           template: activeTemplate,
           data: stableTemplateProps.data,
         };
       },
-      openTemplateChooser:()=>dispatch(formStateHandleFieldChange({ fields: { templateChooserModal: true } })),
+      openTemplateChooser: () =>
+        dispatch(
+          toggleTemplateChooserModal({ isOpen: true, templateGroup: formState.transaction.master?.voucherType, customerType: formState.transaction.master?.customerType, formType: formState.transaction.master?.voucherForm })
+        )
     }));
 
     if (loading) {
@@ -103,6 +111,8 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
                 template={activeTemplate}
                 data={stableTemplateProps?.data}
                 qrCodeImages={stableTemplateProps?.qrCodeImages}
+                isTemplateDesigner={false}
+                isInvTrans={isInvTrans}
               />
             </div>
           </div>

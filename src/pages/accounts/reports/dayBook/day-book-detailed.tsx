@@ -47,13 +47,23 @@ const DayBookDetailed = () => {
       allowFiltering: true,
       width: 130,
       showInPdf: true,
-      cellRender: (cellElement: any, cellInfo: any) => {
-        return (
-          <DrillDownCellTemplate
-            data={cellElement}
-            field="vchNo"
-          ></DrillDownCellTemplate>
-        )
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell !== undefined) {
+          const value = cellElement.data?.vchNo == null ? "0" : cellElement.data.vchNo.toString();
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return (
+            <DrillDownCellTemplate
+              data={cellElement}
+              field="vchNo"
+            />
+          );
+        }
       },
     },
     // {
@@ -149,8 +159,8 @@ const DayBookDetailed = () => {
             balance == null
               ? ""
               : balance < 0
-                ? cellElement.data.particulars === "TOTAL" ? getFormattedValue(-1 * balance) :getFormattedValue (-1 * balance,false,4)
-                : cellElement.data.particulars === "TOTAL" ? getFormattedValue(balance) : getFormattedValue(balance,false,4);
+                ? cellElement.data.particulars === "TOTAL" ? getFormattedValue(-1 * balance) : getFormattedValue(-1 * balance, false, 4)
+                : cellElement.data.particulars === "TOTAL" ? getFormattedValue(balance) : getFormattedValue(balance, false, 4);
           return {
             ...exportCell,
             text: value,
@@ -173,7 +183,7 @@ const DayBookDetailed = () => {
               ? ''
               : cellElement.data.particulars === "TOTAL"
                 ? getFormattedValue(cellElement.data.debit)
-                : getFormattedValue(cellElement.data.debit,false,4)}`}
+                : getFormattedValue(cellElement.data.debit, false, 4)}`}
           </span>)
         }
       }
@@ -193,8 +203,8 @@ const DayBookDetailed = () => {
             balance == null
               ? ""
               : balance < 0
-                ? cellElement.data.particulars === "TOTAL" ? getFormattedValue(-1 * balance) : getFormattedValue(-1 * balance,false,4)
-                : cellElement.data.particulars === "TOTAL" ? getFormattedValue(balance) :getFormattedValue(balance,false,4);
+                ? cellElement.data.particulars === "TOTAL" ? getFormattedValue(-1 * balance) : getFormattedValue(-1 * balance, false, 4)
+                : cellElement.data.particulars === "TOTAL" ? getFormattedValue(balance) : getFormattedValue(balance, false, 4);
           return {
             ...exportCell,
             text: value,
@@ -217,7 +227,7 @@ const DayBookDetailed = () => {
               ? ''
               : cellElement.data.particulars === "TOTAL"
                 ? getFormattedValue(cellElement.data.credit)
-                : getFormattedValue(cellElement.data.credit,false,4)}`}
+                : getFormattedValue(cellElement.data.credit, false, 4)}`}
           </span>)
         }
       }
@@ -291,7 +301,7 @@ const DayBookDetailed = () => {
                   filterInitialData={DayBookReportFilterInitialState}
                   hideGridAddButton={true}
                   reload={true}
-                  remoteOperations={{filtering:false,sorting:false,paging:false}}
+                  remoteOperations={{ filtering: false, sorting: false, paging: false }}
                   childPopupProps={{
                     content: <AccTransactionForm isTeller={false} />,
                     title: t(""),

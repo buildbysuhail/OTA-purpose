@@ -36,18 +36,30 @@ const DayBookSummary = () => {
     // },
     {
       dataField: "voucherType",
-      caption: t("voucherType"),
+      caption: t("voucher_type"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
       showInPdf: true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <DrillDownCellTemplate
-          data={cellElement}
-          field="voucherType"
-        ></DrillDownCellTemplate>
-      ),
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell !== undefined) {
+          const value = cellElement.data?.voucherType == null ? "0" : cellElement.data.voucherType.toString();
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return (
+            <DrillDownCellTemplate
+              data={cellElement}
+              field="voucherType"
+            />
+          );
+        }
+      },
     },
     {
       dataField: "particulars",
@@ -68,39 +80,38 @@ const DayBookSummary = () => {
             balance == null
               ? ""
               : balance < 0
-              ? getFormattedValue(-1 * balance) + " Cr"
-              : getFormattedValue(balance) + " Dr";
+                ? getFormattedValue(-1 * balance) + " Cr"
+                : getFormattedValue(balance) + " Dr";
           return exportCell != undefined
             ? {
-                ...exportCell,
-                text: cellInfo.value,
-                bold: true,
-                alignment: "right",
-                textColor:
-                  cellElement.data.particulars === "TOTAL" ? "#FF0000" : "",
-                font: {
-                  ...exportCell.font,
-                  color:
-                    cellElement.data.particulars === "TOTAL"
-                      ? { argb: "FFFF0000" }
-                      : "",
-                  size: 10,
-                  style:
-                    cellElement.data.particulars === "TOTAL"
-                      ? "bold"
-                      : "normal",
-                  bold: cellElement.data.particulars === "TOTAL" ? true : false,
-                },
-              }
+              ...exportCell,
+              text: cellInfo.value,
+              bold: true,
+              alignment: "right",
+              textColor:
+                cellElement.data.particulars === "TOTAL" ? "#FF0000" : "",
+              font: {
+                ...exportCell.font,
+                color:
+                  cellElement.data.particulars === "TOTAL"
+                    ? { argb: "FFFF0000" }
+                    : "",
+                size: 10,
+                style:
+                  cellElement.data.particulars === "TOTAL"
+                    ? "bold"
+                    : "normal",
+                bold: cellElement.data.particulars === "TOTAL" ? true : false,
+              },
+            }
             : undefined;
         } else {
           return (
             <span
-              className={`${
-                cellElement.data.particulars === "TOTAL"
-                  ? "font-bold text-[#DC143C]"
-                  : ""
-              }`}
+              className={`${cellElement.data.particulars === "TOTAL"
+                ? "font-bold text-[#DC143C]"
+                : ""
+                }`}
             >
               {cellElement.data.particulars}
             </span>
@@ -129,12 +140,12 @@ const DayBookSummary = () => {
             balance == null
               ? ""
               : balance < 0
-              ? cellElement.data.particulars === "TOTAL"
-                ? getFormattedValue(-1 * balance)
-                : getFormattedValue(-1 * balance, false, 4)
-              : cellElement.data.particulars === "TOTAL"
-              ? getFormattedValue(balance)
-              : getFormattedValue(balance, false, 4);
+                ? cellElement.data.particulars === "TOTAL"
+                  ? getFormattedValue(-1 * balance)
+                  : getFormattedValue(-1 * balance, false, 4)
+                : cellElement.data.particulars === "TOTAL"
+                  ? getFormattedValue(balance)
+                  : getFormattedValue(balance, false, 4);
 
           return {
             ...exportCell,
@@ -159,21 +170,19 @@ const DayBookSummary = () => {
         } else {
           return (
             <span
-              className={`${
-                cellElement.data.particulars === "TOTAL"
-                  ? "font-bold text-[#DC143C]"
-                  : ""
-              }`}
+              className={`${cellElement.data.particulars === "TOTAL"
+                ? "font-bold text-[#DC143C]"
+                : ""
+                }`}
             >
-              {`${
-                cellElement.data?.amount == null
-                  ? "0"
-                  : cellElement.data.amount < 0 && cellElement.data.particulars === "TOTAL"
+              {`${cellElement.data?.amount == null
+                ? "0"
+                : cellElement.data.amount < 0 && cellElement.data.particulars === "TOTAL"
                   ? getFormattedValue(cellElement.data.amount)
                   : cellElement.data.particulars === "TOTAL"
-                  ? getFormattedValue(cellElement.data.amount)
-                  : getFormattedValue(cellElement.data.amount, false, 4)
-              }`}
+                    ? getFormattedValue(cellElement.data.amount)
+                    : getFormattedValue(cellElement.data.amount, false, 4)
+                }`}
             </span>
           );
         }

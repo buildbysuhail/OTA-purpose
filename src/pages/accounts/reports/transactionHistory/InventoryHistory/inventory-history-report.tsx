@@ -68,15 +68,23 @@ const InventoryHistoryReport = () => {
       allowFiltering: true,
       width: 180,
       showInPdf: true,
-      cellRender: (cellElement: any, cellInfo: any) => {
-        return cellElement.data.oldInvTransactionID > 0 ? (
-          <DrillDownCellTemplate
-            data={cellElement}
-            field="vchNo"
-          ></DrillDownCellTemplate>
-        ) : (
-          cellElement.value
-        );
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell !== undefined) {
+          const value = cellElement.data?.vchNo == null ? "0" : cellElement.data.vchNo.toString();
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return (
+            <DrillDownCellTemplate
+              data={cellElement}
+              field="vchNo"
+            />
+          );
+        }
       },
     },
     {
@@ -216,12 +224,25 @@ const InventoryHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <DrillDownCellTemplate
-          data={cellElement}
-          field="details"
-        ></DrillDownCellTemplate>
-      ),
+      showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell !== undefined) {
+          const value = cellElement.data?.details == null ? "0" : cellElement.data.details.toString();
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return (
+            <DrillDownCellTemplate
+              data={cellElement}
+              field="details"
+            />
+          );
+        }
+      },
     },
   ];
   return (

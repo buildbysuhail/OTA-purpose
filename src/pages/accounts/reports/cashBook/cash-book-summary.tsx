@@ -12,7 +12,7 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
 const CashBookSummary = () => {
   const dispatch = useAppDispatch();
-  const { getFormattedValue,getNumericFormat } = useNumberFormat()
+  const { getFormattedValue, getNumericFormat } = useNumberFormat()
   const [isOpenDetails, setIsOpenDetails] = useState<{ isOpen: boolean; key: number; groupName?: string }>({ isOpen: false, key: 0 });
   const [filter, setFilter] = useState<any>(CashBookReportFilterInitialState);
   const { t } = useTranslation('accountsReport');
@@ -31,31 +31,18 @@ const CashBookSummary = () => {
         filter: any,
         exportCell: any
       ) => {
-        if (exportCell != undefined) {
-          const balance = cellElement.data?.balance;
-          const isDebit = balance >= 0;
-          const value =
-            balance == null
-              ? ""
-              : balance < 0
-                ? getFormattedValue(-1 * balance) + " Cr"
-                : getFormattedValue(balance) + " Dr";
-          return exportCell != undefined ? {
+        if (exportCell !== undefined) {
+          const value = cellElement.data.ledgerName;
+          return {
             ...exportCell,
-            text: cellInfo.value,
-            bold: true,
-            alignment: "right",
+            text: value,
+            bold: cellElement.data.ledgerName === "TOTAL",
+            alignment: "left",
             textColor: cellElement.data.ledgerName === "TOTAL" ? '#DC143C' : '',
-          } : undefined;
-        }
-        else {
+          };
+        } else {
           return cellElement.data.ledgerName === "TOTAL" ? (
-            <span
-              className={`${cellElement.data.ledgerName === "TOTAL"
-                ? "font-bold text-[#DC143C]"
-                : ""
-                }`}
-            >
+            <span className="font-bold text-[#DC143C]">
               {cellElement.data.ledgerName}
             </span>
           ) : (
@@ -67,6 +54,7 @@ const CashBookSummary = () => {
         }
       },
     },
+
     {
       dataField: "debit",
       caption: t('debit'),
@@ -237,7 +225,7 @@ const CashBookSummary = () => {
                   }}
                   postData={
                     { ...filter }}
-                    
+
                 />
               </div>
             </div>

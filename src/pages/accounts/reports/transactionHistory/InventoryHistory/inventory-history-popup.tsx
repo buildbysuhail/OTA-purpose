@@ -31,7 +31,7 @@ const InventoryHistoryPopup = ({
   // });
   const dispatch = useAppDispatch();
   const { t } = useTranslation("accountsReport");
-    const { getFormattedValue } = useNumberFormat()
+  const { getFormattedValue } = useNumberFormat()
   const [gridHeight, setGridHeight] = useState<{
     mobile: number;
     windows: number;
@@ -61,7 +61,7 @@ const InventoryHistoryPopup = ({
       allowFiltering: true,
       width: 100,
       showInPdf: true,
-        format:"dd-MMM-yyyy"
+      format: "dd-MMM-yyyy"
     },
     {
       dataField: "form",
@@ -70,7 +70,7 @@ const InventoryHistoryPopup = ({
       allowSearch: true,
       allowFiltering: true,
       showInPdf: true,
-      width:100
+      width: 100
     },
     {
       dataField: "vchNo",
@@ -79,16 +79,23 @@ const InventoryHistoryPopup = ({
       allowSearch: true,
       allowFiltering: true,
       showInPdf: true,
-      width:150,
-      cellRender: (cellElement: any, cellInfo: any) => {
-        return cellElement.data.oldInvTransactionID > 0 ? (
-          <DrillDownCellTemplate
-            data={cellElement}
-            field="vchNo"
-          ></DrillDownCellTemplate>
-        ) : (
-          cellElement.value
-        );
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell !== undefined) {
+          const value = cellElement.data?.vchNo == null ? "0" : cellElement.data.vchNo.toString();
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return (
+            <DrillDownCellTemplate
+              data={cellElement}
+              field="vchNo"
+            />
+          );
+        }
       },
     },
     {
@@ -103,11 +110,11 @@ const InventoryHistoryPopup = ({
           const balance = cellElement.data?.grandTotal;
           const isDebit = balance >= 0;
           const value =
-            balance == null 
+            balance == null
               ? ""
               : balance < 0
-              ? getFormattedValue(-1 * balance,false,4) 
-              : getFormattedValue(balance,false,4) ;
+                ? getFormattedValue(-1 * balance, false, 4)
+                : getFormattedValue(balance, false, 4);
 
           return {
             ...exportCell,
@@ -127,8 +134,8 @@ const InventoryHistoryPopup = ({
         }
         else {
           return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-            {`${cellElement.data?.grandTotal == null 
-              ? '':getFormattedValue(cellElement.data.grandTotal,false,4) }`}
+            {`${cellElement.data?.grandTotal == null
+              ? '' : getFormattedValue(cellElement.data.grandTotal, false, 4)}`}
           </span>)
         }
       }
@@ -145,11 +152,11 @@ const InventoryHistoryPopup = ({
           const balance = cellElement.data?.cashReceived;
           const isDebit = balance >= 0;
           const value =
-            balance == null 
+            balance == null
               ? ""
               : balance < 0
-              ? getFormattedValue(-1 * balance,false,4) 
-              : getFormattedValue(balance,false,4) ;
+                ? getFormattedValue(-1 * balance, false, 4)
+                : getFormattedValue(balance, false, 4);
 
           return {
             ...exportCell,
@@ -169,8 +176,8 @@ const InventoryHistoryPopup = ({
         }
         else {
           return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-            {`${cellElement.data?.cashReceived == null 
-              ? '':getFormattedValue(cellElement.data.cashReceived,false,4) }`}
+            {`${cellElement.data?.cashReceived == null
+              ? '' : getFormattedValue(cellElement.data.cashReceived, false, 4)}`}
           </span>)
         }
       }
@@ -181,7 +188,7 @@ const InventoryHistoryPopup = ({
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-    
+
     },
     {
       dataField: "oldInvTransactionID",
@@ -189,8 +196,8 @@ const InventoryHistoryPopup = ({
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      visible:false,
-      showInPdf:false,
+      visible: false,
+      showInPdf: false,
       width: 180,
     },
     {
@@ -209,60 +216,73 @@ const InventoryHistoryPopup = ({
       allowSearch: true,
       allowFiltering: true,
       width: 80,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <DrillDownCellTemplate
-          data={cellElement}
-          field="details"
-        ></DrillDownCellTemplate>
-      ),
+      showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell !== undefined) {
+          const value = cellElement.data?.details == null ? "0" : cellElement.data.details.toString();
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return (
+            <DrillDownCellTemplate
+              data={cellElement}
+              field="details"
+            />
+          );
+        }
+      },
     },
   ];
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-        
-              <div className="grid grid-cols-1 gap-3">
-                <ErpDevGrid
-                  columns={columns}
-                  heightToAdjustOnWindowsInModal={gridHeight.windows}
-                  postData={contentProps}
-                  gridHeader={t("inventory_transaction_history_popup")}
-                  dataUrl={Urls.acc_reports_inventory_history_popup}
-                  method={ActionType.POST}
-                  gridId="grd_inventory_history_popup"
-                  popupAction={toggleCostCentrePopup}
-                  // allowEditing={false}
-                  hideGridAddButton={true}
-                  // gridAddButtonType="popup"
-                  reload={true}
-                  childPopupPropsDynamic={(dataField: string) => ({
-                    title:
-                      dataField == "vchNo"
-                        ? t(`inventory_transaction_history_popup`)
-                        : t(`productsDetailedReportTransaction`),
-                    
-                    isForm: false,
-                    content:
-                      dataField == "vchNo" ? (
-                        <InventoryHistoryPopup />
-                      ) : dataField == "details" ? (
-                        <InventoryHistoryDetails />
-                      ) : null,
-                    drillDownCells: dataField == "vchNo" ? "vchNo" : "details",
-                    bodyProps:
-                      dataField == "vchNo"
-                        ? "oldInvTransactionID"
-                        : "invTransactionMasterID",
-                    enableFn: (data: any) =>
-                      dataField == "vchNo"
-                        ? data.oldInvTransactionID > 0
-                        : true,
-                  })}
-                ></ErpDevGrid>
-              </div>
-            </div>
+
+          <div className="grid grid-cols-1 gap-3">
+            <ErpDevGrid
+              columns={columns}
+              heightToAdjustOnWindowsInModal={gridHeight.windows}
+              postData={contentProps}
+              gridHeader={t("inventory_transaction_history_popup")}
+              dataUrl={Urls.acc_reports_inventory_history_popup}
+              method={ActionType.POST}
+              gridId="grd_inventory_history_popup"
+              popupAction={toggleCostCentrePopup}
+              // allowEditing={false}
+              hideGridAddButton={true}
+              // gridAddButtonType="popup"
+              reload={true}
+              childPopupPropsDynamic={(dataField: string) => ({
+                title:
+                  dataField == "vchNo"
+                    ? t(`inventory_transaction_history_popup`)
+                    : t(`productsDetailedReportTransaction`),
+
+                isForm: false,
+                content:
+                  dataField == "vchNo" ? (
+                    <InventoryHistoryPopup />
+                  ) : dataField == "details" ? (
+                    <InventoryHistoryDetails />
+                  ) : null,
+                drillDownCells: dataField == "vchNo" ? "vchNo" : "details",
+                bodyProps:
+                  dataField == "vchNo"
+                    ? "oldInvTransactionID"
+                    : "invTransactionMasterID",
+                enableFn: (data: any) =>
+                  dataField == "vchNo"
+                    ? data.oldInvTransactionID > 0
+                    : true,
+              })}
+            ></ErpDevGrid>
           </div>
+        </div>
+      </div>
 
     </Fragment>
   );

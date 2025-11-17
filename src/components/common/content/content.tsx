@@ -325,6 +325,7 @@ const PrintJobIndicator = () => {
                         title={route.title}
                         drCr={route.drCr}
                         voucherNo={0}
+                        
                       />
                       </SearchProvider>
                     </RouteGuard>

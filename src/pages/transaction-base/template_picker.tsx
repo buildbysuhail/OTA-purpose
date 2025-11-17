@@ -20,6 +20,7 @@ interface TemplatesProps {
 }
 
 export default function TemplatesView ({ setIsOpen, onTemplateChoosed, voucherType,formType,customerType}: TemplatesProps) {
+
 const { t } = useTranslation("system");
 const navigate = useNavigate();
 const [templates, setTemplate] =useState<[]>([])
@@ -60,23 +61,21 @@ const loadTemplateId = useCallback(
   async (template: TemplateState<unknown> | null) => {
     try {
       if (!template || isNullOrUndefinedOrEmpty(template.id)) return null;
-      debugger;
       const _template =await fetchTemplateById(template.id, template.templateGroup??"", template.customerType, template.formType);
       if (!_template) {
         console.warn("Template not found or failed to parse.");
         return;
       }
-debugger;
      await addTemplateToStore(_template, template.id);
 
      if (onTemplateChoosed && _template.id) {
-  onTemplateChoosed({
-    id: template?.id,
-    group: template?.templateGroup,
-    formType: template?.formType,
-    customerType: template?.customerType,
-  });
-}
+      onTemplateChoosed({
+        id: template?.id,
+        group: template?.templateGroup,
+        formType: template?.formType,
+        customerType: template?.customerType,
+      });
+      }
       setIsOpen();
     } catch (error) {
       console.error(error);

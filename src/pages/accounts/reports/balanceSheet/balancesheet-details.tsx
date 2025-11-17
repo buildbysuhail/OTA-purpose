@@ -18,26 +18,26 @@ interface BalancesheetDetailsProps {
   contentProps?: any;
   isMaximized?: boolean;
   modalHeight?: any;
-  origin?:string,
+  origin?: string,
 }
-const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName, rowData, contentProps,isMaximized,modalHeight, origin}) => {
-  
+const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName, rowData, contentProps, isMaximized, modalHeight, origin }) => {
+
   const dispatch = useAppDispatch();
   const [filter, setFilter] = useState<any>(postData);
   const { t } = useTranslation('accountsReport');
   const { getFormattedValue } = useNumberFormat()
   const rootState = useRootState();
 
-    const [gridHeight, setGridHeight] = useState<{
-      mobile: number;
-      windows: number;
-    }>({ mobile: 500, windows: 500 });
-  
-    useEffect(() => {
-      let gridHeightMobile = modalHeight - 50;
-      let gridHeightWindows = modalHeight - 140;
-      setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
-    }, [isMaximized, modalHeight]);
+  const [gridHeight, setGridHeight] = useState<{
+    mobile: number;
+    windows: number;
+  }>({ mobile: 500, windows: 500 });
+
+  useEffect(() => {
+    let gridHeightMobile = modalHeight - 50;
+    let gridHeightWindows = modalHeight - 140;
+    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+  }, [isMaximized, modalHeight]);
 
   const columns: DevGridColumn[] = [
     {
@@ -46,7 +46,7 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
       width: 250,
     },
     {
@@ -56,10 +56,10 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' :  getFormattedValue(cellElement.data.balance)}`}
+          {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : getFormattedValue(cellElement.data.balance)}`}
         </span>
       ),
     },
@@ -78,7 +78,7 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
@@ -92,7 +92,7 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
@@ -105,14 +105,35 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => {
-        return cellElement.data.ledgerName === "TOTAL" ? (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {cellElement.data.ledgerName}
-        </span>) :
-          <DrillDownCellTemplate data={cellElement} field="ledgerName"></DrillDownCellTemplate>
-      }
+      showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell !== undefined) {
+          const value = cellElement.data.ledgerName === "TOTAL"
+            ? cellElement.data.ledgerName
+            : cellElement.data.ledgerName;
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "left",
+            alignmentExcel: { horizontal: "left" },
+          };
+        } else {
+          return cellElement.data.ledgerName === "TOTAL"
+            ? (
+              <span className="font-bold text-[#DC143C]">
+                {cellElement.data.ledgerName}
+              </span>
+            )
+            : (
+              <DrillDownCellTemplate
+                data={cellElement}
+                field="ledgerName"
+              />
+            );
+        }
+      },
     },
+
   ];
   return (
     <Fragment>
@@ -122,14 +143,14 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
             <div className="">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                 remoteOperations={{ paging: false, filtering: false, sorting: false }}
+                  remoteOperations={{ paging: false, filtering: false, sorting: false }}
                   rowData={rowData}
                   heightToAdjustOnWindowsInModal={gridHeight.windows}
                   columns={columns}
                   postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
                   gridHeader={t("acc_group_view")}
                   // filterText="{ ___(accGroup)} {**** as of (asonDate)}"
-                  filterText={`for {${origin == "detailed" ? '___(accGroup)': '___(groupName)'}}, {**** as of (asonDate)}`}
+                  filterText={`for {${origin == "detailed" ? '___(accGroup)' : '___(groupName)'}}, {**** as of (asonDate)}`}
                   dataUrl={Urls.acc_reports_account_ledger_balance_view}
                   hideGridAddButton={true}
                   enablefilter={false}
@@ -141,7 +162,7 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
                     title: t("acc_group_monthview"),
                     isForm: true,
                     width: 1000,
-                    height:800,
+                    height: 800,
                     drillDownCells: "ledgerName",
                     bodyProps: "ledgerID,",
                     enableFn: (data: any) => data?.ledgerName != "TOTAL"

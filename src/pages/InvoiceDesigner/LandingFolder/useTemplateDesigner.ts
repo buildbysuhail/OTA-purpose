@@ -17,7 +17,7 @@ import ERPToast from "../../../components/ERPComponents/erp-toast";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import { APIClient } from "../../../helpers/api-client";
 import { getOrientedDimensions, getPageDimensions } from "../utils/pdf-util";
-import { fetchTemplateFromApiById, getOrFetchTemplate, loadPrintData } from "../../use-print";
+import { fetchTemplateById, fetchTemplateFromApiById, getOrFetchTemplate, loadPrintData } from "../../use-print";
 import { merge } from 'lodash';
 import { generateQRCodeDataUrl } from "../utils/qrSvgToImg";
 import { PrintDetailDto, PrintResponse } from "../../use-print-type";
@@ -77,7 +77,7 @@ export const useTemplateDesigner = ({
   transactionType,
   dbIdValue,
   voucherType,
-  isAppGlobal
+  isAppGlobal,
 }: UseTemplateDesignerProps) => {
   const { t } = useTranslation("system");
   const { id } = useParams();
@@ -161,7 +161,8 @@ export const useTemplateDesigner = ({
            debugger
         // Fetch template if needed
         if (manuvalTemplateFeatch) {
-          let _template = await getOrFetchTemplate(
+          let _template;
+          _template = await getOrFetchTemplate(
             data?.master?.voucherType,
             data?.master?.voucherForm,
             data?.master?.customerType

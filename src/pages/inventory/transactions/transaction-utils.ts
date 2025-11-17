@@ -35,3 +35,4 @@ export const fetchUserConfig = async (userId: number , transactionType :string )
       console.error("Error fetching user config:", error);
     }
   };
+  

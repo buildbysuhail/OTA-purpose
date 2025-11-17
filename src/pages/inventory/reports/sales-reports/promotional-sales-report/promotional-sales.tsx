@@ -52,13 +52,23 @@ const PromotionalSalesReport = () => {
       allowSorting: true,
       width: 50,
       showInPdf: true,
-      cellRender: (cellElement: any, cellInfo: any) => {
-        return (
-          <DrillDownCellTemplate
-            data={cellElement}
-            field="vchNo"
-          ></DrillDownCellTemplate>
-        );
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell !== undefined) {
+          const value = cellElement.data?.vchNo == null ? "0" : cellElement.data.vchNo.toString();
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return (
+            <DrillDownCellTemplate
+              data={cellElement}
+              field="vchNo"
+            />
+          );
+        }
       },
     },
     {
@@ -384,7 +394,7 @@ const PromotionalSalesReport = () => {
           const value =
             cellElement.data?.stdPurchasePrice == null
               ? ""
-              : getFormattedValue(cellElement.data.stdPurchasePrice,false,2);
+              : getFormattedValue(cellElement.data.stdPurchasePrice, false, 2);
           return {
             ...exportCell,
             text: value,
@@ -394,7 +404,7 @@ const PromotionalSalesReport = () => {
         } else {
           return cellElement.data?.stdPurchasePrice == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.stdPurchasePrice),false,2);
+            : getFormattedValue(parseFloat(cellElement.data.stdPurchasePrice), false, 2);
         }
       },
     },
@@ -417,7 +427,7 @@ const PromotionalSalesReport = () => {
           const value =
             cellElement.data?.stdSalesPrice == null
               ? ""
-              : getFormattedValue(cellElement.data.stdSalesPrice,false,2);
+              : getFormattedValue(cellElement.data.stdSalesPrice, false, 2);
           return {
             ...exportCell,
             text: value,
@@ -427,7 +437,7 @@ const PromotionalSalesReport = () => {
         } else {
           return cellElement.data?.stdSalesPrice == null
             ? ""
-            : getFormattedValue(parseFloat(cellElement.data.stdSalesPrice),false,2);
+            : getFormattedValue(parseFloat(cellElement.data.stdSalesPrice), false, 2);
         }
       },
     },
@@ -523,14 +533,14 @@ const PromotionalSalesReport = () => {
     },
     {
       column: "quantity",
-      summaryType:"sum",
+      summaryType: "sum",
       valueFormat: "fixedPoint",
       customizeText: customizeSummaryRow,
-      
+
     },
     {
       column: "netAmount",
-      summaryType:"sum",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
@@ -542,13 +552,13 @@ const PromotionalSalesReport = () => {
     },
     {
       column: "stdGross",
-      summaryType:"sum",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
       column: "priceDiff",
-      summaryType:"sum",
+      summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },

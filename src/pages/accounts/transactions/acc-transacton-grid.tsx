@@ -13,12 +13,13 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSearch } from "./search-context.tsx";
 import { erpParseFloat } from "../../../utilities/Utils";
 import { RootState } from "../../../redux/store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getStorageString } from "../../../utilities/storage-utils";
 import { UserConfig } from "../../inventory/transactions/transaction-types";
 import { customJsonParse, safeBase64Decode } from "../../../utilities/jsonConverter";
 import { fetchUserConfig } from "../../inventory/transactions/transaction-utils";
-import { formStateHandleFieldChangeKeysOnly } from "../../inventory/transactions/reducer";
+import { formStateHandleFieldChangeKeysOnly } from "./reducer";
+// import { formStateHandleFieldChangeKeysOnly } from "../../inventory/transactions/reducer";
 
 const toggleTransactionPopup = (payload: {
   isOpen: boolean;
@@ -39,32 +40,34 @@ const toggleTransactionPopup = (payload: {
 //   onSearch?: (query: string) => void; 
 // }
 
-const AccTransactionGrid: React.FC<{voucherType?: string
+const AccTransactionGrid: React.FC<{
+  voucherType?: string
   , transactionType?: string
-  ,title?: string ,addTitle?: string}> = ({
+  , title?: string, addTitle?: string
+}> = ({
 
-// const AccTransactionGrid: React.FC<AccTransactionGridProps> = ({
+  // const AccTransactionGrid: React.FC<AccTransactionGridProps> = ({
   voucherType,
   transactionType,
   title,
   addTitle,
   // onSearch,
 }) => {
-  // const dispatch = useAppDispatch();
-    const dispatch = useAppDispatch();
-       const formState = useAppSelector((state: RootState) => state.AccTransaction);
-      // console.log(" atg mjjjjjjjjj22222:", formState?.userConfig?.editInNewTab);
-      const navigate = useNavigate();
+    // const dispatch = useAppDispatch();
+    const dispatch = useDispatch();
+    const formState = useAppSelector((state: RootState) => state.AccTransaction);
+    // console.log(" atg mjjjjjjjjj22222:", formState?.userConfig?.editInNewTab);
+    const navigate = useNavigate();
 
-      useEffect (()=>{
-        console.log("test mj233:", formState?.userConfig?.editInNewTab);
-        
-      })
+    useEffect(() => {
+      console.log("acr test mj233:", formState?.userConfig?.editInNewTab);
+
+    })
 
     const { getFormattedValue } = useNumberFormat();
-  const { t } = useTranslation('transaction');
+    const { t } = useTranslation('transaction');
     const { setSearchQuery } = useSearch();
-    const userSession = useSelector((state:RootState) => state.UserSession)
+    const userSession = useSelector((state: RootState) => state.UserSession)
     useEffect(() => {
       if (!userSession?.userId || !transactionType) return;
       const loadUserConfig = async () => {
@@ -80,15 +83,16 @@ const AccTransactionGrid: React.FC<{voucherType?: string
           } else {
             userConfig = await fetchUserConfig(userSession.userId, transactionType);
           }
-          
+
           // dispatch(forhanfich({ fie: { userConfig } }));
-           dispatch(
-                      formStateHandleFieldChangeKeysOnly({
-                        fields: {
-                          userConfig: userConfig
-                      }})
-                    );
-          
+          dispatch(
+            formStateHandleFieldChangeKeysOnly({
+              fields: {
+                userConfig: userConfig
+              }
+            })
+          );
+
         } catch (error) {
           console.error("Error loading user config:", error);
         }
@@ -97,348 +101,368 @@ const AccTransactionGrid: React.FC<{voucherType?: string
       loadUserConfig();
     }, []);
 
-  //   const handleSearch = (query: string) => {
-  //   if (onSearch) {
-  //     onSearch(query);
-  //   }
-  // };
+    //   const handleSearch = (query: string) => {
+    //   if (onSearch) {
+    //     onSearch(query);
+    //   }
+    // };
 
-  const [reload, setReload] = useState<boolean>(true)
-  
-  const columns: DevGridColumn[] = useMemo(
-    () => [
-      {
-        dataField: "accTransactionMasterID",
-        caption: t("acc_transaction_master_id"),
-        dataType: "number",
-        allowSorting: true,
-        allowFiltering: true,
-        allowSearch: true,
-        alignment: "left",
-        visible:false,
-      },
-      {
-        dataField: "transactionDate",
-        caption: t("transaction_date"),
-        dataType: "date",
-        allowSorting: true,
-        allowFiltering: true,
-        allowSearch: true,
-        width: 150,
-        alignment: "left",
-        showInPdf: true,
-        cellRender: (cellInfo: any) => {
-          
-          return cellInfo.data?.transactionDate
-            ? formatDate(new Date(cellInfo.data?.transactionDate), "MMM dd, yyyy")
-            : "";
+    const [reload, setReload] = useState<boolean>(true)
+
+    const columns: DevGridColumn[] = useMemo(
+      () => [
+        {
+          dataField: "accTransactionMasterID",
+          caption: t("acc_transaction_master_id"),
+          dataType: "number",
+          allowSorting: true,
+          allowFiltering: true,
+          allowSearch: true,
+          alignment: "left",
+          visible: false,
         },
-      },
-      {
-        dataField: "particulars",
-        caption: t("particulars"),
-        dataType: "string",
-        allowSorting: true,
-        allowFiltering: true,
-        allowSearch: true,
-        alignment: "left",
-        showInPdf: true,
-      },
-      {
-        dataField: "voucherType",
-        caption: t("voucher_type"),
-        dataType: "string",
-        // groupIndex:0,
-        allowSorting: true,
-        allowFiltering: true,
-        allowSearch: true,
-        alignment: "left",
-        showInPdf: true,
-      },
-      {
-        dataField: "formType",
-        caption: t("form"),
-        dataType: "string",
-        allowSorting: true,
-        allowFiltering: true,
-        allowSearch: true,
-        alignment: "left",
-        showInPdf: true,
-      },
-      {
-        dataField: "voucherPrefix",
-        caption: t("voucher_prefix"),
-        dataType: "string",
-        allowSorting: true,
-        allowFiltering: true,
-        allowSearch: true,
-        alignment: "left",
-        showInPdf: true,
-      },
-      {
-        dataField: "voucherNumber",
-        caption: t("voucher_number"),
-        dataType: "string",
-        allowSorting: true,
-        allowFiltering: true,
-        allowSearch: true,
-        alignment: "center",
-        showInPdf: true,
-        bold: true,
-        cssClass: "centered-header",
-        cellRender: (cellInfo) => {
-          const row = cellInfo.data;
-          const transactionMasterID = parseInt(row.accTransactionMasterID || "0", 10);
-          const vchtype = row.voucherType;
-          const voucherform = row.formType;
-          const prefix = row.voucherPrefix;
-          const vchno = row.voucherNumber;
-          const financialYearID = parseInt(row.financialYearID || "0", 10);
+        {
+          dataField: "transactionDate",
+          caption: t("transaction_date"),
+          dataType: "date",
+          allowSorting: true,
+          allowFiltering: true,
+          allowSearch: true,
+          width: 150,
+          alignment: "left",
+          showInPdf: true,
+          cellRender: (cellInfo: any) => {
 
-          const tr = transactionRoutes.find((x) => x.voucherType === vchtype);
+            return cellInfo.data?.transactionDate
+              ? formatDate(new Date(cellInfo.data?.transactionDate), "MMM dd, yyyy")
+              : "";
+          },
+        },
+        {
+          dataField: "particulars",
+          caption: t("particulars"),
+          dataType: "string",
+          allowSorting: true,
+          allowFiltering: true,
+          allowSearch: true,
+          alignment: "left",
+          showInPdf: true,
+        },
+        {
+          dataField: "voucherType",
+          caption: t("voucher_type"),
+          dataType: "string",
+          // groupIndex:0,
+          allowSorting: true,
+          allowFiltering: true,
+          allowSearch: true,
+          alignment: "left",
+          showInPdf: true,
+        },
+        {
+          dataField: "formType",
+          caption: t("form"),
+          dataType: "string",
+          allowSorting: true,
+          allowFiltering: true,
+          allowSearch: true,
+          alignment: "left",
+          showInPdf: true,
+        },
+        {
+          dataField: "voucherPrefix",
+          caption: t("voucher_prefix"),
+          dataType: "string",
+          allowSorting: true,
+          allowFiltering: true,
+          allowSearch: true,
+          alignment: "left",
+          showInPdf: true,
+        },
+        {
+          dataField: "voucherNumber",
+          caption: t("voucher_number"),
+          dataType: "string",
+          allowSorting: true,
+          allowFiltering: true,
+          allowSearch: true,
+          alignment: "center",
+          showInPdf: true,
+          bold: true,
+          cssClass: "centered-header",
+          cellRender: (
+            cellInfo: any,
+            sdsd: any,
+            filter: any,
+            exportCell: any
+          ) => {
+            debugger;
+            if (exportCell != undefined) {
+              const value =
+                cellInfo.data?.voucherNumber == null
+                  ? 0
+                  : cellInfo.data.voucherNumber.toString();
+              return {
+                ...exportCell,
+                text: value,
+                alignment: "right",
+                alignmentExcel: { horizontal: "right" },
+              };
+            } else {
+              const row = cellInfo.data;
+              const transactionMasterID = parseInt(row.accTransactionMasterID || "0", 10);
+              const vchtype = row.voucherType;
+              const voucherform = row.formType;
+              const prefix = row.voucherPrefix;
+              const vchno = row.voucherNumber;
+              const financialYearID = parseInt(row.financialYearID || "0", 10);
 
-          let transactionData: any = {};
-          if (parseInt(vchno, 10) > 0) {
-            transactionData = {
-              transactionMasterID,
-              formType: voucherform,
-              voucherPrefix: prefix,
-              voucherType: vchtype,
-              financialYearID,
-              formCode: tr?.formCode,
-              transactionType: tr?.transactionType,
-              transactionBase: tr?.transactionBase,
-              title: tr?.title,
-              drCr: tr?.drCr,
-            };
-          }
- // Convert object to query string
-    const queryString = new URLSearchParams(
-      Object.entries(transactionData).reduce((acc, [key, value]) => {
-        acc[key] = String(value ?? "");
-        return acc;
-      }, {} as Record<string, string>)
-    ).toString();
-    
-          return (
-            <div style={{ textAlign: "center" }}>
-              <Link
-                to={`/accounts/transactions/CashPayment/${cellInfo.value}?${queryString}`}
-                style={{ color: "#1b6de0", textDecoration: "underline" }}
-                onClick={() => {
-                  console.log("cellInfo", cellInfo);
-                  console.log("transactionData", transactionData);
+              const tr = transactionRoutes.find((x) => x.voucherType === vchtype);
+
+              let transactionData: any = {};
+              if (parseInt(vchno, 10) > 0) {
+                transactionData = {
+                  transactionMasterID,
+                  formType: voucherform,
+                  voucherPrefix: prefix,
+                  voucherType: vchtype,
+                  financialYearID,
+                  formCode: tr?.formCode,
+                  transactionType: tr?.transactionType,
+                  transactionBase: tr?.transactionBase,
+                  title: tr?.title,
+                  drCr: tr?.drCr,
+                };
+              }
+              // Convert object to query string
+              const queryString = new URLSearchParams(
+                Object.entries(transactionData).reduce((acc, [key, value]) => {
+                  acc[key] = String(value ?? "");
+                  return acc;
+                }, {} as Record<string, string>)
+              ).toString();
+
+              return (
+                <div style={{ textAlign: "center" }}>
+                  <Link
+                    to={`/accounts/transactions/CashPayment/${cellInfo.value}?${queryString}`}
+                    style={{ color: "#1b6de0", textDecoration: "underline" }}
+                    onClick={() => {
+                      console.log("cellInfo", cellInfo);
+                      console.log("transactionData", transactionData);
+                    }}
+                  >
+                    {cellInfo.value}
+                  </Link>
+                </div>
+              );
+            }
+          },
+
+        },
+
+        {
+          dataField: "referenceNumber",
+          caption: t("ref_no"),
+          dataType: "string",
+          allowSorting: true,
+          allowFiltering: true,
+          allowSearch: true,
+          alignment: "left",
+          showInPdf: true,
+        },
+        {
+          dataField: "referenceDate",
+          caption: t("ref_date"),
+          dataType: "date",
+          allowSorting: true,
+          allowFiltering: true,
+          allowSearch: true,
+          width: 150,
+          alignment: "left",
+          showInPdf: true,
+          cellRender: (cellInfo: any) => {
+            return cellInfo?.data?.referenceDate
+              ? formatDate(new Date(cellInfo?.data?.referenceDate), "MMM dd, yyyy")
+              : "";
+          },
+        },
+        // {
+        //   dataField: "totalDebit",
+        //   caption: t("debit"),
+        //   dataType: "number",
+        //   allowSorting: true,
+        //   allowFiltering: true,
+        //   allowSearch: true,
+        //   alignment: "left",
+        //   showInPdf: true,
+        // },
+        // {
+        //   dataField: "totalCredit",
+        //   caption: t("credit"),
+        //   dataType: "number",
+        //   allowSorting: true,
+        //   allowFiltering: true,
+        //   allowSearch: true,
+        //   alignment: "left",
+        //   showInPdf: true,
+        // },
+        // {
+        //   dataField: "discount",
+        //   caption: t("discount"),
+        //   dataType: "number",
+        //   allowSorting: true,
+        //   allowFiltering: true,
+        //   allowSearch: true,
+        //   alignment: "left",
+        //   showInPdf: true,
+        // },
+        {
+          dataField: "amount",
+          caption: t("amount"),
+          dataType: "number",
+          allowSorting: true,
+          allowFiltering: true,
+          allowSearch: true,
+          alignment: "right",
+          showInPdf: true,
+          cellRender: (cellInfo: any) =>
+            `${getFormattedValue(cellInfo.value)
+            }`,
+        },
+        {
+          dataField: "commonNarration",
+          caption: t("Notes"),
+          dataType: "string",
+          allowSorting: true,
+          allowFiltering: true,
+          allowSearch: true,
+          alignment: "left",
+          showInPdf: true,
+        },
+        {
+          dataField: "remarks",
+          caption: t("remarks"),
+          dataType: "string",
+          allowSorting: true,
+          allowFiltering: true,
+          allowSearch: true,
+          alignment: "left",
+          showInPdf: true,
+        },
+        {
+          dataField: "discount",
+          caption: t("discount"),
+          dataType: "number",
+          allowSorting: true,
+          allowFiltering: true,
+          allowSearch: true,
+          alignment: "left",
+          showInPdf: true,
+        },
+        {
+          dataField: "actions",
+          caption: t("Actions"),
+          allowSearch: false,
+          allowFiltering: false,
+          fixed: true,
+          dataType: "string",
+          // fixedPosition: "right",
+          fixedPosition: document?.dir === "rtl" ? "left" : "right",
+          width: 100,
+          minWidth: 100,
+          maxWidth: 100,
+
+          cellRender: (cellElement: any) => {
+            return (
+              <ERPGridActions
+                view={{
+                  visible: false,
+                  type: "popup",
+                  action: () =>
+                    dispatch(
+                      toggleTransactionPopup({
+                        isOpen: true,
+                        key: cellElement?.data?.accTransactionDetailID,
+                        reload: false,
+                        // formState:formState
+                      })
+                    ),
                 }}
-              >
-                {cellInfo.value}
-              </Link>
-            </div>
-          );
-        }
-      },
+                edit={{
+                  type: "popup",
+                  action: () => {
+                    const row = cellElement.data;
+                    const transactionMasterID = parseInt(row.accTransactionMasterID || "0", 10);
 
-      {
-        dataField: "referenceNumber",
-        caption: t("ref_no"),
-        dataType: "string",
-        allowSorting: true,
-        allowFiltering: true,
-        allowSearch: true,
-        alignment: "left",
-        showInPdf: true,
-      },
-      {
-        dataField: "referenceDate",
-        caption: t("ref_date"),
-        dataType: "date",
-        allowSorting: true,
-        allowFiltering: true,
-        allowSearch: true,
-        width: 150,
-        alignment: "left",
-        showInPdf: true,
-        cellRender: (cellInfo: any) => {
-          return cellInfo?.data?.referenceDate
-            ? formatDate(new Date(cellInfo?.data?.referenceDate), "MMM dd, yyyy")
-            : "";
-        },
-      },
-      // {
-      //   dataField: "totalDebit",
-      //   caption: t("debit"),
-      //   dataType: "number",
-      //   allowSorting: true,
-      //   allowFiltering: true,
-      //   allowSearch: true,
-      //   alignment: "left",
-      //   showInPdf: true,
-      // },
-      // {
-      //   dataField: "totalCredit",
-      //   caption: t("credit"),
-      //   dataType: "number",
-      //   allowSorting: true,
-      //   allowFiltering: true,
-      //   allowSearch: true,
-      //   alignment: "left",
-      //   showInPdf: true,
-      // },
-      // {
-      //   dataField: "discount",
-      //   caption: t("discount"),
-      //   dataType: "number",
-      //   allowSorting: true,
-      //   allowFiltering: true,
-      //   allowSearch: true,
-      //   alignment: "left",
-      //   showInPdf: true,
-      // },
-      {
-        dataField: "amount",
-        caption: t("amount"),
-        dataType: "number",
-        allowSorting: true,
-        allowFiltering: true,
-        allowSearch: true,
-        alignment: "right",
-        showInPdf: true,
-        cellRender: (cellInfo: any) =>
-          `${getFormattedValue(cellInfo.value)
-          }`,
-      },
-      {
-        dataField: "commonNarration",
-        caption: t("Notes"),
-        dataType: "string",
-        allowSorting: true,
-        allowFiltering: true,
-        allowSearch: true,
-        alignment: "left",
-        showInPdf: true,
-      },
-      {
-        dataField: "remarks",
-        caption: t("remarks"),
-        dataType: "string",
-        allowSorting: true,
-        allowFiltering: true,
-        allowSearch: true,
-        alignment: "left",
-        showInPdf: true,
-      },
-       {
-        dataField: "discount",
-        caption: t("discount"),
-        dataType: "number",
-        allowSorting: true,
-        allowFiltering: true,
-        allowSearch: true,
-        alignment: "left",
-        showInPdf: true,
-      },
-      {
-        dataField: "actions",
-        caption: t("Actions"),
-        allowSearch: false,
-        allowFiltering: false,
-        fixed: true,
-        dataType:"string",
-        // fixedPosition: "right",
-        fixedPosition: document?.dir === "rtl" ? "left" : "right",
-        width: 100,
-        minWidth: 100,
-        maxWidth: 100,
-        
-        cellRender: (cellElement: any) => {
-          return (
-            <ERPGridActions
-              view={{
-                visible: false,
-                type: "popup",
-                action: () =>
-                  dispatch(
-                    toggleTransactionPopup({
-                      isOpen: true,
-                      key: cellElement?.data?.accTransactionDetailID,
-                      reload: false,
-                      // formState:formState
-                    })
-                  ),
-              }}
-              edit={{
-                type: "popup",
-                action: () =>
-                {
-                  const row = cellElement.data;
-                  const transactionMasterID = parseInt(row.accTransactionMasterID || "0", 10);
-                          
-                          const vchtype = row.voucherType;
-                          const voucherform = row.formType;
-                  
-                         
-                          const prefix = row.voucherPrefix;
-                          const vchno = row.voucherNumber;
-                          const financialYearID = parseInt(row.financialYearID || "0", 10);
-                  
-                          const tr = transactionRoutes.find((x) => x.voucherType === vchtype);
-                  
-                          let transactionData = {};
-                          if (parseInt(vchno, 10) > 0) {
-                            transactionData = {
-                              transactionMasterID,
-                              formType: voucherform,
-                              voucherPrefix: prefix,
-                              voucherType: vchtype,
-                              financialYearID,
-                              voucherNo: parseInt(vchno, 10),
-                              formCode: tr?.formCode,
-                              transactionType: tr?.transactionType,
-                              transactionBase: tr?.transactionBase,
-                              title: tr?.title,
-                              drCr: tr?.drCr,
-                            };
-                          } 
-                          const url = new URL(
-                                              `${window.location.origin}/${TransactionBase.Accounts}/${transactionType}`
-                                             )
-                                    
+                    const vchtype = row.voucherType;
+                    const voucherform = row.formType;
 
-                  // Append all parameters from the `params` object
-                  Object.entries(transactionData).forEach(([key, value]) => {
-                    url.searchParams.append(key, String(value));
-                  });
-    
-                  // Open the URL in a new tab
-                  //  window.open(url.toString(), formState?.userConfig?.editInNewTab ? "_blank" : "_self");
-                  if(formState?.userConfig?.editInNewTab) {
-                  window.open(url.toString(), "_blank");
-                } else {
-                const path = url.pathname + url.search;
-                    navigate(path);
-                }
-                }
-              }}
-              delete={{
-                onSuccess: () => {
-                  setReload(true);
-                },
-                confirmationRequired: true,
-                confirmationMessage:
-                  "Are you sure you want to delete this transaction?",
-                url: `/Accounts/${transactionType}/`,
-                key: cellElement?.data?.accTransactionMasterID,
-              }}
-            />
-          );
+
+                    const prefix = row.voucherPrefix;
+                    const vchno = row.voucherNumber;
+                    const financialYearID = parseInt(row.financialYearID || "0", 10);
+
+                    const tr = transactionRoutes.find((x) => x.voucherType === vchtype);
+
+                    let transactionData = {};
+                    if (parseInt(vchno, 10) > 0) {
+                      transactionData = {
+                        transactionMasterID,
+                        formType: voucherform,
+                        voucherPrefix: prefix,
+                        voucherType: vchtype,
+                        financialYearID,
+                        voucherNo: parseInt(vchno, 10),
+                        formCode: tr?.formCode,
+                        transactionType: tr?.transactionType,
+                        transactionBase: tr?.transactionBase,
+                        title: tr?.title,
+                        drCr: tr?.drCr,
+                      };
+                    }
+                    const url = new URL(
+                      `${window.location.origin}/${TransactionBase.Accounts}/${transactionType}`
+                    )
+
+
+                    // Append all parameters from the `params` object
+                    Object.entries(transactionData).forEach(([key, value]) => {
+                      url.searchParams.append(key, String(value));
+                    });
+
+                    // Open the URL in a new tab
+                    //  window.open(url.toString(), formState?.userConfig?.editInNewTab ? "_blank" : "_self");
+                    //  console.log("g insisde acr test mj233:", formState?.userConfig?.editInNewTab);
+                    if (formState?.userConfig?.editInNewTab) {
+                      window.open(url.toString(), "_blank");
+                    } else {
+                      const path = url.pathname + url.search;
+                      navigate(path);
+                    }
+                  }
+                }}
+                delete={{
+                  onSuccess: () => {
+                    setReload(true);
+                  },
+                  confirmationRequired: true,
+                  confirmationMessage:
+                    "Are you sure you want to delete this transaction?",
+                  url: `/Accounts/${transactionType}/`,
+                  key: cellElement?.data?.accTransactionMasterID,
+                }}
+              />
+            );
+          },
         },
-      },
-    ],
-    [t, dispatch]
-  );
-  useEffect(() => {
-    setReload(true);
-  }, [location.pathname]); 
-  const customizeSummaryRow = useMemo(() => {
+      ],
+      [t, dispatch, formState.userConfig?.editInNewTab]
+    );
+    useEffect(() => {
+      setReload(true);
+    }, [location.pathname]);
+    const customizeSummaryRow = useMemo(() => {
       return (itemInfo: { value: any }) => {
         const value = itemInfo.value;
         if (
@@ -452,16 +476,16 @@ const AccTransactionGrid: React.FC<{voucherType?: string
         return getFormattedValue(value) || "0"; // Ensure formatted output or fallback to "0"
       };
     }, []);
-  
-   const summaryItems: SummaryConfig[] = [
+
+    const summaryItems: SummaryConfig[] = [
       {
         column: "amount",
         summaryType: "custom",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
-                  return erpParseFloat(getFormattedValue(value));
-                },
+        cellSummaryAction: (value: number) => {
+          return erpParseFloat(getFormattedValue(value));
+        },
       },
       {
         column: "discount",
@@ -474,62 +498,64 @@ const AccTransactionGrid: React.FC<{voucherType?: string
         summaryType: "custom",
         valueFormat: "currency",
         isGroupItem: true,
-        showInGroupFooter:true,
-        displayFormat:"Total: {0}",
+        showInGroupFooter: true,
+        displayFormat: "Total: {0}",
         customizeText: customizeSummaryRow,
-        cellSummaryAction:(value: number) => {
+        cellSummaryAction: (value: number) => {
           return erpParseFloat(getFormattedValue(value));
         },
       }
     ];
 
-      const handleSearch = (query: string) => {
-        setSearchQuery(query);
-      };
+    const handleSearch = (query: string) => {
+      setSearchQuery(query);
+    };
 
     // useEffect(() => {
     //   console.log("searchQuery acc t g" );
     //   console.log({ handleSearch });
     // }, []);
 
-          // console.log("searchQuery acc t g" );
-          // console.log({ handleSearch });
-  return (
-    <Fragment>
-      <div className="grid grid-cols-12 gap-x-6">
-        <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="px-4 pt-4 pb-2">
-            <div className="grid grid-cols-1 gap-3">
-              <ERPDevGrid
-                gridAddButtonType={"link"}
-                // allowGrouping={true}
-                // groupPanelVisible={true}
-                initialSort={[{ selector: "transactionDate", desc: true }]}
-                remoteOperations={{filtering: true,grouping: true,groupPaging: true,paging: true,sorting: true}}
-              // summaryItems={summaryItems}
-                gridAddButtonLink={`${import.meta.env.BASE_URL}accounts/transactions/${transactionType}`}
-                columns={columns}
-                dataUrl={`${urls.acc_transaction_base}${transactionType}/List/`}
-                method={ActionType.GET}
-                // onSearch={handleSearch}
-                // postData={{voucherType: voucherType, transactionType: transactionType}} 
-                gridHeader={t(`${title}`)}
-                gridId={`${addTitle??"transactions"} Transactions`}
-                gridAddButtonIcon="ri-add-line"
-                pageSize={40}
-                allowExport={true}
-                reload={reload}
-                changeReload={() => {setReload(false)}}
-                onSearch={handleSearch} 
-                
-              />
+    // console.log("searchQuery acc t g" );
+    // console.log({ handleSearch });
+    return (
+      <Fragment>
+        <div className="grid grid-cols-12 gap-x-6">
+          <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
+            <div className="px-4 pt-4 pb-2">
+              <div className="grid grid-cols-1 gap-3">
+                {/* safvan
+              {formState?.userConfig?.editInNewTab?.toString()} */}
+                <ERPDevGrid
+                  gridAddButtonType={"link"}
+                  // allowGrouping={true}
+                  // groupPanelVisible={true}
+                  initialSort={[{ selector: "transactionDate", desc: true }]}
+                  remoteOperations={{ filtering: true, grouping: true, groupPaging: true, paging: true, sorting: true }}
+                  // summaryItems={summaryItems}
+                  gridAddButtonLink={`${import.meta.env.BASE_URL}accounts/transactions/${transactionType}`}
+                  columns={columns}
+                  dataUrl={`${urls.acc_transaction_base}${transactionType}/List/`}
+                  method={ActionType.GET}
+                  // onSearch={handleSearch}
+                  // postData={{voucherType: voucherType, transactionType: transactionType}} 
+                  gridHeader={t(`${title}`)}
+                  gridId={`${addTitle ?? "transactions"} Transactions`}
+                  gridAddButtonIcon="ri-add-line"
+                  pageSize={40}
+                  allowExport={true}
+                  reload={reload}
+                  changeReload={() => { setReload(false) }}
+                  onSearch={handleSearch}
+
+                />
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </Fragment>
-  );
-};
+      </Fragment>
+    );
+  };
 
 export default React.memo(AccTransactionGrid);
 

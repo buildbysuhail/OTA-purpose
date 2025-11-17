@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, DeepPartial, PayloadAction } from "@reduxjs/toolkit";
 import {
   accTransactionFormStateInitialData,
   AccTransactionFormState,
@@ -27,6 +27,7 @@ import ERPToast from "../../../components/ERPComponents/erp-toast";
 import moment from "moment";
 import { modelToBase64Unicode } from "../../../utilities/jsonConverter";
 import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
+import _ from "lodash";
 import { setTransactionForHistory } from "../../../helpers/transaction-modified-util";
 
 const accTransactionSlice = createSlice({
@@ -529,6 +530,153 @@ const accTransactionSlice = createSlice({
       state.formElements.pnlMasters.disabled = true;
       state.formElements.dxGrid.disabled = true;
     },
+    formStateHandleFieldChangeKeysOnly: (
+      state: AccTransactionFormState,
+      action: PayloadAction<{
+        fields: { [fieldId in keyof DeepPartial<AccTransactionFormState>]?: any };
+        updateOnlyGivenDetailsColumns?: boolean;
+        rowIndex?: number;
+        itemsToAddToDetails?: AccTransactionRow[];
+      }>
+    ) => {
+      const {
+        fields,
+        updateOnlyGivenDetailsColumns = false,
+        itemsToAddToDetails = undefined,
+        rowIndex = -1,
+      } = action.payload || {};
+
+      if (!fields || typeof fields !== "object") {
+        console.error("Invalid fields in payload");
+        return;
+      }
+
+      // Helper function to update nested objects
+      const updateNested = (
+        target: Record<string, any>,
+        source: Record<string, any>
+      ): void => {
+        Object.keys(source).forEach((key: string) => {
+          const value = source[key];
+
+          if (value === null || value === undefined) {
+            target[key] = value;
+            return;
+          }
+
+          // Check if it's a plain object (not Array, Date, etc.)
+          const isPlainObject = value?.constructor === Object;
+
+          if (isPlainObject) {
+            if (!target[key] || typeof target[key] !== "object") {
+              target[key] = {};
+            }
+            updateNested(
+              target[key] as Record<string, any>,
+              value as Record<string, any>
+            );
+          } else {
+            // Handle arrays, primitives, dates, etc.
+            if (Array.isArray(value)) {
+              target[key] = [...value];
+            } else if (value instanceof Date) {
+              target[key] = value.toISOString();
+            } else {
+              target[key] = value;
+            }
+          }
+        });
+      };
+
+      // Update each field
+      Object.keys(fields).forEach((key: string) => {
+        const fieldValue = fields[key as keyof AccTransactionFormState];
+
+        if (
+          key === "transaction" &&
+          fieldValue &&
+          typeof fieldValue === "object"
+        ) {
+          const transactionValue = fieldValue as AccTransactionData;
+
+          if (
+            transactionValue.details &&
+            Array.isArray(transactionValue.details)
+          ) {
+            if (!state.transaction || typeof state.transaction !== "object") {
+              (state as any).transaction = {};
+            }
+
+            if (!Array.isArray((state as any).transaction.details)) {
+              (state as any).transaction.details = [];
+            }
+
+            transactionValue.details.forEach(
+              (detailItem: AccTransactionRow) => {
+                const toIndex = (state as any).transaction.details.findIndex(
+                  (x: AccTransactionRow) => x.slNo == detailItem.slNo
+                );
+                if (toIndex !== -1) {
+                  if (updateOnlyGivenDetailsColumns === true) {
+                    _.merge(state.transaction.details[toIndex], detailItem);
+                  } else {
+                    (state as any).transaction.details[toIndex] = {
+                      ...detailItem,
+                    };
+                  }
+                }
+              }
+            );
+          }
+
+          // Handle other transaction fields (non-details)
+          Object.keys(transactionValue).forEach((transactionKey: string) => {
+            if (transactionKey !== "details") {
+              const _fieldValue =
+                fields[key as keyof AccTransactionFormState][transactionKey];
+              if (_fieldValue?.constructor === Object) {
+                if (
+                  !(state as any)[key] ||
+                  typeof (state as any)[key] !== "object"
+                ) {
+                  (state as any)[key] = {};
+                }
+                updateNested(
+                  (state as any)[key][transactionKey] as Record<string, any>,
+                  _fieldValue as Record<string, any>
+                );
+              } else {
+                if (Array.isArray(_fieldValue)) {
+                  (state as any)[key] = [..._fieldValue];
+                } else if (_fieldValue instanceof Date) {
+                  (state as any)[key] = _fieldValue.toISOString();
+                } else {
+                  (state as any)[key] = _fieldValue;
+                }
+              }
+            }
+          });
+        } else {
+          if (fieldValue === null || fieldValue === undefined) {
+            (state as any)[key] = fieldValue;
+          } else if (fieldValue?.constructor === Object) {
+            if (!(state as any)[key] || typeof (state as any)[key] !== "object") {
+              (state as any)[key] = {};
+            }
+            updateNested(
+              (state as any)[key] as Record<string, any>,
+              fieldValue as Record<string, any>
+            );
+          } else {
+            (state as any)[key] = fieldValue;
+          }
+        }
+      });
+
+      if (itemsToAddToDetails && itemsToAddToDetails.length > 0 && rowIndex >= 0) {
+        state.transaction.details.splice(rowIndex, 0, ...itemsToAddToDetails);
+      }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(loadAccVoucher.fulfilled, (state, action) => {
@@ -718,6 +866,7 @@ export const {
   accFormStateSet,
   acctemplatesData,
   accFormStateHandleFieldChange,
+  formStateHandleFieldChangeKeysOnly,
   accFormStateTransactionUpdate,
   accFormStateTransactionMasterHandleFieldChange,
   accFormStateTransactionDetailsRowAdd,

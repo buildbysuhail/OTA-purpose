@@ -197,6 +197,7 @@ export const useDirectPrint = () => {
           <SharedDownloadTemplate
             template={templateData.template}
             data={templateData.data}
+            isTemplateDesigner={false}
             qrCodeImages={templateData.qrCodeImages}
             AmountToArabic={templateData.amountInArabic}
             AmountToEnglish={templateData.amountInEnglish}

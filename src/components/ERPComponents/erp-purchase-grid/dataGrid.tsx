@@ -311,7 +311,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
       const parts = value.split(".");
       if (parts.length > 2) return false;
       if (parts.length == 2) {
-        
+
       }
       if (parts[0] && !/^-?\d*$/.test(parts[0])) return false;
       if (parts.length === 2) {
@@ -337,10 +337,10 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
           final =
             column.decimalPoint && value !== ""
               ? (() => {
-                  const num = parseFloat(value as any);
-                  if (isNaN(num)) return ""; // return empty if not a valid number
-                  return round(num, column.decimalPoint);
-                })()
+                const num = parseFloat(value as any);
+                if (isNaN(num)) return ""; // return empty if not a valid number
+                return round(num, column.decimalPoint);
+              })()
               : value;
         }
         onChange && onChange(final, key, rowIndex);
@@ -419,7 +419,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
           <ERPDataCombobox
             options={options ?? []}
             onChange={(e) => {
-              
+
               onChange(
                 e.value,
                 column.dataField as keyof TransactionDetail,
@@ -499,98 +499,98 @@ const SummaryRow: React.FC<{
   gridBorderColor,
   appState,
 }) => {
-  const formState = useAppSelector(
-    (state: RootState) => state.InventoryTransaction
-  );
-  const showBorder = formState.userConfig?.showColumnBorder ?? true;
+    const formState = useAppSelector(
+      (state: RootState) => state.InventoryTransaction
+    );
+    const showBorder = formState.userConfig?.showColumnBorder ?? true;
 
-  return (
-    <tr
+    return (
+      <tr
       className={`flex ${
         appState.mode === "dark"
           ? "bg-gradient-to-r from-[#444444] via-[#555555] to-[#444444]"
           : "bg-gradient-to-r from-slate-100/80 via-gray-100/60 to-slate-100/80"
-      }`}
-      style={{
-        width: `${tableWidth}px`,
-        height: `${rowHeight}px`,
-        minHeight: `${rowHeight}px`,
-        maxHeight: `${rowHeight}px`,
-        boxSizing: "border-box",
+          }`}
+        style={{
+          width: `${tableWidth}px`,
+          height: `${rowHeight}px`,
+          minHeight: `${rowHeight}px`,
+          maxHeight: `${rowHeight}px`,
+          boxSizing: "border-box",
         borderBottom: `0.5px solid ${
           appState.mode === "dark"
             ? "rgba(255,255,255,0.1)"
             : `rgba(${
                 formState.userConfig?.gridBorderColor || "203,213,225"
-              }, 0.3)`
-        }`,
-      }}
-    >
-      {columns
-        .filter((col) => col.visible !== false && col.dataField != null)
-        .map((column, columnIndex) => {
-          const summary = summaryConfig.find(
-            (s) =>
-              s.showInColumn === column.dataField ||
-              s.column === column.dataField
-          );
-          const value = summary
-            ? summaryValues[summary.column as string]
-            : null;
-          const formattedValue = summary?.customizeText
-            ? summary.customizeText({ value })
-            : value;
-          const isFirstColumn = columnIndex === 0;
-          const isLastColumn = columnIndex === columns.length - 1;
-          return (
-            <td
-              key={`summary_${column.dataField}`}
+            }, 0.3)`
+            }`,
+        }}
+      >
+        {columns
+          .filter((col) => col.visible !== false && col.dataField != null)
+          .map((column, columnIndex) => {
+            const summary = summaryConfig.find(
+              (s) =>
+                s.showInColumn === column.dataField ||
+                s.column === column.dataField
+            );
+            const value = summary
+              ? summaryValues[summary.column as string]
+              : null;
+            const formattedValue = summary?.customizeText
+              ? summary.customizeText({ value })
+              : value;
+            const isFirstColumn = columnIndex === 0;
+            const isLastColumn = columnIndex === columns.length - 1;
+            return (
+              <td
+                key={`summary_${column.dataField}`}
               className={`flex items-center justify-end px-1 py-1 font-semibold ${
                 appState.mode === "dark"
                   ? "bg-[#555555] text-[#e0e0e0]"
                   : "bg-slate-200 text-gray-700"
-              }`}
-              style={{
-                fontSize: `${gridFontSize}px`,
-                fontWeight: gridIsBold ? "bold" : "600",
-                width: column.width ? `${column.width}px` : "150px",
-                minWidth: column.width ? `${column.width}px` : "150px",
-                textAlign:
-                  summary?.alignment ||
-                  column.alignment ||
-                  (column.dataType === "number" ? "right" : "left"),
-                boxSizing: "border-box",
-                borderRight: isFirstColumn
+                  }`}
+                style={{
+                  fontSize: `${gridFontSize}px`,
+                  fontWeight: gridIsBold ? "bold" : "600",
+                  width: column.width ? `${column.width}px` : "150px",
+                  minWidth: column.width ? `${column.width}px` : "150px",
+                  textAlign:
+                    summary?.alignment ||
+                    column.alignment ||
+                    (column.dataType === "number" ? "right" : "left"),
+                  boxSizing: "border-box",
+                  borderRight: isFirstColumn
                   ? `2px solid ${
                       appState.mode === "dark"
-                        ? "rgba(255,255,255,0.2)"
-                        : `rgba(${gridBorderColor || "226,232,240"})`
+                      ? "rgba(255,255,255,0.2)"
+                      : `rgba(${gridBorderColor || "226,232,240"})`
                     }`
-                  : isLastColumn
-                  ? "none"
-                  : showBorder
+                    : isLastColumn
+                      ? "none"
+                      : showBorder
                   ? `0.2px solid ${
                       appState.mode === "dark"
-                        ? "rgba(255,255,255,0.1)"
-                        : `rgba(${gridBorderColor || "226,232,240"}, 0.8)`
-                    }`
-                  : "none",
-                borderLeft: isLastColumn
+                          ? "rgba(255,255,255,0.1)"
+                          : `rgba(${gridBorderColor || "226,232,240"}, 0.8)`
+                        }`
+                        : "none",
+                  borderLeft: isLastColumn
                   ? `2px solid ${
                       appState.mode === "dark"
-                        ? "rgba(255,255,255,0.2)"
-                        : `rgba(${gridBorderColor || "226,232,240"})`
+                      ? "rgba(255,255,255,0.2)"
+                      : `rgba(${gridBorderColor || "226,232,240"})`
                     }`
-                  : "none",
-              }}
-            >
-              {summary ? formattedValue : ""}
-            </td>
-          );
-        })}
-    </tr>
-  );
-};
+                    : "none",
+                }}
+              >
+                {summary ? formattedValue : ""}
+              </td>
+            );
+          })}
+      </tr>
+    );
+  };
 
 const VirtualRow = React.memo(
   ({
@@ -659,8 +659,8 @@ const VirtualRow = React.memo(
         column.alignment === "left"
           ? "flex-start"
           : column.alignment === "right"
-          ? "flex-end"
-          : "center",
+            ? "flex-end"
+            : "center",
       textAlign: column.alignment || "center",
       whiteSpace: "nowrap" as const,
       overflow: "hidden",
@@ -797,17 +797,17 @@ const VirtualRow = React.memo(
 
     const rowBg = `${
       appState.mode === "dark"
-        ? index % 2 === 0
-          ? "bg-[#333333]"
-          : "bg-[#444444]"
-        : index % 2 === 0
+      ? index % 2 === 0
+        ? "bg-[#333333]"
+        : "bg-[#444444]"
+      : index % 2 === 0
         ? "bg-white"
         : "bg-[#f9f9f9]"
     } ${
       appState.mode === "dark"
         ? "hover:bg-[#555555]"
         : "hover:bg-gradient-to-r hover:from-[#eff6ff66] hover:to-[#eef2ff4d]"
-    }`;
+      }`;
 
     const [itemName, setItemName] = useState("");
     const [quantity, setQuantity] = useState("");
@@ -841,7 +841,7 @@ const VirtualRow = React.memo(
         {isMobileGridRow ? (
           <>
             <div
-              className={`py-0 ${rowBg} transition-all duration-300 ease-in-out group`}
+              className={`py-0 ${rowBg} transition-all duration-300 ease-in-out group cursor-pointer`}
               style={{
                 position: "absolute",
                 top: `${top}px`,
@@ -855,14 +855,15 @@ const VirtualRow = React.memo(
                 // marginTop: index === 0 ? '8px' : '0',
                 paddingBottom: index === details.length - 1 ? "0.5rem" : "0",
               }}
+              onDoubleClick={() => setIsMobileModalOpen(true)}
             >
               <div className="p-1 w-full">
                 <div
                   className={`rounded-lg shadow-sm w-full max-w-[730px] mx-auto ${
                     appState.mode === "dark"
-                      ? "bg-[#2d2d2d] border border-[#444444]"
-                      : "bg-[#f8f8f8] border border-[#e4e3e8]"
-                  }`}
+                    ? "bg-[#2d2d2d] border border-[#444444]"
+                    : "bg-[#f8f8f8] border border-[#e4e3e8]"
+                    }`}
                 >
                   <div className="flex flex-col md:flex-row sm:flex-row xs:flex-row xs:items-center xs:justify-between p-2 xs:p-3 sm:p-4 !pb-0 gap-2 xs:gap-3">
                     <div className="flex items-center justify-between gap-2 xs:gap-3 min-w-0 flex-1">
@@ -870,18 +871,18 @@ const VirtualRow = React.memo(
                         <span
                           className={`rounded-sm p-1 text-xs xs:text-sm font-medium whitespace-nowrap ${
                             appState.mode === "dark"
-                              ? "bg-[#444444] text-[#e0e0e0]"
-                              : "bg-white text-gray-500"
-                          }`}
+                            ? "bg-[#444444] text-[#e0e0e0]"
+                            : "bg-white text-gray-500"
+                            }`}
                         >
                           #{index + 1}
                         </span>
                         <span
                           className={`font-medium text-sm xs:text-base truncate ${
                             appState.mode === "dark"
-                              ? "text-[#e0e0e0]"
-                              : "text-gray-900"
-                          }`}
+                            ? "text-[#e0e0e0]"
+                            : "text-gray-900"
+                            }`}
                           title={item.product}
                         >
                           {item.product || "Product"}
@@ -890,9 +891,9 @@ const VirtualRow = React.memo(
                       <span
                         className={`font-medium text-sm xs:text-base whitespace-nowrap self-end xs:self-auto ${
                           appState.mode === "dark"
-                            ? "text-[#e0e0e0]"
-                            : "text-gray-900"
-                        }`}
+                          ? "text-[#e0e0e0]"
+                          : "text-gray-900"
+                          }`}
                       >
                         ₹ {item.unitPrice || "Price"}
                       </span>
@@ -903,18 +904,18 @@ const VirtualRow = React.memo(
                       <span
                         className={`text-xs xs:text-sm whitespace-nowrap ${
                           appState.mode === "dark"
-                            ? "text-[#a0a0a0]"
-                            : "text-gray-600"
-                        }`}
+                          ? "text-[#a0a0a0]"
+                          : "text-gray-600"
+                          }`}
                       >
                         Item Subtotal
                       </span>
                       <span
                         className={`text-xs xs:text-sm text-right ${
                           appState.mode === "dark"
-                            ? "text-[#a0a0a0]"
-                            : "text-gray-600"
-                        }`}
+                          ? "text-[#a0a0a0]"
+                          : "text-gray-600"
+                          }`}
                       >
                         1 X ₹ 0 = ₹ {item.total || "Sub Total"}
                       </span>
@@ -923,18 +924,18 @@ const VirtualRow = React.memo(
                       <span
                         className={`text-xs xs:text-sm whitespace-nowrap ${
                           appState.mode === "dark"
-                            ? "text-[#ffa726]"
-                            : "text-orange-400"
-                        }`}
+                          ? "text-[#ffa726]"
+                          : "text-orange-400"
+                          }`}
                       >
                         Discount (%): {item.discPerc || "Discount"}%
                       </span>
                       <span
                         className={`text-xs xs:text-sm text-right whitespace-nowrap ${
                           appState.mode === "dark"
-                            ? "text-[#ffa726]"
-                            : "text-orange-400"
-                        }`}
+                          ? "text-[#ffa726]"
+                          : "text-orange-400"
+                          }`}
                       >
                         ₹ {item.discount || "Discount"}
                       </span>
@@ -943,18 +944,18 @@ const VirtualRow = React.memo(
                       <span
                         className={`text-xs xs:text-sm whitespace-nowrap ${
                           appState.mode === "dark"
-                            ? "text-[#a0a0a0]"
-                            : "text-gray-600"
-                        }`}
+                          ? "text-[#a0a0a0]"
+                          : "text-gray-600"
+                          }`}
                       >
                         Tax: {item.vatPerc || "Tax"}%
                       </span>
                       <span
                         className={`text-xs xs:text-sm text-right whitespace-nowrap ${
                           appState.mode === "dark"
-                            ? "text-[#a0a0a0]"
-                            : "text-gray-600"
-                        }`}
+                          ? "text-[#a0a0a0]"
+                          : "text-gray-600"
+                          }`}
                       >
                         ₹ {item.totalAddExpense || "Tax"}
                       </span>
@@ -968,9 +969,9 @@ const VirtualRow = React.memo(
                 onClick={() => setIsMobileModalOpen(true)}
                 className={`flex-1 w-full flex items-center justify-center gap-2 px-4 py-3 font-medium transition-all duration-200 shadow-md hover:shadow-lg ${
                   appState.mode === "dark"
-                    ? "bg-[#444444] text-white hover:bg-[#555555] active:bg-[#666666] border border-[#555555]"
-                    : "bg-[#0084ff] text-white hover:bg-blue-700 active:bg-blue-800 border border-blue-600"
-                }`}
+                  ? "bg-[#444444] text-white hover:bg-[#555555] active:bg-[#666666] border border-[#555555]"
+                  : "bg-[#0084ff] text-white hover:bg-blue-700 active:bg-blue-800 border border-blue-600"
+                  }`}
               >
                 <CirclePlus className="w-5 h-5" />
                 {t("add_items")}
@@ -981,9 +982,9 @@ const VirtualRow = React.memo(
                 <div
                   className={`relative w-full h-full overflow-y-hidden ${
                     appState.mode === "dark"
-                      ? "bg-[#2d2d2d] text-[#e0e0e0]"
-                      : "bg-white dark:bg-dark-bg-card"
-                  }`}
+                    ? "bg-[#2d2d2d] text-[#e0e0e0]"
+                    : "bg-white dark:bg-dark-bg-card"
+                    }`}
                 >
                   {/* Close Button */}
                   <button
@@ -1054,9 +1055,9 @@ const VirtualRow = React.memo(
                       <h3
                         className={`text-sm font-medium mb-4 ${
                           appState.mode === "dark"
-                            ? "text-[#e0e0e0]"
-                            : "text-gray-700"
-                        }`}
+                          ? "text-[#e0e0e0]"
+                          : "text-gray-700"
+                          }`}
                       >
                         Totals & Taxes
                       </h3>
@@ -1064,9 +1065,9 @@ const VirtualRow = React.memo(
                         <span
                           className={`text-sm ${
                             appState.mode === "dark"
-                              ? "text-[#a0a0a0]"
-                              : "text-gray-600"
-                          }`}
+                            ? "text-[#a0a0a0]"
+                            : "text-gray-600"
+                            }`}
                         >
                           Subtotal (Rate x Qty)
                         </span>
@@ -1078,9 +1079,9 @@ const VirtualRow = React.memo(
                         <span
                           className={`text-sm ${
                             appState.mode === "dark"
-                              ? "text-[#a0a0a0]"
-                              : "text-gray-600"
-                          }`}
+                            ? "text-[#a0a0a0]"
+                            : "text-gray-600"
+                            }`}
                         >
                           Discount
                         </span>
@@ -1097,21 +1098,21 @@ const VirtualRow = React.memo(
                           <div
                             className={`flex rounded ${
                               appState.mode === "dark"
-                                ? "bg-[#444444]"
-                                : "bg-gray-100"
-                            }`}
+                              ? "bg-[#444444]"
+                              : "bg-gray-100"
+                              }`}
                           >
                             <button
                               onClick={() => setDiscountType("₹")}
                               className={`px-2 py-1 text-xs rounded-l ${
                                 discountType === "₹"
-                                  ? appState.mode === "dark"
-                                    ? "bg-[#ffa726] text-[#2d2d2d]"
-                                    : "bg-orange-200 text-orange-800"
-                                  : appState.mode === "dark"
+                                ? appState.mode === "dark"
+                                  ? "bg-[#ffa726] text-[#2d2d2d]"
+                                  : "bg-orange-200 text-orange-800"
+                                : appState.mode === "dark"
                                   ? "text-[#a0a0a0]"
                                   : "text-gray-600"
-                              }`}
+                                }`}
                             >
                               ₹
                             </button>
@@ -1119,13 +1120,13 @@ const VirtualRow = React.memo(
                               onClick={() => setDiscountType("%")}
                               className={`px-2 py-1 text-xs rounded-r ${
                                 discountType === "%"
-                                  ? appState.mode === "dark"
-                                    ? "bg-[#ffa726] text-[#2d2d2d]"
-                                    : "bg-orange-200 text-orange-800"
-                                  : appState.mode === "dark"
+                                ? appState.mode === "dark"
+                                  ? "bg-[#ffa726] text-[#2d2d2d]"
+                                  : "bg-orange-200 text-orange-800"
+                                : appState.mode === "dark"
                                   ? "text-[#a0a0a0]"
                                   : "text-gray-600"
-                              }`}
+                                }`}
                             >
                               %
                             </button>
@@ -1140,9 +1141,9 @@ const VirtualRow = React.memo(
                         <span
                           className={`text-sm ${
                             appState.mode === "dark"
-                              ? "text-[#a0a0a0]"
-                              : "text-gray-600"
-                          }`}
+                            ? "text-[#a0a0a0]"
+                            : "text-gray-600"
+                            }`}
                         >
                           Tax %
                         </span>
@@ -1174,9 +1175,9 @@ const VirtualRow = React.memo(
                           <span
                             className={`font-semibold ${
                               appState.mode === "dark"
-                                ? "text-[#e0e0e0]"
-                                : "text-gray-800"
-                            }`}
+                              ? "text-[#e0e0e0]"
+                              : "text-gray-800"
+                              }`}
                           >
                             Total Amount:
                           </span>
@@ -1204,25 +1205,25 @@ const VirtualRow = React.memo(
               flexDirection: "row",
               borderBottom: `0.5px solid ${
                 appState.mode === "dark"
-                  ? "rgba(255,255,255,0.1)"
+                ? "rgba(255,255,255,0.1)"
                   : `rgba(${
                       formState.userConfig?.gridBorderColor || "203,213,225"
-                    }, 0.3)`
-              }`,
+                }, 0.3)`
+                }`,
               backgroundColor:
                 currentCell?.rowIndex === index
                   ? appState.mode === "dark"
                     ? "#444444"
                     : formState.userConfig?.activeRowBg
-                    ? `rgb(${formState.userConfig.activeRowBg})`
-                    : "#e3f2fd"
+                      ? `rgb(${formState.userConfig.activeRowBg})`
+                      : "#e3f2fd"
                   : index % 2 === 0
-                  ? appState.mode === "dark"
-                    ? "#333333"
-                    : "#fff"
-                  : appState.mode === "dark"
-                  ? "#444444"
-                  : "#f9f9f9",
+                    ? appState.mode === "dark"
+                      ? "#333333"
+                      : "#fff"
+                    : appState.mode === "dark"
+                      ? "#444444"
+                      : "#f9f9f9",
             }}
           >
             {columns.map((column, colIndex) => {
@@ -1234,7 +1235,7 @@ const VirtualRow = React.memo(
                 transactionInitialMoreDetails
               ).includes(column.dataField as keyof TransactionDetailsMore);
               if (column.dataField == "memo" && item.productID > 0) {
-                
+
               }
               const fieldKey = column.dataField as TransactionDetailKeys;
               const idField = column.idField as keyof TransactionDetail;
@@ -1242,8 +1243,8 @@ const VirtualRow = React.memo(
               const cellValue = ((isDetails2
                 ? item.details2?.[fieldKey as keyof TransactionDetails2]
                 : isMoreDetails
-                ? item.moreDetail?.[fieldKey as keyof TransactionDetailsMore]
-                : item[fieldKey as keyof TransactionDetail]) ?? "") as
+                  ? item.moreDetail?.[fieldKey as keyof TransactionDetailsMore]
+                  : item[fieldKey as keyof TransactionDetail]) ?? "") as
                 | string
                 | boolean;
               const idValue = item[idField];
@@ -1267,17 +1268,17 @@ const VirtualRow = React.memo(
               const cellId = `${gridId}_${column.dataField}_${index}`;
               const borderColor = `${
                 (column.readOnly ||
-                  column.allowEditing == false ||
-                  formState.formElements.pnlMasters?.disabled !== true) &&
+                column.allowEditing == false ||
+                formState.formElements.pnlMasters?.disabled !== true) &&
                 currentCell?.column === column.dataField &&
                 currentCell?.rowIndex === index
-                  ? appState.mode === "dark"
-                    ? "#444444"
-                    : formState.userConfig?.inputBoxStyle?.focusBgColor
+                ? appState.mode === "dark"
+                  ? "#444444"
+                  : formState.userConfig?.inputBoxStyle?.focusBgColor
                     ? `rgb(${formState.userConfig?.inputBoxStyle?.focusBgColor})`
                     : "#e3f2fd"
-                  : undefined
-              }`;
+                : undefined
+                }`;
 
               return (
                 <div
@@ -1285,45 +1286,45 @@ const VirtualRow = React.memo(
                   style={{
                     width: `${
                       columnWidths?.find((x) => x.field == column.dataField)
-                        ?.width
-                    }px`,
+                      ?.width
+                      }px`,
                     minWidth: `${
                       columnWidths?.find((x) => x.field == column.dataField)
-                        ?.width
-                    }px`,
+                      ?.width
+                      }px`,
                     maxWidth: `${
                       columnWidths?.find((x) => x.field == column.dataField)
-                        ?.width
-                    }px`,
+                      ?.width
+                      }px`,
                     borderRight: isFirstColumn
                       ? `2px solid ${
                           appState.mode === "dark"
-                            ? "rgba(255,255,255,0.2)"
-                            : `rgba(${gridBorderColor || "226,232,240"})`
-                        }`
+                        ? "rgba(255,255,255,0.2)"
+                        : `rgba(${gridBorderColor || "226,232,240"})`
+                      }`
                       : isLastColumn
-                      ? "none"
-                      : showBorder
+                        ? "none"
+                        : showBorder
                       ? `0.2px solid ${
                           appState.mode === "dark"
                             ? "rgba(255,255,255,0.1)"
                             : `rgba(${gridBorderColor || "226,232,240"}, 0.8)`
-                        }`
-                      : "none",
+                          }`
+                          : "none",
                     borderLeft: isLastColumn
                       ? `2px solid ${
                           appState.mode === "dark"
-                            ? "rgba(255,255,255,0.2)"
-                            : `rgba(${gridBorderColor || "226,232,240"})`
-                        }`
+                        ? "rgba(255,255,255,0.2)"
+                        : `rgba(${gridBorderColor || "226,232,240"})`
+                      }`
                       : "none",
                     fontSize: `${gridFontSize}px`,
                     textAlign:
                       column.dataField === "slNo"
                         ? "center"
                         : ["qty"].includes(column.dataField ?? "")
-                        ? "right"
-                        : "left",
+                          ? "right"
+                          : "left",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                     whiteSpace: "nowrap",
@@ -1332,25 +1333,25 @@ const VirtualRow = React.memo(
                     justifyContent: "center",
                     backgroundColor:
                       currentCell?.rowIndex === index &&
-                      currentCell?.column === column.dataField
+                        currentCell?.column === column.dataField
                         ? appState.mode === "dark"
                           ? "#555555"
                           : formState.userConfig?.inputBoxStyle?.focusBgColor
-                          ? `rgb(${formState.userConfig.inputBoxStyle.focusBgColor})`
-                          : "#bfdbfe"
+                            ? `rgb(${formState.userConfig.inputBoxStyle.focusBgColor})`
+                            : "#bfdbfe"
                         : currentCell?.rowIndex === index
-                        ? appState.mode === "dark"
-                          ? "#444444"
-                          : formState.userConfig?.activeRowBg
-                          ? `rgb(${formState.userConfig.activeRowBg})`
-                          : "#e3f2fd"
-                        : index % 2 === 0
-                        ? appState.mode === "dark"
-                          ? "#333333"
-                          : "#fff"
-                        : appState.mode === "dark"
-                        ? "#444444"
-                        : "#f9f9f9",
+                          ? appState.mode === "dark"
+                            ? "#444444"
+                            : formState.userConfig?.activeRowBg
+                              ? `rgb(${formState.userConfig.activeRowBg})`
+                              : "#e3f2fd"
+                          : index % 2 === 0
+                            ? appState.mode === "dark"
+                              ? "#333333"
+                              : "#fff"
+                            : appState.mode === "dark"
+                              ? "#444444"
+                              : "#f9f9f9",
                     position: isFixed ? "sticky" : "relative",
                     left: isFirstColumn ? "0px" : "auto",
                     right: isLastColumn ? "0px" : "auto",
@@ -1413,9 +1414,9 @@ const VirtualRow = React.memo(
                       }
                       className={`px-2 py-1 border rounded shadow-sm hover:shadow text-xs transition-all ${
                         appState.mode === "dark"
-                          ? "bg-[#444444] text-[#e0e0e0] border-[#555555] hover:bg-[#555555]"
-                          : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50"
-                      }`}
+                        ? "bg-[#444444] text-[#e0e0e0] border-[#555555] hover:bg-[#555555]"
+                        : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50"
+                        }`}
                       aria-label="Action button"
                     >
                       <svg
@@ -1445,16 +1446,16 @@ const VirtualRow = React.memo(
                         onClick={() => handleInfoClick(index)}
                         className={`group relative flex items-center justify-center w-7 h-7 transition-all duration-500 ease-out hover:rounded-full hover:scale-105 hover:shadow-lg hover:border ${
                           appState.mode === "dark"
-                            ? "hover:bg-blue-900 hover:border-blue-700"
-                            : "hover:bg-blue-50 hover:border-blue-200"
-                        }`}
+                          ? "hover:bg-blue-900 hover:border-blue-700"
+                          : "hover:bg-blue-50 hover:border-blue-200"
+                          }`}
                       >
                         <Info
                           className={`w-4 h-4 transition-all duration-300 ${
                             appState.mode === "dark"
-                              ? "text-blue-400 group-hover:text-blue-300"
-                              : "text-blue-600 group-hover:text-blue-700"
-                          }`}
+                            ? "text-blue-400 group-hover:text-blue-300"
+                            : "text-blue-600 group-hover:text-blue-700"
+                            }`}
                         />
                       </button>
                       <button
@@ -1469,22 +1470,22 @@ const VirtualRow = React.memo(
                         }
                         className={`group relative flex items-center justify-center w-7 h-7 transition-all duration-500 ease-out hover:rounded-full hover:scale-105 hover:shadow-lg hover:border ${
                           appState.mode === "dark"
-                            ? "hover:bg-red-900 hover:border-red-700"
-                            : "hover:bg-red-50 hover:border-red-200"
-                        }`}
+                          ? "hover:bg-red-900 hover:border-red-700"
+                          : "hover:bg-red-50 hover:border-red-200"
+                          }`}
                       >
                         <Trash2
                           className={`w-4 h-4 transition-all duration-300 ${
                             appState.mode === "dark"
-                              ? "text-red-400 group-hover:text-red-300"
-                              : "text-red-600 group-hover:text-red-700"
-                          }`}
+                            ? "text-red-400 group-hover:text-red-300"
+                            : "text-red-600 group-hover:text-red-700"
+                            }`}
                         />
                       </button>
                     </div>
                   ) : (column.dataField === "product" ||
-                      column.dataField === "pCode" ||
-                      column.dataField === "barCode") &&
+                    column.dataField === "pCode" ||
+                    column.dataField === "barCode") &&
                     !column.readOnly &&
                     formState.formElements.pnlMasters?.disabled !== true &&
                     currentCell?.column === column.dataField &&
@@ -1568,25 +1569,25 @@ const VirtualRow = React.memo(
                       tabIndex={0}
                       className={`inline-flex px-2 py-1 font-medium rounded-full cursor-default ${
                         cellValue === "Active"
-                          ? appState.mode === "dark"
-                            ? "bg-[#2d6a4f] text-[#b7e1cd]"
-                            : "bg-[#dcfce7] text-[#166534]"
-                          : ""
-                      }
+                        ? appState.mode === "dark"
+                          ? "bg-[#2d6a4f] text-[#b7e1cd]"
+                          : "bg-[#dcfce7] text-[#166534]"
+                        : ""
+                        }
                     ${
                       cellValue === "Inactive"
-                        ? appState.mode === "dark"
-                          ? "bg-[#7b2e2e] text-[#f4a8a8]"
-                          : "bg-[#fee2e2] text-[#991b1b]"
-                        : ""
-                    }
+                          ? appState.mode === "dark"
+                            ? "bg-[#7b2e2e] text-[#f4a8a8]"
+                            : "bg-[#fee2e2] text-[#991b1b]"
+                          : ""
+                        }
                     ${
                       cellValue === "Pending"
-                        ? appState.mode === "dark"
-                          ? "bg-[#6b4e31] text-[#fce5a8]"
-                          : "bg-[#fef9c3] text-[#854d0e]"
-                        : ""
-                    }`}
+                          ? appState.mode === "dark"
+                            ? "bg-[#6b4e31] text-[#fce5a8]"
+                            : "bg-[#fef9c3] text-[#854d0e]"
+                          : ""
+                        }`}
                       onFocus={() => handleFocus(column.dataField!)}
                       onBlur={handleBlur}
                       onKeyDown={(e) =>
@@ -1631,12 +1632,12 @@ const VirtualRow = React.memo(
                     <div
                       style={
                         currentCell?.column === column.dataField &&
-                        currentCell?.rowIndex === index
+                          currentCell?.rowIndex === index
                           ? {
-                              ...getCellContentStyle(column),
-                              border: `solid 3px rgb(${formState.userConfig?.inputBoxStyle?.focusBgColor})`,
-                              background: "#fff",
-                            }
+                            ...getCellContentStyle(column),
+                            border: `solid 3px rgb(${formState.userConfig?.inputBoxStyle?.focusBgColor})`,
+                            background: "#fff",
+                          }
                           : { ...getCellContentStyle(column) }
                       }
                       id={cellId}
@@ -1651,14 +1652,14 @@ const VirtualRow = React.memo(
                       {productId > 0
                         ? column.decimalPoint
                           ? getFormattedValue(
-                              cellValue as any,
-                              false,
-                              column.decimalPoint
-                            )
+                            cellValue as any,
+                            false,
+                            column.decimalPoint
+                          )
                           : column.dataType == "date" &&
                             !isNullOrUndefinedOrEmpty(column.format)
-                          ? moment(cellValue as any).format(column.format)
-                          : cellValue ?? ""
+                            ? moment(cellValue as any).format(column.format)
+                            : cellValue ?? ""
                         : ""}
                     </div>
                   )}
@@ -1800,8 +1801,8 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       window.innerWidth < 480
         ? 125
         : window.innerWidth <= 768
-        ? 140
-        : formState.userConfig?.gridRowHeight ?? 32;
+          ? 140
+          : formState.userConfig?.gridRowHeight ?? 32;
 
     const { scrollTop, updateScroll, visibleItems, totalHeight } =
       useUltraFastVirtualScrolling(

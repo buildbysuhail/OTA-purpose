@@ -438,7 +438,7 @@ const ERPModal = React.memo(
                                 <Printer className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                               </button>
                             </div>
-                             <div className="group relative inline-flex flex-col items-center ps-[5px]" title={"templates"}>
+                             {/* <div className="group relative inline-flex flex-col items-center ps-[5px]" title={"templates"}>
                               <button
                                 className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
                                 onClick={async() => {
@@ -449,7 +449,7 @@ const ERPModal = React.memo(
                               >
                                 <Layout className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                               </button>
-                            </div>
+                            </div> */}
                             </>
                           )}
 

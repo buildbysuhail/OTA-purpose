@@ -3311,7 +3311,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         />
       )}
 
- <ERPResizableSidebar
+ {/* <ERPResizableSidebar
     minWidth={350}
     isOpen={formState.templateChooserModal ?? false}
     setIsOpen={() =>
@@ -3333,7 +3333,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         )
       }
     />
-  </ERPResizableSidebar>
+  </ERPResizableSidebar> */}
 
       <ERPResizableSidebar
         minWidth={350}

@@ -43,39 +43,45 @@ const TransactionGrid: React.FC<{
     (state: RootState) => state.InventoryTransaction
   );
   const navigate = useNavigate();
-  const userSession = useSelector((state:RootState) => state.UserSession)
-      useEffect(() => {
-        if (!userSession?.userId || !transactionType) return;
-        const loadUserConfig = async () => {
-          try {
-            const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`);
-            const Utc = await getStorageString(key);
-  
-            let userConfig: UserConfig | undefined;
-  
-            if (Utc) {
-              const decoded = safeBase64Decode(Utc) ?? "{}";
-              userConfig = customJsonParse(decoded ?? "{}");
-            } else {
-              userConfig = await fetchUserConfig(userSession.userId, transactionType);
+  const userSession = useSelector((state: RootState) => state.UserSession)
+  useEffect(() => {
+    if (!userSession?.userId || !transactionType) return;
+    const loadUserConfig = async () => {
+      try {
+        const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`);
+        const Utc = await getStorageString(key);
+
+        let userConfig: UserConfig | undefined;
+
+        if (Utc) {
+          const decoded = safeBase64Decode(Utc) ?? "{}";
+          userConfig = customJsonParse(decoded ?? "{}");
+        } else {
+          userConfig = await fetchUserConfig(userSession.userId, transactionType);
+        }
+
+        // dispatch(forhanfich({ fie: { userConfig } }));
+        dispatch(
+          formStateHandleFieldChangeKeysOnly({
+            fields: {
+              userConfig: userConfig
             }
-            
-            // dispatch(forhanfich({ fie: { userConfig } }));
-             dispatch(
-                        formStateHandleFieldChangeKeysOnly({
-                          fields: {
-                            userConfig: userConfig
-                        }})
-                      );
-            
-          } catch (error) {
-            console.error("Error loading user config:", error);
-          }
-        };
-  
-        loadUserConfig();
-      }, []);
-  
+          })
+        );
+
+      } catch (error) {
+        console.error("Error loading user config:", error);
+      }
+    };
+
+    loadUserConfig();
+  }, []);
+
+  useEffect (()=>{
+    console.log("tg s : ",formState?.userConfig?.editInNewTab);
+    
+  })
+
   const [reload, setReload] = useState<boolean>(true);
   const columns: DevGridColumn[] = useMemo(
     () => [
@@ -102,9 +108,9 @@ const TransactionGrid: React.FC<{
         cellRender: (cellInfo: any) => {
           return cellInfo.data?.transactionDate
             ? formatDate(
-                new Date(cellInfo.data?.transactionDate),
-                "dd-MMM-yyyy"
-              )
+              new Date(cellInfo.data?.transactionDate),
+              "dd-MMM-yyyy"
+            )
             : "";
         },
       },
@@ -185,14 +191,14 @@ const TransactionGrid: React.FC<{
               drCr: tr?.drCr,
             };
           }
- // Convert object to query string
-    const queryString = new URLSearchParams(
-      Object.entries(transactionData).reduce((acc, [key, value]) => {
-        acc[key] = String(value ?? "");
-        return acc;
-      }, {} as Record<string, string>)
-    ).toString();
-    
+          // Convert object to query string
+          const queryString = new URLSearchParams(
+            Object.entries(transactionData).reduce((acc, [key, value]) => {
+              acc[key] = String(value ?? "");
+              return acc;
+            }, {} as Record<string, string>)
+          ).toString();
+
           return (
             <div style={{ textAlign: "center" }}>
               <Link
@@ -232,9 +238,9 @@ const TransactionGrid: React.FC<{
         cellRender: (cellInfo: any) => {
           return cellInfo?.data?.purchaseInvoiceDate
             ? formatDate(
-                new Date(cellInfo?.data?.purchaseInvoiceDate),
-                "dd-MMM-yyyy"
-              )
+              new Date(cellInfo?.data?.purchaseInvoiceDate),
+              "dd-MMM-yyyy"
+            )
             : "";
         },
       },
@@ -415,7 +421,7 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "right",
         visible: false,
-     cellRender: (cellInfo: any) =>
+        cellRender: (cellInfo: any) =>
           `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
       {
@@ -524,7 +530,7 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "right",
         visible: false,
-      cellRender: (cellInfo: any) =>
+        cellRender: (cellInfo: any) =>
           `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
       {
@@ -536,7 +542,7 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "right",
         visible: false,
-     cellRender: (cellInfo: any) =>
+        cellRender: (cellInfo: any) =>
           `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
       {
@@ -563,7 +569,7 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "right",
         visible: false,
-     cellRender: (cellInfo: any) =>
+        cellRender: (cellInfo: any) =>
           `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
       {
@@ -575,7 +581,7 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "right",
         visible: false,
-     cellRender: (cellInfo: any) =>
+        cellRender: (cellInfo: any) =>
           `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
       {
@@ -587,7 +593,7 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "right",
         visible: false,
-      cellRender: (cellInfo: any) =>
+        cellRender: (cellInfo: any) =>
           `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
       {
@@ -620,7 +626,7 @@ const TransactionGrid: React.FC<{
         allowSearch: true,
         alignment: "right",
         visible: false,
-    cellRender: (cellInfo: any) =>
+        cellRender: (cellInfo: any) =>
           `${getFormattedValue(cellInfo.value, false, 4)}`,
       },
 
@@ -696,11 +702,11 @@ const TransactionGrid: React.FC<{
                     url.searchParams.append(key, String(value));
                   });
 
-                  if(formState?.userConfig?.editInNewTab) {
-                  window.open(url.toString(), "_blank");
+                  if (formState?.userConfig?.editInNewTab) {
+                    window.open(url.toString(), "_blank");
                   } else {
-                  const path = url.pathname + url.search;
-                      navigate(path);
+                    const path = url.pathname + url.search;
+                    navigate(path);
                   }
                 },
               }}
@@ -713,18 +719,18 @@ const TransactionGrid: React.FC<{
                   "Are you sure you want to delete this transaction?",
                 url: `${urls.inv_transaction_base}${transactionType}/`,
                 key: cellElement?.data?.invTransactionMasterID,
-                postData:{
-                invTransactionMasterID:
-                  cellElement?.data?.invTransactionMasterID,
-                transactionType: transactionType,
-              }
+                postData: {
+                  invTransactionMasterID:
+                    cellElement?.data?.invTransactionMasterID,
+                  transactionType: transactionType,
+                }
               }}
             />
           );
         },
       },
     ],
-    [t, dispatch]
+    [t, dispatch , formState.userConfig?.editInNewTab]
   );
   useEffect(() => {
     setReload(true);
@@ -737,9 +743,8 @@ const TransactionGrid: React.FC<{
             <div className="grid grid-cols-1 gap-3">
               <ERPDevGrid
                 gridAddButtonType={"link"}
-                gridAddButtonLink={`${
-                  import.meta.env.BASE_URL
-                }${TransactionBase.Sales}/${transactionType}`}
+                gridAddButtonLink={`${import.meta.env.BASE_URL
+                  }${TransactionBase.Sales}/${transactionType}`}
                 columns={columns}
                 dataUrl={`${urls.inv_transaction_base}${transactionType}/List/`}
                 method={ActionType.GET}
@@ -747,6 +752,7 @@ const TransactionGrid: React.FC<{
                 gridHeader={t(`${title}`)}
                 gridId={`${addTitle ?? "transactions"}Transactions`}
                 gridAddButtonIcon="ri-add-line"
+                remoteOperations={true}
                 pageSize={40}
                 allowExport={true}
                 reload={reload}

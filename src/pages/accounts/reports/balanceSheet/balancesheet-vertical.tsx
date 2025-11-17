@@ -33,15 +33,28 @@ const BalancesheetVertical = () => {
       allowSearch: true,
       allowFiltering: true,
       showInPdf: true,
-      cellRender: (cellElement: any, cellInfo: any) => {
-        return (
-          cellElement.data.accGroupID > 0 ? <DrillDownCellTemplate data={cellElement} field="accGroupID"></DrillDownCellTemplate> : cellElement.value
-        )
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell !== undefined) {
+          const value = cellElement.data?.accGroupID == null ? "0" : cellElement.data.accGroupID.toString();
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return (
+            <DrillDownCellTemplate
+              data={cellElement}
+              field="accGroupID"
+            />
+          );
+        }
       },
-      // cellRender: (cellElement: any, cellInfo: any) => {
-      //   return <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
-      // }
     },
+    // cellRender: (cellElement: any, cellInfo: any) => {
+    //   return <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+    // }
     {
       dataField: "ledgerID",
       caption: t("ledger_ID"),
@@ -49,11 +62,23 @@ const BalancesheetVertical = () => {
       allowSearch: true,
       showInPdf: true,
       allowFiltering: true,
-      cellRender: (cellElement: any, cellInfo: any) => {
-        return (
-          cellElement.data.ledgerID > 0 ? <DrillDownCellTemplate data={cellElement} field="ledgerID"></DrillDownCellTemplate> : cellElement.value
-
-        )
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell !== undefined) {
+          const value = cellElement.data?.ledgerID == null ? "0" : cellElement.data.ledgerID.toString();
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return (
+            <DrillDownCellTemplate
+              data={cellElement}
+              field="ledgerID"
+            />
+          );
+        }
       },
     },
     {

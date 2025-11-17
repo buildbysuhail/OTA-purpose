@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import moment from "moment";
-import {  isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
+import { isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
 import TaxReportDetailedFilter, {
   TaxReportDetailedFilterInitialState,
 } from "./tax-report-detailed-filter";
@@ -62,7 +62,7 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({
         allowFiltering: true,
         width: 100,
         showInPdf: true,
-        format:"dd-MMM-yyyy"
+        format: "dd-MMM-yyyy"
       },
       {
         dataField: "party",
@@ -99,13 +99,23 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({
         allowFiltering: true,
         width: 100,
         showInPdf: true,
-        cellRender: (cellElement: any, cellInfo: any) => {
-          return (
-            <DrillDownCellTemplate
-              data={cellElement}
-              field="vchNo"
-            ></DrillDownCellTemplate>
-          );
+        cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+          if (exportCell !== undefined) {
+            const value = cellElement.data?.vchNo == null ? "0" : cellElement.data.vchNo.toString();
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return (
+              <DrillDownCellTemplate
+                data={cellElement}
+                field="vchNo"
+              />
+            );
+          }
         },
       },
       {
@@ -304,8 +314,8 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({
             cellElement.data.refDate == ""
             ? ""
             : moment(cellElement.data.refDate, "DD-MM-YYYY").format(
-                "DD-MMM-YYYY"
-              ); // Ensures proper formatting
+              "DD-MMM-YYYY"
+            ); // Ensures proper formatting
         },
       },
       {
@@ -368,7 +378,7 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({
           ) || "0"
         );
       },
-    
+
     },
     {
       column: "totalVAT",

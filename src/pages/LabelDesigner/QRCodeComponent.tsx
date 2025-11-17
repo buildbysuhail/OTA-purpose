@@ -107,7 +107,7 @@ export const QRCodeComponent: React.FC<QRCodeComponentProps> = ({
               key={component.id}
               width={ptToPx(props.width)}
               height={ptToPx(props.height)}
-              minConstraints={[ptToPx(20), ptToPx(20)]}
+              minConstraints={[ptToPx(10), ptToPx(10)]}
               maxConstraints={[ptToPx(800), ptToPx(600)]}
               resizeHandles={isSelected ? ['se', 'sw', 'ne', 'nw', 'n', 's', 'e', 'w'] : []}
    

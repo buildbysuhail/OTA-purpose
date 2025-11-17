@@ -1012,7 +1012,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
           width={ptToPx(container.width)}
           height={ptToPx(containerHeight)}
 
-         minConstraints={[ptToPx(20), ptToPx(20)]}
+         minConstraints={[ptToPx(10), ptToPx(10)]}
          maxConstraints={[ptToPx(800), ptToPx(600)]}
 
         resizeHandles={isSelected ? ['se', 'sw', 'ne', 'nw', 'n', 's', 'e', 'w'] : []}
@@ -1217,7 +1217,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
             key={component.id}
             width={ptToPx(component.width)}
             height={ptToPx(component.height)}
-            minConstraints={[ptToPx(20), ptToPx(20)]}
+            minConstraints={[ptToPx(5), ptToPx(5)]}
             maxConstraints={[ptToPx(800), ptToPx(600)]}
             resizeHandles={isSelected ? ['se', 'sw', 'ne', 'nw', 'n', 's', 'e', 'w'] : []}
             onResize={(e, { size }) => {
@@ -1328,7 +1328,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
             key={component.id}
             width={ptToPx(component.lineWidth)}
             height={ptToPx(component.lineThickness || 2)}
-            minConstraints={[ptToPx(10), ptToPx(1)]}
+            minConstraints={[ptToPx(5), ptToPx(1)]}
             maxConstraints={[ptToPx(1500), ptToPx(50)]}
             resizeHandles={
               isSelected 
@@ -1416,7 +1416,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
             key={component.id}
             width={ptToPx(component.width)}
             height={ptToPx(component.height)}
-            minConstraints={[ptToPx(20), ptToPx(20)]}
+            minConstraints={[ptToPx(10), ptToPx(10)]}
             maxConstraints={[ptToPx(800), ptToPx(600)]}
             resizeHandles={isSelected ? ['se', 'sw', 'ne', 'nw', 'n', 's', 'e', 'w'] : []}
             onResize={(e, { size }) => {
@@ -1959,7 +1959,12 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!selectedComponent) return;
-
+    // DELETE HANDLER
+    if (e.key === "Delete" || e.key === "Backspace") {
+      handleDelete(selectedComponent.id);
+      e.preventDefault();
+      return; // stop further key handling
+    }
       const step = 1; // step size (points or px)
       let { x, y, width, height } = selectedComponent;
 
@@ -2025,7 +2030,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedComponent, templateData, setTemplateData, setSelectedComponent]);
+  }, [selectedComponent, templateData]);
 
 
 

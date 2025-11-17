@@ -91,36 +91,16 @@ const loadTemplateId = useCallback(
       {/* Header */}
       <div className="flex items-center justify-between mb-6 sticky top-0  ml-[5px] dark:!bg-dark-bg  bg-[#f9fafb] h-20 p-4 z-50">
        <h1 className=" font-medium text-xl dark:text-dark-text  capitalize">{t("templates")}</h1>
-                         {/* <div className="flex gap-2 px-2 sm:px-4">
+                <div className='flex gap-2'>
                     <ERPButton
-                      title={t("cancel")}
-                      onClick={() => goToPreviousPage()}
-                      className="flex-1 rounded-none !m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg text-sm sm:text-base"
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                    />
-                    <ConfettiWrapper onOriginalClick={save}>
-                      <ERPButton
-                        localInputBox={formState?.userConfig?.inputBoxStyle}
-                        ref={btnSaveRef}
-                        title={formState.transaction.master.voucherType === "LPO" ? t("generate_lpo") : t("save")}
-                        jumpTarget="save"
-                        variant="primary"
-                        className="flex-1 rounded-none !m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg text-sm sm:text-base"
-                        disabled={formState.formElements.pnlMasters?.disabled || formState.transaction.details == null || formState.transaction.details.length == 0 || formState.transactionLoading}
-                      />
-              
-                    </ConfettiWrapper>
-                  </div> */}
-       <div className='flex gap-2'>
-                            {/* <ERPButton
                       title={t("add_new")}
-                      onClick={()=>navigate(`/invoice_designer/new?template_group=${voucherType}`)}
-                      className=" rounded-none  !m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
-                 
-                    /> */}
-        {/* <button className="dark:text-dark-text text-gray-500 dark:hover:text-dark-text  hover:text-gray-700" onClick={()=>navigate("/templates")} >
-         {t("add_new")} 
-        </button> */}
+                       onClick={() => {
+                        setIsOpen(); 
+                        navigate(`/templates?template_group=PI=${voucherType}`);
+                        }}
+                      className=" rounded-none  !m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"       
+                    />
+
         <button className="dark:text-dark-text text-gray-500 dark:hover:text-dark-text  hover:text-gray-700" onClick={setIsOpen} >
           <X className="h-5 w-5" />
         </button>

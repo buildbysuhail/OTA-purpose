@@ -1513,7 +1513,7 @@ export const getCommonValues = (field: string,
       v = data.custom.pageTotalBarcode;
       break;
     case "jvTotalDebit":
-      v = data.custom.jvTotalDebit.toString();
+      v = data.custom?.jvTotalDebit.toString();
       break;
     case "jvTotalCredit":
       v = data.custom.jvTotalCredit.toString();
@@ -1556,143 +1556,143 @@ export const getCommonValues = (field: string,
       break;
     // Kitchen message fields
     case "kmKitchenRemarks":
-      v = data.custom.kmKitchenRemarks;
+      v = data.custom?.kmKitchenRemarks;
       break;
     case "kmWaiter":
-      v = data.custom.kmWaiter;
+      v = data.custom?.kmWaiter;
       break;
     case "kmOrderNumber":
-      v = data.custom.kmOrderNumber;
+      v = data.custom?.kmOrderNumber;
       break;
     case "kmTableNo":
-      v = data.custom.kmTableNo;
+      v = data.custom?.kmTableNo;
       break;
     case "kmSeatNo":
-      v = data.custom.kmSeatNo;
+      v = data.custom?.kmSeatNo;
       break;
     case "kmTokenNumber":
-      v = data.custom.kmTokenNumber;
+      v = data.custom?.kmTokenNumber;
       break;
     case "kmServeType":
-      v = data.custom.kmServeType;
+      v = data.custom?.kmServeType;
       break;
     case "kmKitchenRemarks1":
-      len = parseInt(data.custom.fldLength || "0");
-      if (data.custom.kmKitchenRemarks.length > len) {
-        v = data.custom.kmKitchenRemarks.substring(len);
+      len = parseInt(data.custom?.fldLength || "0");
+      if (data.custom?.kmKitchenRemarks.length > len) {
+        v = data.custom?.kmKitchenRemarks.substring(len);
       } else {
         v = "";
       }
       break;
     case "kmKitchenRemarks2":
-      len = parseInt(data.custom.fldLength || "0");
-      if (data.custom.kmKitchenRemarks.length > len * 2) {
-        v = data.custom.kmKitchenRemarks.substring(len * 2);
+      len = parseInt(data.custom?.fldLength || "0");
+      if (data.custom?.kmKitchenRemarks.length > len * 2) {
+        v = data.custom?.kmKitchenRemarks.substring(len * 2);
       } else {
         v = "";
       }
       break;
     case "kmKitchenRemarks3":
-      len = parseInt(data.custom.fldLength || "0");
-      if (data.custom.kmKitchenRemarks.length > len * 3) {
-        v = data.custom.kmKitchenRemarks.substring(len * 3);
+      len = parseInt(data.custom?.fldLength || "0");
+      if (data.custom?.kmKitchenRemarks.length > len * 3) {
+        v = data.custom?.kmKitchenRemarks.substring(len * 3);
       } else {
         v = "";
       }
       break;
     case "kmKitchenRemarks4":
-      len = parseInt(data.custom.fldLength || "0");
-      if (data.custom.kmKitchenRemarks.length > len * 4) {
-        v = data.custom.kmKitchenRemarks.substring(len * 4);
+      len = parseInt(data.custom?.fldLength || "0");
+      if (data.custom?.kmKitchenRemarks.length > len * 4) {
+        v = data.custom?.kmKitchenRemarks.substring(len * 4);
       } else {
         v = "";
       }
       break;
     case "narration2":
-      len = parseInt(data.custom.fldLength || "0");
-      if (data.custom.narration.length > len) {
-        v = data.custom.narration.substring(len);
+      len = parseInt(data.custom?.fldLength || "0");
+      if (data.custom?.narration.length > len) {
+        v = data.custom?.narration.substring(len);
       } else {
         v = "";
       }
       break;
     case "totalBillQty":
-      v = data.custom.totalBillQty.toString();
+      v = data.custom?.totalBillQty.toString();
       break;
     case "totalBillItemNos":
-      v = data.custom.totalBillItemNos.toString();
+      v = data.custom?.totalBillItemNos.toString();
       break;
     case "bankCardName":
-      v = data.custom.bankCardName;
+      v = data.custom?.bankCardName;
       break;
     // Service items
     case "serviceItemOne":
-      v = data.custom.serviceItems.length > 0 ? data.custom.serviceItems[0] : "";
+      v = data.custom?.serviceItems.length > 0 ? data.custom?.serviceItems[0] : "";
       break;
     case "serviceItemTwo":
-      v = data.custom.serviceItems.length > 1 ? data.custom.serviceItems[1] : "";
+      v = data.custom?.serviceItems.length > 1 ? data.custom?.serviceItems[1] : "";
       break;
     case "serviceItemThree":
-      v = data.custom.serviceItems.length > 2 ? data.custom.serviceItems[2] : "";
+      v = data.custom?.serviceItems.length > 2 ? data.custom?.serviceItems[2] : "";
       break;
     case "serviceItemOneAmt":
-      v = data.custom.serviceItemsAMT.length > 0 ? data.custom.serviceItemsAMT[0] : "";
+      v = data.custom?.serviceItemsAMT.length > 0 ? data.custom?.serviceItemsAMT[0] : "";
       break;
     case "serviceItemTwoAmt":
-      v = data.custom.serviceItemsAMT.length > 1 ? data.custom.serviceItemsAMT[1] : "";
+      v = data.custom?.serviceItemsAMT.length > 1 ? data.custom?.serviceItemsAMT[1] : "";
       break;
     case "serviceItemThreeAmt":
-      v = data.custom.serviceItemsAMT.length > 2 ? data.custom.serviceItemsAMT[2] : "";
+      v = data.custom?.serviceItemsAMT.length > 2 ? data.custom?.serviceItemsAMT[2] : "";
       break;
     case "grandTotalReturn":
-      const grandTot = data.custom.grantTotal;
-      const srAmt = data.custom.dtTranMaster && data.custom.dtTranMaster[0] ? parseFloat(data.custom.dtTranMaster[0].SRAmount || 0) : 0;
+      const grandTot = data.custom?.grantTotal;
+      const srAmt = data.custom?.dtTranMaster && data.custom?.dtTranMaster[0] ? parseFloat(data.custom?.dtTranMaster[0].SRAmount || 0) : 0;
       v = (grandTot - srAmt).toString();
       break;
     // Gate pass fields
     // case "productsGatePass":
     //   setGt(true);
-    //   if (data.custom.productNameGatePass && data.custom.gatePass) {
-    //     v = data.custom.productNameGatePass;
+    //   if (data.custom?.productNameGatePass && data.custom?.gatePass) {
+    //     v = data.custom?.productNameGatePass;
     //   }
     //   break;
     case "qtyGatePass":
-      if (data.custom.qtyGatePass > 0 && data.custom.gatePass) {
-        v = data.custom.qtyGatePass.toString();
+      if (data.custom?.qtyGatePass > 0 && data.custom?.gatePass) {
+        v = data.custom?.qtyGatePass.toString();
       }
       break;
     // case "transactionTimeDateWithTimeGate":
-    //   if (data.custom.gatePass) {
-    //     v = data.custom.transactionTimeGate.toLocaleTimeString();
+    //   if (data.custom?.gatePass) {
+    //     v = data.custom?.transactionTimeGate.toLocaleTimeString();
     //   }
     //   break;
     case "printDateGate":
-      if (data.custom.gatePass) {
+      if (data.custom?.gatePass) {
         v = new Date().toLocaleDateString();
       }
       break;
     case "totalItemsGate":
-      if (data.custom.gatePass) {
-        v = data.custom.totalItemsGate.toString();
+      if (data.custom?.gatePass) {
+        v = data.custom?.totalItemsGate.toString();
       }
       break;
     case "voucherNumberGate":
-      if (data.custom.gatePass) {
-        v = data.custom.tokenBarcodeGate;
+      if (data.custom?.gatePass) {
+        v = data.custom?.tokenBarcodeGate;
       }
       break;
     case "tokenGate":
-      if (data.custom.gatePass) {
+      if (data.custom?.gatePass) {
         v = "PLEASE KEEP YOUR TOKEN";
       }
       break;
     case "voucherNoGate":
-      if (data.custom.gatePass) {
+      if (data.custom?.gatePass) {
         v = "*** VOUCHER NO ***";
       }
       break;
     case "nameGate":
-      if (data.custom.gatePass) {
+      if (data.custom?.gatePass) {
         v = "GATEPASS";
       }
       break;
@@ -1711,6 +1711,7 @@ export function bindDataForPrint(field: string, printData: PrintResponse,
   const splitData = field.split("___");
   const group = splitData[0] as any;
   const key = splitData[1];
+console.log('bindDataForPrint');
 
   if (isNullOrUndefinedOrEmpty(printData?.master))
     return "";
@@ -1718,7 +1719,9 @@ export function bindDataForPrint(field: string, printData: PrintResponse,
   const details = printData?.details
   let val;
   if (group == "master") {
-    val = master[key as (keyof PrintMasterDto)]
+console.log(key);
+console.log(master[key as (keyof PrintMasterDto)]);
+   val =  master[key as (keyof PrintMasterDto)]
 
   }
   else if (group == "details") {

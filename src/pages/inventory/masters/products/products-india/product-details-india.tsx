@@ -46,6 +46,7 @@ const ProductDetailsIndia: React.FC<{
                     handleFieldChange("product.minimumStock", data.product.minimumStock)
                   }
                   className="flex-1 min-w-[100px]"
+                  fetching={formState?.loading !== false ? true : false}
                 />
 
                 <ERPInput
@@ -59,6 +60,7 @@ const ProductDetailsIndia: React.FC<{
                     handleFieldChange("product.maximumStock", data.product.maximumStock)
                   }
                   className="flex-1 min-w-[100px]"
+                  fetching={formState?.loading !== false ? true : false}
                 />
                 <ERPInput
                   {...getFieldProps("product.reorderQty")}
@@ -71,6 +73,7 @@ const ProductDetailsIndia: React.FC<{
                     handleFieldChange("product.reorderQty", data.product.reorderQty)
                   }
                   className="flex-1 min-w-[100px]"
+                  fetching={formState?.loading !== false ? true : false}
                 />
               </div>
 
@@ -101,6 +104,7 @@ const ProductDetailsIndia: React.FC<{
                       dispatch(toggleWarehouse({ isOpen: false })),
                     content: <MemoizedWarehouseManage />,
                   }}
+                  fetching={formState?.loading !== false ? true : false}
                 />
 
                 {/* <button className="bg-gray-300 text-black p-2 rounded-full mt-5 hover:shadow-md hover:text-white hover:bg-black hover:font-bold transition duration-300 flex-shrink-0">
@@ -135,6 +139,7 @@ const ProductDetailsIndia: React.FC<{
                       dispatch(toggleBrands({ isOpen: false })),
                     content: <MemoizedBrandsManage />,
                   }}
+                  fetching={formState?.loading !== false ? true : false}
                 />
 
                 {/* <button className="bg-gray-300 text-black p-2 rounded-full mt-5 hover:shadow-md hover:text-white hover:bg-black hover:font-bold transition duration-300 flex-shrink-0">
@@ -154,6 +159,7 @@ const ProductDetailsIndia: React.FC<{
                   handleFieldChange("product.commodityCode", data.product.commodityCode)
                 }
                 className="flex-1 min-w-[200px]"
+                fetching={formState?.loading !== false ? true : false}
               />
 
               <ERPInput
@@ -166,6 +172,7 @@ const ProductDetailsIndia: React.FC<{
                   handleFieldChange("product.aliasItemName", data.product.aliasItemName)
                 }
                 className="flex-1 min-w-[200px]"
+                fetching={formState?.loading !== false ? true : false}
               />
 
               <ERPInput
@@ -178,6 +185,7 @@ const ProductDetailsIndia: React.FC<{
                   handleFieldChange("batch.specification", data.batch.specification)
                 }
                 className="flex-1 min-w-[200px]"
+                fetching={formState?.loading !== false ? true : false}
               />
             </div>
 
@@ -192,6 +200,7 @@ const ProductDetailsIndia: React.FC<{
                   handleFieldChange("product.hsnCode", data.product.hsnCode)
                 }
                 className="flex-1 min-w-[200px]"
+                fetching={formState?.loading !== false ? true : false}
               />
 
               <ERPDateInput
@@ -201,6 +210,7 @@ const ProductDetailsIndia: React.FC<{
                 disabled={isView}
                 onChange={(e) => handleFieldChange('batch.expiryDate', e.target.value as any)}
                 className="flex-1 min-w-[200px]"
+                fetching={formState?.loading !== false ? true : false}
               // onChangeData={(data: productDto) =>
               //   handleFieldChange("product.expiryDate", data.product.expiryDate)
               // }
@@ -216,6 +226,7 @@ const ProductDetailsIndia: React.FC<{
                   handleFieldChange("batch.autoBarcode", data.batch.autoBarcode)
                 }
                 className="flex-1 min-w-[200px]"
+                fetching={formState?.loading !== false ? true : false}
               />
             </div>
 
@@ -230,6 +241,7 @@ const ProductDetailsIndia: React.FC<{
                   handleFieldChange("batch.batchNo", data.batch.batchNo)
                 }
                 className="flex-1 min-w-[200px]"
+                fetching={formState?.loading !== false ? true : false}
               />
 
               <div className="flex flex-1 gap-1 min-w-[200px]">
@@ -244,6 +256,7 @@ const ProductDetailsIndia: React.FC<{
                     handleFieldChange("product.netWt", data.product.netWt)
                   }
                   className="truncate flex-1 min-w-[100px]"
+                  fetching={formState?.loading !== false ? true : false}
                 />
 
                 <ERPInput
@@ -256,6 +269,7 @@ const ProductDetailsIndia: React.FC<{
                     handleFieldChange("product.netWeightUnit", data.product.netWeightUnit)
                   }
                   className="flex-1 min-w-[80px]"
+                  fetching={formState?.loading !== false ? true : false}
                 />
               </div>
 
@@ -267,6 +281,7 @@ const ProductDetailsIndia: React.FC<{
                 disabled={isView}
                 onChange={(e) => handleFieldChange('batch.mfgDate', e.target.value as any)}
                 className="flex-1 min-w-[200px]"
+                fetching={formState?.loading !== false ? true : false}
               // onChangeData={(data: productDto) =>
               //   handleFieldChange("product.mfgDate", data.product.mfgDate)
               // }
@@ -290,6 +305,7 @@ const ProductDetailsIndia: React.FC<{
                 label={t("location")}
                 // options={[]}
                 className="flex-2 min-w-[200px]"
+                fetching={formState?.loading !== false ? true : false}
               />
             </div>
           </div>

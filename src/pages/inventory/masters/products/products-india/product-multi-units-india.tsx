@@ -40,8 +40,9 @@ const ProductMultiUnitsIndia = forwardRef<
     modalHeight?: any
     isGlobal?: boolean;
     isView: boolean;
+    formState?: any;
   }>
-  (({ t, handleFieldChange, getFieldProps, handleDataChange, appSettings, isMaximized, modalHeight, isGlobal, isView }, ref) => {
+  (({ t, handleFieldChange, getFieldProps, handleDataChange, appSettings, isMaximized, modalHeight, isGlobal, isView, formState }, ref) => {
     const unitDAta: ProductUnitInputDto = {
       productUnitID: 0,
       productBatchID: 0,
@@ -407,6 +408,7 @@ const ProductMultiUnitsIndia = forwardRef<
                 }}
                 className="flex-1 min-w-[120px] max-w-[222px]"
                 disabled={isView}
+                fetching={formState?.loading !== false ? true : false}
               />
 
               <ERPInput
@@ -428,6 +430,7 @@ const ProductMultiUnitsIndia = forwardRef<
                 }}
                 className="flex-1 min-w-[120px] max-w-[222px]"
                 disabled={isView}
+                fetching={formState?.loading !== false ? true : false}
               />
 
               <ERPInput
@@ -443,6 +446,7 @@ const ProductMultiUnitsIndia = forwardRef<
                 }
                 className="flex-1 min-w-[120px] max-w-[222px]"
                 disabled={isView}
+                fetching={formState?.loading !== false ? true : false}
               />
 
               <ERPInput
@@ -458,6 +462,7 @@ const ProductMultiUnitsIndia = forwardRef<
                 }
                 className="flex-1 min-w-[120px] max-w-[222px]"
                 disabled={isView}
+                fetching={formState?.loading !== false ? true : false}
               />
 
               <ERPInput
@@ -473,6 +478,7 @@ const ProductMultiUnitsIndia = forwardRef<
                 }
                 className="flex-1 min-w-[120px] max-w-[222px]"
                 disabled={isView}
+                fetching={formState?.loading !== false ? true : false}
               />
 
               <ERPInput
@@ -488,6 +494,7 @@ const ProductMultiUnitsIndia = forwardRef<
                 }
                 className="flex-1 min-w-[120px] max-w-[222px]"
                 disabled={isView}
+                fetching={formState?.loading !== false ? true : false}
               />
 
               <ERPInput
@@ -503,6 +510,7 @@ const ProductMultiUnitsIndia = forwardRef<
                 }
                 className="flex-1 min-w-[120px] max-w-[222px]"
                 disabled={isView}
+                fetching={formState?.loading !== false ? true : false}
               />
 
               <ERPInput
@@ -518,6 +526,7 @@ const ProductMultiUnitsIndia = forwardRef<
                 }
                 className="flex-1 min-w-[120px] max-w-[222px]"
                 disabled={isView}
+                fetching={formState?.loading !== false ? true : false}
               />
             </div>
 
@@ -594,6 +603,7 @@ const ProductMultiUnitsIndia = forwardRef<
                   className="w-full"
                   label={t("sales")}
                   disabled={isView}
+                  fetching={formState?.loading !== false ? true : false}
                 />
               </div>
               <div className="flex-1 px-1 mb-3 min-w-[200px] max-w-[200px]">
@@ -615,6 +625,7 @@ const ProductMultiUnitsIndia = forwardRef<
                   }
                   className="w-full"
                   disabled={isView}
+                  fetching={formState?.loading !== false ? true : false}
                 />
               </div>
               <div className="flex-1 px-1 mb-3 min-w-[200px] max-w-[200px]">
@@ -636,6 +647,7 @@ const ProductMultiUnitsIndia = forwardRef<
                   }
                   className="w-full"
                   disabled={isView}
+                  fetching={formState?.loading !== false ? true : false}
                 />
               </div>
             </div>

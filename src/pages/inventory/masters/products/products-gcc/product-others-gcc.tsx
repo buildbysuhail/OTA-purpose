@@ -92,42 +92,49 @@ const ProductOthersGcc: React.FC<{
             {...getFieldProps("config.showProductDuplicateWarning")}
             label={t("show_product_duplicate_warning_message")}
             onChange={(data) => handleFieldChangeAndResetSettings("showProductDuplicateWarning", data.target.checked)}
+            fetching={formState?.loading !== false ? true : false}
           />
           <ERPCheckbox
             disabled={isView}
             {...getFieldProps("config.showProductDetailesAfterSave")}
             label={t("show_product_details_after_save")}
             onChange={(data) => handleFieldChangeAndResetSettings("showProductDetailesAfterSave", data.target.checked)}
+            fetching={formState?.loading !== false ? true : false}
           />
           <ERPCheckbox
             disabled={isView}
             {...getFieldProps("config.blockConvertProductNameToUpperCase")}
             label={t("block_convert_product_name_to_upper_case")}
             onChange={(data) => handleFieldChangeAndResetSettings("blockConvertProductNameToUpperCase", data.target.checked)}
+            fetching={formState?.loading !== false ? true : false}
           />
           <ERPCheckbox
             disabled={isView}
             {...getFieldProps("config.calculateMarkUpValue")}
             label={t("calculate_markup_value")}
             onChange={(data) => handleFieldChangeAndResetSettings("calculateMarkUpValue", data.target.checked)}
+            fetching={formState?.loading !== false ? true : false}
           />
           <ERPCheckbox
             disabled={isView}
             {...getFieldProps("config.showDisplayCost")}
             label={t("show_display_cost")}
             onChange={(data) => handleFieldChangeAndResetSettings("showDisplayCost", data.target.checked)}
+            fetching={formState?.loading !== false ? true : false}
           />
           <ERPCheckbox
             disabled={isView}
             {...getFieldProps("config.showMultiBarcodeOnSave")}
             label={t("show_multibacode_onsave")}
             onChange={(data) => handleFieldChangeAndResetSettings("showMultiBarcodeOnSave", data.target.checked)}
+            fetching={formState?.loading !== false ? true : false}
           />
           <ERPCheckbox
             disabled={isView}
             {...getFieldProps("config.showFlavourOnSave")}
             label={t("show_flavour_onsave")}
             onChange={(data) => handleFieldChangeAndResetSettings("showFlavourOnSave", data.target.checked)}
+            fetching={formState?.loading !== false ? true : false}
           />
         </div>
         {activePopup === "fastMoving" && (

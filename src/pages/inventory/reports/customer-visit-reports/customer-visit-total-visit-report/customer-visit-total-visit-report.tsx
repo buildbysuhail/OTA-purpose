@@ -6,9 +6,18 @@ import { ActionType } from "../../../../../redux/types";
 import Urls from "../../../../../redux/urls";
 import CustomerVisitTotalVisitFilter, { CustomerVisitTotalVisitFilterInitialState } from "./customer-visit-total-visit-report-filter";
 import GridId from "../../../../../redux/gridId";
+import { useState } from "react";
+
+interface RouteNameMapItem {
+  original: string;
+  cleaned: string;
+}
 
 const CustomerVisitTotalVisit = () => {
   const { t } = useTranslation('accountsReport');
+  // If The route name contains special characters initially, handle it in grouping
+  const [specialCharactersRoute, setSpecialCharactersRoute] = useState<RouteNameMapItem[]>([]);
+
   const columns: DevGridColumn[] = [
     {
       dataField: "routeName",
@@ -20,6 +29,29 @@ const CustomerVisitTotalVisit = () => {
       allowSorting: true,
       visible: true,
       width: 120,
+      calculateGroupValue: (rowData: any) => {
+        const original = rowData.routeName;
+        // It will Identify The name without the special character at the initial
+        const cleaned = original.replace(/^[^a-zA-Z0-9]+/, "");
+        const leadingSpecials = original.match(/^[^a-zA-Z0-9]+/)?.[0] || "";
+        // If Leading Special character present, Store the original, cleaned for using in UI showing
+        if(leadingSpecials){
+          setSpecialCharactersRoute((prev: any) => {
+            const exists = prev.some((p:any) => p.cleaned === cleaned);
+            if (!exists) {
+               return [...prev, { original, cleaned }];
+            }
+            return prev;
+        });
+        } 
+        return cleaned
+      },
+      customizeText: (cellInfo) => {
+         const cleanedValue = cellInfo.value;
+         // This will select the original route name for showing in ui
+         const match = specialCharactersRoute.find((x:any) => x.cleaned === cleanedValue);
+         return match ? match.original : cleanedValue;
+    },
     },
     {
       dataField: "partyCode",

@@ -257,6 +257,7 @@ const StockCommon: React.FC<{
             }
             noLabel={true}
             className="flex-2 min-w-[200px]"
+            fetching={formState?.loading !== false ? true : false}
           />
         </div>
         <div className="flex items-center gap-2">

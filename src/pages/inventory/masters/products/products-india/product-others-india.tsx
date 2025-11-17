@@ -94,6 +94,7 @@ const ProductOthersIndia: React.FC<{
                   )
                 }
                 className="min-w-[300px] flex-1"
+                fetching={formState?.loading !== false ? true : false}
               />
               <ERPCheckbox
                 disabled={isView}
@@ -106,6 +107,7 @@ const ProductOthersIndia: React.FC<{
                   )
                 }
                 className="min-w-[250px] flex-1"
+                fetching={formState?.loading !== false ? true : false}
               />
             </div>
 
@@ -121,6 +123,7 @@ const ProductOthersIndia: React.FC<{
                   )
                 }
                 className="min-w-[250px] flex-1"
+                fetching={formState?.loading !== false ? true : false}
               />
               <ERPCheckbox
                 disabled={isView}
@@ -133,6 +136,7 @@ const ProductOthersIndia: React.FC<{
                   )
                 }
                 className="min-w-[300px] flex-1"
+                fetching={formState?.loading !== false ? true : false}
               />
             </div>
 
@@ -148,6 +152,7 @@ const ProductOthersIndia: React.FC<{
                   )
                 }
                 className="min-w-[250px] flex-1"
+                fetching={formState?.loading !== false ? true : false}
               />
               <ERPCheckbox
                 disabled={isView}
@@ -160,6 +165,7 @@ const ProductOthersIndia: React.FC<{
                   )
                 }
                 className="min-w-[250px] flex-1"
+                fetching={formState?.loading !== false ? true : false}
               />
             </div>
             <div className="flex flex-wrap gap-x-8 gap-y-2">
@@ -168,12 +174,14 @@ const ProductOthersIndia: React.FC<{
                 {...getFieldProps("config.showMultiBarcodeOnSave")}
                 label={t("show_multibacode_onsave")}
                 onChange={(data) => handleFieldChangeAndResetSettings("showMultiBarcodeOnSave", data.target.checked)}
+                fetching={formState?.loading !== false ? true : false}
               />
               <ERPCheckbox
                 disabled={isView}
                 {...getFieldProps("config.showFlavourOnSave")}
                 label={t("show_flavour_onsave")}
                 onChange={(data) => handleFieldChangeAndResetSettings("showFlavourOnSave", data.target.checked)}
+                fetching={formState?.loading !== false ? true : false}
               />
             </div>
           </div>

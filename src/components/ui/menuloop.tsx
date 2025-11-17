@@ -11,29 +11,43 @@ function Menuloop({ MENUITEMS, toggleSidemenu, level, t }: any) {
     const focusableSelector =
       'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
     const focusable = Array.from(
-      document.getElementsByClassName("firstlevel-link-navigate-helper") as any
-    ).filter((el: any) => el.offsetParent !== null) as HTMLElement[]
+       document.querySelectorAll(
+         ".firstlevel-link-navigate-helper, .first-menu-link-navigate-helper"
+      )
+    ) as HTMLElement[];
+
+    // This focus including the puls button
+    const focusablePlus = Array.from(
+       document.querySelectorAll(
+         ".firstlevel-link-navigate-helper, .circle-btn"
+      )
+    ) as HTMLElement[];
+
+    // Index Including The plus button
+    const currentIndexPlus = focusablePlus.indexOf(
+      document.activeElement as HTMLElement
+    );
 
     const currentIndex = focusable.indexOf(
       document.activeElement as HTMLElement
     );
     if (e.key === "ArrowRight") {
       e.preventDefault();
-      const nextIndex = (currentIndex + 1) % focusable.length;
-      focusable[nextIndex]?.focus();
+      const nextIndex = currentIndexPlus + 1;
+      focusablePlus[nextIndex]?.focus();
     } else if (e.key === "ArrowLeft") {
       e.preventDefault();
-      const nextIndex = (currentIndex - 1) % focusable.length;
-      focusable[nextIndex]?.focus();
+     const nextIndex = currentIndexPlus - 1;
+      focusablePlus[nextIndex]?.focus();
     } else if (e.key === "ArrowDown") {
       e.preventDefault();
-      debugger;
       const nextIndex = currentIndex + 1;
       if(focusable[nextIndex]){
          focusable[nextIndex]?.focus();
       }
       else{
-        //  need handle here
+        const reportMenu = document.getElementById("report-menu-id");
+        reportMenu?.focus();
       }
       
     } else if (e.key === "ArrowUp") {
@@ -50,14 +64,6 @@ function Menuloop({ MENUITEMS, toggleSidemenu, level, t }: any) {
         }
 
     }
-    // Need To remove if not needed CheckIt
-    // else if(e.key === "Enter"){
-    //    const prevIndex = (currentIndex - 1 + focusable.length) % focusable.length;
-    //   focusable[prevIndex]?.focus();
-    //   setTimeout(()=>{
-    //      document.getElementById("first-menu-link")?.focus();
-    //    },100)
-    //  }
   };
 
   const focusableSelector =
@@ -73,7 +79,6 @@ function Menuloop({ MENUITEMS, toggleSidemenu, level, t }: any) {
     )
       return;
     e.preventDefault(); // stop scrolling
-    debugger;
     // collect only visible/enabled focusable elements
     const nodes = Array.from(
       document.querySelectorAll(focusableSelector)
@@ -136,10 +141,7 @@ function Menuloop({ MENUITEMS, toggleSidemenu, level, t }: any) {
         elm?.focus();
       }, 100);
     } else if (e.key === "ArrowDown") {
-      const isLast = currentIndex === focusable.length - 1;
-      if (isLast) alert("Last index reached");
-      const nextIndex =
-        (currentIndex + 1 + focusable.length) % focusable.length;
+      const nextIndex = currentIndex + 1 ;
       focusable[nextIndex].focus();
     } else if (e.key === "ArrowUp") {
       const prevIndex =
@@ -286,7 +288,7 @@ function Menuloop({ MENUITEMS, toggleSidemenu, level, t }: any) {
                           >
                             <Link
                               to={firstlevel.addPath}
-                              className="flex items-center justify-center w-7 h-7 focus:bg-blue-950 focus:rounded-xl"
+                              className="circle-btn flex items-center justify-center w-7 h-7 focus:bg-blue-950 focus:rounded-xl"
                               onClick={(e) => e.stopPropagation()}
                               tabIndex={0}
                             >

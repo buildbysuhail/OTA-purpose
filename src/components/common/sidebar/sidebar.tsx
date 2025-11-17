@@ -1080,6 +1080,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
                       {levelone.type === "link" ? (
                         <Link
                           tabIndex={0}
+                          id="report-menu-id"
                           onKeyDown={handleKeyDown}
                           to={levelone.path}
                           className={`side-menu__item ${levelone.selected ? "active" : ""

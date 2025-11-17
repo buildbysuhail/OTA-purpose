@@ -74,6 +74,7 @@ const NutritionFactsIndia: React.FC<{
                                 nutrients: e.label,
                             }));
                         }}
+                        fetching={formState?.loading !== false ? true : false}
                     />
 
                     <ERPInput
@@ -88,6 +89,7 @@ const NutritionFactsIndia: React.FC<{
                             }))
                         }
                         className="w-32"
+                        fetching={formState?.loading !== false ? true : false}
                     />
 
                     <ERPButton

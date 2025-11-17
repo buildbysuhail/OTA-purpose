@@ -26,6 +26,7 @@ enum ShortKeyEvents {
   GO_TO_NEXT_PAGE = "go-to-next-page",
   GO_TO_HOME = "go-to-home",
   FOCUS_SEARCHBAR = "focus-searchbar",
+  FOCUS_SIDEBAR_SEARCH = "focus-sidebar-search",
 }
 
 const shortKeys: ShortcutConfig[] = [
@@ -77,6 +78,19 @@ const shortKeys: ShortcutConfig[] = [
     description: "Go to Home",
     action: () => {
       window.location.assign("/");
+    },
+  },
+  // Short Key for focusing searchbar in side menu bar (CTRL+m)
+  {
+    event: ShortKeyEvents.FOCUS_SIDEBAR_SEARCH,
+    key: "ctrl+m",
+    description: "Focus Sidebar Search",
+    action: () => {
+      const el = document.getElementById("sidebar-menu-search") as HTMLInputElement | null;
+      if (el) {
+        el.removeAttribute("readonly");  
+        el.focus();                      
+      }
     },
   },
   {

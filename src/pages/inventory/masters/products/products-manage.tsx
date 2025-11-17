@@ -436,6 +436,7 @@ useEffect(() => {
           modalHeight={modalHeight}
           isGlobal={true}
           isView={isView}
+          formState={formState}
         />
       </div>,
       <div key="multi_rates">
@@ -552,6 +553,7 @@ useEffect(() => {
           getFieldProps={getFieldProps}
           handleFieldChange={handleFieldChange}
           isView={isView}
+          formState={formState}
         />
       </div>,
       <div key="multi_units">
@@ -566,6 +568,7 @@ useEffect(() => {
           modalHeight={modalHeight}
           isGlobal={false}
           isView={isView}
+          formState={formState}
         />
       </div>,
       <div key="multi_rates">
@@ -650,6 +653,7 @@ useEffect(() => {
           getFieldProps={getFieldProps}
           handleFieldChange={handleFieldChange}
           isView={isView}
+          formState={formState}
         />
       </div>,
     ];
@@ -675,6 +679,7 @@ useEffect(() => {
             }
           }}
           onChangeData={(data: any) => handleFieldChange("barcode", data.barcode)}
+          fetching={formState?.loading !== false ? true : false}
         // className="w-full max-w-[250px] md:w-1/3 pb-4"
         />
       </div>

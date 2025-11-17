@@ -27,6 +27,7 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
 }) => {
   const location = useLocation();
   const { t } = useTranslation("accountsReport");
+  const [marginPercentage, setMarginPercentage] = useState(0)
 
   const handleCalculateSummary = (e: any) => {
     if (e.name !== "marginPerc") return;
@@ -56,6 +57,18 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
         break;
     }
   };
+
+  const handleContentReady = (e:any) => {
+      setTimeout(() => {
+        // Calculating margin pecentage by (margin/netValue)*100
+        const netValueTotal = e.component.getTotalSummaryValue("netValue");
+        const netMarginTotal = e.component.getTotalSummaryValue("margin");
+        const marginPercent = netValueTotal !== 0
+            ? (netMarginTotal / netValueTotal) * 100
+            : 0;
+        setMarginPercentage(marginPercent)
+      }, 100);
+    };
 
   const columns: DevGridColumn[] = useMemo(() => {
     const baseColumns: DevGridColumn[] = [
@@ -715,6 +728,10 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
       summaryType: "custom", //summaryType: "custom",
       valueFormat: "percent",
       showInColumn: "marginPerc",
+      customizeText: (e: any) => {
+        const result = erpParseFloat(getFormattedValue(marginPercentage));
+        return result.toString()
+      },
       cellSummaryAction: (value: number) => {
         return erpParseFloat(getFormattedValue(value));
       },
@@ -798,6 +815,7 @@ const GroupwiseSalesSummary: FC<SummaryProps> = ({
                   sorting: false,
                 }}
                 handleCalculateSummary={handleCalculateSummary}
+                onContentReady={handleContentReady}
                 columns={columns}
                 gridHeader={t(gridHeader)}
                 dataUrl={Urls.groupwise_sales_summary}

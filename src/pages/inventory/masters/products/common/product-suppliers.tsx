@@ -69,6 +69,7 @@ const SuppliersCommon: React.FC<{
                 }))
               }
               className="w-full"
+              fetching={formState?.loading !== false ? true : false}
             />
           </div>
 
@@ -96,6 +97,7 @@ const SuppliersCommon: React.FC<{
                 })
               }
               className="w-full"
+              fetching={formState?.loading !== false ? true : false}
             />
           </div>
 
@@ -114,6 +116,7 @@ const SuppliersCommon: React.FC<{
                 }))
               }
               className="w-full"
+              fetching={formState?.loading !== false ? true : false}
             />
           </div>
 

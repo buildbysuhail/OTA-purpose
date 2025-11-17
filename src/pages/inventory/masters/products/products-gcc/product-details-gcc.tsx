@@ -16,7 +16,8 @@ export const ProductDetailsGcc: React.FC<{
   ) => void;
   getFieldProps: (fieldId: string, type?: string) => FormField;
   isView: boolean;
-}> = React.memo(({ clientSession, handleFieldChange, getFieldProps, isView }) => {
+  formState: any;
+}> = React.memo(({ clientSession, handleFieldChange, getFieldProps, isView, formState }) => {
   const { t } = useTranslation("inventory");
   return (
     <>
@@ -37,6 +38,7 @@ export const ProductDetailsGcc: React.FC<{
                     data.product.minimumStock
                   )
                 }
+                fetching={formState?.loading !== false ? true : false}
               />
 
               <ERPInput
@@ -52,6 +54,7 @@ export const ProductDetailsGcc: React.FC<{
                     data.product.maximumStock
                   )
                 }
+                fetching={formState?.loading !== false ? true : false}
               />
 
               <ERPInput
@@ -67,6 +70,7 @@ export const ProductDetailsGcc: React.FC<{
                     data.product.reorderQty
                   )
                 }
+                fetching={formState?.loading !== false ? true : false}
               />
             </div>
 
@@ -86,6 +90,7 @@ export const ProductDetailsGcc: React.FC<{
                 }
                 className="w-full"
                 label={t("warehouse")}
+                fetching={formState?.loading !== false ? true : false}
               />
             </div>
 
@@ -105,6 +110,7 @@ export const ProductDetailsGcc: React.FC<{
                 }
                 className="w-full"
                 label={t("brand_mfg")}
+                fetching={formState?.loading !== false ? true : false}
               />
             </div>
 
@@ -120,6 +126,7 @@ export const ProductDetailsGcc: React.FC<{
                   data.product.commodityCode
                 )
               }
+              fetching={formState?.loading !== false ? true : false}
             />
 
             <ERPDataCombobox
@@ -137,6 +144,7 @@ export const ProductDetailsGcc: React.FC<{
               }
               label={t("product_category")}
               className="w-full"
+              fetching={formState?.loading !== false ? true : false}
             />
 
             <ERPInput
@@ -151,6 +159,7 @@ export const ProductDetailsGcc: React.FC<{
                   data.batch.specification
                 )
               }
+              fetching={formState?.loading !== false ? true : false}
             />
 
             <ERPInput
@@ -162,6 +171,7 @@ export const ProductDetailsGcc: React.FC<{
               onChangeData={(data) =>
                 handleFieldChange("product.hsnCode", data.product.hsnCode)
               }
+              fetching={formState?.loading !== false ? true : false}
             />
 
             <ERPInput
@@ -176,6 +186,7 @@ export const ProductDetailsGcc: React.FC<{
                   data.product.aliasItemName
                 )
               }
+              fetching={formState?.loading !== false ? true : false}
             />
 
             <ERPInput
@@ -185,6 +196,7 @@ export const ProductDetailsGcc: React.FC<{
               required={false}
               disabled
               onChangeData={(data) => handleFieldChange("batch.autoBarcode", data.batch.autoBarcode)}
+              fetching={formState?.loading !== false ? true : false}
             />
 
             <ERPInput
@@ -196,6 +208,7 @@ export const ProductDetailsGcc: React.FC<{
               onChangeData={(data) =>
                 handleFieldChange("batch.batchNo", data.batch.batchNo)
               }
+              fetching={formState?.loading !== false ? true : false}
             />
 
             <ERPInput
@@ -208,6 +221,7 @@ export const ProductDetailsGcc: React.FC<{
               onChangeData={(data: productDto) =>
                 handleFieldChange("product.netWt", data.product.netWt)
               }
+              fetching={formState?.loading !== false ? true : false}
             />
 
             <ERPInput
@@ -222,6 +236,7 @@ export const ProductDetailsGcc: React.FC<{
                   data.product.netWeightUnit
                 )
               }
+              fetching={formState?.loading !== false ? true : false}
             />
 
             <ERPDateInput
@@ -232,6 +247,7 @@ export const ProductDetailsGcc: React.FC<{
               onChange={(data) =>
                 handleFieldChange("batch.expiryDate", data.target.value)
               }
+              fetching={formState?.loading !== false ? true : false}
             />
 
             <ERPDateInput
@@ -242,6 +258,7 @@ export const ProductDetailsGcc: React.FC<{
               onChange={(data) =>
                 handleFieldChange("batch.mfgDate", data.target.value)
               }
+              fetching={formState?.loading !== false ? true : false}
             />
 
             <ERPDataCombobox
@@ -259,6 +276,7 @@ export const ProductDetailsGcc: React.FC<{
               }
               label={t("location")}
               className="w-full"
+              fetching={formState?.loading !== false ? true : false}
             />
 
             <ERPCheckbox

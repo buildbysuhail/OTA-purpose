@@ -108,6 +108,7 @@ export const ProductManageGcc: React.FC<{
                     required={false}
                     className="w-full"
                     disabled={getFieldProps("product.manual").value != true || isView}
+                    fetching={formState?.loading !== false ? true : false}
                     onChangeData={(data: any) =>
                       handleFieldChange(
                         "product.productCode",
@@ -145,6 +146,7 @@ export const ProductManageGcc: React.FC<{
                       handleFieldChange("product.manual", data.target.checked);
                     }}
                     className="flex"
+                    fetching={formState?.loading !== false ? true : false}
                   />
 
                   <ERPButton
@@ -243,6 +245,7 @@ export const ProductManageGcc: React.FC<{
                     closeModal: () => dispatch(toggleProductGroup({ isOpen: false })),
                     content: <ProductGroupManage />,
                   }}
+                  fetching={formState?.loading !== false ? true : false}
                 />
 
                 {/* <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
@@ -280,6 +283,7 @@ export const ProductManageGcc: React.FC<{
                         dispatch(toggleUnitOfMeasure({ isOpen: false })),
                       content: <UnitOfMeasureManage />,
                     }}
+                    fetching={formState?.loading !== false ? true : false}
                   />
 
                   {/* <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
@@ -299,6 +303,7 @@ export const ProductManageGcc: React.FC<{
                     onChangeData={(data: any) =>
                       handleFieldChange("product.unitQty", data.product.unitQty)
                     }
+                    fetching={formState?.loading !== false ? true : false}
                   />
                 </div>
               </div>
@@ -328,6 +333,7 @@ export const ProductManageGcc: React.FC<{
                     }
                     handleDataChange(_data);
                   }}
+                  fetching={formState?.loading !== false ? true : false}
                 />
                 <ERPInput
                   disabled={isView}
@@ -343,6 +349,7 @@ export const ProductManageGcc: React.FC<{
                       String(data.target.value)
                     )
                   }
+                  fetching={formState?.loading !== false ? true : false}
                 />
 
                 {/* <p>{getFieldProps("product.unitQty")?.value}</p>
@@ -356,6 +363,7 @@ export const ProductManageGcc: React.FC<{
                     label={t("mu")}
                     // onChangeData={(data: any) => handleFieldChange("product.mu", data.product.mu)}
                     onChange={(e) => handleFieldChange("mu", e.target.checked)}
+                    fetching={formState?.loading !== false ? true : false}
                   />
                 )}
                 {appSettings.productsSettings.allowMultirate && (
@@ -365,6 +373,7 @@ export const ProductManageGcc: React.FC<{
                     label={t("mr")}
                     // onChangeData={(data: any) => handleFieldChange("product.mr", data.product.mr)}
                     onChange={(e) => handleFieldChange("mr", e.target.checked)}
+                    fetching={formState?.loading !== false ? true : false}
                   />
                 )}
               </div>
@@ -405,6 +414,7 @@ export const ProductManageGcc: React.FC<{
                             data.target.checked
                           );
                         }}
+                        fetching={formState?.loading !== false ? true : false}
                       />
                     </div>
                   )}
@@ -426,6 +436,7 @@ export const ProductManageGcc: React.FC<{
                       { "product.stdPurchasePrice": data.product.stdPurchasePrice, "batch.stdPurchasePrice": data.product.stdPurchasePrice }
                     )
                   }
+                  fetching={formState?.loading !== false ? true : false}
                 />
                 <ERPInput
                   {...getFieldProps("product.stdSalesPrice")}
@@ -457,6 +468,7 @@ export const ProductManageGcc: React.FC<{
                     };
                     handleDataChange(_data);
                   }}
+                  fetching={formState?.loading !== false ? true : false}
                 />
                 <ERPInput
                   disabled={isView}
@@ -486,9 +498,11 @@ export const ProductManageGcc: React.FC<{
                       markup: data.markup ?? 0,
                     };
                     handleDataChange(_data);
+                    
                     // const stdSalesPrice =calculateSalesPrice(data.product.stdPurchasePrice, data.markup, data.taxCategoryTaxPercentage,appSettings?.productsSettings.showRateBeforeTax)
                     // handleFieldChange("product.stdSalesPrice", stdSalesPrice)
                   }}
+                  fetching={formState?.loading !== false ? true : false}
                 />
                 <ERPInput
                   disabled={isView}
@@ -503,6 +517,7 @@ export const ProductManageGcc: React.FC<{
                       data.batch.displayCost
                     )
                   }
+                  fetching={formState?.loading !== false ? true : false}
                 />
 
                 <ERPInput
@@ -515,6 +530,7 @@ export const ProductManageGcc: React.FC<{
                   onChangeData={(data: any) =>
                     handleFieldChange("batch.msp", data.batch.msp)
                   }
+                  fetching={formState?.loading !== false ? true : false}
                 />
 
                 <ERPInput
@@ -539,6 +555,7 @@ export const ProductManageGcc: React.FC<{
                     }
                   }}
                   disableEnterNavigation
+                  fetching={formState?.loading !== false ? true : false}
                 />
 
                 {userSession.dbIdValue == "SEMAKA" && (
@@ -553,6 +570,7 @@ export const ProductManageGcc: React.FC<{
                       onChangeData={(data: any) =>
                         handleFieldChange("batch.aPC", data.batch.aPC)
                       }
+                      fetching={formState?.loading !== false ? true : false}
                     />
                     <ERPInput
                       disabled={isView}
@@ -564,6 +582,7 @@ export const ProductManageGcc: React.FC<{
                       onChangeData={(data: any) =>
                         handleFieldChange("batch.stock", data.batch.stock)
                       }
+                      fetching={formState?.loading !== false ? true : false}
                     />
                   </>
                 )}
@@ -583,6 +602,7 @@ export const ProductManageGcc: React.FC<{
                         data.product.secondLanguage
                       )
                     }
+                    fetching={formState?.loading !== false ? true : false}
                   />
                 </div>
               )}
@@ -596,6 +616,7 @@ export const ProductManageGcc: React.FC<{
                     onChange={(data) =>
                       handleFieldChange("batchCriteria", data.target.checked)
                     }
+                    fetching={formState?.loading !== false ? true : false}
                   />
                 </div>
                 <div className="flex-1 min-w-[200px]">
@@ -618,6 +639,7 @@ export const ProductManageGcc: React.FC<{
                         data.batchCriteria
                       )
                     }
+                    fetching={formState?.loading !== false ? true : false}
                   />
                 </div>
               </div>
@@ -654,6 +676,7 @@ export const ProductManageGcc: React.FC<{
                       { value: "Other", label: "Other" },
                       { value: "Fixed Asset", label: "Fixed Asset" },
                     ]}
+                    fetching={formState?.loading !== false ? true : false}
                   />
                 </div>
                 <div className="flex-1 min-w-[200px]">
@@ -671,6 +694,7 @@ export const ProductManageGcc: React.FC<{
                     onSelectItem={(data: any) => handleFieldChange({ "product.taxCategoryID": data.value, "taxCategoryTaxPercentage": data.name })}
                     label={t("tax_category")}
                     className="w-full"
+                    fetching={formState?.loading !== false ? true : false}
                   />
                 </div>
                 <div className="flex flex-col sm:flex-row flex-wrap items-end gap-4 w-full sm:w-auto">

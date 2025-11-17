@@ -7,12 +7,13 @@ import { ProductFieldPath, PathValue, productDto } from "../products-type";
 interface ProductNotesGccProps {
     getFieldProps: (fieldId: string, type?: string) => FormField | any;
     isView: boolean;
+    formState: any;
     handleFieldChange: <Path extends ProductFieldPath>(
         fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
         value?: PathValue<productDto, Path>
     ) => void;
 }
-const ProductNotesGcc: React.FC<ProductNotesGccProps> = ({ getFieldProps, handleFieldChange, isView }) => {
+const ProductNotesGcc: React.FC<ProductNotesGccProps> = ({ getFieldProps, handleFieldChange, isView, formState }) => {
     const moreInfo = getFieldProps("moreInfo").value || {};
     const [notes, setNotes] = useState<{ [key: string]: string }>({});
 
@@ -53,6 +54,7 @@ const ProductNotesGcc: React.FC<ProductNotesGccProps> = ({ getFieldProps, handle
                             onChange={(e) => handleNoteChange(leftKey, e.target.value)}
                             className="w-full"
                             id=""
+                            fetching={formState?.loading !== false ? true : false}
                         />
                         <div className="flex items-end gap-2 w-full">
                             <ERPButton
@@ -68,6 +70,7 @@ const ProductNotesGcc: React.FC<ProductNotesGccProps> = ({ getFieldProps, handle
                                 onChange={(e) => handleNoteChange(rightKey, e.target.value)}
                                 className="w-full"
                                 id=""
+                                fetching={formState?.loading !== false ? true : false}
                             />
                         </div>
                     </div>

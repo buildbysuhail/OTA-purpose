@@ -60,6 +60,7 @@ import { initialTransactionDetails2, transactionInitialMoreDetails, initialTrans
 import { TransactionDetailKeys, ColumnModel, TransactionDetail, FormElementState, CurrentCell, TransactionFormState, TransactionDetails2, TransactionDetailsMore, SummaryItems } from "../../../pages/inventory/transactions/transaction-types";
 import { ERPScrollArea } from "../erp-scrollbar";
 import usePreferenceData from "../../../utilities/hooks/usePreference";
+import DraggablePlusButton from "../../ERPComponents/erp-purchase-grid/draggable-button"
 
 type DataItem = Record<string, any>;
 export interface SummaryConfig<T = any> {
@@ -203,6 +204,7 @@ interface RowData {
   isMobileEditRow?: boolean;
   zIndexController?:number;
 }
+let mountCount = 0;
 
 const EditableCell: React.FC<EditableCellProps> = React.memo(
   ({
@@ -836,10 +838,23 @@ const VirtualRow = React.memo(
       return calculateSubtotal() - calculateDiscount();
     };
 
+  // This is for handling multiple times showing draggable button in mobile, may need to change the concept CheckIt
+  const [showButton, setShowButton] = useState(false);
+  useEffect(() => {
+    mountCount++;
+    // console.log("Mounted count:", mountCount);
+    if (mountCount === 1) {
+      setShowButton(true);
+    } else {
+      setShowButton(false); 
+    }
+  }, []);
+
     return (
       <>
         {isMobileGridRow ? (
           <>
+          <div>{showButton && <DraggablePlusButton />}</div>
             <div
               className={`py-0 ${rowBg} transition-all duration-300 ease-in-out group cursor-pointer`}
               style={{

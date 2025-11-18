@@ -264,10 +264,11 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
         <div className={`!overflow-visible flex items-center justify-evenly md:justify-end space-x-2 p-1 w-full overflow-x-auto bg-[#f9fafb] md:bg-transparent dark:bg-dark-bg-card`}>
           {/* Load Temp Rows */}
           {formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
-            <div className="group relative inline-flex flex-col items-center ps-[5px]" title="Load Details">
+            <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1080px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1030px)]:!ml-[3px]" title="Load Details">
+              
               <button
                 disabled={formState.formElements.pnlMasters?.disabled}
-                className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg dark:hover:border-warmGray-100 bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
+                className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg border-2 border-neutral-200 dark:hover:border-warmGray-100 bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
                 onClick={loadTemporaryRows}>
                 <ChevronUp className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
               </button>
@@ -276,10 +277,10 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
 
           {/* Delete Button */}
           {isAbove480 && formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
-            <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("delete")}>
+            <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1080px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1030px)]:!ml-[3px]" title={t("delete")}>
               <button
                 disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master?.invTransactionMasterID > 0 && formState.formElements?.pnlMasters?.disabled !== true)}
-                className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
+                className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg border-2 border-neutral-200 bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
                 onClick={deleteTransVoucher}>
                 <Trash2 className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
               </button>
@@ -287,18 +288,18 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
           )}
 
           {/* Refresh Button */}
-          <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("refresh")}>
+          <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1080px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1030px)]:!ml-[3px]" title={t("refresh")}>
             <button
-              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
+              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg border-2 border-neutral-200 bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
               onClick={handleRefresh}>
               <RefreshCw className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
             </button>
           </div>
 
           {/* Create New Voucher */}
-          <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("clone")}>
+          <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1080px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1030px)]:!ml-[3px]" title={t("clone")}>
             <button
-              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
+              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg border-2 border-neutral-200 bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
               onClick={createNewVoucher}>
               <BadgePlusIcon className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
             </button>
@@ -306,10 +307,10 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
 
           {/* Edit Button */}
           {formState.formElements.lnkUnlockVoucher?.visible !== true && isAbove480 && formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
-            <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("edit")}>
+            <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1080px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1030px)]:!ml-[3px]" title={t("edit")}>
               <button
                 disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master.invTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
-                className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
+                className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg border-2 border-neutral-200 bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
                 onClick={handleEdit}>
                 <Pencil className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
               </button>
@@ -318,10 +319,10 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
 
           {/* Print Button */}
           {isAbove640 && (
-            <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("print")}>
+            <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1080px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1030px)]:!ml-[3px]" title={t("print")}>
               <button
                 disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master.invTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
-                className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
+                className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg border-2 border-neutral-200 bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
                 onClick={async () =>
                   await printVoucher(
                     formState.transaction?.master.invTransactionMasterID,  // masterID
@@ -346,10 +347,10 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
 
           {/* Clear Button */}
           {isAbove640 && (
-            <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("clear")}>
+            <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1080px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1030px)]:!ml-[3px]" title={t("clear")}>
               <button
                 disabled={formState.transactionLoading}
-                className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
+                className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg border-2 border-neutral-200 bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
                 onClick={handleClearControls}>
                 <Eraser className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
               </button>
@@ -358,10 +359,10 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
 
           {/* Product Summary */}
           {formState.formElements.btnProductSummary.visible == true && isAbove768 && (
-            <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("product_summary")}>
+            <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1080px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1030px)]:!ml-[3px]" title={t("product_summary")}>
               <button
                 disabled={formState.transactionLoading}
-                className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
+                className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg border-2 border-neutral-200 bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
                 onClick={() => dispatch(formStateHandleFieldChange({ fields: { isProductSummaryOpen: true }, }))}>
                 <Boxes className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
               </button>
@@ -370,10 +371,10 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
 
           {/* partywise summary */}
           {isAbove768 && (
-            <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("party_wise_summary")}>
+            <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1080px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1030px)]:!ml-[3px]" title={t("party_wise_summary")}>
               <button
                 disabled={formState.transactionLoading}
-                className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
+                className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg border-2 border-neutral-200 bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
                 onClick={() => dispatch(formStateHandleFieldChange({ fields: { isPartyWiseSummaryOpen: true }, }))}>
                 <Group className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
               </button>
@@ -382,10 +383,10 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
 
           {/* History Button */}
           {isAbove768 && formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
-            <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("history")}>
+            <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1080px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1030px)]:!ml-[3px]" title={t("history")}>
               <button
                 disabled={formState.transactionLoading}
-                className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
+                className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg border-2 border-neutral-200 bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
                 onClick={handleHistoryClick}>
                 <History className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
               </button>
@@ -394,7 +395,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
 
           {/* Settings Button */}
           <div className="group relative inline-flex flex-col items-center" title={t("settings")}>
-            <button className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors ${phone ? "p-1.5" : "p-2"} `} onClick={() => dispatch(formStateHandleFieldChange({ fields: { isUserConfigOpen: true } }))}>
+            <button className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg border-2 border-neutral-200 bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors ${phone ? "p-1.5" : "p-2"} `} onClick={() => dispatch(formStateHandleFieldChange({ fields: { isUserConfigOpen: true } }))}>
               <UserCog className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors duration-300" />
             </button>
           </div>
@@ -406,7 +407,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
               ref={buttonRef}
               onClick={openMenuPopup}
               disabled={formState.transactionLoading}
-              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3  rounded-md hover:bg-gray-200 transition-colors`}
+              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg border-2 border-neutral-200 bg-gray-100 p-1.5 md:p-3  rounded-md hover:bg-gray-200 transition-colors`}
               title={t("more")}>
               <EllipsisVertical className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
             </button>
@@ -827,7 +828,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
               <button
                 disabled={formState.transactionLoading}
                 onClick={(e) => { e.preventDefault(); goToPreviousPage() }}
-                className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
+                className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg border-2 border-neutral-200 bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
                 title={t("close")}>
                 <X className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
               </button>

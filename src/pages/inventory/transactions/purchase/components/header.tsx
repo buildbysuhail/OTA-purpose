@@ -264,7 +264,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
         <div className={`!overflow-visible flex items-center justify-evenly md:justify-end space-x-2 p-1 w-full overflow-x-auto bg-[#f9fafb] md:bg-transparent dark:bg-dark-bg-card`}>
           {/* Load Temp Rows */}
           {formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
-            <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1080px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1030px)]:!ml-[3px]" title="Load Details">
+            <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1125px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1080px)]:!ml-[2px]" title="Load Details">
               
               <button
                 disabled={formState.formElements.pnlMasters?.disabled}
@@ -277,7 +277,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
 
           {/* Delete Button */}
           {isAbove480 && formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
-            <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1080px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1030px)]:!ml-[3px]" title={t("delete")}>
+            <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1125px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1080px)]:!ml-[2px]" title={t("delete")}>
               <button
                 disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master?.invTransactionMasterID > 0 && formState.formElements?.pnlMasters?.disabled !== true)}
                 className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg border-2 border-neutral-200 bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
@@ -288,7 +288,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
           )}
 
           {/* Refresh Button */}
-          <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1080px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1030px)]:!ml-[3px]" title={t("refresh")}>
+          <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1125px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1080px)]:!ml-[2px]" title={t("refresh")}>
             <button
               className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg border-2 border-neutral-200 bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
               onClick={handleRefresh}>
@@ -297,7 +297,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
           </div>
 
           {/* Create New Voucher */}
-          <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1080px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1030px)]:!ml-[3px]" title={t("clone")}>
+          <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1125px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1080px)]:!ml-[2px]" title={t("clone")}>
             <button
               className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg border-2 border-neutral-200 bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
               onClick={createNewVoucher}>
@@ -307,7 +307,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
 
           {/* Edit Button */}
           {formState.formElements.lnkUnlockVoucher?.visible !== true && isAbove480 && formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
-            <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1080px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1030px)]:!ml-[3px]" title={t("edit")}>
+            <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1125px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1080px)]:!ml-[2px]" title={t("edit")}>
               <button
                 disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master.invTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
                 className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg border-2 border-neutral-200 bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
@@ -319,7 +319,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
 
           {/* Print Button */}
           {isAbove640 && (
-            <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1080px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1030px)]:!ml-[3px]" title={t("print")}>
+            <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1125px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1080px)]:!ml-[2px]" title={t("print")}>
               <button
                 disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master.invTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
                 className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg border-2 border-neutral-200 bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
@@ -347,7 +347,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
 
           {/* Clear Button */}
           {isAbove640 && (
-            <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1080px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1030px)]:!ml-[3px]" title={t("clear")}>
+            <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1125px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1080px)]:!ml-[2px]" title={t("clear")}>
               <button
                 disabled={formState.transactionLoading}
                 className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg border-2 border-neutral-200 bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
@@ -359,7 +359,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
 
           {/* Product Summary */}
           {formState.formElements.btnProductSummary.visible == true && isAbove768 && (
-            <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1080px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1030px)]:!ml-[3px]" title={t("product_summary")}>
+            <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1125px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1080px)]:!ml-[2px]" title={t("product_summary")}>
               <button
                 disabled={formState.transactionLoading}
                 className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg border-2 border-neutral-200 bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
@@ -371,7 +371,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
 
           {/* partywise summary */}
           {isAbove768 && (
-            <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1080px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1030px)]:!ml-[3px]" title={t("party_wise_summary")}>
+            <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1125px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1080px)]:!ml-[2px]" title={t("party_wise_summary")}>
               <button
                 disabled={formState.transactionLoading}
                 className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg border-2 border-neutral-200 bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
@@ -383,7 +383,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
 
           {/* History Button */}
           {isAbove768 && formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
-            <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1080px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1030px)]:!ml-[3px]" title={t("history")}>
+            <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1125px)]:!ps-[0px] [@media_(min-width:990px)_and_(max-width:1080px)]:!ml-[2px]" title={t("history")}>
               <button
                 disabled={formState.transactionLoading}
                 className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg border-2 border-neutral-200 bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}

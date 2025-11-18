@@ -394,14 +394,14 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
           )}
 
           {/* Settings Button */}
-          <div className="group relative inline-flex flex-col items-center" title={t("settings")}>
+          <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1125px)]:!ps-[0px] [@media_(min-width:990px)_and_(max-width:1080px)]:!ml-[2px]" title={t("settings")}>
             <button className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg border-2 border-neutral-200 bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors ${phone ? "p-1.5" : "p-2"} `} onClick={() => dispatch(formStateHandleFieldChange({ fields: { isUserConfigOpen: true } }))}>
               <UserCog className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors duration-300" />
             </button>
           </div>
 
           {/* Popup Menu */}
-          <div className="relative">
+          <div className="relative  ps-[5px] [@media_(min-width:990px)_and_(max-width:1125px)]:!ps-[0px] [@media_(min-width:990px)_and_(max-width:1080px)]:!ml-[2px]">
             {/* {formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && ( */}
             <button
               ref={buttonRef}
@@ -824,7 +824,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
           }
           {/* Previous Page Button */}
           {!phone && (
-            <div className="relative">
+            <div className="relative  ps-[5px] [@media_(min-width:990px)_and_(max-width:1125px)]:!ps-[0px] [@media_(min-width:990px)_and_(max-width:1080px)]:!ml-[2px]">
               <button
                 disabled={formState.transactionLoading}
                 onClick={(e) => { e.preventDefault(); goToPreviousPage() }}

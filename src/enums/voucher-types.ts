@@ -79,5 +79,17 @@ export const salesVoucherTypes = [
   VoucherType.SaleReturnEstimate
 ]
 export const accountsVoucherTypes = [
-  VoucherType.CashPayment
+  VoucherType.CashPayment,
+  VoucherType.CashPaymentEstimate,
+  VoucherType.CashReceipt,
+  VoucherType.CashReceiptEstimate,
+  VoucherType.BankPayment,
+  VoucherType.BankReceipt,
+  VoucherType.ChequePayment,
+  VoucherType.ChequeReceipt,
+  VoucherType.DebitNote,
+  VoucherType.CreditNote,
+  VoucherType.OpeningBalance,
+  VoucherType.ClosingBalance,
+  VoucherType.TaxOnExpensePayment
 ]

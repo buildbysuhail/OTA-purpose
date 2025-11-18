@@ -1960,7 +1960,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!selectedComponent) return;
     // DELETE HANDLER
-    if (e.key === "Delete" || e.key === "Backspace") {
+    if (e.key === "Delete") {
       handleDelete(selectedComponent.id);
       e.preventDefault();
       return; // stop further key handling

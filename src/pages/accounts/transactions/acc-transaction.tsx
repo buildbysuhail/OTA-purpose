@@ -3297,7 +3297,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   voucherType={formState.transaction.master?.voucherType ?? ""}
                   printPreviwPopupInfo={popupData.IsPrintPreviewPopup}
                   transactionType={formState.transactionType}
-                  isInvTrans
+                  isInvTrans={false}
                   lastChooseTemp={formState.lastChoosedTemplate}
                 />
               }

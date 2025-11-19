@@ -74,7 +74,8 @@ const Templates = () => {
   const [tempCrmData, setTempCRMData] = useState([])
   const [showPreview, setShowPreview] = useState<previewState>({ show: false })
   const [showTemplateListing, setShowTemplateListing] = useState<boolean>(true)
-  const [searchQuery, setSearchQuery] = useState("")
+  const [searchQuery, setSearchQuery] = useState("") // // This for template search bar
+  const [templateSearchQuery, setTemplateSearchQuery] = useState("") // This for right-side search bar
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [sortBy, setSortBy] = useState<"name" | "date" | "type">("name")
@@ -201,11 +202,11 @@ const Templates = () => {
   const filteredAndSortedTemplates = useMemo(() => {
     let filtered = tempData && Array.isArray(tempData) ? tempData : []
 
-    if (searchQuery) {
+    if (templateSearchQuery) {
       filtered = filtered.filter(
         (temp: any) =>
-          temp.templateName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          temp.templateType?.toLowerCase().includes(searchQuery.toLowerCase()),
+          temp.templateName?.toLowerCase().includes(templateSearchQuery.toLowerCase()) ||
+          temp.templateType?.toLowerCase().includes(templateSearchQuery.toLowerCase()),
       )
     }
 
@@ -223,7 +224,7 @@ const Templates = () => {
     })
 
     return filtered
-  }, [tempData, searchQuery, sortBy])
+  }, [tempData, templateSearchQuery, sortBy])
 
   const { t } = useTranslation("system")
 
@@ -694,8 +695,8 @@ const Templates = () => {
                       </div>
                       <input
                         type="text"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        value={templateSearchQuery}
+                        onChange={(e) => setTemplateSearchQuery(e.target.value)}
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') {
                             // Search is handled by filtering below
@@ -705,7 +706,7 @@ const Templates = () => {
                         placeholder={t("search_templates")}
                         className="block w-full pl-10 pr-3 py-2 sm:py-2.5 border border-slate-300 dark:border-dark-border rounded-lg text-xs placeholder-slate-400 dark:placeholder-gray-500 transition-all duration-200 h-[38px] dark:bg-dark-bg-card dark:text-dark-text"
                       />
-                      {searchQuery && (
+                      {templateSearchQuery && (
                         <button
                           onClick={() => setSearchQuery('')}
                           className="absolute inset-y-0 right-0 pr-3 flex items-center"

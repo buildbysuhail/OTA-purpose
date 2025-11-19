@@ -5,7 +5,7 @@ import ErpDevGrid, {
 } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../../redux/urls";
 import PrivilegeCardReportFilter, {
@@ -14,10 +14,12 @@ import PrivilegeCardReportFilter, {
 import moment from "moment";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
+import { erpParseFloat } from "../../../../../utilities/Utils";
 
 const PrivilegeCardReport = () => {
   const userSession = useSelector((state: RootState) => state.UserSession);
   const { t } = useTranslation("accountsReport");
+  const [balance, setBalance] = useState(0)
   const columns: DevGridColumn[] = [
     {
       dataField: "billNo",
@@ -200,6 +202,23 @@ const PrivilegeCardReport = () => {
     };
   }, [getFormattedValue]);
   const customizeTotal = (itemInfo: any) => `TOTAL`;
+
+  // Actually the summary total is also passes as last row in this data
+  const handleOnRowPrepared = (e: any) => {
+  if (e.rowType === "data") {
+    const grid = e.component;
+    const visibleRows = grid.getVisibleRows();
+    const lastRow = visibleRows[visibleRows.length - 1];
+
+    if (lastRow && lastRow.key === e.key) {
+      const balanceColIndex = e.columns.findIndex((col: any) => col.dataField === "balance");
+      if (balanceColIndex !== -1) {
+        const lastBalance = e.cells[balanceColIndex]?.value;
+        setBalance(lastBalance);
+      }
+    }
+  }
+};
   const summaryItems: SummaryConfig[] = [
     {
       column: "billNo",
@@ -220,9 +239,14 @@ const PrivilegeCardReport = () => {
     },
     {
       column: "balance",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
-      customizeText: customizeSummaryRow,
+      // customizeText: customizeSummaryRow(balance),
+      customizeText: (e: any) => {
+          const parsedValue = erpParseFloat(getFormattedValue(balance));
+          const result = getFormattedValue(parsedValue, false, 2) || "0";
+          return result.toString()
+        },
     },
   ];
 
@@ -255,6 +279,7 @@ const PrivilegeCardReport = () => {
                 }}
                 reload={true}
                 gridId="grd_privilege_card_report"
+                onRowPrepared={handleOnRowPrepared}
               />
             </div>
           </div>

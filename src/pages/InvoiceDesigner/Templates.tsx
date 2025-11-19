@@ -80,7 +80,7 @@ const Templates = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [sortBy, setSortBy] = useState<"name" | "date" | "type">("name")
   const [formType, setFormType] = useState("")
-  const [customerType,setCustomerType] = useState("")
+  const [customerType, setCustomerType] = useState("")
 
   const [templateGroup, setTemplateGroup] = useState<VoucherType | string>(
     (searchParams?.get("template_group")! as VoucherType | string) ?? "SI",
@@ -131,7 +131,7 @@ const Templates = () => {
     setLoading(true)
     try {
       var res = await api.postAsync(`${Urls.templates}filtered`, {
-        template_group:templateGroup,
+        template_group: templateGroup,
         formType: formType,
         customerType: customerType
       })
@@ -164,40 +164,40 @@ const Templates = () => {
 
   // When Click arrows it helps to navigate through item using keyboard
   const handleKeyDown = (e: React.KeyboardEvent) => {
-      if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
-      e.preventDefault(); // prevent page scroll
+    if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+    e.preventDefault(); // prevent page scroll
 
-      // Select only valid focusable elements
-      const focusableSelector =
-        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    // Select only valid focusable elements
+    const focusableSelector =
+      'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-      // Collect all focusable elements
-      const allFocusable = Array.from(
-        document.querySelectorAll(focusableSelector)
-      ) as HTMLElement[];
+    // Collect all focusable elements
+    const allFocusable = Array.from(
+      document.querySelectorAll(focusableSelector)
+    ) as HTMLElement[];
 
-      // Filter out unwanted elements like your clear (X) button
-      const focusable = allFocusable.filter(
-        (el) => !el.classList.contains("skip-focus")
-      );
+    // Filter out unwanted elements like your clear (X) button
+    const focusable = allFocusable.filter(
+      (el) => !el.classList.contains("skip-focus")
+    );
 
-      if (focusable.length === 0) return;
+    if (focusable.length === 0) return;
 
-      const active = document.activeElement as HTMLElement | null;
-      const currentIndex = active ? focusable.indexOf(active) : -1;
+    const active = document.activeElement as HTMLElement | null;
+    const currentIndex = active ? focusable.indexOf(active) : -1;
 
-      const nextIndex =
-        e.key === "ArrowDown"
-          ? (currentIndex + 1) % focusable.length
-          : (currentIndex - 1 + focusable.length) % focusable.length;
+    const nextIndex =
+      e.key === "ArrowDown"
+        ? (currentIndex + 1) % focusable.length
+        : (currentIndex - 1 + focusable.length) % focusable.length;
 
-      focusable[nextIndex]?.focus();
-    };
+    focusable[nextIndex]?.focus();
+  };
 
   useEffect(() => {
     setTempData([])
     getTemplates()
-  }, [templateGroup,formType,customerType])
+  }, [templateGroup, formType, customerType])
 
   const filteredAndSortedTemplates = useMemo(() => {
     let filtered = tempData && Array.isArray(tempData) ? tempData : []
@@ -315,11 +315,13 @@ const Templates = () => {
           <div className="absolute inset-0 bg-gradient-to-br from-amber-400/10 via-orange-400/10 to-pink-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         )}
         <div className="relative w-full h-[80%] bg-gradient-to-br from-slate-50 dark:from-slate-800 to-slate-100 dark:to-slate-700 rounded-t-xl overflow-hidden">
-          <img
-            src={temp?.thumbImage || "/placeholder.svg?height=300&width=240"}
-            alt={temp?.templateName}
-            className="w-full h-full object-cover transition-transform duration-500"
-          />
+          <div>
+            <img
+              src={temp?.thumbImage || "/placeholder.svg?height=300&width=240"}
+              alt={temp?.templateName}
+              className="w-full h-full object-cover transition-transform duration-500"
+            />
+          </div>
           <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-slate-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
           <div className="absolute top-0 right-0 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-xs px-2 py-1 rounded-bl-md font-medium shadow-lg backdrop-blur-sm overflow-hidden">
             <span className="capitalize">{temp?.templateType || "Standard"}</span>
@@ -336,7 +338,7 @@ const Templates = () => {
               </div>
             )}
           </div>
-          <div className="absolute bottom-0 left-0 right-0 h-24 bg-slate-900/60 backdrop-blur-sm flex flex-col opacity-0 group-hover:opacity-100 transition-opacity duration-300 overflow-hidden">
+          <div className="absolute bottom-0 left-0 right-0 h-20 bg-slate-900/60 backdrop-blur-sm flex flex-col opacity-0 group-hover:opacity-100 transition-opacity duration-300 overflow-hidden">
             <div className="flex items-center justify-center gap-3 flex-1 overflow-hidden">
               <button
                 className="bg-white/20 hover:bg-white/30 text-white p-2 rounded-lg transition-colors overflow-hidden"
@@ -467,7 +469,7 @@ const Templates = () => {
                       <button
                         onClick={() => setSearchQuery('')}
                         className="absolute inset-y-0 right-0 pr-3 flex items-center skip-focus"
-                        tabIndex={-1}                    
+                        tabIndex={-1}
                       >
                         <svg
                           className="h-4 w-4 text-slate-400 dark:text-gray-500 hover:text-slate-600 dark:hover:text-gray-400"
@@ -766,38 +768,38 @@ const Templates = () => {
             {/* Initial first list selection required */}
             <div className="border-b-1 bg-white dark:bg-dark-bg-card h-fit p-2 flex gap-8 border-slate-200 dark:border-dark-border">
               <ERPDataCombobox
-                  id="Form Type"
-                  labelDirection="horizontal"
-                  field={{
-                    id: "id",
-                    getListUrl: `${Urls.template_FormTypeByVoucherType}/${templateGroup}`,
-                    valueKey: "name",
-                    labelKey: "name",
-                  }}
+                id="Form Type"
+                labelDirection="horizontal"
+                field={{
+                  id: "id",
+                  getListUrl: `${Urls.template_FormTypeByVoucherType}/${templateGroup}`,
+                  valueKey: "name",
+                  labelKey: "name",
+                }}
 
-                  onChange={(e: any) =>{
-                    setFormType(e.value ?e.name:"")
-                  } }
-                  
+                onChange={(e: any) => {
+                  setFormType(e.value ? e.name : "")
+                }}
+
               />
               <ERPDataCombobox
-                  id="Customer Type"
-                  labelDirection="horizontal"
-                  field={{
-                    id: "id",
-                    valueKey: "id",
-                    labelKey: "name",
-                  }}
-                  options={[
-                    { id: 1, name: "" },
-                    { id: 2, name: "B2B" },
-                    { id: 3, name: "B2C" },
-                    { id: 4, name: "INT" },
-                  ]}
-                  onChange={(e: any) =>{
-                    setCustomerType(e.value ?e.name:"")
-                  } } 
-              /> 
+                id="Customer Type"
+                labelDirection="horizontal"
+                field={{
+                  id: "id",
+                  valueKey: "id",
+                  labelKey: "name",
+                }}
+                options={[
+                  { id: 1, name: "" },
+                  { id: 2, name: "B2B" },
+                  { id: 3, name: "B2C" },
+                  { id: 4, name: "INT" },
+                ]}
+                onChange={(e: any) => {
+                  setCustomerType(e.value ? e.name : "")
+                }}
+              />
             </div>
             <div className="flex-1 overflow-y-auto scrollbar-thin">
               <div className="p-2 w-full">

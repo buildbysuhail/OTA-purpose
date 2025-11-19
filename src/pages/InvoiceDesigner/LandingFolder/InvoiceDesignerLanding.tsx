@@ -43,9 +43,10 @@ const InvoiceDesigner = () => {
         isForm={true}
         isOpen={rootState.PopupData.CustomDesignerPopup.isOpen ?? false}
         title={t("custom_designer")}
+        enableDynamicSize={false}
         closeModal={() => dispatch(toggleCustomDesignerPopup({ isOpen: false }))}
-        width={2000}
-        height={5000}
+        width={1300}
+        height={2000}
         content={
           <PDFBarcodeDesigner
             forCustomRows

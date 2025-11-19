@@ -219,6 +219,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
   onSuccess,
 }) => {
   // State
+
   const [zoom, setZoom] = useState(100);
   const [searchParams] = useSearchParams();
   const templateGroup = searchParams?.get("template_group")! as VoucherType | string;
@@ -254,7 +255,6 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
     isFirstOnly: true,
   });
 
- 
  
   const { t } = useTranslation("labelDesigner");
   const pageSize = template?.propertiesState?.pageSize ?? "A4";
@@ -312,7 +312,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
     {
       id: DesignerElementType.container,
       label: "Container",
-      icon: <Package className="w-4 h-4 text-blue-600" />,
+      icon: <Package className="w-4 h-4" />,
       defaultContent: "",
     },
   ];
@@ -433,17 +433,19 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
           x: adjustedX,
           y: adjustedY,
           rotate: 0,
+          format:"NONE",
           containerId: container.id,
           textAlign: "center",
+          verticalAlign:"middle",
           fontSize: 12,
           direction:"ltr",
           font: "Roboto",
           arabicFont:"Amiri",
           fontStyle: "normal",
-          width: componentType === DesignerElementType.container ? 200 : 100,
+          width: componentType === DesignerElementType.container ? 150 : 100,
           height: componentType === DesignerElementType.container ? 100 :
-            componentType === DesignerElementType.barcode ? 80 :
-              componentType === DesignerElementType.line ? 10 : 30,
+            componentType === DesignerElementType.barcode ? 40 :
+              componentType === DesignerElementType.line ? 10 : 20,
           lineThickness: 1,
           lineColor: "#000000",
           lineType: "solid",
@@ -467,8 +469,8 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
           }),
           qrCodeProps: {
             value: "https://example.com",
-            width: 150,
-            height: 150,
+            width: 60,
+            height: 60,
             level: "M",
             type: "svg",
             margin: 0,
@@ -485,7 +487,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
             padding: 0,
             autoResize: false,
             minHeight: 100,
-            maxHeight: 500,
+            maxHeight: 300,
             borderRound: 1,
           };
           newComponent.children = [];
@@ -540,17 +542,19 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
           y: y,
           rotate: 0,
           textAlign: "center",
+          verticalAlign:"middle",
           fontSize: 12,
+          format:"NONE",
           direction:"ltr",
           font: "Roboto",
           fontStyle: "normal",
           lineThickness: 1,
           lineColor: "#000000",
           lineType: "solid",
-          lineWidth: 150,
-          width: 150,
-          height: componentType === DesignerElementType.barcode ? 80 :
-            componentType === DesignerElementType.line ? 10 : 30,
+          lineWidth: 200,
+          width: 100,
+          height: componentType === DesignerElementType.barcode ? 30 :
+            componentType === DesignerElementType.line ? 10 : 20,
           ...(componentType === DesignerElementType.barcode && {
             barcodeProps: {
               format: "CODE128",
@@ -570,8 +574,8 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
           }),
           qrCodeProps: {
             value: "https://example.com",
-            width: 150,
-            height: 150,
+            width: 80,
+            height: 80,
             level: "M",
             type: "svg",
             margin: 0,
@@ -602,8 +606,8 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
 
         // Add default container props
         if (componentType === DesignerElementType.container) {
-          newComponent.width = 250;
-          newComponent.height = 200;
+          newComponent.width = 200;
+          newComponent.height = 150;
           newComponent.children = [];
           newComponent.containerProps = {
             backgroundColor: "#fafafa",
@@ -1255,64 +1259,68 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
               zIndex: isChild ? 10 : 1,
             }}
           >
-            <div
-              id={`component-${component.id}`}
-              style={{
-                width: "100%",
-                height: "100%",
-                border: isSelected ? "2px solid #2196f3" : "none",
-                boxSizing: "border-box",
-                display: "flex",
-                alignItems: "flex-start",
-                // direction: textDirection,
-                // justifyContent:
-                //   component.textAlign === "left"
-                //     ? textDirection === "rtl"
-                //       ? "flex-end"
-                //       : "flex-start"
-                //     : component.textAlign === "right"
-                //     ? textDirection === "rtl"
-                //       ? "flex-start"
-                //       : "flex-end"
-                //     : "center",
-                overflow: "hidden",
-                backgroundColor: isSelected ? "#ffffffff" : "inherit",
-                pointerEvents: 'auto',
-                userSelect: 'none',
-                cursor: "move",
-              }}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleComponentClick(e, component);
-              }}
-              onMouseDown={(e) => {
-                e.stopPropagation();
-                handleMouseDown(e, component);
-              }}
-            >
-              <span
-                style={{ 
-                    // --- PRESENTATION STYLES GO HERE (MATCHING PREVIEW) ---
-                    display:"block",
-                    fontFamily: isArabic ? component?.arabicFont ?? "Amiri" : component?.font ?? "Roboto",
-                    fontSize: `${component.fontSize || 12}pt`,
-                    fontWeight: component.fontWeight ?? "400",
-                    fontStyle: component.fontStyle || "normal",
-                    textAlign: component.textAlign || "center",
-                    color: `rgb(${component.fontColor || "0,0,0"})`, // Ensure color fallback
-                    pointerEvents: 'none', 
-                    userSelect: 'none', 
-                    whiteSpace: "pre-wrap" ,
+      <div
+        id={`component-${component.id}`}
+        style={{
+          width: "100%",
+          height: "100%",
+          border: isSelected ? "2px solid #2196f3" : "none",
+          boxSizing: "border-box",
+          display: "flex",
+          flexDirection: "column",
+          padding: 0,
+          margin: 0,
+          backgroundColor: isSelected ? "#ffffff" : "inherit",  
+          overflow: "hidden",
+          cursor: "move",
+                    // ✅ Apply alignment directly here
+          justifyContent:
+            component.verticalAlign === "middle"
+              ? "center"
+              : component.verticalAlign === "bottom"
+              ? "flex-end"
+              : "flex-start",
+              
+          alignItems:
+            component.textAlign === "center"
+              ? "center"
+              : component.textAlign === "left"
+              ? "flex-start"
+              : "flex-end",
+        }}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleComponentClick(e, component);
+        }}
+        onMouseDown={(e) => {
+          e.stopPropagation();
+          handleMouseDown(e, component);
+        }}
+      >
+        <span
+          style={{
 
-                  margin: 0,
-                  width: "100%",
-                  padding:0,
-                  verticalAlign:"top"
-                    }}
-                >
-                {component.content}
-              </span>
-            </div>
+
+            textAlign: component.textAlign ?? "left",
+            
+            // ---------- Typography ----------
+            fontFamily: isArabic
+              ? component?.arabicFont ?? "Amiri"
+              : component?.font ?? "Roboto",
+
+            fontSize: `${component.fontSize || 12}pt`,
+            fontWeight: component.fontWeight ?? "400",
+            fontStyle: component.fontStyle || "normal",
+            color: `rgb(${component.fontColor || "0,0,0"})`,
+
+            whiteSpace: "pre-wrap",
+            wordBreak: "break-word",
+          }}
+        >
+          {component.content}
+        </span>
+      </div>
+
             <DeleteButton
               id={component.id}
               isSelected={isSelected}
@@ -2158,8 +2166,13 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
                   key={component.id}
                   draggable
                   onDragStart={(e) => handleDragStart(e, component.id)}
-                  className={`flex items-center p-2 rounded hover:bg-gray-100 cursor-move ${component.id === DesignerElementType.container
-                      ? 'border-2 border-dashed border-gray-300 bg-gray-50'
+                  // className="flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white rounded-lg 
+                  // font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-sm flex-shrink-0"
+                  className={`flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white rounded  cursor-move bg-slate-100 font-medium shadow-sm hover:shadow 
+                    hover:bg-
+                     transform hover:scale-105 transition-all duration-200 text-sm flex-shrink-0
+                    ${component.id === DesignerElementType.container
+                      ? 'border-2 border-dashed border-gray-100'
                       : ''
                     }`}
                   title={component.id === DesignerElementType.container
@@ -2168,7 +2181,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
                   }
                 >
                   {component.icon}
-                  <span className="text-sm ml-2">{component.label}</span>
+                  <span className="ml-2">{component.label}</span>
                 </div>
               ))}
           </div>
@@ -2343,932 +2356,1174 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
             </Tabs>
           </div>
           <Box>
-            <Box
+
+            {selectedComponent && (
+              <Box
               hidden={activeTab !== "element"}
-            // sx={{ maxHeight: "calc(100vh)", pb: 2 }}
-            >
-              {selectedComponent && (
-                <Box
-                  sx={{
+                 sx={{
                     maxHeight: "calc(100vh - 8rem)",
                     overflowY: "auto",
                     py: 2,
                     spaceY: 2,
                   }}
                   className="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 overflow-auto pr-1"
-                // className="max-h-[calc(100vh-8rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 pr-1 "
-                >
-                  {selectedComponent.type === DesignerElementType.container && (
-                    <Box sx={{ mb: 2 }}>
-                      <Typography variant="subtitle2" sx={{ mb: 1 }}>
-                        Container Properties
-                      </Typography>
-                      <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-                        <ERPInput
-                          id="containerBgColor"
-                          label="Background Color"
-                          type="color"
-                          value={selectedComponent.containerProps?.backgroundColor || "#f5f5f5"}
-                          onChange={(e) =>
-                            handleContainerPropertyChange("backgroundColor", e.target.value)
-                          }
-                        />
-                        <ERPInput
-                          id="containerBorderColor"
-                          label="Border Color"
-                          type="color"
-                          value={selectedComponent.containerProps?.borderColor || "#cccccc"}
-                          onChange={(e) =>
-                            handleContainerPropertyChange("borderColor", e.target.value)
-                          }
-                        />
-                        <ERPInput
-                          id="containerBorderRound"
-                          label="Border Round"
-                          type="number"
-                          value={selectedComponent.containerProps?.borderRound || 1}
-                          onChange={(e) =>
-                            handleContainerPropertyChange("borderRound", e.target.value)
-                          }
-                        />
-                        <ERPInput
-                          id="containerBorderWidth"
-                          label="Border Width"
-                          type="number"
-                          value={selectedComponent.containerProps?.borderWidth || 1}
-                          onChange={(e) =>
-                            handleContainerPropertyChange("borderWidth", parseInt(e.target.value))
-                          }
-                        />
-                        <ERPDataCombobox
-                          id="containerBorderStyle"
-                          label="Border Style"
-                          options={[
-                            { value: "solid", label: "Solid" },
-                            { value: "dashed", label: "Dashed" },
-                            { value: "dotted", label: "Dotted" },
-                            { value: "none", label: "None" },
-                          ]}
-                          value={selectedComponent.containerProps?.borderStyle || "solid"}
-                          onChange={(e) =>
-                            handleContainerPropertyChange("borderStyle", e.value)
-                          }
-                        />
-                        <ERPInput
-                          id="containerPadding"
-                          label="Padding"
-                          type="number"
-                          value={selectedComponent.containerProps?.padding || 10}
-                          onChange={(e) =>
-                            handleContainerPropertyChange("padding", parseInt(e.target.value))
-                          }
-                        />
-                        <ERPCheckbox
-                          id="containerAutoResize"
-                          label="Auto-resize based on content"
-                          checked={selectedComponent.containerProps?.autoResize ?? true}
-                          onChange={(e) =>
-                            handleContainerPropertyChange("autoResize", e.target.checked)
-                          }
-                        />
-                        {selectedComponent.containerProps?.autoResize && (
-                          <>
-                            <ERPInput
-                              id="containerMinHeight"
-                              label="Min Height"
-                              type="number"
-                              value={selectedComponent.containerProps?.minHeight || 50}
-                              onChange={(e) =>
-                                handleContainerPropertyChange("minHeight", parseInt(e.target.value))
-                              }
-                            />
-                            <ERPInput
-                              id="containerMaxHeight"
-                              label="Max Height"
-                              type="number"
-                              value={selectedComponent.containerProps?.maxHeight || 500}
-                              onChange={(e) =>
-                                handleContainerPropertyChange("maxHeight", parseInt(e.target.value))
-                              }
-                            />
-                          </>
-                        )}
-                      </Box>
-                    </Box>
-                  )}
 
-                  {
-                    selectedComponent.type !== DesignerElementType.line &&
-                    selectedComponent.type !== DesignerElementType.image &&
-                    selectedComponent.type !== DesignerElementType.container && (
-                      <Box sx={{ mb: 1 }}>
-                        {selectedComponent.type ===
-                          DesignerElementType.field ? (
-                          <>
-                            {/* {selectedComponent.content} */}
-                            <GroupedComboBox
-                              options={getFieldContent()}
-                              value={selectedComponent.content}
-                              onChange={(selectedId) => {
-                                if (selectedId) {
-                                  handlePropertyChange("content", selectedId)
-                                }
-                              }}
-                              label="Content"
-                              placeholder="Select content field..."
-                              className="w-full"
-                            />
-                            {forCustomRows && (
-                              <ERPDataCombobox
-                               
-                                id="format"
-                                label={t("format")}
-                                field={
-                                  {
-                                    id: "format",
-                                    labelKey:"label",
-                                    valueKey:"value",
-                                    
-                                  }
-                                }
-                                data={selectedComponent}
-                                options={templateDesignerFormatOptions}
-                                defaultValue={"NONE"}
-                                // value={selectedComponent.format}
-                                onChange={(e) =>
-                                  handlePropertyChange("format", e.value)
-                                }
-                               />
-                            )}
-                          </>
-
-                        ) : selectedComponent.type ===
-                          DesignerElementType.qrCode ? (
-                          <ERPDataCombobox
-
-                            // onTextChange={}
-                            id="value"
-                            data={selectedComponent.qrCodeProps}
-                            label="QR Code Value"
-                            field={{
-                              id: "value",
-                              valueKey: "value",
-                              labelKey: "label",
-                            }}
-                            options={Object.keys(initialPrintMasterDto)?.map(
-                              (field, index) => ({
-                                value: field,
-                                label: field,
-                              })
-                            )}
-                            onChangeData={(data) =>
-                              handleQRCodePropertyChange("value", data.value)
-                            }
-                          />
-                        ) : (
+              >
+                    {selectedComponent.type === DesignerElementType.container && (
+                      <Box sx={{ mb: 2 }}>
+                        <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                          Container Properties
+                        </Typography>
+                        <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                           <ERPInput
-                            id="content"
-                            label="Content"
-                            value={selectedComponent.content}
-                            data={selectedComponent}
+                            id="containerBgColor"
+                            label="Background Color"
+                            type="color"
+                            value={selectedComponent.containerProps?.backgroundColor || "#f5f5f5"}
                             onChange={(e) =>
-                              handlePropertyChange("content", e.target.value)
+                              handleContainerPropertyChange("backgroundColor", e.target.value)
                             }
                           />
-                        )}
-                      </Box>
-                    )}
-
-                  {selectedComponent.type === DesignerElementType.image && (
-                    <Box sx={{ mb: 1 }} className="flex  gap-2  flex-col">
-                      <div className="text-xs">{t("select_image")}</div>
-                      <ERPCheckbox
-                        id="imgFromDevice"
-                        label={t("upload")}
-                        data={selectedComponent}
-                        checked={
-                          selectedComponent.imgFromDevice ?? false
-                        }
-                        onChange={(e) =>
-                          handlePropertyChange(
-                            "imgFromDevice",
-                            e.target.checked
-                          )
-                        }
-                      />
-                      {!selectedComponent?.imgFromDevice && (
-                            <GroupedComboBox
-                              options={imgField}
-                              value={selectedComponent.content}
-                              onChange={(selectedId) => {
-                                if (selectedId) {
-                                  handlePropertyChange("content", selectedId)
-                                }
-                              }}
-                              label="Image field"
-                              placeholder="Select content field..."
-                              className="w-full"
-                            />                        
-                      )}
-
-                        {/* File upload (when uploading from device) */}
-                          {selectedComponent?.imgFromDevice && (
+                          <ERPInput
+                            id="containerBorderColor"
+                            label="Border Color"
+                            type="color"
+                            value={selectedComponent.containerProps?.borderColor || "#cccccc"}
+                            onChange={(e) =>
+                              handleContainerPropertyChange("borderColor", e.target.value)
+                            }
+                          />
+                          <ERPInput
+                            id="containerBorderRound"
+                            label="Border Round"
+                            type="number"
+                            value={selectedComponent.containerProps?.borderRound || 1}
+                            onChange={(e) =>
+                              handleContainerPropertyChange("borderRound", e.target.value)
+                            }
+                          />
+                          <ERPInput
+                            id="containerBorderWidth"
+                            label="Border Width"
+                            type="number"
+                            value={selectedComponent.containerProps?.borderWidth || 1}
+                            onChange={(e) =>
+                              handleContainerPropertyChange("borderWidth", parseInt(e.target.value))
+                            }
+                          />
+                          <ERPDataCombobox
+                            id="containerBorderStyle"
+                            label="Border Style"
+                            options={[
+                              { value: "solid", label: "Solid" },
+                              { value: "dashed", label: "Dashed" },
+                              { value: "dotted", label: "Dotted" },
+                              { value: "none", label: "None" },
+                            ]}
+                            value={selectedComponent.containerProps?.borderStyle || "solid"}
+                            onChange={(e) =>
+                              handleContainerPropertyChange("borderStyle", e.value)
+                            }
+                          />
+                          <ERPInput
+                            id="containerPadding"
+                            label="Padding"
+                            type="number"
+                            value={selectedComponent.containerProps?.padding || 10}
+                            onChange={(e) =>
+                              handleContainerPropertyChange("padding", parseInt(e.target.value))
+                            }
+                          />
+                          <ERPCheckbox
+                            id="containerAutoResize"
+                            label="Auto-resize based on content"
+                            checked={selectedComponent.containerProps?.autoResize ?? true}
+                            onChange={(e) =>
+                              handleContainerPropertyChange("autoResize", e.target.checked)
+                            }
+                          />
+                          {selectedComponent.containerProps?.autoResize && (
                             <>
                               <ERPInput
-                                id="content"
-                                type="file"
-                                ref={inputImgFile}
-                                onChange={(e: any) => {
-                                  const file = e.target.files?.[0];
-                                  if (!file) return;
-
-                                  if (file.size > 2097152) {
-                                    ERPToast.showWith(
-                                      "Maximum file size allowed is 2 MB, please try with different file.",
-                                      "warning"
-                                    );
-                                    return;
-                                  }
-
-                                  handleImagePropsChange("content", file);
-                                }}
-                                className="hidden"
-                                accept="image/png,image/jpeg"
-                                label="Image"
-                                placeholder=" "
+                                id="containerMinHeight"
+                                label="Min Height"
+                                type="number"
+                                value={selectedComponent.containerProps?.minHeight || 50}
+                                onChange={(e) =>
+                                  handleContainerPropertyChange("minHeight", parseInt(e.target.value))
+                                }
                               />
-
-                              {/* Check for Base64 image */}
-                              {selectedComponent?.content &&
-                              typeof selectedComponent.content === "string" &&
-                              selectedComponent.content.startsWith("data:image") ? (
-                                <>
-                                  <div className="text-xs bg-[#FEF4EA] px-2 py-2 rounded">
-                                    Click Save to apply the selected background image
-                                  </div>
-
-                                  <img
-                                    draggable={false}
-                                    src={selectedComponent.content}
-                                    alt="background_image"
-                                    height={100}
-                                    width={100}
-                                    className="size-5"
-                                  />
-
-                                  <div
-                                    className="text-accent text-xs cursor-pointer max-w-min"
-                                    onClick={handleRemoveImage}
-                                  >
-                                    Remove
-                                  </div>
-                                </>
-                              ) : (
-                                <label htmlFor="content">
-                                  <div
-                                    onClick={() => inputImgFile?.current?.click()}
-                                    className="text-xs border rounded px-1 py-2 text-center bg-[#F1F5F9] cursor-pointer"
-                                  >
-                                    Choose from Desktop
-                                  </div>
-                                </label>
-                              )}
+                              <ERPInput
+                                id="containerMaxHeight"
+                                label="Max Height"
+                                type="number"
+                                value={selectedComponent.containerProps?.maxHeight || 500}
+                                onChange={(e) =>
+                                  handleContainerPropertyChange("maxHeight", parseInt(e.target.value))
+                                }
+                              />
                             </>
                           )}
-
-                          <ERPDataCombobox
-                            id="imgFit"
-                            data={selectedComponent}
-                            label="Image Fit"
-                            field={{
-                              id: "imgFit",
-                              valueKey: "value",
-                              labelKey: "label",
-                            }}
-                            options={objectFitOptions}
-                            onChangeData={(data) =>
-                              handlePropertyChange("imgFit", data.imgFit)
-                            }
-                          />
-                          <ERPDataCombobox
-                            label="Image Position"
-                            id="imgPosition"
-                            data={selectedComponent}
-                            defaultValue={
-                              selectedComponent?.imgPosition ?? "center"
-                            }
-                            onChangeData={(data) =>
-                              handlePropertyChange("imgPosition", data.imgPosition)
-                            }
-                            field={{
-                              id: "imgPosition",
-                              valueKey: "value",
-                              labelKey: "label",
-                            }}
-                            options={objectPosition}
-                          />
                         </Box>
-                      )}
-                      
-                  <Box sx={{ mb: 1 }}>
-                    <ERPInput
-                      id="x"
-                      type="number"
-                      label="Position X"
-                      value={Math.round(selectedComponent.x)}
-                      data={selectedComponent}
-                      onChange={(e) =>
-                        handlePropertyChange("x", parseInt(e.target.value, 10))
-                      }
-                    />
-                  </Box>
-
-                  <Box sx={{ mb: 1 }}>
-                    <ERPInput
-                      id="y"
-                      type="number"
-                      label="Position Y"
-                      value={Math.round(selectedComponent.y)}
-                      data={selectedComponent}
-                      onChange={(e) =>
-                        handlePropertyChange("y", parseInt(e.target.value, 10))
-                      }
-                    />
-                  </Box>
-
-
-
-                  <Box
-                    sx={{ mb: 1 }}
-                    className="flex justify-start gap-2 items-center"
-                  >
-                    <Box className="basis-2/3">
-                      <ERPSlider
-                        label="Rotate"
-                        value={selectedComponent.rotate}
-                        onChange={(e) =>
-                          handlePropertyChange(
-                            "rotate",
-                            e.target.valueAsNumber
-                          )
-                        }
-                        min={0}
-                        max={360}
-                      />
-                    </Box>
-
-                    <Box className="basis-1/3">
-                      <ERPInput
-                        id="rotate"
-                        type="number"
-                        noLabel
-                        value={selectedComponent.rotate}
-                        data={selectedComponent}
-                        onChange={(e) =>
-                          handlePropertyChange(
-                            "rotate",
-                            parseInt(e.target.value, 10)
-                          )
-                        }
-                      />
-                    </Box>
-                  </Box>
-
-
-                  {selectedComponent &&
-                    selectedComponent.type === DesignerElementType.qrCode && (
-                      <Box sx={{ mb: 1, display: "flex", flexDirection: "column", gap: 2 }}>
-
-                        {/* === Base === */}
-                        <ERPSlider
-                          label={`Width (${selectedComponent.qrCodeProps?.width || 128})`}
-                          min={30}
-                          step={10}
-                          max={300}
-                          value={selectedComponent.qrCodeProps?.width || 128}
-                          onChange={(e) => handleQRCodePropertyChange('width', e.target.valueAsNumber)}
-                        />
-                        <ERPSlider
-                          label={`Height (${selectedComponent.qrCodeProps?.height || 128})`}
-                          min={30}
-                          step={10}
-                          max={300}
-                          value={selectedComponent.qrCodeProps?.height || 128}
-                          onChange={(e) => handleQRCodePropertyChange('height', e.target.valueAsNumber)}
-                        />
-
-                        <ERPDataCombobox
-                          id="type"
-                          label="Output Type"
-                          options={[
-                            { value: "canvas", label: "Canvas" },
-                            { value: "svg", label: "SVG" }
-                          ]}
-                          value={selectedComponent.qrCodeProps?.type || "canvas"}
-                          onChange={(e) => handleQRCodePropertyChange('type', e.value)}
-                        />
-
-                        <ERPSlider
-                          label={`Margin (${selectedComponent.qrCodeProps?.margin || 0})`}
-                          min={0}
-                          max={20}
-                          value={selectedComponent.qrCodeProps?.margin || 0}
-                          onChange={(e) => handleQRCodePropertyChange('margin', e.target.valueAsNumber)}
-                        />
-
-                        {/* === QR Options === */}
-                        <ERPDataCombobox
-                          id="level"
-                          label="Error Correction Level"
-                          options={[
-                            { value: "L", label: "Low" },
-                            { value: "M", label: "Medium" },
-                            { value: "Q", label: "Quartile" },
-                            { value: "H", label: "High" }
-                          ]}
-                          value={selectedComponent.qrCodeProps?.level || "M"}
-                          onChange={(e) => handleQRCodePropertyChange('level', e.value)}
-                        />
-
-                        {/* === Dots Options === */}
-                        <ERPInput
-                          id="dotsColor"
-                          label="Dots Color"
-                          type="color"
-                          value={selectedComponent.qrCodeProps?.dotsOptions?.color || "#000000"}
-                          onChange={(e) => handleQRCodePropertyChange('color', e.target.value, 'dotsOptions')}
-                        />
-                        <ERPDataCombobox
-                          id="dotsType"
-                          label="Dots Shape"
-                          options={[
-                            { value: "square", label: "Square" },
-                            { value: "rounded", label: "Rounded" },
-                            { value: "extra-rounded", label: "Extra Rounded" }
-                          ]}
-                          value={selectedComponent.qrCodeProps?.dotsOptions?.type || "square"}
-                          onChange={(e) => handleQRCodePropertyChange('type', e.value, 'dotsOptions')}
-                        />
-
-                        {/* === Background Options === */}
-                        <ERPInput
-                          id="bgColor"
-                          label="Background Color"
-                          type="color"
-                          value={selectedComponent.qrCodeProps?.backgroundOptions?.color || "#ffffff"}
-                          onChange={(e) => handleQRCodePropertyChange('color', e.target.value, 'backgroundOptions')}
-                        />
-
-                        {/* === Corners Square Options === */}
-                        <ERPInput
-                          id="cornersSquareColor"
-                          label="Corner Square Color"
-                          type="color"
-                          value={selectedComponent.qrCodeProps?.cornersSquareOptions?.color || "#000000"}
-                          onChange={(e) => handleQRCodePropertyChange('color', e.target.value, 'cornersSquareOptions')}
-                        />
-                        <ERPDataCombobox
-                          id="cornersSquareType"
-                          label="Corner Square Type"
-                          options={[
-                            { value: "square", label: "Square" },
-                            { value: "extra-rounded", label: "Extra Rounded" }
-                          ]}
-                          value={selectedComponent.qrCodeProps?.cornersSquareOptions?.type || "square"}
-                          onChange={(e) => handleQRCodePropertyChange('type', e.value, 'cornersSquareOptions')}
-                        />
-
-                        {/* === Corners Dot Options === */}
-                        <ERPInput
-                          id="cornersDotColor"
-                          label="Corner Dot Color"
-                          type="color"
-                          value={selectedComponent.qrCodeProps?.cornersDotOptions?.color || "#000000"}
-                          onChange={(e) => handleQRCodePropertyChange('color', e.target.value, 'cornersDotOptions')}
-                        />
-                        <ERPDataCombobox
-                          id="cornersDotType"
-                          label="Corner Dot Type"
-                          options={[
-                            { value: "square", label: "Square" },
-                            { value: "dot", label: "Dot" }
-                          ]}
-                          value={selectedComponent.qrCodeProps?.cornersDotOptions?.type || "square"}
-                          onChange={(e) => handleQRCodePropertyChange('type', e.value, 'cornersDotOptions')}
-                        />
-
-                        {/* === Image Options === */}
-                        <ERPInput
-                          id="imageSrc"
-                          label="Image URL"
-                          value={selectedComponent.qrCodeProps?.image || ""}
-                          onChange={(e) => handleQRCodePropertyChange('image', e.target.value)}
-                        />
-                        {selectedComponent.qrCodeProps?.image && (
-                          <>
-                            <ERPSlider
-                              label={`Image Size (${selectedComponent.qrCodeProps?.imageOptions?.imageSize || 0.2})`}
-                              min={0.05}
-                              max={1}
-                              step={0.05}
-                              value={selectedComponent.qrCodeProps?.imageOptions?.imageSize || 0.2}
-                              onChange={(e) => handleQRCodePropertyChange('imageSize', e.target.valueAsNumber, 'imageOptions')}
-                            />
-                            <ERPCheckbox
-                              id="hideBackgroundDots"
-                              label="Hide Background Dots under Image"
-                              checked={selectedComponent.qrCodeProps?.imageOptions?.hideBackgroundDots || false}
-                              onChange={(e) => handleQRCodePropertyChange('hideBackgroundDots', e.target.checked, 'imageOptions')}
-                            />
-                          </>
-                        )}
-
-
                       </Box>
                     )}
 
-                  {selectedComponent.type === DesignerElementType.line ? (
+                    {
+                      selectedComponent.type !== DesignerElementType.line &&
+                      selectedComponent.type !== DesignerElementType.image &&
+                      selectedComponent.type !== DesignerElementType.container && (
+                        <Box sx={{ mb: 1 }}>
+                          {selectedComponent.type ===
+                            DesignerElementType.field ? (
+                            <>
+                              {/* {selectedComponent.content} */}
+                              <GroupedComboBox
+                                options={getFieldContent()}
+                                value={selectedComponent.content}
+                                onChange={(selectedId) => {
+                                  if (selectedId) {
+                                    handlePropertyChange("content", selectedId)
+                                  }
+                                }}
+                                label="Content"
+                                placeholder="Select content field..."
+                                className="w-full"
+                              />
+
+                              {forCustomRows && (
+                                <ERPDataCombobox
+                                
+                                  id="format"
+                                  label={t("format")}
+                                  field={
+                                    {
+                                      id: "format",
+                                      valueKey: "value",
+                                      labelKey: "label",
+                                      
+                                    }
+                                  }
+                                  data={selectedComponent}
+                                  options={templateDesignerFormatOptions}
+                                  // initialInputValue={"NONE"}
+                                  // defaultData={"NONE"}
+                                  value={selectedComponent.format}
+                                  onChange={(e) =>
+                                    handlePropertyChange("format", e.value)
+                                  }
+                                />
+                              )}
+                            </>
+
+                          ) : selectedComponent.type ===
+                            DesignerElementType.qrCode ? (
+                            <ERPDataCombobox
+
+                              // onTextChange={}
+                              id="value"
+                              data={selectedComponent.qrCodeProps}
+                              label="QR Code Value"
+                              field={{
+                                id: "value",
+                                valueKey: "value",
+                                labelKey: "label",
+                              }}
+                              options={Object.keys(initialPrintMasterDto)?.map(
+                                (field, index) => ({
+                                  value: field,
+                                  label: field,
+                                })
+                              )}
+                              onChangeData={(data) =>
+                                handleQRCodePropertyChange("value", data.value)
+                              }
+                            />
+                          ) : (
+                            <ERPInput
+                              id="content"
+                              label="Content"
+                              value={selectedComponent.content}
+                              data={selectedComponent}
+                              onChange={(e) =>
+                                handlePropertyChange("content", e.target.value)
+                              }
+                            />
+                          )}
+                        </Box>
+                      )}
+
+                    {selectedComponent.type === DesignerElementType.image && (
+                      <Box sx={{ mb: 1 }} className="flex  gap-2  flex-col">
+                        <div className="text-xs">{t("select_image")}</div>
+                        <ERPCheckbox
+                          id="imgFromDevice"
+                          label={t("upload")}
+                          data={selectedComponent}
+                          checked={
+                            selectedComponent.imgFromDevice ?? false
+                          }
+                          onChange={(e) =>
+                            handlePropertyChange(
+                              "imgFromDevice",
+                              e.target.checked
+                            )
+                          }
+                        />
+                        {!selectedComponent?.imgFromDevice && (
+                              <GroupedComboBox
+                                options={imgField}
+                                value={selectedComponent.content}
+                                onChange={(selectedId) => {
+                                  if (selectedId) {
+                                    handlePropertyChange("content", selectedId)
+                                  }
+                                }}
+                                label="Image field"
+                                placeholder="Select content field..."
+                                className="w-full"
+                              />                        
+                        )}
+
+                          {/* File upload (when uploading from device) */}
+                            {selectedComponent?.imgFromDevice && (
+                              <>
+                                <ERPInput
+                                  id="content"
+                                  type="file"
+                                  ref={inputImgFile}
+                                  onChange={(e: any) => {
+                                    const file = e.target.files?.[0];
+                                    if (!file) return;
+
+                                    if (file.size > 2097152) {
+                                      ERPToast.showWith(
+                                        "Maximum file size allowed is 2 MB, please try with different file.",
+                                        "warning"
+                                      );
+                                      return;
+                                    }
+
+                                    handleImagePropsChange("content", file);
+                                  }}
+                                  className="hidden"
+                                  accept="image/png,image/jpeg"
+                                  label="Image"
+                                  placeholder=" "
+                                />
+
+                                {/* Check for Base64 image */}
+                                {selectedComponent?.content &&
+                                typeof selectedComponent.content === "string" &&
+                                selectedComponent.content.startsWith("data:image") ? (
+                                  <>
+                                    <div className="text-xs bg-[#FEF4EA] px-2 py-2 rounded">
+                                      Click Save to apply the selected background image
+                                    </div>
+
+                                    <img
+                                      draggable={false}
+                                      src={selectedComponent.content}
+                                      alt="background_image"
+                                      height={100}
+                                      width={100}
+                                      className="size-5"
+                                    />
+
+                                    <div
+                                      className="text-accent text-xs cursor-pointer max-w-min"
+                                      onClick={handleRemoveImage}
+                                    >
+                                      Remove
+                                    </div>
+                                  </>
+                                ) : (
+                                  <label htmlFor="content">
+                                    <div
+                                      onClick={() => inputImgFile?.current?.click()}
+                                      className="text-xs border rounded px-1 py-2 text-center bg-[#F1F5F9] cursor-pointer"
+                                    >
+                                      Choose from Desktop
+                                    </div>
+                                  </label>
+                                )}
+                              </>
+                            )}
+
+                            <ERPDataCombobox
+                              id="imgFit"
+                              data={selectedComponent}
+                              label="Image Fit"
+                              field={{
+                                id: "imgFit",
+                                valueKey: "value",
+                                labelKey: "label",
+                              }}
+                              options={objectFitOptions}
+                              onChangeData={(data) =>
+                                handlePropertyChange("imgFit", data.imgFit)
+                              }
+                            />
+                            <ERPDataCombobox
+                              label="Image Position"
+                              id="imgPosition"
+                              data={selectedComponent}
+                              defaultValue={
+                                selectedComponent?.imgPosition ?? "center"
+                              }
+                              onChangeData={(data) =>
+                                handlePropertyChange("imgPosition", data.imgPosition)
+                              }
+                              field={{
+                                id: "imgPosition",
+                                valueKey: "value",
+                                labelKey: "label",
+                              }}
+                              options={objectPosition}
+                            />
+                          </Box>
+                        )}
+                        
+                    <Box sx={{ mb: 1 }}>
+                      <ERPInput
+                        id="x"
+                        type="number"
+                        label="Position X"
+                        value={Math.round(selectedComponent.x)}
+                        data={selectedComponent}
+                        onChange={(e) =>
+                          handlePropertyChange("x", parseInt(e.target.value, 10))
+                        }
+                      />
+                    </Box>
+
+                    <Box sx={{ mb: 1 }}>
+                      <ERPInput
+                        id="y"
+                        type="number"
+                        label="Position Y"
+                        value={Math.round(selectedComponent.y)}
+                        data={selectedComponent}
+                        onChange={(e) =>
+                          handlePropertyChange("y", parseInt(e.target.value, 10))
+                        }
+                      />
+                    </Box>
+
+
+
                     <Box
                       sx={{ mb: 1 }}
                       className="flex justify-start gap-2 items-center"
                     >
                       <Box className="basis-2/3">
                         <ERPSlider
-                          label="Line Width"
-                          value={selectedComponent?.lineWidth || selectedComponent?.width || 100}
+                          label="Rotate"
+                          value={selectedComponent.rotate}
                           onChange={(e) =>
                             handlePropertyChange(
-                              "lineWidth",
+                              "rotate",
                               e.target.valueAsNumber
                             )
                           }
-                          min={10}
-                          max={1400}
+                          min={0}
+                          max={360}
                         />
                       </Box>
+
                       <Box className="basis-1/3">
                         <ERPInput
-                          id="lineWidth"
+                          id="rotate"
                           type="number"
                           noLabel
-                          value={selectedComponent?.lineWidth || selectedComponent?.width || 100}
+                          value={selectedComponent.rotate}
                           data={selectedComponent}
                           onChange={(e) =>
                             handlePropertyChange(
-                              "lineWidth",
+                              "rotate",
                               parseInt(e.target.value, 10)
                             )
                           }
                         />
                       </Box>
                     </Box>
-                  ) : (
 
-                    selectedComponent.type !== DesignerElementType.qrCode && (
+
+                    {selectedComponent &&
+                      selectedComponent.type === DesignerElementType.qrCode && (
+                        <Box sx={{ mb: 1, display: "flex", flexDirection: "column", gap: 2 }}>
+
+                          {/* === Base === */}
+                          <ERPSlider
+                            label={`Width (${selectedComponent.qrCodeProps?.width || 128})`}
+                            min={30}
+                            step={10}
+                            max={300}
+                            value={selectedComponent.qrCodeProps?.width || 128}
+                            onChange={(e) => handleQRCodePropertyChange('width', e.target.valueAsNumber)}
+                          />
+                          <ERPSlider
+                            label={`Height (${selectedComponent.qrCodeProps?.height || 128})`}
+                            min={30}
+                            step={10}
+                            max={300}
+                            value={selectedComponent.qrCodeProps?.height || 128}
+                            onChange={(e) => handleQRCodePropertyChange('height', e.target.valueAsNumber)}
+                          />
+
+                          <ERPDataCombobox
+                            id="type"
+                            label="Output Type"
+                            options={[
+                              { value: "canvas", label: "Canvas" },
+                              { value: "svg", label: "SVG" }
+                            ]}
+                            value={selectedComponent.qrCodeProps?.type || "canvas"}
+                            onChange={(e) => handleQRCodePropertyChange('type', e.value)}
+                          />
+
+                          <ERPSlider
+                            label={`Margin (${selectedComponent.qrCodeProps?.margin || 0})`}
+                            min={0}
+                            max={20}
+                            value={selectedComponent.qrCodeProps?.margin || 0}
+                            onChange={(e) => handleQRCodePropertyChange('margin', e.target.valueAsNumber)}
+                          />
+
+                          {/* === QR Options === */}
+                          <ERPDataCombobox
+                            id="level"
+                            label="Error Correction Level"
+                            options={[
+                              { value: "L", label: "Low" },
+                              { value: "M", label: "Medium" },
+                              { value: "Q", label: "Quartile" },
+                              { value: "H", label: "High" }
+                            ]}
+                            value={selectedComponent.qrCodeProps?.level || "M"}
+                            onChange={(e) => handleQRCodePropertyChange('level', e.value)}
+                          />
+
+                          {/* === Dots Options === */}
+                          <ERPInput
+                            id="dotsColor"
+                            label="Dots Color"
+                            type="color"
+                            value={selectedComponent.qrCodeProps?.dotsOptions?.color || "#000000"}
+                            onChange={(e) => handleQRCodePropertyChange('color', e.target.value, 'dotsOptions')}
+                          />
+                          <ERPDataCombobox
+                            id="dotsType"
+                            label="Dots Shape"
+                            options={[
+                              { value: "square", label: "Square" },
+                              { value: "rounded", label: "Rounded" },
+                              { value: "extra-rounded", label: "Extra Rounded" }
+                            ]}
+                            value={selectedComponent.qrCodeProps?.dotsOptions?.type || "square"}
+                            onChange={(e) => handleQRCodePropertyChange('type', e.value, 'dotsOptions')}
+                          />
+
+                          {/* === Background Options === */}
+                          <ERPInput
+                            id="bgColor"
+                            label="Background Color"
+                            type="color"
+                            value={selectedComponent.qrCodeProps?.backgroundOptions?.color || "#ffffff"}
+                            onChange={(e) => handleQRCodePropertyChange('color', e.target.value, 'backgroundOptions')}
+                          />
+
+                          {/* === Corners Square Options === */}
+                          <ERPInput
+                            id="cornersSquareColor"
+                            label="Corner Square Color"
+                            type="color"
+                            value={selectedComponent.qrCodeProps?.cornersSquareOptions?.color || "#000000"}
+                            onChange={(e) => handleQRCodePropertyChange('color', e.target.value, 'cornersSquareOptions')}
+                          />
+                          <ERPDataCombobox
+                            id="cornersSquareType"
+                            label="Corner Square Type"
+                            options={[
+                              { value: "square", label: "Square" },
+                              { value: "extra-rounded", label: "Extra Rounded" }
+                            ]}
+                            value={selectedComponent.qrCodeProps?.cornersSquareOptions?.type || "square"}
+                            onChange={(e) => handleQRCodePropertyChange('type', e.value, 'cornersSquareOptions')}
+                          />
+
+                          {/* === Corners Dot Options === */}
+                          <ERPInput
+                            id="cornersDotColor"
+                            label="Corner Dot Color"
+                            type="color"
+                            value={selectedComponent.qrCodeProps?.cornersDotOptions?.color || "#000000"}
+                            onChange={(e) => handleQRCodePropertyChange('color', e.target.value, 'cornersDotOptions')}
+                          />
+                          <ERPDataCombobox
+                            id="cornersDotType"
+                            label="Corner Dot Type"
+                            options={[
+                              { value: "square", label: "Square" },
+                              { value: "dot", label: "Dot" }
+                            ]}
+                            value={selectedComponent.qrCodeProps?.cornersDotOptions?.type || "square"}
+                            onChange={(e) => handleQRCodePropertyChange('type', e.value, 'cornersDotOptions')}
+                          />
+
+                          {/* === Image Options === */}
+                          <ERPInput
+                            id="imageSrc"
+                            label="Image URL"
+                            value={selectedComponent.qrCodeProps?.image || ""}
+                            onChange={(e) => handleQRCodePropertyChange('image', e.target.value)}
+                          />
+                          {selectedComponent.qrCodeProps?.image && (
+                            <>
+                              <ERPSlider
+                                label={`Image Size (${selectedComponent.qrCodeProps?.imageOptions?.imageSize || 0.2})`}
+                                min={0.05}
+                                max={1}
+                                step={0.05}
+                                value={selectedComponent.qrCodeProps?.imageOptions?.imageSize || 0.2}
+                                onChange={(e) => handleQRCodePropertyChange('imageSize', e.target.valueAsNumber, 'imageOptions')}
+                              />
+                              <ERPCheckbox
+                                id="hideBackgroundDots"
+                                label="Hide Background Dots under Image"
+                                checked={selectedComponent.qrCodeProps?.imageOptions?.hideBackgroundDots || false}
+                                onChange={(e) => handleQRCodePropertyChange('hideBackgroundDots', e.target.checked, 'imageOptions')}
+                              />
+                            </>
+                          )}
+
+
+                        </Box>
+                      )}
+
+                    {selectedComponent.type === DesignerElementType.line ? (
                       <Box
                         sx={{ mb: 1 }}
                         className="flex justify-start gap-2 items-center"
                       >
                         <Box className="basis-2/3">
                           <ERPSlider
-                            label="Width"
-                            value={selectedComponent.width}
+                            label="Line Width"
+                            value={selectedComponent?.lineWidth || selectedComponent?.width || 100}
                             onChange={(e) =>
                               handlePropertyChange(
-                                "width",
+                                "lineWidth",
                                 e.target.valueAsNumber
                               )
                             }
                             min={10}
-                            max={500}
+                            max={1400}
                           />
                         </Box>
                         <Box className="basis-1/3">
                           <ERPInput
-                            id="width"
+                            id="lineWidth"
                             type="number"
                             noLabel
-                            value={selectedComponent.width}
+                            value={selectedComponent?.lineWidth || selectedComponent?.width || 100}
                             data={selectedComponent}
                             onChange={(e) =>
                               handlePropertyChange(
-                                "width",
+                                "lineWidth",
                                 parseInt(e.target.value, 10)
                               )
                             }
                           />
                         </Box>
                       </Box>
-                    )
-                  )}
+                    ) : (
 
-                  {selectedComponent.type === DesignerElementType.line && (
-                    <div className="space-y-3 mb-1">
-                      <Box
-                        sx={{ mb: 1 }}
-                        className="flex justify-start gap-2 items-center"
-                      >
-                        <Box className="basis-2/3">
-                          <ERPSlider
-                            label="Line Thickness"
-                            value={selectedComponent?.lineThickness}
-                            onChange={(e) =>
-                              handlePropertyChange(
-                                "lineThickness",
-                                e.target.valueAsNumber
-                              )
-                            }
-                            min={1}
-                            max={5}
-                          />
+                      selectedComponent.type !== DesignerElementType.qrCode && (
+                        <Box
+                          sx={{ mb: 1 }}
+                          className="flex justify-start gap-2 items-center"
+                        >
+                          <Box className="basis-2/3">
+                            <ERPSlider
+                              label="Width"
+                              value={selectedComponent.width}
+                              onChange={(e) =>
+                                handlePropertyChange(
+                                  "width",
+                                  e.target.valueAsNumber
+                                )
+                              }
+                              min={10}
+                              max={500}
+                            />
+                          </Box>
+                          <Box className="basis-1/3">
+                            <ERPInput
+                              id="width"
+                              type="number"
+                              noLabel
+                              value={selectedComponent.width}
+                              data={selectedComponent}
+                              onChange={(e) =>
+                                handlePropertyChange(
+                                  "width",
+                                  parseInt(e.target.value, 10)
+                                )
+                              }
+                            />
+                          </Box>
                         </Box>
-
-                        <Box className="basis-1/3">
-                          <ERPInput
-                            id="lineThickness"
-                            type="number"
-                            noLabel
-                            value={selectedComponent?.lineThickness}
-                            data={selectedComponent}
-                            onChange={(e) =>
-                              handlePropertyChange(
-                                "lineThickness",
-                                parseInt(e.target.value, 10)
-                              )
-                            }
-                          />
-                        </Box>
-                      </Box>
-
-                      <Box sx={{ mb: 1 }}>
-                        <ERPDataCombobox
-                          id="lineType"
-                          data={selectedComponent}
-                          label="lineType"
-                          field={{
-                            id: "lineType",
-                            valueKey: "value",
-                            labelKey: "label",
-                          }}
-                          options={[
-                            { value: "solid", label: "solid" },
-                            { value: "dotted", label: "dotted" },
-                            { value: "dashed", label: "dashed" },
-                          ]}
-                          onChangeData={(data) =>
-                            handlePropertyChange("lineType", data.lineType)
-                          }
-                        />
-                      </Box>
-
-                      <Box sx={{ mb: 1 }}>
-                        <ERPInput
-                          id="lineColor"
-                          label="Line Color"
-                          type="color"
-                          value={selectedComponent?.lineColor}
-                          data={selectedComponent}
-                          onChange={(e) =>
-                            handlePropertyChange("lineColor", e.target.value)
-                          }
-                        />
-                      </Box>
-                    </div>
-                  )}
-
-                  {selectedComponent.type !== DesignerElementType.line &&
-
-                    selectedComponent.type !== DesignerElementType.qrCode && (
-                      <Box
-                        sx={{ mb: 1 }}
-                        className="flex justify-start gap-2 items-center"
-                      >
-                        <Box className="basis-2/3">
-                          <ERPSlider
-                            label="Height"
-                            value={selectedComponent.height}
-                            onChange={(e) =>
-                              handlePropertyChange(
-                                "height",
-                                parseInt(e.target.value, 10)
-                              )
-                            }
-                            min={10}
-                            max={500}
-                          />
-                        </Box>
-
-                        <Box className="basis-1/3">
-                          <ERPInput
-                            id="height"
-                            type="number"
-                            noLabel
-                            value={selectedComponent.height}
-                            data={selectedComponent}
-                            onChange={(e) =>
-                              handlePropertyChange(
-                                "height",
-                                parseInt(e.target.value, 10)
-                              )
-                            }
-                          />
-                        </Box>
-                      </Box>
+                      )
                     )}
 
-
-                  <Box sx={{ mb: 1 }}>
-                    {(selectedComponent.type == DesignerElementType.text ||
-                      selectedComponent.type == DesignerElementType.field) && (
-                        <div className="flex flex-col gap-2">
-                          <Box sx={{ mb: 1 }}>
-                            <ERPDataCombobox
-                              id="font"
-                              data={selectedComponent}
-                              label="Font"
-                              field={{
-                                id: "font",
-                                valueKey: "value",
-                                labelKey: "label",
-                              }}
-                              options={[
-                                { value: "Roboto", label: "Roboto" },
-                                { value: "RobotoMono", label: "RobotoMono" },
-                                { value: "FiraSans", label: "FiraSans" },
-                                { value: "Poppins", label: "Poppins"},
-                              ]}
+                    {selectedComponent.type === DesignerElementType.line && (
+                      <div className="space-y-3 mb-1">
+                        <Box
+                          sx={{ mb: 1 }}
+                          className="flex justify-start gap-2 items-center"
+                        >
+                          <Box className="basis-2/3">
+                            <ERPSlider
+                              label="Line Thickness"
+                              value={selectedComponent?.lineThickness}
                               onChange={(e) =>
-                                handlePropertyChange("font", e.value)
+                                handlePropertyChange(
+                                  "lineThickness",
+                                  e.target.valueAsNumber
+                                )
+                              }
+                              min={1}
+                              max={5}
+                            />
+                          </Box>
+
+                          <Box className="basis-1/3">
+                            <ERPInput
+                              id="lineThickness"
+                              type="number"
+                              noLabel
+                              value={selectedComponent?.lineThickness}
+                              data={selectedComponent}
+                              onChange={(e) =>
+                                handlePropertyChange(
+                                  "lineThickness",
+                                  parseInt(e.target.value, 10)
+                                )
                               }
                             />
                           </Box>
-                          <Box sx={{ mb: 1 }}>
-                            <ERPDataCombobox
-                              id="arabicFont"
-                              data={selectedComponent}
-                              defaultValue={"Amiri"}
-                              label="arabicFont"
-                              field={{
-                                id: "arabicFont",
-                                valueKey: "value",
-                                labelKey: "label",
-                              }}
-                              options={[
-                                { value: "NotoNaskhArabic", label: "NotoNaskhArabic" },
-                                { value: "Amiri", label: "Amiri" },
-                              ]}
+                        </Box>
+
+                        <Box sx={{ mb: 1 }}>
+                          <ERPDataCombobox
+                            id="lineType"
+                            data={selectedComponent}
+                            label="lineType"
+                            field={{
+                              id: "lineType",
+                              valueKey: "value",
+                              labelKey: "label",
+                            }}
+                            options={[
+                              { value: "solid", label: "solid" },
+                              { value: "dotted", label: "dotted" },
+                              { value: "dashed", label: "dashed" },
+                            ]}
+                            onChangeData={(data) =>
+                              handlePropertyChange("lineType", data.lineType)
+                            }
+                          />
+                        </Box>
+
+                        <Box sx={{ mb: 1 }}>
+                          <ERPInput
+                            id="lineColor"
+                            label="Line Color"
+                            type="color"
+                            value={selectedComponent?.lineColor}
+                            data={selectedComponent}
+                            onChange={(e) =>
+                              handlePropertyChange("lineColor", e.target.value)
+                            }
+                          />
+                        </Box>
+                      </div>
+                    )}
+
+                    {selectedComponent.type !== DesignerElementType.line &&
+
+                      selectedComponent.type !== DesignerElementType.qrCode && (
+                        <Box
+                          sx={{ mb: 1 }}
+                          className="flex justify-start gap-2 items-center"
+                        >
+                          <Box className="basis-2/3">
+                            <ERPSlider
+                              label="Height"
+                              value={selectedComponent.height}
                               onChange={(e) =>
-                                handlePropertyChange("arabicFont", e.value)
+                                handlePropertyChange(
+                                  "height",
+                                  parseInt(e.target.value, 10)
+                                )
+                              }
+                              min={10}
+                              max={500}
+                            />
+                          </Box>
+
+                          <Box className="basis-1/3">
+                            <ERPInput
+                              id="height"
+                              type="number"
+                              noLabel
+                              value={selectedComponent.height}
+                              data={selectedComponent}
+                              onChange={(e) =>
+                                handlePropertyChange(
+                                  "height",
+                                  parseInt(e.target.value, 10)
+                                )
                               }
                             />
                           </Box>
-                          <Box
-                            sx={{ mb: 1 }}
-                            className="flex justify-start gap-2 items-center"
-                          >
-                            <Box className="basis-2/3">
-                              <ERPSlider
-                                label="Font Weight"
-                                value={selectedComponent.fontWeight}
-                                onChange={(e) =>
-                                  handlePropertyChange(
-                                    "fontWeight",
-                                    e.target.valueAsNumber
-                                  )
-                                }
-                                min={300}
-                                max={700}
-                                step={100}
-                              />
-                            </Box>
+                        </Box>
+                      )}
 
-                            <Box className="basis-1/3">
-                              <ERPInput
-                                id="fontWeight"
 
-                                noLabel
-                                value={selectedComponent.fontWeight}
+                    <Box sx={{ mb: 1 }}>
+                      {(selectedComponent.type == DesignerElementType.text ||
+                        selectedComponent.type == DesignerElementType.field) && (
+                          <div className="flex flex-col gap-2">
+                            <Box sx={{ mb: 1 }}>
+                              <ERPDataCombobox
+                                id="font"
                                 data={selectedComponent}
-                              //  onChange={(e) =>
-                              //    handlePropertyChange(
-                              //      "fontWeight",
-                              //      e.target.valueAsNumber
-                              //    )
-                              //  }
-                              //  min={300}
-                              //  max={700}
-                              //  step={100}
-                              />
-                            </Box>
-                          </Box>
-
-                          <Box
-                            sx={{ mb: 1 }}
-                            className="flex justify-start gap-2 items-center"
-                          >
-                            <Box className="basis-2/3">
-                              <ERPSlider
-                                label="Font Size"
-                                value={selectedComponent.fontSize}
+                                label="Font"
+                                field={{
+                                  id: "font",
+                                  valueKey: "value",
+                                  labelKey: "label",
+                                }}
+                                options={[
+                                  { value: "Roboto", label: "Roboto" },
+                                  { value: "RobotoMono", label: "RobotoMono" },
+                                  { value: "FiraSans", label: "FiraSans" },
+                                  { value: "Poppins", label: "Poppins"},
+                                ]}
                                 onChange={(e) =>
-                                  handlePropertyChange(
-                                    "fontSize",
-                                    e.target.valueAsNumber
-                                  )
+                                  handlePropertyChange("font", e.value)
                                 }
-                                min={0}
-                                max={50}
                               />
                             </Box>
-
-                            <Box className="basis-1/3">
-                              <ERPInput
-                                id="fontSize"
-                                type="number"
-                                noLabel
-                                value={selectedComponent.fontSize}
+                            <Box sx={{ mb: 1 }}>
+                              <ERPDataCombobox
+                                id="arabicFont"
                                 data={selectedComponent}
+                                defaultValue={"Amiri"}
+                                label="arabicFont"
+                                field={{
+                                  id: "arabicFont",
+                                  valueKey: "value",
+                                  labelKey: "label",
+                                }}
+                                options={[
+                                  { value: "NotoNaskhArabic", label: "NotoNaskhArabic" },
+                                  { value: "Amiri", label: "Amiri" },
+                                ]}
                                 onChange={(e) =>
-                                  handlePropertyChange(
-                                    "fontSize",
-                                    e.target.valueAsNumber
-                                  )
+                                  handlePropertyChange("arabicFont", e.value)
                                 }
                               />
                             </Box>
-                          </Box>
-                          <Box sx={{ mb: 1 }}>
-
-                            <div className="flex items-center gap-2">
-                              <div
-                                className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                                style={{ backgroundColor: `rgb(${selectedComponent?.fontColor})` }}>
-                                <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
-                                <input
-                                  type="color"
-                                  value={selectedComponent?.fontColor}
-                                  onChange={(e) => {
-                                    const rgb = hexToRgb(e.target?.value);
-                                    if (rgb) {
-                                      debouncedHandlePropetFieldChange("fontColor", `${rgb.r},${rgb.g},${rgb.b}`);
-                                    }
-                                  }}
-                                  className="opacity-0 w-full h-full cursor-pointer"
+                            <Box
+                              sx={{ mb: 1 }}
+                              className="flex justify-start gap-2 items-center"
+                            >
+                              <Box className="basis-2/3">
+                                <ERPSlider
+                                  label="Font Weight"
+                                  value={selectedComponent.fontWeight}
+                                  onChange={(e) =>
+                                    handlePropertyChange(
+                                      "fontWeight",
+                                      e.target.valueAsNumber
+                                    )
+                                  }
+                                  min={300}
+                                  max={700}
+                                  step={100}
                                 />
-                              </div>
-                              <div className="flex-1">
-                                <label className="text-xs font-semibold text-gray-700 dark:text-dark-text block mb-1">
-                                  {t("font_color")}
-                                </label>
-                                <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
-                                  rgb({selectedComponent?.fontColor})
+                              </Box>
+
+                              <Box className="basis-1/3">
+                                <ERPInput
+                                  id="fontWeight"
+
+                                  noLabel
+                                  value={selectedComponent.fontWeight}
+                                  data={selectedComponent}
+                                //  onChange={(e) =>
+                                //    handlePropertyChange(
+                                //      "fontWeight",
+                                //      e.target.valueAsNumber
+                                //    )
+                                //  }
+                                //  min={300}
+                                //  max={700}
+                                //  step={100}
+                                />
+                              </Box>
+                            </Box>
+
+                            <Box
+                              sx={{ mb: 1 }}
+                              className="flex justify-start gap-2 items-center"
+                            >
+                              <Box className="basis-2/3">
+                                <ERPSlider
+                                  label="Font Size"
+                                  value={selectedComponent.fontSize}
+                                  onChange={(e) =>
+                                    handlePropertyChange(
+                                      "fontSize",
+                                      e.target.valueAsNumber
+                                    )
+                                  }
+                                  min={0}
+                                  max={50}
+                                />
+                              </Box>
+
+                              <Box className="basis-1/3">
+                                <ERPInput
+                                  id="fontSize"
+                                  type="number"
+                                  noLabel
+                                  value={selectedComponent.fontSize}
+                                  data={selectedComponent}
+                                  onChange={(e) =>
+                                    handlePropertyChange(
+                                      "fontSize",
+                                      e.target.valueAsNumber
+                                    )
+                                  }
+                                />
+                              </Box>
+                            </Box>
+                            <Box sx={{ mb: 1 }}>
+
+                              <div className="flex items-center gap-2">
+                                <div
+                                  className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
+                                  style={{ backgroundColor: `rgb(${selectedComponent?.fontColor})` }}>
+                                  <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
+                                  <input
+                                    type="color"
+                                    value={selectedComponent?.fontColor}
+                                    onChange={(e) => {
+                                      const rgb = hexToRgb(e.target?.value);
+                                      if (rgb) {
+                                        debouncedHandlePropetFieldChange("fontColor", `${rgb.r},${rgb.g},${rgb.b}`);
+                                      }
+                                    }}
+                                    className="opacity-0 w-full h-full cursor-pointer"
+                                  />
+                                </div>
+                                <div className="flex-1">
+                                  <label className="text-xs font-semibold text-gray-700 dark:text-dark-text block mb-1">
+                                    {t("font_color")}
+                                  </label>
+                                  <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
+                                    rgb({selectedComponent?.fontColor})
+                                  </div>
                                 </div>
                               </div>
-                            </div>
 
-                          </Box>
-                          {/* <Box
-                            sx={{ mb: 1 }}
-                          >
-                            <InputLabel
-                              sx={{
-                                textTransform: "capitalize",
-                                marginBottom: "0.25rem",
-                                display: "block",
-                                fontSize: "0.75rem",
-                                color: "rgb(17, 24, 39)",
-                                textAlign: "left",
-                                direction: "rtl",
-                              }}
-                            >
-                             Text Direction
-                            </InputLabel>
-                              <div className=" flex space-x-2 m-2">
-                              <ERPRadio
-                                id="ltr"
-                                name="ltr"
-                                value="ltr"
-                                label={t("ltr")}
-                                checked={selectedComponent?.direction =="ltr"}
-                                onChange={(e) =>
-                                  handlePropertyChange(
-                                    "direction",e.target.value) }
+                            </Box>
 
-                              />   
-                                <ERPRadio
-                                id="rtl"
-                                name="rtl"
-                                value="rtl"
-                                label={t("rtl")}
-                                checked={selectedComponent?.direction =="rtl"}
-                                onChange={(e) =>
-                                  handlePropertyChange(
-                                    "direction",e.target.value) }
-                                />                                                  
+                            <Box sx={{ mb: 1 }}>
+                              <InputLabel
+                                sx={{
+                                  textTransform: "capitalize",
+                                  marginBottom: "0.25rem",
+                                  display: "block",
+                                  fontSize: "0.75rem",
+                                  color: "rgb(17, 24, 39)",
+                                  textAlign: "left",
+                                  direction: "rtl",
+                                }}
+                              >
+                                Horizontal Align
+                              </InputLabel>
+
+                              <div className="flex justify-between space-x-2">
+                                <button
+                                  className={`ti-btn ${selectedComponent.textAlign === "left"
+                                      ? "ti-btn-primary-full"
+                                      : "bg-slate-100 hover:bg-slate-200 text-black"
+                                    } px-4 py-2 w-full`}
+                                  onClick={() =>
+                                    handlePropertyChange("textAlign", "left")
+                                  }
+                                >
+                                  Left
+                                </button>
+                                <button
+                                  className={`ti-btn ${selectedComponent.textAlign === "center"
+                                      ? "ti-btn-primary-full"
+                                      : "bg-slate-100 hover:bg-slate-200 text-black"
+                                    } px-4 py-2 w-full`}
+                                  onClick={() =>
+                                    handlePropertyChange("textAlign", "center")
+                                  }
+                                >
+                                  Center
+                                </button>
+                                <button
+                                  className={`ti-btn ${selectedComponent.textAlign === "right"
+                                      ? "ti-btn-primary-full"
+                                      : "bg-slate-100 hover:bg-slate-200 text-black"
+                                    } px-4 py-2 w-full`}
+                                  onClick={() =>
+                                    handlePropertyChange("textAlign", "right")
+                                  }
+                                >
+                                  Right
+                                </button>
                               </div>
-                   
-                          </Box> */}
-                          <Box sx={{ mb: 1 }}>
+                            </Box>
+                            <Box sx={{ mb: 1 }}>
+                              <InputLabel
+                                sx={{
+                                  textTransform: "capitalize",
+                                  marginBottom: "0.25rem",
+                                  display: "block",
+                                  fontSize: "0.75rem",
+                                  color: "rgb(17, 24, 39)",
+                                  textAlign: "left",
+                                  direction: "rtl",
+                                }}
+                              >
+                               Vertical Align
+                              </InputLabel>
+
+                              <div className="flex justify-between space-x-2">
+                                <button
+                                  className={`ti-btn ${selectedComponent.verticalAlign === "top"
+                                      ? "ti-btn-primary-full"
+                                      : "bg-slate-100 hover:bg-slate-200 text-black"
+                                    } px-4 py-2 w-full`}
+                                  onClick={() =>
+                                    handlePropertyChange("verticalAlign", "top")
+                                  }
+                                >
+                                  Top
+                                </button>
+                                <button
+                                  className={`ti-btn ${selectedComponent.verticalAlign === "middle"
+                                      ? "ti-btn-primary-full"
+                                      : "bg-slate-100 hover:bg-slate-200 text-black"
+                                    } px-4 py-2 w-full`}
+                                  onClick={() =>
+                                    handlePropertyChange("verticalAlign", "middle")
+                                  }
+                                >
+                                  Middle
+                                </button>
+                                <button
+                                  className={`ti-btn ${selectedComponent.verticalAlign === "bottom"
+                                      ? "ti-btn-primary-full"
+                                      : "bg-slate-100 hover:bg-slate-200 text-black"
+                                    } px-4 py-2 w-full`}
+                                  onClick={() =>
+                                    handlePropertyChange("verticalAlign", "bottom")
+                                  }
+                                >
+                                  Bottom
+                                </button>
+                              </div>
+                            </Box>
+                            <Box>
+                              <InputLabel
+                                sx={{
+                                  textTransform: "capitalize",
+                                  marginBottom: "0.25rem",
+                                  display: "block",
+                                  fontSize: "0.75rem",
+                                  color: "rgb(17, 24, 39)",
+                                  textAlign: "left",
+                                  direction: "rtl",
+                                }}
+                              >
+                                Font Style
+                              </InputLabel>
+                              <div className="flex justify-between space-x-2">
+                                {/* <button
+                                    className={`ti-btn ${
+                                      selectedComponent.fontStyle === "bold"
+                                        ? "ti-btn-primary-full"
+                                        : "bg-slate-100 hover:bg-slate-200 text-black"
+                                    } px-4 py-2 w-full`}
+                                    onClick={() =>
+                                      handlePropertyChange("fontStyle", "bold")
+                                    }
+                                  >
+                                    Bold
+                                  </button> */}
+                                <button
+                                  className={`ti-btn ${selectedComponent.fontStyle === "normal"
+                                      ? "ti-btn-primary-full"
+                                      : "bg-slate-100 hover:bg-slate-200 text-black"
+                                    } px-4 py-2 w-full`}
+                                  onClick={() =>
+                                    handlePropertyChange("fontStyle", "normal")
+                                  }
+                                >
+                                  Normal
+                                </button>
+                                <button
+                                  className={`ti-btn ${selectedComponent.fontStyle === "italic"
+                                      ? "ti-btn-primary-full"
+                                      : "bg-slate-100 hover:bg-slate-200 text-black"
+                                    } px-4 py-2 w-full`}
+                                  onClick={() =>
+                                    handlePropertyChange("fontStyle", "italic")
+                                  }
+                                >
+                                  Italic
+                                </button>
+                              </div>
+                            </Box>
+                          </div>
+                        )}
+                    </Box>
+
+                    {selectedComponent.type === DesignerElementType.barcode &&
+                      selectedComponent.barcodeProps && (
+                        <div className="space-y-4">
+                          <Box>
+                            <ERPDataCombobox
+                              id="field"
+                              label="Field"
+                              data={selectedComponent.barcodeProps}
+                              field={{
+                                id: "field",
+                                valueKey: "value",
+                                labelKey: "label",
+                              }}
+                              options={Object.keys(initialPrintMasterDto)?.map((field) => ({
+                                value: field,
+                                label: field,
+                              }))}
+                              onChangeData={(data) =>
+                                handleBarcodePropertyChange("field", data.field)
+                              }
+                            />
+                          </Box>
+
+                          <Box>
+                            <ERPDataCombobox
+                              id="format"
+                              data={selectedComponent.barcodeProps}
+                              label="Barcode Format"
+                              field={{
+                                id: "format",
+                                valueKey: "value",
+                                labelKey: "value",
+                              }}
+                              options={barcodeFormats?.map((format) => ({
+                                value: format,
+                                label: format,
+                              }))}
+                              // onChange={(e) => {
+                              //   handleBarcodePropertyChange("format", e.value);
+                              // }}
+                              onChangeData={(data) =>
+                                handleBarcodePropertyChange("format", data.format)
+                              }
+                            />
+                          </Box>
+
+                          <Box>
+                            <ERPSlider
+                              label="Bar Width"
+                              value={selectedComponent.barcodeProps.barWidth}
+                              onChange={(e) =>
+                                handleBarcodePropertyChange(
+                                  "barWidth",
+                                  e.target.valueAsNumber
+                                )
+                              }
+                              min={1}
+                              max={10}
+                              step={1}
+                            />
+                          </Box>
+
+                          <Box>
+                            <ERPSlider
+                              label="Margin"
+                              value={selectedComponent.barcodeProps.margin}
+                              onChange={(e) =>
+                                handleBarcodePropertyChange(
+                                  "margin",
+                                  e.target.valueAsNumber
+                                )
+                              }
+                              min={0}
+                              max={50}
+                              step={1}
+                            />
+                          </Box>
+
+                          <Box>
+                            <ERPInput
+                              id="background"
+                              label="Background Color"
+                              type="color"
+                              value={selectedComponent.barcodeProps.background}
+                              data={selectedComponent}
+                              onChange={(e) =>
+                                handleBarcodePropertyChange(
+                                  "background",
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </Box>
+
+                          <Box>
+                            <ERPInput
+                              id="lineColor"
+                              label="Line Color"
+                              type="color"
+                              value={selectedComponent.barcodeProps.lineColor}
+                              data={selectedComponent}
+                              onChange={(e) =>
+                                handleBarcodePropertyChange(
+                                  "lineColor",
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </Box>
+
+                          <Box className="flex space-x-4">
+                            <ERPCheckbox
+                              id="showText"
+                              label="Show Text"
+                              data={selectedComponent}
+                              checked={selectedComponent.barcodeProps.showText}
+                              onChange={(e) =>
+                                handleBarcodePropertyChange(
+                                  "showText",
+                                  e.target.checked
+                                )
+                              }
+                            />
+                          </Box>
+
+                          <Box>
                             <InputLabel
                               sx={{
                                 textTransform: "capitalize",
@@ -3285,39 +3540,69 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
 
                             <div className="flex justify-between space-x-2">
                               <button
-                                className={`ti-btn ${selectedComponent.textAlign === "left"
+                                className={`ti-btn ${selectedComponent.barcodeProps.textAlign ===
+                                    "left"
                                     ? "ti-btn-primary-full"
                                     : "bg-slate-100 hover:bg-slate-200 text-black"
                                   } px-4 py-2 w-full`}
                                 onClick={() =>
-                                  handlePropertyChange("textAlign", "left")
+                                  handleBarcodePropertyChange("textAlign", "left")
                                 }
                               >
                                 Left
                               </button>
                               <button
-                                className={`ti-btn ${selectedComponent.textAlign === "center"
+                                className={`ti-btn ${selectedComponent.barcodeProps.textAlign ===
+                                    "center"
                                     ? "ti-btn-primary-full"
                                     : "bg-slate-100 hover:bg-slate-200 text-black"
                                   } px-4 py-2 w-full`}
                                 onClick={() =>
-                                  handlePropertyChange("textAlign", "center")
+                                  handleBarcodePropertyChange(
+                                    "textAlign",
+                                    "center"
+                                  )
                                 }
                               >
                                 Center
                               </button>
                               <button
-                                className={`ti-btn ${selectedComponent.textAlign === "right"
+                                className={`ti-btn ${selectedComponent.barcodeProps.textAlign ===
+                                    "right"
                                     ? "ti-btn-primary-full"
                                     : "bg-slate-100 hover:bg-slate-200 text-black"
                                   } px-4 py-2 w-full`}
                                 onClick={() =>
-                                  handlePropertyChange("textAlign", "right")
+                                  handleBarcodePropertyChange(
+                                    "textAlign",
+                                    "right"
+                                  )
                                 }
                               >
                                 Right
                               </button>
                             </div>
+                          </Box>
+
+                          <Box>
+                            <ERPDataCombobox
+                              id="font"
+                              data={selectedComponent.barcodeProps}
+                              label="Font"
+                              field={{
+                                id: "font",
+                                valueKey: "value",
+                                labelKey: "label",
+                              }}
+                              options={[
+                                { value: "Roboto", label: "Roboto" },
+                                { value: "RobotoMono", label: "RobotoMono" },
+                                { value: "FiraSans", label: "FiraSans" },
+                              ]}
+                              onChange={(e) =>
+                                handleBarcodePropertyChange("font", e.value)
+                              }
+                            />
                           </Box>
 
                           <Box>
@@ -3334,348 +3619,88 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({
                             >
                               Font Style
                             </InputLabel>
-                            <div className="flex justify-between space-x-2">
-                              {/* <button
-                                   className={`ti-btn ${
-                                     selectedComponent.fontStyle === "bold"
-                                       ? "ti-btn-primary-full"
-                                       : "bg-slate-100 hover:bg-slate-200 text-black"
-                                   } px-4 py-2 w-full`}
-                                   onClick={() =>
-                                     handlePropertyChange("fontStyle", "bold")
-                                   }
-                                 >
-                                   Bold
-                                 </button> */}
+                            <div className="flex justify-between space-x-1">
                               <button
-                                className={`ti-btn ${selectedComponent.fontStyle === "normal"
+                                className={`ti-btn ${selectedComponent.barcodeProps.fontStyle ===
+                                    "bold"
                                     ? "ti-btn-primary-full"
                                     : "bg-slate-100 hover:bg-slate-200 text-black"
                                   } px-4 py-2 w-full`}
                                 onClick={() =>
-                                  handlePropertyChange("fontStyle", "normal")
+                                  handleBarcodePropertyChange("fontStyle", "bold")
+                                }
+                              >
+                                Bold
+                              </button>
+                              <button
+                                className={`ti-btn ${selectedComponent.barcodeProps.fontStyle ===
+                                    "normal"
+                                    ? "ti-btn-primary-full"
+                                    : "bg-slate-100 hover:bg-slate-200 text-black"
+                                  } px-4 py-2 w-full`}
+                                onClick={() =>
+                                  handleBarcodePropertyChange(
+                                    "fontStyle",
+                                    "normal"
+                                  )
                                 }
                               >
                                 Normal
                               </button>
                               <button
-                                className={`ti-btn ${selectedComponent.fontStyle === "italic"
+                                className={`ti-btn ${selectedComponent.barcodeProps.fontStyle ===
+                                    "italic"
                                     ? "ti-btn-primary-full"
                                     : "bg-slate-100 hover:bg-slate-200 text-black"
                                   } px-4 py-2 w-full`}
                                 onClick={() =>
-                                  handlePropertyChange("fontStyle", "italic")
+                                  handleBarcodePropertyChange(
+                                    "fontStyle",
+                                    "italic"
+                                  )
                                 }
                               >
                                 Italic
                               </button>
                             </div>
                           </Box>
+
+                          <Box>
+                            <ERPSlider
+                              label="Font Size"
+                              value={selectedComponent.barcodeProps.fontSize}
+                              onChange={(e) =>
+                                handleBarcodePropertyChange(
+                                  "fontSize",
+                                  e.target.valueAsNumber
+                                )
+                              }
+                              min={0}
+                              max={50}
+                            />
+                          </Box>
+
+                          <Box>
+                            <ERPSlider
+                              label="Text Margin"
+                              value={selectedComponent.barcodeProps.textMargin}
+                              onChange={(e) =>
+                                handleBarcodePropertyChange(
+                                  "textMargin",
+                                  e.target.valueAsNumber
+                                )
+                              }
+                              min={-10}
+                              max={40}
+                            />
+                          </Box>
                         </div>
                       )}
+
+
                   </Box>
-
-                  {selectedComponent.type === DesignerElementType.barcode &&
-                    selectedComponent.barcodeProps && (
-                      <div className="space-y-4">
-                        <Box>
-                          <ERPDataCombobox
-                            id="field"
-                            label="Field"
-                            data={selectedComponent.barcodeProps}
-                            field={{
-                              id: "field",
-                              valueKey: "value",
-                              labelKey: "label",
-                            }}
-                            options={Object.keys(initialPrintMasterDto)?.map((field) => ({
-                              value: field,
-                              label: field,
-                            }))}
-                            onChangeData={(data) =>
-                              handleBarcodePropertyChange("field", data.field)
-                            }
-                          />
-                        </Box>
-
-                        <Box>
-                          <ERPDataCombobox
-                            id="format"
-                            data={selectedComponent.barcodeProps}
-                            label="Barcode Format"
-                            field={{
-                              id: "format",
-                              valueKey: "value",
-                              labelKey: "value",
-                            }}
-                            options={barcodeFormats?.map((format) => ({
-                              value: format,
-                              label: format,
-                            }))}
-                            // onChange={(e) => {
-                            //   handleBarcodePropertyChange("format", e.value);
-                            // }}
-                            onChangeData={(data) =>
-                              handleBarcodePropertyChange("format", data.format)
-                            }
-                          />
-                        </Box>
-
-                        <Box>
-                          <ERPSlider
-                            label="Bar Width"
-                            value={selectedComponent.barcodeProps.barWidth}
-                            onChange={(e) =>
-                              handleBarcodePropertyChange(
-                                "barWidth",
-                                e.target.valueAsNumber
-                              )
-                            }
-                            min={1}
-                            max={10}
-                            step={1}
-                          />
-                        </Box>
-
-                        <Box>
-                          <ERPSlider
-                            label="Margin"
-                            value={selectedComponent.barcodeProps.margin}
-                            onChange={(e) =>
-                              handleBarcodePropertyChange(
-                                "margin",
-                                e.target.valueAsNumber
-                              )
-                            }
-                            min={0}
-                            max={50}
-                            step={1}
-                          />
-                        </Box>
-
-                        <Box>
-                          <ERPInput
-                            id="background"
-                            label="Background Color"
-                            type="color"
-                            value={selectedComponent.barcodeProps.background}
-                            data={selectedComponent}
-                            onChange={(e) =>
-                              handleBarcodePropertyChange(
-                                "background",
-                                e.target.value
-                              )
-                            }
-                          />
-                        </Box>
-
-                        <Box>
-                          <ERPInput
-                            id="lineColor"
-                            label="Line Color"
-                            type="color"
-                            value={selectedComponent.barcodeProps.lineColor}
-                            data={selectedComponent}
-                            onChange={(e) =>
-                              handleBarcodePropertyChange(
-                                "lineColor",
-                                e.target.value
-                              )
-                            }
-                          />
-                        </Box>
-
-                        <Box className="flex space-x-4">
-                          <ERPCheckbox
-                            id="showText"
-                            label="Show Text"
-                            data={selectedComponent}
-                            checked={selectedComponent.barcodeProps.showText}
-                            onChange={(e) =>
-                              handleBarcodePropertyChange(
-                                "showText",
-                                e.target.checked
-                              )
-                            }
-                          />
-                        </Box>
-
-                        <Box>
-                          <InputLabel
-                            sx={{
-                              textTransform: "capitalize",
-                              marginBottom: "0.25rem",
-                              display: "block",
-                              fontSize: "0.75rem",
-                              color: "rgb(17, 24, 39)",
-                              textAlign: "left",
-                              direction: "rtl",
-                            }}
-                          >
-                            Text Align
-                          </InputLabel>
-
-                          <div className="flex justify-between space-x-2">
-                            <button
-                              className={`ti-btn ${selectedComponent.barcodeProps.textAlign ===
-                                  "left"
-                                  ? "ti-btn-primary-full"
-                                  : "bg-slate-100 hover:bg-slate-200 text-black"
-                                } px-4 py-2 w-full`}
-                              onClick={() =>
-                                handleBarcodePropertyChange("textAlign", "left")
-                              }
-                            >
-                              Left
-                            </button>
-                            <button
-                              className={`ti-btn ${selectedComponent.barcodeProps.textAlign ===
-                                  "center"
-                                  ? "ti-btn-primary-full"
-                                  : "bg-slate-100 hover:bg-slate-200 text-black"
-                                } px-4 py-2 w-full`}
-                              onClick={() =>
-                                handleBarcodePropertyChange(
-                                  "textAlign",
-                                  "center"
-                                )
-                              }
-                            >
-                              Center
-                            </button>
-                            <button
-                              className={`ti-btn ${selectedComponent.barcodeProps.textAlign ===
-                                  "right"
-                                  ? "ti-btn-primary-full"
-                                  : "bg-slate-100 hover:bg-slate-200 text-black"
-                                } px-4 py-2 w-full`}
-                              onClick={() =>
-                                handleBarcodePropertyChange(
-                                  "textAlign",
-                                  "right"
-                                )
-                              }
-                            >
-                              Right
-                            </button>
-                          </div>
-                        </Box>
-
-                        <Box>
-                          <ERPDataCombobox
-                            id="font"
-                            data={selectedComponent.barcodeProps}
-                            label="Font"
-                            field={{
-                              id: "font",
-                              valueKey: "value",
-                              labelKey: "label",
-                            }}
-                            options={[
-                              { value: "Roboto", label: "Roboto" },
-                              { value: "RobotoMono", label: "RobotoMono" },
-                              { value: "FiraSans", label: "FiraSans" },
-                            ]}
-                            onChange={(e) =>
-                              handleBarcodePropertyChange("font", e.value)
-                            }
-                          />
-                        </Box>
-
-                        <Box>
-                          <InputLabel
-                            sx={{
-                              textTransform: "capitalize",
-                              marginBottom: "0.25rem",
-                              display: "block",
-                              fontSize: "0.75rem",
-                              color: "rgb(17, 24, 39)",
-                              textAlign: "left",
-                              direction: "rtl",
-                            }}
-                          >
-                            Font Style
-                          </InputLabel>
-                          <div className="flex justify-between space-x-1">
-                            <button
-                              className={`ti-btn ${selectedComponent.barcodeProps.fontStyle ===
-                                  "bold"
-                                  ? "ti-btn-primary-full"
-                                  : "bg-slate-100 hover:bg-slate-200 text-black"
-                                } px-4 py-2 w-full`}
-                              onClick={() =>
-                                handleBarcodePropertyChange("fontStyle", "bold")
-                              }
-                            >
-                              Bold
-                            </button>
-                            <button
-                              className={`ti-btn ${selectedComponent.barcodeProps.fontStyle ===
-                                  "normal"
-                                  ? "ti-btn-primary-full"
-                                  : "bg-slate-100 hover:bg-slate-200 text-black"
-                                } px-4 py-2 w-full`}
-                              onClick={() =>
-                                handleBarcodePropertyChange(
-                                  "fontStyle",
-                                  "normal"
-                                )
-                              }
-                            >
-                              Normal
-                            </button>
-                            <button
-                              className={`ti-btn ${selectedComponent.barcodeProps.fontStyle ===
-                                  "italic"
-                                  ? "ti-btn-primary-full"
-                                  : "bg-slate-100 hover:bg-slate-200 text-black"
-                                } px-4 py-2 w-full`}
-                              onClick={() =>
-                                handleBarcodePropertyChange(
-                                  "fontStyle",
-                                  "italic"
-                                )
-                              }
-                            >
-                              Italic
-                            </button>
-                          </div>
-                        </Box>
-
-                        <Box>
-                          <ERPSlider
-                            label="Font Size"
-                            value={selectedComponent.barcodeProps.fontSize}
-                            onChange={(e) =>
-                              handleBarcodePropertyChange(
-                                "fontSize",
-                                e.target.valueAsNumber
-                              )
-                            }
-                            min={0}
-                            max={50}
-                          />
-                        </Box>
-
-                        <Box>
-                          <ERPSlider
-                            label="Text Margin"
-                            value={selectedComponent.barcodeProps.textMargin}
-                            onChange={(e) =>
-                              handleBarcodePropertyChange(
-                                "textMargin",
-                                e.target.valueAsNumber
-                              )
-                            }
-                            min={-10}
-                            max={40}
-                          />
-                        </Box>
-                      </div>
-                    )}
-                </Box>
-              )}
-            </Box>
+                )}
+         
 
             {templateGroup === "barcode" && (
               <Box hidden={activeTab !== "label"}

@@ -4,7 +4,7 @@ import {
   PlacedComponent,
 } from "../Designer/interfaces";
 import { bindDataForPrint } from "../../use-print";
-import { containsArabicString } from "../utils/pdf-util";
+import { containsArabicString,  } from "../utils/pdf-util";
 
 interface Props {
   component: PlacedComponent;
@@ -67,42 +67,59 @@ export const RenderPreviewComponent: React.FC<Props> = ({
     const textDirection =  component.direction ?? isArabic ? "rtl" : "ltr";
 
               return (
-            <div
+              <div
               key={component.id}
-              style={{
-                ...baseStyle,
-            display: "flex",
-            flexDirection: "column", // FIXED: Match PDF
-            alignItems: "stretch",   // FIXED: Match PDF
-            justifyContent: "flex-start", // FIXED: Match PDF
-
-               overflow:"hidden"
-
-              }}
-            >
-              <span
                 style={{
-                  display: "block",
-                  fontFamily: isArabic
-                    ? component?.arabicFont ?? "Amiri"
-                    : component?.font ?? "Roboto",
-                  lineHeight: 1.2,
-                  fontSize: `${component.fontSize || 12}pt`,
-                  fontStyle: component.fontStyle || "normal",
-                  textAlign: component.textAlign || "center",
-                  color: `rgb(${component.fontColor || "0,0,0"})`,
-                  fontWeight: component.fontWeight ?? "normal",
-                  whiteSpace:  "normal",
-                  margin: 0,
-                  padding: 0,
-                  width: "100%",
-                  verticalAlign: "baseline",
+                  ...baseStyle,
                   boxSizing: "border-box",
+                  display: "flex",
+                  overflow: "hidden",
                 }}
               >
-                {finalContent}
-              </span>
-            </div>
+            <span
+          style={{
+            display: "flex",           
+            flexDirection: "column",
+            width: "100%",
+            height: "100%",   
+            // ---------- Vertical Alignment ----------
+            justifyContent:
+              component.verticalAlign === "middle"
+                ? "center"
+                : component.verticalAlign === "bottom"
+                ? "flex-end"
+                : "flex-start",
+
+            // // ---------- Horizontal Alignment (RTL aware) ----------
+            alignItems:
+              component.textAlign === "center"
+                ? "center"
+                : component.textAlign === "left"
+                ? "flex-start"
+                : "flex-end",
+
+            textAlign: component.textAlign ?? "left",
+            
+            // ---------- Typography ----------
+            fontFamily: isArabic
+              ? component?.arabicFont ?? "Amiri"
+              : component?.font ?? "Roboto",
+
+            fontSize: `${component.fontSize || 12}pt`,
+            fontWeight: component.fontWeight ?? "400",
+            fontStyle: component.fontStyle || "normal",
+            color: `rgb(${component.fontColor || "0,0,0"})`,
+
+       // ✅ Critical: prevent text overflow issues
+          wordBreak: "break-word",
+          overflowWrap: "break-word",
+          whiteSpace: "pre-wrap",
+          }}
+        >
+          {finalContent}
+        </span>
+
+              </div>
           );
 
 
@@ -111,9 +128,9 @@ export const RenderPreviewComponent: React.FC<Props> = ({
       const imgUrl = component?.imgFromDevice ?component.content : bindDataForPrint(component.content, data);
       return (
         <div key={component.id} style={baseStyle}>
+          {imgUrl &&(
           <img
             src={imgUrl}
-            alt="dynamic"
             style={{
               width: "100%",
               height: "100%",
@@ -122,6 +139,8 @@ export const RenderPreviewComponent: React.FC<Props> = ({
               objectPosition: component.imgPosition || "center",
             }}
           />
+          )}
+
         </div>
       );
 

@@ -36,7 +36,7 @@ interface ItemTableLayoutDesignerProps {
 const LabelsEditor = <T,>({ currentTableState, onChange, }: ItemTableLabelDesignerProps<T>) => {
   const { t } = useTranslation("system");
   const dispatch = useDispatch();
-  const [openTableCol, setOpenTableCol] = useState({ show: false, index: undefined, column: undefined } as { show: boolean, index?: number, column?: TableColumn<PrintDetailDto> });
+  const [openTableCol, setOpenTableCol] = useState(false);
 
   const dragItem = useRef<string | null>(null);
   const dragOverItem = useRef<string | null>(null);
@@ -75,14 +75,10 @@ const LabelsEditor = <T,>({ currentTableState, onChange, }: ItemTableLabelDesign
           title={t("new")}
           variant="primary"
           onClick={() => {
-            setOpenTableCol((prev: any) => {
-              return {
-                ...prev,
-                show: true, index: undefined, column: undefined
-              }
-            })
+            setOpenTableCol(true)
           }}
         />
+      
       </div>
       {currentTableState &&
         currentTableState.length > 0 &&
@@ -99,6 +95,7 @@ const LabelsEditor = <T,>({ currentTableState, onChange, }: ItemTableLabelDesign
                 onDragEnd={() => handleDropping(false)}
               >
                 ⋮⋮
+                
                 <ERPCheckbox
                   id="tb_col_show"
                   noLabel
@@ -131,6 +128,7 @@ const LabelsEditor = <T,>({ currentTableState, onChange, }: ItemTableLabelDesign
                     onChange(item.field as keyof T, { label: e.target.value })
                   }
                 />
+ 
                 <ERPDataCombobox
                  disabled={item.show != true}
                   id="tb_col_format"
@@ -145,10 +143,10 @@ const LabelsEditor = <T,>({ currentTableState, onChange, }: ItemTableLabelDesign
                   value={item.format}
                   onChange={(e) =>
                   onChange &&
-                  onChange(item.field as keyof T, { format: e.target.value })
+                  onChange(item.field as keyof T, { format: e.value })
                 }
                 />          
-
+           
                   <div className="w-3 h-3 cursor-pointer self-center" title={t("remove")} onClick={()=>removeColumn(item)}>
                     <Trash />
                   </div>
@@ -157,19 +155,19 @@ const LabelsEditor = <T,>({ currentTableState, onChange, }: ItemTableLabelDesign
           })}
 
 
-      {openTableCol && openTableCol.show && (
+      {openTableCol &&  (
         <ERPModal
           isForm={true}
           disableOutsideClickClose={false}
-          isOpen={openTableCol.show}
+          isOpen={openTableCol}
           title="Choose TableColumns"
-          closeModal={() => setOpenTableCol({ show: false, index: undefined, column: undefined })}
+          closeModal={() => setOpenTableCol(false)}
           width={1000}
           height={700}
           content={
             <TableColumnAddOrEdit
-              onClose={() => { setOpenTableCol({ show: false, index: undefined, column: undefined }) }}
-              column={openTableCol.column} index={openTableCol.index}
+              onClose={() => { setOpenTableCol(false) }}
+        
             />
           }
         // footer={<TableManagerFooter onSubmit={onSubmit}  onClose={onClose}/>}

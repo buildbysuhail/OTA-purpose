@@ -32,6 +32,39 @@ export const RenderComponentPDF: React.FC<Props> = ({
     transform: component.rotate ? `rotate(${component.rotate}deg)` : undefined,
   };
 
+const FONT_CONFIG: Record<string, { baselineOffset: number; lineHeight: number }> = {
+  // Arabic Fonts
+  "Amiri": { 
+    baselineOffset: 2, 
+    lineHeight: 1.0  // Tighter for Arabic
+  },
+  "NotoNaskhArabic": { 
+    baselineOffset: 2.5, 
+    lineHeight: 1.0 
+  },
+  
+  // English Fonts
+  "Roboto": { 
+    baselineOffset: 0, 
+    lineHeight: 1.2 
+  },
+  "RobotoMono": { 
+    baselineOffset: 0, 
+    lineHeight: 1.2 
+  },
+  "FiraSans": { 
+    baselineOffset: 0, 
+    lineHeight: 1.2 
+  },
+  "Poppins": { 
+    baselineOffset: 0, 
+    lineHeight: 1.2 
+  },
+};
+const DEFAULT_FONT_CONFIG = { 
+  baselineOffset: 0, 
+  lineHeight: 1.2 
+};
   // Calculate container height if needed
   const calculateContainerHeight = () => {
     if (component.type !== DesignerElementType.container || !component.containerProps?.autoResize || !component.children?.length) {
@@ -65,58 +98,58 @@ export const RenderComponentPDF: React.FC<Props> = ({
         );
 
   const isArabic = typeof finalText === "string" && containsArabicString(finalText);
+  const fontFamily = isArabic 
+    ? (component?.arabicFont ?? "Amiri")
+    : (component?.font ?? "Roboto");
+      // ✅ Get font-specific configuration
+  const fontConfig = FONT_CONFIG[fontFamily] || DEFAULT_FONT_CONFIG;
+          return (
+        <View
+          style={{
+            ...baseStyle,
+            top:  component.y - fontConfig.baselineOffset,
+            display: "flex",
+            flexDirection: "column",
 
-  return (
-    <View
-      key={component.id}
-      style={{
-        ...baseStyle,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "stretch",
-        justifyContent: "flex-start",
-        overflow: "hidden",
-      }}
-    >
-      <Text
-        wrap
-        style={{
-          height:"100%",
-          maxHeight:"100%",
-          margin: 0,
-          padding: 0,
-          fontFamily: isArabic
-            ? component?.arabicFont ?? "Amiri"
-            : component?.font ?? "Roboto",
+            justifyContent:
+              component.verticalAlign === "middle"
+                ? "center"
+                : component.verticalAlign === "bottom"
+                ? "flex-end"
+                : "flex-start",
 
-          fontSize: component.fontSize || 12,
-          lineHeight: 1.2,
+            alignItems:
+              component.textAlign === "center"
+                ? "center"
+                : component.textAlign === "right"
+                ? "flex-end"
+                : "flex-start",
 
-          fontWeight: component.fontWeight || "normal",
+            overflow: "hidden",
+          }}
+        >
+          <Text
+            style={{
+              textAlign: component.textAlign || "left",
+              fontFamily: fontFamily,
+              fontSize: component.fontSize || 12,
+              fontWeight: component.fontWeight ?? "normal",
+              fontStyle: component.fontStyle || "normal",
+              color: `rgb(${component.fontColor || "0,0,0"})`,
+              lineHeight:  fontConfig.lineHeight,
+              maxWidth:"100%",
+             
+            }}
+          >
+            {finalText}
+          </Text>
+        </View>
 
-          color: component.fontColor ? `rgb(${component.fontColor})` : "black",
-
-          textAlign: component.textAlign || "center",
-          verticalAlign:"sub"
-        }}
-      >
-        {finalText}
-      </Text>
-    </View>
   );  
     case DesignerElementType.image:
       const imgUrl = component?.imgFromDevice ?component.content : bindDataForPrint(component.content, data);
       return (
-        <View style={baseStyle}>
-          {/* <Image
-            src={imgUrl}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: component.imgFit || "contain",
-            }}
-          /> */}
-             {imgUrl ? (
+      <View style={baseStyle}>       
       <Image
         src={imgUrl}
         style={{
@@ -125,17 +158,7 @@ export const RenderComponentPDF: React.FC<Props> = ({
           objectFit: component.imgFit || "contain",
         }}
       />
-    ) : (
-        <Text style={{
-              width: "100%",
-              height: "100%",
-              justifyContent: "center",
-              alignItems: "center",
-        }}>
-          |{"Image not available"}
-        </Text>
-      
-    )}
+ 
         </View>
       );
 

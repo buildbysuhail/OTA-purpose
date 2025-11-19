@@ -1,4 +1,5 @@
 import React from "react";
+import { PlacedComponent } from "../Designer/interfaces";
 
 // Standard page size dimensions in points
 export const PAGE_DIMENSIONS = {
@@ -143,5 +144,7 @@ export const containsArabicString = (text: string): boolean => {
 
 
 
+
+ 
 
   

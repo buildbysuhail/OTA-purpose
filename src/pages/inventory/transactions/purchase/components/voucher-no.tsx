@@ -74,6 +74,7 @@ const AccVoucherNo = React.forwardRef<HTMLInputElement, VoucherNoPrefixProps>(({
             }
             handleKeyDown && handleKeyDown(e, "voucherNumber");
           }}
+          min={1}
           label={phone ? "Voucher No" : t(formState.formElements.voucherNumber.label)}
           value={value}
           type="number"

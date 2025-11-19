@@ -108,6 +108,7 @@ export interface PlacedComponent {
   x: number;
   y: number;
   textAlign?: "left" | "center" | "right";
+  verticalAlign?:"top"|"middle"|"bottom";
   textUnderLine?:boolean;
   fontSize: number;
   direction:"ltr"|"rtl"

@@ -23,6 +23,7 @@ export interface TemplateReducerState<T> {
     background_image_footer: string | null;
   };
   templates: TemplateState<T>[];
+  lastActionMessage?: any
 }
 
 //
@@ -30,7 +31,8 @@ export interface TemplateReducerState<T> {
 // export const templateInitialState: TemplateReducerState = {
 export const templateInitialState = <T>(): TemplateReducerState<T> => ({
   activeTemplate: DefaultSITemplates[0]?.content,
-  templates: []
+  templates: [],
+  lastActionMessage:null
 });
 
 // const TemplateReducer = () => {

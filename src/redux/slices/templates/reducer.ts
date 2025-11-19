@@ -139,47 +139,33 @@ removeTemplateTableColumn: (
     );
 },
 
-addTemplateTableColumn: (
-  state: any,
-  action: PayloadAction<{
-    index?: number;
-    column: any;
-  }>
-) => {
-  const { index, column } = action.payload;
-  if(state.activeTemplate.tableState== undefined){
-    state.activeTemplate.tableState=[];
-  }
-  const table = state.activeTemplate.tableState??[];
 
-  if (index === undefined || index === null) {
-    // ✅ Add to the end
-    table.push({...column, key: generateUniqueKey()});
-  } else {
-    // ✅ Insert at specific index
-    table.splice(index, 0, column);
-  }
-},
-editTemplateTableColumn: (
-  state: any,
-  action: PayloadAction<{
-    index?: number;
-    column: any;
-  }>
+addTemplateTableColumn: (
+  state,
+  action: PayloadAction<{column: any;}>
 ) => {
-  const { index, column } = action.payload;
+  const { column } = action.payload;
+
+  if (!Array.isArray(state.activeTemplate.tableState)) {
+    state.activeTemplate.tableState = [];
+  }
+
   const table = state.activeTemplate.tableState;
 
-  if (index === undefined || index === null) {
+  // Check for duplicate field
+  const exists = table.some(col => col.field === column.field);
+
+  if (exists) {
+    state.lastActionMessage = "COLUMN_FIELD_ALREADY_EXISTS";
     return;
-  } else {
-    // ✅ Insert at specific index
-    table[index] = {
-      ...table[index],
-      ...column, // merge or replace as needed
-    };
   }
+
+  // Add new column
+  table.push({...column, key: generateUniqueKey()});
+  state.lastActionMessage = "COLUMN_ADDED";
 },
+
+
 updateTemplateTableState: (
   state: any,
   action: PayloadAction<{
@@ -352,7 +338,7 @@ export const {
   setTemplateCustomElements,
   setTemplateTableMasterState,
   addTemplateTableColumn,
-  editTemplateTableColumn,
+  // editTemplateTableColumn,
   removeTemplateTableColumn,
   updateTemplateTableState
 } = templateSlice.actions;

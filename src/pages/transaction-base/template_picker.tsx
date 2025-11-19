@@ -10,6 +10,7 @@ import { isNullOrUndefinedOrEmpty } from '../../utilities/Utils';
 import { useNavigate } from 'react-router-dom';
 import ERPButton from '../../components/ERPComponents/erp-button';
 import { removeStorageString } from '../../utilities/storage-utils';
+import { PlusIcon } from '@heroicons/react/24/outline';
 
 interface TemplatesProps {
   setIsOpen: () => void; 
@@ -59,6 +60,7 @@ useEffect(() => {
 
 const loadTemplateId = useCallback(
   async (template: TemplateState<unknown> | null) => {
+    setTemplateLoad(true)
     try {
       if (!template || isNullOrUndefinedOrEmpty(template.id)) return null;
       const _template =await fetchTemplateById(template.id, template.templateGroup??"", template.customerType, template.formType);
@@ -79,6 +81,8 @@ const loadTemplateId = useCallback(
       setIsOpen();
     } catch (error) {
       console.error(error);
+    }finally{
+      setTemplateLoad(false)
     }
   },
   []
@@ -91,20 +95,29 @@ const loadTemplateId = useCallback(
       {/* Header */}
       <div className="flex items-center justify-between mb-6 sticky top-0  ml-[5px] dark:!bg-dark-bg  bg-[#f9fafb] h-20 p-4 z-50">
        <h1 className=" font-medium text-xl dark:text-dark-text  capitalize">{t("templates")}</h1>
-                <div className='flex gap-2'>
-                    <ERPButton
-                      title={t("add_new")}
-                       onClick={() => {
-                        setIsOpen(); 
-                        navigate(`/templates?template_group=PI=${voucherType}`);
-                        }}
-                      className=" rounded-none  !m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"       
-                    />
+            <div className='flex gap-2'>
+                <button
+                  onClick={() => {
+                  setIsOpen(); 
+                  navigate(`/templates?template_group=PI=${voucherType}`);
+                  }}
+                  className="flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white rounded-lg font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-sm flex-shrink-0"
+                >
+                  <PlusIcon className="w-4 h-4" />
+                  <span>{t('new')}</span>
+                </button>
 
-        <button className="dark:text-dark-text text-gray-500 dark:hover:text-dark-text  hover:text-gray-700" onClick={setIsOpen} >
-          <X className="h-5 w-5" />
-        </button>
-       </div>
+                <button
+                  className="px-3 py-1 rounded-lg dark:text-dark-text text-gray-500
+                  dark:hover:text-dark-text hover:text-gray-700 shadow-lg hover:shadow-xl
+                  transform hover:scale-105 transition-all duration-200
+                  flex items-center "
+                  onClick={setIsOpen}
+                >
+                  <X className="w-4 h-4" />
+                </button>
+
+            </div>
 
       </div>
 

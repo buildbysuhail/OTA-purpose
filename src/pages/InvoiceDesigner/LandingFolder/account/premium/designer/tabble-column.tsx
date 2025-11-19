@@ -1,40 +1,45 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { initialTableColumn, TableColumn, templateDesignerFormatOptions } from "../../../../Designer/interfaces";
-import { addTemplateTableColumn, editTemplateTableColumn } from "../../../../../../redux/slices/templates/reducer";
+import { addTemplateTableColumn,  } from "../../../../../../redux/slices/templates/reducer";
 import { PrintDetailDto } from "../../../../../use-print-type";
 import ErpInput from "../../../../../../components/ERPComponents/erp-input";
 import ERPButton from "../../../../../../components/ERPComponents/erp-button";
 import ERPDataCombobox from "../../../../../../components/ERPComponents/erp-data-combobox";
 import { modelToListFromObject } from "../../../../../../utilities/Utils";
 import { initialPrintDetailDto } from "../../../../../use-print-type-data";
+import { RootState } from "../../../../../../redux/store";
+import ERPToast from "../../../../../../components/ERPComponents/erp-toast";
 
 interface TableManagerContentProps {
-  index?: number;
-  column?: TableColumn<PrintDetailDto>;
   onClose: any;
 }
 
 export const TableColumnAddOrEdit: React.FC<TableManagerContentProps> = React.memo(
-  ({ index, column, onClose }) => {
-    
+  ({onClose }) => {
+     const lastMessage  = useSelector((state: RootState) => state.Template?.lastActionMessage);
     const dispatch = useDispatch();
     const { t } = useTranslation("masters");
-    const [_column, setColumn] = useState<TableColumn<PrintDetailDto>>(column || initialTableColumn);
+    const [_column, setColumn] = useState<TableColumn<PrintDetailDto>>( initialTableColumn);
     const [options, setOptions] = useState<any>([]);
     useEffect(() => {
       const list =modelToListFromObject<PrintDetailDto>(initialPrintDetailDto)
       setOptions(list)
     }, [])
-    
+useEffect(() => {
+  if (lastMessage === "COLUMN_FIELD_ALREADY_EXISTS") {
+    ERPToast.showWith("This column already exists in table!", "warning")
+    return; // do NOT close the form
+  }
+
+  if (lastMessage === "COLUMN_ADDED") {
+    onClose(); // close only when added successfully
+  }
+}, [lastMessage]);
+
     const onSave = () => {
-      if (!column) {
-        dispatch(addTemplateTableColumn({ index, column: _column }));
-      } else {
-        dispatch(editTemplateTableColumn({ index, column: _column }));
-      }
-      onClose();
+        dispatch(addTemplateTableColumn({ column: _column }));
     };
 
     const onCancel = () => {
@@ -84,6 +89,7 @@ export const TableColumnAddOrEdit: React.FC<TableManagerContentProps> = React.me
             }
             options={templateDesignerFormatOptions}
             value={_column.format}
+            initialValue={"NONE"}
             onChange={(e) =>{  setColumn(prev => ({ ...prev, format: e.value}))}}
           />          
         </div>
@@ -102,15 +108,6 @@ export const TableColumnAddOrEdit: React.FC<TableManagerContentProps> = React.me
             title={t("cancel")}
             // className="w-28 dark:text-dark-hover-text bg-[#e5e7eb] text-[#404040]"
           />
-
-
-          {/* <ERPButton
-            type="reset"
-            onClick={onCancel}
-            className="w-28 dark:text-dark-hover-text bg-[#e5e7eb] text-[#404040]"
-          >
-            {t("cancel")}
-          </ERPButton> */}
         </div>
       </>
     );

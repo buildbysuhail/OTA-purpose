@@ -620,7 +620,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
     chequeStatusRef,
     handleKeyDown,
     formStateRef,
-    purchaseGridRef
+    purchaseGridRef,
+
 
   );
 
@@ -2066,11 +2067,11 @@ const TransactionForm: React.FC<TransactionProps> = ({
               ledgerCodeRef={ledgerCodeRef}
               voucherNumberRef={voucherNumberRef}
               refNoRef={refNoRef}
-              // isDropDownOpen={isDropDownOpen}
+              isDropDownOpen={isDropDownOpen}
               toggleDropdown={toggleHeaderDropdown}
               footerLayout="vertical"
               userSession={userSession}
-              isDropDownOpen={false}
+              // isDropDownOpen={false}
             // refactorDetails={refactorDetails}
             // voucherType={voucherType}
             // focusAdd1={focusAdd1}
@@ -2170,6 +2171,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
                         toggleDropup={toggleFooterDropup}
                         footerLayout={"vertical"}
                         applicationSettings={applicationSettings}
+                        loadAndSetTransVoucher={loadAndSetTransVoucher}
+                        handleDiscountSlab={handleDiscountSlab}
                       // generateLPO={generateLPO}
                       // generateLPQ={generateLPQ}
                       // clientSession={clientSession}
@@ -2284,11 +2287,11 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     ledgerCodeRef={ledgerCodeRef}
                     voucherNumberRef={voucherNumberRef}
                     refNoRef={refNoRef}
-                    // isDropDownOpen={isDropDownOpen}
+                    isDropDownOpen={isDropDownOpen}
                     toggleDropdown={toggleHeaderDropdown}
                     footerLayout="vertical"
                     userSession={userSession}
-                    isDropDownOpen={false}
+                    // isDropDownOpen={false}
                   // refactorDetails={refactorDetails}
                   // voucherType={voucherType}
                   />
@@ -2357,6 +2360,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   isDropUpOpen={isDropUpOpen}
                   toggleDropup={toggleFooterDropup}
                   applicationSettings={applicationSettings}
+                  loadAndSetTransVoucher={loadAndSetTransVoucher}
+                  handleDiscountSlab={handleDiscountSlab}
                   // generateLPO={generateLPO}
                   // generateLPQ={generateLPQ}
                   // clientSession={clientSession}
@@ -2411,6 +2416,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
             footerLayout={"horizontal"}
             applyDiscountsToItems={applyDiscountsToItems}
             applicationSettings={applicationSettings}
+            loadAndSetTransVoucher={loadAndSetTransVoucher}
+            handleDiscountSlab={handleDiscountSlab}
           // generateLPO={generateLPO}
           // generateLPQ={generateLPQ}
           // clientSession={clientSession}

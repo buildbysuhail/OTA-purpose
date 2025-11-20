@@ -338,33 +338,7 @@ const Templates = () => {
               </div>
             )}
           </div>
-          <div className="absolute bottom-0 left-0 right-0 h-20 bg-slate-900/60 backdrop-blur-sm flex flex-col opacity-0 group-hover:opacity-100 transition-opacity duration-300 overflow-hidden">
-            <div className="flex items-center justify-center gap-3 flex-1 overflow-hidden">
-              <button
-                className="bg-white/20 hover:bg-white/30 text-white p-2 rounded-lg transition-colors overflow-hidden"
-                title={t("edit")}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  templateGroup == "barcode"
-                    ? navigate(`/label-designer/${temp?.id}?template_group=${templateGroup}`)
-                    : navigate(`/invoice_designer/${temp?.id}?template_group=${templateGroup}`, {
-                      state: { templateKind: temp?.templateKind, templateType: temp?.templateType },
-                    })
-                }}
-              >
-                <PencilIcon className="w-4 h-4" />
-              </button>
-              <button
-                className="bg-white/20 hover:bg-white/30 text-red-400 p-2 rounded-lg transition-colors overflow-hidden"
-                title={t("delete")}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  handleDeleteTemplate(temp)
-                }}
-              >
-                <TrashIcon className="w-4 h-4" />
-              </button>
-            </div>
+          <div className="absolute bottom-0 left-0 right-0 h-14 bg-slate-900/60 backdrop-blur-sm flex flex-col opacity-0 group-hover:opacity-100 transition-opacity duration-300 overflow-hidden">
             <div className="flex items-center justify-center flex-1 overflow-hidden">
               {isDefault ? (
                 <span className="bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-950 dark:to-indigo-950 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded-full font-medium border border-blue-200 dark:border-blue-800 flex items-center gap-1 flex-shrink-0 whitespace-nowrap overflow-hidden">
@@ -387,7 +361,7 @@ const Templates = () => {
           </div>
         </div>
         <div className="p-4 relative z-30 bg-white dark:bg-dark-bg-card rounded-b-xl overflow-hidden min-h-[20%]">
-          <div className="flex items-start justify-between mb-0">
+          <div className="flex items-center justify-between mb-0">
             <div className="flex-1 min-w-0 max-w-full">
               <h3
                 className="font-semibold mj23333 text-slate-900 dark:!text-dark-text text-sm line-clamp-2 leading-tight block overflow-hidden text-ellipsis"
@@ -395,6 +369,36 @@ const Templates = () => {
               >
                 {temp?.templateName || "Untitled Template"}
               </h3>
+            </div>
+            <div>
+              <div className="flex items-center justify-center gap-2 flex-1 overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+
+                {/* Edit Button */}
+                <button className="bg-white border border-slate-200 hover:bg-blue-500 p-2 rounded-lg transition-all duration-200 flex items-center justify-center group/edit"
+                  title={t('edit')}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    templateGroup === 'barcode'
+                      ? navigate(`/label-designer/${temp?.id}?template_group=${templateGroup}`)
+                      : navigate(`/invoice_designer/${temp?.id}?template_group=${templateGroup}`, {
+                        state: { templateKind: temp?.templateKind, templateType: temp?.templateType },
+                      })
+                  }}
+                >
+                  <PencilIcon className="w-4 h-4 text-blue-500 group-hover/edit:text-white transition-colors duration-200" />
+                </button>
+
+                {/* Delete Button */}
+                <button className=" bg-white border border-red-200  hover:bg-red-500  p-2 rounded-lg  transition-all duration-200  flex items-center justify-center group/delete"
+                  title={t('delete')}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    handleDeleteTemplate(temp)
+                  }}
+                >
+                  <TrashIcon className="w-4 h-4 text-red-500 group-hover/delete:text-white transition-colors duration-200" />
+                </button>
+              </div>
             </div>
           </div>
         </div>

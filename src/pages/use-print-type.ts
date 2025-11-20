@@ -184,6 +184,11 @@ export interface PrintMasterDto {
 
   netAmount: number;
   returnAmount: number;
+
+  narration: string;
+  bankAccName: string;
+  bankAcNumber: string;
+  bankDetails: string;
 }
 
 export interface InvMaster2ForPrint {
@@ -526,6 +531,15 @@ export interface PrintDetailDto {
 
   mannualAutoBarcode: string;
   groupNameHead: string;
+
+  formType: string;
+  transactionDate: string;   // ISO string (DateTime)
+  amountDue: number;
+  payment: number;
+  balance: number;
+
+  fullAmountPaid: string;    // "Yes" | "No"
+  accTransactionMasterID: number;
 }
 
 export interface InvDetail2ForPrint {
@@ -639,30 +653,30 @@ export interface PrintCustomFields {
 
   // Transaction data
   invTransactionMasterID: number;
-  // fldName: string;
-  // fldText: string;
-  // fldLength: string;
-  // fldFont: string;
-  // fldFontSize: string;
-  // fldAlign: string;
-  // fldLeft: string;
-  // fldTop: string;
-  // fldBold: string;
-  // fldItalic: string;
-  // fldUnderLine: string;
-  // fldFormat: string;
-  // fldHideCodes: string;
+  fldName: string;
+  fldText: string;
+  fldLength: string;
+  fldFont: string;
+  fldFontSize: string;
+  fldAlign: string;
+  fldLeft: string;
+  fldTop: string;
+  fldBold: string;
+  fldItalic: string;
+  fldUnderLine: string;
+  fldFormat: string;
+  fldHideCodes: string;
 
-  // tempFname: string;
-  // ihSettings: string;
-  // phSettings: string;
-  // dtSettings: string;
-  // pfSettings: string;
-  // ifSettings: string;
+  tempFname: string;
+  ihSettings: string;
+  phSettings: string;
+  dtSettings: string;
+  pfSettings: string;
+  ifSettings: string;
 
   // Data tables
-  // dtTranMaster: any | null;
-  // dtTransDetails: any | null;
+  dtTranMaster: any | null;
+  dtTransDetails: any | null;
   noOfCopies: number;
   printInCopy: number;
 
@@ -1016,5 +1030,4 @@ export interface PrintCustomFields {
   voucherNoGate: string;
   nameGate: string;
   obCashRcvd: string;
-  
 }

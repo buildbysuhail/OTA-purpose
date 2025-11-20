@@ -746,7 +746,12 @@ export const initialPrintMasterDto: PrintMasterDto = {
   employeeCode: "",
   branch: "",
   netAmount: 0,
-  returnAmount: 0
+  returnAmount: 0,
+  
+  narration: "",
+  bankAccName: "",
+  bankAcNumber: "",
+  bankDetails: ""
 };
 
 
@@ -913,7 +918,16 @@ export const initialPrintDetailDto : PrintDetailDto = {
   txp_RefDate: "",
   detail2Data: initialInvDetail2ForPrint,
   mannualAutoBarcode: '',
-  groupNameHead: ''
+  groupNameHead: '',
+
+  formType: "",
+  transactionDate: "",   // or new Date().toISOString()
+  amountDue: 0,
+  payment: 0,
+  balance: 0,
+
+  fullAmountPaid: "No",
+  accTransactionMasterID: 0
 };
 
 // ---------------------- Full Response ---------------------- //

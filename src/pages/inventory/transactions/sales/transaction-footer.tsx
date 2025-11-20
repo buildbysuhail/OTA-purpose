@@ -201,6 +201,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   const [showAdjustmentOutside, setShowAdjustmentOutside] = useState(false);
   const [showCheckboxesOutside, setShowCheckboxesOutside] = useState(false);
   const [showAttachmentOutside, setShowAttachmentOutside] = useState(false);
+  const [showSecondHalf, setShowSecondHalf] = useState(false);
+  const [showButtonsOutside, setShowButtonsOutside] = useState(false);
   const [dropupState, setDropupState] = useState<'closed' | 'minimal' | 'full'>('closed');
   const [isSmallDevice, setIsSmallDevice] = useState(false);
   const [srAmount, setSrAmount] = useState<number>(0)  // changes based on types
@@ -273,17 +275,19 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
       setIsSmallHeight(window.innerHeight <= 650);
       if (isSidebar) {
         setShowAttachmentOutside(width >= 1540);
-        setShowCheckboxesOutside(width >= 1500);
+        setShowCheckboxesOutside(width >= 1632);
         setShowAdjustmentOutside(width >= 1400);
         setShowCostCentreOutside(width >= 1400);
         setShowWarehouseOutside(width >= 1400);
       } else {
         setShowAttachmentOutside(width >= 1300);
-        setShowCheckboxesOutside(width >= 1250);
+        setShowCheckboxesOutside(width >= 1632);
         setShowAdjustmentOutside(width >= 1200);
         setShowCostCentreOutside(width >= 1200);
         setShowWarehouseOutside(width >= 1200);
       }
+      setShowSecondHalf(width >= 1440);
+      setShowButtonsOutside(width >= 1816);
     };
     handleResize();
     window.addEventListener("resize", handleResize);
@@ -378,7 +382,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
     )
   }
 
-  const handleSalesReturnOpen =( type: string ) =>{
+  const handleSalesReturnOpen = (type: string) => {
     setIsModalOpen({ visible: true, type: type });
     // dispatch(
     //   formStateHandleFieldChange({
@@ -386,7 +390,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
     //   })
     // )
   }
-  const handleSalesReturnClose =()=>{
+  const handleSalesReturnClose = () => {
     dispatch(
       formStateHandleFieldChange({
         fields: { srOpen: false }
@@ -412,7 +416,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
 
   const priceCategoryComponent = (
     <div>
-       <PriceCategoryCombobox
+      <PriceCategoryCombobox
         formState={formState}
         dispatch={dispatch}
         t={t}
@@ -490,8 +494,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
     <div className="flex flex-col gap-1 pr-4 w-full">
       {showCheckboxesOutside ? (
         <>
-        {/* ----------------------------------------------------- */}
-          <div className="flex flex-wrap items-end justify-end gap-1 ">
+          {/* ----------------------------------------------------- */}
+          <div className="flex flex-wrap items-end gap-1">
             {showWarehouseOutside && warehouseComponent}
             {priceCategoryComponent}
             {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
@@ -500,108 +504,72 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 {showCostCentreOutside && costCentreComponent}
               </>
             )}
-          </div>
-          <div className="flex items-end gap-1">
-            {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
-              <>
-                {/* {showCostCentreOutside && costCentreComponent} */}
-              </>
-            )}
             {
               (applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && showAttachmentOutside) && (
                 attachmentComponent
               )
-            } 
-          </div>
-
-          {/* ----------------------------------------------- */}
-
-           <div className="px-2 flex flex-row justify-between gap-2 ">
-            <div>{t("LBill_Amount")}:{0.00}</div>
-              <div className="">
-                <div className="mb-2 sm:mb-0 sm:w-auto">
-                  {checkboxesComponent}
-                </div>
+            }
+            <div className="w-[130px]">
+              <ERPInput
+                id="creditCardAmount"
+                label={t("credit_card_amount")}
+                type="number"
+                value={creditCardAmount}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setCreditCardAmount(parseInt(e.target.value) || 0)
+                }
+              />
             </div>
-            <div className="flex flex-col gap-1">
-              <div className="space-y-2 flex justify-end">
+            <div className="flex items-end gap-1">
+              <div className="w-[130px]">
                 <ERPInput
-                  id="credit_card_amount"
+                  id="srAmount"
+                  label={t('sr_amount')}
                   type="number"
-                  labelDirection="horizontal"
-                  value={creditCardAmount} // credit cardAmount need to change the state
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setCreditCardAmount(parseInt(e.target.value) || 0)
-                  }
-                />
-              </div>
-              <div className="flex flex-row items-center justify-end">
-                <ERPInput
-                  id="sr_amount"
-                  type="number"
-                  labelDirection="horizontal"
                   value={srAmount}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setSrAmount(parseInt(e.target.value) || 0)
                   }
                 />
-                 {(formState.transaction.master.voucherType ===
-                    VoucherType.SalesInvoice,VoucherType.SalesReturn ) && (
-                      <ERPButton
-                        title={t("sr")}
-                        className="h-5"
-                        onClick={()=>handleSalesReturnOpen(formState.transaction.master.voucherType)}
-                      />
-                
-                )}
               </div>
-              
-                </div>
-        </div>
+              {(formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
+                formState.transaction.master.voucherType === VoucherType.SalesReturn) && (
+                  <ERPButton
+                    title={t("sr")}
+                    className="!h-[38px] !px-3"
+                    onClick={() => handleSalesReturnOpen(formState.transaction.master.voucherType)}
+                  />
+                )}
+            </div>
+            <div className="flex items-center gap-2 text-sm dark:text-dark-text">
+              {checkboxesComponent}
+              <span className="text-xs font-medium">{t("l_bill_amount")}:</span><span className="text-xs font-semibold">0.00</span>
+            </div>
+          </div>
 
-        {/* ------------------------------------------------------------ */}
-
-        {(formState.transaction.master.voucherType ===
-                    VoucherType.SalesInvoice ) && (
-
-          <div className="flex items-center gap-1 justify-end">
-            <ERPButton
-              title={t('tender')}
-              onClick={handleTenderOpen}
-            />
-            <ERPButton
-              title={t('pending')}
-            />
-            <ERPButton
-              title={t('privilege_card')}
-              onClick={handlePrivilegeCardOpen}
-            />
-            {
-              formState.privilegeCardOpen && (
-                <PrivilegeCardEntry
-                  isOpen={formState.privilegeCardOpen}
-                  onClose={handlePrivilegeCardClose}
-                  t={t}
-                  data={""}
+          {(formState.transaction.master.voucherType ===
+            VoucherType.SalesInvoice) && showButtonsOutside && (
+              <div className="flex items-center gap-1">
+                <ERPButton
+                  title={t('tender')}
+                  onClick={handleTenderOpen}
                 />
-              )
-            }
-            <ERPButton
-              title={t('offer_achieved')}
-            />
-            {formState.tenderOpen && (
-              <Tender
-                isOpen={formState.tenderOpen}
-                onClose={handleTenderClose}
-                t={t}
-              />
-            )}
-            <ERPButton
+                <ERPButton
+                  title={t('pending')}
+                />
+                <ERPButton
+                  title={t('privilege_card')}
+                  onClick={handlePrivilegeCardOpen}
+                />
+                <ERPButton
+                  title={t('offer_achieved')}
+                />
+                <ERPButton
                   title={t('disc_slab')}
-                  onClick={()=> handleDiscountSlab()}
-                  // onClick={handleSalesReturnOpen}
-            />
-            
+                  onClick={() => handleDiscountSlab()}
+                // onClick={handleSalesReturnOpen}
+                />
+
                 {/* {formState.srOpen && (
                   <div>
                     <SalesReturn 
@@ -611,60 +579,61 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               </div>
               
              )} */}
-             
-
-                {isModalOpen && isModalOpen.visible &&
-                [
-                    VoucherType.SalesInvoice,
-                    VoucherType.SalesReturn,
-                ].includes(formState.transaction.master.voucherType as VoucherType) && (
-                <ERPModal
-                  isOpen={isModalOpen.visible}
-                  title={isModalOpen.type}
-                  width={600}
-                  height={280}
-                  closeModal={closeModal}
-                  content={
-                    <VoucherLoader
-                      updateDeliveryNoteNumber={["SI", "SR"].includes(isModalOpen.type)}
-                      fromVoucherType={
-                        isModalOpen.type == "SI_Ref"
-                          ? VoucherType.SalesInvoice
-                          : formState.transaction.master.voucherType ===
-                            VoucherType.SalesInvoice
-                            ? VoucherType.GoodsReceiptNote : ""
-                            // : formState.transaction.master.voucherType ===
-                            //   VoucherType.GoodsReceiptNote
-                            //   ? VoucherType.PurchaseOrder
-                            //   : formState.transaction.master.voucherType ===
-                            //     VoucherType.PurchaseReturn
-                            //     ? VoucherType.GoodsReceiptReturn
-                            //     : ""
-                      }
-                      dispatch={dispatch}
-                      formState={formState}
-                      closeModal={closeModal}
-                      t={t}
-                      loadAndSetTransVoucher={loadAndSetTransVoucher}
-                    />
-                  }
-                />
-                )}
-            
-
-          </div>
-                    )}
+              </div>
+            )}
         </>
       ) : (
-        <>
-          {showWarehouseOutside && warehouseComponent}
-          {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
-            <>{showCostCentreOutside && costCentreComponent}</>
+        <div className="flex items-center justify-between">
+          {/* first half */}
+          <div className="flex flex-col">
+            {showWarehouseOutside && warehouseComponent}
+            {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+              <>{showCostCentreOutside && costCentreComponent}</>
+            )}
+            {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+              <>{showAdjustmentOutside && adjustmentComponent}</>
+            )}
+          </div>
+          {/* second half */}
+          {showSecondHalf && (
+            <div className="flex flex-col">
+              <ERPInput
+                id="creditCardAmount"
+                label={t("credit_card_amount")}
+                type="number"
+                value={creditCardAmount}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setCreditCardAmount(parseInt(e.target.value) || 0)
+                }
+              />
+              <div className="flex items-end gap-1">
+                <div className="w-[140px]">
+                  <ERPInput
+                    id="srAmount"
+                    label={t('sr_amount')}
+                    type="number"
+                    value={srAmount}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setSrAmount(parseInt(e.target.value) || 0)
+                    }
+                  />
+                </div>
+                {(formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
+                  formState.transaction.master.voucherType === VoucherType.SalesReturn) && (
+                    <ERPButton
+                      title={t("sr")}
+                      className="!h-[38px] !px-3"
+                      onClick={() => handleSalesReturnOpen(formState.transaction.master.voucherType)}
+                    />
+                  )}
+              </div>
+              <div className="flex items-center gap-2 text-sm dark:text-dark-text">
+                <span className="font-medium">{t("l_bill_amount")}:</span>
+                <span className="font-semibold">0.00</span>
+              </div>
+            </div>
           )}
-          {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
-            <>{showAdjustmentOutside && adjustmentComponent}</>
-          )}
-        </>
+        </div>
       )}
     </div>
   );
@@ -683,7 +652,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
     !showCostCentreOutside ||
     !showAdjustmentOutside ||
     !showAttachmentOutside ||
-    formState.formElements.printOnSave.visible
+    formState.formElements.printOnSave.visible ||
+    (formState.transaction.master.voucherType === VoucherType.SalesInvoice && !showButtonsOutside)
 
   const renderSecondFooter = () => (
     <div
@@ -998,55 +968,80 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             {attachmentComponent}
           </div>
         )}
-        <ERPButton
-          title={t('privilege_card')}
-          onClick={handlePrivilegeCardOpen}
-        />
-        <ERPButton
-          title={t('tender')}
-          onClick={handleTenderOpen}
-        />
-        <ERPButton
-          title={t('pending')}
-        // onClick={handleTenderOpen}
-        />
-        {/* <ERPButton
-          title={t('sr')}
-          onClick={handleSalesReturnOpen}
-        /> */}
-        <ERPButton
-          title={t('disc_slab')}
-          onClick={()=> handleDiscountSlab()}
-        />
-        {formState.tenderOpen && (
-          <Tender
-            isOpen={formState.tenderOpen}
-            onClose={handleTenderClose}
-            t={t}
-          />
-        )}
-        {formState.srOpen && (
-                  <div>
-                    <SalesReturn 
-                    isOpen={formState.srOpen}
-                    onClose={closeModal}
-                    t={t}/>
-              </div>
-              
-             )}
-        {
-          formState.privilegeCardOpen && (
-            <PrivilegeCardEntry
-              isOpen={formState.privilegeCardOpen}
-              onClose={handlePrivilegeCardClose}
-              t={t}
-              data={""}
+        {!showSecondHalf && (
+          <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
+            <ERPInput
+              id="creditCardAmount"
+              label={t("credit_card_amount")}
+              type="number"
+              value={creditCardAmount}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setCreditCardAmount(parseInt(e.target.value) || 0)
+              }
             />
-          )
-        }
-        <div className="w-full mb-2 sm:mb-0 sm:w-auto">
-          {checkboxesComponent}
-        </div>
+          </div>
+        )}
+        {!showSecondHalf && (
+          <div className="flex items-end gap-1">
+            <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
+              <ERPInput
+                id="srAmount"
+                label={t('sr_amount')}
+                type="number"
+                value={srAmount}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setSrAmount(parseInt(e.target.value) || 0)
+                }
+              />
+            </div>
+            {(formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
+              formState.transaction.master.voucherType === VoucherType.SalesReturn) && (
+                <ERPButton
+                  title={t("sr")}
+                  className="!h-[38px] !px-3"
+                  onClick={() => handleSalesReturnOpen(formState.transaction.master.voucherType)}
+                />
+              )}
+          </div>
+        )}
+        {!showButtonsOutside && (
+          <>
+            <ERPButton
+              title={t('tender')}
+              onClick={handleTenderOpen}
+            />
+            <ERPButton
+              title={t('pending')}
+            // onClick={handleTenderOpen}
+            />
+            <ERPButton
+              title={t('privilege_card')}
+              onClick={handlePrivilegeCardOpen}
+            />
+            <ERPButton
+              title={t('offer_achieved')}
+            />
+            {/* <ERPButton
+              title={t('sr')}
+              onClick={handleSalesReturnOpen}
+            /> */}
+            <ERPButton
+              title={t('disc_slab')}
+              onClick={() => handleDiscountSlab()}
+            />
+          </>
+        )}
+        {!showSecondHalf && (
+          <div className="flex items-center gap-2 text-sm dark:text-dark-text">
+            <span className="font-medium">{t("l_bill_amount")}:</span>
+            <span className="font-semibold">0.00</span>
+          </div>
+        )}
+        {!showCheckboxesOutside && (
+          <div className="w-full mb-2 sm:mb-0 sm:w-auto">
+            {checkboxesComponent}
+          </div>
+        )}
         <div className="flex items-center justify-between w-full">
           {formState.formElements.printOnSave.visible && (
             <ERPCheckbox
@@ -1150,11 +1145,65 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
 
   if (formState.userConfig?.footerPosition === "right") {
     return (
-      <div
-        className={`fixed ${isRtl ? "left-0" : "right-0"} h-[-webkit-fill-available] overflow-y-scroll w-[280px] sm:w-[300px] shadow-lg p-2 z-30`}
-        style={{ top: `${170 + (getInputHeight())}px`, backgroundColor: formState.userConfig?.footerBg ? `rgb(${formState.userConfig.footerBg})` : '#f8f8ff', }}>
-        {renderSecondFooter()}
-      </div>
+      <>
+        {formState.tenderOpen && (
+          <Tender
+            isOpen={formState.tenderOpen}
+            onClose={handleTenderClose}
+            t={t}
+          />
+        )}
+        {formState.privilegeCardOpen && (
+          <PrivilegeCardEntry
+            isOpen={formState.privilegeCardOpen}
+            onClose={handlePrivilegeCardClose}
+            t={t}
+            data={""}
+          />
+        )}
+        {isModalOpen && isModalOpen.visible &&
+          [
+            VoucherType.SalesInvoice,
+            VoucherType.SalesReturn,
+          ].includes(formState.transaction.master.voucherType as VoucherType) && (
+            <ERPModal
+              isOpen={isModalOpen.visible}
+              title={isModalOpen.type}
+              width={600}
+              height={280}
+              closeModal={closeModal}
+              content={
+                <VoucherLoader
+                  updateDeliveryNoteNumber={["SI", "SR"].includes(isModalOpen.type)}
+                  fromVoucherType={
+                    isModalOpen.type == "SI_Ref"
+                      ? VoucherType.SalesInvoice
+                      : formState.transaction.master.voucherType ===
+                        VoucherType.SalesInvoice
+                        ? VoucherType.GoodsReceiptNote : ""
+                    // : formState.transaction.master.voucherType ===
+                    //   VoucherType.GoodsReceiptNote
+                    //   ? VoucherType.PurchaseOrder
+                    //   : formState.transaction.master.voucherType ===
+                    //     VoucherType.PurchaseReturn
+                    //     ? VoucherType.GoodsReceiptReturn
+                    //     : ""
+                  }
+                  dispatch={dispatch}
+                  formState={formState}
+                  closeModal={closeModal}
+                  t={t}
+                  loadAndSetTransVoucher={loadAndSetTransVoucher}
+                />
+              }
+            />
+          )}
+        <div
+          className={`fixed ${isRtl ? "left-0" : "right-0"} h-[-webkit-fill-available] overflow-y-scroll w-[280px] sm:w-[300px] shadow-lg p-2 z-30`}
+          style={{ top: `${170 + (getInputHeight())}px`, backgroundColor: formState.userConfig?.footerBg ? `rgb(${formState.userConfig.footerBg})` : '#f8f8ff', }}>
+          {renderSecondFooter()}
+        </div>
+      </>
     );
   } else {
     return (
@@ -1162,6 +1211,58 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         {dropupState !== 'closed' && hasDropupContent && (
           <div className="fixed inset-0 bg-black/20 dark:bg-black/30 backdrop-blur-sm z-30" onClick={() => setDropupState('closed')} />
         )}
+        {formState.tenderOpen && (
+          <Tender
+            isOpen={formState.tenderOpen}
+            onClose={handleTenderClose}
+            t={t}
+          />
+        )}
+        {formState.privilegeCardOpen && (
+          <PrivilegeCardEntry
+            isOpen={formState.privilegeCardOpen}
+            onClose={handlePrivilegeCardClose}
+            t={t}
+            data={""}
+          />
+        )}
+        {isModalOpen && isModalOpen.visible &&
+          [
+            VoucherType.SalesInvoice,
+            VoucherType.SalesReturn,
+          ].includes(formState.transaction.master.voucherType as VoucherType) && (
+            <ERPModal
+              isOpen={isModalOpen.visible}
+              title={isModalOpen.type}
+              width={600}
+              height={280}
+              closeModal={closeModal}
+              content={
+                <VoucherLoader
+                  updateDeliveryNoteNumber={["SI", "SR"].includes(isModalOpen.type)}
+                  fromVoucherType={
+                    isModalOpen.type == "SI_Ref"
+                      ? VoucherType.SalesInvoice
+                      : formState.transaction.master.voucherType ===
+                        VoucherType.SalesInvoice
+                        ? VoucherType.GoodsReceiptNote : ""
+                    // : formState.transaction.master.voucherType ===
+                    //   VoucherType.GoodsReceiptNote
+                    //   ? VoucherType.PurchaseOrder
+                    //   : formState.transaction.master.voucherType ===
+                    //     VoucherType.PurchaseReturn
+                    //     ? VoucherType.GoodsReceiptReturn
+                    //     : ""
+                  }
+                  dispatch={dispatch}
+                  formState={formState}
+                  closeModal={closeModal}
+                  t={t}
+                  loadAndSetTransVoucher={loadAndSetTransVoucher}
+                />
+              }
+            />
+          )}
         {!deviceInfo?.isMobile && (
           <div className={`fixed dark:bg-dark-bg ${footerLayout === "vertical" ? `top-[170px] ${isRtl ? "left-0" : "right-0"} h-[-webkit-fill-available] w-[280px] sm:w-[300px] overflow-y-auto p-2 z-20 bg-white border-l dark:border-dark-border border-l-slate-200` : "z-40 bottom-0 shadow-lg full-available-width dark:bg-dark-bg bg-[#f8f8ff]"}`}>
             {hasDropupContent && (

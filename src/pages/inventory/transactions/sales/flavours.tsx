@@ -14,6 +14,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
+import { Trash2, Edit } from "lucide-react";
+
 
 interface FlavoursItem {
   flavours: string;
@@ -145,7 +147,7 @@ const Flavours: React.FC<ImfProps> = ({ data, isOpen, productId, onClose, rowInd
               <Column
                 dataField="flavours"
                 caption={t("flavours")}
-                width={200}
+                width={250}
                 allowEditing={false}
               />
 
@@ -157,9 +159,17 @@ const Flavours: React.FC<ImfProps> = ({ data, isOpen, productId, onClose, rowInd
               />
               <Column
                 dataField="action"
-                width={150}
+                width={70}
                 caption={t("action")}
                 allowEditing={true}
+                cellRender={(cellData) => (
+                <button
+                  // onClick={() => handleDelete(cellData.data)}
+                  className="p-1 text-red-600 hover:text-red-800"
+                >
+                  <Trash2 size={16} />
+                </button>
+              )}
               />
 
               <Paging pageSize={100} />
@@ -175,7 +185,7 @@ const Flavours: React.FC<ImfProps> = ({ data, isOpen, productId, onClose, rowInd
         </>
       }
       footer={
-        <div className="absolute -bottom-0 h-[42px] pt-[4px] pb-[2px] left-0 w-full flex justify-end space-x-2 dark:!border-dark-border dark:!bg-dark-bg bg-white border-t z-10 pr-[10px] rounded-b-md">
+        <div className="flex justify-end">
 
           <ERPSubmitButton
             type="button"
@@ -188,7 +198,7 @@ const Flavours: React.FC<ImfProps> = ({ data, isOpen, productId, onClose, rowInd
           </ERPSubmitButton>
         </div>
       }
-      width={550}
+      width={500}
       height={500}
       disableOutsideClickClose={false}
     />

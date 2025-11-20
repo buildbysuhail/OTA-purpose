@@ -1,5 +1,4 @@
 "use client"
-
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { PlusIcon, TrashIcon, PencilIcon, XMarkIcon, Squares2X2Icon, ListBulletIcon, Bars3Icon, } from "@heroicons/react/24/outline"
@@ -62,8 +61,8 @@ interface previewState {
   show: boolean
   template?: TemplateState<unknown>
 }
-const api = new APIClient()
 
+const api = new APIClient()
 const Templates = () => {
   const navigate = useNavigate()
   const appDispatch = useAppDispatch()
@@ -81,12 +80,8 @@ const Templates = () => {
   const [sortBy, setSortBy] = useState<"name" | "date" | "type">("name")
   const [formType, setFormType] = useState("")
   const [customerType, setCustomerType] = useState("")
-
-  const [templateGroup, setTemplateGroup] = useState<VoucherType | string>(
-    (searchParams?.get("template_group")! as VoucherType | string) ?? "SI",
-  )
+  const [templateGroup, setTemplateGroup] = useState<VoucherType | string>(  (searchParams?.get("template_group")! as VoucherType | string) ?? "SI",)
   const [accountVoucher, setAccountVoucher] = useState(DummyVoucherData)
-
   const setDefaultTemplate = async (id: any) => {
     try {
       const res = await api.patch(`${Urls.templates}${id}`, {
@@ -467,7 +462,7 @@ const Templates = () => {
                         }
                       }}
                       placeholder={t("search_templates")}
-                      className="block w-full pl-10 pr-3 py-2 sm:py-2.5 border border-slate-300 dark:border-dark-border rounded-lg text-xs placeholder-slate-400 dark:placeholder-gray-500 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text transition-all duration-200 h-[38px]"
+                      className="block w-full pl-10 pr-3 py-2 sm:py-2.5 border border-slate-300 rounded-lg text-xs placeholder-slate-400 dark:placeholder-gray-500 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text transition-all duration-200 h-[38px]"
                     />
                     {searchQuery && (
                       <button
@@ -714,7 +709,7 @@ const Templates = () => {
                       />
                       {templateSearchQuery && (
                         <button
-                          onClick={() => setSearchQuery('')}
+                          onClick={() => setTemplateSearchQuery('')}
                           className="absolute inset-y-0 right-0 pr-3 flex items-center"
                         >
                           <svg
@@ -733,13 +728,13 @@ const Templates = () => {
                     </div>
 
                     {/* View Toggle */}
-                    <div className="flex bg-white/80 dark:bg-dark-bg-card/80 backdrop-blur-sm rounded-lg p-1 border border-slate-200 dark:border-dark-border shadow-sm">
+                    <div className="flex gap-1 bg-white/80 dark:bg-dark-bg-card/80 backdrop-blur-sm rounded-lg p-1 border border-slate-200 dark:border-dark-border shadow-sm">
                       <button
                         type="button"
                         onClick={() => setViewMode("grid")}
                         className={`p-[6px] rounded-md transition-all duration-200 ${viewMode === "grid"
                           ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
-                          : "text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-gray-200 hover:bg-slate-100 dark:hover:bg-dark-hover"
+                          : "text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-gray-200 hover:bg-slate-100 dark:hover:bg-slate-700"
                           }`}
                       >
                         <Squares2X2Icon className="w-4 h-4" />
@@ -749,7 +744,7 @@ const Templates = () => {
                         onClick={() => setViewMode("list")}
                         className={`p-[6px] rounded-md transition-all duration-200 ${viewMode === "list"
                           ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
-                          : "text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-gray-200 hover:bg-slate-100 dark:hover:bg-dark-hover"
+                          : "text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-gray-200 hover:bg-slate-100 dark:hover:bg-slate-700"
                           }`}
                       >
                         <ListBulletIcon className="w-4 h-4" />

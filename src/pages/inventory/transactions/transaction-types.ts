@@ -447,6 +447,11 @@ export interface UserConfig {
   showCustomersAfterSales?: boolean;
   UserSalesPriceForTransfer?: boolean;
   gatePass?: boolean;
+  showSrInProductInfoPopup?: boolean;
+  setDefaultCashPaid?: boolean;
+  showProductInfoPopupForSq?: boolean;
+  blockNonStockItems?: boolean;
+  stockOutConfirmation?: boolean;
 }
 
 export type FormElementsState = {
@@ -572,6 +577,7 @@ export interface TransactionFormState {
   showPcode: boolean;
   batchEntryData: { visible: boolean; data: string; rowIndex: number };
   serialNoEntryData: { visible: boolean; data: string; rowIndex: number };
+  imfData: { visible: boolean, data: string, rowIndex: number },
   batchSelectionData: string;
   popupSearchSelectionData: string;
   quantityFactorData: string;

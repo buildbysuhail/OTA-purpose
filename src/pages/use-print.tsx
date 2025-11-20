@@ -1125,62 +1125,62 @@ export const getCommonValues = (field: string,
     case "productUnitRemarksOrProductName":
       v = data.custom.productUnitRemarksOrProductName;
       break;
-    case "partyNameLine2":
-      const flen = parseInt(data.custom.fldLength || "0");
-      if (data.custom.partyName.length > flen) {
-        v = data.custom.partyName.substring(flen);
-      } else {
-        v = "";
-      }
-      break;
-    case "productName2":
-      let len = parseInt(data.custom.fldLength || "0");
-      if (data.custom.prodName.length > len) {
-        v = data.custom.prodName.substring(len);
-      } else {
-        v = "";
-      }
-      break;
-    case "productName3":
-      len = parseInt(data.custom.fldLength || "0");
-      if (data.custom.prodName.length > len * 2) {
-        v = data.custom.prodName.substring(len * 2);
-      } else {
-        v = "";
-      }
-      break;
-    case "productDescription2":
-      len = parseInt(data.custom.fldLength || "0");
-      if (data.custom.prodDescription.length > len) {
-        v = data.custom.prodDescription.substring(len);
-      } else {
-        v = "";
-      }
-      break;
-    case "productDescription3":
-      len = parseInt(data.custom.fldLength || "0");
-      if (data.custom.prodDescription.length > len * 2) {
-        v = data.custom.prodDescription.substring(len * 2);
-      } else {
-        v = "";
-      }
-      break;
-    case "productDescription4":
-      len = parseInt(data.custom.fldLength || "0");
-      if (data.custom.prodDescription.length > len * 3) {
-        v = data.custom.prodDescription.substring(len * 3);
-      } else {
-        v = "";
-      }
-      break;
-    case "productDescription5":
-      len = parseInt(data.custom.fldLength || "0");
-      if (data.custom.prodDescription.length > len * 4) {
-        v = data.custom.prodDescription.substring(len * 4);
-      } else {
-        v = "";
-      }
-      break;
+    // case "partyNameLine2":
+    //   const flen = fldLength || 0;
+    //   if (data.custom.partyName.length > flen) {
+    //     v = data.custom.partyName.substring(flen);
+    //   } else {
+    //     v = "";
+    //   }
+    //   break;
+    // case "productName2":
+    //   let len = parseInt(fldLength || 0);
+    //   if (data.custom.prodName.length > len) {
+    //     v = data.custom.prodName.substring(len);
+    //   } else {
+    //     v = "";
+    //   }
+    //   break;
+    // case "productName3":
+    //   len = parseInt(data.custom.fldLength || "0");
+    //   if (data.custom.prodName.length > len * 2) {
+    //     v = data.custom.prodName.substring(len * 2);
+    //   } else {
+    //     v = "";
+    //   }
+    //   break;
+    // case "productDescription2":
+    //   len = parseInt(data.custom.fldLength || "0");
+    //   if (data.custom.prodDescription.length > len) {
+    //     v = data.custom.prodDescription.substring(len);
+    //   } else {
+    //     v = "";
+    //   }
+    //   break;
+    // case "productDescription3":
+    //   len = parseInt(data.custom.fldLength || "0");
+    //   if (data.custom.prodDescription.length > len * 2) {
+    //     v = data.custom.prodDescription.substring(len * 2);
+    //   } else {
+    //     v = "";
+    //   }
+    //   break;
+    // case "productDescription4":
+    //   len = parseInt(data.custom.fldLength || "0");
+    //   if (data.custom.prodDescription.length > len * 3) {
+    //     v = data.custom.prodDescription.substring(len * 3);
+    //   } else {
+    //     v = "";
+    //   }
+    //   break;
+    // case "productDescription5":
+    //   len = parseInt(data.custom.fldLength || "0");
+    //   if (data.custom.prodDescription.length > len * 4) {
+    //     v = data.custom.prodDescription.substring(len * 4);
+    //   } else {
+    //     v = "";
+    //   }
+    //   break;
     case "productNameOrOpenProductName":
       v = data.custom.prodName;
       if (data.custom.productCode === "0") {
@@ -1194,8 +1194,8 @@ export const getCommonValues = (field: string,
     //   v = getProductStockDetails(data.custom.productBatchID.toString(), data.custom.invQty);
     //   break;
     case "inOutArabic":
-      if (data.custom.dtTranMaster && data.custom.dtTranMaster[0]) {
-        const inOutValue = data.custom.dtTranMaster[0].InOut;
+      if (data.master) {
+        const inOutValue = data.master.inout;
         if (inOutValue === "DINE IN") {
           v = "محلي";
         } else if (inOutValue === "TAKE AWAY") {
@@ -1301,7 +1301,7 @@ export const getCommonValues = (field: string,
     //   v = zeroPercentTaxValue.toString();
     //   break;
     case "amountInWordsPayable":
-      const payableAmount = data.custom.grantTotal - (data.custom.dtTranMaster && data.custom.dtTranMaster[0] ? parseFloat(data.custom.dtTranMaster[0].SRAmount || 0) : 0);
+      const payableAmount = data.custom.grantTotal - (data.master ? data.master.srAmount || 0 : 0);
       v = getAmountInWords(payableAmount);
       break;
     // Balance calculations
@@ -1364,7 +1364,7 @@ export const getCommonValues = (field: string,
       v = (data.custom.grantTotal - data.custom.billDiscount).toString();
       break;
     case "grandTotalCouponAmt":
-      const couponAmt = data.custom.dtTranMaster && data.custom.dtTranMaster[0] ? parseFloat(data.custom.dtTranMaster[0].CouponAmt || 0) : 0;
+      const couponAmt = data.master ? data.master.couponAmt || 0 : 0;
       v = (data.custom.grantTotal - couponAmt).toString();
       break;
     case "qtyWithUnit":
@@ -1374,41 +1374,41 @@ export const getCommonValues = (field: string,
       v = data.custom.unitNetValue.toString();
       break;
     case "vehicleNumber":
-      v = data.custom.dtTranMaster && data.custom.dtTranMaster[0] ? (data.custom.dtTranMaster[0].VehicleNumber || "") : "";
+      v = data.master ? (data.master.vehicleData.vehicleNumber || "") : "";
       break;
     case "billDiscountPlusDiscount":
       v = (data.custom.billDiscount + data.custom.sumOfDisc).toString();
       break;
     case "partyDisplayName":
-      v = data.custom.dtTranMaster && data.custom.dtTranMaster[0] ? (data.custom.dtTranMaster[0].PartyDisplayName || "") : "";
+      v = data.master ? (data.master.partyData.partyDisplayName || "") : "";
       break;
     // Vehicle details
     case "vehicleName":
-      v = data.custom.dtTranMaster && data.custom.dtTranMaster[0] ? (data.custom.dtTranMaster[0].VehicleName || "") : "";
+      v = data.master ? (data.master.vehicleData.vehicleName || "") : "";
       break;
     case "vehicleModel":
-      v = data.custom.dtTranMaster && data.custom.dtTranMaster[0] ? (data.custom.dtTranMaster[0].VehicleModel || "") : "";
+      v = data.master ? (data.master.vehicleData.vehicleModel || "") : "";
       break;
     case "vehicleCapacity":
-      v = data.custom.dtTranMaster && data.custom.dtTranMaster[0] ? (data.custom.dtTranMaster[0].VehicleCapacity || "") : "";
+      v = data.master ? (data.master.vehicleData.vehicleCapacity || "") : "";
       break;
     case "vehicleManufacturer":
-      v = data.custom.dtTranMaster && data.custom.dtTranMaster[0] ? (data.custom.dtTranMaster[0].VehicleManufacturer || "") : "";
+      v = data.master ? (data.master.vehicleData.vehicleManufacturer || "") : "";
       break;
     case "vehicleOwner":
-      v = data.custom.dtTranMaster && data.custom.dtTranMaster[0] ? (data.custom.dtTranMaster[0].VehicleOwner || "") : "";
+      v = data.master ? (data.master.vehicleData.vehicleOwner || "") : "";
       break;
     case "vehicleColor":
-      v = data.custom.dtTranMaster && data.custom.dtTranMaster[0] ? (data.custom.dtTranMaster[0].VehicleColor || "") : "";
+      v = data.master ? (data.master.vehicleData.vehicleColor || "") : "";
       break;
     case "vehicleOdometer":
-      v = data.custom.dtTranMaster && data.custom.dtTranMaster[0] ? (data.custom.dtTranMaster[0].VehicleOdometer || "") : "";
+      v = data.master ? (data.master.vehicleData.vehicleOdometer || "") : "";
       break;
     case "vehicleRemarks":
-      v = data.custom.dtTranMaster && data.custom.dtTranMaster[0] ? (data.custom.dtTranMaster[0].VehicleRemarks || "") : "";
+      v = data.master ? (data.master.vehicleData.vehicleRemarks || "") : "";
       break;
     case "balanceAmtPayable":
-      const srAmount = data.custom.dtTranMaster && data.custom.dtTranMaster[0] ? parseFloat(data.custom.dtTranMaster[0].SRAmount || 0) : 0;
+      const srAmount = data.master ? data.master.srAmount || 0 : 0;
       v = (data.custom.grantTotal - srAmount).toString();
       break;
     // case "privilageCardBalance":
@@ -1427,16 +1427,10 @@ export const getCommonValues = (field: string,
     case "chequeRemarks":
       v = data.custom.chequeRemarks;
       break;
-    // case "chequeAmountInWordsLine1":
-    //   const chequeWordsLine1 = `***${getAmountInWords(parseFloat(data.custom.chequeAmount))}***`;
-    //   setChequeAmountInWords(chequeWordsLine1);
-    //   len = parseInt(data.custom.fldLength || "0");
-    //   if (chequeWordsLine1.length > len) {
-    //     v = chequeWordsLine1.substring(0, len);
-    //   } else {
-    //     v = chequeWordsLine1;
-    //   }
-    //   break;
+    case "chequeAmountInWordsLine":
+      v = `***${getAmountInWords(parseFloat(data.custom.chequeAmount))}***`;
+      
+      break;
     // case "chequeAmountInWordsLine2":
     //   if (!data.custom.chequeAmountInWords) {
     //     setChequeAmountInWords(`***${getAmountInWords(parseFloat(data.custom.chequeAmount))}***`);
@@ -1493,7 +1487,7 @@ export const getCommonValues = (field: string,
     //   }
     //   break;
     case "invoiceStatus":
-      const oldInvTrID = data.custom.dtTranMaster && data.custom.dtTranMaster[0] ? parseFloat(data.custom.dtTranMaster[0].OldInvTransactionID || 0) : 0;
+      const oldInvTrID = data.master  ? data.master.oldInvTransactionID || 0 : 0;
       v = oldInvTrID === 0 ? "NEW" : "EDITED";
       break;
     case "netAmount":
@@ -1576,46 +1570,46 @@ export const getCommonValues = (field: string,
     case "kmServeType":
       v = data.custom?.kmServeType;
       break;
-    case "kmKitchenRemarks1":
-      len = parseInt(data.custom?.fldLength || "0");
-      if (data.custom?.kmKitchenRemarks.length > len) {
-        v = data.custom?.kmKitchenRemarks.substring(len);
-      } else {
-        v = "";
-      }
-      break;
-    case "kmKitchenRemarks2":
-      len = parseInt(data.custom?.fldLength || "0");
-      if (data.custom?.kmKitchenRemarks.length > len * 2) {
-        v = data.custom?.kmKitchenRemarks.substring(len * 2);
-      } else {
-        v = "";
-      }
-      break;
-    case "kmKitchenRemarks3":
-      len = parseInt(data.custom?.fldLength || "0");
-      if (data.custom?.kmKitchenRemarks.length > len * 3) {
-        v = data.custom?.kmKitchenRemarks.substring(len * 3);
-      } else {
-        v = "";
-      }
-      break;
-    case "kmKitchenRemarks4":
-      len = parseInt(data.custom?.fldLength || "0");
-      if (data.custom?.kmKitchenRemarks.length > len * 4) {
-        v = data.custom?.kmKitchenRemarks.substring(len * 4);
-      } else {
-        v = "";
-      }
-      break;
-    case "narration2":
-      len = parseInt(data.custom?.fldLength || "0");
-      if (data.custom?.narration.length > len) {
-        v = data.custom?.narration.substring(len);
-      } else {
-        v = "";
-      }
-      break;
+    // case "kmKitchenRemarks1":
+    //   len = parseInt(data.custom?.fldLength || "0");
+    //   if (data.custom?.kmKitchenRemarks.length > len) {
+    //     v = data.custom?.kmKitchenRemarks.substring(len);
+    //   } else {
+    //     v = "";
+    //   }
+    //   break;
+    // case "kmKitchenRemarks2":
+    //   len = parseInt(data.custom?.fldLength || "0");
+    //   if (data.custom?.kmKitchenRemarks.length > len * 2) {
+    //     v = data.custom?.kmKitchenRemarks.substring(len * 2);
+    //   } else {
+    //     v = "";
+    //   }
+    //   break;
+    // case "kmKitchenRemarks3":
+    //   len = parseInt(data.custom?.fldLength || "0");
+    //   if (data.custom?.kmKitchenRemarks.length > len * 3) {
+    //     v = data.custom?.kmKitchenRemarks.substring(len * 3);
+    //   } else {
+    //     v = "";
+    //   }
+    //   break;
+    // case "kmKitchenRemarks4":
+    //   len = parseInt(data.custom?.fldLength || "0");
+    //   if (data.custom?.kmKitchenRemarks.length > len * 4) {
+    //     v = data.custom?.kmKitchenRemarks.substring(len * 4);
+    //   } else {
+    //     v = "";
+    //   }
+    //   break;
+    // case "narration2":
+    //   len = parseInt(data.custom?.fldLength || "0");
+    //   if (data.custom?.narration.length > len) {
+    //     v = data.custom?.narration.substring(len);
+    //   } else {
+    //     v = "";
+    //   }
+    //   break;
     case "totalBillQty":
       v = data.custom?.totalBillQty.toString();
       break;
@@ -1646,7 +1640,7 @@ export const getCommonValues = (field: string,
       break;
     case "grandTotalReturn":
       const grandTot = data.custom?.grantTotal;
-      const srAmt = data.custom?.dtTranMaster && data.custom?.dtTranMaster[0] ? parseFloat(data.custom?.dtTranMaster[0].SRAmount || 0) : 0;
+      const srAmt = data.master ? data.master.srAmount || 0 : 0;
       v = (grandTot - srAmt).toString();
       break;
     // Gate pass fields

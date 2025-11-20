@@ -23,6 +23,7 @@ import { ERPScrollArea } from "../../../../components/ERPComponents/erp-scrollba
 import { setStorageString } from "../../../../utilities/storage-utils";
 import { formStateHandleFieldChange, formStateMasterHandleFieldChange, formStateHandleFieldChangeKeysOnly } from "../reducer";
 import { UserConfig } from "../transaction-types";
+import VoucherType from "../../../../enums/voucher-types";
 
 const api = new APIClient();
 
@@ -259,42 +260,178 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
 
             {/* Main Configuration Options - All checkboxes in one section */}
             <CollapsibleSection title={t("configuration_options")} defaultExpanded={true} icon={<Settings className="w-4 h-4 text-[#2563eb] dark:text-[#60a5fa]" />}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6 relative">
-                <div className="space-y-2">
-                  <ERPCheckbox
-                    id="useBarcode"
-                    label={t("use_barcode")}
+              <div className="flex flex-row">
+                <div className="flex flex-wrap space-y-1 px-4">
+                  {[VoucherType.SalesInvoice, VoucherType.SalesQuotation,VoucherType.SalesReturn, VoucherType.SalesOrder]
+                   .includes(formState.transaction.master.voucherType as VoucherType) && 
+                   <>
+                      <ERPCheckbox
+                        id="useBarcode"
+                        label={t("use_barcode")}
+                        data={formState.userConfig}
+                        checked={formState?.userConfig?.useBarcode}
+                        onChangeData={(e) => handleFieldChange("useBarcode", e.useBarcode)}
+                        className="w-1/3 mt-1"
+                      />
+                      <ERPCheckbox
+                        id="resizeGrid"
+                        label={t("resize_grid")}
+                        data={formState.userConfig}
+                        checked={formState?.userConfig?.resizeGrid}
+                        onChangeData={(e) => handleFieldChange("resizeGrid", e.resizeGrid)}
+                        className="w-1/3"
+                      />
+                      <ERPCheckbox
+                        localInputBox={formState?.userConfig?.inputBoxStyle}
+                        id="printOnSave"
+                        label={t(formState.formElements.printOnSave.label)}
+                        checked={formState.userConfig?.printOnSave}
+                        onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { printOnSave: e.target.checked }, }))}
+                        disabled={formState.formElements.printOnSave?.disabled}
+                        className="w-1/3"
+                      />
+                      <ERPCheckbox
+                        id="enableItemCodeSearchInNameColumn"
+                        label={t("enable_item_code_search_in_name_column")}
+                        data={formState.userConfig}
+                        checked={formState?.userConfig?.enableItemCodeSearchInNameColumn}
+                        onChangeData={(e) => handleFieldChange("enableItemCodeSearchInNameColumn", e.enableItemCodeSearchInNameColumn)}
+                        className="w-1/3"
+                      />
+                      
+                      <ERPCheckbox
+                        id="showProductInfoPopup"
+                        label={t("show_product_info_popup")}
+                        data={formState.userConfig}
+                        checked={formState?.userConfig?.showProductInfoPopup}
+                        onChangeData={(e) => handleFieldChange("showProductInfoPopup", e.showProductInfoPopup)}
+                        className="w-1/3"
+                      />
+                      <ERPCheckbox
+                        id="showRateBeforeTax"
+                        label={t("show_rate_before_tax")}
+                        data={formState.userConfig}
+                        checked={formState?.userConfig?.showRateBeforeTax}
+                        onChangeData={(e) => handleFieldChange("showRateBeforeTax", e.showRateBeforeTax)}
+                        className="w-1/3"
+                      />
+                      </>
+                      }
+
+                       {/* -------------------------------------------------- */}
+                      {[VoucherType.SalesReturn]
+                        .includes(formState.transaction.master.voucherType as VoucherType) && 
+                        <>
+                        <ERPCheckbox
+                          id="showSrInProductInfoPopup"
+                          label={t("show_sr_in_product_info_popup")}
+                          data={formState.userConfig}
+                          checked={formState?.userConfig?.showSrInProductInfoPopup}
+                          onChangeData={(e) => handleFieldChange("showSrInProductInfoPopup", e.showSrInProductInfoPopup)}
+                          className="w-1/3"
+                        />
+                        <ERPCheckbox
+                          id="setDefaultCashPaid"
+                          label={t("set_default_cash_paid")}
+                          data={formState.userConfig}
+                          checked={formState?.userConfig?.setDefaultCashPaid}
+                          onChangeData={(e) => handleFieldChange("setDefaultCashPaid", e.setDefaultCashPaid)}
+                          className="w-1/3"
+                        />
+                        </>
+                      }
+                      {/* ------------------------------------------- */}
+                      {[VoucherType.SalesQuotation]
+                        .includes(formState.transaction.master.voucherType as VoucherType) && 
+                        <ERPCheckbox
+                          id="showProductInfoPopupForSq"
+                          label={t("show_product_info_popup_for_sq")}
+                          data={formState.userConfig}
+                          checked={formState?.userConfig?.showProductInfoPopupForSq}
+                          onChangeData={(e) => handleFieldChange("showProductInfoPopupForSq", e.showProductInfoPopupForSq)}
+                          className="w-1/3"
+                        />
+
+                      }
+                      {/* -------------------------------------------------------- */}
+
+                      {[VoucherType.SalesOrder]
+                        .includes(formState.transaction.master.voucherType as VoucherType) && 
+                        <>
+                        <ERPCheckbox
+                          id="blockNonStockItems"
+                          label={t("block_non_stock_items")}
+                          data={formState.userConfig}
+                          checked={formState?.userConfig?.blockNonStockItems}
+                          onChangeData={(e) => handleFieldChange("blockNonStockItems", e.blockNonStockItems)}
+                          className="w-1/3"
+                        />
+                        <ERPCheckbox
+                          id="stockOutConfirmation"
+                          label={t("stock_out_confirmation")}
+                          data={formState.userConfig}
+                          checked={formState?.userConfig?.stockOutConfirmation}
+                          onChangeData={(e) => handleFieldChange("stockOutConfirmation", e.stockOutConfirmation)}
+                          className="w-1/3"
+                        />
+                        </>
+
+                      }
+                  
+                      {/* -------------------------------------------------- */}
+                      {![VoucherType.SalesReturn]
+                        .includes(formState.transaction.master.voucherType as VoucherType) && 
+                        <>
+                          <ERPCheckbox
+                          id="roundOff"
+                          label={t("round_off")}
+                          data={formState.userConfig}
+                          checked={formState?.userConfig?.roundOff}
+                          onChangeData={(e) => handleFieldChange("roundOff", e.roundOff)}
+                          className="w-1/3"
+                        />
+                        <ERPCheckbox
+                          id="duplicationMessage"
+                          label={t("duplication_message")}
+                          data={formState.userConfig}
+                          checked={formState?.userConfig?.duplicationMessage}
+                          onChangeData={(e) => handleFieldChange("duplicationMessage", e.duplicationMessage)}
+                          className="w-1/3"
+                        />
+                        <ERPCheckbox
+                          id="showSearchPopupWindowAutomatically"
+                          label={t("show_search_popup_window_automatically")}
+                          data={formState.userConfig}
+                          checked={formState?.userConfig?.showSearchPopupWindowAutomatically}
+                          onChangeData={(e) => handleFieldChange("showSearchPopupWindowAutomatically", e.showSearchPopupWindowAutomatically)}
+                          className="w-1/3"
+                        />
+                        
+                        <ERPCheckbox
+                          id="enableSalesMan"
+                          label={t("enable_sales_man")}
+                          data={formState.userConfig}
+                          checked={formState?.userConfig?.enableSalesMan}
+                          onChangeData={(e) => handleFieldChange("enableSalesMan", e.enableSalesMan)}
+                          className="w-1/3"
+                        />
+                        </>
+
+                        }
+            
+                        {/* -------------------------------------------- */}
+                       
+                       
+                        {![VoucherType.SalesReturn, VoucherType.SalesOrder]
+                   .includes(formState.transaction.master.voucherType as VoucherType) && 
+                   <>
+                    <ERPCheckbox
+                    id="holdSalesMan"
+                    label={t("hold_salesman")}
                     data={formState.userConfig}
-                    checked={formState?.userConfig?.useBarcode}
-                    onChangeData={(e) => handleFieldChange("useBarcode", e.useBarcode)}
-                  />
-                  <ERPCheckbox
-                    id="printPreview"
-                    label={t("print_preview")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.printPreview}
-                    onChangeData={(e) => handleFieldChange("printPreview", e.printPreview)}
-                  />
-                  <ERPCheckbox
-                    id="askConfirmationForRemoveItem"
-                    label={t("ask_confirmation_for_remove_item")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.askConfirmationForRemoveItem}
-                    onChangeData={(e) => handleFieldChange("askConfirmationForRemoveItem", e.askConfirmationForRemoveItem)}
-                  />
-                  <ERPCheckbox
-                    id="allowExcessCashReceipt"
-                    label={t("allow_excess_cash_receipt")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.allowExcessCashReceipt}
-                    onChangeData={(e) => handleFieldChange("allowExcessCashReceipt", e.allowExcessCashReceipt)}
-                  />
-                  <ERPCheckbox
-                    id="notSetDefaultCustomer"
-                    label={t("not_set_default_customer")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.notSetDefaultCustomer}
-                    onChangeData={(e) => handleFieldChange("notSetDefaultCustomer", e.notSetDefaultCustomer)}
+                    checked={formState?.userConfig?.holdSalesMan}
+                    onChangeData={(e) => handleFieldChange("holdSalesMan", e.holdSalesMan)}
+                    className="w-1/3"
                   />
                   <ERPCheckbox
                     id="discAmtReadOnly"
@@ -302,40 +439,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                     data={formState.userConfig}
                     checked={formState?.userConfig?.discAmtReadOnly}
                     onChangeData={(e) => handleFieldChange("discAmtReadOnly", e.discAmtReadOnly)}
-                  />
-                  <ERPCheckbox
-                    id="setDefaultCashReceived"
-                    label={t("set_default_cash_received")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.setDefaultCashReceived}
-                    onChangeData={(e) => handleFieldChange("setDefaultCashReceived", e.setDefaultCashReceived)}
-                  />
-                  <ERPCheckbox
-                    id="enableSalesMan"
-                    label={t("enable_sales_man")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.enableSalesMan}
-                    onChangeData={(e) => handleFieldChange("enableSalesMan", e.enableSalesMan)}
-                  />
-                  <ERPInput
-                    type="number"
-                    className="text-xs"
-                    id="qtyDecimalPoint"
-                    labelDirection="horizontal"
-                    label={t("qty_decimal_point")}
-                    data={formState.userConfig}
-                    value={formState?.userConfig?.qtyDecimalPoint}
-                    onChangeData={(e) => handleFieldChange("qtyDecimalPoint", e.qtyDecimalPoint)}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <ERPCheckbox
-                    id="roundOff"
-                    label={t("round_off")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.roundOff}
-                    onChangeData={(e) => handleFieldChange("roundOff", e.roundOff)}
+                    className="w-1/3"
                   />
                   <ERPCheckbox
                     id="qtyAfterBarcode"
@@ -343,68 +447,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                     data={formState.userConfig}
                     checked={formState?.userConfig?.qtyAfterBarcode}
                     onChangeData={(e) => handleFieldChange("qtyAfterBarcode", e.qtyAfterBarcode)}
-                  />
-                  <ERPCheckbox
-                    id="clearDetailsAfterSave"
-                    label={t("clear_details_after_save")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.clearDetailsAfterSave}
-                    onChangeData={(e) => handleFieldChange("clearDetailsAfterSave", e.clearDetailsAfterSave)}
-                  />
-                  <ERPCheckbox
-                    id="enableItemCodeSearchInNameColumn"
-                    label={t("enable_item_code_search_in_name_column")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.enableItemCodeSearchInNameColumn}
-                    onChangeData={(e) => handleFieldChange("enableItemCodeSearchInNameColumn", e.enableItemCodeSearchInNameColumn)}
-                  />
-                  <ERPCheckbox
-                    id="resizeGrid"
-                    label={t("resize_grid")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.resizeGrid}
-                    onChangeData={(e) => handleFieldChange("resizeGrid", e.resizeGrid)}
-                  />
-                  <ERPCheckbox
-                    id="showPrintConfirmation"
-                    label={t("show_print_confirmation")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.showPrintConfirmation}
-                    onChangeData={(e) => handleFieldChange("showPrintConfirmation", e.showPrintConfirmation)}
-                  />
-                  <ERPCheckbox
-                    id="showRateBeforeTax"
-                    label={t("show_rate_before_tax")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.showRateBeforeTax}
-                    onChangeData={(e) => handleFieldChange("showRateBeforeTax", e.showRateBeforeTax)}
-                  />
-                  <ERPCheckbox
-                    id="blockZeroFigureEntry"
-                    label={t("block_zero_figure_entry")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.blockZeroFigureEntry}
-                    onChangeData={(e) => handleFieldChange("blockZeroFigureEntry", e.blockZeroFigureEntry)}
-                  />
-                  {/* {formState.formElements.printOnSave.visible && ( */}
-                  <ERPCheckbox
-                    localInputBox={formState?.userConfig?.inputBoxStyle}
-                    id="printOnSave"
-                    label={t(formState.formElements.printOnSave.label)}
-                    checked={formState.userConfig?.printOnSave}
-                    onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { printOnSave: e.target.checked }, }))}
-                    disabled={formState.formElements.printOnSave?.disabled}
-                  />
-                  {/* )} */}
-                </div>
-
-                <div className="space-y-2">
-                  <ERPCheckbox
-                    id="holdSalesMan"
-                    label={t("hold_salesman")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.holdSalesMan}
-                    onChangeData={(e) => handleFieldChange("holdSalesMan", e.holdSalesMan)}
+                    className="w-1/3"
                   />
                   <ERPCheckbox
                     id="autoIncrementQty"
@@ -412,50 +455,138 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                     data={formState.userConfig}
                     checked={formState?.userConfig?.autoIncrementQty}
                     onChangeData={(e) => handleFieldChange("autoIncrementQty", e.autoIncrementQty)}
+                    className="w-1/3"
                   />
-                  <ERPCheckbox
-                    id="initialFocusToCustomer"
-                    label={t("initial_focus_to_customer")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.initialFocusToCustomer}
-                    onChangeData={(e) => handleFieldChange("initialFocusToCustomer", e.initialFocusToCustomer)}
-                  />
-                  <ERPCheckbox
-                    id="showSearchPopupWindowAutomatically"
-                    label={t("show_search_popup_window_automatically")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.showSearchPopupWindowAutomatically}
-                    onChangeData={(e) => handleFieldChange("showSearchPopupWindowAutomatically", e.showSearchPopupWindowAutomatically)}
-                  />
-                  <ERPCheckbox
-                    id="duplicationMessage"
-                    label={t("duplication_message")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.duplicationMessage}
-                    onChangeData={(e) => handleFieldChange("duplicationMessage", e.duplicationMessage)}
-                  />
-                  <ERPCheckbox
-                    id="showProductInfoPopup"
-                    label={t("show_product_info_popup")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.showProductInfoPopup}
-                    onChangeData={(e) => handleFieldChange("showProductInfoPopup", e.showProductInfoPopup)}
-                  />
-                  <ERPCheckbox
+                  
+                   </>
+
+                  }
+
+                  {/* ----------------------------------------------------------------------------- */}
+                  
+
+                  {![VoucherType.SalesQuotation, VoucherType.SalesReturn]
+                   .includes(formState.transaction.master.voucherType as VoucherType) && 
+                   <>
+                    <ERPCheckbox
+                      id="askConfirmationForRemoveItem"
+                      label={t("ask_confirmation_for_remove_item")}
+                      data={formState.userConfig}
+                      checked={formState?.userConfig?.askConfirmationForRemoveItem}
+                      onChangeData={(e) => handleFieldChange("askConfirmationForRemoveItem", e.askConfirmationForRemoveItem)}
+                      className="w-1/3"
+                    />
+                    <ERPCheckbox
+                      id="clearDetailsAfterSave"
+                      label={t("clear_details_after_save")}
+                      data={formState.userConfig}
+                      checked={formState?.userConfig?.clearDetailsAfterSave}
+                      onChangeData={(e) => handleFieldChange("clearDetailsAfterSave", e.clearDetailsAfterSave)}
+                      className="w-1/3"
+                    />
+                   </>
+
+                  }
+                  {/* ------------------------------------------------------------- */}
+
+                  {![VoucherType.SalesQuotation, VoucherType.SalesOrder]
+                   .includes(formState.transaction.master.voucherType as VoucherType) && 
+                    <ERPCheckbox
                     id="enableVoucherPrefixAndDate"
                     label={t("enable_voucher_prefix_and_date")}
                     data={formState.userConfig}
                     checked={formState?.userConfig?.enableVoucherPrefixAndDate}
                     onChangeData={(e) => handleFieldChange("enableVoucherPrefixAndDate", e.enableVoucherPrefixAndDate)}
+                    className="w-1/3"
                   />
-                  <ERPCheckbox
-                    id="showCustomersAfterSales"
-                    label={t("show_customers_after_sales")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.showCustomersAfterSales}
-                    onChangeData={(e) => handleFieldChange("showCustomersAfterSales", e.showCustomersAfterSales)}
-                  />
+                  }
+                  {/* ---------------------------------------------------- */}
+                   {![VoucherType.SalesQuotation,VoucherType.SalesReturn, VoucherType.SalesOrder]
+                   .includes(formState.transaction.master.voucherType as VoucherType) && 
+                   <>
+                    <ERPCheckbox
+                      id="initialFocusToCustomer"
+                      label={t("initial_focus_to_customer")}
+                      data={formState.userConfig}
+                      checked={formState?.userConfig?.initialFocusToCustomer}
+                      onChangeData={(e) => handleFieldChange("initialFocusToCustomer", e.initialFocusToCustomer)}
+                      className="w-1/3"
+                    />
+                    
+                    <ERPCheckbox
+                      id="allowExcessCashReceipt"
+                      label={t("allow_excess_cash_receipt")}
+                      data={formState.userConfig}
+                      checked={formState?.userConfig?.allowExcessCashReceipt}
+                      onChangeData={(e) => handleFieldChange("allowExcessCashReceipt", e.allowExcessCashReceipt)}
+                      className="w-1/3"
+                    />
+                    <ERPCheckbox
+                      id="notSetDefaultCustomer"
+                      label={t("not_set_default_customer")}
+                      data={formState.userConfig}
+                      checked={formState?.userConfig?.notSetDefaultCustomer}
+                      onChangeData={(e) => handleFieldChange("notSetDefaultCustomer", e.notSetDefaultCustomer)}
+                      className="w-1/3"
+                    />
+                    <ERPCheckbox
+                      id="UserSalesPriceForTransfer"
+                      label={t("use_sales_price_to_transfer")}
+                      data={formState.userConfig}
+                      checked={formState?.userConfig?.UserSalesPriceForTransfer}
+                      onChangeData={(e) => handleFieldChange("UserSalesPriceForTransfer", e.UserSalesPriceForTransfer)}
+                      className="w-1/3"
+                    />
+                    <ERPCheckbox
+                      id="showPrintConfirmation"
+                      label={t("show_print_confirmation")}
+                      data={formState.userConfig}
+                      checked={formState?.userConfig?.showPrintConfirmation}
+                      onChangeData={(e) => handleFieldChange("showPrintConfirmation", e.showPrintConfirmation)}
+                      className="w-1/3"
+                    />
+                    <ERPCheckbox
+                      id="setDefaultCashReceived"
+                      label={t("set_default_cash_received")}
+                      data={formState.userConfig}
+                      checked={formState?.userConfig?.setDefaultCashReceived}
+                      onChangeData={(e) => handleFieldChange("setDefaultCashReceived", e.setDefaultCashReceived)}
+                      className="w-1/3"
+                    />
+                    <ERPCheckbox
+                      id="blockZeroFigureEntry"
+                      label={t("block_zero_figure_entry")}
+                      data={formState.userConfig}
+                      checked={formState?.userConfig?.blockZeroFigureEntry}
+                      onChangeData={(e) => handleFieldChange("blockZeroFigureEntry", e.blockZeroFigureEntry)}
+                      className="w-1/3"
+                    />
+                    <ERPCheckbox
+                      id="showCustomersAfterSales"
+                      label={t("show_customers_after_sales")}
+                      data={formState.userConfig}
+                      checked={formState?.userConfig?.showCustomersAfterSales}
+                      onChangeData={(e) => handleFieldChange("showCustomersAfterSales", e.showCustomersAfterSales)}
+                      className="w-1/3"
+                    />
+                    <ERPInput
+                      type="number"
+                      className="text-xs w-1/4"
+                      labelClassName="text-xs px-4"
+                      id="qtyDecimalPoint"
+                      labelDirection="horizontal"
+                      label={t("qty_decimal_point")}
+                      data={formState.userConfig}
+                      value={formState?.userConfig?.qtyDecimalPoint}
+                      onChangeData={(e) => handleFieldChange("qtyDecimalPoint", e.qtyDecimalPoint)}
+                    />
+
+                   </>
+                   }
+
+
                 </div>
+
               </div>
 
               <div className="absolute top-[200px] right-[30px]">

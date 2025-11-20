@@ -3891,7 +3891,26 @@ const logUserAction = async (input: LogUserActionParams) => {
                 updateOnlyGivenDetailsColumns: true,
               })
             );
-          } else {
+          }
+          else if( columnName == "imf"){
+            const rowData: TransactionDetail = formState.transaction.details[rowIndex];
+            // const rowIndex = details.findIndex((x) => x.slNo == row.slNo);
+            
+            dispatch(
+              commonParams.formStateHandleFieldChangeKeysOnly({
+                fields: {
+                  imfData: {
+                    visible: true,
+                    data: rowData.productDescription,
+                    slNo: rowIndex,
+                  },
+                },
+                updateOnlyGivenDetailsColumns: true,
+              })
+            );
+
+          }
+          else {
             const res = focusToNextColumn(rowIndex, columnName);
             setCurrentCell(res, data, rowIndex != res?.rowIndex);
           }

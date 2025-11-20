@@ -51,6 +51,7 @@ import ProductInformation from "./product-information";
 import ProductInfoSlideUp from "./productInfo";
 import QtyFactorsModal from "./qty-factors";
 import Serials from "./serials";
+import Flavours from "./flavours";
 import TransactionFooter from "./transaction-footer";
 import { purchaseGridCol } from "./transaction-grid-cols";
 import TransactionHeader from "./transaction-header";
@@ -2728,6 +2729,23 @@ const TransactionForm: React.FC<TransactionProps> = ({
             productId={null}
             rowIndex={formState.serialNoEntryData.rowIndex}
           />
+        )}
+
+        {formState.imfData && formState.imfData.visible && (
+          <Flavours
+          data={formState.imfData.data}
+            isOpen={formState.imfData.visible}
+            onClose={() =>
+              dispatch(
+                formStateHandleFieldChangeKeysOnly({
+                  fields: { imfData: { visible: false, data: "" } },
+                  updateOnlyGivenDetailsColumns: true,
+                })
+              )
+            }
+            t={t}
+            productId={null}
+            rowIndex={formState.imfData.rowIndex}/>
         )}
 
         {formState.productInfo && (

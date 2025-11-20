@@ -56,7 +56,7 @@ import BillWisePopup from "../../../transaction-base/billwise-popup";
 import DeletingOverlay from "../transaction-deleting";
 import { formStateHandleFieldChangeKeysOnly, resetState, formStateHandleFieldChange, updateFormElement } from "../reducer";
 import { TransactionProps, UserConfig, TransactionDetail, TransactionFormState, TransactionData, SummaryItems, GridQtyFactors, ColumnModel } from "../transaction-types";
-import { initialUserConfig, transactionInitialData, TransactionFormStateInitialData, initialFormElements, initialInventoryTotals } from "../transaction-type-data";
+import { initialUserConfig, transactionInitialData, TransactionFormStateInitialData, initialFormElements, initialInventoryTotals, initialTransactionDetailData } from "../transaction-type-data";
 import { toggleIsPrintPreviewPopup } from "../../../../redux/slices/popup-reducer";
 import TemplatesPreView from "../../../transaction-base/transaction-print-preview";
 // import { fetchUserConfig } from "../transaction-utils";
@@ -742,7 +742,11 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
 
       if (!isInvoker) {
-        const voucher: TransactionData = transactionInitialData;
+        debugger;
+        const voucher: TransactionData = {...transactionInitialData,details:!deviceInfo.isMobile ? Array.from({ length: 30 }, (_, index) => ({
+            ...initialTransactionDetailData,
+            slNo: generateUniqueKey()
+          })) : []};
         _formState = {
           ...TransactionFormStateInitialData,
           transaction: {
@@ -1896,7 +1900,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         )}
 
         {deviceInfo?.isMobile && (
-          <div className="fixed inset-0 z-50 flex flex-col bg-gray-100 w-full h-full font-sans overflow-hidden">
+          <div className="fixed inset-0 z-40 flex flex-col bg-gray-100 w-full h-full font-sans overflow-hidden">
             {/* Sale Header */}
             <div className="flex items-center bg-white dark:bg-dark-bg-card shadow-sm p-3 border-b-2 dark:border-dark-border fixed top-0 left-0 w-full z-50 h-12">
               <ERPPreviousUrlButton />

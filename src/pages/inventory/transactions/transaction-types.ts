@@ -504,6 +504,7 @@ export interface ProductDisplayDto {
 
 export interface TransactionFormState {
   store: any;
+  row?: TransactionDetail
   formCode: string;
   userRightsFormCode: string;
   isEntryControl: boolean;
@@ -685,6 +686,7 @@ export interface TransactionFormState {
   privConfig?: string;
   printGatepass?: boolean;
   lastChoosedTemplate?: { id?: number, group?: string, formType?: string, customerType?: string }; // nizam
+  itemPopup?:{isOpen?: boolean, index?:number}
 }
 export interface GiftModel {
   productBatchId: number;

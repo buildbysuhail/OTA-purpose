@@ -101,6 +101,7 @@ export const useTransaction = (
   const appDispatch = useAppDispatch();
   const dataContainer = useAppSelector((state: RootState) => state.Data);
   const userSession = useAppSelector((state: RootState) => state.UserSession);
+  const deviceInfo = useAppSelector((state: RootState) => state.DeviceInfo);
   const softwareDate = useAppSelector(
     (state: RootState) => state.ClientSession.softwareDate
   );
@@ -1362,7 +1363,7 @@ export const useTransaction = (
         fields: { ...master },
       })
     );
-    dispatch(formStateClearDetails());
+    dispatch(formStateClearDetails(deviceInfo.isMobile));
     dispatch(formStateClearAttachments());
     dispatch(
       formStateTransactionUpdate({ key: "invAccTransactions", value: [] })
@@ -2583,16 +2584,18 @@ const logUserAction = async (input: LogUserActionParams) => {
   const handleTextDataChange = async (
     value: any,
     columnName: string,
-    rowIndex: number
+    rowIndex: number,
+    isMobRow?: boolean
   ) => {
     try {
       console.log("handleTextDataChange");
 
-      if (!formState.transaction?.details?.[rowIndex]) {
+      if (!isMobRow && !formState.transaction?.details?.[rowIndex]) {
         return false;
       }
 
-      const detail = { ...formState.transaction.details[rowIndex] };
+      const detail = isMobRow?  { ...formState.row } :  { ...formState.transaction.details[rowIndex] };
+      if(!detail) return;
       let outState: DeepPartial<TransactionFormState> = {
         transaction: { details: [{ [columnName]: value, slNo: detail.slNo }] },
       };
@@ -2616,11 +2619,11 @@ const logUserAction = async (input: LogUserActionParams) => {
 
           handleChangeUnit(
             outDetail,
-            detail,
+            detail as any,
             actualPriceVisible ?? false,
             outState,
             columnName,
-            rowIndex
+            isMobRow ? -1 : rowIndex
           );
         }
       }
@@ -2636,7 +2639,7 @@ const logUserAction = async (input: LogUserActionParams) => {
           outDetail.unitPrice = round(unitPriceFC * exchangeRate, 4);
           outDetail.grossFC = round(unitPriceFC * qty, 3);
           outState = calculateRowAmount(
-            Object.assign(detail, outDetail),
+            merge({},detail, outDetail as any),
             columnName,
             {
               result: {
@@ -2659,7 +2662,7 @@ const logUserAction = async (input: LogUserActionParams) => {
         outDetail[columnName] = value;
         // Calculate row amount
         outState = calculateRowAmount(
-          Object.assign(detail, outDetail),
+          merge({},detail, outDetail as any),
           columnName,
           {
             result: {
@@ -2674,7 +2677,7 @@ const logUserAction = async (input: LogUserActionParams) => {
       } else if (columnName === "margin") {
         outDetail.margin = value;
         outState = calculateRowAmount(
-          Object.assign(detail, outDetail),
+          merge({},detail, outDetail as any),
           columnName,
           {
             result: {
@@ -2702,7 +2705,7 @@ const logUserAction = async (input: LogUserActionParams) => {
 
         outDetail.margin = round(marginPerc, 6);
         outState = calculateRowAmount(
-          Object.assign(detail, outDetail),
+         merge({},detail, outDetail as any),
           columnName,
           {
             result: {
@@ -2716,8 +2719,15 @@ const logUserAction = async (input: LogUserActionParams) => {
         calculateSummaryAndTotal = true;
       }
 
-      if (calculateSummaryAndTotal) {
-        const details = [...formState.transaction.details];
+      if (isMobRow){
+        dispatch(
+        formStateHandleFieldChangeKeysOnly({
+          fields: {row: {...outState!.transaction!.details![0]}}
+        })
+      );
+      } 
+      else if(calculateSummaryAndTotal) {
+        const details = [...formState.transaction.details] as any;
         let final = { ...detail, ...outState!.transaction!.details![0] };
         details[rowIndex] = final;
         const summaryRes = calculateSummary(details, formState, { result: {} });
@@ -3252,6 +3262,7 @@ const logUserAction = async (input: LogUserActionParams) => {
         },
         true
       );
+      if(rowIndex > -1) {
       const details = [...formState.transaction.details];
       let final = { ...detail, ...outState!.transaction!.details![0] };
       details[rowIndex] = final;
@@ -3278,6 +3289,13 @@ const logUserAction = async (input: LogUserActionParams) => {
           rowIndex: rowIndex,
         })
       );
+    } else {
+      dispatch(
+        formStateHandleFieldChangeKeysOnly({
+          fields: {row: outState!.transaction!.details![0]}
+        })
+      );
+    }
     }
   };
 
@@ -3342,7 +3360,8 @@ const logUserAction = async (input: LogUserActionParams) => {
     event: React.KeyboardEvent<HTMLInputElement> | KeyboardEvent,
     columnName: string,
     rowIndex: number,
-    commonParams: CommonParams
+    commonParams: CommonParams,
+    isMobRow?: boolean
   ): Promise<{
     handled: boolean;
     preventDefault?: boolean;
@@ -3540,7 +3559,7 @@ const logUserAction = async (input: LogUserActionParams) => {
               actualPriceVisible ?? false,
               outState,
               columnName,
-              rowIndex
+              isMobRow ? -1 : rowIndex
             );
           }
           break;

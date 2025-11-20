@@ -219,7 +219,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
 
         <ERPCheckbox
           id="select_printer"
-          label={t("Enable Printer Selection")}
+          label={t("enable_printer_selection")}
           checked={propertiesState?.select_printer}
           onChange={(e) => onChange?.({ ...propertiesState, select_printer: e.target.checked })}
         />

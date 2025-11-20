@@ -1,4 +1,4 @@
-import { TransactionMaster, TransactionValidationsData, TransactionDetail, TransactionMaster3, FormElementState, TransactionFormState, SummaryItems, TransactionData, BarcodeLabel, ProductDisplayDto, EmployeeType, TransactionDetails2, TransactionMaster2, TransactionDetailsMore, UserConfig, CouponDetails, PrivilegeCardDetails, SettlementDetails } from "./transaction-types";
+import { TransactionMaster, TransactionValidationsData, TransactionDetail, TransactionMaster3, FormElementState, TransactionFormState, SummaryItems, TransactionData, BarcodeLabel, ProductDisplayDto, EmployeeType, TransactionDetails2, TransactionMaster2, TransactionDetailsMore, UserConfig, CouponDetails, PrivilegeCardDetails, SettlementDetails, ColumnModel } from "./transaction-types";
 import { generateUniqueKey } from "../../../utilities/Utils";
 
 

@@ -277,6 +277,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     const { t } = useTranslation("inventory");
     const productColumns: DevGridColumn[] = useMemo(
       () => [
+        // ====
         {
           dataField: "productName",
           caption: t("product_name"),
@@ -1200,6 +1201,7 @@ useEffect(() => {
         document.head.removeChild(style);
       };
     }, []);
+    console.log("mj233333333333-2");
     // Render DataGrid components in a portal
     const renderDataGridPortal = () => {
       if (!portalContainerRef.current) return null;
@@ -1365,6 +1367,7 @@ useEffect(() => {
           style={{ width: "100%", minWidth: "100%", maxWidth: "100%" }}
         >
           <div className="relative flex-1" ref={gridContainerRef}>
+            {/* <p>mj233333333333-2</p> */}
             <ERPInput
               localInputBox={customStyle}
               textAlignStyle={textAlign}

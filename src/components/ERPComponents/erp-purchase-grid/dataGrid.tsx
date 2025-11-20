@@ -62,6 +62,7 @@ import { ERPScrollArea } from "../erp-scrollbar";
 import usePreferenceData from "../../../utilities/hooks/usePreference";
 import DraggablePlusButton from "../../ERPComponents/erp-purchase-grid/draggable-button"
 import GridCell from "./GridCell";
+import ReactDOM from "react-dom";
 
 type DataItem = Record<string, any>;
 export interface SummaryConfig<T = any> {
@@ -1453,6 +1454,8 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
     ref: Ref<any>
   ) {
     const dispatch = useAppDispatch();
+    console.log("zIndexController:",zIndexController);
+    
     const formState = useAppSelector(
       (state: RootState) => state.InventoryTransaction
     );
@@ -1749,6 +1752,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
           pattern: "solid",
           fgColor: { argb: colors.headerBg },
         };
+        
 
         formState.transaction?.details.forEach((item, index) => {
           const row: { [key: string]: any } = {};
@@ -2429,6 +2433,42 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       };
     }, []);
 
+    const [state, setState] = useState({
+      itemName: "",
+      quantity: 1,
+      unit: "Bag",
+      rate: 100,
+      priceIncludesTax: false,
+      discountPercent: undefined as number | undefined,
+      discountAmount: undefined as number | undefined,
+      taxPercent: 18,
+    });
+
+    const update = (key: string, value: any) => {
+  setState((prev) => ({ ...prev, [key]: value }));
+};
+
+const formatCurrency = (amount: number) => {
+  return `₹${amount.toFixed(2)}`;
+};
+
+const subtotal = state.quantity * state.rate;
+const discountFromPercent = state.discountPercent 
+  ? (subtotal * state.discountPercent) / 100 
+  : 0;
+const discountAmount = state.discountAmount ?? discountFromPercent;
+const afterDiscount = subtotal - discountAmount;
+const taxAmount = state.priceIncludesTax
+  ? (afterDiscount * state.taxPercent) / (100 + state.taxPercent)
+  : (afterDiscount * state.taxPercent) / 100;
+const total = state.priceIncludesTax ? afterDiscount : afterDiscount + taxAmount;
+
+// 5. Missing arrays for dropdowns
+const units = ["Bag", "Box", "Piece", "Kg", "Litre"];
+const taxOptions = [0, 5, 12, 18, 28];
+
+    
+
     return (
       <>
       
@@ -3011,114 +3051,285 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
             </div>
           </ERPScrollArea>
         </div>
-        {formState.itemPopup?.isOpen && (
-              <div className="fixed top-0 h-full inset-0 z-40 flex items-center justify-center bg-black/50">
-                <div
-                  className={`relative w-full h-full overflow-y-hidden ${
-                    appState.mode === "dark"
-                    ? "bg-[#2d2d2d] text-[#e0e0e0]"
-                    : "bg-white dark:bg-dark-bg-card"
-                    }`}
-                >
-                  {/* Close Button */}
-                  <button
-                    onClick={() =>dispatch(formStateHandleFieldChange({fields:{row:undefined, itemPopup: {isOpen: false}}}) )}
-                    className="absolute top-6 right-4 w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600 transition shadow-md"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                  {/* Content */}
-
-                 <div className="mt-8 p-4">
-                  {(() => {
-                    const column = _columns.find(x => x.dataField == "pCode") as ColumnModel;
-
-                    return (
-                      <>
-                      <GridCell
-                        key={`${column.dataField}`}
-                        column={column}
-                        item={formState.row??initialTransactionDetailData}
-                        index={formState.itemPopup?.index??0}
-                        currentCell={currentCell}
-                        setCurrentCell={setCurrentCell}
-                        formState={formState}
-                        appState={appState}
-                        gridFontSize={gridFontSize}
-                        gridIsBold={gridIsBold}
-                        rowHeight={rowHeight}
-                        gridBorderColor={gridBorderColor}
-                        isFirstColumn={false}
-                        isLastColumn={false}
-                        showBorder={true}
-                        columnWidths={columnWidths}
-                        onChange={onChange}
-                        onKeyDown={onKeyDown}
-                        handlRowKeyDown={handlRowKeyDown}
-                        handleFocus={handleFocus}
-                        handleBlur={handleBlur}
-                        gridId={gridId}
-                        details={formState.transaction.details}
-                        blockUnitOnDecimalPoint={applicationSettings?.inventorySettings?.blockUnitOnDecimalPoint}
-                        applicationSettings={applicationSettings}
-                        useInSearch={formState.userConfig?.useInSearch}
-                        searchByCodeAndName={formState.userConfig?.enableItemCodeSearchInNameColumn}
-                        advancedProductSearching={applicationSettings?.productsSettings?.advancedProductSearching}
-                        transactionType={transactionType}
-                        zIndexController={zIndexController}
-                        nextCellFind={nextCellFind}
+       {formState.itemPopup?.isOpen &&
+        ReactDOM.createPortal(
+          <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
+               <div
+                 className={`relative w-full h-full overflow-y-auto ${
+                   appState.mode === "dark"
+                     ? "bg-[#2d2d2d] text-[#e0e0e0]"
+                     : "bg-white text-gray-800"
+                 }`}
+               >
+                 {/* Header */}
+                 <header className="flex items-center px-4 py-3 bg-white shadow-sm sticky top-0 z-10 dark:bg-[#2d2d2d]">
+                   <button
+                     onClick={() =>
+                       dispatch(
+                         formStateHandleFieldChange({
+                           fields: { row: undefined, itemPopup: { isOpen: false } },
+                         })
+                       )
+                     }
+                     className="p-2 mr-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+                   >
+                     <X className="w-5 h-5" />
+                   </button>
+                   <h1 className="text-lg font-medium">Add Items to Sale</h1>
+                 </header>
+         
+                 {/* Content */}
+                 <main className="flex-1 overflow-auto px-4 py-4">
+                   {/* Item name */}
+                   <div>
+                     <label className="block text-sm text-gray-600 mb-2 dark:text-gray-400">
+                       Item Name
+                     </label>
+                     <GridCell
+                     isMobile={true}
+                       column={_columns.find((x) => x?.dataField == "product") as ColumnModel}
+                       item={formState.row ?? initialTransactionDetailData}
+                       index={formState.itemPopup?.index ?? 0}
+                       currentCell={currentCell}
+                       setCurrentCell={setCurrentCell}
+                       formState={formState}
+                       appState={appState}
+                       gridFontSize={gridFontSize}
+                       gridIsBold={gridIsBold}
+                       rowHeight={rowHeight}
+                       gridBorderColor={gridBorderColor}
+                       isFirstColumn={false}
+                       isLastColumn={false}
+                       showBorder={true}
+                       columnWidths={columnWidths}
+                       onChange={onChange}
+                       onKeyDown={onKeyDown}
+                       handlRowKeyDown={handlRowKeyDown}
+                       handleFocus={handleFocus}
+                       handleBlur={handleBlur}
+                       gridId={gridId}
+                       details={formState.transaction.details}
+                       blockUnitOnDecimalPoint={
+                         applicationSettings?.inventorySettings?.blockUnitOnDecimalPoint
+                       }
+                       applicationSettings={applicationSettings}
+                       useInSearch={formState.userConfig?.useInSearch}
+                       searchByCodeAndName={
+                         formState.userConfig?.enableItemCodeSearchInNameColumn
+                       }
+                       advancedProductSearching={
+                         applicationSettings?.productsSettings?.advancedProductSearching
+                       }
+                       transactionType={transactionType}
+                      //  zIndexController={zIndexController}
+                       zIndexController= {55}
+                       nextCellFind={nextCellFind}
+                     />
+                   </div>
+         
+                   {/* Row: Quantity | Unit */}
+                   <div className="mt-4 grid grid-cols-2 gap-3">
+                     <div>
+                       <label className="block text-sm text-gray-600 mb-2 dark:text-gray-400">
+                         Quantity
+                       </label>
+                       <ERPInput
+                          id="modal-item-quantity"
+                          type="number"
+                          min={0}
+                          value={state.quantity}
+                          onChange={(e) => update("quantity", Number(e.target.value))}
+                        />
+                     </div>
+                     <div>
+                       <label className="block text-sm text-gray-600 mb-2 dark:text-gray-400">
+                         Unit
+                       </label>
+                       <ERPDataCombobox
+                         id="modal-item-unit"
+                         value={state.unit}
+                         onChange={(e) => update("unit", e.target.value)}
+                         options={units.map((u) => ({ value: u, label: u }))}
+                       />
+                     </div>
+                   </div>
+         
+                   {/* Row: Rate | Tax Mode */}
+                   <div className="mt-4 grid grid-cols-2 gap-3">
+                     <div>
+                       <label className="block text-sm text-gray-600 mb-2 dark:text-gray-400">
+                         Rate (Price/Unit)
+                       </label>
+                       <GridCell
+                       isMobile={true}
+                      column={_columns.find((x) => x.dataField == "unitPrice") as ColumnModel}
+                      item={formState.row ?? initialTransactionDetailData}
+                      index={formState.itemPopup?.index ?? 0}
+                      currentCell={currentCell}
+                      setCurrentCell={setCurrentCell}
+                      formState={formState}
+                      appState={appState}
+                      gridFontSize={gridFontSize}
+                      gridIsBold={gridIsBold}
+                      rowHeight={rowHeight}
+                      gridBorderColor={gridBorderColor}
+                      isFirstColumn={false}
+                      isLastColumn={false}
+                      showBorder={true}
+                      columnWidths={columnWidths}
+                      onChange={onChange}
+                      onKeyDown={onKeyDown}
+                      handlRowKeyDown={handlRowKeyDown}
+                      handleFocus={handleFocus}
+                      handleBlur={handleBlur}
+                      gridId={gridId}
+                      zIndexController= {55}
+                      details={formState.transaction.details} blockUnitOnDecimalPoint={false} applicationSettings={undefined} nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
+                        throw new Error("Function not implemented.");
+                      } }                       />
+                     </div>
+                     <div>
+                       <label className="block text-sm text-gray-600 mb-2 dark:text-gray-400">
+                         Tax Mode
+                       </label>
+                       <ERPDataCombobox
+                         id="modal-tax-mode"
+                         value={state.priceIncludesTax ? "incl" : "excl"}
+                         onChange={(e) =>
+                           update("priceIncludesTax", e.target.value === "incl")
+                         }
+                         options={[
+                           { value: "excl", label: "Without Tax" },
+                           { value: "incl", label: "Price Includes Tax" },
+                         ]}
+                       />
+                     </div>
+                   </div>
+         
+                   {/* Totals & Taxes Card */}
+                   <div className="mt-6 bg-white dark:bg-[#3c3c3c] rounded-lg shadow-sm p-4">
+                     <h6 className="font-medium text-gray-800 dark:text-gray-200 mb-3">
+                       Totals &amp; Taxes
+                     </h6>
+                     {/* Subtotal */}
+                     <div className="flex justify-between items-center text-sm text-gray-600 dark:text-gray-400">
+                       <div>
+                         <div className="text-xs text-gray-400 dark:text-gray-500">
+                           Subtotal{" "}
+                           <span className="text-[11px]">(Rate × Qty)</span>
+                         </div>
+                       </div>
+                       <div className="text-right">
+                         <div className="text-sm font-medium">{formatCurrency(subtotal)}</div>
+                       </div>
+                     </div>
+                     {/* Discount row */}
+                     <div className="mt-4 grid grid-cols-3 gap-3 items-center">
+                       <div className="col-span-1">
+                         <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                           Discount
+                         </div>
+                       </div>
+                       <div className="col-span-1 flex">
+                         <ERPInput
+                           id="modal-discount-percent"
+                           type="number"
+                           min={0}
+                           placeholder="%"
+                           value={state.discountPercent ?? ""}
+                           onChange={(e) => {
+                             const v =
+                               e.target.value === "" ? undefined : Number(e.target.value);
+                             update("discountPercent", v);
+                             if (v !== undefined) update("discountAmount", undefined);
+                           }}
+                         />
+                       </div>
+                       <div className="col-span-1 flex">
+                        <ERPInput
+                          id="modal-discount-percent"
+                          type="number"
+                          min={0}
+                          placeholder="%"
+                          value={state.discountPercent ?? ""}
+                          onChange={(e) => {
+                            const v = e.target.value === "" ? undefined : Number(e.target.value);
+                            update("discountPercent", v);
+                            if (v !== undefined) update("discountAmount", undefined);
+                          }}
+                        />
+                       </div>
+                     </div>
+                     {/* Tax row */}
+                     <div className="mt-4 grid grid-cols-3 gap-3 items-center">
+                       <div className="col-span-1 text-sm text-gray-600 dark:text-gray-400">
+                         Tax %
+                       </div>
+                       <div className="col-span-1">
+                      <ERPInput
+                        id="modal-discount-amount"
+                        type="number"
+                        min={0}
+                        placeholder="Amount"
+                        // leftIcon="₹"
+                        value={state.discountAmount ?? ""}
+                        onChange={(e) => {
+                          const v = e.target.value === "" ? undefined : Number(e.target.value);
+                          update("discountAmount", v);
+                          if (v !== undefined) update("discountPercent", undefined);
+                        }}
                       />
-                      
-                      </>
-                    );
-                  })()}
-                   {(() => {
-                    const column = _columns.find(x => x.dataField == "unitPrice") as ColumnModel;
-
-                    return (
-                      <>
-                      <GridCell
-                        key={`${column.dataField}`}
-                        column={column}
-                        item={formState.row??initialTransactionDetailData}
-                        index={formState.itemPopup?.index??0}
-                        currentCell={currentCell}
-                        setCurrentCell={setCurrentCell}
-                        formState={formState}
-                        appState={appState}
-                        gridFontSize={gridFontSize}
-                        gridIsBold={gridIsBold}
-                        rowHeight={rowHeight}
-                        gridBorderColor={gridBorderColor}
-                        isFirstColumn={false}
-                        isLastColumn={false}
-                        showBorder={true}
-                        columnWidths={columnWidths}
-                        onChange={onChange}
-                        onKeyDown={onKeyDown}
-                        handlRowKeyDown={handlRowKeyDown}
-                        handleFocus={handleFocus}
-                        handleBlur={handleBlur}
-                        gridId={gridId}
-                        details={formState.transaction.details}
-                        blockUnitOnDecimalPoint={applicationSettings?.inventorySettings?.blockUnitOnDecimalPoint}
-                        applicationSettings={applicationSettings}
-                        useInSearch={formState.userConfig?.useInSearch}
-                        searchByCodeAndName={formState.userConfig?.enableItemCodeSearchInNameColumn}
-                        advancedProductSearching={applicationSettings?.productsSettings?.advancedProductSearching}
-                        transactionType={transactionType}
-                        zIndexController={zIndexController}
-                        nextCellFind={nextCellFind}
-                      />
-                      
-                      </>
-                    );
-                  })()}
-                </div>
-
-                </div>
-              </div>
-            )}
+                       </div>
+                       <div className="col-span-1 text-right text-sm text-gray-600 dark:text-gray-400">
+                         <div className="text-sm">{formatCurrency(taxAmount)}</div>
+                       </div>
+                     </div>
+                     {/* Divider */}
+                     <div className="mt-4 border-t pt-4 flex justify-between items-center dark:border-gray-600">
+                       <div className="text-sm font-medium">Total Amount:</div>
+                       <div className="text-lg font-semibold">{formatCurrency(total)}</div>
+                     </div>
+                   </div>
+                 </main>
+         
+                 {/* Bottom action bar */}
+                 <div className="bg-white dark:bg-[#2d2d2d] border-t dark:border-gray-700 shadow-md sticky bottom-0 left-0 right-0 flex">
+                   <button
+                     className="flex-1 py-4 text-center text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                     onClick={() => {
+                       console.log("Save & New", state);
+                       setState((s) => ({
+                         ...s,
+                         itemName: "",
+                         quantity: 1,
+                         rate: 100,
+                         discountAmount: undefined,
+                         discountPercent: undefined,
+                       }));
+                     }}
+                   >
+                     Save & New
+                   </button>
+                   <button
+                     className="flex-1 py-4 text-center bg-red-600 text-white font-medium hover:bg-red-700"
+                     onClick={() => {
+                       console.log("Save", {
+                         ...state,
+                         subtotal,
+                         discountFromPercent,
+                         taxAmount,
+                         total,
+                       });
+                       alert("Saved (demo)");
+                     }}
+                   >
+                     Save
+                   </button>
+                 </div>
+               </div>
+             </div>,
+             document.body
+        )}
       </div>
     </>
     );

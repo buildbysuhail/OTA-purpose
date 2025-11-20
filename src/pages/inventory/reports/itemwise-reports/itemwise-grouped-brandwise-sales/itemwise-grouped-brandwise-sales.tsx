@@ -1,16 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import { useMemo } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../../redux/urls";
-import ItemWiseGroupedBrandwiseSalesFilter, {
-  ItemWiseGroupedBrandwiseSalesFilterInitialState,
-} from "./itemwise-grouped-brandwise-sales-filter";
+import ItemWiseGroupedBrandwiseSalesFilter, { ItemWiseGroupedBrandwiseSalesFilterInitialState, } from "./itemwise-grouped-brandwise-sales-filter";
 
 const ItemWiseGroupedBrandwiseSales = () => {
   const { t } = useTranslation("accountsReport");
@@ -55,7 +51,6 @@ const ItemWiseGroupedBrandwiseSales = () => {
       width: 120,
       showInPdf: true,
     },
-
     {
       dataField: "pCode",
       caption: t("p_code"),
@@ -220,10 +215,10 @@ const ItemWiseGroupedBrandwiseSales = () => {
           return cellElement.data?.unitPrice == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.unitPrice),
-                false,
-                2
-              );
+              parseFloat(cellElement.data.unitPrice),
+              false,
+              2
+            );
         }
       },
     },
@@ -300,10 +295,10 @@ const ItemWiseGroupedBrandwiseSales = () => {
           return cellElement.data?.stdPurchasePrice == null
             ? ""
             : getFormattedValue(
-                parseFloat(cellElement.data.stdPurchasePrice),
-                false,
-                2
-              );
+              parseFloat(cellElement.data.stdPurchasePrice),
+              false,
+              2
+            );
         }
       },
     },

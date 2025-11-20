@@ -744,5 +744,22 @@
   "discount_reports": "تقارير الخصم",
   "inventory_price_reports": "تقارير أسعار المخزون",
   "fcm_push_notification_test": "اختبار إشعار FCM الفوري",
-  "refresh_cache": "تحديث ذاكرة التخزين المؤقت"
+  "refresh_cache": "تحديث ذاكرة التخزين المؤقت",
+  "sales_gst_taxwise_report": "تقرير مبيعات (ضريبة السلع والخدمات) حسب الضريبة",
+  "sales_return_gst_taxwise_report": "تقرير مرتجعات المبيعات (ضريبة السلع والخدمات) حسب الضريبة",
+  "sales_gst_taxwise_with_hsn_report": "تقرير مبيعات (ضريبة السلع والخدمات) حسب الضريبة مع رمز HSN",
+  "sales_return_gst_taxwise_with_hsn_report": "تقرير مرتجعات المبيعات (ضريبة السلع والخدمات) حسب الضريبة مع رمز HSN",
+  "sales_gst_detailed_report": "تقرير مفصل لمبيعات (ضريبة السلع والخدمات)",
+  "sales_return_gst_detailed_report": "تقرير مفصل لمرتجعات المبيعات (ضريبة السلع والخدمات)",
+  "sales_gst_advanced_register_format_report": "تقرير مبيعات (ضريبة السلع والخدمات) بصيغة السجل المتقدمة",
+  "sales_return_gst_advanced_register_format_report": "تقرير مرتجعات المبيعات (ضريبة السلع والخدمات) بصيغة السجل المتقدمة",
+  "purchase_gst_advanced_register_format_report": "تقرير مشتريات (ضريبة السلع والخدمات) بصيغة السجل المتقدمة",
+  "purchase_return_gst_advanced_register_format_report": "تقرير مرتجعات مشتريات (ضريبة السلع والخدمات) بصيغة السجل المتقدمة",
+  "diagnosis_report_sales_price_category_greater_than_mrp": "تقرير تشخيص: فئة سعر البيع أكبر من سعر التجزئة (MRP)",
+  "inventory_report_of_products_with_all_price_category": "تقرير مخزون المنتجات بجميع فئات الأسعار",
+  "diagnosis_report_of_zero_mrp_product_list": "تقرير تشخيص قائمة المنتجات ذات سعر التجزئة (MRP) صفر",
+  "grouped_brandwise_sales_summary": "ملخص المبيعات المجمعة حسب العلامة التجارية",
+  "salesmanwise_sales_summary_report": "تقرير ملخص المبيعات حسب مندوب المبيعات",
+  "sales_register_report": "تقرير سجل المبيعات",
+  "sales_return_estimate_register_report": "تقرير سجل تقديرات مرتجعات المبيعات"
 }

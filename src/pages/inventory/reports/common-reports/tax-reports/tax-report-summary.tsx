@@ -1,16 +1,12 @@
-import { FC, Fragment, useCallback, useMemo, useState } from "react";
+import { FC, Fragment, useCallback, useState } from "react";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import moment from "moment";
-import {  isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
-import TaxReportDetailedFilter, {
-  TaxReportDetailedFilterInitialState,
-} from "./tax-report-detailed-filter";
+import { isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
+import TaxReportDetailedFilter, { TaxReportDetailedFilterInitialState, } from "./tax-report-detailed-filter";
 
 interface TaxReportSummaryProps {
   gridHeader: string;
@@ -18,20 +14,12 @@ interface TaxReportSummaryProps {
   gridId: string;
 }
 
-const TaxReportSummary: FC<TaxReportSummaryProps> = ({
-  gridHeader,
-  dataUrl,
-  gridId,
-}) => {
+const TaxReportSummary: FC<TaxReportSummaryProps> = ({ gridHeader, dataUrl, gridId, }) => {
   const { t } = useTranslation("accountsReport");
   const [showFilter, setShowFilter] = useState<boolean>(false);
-  const [filter, setFilter] = useState<any>(
-    TaxReportDetailedFilterInitialState
-  );
+  const [filter, setFilter] = useState<any>(TaxReportDetailedFilterInitialState);
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
-  const onApplyFilter = useCallback((_filter: any) => {
-    setFilter({ ..._filter });
-  }, []);
+  const onApplyFilter = useCallback((_filter: any) => { setFilter({ ..._filter }); }, []);
   const onCloseFilter = useCallback(() => {
     if (filterShowCount === 0) {
       setFilter({});
@@ -45,7 +33,7 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({
       sortIndex: 0,
       sortOrder: "asc",
       dataField: "siNo",
-      caption: t("SINo"),
+      caption: t("SiNo"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -60,7 +48,7 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({
       allowFiltering: true,
       // width: 100,
       showInPdf: true,
-      format:'dd-MMM-yyyy',
+      format: 'dd-MMM-yyyy',
     },
     {
       dataField: "taxCategory",
@@ -290,11 +278,11 @@ const TaxReportSummary: FC<TaxReportSummaryProps> = ({
               ).replace(/,/g, "") || "0"
             ),
             false,
-             4
+            4
           ) || "0"
         );
       },
-         
+
     },
   ];
 

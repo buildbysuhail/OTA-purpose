@@ -6,11 +6,7 @@ import Urls from "../../../../../redux/urls";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 
-const UnsoldProductReportFilter = ({
-  getFieldProps,
-  handleFieldChange,
-  formState,
-}: any) => {
+const UnsoldProductReportFilter = ({  getFieldProps,  handleFieldChange,  formState,}: any) => {
   const { t } = useTranslation("accountsReport");
   const userSession = useSelector((state: RootState) => state.UserSession);
   const fromDate = getFieldProps("fromDate").value;
@@ -124,9 +120,6 @@ const UnsoldProductReportFilter = ({
       </div>
     )}
   </div>
-
-
-
   );
 };
 

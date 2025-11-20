@@ -525,5 +525,18 @@
   "confirm_delete_template": "هل أنت متأكد أنك تريد حذف هذا القالب؟ لا يمكن التراجع عن هذا الإجراء.",
   "template_deleted_successfully": "تم حذف القالب بنجاح!",
   "failed_to_delete_template": "فشل في حذف القالب!",
-  "customer_balance_report": "تقرير رصيد العميل"
+  "customer_balance_report": "تقرير رصيد العميل",
+  "add_header": "إضافة ترويسة",
+  "enable_printer_selection": "تمكين اختيار الطابعة",
+  "customer_type": "نوع العميل",
+  "from_type": "من نوع",
+  "choose_table_columns": "اختيار أعمدة الجدول",
+  "table_row_border": "حد صف الجدول",
+  "table_col_border": "حد عمود الجدول",
+  "header_repeat_on_each_page": "تكرار الترويسة في كل صفحة",
+  "header_font_family": "عائلة خط الترويسة",
+  "arbic_font_family": "عائلة الخط العربي",
+  "font_weight": "وزن الخط",
+  "font_family": "عائلة الخط",
+  "add_footer": "إضافة تذييل"
 }

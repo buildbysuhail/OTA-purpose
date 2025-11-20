@@ -4,13 +4,8 @@ import { useTranslation } from "react-i18next";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 
-const TaxReportDetailedFilter = ({
-  getFieldProps,
-  handleFieldChange,
-  formState,
-}: any) => {
+const TaxReportDetailedFilter = ({ getFieldProps, handleFieldChange, formState, }: any) => {
   const { t } = useTranslation("accountsReport");
-
   return (
     <div className="grid grid-cols-1 gap-4">
       <div className="grid lg:grid-cols-2 md:grid-cols-1 gap-4">

@@ -1196,5 +1196,8 @@
   "sales_return_tax_reports": "تقارير ضريبة مرتجعات المبيعات",
   "purchase_tax_reports": "تقارير ضريبة المشتريات",
   "purchase_return_tax_reports": "تقارير ضريبة مرتجعات المشتريات",
-  "inventory_price_reports": "تقارير أسعار المخزون"
+  "inventory_price_reports": "تقارير أسعار المخزون",
+  "sales_period": "فترة المبيعات",
+  "total_sold": "إجمالي المباع",
+  "gst_included": "ضريبة السلع والخدمات متضمنة"
 }

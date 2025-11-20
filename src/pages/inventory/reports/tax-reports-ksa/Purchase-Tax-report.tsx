@@ -1,13 +1,9 @@
 import { useTranslation } from "react-i18next";
 import { Fragment, useMemo } from "react";
 import moment from "moment";
-import PurchaseTaxReportFilter, {
-  PurchaseTaxReportFilterInitialState,
-} from "./Purchase-Tax-report-filter";
+import PurchaseTaxReportFilter, { PurchaseTaxReportFilterInitialState, } from "./Purchase-Tax-report-filter";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { SummaryConfig, } from "../../../../components/ERPComponents/erp-dev-grid";
 import GridId from "../../../../redux/gridId";
 import { ActionType } from "../../../../redux/types";
 import Urls from "../../../../redux/urls";
@@ -16,7 +12,6 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 const PurchaseTaxReport = () => {
   const { t } = useTranslation("accountsReport");
   const { getFormattedValue } = useNumberFormat();
-
   const columns: DevGridColumn[] = [
     {
       dataField: "date",
@@ -288,7 +283,7 @@ const PurchaseTaxReport = () => {
       allowFiltering: true,
       width: 100,
       showInPdf: true,
-       format: "dd-MMM-yyyy",
+      format: "dd-MMM-yyyy",
     },
   ];
 
@@ -317,7 +312,7 @@ const PurchaseTaxReport = () => {
       ) {
         return "0"; // Ensure "0" is displayed when value is missing
       }
-      return value|| "0"; // Ensure formatted output or fallback to "0"
+      return value || "0"; // Ensure formatted output or fallback to "0"
     };
   }, []);
   const summaryItems: SummaryConfig[] = [

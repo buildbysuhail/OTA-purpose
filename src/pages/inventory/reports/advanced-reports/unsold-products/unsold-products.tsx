@@ -1,8 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import Urls from "../../../../../redux/urls";
@@ -10,9 +8,7 @@ import { useMemo } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import GridId from "../../../../../redux/gridId";
 import moment from "moment";
-import UnsoldProductReportFilter, {
-  UnsoldProductReportFilterInitialState,
-} from "./unsold-products-filter";
+import UnsoldProductReportFilter, { UnsoldProductReportFilterInitialState, } from "./unsold-products-filter";
 import { RootState } from "../../../../../redux/store";
 import { useSelector } from "react-redux";
 
@@ -59,10 +55,9 @@ const UnsoldProductReport = () => {
       visible: true,
       width: 200,
     },
-
     {
       dataField: "mannualBarcode",
-      caption: t("mannual_barcode"),
+      caption: t("manual_barcode"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -80,7 +75,6 @@ const UnsoldProductReport = () => {
       visible: true,
       width: 100,
     },
-
     {
       dataField: "quantity",
       caption: t("quantity"),

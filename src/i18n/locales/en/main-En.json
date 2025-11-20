@@ -744,5 +744,22 @@
   "discount_reports": "Discount Reports",
   "inventory_price_reports": "Inventory Price Reports",
   "fcm_push_notification_test": "FCM Push Notification Test",
-  "refresh_cache": "Refresh Cache"
+  "refresh_cache": "Refresh Cache",
+  "sales_gst_taxwise_report": "Sales GST Taxwise Report",
+  "sales_return_gst_taxwise_report": "Sales Return GST Taxwise Report",
+  "sales_gst_taxwise_with_hsn_report": "Sales GST Taxwise With HSN Report",
+  "sales_return_gst_taxwise_with_hsn_report": "Sales Return GST Taxwise With HSN Report",
+  "sales_gst_detailed_report": "Sales GST Detailed Report",
+  "sales_return_gst_detailed_report": "Sales Return GST Detailed Report",
+  "sales_gst_advanced_register_format_report": "Sales GST Advanced Register Format Report",
+  "sales_return_gst_advanced_register_format_report": "Sales Return GST Advanced Register Format Report",
+  "purchase_gst_advanced_register_format_report": "Purchase GST Advanced Register Format Report",
+  "purchase_return_gst_advanced_register_format_report": "Purchase Return GST Advanced Register Format Report",
+  "diagnosis_report_sales_price_category_greater_than_mrp": "Diagnosis Report Sales Price Category Greater Than MRP",
+  "inventory_report_of_products_with_all_price_category": "Inventory Report Of Products With All Price Category",
+  "diagnosis_report_of_zero_mrp_product_list": "Diagnosis Report Of Zero MRP Product List",
+  "grouped_brandwise_sales_summary": "Grouped Brandwise Sales Summary",
+  "salesmanwise_sales_summary_report": "Salesman Wise Sales Summary Report",
+  "sales_register_report": "Sales Register Report",
+  "sales_return_estimate_register_report": "Sales Return Estimate Register Report"
 }

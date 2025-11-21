@@ -27,7 +27,7 @@ import { getStorageString, setStorageString, } from "../../../../utilities/stora
 import { getApLocalDataByUrl } from "../../../../redux/cached-urls";
 import { formStateHandleFieldChangeKeysOnly, formStateHandleFieldChange, formStateTransactionMasterHandleFieldChange, formStateTransactionUpdate, clearState, formStateMasterHandleFieldChange, formStateClearDetails, formStateClearAttachments, formStateTransactionDetailsRowRemove, formStateSetDetails, updateFormElement, } from "../reducer";
 import { transactionInitialData, initialInventoryTotals, TransactionMasterInitialData, initialTransactionDetailData, initialTransactionDetails2, initialUserConfig, } from "../transaction-type-data";
-import { TransactionDetail, UserConfig, TransactionFormState, SummaryItems, TransactionMaster, TransactionData, LoadProductDetailsByAutoBarcodeProps, CommonParams, DataAutoBarcode, ExcelRowData, } from "../transaction-types";
+import { TransactionDetail, UserConfig, TransactionFormState, SummaryItems, TransactionMaster, TransactionData, LoadProductDetailsByAutoBarcodeProps, CommonParams, DataAutoBarcode, ExcelRowData, LoadSrParams, } from "../transaction-types";
 
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;
@@ -3891,7 +3891,26 @@ const logUserAction = async (input: LogUserActionParams) => {
                 updateOnlyGivenDetailsColumns: true,
               })
             );
-          } else {
+          }
+          else if( columnName == "imf"){
+            const rowData: TransactionDetail = formState.transaction.details[rowIndex];
+            // const rowIndex = details.findIndex((x) => x.slNo == row.slNo);
+            
+            dispatch(
+              commonParams.formStateHandleFieldChangeKeysOnly({
+                fields: {
+                  imfData: {
+                    visible: true,
+                    data: rowData.productDescription,
+                    slNo: rowIndex,
+                  },
+                },
+                updateOnlyGivenDetailsColumns: true,
+              })
+            );
+
+          }
+          else {
             const res = focusToNextColumn(rowIndex, columnName);
             setCurrentCell(res, data, rowIndex != res?.rowIndex);
           }
@@ -4447,9 +4466,19 @@ const logUserAction = async (input: LogUserActionParams) => {
   voucherForm: string;
 }
 
-const loadInvTransactionMasterByVouchNo = async (input: LoadInvTransactionMasterParams) => {
-  if(!isNullOrUndefinedOrEmpty(input.voucherNumber)){
-  const query = new URLSearchParams(input as any).toString();
+const handleLoadSr = async ({ voucherNumber, voucherPrefix, voucherForm }: LoadSrParams) => {
+  const voucherNum = Number(voucherNumber || 0);
+    
+    if (voucherNum > 0) {
+      const api = new APIClient();
+      
+      const params = {
+        voucherNumber: voucherNumber,
+        voucherPrefix: voucherPrefix,
+        voucherType: "SR ",
+        voucherForm: voucherForm,
+      };
+      const query = new URLSearchParams(params).toString();
   let srAmount = 0;
   const response = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/loadInvTransactionMasterByVouchNo}?${query}`);
   if(response && !response.isInvoiced){
@@ -4511,7 +4540,9 @@ const handleDiscountSlab = async() => {
       if(res && res.pids?.lengh > 0){
         const netPerc = res.netPerc;
         const _pids:number[] = res.pids.split(',').map((id: string) => Number(id.trim()));
-        details = details.filter(x => _pids.includes(x.productID)).map((item, i) => {
+        details = details.map((item, i) => {
+          if(_pids.includes(item.productID))
+          {
           lastRowIndex = details.findIndex(x => x.slNo === item.slNo);
           const detail = { slNo: item.slNo, discPerc: res.discPerc??0 };
           const updatedRow = calculateRowAmount(
@@ -4526,6 +4557,7 @@ const handleDiscountSlab = async() => {
             );
             return { ...item, ...updatedRow.transaction!.details![0] };
           }
+        }
           return item;
         });
 
@@ -4566,6 +4598,7 @@ const handleDiscountSlab = async() => {
     }
   }
   };
+
   function getCustomerTypeAndTitle(
   formType: string,
   title: string,
@@ -4663,7 +4696,7 @@ const handleDiscountSlab = async() => {
     loadLedgerData,
     postBillWiseDetails,
     logUserAction,
-    loadInvTransactionMasterByVouchNo,
+    handleLoadSr,
     handleDiscountSlab,
     getCustomerTypeAndTitle
   };

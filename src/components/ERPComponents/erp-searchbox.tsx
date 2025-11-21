@@ -277,6 +277,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     const { t } = useTranslation("inventory");
     const productColumns: DevGridColumn[] = useMemo(
       () => [
+        // ====
         {
           dataField: "productName",
           caption: t("product_name"),
@@ -711,6 +712,88 @@ useEffect(() => {
   }
 }, [showProductGrid, showBatchGrid]);
 
+const handleEnterAction = async () => {
+  try {
+    const gridInstance = dataGridRef.current.instance();
+
+    // Focused row key
+    const focusedRowKey = gridInstance.option("focusedRowKey");
+
+    // Find row data
+    const focusedRowData = gridInstance
+      .getDataSource()
+      .items()
+      .find((row: any) => row.productID === focusedRowKey);
+
+    let rowData = focusedRowData;
+
+    if (!rowData) {
+      const selectedRows = await gridInstance.getSelectedRowsData();
+      rowData =
+        selectedRows && selectedRows.length > 0 ? selectedRows[0] : null;
+    }
+
+    if (rowData && rowData.productID > 0) {
+      if (onProductSelected) onProductSelected(rowData);
+
+      if (!isNullOrUndefinedOrEmpty(batchDataUrl)) {
+        const batchStore = await createBatchStore(
+          rowData.productID,
+          formState.transaction.master.fromWarehouseID,
+          batchDataUrl
+        );
+        setProductDetailStore(batchStore);
+        setShowBatchGrid(true);
+        setShowProductGrid(false);
+      } else {
+        setShowProductGrid(false);
+
+        if (inputRef && "current" in inputRef && inputRef.current) {
+                  inputRef.current.focus();
+         }
+      }
+    }
+  } catch (err) {
+    setShowProductGrid(false);
+    if (inputRef && "current" in inputRef && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }
+};
+
+const handleBatchEnterAction = async () => {
+  try {
+          const gridInstance = batchGridRef.current.instance();
+          const allSelected = await gridInstance.getSelectedRowsData();
+          const selected = allSelected[0];
+          if (onRowSelected) {
+            onRowSelected(selected, inputValue.searchValue);
+          }
+          setShowBatchGrid(false);
+          if (clearAfterSelection) {
+            setInputValue((prev) => ({
+              ...prev,
+              searchValue: "",
+            }));
+          }
+          if (inputRef && "current" in inputRef && inputRef.current) {
+            inputRef.current.focus();
+          }
+  } catch (err) {
+    console.log("batchselect",err);  
+  }
+};
+
+const handleGridDoubleClick =async (e: any) => {
+  if (disabled) return;
+  await handleEnterAction();
+};
+
+const handleBatchGridDoubleClick =async (e: any) => {
+  if (disabled) return;
+  await handleBatchEnterAction();
+};
+
     const handleGridKeyDown = useCallback(
       async (e: any) => {
         if (disabled) return;
@@ -723,54 +806,12 @@ useEffect(() => {
           e.event.propagation();
           return
         }
-
+        
         if (key === "Enter" || key === "NumpadEnter") {
-          try {
-            const gridInstance = dataGridRef.current.instance(); 
-
-            // Get the data of the currently focused row
-            const focusedRowKey = gridInstance.option("focusedRowKey");
-            const focusedRowData = gridInstance
-              .getDataSource()
-              .items()
-              .find((row: any) => row.productID === focusedRowKey);
-
-            let rowData = focusedRowData;
-
-            if (!rowData) {
-              const selectedRows = await gridInstance.getSelectedRowsData();
-              rowData =
-                selectedRows && selectedRows.length > 0
-                  ? selectedRows[0]
-                  : null;
-            }
-
-            if (rowData && rowData.productID > 0) {
-              if (onProductSelected) onProductSelected(rowData);
-
-              if (!isNullOrUndefinedOrEmpty(batchDataUrl)) {
-                const batchStore = await createBatchStore(
-                  rowData.productID,
-                  formState.transaction.master.fromWarehouseID,
-                  batchDataUrl
-                );
-                setProductDetailStore(batchStore);
-                setShowBatchGrid(true);
-                setShowProductGrid(false);
-              } else {
-                setShowProductGrid(false);
-                if (inputRef && "current" in inputRef && inputRef.current) {
-                  inputRef.current.focus();
-                }
-              }
-            }
-          } catch (err) {
-            setShowProductGrid(false);
-            if (inputRef && "current" in inputRef && inputRef.current) {
-              inputRef.current.focus();
-            }
-          }
-        } else if (key === "Escape") {
+          await handleEnterAction();
+          return;
+        }
+         if (key === "Escape") {
           setShowProductGrid(false);
           setProductInitialized(false);
           if (inputRef && "current" in inputRef && inputRef.current) {
@@ -778,6 +819,7 @@ useEffect(() => {
             const val = inputRef.current.value;
             inputRef.current.setSelectionRange(val.length, val.length);
           }
+           return;
         } else {
           if (
             !["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(key)
@@ -799,24 +841,9 @@ useEffect(() => {
     const handleBatchGridKeyDown = useCallback(
       async (e: any) => {
         if (disabled) return;
-    console.log(`Batch grid key: ${e.event.key}`); 
+        console.log(`Batch grid key: ${e.event.key}`); 
         if (e.event.key === "Enter") {
-          const gridInstance = batchGridRef.current.instance();
-          const allSelected = await gridInstance.getSelectedRowsData();
-          const selected = allSelected[0];
-          if (onRowSelected) {
-            onRowSelected(selected, inputValue.searchValue);
-          }
-          setShowBatchGrid(false);
-          if (clearAfterSelection) {
-            setInputValue((prev) => ({
-              ...prev,
-              searchValue: "",
-            }));
-          }
-          if (inputRef && "current" in inputRef && inputRef.current) {
-            inputRef.current.focus();
-          }
+            await handleBatchEnterAction()
         }
         // else if (e.event.key === 'Escape') {
         //   dispatch(formStateHandleFieldChangeKeysOnly({fields: {formElements:{dgvProductBatches: {visible: false}}}}));
@@ -1200,6 +1227,7 @@ useEffect(() => {
         document.head.removeChild(style);
       };
     }, []);
+    console.log("mj233333333333-2");
     // Render DataGrid components in a portal
     const renderDataGridPortal = () => {
       if (!portalContainerRef.current) return null;
@@ -1268,6 +1296,7 @@ useEffect(() => {
                       onFocusedRowChanged={handleProductFocusedRowChanged}
                       onContentReady={handleProductGridContentReady}
                       onKeyDown={handleGridKeyDown}
+                      onCellDblClick={handleGridDoubleClick}
                       tabIndex={0}
                       width="100%"
                     >
@@ -1327,6 +1356,7 @@ useEffect(() => {
                     onContentReady={handleBatchContentReady}
                     onFocusedRowChanged={handleBatchFocusedRowChanged}
                     onKeyDown={handleBatchGridKeyDown}
+                    onCellDblClick={handleBatchGridDoubleClick}
                     tabIndex={0}
                     width="100%"
                   >
@@ -1365,6 +1395,7 @@ useEffect(() => {
           style={{ width: "100%", minWidth: "100%", maxWidth: "100%" }}
         >
           <div className="relative flex-1" ref={gridContainerRef}>
+            {/* <p>mj233333333333-2</p> */}
             <ERPInput
               localInputBox={customStyle}
               textAlignStyle={textAlign}

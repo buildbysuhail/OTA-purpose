@@ -137,9 +137,12 @@ removeTemplateTableColumn: (
     state.activeTemplate.tableState.filter(
       (column: any) => column.key !== key
     );
+     state.lastActionMessage = null; 
 },
 
-
+clearTemplateMessage: (state) => {
+  state.lastActionMessage = null;
+},
 addTemplateTableColumn: (
   state,
   action: PayloadAction<{column: any;}>
@@ -340,7 +343,8 @@ export const {
   addTemplateTableColumn,
   // editTemplateTableColumn,
   removeTemplateTableColumn,
-  updateTemplateTableState
+  updateTemplateTableState,
+  clearTemplateMessage
 } = templateSlice.actions;
 
 export default templateSlice.reducer;

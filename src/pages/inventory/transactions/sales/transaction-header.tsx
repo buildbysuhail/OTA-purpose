@@ -1252,10 +1252,10 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   transactionType={transactionType}
                   t={t}
                 />
-                {formState.transaction.master.voucherType !==
+                {/* {formState.transaction.master.voucherType !==
                   VoucherType.GoodsReceiptNote &&
                   formState.transaction.master.voucherType !==
-                  VoucherType.PurchaseEstimate && (
+                  VoucherType.PurchaseEstimate && ( */}
                     <VatTokenInput
                       formState={formState}
                       dispatch={dispatch}
@@ -1263,7 +1263,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       handleFieldKeyDown={handleFieldKeyDown}
                       handleKeyDown={handleKeyDown}
                     />
-                  )}
+                  {/* )} */}
                 {/* Conditional Elements */}
                 {formState.formElements.inSearch?.visible && (
                   <ERPCheckbox

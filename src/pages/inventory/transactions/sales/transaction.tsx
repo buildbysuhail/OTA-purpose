@@ -51,6 +51,7 @@ import ProductInformation from "./product-information";
 import ProductInfoSlideUp from "./productInfo";
 import QtyFactorsModal from "./qty-factors";
 import Serials from "./serials";
+import Flavours from "./flavours";
 import TransactionFooter from "./transaction-footer";
 import { purchaseGridCol } from "./transaction-grid-cols";
 import TransactionHeader from "./transaction-header";
@@ -593,7 +594,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     loadLedgerData,
     postBillWiseDetails,
     logUserAction,
-    loadInvTransactionMasterByVouchNo,
+    handleLoadSr,
     handleDiscountSlab,
     getCustomerTypeAndTitle
   } = useTransaction(
@@ -805,7 +806,12 @@ const TransactionForm: React.FC<TransactionProps> = ({
               ? _formState.userConfig?.counterWiseWarehouseId ?? 0
               : applicationSettings.inventorySettings.defaultWareHouse
           : _formState.formElements.cbWarehouse?.selectedValue
+      _formState.transaction.master.costCentreID =
+        _formState.userConfig?.presetCostenterId ?? 0 > 0
+          ? _formState.userConfig?.presetCostenterId ?? 0
+          : _formState.transaction.master.costCentreID
 
+      _formState.transaction.master.inventoryLedgerID = applicationSettings.inventorySettings.defaultSalesAcc
       _formState.transaction.master.employeeID = userSession.employeeId > 0
         ? userSession.employeeId.toString()
         : _formState.formElements.cbSalesMan?.selectedValue,
@@ -2728,6 +2734,23 @@ const TransactionForm: React.FC<TransactionProps> = ({
             productId={null}
             rowIndex={formState.serialNoEntryData.rowIndex}
           />
+        )}
+
+        {formState.imfData && formState.imfData.visible && (
+          <Flavours
+          data={formState.imfData.data}
+            isOpen={formState.imfData.visible}
+            onClose={() =>
+              dispatch(
+                formStateHandleFieldChangeKeysOnly({
+                  fields: { imfData: { visible: false, data: "" } },
+                  updateOnlyGivenDetailsColumns: true,
+                })
+              )
+            }
+            t={t}
+            productId={null}
+            rowIndex={formState.imfData.rowIndex}/>
         )}
 
         {formState.productInfo && (

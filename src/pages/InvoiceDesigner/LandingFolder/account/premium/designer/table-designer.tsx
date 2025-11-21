@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { ERPScrollArea } from "../../../../../../components/ERPComponents/erp-scrollbar";
-import { removeTemplateTableColumn, setTemplateTableMasterState, setTemplateTableState, updateTemplateTableState, } from "../../../../../../redux/slices/templates/reducer";
+import { clearTemplateMessage, removeTemplateTableColumn, setTemplateTableMasterState, setTemplateTableState, updateTemplateTableState, } from "../../../../../../redux/slices/templates/reducer";
 import { ItemTableMasterState, TableColumn, templateDesignerFormatOptions, } from "../../../../Designer/interfaces";
 import ERPCheckbox from "../../../../../../components/ERPComponents/erp-checkbox";
 import ErpInput from "../../../../../../components/ERPComponents/erp-input";
@@ -73,6 +73,7 @@ const LabelsEditor = <T,>({ currentTableState, onChange, }: ItemTableLabelDesign
           title={t("new")}
           variant="primary"
           onClick={() => {
+            dispatch(clearTemplateMessage());
             setOpenTableCol(true)
           }}
         />

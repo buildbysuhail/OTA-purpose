@@ -27,6 +27,7 @@ interface GridCellProps {
   isFirstColumn: boolean;
   isLastColumn: boolean;
   showBorder: boolean;
+  isMobile?: boolean; // NEW PROP
   columnWidths: { width: number; field: string }[];
   onChange: (value: any, column: keyof TransactionDetail, rowIndex: number) => void;
   onKeyDown: (value: any, e: React.KeyboardEvent<HTMLElement>, column: keyof TransactionDetail, rowIndex: number) => void;
@@ -261,6 +262,7 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
   isFirstColumn,
   isLastColumn,
   showBorder,
+  isMobile = false,
   columnWidths,
   onChange,
   onKeyDown,
@@ -381,31 +383,29 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
     //   );
     // }
     if (column.dataType === "btn") {
-    return (
+      return (
         <button
-        disabled={formState.formElements.pnlMasters?.disabled}
-        onClick={() =>
+          disabled={formState.formElements.pnlMasters?.disabled}
+          onClick={() =>
             handlRowKeyDown(
-            cellValue,
-            { key: "Enter" } as React.KeyboardEvent<HTMLElement>,
-            column,
-            index,
-            details
+              cellValue,
+              { key: "Enter" } as React.KeyboardEvent<HTMLElement>,
+              column,
+              index,
+              details
             )
-        }
-        className={`px-2 py-1 border rounded shadow-sm hover:shadow text-xs transition-all ${
+          }
+          className={`px-2 py-1 border rounded shadow-sm hover:shadow text-xs transition-all ${
             appState.mode === "dark" ? "bg-[#444444] text-[#e0e0e0] border-[#555555] hover:bg-[#555555]" : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50"
-        }`}
-        aria-label="Action button"
+          }`}
+          aria-label="Action button"
         >
-        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 12 12">
+          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 12 12">
             <rect x="1" y="3" width="10" height="6" rx="1" strokeWidth="1.5" />
-        </svg>
+          </svg>
         </button>
-    );
+      );
     }
-
-
     // if (column.dataField === "actionCol") {
     //   return (
     //     <div className="flex items-center justify-center gap-1" style={{ border: `solid 1px ${borderColor}` }}>
@@ -434,41 +434,41 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
     //     </div>
     //   );
     // }
-        if (column.dataField === "actionCol") {
-        return (
-            <div className="flex items-center justify-center gap-1" style={{ border: `solid 1px ${borderColor}` }}>
-            <button
-                onClick={() => handleInfoClick(index)}
-                className={`group relative flex items-center justify-center w-7 h-7 transition-all duration-500 ease-out hover:rounded-full hover:scale-105 hover:shadow-lg hover:border ${
-                appState.mode === "dark" ? "hover:bg-blue-900 hover:border-blue-700" : "hover:bg-blue-50 hover:border-blue-200"
-                }`}
-            >
-                <Info className={`w-4 h-4 transition-all duration-300 ${
-                appState.mode === "dark" ? "text-blue-400 group-hover:text-blue-300" : "text-blue-600 group-hover:text-blue-700"
-                }`} />
-            </button>
-            <button
-                disabled={formState.formElements.pnlMasters?.disabled}
-                onClick={() =>
-                onKeyDown(
-                    item.slNo,
-                    { key: "Enter" } as React.KeyboardEvent<HTMLElement>,
-                    "actionCol",
-                    index
-                )
-                }
-                className={`group relative flex items-center justify-center w-7 h-7 transition-all duration-500 ease-out hover:rounded-full hover:scale-105 hover:shadow-lg hover:border ${
-                appState.mode === "dark" ? "hover:bg-red-900 hover:border-red-700" : "hover:bg-red-50 hover:border-red-200"
-                }`}
-            >
-                <Trash2 className={`w-4 h-4 transition-all duration-300 ${
-                appState.mode === "dark" ? "text-red-400 group-hover:text-red-300" : "text-red-600 group-hover:text-red-700"
-                }`} />
-            </button>
-            </div>
-        );
-        }
 
+    if (column.dataField === "actionCol") {
+      return (
+        <div className="flex items-center justify-center gap-1" style={{ border: `solid 1px ${borderColor}` }}>
+          <button
+            onClick={() => handleInfoClick(index)}
+            className={`group relative flex items-center justify-center w-7 h-7 transition-all duration-500 ease-out hover:rounded-full hover:scale-105 hover:shadow-lg hover:border ${
+              appState.mode === "dark" ? "hover:bg-blue-900 hover:border-blue-700" : "hover:bg-blue-50 hover:border-blue-200"
+            }`}
+          >
+            <Info className={`w-4 h-4 transition-all duration-300 ${
+              appState.mode === "dark" ? "text-blue-400 group-hover:text-blue-300" : "text-blue-600 group-hover:text-blue-700"
+            }`} />
+          </button>
+          <button
+            disabled={formState.formElements.pnlMasters?.disabled}
+            onClick={() =>
+              onKeyDown(
+                item.slNo,
+                { key: "Enter" } as React.KeyboardEvent<HTMLElement>,
+                "actionCol",
+                index
+              )
+            }
+            className={`group relative flex items-center justify-center w-7 h-7 transition-all duration-500 ease-out hover:rounded-full hover:scale-105 hover:shadow-lg hover:border ${
+              appState.mode === "dark" ? "hover:bg-red-900 hover:border-red-700" : "hover:bg-red-50 hover:border-red-200"
+            }`}
+          >
+            <Trash2 className={`w-4 h-4 transition-all duration-300 ${
+              appState.mode === "dark" ? "text-red-400 group-hover:text-red-300" : "text-red-600 group-hover:text-red-700"
+            }`} />
+          </button>
+        </div>
+      );
+    }
 
     if (
       (column.dataField === "product" || column.dataField === "pCode" || column.dataField === "barCode") &&
@@ -606,27 +606,75 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
     advancedProductSearching, transactionType, zIndexController, nextCellFind
   ]);
 
-  const cellWidth = useMemo(() =>
-    columnWidths?.find((x) => x.field === column.dataField)?.width || 150,
-  [columnWidths, column.dataField]);
+    const cellWidth = useMemo(() => {
+    if (isMobile) {
+        return '100%';
+    }
+    return columnWidths?.find((x) => x.field === column.dataField)?.width || 150;
+    }, [columnWidths, column.dataField, isMobile]);
+//   console.log("mjjjjjjjjjjj",
+//     cellWidth
+//   );
+//   console.log("mjjjjjjjjjjj",
+//     columnWidths
+//   );
+  
+
+  // NEW: Mobile border styles
+  const getMobileBorderStyles = () => {
+    if (!isMobile) return {};
+    
+    const borderStyle = `1px solid ${
+      appState.mode === "dark" 
+        ? "rgba(255,255,255,0.2)" 
+        : `rgba(${gridBorderColor || "226,232,240"}, 0.8)`
+    }`;
+    
+    return {
+      border: borderStyle,
+      borderRadius: "4px",
+      margin: "2px",
+    };
+  };
+
+  // NEW: Updated border logic for desktop
+  const getDesktopBorderStyles = () => {
+    return {
+      borderRight: (() => {
+        if (isLastColumn) return "none";
+        if (isFirstColumn) {
+          return `2px solid ${
+            appState.mode === "dark" 
+              ? "rgba(255,255,255,0.2)" 
+              : `rgba(${gridBorderColor || "226,232,240"})`
+          }`;
+        }
+        return showBorder 
+          ? `0.2px solid ${
+              appState.mode === "dark" 
+                ? "rgba(255,255,255,0.1)" 
+                : `rgba(${gridBorderColor || "226,232,240"}, 0.8)`
+            }` 
+          : "none";
+      })(),
+      borderLeft: isLastColumn
+        ? `2px solid ${
+            appState.mode === "dark" 
+              ? "rgba(255,255,255,0.2)" 
+              : `rgba(${gridBorderColor || "226,232,240"})`
+          }`
+        : "none",
+    };
+  };
 
   return (
     <div
       key={`${column.dataField}`}
       style={{
-        width: `${cellWidth}px`,
-        minWidth: `${cellWidth}px`,
-        maxWidth: `${cellWidth}px`,
-        borderRight: isFirstColumn
-          ? `2px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.2)" : `rgba(${gridBorderColor || "226,232,240"})`}`
-          : isLastColumn
-            ? "none"
-            : showBorder
-              ? `0.2px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.1)" : `rgba(${gridBorderColor || "226,232,240"}, 0.8)`}`
-              : "none",
-        borderLeft: isLastColumn
-          ? `2px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.2)" : `rgba(${gridBorderColor || "226,232,240"})`}`
-          : "none",
+        width: typeof cellWidth === 'number' ? `${cellWidth}px` : cellWidth,
+        minWidth: typeof cellWidth === 'number' ? `${cellWidth}px` : cellWidth,
+        maxWidth: typeof cellWidth === 'number' ? `${cellWidth}px` : cellWidth,
+        ...(isMobile ? getMobileBorderStyles() : getDesktopBorderStyles()),
         fontSize: `${gridFontSize}px`,
         textAlign: column.dataField === "slNo" ? "center" : ["qty"].includes(column.dataField ?? "") ? "right" : "left",
         overflow: "hidden",
@@ -636,39 +684,39 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
         alignItems: "center",
         justifyContent: "center",
         backgroundColor:
-          currentCell?.rowIndex === index && currentCell?.column === column.dataField
+            currentCell?.rowIndex === index && currentCell?.column === column.dataField
             ? appState.mode === "dark"
-              ? "#555555"
-              : formState.userConfig?.inputBoxStyle?.focusBgColor
+                ? "#555555"
+                : formState.userConfig?.inputBoxStyle?.focusBgColor
                 ? `rgb(${formState.userConfig.inputBoxStyle.focusBgColor})`
                 : "#bfdbfe"
             : currentCell?.rowIndex === index
-              ? appState.mode === "dark"
+                ? appState.mode === "dark"
                 ? "#444444"
                 : formState.userConfig?.activeRowBg
-                  ? `rgb(${formState.userConfig.activeRowBg})`
-                  : "#e3f2fd"
-              : index % 2 === 0
+                    ? `rgb(${formState.userConfig.activeRowBg})`
+                    : "#e3f2fd"
+                : index % 2 === 0
                 ? appState.mode === "dark"
-                  ? "#333333"
-                  : "#fff"
+                    ? "#333333"
+                    : "#fff"
                 : appState.mode === "dark"
-                  ? "#444444"
-                  : "#f9f9f9",
-        position: isFixed ? "sticky" : "relative",
-        left: isFirstColumn ? "0px" : "auto",
-        right: isLastColumn ? "0px" : "auto",
-        zIndex: isFixed ? 50 : 1,
+                    ? "#444444"
+                    : "#f9f9f9",
+        position: isMobile ? 'relative' : (isFixed ? "sticky" : "relative"),
+        left: !isMobile && isFirstColumn ? "0px" : "auto",
+        right: !isMobile && isLastColumn ? "0px" : "auto",
+        zIndex: !isMobile && isFixed ? 50 : 1,
         gap: isLastColumn ? "8px" : "0",
-      }}
-      onClick={(e: React.MouseEvent<HTMLElement>) => {
+        }}
+        onClick={(e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
         setCurrentCell({
-          column: column.dataField ?? "",
-          data: item,
-          rowIndex: index,
+            column: column.dataField ?? "",
+            data: item,
+            rowIndex: index,
         });
-      }}
+        }}
     >
       {renderCellValue()}
     </div>

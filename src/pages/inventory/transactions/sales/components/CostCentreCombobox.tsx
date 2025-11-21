@@ -12,7 +12,7 @@ interface CostCentreComboboxProps extends VoucherElementProps {
 const CostCentreCombobox = React.forwardRef<HTMLInputElement, CostCentreComboboxProps>(({ formState, dispatch, t, handleFieldKeyDown, handleKeyDown }, ref) => {
   return (
     <>
-      {formState.formElements.cbCostCentre.visible && (
+      {/* {formState.formElements.cbCostCentre.visible && ( */}
         <ERPDataCombobox
           localInputBox={formState?.userConfig?.inputBoxStyle}
           fetching={formState.transactionLoading}
@@ -48,7 +48,7 @@ const CostCentreCombobox = React.forwardRef<HTMLInputElement, CostCentreCombobox
             handleKeyDown?.(e, "costCentreID");
           }}
         />
-      )}
+      {/* )} */}
     </>
   );
 });

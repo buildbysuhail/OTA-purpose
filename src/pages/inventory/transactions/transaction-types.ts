@@ -212,6 +212,7 @@ export interface TransactionMaster {
   master2: TransactionMaster2;
   master3: TransactionMaster3;
   lblSRAmount: string; //new
+  totalTax?: number; //new
 }
 
 export interface TransactionMaster3 {
@@ -272,6 +273,9 @@ export interface TransactionDetail {
   unitPriceTag: number;
   gross: number;
   discPerc: number;
+  unitDiscount: number; //sales
+  purchasePrice: number; //sales
+  purchaseRate: number; //sales
   discount: number;
   netValue: number;
   total: number;
@@ -353,6 +357,7 @@ export interface TransactionDetail {
   pOTransDetailID: number;
   pO_PITransDetailIDs: number;
   pO_PITransDetailQtys: number;
+  netConvert?:string
 }
 
 export interface TransactionDetailsMore {
@@ -447,6 +452,11 @@ export interface UserConfig {
   showCustomersAfterSales?: boolean;
   UserSalesPriceForTransfer?: boolean;
   gatePass?: boolean;
+  showSrInProductInfoPopup?: boolean;
+  setDefaultCashPaid?: boolean;
+  showProductInfoPopupForSq?: boolean;
+  blockNonStockItems?: boolean;
+  stockOutConfirmation?: boolean;
 }
 
 export type FormElementsState = {
@@ -572,6 +582,7 @@ export interface TransactionFormState {
   showPcode: boolean;
   batchEntryData: { visible: boolean; data: string; rowIndex: number };
   serialNoEntryData: { visible: boolean; data: string; rowIndex: number };
+  imfData: { visible: boolean, data: string, rowIndex: number },
   batchSelectionData: string;
   popupSearchSelectionData: string;
   quantityFactorData: string;
@@ -687,6 +698,7 @@ export interface TransactionFormState {
   printGatepass?: boolean;
   lastChoosedTemplate?: { id?: number, group?: string, formType?: string, customerType?: string }; // nizam
   itemPopup?:{isOpen?: boolean, index?:number}
+  taxBreakdown?: { name: string, amount: number }[];
 }
 export interface GiftModel {
   productBatchId: number;
@@ -1015,3 +1027,8 @@ export interface SettlementDetails {
   paymentName: string;
   paymentType: string;
 }
+export type LoadSrParams = {
+  voucherNumber: string;
+  voucherPrefix: string;
+  voucherForm: string;
+};

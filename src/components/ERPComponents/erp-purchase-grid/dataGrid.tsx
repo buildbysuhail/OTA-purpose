@@ -3082,11 +3082,11 @@ const taxOptions = [0, 5, 12, 18, 28];
                  <main className="flex-1 overflow-auto px-4 py-4">
                    {/* Item name */}
                    <div>
-                     <label className="block text-sm text-gray-600 mb-2 dark:text-gray-400">
+                     <label className="block text-sm text-gray-600 mb-1 dark:text-gray-400">
                        Item Name
                      </label>
                      <GridCell
-                     isMobile={true}
+                       isMobile={true}
                        column={_columns.find((x) => x?.dataField == "product") as ColumnModel}
                        item={formState.row ?? initialTransactionDetailData}
                        index={formState.itemPopup?.index ?? 0}
@@ -3130,10 +3130,11 @@ const taxOptions = [0, 5, 12, 18, 28];
                    {/* Row: Quantity | Unit */}
                    <div className="mt-4 grid grid-cols-2 gap-3">
                      <div>
-                       <label className="block text-sm text-gray-600 mb-2 dark:text-gray-400">
+                       <label className="block text-sm text-gray-600 mb-1 dark:text-gray-400">
                          Quantity
                        </label>
                        <ERPInput
+                          noLabel ={true}
                           id="modal-item-quantity"
                           type="number"
                           min={0}
@@ -3142,10 +3143,11 @@ const taxOptions = [0, 5, 12, 18, 28];
                         />
                      </div>
                      <div>
-                       <label className="block text-sm text-gray-600 mb-2 dark:text-gray-400">
+                       <label className="block text-sm text-gray-600 mb-1 dark:text-gray-400">
                          Unit
                        </label>
                        <ERPDataCombobox
+                         noLabel ={true}
                          id="modal-item-unit"
                          value={state.unit}
                          onChange={(e) => update("unit", e.target.value)}
@@ -3157,7 +3159,7 @@ const taxOptions = [0, 5, 12, 18, 28];
                    {/* Row: Rate | Tax Mode */}
                    <div className="mt-4 grid grid-cols-2 gap-3">
                      <div>
-                       <label className="block text-sm text-gray-600 mb-2 dark:text-gray-400">
+                       <label className="block text-sm text-gray-600 mb-1 dark:text-gray-400">
                          Rate (Price/Unit)
                        </label>
                        <GridCell
@@ -3189,10 +3191,11 @@ const taxOptions = [0, 5, 12, 18, 28];
                       } }                       />
                      </div>
                      <div>
-                       <label className="block text-sm text-gray-600 mb-2 dark:text-gray-400">
+                       <label className="block text-sm text-gray-600 mb-1 dark:text-gray-400">
                          Tax Mode
                        </label>
                        <ERPDataCombobox
+                         noLabel ={true}
                          id="modal-tax-mode"
                          value={state.priceIncludesTax ? "incl" : "excl"}
                          onChange={(e) =>
@@ -3226,12 +3229,13 @@ const taxOptions = [0, 5, 12, 18, 28];
                      {/* Discount row */}
                      <div className="mt-4 grid grid-cols-3 gap-3 items-center">
                        <div className="col-span-1">
-                         <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                         <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">
                            Discount
                          </div>
                        </div>
                        <div className="col-span-1 flex">
                          <ERPInput
+                           noLabel ={true}
                            id="modal-discount-percent"
                            type="number"
                            min={0}
@@ -3247,6 +3251,7 @@ const taxOptions = [0, 5, 12, 18, 28];
                        </div>
                        <div className="col-span-1 flex">
                         <ERPInput
+                          noLabel ={true}
                           id="modal-discount-percent"
                           type="number"
                           min={0}
@@ -3267,6 +3272,7 @@ const taxOptions = [0, 5, 12, 18, 28];
                        </div>
                        <div className="col-span-1">
                       <ERPInput
+                        noLabel ={true}
                         id="modal-discount-amount"
                         type="number"
                         min={0}

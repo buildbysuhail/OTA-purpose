@@ -262,7 +262,7 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
   isFirstColumn,
   isLastColumn,
   showBorder,
-  isMobile = false, // NEW PROP WITH DEFAULT VALUE
+  isMobile = false,
   columnWidths,
   onChange,
   onKeyDown,
@@ -606,9 +606,19 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
     advancedProductSearching, transactionType, zIndexController, nextCellFind
   ]);
 
-  const cellWidth = useMemo(() =>
-    columnWidths?.find((x) => x.field === column.dataField)?.width || 150,
-  [columnWidths, column.dataField]);
+    const cellWidth = useMemo(() => {
+    if (isMobile) {
+        return '100%';
+    }
+    return columnWidths?.find((x) => x.field === column.dataField)?.width || 150;
+    }, [columnWidths, column.dataField, isMobile]);
+//   console.log("mjjjjjjjjjjj",
+//     cellWidth
+//   );
+//   console.log("mjjjjjjjjjjj",
+//     columnWidths
+//   );
+  
 
   // NEW: Mobile border styles
   const getMobileBorderStyles = () => {
@@ -661,9 +671,9 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
     <div
       key={`${column.dataField}`}
       style={{
-        width: `${cellWidth}px`,
-        minWidth: `${cellWidth}px`,
-        maxWidth: `${cellWidth}px`,
+        width: typeof cellWidth === 'number' ? `${cellWidth}px` : cellWidth,
+        minWidth: typeof cellWidth === 'number' ? `${cellWidth}px` : cellWidth,
+        maxWidth: typeof cellWidth === 'number' ? `${cellWidth}px` : cellWidth,
         ...(isMobile ? getMobileBorderStyles() : getDesktopBorderStyles()),
         fontSize: `${gridFontSize}px`,
         textAlign: column.dataField === "slNo" ? "center" : ["qty"].includes(column.dataField ?? "") ? "right" : "left",
@@ -674,39 +684,39 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
         alignItems: "center",
         justifyContent: "center",
         backgroundColor:
-          currentCell?.rowIndex === index && currentCell?.column === column.dataField
+            currentCell?.rowIndex === index && currentCell?.column === column.dataField
             ? appState.mode === "dark"
-              ? "#555555"
-              : formState.userConfig?.inputBoxStyle?.focusBgColor
+                ? "#555555"
+                : formState.userConfig?.inputBoxStyle?.focusBgColor
                 ? `rgb(${formState.userConfig.inputBoxStyle.focusBgColor})`
                 : "#bfdbfe"
             : currentCell?.rowIndex === index
-              ? appState.mode === "dark"
+                ? appState.mode === "dark"
                 ? "#444444"
                 : formState.userConfig?.activeRowBg
-                  ? `rgb(${formState.userConfig.activeRowBg})`
-                  : "#e3f2fd"
-              : index % 2 === 0
+                    ? `rgb(${formState.userConfig.activeRowBg})`
+                    : "#e3f2fd"
+                : index % 2 === 0
                 ? appState.mode === "dark"
-                  ? "#333333"
-                  : "#fff"
+                    ? "#333333"
+                    : "#fff"
                 : appState.mode === "dark"
-                  ? "#444444"
-                  : "#f9f9f9",
-        position: isFixed ? "sticky" : "relative",
-        left: isFirstColumn ? "0px" : "auto",
-        right: isLastColumn ? "0px" : "auto",
-        zIndex: isFixed ? 50 : 1,
+                    ? "#444444"
+                    : "#f9f9f9",
+        position: isMobile ? 'relative' : (isFixed ? "sticky" : "relative"),
+        left: !isMobile && isFirstColumn ? "0px" : "auto",
+        right: !isMobile && isLastColumn ? "0px" : "auto",
+        zIndex: !isMobile && isFixed ? 50 : 1,
         gap: isLastColumn ? "8px" : "0",
-      }}
-      onClick={(e: React.MouseEvent<HTMLElement>) => {
+        }}
+        onClick={(e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
         setCurrentCell({
-          column: column.dataField ?? "",
-          data: item,
-          rowIndex: index,
+            column: column.dataField ?? "",
+            data: item,
+            rowIndex: index,
         });
-      }}
+        }}
     >
       {renderCellValue()}
     </div>

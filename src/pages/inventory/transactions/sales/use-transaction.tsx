@@ -642,7 +642,7 @@ export const useTransaction = (
         : initialInventoryTotals
     ) as SummaryItems;
 
-    voucher = calculateTotal(
+    voucher = await calculateTotal(
       voucher.transaction.master,
       voucher.summary,
       voucher.formElements,
@@ -1482,7 +1482,7 @@ export const useTransaction = (
         result: {},
       });
 
-      const totalRes = calculateTotal(
+      const totalRes = await calculateTotal(
         formState.transaction.master,
         summaryRes
           ? (summaryRes.summary as SummaryItems)
@@ -2131,7 +2131,7 @@ export const useTransaction = (
             result: {},
           });
 
-          const totalRes = calculateTotal(
+          const totalRes = await calculateTotal(
             formState.transaction.master,
             summaryRes
               ? (summaryRes.summary as SummaryItems)
@@ -2638,7 +2638,7 @@ const logUserAction = async (input: LogUserActionParams) => {
 
           outDetail.unitPrice = round(unitPriceFC * exchangeRate, 4);
           outDetail.grossFC = round(unitPriceFC * qty, 3);
-          outState = calculateRowAmount(
+          outState = await calculateRowAmount(
             merge({},detail, outDetail as any),
             columnName,
             {
@@ -2661,7 +2661,7 @@ const logUserAction = async (input: LogUserActionParams) => {
       ) {
         outDetail[columnName] = value;
         // Calculate row amount
-        outState = calculateRowAmount(
+        outState = await calculateRowAmount(
           merge({},detail, outDetail as any),
           columnName,
           {
@@ -2676,7 +2676,7 @@ const logUserAction = async (input: LogUserActionParams) => {
         calculateSummaryAndTotal = true;
       } else if (columnName === "margin") {
         outDetail.margin = value;
-        outState = calculateRowAmount(
+        outState = await calculateRowAmount(
           merge({},detail, outDetail as any),
           columnName,
           {
@@ -2704,7 +2704,7 @@ const logUserAction = async (input: LogUserActionParams) => {
         }
 
         outDetail.margin = round(marginPerc, 6);
-        outState = calculateRowAmount(
+        outState = await calculateRowAmount(
          merge({},detail, outDetail as any),
           columnName,
           {
@@ -2732,7 +2732,7 @@ const logUserAction = async (input: LogUserActionParams) => {
         details[rowIndex] = final;
         const summaryRes = calculateSummary(details, formState, { result: {} });
 
-        const totalRes = calculateTotal(
+        const totalRes = await calculateTotal(
           formState.transaction.master,
           summaryRes.summary as SummaryItems,
           formState.formElements,
@@ -3126,7 +3126,7 @@ const logUserAction = async (input: LogUserActionParams) => {
         if (proceedAll) {
           const latestData = outDetail;
 
-          let _res = calculateRowAmount(
+          let _res = await calculateRowAmount(
             latestData as TransactionDetail,
             "pCode",
             { result: { transaction: { details: [latestData] } } },
@@ -3148,7 +3148,7 @@ const logUserAction = async (input: LogUserActionParams) => {
             result: {},
           });
 
-          const totalRes = calculateTotal(
+          const totalRes = await calculateTotal(
             formState.transaction.master,
             summaryRes.summary as SummaryItems,
             {
@@ -3250,7 +3250,7 @@ const logUserAction = async (input: LogUserActionParams) => {
           outDetail.actualSalesPrice = res.actualSalesPrice;
         }
       }
-      outState = calculateRowAmount(
+      outState = await calculateRowAmount(
         Object.assign(detail, outDetail),
         columnName as any,
         {
@@ -3268,7 +3268,7 @@ const logUserAction = async (input: LogUserActionParams) => {
       details[rowIndex] = final;
       const summaryRes = calculateSummary(details, formState, { result: {} });
 
-      const totalRes = calculateTotal(
+      const totalRes = await calculateTotal(
         formState.transaction.master,
         summaryRes.summary as SummaryItems,
         formState.formElements,
@@ -4156,7 +4156,7 @@ const logUserAction = async (input: LogUserActionParams) => {
               detailItem
             );
             detailItem.isValid = true;
-            const calculatedRow = calculateRowAmount(
+            const calculatedRow = await calculateRowAmount(
               detailItem,
               "barCode",
               { result: { transaction: { details: [detailItem] } } },
@@ -4225,7 +4225,7 @@ const logUserAction = async (input: LogUserActionParams) => {
           result: {},
         });
 
-        const totalRes = calculateTotal(
+        const totalRes = await calculateTotal(
           formState.transaction.master,
           summaryRes
             ? (summaryRes.summary as SummaryItems)
@@ -4540,12 +4540,12 @@ const handleDiscountSlab = async() => {
       if(res && res.pids?.lengh > 0){
         const netPerc = res.netPerc;
         const _pids:number[] = res.pids.split(',').map((id: string) => Number(id.trim()));
-        details = details.map((item, i) => {
+        details =  await Promise.all( details.map(async(item, i) => {
           if(_pids.includes(item.productID))
           {
           lastRowIndex = details.findIndex(x => x.slNo === item.slNo);
           const detail = { slNo: item.slNo, discPerc: res.discPerc??0 };
-          const updatedRow = calculateRowAmount(
+          const updatedRow = await calculateRowAmount(
             item,
             "discPerc",
             { result: { transaction: { details: [detail] } } },
@@ -4559,12 +4559,13 @@ const handleDiscountSlab = async() => {
           }
         }
           return item;
-        });
+        })
+      );
 
         const summaryRes = calculateSummary(details, formState, {
           result: {},
         });
-        let totalRes = calculateTotal(
+        let totalRes = await calculateTotal(
           formState.transaction.master,
           summaryRes
             ? (summaryRes.summary as SummaryItems)

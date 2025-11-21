@@ -3154,7 +3154,7 @@ const [showMore , setShowMore] = useState (false)
                       isLastColumn={false}
                       showBorder={true}
                       columnWidths={columnWidths}
-                      onChange={onChange}
+                      onChange={(value: string, column: any, rowIndex: number) => {debugger; onChange(value, column, rowIndex);}}
                       onKeyDown={onKeyDown}
                       handlRowKeyDown={handlRowKeyDown}
                       handleFocus={handleFocus}

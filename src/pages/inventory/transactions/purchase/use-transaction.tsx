@@ -2609,10 +2609,10 @@ export const useTransaction = (
   const handleTextDataChange = async (
     value: any,
     columnName: string,
-    rowIndex: number,
-    isMobRow?: boolean
+    rowIndex: number
   ) => {
     try {
+    const isMobRow = deviceInfo.isMobile
       console.log("handleTextDataChange");
 
       if (!isMobRow && !formState.transaction?.details?.[rowIndex]) {
@@ -2743,7 +2743,7 @@ export const useTransaction = (
         );
         calculateSummaryAndTotal = true;
       }
-
+debugger;
       if (isMobRow) {
         dispatch(
           formStateHandleFieldChangeKeysOnly({

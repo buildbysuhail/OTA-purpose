@@ -957,7 +957,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           })(),
         };
       _formState.transaction.master.ledgerID =
-        ["543140180640", "BAHAMDOON", "HANAPLASTICS"].includes(userSession.dbIdValue.trim())
+        ["543140180640", "BAHAMDOON", "HANAPLASTICS"].includes(userSession.dbIdValue?.trim())
           ? applicationSettings.accountsSettings.defaultCustomerLedgerID
           : applicationSettings.accountsSettings.setDefaultCustomerInSales &&
             !_formState.formElements.chkNotSetDefaultCustomer?.checked

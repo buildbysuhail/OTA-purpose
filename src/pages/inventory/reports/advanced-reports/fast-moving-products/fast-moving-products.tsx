@@ -1,25 +1,18 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import Urls from "../../../../../redux/urls";
 import { useMemo } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import GridId from "../../../../../redux/gridId";
-import moment from "moment";
-import FastMovingReportFilter, {
-  FastMovingReportFilterInitialState,
-} from "./fast-moving-products-filter";
+import FastMovingReportFilter, { FastMovingReportFilterInitialState, } from "./fast-moving-products-filter";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 
 const FastMovingProductsReport = () => {
-    const userSession = useSelector(
-      (state: RootState) => state.UserSession
-    );
+  const userSession = useSelector((state: RootState) => state.UserSession);
   const { t } = useTranslation("accountsReport");
   const columns: DevGridColumn[] = [
     {
@@ -43,7 +36,7 @@ const FastMovingProductsReport = () => {
     },
     {
       dataField: "mannualBarcode",
-      caption: t("mannual_barcode"),
+      caption: t("manual_barcode"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -71,7 +64,6 @@ const FastMovingProductsReport = () => {
       visible: true,
       width: 100,
     },
-   
     {
       dataField: "totalSold",
       caption: t("total_sold"),
@@ -105,7 +97,7 @@ const FastMovingProductsReport = () => {
         }
       },
     },
-     {
+    {
       dataField: "unit",
       caption: t("unit"),
       dataType: "string",
@@ -241,10 +233,11 @@ const FastMovingProductsReport = () => {
                 filterContent={<FastMovingReportFilter />}
                 filterWidth={700}
                 filterHeight={100}
-                filterInitialData={{...FastMovingReportFilterInitialState ,
-                  fromDate:userSession.finFrom,
-                  branchId:userSession.currentBranchId,
-                  branch:userSession.currentBranchName
+                filterInitialData={{
+                  ...FastMovingReportFilterInitialState,
+                  fromDate: userSession.finFrom,
+                  branchId: userSession.currentBranchId,
+                  branch: userSession.currentBranchName
                 }}
                 reload={true}
                 gridId={GridId.fast_moving_products_report}

@@ -525,5 +525,18 @@
   "confirm_delete_template": "Are you sure you want to delete this template? This action cannot be undone.",
   "template_deleted_successfully": "Template deleted successfully!",
   "failed_to_delete_template": "Failed to delete template!",
-  "customer_balance_report": "Customer balance report"
+  "customer_balance_report": "Customer Balance Report",
+  "add_header": "Add Header",
+  "enable_printer_selection": "Enable Printer Selection",
+  "customer_type": "Customer Type",
+  "from_type": "From Type",
+  "choose_table_columns": "Choose Table Columns",
+  "table_row_border": "Table Row Border",
+  "table_col_border": "Table Col Border",
+  "header_repeat_on_each_page": "Header Repeat On Each Page",
+  "header_font_family": "Header Font Family",
+  "arbic_font_family": "Arabic Font Family",
+  "font_weight": "Font Weight",
+  "font_family": "Font Family",
+  "add_footer":"Add Footer"
 }

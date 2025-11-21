@@ -1,17 +1,12 @@
 import { FC, Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ErpDevGrid, {
-  DrillDownCellTemplate,
-  SummaryConfig,
-} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { DrillDownCellTemplate, SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import moment from "moment";
 import { isNullOrUndefinedOrEmpty } from "../../../../../utilities/Utils";
-import TaxReportDetailedFilter, {
-  TaxReportDetailedFilterInitialState,
-} from "./tax-report-detailed-filter";
+import TaxReportDetailedFilter, { TaxReportDetailedFilterInitialState, } from "./tax-report-detailed-filter";
 import { useLocation } from "react-router-dom";
 
 interface TaxReportDetailedProps {
@@ -20,20 +15,12 @@ interface TaxReportDetailedProps {
   gridId: string;
 }
 
-const TaxReportDetailed: FC<TaxReportDetailedProps> = ({
-  gridHeader,
-  dataUrl,
-  gridId,
-}) => {
+const TaxReportDetailed: FC<TaxReportDetailedProps> = ({ gridHeader, dataUrl, gridId, }) => {
   const { t } = useTranslation("accountsReport");
   const [showFilter, setShowFilter] = useState<boolean>(false);
-  const [filter, setFilter] = useState<any>(
-    TaxReportDetailedFilterInitialState
-  );
+  const [filter, setFilter] = useState<any>(TaxReportDetailedFilterInitialState);
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
-  const onApplyFilter = useCallback((_filter: any) => {
-    setFilter({ ..._filter });
-  }, []);
+  const onApplyFilter = useCallback((_filter: any) => { setFilter({ ..._filter }); }, []);
   let location = useLocation();
   const onCloseFilter = useCallback(() => {
     if (filterShowCount === 0) {
@@ -73,7 +60,6 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({
         width: 100,
         showInPdf: true,
       },
-
       {
         dataField: "address1",
         caption: t("address1"),
@@ -346,9 +332,7 @@ const TaxReportDetailed: FC<TaxReportDetailedProps> = ({
     ];
     return baseColumns.filter((column) => {
       if (column.dataField == "taxNumber" || column.dataField == "refNo2") {
-        return location.pathname.includes(
-          "inventory/purchase_tax_report_detailed"
-        );
+        return location.pathname.includes("inventory/purchase_tax_report_detailed");
       }
       return true;
     });

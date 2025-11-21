@@ -55,12 +55,14 @@ import ERPInput from "../../../components/ERPComponents/erp-input";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import moment from "moment";
 import { setStorageString } from "../../../utilities/storage-utils";
-import { formStateDeleteDetails, formStateHandleFieldChange, formStateTransactionDetailsRowsAdd } from "../../../pages/inventory/transactions/reducer";
-import { initialTransactionDetails2, transactionInitialMoreDetails, initialTransactionDetailData } from "../../../pages/inventory/transactions/transaction-type-data";
+import { formStateDeleteDetails, formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly, formStateTransactionDetailsRowsAdd } from "../../../pages/inventory/transactions/reducer";
+import { initialTransactionDetails2, transactionInitialMoreDetails, initialTransactionDetailData, initialColumnModel } from "../../../pages/inventory/transactions/transaction-type-data";
 import { TransactionDetailKeys, ColumnModel, TransactionDetail, FormElementState, CurrentCell, TransactionFormState, TransactionDetails2, TransactionDetailsMore, SummaryItems } from "../../../pages/inventory/transactions/transaction-types";
 import { ERPScrollArea } from "../erp-scrollbar";
 import usePreferenceData from "../../../utilities/hooks/usePreference";
 import DraggablePlusButton from "../../ERPComponents/erp-purchase-grid/draggable-button"
+import GridCell from "./GridCell";
+import ReactDOM from "react-dom";
 
 type DataItem = Record<string, any>;
 export interface SummaryConfig<T = any> {
@@ -87,7 +89,8 @@ interface DataGridProps<T extends DataItem> {
   onChange: (
     value: any,
     column: keyof TransactionDetail,
-    rowIndex: number
+    rowIndex: number,
+    isMobRow?: boolean
   ) => void;
   onKeyDown: (
     value: any,
@@ -109,6 +112,7 @@ interface DataGridProps<T extends DataItem> {
   gridFooterBg?: string;
   gridFooterFontColor?: string;
   zIndexController?: number;
+  
 }
 
 interface EditableCellProps {
@@ -203,6 +207,19 @@ interface RowData {
   isMobileGridRow?: boolean;
   isMobileEditRow?: boolean;
   zIndexController?:number;
+  // handleFocus?:boolean;
+  // handleBlur?:boolean;
+  handleFocus?: (field: string) => void;
+  handleBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+
+   handlRowKeyDown: 
+      (
+        value: any,
+        e: React.KeyboardEvent<HTMLElement>,
+        column: ColumnModel,
+        rowIndex: number,
+        details: TransactionDetail[]
+      ) => void
 }
 let mountCount = 0;
 
@@ -230,6 +247,7 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
     const cbRef = useRef<ERPSimpleComboboxRef>(null);
     const inputRef = useRef<HTMLInputElement>(null);
     console.log(appState);
+console.log(`safvan${column.dataField}`);
 
     const editCellComboBox: inputBox = formState?.userConfig?.inputBoxStyle;
     const gridBorderCol = formState?.userConfig?.gridBorderCol;
@@ -630,23 +648,25 @@ const VirtualRow = React.memo(
     zIndexController,
     isMobileGridRow = false,
     isMobileEditRow = false,
+    handlRowKeyDown,
+    handleFocus,
+    handleBlur
   }: RowData) => {
-    const [focusedColumn, setFocusedColumn] = useState<string | null>(null);
+    // const [focusedColumn, setFocusedColumn] = useState<string | null>(null);
     const item = details[index];
     const rowRef = useRef<HTMLTableRowElement>(null);
     const dispatch = useAppDispatch();
-    const handleFocus = useCallback(
-      (columnKey: string) => {
-        setFocusedColumn(columnKey);
-      },
-      [index]
-    );
-    const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
+    // const handleFocus = useCallback(
+    //   (columnKey: string) => {
+    //     setFocusedColumn(columnKey);
+    //   },
+    //   [index]
+    // );
     const { round, getFormattedValue } = useNumberFormat();
-    const handleBlur = useCallback(() => {
-      if (document.activeElement?.closest(".dx-datagrid")) return;
-      setFocusedColumn(null);
-    }, []);
+    // const handleBlur = useCallback(() => {
+    //   if (document.activeElement?.closest(".dx-datagrid")) return;
+    //   setFocusedColumn(null);
+    // }, []);
 
     const getCellContentStyle = (column: ColumnModel) => ({
       fontSize: `${gridFontSize}px`,
@@ -686,102 +706,6 @@ const VirtualRow = React.memo(
       fontSize: gridFontSize ?? 13,
       fontWeight: gridIsBold ? 700 : 400,
     } as inputBox;
-
-    const handleKeyDown = useCallback(
-      (
-        value: any,
-        e: React.KeyboardEvent<HTMLElement>,
-        column: ColumnModel,
-        rowIndex: number
-      ) => {
-        const target = e.target as HTMLElement;
-        const visibleColumns = columns.filter(
-          (col) => col.visible !== false && col.dataField != null
-        );
-        const currentColumnIndex = visibleColumns.findIndex(
-          (col) => col.dataField === column?.dataField
-        );
-
-        if (
-          !["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(e.key)
-        ) {
-          onKeyDown(
-            value,
-            e,
-            column.dataField as keyof TransactionDetail,
-            rowIndex
-          );
-          return;
-        }
-        if (!target.id) return;
-
-        let shouldNavigate = true;
-        if (target.tagName === "INPUT" || target.querySelector("input")) {
-          const input =
-            target.tagName === "INPUT"
-              ? (target as HTMLInputElement)
-              : (target.querySelector("input") as HTMLInputElement | null);
-          if (input && input.type !== "number") {
-            const { selectionStart, selectionEnd, value } = input;
-            const effectiveValue = value || "";
-            const effectiveStart = selectionStart ?? 0;
-            const effectiveEnd = selectionEnd ?? 0;
-            if (
-              e.key === "ArrowRight" &&
-              (effectiveStart !== effectiveValue.length ||
-                effectiveEnd !== effectiveValue.length)
-            ) {
-              shouldNavigate = false;
-            } else if (
-              e.key === "ArrowLeft" &&
-              (effectiveStart !== 0 || effectiveEnd !== 0)
-            ) {
-              shouldNavigate = false;
-            }
-          }
-        }
-
-        if (!shouldNavigate) return;
-
-        e.preventDefault();
-
-        switch (e.key) {
-          case "ArrowRight":
-            if (currentColumnIndex < visibleColumns.length - 1) {
-              const res = focusCell(index, currentColumnIndex + 1);
-              if (res != null) {
-                setCurrentCell({ ...res, data: details[index] });
-              }
-            }
-            break;
-          case "ArrowLeft":
-            if (currentColumnIndex > 1) {
-              const res = focusCell(index, currentColumnIndex - 1);
-              if (res != null) {
-                setCurrentCell({ ...res, data: details[index] });
-              }
-            }
-            break;
-          case "ArrowUp":
-            {
-              const res = focusCell(index - 1, currentColumnIndex);
-              if (res != null) {
-                setCurrentCell({ ...res, data: details[index] });
-              }
-            }
-            break;
-          case "ArrowDown":
-            {
-              const res = focusCell(index + 1, currentColumnIndex);
-              if (res != null) {
-                setCurrentCell({ ...res, data: details[index] });
-              }
-            }
-            break;
-        }
-      },
-      [columns, focusCell, setCurrentCell, onKeyDown]
-    );
 
     const handleDelete = (slNo: string) => {
       dispatch(formStateDeleteDetails({ slNo: slNo }));
@@ -839,22 +763,21 @@ const VirtualRow = React.memo(
     };
 
   // This is for handling multiple times showing draggable button in mobile, may need to change the concept CheckIt
-  const [showButton, setShowButton] = useState(false);
-  useEffect(() => {
-    mountCount++;
-    // console.log("Mounted count:", mountCount);
-    if (mountCount === 1) {
-      setShowButton(true);
-    } else {
-      setShowButton(false); 
-    }
-  }, []);
+  // const [showButton, setShowButton] = useState(false);
+  // useEffect(() => {
+  //   mountCount++;
+  //   // console.log("Mounted count:", mountCount);
+  //   if (mountCount === 1) {
+  //     setShowButton(true);
+  //   } else {
+  //     setShowButton(false); 
+  //   }
+  // }, []);
 
     return (
       <>
         {isMobileGridRow ? (
           <>
-          <div>{showButton && <DraggablePlusButton />}</div>
             <div
               className={`py-0 ${rowBg} transition-all duration-300 ease-in-out group cursor-pointer`}
               style={{
@@ -870,7 +793,7 @@ const VirtualRow = React.memo(
                 // marginTop: index === 0 ? '8px' : '0',
                 paddingBottom: index === details.length - 1 ? "0.5rem" : "0",
               }}
-              onDoubleClick={() => setIsMobileModalOpen(true)}
+              onDoubleClick={() => dispatch(formStateHandleFieldChange({fields:{row:item, itemPopup: {isOpen: true,index}}}) )}
             >
               <div className="p-1 w-full">
                 <div
@@ -979,233 +902,8 @@ const VirtualRow = React.memo(
                 </div>
               </div>
             </div>
-            {index === details.length - 19 && (
-              <button
-                onClick={() => setIsMobileModalOpen(true)}
-                className={`flex-1 w-full flex items-center justify-center gap-2 px-4 py-3 font-medium transition-all duration-200 shadow-md hover:shadow-lg ${
-                  appState.mode === "dark"
-                  ? "bg-[#444444] text-white hover:bg-[#555555] active:bg-[#666666] border border-[#555555]"
-                  : "bg-[#0084ff] text-white hover:bg-blue-700 active:bg-blue-800 border border-blue-600"
-                  }`}
-              >
-                <CirclePlus className="w-5 h-5" />
-                {t("add_items")}
-              </button>
-            )}
-            {isMobileModalOpen && (
-              <div className="fixed top-0 h-full inset-0 z-50 flex items-center justify-center bg-black/50">
-                <div
-                  className={`relative w-full h-full overflow-y-hidden ${
-                    appState.mode === "dark"
-                    ? "bg-[#2d2d2d] text-[#e0e0e0]"
-                    : "bg-white dark:bg-dark-bg-card"
-                    }`}
-                >
-                  {/* Close Button */}
-                  <button
-                    onClick={() => setIsMobileModalOpen(false)}
-                    className="absolute top-6 right-4 w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600 transition shadow-md"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                  {/* Content */}
-                  <div className="mt-8 p-4">
-                    <ERPInput
-                      id={"itemName"}
-                      value={itemName}
-                      label="item_name"
-                      placeholder={t("enter_item_name")}
-                      onChange={(e) => setItemName(e.target.value)}
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                    />
-                    <div className="grid grid-cols-2 items-center gap-2">
-                      <ERPInput
-                        type="number"
-                        id={"quantity"}
-                        value={quantity}
-                        label={t("quantity")}
-                        placeholder={t("enter_quantity")}
-                        onChange={(e) => setQuantity(e.target.value)}
-                        localInputBox={formState?.userConfig?.inputBoxStyle}
-                      />
-                      <ERPDataCombobox
-                        id="unit"
-                        label="Unit"
-                        options={[
-                          { value: "Bag", label: "Bag" },
-                          { value: "Piece", label: "Piece" },
-                          { value: "Kg", label: "Kg" },
-                          { value: "Liter", label: "Liter" },
-                        ]}
-                        value={unit}
-                        onChange={(value) => setUnit(value?.value)}
-                        localInputBox={formState?.userConfig?.inputBoxStyle}
-                      />
-                    </div>
-                    <div className="grid grid-cols-2 items-center gap-2 mb-3">
-                      <ERPInput
-                        type="number"
-                        id={"rate"}
-                        value={rate}
-                        label={t("rate")}
-                        placeholder={t("enter_rate")}
-                        onChange={(e) => setRate(e.target.value)}
-                        localInputBox={formState?.userConfig?.inputBoxStyle}
-                      />
-                      <ERPDataCombobox
-                        id="taxType"
-                        label="Tax"
-                        options={[
-                          { value: "With Tax", label: "With Tax" },
-                          { value: "Without Tax", label: "Without Tax" },
-                          { value: "Tax Exempt", label: "Tax Exempt" },
-                        ]}
-                        value={taxType}
-                        onChange={(value) => setTaxType(value?.value)}
-                        localInputBox={formState?.userConfig?.inputBoxStyle}
-                      />
-                    </div>
-                    {/* Totals & Taxes Section */}
-                    <div className="border-t pt-4 border-[#444444]">
-                      <h3
-                        className={`text-sm font-medium mb-4 ${
-                          appState.mode === "dark"
-                          ? "text-[#e0e0e0]"
-                          : "text-gray-700"
-                          }`}
-                      >
-                        Totals & Taxes
-                      </h3>
-                      <div className="flex justify-between items-center mb-3">
-                        <span
-                          className={`text-sm ${
-                            appState.mode === "dark"
-                            ? "text-[#a0a0a0]"
-                            : "text-gray-600"
-                            }`}
-                        >
-                          Subtotal (Rate x Qty)
-                        </span>
-                        <span className="font-medium">
-                          ₹ {calculateSubtotal().toFixed(2)}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between mb-3">
-                        <span
-                          className={`text-sm ${
-                            appState.mode === "dark"
-                            ? "text-[#a0a0a0]"
-                            : "text-gray-600"
-                            }`}
-                        >
-                          Discount
-                        </span>
-                        <div className="flex items-center space-x-2">
-                          <ERPInput
-                            type="number"
-                            noLabel={true}
-                            id={"discount"}
-                            className="w-16"
-                            value={discount}
-                            onChange={(e) => setDiscount(e.target.value)}
-                            localInputBox={formState?.userConfig?.inputBoxStyle}
-                          />
-                          <div
-                            className={`flex rounded ${
-                              appState.mode === "dark"
-                              ? "bg-[#444444]"
-                              : "bg-gray-100"
-                              }`}
-                          >
-                            <button
-                              onClick={() => setDiscountType("₹")}
-                              className={`px-2 py-1 text-xs rounded-l ${
-                                discountType === "₹"
-                                ? appState.mode === "dark"
-                                  ? "bg-[#ffa726] text-[#2d2d2d]"
-                                  : "bg-orange-200 text-orange-800"
-                                : appState.mode === "dark"
-                                  ? "text-[#a0a0a0]"
-                                  : "text-gray-600"
-                                }`}
-                            >
-                              ₹
-                            </button>
-                            <button
-                              onClick={() => setDiscountType("%")}
-                              className={`px-2 py-1 text-xs rounded-r ${
-                                discountType === "%"
-                                ? appState.mode === "dark"
-                                  ? "bg-[#ffa726] text-[#2d2d2d]"
-                                  : "bg-orange-200 text-orange-800"
-                                : appState.mode === "dark"
-                                  ? "text-[#a0a0a0]"
-                                  : "text-gray-600"
-                                }`}
-                            >
-                              %
-                            </button>
-                          </div>
-                          <span className="font-medium w-12 text-right">
-                            ₹ {calculateDiscount().toFixed(2)}
-                          </span>
-                        </div>
-                      </div>
-                      {/* Tax */}
-                      <div className="flex items-center justify-between mb-4">
-                        <span
-                          className={`text-sm ${
-                            appState.mode === "dark"
-                            ? "text-[#a0a0a0]"
-                            : "text-gray-600"
-                            }`}
-                        >
-                          Tax %
-                        </span>
-                        <div className="flex items-center space-x-2">
-                          <ERPDataCombobox
-                            id={"taxPercentage"}
-                            noLabel={true}
-                            noPlaceholder={true}
-                            value={taxPercentage}
-                            className="w-28"
-                            localInputBox={formState?.userConfig?.inputBoxStyle}
-                            onChange={(e) => setTaxPercentage(e.target.value)}
-                            options={[
-                              { label: "None", value: "none" },
-                              { label: "5%", value: "5" },
-                              { label: "12%", value: "12" },
-                              { label: "18%", value: "18" },
-                              { label: "28%", value: "28" },
-                            ]}
-                          />
-                          <span className="font-medium w-12 text-right">
-                            ₹ 0.00
-                          </span>
-                        </div>
-                      </div>
-                      {/* Total Amount */}
-                      <div className="border-t pt-3 border-[#444444]">
-                        <div className="flex justify-between items-center">
-                          <span
-                            className={`font-semibold ${
-                              appState.mode === "dark"
-                              ? "text-[#e0e0e0]"
-                              : "text-gray-800"
-                              }`}
-                          >
-                            Total Amount:
-                          </span>
-                          <span className="font-bold text-lg">
-                            ₹ {calculatedTotal().toFixed(2)}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
+            
+            
           </>
         ) : (
           <div
@@ -1296,7 +994,41 @@ const VirtualRow = React.memo(
                 }`;
 
               return (
-                <div
+                <>
+                <GridCell
+                  key={`${column.dataField}`}
+                  column={column}
+                  item={item}
+                  index={index}
+                  currentCell={currentCell}
+                  setCurrentCell={setCurrentCell}
+                  formState={formState}
+                  appState={appState}
+                  gridFontSize={gridFontSize}
+                  gridIsBold={gridIsBold}
+                  rowHeight={rowHeight}
+                  gridBorderColor={gridBorderColor}
+                  isFirstColumn={isFirstColumn}
+                  isLastColumn={isLastColumn}
+                  showBorder={showBorder}
+                  columnWidths={columnWidths}
+                  onChange={onChange}
+                  onKeyDown={onKeyDown}
+                  handlRowKeyDown={handlRowKeyDown}
+                  handleFocus={handleFocus}
+                  handleBlur={handleBlur}
+                  gridId={gridId}
+                  details={details}
+                  blockUnitOnDecimalPoint={blockUnitOnDecimalPoint}
+                  applicationSettings={applicationSettings}
+                  useInSearch={useInSearch}
+                  searchByCodeAndName={searchByCodeAndName}
+                  advancedProductSearching={advancedProductSearching}
+                  transactionType={transactionType}
+                  zIndexController={zIndexController}
+                  nextCellFind={nextCellFind}
+                  />
+                {/* <div
                   key={`${column.dataField}`}
                   style={{
                     width: `${
@@ -1420,11 +1152,11 @@ const VirtualRow = React.memo(
                     <button
                       disabled={formState.formElements.pnlMasters?.disabled}
                       onClick={() =>
-                        handleKeyDown(
+                        handlRowKeyDown(
                           cellValue,
                           { key: "Enter" } as any,
                           column as any,
-                          index
+                          index,details
                         )
                       }
                       className={`px-2 py-1 border rounded shadow-sm hover:shadow text-xs transition-all ${
@@ -1529,10 +1261,10 @@ const VirtualRow = React.memo(
                       productDataUrl={`${Urls.inv_transaction_base}${transactionType}/products`}
                       batchDataUrl={`${Urls.inv_transaction_base}${transactionType}/batches/`}
                       className="h-[22px] text-sm"
-                      onFocus={() => handleFocus(column.dataField!)}
-                      onBlur={handleBlur}
+                      onFocus={() => handleFocus?.(column.dataField!)}
+                      onBlur={(e) => handleBlur?.(e)}
                       onKeyDown={(value, e) => {
-                        handleKeyDown(value, e, column, index);
+                        handlRowKeyDown(value, e, column, index,details);
                       }}
                       searchKey={column.dataField}
                       advancedProductSearching={advancedProductSearching}
@@ -1565,10 +1297,11 @@ const VirtualRow = React.memo(
                       }}
                       id={cellId}
                       tabIndex={0}
-                      onFocus={() => handleFocus(column.dataField!)}
+                      onFocus={() => handleFocus?.(column.dataField!)}
+                      // onBlur={(e) => handleBlur?.(e)}
                       onBlur={handleBlur}
                       onKeyDown={(e) =>
-                        handleKeyDown(cellValue, e, column, index)
+                        handlRowKeyDown(cellValue, e, column, index,details)
                       }
                     >
                       {productId > 0 ? cellValue ?? "" : ""}
@@ -1603,10 +1336,11 @@ const VirtualRow = React.memo(
                             : "bg-[#fef9c3] text-[#854d0e]"
                           : ""
                         }`}
-                      onFocus={() => handleFocus(column.dataField!)}
+                      onFocus={() => handleFocus?.(column.dataField!)}
+                      // onBlur={(e) => handleBlur?.(e)}
                       onBlur={handleBlur}
                       onKeyDown={(e) =>
-                        handleKeyDown(cellValue, e, column, index)
+                        handlRowKeyDown(cellValue, e, column, index,details)
                       }
                     >
                       {productId > 0 ? cellValue ?? "" : ""}
@@ -1632,11 +1366,13 @@ const VirtualRow = React.memo(
                           : (cellValue as string | number)
                       }
                       options={options}
-                      onFocus={() => handleFocus(column.dataField!)}
-                      onBlur={handleBlur}
+                      onFocus={() => handleFocus?.(column.dataField!)}
+                      // onBlur={(e) => handleBlur?.(e)}
+                      // onBlur={handleBlur}
+                      onBlur={() => handleBlur?.({} as React.FocusEvent<HTMLInputElement>)}
                       gridId={gridId}
                       onKeyDown={(e) =>
-                        handleKeyDown(cellValue, e, column, index)
+                        handlRowKeyDown(cellValue, e, column, index,details)
                       }
                       gridFontSize={gridFontSize}
                       gridIsBold={gridIsBold}
@@ -1658,10 +1394,11 @@ const VirtualRow = React.memo(
                       id={cellId}
                       tabIndex={0}
                       className="px-1 cursor-default"
-                      onFocus={() => handleFocus(column.dataField!)}
+                       onFocus={() => handleFocus?.(column.dataField!)}
+                      // onBlur={(e) => handleBlur?.(e)}
                       onBlur={handleBlur}
                       onKeyDown={(e) =>
-                        handleKeyDown(cellValue ?? "", e, column, index)
+                        handlRowKeyDown(cellValue ?? "", e, column, index,details)
                       }
                     >
                       {productId > 0
@@ -1678,7 +1415,8 @@ const VirtualRow = React.memo(
                         : ""}
                     </div>
                   )}
-                </div>
+                </div> */}
+                </>
               );
             })}
           </div>
@@ -1716,6 +1454,8 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
     ref: Ref<any>
   ) {
     const dispatch = useAppDispatch();
+    console.log("zIndexController:",zIndexController);
+    
     const formState = useAppSelector(
       (state: RootState) => state.InventoryTransaction
     );
@@ -1750,7 +1490,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
     const appState = useAppSelector(
       (state: RootState) => state.AppState?.appState
     );
-    const applicationState = useAppSelector(
+    const applicationSettings = useAppSelector(
       (state: RootState) => state.ApplicationSettings
     );
     const preferenceChooserRef = useRef<{
@@ -1787,6 +1527,8 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
         })
       );
     };
+
+  
 
     useEffect(() => {
       const fetchPreferences = async () => {
@@ -2010,6 +1752,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
           pattern: "solid",
           fgColor: { argb: colors.headerBg },
         };
+        
 
         formState.transaction?.details.forEach((item, index) => {
           const row: { [key: string]: any } = {};
@@ -2496,7 +2239,8 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
         }
         if (
           prevCell !== currentCell?.rowIndex &&
-          isNullOrUndefinedOrZero(currentCell?.data.productID)
+          isNullOrUndefinedOrZero(currentCell?.data?.productID
+          )&& !isMobile
         ) {
           const rc =
             20 -
@@ -2548,6 +2292,130 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       );
     }
 
+      const handlRowKeyDown = useCallback(
+      (
+        value: any,
+        e: React.KeyboardEvent<HTMLElement>,
+        column: ColumnModel,
+        rowIndex: number,
+        details: TransactionDetail[]
+      ) => {
+        const target = e.target as HTMLElement;
+        const visibleColumns = columns.filter(
+          (col) => col.visible !== false && col.dataField != null
+        );
+        const currentColumnIndex = visibleColumns.findIndex(
+          (col) => col.dataField === column?.dataField
+        );
+
+        if (
+          !["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(e.key)
+        ) {
+          onKeyDown(
+            value,
+            e,
+            column.dataField as keyof TransactionDetail,
+            rowIndex
+          );
+          return;
+        }
+        if (!target.id) return;
+
+        let shouldNavigate = true;
+        if (target.tagName === "INPUT" || target.querySelector("input")) {
+          const input =
+            target.tagName === "INPUT"
+              ? (target as HTMLInputElement)
+              : (target.querySelector("input") as HTMLInputElement | null);
+          if (input && input.type !== "number") {
+            const { selectionStart, selectionEnd, value } = input;
+            const effectiveValue = value || "";
+            const effectiveStart = selectionStart ?? 0;
+            const effectiveEnd = selectionEnd ?? 0;
+            if (
+              e.key === "ArrowRight" &&
+              (effectiveStart !== effectiveValue.length ||
+                effectiveEnd !== effectiveValue.length)
+            ) {
+              shouldNavigate = false;
+            } else if (
+              e.key === "ArrowLeft" &&
+              (effectiveStart !== 0 || effectiveEnd !== 0)
+            ) {
+              shouldNavigate = false;
+            }
+          }
+        }
+
+        if (!shouldNavigate) return;
+
+        e.preventDefault();
+
+        switch (e.key) {
+         case "ArrowRight":
+          if (!details) return;
+          if (rowIndex === undefined) return;
+
+          if (currentColumnIndex < visibleColumns.length - 1) {
+            const res = focusCell(rowIndex, currentColumnIndex + 1);
+            if (res != null) {
+              setCurrentCell({ ...res, data: details[rowIndex] });
+            }
+          }
+          break;
+
+        case "ArrowLeft":
+          if (!details) return;
+          if (rowIndex === undefined) return;
+
+          if (currentColumnIndex > 0) {
+            const res = focusCell(rowIndex, currentColumnIndex - 1);
+            if (res != null) {
+              setCurrentCell({ ...res, data: details[rowIndex] });
+            }
+          }
+          break;
+
+        case "ArrowUp":
+          if (!details) return;
+          if (rowIndex === undefined || rowIndex <= 0) return;
+
+          const resUp = focusCell(rowIndex - 1, currentColumnIndex);
+          if (resUp != null) {
+            setCurrentCell({ ...resUp, data: details[rowIndex - 1] });
+          }
+          break;
+
+        case "ArrowDown":
+          if (!details) return;
+          if (rowIndex === undefined || rowIndex >= details.length - 1) return;
+
+          const resDown = focusCell(rowIndex + 1, currentColumnIndex);
+          if (resDown != null) {
+            setCurrentCell({ ...resDown, data: details[rowIndex + 1] });
+          }
+          break;
+
+        }
+      },
+      [columns, focusCell, setCurrentCell, onKeyDown]
+    );
+
+    const [focusedColumn, setFocusedColumn] = useState<string | null>(null);
+
+    const handleFocus = useCallback(
+      (columnKey: string) => {
+        setFocusedColumn(columnKey);
+      },
+      // [index]
+      []
+    );
+
+     const handleBlur = useCallback(() => {
+      if (document.activeElement?.closest(".dx-datagrid")) return;
+      setFocusedColumn(null);
+    }, []);
+
     useEffect(() => {
       function handleClickOutside(event: MouseEvent) {
         if (
@@ -2565,7 +2433,55 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       };
     }, []);
 
+    const [state, setState] = useState({
+      itemName: "",
+      quantity: 1,
+      unit: "Bag",
+      rate: 100,
+      priceIncludesTax: false,
+      discountPercent: undefined as number | undefined,
+      discountAmount: undefined as number | undefined,
+      taxPercent: 18,
+    });
+
+    const update = (key: string, value: any) => {
+  setState((prev) => ({ ...prev, [key]: value }));
+};
+
+const formatCurrency = (amount: number) => {
+  return `₹${amount.toFixed(2)}`;
+};
+
+const subtotal = state.quantity * state.rate;
+const discountFromPercent = state.discountPercent 
+  ? (subtotal * state.discountPercent) / 100 
+  : 0;
+const discountAmount = state.discountAmount ?? discountFromPercent;
+const afterDiscount = subtotal - discountAmount;
+const taxAmount = state.priceIncludesTax
+  ? (afterDiscount * state.taxPercent) / (100 + state.taxPercent)
+  : (afterDiscount * state.taxPercent) / 100;
+const total = state.priceIncludesTax ? afterDiscount : afterDiscount + taxAmount;
+
+// 5. Missing arrays for dropdowns
+const units = ["Bag", "Box", "Piece", "Kg", "Litre"];
+const taxOptions = [0, 5, 12, 18, 28];
+
+    
+
     return (
+      <>
+      
+          <div>{isMobile && <DraggablePlusButton onClick={() => {
+            debugger;
+            dispatch(formStateHandleFieldChangeKeysOnly({fields:{
+              row: {
+                ...initialTransactionDetailData,
+                slNo: generateUniqueKey()
+              },
+              itemPopup: {isOpen:true, index:formState.transaction.details.length}
+            }}))
+          }} />}</div>
       <div
         style={{
           position: isMobile ? "relative" : "static",
@@ -2592,6 +2508,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
         }}
         className="rounded-2xl shadow-xl backdrop-blur-sm"
       >
+        
         <div className={`relative ${className} w-full`}>
           {formState.gridMenuOpen && (
             <div
@@ -2948,7 +2865,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                       isMobileGridRow={isMobile}
                       zIndexController={zIndexController}
                       appState={appState}
-                      applicationSettings={applicationState}
+                      applicationSettings={applicationSettings}
                       formState={formState}
                       key={index}
                       index={index}
@@ -2969,6 +2886,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                       onChange={(value, column, rowIndex) => {
                         onChange(value, column, rowIndex);
                       }}
+                      handlRowKeyDown={handlRowKeyDown}
                       searchByCodeAndName={
                         formState.userConfig?.enableItemCodeSearchInNameColumn
                       }
@@ -2977,7 +2895,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                         transactionType ?? formState.transactionType
                       }
                       blockUnitOnDecimalPoint={
-                        applicationState.inventorySettings
+                        applicationSettings.inventorySettings
                           .blockUnitOnDecimalPoint
                       }
                       focusCell={focusCell}
@@ -3041,7 +2959,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
                           const rounded = getFormattedValue(
                             num,
                             false,
-                            applicationState.mainSettings.decimalPoints ?? 2
+                            applicationSettings.mainSettings.decimalPoints ?? 2
                           );
                           console.log("Rounded:", rounded);
 
@@ -3133,7 +3051,293 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
             </div>
           </ERPScrollArea>
         </div>
+       {formState.itemPopup?.isOpen &&
+        ReactDOM.createPortal(
+          <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
+               <div
+                 className={`relative w-full h-full overflow-y-auto ${
+                   appState.mode === "dark"
+                     ? "bg-[#2d2d2d] text-[#e0e0e0]"
+                     : "bg-white text-gray-800"
+                 }`}
+               >
+                 {/* Header */}
+                 <header className="flex items-center px-4 py-3 bg-white shadow-sm sticky top-0 z-10 dark:bg-[#2d2d2d]">
+                   <button
+                     onClick={() =>
+                       dispatch(
+                         formStateHandleFieldChange({
+                           fields: { row: undefined, itemPopup: { isOpen: false } },
+                         })
+                       )
+                     }
+                     className="p-2 mr-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+                   >
+                     <X className="w-5 h-5" />
+                   </button>
+                   <h1 className="text-lg font-medium">Add Items to Sale</h1>
+                 </header>
+         
+                 {/* Content */}
+                 <main className="flex-1 overflow-auto px-4 py-4">
+                   {/* Item name */}
+                   <div>
+                     <label className="block text-sm text-gray-600 mb-1 dark:text-gray-400">
+                       Item Name
+                     </label>
+                     <GridCell
+                       isMobile={true}
+                       column={_columns.find((x) => x?.dataField == "product") as ColumnModel}
+                       item={formState.row ?? initialTransactionDetailData}
+                       index={formState.itemPopup?.index ?? 0}
+                       currentCell={currentCell}
+                       setCurrentCell={setCurrentCell}
+                       formState={formState}
+                       appState={appState}
+                       gridFontSize={gridFontSize}
+                       gridIsBold={gridIsBold}
+                       rowHeight={rowHeight}
+                       gridBorderColor={gridBorderColor}
+                       isFirstColumn={false}
+                       isLastColumn={false}
+                       showBorder={true}
+                       columnWidths={columnWidths}
+                       onChange={onChange}
+                       onKeyDown={onKeyDown}
+                       handlRowKeyDown={handlRowKeyDown}
+                       handleFocus={handleFocus}
+                       handleBlur={handleBlur}
+                       gridId={gridId}
+                       details={formState.transaction.details}
+                       blockUnitOnDecimalPoint={
+                         applicationSettings?.inventorySettings?.blockUnitOnDecimalPoint
+                       }
+                       applicationSettings={applicationSettings}
+                       useInSearch={formState.userConfig?.useInSearch}
+                       searchByCodeAndName={
+                         formState.userConfig?.enableItemCodeSearchInNameColumn
+                       }
+                       advancedProductSearching={
+                         applicationSettings?.productsSettings?.advancedProductSearching
+                       }
+                       transactionType={transactionType}
+                      //  zIndexController={zIndexController}
+                       zIndexController= {55}
+                       nextCellFind={nextCellFind}
+                     />
+                   </div>
+         
+                   {/* Row: Quantity | Unit */}
+                   <div className="mt-4 grid grid-cols-2 gap-3">
+                     <div>
+                       <label className="block text-sm text-gray-600 mb-1 dark:text-gray-400">
+                         Quantity
+                       </label>
+                       <ERPInput
+                          noLabel ={true}
+                          id="modal-item-quantity"
+                          type="number"
+                          min={0}
+                          value={state.quantity}
+                          onChange={(e) => update("quantity", Number(e.target.value))}
+                        />
+                     </div>
+                     <div>
+                       <label className="block text-sm text-gray-600 mb-1 dark:text-gray-400">
+                         Unit
+                       </label>
+                       <ERPDataCombobox
+                         noLabel ={true}
+                         id="modal-item-unit"
+                         value={state.unit}
+                         onChange={(e) => update("unit", e.target.value)}
+                         options={units.map((u) => ({ value: u, label: u }))}
+                       />
+                     </div>
+                   </div>
+         
+                   {/* Row: Rate | Tax Mode */}
+                   <div className="mt-4 grid grid-cols-2 gap-3">
+                     <div>
+                       <label className="block text-sm text-gray-600 mb-1 dark:text-gray-400">
+                         Rate (Price/Unit)
+                       </label>
+                       <GridCell
+                       isMobile={true}
+                      column={_columns.find((x) => x.dataField == "unitPrice") as ColumnModel}
+                      item={formState.row ?? initialTransactionDetailData}
+                      index={formState.itemPopup?.index ?? 0}
+                      currentCell={currentCell}
+                      setCurrentCell={setCurrentCell}
+                      formState={formState}
+                      appState={appState}
+                      gridFontSize={gridFontSize}
+                      gridIsBold={gridIsBold}
+                      rowHeight={rowHeight}
+                      gridBorderColor={gridBorderColor}
+                      isFirstColumn={false}
+                      isLastColumn={false}
+                      showBorder={true}
+                      columnWidths={columnWidths}
+                      onChange={onChange}
+                      onKeyDown={onKeyDown}
+                      handlRowKeyDown={handlRowKeyDown}
+                      handleFocus={handleFocus}
+                      handleBlur={handleBlur}
+                      gridId={gridId}
+                      zIndexController= {55}
+                      details={formState.transaction.details} blockUnitOnDecimalPoint={false} applicationSettings={undefined} nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
+                        throw new Error("Function not implemented.");
+                      } }                       />
+                     </div>
+                     <div>
+                       <label className="block text-sm text-gray-600 mb-1 dark:text-gray-400">
+                         Tax Mode
+                       </label>
+                       <ERPDataCombobox
+                         noLabel ={true}
+                         id="modal-tax-mode"
+                         value={state.priceIncludesTax ? "incl" : "excl"}
+                         onChange={(e) =>
+                           update("priceIncludesTax", e.target.value === "incl")
+                         }
+                         options={[
+                           { value: "excl", label: "Without Tax" },
+                           { value: "incl", label: "Price Includes Tax" },
+                         ]}
+                       />
+                     </div>
+                   </div>
+         
+                   {/* Totals & Taxes Card */}
+                   <div className="mt-6 bg-white dark:bg-[#3c3c3c] rounded-lg shadow-sm p-4">
+                     <h6 className="font-medium text-gray-800 dark:text-gray-200 mb-3">
+                       Totals &amp; Taxes
+                     </h6>
+                     {/* Subtotal */}
+                     <div className="flex justify-between items-center text-sm text-gray-600 dark:text-gray-400">
+                       <div>
+                         <div className="text-xs text-gray-400 dark:text-gray-500">
+                           Subtotal{" "}
+                           <span className="text-[11px]">(Rate × Qty)</span>
+                         </div>
+                       </div>
+                       <div className="text-right">
+                         <div className="text-sm font-medium">{formatCurrency(subtotal)}</div>
+                       </div>
+                     </div>
+                     {/* Discount row */}
+                     <div className="mt-4 grid grid-cols-3 gap-3 items-center">
+                       <div className="col-span-1">
+                         <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                           Discount
+                         </div>
+                       </div>
+                       <div className="col-span-1 flex">
+                         <ERPInput
+                           noLabel ={true}
+                           id="modal-discount-percent"
+                           type="number"
+                           min={0}
+                           placeholder="%"
+                           value={state.discountPercent ?? ""}
+                           onChange={(e) => {
+                             const v =
+                               e.target.value === "" ? undefined : Number(e.target.value);
+                             update("discountPercent", v);
+                             if (v !== undefined) update("discountAmount", undefined);
+                           }}
+                         />
+                       </div>
+                       <div className="col-span-1 flex">
+                        <ERPInput
+                          noLabel ={true}
+                          id="modal-discount-percent"
+                          type="number"
+                          min={0}
+                          placeholder="%"
+                          value={state.discountPercent ?? ""}
+                          onChange={(e) => {
+                            const v = e.target.value === "" ? undefined : Number(e.target.value);
+                            update("discountPercent", v);
+                            if (v !== undefined) update("discountAmount", undefined);
+                          }}
+                        />
+                       </div>
+                     </div>
+                     {/* Tax row */}
+                     <div className="mt-4 grid grid-cols-3 gap-3 items-center">
+                       <div className="col-span-1 text-sm text-gray-600 dark:text-gray-400">
+                         Tax %
+                       </div>
+                       <div className="col-span-1">
+                      <ERPInput
+                        noLabel ={true}
+                        id="modal-discount-amount"
+                        type="number"
+                        min={0}
+                        placeholder="Amount"
+                        // leftIcon="₹"
+                        value={state.discountAmount ?? ""}
+                        onChange={(e) => {
+                          const v = e.target.value === "" ? undefined : Number(e.target.value);
+                          update("discountAmount", v);
+                          if (v !== undefined) update("discountPercent", undefined);
+                        }}
+                      />
+                       </div>
+                       <div className="col-span-1 text-right text-sm text-gray-600 dark:text-gray-400">
+                         <div className="text-sm">{formatCurrency(taxAmount)}</div>
+                       </div>
+                     </div>
+                     {/* Divider */}
+                     <div className="mt-4 border-t pt-4 flex justify-between items-center dark:border-gray-600">
+                       <div className="text-sm font-medium">Total Amount:</div>
+                       <div className="text-lg font-semibold">{formatCurrency(total)}</div>
+                     </div>
+                   </div>
+                 </main>
+         
+                 {/* Bottom action bar */}
+                 <div className="bg-white dark:bg-[#2d2d2d] border-t dark:border-gray-700 shadow-md sticky bottom-0 left-0 right-0 flex">
+                   <button
+                     className="flex-1 py-4 text-center text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                     onClick={() => {
+                       console.log("Save & New", state);
+                       setState((s) => ({
+                         ...s,
+                         itemName: "",
+                         quantity: 1,
+                         rate: 100,
+                         discountAmount: undefined,
+                         discountPercent: undefined,
+                       }));
+                     }}
+                   >
+                     Save & New
+                   </button>
+                   <button
+                     className="flex-1 py-4 text-center bg-red-600 text-white font-medium hover:bg-red-700"
+                     onClick={() => {
+                       console.log("Save", {
+                         ...state,
+                         subtotal,
+                         discountFromPercent,
+                         taxAmount,
+                         total,
+                       });
+                       alert("Saved (demo)");
+                     }}
+                   >
+                     Save
+                   </button>
+                 </div>
+               </div>
+             </div>,
+             document.body
+        )}
       </div>
+    </>
     );
   }
 );

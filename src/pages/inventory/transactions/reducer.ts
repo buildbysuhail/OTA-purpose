@@ -356,9 +356,21 @@ const InvTransactionSlice = createSlice({
       // Iterate over all rows in details
       state.transaction.attachments = [];
     },
-    formStateClearDetails: (state) => {
-      // Iterate over all rows in details
-      state.transaction.details = transactionInitialData.details;
+    // formStateClearDetails: (state) => {
+    //   // Iterate over all rows in details
+    //   state.transaction.details = transactionInitialData.details;
+    // },
+     formStateClearDetails: (state, action) => {
+      debugger;
+      const isMobile = action.payload;
+      console.log("isMobileisMobile:",
+        isMobile
+      );      
+      // Iterate over all rows in details  
+      state.transaction.details = isMobile? Array.from({ length: 30 }, (_, index) => ({
+                  ...initialTransactionDetailData,
+                  slNo: generateUniqueKey()
+                })) : []
     },
     formStateDeleteDetails: (state,action: PayloadAction<{slNo: string}>) => {
       // Iterate over all rows in details

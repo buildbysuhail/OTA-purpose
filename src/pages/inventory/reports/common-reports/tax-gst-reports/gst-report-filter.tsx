@@ -41,18 +41,18 @@ const GstReportFilter = ({ getFieldProps, handleFieldChange, formState, }: any) 
           />
         </div>
       </div>
- <div className="flex items-end gap-2">
-           <ERPCheckbox
-            {...getFieldProps("isGSTPerc")}
-            label={t("")}
-            noLabel
-            onChangeData={(data) =>
-              handleFieldChange("isGSTPerc", data.isGSTPerc)
-            }
-          />
-          <ERPInput
+      <div className="flex items-end gap-2">
+        <ERPCheckbox
+          {...getFieldProps("isGSTPerc")}
+          label={t("")}
+          noLabel
+          onChangeData={(data) =>
+            handleFieldChange("isGSTPerc", data.isGSTPerc)
+          }
+        />
+        <ERPInput
           {...getFieldProps("gSTPerc")}
-            disabled={getFieldProps("isGSTPerc").value != true}
+          disabled={getFieldProps("isGSTPerc").value != true}
           label={t("gst_percentage")}
           className="w-32"
           placeholder="0.00"
@@ -60,7 +60,7 @@ const GstReportFilter = ({ getFieldProps, handleFieldChange, formState, }: any) 
           onChangeData={(data) => handleFieldChange("gSTPerc", data.gSTPerc)}
         />
         {/* </div> */}
-     
+
         {/* always visible false now */}
         {/* {(location.pathname.includes("inventory/sales_gst_sales_and_return") ||
           location.pathname.includes(
@@ -129,41 +129,41 @@ const GstReportFilter = ({ getFieldProps, handleFieldChange, formState, }: any) 
           }}
         /> */}
         {/* <div className="flex items-end gap-2"> */}
-          <ERPCheckbox
-            {...getFieldProps("isVchForm")}
-            label={t("")}
-            noLabel
-            onChangeData={(data) =>
-              handleFieldChange("isVchForm", data.isVchForm)
-            }
-          />
-          <ERPDataCombobox
-            {...getFieldProps("isVchForm")}
-            label={t("voucher_form")}
-            field={{
-              id: "isVchForm",
-              getListUrl: Urls.data_form_type,
-              valueKey: "id",
-              labelKey: "name",
-            }}
-            disabled={getFieldProps("isVchForm").value != true}
-            className="w-full"
-            onSelectItem={(data) => {
-              handleFieldChange({
-                voucherFormId: data.value,
-                voucherForm: data.label,
-              });
-            }}
-          />
-        </div>
-
         <ERPCheckbox
-          {...getFieldProps("excludeNA")}
-          label={t("exclude_na")}
+          {...getFieldProps("isVchForm")}
+          label={t("")}
+          noLabel
           onChangeData={(data) =>
-            handleFieldChange("excludeNA", data.excludeNA)
+            handleFieldChange("isVchForm", data.isVchForm)
           }
         />
+        <ERPDataCombobox
+          {...getFieldProps("isVchForm")}
+          label={t("voucher_form")}
+          field={{
+            id: "isVchForm",
+            getListUrl: Urls.data_form_type,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          disabled={getFieldProps("isVchForm").value != true}
+          className="w-full"
+          onSelectItem={(data) => {
+            handleFieldChange({
+              voucherFormId: data.value,
+              voucherForm: data.label,
+            });
+          }}
+        />
+      </div>
+
+      <ERPCheckbox
+        {...getFieldProps("excludeNA")}
+        label={t("exclude_na")}
+        onChangeData={(data) =>
+          handleFieldChange("excludeNA", data.excludeNA)
+        }
+      />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { TransactionMaster, TransactionValidationsData, TransactionDetail, TransactionMaster3, FormElementState, TransactionFormState, SummaryItems, TransactionData, BarcodeLabel, ProductDisplayDto, EmployeeType, TransactionDetails2, TransactionMaster2, TransactionDetailsMore, UserConfig, CouponDetails, PrivilegeCardDetails, SettlementDetails } from "./transaction-types";
+import { TransactionMaster, TransactionValidationsData, TransactionDetail, TransactionMaster3, FormElementState, TransactionFormState, SummaryItems, TransactionData, BarcodeLabel, ProductDisplayDto, EmployeeType, TransactionDetails2, TransactionMaster2, TransactionDetailsMore, UserConfig, CouponDetails, PrivilegeCardDetails, SettlementDetails, ColumnModel } from "./transaction-types";
 import { generateUniqueKey } from "../../../utilities/Utils";
 
 
@@ -292,10 +292,8 @@ export const initialTransactionDetailData: TransactionDetail = {
   pO_PITransDetailQtys: 0
 };
 export const transactionInitialData: TransactionData = {
-  master: TransactionMasterInitialData, details: Array.from({ length: 30 }, (_, index) => ({
-    ...initialTransactionDetailData,
-    slNo: generateUniqueKey()
-  })),
+  master: TransactionMasterInitialData, 
+  details:[],
   attachments: [],
   masterValidations: initialTransactionMasterValidations,
   invAccTransactions: [],
@@ -642,6 +640,7 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   quantityFactorData: "",
   batchEntryData: { visible: false, data: "", rowIndex: -1 },
   serialNoEntryData: { visible: false, data: "", rowIndex: -1 },
+  imfData: { visible: false, data: "", rowIndex: -1 },
   productInfo: false,
   ShowProductBatchUnitDetails: false,
   ledgerDetails: false,
@@ -854,3 +853,21 @@ export const initialSettlement: SettlementDetails = {
 };
 
 
+export const initialColumnModel: ColumnModel = {
+  dataField: "",
+  decimalPoint: 0,
+  formStateOptionKey: "",
+  cssClass: "",
+  caption: "",
+  dataType: "string",
+  allowEditing: true,
+  alignment: "left",
+  format: "",
+  visible: true,
+  isLocked: false,
+  width: 120,
+  readOnly: false,
+  idField: "",
+  field: undefined,   // or { valueKey: "", labelKey: "" }
+  cellRender: undefined
+};

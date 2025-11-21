@@ -983,6 +983,15 @@ export const purchaseGridCol = (
         isLocked: true,
         alignment: "center",
       },
+      {
+        dataField: "imf",
+        caption: t("imf"),
+        dataType: "btn",
+        visible: false,
+        allowEditing: false,
+        width: 250,
+        alignment: "center",
+      },
     ] as ColumnModel[]
   )
    .filter((gc: ColumnModel) => {

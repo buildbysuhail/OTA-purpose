@@ -910,5 +910,18 @@
   "shortage_amount": "Shortage Amount",
   "sr_amount": "SR Amount",
   "system_datetime": "System Date Time",
-  "token_number": "Token Number"
+  "token_number": "Token Number",
+
+  "credit_card_amount":"Credit Card Amount",
+  "sr":"SR",
+  "l_bill_amount":"LBill Amount",
+  "gate_pass":"Gate Pass",
+  "vat_#":"VAT#",
+  "pending":"Pending",
+  "offer_achieved":"Offer Achieved",
+  "disc_slab":"Disc Slab",
+  "bank_card":"Bank Card",
+  "flavours":"Flavours",
+  "flavour":"Flavour",
+  "apply_all":"Apply All"
 }

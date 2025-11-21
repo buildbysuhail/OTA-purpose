@@ -13,7 +13,7 @@ interface GSTAdvRegisterFormatProps {
   gridId: string;
 }
 const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({ gridHeader, dataUrl, gridId, }) => {
-  const { t } = useTranslation("inventory");
+  const { t } = useTranslation('accountsReport');
   const location = useLocation();
   const [filter, setFilter] = useState<any>(GstReportFilterInitialState);
   const columns: DevGridColumn[] = useMemo(() => {
@@ -1429,14 +1429,7 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({ gridHeader, dataU
         if (["voucherPrefix", "invoiceNo"].includes(column.dataField ?? "")) {
           return true;
         } else if (
-          [
-            "voucherNo",
-            "refNumber",
-            "refDate",
-            "party",
-            "address",
-            "gstin",
-          ].includes(column.dataField ?? "")
+          ["voucherNo", "refNumber", "refDate", "party", "address", "gstin",].includes(column.dataField ?? "")
         ) {
           return false;
         }
@@ -1701,7 +1694,7 @@ const GSTAdvRegisterFormat: FC<GSTAdvRegisterFormatProps> = ({ gridHeader, dataU
   useEffect(() => {
     setKey((prev: any) => prev + 1);
   }, [location]);
-  
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">

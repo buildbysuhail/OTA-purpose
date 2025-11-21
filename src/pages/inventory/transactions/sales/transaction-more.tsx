@@ -153,8 +153,8 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({ formS
                     className="flex-1 h-6 text-xs w-full sm:max-w-36"
                     field={{
                       id: "driverID",
-                      valueKey: "EmployeeID",
-                      labelKey: "EmployeeName",
+                      valueKey: "employeeID",
+                      labelKey: "employeeName",
                       getListUrl: Urls.data_driver
                     }}
                     onSelectItem={(data) => dispatch(formStateMasterHandleFieldChange({ fields: { driverID: data.value } }))}
@@ -308,8 +308,8 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({ formS
                     value={formState.transaction.master.deliveryManID}
                     field={{
                       id: "id",
-                      valueKey: "EmployeeID",
-                      labelKey: "EmployeeName",
+                      valueKey: "employeeID",
+                      labelKey: "employeeName",
                       getListUrl: Urls.data_deliveryMan,
                     }}
                     onSelectItem={(data) => dispatch(formStateMasterHandleFieldChange({ fields: { deliveryManID: data.value } }))}

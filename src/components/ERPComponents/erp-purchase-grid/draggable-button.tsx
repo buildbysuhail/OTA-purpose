@@ -1,65 +1,75 @@
-import { useState, useRef, useEffect, useCallback, memo } from "react";
+import React, { useState, useRef, useEffect, useCallback, memo } from "react";
 import { Plus } from "lucide-react";
 
-function DraggablePlusButton() {
-  const [position, setPosition] = useState({ x: 20, y: 20 });
+interface DraggablePlusButtonProps {
+  onClick?: () => void;
+}
+
+const DraggablePlusButton: React.FC<DraggablePlusButtonProps> = ({ onClick }) => {
+  const buttonSize = 56;
+  const rightOffset = 20;
+  const bottomOffset = 100;
+
+  const [position, setPosition] = useState(() => ({
+    x: window.innerWidth - buttonSize - rightOffset,
+    y: window.innerHeight - buttonSize - bottomOffset,
+  }));
+
   const [isDragging, setIsDragging] = useState(false);
   const [hasMoved, setHasMoved] = useState(false);
 
-  const buttonRef = useRef<HTMLButtonElement>(null);
   const dragStartRef = useRef({ x: 0, y: 0 });
   const rafRef = useRef<number | null>(null);
 
-  const buttonSize = 56;
-  
+  const handleStart = useCallback(
+    (clientX: number, clientY: number) => {
+      setIsDragging(true);
+      setHasMoved(false);
+      dragStartRef.current = {
+        x: clientX - position.x,
+        y: clientY - position.y,
+      };
+    },
+    [position]
+  );
 
-  const handleStart = useCallback((clientX: number, clientY: number) => {
-    if (!buttonRef.current) return;
-    setIsDragging(true);
-    setHasMoved(false);
-    dragStartRef.current = {
-      x: clientX - position.x,
-      y: clientY - position.y,
-    };
-  }, [position]);
+  const handleMove = useCallback(
+    (clientX: number, clientY: number) => {
+      if (!isDragging) return;
 
-  const handleMove = useCallback((clientX: number, clientY: number) => {
-    if (!isDragging) return;
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
 
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(() => {
+        setHasMoved(true);
 
-    rafRef.current = requestAnimationFrame(() => {
-      setHasMoved(true);
+        const newX = clientX - dragStartRef.current.x;
+        const newY = clientY - dragStartRef.current.y;
 
-      const newX = clientX - dragStartRef.current.x;
-      const newY = clientY - dragStartRef.current.y;
-      const maxX = window.innerWidth - buttonSize;
-      const maxY = window.innerHeight - buttonSize;
+        const maxX = window.innerWidth - buttonSize;
+        const maxY = window.innerHeight - buttonSize;
 
-      const boundedX = Math.max(0, Math.min(newX, maxX));
-      const boundedY = Math.max(0, Math.min(newY, maxY));
-
-      setPosition({ x: boundedX, y: boundedY });
-    });
-  }, [isDragging]);
+        setPosition({
+          x: Math.max(0, Math.min(newX, maxX)),
+          y: Math.max(0, Math.min(newY, maxY)),
+        });
+      });
+    },
+    [isDragging]
+  );
 
   const handleEnd = useCallback(() => {
     setIsDragging(false);
-    if (rafRef.current) {
-      cancelAnimationFrame(rafRef.current);
-      rafRef.current = null;
-    }
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
   }, []);
 
-  // Add & clean up global listeners
   useEffect(() => {
     if (!isDragging) return;
 
     const mouseMove = (e: MouseEvent) => handleMove(e.clientX, e.clientY);
     const touchMove = (e: TouchEvent) => {
       e.preventDefault();
-      const touch = e.touches[0];
-      handleMove(touch.clientX, touch.clientY);
+      const t = e.touches[0];
+      handleMove(t.clientX, t.clientY);
     };
 
     document.addEventListener("mousemove", mouseMove);
@@ -72,46 +82,33 @@ function DraggablePlusButton() {
       document.removeEventListener("mouseup", handleEnd);
       document.removeEventListener("touchmove", touchMove);
       document.removeEventListener("touchend", handleEnd);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, [isDragging, handleMove, handleEnd]);
 
   const handleClick = (e: React.MouseEvent) => {
     if (hasMoved) {
       e.preventDefault();
-      e.stopPropagation();
-      return;
+      return; // prevent click after drag
     }
-    alert("Add button clicked!");
+    onClick?.(); // call parent onClick
   };
-
-  useEffect(() => {
-  console.log("DraggablePlusButton mounted");
-  return () => console.log("DraggablePlusButton unmounted");
-}, []);
 
   return (
     <button
-      ref={buttonRef}
-      onMouseDown={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        handleStart(e.clientX, e.clientY);
-      }}
+      onMouseDown={(e) => handleStart(e.clientX, e.clientY)}
       onTouchStart={(e) => {
-        e.stopPropagation();
-        const touch = e.touches[0];
-        handleStart(touch.clientX, touch.clientY);
+        const t = e.touches[0];
+        handleStart(t.clientX, t.clientY);
       }}
       onClick={handleClick}
-      className={`fixed w-14 h-14 bg-indigo-600 hover:bg-indigo-700 text-white 
-        rounded-full shadow-lg flex items-center justify-center 
-        transition-transform duration-200 pointer-events-auto 
-        ${isDragging ? "scale-110 shadow-2xl" : "scale-100"}
+      className={`fixed w-14 h-14 bg-indigo-600 hover:bg-indigo-700 text-white
+        rounded-full shadow-xl flex items-center justify-center
+        transition-transform duration-200
+        ${isDragging ? "scale-110" : "scale-100"}
       `}
       style={{
-        left: `${position.x}px`,
-        top: `${position.y}px`,
+        left: position.x,
+        top: position.y,
         cursor: isDragging ? "grabbing" : "grab",
         touchAction: "none",
         userSelect: "none",
@@ -121,6 +118,6 @@ function DraggablePlusButton() {
       <Plus size={28} strokeWidth={2.5} />
     </button>
   );
-}
+};
 
 export default memo(DraggablePlusButton);

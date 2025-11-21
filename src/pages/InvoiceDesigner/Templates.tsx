@@ -1,5 +1,4 @@
 "use client"
-
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { PlusIcon, TrashIcon, PencilIcon, XMarkIcon, Squares2X2Icon, ListBulletIcon, Bars3Icon, } from "@heroicons/react/24/outline"
@@ -62,8 +61,8 @@ interface previewState {
   show: boolean
   template?: TemplateState<unknown>
 }
-const api = new APIClient()
 
+const api = new APIClient()
 const Templates = () => {
   const navigate = useNavigate()
   const appDispatch = useAppDispatch()
@@ -81,12 +80,8 @@ const Templates = () => {
   const [sortBy, setSortBy] = useState<"name" | "date" | "type">("name")
   const [formType, setFormType] = useState("")
   const [customerType, setCustomerType] = useState("")
-
-  const [templateGroup, setTemplateGroup] = useState<VoucherType | string>(
-    (searchParams?.get("template_group")! as VoucherType | string) ?? "SI",
-  )
+  const [templateGroup, setTemplateGroup] = useState<VoucherType | string>(  (searchParams?.get("template_group")! as VoucherType | string) ?? "SI",)
   const [accountVoucher, setAccountVoucher] = useState(DummyVoucherData)
-
   const setDefaultTemplate = async (id: any) => {
     try {
       const res = await api.patch(`${Urls.templates}${id}`, {
@@ -338,33 +333,7 @@ const Templates = () => {
               </div>
             )}
           </div>
-          <div className="absolute bottom-0 left-0 right-0 h-20 bg-slate-900/60 backdrop-blur-sm flex flex-col opacity-0 group-hover:opacity-100 transition-opacity duration-300 overflow-hidden">
-            <div className="flex items-center justify-center gap-3 flex-1 overflow-hidden">
-              <button
-                className="bg-white/20 hover:bg-white/30 text-white p-2 rounded-lg transition-colors overflow-hidden"
-                title={t("edit")}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  templateGroup == "barcode"
-                    ? navigate(`/label-designer/${temp?.id}?template_group=${templateGroup}`)
-                    : navigate(`/invoice_designer/${temp?.id}?template_group=${templateGroup}`, {
-                      state: { templateKind: temp?.templateKind, templateType: temp?.templateType },
-                    })
-                }}
-              >
-                <PencilIcon className="w-4 h-4" />
-              </button>
-              <button
-                className="bg-white/20 hover:bg-white/30 text-red-400 p-2 rounded-lg transition-colors overflow-hidden"
-                title={t("delete")}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  handleDeleteTemplate(temp)
-                }}
-              >
-                <TrashIcon className="w-4 h-4" />
-              </button>
-            </div>
+          <div className="absolute bottom-0 left-0 right-0 h-14 bg-slate-900/60 backdrop-blur-sm flex flex-col opacity-0 group-hover:opacity-100 transition-opacity duration-300 overflow-hidden">
             <div className="flex items-center justify-center flex-1 overflow-hidden">
               {isDefault ? (
                 <span className="bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-950 dark:to-indigo-950 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded-full font-medium border border-blue-200 dark:border-blue-800 flex items-center gap-1 flex-shrink-0 whitespace-nowrap overflow-hidden">
@@ -387,7 +356,7 @@ const Templates = () => {
           </div>
         </div>
         <div className="p-4 relative z-30 bg-white dark:bg-dark-bg-card rounded-b-xl overflow-hidden min-h-[20%]">
-          <div className="flex items-start justify-between mb-0">
+          <div className="flex items-center justify-between mb-0">
             <div className="flex-1 min-w-0 max-w-full">
               <h3
                 className="font-semibold mj23333 text-slate-900 dark:!text-dark-text text-sm line-clamp-2 leading-tight block overflow-hidden text-ellipsis"
@@ -395,6 +364,36 @@ const Templates = () => {
               >
                 {temp?.templateName || "Untitled Template"}
               </h3>
+            </div>
+            <div>
+              <div className="flex items-center justify-center gap-2 flex-1 overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+
+                {/* Edit Button */}
+                <button className="bg-white border border-slate-200 hover:bg-blue-500 p-2 rounded-lg transition-all duration-200 flex items-center justify-center group/edit"
+                  title={t('edit')}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    templateGroup === 'barcode'
+                      ? navigate(`/label-designer/${temp?.id}?template_group=${templateGroup}`)
+                      : navigate(`/invoice_designer/${temp?.id}?template_group=${templateGroup}`, {
+                        state: { templateKind: temp?.templateKind, templateType: temp?.templateType },
+                      })
+                  }}
+                >
+                  <PencilIcon className="w-4 h-4 text-blue-500 group-hover/edit:text-white transition-colors duration-200" />
+                </button>
+
+                {/* Delete Button */}
+                <button className=" bg-white border border-red-200  hover:bg-red-500  p-2 rounded-lg  transition-all duration-200  flex items-center justify-center group/delete"
+                  title={t('delete')}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    handleDeleteTemplate(temp)
+                  }}
+                >
+                  <TrashIcon className="w-4 h-4 text-red-500 group-hover/delete:text-white transition-colors duration-200" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -463,7 +462,7 @@ const Templates = () => {
                         }
                       }}
                       placeholder={t("search_templates")}
-                      className="block w-full pl-10 pr-3 py-2 sm:py-2.5 border border-slate-300 dark:border-dark-border rounded-lg text-xs placeholder-slate-400 dark:placeholder-gray-500 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text transition-all duration-200 h-[38px]"
+                      className="block w-full pl-10 pr-3 py-2 sm:py-2.5 border border-slate-300 rounded-lg text-xs placeholder-slate-400 dark:placeholder-gray-500 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text transition-all duration-200 h-[38px]"
                     />
                     {searchQuery && (
                       <button
@@ -710,7 +709,7 @@ const Templates = () => {
                       />
                       {templateSearchQuery && (
                         <button
-                          onClick={() => setSearchQuery('')}
+                          onClick={() => setTemplateSearchQuery('')}
                           className="absolute inset-y-0 right-0 pr-3 flex items-center"
                         >
                           <svg
@@ -729,13 +728,13 @@ const Templates = () => {
                     </div>
 
                     {/* View Toggle */}
-                    <div className="flex bg-white/80 dark:bg-dark-bg-card/80 backdrop-blur-sm rounded-lg p-1 border border-slate-200 dark:border-dark-border shadow-sm">
+                    <div className="flex gap-1 bg-white/80 dark:bg-dark-bg-card/80 backdrop-blur-sm rounded-lg p-1 border border-slate-200 dark:border-dark-border shadow-sm">
                       <button
                         type="button"
                         onClick={() => setViewMode("grid")}
                         className={`p-[6px] rounded-md transition-all duration-200 ${viewMode === "grid"
                           ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
-                          : "text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-gray-200 hover:bg-slate-100 dark:hover:bg-dark-hover"
+                          : "text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-gray-200 hover:bg-slate-100 dark:hover:bg-slate-700"
                           }`}
                       >
                         <Squares2X2Icon className="w-4 h-4" />
@@ -745,7 +744,7 @@ const Templates = () => {
                         onClick={() => setViewMode("list")}
                         className={`p-[6px] rounded-md transition-all duration-200 ${viewMode === "list"
                           ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
-                          : "text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-gray-200 hover:bg-slate-100 dark:hover:bg-dark-hover"
+                          : "text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-gray-200 hover:bg-slate-100 dark:hover:bg-slate-700"
                           }`}
                       >
                         <ListBulletIcon className="w-4 h-4" />

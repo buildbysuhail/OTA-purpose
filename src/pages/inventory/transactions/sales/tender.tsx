@@ -88,7 +88,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
     <ERPModal
       isOpen={isOpen}
       closeModal={onClose}
-      title={t("tender")}
+      title={""}
       width={480}
       height={400}
       content={

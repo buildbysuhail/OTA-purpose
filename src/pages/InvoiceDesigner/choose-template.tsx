@@ -541,13 +541,13 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
                 </div>
 
                 {/* View Toggle */}
-                <div className="flex bg-white/80 dark:bg-dark-bg-card/80 backdrop-blur-sm rounded-lg p-1 border border-slate-200 dark:border-dark-border shadow-sm">
+                <div className="flex gap-1 bg-white/80 dark:bg-dark-bg-card/80 backdrop-blur-sm rounded-lg p-1 border border-slate-200 dark:border-dark-border shadow-sm">
                   <button
                     type="button"
                     onClick={() => setViewMode("grid")}
                     className={`p-[6px] rounded-md transition-all duration-200 ${viewMode === "grid"
                       ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
-                      : "text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-gray-200 hover:bg-slate-100 dark:hover:bg-dark-hover"
+                      : "text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-gray-200 hover:bg-slate-100 dark:hover:bg-slate-700"
                       }`}
                   >
                     <Grid3X3 className="w-4 h-4" />
@@ -557,7 +557,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
                     onClick={() => setViewMode("list")}
                     className={`p-[6px] rounded-md transition-all duration-200 ${viewMode === "list"
                       ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
-                      : "text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-gray-200 hover:bg-slate-100 dark:hover:bg-dark-hover"
+                      : "text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-gray-200 hover:bg-slate-100 dark:hover:bg-slate-700"
                       }`}
                   >
                     <List className="w-4 h-4" />

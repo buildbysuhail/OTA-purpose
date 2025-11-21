@@ -151,7 +151,7 @@
   "vat_percentage": "VAT %",
   "vat_amount": "VAT Amount",
   "cr_number": "Cr Number",
-  "credit_or_cash": "Credit/Cash",
+  "credit_or_cash": "Credit / Cash",
   "transaction_type": "Transaction Type",
   "tot_qty": "TotQty",
   "tot_gross": "TotQross",
@@ -1196,5 +1196,8 @@
   "sales_return_tax_reports": "Sales Return Tax Reports",
   "purchase_tax_reports": "Purchase Tax Reports",
   "purchase_return_tax_reports": "Purchase Return Tax Reports",
-  "inventory_price_reports": "Inventory Price Reports"
+  "inventory_price_reports": "Inventory Price Reports",
+  "sales_period": "Sales Period",
+  "total_sold": "Total Sold",
+  "gst_included": "GST Included"
 }

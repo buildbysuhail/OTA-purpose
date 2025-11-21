@@ -59,7 +59,10 @@ interface TransactionHeaderProps {
   ledgerCodeRef: any;
   voucherNumberRef: any;
   refNoRef: any;
-  isDropDownOpen: boolean;
+  isDropDownOpen: {
+    open: boolean;
+    autoAddressFocus: boolean;
+};
   toggleDropdown: () => void;
   onHeightChange?: (height: number) => void;
   footerLayout: "horizontal" | "vertical";
@@ -210,7 +213,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
-        isDropDownOpen &&
+        isDropDownOpen.open &&
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target as Node) &&
         !(event.target as HTMLElement).closest("button") &&
@@ -234,7 +237,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isDropDownOpen, toggleDropdown]);
+  }, [isDropDownOpen.open, toggleDropdown]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -347,7 +350,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
 
   return (
     <div>
-      {isDropDownOpen && (
+      {isDropDownOpen.open && (
         <div
           className="fixed inset-0 bg-black/20 dark:bg-black/30 backdrop-blur-sm z-30"
           onClick={toggleDropdown}
@@ -440,7 +443,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
           {/* Dropdown content */}
           <div
             ref={dropdownRef}
-            className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropDownOpen ? "max-h-[50vh]" : "max-h-0"
+            className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropDownOpen.open ? "max-h-[50vh]" : "max-h-0"
               }`}
           >
             <div className="p-4 md:p-2 dark:bg-dark-bg-card bg-white border-t dark:border-dark-border border-gray-300 shadow-lg">
@@ -1007,7 +1010,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
             <div className="absolute left-1/2 transform -translate-x-1/2 top-[-8px]">
               <button
                 onClick={toggleDropdown}
-                className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-white rounded-b-full border border-l-0 border-r-0 border-t-0 border-gray-300 transition-all duration-500 ${isDropDownOpen ? "dark:bg-dark-hover-bg bg-gray-100" : ""
+                className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-white rounded-b-full border border-l-0 border-r-0 border-t-0 border-gray-300 transition-all duration-500 ${isDropDownOpen.open ? "dark:bg-dark-hover-bg bg-gray-100" : ""
                   }`}
                 style={{
                   transform: isDropDownOpen ? "translateY(0)" : "translateY(0)",
@@ -1015,7 +1018,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 }}
               >
                 <ChevronDown
-                  className={`mx-2 transition-transform duration-500 dark:text-dark-text ${isDropDownOpen
+                  className={`mx-2 transition-transform duration-500 dark:text-dark-text ${isDropDownOpen.open
                     ? "transform rotate-180"
                     : hasAnimated
                       ? ""
@@ -1066,7 +1069,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
           {/* Collapsible Dropdown Section */}
           <div
             ref={dropdownRef}
-            className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropDownOpen
+            className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropDownOpen.open
               ? "max-h-[50vh] overflow-y-auto overflow-x-hidden"
               : "max-h-0 overflow-hidden"
               }`}
@@ -1249,10 +1252,10 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   transactionType={transactionType}
                   t={t}
                 />
-                {formState.transaction.master.voucherType !==
+                {/* {formState.transaction.master.voucherType !==
                   VoucherType.GoodsReceiptNote &&
                   formState.transaction.master.voucherType !==
-                  VoucherType.PurchaseEstimate && (
+                  VoucherType.PurchaseEstimate && ( */}
                     <VatTokenInput
                       formState={formState}
                       dispatch={dispatch}
@@ -1260,7 +1263,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       handleFieldKeyDown={handleFieldKeyDown}
                       handleKeyDown={handleKeyDown}
                     />
-                  )}
+                  {/* )} */}
                 {/* Conditional Elements */}
                 {formState.formElements.inSearch?.visible && (
                   <ERPCheckbox
@@ -1554,7 +1557,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
             <div className="absolute left-1/2 transform -translate-x-1/2 top-0">
               <button
                 onClick={toggleDropdown}
-                className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-white rounded-b-lg border border-t-0 border-gray-300 transition-all duration-500 ${isDropDownOpen ? "dark:bg-dark-hover-bg bg-gray-100" : ""
+                className={`flex items-center justify-center dark:bg-dark-bg-card dark:border-dark-border bg-white rounded-b-lg border border-t-0 border-gray-300 transition-all duration-500 ${isDropDownOpen.open ? "dark:bg-dark-hover-bg bg-gray-100" : ""
                   }`}
                 style={{
                   boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
@@ -1563,7 +1566,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 }}
               >
                 <ChevronDown
-                  className={`mx-2 transition-transform duration-500 dark:text-dark-text ${isDropDownOpen
+                  className={`mx-2 transition-transform duration-500 dark:text-dark-text ${isDropDownOpen.open
                     ? "transform rotate-180"
                     : hasAnimated
                       ? ""

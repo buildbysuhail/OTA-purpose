@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { ERPScrollArea } from "../../../../../../components/ERPComponents/erp-scrollbar";
-import { removeTemplateTableColumn, setTemplateTableMasterState, setTemplateTableState, updateTemplateTableState, } from "../../../../../../redux/slices/templates/reducer";
+import { clearTemplateMessage, removeTemplateTableColumn, setTemplateTableMasterState, setTemplateTableState, updateTemplateTableState, } from "../../../../../../redux/slices/templates/reducer";
 import { ItemTableMasterState, TableColumn, templateDesignerFormatOptions, } from "../../../../Designer/interfaces";
 import ERPCheckbox from "../../../../../../components/ERPComponents/erp-checkbox";
 import ErpInput from "../../../../../../components/ERPComponents/erp-input";
@@ -14,7 +14,6 @@ import { RootState } from "../../../../../../redux/store";
 import ERPButton from "../../../../../../components/ERPComponents/erp-button";
 import ERPModal from "../../../../../../components/ERPComponents/erp-modal";
 import { TableColumnAddOrEdit } from "./tabble-column";
-import { PrintDetailDto } from "../../../../../use-print-type";
 import { moveArrayElement } from "../../../../../../utilities/Utils";
 import ERPDataCombobox from "../../../../../../components/ERPComponents/erp-data-combobox";
 import ERPInput from "../../../../../../components/ERPComponents/erp-input";
@@ -37,7 +36,6 @@ const LabelsEditor = <T,>({ currentTableState, onChange, }: ItemTableLabelDesign
   const { t } = useTranslation("system");
   const dispatch = useDispatch();
   const [openTableCol, setOpenTableCol] = useState(false);
-
   const dragItem = useRef<string | null>(null);
   const dragOverItem = useRef<string | null>(null);
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => { dragItem.current = e.currentTarget.id; };
@@ -63,10 +61,10 @@ const LabelsEditor = <T,>({ currentTableState, onChange, }: ItemTableLabelDesign
     dragItem.current = null;
     dragOverItem.current = null;
   };
-  
-    const removeColumn = (item: TableColumn<T>) => {
-      dispatch(removeTemplateTableColumn({ key: item.key }));
-    };
+
+  const removeColumn = (item: TableColumn<T>) => {
+    dispatch(removeTemplateTableColumn({ key: item.key }));
+  };
 
   return (
     <>
@@ -75,10 +73,10 @@ const LabelsEditor = <T,>({ currentTableState, onChange, }: ItemTableLabelDesign
           title={t("new")}
           variant="primary"
           onClick={() => {
+            dispatch(clearTemplateMessage());
             setOpenTableCol(true)
           }}
         />
-      
       </div>
       {currentTableState &&
         currentTableState.length > 0 &&
@@ -95,7 +93,6 @@ const LabelsEditor = <T,>({ currentTableState, onChange, }: ItemTableLabelDesign
                 onDragEnd={() => handleDropping(false)}
               >
                 ⋮⋮
-                
                 <ERPCheckbox
                   id="tb_col_show"
                   noLabel
@@ -128,46 +125,43 @@ const LabelsEditor = <T,>({ currentTableState, onChange, }: ItemTableLabelDesign
                     onChange(item.field as keyof T, { label: e.target.value })
                   }
                 />
- 
                 <ERPDataCombobox
-                 disabled={item.show != true}
+                  disabled={item.show != true}
                   id="tb_col_format"
                   label={t("format")}
-                  field={
-                    {
-                      labelKey:"label",
-                      valueKey:"value"
-                    }
-                  }
+                  field={{
+                    labelKey: "label",
+                    valueKey: "value"
+                  }}
                   options={templateDesignerFormatOptions}
                   value={item.format}
                   onChange={(e) =>
-                  onChange &&
-                  onChange(item.field as keyof T, { format: e.value })
-                }
-                />          
-           
-                  <div className="w-3 h-3 cursor-pointer self-center" title={t("remove")} onClick={()=>removeColumn(item)}>
-                    <Trash />
-                  </div>
+                    onChange &&
+                    onChange(item.field as keyof T, { format: e.value })
+                  }
+                />
+
+                <div className="w-3 h-3 cursor-pointer self-center" title={t("remove")} onClick={() => removeColumn(item)}>
+                  <Trash />
+                </div>
               </div>
             );
           })}
 
 
-      {openTableCol &&  (
+      {openTableCol && (
         <ERPModal
           isForm={true}
           disableOutsideClickClose={false}
           isOpen={openTableCol}
-          title="Choose TableColumns"
+          title={t("choose_table_columns")}
           closeModal={() => setOpenTableCol(false)}
           width={1000}
           height={700}
           content={
             <TableColumnAddOrEdit
               onClose={() => { setOpenTableCol(false) }}
-        
+
             />
           }
         // footer={<TableManagerFooter onSubmit={onSubmit}  onClose={onClose}/>}
@@ -180,7 +174,6 @@ const LabelsEditor = <T,>({ currentTableState, onChange, }: ItemTableLabelDesign
 const LayoutEditor = ({ masterState, onChange, }: ItemTableLayoutDesignerProps) => {
   const [searchParams] = useSearchParams();
   const { t } = useTranslation("system");
-
   return (
     <div className="flex flex-col gap-2 dark:bg-dark-bg-card">
       <ERPCheckbox
@@ -235,6 +228,7 @@ const LayoutEditor = ({ masterState, onChange, }: ItemTableLayoutDesignerProps) 
         }
         checked={masterState?.headerRepeatOnPage}
       />
+
       <ERPDataCombobox
         id="headerFontFamily"
         label={t("header_font_family")}
@@ -257,6 +251,7 @@ const LayoutEditor = ({ masterState, onChange, }: ItemTableLayoutDesignerProps) 
           { value: "Poppins", label: t("poppins") },
         ]}
       />
+
       <ERPDataCombobox
         id="arabicHeaderFontFamily"
         label={t("arbic_font_family")}
@@ -277,6 +272,7 @@ const LayoutEditor = ({ masterState, onChange, }: ItemTableLayoutDesignerProps) 
           { value: "Amiri", label: t("amiri") },
         ]}
       />
+
       <ERPDataCombobox
         id="headerFontStyle"
         label={t("font_style")}
@@ -297,6 +293,7 @@ const LayoutEditor = ({ masterState, onChange, }: ItemTableLayoutDesignerProps) 
           { value: "italic", label: t("italic") },
         ]}
       />
+
       <ERPStepInput
         value={masterState?.headerFontSize}
         onChange={(headerFontSize) =>
@@ -304,12 +301,12 @@ const LayoutEditor = ({ masterState, onChange, }: ItemTableLayoutDesignerProps) 
         }
         label={t("size_(8-28)")}
         id="headerFontSize"
-        placeholder=" "
         defaultValue={10}
         min={5}
         max={28}
         step={1}
       />
+
       <div className="flex items-center space-x-3">
         <div className="basis-2/3 ">
           <ERPSlider
@@ -325,6 +322,7 @@ const LayoutEditor = ({ masterState, onChange, }: ItemTableLayoutDesignerProps) 
             step={100}
           />
         </div>
+
         <div className="basis-1/3 translate-y-3">
           <ERPInput
             id="headerFontWeight"
@@ -346,6 +344,7 @@ const LayoutEditor = ({ masterState, onChange, }: ItemTableLayoutDesignerProps) 
           />
         </div>
       </div>
+
       <ErpInput
         id="headerFontColor"
         label={t("font_color")}
@@ -355,6 +354,7 @@ const LayoutEditor = ({ masterState, onChange, }: ItemTableLayoutDesignerProps) 
           onChange?.({ ...masterState, headerFontColor: e.target?.value });
         }}
       />
+
       <ERPCheckbox
         id="showTableHeaderBg"
         label={t("background")}
@@ -363,6 +363,7 @@ const LayoutEditor = ({ masterState, onChange, }: ItemTableLayoutDesignerProps) 
         }}
         checked={masterState?.showTableHeaderBg}
       />
+
       {masterState?.showTableHeaderBg && (
         <ErpInput
           id="tableHeaderBgColor"
@@ -399,6 +400,7 @@ const LayoutEditor = ({ masterState, onChange, }: ItemTableLayoutDesignerProps) 
           { value: "Poppins", label: t("poppins") },
         ]}
       />
+
       <ERPDataCombobox
         id="arabicItemRowFontFamily"
         label={t("arbic_font_family")}
@@ -419,6 +421,7 @@ const LayoutEditor = ({ masterState, onChange, }: ItemTableLayoutDesignerProps) 
           { value: "Amiri", label: t("amiri") },
         ]}
       />
+
       <ERPDataCombobox
         id="itemRowFontStyle"
         label={t("font_style")}
@@ -439,6 +442,7 @@ const LayoutEditor = ({ masterState, onChange, }: ItemTableLayoutDesignerProps) 
           { value: "italic", label: t("italic") },
         ]}
       />
+
       <ERPStepInput
         value={masterState?.itemRowFontSize}
         onChange={(itemRowFontSize) =>
@@ -452,6 +456,7 @@ const LayoutEditor = ({ masterState, onChange, }: ItemTableLayoutDesignerProps) 
         max={28}
         step={1}
       />
+
       <div className="flex items-center space-x-3">
         <div className="basis-2/3 ">
           <ERPSlider
@@ -467,6 +472,7 @@ const LayoutEditor = ({ masterState, onChange, }: ItemTableLayoutDesignerProps) 
             step={100}
           />
         </div>
+
         <div className="basis-1/3 translate-y-3">
           <ERPInput
             id="itemRowFontWeight"
@@ -488,6 +494,7 @@ const LayoutEditor = ({ masterState, onChange, }: ItemTableLayoutDesignerProps) 
           />
         </div>
       </div>
+
       <ErpInput
         id="itemRowFontColor"
         label={t("font_color")}
@@ -497,6 +504,7 @@ const LayoutEditor = ({ masterState, onChange, }: ItemTableLayoutDesignerProps) 
           onChange?.({ ...masterState, itemRowFontColor: e.target?.value });
         }}
       />
+
       <ERPCheckbox
         id="showRowBg"
         label={t("background")}
@@ -505,6 +513,7 @@ const LayoutEditor = ({ masterState, onChange, }: ItemTableLayoutDesignerProps) 
         }}
         checked={masterState?.showRowBg}
       />
+
       {masterState?.showRowBg && (
         <ErpInput
           id="itemRowBgColor"

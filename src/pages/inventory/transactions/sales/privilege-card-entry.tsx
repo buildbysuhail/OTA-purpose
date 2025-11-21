@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react';
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
-
+import { togglePrivilegeCardPopup } from "../../../../redux/slices/popup-reducer";
+import { useAppDispatch } from '../../../../utilities/hooks/useAppDispatch';
+import { useRootState } from '../../../../utilities/hooks/useRootState';
+import PrivilegeCardManage from '../../../accounts/masters/account-privilege-card/privilege-card-manage';
 interface PrivilegeCardEntryProps {
   isOpen: boolean;
   onClose: () => void;
@@ -45,6 +48,9 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
     point50: 0,
     point0: 0,
   });
+    const dispatch = useAppDispatch();
+    const rootState = useRootState();
+    const [addNewEntry, setAddNewEntry] = useState(false)
 
   useEffect(() => {
     if (data && data !== "") {
@@ -104,6 +110,7 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
   };
 
   const handleAddNew = () => {
+    setAddNewEntry(true)
     setCardData({
       cardNo: "",
       customerName: "",
@@ -262,12 +269,11 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
                 </span>
                 <ERPButton
                   title={t('add_new')}
-                  onClick={handleAddNew}
+                  onClick={()=>handleAddNew()}
                   variant='secondary'
                   className="h-7 text-xs px-3"
                 />
               </div>
-
               <div className="flex items-center justify-between gap-2">
                 {[200, 150, 100, 50, 0].map((points) => (
                   <button
@@ -292,6 +298,20 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
                 })}
               </div>
             </div>
+            
+            {/* Privilege manage modal */}
+            {addNewEntry &&
+            <ERPModal
+                isOpen={addNewEntry}
+                title={t("privilege_card")}
+                width={800}
+                height={280}
+                isForm={true}
+                closeModal={() =>  setAddNewEntry(false)}
+                // closeModal={() => { dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, reload: false })) }}
+                content={<PrivilegeCardManage />}
+              />
+          }
 
             {/* Action Buttons */}
             <div className='flex items-center justify-end gap-2 mt-2'>

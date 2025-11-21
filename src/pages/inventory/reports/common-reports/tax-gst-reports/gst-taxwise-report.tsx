@@ -13,7 +13,7 @@ interface GSTTaxwiseProps {
   gridId: string;
 }
 const GSTTaxwise: FC<GSTTaxwiseProps> = ({ gridHeader, dataUrl, gridId }) => {
-  const { t } = useTranslation("inventory");
+  const { t } = useTranslation('accountsReport');
   const [filter, setFilter] = useState<any>(GstReportFilterGstCatInitialState);
   const columns: DevGridColumn[] = [
     {

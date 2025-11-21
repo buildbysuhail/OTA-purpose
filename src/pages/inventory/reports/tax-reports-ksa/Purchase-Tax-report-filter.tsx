@@ -4,7 +4,6 @@ import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 
 const PurchaseTaxReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
   const { t } = useTranslation("accountsReport");
-
   return (
     <div className="grid lg:grid-cols-2 md:grid-cols-1 gap-4">
       <ERPDateInput

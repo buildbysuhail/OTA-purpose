@@ -33,7 +33,7 @@ const FooterDesigner = ({ }: FooterDesignerProps) => {
         </div>
         <div className="px-4 py-2  bg-slate-50 dark:bg-dark-bg-card border-t border-slate-400 dark:border-dark-border rounded-b-md min-h-[20%] overflow-hidden">
           <CustomDesignerButton
-            Label="Add Footer"
+            Label={t("add_footer")}
             customFieldMaster={"footerState"}
             dispatch={dispatch}
             className=""

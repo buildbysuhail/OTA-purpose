@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { usePurchasePrint } from "./use-print";
 import { useCommenPrint } from "../../../transaction-base/use-commen-print";
 import moment from "moment";
@@ -163,6 +163,7 @@ export const useTransaction = (
   const softwareDate = useAppSelector(
     (state: RootState) => state.ClientSession.softwareDate
   );
+    const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
   const {
     attachDetails,
     attachMaster,
@@ -601,9 +602,14 @@ export const useTransaction = (
     }
 
     if (vch == null || vch?.master == null) {
+      debugger;
       // const vno = await getNextVoucherNumber(params.formType,params.voucherType,params.voucherPrefix, false);
       vch = {
         ...transactionInitialData,
+        details: !deviceInfo.isMobile ? Array.from({ length: 30 }, (_, index) => ({
+                    ...initialTransactionDetailData,
+                    slNo: generateUniqueKey()
+                  })) : [],
         master: {
           ...transactionInitialData.master,
           voucherNumber: _voucherNumber,
@@ -1396,7 +1402,7 @@ export const useTransaction = (
         fields: { ...master },
       })
     );
-    dispatch(formStateClearDetails());
+    dispatch(formStateClearDetails(deviceInfo.isMobile));
     dispatch(formStateClearAttachments());
     dispatch(
       formStateTransactionUpdate({ key: "invAccTransactions", value: [] })
@@ -2604,16 +2610,18 @@ export const useTransaction = (
   const handleTextDataChange = async (
     value: any,
     columnName: string,
-    rowIndex: number
+    rowIndex: number,
+    isMobRow?: boolean
   ) => {
     try {
       console.log("handleTextDataChange");
 
-      if (!formState.transaction?.details?.[rowIndex]) {
+      if (!isMobRow && !formState.transaction?.details?.[rowIndex]) {
         return false;
       }
 
-      const detail = { ...formState.transaction.details[rowIndex] };
+      const detail = isMobRow?  { ...formState.row } :  { ...formState.transaction.details[rowIndex] };
+      if(!detail) return;
       let outState: DeepPartial<TransactionFormState> = {
         transaction: { details: [{ [columnName]: value, slNo: detail.slNo }] },
       };
@@ -2637,11 +2645,11 @@ export const useTransaction = (
 
           handleChangeUnit(
             outDetail,
-            detail,
+            detail as any,
             actualPriceVisible ?? false,
             outState,
             columnName,
-            rowIndex
+            isMobRow ? -1 : rowIndex
           );
         }
       }
@@ -2657,7 +2665,7 @@ export const useTransaction = (
           outDetail.unitPrice = round(unitPriceFC * exchangeRate, 4);
           outDetail.grossFC = round(unitPriceFC * qty, 3);
           outState = calculateRowAmount(
-            Object.assign(detail, outDetail),
+            merge({},detail, outDetail as any),
             columnName,
             {
               result: {
@@ -2680,7 +2688,7 @@ export const useTransaction = (
         outDetail[columnName] = value;
         // Calculate row amount
         outState = calculateRowAmount(
-          Object.assign(detail, outDetail),
+          merge({},detail, outDetail as any),
           columnName,
           {
             result: {
@@ -2695,7 +2703,7 @@ export const useTransaction = (
       } else if (columnName === "margin") {
         outDetail.margin = value;
         outState = calculateRowAmount(
-          Object.assign(detail, outDetail),
+         merge({},detail, outDetail as any),
           columnName,
           {
             result: {
@@ -2723,7 +2731,7 @@ export const useTransaction = (
 
         outDetail.margin = round(marginPerc, 6);
         outState = calculateRowAmount(
-          Object.assign(detail, outDetail),
+          merge({},detail, outDetail as any),
           columnName,
           {
             result: {
@@ -2737,8 +2745,15 @@ export const useTransaction = (
         calculateSummaryAndTotal = true;
       }
 
-      if (calculateSummaryAndTotal) {
-        const details = [...formState.transaction.details];
+      if (isMobRow){
+        dispatch(
+        formStateHandleFieldChangeKeysOnly({
+          fields: {row: {...outState!.transaction!.details![0]}}
+        })
+      );
+      } 
+      else if(calculateSummaryAndTotal) {
+        const details = [...formState.transaction.details] as any;
         let final = { ...detail, ...outState!.transaction!.details![0] };
         details[rowIndex] = final;
         const summaryRes = calculateSummary(details, formState, { result: {} });
@@ -3274,6 +3289,7 @@ export const useTransaction = (
         },
         true
       );
+      if(rowIndex > -1) {
       const details = [...formState.transaction.details];
       let final = { ...detail, ...outState!.transaction!.details![0] };
       details[rowIndex] = final;
@@ -3300,6 +3316,13 @@ export const useTransaction = (
           rowIndex: rowIndex,
         })
       );
+      } else {
+            dispatch(
+              formStateHandleFieldChangeKeysOnly({
+                fields: {row: outState!.transaction!.details![0]}
+              })
+            );
+          }
     }
   };
 
@@ -3364,7 +3387,8 @@ export const useTransaction = (
     event: React.KeyboardEvent<HTMLInputElement> | KeyboardEvent,
     columnName: string,
     rowIndex: number,
-    commonParams: CommonParams
+    commonParams: CommonParams,
+    isMobRow?: boolean
   ): Promise<{
     handled: boolean;
     preventDefault?: boolean;
@@ -3562,7 +3586,7 @@ export const useTransaction = (
               actualPriceVisible ?? false,
               outState,
               columnName,
-              rowIndex
+              isMobRow ? -1 : rowIndex
             );
           }
           break;

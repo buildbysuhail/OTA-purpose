@@ -206,29 +206,29 @@ export const initialPrintCustomFields: PrintCustomFields = {
 
   // Transaction data
   invTransactionMasterID: 0,
-  fldName: "",
-  fldText: "",
-  fldLength: "",
-  fldFont: "",
-  fldFontSize: "",
-  fldAlign: "",
-  fldLeft: "",
-  fldTop: "",
-  fldBold: "",
-  fldItalic: "",
-  fldUnderLine: "",
-  fldFormat: "",
-  fldHideCodes: "",
-  tempFname: "",
-  ihSettings: "",
-  phSettings: "",
-  dtSettings: "",
-  pfSettings: "",
-  ifSettings: "",
+  // fldName: "",
+  // fldText: "",
+  // fldLength: "",
+  // fldFont: "",
+  // fldFontSize: "",
+  // fldAlign: "",
+  // fldLeft: "",
+  // fldTop: "",
+  // fldBold: "",
+  // fldItalic: "",
+  // fldUnderLine: "",
+  // fldFormat: "",
+  // fldHideCodes: "",
+  // tempFname: "",
+  // ihSettings: "",
+  // phSettings: "",
+  // dtSettings: "",
+  // pfSettings: "",
+  // ifSettings: "",
 
   // Data tables
-  dtTranMaster: null,
-  dtTransDetails: null,
+  // dtTranMaster: null,
+  // dtTransDetails: null,
   noOfCopies: 0,
   printInCopy: 0,
 
@@ -556,9 +556,10 @@ export const initialPrintCustomFields: PrintCustomFields = {
   vehicleOdometer: "",
   vehicleRemarks: "",
   balanceAmtPayable: "",
-  chequeAmountInWordsLine1: "",
-  chequeAmountInWordsLine2: "",
-  chequeAmountInWordsLine3: "",
+  chequeAmountInWordsLine:"",
+  // chequeAmountInWordsLine1: "",
+  // chequeAmountInWordsLine2: "",
+  // chequeAmountInWordsLine3: "",
   previousBalance: "",
   closingBalance: "",
   invoiceStatus: "",
@@ -746,7 +747,12 @@ export const initialPrintMasterDto: PrintMasterDto = {
   employeeCode: "",
   branch: "",
   netAmount: 0,
-  returnAmount: 0
+  returnAmount: 0,
+  
+  narration: "",
+  bankAccName: "",
+  bankAcNumber: "",
+  bankDetails: ""
 };
 
 
@@ -913,7 +919,16 @@ export const initialPrintDetailDto : PrintDetailDto = {
   txp_RefDate: "",
   detail2Data: initialInvDetail2ForPrint,
   mannualAutoBarcode: '',
-  groupNameHead: ''
+  groupNameHead: '',
+
+  formType: "",
+  transactionDate: "",   // or new Date().toISOString()
+  amountDue: 0,
+  payment: 0,
+  balance: 0,
+
+  fullAmountPaid: "No",
+  accTransactionMasterID: 0
 };
 
 // ---------------------- Full Response ---------------------- //

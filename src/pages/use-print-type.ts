@@ -184,6 +184,11 @@ export interface PrintMasterDto {
 
   netAmount: number;
   returnAmount: number;
+
+  narration: string;
+  bankAccName: string;
+  bankAcNumber: string;
+  bankDetails: string;
 }
 
 export interface InvMaster2ForPrint {
@@ -526,6 +531,15 @@ export interface PrintDetailDto {
 
   mannualAutoBarcode: string;
   groupNameHead: string;
+
+  formType: string;
+  transactionDate: string;   // ISO string (DateTime)
+  amountDue: number;
+  payment: number;
+  balance: number;
+
+  fullAmountPaid: string;    // "Yes" | "No"
+  accTransactionMasterID: number;
 }
 
 export interface InvDetail2ForPrint {
@@ -989,9 +1003,9 @@ export interface PrintCustomFields {
   vehicleOdometer: string;
   vehicleRemarks: string;
   balanceAmtPayable: string;
-  chequeAmountInWordsLine1: string;
-  chequeAmountInWordsLine2: string;
-  chequeAmountInWordsLine3: string;
+  chequeAmountInWordsLine: string;
+  // chequeAmountInWordsLine2: string;
+  // chequeAmountInWordsLine3: string;
   previousBalance: string;
   closingBalance: string;
   invoiceStatus: string;
@@ -1016,5 +1030,4 @@ export interface PrintCustomFields {
   voucherNoGate: string;
   nameGate: string;
   obCashRcvd: string;
-  
 }

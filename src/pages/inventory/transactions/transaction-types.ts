@@ -452,6 +452,11 @@ export interface UserConfig {
   showCustomersAfterSales?: boolean;
   UserSalesPriceForTransfer?: boolean;
   gatePass?: boolean;
+  showSrInProductInfoPopup?: boolean;
+  setDefaultCashPaid?: boolean;
+  showProductInfoPopupForSq?: boolean;
+  blockNonStockItems?: boolean;
+  stockOutConfirmation?: boolean;
 }
 
 export type FormElementsState = {
@@ -509,6 +514,7 @@ export interface ProductDisplayDto {
 
 export interface TransactionFormState {
   store: any;
+  row?: TransactionDetail
   formCode: string;
   userRightsFormCode: string;
   isEntryControl: boolean;
@@ -576,6 +582,7 @@ export interface TransactionFormState {
   showPcode: boolean;
   batchEntryData: { visible: boolean; data: string; rowIndex: number };
   serialNoEntryData: { visible: boolean; data: string; rowIndex: number };
+  imfData: { visible: boolean, data: string, rowIndex: number },
   batchSelectionData: string;
   popupSearchSelectionData: string;
   quantityFactorData: string;
@@ -690,6 +697,7 @@ export interface TransactionFormState {
   privConfig?: string;
   printGatepass?: boolean;
   lastChoosedTemplate?: { id?: number, group?: string, formType?: string, customerType?: string }; // nizam
+  itemPopup?:{isOpen?: boolean, index?:number}
   taxBreakdown?: { name: string, amount: number }[];
 }
 export interface GiftModel {

@@ -907,5 +907,18 @@
   "shortage_amount": "مبلغ النقص",
   "sr_amount": "مبلغ مرتجع المبيعات (SR Amount)",
   "system_datetime": "تاريخ ووقت النظام",
-  "token_number": "رقم الرمز (Token Number)"
+  "token_number": "رقم الرمز (Token Number)",
+
+  "credit_card_amount": "مبلغ بطاقة الائتمان",
+  "sr": "مرتجع مبيعات (SR)",
+  "l_bill_amount": "مبلغ الفاتورة (LBill Amount)",
+  "gate_pass": "تصريح البوابة (Gate Pass)",
+  "vat_#": "رقم ضريبة القيمة المضافة (#VAT)",
+  "pending": "معلَّق",
+  "offer_achieved": "تم تحقيق العرض",
+  "disc_slab": "شريحة الخصم",
+  "bank_card": "بطاقة بنكية",
+  "flavours": "النكهات",
+  "flavour": "النكهة",
+  "apply_all": "تطبيق الكل"
 }

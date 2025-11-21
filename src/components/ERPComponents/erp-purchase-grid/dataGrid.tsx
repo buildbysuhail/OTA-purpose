@@ -2444,13 +2444,13 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       taxPercent: 18,
     });
 
-    const update = (key: string, value: any) => {
-  setState((prev) => ({ ...prev, [key]: value }));
-};
+//     const update = (key: string, value: any) => {
+//   setState((prev) => ({ ...prev, [key]: value }));
+// };
 
-const formatCurrency = (amount: number) => {
-  return `₹${amount.toFixed(2)}`;
-};
+// const formatCurrency = (amount: number) => {
+//   return `₹${amount.toFixed(2)}`;
+// };
 
 const subtotal = state.quantity * state.rate;
 const discountFromPercent = state.discountPercent 
@@ -2466,6 +2466,9 @@ const total = state.priceIncludesTax ? afterDiscount : afterDiscount + taxAmount
 // 5. Missing arrays for dropdowns
 const units = ["Bag", "Box", "Piece", "Kg", "Litre"];
 const taxOptions = [0, 5, 12, 18, 28];
+
+const [showMore , setShowMore] = useState (false)
+
 
     
 
@@ -3129,42 +3132,14 @@ const taxOptions = [0, 5, 12, 18, 28];
          
                    {/* Row: Quantity | Unit */}
                    <div className="mt-4 grid grid-cols-2 gap-3">
+                   
                      <div>
                        <label className="block text-sm text-gray-600 mb-1 dark:text-gray-400">
-                         Quantity
-                       </label>
-                       <ERPInput
-                          noLabel ={true}
-                          id="modal-item-quantity"
-                          type="number"
-                          min={0}
-                          value={state.quantity}
-                          onChange={(e) => update("quantity", Number(e.target.value))}
-                        />
-                     </div>
-                     <div>
-                       <label className="block text-sm text-gray-600 mb-1 dark:text-gray-400">
-                         Unit
-                       </label>
-                       <ERPDataCombobox
-                         noLabel ={true}
-                         id="modal-item-unit"
-                         value={state.unit}
-                         onChange={(e) => update("unit", e.target.value)}
-                         options={units.map((u) => ({ value: u, label: u }))}
-                       />
-                     </div>
-                   </div>
-         
-                   {/* Row: Rate | Tax Mode */}
-                   <div className="mt-4 grid grid-cols-2 gap-3">
-                     <div>
-                       <label className="block text-sm text-gray-600 mb-1 dark:text-gray-400">
-                         Rate (Price/Unit)
+                         qty
                        </label>
                        <GridCell
                        isMobile={true}
-                      column={_columns.find((x) => x.dataField == "unitPrice") as ColumnModel}
+                      column={_columns.find((x) => x.dataField == "qty") as ColumnModel}
                       item={formState.row ?? initialTransactionDetailData}
                       index={formState.itemPopup?.index ?? 0}
                       currentCell={currentCell}
@@ -3190,22 +3165,107 @@ const taxOptions = [0, 5, 12, 18, 28];
                         throw new Error("Function not implemented.");
                       } }                       />
                      </div>
+                     
                      <div>
+                       <label className="block text-sm text-gray-600 mb-1 dark:text-gray-400">
+                         unit
+                       </label>
+                       <GridCell
+                       isMobile={true}
+                      column={_columns.find((x) => x.dataField == "unit") as ColumnModel}
+                      item={formState.row ?? initialTransactionDetailData}
+                      index={formState.itemPopup?.index ?? 0}
+                      currentCell={currentCell}
+                      setCurrentCell={setCurrentCell}
+                      formState={formState}
+                      appState={appState}
+                      gridFontSize={gridFontSize}
+                      gridIsBold={gridIsBold}
+                      rowHeight={rowHeight}
+                      gridBorderColor={gridBorderColor}
+                      isFirstColumn={false}
+                      isLastColumn={false}
+                      showBorder={true}
+                      columnWidths={columnWidths}
+                      onChange={onChange}
+                      onKeyDown={onKeyDown}
+                      handlRowKeyDown={handlRowKeyDown}
+                      handleFocus={handleFocus}
+                      handleBlur={handleBlur}
+                      gridId={gridId}
+                      zIndexController= {55}
+                      details={formState.transaction.details} blockUnitOnDecimalPoint={false} applicationSettings={undefined} nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
+                        throw new Error("Function not implemented.");
+                      } }                       />
+                     </div>
+                   </div>
+         
+                   {/* Row: Rate | Tax Mode */}
+                   <div className="mt-4 grid grid-cols-2 gap-3">
+                     <div>
+                       <label className="block text-sm text-gray-600 mb-1 dark:text-gray-400">
+                         Rate (Price/Unit)
+                       </label>
+                       <GridCell
+                       isMobile={true}
+                      column={_columns.find((x) => x.dataField == "salesPrice") as ColumnModel} 
+                      item={formState.row ?? initialTransactionDetailData}
+                      index={formState.itemPopup?.index ?? 0}
+                      currentCell={currentCell}
+                      setCurrentCell={setCurrentCell}
+                      formState={formState}
+                      appState={appState}
+                      gridFontSize={gridFontSize}
+                      gridIsBold={gridIsBold}
+                      rowHeight={rowHeight}
+                      gridBorderColor={gridBorderColor}
+                      isFirstColumn={false}
+                      isLastColumn={false}
+                      showBorder={true}
+                      columnWidths={columnWidths}
+                      onChange={onChange}
+                      onKeyDown={onKeyDown}
+                      handlRowKeyDown={handlRowKeyDown}
+                      handleFocus={handleFocus}
+                      handleBlur={handleBlur}
+                      gridId={gridId}
+                      zIndexController= {55}
+                      details={formState.transaction.details} blockUnitOnDecimalPoint={false} applicationSettings={undefined} nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
+                        throw new Error("Function not implemented.");
+                      } }                       />
+                     </div>
+                    
+                      <div>
                        <label className="block text-sm text-gray-600 mb-1 dark:text-gray-400">
                          Tax Mode
                        </label>
-                       <ERPDataCombobox
-                         noLabel ={true}
-                         id="modal-tax-mode"
-                         value={state.priceIncludesTax ? "incl" : "excl"}
-                         onChange={(e) =>
-                           update("priceIncludesTax", e.target.value === "incl")
-                         }
-                         options={[
-                           { value: "excl", label: "Without Tax" },
-                           { value: "incl", label: "Price Includes Tax" },
-                         ]}
-                       />
+                       <GridCell
+                       isMobile={true}
+                      column={_columns.find((x) => x.dataField == "unit") as ColumnModel}
+                      item={formState.row ?? initialTransactionDetailData}
+                      index={formState.itemPopup?.index ?? 0}
+                      currentCell={currentCell}
+                      setCurrentCell={setCurrentCell}
+                      formState={formState}
+                      appState={appState}
+                      gridFontSize={gridFontSize}
+                      gridIsBold={gridIsBold}
+                      rowHeight={rowHeight}
+                      gridBorderColor={gridBorderColor}
+                      isFirstColumn={false}
+                      isLastColumn={false}
+                      showBorder={true}
+                      columnWidths={columnWidths}
+                      onChange={onChange}
+                      onKeyDown={onKeyDown}
+                      handlRowKeyDown={handlRowKeyDown}
+                      handleFocus={handleFocus}
+                      handleBlur={handleBlur}
+                      gridId={gridId}
+                      zIndexController= {55}
+                      details={formState.transaction.details} blockUnitOnDecimalPoint={false} applicationSettings={undefined} nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
+                        throw new Error("Function not implemented.");
+                      } }                       />
                      </div>
                    </div>
          
@@ -3223,7 +3283,35 @@ const taxOptions = [0, 5, 12, 18, 28];
                          </div>
                        </div>
                        <div className="text-right">
-                         <div className="text-sm font-medium">{formatCurrency(subtotal)}</div>
+                         {/* <div className="text-sm font-medium">{formatCurrency(subtotal)}</div> */}
+
+                          <GridCell
+                       isMobile={true}
+                      column={_columns.find((x) => x.dataField == "total") as ColumnModel}
+                      item={formState.row ?? initialTransactionDetailData}
+                      index={formState.itemPopup?.index ?? 0}
+                      currentCell={currentCell}
+                      setCurrentCell={setCurrentCell}
+                      formState={formState}
+                      appState={appState}
+                      gridFontSize={gridFontSize}
+                      gridIsBold={gridIsBold}
+                      rowHeight={rowHeight}
+                      gridBorderColor={gridBorderColor}
+                      isFirstColumn={false}
+                      isLastColumn={false}
+                      showBorder={true}
+                      columnWidths={columnWidths}
+                      onChange={onChange}
+                      onKeyDown={onKeyDown}
+                      handlRowKeyDown={handlRowKeyDown}
+                      handleFocus={handleFocus}
+                      handleBlur={handleBlur}
+                      gridId={gridId}
+                      zIndexController= {55}
+                      details={formState.transaction.details} blockUnitOnDecimalPoint={false} applicationSettings={undefined} nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
+                        throw new Error("Function not implemented.");
+                      } }                       />
                        </div>
                      </div>
                      {/* Discount row */}
@@ -3234,35 +3322,67 @@ const taxOptions = [0, 5, 12, 18, 28];
                          </div>
                        </div>
                        <div className="col-span-1 flex">
-                         <ERPInput
-                           noLabel ={true}
-                           id="modal-discount-percent"
-                           type="number"
-                           min={0}
-                           placeholder="%"
-                           value={state.discountPercent ?? ""}
-                           onChange={(e) => {
-                             const v =
-                               e.target.value === "" ? undefined : Number(e.target.value);
-                             update("discountPercent", v);
-                             if (v !== undefined) update("discountAmount", undefined);
-                           }}
-                         />
+                         
+                         <div>
+                       
+                       <GridCell
+                       isMobile={true}
+                      column={_columns.find((x) => x.dataField == "discPerc") as ColumnModel}
+                      item={formState.row ?? initialTransactionDetailData}
+                      index={formState.itemPopup?.index ?? 0}
+                      currentCell={currentCell}
+                      setCurrentCell={setCurrentCell}
+                      formState={formState}
+                      appState={appState}
+                      gridFontSize={gridFontSize}
+                      gridIsBold={gridIsBold}
+                      rowHeight={rowHeight}
+                      gridBorderColor={gridBorderColor}
+                      isFirstColumn={false}
+                      isLastColumn={false}
+                      showBorder={true}
+                      columnWidths={columnWidths}
+                      onChange={onChange}
+                      onKeyDown={onKeyDown}
+                      handlRowKeyDown={handlRowKeyDown}
+                      handleFocus={handleFocus}
+                      handleBlur={handleBlur}
+                      gridId={gridId}
+                      zIndexController= {55}
+                      details={formState.transaction.details} blockUnitOnDecimalPoint={false} applicationSettings={undefined} nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
+                        throw new Error("Function not implemented.");
+                      } }                       />
+                     </div>
                        </div>
                        <div className="col-span-1 flex">
-                        <ERPInput
-                          noLabel ={true}
-                          id="modal-discount-percent"
-                          type="number"
-                          min={0}
-                          placeholder="%"
-                          value={state.discountPercent ?? ""}
-                          onChange={(e) => {
-                            const v = e.target.value === "" ? undefined : Number(e.target.value);
-                            update("discountPercent", v);
-                            if (v !== undefined) update("discountAmount", undefined);
-                          }}
-                        />
+                        
+                        <GridCell
+                       isMobile={true}
+                      column={_columns.find((x) => x.dataField == "discount") as ColumnModel}
+                      item={formState.row ?? initialTransactionDetailData}
+                      index={formState.itemPopup?.index ?? 0}
+                      currentCell={currentCell}
+                      setCurrentCell={setCurrentCell}
+                      formState={formState}
+                      appState={appState}
+                      gridFontSize={gridFontSize}
+                      gridIsBold={gridIsBold}
+                      rowHeight={rowHeight}
+                      gridBorderColor={gridBorderColor}
+                      isFirstColumn={false}
+                      isLastColumn={false}
+                      showBorder={true}
+                      columnWidths={columnWidths}
+                      onChange={onChange}
+                      onKeyDown={onKeyDown}
+                      handlRowKeyDown={handlRowKeyDown}
+                      handleFocus={handleFocus}
+                      handleBlur={handleBlur}
+                      gridId={gridId}
+                      zIndexController= {55}
+                      details={formState.transaction.details} blockUnitOnDecimalPoint={false} applicationSettings={undefined} nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
+                        throw new Error("Function not implemented.");
+                      } }                       />
                        </div>
                      </div>
                      {/* Tax row */}
@@ -3271,29 +3391,163 @@ const taxOptions = [0, 5, 12, 18, 28];
                          Tax %
                        </div>
                        <div className="col-span-1">
-                      <ERPInput
-                        noLabel ={true}
-                        id="modal-discount-amount"
-                        type="number"
-                        min={0}
-                        placeholder="Amount"
-                        // leftIcon="₹"
-                        value={state.discountAmount ?? ""}
-                        onChange={(e) => {
-                          const v = e.target.value === "" ? undefined : Number(e.target.value);
-                          update("discountAmount", v);
-                          if (v !== undefined) update("discountPercent", undefined);
-                        }}
-                      />
+                      
+                      <GridCell
+                       isMobile={true}
+                      column={_columns.find((x) => x.dataField == "ratePlusTax") as ColumnModel}
+                      item={formState.row ?? initialTransactionDetailData}
+                      index={formState.itemPopup?.index ?? 0}
+                      currentCell={currentCell}
+                      setCurrentCell={setCurrentCell}
+                      formState={formState}
+                      appState={appState}
+                      gridFontSize={gridFontSize}
+                      gridIsBold={gridIsBold}
+                      rowHeight={rowHeight}
+                      gridBorderColor={gridBorderColor}
+                      isFirstColumn={false}
+                      isLastColumn={false}
+                      showBorder={true}
+                      columnWidths={columnWidths}
+                      onChange={onChange}
+                      onKeyDown={onKeyDown}
+                      handlRowKeyDown={handlRowKeyDown}
+                      handleFocus={handleFocus}
+                      handleBlur={handleBlur}
+                      gridId={gridId}
+                      zIndexController= {55}
+                      details={formState.transaction.details} blockUnitOnDecimalPoint={false} applicationSettings={undefined} nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
+                        throw new Error("Function not implemented.");
+                      } }                       />
                        </div>
                        <div className="col-span-1 text-right text-sm text-gray-600 dark:text-gray-400">
-                         <div className="text-sm">{formatCurrency(taxAmount)}</div>
+                         {/* <div className="text-sm">{formatCurrency(taxAmount)}</div> */}
+                          <GridCell
+                       isMobile={true}
+                      column={_columns.find((x) => x.dataField == "ratePlusTax") as ColumnModel}
+                      item={formState.row ?? initialTransactionDetailData}
+                      index={formState.itemPopup?.index ?? 0}
+                      currentCell={currentCell}
+                      setCurrentCell={setCurrentCell}
+                      formState={formState}
+                      appState={appState}
+                      gridFontSize={gridFontSize}
+                      gridIsBold={gridIsBold}
+                      rowHeight={rowHeight}
+                      gridBorderColor={gridBorderColor}
+                      isFirstColumn={false}
+                      isLastColumn={false}
+                      showBorder={true}
+                      columnWidths={columnWidths}
+                      onChange={onChange}
+                      onKeyDown={onKeyDown}
+                      handlRowKeyDown={handlRowKeyDown}
+                      handleFocus={handleFocus}
+                      handleBlur={handleBlur}
+                      gridId={gridId}
+                      zIndexController= {55}
+                      details={formState.transaction.details} blockUnitOnDecimalPoint={false} applicationSettings={undefined} nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
+                        throw new Error("Function not implemented.");
+                      } }                       />
+                       </div>
+                       <div>
+                        <button
+                        onClick={() => setShowMore(true)}
+
+                        >
+                          show more
+                        </button>
+                        
                        </div>
                      </div>
+                     <div className="">
+                           {showMore && (
+                            <div>
+                              Show more content
+                               {formState.gridColumns.filter(x => x.visible == true && !["slNo", "action"].includes(x.dataField??""))?.map((col, index) => (
+                              <div className="mt-4 grid grid-cols-2 gap-3 items-center">
+                                <div className="col-span-1">
+                         <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                           
+                            <div>
+                                <div key={index}>
+                                    {col.caption}
+                                </div>
+                            </div>
+                           
+                         </div>
+                       </div>
+                       <div className="col-span-1 flex">
+                        <GridCell
+                       isMobile={true}
+                      column={_columns.find((x) => x.dataField == col.dataField) as ColumnModel}
+                      item={formState.row ?? initialTransactionDetailData}
+                      index={formState.itemPopup?.index ?? 0}
+                      currentCell={currentCell}
+                      setCurrentCell={setCurrentCell}
+                      formState={formState}
+                      appState={appState}
+                      gridFontSize={gridFontSize}
+                      gridIsBold={gridIsBold}
+                      rowHeight={rowHeight}
+                      gridBorderColor={gridBorderColor}
+                      isFirstColumn={false}
+                      isLastColumn={false}
+                      showBorder={true}
+                      columnWidths={columnWidths}
+                      onChange={onChange}
+                      onKeyDown={onKeyDown}
+                      handlRowKeyDown={handlRowKeyDown}
+                      handleFocus={handleFocus}
+                      handleBlur={handleBlur}
+                      gridId={gridId}
+                      zIndexController= {55}
+                      details={formState.transaction.details} blockUnitOnDecimalPoint={false} applicationSettings={undefined} nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
+                        throw new Error("Function not implemented.");
+                      } }  
+                        />
+
+                      </div>
+                     </div>
+                      ))}
+                              
+                              
+                            </div>
+                          )}
+                        </div>
                      {/* Divider */}
                      <div className="mt-4 border-t pt-4 flex justify-between items-center dark:border-gray-600">
                        <div className="text-sm font-medium">Total Amount:</div>
-                       <div className="text-lg font-semibold">{formatCurrency(total)}</div>
+                       {/* <div className="text-lg font-semibold">{formatCurrency(total)}</div> */}
+                       <div>
+                       <GridCell
+                       isMobile={true}
+                      column={_columns.find((x) => x.dataField == "total") as ColumnModel}
+                      item={formState.row ?? initialTransactionDetailData}
+                      index={formState.itemPopup?.index ?? 0}
+                      currentCell={currentCell}
+                      setCurrentCell={setCurrentCell}
+                      formState={formState}
+                      appState={appState}
+                      gridFontSize={gridFontSize}
+                      gridIsBold={gridIsBold}
+                      rowHeight={rowHeight}
+                      gridBorderColor={gridBorderColor}
+                      isFirstColumn={false}
+                      isLastColumn={false}
+                      showBorder={true}
+                      columnWidths={columnWidths}
+                      onChange={onChange}
+                      onKeyDown={onKeyDown}
+                      handlRowKeyDown={handlRowKeyDown}
+                      handleFocus={handleFocus}
+                      handleBlur={handleBlur}
+                      gridId={gridId}
+                      zIndexController= {55}
+                      details={formState.transaction.details} blockUnitOnDecimalPoint={false} applicationSettings={undefined} nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
+                        throw new Error("Function not implemented.");
+                      } }                       />
+                      </div>
                      </div>
                    </div>
                  </main>

@@ -1,17 +1,19 @@
-import { useTranslation } from "react-i18next"
-import { Fragment, useMemo } from "react"
-import  {  DailyStatementReportInitialState } from "./daily-statement-report -filter"
-import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid"
-import GridId from "../../../../redux/gridId"
-import { ActionType } from "../../../../redux/types"
-import Urls from "../../../../redux/urls"
-import { useNumberFormat } from "../../../../utilities/hooks/use-number-format"
-import { DevGridColumn } from "../../../../components/types/dev-grid-column"
-import DailyStatementReportFilter from "./daily-statement-report -filter"
+import { useTranslation } from "react-i18next";
+import { Fragment, useMemo } from "react";
+import { DailyStatementReportInitialState } from "./daily-statement-report -filter";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
+import GridId from "../../../../redux/gridId";
+import { ActionType } from "../../../../redux/types";
+import Urls from "../../../../redux/urls";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import { DevGridColumn } from "../../../../components/types/dev-grid-column";
+import DailyStatementReportFilter from "./daily-statement-report -filter";
 
 const DailyStatementAllReport = () => {
-  const { t } = useTranslation("accountsReport")
-  const { getFormattedValue } = useNumberFormat()
+  const { t } = useTranslation("accountsReport");
+  const { getFormattedValue } = useNumberFormat();
   const columns: DevGridColumn[] = [
     {
       dataField: "iD",
@@ -31,10 +33,36 @@ const DailyStatementAllReport = () => {
       allowFiltering: true,
       width: 100,
       visible: true,
-      groupIndex: 0,
       showInPdf: true,
-      // allowSorting:false,
-      // sortOrder:"None",
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          return {
+            ...exportCell,
+            text: cellInfo.value,
+            bold: true,
+            // alignment: "left",
+            textColor: "#0000FF",
+            font: {
+              ...exportCell.font,
+              color: { argb: "FF0000FF" },
+              size: 10,
+              style: "bold",
+              bold: true,
+            },
+          };
+        } else {
+          return (
+            <span className="font-bold text-blue-600">
+              {cellElement.data.form}
+            </span>
+          );
+        }
+      },
     },
     {
       dataField: "vchNo",
@@ -65,6 +93,66 @@ const DailyStatementAllReport = () => {
       // width: 130,
       visible: true,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          return {
+            ...exportCell,
+            text: cellInfo.value,
+            bold: true,
+            alignment: "right",
+            textColor:
+              cellElement.data.party === "Total"
+                ? "#FF0000"
+                : cellElement.data.party === "Opening Cash" ||
+                  cellElement.data.party === "Closing Cash"
+                ? "#047857"
+                : "",
+            font: {
+              ...exportCell.font,
+              color:
+                cellElement.data.party === "Total"
+                  ? { argb: "FFFF0000" }
+                  : cellElement.data.party === "Opening Cash" ||
+                    cellElement.data.party === "Closing Cash"
+                  ? { argb: "FF047857" }
+                  : "",
+              size: 10,
+              style:
+                cellElement.data.party === "Total" ||
+                cellElement.data.party === "Opening Cash" ||
+                cellElement.data.party === "Closing Cash"
+                  ? "bold"
+                  : "normal",
+              bold:
+                cellElement.data.party === "Total" ||
+                cellElement.data.party === "Opening Cash" ||
+                cellElement.data.party === "Closing Cash"
+                  ? true
+                  : false,
+            },
+          };
+        } else {
+          return (
+            <span
+              className={`${
+                cellElement.data.party === "Total"
+                  ? "font-bold text-[#DC143C]"
+                  : cellElement.data.party === "Opening Cash" ||
+                    cellElement.data.party === "Closing Cash"
+                  ? "font-bold text-green-700"
+                  : ""
+              }`}
+            >
+              {cellElement.data.party}
+            </span>
+          );
+        }
+      },
     },
     {
       dataField: "address1",
@@ -87,22 +175,59 @@ const DailyStatementAllReport = () => {
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
+          const balance =
+            cellElement.data?.cash < 0
+              ? -1 * cellElement.data?.cash
+              : cellElement.data?.cash;
           const value =
-            cellElement.data?.cash == null ? "" : cellElement.data?.cash >= 0 ? getFormattedValue(Number.parseFloat(cellElement.data.cash)) : getFormattedValue(-1 * cellElement.data.cash)
+            balance == null
+              ? ""
+              : cellElement.data.party === "Total"
+              ? getFormattedValue(balance, false, 2)
+              : getFormattedValue(balance);
           return {
             ...exportCell,
             text: value,
+            bold: true,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+            textColor: cellElement.data.party === "Total" ? "#FF0000" : "",
+            font: {
+              ...exportCell.font,
+              color:
+                cellElement.data.party === "Total" ? { argb: "FFFF0000" } : "",
+              size: 10,
+              style: cellElement.data.party === "Total" ? "bold" : "normal",
+              bold: cellElement.data.party === "Total" ? true : false,
+            },
+          };
         } else {
           return (
-            <span>
-              {cellElement.data?.cash == null ? "" : cellElement.data?.cash >= 0 ? getFormattedValue(Number.parseFloat(cellElement.data.cash)) : getFormattedValue(-1 * cellElement.data.cash)}
+            <span
+              className={`${
+                cellElement.data.party === "Total"
+                  ? "font-bold text-[#DC143C]"
+                  : ""
+              }`}
+            >
+              {`${
+                cellElement.data?.cash == null
+                  ? ""
+                  : cellElement.data.party === "Total"
+                  ? getFormattedValue(Math.abs(cellElement.data.cash), false, 2)
+                  : cellElement.data.cash < 0
+                  ? getFormattedValue(-1 * cellElement.data.cash)
+                  : getFormattedValue(cellElement.data.cash)
+              }`}
             </span>
-          )
+          );
         }
       },
     },
@@ -117,22 +242,59 @@ const DailyStatementAllReport = () => {
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
+          const balance =
+            cellElement.data?.bank < 0
+              ? -1 * cellElement.data?.bank
+              : cellElement.data?.bank;
           const value =
-            cellElement.data?.bank == null ? "" : cellElement.data?.bank >= 0 ? getFormattedValue(Number.parseFloat(cellElement.data.bank)) : getFormattedValue(-1 * cellElement.data.bank)
+            balance == null
+              ? ""
+              : cellElement.data.party === "Total"
+              ? getFormattedValue(balance, false, 2)
+              : getFormattedValue(balance);
           return {
             ...exportCell,
             text: value,
+            bold: true,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+            textColor: cellElement.data.party === "Total" ? "#FF0000" : "",
+            font: {
+              ...exportCell.font,
+              color:
+                cellElement.data.party === "Total" ? { argb: "FFFF0000" } : "",
+              size: 10,
+              style: cellElement.data.party === "Total" ? "bold" : "normal",
+              bold: cellElement.data.party === "Total" ? true : false,
+            },
+          };
         } else {
           return (
-            <span>
-              {cellElement.data?.bank == null ? "" : cellElement.data?.bank >= 0 ? getFormattedValue(Number.parseFloat(cellElement.data.bank)) : getFormattedValue(-1 * cellElement.data.bank)}
+            <span
+              className={`${
+                cellElement.data.party === "Total"
+                  ? "font-bold text-[#DC143C]"
+                  : ""
+              }`}
+            >
+              {`${
+                cellElement.data?.bank == null
+                  ? ""
+                  : cellElement.data.party === "Total"
+                  ? getFormattedValue(Math.abs(cellElement.data.bank), false, 2)
+                  : cellElement.data.bank < 0
+                  ? getFormattedValue(-1 * cellElement.data.bank)
+                  : getFormattedValue(cellElement.data.bank)
+              }`}
             </span>
-          )
+          );
         }
       },
     },
@@ -147,22 +309,63 @@ const DailyStatementAllReport = () => {
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
+          const balance =
+            cellElement.data?.credit < 0
+              ? -1 * cellElement.data?.credit
+              : cellElement.data?.credit;
           const value =
-            cellElement.data?.credit == null ? "" : cellElement.data?.credit >= 0 ? getFormattedValue(Number.parseFloat(cellElement.data.credit)) : getFormattedValue(-1 * cellElement.data.credit)
+            balance == null
+              ? ""
+              : cellElement.data.party === "Total"
+              ? getFormattedValue(balance, false, 2)
+              : getFormattedValue(balance);
           return {
             ...exportCell,
             text: value,
+            bold: true,
             alignment: "right",
             alignmentExcel: { horizontal: "right" },
-          }
+            textColor: cellElement.data.party === "Total" ? "#FF0000" : "",
+            font: {
+              ...exportCell.font,
+              color:
+                cellElement.data.party === "Total" ? { argb: "FFFF0000" } : "",
+              size: 10,
+              style: cellElement.data.party === "Total" ? "bold" : "normal",
+              bold: cellElement.data.party === "Total" ? true : false,
+            },
+          };
         } else {
           return (
-            <span>
-              {cellElement.data?.credit == null ? "" : cellElement.data?.credit >= 0 ? getFormattedValue(Number.parseFloat(cellElement.data.credit)) : getFormattedValue(-1 * cellElement.data.credit)}
+            <span
+              className={`${
+                cellElement.data.party === "Total"
+                  ? "font-bold text-[#DC143C]"
+                  : ""
+              }`}
+            >
+              {`${
+                cellElement.data?.credit == null
+                  ? ""
+                  : cellElement.data.party === "Total"
+                  ? getFormattedValue(
+                      Math.abs(cellElement.data.credit),
+                      false,
+                      2
+                    )
+                  : cellElement.data.credit < 0
+                  ? getFormattedValue(-1 * cellElement.data.credit)
+                  : getFormattedValue(cellElement.data.credit)
+              }`}
             </span>
-          )
+          );
         }
       },
     },
@@ -177,22 +380,98 @@ const DailyStatementAllReport = () => {
       showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
+          const balance = cellElement.data?.total ;
           const value =
-            cellElement.data?.total == null ? "" : cellElement.data?.total >= 0 ? getFormattedValue(Number.parseFloat(cellElement.data.total)) : getFormattedValue(-1 * cellElement.data.total)
+            balance == null
+              ? ""
+              : cellElement.data.party === "Total"
+              ? getFormattedValue(Math.abs(balance), false, 2)
+              : ((cellElement.data.party === "Opening Cash" ||
+                  cellElement.data.party === "Closing Cash") &&
+                balance < 0)
+              ? getFormattedValue(-1 * balance, false, 2) + " Cr"
+              : ((cellElement.data.party === "Opening Cash" ||
+                  cellElement.data.party === "Closing Cash") &&
+                balance >= 0)
+              ? getFormattedValue(balance, false, 2) + " Dr"
+              : getFormattedValue(Math.abs(balance));
           return {
             ...exportCell,
             text: value,
+            bold: true,
             alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          }
+            textColor:
+              cellElement.data.party === "Total"
+                ? "#FF0000"
+                : cellElement.data.party === "Opening Cash" ||
+                  cellElement.data.party === "Closing Cash"
+                ? "#047857"
+                : "",
+            font: {
+              ...exportCell.font,
+              color:
+                cellElement.data.party === "Total"
+                  ? { argb: "FFFF0000" }
+                  : cellElement.data.party === "Opening Cash" ||
+                    cellElement.data.party === "Closing Cash"
+                  ? { argb: "FF047857" }
+                  : "",
+              size: 10,
+              style:
+                cellElement.data.party === "Total" ||
+                cellElement.data.party === "Opening Cash" ||
+                cellElement.data.party === "Closing Cash"
+                  ? "bold"
+                  : "normal",
+              bold:
+                cellElement.data.party === "Total" ||
+                cellElement.data.party === "Opening Cash" ||
+                cellElement.data.party === "Closing Cash"
+                  ? true
+                  : false,
+            },
+          };
         } else {
           return (
-            <span>
-              {cellElement.data?.total == null ? "" : cellElement.data?.total >= 0 ? getFormattedValue(Number.parseFloat(cellElement.data.total)) : getFormattedValue(-1 * cellElement.data.total)}
+            <span
+              className={`${
+                cellElement.data.party === "Total"
+                  ? "font-bold text-[#DC143C]"
+                  : cellElement.data.party === "Opening Cash" ||
+                    cellElement.data.party === "Closing Cash"
+                  ? "font-bold text-green-700"
+                  : ""
+              }`}
+            >
+              {`${
+                cellElement.data?.total == null
+                  ? ""
+                  : cellElement.data.party === "Total"
+                  ? getFormattedValue(
+                      Math.abs(cellElement.data.total),
+                      false,
+                      2
+                    )
+                  : (cellElement.data.party === "Opening Cash" ||
+                      cellElement.data.party === "Closing Cash") &&
+                    cellElement.data?.total < 0
+                  ? getFormattedValue(-1 * cellElement.data?.total, false, 2) +
+                    " Cr"
+                  : (cellElement.data.party === "Opening Cash" ||
+                      cellElement.data.party === "Closing Cash") &&
+                    cellElement.data?.total >= 0
+                  ? getFormattedValue(cellElement.data?.total, false, 2) + " Dr"
+                  : getFormattedValue(Math.abs(cellElement.data.total))
+              }`}
             </span>
-          )
+          );
         }
       },
     },
@@ -206,65 +485,65 @@ const DailyStatementAllReport = () => {
       visible: false,
       showInPdf: true,
     },
-  ]
-
-  const customizeSummaryRow = useMemo(() => {
-    return (itemInfo: { value: any }) => {
-      const value = itemInfo.value;
-      if (
-        value === null ||
-        value === undefined ||
-        value === "" ||
-        isNaN(value)
-      ) {
-        return "0"; // Ensure "0" is displayed when value is missing
-      }
-      return value >= 0 ? getFormattedValue(value, false, 2) : getFormattedValue(-1 * value, false, 2) || "0"; // Ensure formatted output or fallback to "0"
-    };
-  }, []);
-  // const customizeDate = (itemInfo: any) => `TOTAL`;
-  const customizeGroup = (itemInfo: any) => `Group Total`;
-  const summaryItems: SummaryConfig[] = [
-    {
-      column: "party",
-      summaryType: "max",
-      isGroupItem: true,
-      showInGroupFooter: true,
-      customizeText: customizeGroup,
-    },
-    {
-      column: "cash",
-      summaryType: "sum",
-      isGroupItem: true,
-      valueFormat: "currency",
-      showInGroupFooter: true,
-      customizeText: customizeSummaryRow,
-    },
-    {
-      column: "credit",
-      summaryType: "sum",
-      isGroupItem: true,
-      valueFormat: "currency",
-      showInGroupFooter: true,
-      customizeText: customizeSummaryRow,
-    },
-    {
-      column: "bank",
-      summaryType: "sum",
-      isGroupItem: true,
-      valueFormat: "currency",
-      showInGroupFooter: true,
-      customizeText: customizeSummaryRow,
-    },
-    {
-      column: "total",
-      summaryType: "sum",
-      isGroupItem: true,
-      valueFormat: "currency",
-      showInGroupFooter: true,
-      customizeText: customizeSummaryRow,
-    },
   ];
+
+  // const customizeSummaryRow = useMemo(() => {
+  //   return (itemInfo: { value: any }) => {
+  //     const value = itemInfo.value;
+  //     if (
+  //       value === null ||
+  //       value === undefined ||
+  //       value === "" ||
+  //       isNaN(value)
+  //     ) {
+  //       return "0"; // Ensure "0" is displayed when value is missing
+  //     }
+  //     return value >= 0 ? getFormattedValue(value, false, 2) : getFormattedValue(-1 * value, false, 2) || "0"; // Ensure formatted output or fallback to "0"
+  //   };
+  // }, []);
+  // const customizeDate = (itemInfo: any) => `Total`;
+  // const customizeGroup = (itemInfo: any) => `Group Total`;
+  // const summaryItems: SummaryConfig[] = [
+  //   {
+  //     column: "party",
+  //     summaryType: "max",
+  //     isGroupItem: true,
+  //     showInGroupFooter: true,
+  //     customizeText: customizeGroup,
+  //   },
+  //   {
+  //     column: "cash",
+  //     summaryType: "sum",
+  //     isGroupItem: true,
+  //     valueFormat: "currency",
+  //     showInGroupFooter: true,
+  //     customizeText: customizeSummaryRow,
+  //   },
+  //   {
+  //     column: "credit",
+  //     summaryType: "sum",
+  //     isGroupItem: true,
+  //     valueFormat: "currency",
+  //     showInGroupFooter: true,
+  //     customizeText: customizeSummaryRow,
+  //   },
+  //   {
+  //     column: "bank",
+  //     summaryType: "sum",
+  //     isGroupItem: true,
+  //     valueFormat: "currency",
+  //     showInGroupFooter: true,
+  //     customizeText: customizeSummaryRow,
+  //   },
+  //   {
+  //     column: "total",
+  //     summaryType: "sum",
+  //     isGroupItem: true,
+  //     valueFormat: "currency",
+  //     showInGroupFooter: true,
+  //     customizeText: customizeSummaryRow,
+  //   },
+  // ];
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -273,14 +552,21 @@ const DailyStatementAllReport = () => {
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                  autoExpandAll={true}
+                  // autoExpandAll={true}
                   columns={columns}
                   filterText=" From {fromDate} To {toDate}"
                   gridHeader={t("daily_statement_report_of_all")}
                   dataUrl={Urls.daily_statement_all}
-                  summaryItems={summaryItems}
-                  remoteOperations={{ filtering: false, paging: false, sorting: false, summary: false, grouping: false, groupPaging: false }}
-                  allowGrouping={true}
+                  // summaryItems={summaryItems}
+                  remoteOperations={{
+                    filtering: false,
+                    paging: false,
+                    sorting: false,
+                    summary: false,
+                    grouping: false,
+                    groupPaging: false,
+                  }}
+                  // allowGrouping={true}
                   groupPanelVisible={true}
                   method={ActionType.POST}
                   gridId={GridId.daily_statement_all}
@@ -299,7 +585,7 @@ const DailyStatementAllReport = () => {
         </div>
       </div>
     </Fragment>
-  )
-}
+  );
+};
 
 export default DailyStatementAllReport;

@@ -189,6 +189,7 @@ const PrivilegeCardReport = () => {
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) => {
+      debugger;
       const value = itemInfo.value;
       if (
         value === null ||
@@ -227,15 +228,22 @@ const PrivilegeCardReport = () => {
     },
     {
       column: "addAmt",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+         cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
+      },
+
     },
     {
       column: "redeem",
-      summaryType: "sum",
+      summaryType: "custom",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
+         cellSummaryAction: (value: number) => {
+        return erpParseFloat(getFormattedValue(value));
+      },
     },
     {
       column: "balance",
@@ -244,7 +252,7 @@ const PrivilegeCardReport = () => {
       // customizeText: customizeSummaryRow(balance),
       customizeText: (e: any) => {
           const parsedValue = erpParseFloat(getFormattedValue(balance));
-          const result = getFormattedValue(parsedValue, false, 2) || "0";
+          const result = getFormattedValue(parsedValue) || "0";
           return result.toString()
         },
     },

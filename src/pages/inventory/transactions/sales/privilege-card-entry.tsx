@@ -104,12 +104,14 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
     });
     handleFieldChange('redeem', '0.00');
   };
+  
 
   const handleApply = () => {
+    alert(`Redeemable amount: ${cardData.redeem}`);
     onClose();
   };
-
   const handleAddNew = () => {
+    // onClose();
     setAddNewEntry(true)
     setCardData({
       cardNo: "",
@@ -136,17 +138,17 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
       closeModal={onClose}
       title={t("privilege_card_entry")}
       width={500}
-      height={400}
+      height={360}
       content={
         <div className="w-full modal-content">
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 p-2">
             {/* Left side - Form Fields */}
-            <div className="grid grid-cols-2 gap-x-4 gap-y-3">
+            <div className="flex flex-row gap-3 justify-between">
               {/* Left Column */}
               <div className="flex flex-col gap-3">
                 {/* Card No */}
                 <div className="flex items-center gap-2">
-                  <label className="w-28 text-xs font-semibold">
+                  <label className="w-24 text-xs font-semibold">
                     {t("card_no")}
                   </label>
                   <ERPInput
@@ -160,7 +162,7 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
 
                 {/* Customer Name */}
                 <div className="flex items-center gap-2">
-                  <label className="w-28 text-xs font-semibold">
+                  <label className="w-24 text-xs font-semibold">
                     {t("customer_name")}
                   </label>
                   <ERPInput
@@ -174,7 +176,7 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
 
                 {/* Address */}
                 <div className="flex items-center gap-2">
-                  <label className="w-28 text-xs font-semibold">
+                  <label className="w-24 text-xs font-semibold">
                     {t("address")}
                   </label>
                   <ERPInput
@@ -188,7 +190,7 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
 
                 {/* Mobile No */}
                 <div className="flex items-center gap-2">
-                  <label className="w-28 text-xs font-semibold">
+                  <label className="w-24 text-xs font-semibold">
                     {t("mobile_no")}
                   </label>
                   <ERPInput
@@ -205,13 +207,13 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
               <div className="flex flex-col gap-3">
                 {/* Old Balance */}
                 <div className="flex items-center gap-2">
-                  <label className="w-24 text-xs font-semibold text-right">
+                  <label className="w-20 text-xs font-semibold text-right">
                     {t("old_balance")}
                   </label>
                   <ERPInput
                     id="oldBalance"
                     value={cardData.oldBalance}
-                    className="w-24 h-7 text-xs text-right"
+                    className="w-28 h-7 text-xs text-right"
                     noLabel={true}
                     onChange={(e) => handleFieldChange('oldBalance', e.target.value)}
                   />
@@ -219,13 +221,13 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
 
                 {/* Add */}
                 <div className="flex items-center gap-2">
-                  <label className="w-24 text-xs font-semibold text-right">
+                  <label className="w-20 text-xs font-semibold text-right">
                     {t("add")}
                   </label>
                   <ERPInput
                     id="add"
                     value={cardData.add}
-                    className="w-24 h-7 text-xs text-right"
+                    className="w-28 h-7 text-xs text-right"
                     noLabel={true}
                     onChange={(e) => handleFieldChange('add', e.target.value)}
                   />
@@ -233,13 +235,13 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
 
                 {/* Redeem */}
                 <div className="flex items-center gap-2">
-                  <label className="w-24 text-xs font-semibold text-right">
+                  <label className="w-20 text-xs font-semibold text-right">
                     {t("redeem")}
                   </label>
                   <ERPInput
                     id="redeem"
                     value={cardData.redeem}
-                    className="w-24 h-7 text-xs text-right"
+                    className="w-28 h-7 text-xs text-right"
                     noLabel={true}
                     onChange={(e) => handleFieldChange('redeem', e.target.value)}
                   />
@@ -247,13 +249,13 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
 
                 {/* Balance */}
                 <div className="flex items-center gap-2">
-                  <label className="w-24 text-xs font-semibold text-right">
+                  <label className="w-20 text-xs font-semibold text-right">
                     {t("balance")}
                   </label>
                   <ERPInput
                     id="balance"
                     value={cardData.balance}
-                    className="w-24 h-7 text-xs text-right"
+                    className="w-28 h-7 text-xs text-right"
                     noLabel={true}
                     disabled={true}
                   />
@@ -264,22 +266,35 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
             {/* Redeem Points Section */}
             <div className="border-t pt-3">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-bold text-red-600">
+                <span className="text-sm font-bold text-red-600">
                   {t("redeem_points")}
                 </span>
                 <ERPButton
                   title={t('add_new')}
                   onClick={()=>handleAddNew()}
-                  variant='secondary'
-                  className="h-7 text-xs px-3"
+                  variant='custom'
+                  className="h-7 text-xs px-3 underline"
                 />
+                <div className='flex gap-2'>
+                  <ERPButton
+                title={t('reset')}
+                onClick={handleReset}
+                variant='secondary'
+                />
+                <ERPButton
+                  title={t('apply')}
+                  onClick={handleApply}
+                  variant='primary'
+                />
+                </div>
               </div>
+              {/* Action Buttons */}
               <div className="flex items-center justify-between gap-2">
                 {[200, 150, 100, 50, 0].map((points) => (
                   <button
                     key={points}
                     onClick={() => handleRedeemPointClick(points)}
-                    className="flex-1 bg-blue-100 hover:bg-blue-200 border border-blue-300 rounded px-2 py-2 text-sm font-semibold transition-colors"
+                    className="flex-1 bg-blue-100 hover:bg-blue-200 border mt-2 border-blue-300 rounded-lg px-2 py-2 text-sm font-semibold transition-colors"
                   >
                     {points}
                   </button>
@@ -307,25 +322,11 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
                 width={800}
                 height={280}
                 isForm={true}
-                closeModal={() =>  setAddNewEntry(false)}
-                // closeModal={() => { dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, reload: false })) }}
+                // closeModal={() =>  setAddNewEntry(false)}
+                closeModal={() => { dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, reload: false })) }}
                 content={<PrivilegeCardManage />}
               />
-          }
-
-            {/* Action Buttons */}
-            <div className='flex items-center justify-end gap-2 mt-2'>
-              <ERPButton
-                title={t('reset')}
-                onClick={handleReset}
-                variant='secondary'
-              />
-              <ERPButton
-                title={t('apply')}
-                onClick={handleApply}
-                variant='primary'
-              />
-            </div>
+          }  
           </div>
         </div>
       }

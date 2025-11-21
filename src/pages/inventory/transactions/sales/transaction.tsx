@@ -836,7 +836,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               (
                 applicationSettings.accountsSettings.allowSalesCounter &&
                 (_formState.userConfig?.counterWiseWarehouseId ?? 0) > 0 &&
-                userSession.dbIdValue.trim() === "BAHAMDOON"
+                userSession.dbIdValue?.trim() === "BAHAMDOON"
               )
           },
 
@@ -911,7 +911,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
             if (
               ["543140180640", "BAHAMDOON", "HANAPLASTICS"].includes(
-                userSession.dbIdValue.trim()
+                userSession.dbIdValue?.trim()
               )
             ) {
               selectedValue = applicationSettings.accountsSettings.defaultCustomerLedgerID;
@@ -1346,7 +1346,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
       const PendingTransDetails: any = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/PendingTransactionsByMasterIds`, `masterIDs=${masterIds}`)
       if (PendingTransDetails && PendingTransDetails.details && PendingTransDetails.details.length > 0) {
         const calculatedDetails: TransactionDetail[] = [];
-        const refactoredDetails = refactorDetails(PendingTransDetails.details?.map((x: any) => {
+        const refactoredDetails = await refactorDetails(PendingTransDetails.details?.map((x: any) => {
           return { ...x, qty: x.pendingQty }
         }), formState.transaction.master.voucherForm, voucherType, { result: {} }, loadType);
         for (let index = 0; index < refactoredDetails.length; index++) {
@@ -1364,7 +1364,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
             }
           }
-          const calculated = calculateRowAmount(
+          const calculated =await calculateRowAmount(
             element,
             "barCode",
             { result: { transaction: { details: [element] } } },
@@ -1375,11 +1375,11 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
         const details = [...calculatedDetails, ...formState.transaction?.details?.filter((x: any) => x.productID > 0) || []]
         if (details.length > 0 && calculateSummary && calculateTotal && formState && dispatch && formStateHandleFieldChangeKeysOnly) {
-          const summaryRes = calculateSummary(details, formState, {
+          const summaryRes = await calculateSummary(details, formState, {
             result: {},
           });
 
-          const totalRes = calculateTotal(
+          const totalRes = await calculateTotal(
             formState.transaction.master,
             summaryRes ? summaryRes.summary as SummaryItems : initialInventoryTotals,
             formState.formElements,
@@ -1586,7 +1586,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   ...latestData,
                 };
                 currentDetails[rowIndex] = mergedRowData;
-                res = calculateRowAmount(
+                res = await calculateRowAmount(
                   mergedRowData as TransactionDetail,
                   searchColumn,
                   { result: { transaction: { details: [mergedRowData] } } },
@@ -1627,7 +1627,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   ...latestData,
                 };
 
-                let _res = calculateRowAmount(
+                let _res = await calculateRowAmount(
                   mergedRowData as TransactionDetail,
                   searchColumn,
                   { result: { transaction: { details: [mergedRowData] } } },
@@ -1650,7 +1650,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               result: {},
             });
 
-            const totalRes = calculateTotal(
+            const totalRes = await calculateTotal(
               formState.transaction.master,
               summaryRes.summary as SummaryItems,
               formState.formElements,
@@ -1697,6 +1697,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   }, [formState.popupSearchSelectionData]);
 
   useEffect(() => {
+     const run = async()=>{
     if (formState.quantityFactorData != "") {
 
       const data = JSON.parse(formState.quantityFactorData);
@@ -1708,11 +1709,11 @@ const TransactionForm: React.FC<TransactionProps> = ({
       ];
       let res: DeepPartial<TransactionFormState> = {};
       let addDetails: TransactionDetail[] = [];
-      quantityFactor.forEach((value: GridQtyFactors, index: number) => {
+      quantityFactor.forEach(async(value: GridQtyFactors, index: number) => {
         if (index == 0) {
           const rowData = { ...baseRowData, qty: value.total };
           currentDetails[rowIndex] = rowData;
-          res = calculateRowAmount(rowData, "qty", { result: { transaction: { details: [{ qty: value.total, slNo: baseRowData.slNo }] } } }, true);
+          res = await calculateRowAmount(rowData, "qty", { result: { transaction: { details: [{ qty: value.total, slNo: baseRowData.slNo }] } } }, true);
           res!.transaction!.details![0]!.productDescription = `${value.width} X ${value.height} X ${value.nos}`;
         } else {
           const rowData = {
@@ -1721,7 +1722,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
             slNo: generateUniqueKey(),
             productDescription: `${value.width} X ${value.height} X ${value.nos}`,
           };
-          res = calculateRowAmount(rowData, "qty", { result: { transaction: { details: [rowData] } } }, true);
+          res = await calculateRowAmount(rowData, "qty", { result: { transaction: { details: [rowData] } } }, true);
           if (
             res?.transaction?.details &&
             res?.transaction?.details.length > 0
@@ -1734,7 +1735,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
       let final = [...currentDetails, ...addDetails];
       const summaryRes = calculateSummary(final, formState, { result: {} });
 
-      const totalRes = calculateTotal(
+      const totalRes = await calculateTotal(
         formState.transaction.master,
         summaryRes.summary as SummaryItems,
         formState.formElements,
@@ -1757,6 +1758,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
         })
       );
     }
+      
+    }
+    run()
   }, [formState.quantityFactorData]);
 
 

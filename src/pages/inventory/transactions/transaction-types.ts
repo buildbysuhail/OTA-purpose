@@ -212,6 +212,7 @@ export interface TransactionMaster {
   master2: TransactionMaster2;
   master3: TransactionMaster3;
   lblSRAmount: string; //new
+  totalTax?: number; //new
 }
 
 export interface TransactionMaster3 {
@@ -272,6 +273,9 @@ export interface TransactionDetail {
   unitPriceTag: number;
   gross: number;
   discPerc: number;
+  unitDiscount: number; //sales
+  purchasePrice: number; //sales
+  purchaseRate: number; //sales
   discount: number;
   netValue: number;
   total: number;
@@ -353,6 +357,7 @@ export interface TransactionDetail {
   pOTransDetailID: number;
   pO_PITransDetailIDs: number;
   pO_PITransDetailQtys: number;
+  netConvert?:string
 }
 
 export interface TransactionDetailsMore {
@@ -685,6 +690,7 @@ export interface TransactionFormState {
   privConfig?: string;
   printGatepass?: boolean;
   lastChoosedTemplate?: { id?: number, group?: string, formType?: string, customerType?: string }; // nizam
+  taxBreakdown?: { name: string, amount: number }[];
 }
 export interface GiftModel {
   productBatchId: number;
@@ -1013,3 +1019,8 @@ export interface SettlementDetails {
   paymentName: string;
   paymentType: string;
 }
+export type LoadSrParams = {
+  voucherNumber: string;
+  voucherPrefix: string;
+  voucherForm: string;
+};

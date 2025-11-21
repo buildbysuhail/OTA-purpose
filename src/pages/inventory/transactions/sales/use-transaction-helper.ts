@@ -15,6 +15,8 @@ import VoucherType from "../../../../enums/voucher-types";
 import { formStateHandleFieldChangeKeysOnly } from "../reducer";
 import { TransactionMaster3InitialData, initialTransactionDetails2, initialInventoryTotals, initialTransactionDetailData, TransactionMasterInitialData, } from "../transaction-type-data";
 import { TransactionFormState, TransactionMaster, SummaryItems, FormElementsState, CommonParams, TransactionDetail, TransactionDetailKeys, TransactionDetails2, } from "../transaction-types";
+import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
+import { useTranslation } from "react-i18next";
 
 export const useTransactionHelper = (transactionType: string) => {
   const dispatch = useDispatch();
@@ -22,6 +24,7 @@ export const useTransactionHelper = (transactionType: string) => {
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   const clientSession = useAppSelector((state: RootState) => state.ClientSession);
   const formState = useAppSelector((state: RootState) => state.InventoryTransaction);
+  const { t } = useTranslation();
   const {
     round,
     getAmountInWords,
@@ -32,7 +35,7 @@ export const useTransactionHelper = (transactionType: string) => {
     getNumericFormat,
     getTaxFormat,
   } = useNumberFormat();
-  
+
   const clearEntryControl = (state: TransactionFormState, defaultCostCenterID: number): TransactionFormState => {
     return state;
   };
@@ -190,388 +193,344 @@ export const useTransactionHelper = (transactionType: string) => {
     return new Date(date);
   };
 
-  const calculateTotal = (
-    master: TransactionMaster,
-    summary: SummaryItems,
-    formElements: FormElementsState,
-    commonParams: CommonParams
-  ) => {
-    let { result } = commonParams;
-    result = result
-      ? result
-      : {
-        netAmount: 0,
-        transaction: {
-          master: {
-            grandTotal: 0,
-            grandTotalFc: undefined,
-            vatAmount: 0,
-            roundAmount: 0,
-          },
-        },
-      };
 
-    const netVal = summary.netValue;
-    let netAmt = summary.total;
-    const tax = summary.vatAmount;
-    const cgst = summary.cgst;
-    const sgst = summary.sgst;
-    const igst = summary.igst;
-    const cessAmt = summary.cessAmt;
-    const additionalCess = summary.additionalCess;
-
-    if (+(netVal + tax) !== +netAmt) {
-      netAmt = round(netVal + tax);
-    }
-
-    const billDisc = master.billDiscount;
-    const additionalAmt = master.adjustmentAmount;
-
-    if (!result.transaction) {
-      result.transaction = { master: {} };
-    }
-    if (!result.transaction.master) {
-      result.transaction.master = {};
-    }
-    if (!result.transaction.master.master3) {
-      result.transaction.master.master3 = {};
-    }
-    result.transaction.master.vatAmount = round(tax);
-    if (clientSession.isAppGlobal) {
-      result.transaction.master.master3 ?? TransactionMaster3InitialData;
-      result.transaction.master.master3!.totCGST = round(cgst);
-      result.transaction.master.master3!.totSGST = round(sgst);
-      result.transaction.master.master3!.totIGST = round(igst);
-      result.transaction.master.master3!.totCess = round(cessAmt);
-      result.transaction.master.master3!.totAdditionalCess =
-        round(additionalCess);
-    }
-    result.netAmount = round(netAmt);
-
-    let tcsAmt = 0;
-    let _grandTotal = netAmt + additionalAmt - billDisc;
-
-    if (master.hasroundOff) {
-      try {
-        result.transaction!.master!.roundAmount = parseFloat(
-          (Math.round(_grandTotal) - _grandTotal).toFixed(3)
-        );
-        _grandTotal =
-          _grandTotal ?? 0 - result.transaction!.master!.roundAmount;
-        result.transaction!.master!.grandTotal = Math.round(_grandTotal);
-      } catch (err) {
-        // handle error if needed
-        console.error("Error in rounding calculation:", err);
-      }
-    } else {
-      result.transaction!.master!.roundAmount = 0;
-      result.transaction!.master!.grandTotal = _grandTotal;
-    }
-
-    // if(clientSession.isAppGlobal && master.other.tcs > 0) {
-    //   result.transaction!.master!.other?.totTCS = result.transaction!.master!.grandTotal
-    // }
-    result.transaction!.master!.totalGross = summary.gross;
-    result.transaction!.master!.totalDiscount = summary.discount;
-
-    // Check if foreign currency calculation is needed
-    if (formElements.pnlImport.visible && master.exchangeRate > 0) {
-      const exchangeRate = master.exchangeRate;
-      if (exchangeRate > 0) {
-        result.transaction!.master!.grandTotalFc = _grandTotal / exchangeRate;
-      }
-    }
-    commonParams.formStateHandleFieldChangeKeysOnly &&
-      dispatch &&
-      dispatch(
-        commonParams.formStateHandleFieldChangeKeysOnly({ fields: result })
-      );
-
-    return result;
-  };
-
-  const calculateRowAmount = (
+  // ---------- Helper stubs (replace with your real helpers if available) ----------
+  const toNum = (v: any) => (v === null || v === undefined || v === "" ? 0 : Number(v));
+  const calculateRowAmount = async (
     transactionDetail: TransactionDetail,
     currentColumn: TransactionDetailKeys,
     commonParams: CommonParams,
     ignoreCalculateTotal?: boolean,
-    rowIndex?: number
-  ): DeepPartial<TransactionFormState> => {
+    rowIndex?: number,
+    reverseDiscountClicked?: boolean
+  ): Promise<DeepPartial<TransactionFormState>> => {
     rowIndex = rowIndex ?? -1;
     ignoreCalculateTotal = ignoreCalculateTotal ?? false;
-    let { result } = commonParams;
+    let { result } = commonParams || ({} as CommonParams);
 
     result = result || { transaction: { details: [] } };
     result.transaction ??= { details: [] };
     result.transaction.details ??= [];
 
-    const detail = { ...result.transaction.details[0] };
-    // Early return if no product selected
-    if (!(transactionDetail.productID > 0)) {
+    const detailFromResult = { ...result.transaction.details[0] };
+    if (!transactionDetail || !(transactionDetail.productID > 0)) {
       return result;
     }
 
+    let detail: TransactionDetail = { ...(transactionDetail || {}), ...detailFromResult };
+
     try {
-      // Initialize variables with proper null checks and defaults
+      const isIndia = clientSession.isAppGlobal === true; // true = India (GST), false = GCC (VAT)
+      const settings = applicationSettings || {};
+      const form = formState;
+      const chkShowRateBeforeTax = !!(form?.formElements?.chkShowRateBeforeTax?.checked);
+      const chkTaxOnMRP = !!(form?.formElements?.chkTaxOnMRP?.checked);
+      const chkTaxOnFreeItem = !!(form?.formElements?.chkTaxOnFreeItem?.checked);
 
-      transactionDetail = { ...transactionDetail, ...detail };
-      let qty = Number(transactionDetail.qty || 0);
-      let freeQty = Number(transactionDetail.free || 0);
-      let rate = Number(transactionDetail.unitPrice || 0);
-      let addAmt = Number(transactionDetail.additionalExpense || 0);
-      let vatPerc = Number(transactionDetail.vatPerc || 0);
-      let disc = Number(transactionDetail.discount || 0);
-      let discPerc = Number(transactionDetail.discPerc || 0);
-      let exciseTaxPer = Number(transactionDetail.cstPerc || 0);
-      let exciseTax = Number(transactionDetail.cst || 0);
-      let ratePlusTax = 0;
-      let cost = 0;
-      let unitPrice = Number(transactionDetail.unitPrice || 0);
+      // read numeric values directly (no toNum helper)
+      let Qty = Number(detail.qty ?? 0);
+      let FreeQty = Number(detail.free ?? 0);
+      let Rate = Number(detail.unitPrice ?? 0);
+      let UnitDiscount = Number(detail.unitDiscount ?? 0);
+      let Disc = Number(detail.discount ?? 0);
+      let DiscPerc = Number(detail.discPerc ?? 0);
+      let RatePlusTax = Number(detail.ratePlusTax ?? 0);
+      let UP = Number(detail.unitPrice ?? 0);
 
-      // India
-      let cgstPerc = Number(transactionDetail.details2?.cgstPerc || 0);
-      let sgstPerc = Number(transactionDetail.details2?.sgstPerc || 0);
-      let igstPerc = Number(transactionDetail.details2?.igstPerc || 0);
-      let addnlCessPerc = Number(
-        transactionDetail.details2?.additionalCessPerc || 0
-      );
-      let cessPerc = Number(transactionDetail.details2?.cessPerc || 0);
-      let cess = Number(transactionDetail.details2?.cessAmt || 0);
+      // VAT-specific
+      let VatPerc = Number(detail.vatPerc ?? 0);
+      let Vat = 0;
+      let ExciseTaxPer = Number(detail.cstPerc ?? 0);
+      let ExciseTax = Number(detail.cst ?? 0);
 
-      if (clientSession.isAppGlobal) {
-        vatPerc = cgstPerc + sgstPerc + igstPerc + addnlCessPerc + cessPerc;
-      }
-      detail.unitPrice = transactionDetail.unitPrice;
-      // Handle RatePlusTax visibility and calculation
-      if (
-        transactionDetail.ratePlusTax !== undefined &&
-        transactionDetail.ratePlusTax !== null
-      ) {
-        ratePlusTax = Number(transactionDetail.ratePlusTax || 0);
-      } else {
-        ratePlusTax = 0;
-      }
+      // GST-specific (India)
+      let CGSTPerc = Number(detail.details2?.cgstPerc ?? 0);
+      let SGSTPerc = Number(detail.details2?.sgstPerc ?? 0);
+      let IGSTPerc = Number(detail.details2?.igstPerc ?? 0);
+      let AddnlCessPerc = Number(detail.details2?.additionalCessPerc ?? 0);
+      let CessPerc = Number(detail.details2?.cessPerc ?? 0);
 
-      // Calculate gross amount (Qty * Rate)
-      let gross = round(qty * rate, 5);
+      let CGST = Number(detail.details2?.cgst ?? 0);
+      let SGST = Number(detail.details2?.sgst ?? 0);
+      let IGST = Number(detail.details2?.igst ?? 0);
+      let AddnlCess = Number(detail.details2?.additionalCess ?? 0);
+      let Cess = Number(detail.details2?.cessAmt ?? 0);
 
-      // Handle RatePlusTax calculation when current column is RatePlusTax
-      if (ratePlusTax > 0 && currentColumn === "ratePlusTax") {
-        if (
-          clientSession.isAppGlobal &&
-          formState.transaction.master.voucherForm !== ""
-        ) {
-          let dval =
-            (Number(transactionDetail.details2?.cgstPerc || 0) +
-              Number(transactionDetail.details2?.sgstPerc || 0) +
-              Number(transactionDetail.details2?.igstPerc || 0) +
-              Number(transactionDetail.details2?.additionalCessPerc || 0)) /
-            100 +
-            1;
+      // Flags
+      const isEdit = form?.isEdit ?? false;
+      const TenderClosed = formState?.tenderOpen !== true;
 
-          let qty1 = Number(transactionDetail.qty || 1);
-          if (qty1 === 0) qty1 = 1;
-
-          let rate = round((ratePlusTax * qty1) / dval, 3);
-
-          rate = Number(rate) / qty1; // convert back to number
+      // ---------------- RatePlusTax -> UnitPrice conversion (exact C# behavior) ----------------
+      if (RatePlusTax > 0 && (currentColumn === "ratePlusTax" || currentColumn === "netConvert")) {
+        if (isIndia) {
+          const dval = ((SGSTPerc + CGSTPerc + IGSTPerc + CessPerc + AddnlCessPerc) / 100) + 1;
+          if (dval === 0) {
+            Rate = 0;
+          } else {
+            Rate = round(RatePlusTax / dval, 4);
+          }
+          detail.unitPrice = Rate;
         } else {
-          const dval = vatPerc / 100 + 1;
-          let qty1 = qty || 1;
-
-          if (qty1 === 0) qty1 = 1;
-
-          rate = round((ratePlusTax * qty1) / dval, 3);
-          rate = rate / qty1;
-
-          // Update unit price in form state
+          const dval = (VatPerc / 100) + 1;
+          let Qty1 = Qty || 1;
+          if (Qty1 === 0) Qty1 = 1;
+          Rate = round((RatePlusTax * Qty1) / dval, 4);
+          Rate = Rate / Qty1;
+          detail.unitPrice = Rate;
         }
-
-        detail.unitPrice = rate;
       } else {
-        const dval = vatPerc / 100 + 1;
-        detail.ratePlusTax = round(unitPrice * dval, 4);
-      }
-
-      // Fallback for rate if still 0
-      if (rate === 0) {
-        rate = Number(detail.unitPrice || 0);
-      }
-
-      // Handle discount percentage calculation
-      if (discPerc > 0 && currentColumn !== "discount") {
-        const calculatedDisc = round((discPerc * gross) / 100, 5);
-        if ((discPerc * gross) / 100 !== disc) {
-          disc = calculatedDisc;
+        // When RatePlusTax not used for conversion: if RatePlusTax isn't visible/used C# sometimes sets unitPrice->0 when ratePlusTax <= 0 and user edited ratePlusTax col
+        if ((currentColumn === "ratePlusTax") && RatePlusTax <= 0) {
+          // reflect C# behaviour: set unitPrice to 0
+          detail.unitPrice = 0;
+          Rate = 0;
+        } else {
+          Rate = Rate || Number(detail.unitPrice ?? 0);
         }
       }
 
-      // Handle discount percentage when discount amount is being edited
-      if (rate > 0 && currentColumn === "discount") {
-        discPerc = round((100 * disc) / gross, 5);
+      // ---------- Gross ----------
+      let Gross = round(Qty * Rate, 4);
+
+      // ---------- Discount logic (mirror C# branches exactly) ----------
+      // Case: Discount amount edited
+      if (Disc > 0 && currentColumn === "discount") {
+        DiscPerc = Gross !== 0 ? round((100 * Disc) / Gross, 5) : 0;
+        UnitDiscount = round(Disc / (Qty === 0 ? 1 : Qty), 5);
+      }
+      // Case: Discount % edited
+      else if (DiscPerc > 0 && currentColumn === "discPerc") {
+        const calcDisc = round(DiscPerc * Gross / 100, 5);
+        if (Math.abs(calcDisc - Disc) > 0.000001) {
+          Disc = calcDisc;
+          UnitDiscount = Disc / (Qty === 0 ? 1 : Qty);
+        }
+      }
+      // Case: ReverseDiscountClicked or other edits where discPerc > 0 and discount column not being edited
+      else if (DiscPerc > 0 && (reverseDiscountClicked === true || currentColumn !== "discount")) {
+        const calcDisc = round(DiscPerc * Gross / 100, 5);
+        if (Math.abs(calcDisc - Disc) > 0.000001) {
+          Disc = calcDisc;
+          UnitDiscount = Disc / (Qty === 0 ? 1 : Qty);
+        }
+      } else {
+        // default - maintain UnitDiscount if provided, else 0
+        UnitDiscount = UnitDiscount || 0;
       }
 
-      // Calculate net value after discount
-      let netValue = gross - disc;
+      // Discount slab offer behavior (exact mapping)
+      if (settings?.inventorySettings?.enableDiscountSlabOffer || settings?.inventorySettings?.enableDiscountSlabOffer) {
+        // C# checks for EnableDiscountSlabOffer and DiscPerc == 0 and (isEdit || TenderClosed)
+        if ((DiscPerc === 0) && (isEdit || TenderClosed)) {
+          if (DiscPerc !== Disc) {
+            Disc = DiscPerc;
+            UnitDiscount = Disc / (Qty === 0 ? 1 : Qty);
+          }
+        }
+      }
 
-      // Calculate excise tax
-      exciseTax = (netValue * exciseTaxPer) / 100;
-      netValue += exciseTax;
+      if (Rate > 0 && currentColumn === "discount") {
+        DiscPerc = round(100 * Disc / (Gross === 0 ? 1 : Gross), 5);
+      }
 
-      // Update form state with calculated values
-      detail.cst = getFormattedValueIgnoreRoundingToNumber(exciseTax);
-      detail.netValue = getFormattedValueIgnoreRoundingToNumber(netValue);
-      detail.discPerc = getFormattedValueIgnoreRoundingToNumber(discPerc);
-      detail.discount = getFormattedValueIgnoreRoundingToNumber(disc);
+      // Reset ReverseDiscountClicked equivalent handled by caller; we don't mutate global flag here.
 
-      // Calculate total additional expense
-      detail.totalAddExpense = round(addAmt * qty);
+      // ---------- CalculationDiff & Show Rate Before Tax ----------
+      let CalculationDiff = 0;
+      CalculationDiff = Gross - Qty * (RatePlusTax / (1 + VatPerc / 100 || 1));
 
-      // Calculate VAT amount
+      if (RatePlusTax > 0 && VatPerc > 0 && Disc === 0 && chkShowRateBeforeTax && Math.abs(CalculationDiff) < 0.5) {
+        Gross = round(Qty * (RatePlusTax / (1 + VatPerc / 100)), 5);
+      }
 
-      // India tax
-      if (clientSession.isAppGlobal) {
-        // === Case 1: Additional Cess calculation ===
-        detail.details2 = {
-          ...(transactionDetail.details2 ?? initialTransactionDetails2),
-        };
-        if (netValue > 0 && currentColumn === "details2.additionalCess") {
-          if (Number(detail.details2?.additionalCess || 0) > 0) {
-            const addCessAmount = Number(detail.details2?.additionalCess || 0);
-            detail.details2!.additionalCessPerc = Number(
-              ((addCessAmount * 100) / netValue).toFixed(3)
-            );
+      // ---------- NetValue ----------
+      let NetValue = round(Gross - Disc, 4);
+
+      // ---------- VAT path (GCC, isIndia === false) ----------
+      if (!isIndia) {
+        // Excise on NetValue
+        ExciseTax = (NetValue * ExciseTaxPer) / 100;
+        NetValue += ExciseTax;
+
+        // KSA einvoice rounding
+        if (applicationSettings?.branchSettings?.maintainKSA_EInvoice && applicationSettings?.branchSettings.apply_KSA_EInvoice_Validation_Rules) {
+          NetValue = round(NetValue, 2);
+        }
+
+        Vat = round(NetValue * VatPerc / 100, 4);
+
+        // Map values to detail (matching C# cell writes)
+        detail.cst = getFormattedValueIgnoreRoundingToNumber(ExciseTax);
+        detail.netValue = getFormattedValueIgnoreRoundingToNumber(NetValue);
+        detail.discPerc = getFormattedValueIgnoreRoundingToNumber(DiscPerc);
+        detail.discount = getFormattedValueIgnoreRoundingToNumber(Disc);
+        detail.unitDiscount = getFormattedValueIgnoreRoundingToNumber(round(UnitDiscount, 5));
+        detail.vatAmount = getFormattedValueIgnoreRoundingToNumber(Vat);
+
+        let NetAmount = NetValue + Vat;
+        NetAmount = round(NetAmount, 4);
+
+        // If unit price edited update RatePlusTax similar to C#
+        if (currentColumn === "unitPrice" && VatPerc > 0 && UP * (1 + VatPerc / 100) !== RatePlusTax) {
+          RatePlusTax = UP * (1 + VatPerc / 100);
+          detail.ratePlusTax = round(RatePlusTax, 4);
+        }
+
+        detail.gross = getFormattedValueIgnoreRoundingToNumber(Gross);
+        detail.total = NetAmount;
+        detail.cost = Qty !== 0 ? (NetValue / Qty) : 0;
+
+        // Profit calculation (same as C#)
+        const purchasePrice = Number(detail.purchasePrice ?? detail.purchaseRate ?? 0);
+        const Profit = NetValue - (Qty * purchasePrice);
+        detail.profit = Profit;
+        // Profit percentage only if column visible in grid (mimic C# try/catch)
+        try {
+          const profitColumn = formState.gridColumns?.find((x: any) => x.dataField == "profitPercentage");
+          if (profitColumn?.visible !== false) {
+            let profit_perc = 0;
+            if (purchasePrice > 0 && Qty > 0) {
+              profit_perc = (Profit / (purchasePrice * Qty)) * 100;
+            } else {
+              profit_perc = 0;
+            }
+            detail.profitPercentage = profit_perc;
+          }
+        } catch {
+          /* ignore like C# */
+        }
+      }
+      // ---------- GST path (India) ----------
+      else {
+        // RatePlusTax handling (C# had special block)
+        if (currentColumn === "ratePlusTax") {
+          if (RatePlusTax > 0) {
+            const dval = ((SGSTPerc + CGSTPerc + IGSTPerc + CessPerc + AddnlCessPerc) / 100) + 1;
+            if (dval === 0) {
+              Rate = 0;
+            } else {
+              Rate = round(RatePlusTax / dval, 4);
+            }
+            detail.unitPrice = Rate;
+          } else {
+            // C# sets unit price to "0.00" when ratePlusTax <= 0 and user edited ratePlusTax column
+            detail.unitPrice = 0;
           }
         }
 
-        // // === Case 2: Tax on MRP ===
-        // // if (formState.formElements) {
-        // //   const taxableMRP =
-        // //     Number(detail.mrp || 0) /
-        // //     (1 +
-        // //       (Number(detail.details2?.cgstPerc || 0) +
-        // //         Number(detail.details2?.sgstPerc || 0) +
-        // //         Number(detail.details2?.igstPerc || 0)) /
-        // //         100);
+        if (Rate === 0) Rate = Number(detail.unitPrice ?? 0);
 
-        //   // if (ckbTaxOnFreeItems) {
-        //   //   // including free qty
-        //   //   detail.details2!.cgst =
-        //   //     (qty + freeQty) * taxableMRP * (detail.details2?.cgstPerc || 0) / 100;
-        //   //   detail.details2!.sgst =
-        //   //     (qty + freeQty) * taxableMRP * (detail.details2?.sgstPerc || 0) / 100;
-        //   //   detail.details2!.igst =
-        //   //     (qty + freeQty) * taxableMRP * (detail.details2?.igstPerc || 0) / 100;
-        //   //   detail.details2!.additionalCess =
-        //   //     (qty + freeQty) * taxableMRP * (detail.details2?.additionalCessPerc || 0) / 100;
+        // recalc gross
+        Gross = round(Qty * Rate, 4);
 
-        //   //   if (detail.details2!.cessPerc > 0 && currentColumn !== "details2.cessAmt") {
-        //   //     detail.details2!.cessAmt =
-        //   //       (qty + freeQty) * taxableMRP * (detail.details2!.cessPerc || 0) / 100;
-        //   //   } else if (
-        //   //     (qty + freeQty) * taxableMRP > 0 &&
-        //   //     currentColumn === "details2.cessAmt"
-        //   //   ) {
-        //   //     detail.details2!.cessPerc =
-        //   //       (detail.details2!.cessAmt * 100) /
-        //   //       ((qty + freeQty) * taxableMRP);
-        //   //   } else {
-        //   //     detail.details2!.cessAmt = 0;
-        //   //     detail.details2!.cessPerc = 0;
-        //   //   }
-        //   // } else {
-        //     // without free qty
-        //     detail.details2!.cgst =
-        //       qty * taxableMRP * (detail.details2!.cgstPerc || 0) / 100;
-        //     detail.details2!.sgst =
-        //       qty * taxableMRP * (detail.details2!.sgstPerc || 0) / 100;
-        //     detail.details2!.igst =
-        //       qty * taxableMRP * (detail.details2!.igstPerc || 0) / 100;
-        //     detail.details2!.additionalCess =
-        //       qty * taxableMRP * (detail.details2!.additionalCessPerc || 0) / 100;
+        // NetValue after discount
+        NetValue = round(Gross - Disc, 4);
 
-        //     if (detail.details2!.cessPerc > 0 && currentColumn !== "details2.cessAmt") {
-        //       detail.details2!.cessAmt =
-        //         qty * taxableMRP * (detail.details2!.cessPerc || 0) / 100;
-        //     } else if (
-        //       qty * taxableMRP > 0 &&
-        //       currentColumn === "details2.cessAmt"
-        //     ) {
-        //       detail.details2!.cessPerc =
-        //         (detail.details2!.cessAmt * 100) / (qty * taxableMRP);
-        //     } else {
-        //       detail.details2!.cessAmt = 0;
-        //       detail.details2!.cessPerc = 0;
-        //     }
-        //   // }
-        // } else {
-        // === Case 3: Tax on NetValue ===
-
-        detail.details2.cgst =
-          (netValue * (transactionDetail.details2!.cgstPerc || 0)) / 100;
-        detail.details2.sgst =
-          (netValue * (transactionDetail.details2!.sgstPerc || 0)) / 100;
-        detail.details2.igst =
-          (netValue * (transactionDetail.details2!.igstPerc || 0)) / 100;
-        detail.details2.additionalCess =
-          (netValue * (transactionDetail.details2!.additionalCessPerc || 0)) /
-          100;
-
-        if (transactionDetail.details2!.cessPerc > 0) {
-          detail.details2!.cessAmt =
-            (netValue * (transactionDetail.details2!.cessPerc || 0)) / 100;
-        } else if (netValue > 0 && currentColumn === "details2.cessAmt") {
-          detail.details2!.cessPerc =
-            (detail.details2!.cessAmt * 100) / netValue;
-        } else {
-          detail.details2!.cessAmt = 0;
-          detail.details2!.cessPerc = 0;
+        // If AddnlCess amount edited, recompute percentage
+        if (Number(detail.details2?.additionalCess ?? 0) > 0 && currentColumn === "details2.additionalCess") {
+          const AddCessAmount = Number(detail.details2?.additionalCess ?? 0);
+          if (NetValue > 0) {
+            AddnlCessPerc = round((AddCessAmount * 100) / NetValue, 3);
+            detail.details2 = { ...(detail.details2 || initialTransactionDetails2), additionalCessPerc: AddnlCessPerc };
+          }
         }
 
-        // Handle free items tax
-        // if (ckbTaxOnFreeItems && freeQty > 0) {
-        //   const gross1 = freeQty * rate;
-        //   const netValue1 = gross1 - disc;
+        // Tax on MRP branch (exact C#)
+        if (chkTaxOnMRP) {
+          let TaxableMRP = 0;
+          const denom = 1 + ((CGSTPerc + SGSTPerc + IGSTPerc) / 100 || 0);
+          TaxableMRP = denom !== 0 ? (Number(detail.mrp ?? 0) / denom) : 0;
 
-        //   const freeCgst = netValue1 * (detail.details2!.cgstPerc || 0) / 100;
-        //   const freeSgst = netValue1 * (detail.details2!.sgstPerc || 0) / 100;
-        //   const freeIgst = netValue1 * (detail.details2!.igstPerc || 0) / 100;
-        //   const freeAddCess =
-        //     netValue1 * (detail.details2!.additionalCessPerc || 0) / 100;
-        //   const freeCess =
-        //     detail.details2!.cessPerc > 0
-        //       ? netValue1 * (detail.details2!.cessPerc || 0) / 100
-        //       : 0;
+          if (chkTaxOnFreeItem) {
+            const qtyForTax = Qty + FreeQty;
+            CGST = qtyForTax * TaxableMRP * (CGSTPerc / 100);
+            SGST = qtyForTax * TaxableMRP * (SGSTPerc / 100);
+            IGST = qtyForTax * TaxableMRP * (IGSTPerc / 100);
+            AddnlCess = qtyForTax * TaxableMRP * (AddnlCessPerc / 100);
 
-        //   detail.details2!.cgst += freeCgst;
-        //   detail.details2!.sgst += freeSgst;
-        //   detail.details2!.igst += freeIgst;
-        //   detail.details2!.additionalCess += freeAddCess;
-        //   detail.details2!.cessAmt += freeCess;
-        // }
-        // }
+            if (CessPerc > 0 && currentColumn !== "details2.cessAmt") {
+              Cess = qtyForTax * TaxableMRP * (CessPerc / 100);
+            } else if ((qtyForTax * TaxableMRP) > 0 && currentColumn === "details2.cessAmt") {
+              CessPerc = (Cess * 100) / (qtyForTax * TaxableMRP);
+            } else {
+              Cess = 0;
+              CessPerc = 0;
+            }
+          } else {
+            CGST = Qty * TaxableMRP * (CGSTPerc / 100);
+            SGST = Qty * TaxableMRP * (SGSTPerc / 100);
+            IGST = Qty * TaxableMRP * (IGSTPerc / 100);
+            AddnlCess = Qty * TaxableMRP * (AddnlCessPerc / 100);
 
-        // === Final update (equivalent to dgvInventory cell values) ===
-        detail.details2.cgst = round(detail.details2!.cgst);
-        detail.details2.sgst = round(detail.details2!.sgst);
-        detail.details2.igst = round(detail.details2!.igst);
-        detail.details2.additionalCess = round(detail.details2!.additionalCess);
-        detail.details2.cessAmt = round(detail.details2!.cessAmt);
-        detail.details2.cessPerc = round(detail.details2!.cessPerc);
-        if (
-          formState.transaction.master.voucherForm.toUpperCase() == "INTERSTATE" ||
-          formState.transaction.master.voucherForm.toUpperCase() == "INT" ||
-          formState.transaction.master.voucherForm.toUpperCase() == "IMPORT"
-        ) {
+            if (CessPerc > 0 && currentColumn !== "details2.cessAmt") {
+              Cess = Qty * TaxableMRP * (CessPerc / 100);
+            } else if ((Qty * TaxableMRP) > 0 && currentColumn === "details2.cessAmt") {
+              CessPerc = (Cess * 100) / (Qty * TaxableMRP);
+            } else {
+              Cess = 0;
+              CessPerc = 0;
+            }
+          }
+        } else {
+          // default: tax on NetValue
+          CGST = NetValue * CGSTPerc / 100;
+          SGST = NetValue * SGSTPerc / 100;
+          IGST = NetValue * IGSTPerc / 100;
+          AddnlCess = NetValue * AddnlCessPerc / 100;
+
+          if (CessPerc > 0 && currentColumn !== "details2.cessAmt") {
+            Cess = NetValue * CessPerc / 100;
+          } else if (NetValue > 0 && currentColumn === "details2.cessAmt") {
+            CessPerc = (Cess * 100) / NetValue;
+          } else {
+            Cess = 0;
+            CessPerc = 0;
+          }
+
+          // Tax on free item: C# uses FreeQty * Rate => NetValue1 = Gross1 - Disc ??? 
+          // According to original C# GST: Free tax calculated by NetValue1 = Gross1 - Disc (they used same Disc for free item)
+          if (chkTaxOnFreeItem && FreeQty > 0) {
+            const Gross1 = FreeQty * Rate;
+            const NetValue1 = Gross1 - Disc; // keep same as original C# implementation
+            const FreeCGST = NetValue1 * (CGSTPerc / 100);
+            const FreeSGST = NetValue1 * (SGSTPerc / 100);
+            const FreeIGST = NetValue1 * (IGSTPerc / 100);
+            const FreeAddnlCess = NetValue1 * (AddnlCessPerc / 100);
+            const FreeCess = CessPerc > 0 ? NetValue1 * (CessPerc / 100) : 0;
+
+            CGST += FreeCGST;
+            SGST += FreeSGST;
+            IGST += FreeIGST;
+            AddnlCess += FreeAddnlCess;
+            Cess += FreeCess;
+          }
+        }
+
+        // Store results in details2
+        detail.details2 = {
+          ...(detail.details2 || initialTransactionDetails2),
+          cgst: round(CGST),
+          sgst: round(SGST),
+          igst: round(IGST),
+          additionalCess: round(AddnlCess),
+          cessAmt: round(Cess),
+          cessPerc: round(CessPerc, 4),
+          cgstPerc: CGSTPerc,
+          sgstPerc: SGSTPerc,
+          igstPerc: IGSTPerc,
+          additionalCessPerc: AddnlCessPerc,
+        };
+
+        // Voucher form special rules (exact mapping)
+        const vform = (form?.transaction?.master?.voucherForm ?? "").toString().toUpperCase();
+        if (vform === "INTERSTATE" || vform === "INT" || vform === "IMPORT") {
           detail.details2.cgst = 0;
           detail.details2.sgst = 0;
+          detail.details2.cgstPerc = 0;
           detail.details2.sgstPerc = 0;
-          detail.details2.sgstPerc = 0;
+          // C# doesn't zero IGST here (IGST used for interstate)
         }
-
-        if (
-          formState.transaction.master.voucherType == "PE"
-        ) {
+        if ((form?.transaction?.master?.voucherType ?? "") === "PE") {
           detail.details2.cgst = 0;
           detail.details2.sgst = 0;
           detail.details2.igst = 0;
@@ -583,139 +542,84 @@ export const useTransactionHelper = (transactionType: string) => {
           detail.details2.cessPerc = 0;
           detail.details2.additionalCessPerc = 0;
         }
+
+        // VAT compatibility variable (sum of GST components)
+        Vat = round(CGST + SGST + IGST + Cess + AddnlCess, 4);
+
+        let NetAmount = NetValue + CGST + SGST + IGST + Cess + AddnlCess;
+        NetAmount = round(NetAmount, 4);
+
+        // Map many fields back to detail
+        detail.netValue = getFormattedValueIgnoreRoundingToNumber(NetValue);
+        detail.discPerc = getFormattedValueIgnoreRoundingToNumber(DiscPerc);
+        detail.discount = getFormattedValueIgnoreRoundingToNumber(Disc);
+        detail.unitDiscount = getFormattedValueIgnoreRoundingToNumber(round(UnitDiscount, 5));
+        detail.vatAmount = getFormattedValueIgnoreRoundingToNumber(Vat);
+        detail.gross = getFormattedValueIgnoreRoundingToNumber(Gross);
+        detail.total = NetAmount;
+        detail.cost = Qty !== 0 ? (NetValue / Qty) : 0;
+
+        // Profit
+        const purchasePrice = Number(detail.purchasePrice ?? detail.purchaseRate ?? 0);
+        const Profit = NetValue - (Qty * purchasePrice);
+        detail.profit = Profit;
       }
 
-      let vat = round((netValue * vatPerc) / 100, 4);
-      // Calculate net value per unit for cost calculation
-      let netVal = rate - (rate * discPerc) / 100;
-      if (clientSession.isAppGlobal) {
-        vat =
-          detail.details2!.cgst +
-          detail.details2!.sgst +
-          detail.details2!.igst +
-          detail.details2!.cessAmt +
-          detail.details2!.additionalCess;
-      }
-      // Calculate cost based on settings
-      if (applicationSettings?.inventorySettings?.setProductCostWithVATAmount) {
-        if (clientSession.isAppGlobal) {
-          cost = round(
-            netVal +
-            (netVal *
-              (detail.details2!.cgstPerc +
-                detail.details2!.sgstPerc +
-                detail.details2!.igstPerc +
-                detail.details2!.cessPerc +
-                detail.details2!.additionalCessPerc)) /
-            100
-          );
-        } else {
-          cost = round(netVal + (netVal * vatPerc) / 100);
-        }
+      // ---------- Final profit percentage (common) ----------
+      const costForPerc = Number(detail.purchasePrice ?? detail.purchaseRate ?? 0);
+      if (costForPerc > 0 && Qty > 0) {
+        detail.profitPercentage = ((detail.profit ?? 0) / (costForPerc * Qty)) * 100;
       } else {
-        cost = netVal;
+        detail.profitPercentage = 0;
       }
 
-      // Update cost and VAT amount
-      detail.cost = round(cost);
-      detail.vatAmount = getFormattedValueIgnoreRoundingToNumber(vat);
+      // ---------- Final formatting/rounding ----------
+      detail.gross = getFormattedValueIgnoreRoundingToNumber(round(Gross, 4));
+      detail.netValue = getFormattedValueIgnoreRoundingToNumber(round(Number(detail.netValue ?? 0), 4));
+      detail.total = round(Number(detail.total ?? (Number(detail.netValue ?? 0) + Number(detail.vatAmount ?? 0))), 4);
+      detail.unitDiscount = getFormattedValueIgnoreRoundingToNumber(round(UnitDiscount, 5));
 
-      // Calculate final net amount (NetValue + VAT)
-      let netAmount = 0;
-      if (clientSession.isAppGlobal) {
-        netAmount = round(netValue + vat);
-      } else {
-        netAmount = round(netValue + vat, 4);
-      }
+      // Put result back
+      result.transaction.details = [{ ...detail }];
 
-      // Update gross and total
-      detail.gross = getFormattedValueIgnoreRoundingToNumber(gross);
-      detail.total = round(netAmount);
-
-      // Calculate margin per row
-      const sp_margin = calculateMarginPerRow(
-        {
-          total: detail.total,
-          margin: transactionDetail.margin,
-          qty,
-          salesPrice: transactionDetail.salesPrice,
-        },
-        formState
-      );
-      detail.salesPrice = sp_margin ?? transactionDetail.salesPrice;
-
-      // Calculate profit and profit percentage
-      let sp = Number(detail.salesPrice || 0);
-
-      // Use actual sales price if available
-      if (Number(transactionDetail.actualSalesPrice || 0) > 0) {
-        sp = Number(transactionDetail.actualSalesPrice || 0);
-      }
-
-      // Adjust sales price if showing rate before tax
-      if (applicationSettings?.productsSettings?.showRateBeforeTax) {
-        sp = sp / (1 + vatPerc / 100);
-      }
-
-      if (sp > 0) {
-        const profit = qty * (sp - netVal);
-        detail.profit = round(profit);
-
-        const profitPerc =
-          Math.round(((sp - netVal) / netVal) * 100 * 1000) / 1000;
-        detail.profitPercentage = profitPerc;
-      } else {
-        detail.profit = 0.0;
-        detail.profitPercentage = 0.0;
-      }
-
-      // Auto calculation and summary
-      // if (formState.autoCalculation || rowIndex < 15) {
-      //   calculateAutoSummary(formState);
-      //   calculateTotal(formState);
-      // }
-
-      result.transaction.details = [detail];
-
-      if (!ignoreCalculateTotal && rowIndex >= 0) {
-        let details = [...formState.transaction.details];
-        let current = { ...formState.transaction.details[rowIndex] };
+      // Keep formState, calculateSummary, calculateTotal unchanged (per your request)
+      if (!ignoreCalculateTotal && typeof rowIndex === "number" && rowIndex >= 0) {
+        const details = [...formState.transaction.details];
+        const current = { ...(formState.transaction.details[rowIndex] || {}) };
         const final = { ...current, ...detail };
         details[rowIndex] = final;
 
-        const summaryRes = calculateSummary(details, formState, {
-          result: {},
-        });
-        let _result = calculateTotal(
+        const summaryRes = calculateSummary(details, formState, { result: {} });
+        const totals = await calculateTotal(
           formState.transaction.master,
           summaryRes
             ? (summaryRes.summary as SummaryItems)
             : initialInventoryTotals,
           formState.formElements,
-          {
-            result,
-          }
+          { result }
         );
-        _result.transaction = _result.transaction ? _result.transaction : {};
+        let _result = totals;
+        _result.transaction = _result.transaction ?? {};
         _result.summary = summaryRes.summary;
         _result.transaction.details = [{ ...detail, slNo: current.slNo }];
         result = _result;
       }
-      commonParams.formStateHandleFieldChangeKeysOnly &&
-        dispatch &&
+
+      if (commonParams.formStateHandleFieldChangeKeysOnly && dispatch) {
         dispatch(
           commonParams.formStateHandleFieldChangeKeysOnly({
             fields: result,
             updateOnlyGivenDetailsColumns: true,
           })
         );
+      }
     } catch (error) {
-      console.error("Error in calculateRowAmount:", error);
-      // Handle error gracefully - could set default values or show user message
+      console.error("calculateRowAmount error:", error);
     } finally {
       return result;
     }
   };
+
   const calculateMarginPerRow = (
     detail: { total: number; qty: number; margin: number; salesPrice: number },
     formState: TransactionFormState
@@ -1157,13 +1061,13 @@ export const useTransactionHelper = (transactionType: string) => {
     }
   };
 
-  const refactorDetails = (
+  const refactorDetails = async(
     _details: any[],
     formType: string,
     voucherType: string,
     commonParams: CommonParams,
     loadType?: string
-  ): TransactionDetail[] => {
+  ): Promise<TransactionDetail[]> => {
     const detailsLength = _details.length;
     let details = [..._details];
     let validDetailsCount = 0;
@@ -1362,7 +1266,7 @@ export const useTransactionHelper = (transactionType: string) => {
       const originalCost = detail.cost;
 
       // Calculate row amounts
-      const res = calculateRowAmount(
+      const res = await calculateRowAmount(
         detail,
         "slNo",
         {
@@ -1632,7 +1536,7 @@ export const useTransactionHelper = (transactionType: string) => {
         formState.transaction.master.voucherType == VoucherType.PurchaseReturn
           ? formState.transaction.master.address4
           : "",
-        salesManID: formState.transaction.master.employeeID
+      salesManID: formState.transaction.master.employeeID
     };
 
     master.partyName = !isNullOrUndefinedOrEmpty(master.displayName)
@@ -1668,7 +1572,7 @@ export const useTransactionHelper = (transactionType: string) => {
     );
     return _master;
   };
-  const applyDiscountsToItems = (): void => {
+  const applyDiscountsToItems = async () => {
     try {
       let outState: DeepPartial<TransactionFormState> = {
         transaction: { master: {}, details: [] },
@@ -1689,14 +1593,15 @@ export const useTransactionHelper = (transactionType: string) => {
       totalGross = formState.summary.gross;
       // Apply discount to each item with productID > 0
       if (details.length > 0) {
-        details = details.map((item, i) => {
+        for (let i = 0; i < details.length; i++) {
+          const item = details[i];
           itemGross = item.gross ?? 0;
           grossPerc = (itemGross / totalGross) * 100;
           itemDisc = (billDisc * grossPerc) / 100;
           discPerc = round((itemDisc / itemGross) * 100, 5);
 
           const detail = { slNo: item.slNo, discPerc: discPerc };
-          const updatedRow = calculateRowAmount(
+          const updatedRow = await calculateRowAmount(
             item,
             "discPerc",
             { result: { transaction: { details: [detail] } } },
@@ -1708,13 +1613,14 @@ export const useTransactionHelper = (transactionType: string) => {
             );
             return { ...item, ...updatedRow.transaction!.details![0] };
           }
-          return item;
-        });
 
-        const summaryRes = calculateSummary(details, formState, {
+          details[i] = item;
+        }
+
+        const summaryRes = await calculateSummary(details, formState, {
           result: {},
         });
-        let totalRes = calculateTotal(
+        let totalRes = await calculateTotal(
           formState.transaction.master,
           summaryRes
             ? (summaryRes.summary as SummaryItems)
@@ -1744,6 +1650,279 @@ export const useTransactionHelper = (transactionType: string) => {
       console.error("Error applying discounts:", ex);
     }
   };
+  function getTotalTaxable(taxPercentage: number): number {
+    let totalTaxable = 0;
+
+    try {
+      const details = formState.transaction.details;
+
+      for (let i = 0; i < details.length; i++) {
+        const row = details[i];
+
+        // Skip empty rows (similar to FirstFreeRow logic)
+        if (!row) continue;
+
+        // Match row with the given VatPerc
+        if ((row.vatPerc ?? 0) === taxPercentage) {
+          totalTaxable += (row.netValue ?? 0);
+        }
+      }
+    } catch (err) {
+      // silent catch like C#
+    }
+
+    return totalTaxable;
+  }
+  function getMaxTaxPercInItemList(): number {
+    let maxTaxPerc = 0;
+
+    try {
+      const details = formState.transaction.details;
+
+      for (let i = 0; i < details.length; i++) {
+        const row = details[i];
+        if (!row) continue;
+
+        const vatPerc = Number(row.vatPerc ?? 0);
+
+        if (vatPerc > maxTaxPerc) {
+          maxTaxPerc = vatPerc;
+        }
+      }
+    } catch (err) {
+      // silent catch – same as C#
+    }
+
+    return maxTaxPerc;
+  }
+  function calculateTaxOnDiscount() {
+    try {
+      if (!applicationSettings.branchSettings.enableTaxOnBillDiscount) return;
+
+      const decimalPoints = applicationSettings.mainSettings.decimalPoints;
+
+      let oldTaxOnBillDisc = formState.transaction.master.taxOnDiscount ?? 0;
+      let taxPerc = getMaxTaxPercInItemList();
+      let billDiscount = formState.transaction.master.billDiscount ?? 0;
+
+      // First calculation (3 decimal rounding)
+      let taxOnBillDisc = Number(
+        (billDiscount * taxPerc / 100).toFixed(3)
+      );
+
+      // Double rounding logic same as C#
+      if (Math.abs(oldTaxOnBillDisc * 100 - taxOnBillDisc * 100) >= 0.75) {
+        taxOnBillDisc = Number(
+          taxOnBillDisc.toFixed(decimalPoints)
+        );
+      } else {
+        taxOnBillDisc = oldTaxOnBillDisc;
+      }
+
+      // Assign final value
+      formState.transaction.master.taxOnDiscount = taxOnBillDisc;
+
+    } catch (err) {
+      // swallow like C#
+    }
+  }
+
+  const calculateTotal = async (
+    master: TransactionMaster,
+    summary: SummaryItems,
+    formElements: FormElementsState,
+    commonParams: CommonParams,
+    isEdit: boolean = false
+  ) => {
+    let { result } = commonParams;
+    result = result
+      ? result
+      : {
+        netAmount: 0,
+        transaction: {
+          master: {
+            grandTotal: 0,
+            grandTotalFc: undefined,
+            vatAmount: 0,
+            roundAmount: 0,
+          },
+        },
+      };
+
+    // ensure nested structure
+    if (result.transaction == undefined) {
+      result.transaction = { master: {} } as any
+    };
+    if (!result.transaction!.master) {
+      result.transaction!.master = {} as any;
+    }
+    if (!result.transaction!.master!.master3) {
+      result.transaction!.master!.master3 = {} as any;
+    }
+
+    const netVal = summary.netValue ?? 0;
+    let netAmt = summary.total ?? 0;
+    let tax = summary.vatAmount ?? 0;
+    const cgst = summary.cgst ?? 0;
+    const sgst = summary.sgst ?? 0;
+    const igst = summary.igst ?? 0;
+    const cessAmt = summary.cessAmt ?? 0;
+    const additionalCess = summary.additionalCess ?? 0;
+
+    // if totals mismatch, recompute netAmt from netVal+tax (same as PI)
+    if (+ (netVal + tax) !== +netAmt) {
+      netAmt = round(netVal + tax);
+    }
+
+    // Bill discount + tax-on-bill-disc logic (Indian-specific branch will later override if needed)
+    const billDisc = Number(master.billDiscount ?? 0);
+    const additionalAmt = Number(master.adjustmentAmount ?? 0);
+
+    // write vat to result.master
+    result.transaction!.master!.vatAmount = round(tax);
+
+    // If India, populate tax breakup
+    if (clientSession.isAppGlobal === true) {
+      result.transaction!.master!.master3 ??= (TransactionMaster3InitialData as any);
+      result.transaction!.master!.master3!.totCGST = round(cgst);
+      result.transaction!.master!.master3!.totSGST = round(sgst);
+      result.transaction!.master!.master3!.totIGST = round(igst);
+      result.transaction!.master!.master3!.totCess = round(cessAmt);
+      result.transaction!.master!.master3!.totAdditionalCess = round(additionalCess);
+    }
+
+    // basic net amount
+    result.netAmount = round(netAmt);
+
+    // tax on bill discount handling (mirror C# Indian logic)
+    let taxOnBilldisc = Number(master.taxOnDiscount ?? 0);
+    let blnApplyTaxonDiscount = true;
+    if ((master.invTransactionMasterID ?? 0) > 0 && isEdit === false && Number(master.taxOnDiscount ?? 0) === 0) {
+      blnApplyTaxonDiscount = false;
+    }
+
+    if (
+      applicationSettings.branchSettings?.maintainKSA_EInvoice &&
+      applicationSettings.branchSettings?.enableTaxOnBillDiscount &&
+      Number(billDisc) > 0 &&
+      blnApplyTaxonDiscount
+    ) {
+      const _BillDiscount = Number(billDisc);
+      const TaxPerc = getMaxTaxPercInItemList();
+      let TaxableAmt_StdRate = getTotalTaxable(TaxPerc);
+      const totalGross = Number(summary.gross ?? 0);
+      const totalDiscount = Number(summary.discount ?? 0);
+      const _TotalNetValue = totalGross - totalDiscount;
+
+      if (TaxableAmt_StdRate >= _BillDiscount) {
+        TaxableAmt_StdRate -= _BillDiscount;
+
+        // taxOnBilldisc rounded to decimalPoints (as C# did)
+        taxOnBilldisc = Number((_BillDiscount * TaxPerc / 100).toFixed(applicationSettings.mainSettings.decimalPoints));
+      } else if (_BillDiscount > _TotalNetValue && _BillDiscount > 0 && _TotalNetValue > 0) {
+        const confirm = await ERPAlert.show({
+          icon: "info",
+          title: t("info"),
+          text: t(`Maximum Bill Discount allowed is ${_TotalNetValue}`),
+        });
+        // reset bill discount
+        // caller said they will set master fields as needed; mirror C# by setting back
+        // but keep result consistent:
+        master.billDiscount = 0;
+        TaxableAmt_StdRate = 0;
+        taxOnBilldisc = 0;
+      } else {
+        TaxableAmt_StdRate = 0;
+        taxOnBilldisc = 0;
+      }
+
+      // Tax recalc: first round to 3 decimals, then round to decimalPoints
+      tax = Number((TaxableAmt_StdRate * TaxPerc / 100).toFixed(3));
+      tax = Number(tax.toFixed(applicationSettings.mainSettings.decimalPoints));
+
+      // update taxed value in result.master
+      result.transaction!.master!.taxOnDiscount = taxOnBilldisc;
+    }
+
+    // For India: recalc tax breakdown source (if needed) and set totalTax
+    if (clientSession.isAppGlobal === true) {
+      const taxes = [
+        { name: "SGST", amount: round(sgst) },
+        { name: "CGST", amount: round(cgst) },
+        { name: "IGST", amount: round(igst) },
+        { name: "CESS", amount: round(cessAmt) },
+        { name: "AddCESS", amount: round(additionalCess) },
+      ];
+      // keep a copy (optional) and set totalTax
+      result.taxBreakdown = taxes as any;
+      result.transaction!.master!.totalTax = round(taxes.reduce((s, t) => s + t.amount, 0));
+      tax = Number(result.transaction!.master!.totalTax ?? tax);
+    } else {
+      // KSA / non-India: tax remains summary.vatAmount
+    }
+
+    // if netVal+tax differs and not India, recalc netAmt (mirrors C#)
+    if (netVal + tax !== netAmt && clientSession.isAppGlobal !== true) {
+      netAmt = Number((netVal + tax).toFixed(applicationSettings.mainSettings.decimalPoints));
+    }
+
+    // Populating totals into result
+    result.transaction!.master!.totalGross = summary.gross;
+    result.transaction!.master!.totalDiscount = summary.discount;
+
+    // Grand total calculation
+    let tcsAmt = 0;
+    let _grandTotal = Number(netAmt) + Number(additionalAmt ?? 0) - Number(billDisc ?? 0) - Number(taxOnBilldisc ?? 0);
+
+    // Round-off logic (same structure as PI)
+    if (master.hasroundOff) {
+      try {
+        result.transaction!.master!.roundAmount = parseFloat(
+          (Math.round(_grandTotal) - _grandTotal).toFixed(3)
+        );
+        // replicate C# expression: _grandTotal = _grandTotal ?? 0 - roundAmount;
+        _grandTotal = (_grandTotal ?? 0) - (result.transaction!.master!.roundAmount ?? 0);
+        result.transaction!.master!.grandTotal = Math.round(_grandTotal);
+      } catch (err) {
+        console.error("Error in rounding calculation:", err);
+      }
+    } else {
+      result.transaction!.master!.roundAmount = 0;
+      result.transaction!.master!.grandTotal = _grandTotal;
+    }
+
+    // TCS calculation (Indian SI uses TCS percentage if present)
+    const TCSPerc = Number(formState.ledgerData.tCSPerc ?? master.master3?.totTCS ?? 0);
+    if (TCSPerc > 0) {
+      tcsAmt = (Number(result.transaction!.master!.grandTotal ?? 0) * TCSPerc) / 100;
+      // store into master3 or other as you track it
+      result.transaction!.master!.master3!.totTCS = round(tcsAmt);
+    } else {
+      result.transaction!.master!.master3!.totTCS = 0;
+    }
+
+    // Net Grand Total = grandTotal + TCS - SR Amount (SR is service rounding / shipping etc.)
+    const SRAmt = Number(master.srAmount ?? 0);
+    const lblGrandTot = Number(result.transaction!.master!.grandTotal ?? 0) + Number(result.transaction!.master!.master3!.totTCS ?? 0);
+    result.transaction!.master!.grandTotal = round(lblGrandTot - SRAmt);
+
+    // if foreign currency conversion needed (similar to PI)
+    if (formElements.pnlImport.visible && master.exchangeRate > 0) {
+      const exchangeRate = master.exchangeRate;
+      if (exchangeRate > 0) {
+        result.transaction!.master!.grandTotalFc = (result.transaction!.master!.grandTotal ?? 0) / exchangeRate;
+      }
+    }
+
+    // dispatch only changed fields (keep pattern identical to PI)
+    commonParams.formStateHandleFieldChangeKeysOnly &&
+      dispatch &&
+      dispatch(commonParams.formStateHandleFieldChangeKeysOnly({ fields: result }));
+
+    return result;
+  };
+
+
 
   return {
     clearEntryControl,

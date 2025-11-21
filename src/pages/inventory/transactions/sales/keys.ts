@@ -47,3 +47,15 @@
 //This Voucher is already Cleared..
 //invalid_input
 //voucher_number_cannot_be_empty
+
+
+// Translation keys for handleLoadSr function
+// sales_return -> Sales Return
+// voucher_already_cleared -> This Voucher is already Cleared..
+// voucher_not_found -> This Voucher Not Found..
+// voucher_number_empty -> Voucher Number Is Empty...!
+// error -> Error
+// error_loading_voucher -> Error loading voucher
+// ok -> OK
+
+// profit_percentage

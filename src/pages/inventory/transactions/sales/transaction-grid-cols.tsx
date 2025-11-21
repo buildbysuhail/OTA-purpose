@@ -957,6 +957,14 @@ export const purchaseGridCol = (
         visible: false,
         alignment: "center",
       },
+      {
+        dataField: "profitPercentage",
+        caption: t("profit_percentage"),
+        dataType: "number",
+        width: 55,
+        visible: false,
+        alignment: "center",
+      },
       //not in web
       // {
       //   dataField: "btnPrintBarcodeStd",

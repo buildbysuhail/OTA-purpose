@@ -593,7 +593,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     loadLedgerData,
     postBillWiseDetails,
     logUserAction,
-    loadInvTransactionMasterByVouchNo,
+    handleLoadSr,
     handleDiscountSlab,
     getCustomerTypeAndTitle
   } = useTransaction(
@@ -804,7 +804,12 @@ const TransactionForm: React.FC<TransactionProps> = ({
               ? _formState.userConfig?.counterWiseWarehouseId ?? 0
               : applicationSettings.inventorySettings.defaultWareHouse
           : _formState.formElements.cbWarehouse?.selectedValue
+      _formState.transaction.master.costCentreID =
+        _formState.userConfig?.presetCostenterId ?? 0 > 0
+          ? _formState.userConfig?.presetCostenterId ?? 0
+          : _formState.transaction.master.costCentreID
 
+      _formState.transaction.master.inventoryLedgerID = applicationSettings.inventorySettings.defaultSalesAcc
       _formState.transaction.master.employeeID = userSession.employeeId > 0
         ? userSession.employeeId.toString()
         : _formState.formElements.cbSalesMan?.selectedValue,

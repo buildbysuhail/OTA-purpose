@@ -1194,10 +1194,11 @@ const TransactionForm: React.FC<TransactionProps> = ({
     const batchSelectionData = async () => {
       if (formState.batchSelectionData != "") {
         const data = JSON.parse(formState.batchSelectionData);
+        let baseDetail = { ...formState.transaction.details[data.rowIndex] };
         if (data.rowIndex < 0) {
-          return;
+          baseDetail = { ...formState.row??initialTransactionDetailData };
         }
-        const baseDetail = { ...formState.transaction.details[data.rowIndex] };
+        
         await loadProductDetailsByAutoBarcode(
           {
             productCode: data.productCode,

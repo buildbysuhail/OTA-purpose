@@ -289,7 +289,10 @@ export const initialTransactionDetailData: TransactionDetail = {
   gRTransDetailID: 0,
   pOTransDetailID: 0,
   pO_PITransDetailIDs: 0,
-  pO_PITransDetailQtys: 0
+  pO_PITransDetailQtys: 0,
+  unitDiscount: 0,
+  purchasePrice: 0,
+  purchaseRate: 0
 };
 export const transactionInitialData: TransactionData = {
   master: TransactionMasterInitialData, 

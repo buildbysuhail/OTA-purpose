@@ -506,7 +506,7 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
           onRowSelected={(data: any, rowValue?: string) => {
             const res = {
               slNo: item.slNo,
-              rowIndex: index,
+              rowIndex: isMobile ? - 1 : index,
               productBatchID: data.productBatchID,
               autoBarcode: data.autoBarcode,
               productCode: data.productCode,

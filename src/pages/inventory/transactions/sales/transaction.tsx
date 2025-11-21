@@ -2461,7 +2461,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         {formState.isFormStateDetailOpen && (
           <ERPModal
             isOpen={formState.isFormStateDetailOpen}
-            title={t("formState_summary")}
+            title={t("formstate_summary")}
             width={2500}
             height={2500}
             isForm={true}

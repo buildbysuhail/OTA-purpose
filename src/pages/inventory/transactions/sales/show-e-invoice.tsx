@@ -25,21 +25,21 @@ const ShowEInvoice: React.FC<ShowEInvoiceProps> = ({ closeModal, t }) => {
           className="!m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
         />
         <ERPButton
-          title={t("Check Success")}
+          title={t("check_success")}
           variant="secondary"
           className="!m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
         />
         <ERPInput
+          id=""
           type="number"
-          id={"test data"}
           className="w-32"
           noLabel
           value={1}
           // label={t("quantity")}
           // placeholder={t("Test data")}
           width={20}
-          // onChange={(e) => setQuantity(e.target.value)}
-          // localInputBox={formState?.userConfig?.inputBoxStyle}
+        // onChange={(e) => setQuantity(e.target.value)}
+        // localInputBox={formState?.userConfig?.inputBoxStyle}
         />
       </div>
     </>

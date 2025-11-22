@@ -702,7 +702,7 @@
   "process_selected": "معالجة المحدد",
   "pending_order": "طلب معلق",
   "footer_background_color": "لون خلفية التذييل",
-  "formState_summary": "ملخص حالة النموذج",
+  "formstate_summary": "ملخص حالة النموذج",
 
   "p_price": "سعر الشراء",
   "item_list": "قائمة الأصناف",
@@ -920,5 +920,20 @@
   "bank_card": "بطاقة بنكية",
   "flavours": "النكهات",
   "flavour": "النكهة",
-  "apply_all": "تطبيق الكل"
+  "apply_all": "تطبيق الكل",
+  "tender_cap": "مناقصة",
+  "use_sales_price_to_transfer": "استخدام سعر البيع للتحويل",
+  "show_e_invoice": "إظهار الفاتورة الإلكترونية",
+  "gift_cash_coupon_selector": "محدد قسيمة الهدايا / النقدية",
+  "print_address_label": "طباعة ملصق العنوان",
+  "show_report": "عرض التقرير",
+  "no_of_labels": "عدد الملصقات",
+  "empty": "فارغ",
+  "type": "النوع",
+  "bill_amount": "مبلغ الفاتورة",
+  "c_number": "الرقم C",
+  "card_id": "معرّف البطاقة",
+  "ob": "رصيد الافتتاح (OB)",
+  "check_success": "التحقق ناجح",
+  "coupon_card_number": "رقم القسيمة / البطاقة"
 }

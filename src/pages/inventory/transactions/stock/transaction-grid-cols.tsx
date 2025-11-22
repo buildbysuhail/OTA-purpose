@@ -1,0 +1,1536 @@
+import VoucherType from "../../../../enums/voucher-types";
+import { Countries, UserModel, } from "../../../../redux/slices/user-session/reducer";
+import { ApplicationSettingsType } from "../../../settings/system/application-settings-types/application-settings-types";
+import { ColumnModel, TransactionFormState } from "../transaction-types";
+// voucherType ?? formState.transaction.master.voucherType
+// formType ?? formState.transaction.master.voucherForm
+export const stockGridCol = (
+  applicationSettings: ApplicationSettingsType,
+  userSession: UserModel,
+  voucherType: string,
+  formType: string,
+  t: any,
+  formState: TransactionFormState
+) =>
+  (
+    [
+      {
+        dataField: "slNo",
+        caption: "",
+        dataType: "number",
+        width: 40,
+        isLocked: true,
+        alignment: "center",
+      },
+      {
+        dataField: "pCode",
+        caption: t("code"),
+        dataType: "string",
+        allowEditing: true,
+        width: 150,
+        alignment: "left",
+      },
+      {
+        dataField: "barCode",
+        caption: t("barcode"),
+        dataType: "string",
+        allowEditing: true,
+        width: 150,
+        alignment: "left",
+      },
+      {
+        dataField: "productBatchID",
+        caption: t("item_batch_id"),
+        dataType: "number",
+        width: 200,
+        readOnly: true,
+        alignment: "right",
+        visible: false,
+      },
+      {
+        dataField: "product",
+        caption: t("product"),
+        dataType: "string",
+        allowEditing: true,
+        width: 250,
+        alignment: "left",
+      },
+      {
+        dataField: "productID",
+        caption: t("product_id"),
+        dataType: "number",
+        width: 100,
+        readOnly: true,
+        alignment: "right",
+        visible: false,
+      },
+      {
+        dataField: "supplier",
+        caption: t("supplier"),
+        dataType: "string",
+        width: 100,
+        readOnly: true,
+        alignment: "right",
+      },
+      {
+        dataField: "supplierID",
+        caption: t("supplier_id"),
+        dataType: "number",
+        width: 100,
+        readOnly: true,
+        alignment: "right",
+      },
+      {
+        dataField: "avgSales",
+        caption: t("avg_sales"),
+        dataType: "number",
+        width: 100,
+        readOnly: true,
+          decimalPoint:2,
+        alignment: "right",
+      },
+      {
+        dataField: "sold",
+        caption: t("sold"),
+        dataType: "number",
+        width: 100,
+        readOnly: true,
+        alignment: "right",
+      },
+      {
+        dataField: "brand",
+        caption: t("brand"),
+        idField: "brand",
+        dataType: "cb",
+        field: { valueKey: "name", labelKey: "name" },
+        width: 150,
+        alignment: "left",
+        visible: false,
+        allowEditing: true,
+      },
+      {
+        dataField: "brandID",
+        field: { valueKey: "id", labelKey: "name" },
+        caption: t("brand_id"),
+        dataType: "number",
+        width: 100,
+        readOnly: false,
+        allowEditing: true,
+        alignment: "right",
+        visible: false,
+      },
+      {
+        dataField: "qty",
+        caption: t("qty"),
+        dataType: "number",
+        allowEditing: true,
+        width: 100,
+        alignment: "right",
+      },
+      {
+        dataField: "free",
+        caption: t("free"),
+        dataType: "number",
+        allowEditing: true,
+        width: 100,
+        alignment: "right",
+        visible: false,
+      },
+      {
+        dataField: "unit",
+        idField: "unitID",
+        caption: t("unit"),
+        dataType: "cb",
+        width: 150,
+        alignment: "left",
+        allowEditing: true,
+        readOnly: true,
+      },
+      {
+        dataField: "unitID",
+        caption: t("unit_id"),
+        detailsOptionKey: "units",
+        allowEditing: true,
+        visible: false,
+        width: 100,
+        alignment: "right",
+      },
+      {
+        dataField: "unitPrice",
+        caption: t("unit_price"),
+        dataType: "number",
+        allowEditing: true,
+        width: 130,
+        // decimalPoint: applicationSettings.mainSettings.decimalPoints,
+        alignment: "right",
+      },
+      {
+        dataField: "gross",
+        caption: t("gross"),
+        dataType: "number",
+        decimalPoint: 4,
+        readOnly: true,
+        width: 100,
+        alignment: "right",
+        allowEditing: true,
+      },
+      {
+        dataField: "discPerc",
+        caption: t("disc_perc"),
+        dataType: "number",
+        decimalPoint: 3,
+        allowEditing: true,
+        width: 100,
+        alignment: "right",
+      },
+      {
+        dataField: "discount",
+        caption: t("discount"),
+        dataType: "number",
+        decimalPoint: 4,
+        allowEditing: true,
+        width: 100,
+        alignment: "right",
+      },
+      {
+        dataField: "netValue",
+        caption: t("net_value"),
+        dataType: "number",
+        decimalPoint: 4,
+        width: 100,
+        alignment: "right",
+        readOnly: true,
+        visible: false,
+      },
+      {
+        dataField: "total",
+        caption: t("total"),
+        dataType: "number",
+        width: 100,
+        alignment: "right",
+        readOnly: true,
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
+      },
+      {
+        dataField: "stock",
+        caption: t("stock"),
+        dataType: "number",
+        readOnly: true,
+        width: 100,
+        alignment: "right",
+        decimalPoint: 4,
+      },
+      {
+        dataField: "manualBarcode",
+        caption: t("m_barcode"),
+        dataType: "string",
+        width: 200,
+        alignment: "left",
+      },
+      {
+        dataField: "stockDetails",
+        caption: t("stock_details"),
+        dataType: "string",
+        readOnly: true,
+        visible: false,
+        width: 200,
+        alignment: "left",
+      },
+      {
+        dataField: "margin",
+        caption: t("margin"),
+        dataType: "number",
+        visible: false,
+        width: 100,
+        allowEditing: true,
+        alignment: "right",
+        decimalPoint: 4,
+      },
+      {
+        dataField: "status",
+        caption: t("status"),
+        dataType: "string",
+        width: 200,
+        visible:false
+      },
+      {
+        dataField: "salesPrice",
+        caption: t("sales_price"),
+        dataType: "number",
+        allowEditing: true,
+        width: 200,
+        alignment: "right",
+        readOnly: true,
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
+      },
+      {
+        dataField: "lpr",
+        caption: t("lpr"),
+        dataType: "number",
+        readOnly: true,
+        width: 100,
+        alignment: "right",
+        // decimalPoint: applicationSettings.mainSettings.decimalPoints,
+      },
+      {
+        dataField: "lpc",
+        caption: t("lpc"),
+        dataType: "number",
+        readOnly: true,
+        width: 100,
+        alignment: "right",
+        visible: false,
+        // decimalPoint: applicationSettings.mainSettings.decimalPoints,
+      },
+      {
+        dataField: "stickerQty",
+        caption: t("sticker"),
+        dataType: "number",
+        visible: false,
+        width: 130,
+        alignment: "right",
+        allowEditing: true,
+      },
+      {
+        dataField: "profit",
+        caption: t("profit"),
+        dataType: "number",
+        readOnly: true,
+        width: 100,
+        alignment: "right",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
+      },
+      {
+        dataField: "size",
+        caption: t("size"),
+        dataType: "string",
+        visible: false,
+        width: 150,
+        alignment: "left",
+      },
+      {
+        dataField: "vatPerc",
+        caption: t("vat_perc"),
+        dataType: "number",
+        visible: false,
+        allowEditing: true,
+        width: 100,
+        alignment: "right",
+      },
+      {
+        dataField: "vatAmount",
+        caption: t("vat"),
+        dataType: "number",
+        visible: false,
+        readOnly: true,
+        width: 100,
+        alignment: "right",
+        decimalPoint: 3,
+      },
+      {
+        dataField: "cst",
+        caption: t("cst"),
+        dataType: "number",
+        visible: false,
+        width: 100,
+        alignment: "right",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
+      },
+      {
+        dataField: "cstPerc",
+        caption: t("cst_perc"),
+        dataType: "number",
+        visible: false,
+        width: 100,
+        allowEditing: true,
+        alignment: "right",
+        decimalPoint: 2,
+      },
+      {
+        dataField: "hsnCode",
+        caption: t("hsn_code"),
+        dataType: "string",
+        width: 150,
+        visible: false,
+        alignment: "left",
+      },
+      {
+        dataField: "cgst",
+        caption: t("cgst"),
+        dataType: "number",
+        width: 100,
+        visible: false,
+        alignment: "right",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
+      },
+      {
+        dataField: "cgstPerc",
+        caption: t("cgst_perc"),
+        dataType: "number",
+        width: 100,
+        visible: false,
+        alignment: "right",
+      },
+      {
+        dataField: "sgstPerc",
+        caption: t("sgst_perc"),
+        dataType: "number",
+        visible: false,
+        width: 100,
+        allowEditing: true,
+        alignment: "right",
+      },
+      {
+        dataField: "sgst",
+        caption: t("sgst"),
+        dataType: "number",
+        width: 100,
+        visible: false,
+        alignment: "right",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
+      },
+      {
+        dataField: "igstPerc",
+        caption: t("igst_perc"),
+        dataType: "number",
+        width: 100,
+        visible: false,
+        allowEditing: true,
+        alignment: "right",
+      },
+      {
+        dataField: "igst",
+        caption: t("igst"),
+        dataType: "number",
+        width: 100,
+        visible: false,
+        allowEditing: true,
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
+        alignment: "right",
+      },
+      {
+        dataField: "cessPerc",
+        caption: t("cess_perc"),
+        dataType: "number",
+        width: 100,
+        visible: false,
+        allowEditing: true,
+        alignment: "right",
+      },
+      {
+        dataField: "cessAmt",
+        caption: t("cess_amt"),
+        dataType: "number",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
+        width: 100,
+        visible: false,
+        allowEditing: true,
+        alignment: "right",
+      },
+      {
+        dataField: "additionalCessPerc",
+        caption: t("additional_cess_perc"),
+        dataType: "number",
+        width: 100,
+        visible: false,
+        allowEditing: true,
+        alignment: "right",
+      },
+      {
+        dataField: "additionalCess",
+        caption: t("additional_cess"),
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
+        visible: false,
+        dataType: "number",
+        width: 100,
+        allowEditing: true,
+        alignment: "right",
+      },
+      {
+        dataField: "mR",
+        caption: t("mr"),
+        dataType: "number",
+        width: 100,
+        visible: false,
+        allowEditing: true,
+        alignment: "right",
+      },
+        {
+        dataField: "mrp",
+        decimalPoint: applicationSettings.mainSettings?.decimalPoints,
+        caption: t("mrp"),
+        dataType: "number",
+        allowEditing: true,
+        width: 100,
+        readOnly: false,
+        alignment: "right",
+      },
+      {
+        dataField: "netRate",
+        caption: t("net_rate"),
+        dataType: "number",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
+        width: 100,
+        visible: false,
+        allowEditing: true,
+        alignment: "right",
+      },
+      {
+        dataField: "cost",
+        caption: t("cost"),
+        dataType: "number",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
+        readOnly: true,
+        width: 100,
+        alignment: "right",
+      },
+      {
+        dataField: "batchNo",
+        caption: t("batch_no"),
+        dataType: "string",
+        visible: false,
+        width: 150,
+        alignment: "left",
+      },
+      {
+        dataField: "mfdDate",
+        caption: t("mfd_date"),
+        dataType: "date",
+        visible: false,
+        width: 100,
+        format: "DD-MMM-YYYY",
+        alignment: "left",
+      },
+      {
+        dataField: "expDate",
+        caption: t("exp_date"),
+        dataType: "date",
+        visible: false,
+        width: 100,
+        readOnly: true,
+        format: "DD-MMM-YYYY",
+        alignment: "left",
+      },
+      {
+        dataField: "expDays",
+        caption: t("exp_days"),
+        dataType: "number",
+        visible: false,
+        width: 100,
+        alignment: "right",
+      },
+      {
+        dataField: "bd",
+        caption: t("bd"),
+        dataType: "btn",
+        allowEditing: false,
+        visible: false,
+        width: 150,
+        alignment: "left",
+      },
+      {
+        dataField: "btnPrintBarcode",
+        caption: t("pb"),
+        dataType: "btn",
+        visible: false,
+        allowEditing: false,
+        width: 250,
+        alignment: "center",
+      },
+      {
+        dataField: "barcodePrinted",
+        caption: t("barcode_printed"),
+        dataType: "chk",
+        visible: true,
+        readOnly: true,
+        width: 50,
+        alignment: "center",
+      },
+      {
+        dataField: "batchCreated",
+        caption: t("batch_created"),
+        dataType: "chk",
+        visible: false,
+        width: 150,
+        readOnly: true,
+        alignment: "center",
+      },
+      {
+        dataField: "productDescription",
+        caption: t("product_description"),
+        dataType: "string",
+        width: 250,
+        readOnly: true,
+        alignment: "left",
+        visible: false,
+      },
+      {
+        dataField: "serial",
+        caption: t("sl"),
+        dataType: "btn",
+        visible: false,
+        width: 150,
+        readOnly: true,
+        alignment: "left",
+        allowEditing: false,
+      },
+      {
+        dataField: "minSalePrice",
+        caption: t("min_sale_price"),
+        dataType: "number",
+        width: 150,
+        readOnly: true,
+        alignment: "right",
+        visible: false,
+      },
+      {
+        dataField: "additionalExpense",
+        caption: t("additional_expense"),
+        dataType: "number",
+        width: 250,
+        alignment: "right",
+        visible: false,
+        decimalPoint: 2,
+      },
+      {
+        dataField: "unitPriceFC",
+        caption: t("unit_price_fc"),
+        dataType: "number",
+        allowEditing: true,
+        width: 150,
+        readOnly: false,
+        alignment: "right",
+        visible: false,
+        decimalPoint: 4,
+      },
+      {
+        dataField: "colour",
+        caption: t("colour"),
+        dataType: "string",
+        width: 150,
+        readOnly: true,
+        alignment: "left",
+        visible: false,
+      },
+
+      {
+        dataField: "warranty",
+        caption: t("warranty"),
+        dataType: "cb",
+        field: { valueKey: "id", labelKey: "name" },
+        visible: false,
+        width: 150,
+        readOnly: false,
+        allowEditing: true,
+        alignment: "left",
+      },
+      {
+        dataField: "nosQty",
+        caption: t("nos"),
+        dataType: "number",
+        visible: false,
+        width: 100,
+        readOnly: true,
+        alignment: "right",
+      },
+      {
+        dataField: "totalAddExpense",
+        caption: t("total_add_expense"),
+        dataType: "number",
+        width: 180,
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
+        readOnly: true,
+        alignment: "right",
+        visible: false,
+      },
+      {
+        dataField: "grossConvert",
+        caption: t("gross_convert"),
+        dataType: "btn",
+        allowEditing: false,
+        width: 140,
+        readOnly: true,
+        alignment: "right",
+        visible: false,
+      },
+
+      {
+        dataField: "grossFC",
+        caption: t("gross_fc"),
+        dataType: "number",
+        width: 100,
+        allowEditing: true,
+        alignment: "right",
+        visible: false,
+      },
+      {
+        dataField: "unitID2",
+        caption: t("unit_id_2"),
+        dataType: "number",
+        visible: false,
+        width: 100,
+        readOnly: true,
+        alignment: "right",
+      },
+      {
+        dataField: "unit2Qty",
+        caption: t("unit_2_qty"),
+        dataType: "number",
+        visible: false,
+        width: 100,
+        readOnly: true,
+        alignment: "right",
+        decimalPoint: 4,
+      },
+      {
+        dataField: "unit2SalesRate",
+        caption: t("unit_2_sales_rate"),
+        dataType: "number",
+        visible: false,
+        width: 200,
+        readOnly: true,
+        alignment: "right",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
+      },
+      {
+        dataField: "unit2MRP",
+        caption: t("unit_2_mrp"),
+        dataType: "number",
+        visible: false,
+        width: 100,
+        readOnly: true,
+        alignment: "right",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
+      },
+      {
+        dataField: "unit2MBarcode",
+        caption: t("unit_2_m_barcode"),
+        dataType: "string",
+        visible: false,
+        width: 150,
+        readOnly: true,
+        alignment: "left",
+      },
+      {
+        dataField: "unit2StickerQty",
+        caption: t("sq_2"),
+        dataType: "number",
+        visible: false,
+        width: 200,
+        readOnly: true,
+        alignment: "right",
+      },
+      {
+        dataField: "unitID3",
+        caption: t("unit_id_3"),
+        dataType: "number",
+        visible: false,
+        width: 100,
+        readOnly: true,
+        alignment: "right",
+      },
+      {
+        dataField: "unit3Qty",
+        caption: t("unit_3_qty"),
+        dataType: "number",
+        visible: false,
+        width: 100,
+        readOnly: true,
+        alignment: "right",
+        decimalPoint: 4,
+      },
+      {
+        dataField: "unit3SalesRate",
+        caption: t("unit_3_sales_rate"),
+        dataType: "number",
+        visible: false,
+        width: 150,
+        readOnly: true,
+        alignment: "right",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
+      },
+      {
+        dataField: "unit3MRP",
+        caption: t("unit_3_mrp"),
+        dataType: "number",
+        visible: false,
+        width: 100,
+        readOnly: true,
+        alignment: "right",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
+      },
+      {
+        dataField: "unit3MBarcode",
+        caption: t("unit_3_m_barcode"),
+        dataType: "string",
+        visible: false,
+        width: 180,
+        readOnly: true,
+        alignment: "left",
+      },
+      {
+        dataField: "unit3StickerQty",
+        caption: t("sq_3"),
+        dataType: "number",
+        visible: false,
+        width: 180,
+        readOnly: true,
+        alignment: "right",
+      },
+      {
+        dataField: "tagQty",
+        caption: t("tag_qty"),
+        dataType: "number",
+        visible: false,
+        width: 100,
+        readOnly: true,
+        alignment: "right",
+      },
+      {
+        dataField: "barcodeTagPrinted",
+        caption: t("barcode_tag_printed"),
+        dataType: "boolean",
+        visible: false,
+        width: 250,
+        readOnly: true,
+        alignment: "center",
+      },
+      {
+        dataField: "barcodeUnit2Printed",
+        caption: t("barcode_unit_2_printed"),
+        dataType: "boolean",
+        visible: false,
+        width: 280,
+        alignment: "center",
+      },
+      {
+        dataField: "barcodeUnit3Printed",
+        caption: t("barcode_unit_3_printed"),
+        dataType: "boolean",
+        visible: false,
+        width: 280,
+        alignment: "center",
+      },
+      {
+        dataField: "location",
+        caption: t("location"),
+        dataType: "string",
+        visible: false,
+        width: 150,
+        alignment: "left",
+      },
+      {
+        dataField: "grTransDetailsID",
+        caption: t("gr_trans_details_id"),
+        dataType: "number",
+        visible: false,
+        width: 200,
+        alignment: "right",
+      },
+      {
+        dataField: "arabicName",
+        caption: t("arabic_name"),
+        dataType: "string",
+        visible: false,
+        width: 150,
+        alignment: "left",
+      },
+      {
+        dataField: "salesLast30Days",
+        caption: t("sales_last_30_days"),
+        dataType: "number",
+        visible: false,
+        width: 150,
+          decimalPoint:2,
+        alignment: "right",
+      },
+      {
+        dataField: "salesLast90Days",
+        caption: t("sales_last_90_days"),
+        dataType: "number",
+        visible: false,
+          decimalPoint:2,
+        width: 150,
+        alignment: "right",
+      },
+      {
+        dataField: "supplierRefCode",
+        caption: t("supplier_ref_code"),
+        dataType: "string",
+        visible: false,
+        width: 150,
+        alignment: "right",
+      },
+      {
+        dataField: "lastSoldDate",
+        caption: t("last_sold_date"),
+        dataType: "string",
+        width: 150,
+        alignment: "right",
+      },
+      {
+        dataField: "poPendingQty",
+        caption: t("po_pending_qty"),
+        dataType: "number",
+        visible: false,
+        decimalPoint: 4,
+        width: 150,
+        alignment: "right",
+      },
+      {
+        dataField: "salesLast180Days",
+        caption: t("sales_last_180_days"),
+        dataType: "number",
+        width: 150,
+        decimalPoint:2,
+        alignment: "right",
+      },
+      {
+        dataField: "pqPendingQty",
+        caption: t("pq_pending_qty"),
+        dataType: "number",
+        width: 150,
+        decimalPoint:4,
+        alignment: "right",
+      },
+      {
+        dataField: "supplierReferenceProductCode",
+        caption: t("supplier_pcode"),
+        dataType: "string",
+        visible: false,
+        width: 280,
+        alignment: "left",
+      },
+      {
+        dataField: "poTransDetailsID",
+        caption: t("po_trans_details_id"),
+        dataType: "number",
+        visible: false,
+        width: 180,
+        alignment: "right",
+      },
+      {
+        dataField: "ratePlusTax",
+        caption: t("rate"),
+        dataType: "number",
+        visible: false,
+        width: 130,
+        alignment: "right",
+        // decimalPoint: applicationSettings.mainSettings.decimalPoints,
+      },
+      {
+        dataField: "warehouse",
+        caption: t("warehouse"),
+        dataType: "string",
+        visible: false,
+        width: 130,
+        readOnly: true,
+        alignment: "right",
+      },
+      {
+        dataField: "sortOrder",
+        caption: t("sort_order"),
+        dataType: "number",
+        visible: false,
+        width: 120,
+        alignment: "right",
+      },
+      {
+        dataField: "profitPercentage",
+        caption: t("profit_percentage"),
+        dataType: "number",
+        visible: false,
+        width: 140,
+        readOnly: true,
+        alignment: "right",
+      },
+      {
+        dataField: "schemeDiscount",
+        caption: t("scheme_disc"),
+        dataType: "number",
+        visible: false,
+        width: 140,
+        alignment: "right",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
+      },
+      {
+        dataField: "memo",
+        caption: t("memo"),
+        dataType: "string",
+        visible: false,
+        width: 200,
+        alignment: "left",
+      },
+      {
+        dataField: "memoEditor",
+        caption: t("me"),
+        dataType: "btn",
+        visible: false,
+        width: 150,
+        alignment: "left",
+      },
+      {
+        dataField: "rowNumber",
+        caption: t("row_number"),
+        dataType: "number",
+        width: 100,
+        alignment: "right",
+      },
+      {
+        dataField: "actualSalesPrice",
+        caption: t("actual_sales_price"),
+        dataType: "number",
+        visible: false,
+        width: 200,
+        readOnly: true,
+        alignment: "right",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
+      },
+      {
+        dataField: "unit2",
+        caption: t("unit_2"),
+        dataType: "string",
+        visible: false,
+        width: 150,
+        alignment: "left",
+      },
+      {
+        dataField: "unit3",
+        caption: t("unit_3"),
+        dataType: "string",
+        visible: false,
+        width: 150,
+        alignment: "left",
+      },
+      {
+        dataField: "itemType",
+        caption: t("item_type"),
+        dataType: "string",
+        width: 55,
+        visible: false,
+        alignment: "center",
+      },
+      {
+        dataField: "refBranchID",
+        caption: t("ref_branch_id"),
+        dataType: "string",
+        width: 55,
+        visible: false,
+        alignment: "center",
+      },
+      {
+        dataField: "employeeCode",
+        caption: t("sm_code"),
+        dataType: "string",
+        width: 55,
+        visible: false,
+        alignment: "center",
+      },
+      {
+        dataField: "employeeName",
+        caption: t("sales_man"),
+        dataType: "string",
+        width: 55,
+        visible: false,
+        alignment: "center",
+      },
+      {
+        dataField: "stdPurchasePrice",
+        caption: t("purchase_price"),
+        dataType: "number",
+        width: 55,
+        visible: false,
+        alignment: "center",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
+      },
+      {
+        dataField: "refTransDtailId",
+        caption: t("ref_trans_detail_id"),
+        dataType: "number",
+        width: 55,
+        visible: false,
+        alignment: "center",
+      },
+      //not in web
+      // {
+      //   dataField: "btnPrintBarcodeStd",
+      //   caption: t("pbs"),
+      //   dataType: "string",
+      //   width: 250,
+      //   visible: false,
+      //   alignment: "left",
+      // },
+      {
+        dataField: "actionCol",
+        caption: "",
+        dataType: "boolean",
+        width: 55,
+        readOnly: true,
+        isLocked: true,
+        alignment: "center",
+      },
+    ] as ColumnModel[]
+  )
+    .filter((gc: ColumnModel) => {
+      const field = gc.dataField ?? "";
+
+      // ---------------- PURCHASE INVOICE ----------------
+      if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.PurchaseInvoice
+      ) {
+        return ![
+          "mrp", "hsnCode", "cgst", "cgstPerc", "sgstPerc", "sgst",
+          "igstPerc", "igst", "cessPerc", "cessAmt", "additionalCessPerc",
+          "additionalCess", "mR", "netRate", "itemType", "refBranchID",
+          "employeeCode", "employeeName", "stdPurchasePrice", "refTransDtailId",
+
+          "supplier", "supplierID", "avgSales", "sold", "status", "salesLast30Days",
+          "salesLast90Days", "supplierRefCode", "lastSoldDate", "poPendingQty",
+          "salesLast180Days", "pqPendingQty",
+        ].includes(field);
+      } else if (
+        userSession.countryId == Countries.India &&
+        voucherType == VoucherType.PurchaseInvoice
+      ) {
+        return ![
+          "vatPerc","vatAmount",
+          "itemType", "employeeCode", "employeeName",
+          "stdPurchasePrice", "refTransDtailId",
+
+          "supplier", "supplierID", "avgSales", "sold", "status", "salesLast30Days",
+          "salesLast90Days", "supplierRefCode", "lastSoldDate", "poPendingQty",
+          "salesLast180Days", "pqPendingQty",
+        ].includes(field);
+      }
+
+      // ---------------- PURCHASE RETURN ----------------
+      else if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.PurchaseReturn
+      ) {
+        return ![
+          "mrp", "hsnCode", "cgst", "cgstPerc", "sgstPerc", "sgst",
+          "igstPerc", "igst", "cessPerc", "cessAmt", "additionalCessPerc",
+          "additionalCess", "mR", "netRate", "refBranchID", "employeeCode",
+          "employeeName", "stdPurchasePrice", "refTransDtailId",
+          "free", "manualBarcode", "stockDetails", "lastPurchaseRate",
+          "lastPurchaseCost", "btnPrintBarcode", "expDate", "expDays",
+          "minSalePrice", "additionalExpense", "totalAddExpense", "grossConvert",
+          "unitID2", "unit2Qty", "unit2SalesRate", "unit2MRP", "unit2MBarcode",
+          "unit2StickerQty", "unitID3", "unit3Qty", "unit3SalesRate",
+          "unit3MRP", "unit3MBarcode", "unit3StickerQty", "tagQty",
+          "barcodeTagPrinted", "barcodeUnit2Printed", "barcodeUnit3Printed",
+          "location", "grTransDetailsID", "poTransDetailsID", "ratePlusTax",
+          "sortOrder", "profitPercentage", "schemeDiscount", "memo", "memoEditor",
+          "rowNumber", "actualSalesPrice", "unit2", "unit3", "mfdDate", "warranty",
+
+          "supplier", "supplierID", "avgSales", "sold", "status", "salesLast30Days",
+          "salesLast90Days", "supplierRefCode", "lastSoldDate", "poPendingQty",
+          "salesLast180Days", "pqPendingQty",
+        ].includes(field);
+      } else if (
+        userSession.countryId == Countries.India &&
+        voucherType == VoucherType.PurchaseReturn
+      ) {
+        return ![
+          "vatPerc","vatAmount",
+          "refBranchID", "employeeCode", "employeeName",
+          "stdPurchasePrice", "refTransDtailId",
+          "mR", "netRate", "manualBarcode", "stockDetails", "lastPurchaseRate",
+          "lastPurchaseCost", "btnPrintBarcode", "expDate", "expDays",
+          "minSalePrice", "additionalExpense", "totalAddExpense", "grossConvert",
+          "unitID2", "unit2Qty", "unit2SalesRate", "unit2MRP", "unit2MBarcode",
+          "unit2StickerQty", "unitID3", "unit3Qty", "unit3SalesRate",
+          "unit3MRP", "unit3MBarcode", "unit3StickerQty", "tagQty",
+          "barcodeTagPrinted", "barcodeUnit2Printed", "barcodeUnit3Printed",
+          "location", "grTransDetailsID", "poTransDetailsID", "ratePlusTax",
+          "sortOrder", "profitPercentage", "schemeDiscount", "memo", "memoEditor",
+          "rowNumber", "actualSalesPrice", "unit2", "unit3", "serial",
+          "unitPriceFC", "grossFC", "mfdDate", "warranty",
+
+         "supplier", "supplierID", "avgSales", "sold", "status", "salesLast30Days",
+          "salesLast90Days", "supplierRefCode", "lastSoldDate", "poPendingQty",
+          "salesLast180Days", "pqPendingQty",
+        ].includes(field);
+      }
+
+      // ---------------- PURCHASE ESTIMATE ----------------
+      else if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.PurchaseEstimate
+      ) {
+        return ![
+          "mrp", "hsnCode", "cgst", "cgstPerc", "sgstPerc", "sgst",
+          "igstPerc", "igst", "cessPerc", "cessAmt", "additionalCessPerc",
+          "additionalCess", "mR", "netRate", "itemType", "refBranchID",
+          "employeeCode", "employeeName", "stdPurchasePrice", "refTransDtailId",
+          "free", "stock", "stockDetails", "lastPurchaseRate", "lastPurchaseCost",
+          "productDescription", "serial", "minSalePrice", "additionalExpense",
+          "unitPriceFC", "colour", "warranty", "nosQty", "totalAddExpense",
+          "grossConvert", "grossFC", "unitID2", "unit2Qty", "unit2SalesRate",
+          "unit2MRP", "unit2MBarcode", "unit2StickerQty", "unitID3", "unit3Qty",
+          "unit3SalesRate", "unit3MRP", "unit3MBarcode", "unit3StickerQty",
+          "tagQty", "barcodeTagPrinted", "barcodeUnit2Printed",
+          "barcodeUnit3Printed", "location", "grTransDetailsID", "arabicName",
+          "supplierReferenceProductCode", "poTransDetailsID", "ratePlusTax",
+          "warehouseID", "sortOrder", "profitPercentage", "schemeDiscount",
+          "memo", "memoEditor", "actualSalesPrice", "unit2", "unit3",
+
+          "supplier", "supplierID", "avgSales", "sold", "status", "salesLast30Days",
+          "salesLast90Days", "supplierRefCode", "lastSoldDate", "poPendingQty",
+          "salesLast180Days", "pqPendingQty",
+        ].includes(field);
+      } else if (
+        userSession.countryId == Countries.India &&
+        voucherType == VoucherType.PurchaseEstimate
+      ) {
+        return ![
+          "vatPerc","vatAmount",
+          "hsnCode", "itemType", "refBranchID", "employeeCode", "employeeName",
+          "stdPurchasePrice", "refTransDtailId", "stock", "stockDetails",
+          "lastPurchaseRate", "lastPurchaseCost", "serial", "additionalExpense",
+          "unitPriceFC", "colour", "warranty", "nosQty", "totalAddExpense",
+          "grossConvert", "grossFC", "tagQty", "barcodeTagPrinted",
+          "barcodeUnit2Printed", "barcodeUnit3Printed", "location",
+          "grTransDetailsID", "arabicName", "supplierReferenceProductCode",
+          "poTransDetailsID", "ratePlusTax", "warehouseID", "sortOrder",
+          "profitPercentage", "schemeDiscount", "memo", "memoEditor",
+          "actualSalesPrice",
+
+          "supplier", "supplierID", "avgSales", "sold", "status", "salesLast30Days",
+          "salesLast90Days", "supplierRefCode", "lastSoldDate", "poPendingQty",
+          "salesLast180Days", "pqPendingQty",
+        ].includes(field);
+      }
+
+      // ---------------- PURCHASE ORDER & QUOTATION ----------------
+      else if (
+        userSession.countryId != Countries.India &&
+        (voucherType == VoucherType.PurchaseOrder ||
+          voucherType == VoucherType.PurchaseQuotation)
+      ) {
+        return ![
+          "mrp", "hsnCode", "cgst", "cgstPerc", "sgstPerc", "sgst",
+          "igstPerc", "igst", "cessPerc", "cessAmt", "additionalCessPerc",
+          "additionalCess", "mR", "netRate", "itemType", "employeeCode",
+          "employeeName", "stdPurchasePrice", "refTransDtailId", "lastPurchaseRate",
+          "lastPurchaseCost", "bd", "btnPrintBarcode", "mfdDate", "expDate",
+          "expDays", "minSalePrice", "additionalExpense", "unitPriceFC",
+          "warranty", "nosQty", "totalAddExpense", "grossConvert", "grossFC",
+          "unitID2", "unit2Qty", "unit2SalesRate", "unit2MRP", "unit2MBarcode",
+          "unit2StickerQty", "unitID3", "unit3Qty", "unit3SalesRate",
+          "unit3MRP", "unit3MBarcode", "unit3StickerQty", "tagQty",
+          "barcodeTagPrinted", "barcodeUnit2Printed", "barcodeUnit3Printed",
+          "location", "grTransDetailsID", "ratePlusTax", "warehouseID",
+          "sortOrder", "profitPercentage", "schemeDiscount", "memo", "memoEditor",
+          "actualSalesPrice", "unit2", "unit3", "serial",
+
+          "supplier", "supplierID", "avgSales", "sold", "status", "salesLast30Days",
+          "salesLast90Days", "supplierRefCode", "lastSoldDate", "poPendingQty",
+          "salesLast180Days", "pqPendingQty",
+        ].includes(field);
+      } else if (
+        userSession.countryId == Countries.India &&
+        (voucherType == VoucherType.PurchaseOrder ||
+          voucherType == VoucherType.PurchaseQuotation)
+      ) {
+        return ![
+          "vatPerc","vatAmount",
+          "mR", "netRate", "itemType", "employeeCode", "employeeName",
+          "stdPurchasePrice", "refTransDtailId", "lastPurchaseRate",
+          "lastPurchaseCost", "bd", "btnPrintBarcode", "mfdDate", "expDate",
+          "expDays", "minSalePrice", "additionalExpense", "unitPriceFC",
+          "warranty", "nosQty", "totalAddExpense", "grossConvert", "grossFC",
+          "unitID2", "unit2Qty", "unit2SalesRate", "unit2MRP", "unit2MBarcode",
+          "unit2StickerQty", "unitID3", "unit3Qty", "unit3SalesRate",
+          "unit3MRP", "unit3MBarcode", "unit3StickerQty", "tagQty",
+          "barcodeTagPrinted", "barcodeUnit2Printed", "barcodeUnit3Printed",
+          "location", "grTransDetailsID", "ratePlusTax", "warehouseID",
+          "sortOrder", "profitPercentage", "schemeDiscount", "memo", "memoEditor",
+          "actualSalesPrice", "unit2", "unit3", "serial",
+
+          "supplier", "supplierID", "avgSales", "sold", "status", "salesLast30Days",
+          "salesLast90Days", "supplierRefCode", "lastSoldDate", "poPendingQty",
+          "salesLast180Days", "pqPendingQty",
+        ].includes(field);
+      }
+
+      // ---------------- GOODS RECEIPT NOTE ----------------
+      else if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.GoodsReceiptNote
+      ) {
+        return ![
+          "mrp", "hsnCode", "cgst", "cgstPerc", "sgstPerc", "sgst",
+          "igstPerc", "igst", "cessPerc", "cessAmt", "additionalCessPerc",
+          "additionalCess", "mR", "netRate", "itemType", "employeeCode",
+          "employeeName", "stdPurchasePrice", "refTransDtailId", "nosQty",
+          "totalAddExpense", "grossConvert", "grossFC", "unitID2", "unit2Qty",
+          "unit2SalesRate", "unit2MRP", "unit2MBarcode", "unit2StickerQty",
+          "unitID3", "unit3Qty", "unit3SalesRate", "unit3MRP", "unit3MBarcode",
+          "unit3StickerQty", "tagQty", "barcodeTagPrinted", "barcodeUnit2Printed",
+          "barcodeUnit3Printed", "grTransDetailsID", "ratePlusTax", "sortOrder",
+          "profitPercentage", "schemeDiscount", "memo", "memoEditor",
+          "actualSalesPrice", "unit2", "unit3",
+
+          "supplier", "supplierID", "avgSales", "sold", "status", "salesLast30Days",
+          "salesLast90Days", "supplierRefCode", "lastSoldDate", "poPendingQty",
+          "salesLast180Days", "pqPendingQty",
+        ].includes(field);
+      }
+
+      // ---------------- GOODS RECEIPT RETURN ----------------
+      else if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.GoodsReceiptReturn
+      ) {
+        return ![
+          "mrp", "hsnCode", "cgst", "cgstPerc", "sgstPerc", "sgst",
+          "igstPerc", "igst", "cessPerc", "cessAmt", "additionalCessPerc",
+          "additionalCess", "mR", "netRate", "itemType", "refBranchID",
+
+          "supplier", "supplierID", "avgSales", "sold", "status", "salesLast30Days",
+          "salesLast90Days", "supplierRefCode", "lastSoldDate", "poPendingQty",
+          "salesLast180Days", "pqPendingQty",
+
+
+          "lastPurchaseRate", "lastPurchaseCost", "bd", "btnPrintBarcode",
+          "mfdDate", "expDate", "expDays", "additionalExpense", "unitPriceFC",
+          "colour", "warranty", "nosQty", "totalAddExpense", "grossConvert",
+          "grossFC", "unitID2", "unit2Qty", "unit2SalesRate", "unit2MRP",
+          "unit2MBarcode", "unit2StickerQty", "unitID3", "unit3Qty",
+          "unit3SalesRate", "unit3MRP", "unit3MBarcode", "unit3StickerQty",
+          "tagQty", "barcodeTagPrinted", "barcodeUnit2Printed",
+          "barcodeUnit3Printed", "location", "grTransDetailsID",
+          "poTransDetailsID", "ratePlusTax", "sortOrder", "profitPercentage",
+          "schemeDiscount", "memo", "memoEditor", "rowNumber",
+          "actualSalesPrice", "unit2", "unit3",
+        ].includes(field);
+      }
+            // ---------------- LPO ----------------
+        else if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.LPO
+      ) {
+        return ![
+            "mrp", "hsnCode", "cgst", "cgstPerc", "sgstPerc", "sgst",
+          "igstPerc", "igst", "cessPerc", "cessAmt", "additionalCessPerc",
+          "additionalCess", "mR", "netRate", "itemType", "refBranchID",
+          "employeeCode", "employeeName", "stdPurchasePrice", "refTransDtailId",
+
+            "mrp", "brand", "brandID", "free", "discPerc", "discount", "lpr", "lpc",
+            "stickerQty", "profit", "size", "batchNo", "mfdDate", "expDate", "expDays",
+            "bd", "btnPrintBarcode", "barcodePrinted", "batchCreated", "productDescription",
+            "serial", "additionalExpense", "unitPriceFC", "colour", "warranty", "nosQty",
+            "totalAddExpense", "grossConvert", "grossFC", "unitID2", "unit2Qty",
+            "unit2SalesRate", "unit2MRP", "unit2MBarcode", "unit2StickerQty", "unitID3",
+            "unit3Qty", "unit3SalesRate", "unit3MRP", "unit3MBarcode", "unit3StickerQty",
+            "tagQty", "barcodeTagPrinted", "barcodeUnit2Printed", "barcodeUnit3Printed",
+            "location", "grTransDetailsID", "supplierReferenceProductCode", "poTransDetailsID",
+            "ratePlusTax", "warehouseID", "sortOrder", "profitPercentage", "schemeDiscount",
+            "memo", "memoEditor", "rowNumber", "actualSalesPrice", "unit2", "unit3",
+            "btnPrintBarcodeStd", "schemeDiscPerc", "margin", "stockDetails"
+        ].includes(field);
+      }
+        else if (
+        userSession.countryId == Countries.India &&
+        voucherType == VoucherType.LPO
+      ) {
+        return ![
+             //not in pi added from others
+            "vatPerc","vatAmount",
+            "mrp", "hsnCode","igstPerc", "igst","mR", "netRate", "itemType", "refBranchID",
+            "employeeCode", "employeeName", "stdPurchasePrice", "refTransDtailId",
+             //common
+            "mrp", "brand", "brandID", "free", "discPerc", "discount", "lpr", "lpc",
+            "stickerQty", "profit", "size", "batchNo", "mfdDate", "expDate", "expDays",
+            "bd", "btnPrintBarcode", "barcodePrinted", "batchCreated", "productDescription",
+            "serial", "additionalExpense", "unitPriceFC", "colour", "warranty", "nosQty",
+            "totalAddExpense", "grossConvert", "grossFC", "unitID2", "unit2Qty",
+            "unit2SalesRate", "unit2MRP", "unit2MBarcode", "unit2StickerQty", "unitID3",
+            "unit3Qty", "unit3SalesRate", "unit3MRP", "unit3MBarcode", "unit3StickerQty",
+            "tagQty", "barcodeTagPrinted", "barcodeUnit2Printed", "barcodeUnit3Printed",
+            "location", "grTransDetailsID", "supplierReferenceProductCode", "poTransDetailsID",
+            "ratePlusTax", "warehouseID", "sortOrder", "profitPercentage", "schemeDiscount",
+            "memo", "memoEditor", "rowNumber", "actualSalesPrice", "unit2", "unit3",
+            "btnPrintBarcodeStd", "schemeDiscPerc", "margin", "stockDetails",
+            //not in global but in gcc
+            "salesLast180Days","pqPendingQty","minSalePrice",
+        ].includes(field);
+      }
+
+      // ✅ Default: allow all if no case matches
+      return true;
+    }) .map((mi) => {
+      // if(userSession.countryId!=Countries.India)
+      if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.PurchaseInvoice &&
+        formType.toUpperCase() == "IMPORT" &&
+        (mi.dataField?.includes("unitPriceFC") ||
+          mi.dataField?.includes("grossFC"))
+      ) {
+        return {
+          ...mi,
+          visible: true,
+        };
+      }
+
+      if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.PurchaseReturn &&
+        (mi.dataField?.includes("pCode") ||
+          mi.dataField?.includes("discPerc") ||
+          mi.dataField?.includes("discount") ||
+          mi.dataField?.includes("stock") ||
+          mi.dataField?.includes("salesPrice") ||
+          mi.dataField?.includes("cost") ||
+          mi.dataField?.includes("profit") ||
+          mi.dataField?.includes("barcodePrinted"))
+      ) {
+        return {
+          ...mi,
+          visible: false,
+        };
+      }
+
+      if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.PurchaseEstimate &&
+        (mi.dataField?.includes("netValue") ||
+          mi.dataField?.includes("vatPerc") ||
+          mi.dataField?.includes("vatAmount") ||
+          mi.dataField?.includes("margin") ||
+          mi.dataField?.includes("size") ||
+          mi.dataField?.includes("stickerQty"))
+      ) {
+        return {
+          ...mi,
+          visible: true,
+        };
+      }
+      if (
+        userSession.countryId == Countries.India &&
+        (voucherType == VoucherType.PurchaseOrder ||
+          VoucherType.PurchaseQuotation) &&
+        (mi.dataField?.includes("hsnCode") ||
+          mi.dataField?.includes("cgst") ||
+          mi.dataField?.includes("cgstPerc") ||
+          mi.dataField?.includes("sgstPerc") ||
+          mi.dataField?.includes("sgst") ||
+          mi.dataField?.includes("igstPerc") ||
+          mi.dataField?.includes("igst") ||
+          mi.dataField?.includes("cessPerc") ||
+          mi.dataField?.includes("cessAmt") ||
+          mi.dataField?.includes("additionalCessPerc") ||
+          mi.dataField?.includes("additionalCess"))
+      ) {
+        return {
+          ...mi,
+          visible: true,
+        };
+      }
+      if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.PurchaseOrder
+      ) {
+        if (
+          mi.dataField?.includes("gross") ||
+          mi.dataField?.includes("discPerc") ||
+          mi.dataField?.includes("discount") ||
+          mi.dataField?.includes("salesPrice") ||
+          mi.dataField?.includes("cost") ||
+          mi.dataField?.includes("profit")
+        ) {
+          return {
+            ...mi,
+            visible: false,
+          };
+        } else if (mi.dataField?.includes("stockDetails")) {
+          return {
+            ...mi,
+            visible: true,
+          };
+        }
+      }
+
+      if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.GoodsReceiptReturn &&
+        (mi.dataField?.includes("pCode") ||
+          mi.dataField?.includes("manualBarcode") ||
+          mi.dataField?.includes("salesPrice") ||
+          mi.dataField?.includes("cost") ||
+          mi.dataField?.includes("stock"))
+        //check rate field present in GRR
+      ) {
+        return {
+          ...mi,
+          visible: false,
+        };
+      }
+      if (voucherType == VoucherType.LPO
+      ) {
+        return {
+          ...mi,
+          readOnly: mi.dataField?.includes("qty")?false:true,
+          allowEditing: mi.dataField?.includes("qty")?true:false,
+          visible: mi.dataField?.includes("cost") ||
+          mi.dataField?.includes("supplierID")? false:true,
+        };
+      }
+       if (voucherType == VoucherType.LPO &&
+        (mi.dataField?.includes("netValue") ||
+          mi.dataField?.includes("vatAmount") ||
+          mi.dataField?.includes("arabicName") ||
+          mi.dataField?.includes("cgst") ||
+          mi.dataField?.includes("cgstPerc") ||
+          mi.dataField?.includes("sgstPerc") ||
+          mi.dataField?.includes("sgst") ||
+          mi.dataField?.includes("cessPerc") ||
+          mi.dataField?.includes("cessAmt") ||
+          mi.dataField?.includes("additionalCessPerc") ||
+          mi.dataField?.includes("additionalCess"))
+      ) {
+        return {
+          ...mi,
+          visible: true,
+        };
+      }
+//  if (voucherType == VoucherType.LPO) {
+//         if (
+//           mi.dataField?.includes("cost") ||
+//           mi.dataField?.includes("supplierID") ||
+//           mi.dataField?.includes("avgSales")
+//         )
+//           return {
+//             ...mi,
+//             visible: false,
+//           };
+//         else if (
+//           voucherType == VoucherType.LPO &&
+//           (mi.dataField?.includes("netValue") ||
+//             mi.dataField?.includes("vatAmount") ||
+//             mi.dataField?.includes("arabicName") ||
+//             mi.dataField?.includes("cgst") ||
+//             mi.dataField?.includes("cgstPerc") ||
+//             mi.dataField?.includes("sgstPerc") ||
+//             mi.dataField?.includes("sgst") ||
+//             mi.dataField?.includes("cessPerc") ||
+//             mi.dataField?.includes("cessAmt") ||
+//             mi.dataField?.includes("additionalCessPerc") ||
+//             mi.dataField?.includes("additionalCess"))
+//         ) {
+//           return {
+//             ...mi,
+//             visible: true,
+//           };
+//         }
+//       }
+      return mi;
+    });
+
+
+
+// [formType, voucherType, formState.transaction.master.voucherType, formState.transaction.master.voucherForm]

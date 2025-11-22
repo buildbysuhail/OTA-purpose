@@ -1,0 +1,73 @@
+import React from "react";
+import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
+import ERPInput from "../../../../../components/ERPComponents/erp-input";
+import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
+import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
+import { useAppState } from "../../../../../utilities/hooks/useAppState";
+import { formStateMasterHandleFieldChange } from "../../reducer";
+import { VoucherElementProps } from "../../transaction-types";
+
+interface RoundOffInputProps extends VoucherElementProps {
+  handleKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>, field: string) => void;
+  focusDiscount: () => void;
+  focusAmount: () => void;
+}
+
+const RoundOffInput: React.FC<RoundOffInputProps> = ({ formState, t, handleKeyDown, focusDiscount, focusAmount, }) => {
+  const dispatch = useAppDispatch();
+  const { appState } = useAppState();
+  const isRtl = appState.locale.rtl;
+  const { value, onChange } = useDebouncedInput(
+    formState.transaction.master.roundAmount || '',
+    (debouncedValue) => {
+      dispatch(
+        formStateMasterHandleFieldChange({
+          fields: { roundAmount: debouncedValue },
+        })
+      );
+    }, 300
+  );
+
+  return (
+    <div className="flex flex-col gap-0">
+      <ERPCheckbox
+        localInputBox={formState?.userConfig?.inputBoxStyle}
+        id="hasroundOff"
+        className={isRtl ? "text-right" : "text-left"}
+        label={t(formState.formElements.roundOff.label)}
+        checked={formState.transaction.master.hasroundOff}
+        onChange={(e) => {
+          const isChecked = e.target.checked;
+          dispatch(
+            formStateMasterHandleFieldChange({
+              fields: { hasroundOff: isChecked },
+            })
+          );
+          isChecked ? focusDiscount() : focusAmount();
+        }}
+        disabled={
+          formState.formElements.hasroundOff?.disabled ||
+          formState.formElements.pnlMasters?.disabled
+        }
+      />
+
+      <ERPInput
+        localInputBox={formState?.userConfig?.inputBoxStyle}
+        fetching={formState.transactionLoading}
+        id="roundAmount"
+        className="max-w-[110px] min-w-[110px] !m-0"
+        type="number"
+        noLabel
+        value={value}
+        disableEnterNavigation={true}
+        onKeyDown={(e) => {
+          handleKeyDown && handleKeyDown(e, "roundAmount");
+        }}
+        onChange={(e) => onChange(e.target.value)}
+        readOnly
+      />
+    </div>
+  );
+};
+
+export default React.memo(RoundOffInput);

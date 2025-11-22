@@ -1,0 +1,749 @@
+import { formatDate } from "devextreme/localization";
+import React, { Fragment, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
+import { DevGridColumn } from "../../../../components/types/dev-grid-column";
+import urls from "../../../../redux/urls";
+import { useAppDispatch, useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
+import ERPDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
+import { ActionType } from "../../../../redux/types";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import { TransactionBase, transactionRoutes, } from "../../../../components/common/content/transaction-routes";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { RootState } from "../../../../redux/store";
+import { useSelector } from "react-redux";
+import { safeBase64Decode, customJsonParse } from "../../../../utilities/jsonConverter";
+import { getStorageString } from "../../../../utilities/storage-utils";
+import { formStateHandleFieldChangeKeysOnly } from "../reducer";
+import { UserConfig } from "../transaction-types";
+import { fetchUserConfig } from "../transaction-utils";
+
+const toggleTransactionPopup = (payload: { isOpen: boolean; key: string | null; reload: boolean; }) => ({ type: "TOGGLE_TRANSACTION_POPUP", payload, });
+
+const TransactionGrid: React.FC<{ voucherType?: string; transactionType?: string; title?: string; addTitle?: string; }> = ({ voucherType, transactionType, title, addTitle }) => {
+  const dispatch = useAppDispatch();
+    const formState = useAppSelector(
+    (state: RootState) => state.InventoryTransaction
+  );
+const userSession = useSelector((state:RootState) => state.UserSession)
+    useEffect(() => {
+      if (!userSession?.userId || !transactionType) return;
+      const loadUserConfig = async () => {
+        try {
+          const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`);
+          const Utc = await getStorageString(key);
+
+          let userConfig: UserConfig | undefined;
+
+          if (Utc) {
+            const decoded = safeBase64Decode(Utc) ?? "{}";
+            userConfig = customJsonParse(decoded ?? "{}");
+          } else {
+            userConfig = await fetchUserConfig(userSession.userId, transactionType);
+          }
+          
+          // dispatch(forhanfich({ fie: { userConfig } }));
+           dispatch(
+                      formStateHandleFieldChangeKeysOnly({
+                        fields: {
+                          userConfig: userConfig
+                      }})
+                    );
+          
+        } catch (error) {
+          console.error("Error loading user config:", error);
+        }
+      };
+
+      loadUserConfig();
+    }, []);
+    const navigate = useNavigate();
+
+
+  
+  const { getFormattedValue } = useNumberFormat();
+  const { t } = useTranslation("transaction");
+  const [reload, setReload] = useState<boolean>(true);
+  const location = useLocation();
+  // Normalize and map row data to route/query payload
+  const buildTransactionData = (row: any) => {
+    const transactionMasterID = parseInt(row.invTransactionMasterID || "0", 10);
+    const vchtype = row.voucherType;
+    const voucherform = row.formType ?? row.voucherForm;
+    const prefix = row.voucherPrefix;
+    const vchno = row.voucherNumber;
+    const financialYearID = parseInt(row.financialYearID || "0", 10);
+    const tr = transactionRoutes.find((x) => x.voucherType === vchtype);
+
+    if (parseInt(vchno, 10) > 0 && tr) {
+      return {
+        transactionMasterID,
+        formType: voucherform,
+        voucherPrefix: prefix,
+        voucherType: vchtype,
+        financialYearID,
+        voucherNo: parseInt(vchno, 10),
+        formCode: tr.formCode,
+        transactionType: tr.transactionType,
+        transactionBase: tr.transactionBase,
+        title: tr.title,
+        drCr: tr.drCr,
+      };
+    }
+    return null;
+  };
+
+  const columns: DevGridColumn[] = useMemo(
+    () => [
+      {
+        dataField: "invTransactionMasterID",
+        caption: t("inv_transaction_master_id"),
+        dataType: "number",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "left",
+        visible: false,
+      },
+      {
+        dataField: "transactionDate",
+        caption: t("transaction_date"),
+        dataType: "date",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        width: 150,
+        alignment: "left",
+        showInPdf: true,
+        cellRender: (cellInfo: any) => {
+          return cellInfo.data?.transactionDate
+            ? formatDate(
+              new Date(cellInfo.data?.transactionDate),
+              "dd-MMM-yyyy"
+            )
+            : "";
+        },
+      },
+      {
+        dataField: "partyName",
+        caption: t("party_name"),
+        dataType: "string",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "left",
+        showInPdf: true,
+      },
+      {
+        dataField: "voucherType",
+        caption: t("voucher_type"),
+        dataType: "string",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "left",
+        showInPdf: true,
+      },
+      {
+        dataField: "voucherForm",
+        caption: t("form"),
+        dataType: "string",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "left",
+        showInPdf: true,
+      },
+      {
+        dataField: "voucherPrefix",
+        caption: t("voucher_prefix"),
+        dataType: "string",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "left",
+        showInPdf: true,
+      },
+      {
+        dataField: "voucherNumber",
+        caption: t("voucher_number"),
+        dataType: "string",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "center",
+        showInPdf: true,
+        bold: true,
+        cssClass: "centered-header",
+        // Important: keep route path shape and add export guards
+        // DevExtreme exporter passes exportCell; a global flag can be set for PDF
+        cellRender: (
+          cellInfo: any,
+          _a?: any,
+          _b?: any,
+          exportCell?: any
+        ) => {
+          const row = cellInfo?.data ?? {};
+          const tx = buildTransactionData(row);
+          const value = cellInfo?.value ?? row?.voucherNumber ?? "";
+          const isExporting =
+            !!exportCell || Boolean((window as any).__DX_PDF_EXPORTING__);
+
+          if (!tx) {
+            return value;
+          }
+
+          const queryString = new URLSearchParams(
+            Object.entries(tx).reduce((acc, [k, v]) => {
+              acc[k] = String(v ?? "");
+              return acc;
+            }, {} as Record<string, string>)
+          ).toString();
+
+          if (isExporting) {
+            // During Excel/PDF export, return plain text to avoid router/DOM usage
+            return value;
+          }
+
+          return (
+            <div style={{ textAlign: "center" }}>
+              <Link
+                to={`/${TransactionBase.Purchase}/${transactionType}/${cellInfo.value}?${queryString}`}
+                style={{ color: "#1b6de0", textDecoration: "underline" }}
+                onClick={() => {
+                  // Optional debugging retained from last code
+                  // console.log("cellInfo", cellInfo);
+                  // console.log("tx", tx);
+                }}
+              >
+                {value}
+              </Link>
+            </div>
+          );
+        },
+      },
+      {
+        dataField: "purchaseInvoiceNumber",
+        caption: t("ref_no"),
+        dataType: "string",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "left",
+        showInPdf: true,
+      },
+      {
+        dataField: "purchaseInvoiceDate",
+        caption: t("ref_date"),
+        dataType: "date",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        width: 150,
+        alignment: "left",
+        showInPdf: true,
+        cellRender: (cellInfo: any) => {
+          return cellInfo?.data?.purchaseInvoiceDate
+            ? formatDate(
+              new Date(cellInfo?.data?.purchaseInvoiceDate),
+              "dd-MMM-yyyy"
+            )
+            : "";
+        },
+      },
+      {
+        dataField: "totalGross",
+        caption: t("total_gross"),
+        dataType: "number",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "right",
+        showInPdf: true,
+        visible: false,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
+      },
+      {
+        dataField: "totalDiscount",
+        caption: t("total_discount"),
+        dataType: "number",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "right",
+        showInPdf: true,
+        visible: false,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
+      },
+      {
+        dataField: "grandTotal",
+        caption: t("grand_total"),
+        dataType: "number",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "right",
+        showInPdf: true,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
+      },
+      {
+        dataField: "remarks",
+        caption: t("remarks"),
+        dataType: "string",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "left",
+        showInPdf: true,
+      },
+      // Additional hidden fields
+      {
+        dataField: "adjustmentAmount",
+        caption: t("adjustment_amount"),
+        dataType: "number",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "right",
+        visible: false,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
+      },
+      {
+        dataField: "advanceAmt",
+        caption: t("advance_amount"),
+        dataType: "number",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "right",
+        visible: false,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
+      },
+      {
+        dataField: "bankAmt",
+        caption: t("bank_amount"),
+        dataType: "number",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "right",
+        visible: false,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
+      },
+      {
+        dataField: "billDiscount",
+        caption: t("bill_discount"),
+        dataType: "number",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "right",
+        visible: false,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
+      },
+      {
+        dataField: "cashAmt",
+        caption: t("cash_amount"),
+        dataType: "number",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "right",
+        visible: false,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
+      },
+      {
+        dataField: "cashDiscount",
+        caption: t("cash_discount"),
+        dataType: "number",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "right",
+        visible: false,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
+      },
+      {
+        dataField: "cashReceived",
+        caption: t("cash_received"),
+        dataType: "number",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "right",
+        visible: false,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
+      },
+      {
+        dataField: "cashReturned",
+        caption: t("cash_returned"),
+        dataType: "number",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "right",
+        visible: false,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
+      },
+      {
+        dataField: "cashrOrCredit",
+        caption: t("cash_or_credit"),
+        dataType: "string",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "left",
+        visible: false,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
+      },
+      {
+        dataField: "createdDate",
+        caption: t("created_date"),
+        dataType: "date",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "left",
+        visible: false,
+        format: "dd-MMM-yyyy",
+      },
+      {
+        dataField: "creditAmt",
+        caption: t("credit_amount"),
+        dataType: "number",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "right",
+        visible: false,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
+      },
+      {
+        dataField: "deliveryDate",
+        caption: t("delivery_date"),
+        dataType: "date",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "left",
+        visible: false,
+        format: "dd-MMM-yyyy",
+      },
+      {
+        dataField: "despatchDate",
+        caption: t("despatch_date"),
+        dataType: "date",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "left",
+        visible: false,
+        cellRender: (cellInfo: any) => {
+          return cellInfo.data?.despatchDate
+            ? formatDate(new Date(cellInfo.data?.despatchDate), "dd-MMM-yyyy")
+            : "";
+        },
+      },
+      {
+        dataField: "despatchDocumentNumber",
+        caption: t("despatch_document_number"),
+        dataType: "string",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "left",
+        visible: false,
+      },
+      {
+        dataField: "dueDate",
+        caption: t("due_date"),
+        dataType: "date",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "left",
+        visible: false,
+        cellRender: (cellInfo: any) => {
+          return cellInfo.data?.dueDate
+            ? formatDate(new Date(cellInfo.data?.dueDate), "dd-MMM-yyyy")
+            : "";
+        },
+      },
+      {
+        dataField: "exchangeRate",
+        caption: t("exchange_rate"),
+        dataType: "number",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "right",
+        visible: false,
+      },
+      {
+        dataField: "financialYearID",
+        caption: t("financial_year_id"),
+        dataType: "number",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "right",
+        visible: false,
+      },
+      {
+        dataField: "modifiedDate",
+        caption: t("modified_date"),
+        dataType: "date",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "left",
+        visible: false,
+        format: "dd-MMM-yyyy",
+      },
+      {
+        dataField: "orderDate",
+        caption: t("order_date"),
+        dataType: "date",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "left",
+        visible: false,
+        cellRender: (cellInfo: any) => {
+          return cellInfo.data?.orderDate
+            ? formatDate(new Date(cellInfo.data?.orderDate), "dd-MMM-yyyy")
+            : "";
+        },
+      },
+      {
+        dataField: "privAddAmount",
+        caption: t("priv_add_amount"),
+        dataType: "number",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "right",
+        visible: false,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
+      },
+      {
+        dataField: "privRedeem",
+        caption: t("priv_redeem"),
+        dataType: "number",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "right",
+        visible: false,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
+      },
+      {
+        dataField: "quotationDate",
+        caption: t("quotation_date"),
+        dataType: "date",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "left",
+        visible: false,
+        cellRender: (cellInfo: any) => {
+          return cellInfo.data?.quotationDate
+            ? formatDate(new Date(cellInfo.data?.quotationDate), "dd-MMM-yyyy")
+            : "";
+        },
+      },
+      {
+        dataField: "roundAmount",
+        caption: t("round_amount"),
+        dataType: "number",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "right",
+        visible: false,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
+      },
+      {
+        dataField: "shortageAmount",
+        caption: t("shortage_amount"),
+        dataType: "number",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "right",
+        visible: false,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
+      },
+      {
+        dataField: "srAmount",
+        caption: t("sr_amount"),
+        dataType: "number",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "right",
+        visible: false,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
+      },
+      {
+        dataField: "systemDateTime",
+        caption: t("system_datetime"),
+        dataType: "date",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "left",
+        visible: false,
+        format: "dd-MMM-yyyy",
+      },
+      {
+        dataField: "tokenNumber",
+        caption: t("token_number"),
+        dataType: "string",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "left",
+        visible: false,
+      },
+      {
+        dataField: "vatAmount",
+        caption: t("vat_amount"),
+        dataType: "number",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "right",
+        visible: false,
+        cellRender: (cellInfo: any) => `${getFormattedValue(cellInfo.value, false, 4)}`,
+      },
+      {
+        dataField: "actions",
+        caption: t("actions"),
+        allowSearch: false,
+        allowFiltering: false,
+        allowSorting: false,
+        allowResizing: false,
+        // allowReordering: false,
+        fixed: true,
+        fixedPosition: document?.dir === "rtl" ? "left" : "right",
+        width: 100,
+        minWidth: 100,
+        maxWidth: 100,
+        cellRender: (cellElement: any) => {
+          return (
+            <ERPGridActions
+              view={{
+                visible: false,
+                type: "popup",
+                action: () =>
+                  dispatch(toggleTransactionPopup({ isOpen: true, key: cellElement?.data?.accTransactionDetailID, reload: false, })),
+              }}
+              edit={{
+                type: "popup",
+                action: () => {
+                  const row = cellElement.data;
+                  const transactionMasterID = parseInt(row.invTransactionMasterID || "0", 10);
+                  const vchtype = row.voucherType;
+                  const voucherform = row.voucherForm;
+                  const prefix = row.voucherPrefix;
+                  const vchno = row.voucherNumber;
+                  const financialYearID = parseInt(row.financialYearID || "0", 10);
+                  const tr = transactionRoutes.find((x: any) => x.voucherType === vchtype);
+
+                  let transactionData = {};
+                  if (parseInt(vchno, 10) > 0) {
+                    transactionData = {
+                      transactionMasterID,
+                      formType: voucherform,
+                      voucherPrefix: prefix,
+                      voucherType: vchtype,
+                      financialYearID,
+                      voucherNo: parseInt(vchno, 10),
+                      formCode: tr?.formCode,
+                      transactionType: tr?.transactionType,
+                      transactionBase: tr?.transactionBase,
+                      title: tr?.title,
+                      drCr: tr?.drCr,
+                    };
+                  }
+                  const url = new URL(
+                    `${window.location.origin}/${TransactionBase.Purchase}/${transactionType}`
+                  );
+
+                  // Append all parameters from the `params` object
+                  Object.entries(transactionData).forEach(([key, value]) => {
+                    url.searchParams.append(key, String(value));
+                  });
+                  
+                if(formState?.userConfig?.editInNewTab) {
+                  window.open(url.toString(), "_blank");
+                } else {
+                const path = url.pathname + url.search;
+                    navigate(path);
+                }
+                  
+                },
+              }}
+              delete={{
+                onSuccess: () => {
+                  setReload(true);
+                },
+                confirmationRequired: true,
+                confirmationMessage: t('deleting_transaction_question'),
+                url: `${urls.inv_transaction_base}${transactionType}/`,
+                key: cellElement?.data?.invTransactionMasterID,
+                postData: {
+                  invTransactionMasterID: cellElement?.data?.invTransactionMasterID,
+                  transactionType: transactionType,
+                },
+              }}
+            />
+          );
+        },
+      },
+    ],
+    [t, dispatch, transactionType, formState.userConfig?.editInNewTab]
+  );
+
+  useEffect(() => {
+    setReload(true);
+  }, [location.pathname]);
+
+  // Instead of passing functions directly as children
+  const renderContent = () => {
+    // Your content rendering logic
+    return <span>{/* Your actual content */}</span>;
+  };
+
+  return (
+    <Fragment>
+      <div className="grid grid-cols-12 gap-x-6">
+        <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
+          <div className="px-4 pt-4 pb-2">
+            <div className="grid grid-cols-1 gap-3">
+              <ERPDevGrid
+                gridAddButtonType={"link"}
+                gridAddButtonLink={`${import.meta.env.BASE_URL}${TransactionBase.Purchase}/${transactionType}`}
+                columns={columns}
+                dataUrl={`${urls.inv_transaction_base}${transactionType}/List/`}
+                method={ActionType.GET}
+                // postData={{voucherType: voucherType, transactionType: transactionType}}
+                gridHeader={t(`${title}`)}
+                gridId={`${addTitle ?? "transactions"}Transactions`}
+                gridAddButtonIcon="ri-add-line"
+                pageSize={40}
+                allowExport={true}
+                reload={reload}
+                changeReload={() => { setReload(false); }}
+                remoteOperations={true}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </Fragment>
+  );
+};
+
+export default React.memo(TransactionGrid);

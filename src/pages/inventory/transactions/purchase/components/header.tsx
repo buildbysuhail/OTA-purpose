@@ -41,15 +41,12 @@ interface HeaderProps extends VoucherElementProps {
     printData?: any,
     templateId?: number
   ) => Promise<void>;
-
   handleClearControls: () => void;
   handleHistoryClick: () => void;
   setIsHistorySidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   transactionType?: string;
   voucherType: string;
-  userSession: {
-    userId: any; dbIdValue: string
-  };
+  userSession: { userId: any; dbIdValue: string };
   unlockVoucher: () => void;
   setShowValidation: React.Dispatch<React.SetStateAction<boolean>>;
   showValidation: boolean;
@@ -59,7 +56,6 @@ interface HeaderProps extends VoucherElementProps {
   onProcessSelected: ((masterIds: string, branchIDs: string, voucherNumbers: string, referenceNumber: string, loadType: string, voucherType: string) => void) | undefined;
   downloadImportTemplateHeadersOnly: any;
   importFromExcel: any;
-
   undoEditMode: (
     isEdit: boolean,
     transactionMasterId: number
@@ -78,36 +74,33 @@ const useMediaQuery = (query: string) => {
   return matches;
 };
 
-
-
 const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
-  (
-    {
-      formState,
-      dispatch,
-      handleKeyDown,
-      t,
-      loadTemporaryRows,
-      deleteTransVoucher,
-      handleRefresh,
-      createNewVoucher,
-      handleEdit,
-      printVoucher,
-      handleClearControls,
-      handleHistoryClick,
-      transactionType,
-      voucherType,
-      userSession,
-      unlockVoucher,
-      setShowValidation,
-      showValidation,
-      goToPreviousPage,
-      phone = false,
-      onProcessSelected,
-      downloadImportTemplateHeadersOnly,
-      importFromExcel,
-      undoEditMode
-    }, ref) => {
+  ({
+    formState,
+    dispatch,
+    handleKeyDown,
+    t,
+    loadTemporaryRows,
+    deleteTransVoucher,
+    handleRefresh,
+    createNewVoucher,
+    handleEdit,
+    printVoucher,
+    handleClearControls,
+    handleHistoryClick,
+    transactionType,
+    voucherType,
+    userSession,
+    unlockVoucher,
+    setShowValidation,
+    showValidation,
+    goToPreviousPage,
+    phone = false,
+    onProcessSelected,
+    downloadImportTemplateHeadersOnly,
+    importFromExcel,
+    undoEditMode
+  }, ref) => {
     const { appState } = useAppState();
     const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
     const isRtl = appState.locale.rtl;
@@ -124,42 +117,49 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
     };
 
     const closeMenuPopup = () => {
-      dispatch(formStateHandleFieldChange({ fields: { headerMenuOpen: false }, }));
+      dispatch(
+        formStateHandleFieldChange({
+          fields: { headerMenuOpen: false },
+        })
+      );
     };
+
     const selectTemplates = () => {
       dispatch(
-        toggleTemplateChooserModal({ isOpen: true, templateGroup: formState.transaction.master?.voucherType, customerType: formState.transaction.master?.customerType, formType: formState.transaction.master?.voucherForm,isInv:true})
+        toggleTemplateChooserModal({
+          isOpen: true, templateGroup: formState.transaction.master?.voucherType,
+          customerType: formState.transaction.master?.customerType,
+          formType: formState.transaction.master?.voucherForm,
+          isInv: true
+        })
       );
     }
+
     const openMenuPopup = () => {
-      dispatch(formStateHandleFieldChange({ fields: { headerMenuOpen: true }, }));
+      dispatch(
+        formStateHandleFieldChange({
+          fields: { headerMenuOpen: true },
+        })
+      );
     };
 
     const handleBillwiseClick = useCallback(async () => {
       try {
         // 1. Check if ledger is billwise applicable
         const isBillwise = formState.ledgerData.billwiseApplicable;
-
         if (isBillwise) {
           let billwiseStr = formState.transaction.master.billWiseString;
-
           // 2. Fetch transaction details for billwise
-          const accTransactionDetailId =
-            formState.transaction.master.accTransactionDetailIDForBillwise;
-
+          const accTransactionDetailId = formState.transaction.master.accTransactionDetailIDForBillwise;
           try {
             const api = new APIClient();
-            const billwise = await api.getAsync(
-              `${Urls.inv_transaction_base}${formState.transactionType}/BillwiseMaster/?LedgerId=${formState.transaction.master.ledgerID}&DrCr=Dr&AccTransactionDetailID=${accTransactionDetailId}`
-            );
-
+            const billwise = await api.getAsync(`${Urls.inv_transaction_base}${formState.transactionType}/BillwiseMaster/?LedgerId=${formState.transaction.master.ledgerID}&DrCr=Dr&AccTransactionDetailID=${accTransactionDetailId}`);
             if (accTransactionDetailId > 0) {
               billwise.map((x: BillwiseData) => ({
                 ...x,
                 balanceAfter: x.balance - x.billwiseAmount,
               }));
             }
-
             setTimeout(() => {
               dispatch(
                 formStateHandleFieldChange({
@@ -207,16 +207,13 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
     const isAbove768 = useMediaQuery('(min-width: 768px)');
     const isAbove640 = useMediaQuery('(min-width: 640px)');
     const isAbove480 = useMediaQuery('(min-width: 480px)');
-
     const postUserConfig = async () => {
       try {
-
         const base64 = modelToBase64Unicode({ ...formState.userConfig, themeName: 'Custom' });
         const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, base64);
         handleResponse(response, async () => {
           const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`);
           await setStorageString(key, base64);
-
           dispatch(
             formStateHandleFieldChangeKeysOnly({
               fields: {
@@ -256,7 +253,11 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
     };
 
     const previousThemeChange = async () => {
-      dispatch(formStateHandleFieldChange({ fields: { userConfig: JSON.parse(formState?.privConfig ?? ""), isUserConfigOpen: false } }));
+      dispatch(
+        formStateHandleFieldChange({
+          fields: { userConfig: JSON.parse(formState?.privConfig ?? ""), isUserConfigOpen: false }
+        })
+      );
     };
 
     return (
@@ -264,8 +265,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
         <div className={`!overflow-visible flex items-center justify-evenly md:justify-end space-x-2 p-1 w-full overflow-x-auto bg-[#f9fafb] md:bg-transparent dark:bg-dark-bg-card`}>
           {/* Load Temp Rows */}
           {formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
-            <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1125px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1080px)]:!ml-[2px]" title="Load Details">
-              
+            <div className="group relative inline-flex flex-col items-center ps-[5px] [@media_(min-width:990px)_and_(max-width:1125px)]:ps-[0px] [@media_(min-width:990px)_and_(max-width:1080px)]:!ml-[2px]" title={t("load_details")}>
               <button
                 disabled={formState.formElements.pnlMasters?.disabled}
                 className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg border-2 border-neutral-200 dark:hover:border-warmGray-100 bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
@@ -336,7 +336,6 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                     formState.transaction?.master.transactionDate ?? "",
                     undefined,  //tmepData
                     formState?.lastChoosedTemplate?.id  //lastchoose tempId
-
                   )
                 }
               >
@@ -433,19 +432,18 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                       </li>
                     )}
 
-                    {formState.transaction.master.voucherType === "MJV" &&
-                      userSession.dbIdValue === "ABCO" && (
-                        <li>
-                          <button
-                            className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f0fdf4] hover:text-[#15803d] dark:hover:bg-[#14532d4d] dark:hover:text-[#86efac] transition-all duration-200 rounded-md group text-left"
-                            onClick={() => setShowValidation(true)}>
-                            <div className="w-8 h-8 bg-[#bbf7d0] dark:bg-[#1665344d] rounded-full flex items-center justify-center group-hover:bg-[#86efac] dark:group-hover:bg-[#16653499] group-hover:scale-110 transition-all duration-200">
-                              <FileUp className="h-4 w-4 text-[#166534] dark:text-[#bbf7d0]" />
-                            </div>
-                            <span className="font-medium">{t("MJV_excel_import")}</span>
-                          </button>
-                        </li>
-                      )}
+                    {formState.transaction.master.voucherType === "MJV" && userSession.dbIdValue === "ABCO" && (
+                      <li>
+                        <button
+                          className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f0fdf4] hover:text-[#15803d] dark:hover:bg-[#14532d4d] dark:hover:text-[#86efac] transition-all duration-200 rounded-md group text-left"
+                          onClick={() => setShowValidation(true)}>
+                          <div className="w-8 h-8 bg-[#bbf7d0] dark:bg-[#1665344d] rounded-full flex items-center justify-center group-hover:bg-[#86efac] dark:group-hover:bg-[#16653499] group-hover:scale-110 transition-all duration-200">
+                            <FileUp className="h-4 w-4 text-[#166534] dark:text-[#bbf7d0]" />
+                          </div>
+                          <span className="font-medium">{t("MJV_excel_import")}</span>
+                        </button>
+                      </li>
+                    )}
 
                     {formState.formElements.foreignCurrency?.visible && (
                       <li>
@@ -466,6 +464,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         </div>
                       </li>
                     )}
+
                     {formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
                       <li>
                         <button
@@ -528,65 +527,57 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                       </li>
                     )}
 
-                    {
-                      formState.transaction.master.voucherType == 'PI' &&
-                      (
-                        <li>
-                          <button
-                            disabled={formState.formElements?.pnlMasters?.disabled}
-                            onClick={(e) => {
-                              closeMenuPopup();
-                              setIsPendingOrderOpen({ open: true, type: "GRN" });
-                            }}
-                            className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#fefce8] hover:text-[#a16207] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047]'}`}>
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#fef3c7] dark:bg-[#78350f4d] group-hover:bg-[#fde68a] dark:group-hover:bg-[#78350fcc] group-hover:scale-110'}`} >
-                              <PackageCheck className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#a16207] dark:text-[#fde047]'}`} />
-                            </div>
-                            <span className="font-medium">{t('pending_goods_receipt_list')}</span>
-                          </button>
-                        </li>
-                      )
-                    }
+                    {formState.transaction.master.voucherType == 'PI' && (
+                      <li>
+                        <button
+                          disabled={formState.formElements?.pnlMasters?.disabled}
+                          onClick={(e) => {
+                            closeMenuPopup();
+                            setIsPendingOrderOpen({ open: true, type: "GRN" });
+                          }}
+                          className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#fefce8] hover:text-[#a16207] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047]'}`}>
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#fef3c7] dark:bg-[#78350f4d] group-hover:bg-[#fde68a] dark:group-hover:bg-[#78350fcc] group-hover:scale-110'}`} >
+                            <PackageCheck className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#a16207] dark:text-[#fde047]'}`} />
+                          </div>
+                          <span className="font-medium">{t('pending_goods_receipt_list')}</span>
+                        </button>
+                      </li>
+                    )}
 
-                    {
-                      ["PO", VoucherType.PurchaseQuotation].includes(formState.transaction.master.voucherType) &&
-                      (
-                        <li>
-                          <button
-                            disabled={formState.formElements?.pnlMasters?.disabled}
-                            onClick={(e) => {
-                              closeMenuPopup();
-                              setIsPendingOrderOpen({ open: true, type: "POC" });
-                            }}
-                            className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#e0e7ff] hover:text-[#4338ca] dark:hover:bg-[#312e814d] dark:hover:text-[#c7d2fe]'}`}>
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#e0e7ff] dark:bg-[#312e814d] group-hover:bg-[#c7d2fe] dark:group-hover:bg-[#312e81cc] group-hover:scale-110'}`} >
-                              <PackageSearch className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#4338ca] dark:text-[#c7d2fe]'}`} />
-                            </div>
-                            <span className="font-medium">{t('consolidated_all_branch_purchase_order_list')}</span>
-                          </button>
-                        </li>
-                      )
-                    }
+                    {["PO", VoucherType.PurchaseQuotation].includes(formState.transaction.master.voucherType) && (
+                      <li>
+                        <button
+                          disabled={formState.formElements?.pnlMasters?.disabled}
+                          onClick={(e) => {
+                            closeMenuPopup();
+                            setIsPendingOrderOpen({ open: true, type: "POC" });
+                          }}
+                          className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#e0e7ff] hover:text-[#4338ca] dark:hover:bg-[#312e814d] dark:hover:text-[#c7d2fe]'}`}>
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#e0e7ff] dark:bg-[#312e814d] group-hover:bg-[#c7d2fe] dark:group-hover:bg-[#312e81cc] group-hover:scale-110'}`} >
+                            <PackageSearch className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#4338ca] dark:text-[#c7d2fe]'}`} />
+                          </div>
+                          <span className="font-medium">{t('consolidated_all_branch_purchase_order_list')}</span>
+                        </button>
+                      </li>
+                    )}
 
-                    {
-                      ["PO"].includes(formState.transaction.master.voucherType) &&
-                      (
-                        <li>
-                          <button
-                            disabled={formState.formElements?.pnlMasters?.disabled}
-                            onClick={(e) => {
-                              closeMenuPopup();
-                              setIsPendingOrderOpen({ open: true, type: "PQ" });
-                            }}
-                            className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#fce7f3] hover:text-[#be185d] dark:hover:bg-[#831843]/30 dark:hover:text-[#f9a8d4]'}`}   >
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#fce7f3] dark:bg-[#831843]/30 group-hover:bg-[#fbcfe8] dark:group-hover:bg-[#831843]/50 group-hover:scale-110'}`}>
-                              <FileText className={`h-4 w-4  ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#be185d] dark:text-[#f9a8d4]'}`} />
-                            </div>
-                            <span className="font-medium">{t('pending_purchase_quotation_list')}</span>
-                          </button>
-                        </li>
-                      )
-                    }
+                    {["PO"].includes(formState.transaction.master.voucherType) && (
+                      <li>
+                        <button
+                          disabled={formState.formElements?.pnlMasters?.disabled}
+                          onClick={(e) => {
+                            closeMenuPopup();
+                            setIsPendingOrderOpen({ open: true, type: "PQ" });
+                          }}
+                          className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#fce7f3] hover:text-[#be185d] dark:hover:bg-[#831843]/30 dark:hover:text-[#f9a8d4]'}`}   >
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#fce7f3] dark:bg-[#831843]/30 group-hover:bg-[#fbcfe8] dark:group-hover:bg-[#831843]/50 group-hover:scale-110'}`}>
+                            <FileText className={`h-4 w-4  ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#be185d] dark:text-[#f9a8d4]'}`} />
+                          </div>
+                          <span className="font-medium">{t('pending_purchase_quotation_list')}</span>
+                        </button>
+                      </li>
+                    )}
+
                     {formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
                       <li>
                         <button
@@ -603,6 +594,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         </button>
                       </li>
                     )}
+
                     {formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
                       <li>
                         <button
@@ -624,6 +616,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         </button>
                       </li>
                     )}
+
                     {formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
                       <li>
                         <button
@@ -641,7 +634,6 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                       <li>
                         <button
                           className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#f5f3ff] hover:text-[#6d28d9] dark:hover:bg-[#4c1d954d] dark:hover:text-[#ddd6fe] transition-all duration-200 rounded-md group text-left"
-
                           onClick={async () => {
                             await printVoucher(
                               formState.transaction?.master.invTransactionMasterID,  // masterID
@@ -657,8 +649,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                               formState?.lastChoosedTemplate?.id //lastchoosedTempId
                             );
                             closeMenuPopup();
-                          }
-                          }
+                          }}
                           disabled={formState.transactionLoading}
                         >
                           <div className="w-8 h-8 bg-[#ede9fe] dark:bg-[#4c1d954d] rounded-full flex items-center justify-center group-hover:bg-[#ddd6fe] dark:group-hover:bg-[#4c1d9599] group-hover:scale-110 transition-all duration-200">
@@ -668,6 +659,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         </button>
                       </li>
                     )}
+
                     {formState.transaction.master.invTransactionMasterID > 0 && formState.transaction.master.voucherType === 'PR' && applicationSettings.accountsSettings.maintainBillwiseAccount && (
                       <li>
                         <button
@@ -696,6 +688,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                             </button>
                           </li>
                         )}
+
                         <li>
                           <button
                             className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#faf5ff] hover:text-[#7c3aed] dark:hover:bg-[#581c874d] dark:hover:text-[#d8b4fe] transition-all duration-200 rounded-md group text-left"
@@ -706,6 +699,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                             <span className="font-medium">{t("party_wise_summary")}</span>
                           </button>
                         </li>
+
                         {!isAbove640 && formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
                           <li>
                             <button
@@ -721,7 +715,6 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                       </>
                     )}
 
-
                     <>
                       {!isAbove640 && formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
                         <li>
@@ -735,6 +728,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                           </button>
                         </li>
                       )}
+
                       {!isAbove640 && formState?.transaction?.master?.voucherType && formState.transaction.master.voucherType !== "LPO" && (
                         <li>
                           <button
@@ -750,10 +744,9 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                                 true,   //isInv
                                 formState.userConfig?.printPreview ?? false,  // print privew
                                 undefined,                                            // printTmeplate (optional)
-                                formState.transaction?.master.transactionDate ?? ""  //transactinDate
-                                , undefined,  //tempData 
+                                formState.transaction?.master.transactionDate ?? "",  //transactinDate
+                                undefined,  //tempData 
                                 formState?.lastChoosedTemplate?.id //lastChooseTempId
-
                               )}
                           >
                             <div className="w-8 h-8 bg-[#ede9fe] dark:bg-[#4c1d954d] rounded-full flex items-center justify-center group-hover:bg-[#ddd6fe] dark:group-hover:bg-[#4c1d9599] group-hover:scale-110 transition-all duration-200">
@@ -778,6 +771,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                             <span className="font-medium">{t("delete")}</span>
                           </button>
                         </li>
+
                         {formState.formElements.lnkUnlockVoucher?.visible !== true && (
                           <li>
                             <button
@@ -795,8 +789,6 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                     )}
                   </ul>
                 </nav>
-
-
               </div>
             )}
           </div>
@@ -845,7 +837,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
           {formState.isUserConfigOpen && (
             <ERPModal
               isOpen={formState.isUserConfigOpen}
-              title={t("formState_summary")}
+              title={t("formstate_summary")}
               width={2500}
               height={2500}
               isForm={true}
@@ -866,7 +858,6 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                     onClick={previousThemeChange}
                     variant="secondary"
                     className="min-w-[100px] transition-all duration-300"
-
                   />
                   <ERPButton
                     title={t("reset_all")}

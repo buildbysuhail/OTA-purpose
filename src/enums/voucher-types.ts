@@ -1,35 +1,35 @@
 enum VoucherType {
-  TaxOnExpensePayment = "TXP",//
+  TaxOnExpensePayment = "TXP", //
   DamageExpirySubstitute = "SUB",
   GoodsDeliveryReturn = "DR",
   SalesInvoice = "SI",
-  ChequeReceipt = "CQR",//
+  ChequeReceipt = "CQR", //
   BranchTransferOut = "BTO",
   BankReceipt = "BR",
-  MultiJournal = "MJV",//
+  MultiJournal = "MJV", //
   PurchaseInvoice = "PI",
   SalaryProcess = "SP",
   ExcessStock = "EX",
-  ChequePayment = "CQP",//
-  CashReceipt = "CR",//
-  DebitNote = "DN",//
+  ChequePayment = "CQP", //
+  CashReceipt = "CR", //
+  DebitNote = "DN", //
   SalesQuotation = "SQ",
   SalesOrder = "SO",
   SalesEstimate = "SE",
   GoodsReceiptNote = "GRN",
   LPO = "LPO",
-  BankPayment = "BP",//
+  BankPayment = "BP", //
   DeliveryChallan = "DC",
   GoodRequest = "GR",
   DamageEntry = "DMG",
   ServiceInventory = "SRV",
   Production = "MFR",
-  CashReceiptEstimate = "CRE",//
+  CashReceiptEstimate = "CRE", //
   GoodsReceiptReturn = "GRR",
   PurchaseReturn = "PR",
-  OpeningBalance = "OB",//
-  CashPaymentEstimate = "CPE",//
-  CashPayment = "CP",//
+  OpeningBalance = "OB", //
+  CashPaymentEstimate = "CPE", //
+  CashPayment = "CP", //
   GoodsDeliveryNote = "GD",
   ShortageStock = "SH",
   MaterialReceipt = "MR",
@@ -38,8 +38,8 @@ enum VoucherType {
   PurchaseOrder = "PO",
   BankReconciliation = "BRC",
   SaleReturnEstimate = "SRE",
-  CreditNote = "CN",//
-  JournalVoucher = "JV",//
+  CreditNote = "CN", //
+  JournalVoucher = "JV", //
   ClosingBalance = "CB",
   LeaveEntry = "LE",
   BranchTransferIn = "BTI",
@@ -52,9 +52,14 @@ enum VoucherType {
   StockTransferExcessSpecial = "EX_SP",
   PurchaseOrderTransist = "POT",
   RequestForQuotation = "RFQ",
-  JournalVoucherSpecial = "JVSP",//
+  JournalVoucherSpecial = "JVSP", //
   ServiceReturn = "SVRT",
-  SalesDiscount = "SD"
+  SalesDiscount = "SD",
+  OpeningStock = "OS", //not in vouchertable
+  StockAdjuster = "AD", //not in vouchertable
+  ItemLoadRequest = "ILR", //not in vouchertable
+  StockCount = "SC", //not in vouchertable
+  ServiceInvoice = "SVI", //not in vouchertable
 }
 
 export default VoucherType;
@@ -68,16 +73,16 @@ export const purchaseVoucherTypes = [
   VoucherType.PurchaseEstimate,
   VoucherType.PurchaseReturn,
   VoucherType.PurchaseReturnEstimate,
-  VoucherType.PurchaseOrderTransist
-]
+  VoucherType.PurchaseOrderTransist,
+];
 export const salesVoucherTypes = [
   VoucherType.SalesInvoice,
   VoucherType.SalesOrder,
   VoucherType.SalesQuotation,
   VoucherType.SalesEstimate,
   VoucherType.SalesReturn,
-  VoucherType.SaleReturnEstimate
-]
+  VoucherType.SaleReturnEstimate,
+];
 export const accountsVoucherTypes = [
   VoucherType.CashPayment,
   VoucherType.CashPaymentEstimate,
@@ -91,5 +96,5 @@ export const accountsVoucherTypes = [
   VoucherType.CreditNote,
   VoucherType.OpeningBalance,
   VoucherType.ClosingBalance,
-  VoucherType.TaxOnExpensePayment
-]
+  VoucherType.TaxOnExpensePayment,
+];

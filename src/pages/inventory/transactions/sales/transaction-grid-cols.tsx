@@ -32,6 +32,7 @@ export const purchaseGridCol = (
         allowEditing: true,
         width: 150,
         alignment: "left",
+        visible: false,
       },
       {
         dataField: "barCode",
@@ -191,7 +192,8 @@ export const purchaseGridCol = (
         dataField: "manualBarcode",
         caption: t("m_barcode"),
         dataType: "string",
-          readOnly: true,
+        visible: false,
+        readOnly: true,
         width: 200,
         alignment: "left",
       },
@@ -209,8 +211,7 @@ export const purchaseGridCol = (
         dataField: "vatPerc",
         caption: t("vat_perc"),
         dataType: "number",
-        visible: false,
-          readOnly: true,
+        readOnly: true,
         allowEditing: true,
         width: 100,
         alignment: "right",
@@ -219,7 +220,6 @@ export const purchaseGridCol = (
         dataField: "vatAmount",
         caption: t("vat"),
         dataType: "number",
-        visible: false,
         readOnly: true,
         width: 100,
         alignment: "right",
@@ -248,6 +248,7 @@ export const purchaseGridCol = (
         dataField: "salesPrice",
         caption: t("sales_price"),
         dataType: "number",
+        visible: false,
         allowEditing: true,
         width: 200,
         alignment: "right",
@@ -258,7 +259,7 @@ export const purchaseGridCol = (
         caption: t("size"),
         dataType: "string",
         visible: false,
-          readOnly: true,
+        readOnly: true,
         width: 150,
         alignment: "left",
       },
@@ -277,6 +278,7 @@ export const purchaseGridCol = (
         dataType: "number",
         decimalPoint: applicationSettings.mainSettings.decimalPoints,
         readOnly: true,
+        visible: false,
         width: 100,
         alignment: "right",
       },
@@ -292,7 +294,8 @@ export const purchaseGridCol = (
         dataField: "barcodePrinted",
         caption: t("barcode_printed"),
         dataType: "chk",
-        visible: true,
+        visible: false,
+
         width: 50,
         alignment: "center",
       },
@@ -326,6 +329,7 @@ export const purchaseGridCol = (
         caption: t("stock"),
         dataType: "number",
         width: 100,
+        visible: false,
         alignment: "right",
         decimalPoint: 4,
       },
@@ -400,7 +404,7 @@ export const purchaseGridCol = (
         alignment: "right",
       },
       {
-        dataField: "FLV",
+        dataField: "fLV",
         caption: t("flv"),
         dataType: "btn",
         allowEditing: false,
@@ -409,30 +413,30 @@ export const purchaseGridCol = (
         visible: false,
       },
       {
-        dataField: "color",
-        caption: t("flavors"),
-        dataType: "btn",
+        dataField: "flavors",
+        caption: t("flavor"),
+        dataType: "string",
         allowEditing: false,
         width: 140,
         readOnly: true,
         alignment: "right",
         visible: false,
       },
+      //warehouse passing from sales but warehouseid as name changed
       {
         dataField: "warehouseID",
-        caption: t("warehouse_id"),
+        caption: t("warehouse"),
         dataType: "string",
         visible: false,
         width: 130,
-        readOnly: true,
         alignment: "right",
       },
       {
         dataField: "profit",
         caption: t("profit"),
         dataType: "number",
-        readOnly: true,
         width: 100,
+        visible: false,
         alignment: "right",
         decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
@@ -442,7 +446,6 @@ export const purchaseGridCol = (
         dataType: "number",
         visible: false,
         width: 100,
-        readOnly: true,
         alignment: "right",
         decimalPoint: 4,
       },
@@ -452,7 +455,6 @@ export const purchaseGridCol = (
         dataType: "number",
         visible: false,
         width: 100,
-        readOnly: true,
         alignment: "right",
         decimalPoint: 4,
       },
@@ -486,7 +488,6 @@ export const purchaseGridCol = (
         dataType: "btn",
         allowEditing: false,
         width: 140,
-        readOnly: true,
         alignment: "right",
         visible: false,
       },
@@ -499,11 +500,18 @@ export const purchaseGridCol = (
         alignment: "left",
       },
       {
+        dataField: "sITransDetailID",
+        caption: t("si_trans_detail_id"),
+        dataType: "string",
+        visible: false,
+        width: 150,
+        alignment: "left",
+      },
+      {
         dataField: "nLA_SalesPrice",
         caption: t("nLA_sales_price"),
         dataType: "number",
         width: 150,
-        readOnly: true,
         alignment: "right",
         visible: false,
       },
@@ -512,7 +520,6 @@ export const purchaseGridCol = (
         caption: t("box_qty"),
         dataType: "number",
         width: 150,
-        readOnly: true,
         alignment: "right",
         visible: false,
       },
@@ -522,25 +529,28 @@ export const purchaseGridCol = (
         dataType: "string",
         width: 55,
         visible: false,
+        readOnly: true,
         alignment: "center",
       },
-{
+      {
         dataField: "location",
         caption: t("location"),
         dataType: "string",
         visible: false,
+        readOnly: true,
         width: 150,
         alignment: "left",
       },
-       {
+      {
         dataField: "refBranchID",
         caption: t("ref_branch_id"),
         dataType: "string",
         width: 55,
         visible: false,
+        readOnly: true,
         alignment: "center",
       },
-       {
+      {
         dataField: "isSchemeItem",
         caption: t("is_scheme_item"),
         dataType: "string",
@@ -555,19 +565,19 @@ export const purchaseGridCol = (
         dataType: "number",
         visible: false,
         width: 200,
-        readOnly: true,
         alignment: "right",
         decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
-{
+      {
         dataField: "schemeType",
         caption: t("scheme_type"),
         dataType: "string",
         visible: false,
         width: 280,
+        readOnly: true,
         alignment: "left",
       },
- {
+      {
         dataField: "btnPrintBarcode",
         caption: t("pb"),
         dataType: "btn",
@@ -576,16 +586,15 @@ export const purchaseGridCol = (
         width: 250,
         alignment: "center",
       },
-{
+      {
         dataField: "customer_LSP",
         caption: t("customer_lsp"),
         dataType: "number",
         width: 150,
-        readOnly: true,
         alignment: "right",
         visible: false,
       },
-       {
+      {
         dataField: "memo",
         caption: t("memo"),
         dataType: "string",
@@ -601,21 +610,20 @@ export const purchaseGridCol = (
         width: 150,
         alignment: "left",
       },
- {
+      {
         dataField: "unitDiscount",
         caption: t("unit_discount"),
         dataType: "number",
         visible: false,
         width: 140,
+        readOnly: true,
         alignment: "right",
         decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
 
+      //gcc only
 
-
-//gcc only
-
-{
+      {
         dataField: "netConvert",
         caption: t("nr"),
         dataType: "number",
@@ -624,24 +632,24 @@ export const purchaseGridCol = (
         alignment: "right",
         visible: false,
       },
-{
+      {
         dataField: "schemeID",
         caption: t("scheme_id"),
         dataType: "number",
         readOnly: true,
         width: 100,
         alignment: "right",
-        visible: false,
       },
       {
         dataField: "isQtyFreezed",
         caption: t("is_qty_freezed"),
         dataType: "string",
         visible: false,
+        readOnly: true,
         width: 280,
         alignment: "left",
       },
- {
+      {
         dataField: "profitPercentage",
         caption: t("profit_percentage"),
         dataType: "number",
@@ -650,17 +658,16 @@ export const purchaseGridCol = (
         readOnly: true,
         alignment: "right",
       },
-       {
-        dataField: "expiryDate",
+      {
+        dataField: "expDate",
         caption: t("expiry_date"),
         dataType: "date",
         visible: false,
         width: 100,
-        readOnly: true,
         format: "DD-MMM-YYYY",
         alignment: "left",
       },
-       {
+      {
         dataField: "unitPriceFC",
         caption: t("unit_price_fc"),
         dataType: "number",
@@ -680,13 +687,12 @@ export const purchaseGridCol = (
         alignment: "right",
         visible: false,
       },
-     //india only
+      //india only
 
-       {
+      {
         dataField: "sgstPerc",
         caption: t("sgst_perc"),
         dataType: "number",
-        visible: false,
         width: 100,
         allowEditing: true,
         alignment: "right",
@@ -696,16 +702,14 @@ export const purchaseGridCol = (
         caption: t("sgst"),
         dataType: "number",
         width: 100,
-        visible: false,
         alignment: "right",
         decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
-        {
+      {
         dataField: "cgstPerc",
         caption: t("cgst_perc"),
         dataType: "number",
         width: 100,
-        visible: false,
         alignment: "right",
       },
       {
@@ -713,18 +717,15 @@ export const purchaseGridCol = (
         caption: t("cgst"),
         dataType: "number",
         width: 100,
-        visible: false,
         alignment: "right",
         decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
-    
-     
+
       {
         dataField: "igstPerc",
         caption: t("igst_perc"),
         dataType: "number",
         width: 100,
-        visible: false,
         allowEditing: true,
         alignment: "right",
       },
@@ -733,7 +734,6 @@ export const purchaseGridCol = (
         caption: t("igst"),
         dataType: "number",
         width: 100,
-        visible: false,
         allowEditing: true,
         decimalPoint: applicationSettings.mainSettings.decimalPoints,
         alignment: "right",
@@ -743,7 +743,6 @@ export const purchaseGridCol = (
         caption: t("cess_perc"),
         dataType: "number",
         width: 100,
-        visible: false,
         allowEditing: true,
         alignment: "right",
       },
@@ -753,7 +752,6 @@ export const purchaseGridCol = (
         dataType: "number",
         decimalPoint: applicationSettings.mainSettings.decimalPoints,
         width: 100,
-        visible: false,
         allowEditing: true,
         alignment: "right",
       },
@@ -762,7 +760,6 @@ export const purchaseGridCol = (
         caption: t("additional_cess_perc"),
         dataType: "number",
         width: 100,
-        visible: false,
         allowEditing: true,
         alignment: "right",
       },
@@ -770,20 +767,18 @@ export const purchaseGridCol = (
         dataField: "additionalCess",
         caption: t("additional_cess"),
         decimalPoint: applicationSettings.mainSettings.decimalPoints,
-        visible: false,
         dataType: "number",
         width: 100,
         allowEditing: true,
         alignment: "right",
       },
- {
+      {
         dataField: "mrp",
         decimalPoint: applicationSettings.mainSettings?.decimalPoints,
         caption: t("mrp"),
         dataType: "number",
         allowEditing: true,
         width: 100,
-        visible: false,
         readOnly: false,
         alignment: "right",
       },
@@ -792,67 +787,56 @@ export const purchaseGridCol = (
         caption: t("hsn_code"),
         dataType: "string",
         width: 150,
-        visible: false,
         alignment: "left",
       },
-     {
+      {
         dataField: "purchaseCost",
         caption: t("purchase_cost"),
         dataType: "number",
-        readOnly: true,
         width: 100,
         alignment: "right",
       },
-       {
+      {
         dataField: "taxCategoryID",
         caption: t("taxCategory_id"),
         dataType: "number",
         width: 100,
-        readOnly: true,
         alignment: "right",
         visible: false,
       },
-       {
+      {
         dataField: "productCategoryID",
         caption: t("product_category_id"),
         dataType: "number",
         width: 100,
-        readOnly: true,
         alignment: "right",
         visible: false,
       },
-       {
+      {
         dataField: "invTransactionDetailID",
         caption: t("inv_transaction_detail_id"),
         dataType: "number",
         width: 100,
-        readOnly: true,
         alignment: "right",
         visible: false,
       },
-      
- {
-        dataField: "specification",
+      {
+        dataField: "gatePass",
         caption: t("gate_pass"),
         dataType: "string",
         width: 150,
-        visible: false,
         alignment: "left",
       },
- {
-        dataField: "color",
+      {
+        dataField: "colour",
         caption: t("colour"),
         dataType: "string",
         width: 150,
-        readOnly: true,
         alignment: "left",
         visible: false,
       },
 
-
-
-
-     {
+      {
         dataField: "actionCol",
         caption: "",
         dataType: "boolean",
@@ -861,569 +845,203 @@ export const purchaseGridCol = (
         isLocked: true,
         alignment: "center",
       },
-
-
-
-
-
-    
-      
-
-
-     
-    
     ] as ColumnModel[]
-  ).filter((gc: ColumnModel) => {
-    const field = gc.dataField ?? "";
+  )
+    .filter((gc: ColumnModel) => {
+      const field = gc.dataField ?? "";
 
-    // ---------------- SALES INVOICE ----------------
-    if (
-      userSession.countryId != Countries.India &&
-      voucherType == VoucherType.SalesInvoice
-    ) {
-      return ![
-        "cgst",
-        "cgstPerc",
-        "sgstPerc",
-        "sgst",
-        "igstPerc",
-        "igst",
-        "cessPerc",
-        "cessAmt",
-        "additionalCessPerc",
-        "additionalCess",
-        "mrp",
-        "hsnCode",
-        "purchaseCost",
-        "taxCategoryID",
-        "productCategoryID",
-        "invTransactionDetailID",
-        "specification",
-        "color",
-      ].includes(field);
-    } else if (
-      userSession.countryId == Countries.India &&
-      voucherType == VoucherType.SalesInvoice
-    ) {
-      return ![
-        "nr",
-        "schemeID",
-        "isQtyFreezed",
-        "profitPercentage",
-        "expiryDate",
-        "unitPriceFC",
-        "grossFC",
-      ].includes(field);
-    }
+      // ---------------- SALES INVOICE ----------------
+      if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.SalesInvoice
+      ) {
+        return ![
+          "cgst",
+          "cgstPerc",
+          "sgstPerc",
+          "sgst",
+          "igstPerc",
+          "igst",
+          "cessPerc",
+          "cessAmt",
+          "additionalCessPerc",
+          "additionalCess",
+          "mrp",
+          "hsnCode",
+          "purchaseCost",
+          "taxCategoryID",
+          "productCategoryID",
+          "invTransactionDetailID",
+          "gatePass",
+          "colour",
 
-    // // ---------------- PURCHASE RETURN ----------------
-    // else if (
-    //   userSession.countryId != Countries.India &&
-    //   voucherType == VoucherType.PurchaseReturn
-    // ) {
-    //   return ![
-    //     "mrp",
-    //     "hsnCode",
-    //     "cgst",
-    //     "cgstPerc",
-    //     "sgstPerc",
-    //     "sgst",
-    //     "igstPerc",
-    //     "igst",
-    //     "cessPerc",
-    //     "cessAmt",
-    //     "additionalCessPerc",
-    //     "additionalCess",
-    //     "mR",
-    //     "netRate",
-    //     "refBranchID",
-    //     "employeeCode",
-    //     "employeeName",
-    //     "stdPurchasePrice",
-    //     "refTransDtailId",
-    //     "free",
-    //     "manualBarcode",
-    //     "stockDetails",
-    //     "lastPurchaseRate",
-    //     "lastPurchaseCost",
-    //     "btnPrintBarcode",
-    //     "expDate",
-    //     "expDays",
-    //     "minSalePrice",
-    //     "additionalExpense",
-    //     "totalAddExpense",
-    //     "grossConvert",
-    //     "unitID2",
-    //     "unit2Qty",
-    //     "unit2SalesRate",
-    //     "unit2MRP",
-    //     "unit2MBarcode",
-    //     "unit2StickerQty",
-    //     "unitID3",
-    //     "unit3Qty",
-    //     "unit3SalesRate",
-    //     "unit3MRP",
-    //     "unit3MBarcode",
-    //     "unit3StickerQty",
-    //     "tagQty",
-    //     "barcodeTagPrinted",
-    //     "barcodeUnit2Printed",
-    //     "barcodeUnit3Printed",
-    //     "location",
-    //     "grTransDetailsID",
-    //     "poTransDetailsID",
-    //     "ratePlusTax",
-    //     "sortOrder",
-    //     "profitPercentage",
-    //     "schemeDiscount",
-    //     "memo",
-    //     "memoEditor",
-    //     "rowNumber",
-    //     "actualSalesPrice",
-    //     "unit2",
-    //     "unit3",
-    //     "mfdDate",
-    //     "warranty",
-    //   ].includes(field);
-    // } else if (
-    //   userSession.countryId == Countries.India &&
-    //   voucherType == VoucherType.PurchaseReturn
-    // ) {
-    //   return ![
-    //     "refBranchID",
-    //     "employeeCode",
-    //     "employeeName",
-    //     "stdPurchasePrice",
-    //     "refTransDtailId",
-    //     "mR",
-    //     "netRate",
-    //     "manualBarcode",
-    //     "stockDetails",
-    //     "lastPurchaseRate",
-    //     "lastPurchaseCost",
-    //     "btnPrintBarcode",
-    //     "expDate",
-    //     "expDays",
-    //     "minSalePrice",
-    //     "additionalExpense",
-    //     "totalAddExpense",
-    //     "grossConvert",
-    //     "unitID2",
-    //     "unit2Qty",
-    //     "unit2SalesRate",
-    //     "unit2MRP",
-    //     "unit2MBarcode",
-    //     "unit2StickerQty",
-    //     "unitID3",
-    //     "unit3Qty",
-    //     "unit3SalesRate",
-    //     "unit3MRP",
-    //     "unit3MBarcode",
-    //     "unit3StickerQty",
-    //     "tagQty",
-    //     "barcodeTagPrinted",
-    //     "barcodeUnit2Printed",
-    //     "barcodeUnit3Printed",
-    //     "location",
-    //     "grTransDetailsID",
-    //     "poTransDetailsID",
-    //     "ratePlusTax",
-    //     "sortOrder",
-    //     "profitPercentage",
-    //     "schemeDiscount",
-    //     "memo",
-    //     "memoEditor",
-    //     "rowNumber",
-    //     "actualSalesPrice",
-    //     "unit2",
-    //     "unit3",
-    //     "serial",
-    //     "unitPriceFC",
-    //     "grossFC",
-    //     "mfdDate",
-    //     "warranty",
-    //   ].includes(field);
-    // }
-
-    // // ---------------- PURCHASE ESTIMATE ----------------
-    // else if (
-    //   userSession.countryId != Countries.India &&
-    //   voucherType == VoucherType.PurchaseEstimate
-    // ) {
-    //   return ![
-    //     "mrp",
-    //     "hsnCode",
-    //     "cgst",
-    //     "cgstPerc",
-    //     "sgstPerc",
-    //     "sgst",
-    //     "igstPerc",
-    //     "igst",
-    //     "cessPerc",
-    //     "cessAmt",
-    //     "additionalCessPerc",
-    //     "additionalCess",
-    //     "mR",
-    //     "netRate",
-    //     "itemType",
-    //     "refBranchID",
-    //     "employeeCode",
-    //     "employeeName",
-    //     "stdPurchasePrice",
-    //     "refTransDtailId",
-    //     "free",
-    //     "stock",
-    //     "stockDetails",
-    //     "lastPurchaseRate",
-    //     "lastPurchaseCost",
-    //     "productDescription",
-    //     "serial",
-    //     "minSalePrice",
-    //     "additionalExpense",
-    //     "unitPriceFC",
-    //     "colour",
-    //     "warranty",
-    //     "nosQty",
-    //     "totalAddExpense",
-    //     "grossConvert",
-    //     "grossFC",
-    //     "unitID2",
-    //     "unit2Qty",
-    //     "unit2SalesRate",
-    //     "unit2MRP",
-    //     "unit2MBarcode",
-    //     "unit2StickerQty",
-    //     "unitID3",
-    //     "unit3Qty",
-    //     "unit3SalesRate",
-    //     "unit3MRP",
-    //     "unit3MBarcode",
-    //     "unit3StickerQty",
-    //     "tagQty",
-    //     "barcodeTagPrinted",
-    //     "barcodeUnit2Printed",
-    //     "barcodeUnit3Printed",
-    //     "location",
-    //     "grTransDetailsID",
-    //     "arabicName",
-    //     "supplierReferenceProductCode",
-    //     "poTransDetailsID",
-    //     "ratePlusTax",
-    //     "warehouseID",
-    //     "sortOrder",
-    //     "profitPercentage",
-    //     "schemeDiscount",
-    //     "memo",
-    //     "memoEditor",
-    //     "actualSalesPrice",
-    //     "unit2",
-    //     "unit3",
-    //   ].includes(field);
-    // } else if (
-    //   userSession.countryId == Countries.India &&
-    //   voucherType == VoucherType.PurchaseEstimate
-    // ) {
-    //   return ![
-    //     "hsnCode",
-    //     "itemType",
-    //     "refBranchID",
-    //     "employeeCode",
-    //     "employeeName",
-    //     "stdPurchasePrice",
-    //     "refTransDtailId",
-    //     "stock",
-    //     "stockDetails",
-    //     "lastPurchaseRate",
-    //     "lastPurchaseCost",
-    //     "serial",
-    //     "additionalExpense",
-    //     "unitPriceFC",
-    //     "colour",
-    //     "warranty",
-    //     "nosQty",
-    //     "totalAddExpense",
-    //     "grossConvert",
-    //     "grossFC",
-    //     "tagQty",
-    //     "barcodeTagPrinted",
-    //     "barcodeUnit2Printed",
-    //     "barcodeUnit3Printed",
-    //     "location",
-    //     "grTransDetailsID",
-    //     "arabicName",
-    //     "supplierReferenceProductCode",
-    //     "poTransDetailsID",
-    //     "ratePlusTax",
-    //     "warehouseID",
-    //     "sortOrder",
-    //     "profitPercentage",
-    //     "schemeDiscount",
-    //     "memo",
-    //     "memoEditor",
-    //     "actualSalesPrice",
-    //   ].includes(field);
-    // }
-
-    // // ---------------- PURCHASE ORDER & QUOTATION ----------------
-    // else if (
-    //   userSession.countryId != Countries.India &&
-    //   (voucherType == VoucherType.PurchaseOrder ||
-    //     voucherType == VoucherType.PurchaseQuotation)
-    // ) {
-    //   return ![
-    //     "mrp",
-    //     "hsnCode",
-    //     "cgst",
-    //     "cgstPerc",
-    //     "sgstPerc",
-    //     "sgst",
-    //     "igstPerc",
-    //     "igst",
-    //     "cessPerc",
-    //     "cessAmt",
-    //     "additionalCessPerc",
-    //     "additionalCess",
-    //     "mR",
-    //     "netRate",
-    //     "itemType",
-    //     "employeeCode",
-    //     "employeeName",
-    //     "stdPurchasePrice",
-    //     "refTransDtailId",
-    //     "lastPurchaseRate",
-    //     "lastPurchaseCost",
-    //     "bd",
-    //     "btnPrintBarcode",
-    //     "mfdDate",
-    //     "expDate",
-    //     "expDays",
-    //     "minSalePrice",
-    //     "additionalExpense",
-    //     "unitPriceFC",
-    //     "warranty",
-    //     "nosQty",
-    //     "totalAddExpense",
-    //     "grossConvert",
-    //     "grossFC",
-    //     "unitID2",
-    //     "unit2Qty",
-    //     "unit2SalesRate",
-    //     "unit2MRP",
-    //     "unit2MBarcode",
-    //     "unit2StickerQty",
-    //     "unitID3",
-    //     "unit3Qty",
-    //     "unit3SalesRate",
-    //     "unit3MRP",
-    //     "unit3MBarcode",
-    //     "unit3StickerQty",
-    //     "tagQty",
-    //     "barcodeTagPrinted",
-    //     "barcodeUnit2Printed",
-    //     "barcodeUnit3Printed",
-    //     "location",
-    //     "grTransDetailsID",
-    //     "ratePlusTax",
-    //     "warehouseID",
-    //     "sortOrder",
-    //     "profitPercentage",
-    //     "schemeDiscount",
-    //     "memo",
-    //     "memoEditor",
-    //     "actualSalesPrice",
-    //     "unit2",
-    //     "unit3",
-    //     "serial",
-    //   ].includes(field);
-    // } else if (
-    //   userSession.countryId == Countries.India &&
-    //   (voucherType == VoucherType.PurchaseOrder ||
-    //     voucherType == VoucherType.PurchaseQuotation)
-    // ) {
-    //   return ![
-    //     "mR",
-    //     "netRate",
-    //     "itemType",
-    //     "employeeCode",
-    //     "employeeName",
-    //     "stdPurchasePrice",
-    //     "refTransDtailId",
-    //     "lastPurchaseRate",
-    //     "lastPurchaseCost",
-    //     "bd",
-    //     "btnPrintBarcode",
-    //     "mfdDate",
-    //     "expDate",
-    //     "expDays",
-    //     "minSalePrice",
-    //     "additionalExpense",
-    //     "unitPriceFC",
-    //     "warranty",
-    //     "nosQty",
-    //     "totalAddExpense",
-    //     "grossConvert",
-    //     "grossFC",
-    //     "unitID2",
-    //     "unit2Qty",
-    //     "unit2SalesRate",
-    //     "unit2MRP",
-    //     "unit2MBarcode",
-    //     "unit2StickerQty",
-    //     "unitID3",
-    //     "unit3Qty",
-    //     "unit3SalesRate",
-    //     "unit3MRP",
-    //     "unit3MBarcode",
-    //     "unit3StickerQty",
-    //     "tagQty",
-    //     "barcodeTagPrinted",
-    //     "barcodeUnit2Printed",
-    //     "barcodeUnit3Printed",
-    //     "location",
-    //     "grTransDetailsID",
-    //     "ratePlusTax",
-    //     "warehouseID",
-    //     "sortOrder",
-    //     "profitPercentage",
-    //     "schemeDiscount",
-    //     "memo",
-    //     "memoEditor",
-    //     "actualSalesPrice",
-    //     "unit2",
-    //     "unit3",
-    //     "serial",
-    //   ].includes(field);
-    // }
-
-    // // ---------------- GOODS RECEIPT NOTE ----------------
-    // else if (
-    //   userSession.countryId != Countries.India &&
-    //   voucherType == VoucherType.GoodsReceiptNote
-    // ) {
-    //   return ![
-    //     "mrp",
-    //     "hsnCode",
-    //     "cgst",
-    //     "cgstPerc",
-    //     "sgstPerc",
-    //     "sgst",
-    //     "igstPerc",
-    //     "igst",
-    //     "cessPerc",
-    //     "cessAmt",
-    //     "additionalCessPerc",
-    //     "additionalCess",
-    //     "mR",
-    //     "netRate",
-    //     "itemType",
-    //     "employeeCode",
-    //     "employeeName",
-    //     "stdPurchasePrice",
-    //     "refTransDtailId",
-    //     "nosQty",
-    //     "totalAddExpense",
-    //     "grossConvert",
-    //     "grossFC",
-    //     "unitID2",
-    //     "unit2Qty",
-    //     "unit2SalesRate",
-    //     "unit2MRP",
-    //     "unit2MBarcode",
-    //     "unit2StickerQty",
-    //     "unitID3",
-    //     "unit3Qty",
-    //     "unit3SalesRate",
-    //     "unit3MRP",
-    //     "unit3MBarcode",
-    //     "unit3StickerQty",
-    //     "tagQty",
-    //     "barcodeTagPrinted",
-    //     "barcodeUnit2Printed",
-    //     "barcodeUnit3Printed",
-    //     "grTransDetailsID",
-    //     "ratePlusTax",
-    //     "sortOrder",
-    //     "profitPercentage",
-    //     "schemeDiscount",
-    //     "memo",
-    //     "memoEditor",
-    //     "actualSalesPrice",
-    //     "unit2",
-    //     "unit3",
-    //   ].includes(field);
-    // }
-
-    // // ---------------- GOODS RECEIPT RETURN ----------------
-    // else if (
-    //   userSession.countryId != Countries.India &&
-    //   voucherType == VoucherType.GoodsReceiptReturn
-    // ) {
-    //   return ![
-    //     "mrp",
-    //     "hsnCode",
-    //     "cgst",
-    //     "cgstPerc",
-    //     "sgstPerc",
-    //     "sgst",
-    //     "igstPerc",
-    //     "igst",
-    //     "cessPerc",
-    //     "cessAmt",
-    //     "additionalCessPerc",
-    //     "additionalCess",
-    //     "mR",
-    //     "netRate",
-    //     "itemType",
-    //     "refBranchID",
-    //     "lastPurchaseRate",
-    //     "lastPurchaseCost",
-    //     "bd",
-    //     "btnPrintBarcode",
-    //     "mfdDate",
-    //     "expDate",
-    //     "expDays",
-    //     "additionalExpense",
-    //     "unitPriceFC",
-    //     "colour",
-    //     "warranty",
-    //     "nosQty",
-    //     "totalAddExpense",
-    //     "grossConvert",
-    //     "grossFC",
-    //     "unitID2",
-    //     "unit2Qty",
-    //     "unit2SalesRate",
-    //     "unit2MRP",
-    //     "unit2MBarcode",
-    //     "unit2StickerQty",
-    //     "unitID3",
-    //     "unit3Qty",
-    //     "unit3SalesRate",
-    //     "unit3MRP",
-    //     "unit3MBarcode",
-    //     "unit3StickerQty",
-    //     "tagQty",
-    //     "barcodeTagPrinted",
-    //     "barcodeUnit2Printed",
-    //     "barcodeUnit3Printed",
-    //     "location",
-    //     "grTransDetailsID",
-    //     "poTransDetailsID",
-    //     "ratePlusTax",
-    //     "sortOrder",
-    //     "profitPercentage",
-    //     "schemeDiscount",
-    //     "memo",
-    //     "memoEditor",
-    //     "rowNumber",
-    //     "actualSalesPrice",
-    //     "unit2",
-    //     "unit3",
-    //   ].includes(field);
-    // }
-
-    // ✅ Default: allow all if no case matches
-    return true;
-  });
-
-// [formType, voucherType, formState.transaction.master.voucherType, formState.transaction.master.voucherForm]
+          //SR
+          "sITransDetailID",
+        ].includes(field);
+      } else if (
+        userSession.countryId == Countries.India &&
+        voucherType == VoucherType.SalesInvoice
+      ) {
+        return ![
+          "netConvert",
+          "schemeID",
+          "isQtyFreezed",
+          "profitPercentage",
+          "expDate",
+          "unitPriceFC",
+          "grossFC",
+          //SR
+          "sITransDetailID",
+        ].includes(field);
+      }
+      // ---------------- SALES RETURN INVOICE ----------------
+      if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.SalesReturn
+      ) {
+        return ![
+          // sales india
+          "cgst",
+          "cgstPerc",
+          "sgstPerc",
+          "sgst",
+          "igstPerc",
+          "igst",
+          "cessPerc",
+          "cessAmt",
+          "additionalCessPerc",
+          "additionalCess",
+          "mrp",
+          "hsnCode",
+          "purchaseCost",
+          "taxCategoryID",
+          "productCategoryID",
+          "invTransactionDetailID",
+          "gatePass",
+          "colour",
+          //sales
+          "manualBarcode",
+          "employeeCode",
+          "employeeName",
+          "stock",
+          "minSalePrice",
+          "grossConvert",
+          "soTransDetailsID",
+          "gdTransDetailsID",
+          "fLV",
+          "flavors",
+          "imf",
+          "image",
+          "nLA_SalesPrice",
+          "itemType",
+          "location",
+          "refBranchID",
+          "isSchemeItem",
+          "actualPrice",
+          "schemeType",
+          "btnPrintBarcode",
+          "customer_LSP",
+          "memo",
+          "memoEditor",
+          "unitDiscount",
+          "boxQty",
+          //gcc sales
+          "netConvert",
+          "schemeID",
+          "isQtyFreezed",
+          "profitPercentage",
+          "expDate",
+          "unitPriceFC",
+          "grossFC",
+        ].includes(field);
+      } else if (
+        userSession.countryId == Countries.India &&
+        voucherType == VoucherType.SalesReturn
+      ) {
+        return ![
+          "netConvert",
+          "schemeID",
+          "isQtyFreezed",
+          "profitPercentage",
+          "expDate",
+          "unitPriceFC",
+          "grossFC",
+          //sales india
+          "manualBarcode",
+          "employeeCode",
+          "employeeName",
+          "minSalePrice",
+          "grossConvert",
+          "soTransDetailsID",
+          "gdTransDetailsID",
+          "fLV",
+          "flavors",
+          "imf",
+          "image",
+          "nLA_SalesPrice",
+          "itemType",
+          "location",
+          "refBranchID",
+          "isSchemeItem",
+          "actualPrice",
+          "schemeType",
+          "btnPrintBarcode",
+          "customer_LSP",
+          "memo",
+          "memoEditor",
+          "unitDiscount",
+          "boxQty",
+          //india sales
+          "purchaseCost",
+          "gatePass",
+          "colour",
+        ].includes(field);
+      }
+      return true;
+    })
+    .map((mi) => {
+      if (
+        userSession.countryId == Countries.India &&
+        voucherType == VoucherType.SalesInvoice &&
+        (mi.dataField?.includes("vatPerc") ||
+          mi.dataField?.includes("vatAmount"))
+      ) {
+        return {
+          ...mi,
+          visible: false,
+        };
+      }
+      if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.PurchaseInvoice &&
+        formType.toUpperCase() == "EXPORT" &&
+        (mi.dataField?.includes("unitPriceFC") ||
+          mi.dataField?.includes("grossFC"))
+      ) {
+        return {
+          ...mi,
+          visible: true,
+        };
+      }
+      if (
+        userSession.countryId == Countries.India &&
+        voucherType == VoucherType.SalesReturn &&
+        (mi.dataField=="pCode" || mi.dataField=="stock")
+      ) {
+        return {
+          ...mi,
+          visible: true,
+        };
+      }
+      if (
+        userSession.countryId == Countries.India &&
+        voucherType == VoucherType.SalesReturn &&
+        (["discPerc","discount","vatPerc","vatAmount"].includes(mi.dataField??""))
+      ) {
+        return {
+          ...mi,
+          visible: false,
+        };
+      }
+      return mi;
+    });

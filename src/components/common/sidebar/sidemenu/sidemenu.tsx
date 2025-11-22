@@ -366,7 +366,7 @@ export const MENUITEMS = [
   //   ],
   // },
   {
-    icon: <i className="side-menu__icon ri-coins-fill"></i>,
+    icon: <i className="side-menu__icon ri-wallet-3-line"></i>,
     type: "sub",
     Name: "",
     active: false,
@@ -408,7 +408,7 @@ export const MENUITEMS = [
     ],
   },
   {
-    icon: <i className="side-menu__icon ri-coins-fill"></i>,
+    icon: <i className="side-menu__icon ri-shopping-cart-line"></i>, 
     type: "sub",
     Name: "",
     active: false,
@@ -441,8 +441,7 @@ export const MENUITEMS = [
     ],
   },
   {
-    icon: <i className="side-menu__icon ri-coins-fill"></i>,
-    type: "sub",
+    icon: <i className="side-menu__icon ri-store-2-line"></i>, 
     Name: "",
     active: false,
     selected: false,
@@ -455,6 +454,30 @@ export const MENUITEMS = [
       ...transactionRoutes.filter(x => x.transactionBase == TransactionBase.Sales).map((route) => ({
         path: `${import.meta.env.BASE_URL}${TransactionBase.Sales}/${route.transactionType}List`,
         addPath: `${import.meta.env.BASE_URL}${TransactionBase.Sales}/${route.transactionType}`,
+        type: "link",
+        active: false,
+        selected: false,
+        title: route.title,
+        rights: route.formCode,
+        icon: route.icon,
+      })),
+    ],
+  },
+  {
+    icon: <i className="side-menu__icon ri-stack-line"></i>, 
+    type: "sub",
+    Name: "",
+    active: false,
+    selected: false,
+    title: "stock",
+    badge: "",
+    badgetxt: "",
+    rights: "",
+    class: "badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2",
+    children: [
+      ...transactionRoutes.filter(x => x.transactionBase == TransactionBase.StockJournal).map((route) => ({
+        path: `${import.meta.env.BASE_URL}${TransactionBase.StockJournal}/${route.transactionType}List`,
+        addPath: `${import.meta.env.BASE_URL}${TransactionBase.StockJournal}/${route.transactionType}`,
         type: "link",
         active: false,
         selected: false,

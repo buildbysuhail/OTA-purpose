@@ -106,6 +106,7 @@ const Settings = () => {
           </div>
         </div>
       </div>
+      {rootState.PopupData.testPopup.isOpen &&
       <ERPModal
         isOpen={rootState.PopupData.testPopup.isOpen || false}
         title="Test Popup"
@@ -114,6 +115,8 @@ const Settings = () => {
         closeModal={() => {  dispatch(toggleTestPopup({ isOpen: false }));}}
         content={<TestPopup />}
       />
+      }
+      {rootState.PopupData.hide_acc_ledger.isOpen &&
       <ERPModal
         isOpen={rootState.PopupData.hide_acc_ledger.isOpen || false}
         title={t("hide_account_ledger")}
@@ -125,6 +128,8 @@ const Settings = () => {
         }}
         content={<HideAccountLedger />}
       />
+      }
+      {rootState.PopupData.userTypePrivilege.isOpen &&
       <ERPModal
         isOpen={rootState.PopupData.userTypePrivilege.isOpen || false}
         title={t("user_privilege")}
@@ -136,6 +141,8 @@ const Settings = () => {
         }}
         content={<UserTypePrivilegeManage />}
       />
+      }
+      {rootState.PopupData.deleteInactiveTransactions.isOpen &&
       <ERPModal
         isOpen={rootState.PopupData.deleteInactiveTransactions.isOpen || false}
         title={t("delete_in_active_transactions")}
@@ -147,6 +154,8 @@ const Settings = () => {
         }}
         content={<DeleteInactiveTransactionManage />}
       />
+      }
+      {rootState.PopupData.companyProfile.isOpen &&
       <ERPModal
         isOpen={rootState.PopupData.companyProfile.isOpen || false}
         title={t("company_profile")}
@@ -158,6 +167,8 @@ const Settings = () => {
         }}
         content={<CompanyProfileManage />}
       />
+      }
+      {rootState.PopupData.companyProfileIndia.isOpen &&
       <ERPModal
         isOpen={rootState.PopupData.companyProfileIndia.isOpen || false}
         title={t("company_profile")}
@@ -169,6 +180,8 @@ const Settings = () => {
         }}
         content={<CompanyProfileManageIndia />}
       />
+      }
+      {rootState.PopupData.bankPos.isOpen &&
       <ERPModal
         isOpen={rootState.PopupData.bankPos.isOpen || false}
         title={t("bank_pos_settings")}
@@ -180,6 +193,8 @@ const Settings = () => {
         }}
         content={<BankPosSettingsManage />}
       />
+      }
+      {rootState.PopupData.branch.isOpen &&
       <ERPModal
         isOpen={rootState.PopupData.branch.isOpen || false}
         title={t("branch_info")}
@@ -192,6 +207,8 @@ const Settings = () => {
         }}
         content={<BranchManage />}
       />
+      }
+      {rootState.PopupData.dayClose.isOpen &&
       <ERPModal
         isOpen={rootState.PopupData.dayClose.isOpen || false}
         title={t("day_close")}
@@ -204,6 +221,8 @@ const Settings = () => {
         }}
         content={<DayCloseManage />}
       />
+      }
+      {rootState.PopupData.userActionReport.isOpen &&
       <ERPModal
         isOpen={rootState.PopupData.userActionReport.isOpen || false}
         title={t("user_action_report")}
@@ -215,6 +234,8 @@ const Settings = () => {
         }}
         content={<UserActionReport />}
       />
+      }
+      {rootState.PopupData.importExport.isOpen &&
       <ERPModal
         isOpen={rootState.PopupData.importExport.isOpen || false}
         title={t("export_import")}
@@ -226,6 +247,8 @@ const Settings = () => {
         }}
         content={<ImportExportManage />}
       />
+      }
+      {rootState.PopupData.resetDataBase.isOpen &&
       <ERPModal
         isOpen={rootState.PopupData.resetDataBase.isOpen || false}
         title={t("reset_dataBase")}
@@ -237,7 +260,8 @@ const Settings = () => {
         }}
         content={<ResetDbManage />}
       />
-
+      }
+      {rootState.PopupData.commands.isOpen &&
       <ERPModal
         isOpen={rootState.PopupData.commands.isOpen || false}
         title={t("sql_commands")}
@@ -249,6 +273,8 @@ const Settings = () => {
         }}
         content={<CommandsManage />}
       />
+      }
+      {rootState.PopupData.authorizationSettings.isOpen &&
       <ERPModal
         isOpen={rootState.PopupData.authorizationSettings.isOpen || false}
         title={t("authorization_settings")}
@@ -260,6 +286,8 @@ const Settings = () => {
         }}
         content={<AuthorizationSettings />}
       />
+      }
+      {rootState.PopupData.barcodeprint.isOpen &&
       <ERPModal
         isOpen={rootState.PopupData.barcodeprint.isOpen || false}
         title={t("barcode_print")}
@@ -271,6 +299,8 @@ const Settings = () => {
         }}
         content={<Barcodeprint />}
       />
+     }
+     {rootState.PopupData.exchangeRates.isOpen &&
       <ERPModal
         isOpen={rootState.PopupData.exchangeRates.isOpen || false}
         title={t("exchange_rates")}
@@ -282,6 +312,8 @@ const Settings = () => {
         }}
         content={<ExchangeRates />}
       />
+      }
+      {rootState.PopupData.resetBranchDataForSync.isOpen &&
       <ERPModal
         isOpen={rootState.PopupData.resetBranchDataForSync.isOpen || false}
         title={t("reset_branch_data_for_sync")}
@@ -293,6 +325,8 @@ const Settings = () => {
         }}
         content={<ResetBranchDataForSync />}
       />
+      }
+      {rootState.PopupData.refreshAllBranches.isOpen &&
       <ERPModal
         isOpen={rootState.PopupData.refreshAllBranches.isOpen || false}
         title={t("refresh_all_branches")}
@@ -304,6 +338,8 @@ const Settings = () => {
         }}
         content={<RefreshAllBranches />}
       />
+      }
+      {rootState.PopupData.headAndFooter.isOpen &&
       <ERPModal
         isOpen={rootState.PopupData.headAndFooter.isOpen || false}
         title={t("headers_footers")}
@@ -315,6 +351,7 @@ const Settings = () => {
         }}
         content={<HeadersAndFooters />}
       />
+      }
     </Fragment>
   );
 };

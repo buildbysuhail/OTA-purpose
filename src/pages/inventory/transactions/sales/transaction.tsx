@@ -2747,7 +2747,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
             onClose={() =>
               dispatch(
                 formStateHandleFieldChangeKeysOnly({
-                  fields: { imfData: { visible: false, data: "" } },
+                  fields: { imfData: { visible: false, data: "", rowIndex: 0, slNo: 0} },
                   updateOnlyGivenDetailsColumns: true,
                 })
               )

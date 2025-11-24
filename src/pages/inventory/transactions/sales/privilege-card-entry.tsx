@@ -132,6 +132,21 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
     });
   };
 
+  const handlePrivilegeCardSubmit = (submittedData: any) => {
+      setCardData((prev) => ({
+        ...prev,
+        cardNo: submittedData.cardNumber ?? prev.cardNo,
+        customerName: submittedData.cardHolderName ?? prev.customerName,
+        address: submittedData.address1 ?? prev.address,
+        mobileNo: submittedData.mobile ?? prev.mobileNo,
+        oldBalance: submittedData.oBalance ?? prev.oldBalance, //Check it is opening or old balance
+        // add: submittedData.added ?? prev.add,
+        // redeem: submittedData.redeemed ?? prev.redeem,
+        // balance: submittedData.total_balance ?? prev.balance,
+      }));
+    };
+
+
   return (
     <ERPModal
       isOpen={isOpen}
@@ -269,12 +284,10 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
                 <span className="text-sm font-bold text-red-600">
                   {t("redeem_points")}
                 </span>
-                <ERPButton
-                  title={t('add_new')}
+                <button
                   onClick={()=>handleAddNew()}
-                  variant='custom'
-                  className="h-7 text-xs px-3 underline"
-                />
+                  className="h-7 text-sm px-3 font-semibold underline "
+                >{t('add_new')}</button>
                 <div className='flex gap-2'>
                   <ERPButton
                 title={t('reset')}
@@ -322,9 +335,9 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
                 width={800}
                 height={280}
                 isForm={true}
-                // closeModal={() =>  setAddNewEntry(false)}
-                closeModal={() => { dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, reload: false })) }}
-                content={<PrivilegeCardManage />}
+                closeModal={() => setAddNewEntry(false)}
+                // closeModal={() => { dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, reload: false })) }}
+                content={<PrivilegeCardManage isPrivilegeCardEntry={addNewEntry} onClose ={() =>setAddNewEntry(false)} onSubmitData={handlePrivilegeCardSubmit}/>}
               />
           }  
           </div>

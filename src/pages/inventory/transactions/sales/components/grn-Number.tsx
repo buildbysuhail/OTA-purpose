@@ -62,9 +62,9 @@ const VoucherLoader = React.forwardRef<HTMLInputElement, GrnNumberProps>((props,
   ]);
   return (
     <>
-      <div className="flex items-center mb-6">
+      <div className="flex items-center mb-4 px-2">
         {/* INPUT ROW */}
-        <div className="flex items-center gap-3 flex-wrap flex-1">
+        <div className="flex items-center gap-2 justify-between">
           <ERPDataCombobox
             localInputBox={formState?.userConfig?.inputBoxStyle}
             enableClearOption={false}
@@ -124,7 +124,7 @@ const VoucherLoader = React.forwardRef<HTMLInputElement, GrnNumberProps>((props,
             label={t("v_number")}
             placeholder={t("enter_voucher_number")}
             type="number"
-            className="w-[80px]"
+            className="w-[116px]"
             // value={orderNumberValue}
             value={props.updateDeliveryNoteNumber ? formState.transaction.master.deliveryNoteNumber : loadData.vNumber}
             onChange={(e) => {
@@ -145,7 +145,7 @@ const VoucherLoader = React.forwardRef<HTMLInputElement, GrnNumberProps>((props,
       </div>
 
       {/* Modal Footer (Optional) */}
-      <div className="flex justify-end gap-2">
+      <div className="flex justify-end gap-2 px-2">
         <ERPButton
           onClick={handleLoadByRefNo}
           title={t("load")}

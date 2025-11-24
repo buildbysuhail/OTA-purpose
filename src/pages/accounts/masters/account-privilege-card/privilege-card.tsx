@@ -227,7 +227,7 @@ const PrivilegeCard = () => {
         height={280}
         isForm={true}
         closeModal={() => { dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, reload: false })) }}
-        content={<MemoizedPrivilegeCardrManage />}
+        content={<MemoizedPrivilegeCardrManage isPrivilegeCardEntry={false}/>}
       />
     </Fragment>
   );

@@ -11,7 +11,13 @@ import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combo
 import { initialPrivilegeCard, PrivilegeCardData } from "./privilege-card-types";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 
-export const PrivilegeCardManage: React.FC = React.memo(() => {
+interface PrivilegeCardEntryProps {
+  isPrivilegeCardEntry: any;
+  onClose?: ()=> void;
+  onSubmitData?: (data: any) => void;
+}
+
+export const PrivilegeCardManage: React.FC<PrivilegeCardEntryProps> = React.memo(({isPrivilegeCardEntry, onClose, onSubmitData }) => {
   const rootState = useRootState();
   const dispatch = useDispatch();
   const { t } = useTranslation("masters");
@@ -27,12 +33,20 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
   } = useFormManager<PrivilegeCardData>({
     url: Urls.account_privilege_card,
     onSuccess: useCallback(() => dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
-    onClose: useCallback(() => dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, reload: false })), [dispatch]),
+    onClose: useCallback(() => onClose ? onClose() : dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, reload: false })), [dispatch]),
     key: rootState.PopupData.privilegeCard.key,
     keyField: "privilegeCardsID",
     useApiClient: true,
     initialData: initialPrivilegeCard
   });
+
+  const onSubmit = async () => {
+      const result = await handleSubmit();
+      if (onSubmitData) {
+         onSubmitData(formState.data); 
+         onClose?.();  
+      }
+  };
 
   const handleDateChange = (field: string, value: string | null) => {
     if (value) {
@@ -148,7 +162,7 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
           ]}
           onChangeData={(data: any) => handleFieldChange("cardType", data.cardType)}
           label={t("card_type")}
-          disabled={rootState.PopupData.privilegeCard.mode == "view"}
+          disabled={rootState.PopupData.privilegeCard.mode == "view" || isPrivilegeCardEntry }
           fetching={formState?.loading !== false ? true : false}
         />
 
@@ -190,7 +204,7 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
-        onSubmit={rootState.PopupData.privilegeCard.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleSubmit}
+        onSubmit={rootState.PopupData.privilegeCard.mode == "view" ? undefined : formState?.loading !== false ? undefined : onSubmit}
       />
     </div>
   );

@@ -1170,10 +1170,11 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           <ERPModal
             isOpen={isModalOpen.visible}
             title={isModalOpen.type}
-            width={600}
-            height={280}
+            width={550}
+            height={200}
             closeModal={closeModal}
             content={
+              // Need to update this based on the upcoming condition
               <VoucherLoader
                 updateDeliveryNoteNumber={["SI", "SR"].includes(isModalOpen.type)}
                 fromVoucherType={
@@ -1227,11 +1228,12 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           <ERPModal
             isOpen={isModalOpen.visible}
             title={isModalOpen.type}
-            width={600}
-            height={280}
+            width={550}
+            height={200}
             closeModal={closeModal}
             content={
               <VoucherLoader
+              // Need to update this based on the upcoming condition
                 updateDeliveryNoteNumber={["SI", "SR"].includes(isModalOpen.type)}
                 fromVoucherType={isModalOpen.type == "SI_Ref" ? VoucherType.SalesInvoice : formState.transaction.master.voucherType === VoucherType.SalesInvoice ? VoucherType.GoodsReceiptNote : ""
                   // : formState.transaction.master.voucherType ===

@@ -62,7 +62,7 @@ const Flavours: React.FC<ImfProps> = ({ data, isOpen, productId, onClose, rowInd
 
   const handleAddClick = () => {
     const newRow = {
-      id: Date.now(), // unique id
+      id: Date.now(),
       flavours: flavoursFactors.flavours,
       qty: flavoursFactors.qty,
     };
@@ -77,37 +77,47 @@ const Flavours: React.FC<ImfProps> = ({ data, isOpen, productId, onClose, rowInd
         });
       };
 
+      // Need to update this function
   const handleApplyAll = () => {
+    try {
+    let description = "";
+    let qty = 0
+
+    for (let i = 0; i < flavourData.length; i++) {
+      const row = flavourData[i];
+
+      const itemFlavour = row?.flavours?.toString() ?? "";
+
+      description += `${itemFlavour} - ${row.qty},`;
+      qty = qty +row.qty;
+    }
+
+    // Set description
     dispatch(
-        formStateHandleFieldChangeKeysOnly({
-          fields: {
-            serialNoEntryData: { visible: false, data: "", SlNo: -1 },
-            transaction: {
-              details: [{
-                // productDescription: dataToSaveString,
-                // qty: lt,
-                // slNo: slNo
-              }]
-            }
-          },
-          updateOnlyGivenDetailsColumns: true,
-          rowIndex
-        })
-      );
-      // Or test submit
-      dispatch(
-              formStateHandleFieldChangeKeysOnly({
-                fields: {
-                  quantityFactorData: JSON.stringify({
-                    rowIndex: rowIndex,
-                    data: flavourData,
-                  }),
-                },
-              })
-            );
-      
-      onClose(); // Close modal on successful save
+      formStateHandleFieldChangeKeysOnly({
+        fields: { transaction: { details: [{slNo:formState.imfData.rowIndex, productDescription: description.replace(/,$/, ""), qty: qty}] } },
+      })
+    );
+    // close popup
+    // closePopup();
+  } catch (err) {
+    // ignore
   }
+    }
+      // Or test submit
+      // dispatch(
+      //         formStateHandleFieldChangeKeysOnly({
+      //           fields: {
+      //             imfData: JSON.stringify({
+      //               rowIndex: rowIndex,
+      //               data: flavourData,
+      //             }),
+      //           },
+      //         })
+      //       );
+      
+      // onClose();
+  // }
 
   return (
     <ERPModal
@@ -119,11 +129,11 @@ const Flavours: React.FC<ImfProps> = ({ data, isOpen, productId, onClose, rowInd
           <div className="flex flex-row gap-2 px-4 items-center justify-between">
             {/* This is dummy data comboBox, need to change by api end point */}
            <ERPDataCombobox
-                // {...getFieldProps("flavours")}pCode
+                // {...getFieldProps("flavours")}
                 id="id"
                 field={{
                 id:"flavour",
-                // required: true,
+                required: true,
                 // getListUrl: `${Urls.product_flavours}${20797}`,// This is not the right api call // inventory/sales/ data/ flavors
                 valueKey: "value",
                 labelKey: "label",
@@ -132,9 +142,7 @@ const Flavours: React.FC<ImfProps> = ({ data, isOpen, productId, onClose, rowInd
                   { value: 0, label: "red" },
                   { value: 1, label: "white" },
                   { value: 2, label: "black" },
-                  { value: 3, label: "thh" },
-                  { value: 4, label: "ehgeh" },
-                  { value: 5, label: "thr" },
+                  { value: 3, label: "green" },
                 ]}
                 onChange={(data: any) => {
                 handleFieldChange("flavours", data.label);
@@ -166,29 +174,14 @@ const Flavours: React.FC<ImfProps> = ({ data, isOpen, productId, onClose, rowInd
               ref={dataGridRef}
               keyExpr="id"
               dataSource={flavourData}
-              // onContentReady={onContentReady}
               className='custom-data-grid-dark-only'
               focusedRowEnabled={false}
               showBorders={true}
               columnAutoWidth={true}
               rowAlternationEnabled={true}
-              // onEditorPreparing={onEditorPreparing}
               repaintChangesOnly={true}
               height={300}
             >
-              <Editing
-                mode="cell"
-                allowAdding={false}
-                allowUpdating={true}
-                selectTextOnEditStart={true}
-              />
-
-              <KeyboardNavigation
-                editOnKeyPress={true}
-                enterKeyAction={"moveFocus"}
-                enterKeyDirection={"column"}
-              />
-
               <Column
                 dataField="flavours"
                 caption={t("flavours")}
@@ -209,10 +202,8 @@ const Flavours: React.FC<ImfProps> = ({ data, isOpen, productId, onClose, rowInd
                 <button
                   onClick={() => handleDelete(cellData.data)}
                   className="p-1 text-red-600 hover:text-red-800"
-                >
-                  <Trash2 size={16} />
-                </button>
-              )}
+                ><Trash2 size={16} /></button>
+                )}
               />
 
               <Paging pageSize={100} />
@@ -229,7 +220,6 @@ const Flavours: React.FC<ImfProps> = ({ data, isOpen, productId, onClose, rowInd
       }
       footer={
         <div className="flex justify-end">
-
           <ERPSubmitButton
             type="button"
             className="max-w-[115px]"

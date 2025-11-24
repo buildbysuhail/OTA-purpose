@@ -15,6 +15,8 @@ import { useAppState } from "../../utilities/hooks/useAppState";
 import { removeStorageString, setStorageString } from "../../utilities/storage-utils";
 import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
 import { formStateHandleFieldChange } from "../../pages/inventory/transactions/reducer";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 interface GridPreferenceChooserProps {
   gridId: string;
   columns: DevGridColumn[];
@@ -22,7 +24,8 @@ interface GridPreferenceChooserProps {
   showChooserOnGridHead?: boolean;
   showChooserName?: boolean;
   eclipseClass?: string;
-  initialPreferences?: any
+  initialPreferences?: any;
+  isMobile?: boolean;
 }
 
 const api = new APIClient();
@@ -36,6 +39,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
   const { appState } = useAppState();
   const isRtl = appState.locale.rtl;
   const dispatch = useAppDispatch();
+  const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
 
   const onChange = (e: any) => {
     onApplyPreferences(e);
@@ -96,6 +100,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
 
   const getDefaultColumnPreference = (column: DevGridColumn, index: number): ColumnPreference => ({
     ...column,
+    isMobile:false,
     dataField: column.dataField ?? "",
     isLocked: column.isLocked ?? false,
     caption: column.caption || capitalizeAndAddSpace(column.dataField ?? ""),
@@ -232,7 +237,9 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
           <div className="w-8 h-8 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center group-hover:bg-purple-200 dark:group-hover:bg-purple-900/50 group-hover:scale-110 transition-all duration-200">
             <Settings className="h-4 w-4 text-purple-800 dark:text-purple-300" />
           </div>
+          {!deviceInfo?.isMobile && (
           <span className="font-medium">{t('grid_preference_chooser')}</span>
+          )}
         </button>
       ) : (
         <button onClick={() => setIsOpen(true)} className="ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px]">
@@ -262,12 +269,20 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
               prefix={<MagnifyingGlassIcon className="w-4 h-4" />}
             />
             <div className="grid-preference-form">
-              <div className="header-row dark:bg-dark-bg-header dark:text-dark-text bg-gray-100 px-4 py-2 font-bold text-sm grid grid-cols-6 gap-2 items-center">
+              <div className={`header-row dark:bg-dark-bg-header dark:text-dark-text bg-gray-100 px-4 py-2 font-bold text-sm grid gap-2 items-center
+                  ${deviceInfo?.isMobile ? "grid-cols-3" : "grid-cols-6"}`}
+              >
                 <span className="col-span-2">{t("column")}</span>
-                <span>{t("width")}</span>
+                {!deviceInfo?.isMobile && (
+                  <span>{t("width")}</span>
+                )}
                 <span>{t("read_only")}</span>
+                {!deviceInfo?.isMobile && (
                 <span>{t("pdf")}</span>
+                )}
+                {!deviceInfo?.isMobile && (
                 <span>{t("pdf-width")}</span>
+                )}
               </div>
               {preferences.columnPreferences.length}
               {preferences &&
@@ -286,7 +301,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
                         onDragStart={handleDragStart}
                         onDragEnter={handleDragEnd}
                         onDragEnd={() => handleDropping(false)}>
-                        <div className="dark:bg-dark-bg-header dark:text-dark-text bg-[#F9F9FB] w-full px-1 rounded grid grid-cols-6 !items-center pl-4">
+                        <div className={`dark:bg-dark-bg-header dark:text-dark-text bg-[#F9F9FB] w-full px-1 rounded grid  !items-center pl-4 ${deviceInfo?.isMobile ? "grid-cols-3" : "grid-cols-6"}`}>
                           <label className="col-span-2 items-center py-1 capitalize text-sm dark:text-dark-text text-slate-800 cursor-move">
                             ⋮⋮
                             {column?.isLocked ? (
@@ -310,6 +325,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
                             )}
                           </label>
 
+                          {!deviceInfo?.isMobile && (
                           <input
                             type="number"
                             value={column.width || ""}
@@ -317,6 +333,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
                             disabled={column.isLocked}
                             className="dark:bg-dark-bg-card border dark:border-dark-border rounded p-1 w-16 mh-[27px]"
                           />
+                          )}
                           <input
                             type="checkbox"
                             className="dark:bg-dark-bg-card border dark:border-dark-border cursor-pointer mh-[27px] ms-[10px]"
@@ -324,6 +341,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
                             checked={column.readOnly}
                             onChange={(e) => handleColumnPreferenceChange(column.dataField, "readOnly", e.target.checked)}
                           />
+                          {!deviceInfo?.isMobile && (
                           <input
                             className="dark:bg-dark-bg-card border dark:border-dark-border mh-[27px]"
                             type="checkbox"
@@ -331,6 +349,8 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
                             onChange={(e) => handleColumnPreferenceChange(column.dataField, "showInPdf", e.target.checked)}
                             disabled={column.isLocked}
                           />
+                          )}
+                          {!deviceInfo?.isMobile && (
                           <input
                             type="number"
                             value={column.pdfWidth || ""}
@@ -339,6 +359,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
                             disabled={column.isLocked}
                             className="dark:bg-dark-bg-card border dark:border-dark-border rounded p-1 w-16 mh-[27px]"
                           />
+                          )}
                         </div>
                       </div>
                     );

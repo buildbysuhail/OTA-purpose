@@ -15,12 +15,15 @@ import {
 } from "../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../redux/store";
 import {
+  ChevronDown,
+  ChevronUp,
   CirclePlus,
   EllipsisVertical,
   FileUp,
   Info,
   Paintbrush,
   Settings,
+  StepBack,
   Trash2,
   X,
 } from "lucide-react";
@@ -2469,13 +2472,27 @@ const taxOptions = [0, 5, 12, 18, 28];
 
 const [showMore , setShowMore] = useState (false)
 
+const hidColumns: string[] = [
+  "product",
+  "qty",
+  "unit",
+  "salesPrice",
+  "total",
+  "discPerc",
+  "discount",
+  "vatPerc",
+  "vatAmount",
+  "actionCol"
+];
+
+
 
     
 
     return (
       <>
       
-          <div>{isMobile && <DraggablePlusButton onClick={() => {
+          <div>{isMobile && !formState.transactionLoading && <DraggablePlusButton onClick={() => {
             debugger;
             dispatch(formStateHandleFieldChangeKeysOnly({fields:{
               row: {
@@ -3065,7 +3082,7 @@ const [showMore , setShowMore] = useState (false)
                  }`}
                >
                  {/* Header */}
-                 <header className="flex items-center px-4 py-3 bg-white shadow-sm sticky top-0 z-10 dark:bg-[#2d2d2d]">
+                 <header className="flex items-center px-4 py-2 bg-white shadow-sm sticky top-0 z-10 dark:bg-[#2d2d2d]">
                    <button
                      onClick={() =>
                        dispatch(
@@ -3076,21 +3093,48 @@ const [showMore , setShowMore] = useState (false)
                      }
                      className="p-2 mr-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
                    >
-                     <X className="w-5 h-5" />
+                     <StepBack  className="w-3 h-3" />
                    </button>
-                   <h1 className="text-lg font-medium">Add Items to Sale</h1>
+                   <h6 className="text-sm font-medium">Add Items to Sale</h6>
+                    <div className="ml-auto"> 
+                        <GridPreferenceChooser
+                        initialPreferences={preferences}
+                        ref={preferenceChooserRef}
+                        gridId={gridId}
+                        columns={
+                          (formState.gridColumns ?? []) as DevGridColumn[]
+                        }
+                        onApplyPreferences={onApplyPreferences}
+                        showChooserName={true}
+                        isMobile={true}
+                      />
+                 </div>
                  </header>
          
                  {/* Content */}
                  <main className="flex-1 overflow-auto px-4 py-4">
                    {/* Item name */}
                    <div>
+                    {/* Grid Preferences */}
+                  {/* <li> 
+                        <GridPreferenceChooser
+                        initialPreferences={preferences}
+                        ref={preferenceChooserRef}
+                        gridId={gridId}
+                        columns={
+                          (formState.gridColumns ?? []) as DevGridColumn[]
+                        }
+                        onApplyPreferences={onApplyPreferences}
+                        showChooserName={true}
+                        isMobile={true}
+                      />
+                 </li> */}
                      <label className="block text-sm text-gray-600 mb-1 dark:text-gray-400">
-                       Item Name
+                       {t("product")}
                      </label>
                      <GridCell
                        isMobile={true}
-                       column={_columns.find((x) => x?.dataField == "product") as ColumnModel}
+                       column={formState.gridColumns.find((x) => x?.dataField == "product") as ColumnModel}
                        item={formState.row ?? initialTransactionDetailData}
                        index={formState.itemPopup?.index ?? 0}
                        currentCell={currentCell}
@@ -3131,15 +3175,15 @@ const [showMore , setShowMore] = useState (false)
                    </div>
          
                    {/* Row: Quantity | Unit */}
-                   <div className="mt-4 grid grid-cols-2 gap-3">
+                   <div className="mt-2 grid grid-cols-2 gap-3">
                    
                      <div>
                        <label className="block text-sm text-gray-600 mb-1 dark:text-gray-400">
-                         qty
+                        {t("qty")}
                        </label>
                        <GridCell
                        isMobile={true}
-                      column={_columns.find((x) => x.dataField == "qty") as ColumnModel}
+                      column={formState.gridColumns.find((x) => x.dataField == "qty") as ColumnModel}
                       item={formState.row ?? initialTransactionDetailData}
                       index={formState.itemPopup?.index ?? 0}
                       currentCell={currentCell}
@@ -3165,14 +3209,18 @@ const [showMore , setShowMore] = useState (false)
                         throw new Error("Function not implemented.");
                       } }                       />
                      </div>
-                     
+                     <>
+                     {/* {
+                      // JSON.stringify(_columns.find((x) => x.dataField == "unit") as ColumnModel)
+                     } */}
+                     </>
                      <div>
                        <label className="block text-sm text-gray-600 mb-1 dark:text-gray-400">
-                         unit
+                        {t("unit")}
                        </label>
                        <GridCell
                        isMobile={true}
-                      column={_columns.find((x) => x.dataField == "unit") as ColumnModel}
+                      column={formState.gridColumns.find((x) => x.dataField == "unit") as ColumnModel}
                       item={formState.row ?? initialTransactionDetailData}
                       index={formState.itemPopup?.index ?? 0}
                       currentCell={currentCell}
@@ -3201,14 +3249,14 @@ const [showMore , setShowMore] = useState (false)
                    </div>
          
                    {/* Row: Rate | Tax Mode */}
-                   <div className="mt-4 grid grid-cols-2 gap-3">
+                   <div className="mt-2 grid grid-cols-2 gap-3">
                      <div>
                        <label className="block text-sm text-gray-600 mb-1 dark:text-gray-400">
                          Rate (Price/Unit)
                        </label>
                        <GridCell
                        isMobile={true}
-                      column={_columns.find((x) => x.dataField == "salesPrice") as ColumnModel} 
+                      column={formState.gridColumns.find((x) => x.dataField == "unitPrice") as ColumnModel} 
                       item={formState.row ?? initialTransactionDetailData}
                       index={formState.itemPopup?.index ?? 0}
                       currentCell={currentCell}
@@ -3235,7 +3283,7 @@ const [showMore , setShowMore] = useState (false)
                       } }                       />
                      </div>
                     
-                      <div>
+                      {/* <div>
                        <label className="block text-sm text-gray-600 mb-1 dark:text-gray-400">
                          Tax Mode
                        </label>
@@ -3266,12 +3314,12 @@ const [showMore , setShowMore] = useState (false)
                       details={formState.transaction.details} blockUnitOnDecimalPoint={false} applicationSettings={undefined} nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
                         throw new Error("Function not implemented.");
                       } }                       />
-                     </div>
+                     </div> */}
                    </div>
          
                    {/* Totals & Taxes Card */}
-                   <div className="mt-6 bg-white dark:bg-[#3c3c3c] rounded-lg shadow-sm p-4">
-                     <h6 className="font-medium text-gray-800 dark:text-gray-200 mb-3">
+                   <div className="mt-2 bg-white dark:bg-[#3c3c3c] rounded-lg shadow-sm p-0 pb-[95px]">
+                     <h6 className="font-medium text-sm text-gray-800 dark:text-gray-200 mb-3">
                        Totals &amp; Taxes
                      </h6>
                      {/* Subtotal */}
@@ -3287,7 +3335,7 @@ const [showMore , setShowMore] = useState (false)
 
                           <GridCell
                        isMobile={true}
-                      column={_columns.find((x) => x.dataField == "total") as ColumnModel}
+                      column={formState.gridColumns.find((x) => x.dataField == "total") as ColumnModel}
                       item={formState.row ?? initialTransactionDetailData}
                       index={formState.itemPopup?.index ?? 0}
                       currentCell={currentCell}
@@ -3315,10 +3363,10 @@ const [showMore , setShowMore] = useState (false)
                        </div>
                      </div>
                      {/* Discount row */}
-                     <div className="mt-4 grid grid-cols-3 gap-3 items-center">
+                     <div className="mt-2 grid grid-cols-3 gap-3 items-center">
                        <div className="col-span-1">
                          <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">
-                           Discount
+                          { t("discount")}
                          </div>
                        </div>
                        <div className="col-span-1 flex">
@@ -3327,7 +3375,7 @@ const [showMore , setShowMore] = useState (false)
                        
                        <GridCell
                        isMobile={true}
-                      column={_columns.find((x) => x.dataField == "discPerc") as ColumnModel}
+                      column={formState.gridColumns.find((x) => x.dataField == "discPerc") as ColumnModel}
                       item={formState.row ?? initialTransactionDetailData}
                       index={formState.itemPopup?.index ?? 0}
                       currentCell={currentCell}
@@ -3358,7 +3406,7 @@ const [showMore , setShowMore] = useState (false)
                         
                         <GridCell
                        isMobile={true}
-                      column={_columns.find((x) => x.dataField == "discount") as ColumnModel}
+                      column={formState.gridColumns.find((x) => x.dataField == "discount") as ColumnModel}
                       item={formState.row ?? initialTransactionDetailData}
                       index={formState.itemPopup?.index ?? 0}
                       currentCell={currentCell}
@@ -3386,7 +3434,7 @@ const [showMore , setShowMore] = useState (false)
                        </div>
                      </div>
                      {/* Tax row */}
-                     <div className="mt-4 grid grid-cols-3 gap-3 items-center">
+                     <div className="mt-2 grid grid-cols-3 gap-3 items-center">
                        <div className="col-span-1 text-sm text-gray-600 dark:text-gray-400">
                          Tax %
                        </div>
@@ -3394,7 +3442,7 @@ const [showMore , setShowMore] = useState (false)
                       
                       <GridCell
                        isMobile={true}
-                      column={_columns.find((x) => x.dataField == "ratePlusTax") as ColumnModel}
+                      column={formState.gridColumns.find((x) => x.dataField == "vatPerc") as ColumnModel}
                       item={formState.row ?? initialTransactionDetailData}
                       index={formState.itemPopup?.index ?? 0}
                       currentCell={currentCell}
@@ -3424,7 +3472,7 @@ const [showMore , setShowMore] = useState (false)
                          {/* <div className="text-sm">{formatCurrency(taxAmount)}</div> */}
                           <GridCell
                        isMobile={true}
-                      column={_columns.find((x) => x.dataField == "ratePlusTax") as ColumnModel}
+                      column={formState.gridColumns.find((x) => x.dataField == "vatAmount") as ColumnModel}
                       item={formState.row ?? initialTransactionDetailData}
                       index={formState.itemPopup?.index ?? 0}
                       currentCell={currentCell}
@@ -3450,22 +3498,24 @@ const [showMore , setShowMore] = useState (false)
                         throw new Error("Function not implemented.");
                       } }                       />
                        </div>
-                       <div>
-                        <button
-                        onClick={() => setShowMore(true)}
-
+                       <div className="text-center col-span-full">
+                         <button
+                         aria-label="showMore"
+                          onClick={() => setShowMore(prev => !prev)}
+                          className="p-2 bg-slate-600 hover:bg-slate-900 rounded-full"
                         >
-                          show more
+                          {showMore ? <ChevronUp className="text-warmGray-100" size={20} /> : <ChevronDown className="text-warmGray-100" size={20} />}
                         </button>
+
                         
                        </div>
                      </div>
                      <div className="">
                            {showMore && (
                             <div>
-                              Show more content
-                               {formState.gridColumns.filter(x => x.visible == true && !["slNo", "action"].includes(x.dataField??""))?.map((col, index) => (
-                              <div className="mt-4 grid grid-cols-2 gap-3 items-center">
+                              {/* Show more content */}
+                               {formState.gridColumns.filter(x => x && x.visible == true && !["slNo", "action", ...hidColumns].includes(x.dataField??""))?.map((col, index) => (
+                              <div key={generateUniqueKey()} className="mt-2 grid grid-cols-2 gap-3 items-center">
                                 <div className="col-span-1">
                          <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">
                            
@@ -3480,7 +3530,9 @@ const [showMore , setShowMore] = useState (false)
                        <div className="col-span-1 flex">
                         <GridCell
                        isMobile={true}
-                      column={_columns.find((x) => x.dataField == col.dataField) as ColumnModel}
+                      column={col as ColumnModel}
+                      // column={_columns.find((x) => x.dataField == col.dataField) as ColumnModel}
+                      //  column={formState.gridColumns.find((x) => x.dataField == "vatAmount") as ColumnModel}
                       item={formState.row ?? initialTransactionDetailData}
                       index={formState.itemPopup?.index ?? 0}
                       currentCell={currentCell}
@@ -3516,44 +3568,12 @@ const [showMore , setShowMore] = useState (false)
                           )}
                         </div>
                      {/* Divider */}
-                     <div className="mt-4 border-t pt-4 flex justify-between items-center dark:border-gray-600">
-                       <div className="text-sm font-medium">Total Amount:</div>
-                       {/* <div className="text-lg font-semibold">{formatCurrency(total)}</div> */}
-                       <div>
-                       <GridCell
-                       isMobile={true}
-                      column={_columns.find((x) => x.dataField == "total") as ColumnModel}
-                      item={formState.row ?? initialTransactionDetailData}
-                      index={formState.itemPopup?.index ?? 0}
-                      currentCell={currentCell}
-                      setCurrentCell={setCurrentCell}
-                      formState={formState}
-                      appState={appState}
-                      gridFontSize={gridFontSize}
-                      gridIsBold={gridIsBold}
-                      rowHeight={rowHeight}
-                      gridBorderColor={gridBorderColor}
-                      isFirstColumn={false}
-                      isLastColumn={false}
-                      showBorder={true}
-                      columnWidths={columnWidths}
-                      onChange={onChange}
-                      onKeyDown={onKeyDown}
-                      handlRowKeyDown={handlRowKeyDown}
-                      handleFocus={handleFocus}
-                      handleBlur={handleBlur}
-                      gridId={gridId}
-                      zIndexController= {55}
-                      details={formState.transaction.details} blockUnitOnDecimalPoint={false} applicationSettings={undefined} nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
-                        throw new Error("Function not implemented.");
-                      } }                       />
-                      </div>
-                     </div>
+                     
                    </div>
                  </main>
          
                  {/* Bottom action bar */}
-                 <div className="bg-white dark:bg-[#2d2d2d] border-t dark:border-gray-700 shadow-md sticky bottom-0 left-0 right-0 flex">
+                 {/* <div className="bg-white dark:bg-[#2d2d2d] border-t dark:border-gray-700 shadow-md sticky bottom-0 left-0 right-0 flex">
                    <button
                      className="flex-1 py-4 text-center text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                      onClick={() => {
@@ -3585,7 +3605,73 @@ const [showMore , setShowMore] = useState (false)
                    >
                      Save
                    </button>
-                 </div>
+                 </div> */}
+                 {/* ===== */}
+                <div className="fixed bottom-0 left-0 right-0 w-full bg-[#f8f8ff] dark:bg-dark-bg-card border-t dark:border-gray-700 shadow-md z-[60]">
+  <div className="flex items-center justify-between px-3 py-2">
+    {/* GRAND TOTAL */}
+    <div className="flex flex-col">
+      <span className="text-xs font-bold text-gray-900 dark:text-dark-text uppercase">
+        Total Amount:
+      </span>
+    </div>
+
+    <span className="text-base font-bold text-[#3b82f6]">
+       <GridCell
+                      //  isMobile={true}
+                      column={formState.gridColumns.find((x) => x.dataField == "total") as ColumnModel}
+                      item={formState.row ?? initialTransactionDetailData}
+                      index={formState.itemPopup?.index ?? 0}
+                      currentCell={currentCell}
+                      setCurrentCell={setCurrentCell}
+                      formState={formState}
+                      appState={appState}
+                      gridFontSize={gridFontSize}
+                      gridIsBold={gridIsBold}
+                      rowHeight={rowHeight}
+                      gridBorderColor={gridBorderColor}
+                      isFirstColumn={false}
+                      isLastColumn={false}
+                      showBorder={true}
+                      columnWidths={columnWidths}
+                      onChange={onChange}
+                      onKeyDown={onKeyDown}
+                      handlRowKeyDown={handlRowKeyDown}
+                      handleFocus={handleFocus}
+                      handleBlur={handleBlur}
+                      gridId={gridId}
+                      zIndexController= {55}
+                      details={formState.transaction.details} blockUnitOnDecimalPoint={false} applicationSettings={undefined} nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
+                        throw new Error("Function not implemented.");
+                      } }                       />
+    </span>
+  </div>
+
+  {/* BUTTON ROW */}
+  <div className="flex gap-2 px-3 pb-2">
+    <ERPButton
+      title={t("cancel")}
+      className="flex-1 rounded-md !m-0 bg-white dark:bg-dark-bg-card border border-gray-300 text-black dark:text-dark-text text-sm sm:text-base"
+      localInputBox={formState?.userConfig?.inputBoxStyle}
+    />
+
+    <ERPButton
+      localInputBox={formState?.userConfig?.inputBoxStyle}
+      title={formState.transaction.master.voucherType === "LPO" ? t("generate_lpo") : t("save")}
+      jumpTarget="save"
+      variant="primary"
+      className="flex-1 rounded-md !m-0 bg-[#94a3b8] text-white text-sm sm:text-base"
+      disabled={
+        formState.formElements.pnlMasters?.disabled ||
+        !formState.transaction.details ||
+        formState.transaction.details.length === 0 ||
+        formState.transactionLoading
+      }
+    />
+  </div>
+</div>
+
+
                </div>
              </div>,
              document.body

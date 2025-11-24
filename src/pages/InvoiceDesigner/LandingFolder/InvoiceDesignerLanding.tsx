@@ -39,6 +39,7 @@ const InvoiceDesigner = () => {
         designerKind={templateKind || "standard"}
         templateGroup={templateGroup}
       />
+      
       <ERPModal
         isForm={true}
         isOpen={rootState.PopupData.CustomDesignerPopup.isOpen ?? false}

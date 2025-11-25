@@ -1,3 +1,25 @@
+* {
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+ */
+  user-select: none; /* Standard */
+}
+html, body {
+  -webkit-touch-callout: none; /* Disable callout menu */
+  -webkit-user-select: none;
+}
+
+input, textarea {
+  -webkit-user-select: none !important;
+  user-select: none !important;
+}
+
+input {
+  -webkit-touch-callout: none !important;
+}
+
+
+
 .box-title-desc {
   @apply text-defaulttextcolor text-[.75rem] font-[400] me-auto dark:text-defaulttextcolor/70;
 }

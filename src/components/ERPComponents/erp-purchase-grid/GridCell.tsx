@@ -11,6 +11,8 @@ import { formStateHandleFieldChange } from "../../../pages/inventory/transaction
 import Urls from "../../../redux/urls";
 import { AppState } from "../../../redux/slices/app/types";
 import useDebounce from "../../../pages/inventory/transactions/purchase/use-debounce";
+import { merge } from "lodash";
+import { initialUserConfig } from "../../../pages/inventory/transactions/transaction-type-data";
 
 interface GridCellProps {
   column: ColumnModel;
@@ -133,6 +135,7 @@ const EditableCell: React.FC<{
     },
     300
   );
+
 
   const handleInput = useCallback((e: React.FormEvent<HTMLInputElement>) => {
     let inputValue = e.currentTarget.value;
@@ -280,6 +283,9 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
   zIndexController,
   nextCellFind,
 }) => {
+//   if (!column) {
+//     return null;
+//   }
   const { getFormattedValue } = useNumberFormat();
   const dispatch = useAppDispatch();
   const cellId = `${gridId}_${column.dataField}_${index}`;
@@ -480,7 +486,8 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
       return (
         <ERPProductSearch
           showInputSymbol={true}
-          customStyle={formState.userConfig?.inputBoxStyle}
+        //   customStyle={formState.userConfig?.inputBoxStyle}
+          customStyle={merge( {}, formState.userConfig?.inputBoxStyle, initialUserConfig.inputBoxStyle, { inputHeight: 2, fontSize: 25, fontColor: "0, 0, 0", borderColor: "200, 200, 200"})}
           appState={appState}
           zIndexController={zIndexController}
           textAlign={column.alignment === "right" ? "right" : "left"}
@@ -549,7 +556,8 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
     }
 
     if (column.allowEditing === true && !column.readOnly && formState.formElements.pnlMasters?.disabled !== true &&
-        currentCell?.column === column.dataField && currentCell?.rowIndex === index) {
+        ((currentCell?.column === column.dataField && currentCell?.rowIndex === index )|| isMobile) 
+    ) {
       return (
         <EditableCell
           appState={appState}
@@ -603,7 +611,7 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
     borderColor, getCellContentStyle, handleFocus, handleBlur, handlRowKeyDown,
     getFormattedValue, gridFontSize, gridIsBold, rowHeight, gridId, details,
     blockUnitOnDecimalPoint, applicationSettings, useInSearch, searchByCodeAndName,
-    advancedProductSearching, transactionType, zIndexController, nextCellFind
+    advancedProductSearching, transactionType, zIndexController, nextCellFind,formState.formElements.pnlMasters?.disabled
   ]);
 
     const cellWidth = useMemo(() => {
@@ -668,12 +676,30 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
   };
 
   return (
+    <div>
+        <div>
+             {/* <li> 
+                        <GridPreferenceChooser
+                        initialPreferences={preferences}
+                        ref={preferenceChooserRef}
+                        gridId={gridId}
+                        columns={
+                          (formState.gridColumns ?? []) as DevGridColumn[]
+                        }
+                        onApplyPreferences={onApplyPreferences}
+                        showChooserName={true}
+                      />
+                 </li> */}
+        </div>
     <div
       key={`${column.dataField}`}
       style={{
         width: typeof cellWidth === 'number' ? `${cellWidth}px` : cellWidth,
         minWidth: typeof cellWidth === 'number' ? `${cellWidth}px` : cellWidth,
         maxWidth: typeof cellWidth === 'number' ? `${cellWidth}px` : cellWidth,
+        height: '33px',
+        // height: '100px',
+        //  height: '100%',
         ...(isMobile ? getMobileBorderStyles() : getDesktopBorderStyles()),
         fontSize: `${gridFontSize}px`,
         textAlign: column.dataField === "slNo" ? "center" : ["qty"].includes(column.dataField ?? "") ? "right" : "left",
@@ -684,6 +710,11 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
         alignItems: "center",
         justifyContent: "center",
         backgroundColor:
+        isMobile ? 
+        appState.mode === "dark"
+                ? "#555555"
+                : "#fff" 
+        :
             currentCell?.rowIndex === index && currentCell?.column === column.dataField
             ? appState.mode === "dark"
                 ? "#555555"
@@ -719,6 +750,7 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
         }}
     >
       {renderCellValue()}
+    </div>
     </div>
   );
 });

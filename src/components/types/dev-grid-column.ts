@@ -69,8 +69,9 @@ export interface DevGridColumn {
     showInPdf: true, // number: font size
     displayOrder: 1, // number: the order in which the column appears
     groupIndex: 0,
-    allowEditing: false, 
+    allowEditing: false,
     pdfWidth: 150,
+    isMobile: false
   };
   export interface Preferences {
     [dataField: string]: ColumnPreference;
@@ -82,6 +83,7 @@ export interface DevGridColumn {
     format?: string;
     width?: number;
     // Actionswidth?: number;
+    isMobile:boolean;
     minWidth?: number;
     alignment: 'left' | 'center' | 'right';
     visible: boolean;

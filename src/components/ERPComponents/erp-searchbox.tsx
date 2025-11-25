@@ -36,6 +36,7 @@ import usePreferenceData from "../../utilities/hooks/usePreference";
 import { SortDescriptor } from "devextreme/data";
 import { formStateHandleFieldChangeKeysOnly } from "../../pages/inventory/transactions/reducer";
 import { TransactionDetail } from "../../pages/inventory/transactions/transaction-types";
+import { getInitialPreference } from "../../utilities/dx-grid-preference-updater";
 interface InputProps {
   id?: string;
   inputId?: string;
@@ -178,6 +179,97 @@ const createStore = async (
   });
 };
 
+const createStoreWithCache = async (
+  value: string,
+  payload: any,
+  productDataUrl?: string,
+  initialSort: SortDescriptor<any>[] = [],
+  closeIfNodata?: boolean
+) => {
+  let cachedResult: any = null;
+  let hasFetchedOnce = false;
+  const api = new APIClient();
+
+  return new CustomStore({
+    key: "productID",
+    async load(loadOptions: any) {
+      // Only make API call on first load
+      if (!hasFetchedOnce) {
+        hasFetchedOnce = true;
+        console.log("🔵 Making API call for:", value);
+
+        if (
+          !loadOptions.sort ||
+          (Array.isArray(loadOptions.sort) && loadOptions.sort.length === 0)
+        ) {
+          loadOptions.sort = initialSort;
+        }
+
+        const paramNames = [
+          "skip",
+          "take",
+          "requireTotalCount",
+          "sort",
+          "filter",
+        ];
+        const queryString = paramNames
+          .filter(
+            (paramName) =>
+              loadOptions[paramName] !== undefined &&
+              loadOptions[paramName] !== null &&
+              loadOptions[paramName] !== ""
+          )
+          .map(
+            (paramName) =>
+              `${paramName}=${JSON.stringify(loadOptions[paramName])}`
+          )
+          .join("&");
+
+        try {
+          const url = productDataUrl || "";
+          const response = await api.postAsync(
+            queryString && queryString !== ""
+              ? `${url}?${queryString}`
+              : `${url}?skip=0`,
+            payload
+          );
+
+          cachedResult = response;
+
+          return cachedResult !== undefined && cachedResult !== null
+            ? {
+                data: cachedResult.data,
+                totalCount: cachedResult.totalCount,
+              }
+            : {
+                data: [],
+                totalCount: 0,
+                summary: {},
+                groupCount: 0,
+              };
+        } catch (err) {
+          console.error("API call failed:", err);
+          throw new Error("Data Loading Error");
+        }
+      }
+
+      // Return cached result for subsequent calls
+      console.log("🟢 Returning cached result for:", value);
+      return cachedResult !== undefined && cachedResult !== null
+        ? {
+            data: cachedResult.data,
+            totalCount: cachedResult.totalCount,
+          }
+        : {
+            data: [],
+            totalCount: 0,
+            summary: {},
+            groupCount: 0,
+          };
+    },
+  });
+};
+
 const createBatchStore = async (productID: string, warehouseId: number, batchDataUrl?: string) => {
   
   return new CustomStore({
@@ -229,7 +321,56 @@ const createBatchStore = async (productID: string, warehouseId: number, batchDat
   });
 };
 
+const createBatchStoreWithCache = async (
+  productID: string,
+  warehouseId: number,
+  batchDataUrl?: string
+) => {
+  let cachedResult: any = null;
+  let hasFetchedOnce = false;
+  const api = new APIClient();
 
+  return new CustomStore({
+    key: "productBatchID",
+    async load(loadOptions: any) {
+      if (!hasFetchedOnce) {
+        hasFetchedOnce = true;
+        console.log("🔵 Making BATCH API call for product:", productID);
+
+        const paramNames = ["skip", "take", "requireTotalCount", "sort", "filter"];
+        const queryString = paramNames
+          .filter(
+            (paramName) =>
+              loadOptions[paramName] !== undefined &&
+              loadOptions[paramName] !== null &&
+              loadOptions[paramName] !== ""
+          )
+          .map((paramName) => `${paramName}=${JSON.stringify(loadOptions[paramName])}`)
+          .join("&");
+
+        try {
+          const url = `${batchDataUrl}${productID}/${warehouseId ?? 1}` || "";
+          const response = await api.getAsync(
+            queryString && queryString !== "" ? `${url}?${queryString}` : `${url}?skip=0`
+          );
+
+          cachedResult = response;
+          return cachedResult !== undefined && cachedResult !== null
+            ? { data: cachedResult.data, totalCount: cachedResult.totalCount }
+            : { data: [], totalCount: 0, summary: {}, groupCount: 0 };
+        } catch (err) {
+          console.error("Batch API call failed:", err);
+          throw new Error("Batch Data Loading Error");
+        }
+      }
+
+      console.log("🟢 Returning cached BATCH result for product:", productID);
+      return cachedResult !== undefined && cachedResult !== null
+        ? { data: cachedResult.data, totalCount: cachedResult.totalCount }
+        : { data: [], totalCount: 0, summary: {}, groupCount: 0 };
+    },
+  });
+};
 
 const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
   (
@@ -461,7 +602,12 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     const gridContainerRef = useRef<HTMLDivElement>(null);
     const internalRef = useRef<HTMLInputElement>(null);
     const inputRef = ref || internalRef;
+    const fetchInProgressRef = useRef(false);
     const [isLoading, setIsLoading] = useState(false);
+
+    const [productInitialPreferences, setProductInitialPreferences] = useState<any>(null);
+    const [batchInitialPreferences, setBatchInitialPreferences] = useState<any>(null);
+
     const dispatch = useDispatch();
     const portalContainerRef = useRef<HTMLElement | null>(null);
     const formState = useSelector(
@@ -477,13 +623,13 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     const {
       onApplyPreferences: onApplyProductPreferences,
       gridCols: productGridCol,
-    } = usePreferenceData(productColumns, productGridId);
+    } = usePreferenceData(productColumns, productGridId,productInitialPreferences );
 
     // Use the hook for batch grid preferences
     const {
       onApplyPreferences: onApplyBatchPreferences,
       gridCols: batchGridCol,
-    } = usePreferenceData(batchColumns, batchGridId);
+    } = usePreferenceData(batchColumns, batchGridId,batchInitialPreferences );
     const preferenceChooserRef = useRef<{
       handleDragStart: (e: React.DragEvent<HTMLElement>) => void;
       handleDragEnd: (e: React.DragEvent<HTMLElement>) => void;
@@ -495,6 +641,68 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
         eFromDataGrid?: boolean
       ) => void;
     }>(null);
+
+
+useEffect(() => {
+  const fetchProductPreferences = async () => {
+    try {
+      console.log("🔵 Fetching product preferences");
+      const productPref = await getInitialPreference(
+        productGridId,
+        productColumns,
+        new APIClient()
+      );
+      setProductInitialPreferences(productPref);
+      onApplyProductPreferences(productPref);
+    } catch (error) {
+      console.error("Failed to fetch product preferences:", error);
+    }
+  };
+
+  // Fetch on mount and when gridId changes
+  if (productGridId) {
+    fetchProductPreferences();
+  }
+}, [productGridId]);
+
+// STEP 3: Add listener for preference updates (when user saves)
+
+useEffect(() => {
+  if (productInitialPreferences) {
+    console.log("✅ Applying updated product preferences");
+    onApplyProductPreferences(productInitialPreferences);
+  }
+}, [productInitialPreferences]);
+// 4. Add this useEffect to fetch batch preferences when needed:
+
+useEffect(() => {
+  const fetchBatchPreferences = async () => {
+    if (showBatchGrid) {  
+      try {
+        console.log("🔵 Fetching batch preferences");
+        const batchPref = await getInitialPreference(
+          batchGridId,
+          batchColumns,
+          new APIClient()
+        );
+        setBatchInitialPreferences(batchPref);
+        onApplyBatchPreferences(batchPref);
+      } catch (error) {
+        console.error("Failed to fetch batch preferences:", error);
+      }
+    }
+  };
+
+  fetchBatchPreferences();
+}, [showBatchGrid, batchGridId]);
+
+useEffect(() => {
+  if (batchInitialPreferences) {
+    console.log("✅ Applying updated batch preferences");
+    onApplyBatchPreferences(batchInitialPreferences);
+  }
+}, [batchInitialPreferences]);
+
     // Initialize portal container
     useEffect(() => {
       portalContainerRef.current = document.getElementById("portal-root");
@@ -525,7 +733,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
               },
             })
           );
-          const batchStore = await createBatchStore(
+          const batchStore = await createBatchStoreWithCache(
             (formState.batchGridShowKey ?? 0).toString(),
             formState.transaction.master.fromWarehouseID,
             batchDataUrl
@@ -535,6 +743,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       };
       loadLedgerData();
     }, [formState.batchGridShowKey]);
+
     useEffect(() => {
       setInputValue((prev) => ({
         ...prev,
@@ -563,27 +772,39 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       }
       return { top: 0, left: 0, width: "100%" };
     }, [inputRef]);
+
     const debouncedFetch = useMemo(
       () =>
         debounce(async (value: string, byCode: boolean) => {
-          console.log("debouncedFetch", value);
-          if (value.trim() == "" || value.trim() == "%") {
-        setIsLoading(false);
+      if (fetchInProgressRef.current) {
+        console.log("Fetch already in progress, skipping...");
         return;
-          }
-          
-          setIsLoading(true); // Start loading
-          let payload: any = {};
-          if (searchType === "modal") {
+      }
+         console.log("debouncedFetch called with:", value);
+
+          if (value.trim() == "" || value.trim() == "%") {
             setIsLoading(false);
-            // dispatch(formStateHandleFieldChangeKeysOnly({fields: {formElements:{dgvProduct: {visible: true}}}}));
-          } else if (searchType === "grid") {
+            setShowProductGrid(false);
+            return;
+          }
+          fetchInProgressRef.current = true;
+          setIsLoading(true); // Start loading
+          try{
+            let payload: any = {};
+             if (searchType === "modal") {
+            setIsLoading(false);
+            fetchInProgressRef.current = false;
+            return;
+            } 
+             if (searchType === "grid") {
+            // Build payload based on searchKey
             if (searchKey == "pCode") {
               payload.searchByCode = true;
               payload.searchByCodeAndName = false;
               if (value.trim() === "%") {
                 setIsLoading(false);
-                return null;
+                fetchInProgressRef.current = false;
+                return ;
               }
 
               let searchText = "";
@@ -599,7 +820,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
               payload.searchByCode = false;
               if (value.trim() === "%") {
                 setIsLoading(false);
-                return null;
+                fetchInProgressRef.current = false;
+                return ;
               }
 
               let searchText = "";
@@ -619,56 +841,85 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
               payload.searchByCode = byCode;
               payload.productName = value;
             }
-      try {
-            const store = await createStore(value, payload, productDataUrl, [
+
+    
+          // ⭐ CRITICAL CHANGE: Use createStoreWithCache instead of createStore
+          // This prevents the double-load issue
+          const store = await createStoreWithCache(
+            value,
+            payload,
+            productDataUrl,
+            [
               {
                 selector:
                   formState.formElements.productSearchPopupWindow.data
-                    .searchCriteria == "product"
+                    .searchCriteria === "product"
                     ? "productCode"
                     : "productCode",
                 desc: true,
               },
-            ]);
-            
-            const result: any = await store.load();
+            ],
+            closeIfNodata
+          );
 
-              if (result.data.length === 0 && closeIfNodata) {
-                setShowProductGrid(false);
-              } else {
-                setStore(store);
-                setShowProductGrid(true);
-              }
-          }catch (error) {
-            console.error("Fetch error:", error);
-        } finally {
-          setIsLoading(false); // Always clear loading
-        }
+          //  CRITICAL CHANGE: Remove the manual store.load() call
+          // Just set the store and let DataGrid handle loading
+          setStore(store);
+          setShowProductGrid(true);        
+
+          }
+        } catch (error) {
+        console.error("Fetch error:", error);
+        setShowProductGrid(false);
+      } finally {
+        setIsLoading(false);
+        fetchInProgressRef.current = false;
       }
-        }, 200),
-      [productDataUrl, searchType]
+        }, 300),
+      [
+        productDataUrl,
+        searchType,
+        searchKey,
+        useInSearch,
+        searchByCodeAndName,
+        advancedProductSearching,
+        closeIfNodata,
+        formState.formElements.productSearchPopupWindow.data.searchCriteria
+      ]
     );
 
 
 const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {    
       if (disabled) return;
       const value = e.target.value;
-      setProductGridReady(false)
+    // Update input value immediately
       setInputValue((prev) => ({
         ...prev,
         searchValue: value,
       }));
+    // Reset grid ready state
+      setProductGridReady(false);
+      setShowBatchGrid(false);
       if (searchKey == "barCode") {
         return;
       }
-      setShowBatchGrid(false);
+      
       debouncedFetch.cancel();
-      if (value.length >= 1) {    
-        setIsLoading(true);   // Set loading immediately before debounce
+   // If input is empty or too short, immediately hide everything
+      if (!value || value.trim() === "" || value.length < 1) {
+        setIsLoading(false);
+        setShowProductGrid(false);
+        setShowBatchGrid(false);
+        setProductInitialized(false);
+        fetchInProgressRef.current = false;
+        setStore(null);
+        return;
+      };     
+      if (value.length >= 1 && !isNullOrUndefinedOrEmpty(value)  ) {    
+
         if (searchType !== "modal") {
-          await debouncedFetch(value, inputValue.searchByCode);
-          // setShowProductGrid(false);
-          setProductInitialized(false); // Check It
+           debouncedFetch(value, inputValue.searchByCode);
+          setProductInitialized(false); 
           if (inputRef && "current" in inputRef && inputRef.current) {
             inputRef.current.focus();
 
@@ -676,25 +927,17 @@ const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
             inputRef.current.setSelectionRange(val.length, val.length);
           }
         }
-      } else {
-        setIsLoading(false);
-        setStore({
-          data: [],
-          totalCount: 0,
-          summary: {},
-          groupCount: 0,
-        });
-        setShowBatchGrid(false);
-      }
+      } 
       if (onChange) onChange(e);    
     };
 
-    useEffect(
-      () => () => {
+// Add this useEffect to cleanup on unmount
+    useEffect(() => {
+      return () => {
         debouncedFetch.cancel();
-      },
-      [debouncedFetch]
-    );
+        fetchInProgressRef.current = false;
+      };
+    }, [debouncedFetch]);
 
     useEffect(() => {
       if (inputRef && "current" in inputRef && inputRef.current) {
@@ -737,7 +980,7 @@ const handleEnterAction = async () => {
       if (onProductSelected) onProductSelected(rowData);
 
       if (!isNullOrUndefinedOrEmpty(batchDataUrl)) {
-        const batchStore = await createBatchStore(
+        const batchStore = await createBatchStoreWithCache(
           rowData.productID,
           formState.transaction.master.fromWarehouseID,
           batchDataUrl
@@ -886,122 +1129,6 @@ const handleBatchGridDoubleClick =async (e: any) => {
         e.component.selectRows([e.row.key], false);
       }, 0);
     }, []);
-
-    // const handleInputKeyDown = useCallback(
-    //   async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    //     if (disabled) return;
-    //     // e.preventDefault();   
-    //     // e.stopPropagation(); 
-    //     const value = e.currentTarget.value;
-    //     console.log(`Input key: ${value}`);
-    //     if (
-    //       [
-    //         "ArrowLeft",
-    //         "ArrowRight",
-    //         "ArrowUp",
-    //         "ArrowDown",
-    //         "Enter",
-    //         "Escape",
-    //       ].includes(e.key)&& !isLoading  &&
-    //       showProductGrid &&
-    //       dataGridRef.current  && productGridReady
-    //     ) {
-    //       if (e.key === "ArrowDown") {
-    //         const grid: any = dataGridRef.current.instance();
-    //         const rows = grid.getVisibleRows();
-    //         if (rows.length > 0 && productGridReady) {
-    //           grid.selectRowsByIndexes([0]);
-
-    //           grid.navigateToRow(grid.getKeyByRowIndex(0));
-    //           grid.focus();
-    //           e.preventDefault();
-    //         }
-    //       } else if (e.key === "ArrowUp") {
-    //         const grid: any = dataGridRef.current.instance();
-    //         const rows = grid.getVisibleRows();
-    //         if (rows.length > 0) {
-    //           grid.selectRowsByIndexes([0]);
-    //           grid.navigateToRow(grid.getKeyByRowIndex(0));
-    //           grid.option("focusedRowIndex", 0); // ✅ explicitly set focused row
-    //           grid.focus(); // optional: focus container
-    //           e.preventDefault();
-    //         }
-    //       } else if (e.key === "Enter" ) {
-    //         if (searchType !== "modal") {
-    //           rest?.onKeyDown && rest?.onKeyDown(value, e);
-    //         } else {
-    //           if (!isNullOrUndefinedOrEmpty(e.currentTarget.value)) {
-    //             if (searchKey == "product") {
-    //               dispatch(
-    //                 formStateHandleFieldChangeKeysOnly({
-    //                   fields: {
-    //                     formElements: {
-    //                       productSearchPopupWindow: {
-    //                         visible: true,
-    //                         data: {
-    //                           searchColumn: searchKey,
-    //                           rowIndex: rowIndex,
-    //                           searchCriteria: searchKey,
-    //                           searchText: e.currentTarget.value,
-    //                           voucherType:
-    //                             formState.transaction.master.voucherType,
-    //                           warehouseId: 1,
-    //                           inSearch: formState.inSearch,
-    //                         },
-    //                       },
-    //                     },
-    //                   },
-    //                 })
-    //               );
-    //               e.preventDefault();
-    //             } else {
-    //               rest?.onKeyDown && rest?.onKeyDown(value, e);
-    //             }
-    //           } else {
-    //             rest?.onKeyDown && rest?.onKeyDown(value, e);
-    //           }
-    //         }
-    //       } else if (e.key === "Escape") {
-    //         setShowProductGrid(false);
-    //         setShowBatchGrid(false);
-    //         e.preventDefault();
-    //       } else if (["ArrowLeft", "ArrowRight"].includes(e.key)) {
-    //         const input = e.target as HTMLInputElement;
-    //         const { selectionStart, selectionEnd, value } = input;
-    //         let shouldNavigate = true;
-    //         if (["ArrowLeft", "ArrowRight"].includes(e.key)) {
-    //           if (
-    //             e.key === "ArrowRight" &&
-    //             (selectionStart !== value.length ||
-    //               selectionEnd !== value.length)
-    //           ) {
-    //             shouldNavigate = false;
-    //           } else if (
-    //             e.key === "ArrowLeft" &&
-    //             (selectionStart !== 0 || selectionEnd !== 0)
-    //           ) {
-    //             shouldNavigate = false;
-    //           }
-    //         }
-    //         if (shouldNavigate && rest.onKeyDown) {
-    //           rest?.onKeyDown(value, e);
-    //           e.preventDefault();
-    //         }
-    //       }
-    //     } else {
-    //       if (rest.onKeyDown) {
-    //         rest?.onKeyDown(value, e);
-    //       }
-    //     }
-    //   },
-    //   [
-    //     showProductGrid,
-    //     setShowProductGrid,
-    //     searchType,
-    //     debouncedFetch,
-    //     rest.onKeyDown,
-    //   ]
-    // );
 
     const handleInputKeyDown = useCallback(
   async (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -1193,15 +1320,26 @@ const handleBatchGridDoubleClick =async (e: any) => {
         const gridInstance = e.component;
         const visibleRows = gridInstance.getVisibleRows();
         const hasValidData = visibleRows.length > 0 && visibleRows[0].data?.productID;
-        setProductGridReady(true);
-        if (hasValidData && !productInitialized) {
-          gridInstance.option("focusedRowIndex", 0);
-          gridInstance.focus();
 
-          setProductInitialized(true);
-        }
+            // Handle closeIfNodata here instead of in debouncedFetch
+    if (!hasValidData && closeIfNodata && visibleRows.length === 0) {
+      setShowProductGrid(false);
+      setIsLoading(false);
+      setProductGridReady(false);
+      return;
+    }
+    // Only set ready if we have valid data
+    if (hasValidData) {
+      setProductGridReady(true);
+
+      if (!productInitialized) {
+        gridInstance.option("focusedRowIndex", 0);
+        gridInstance.focus();
+        setProductInitialized(true);
+      }
+    }
       },
-      [productInitialized]
+      [productInitialized,closeIfNodata]
     );
       // It will helps to fix the product grid moving isSecureContext, check it 
         useEffect(() => {
@@ -1227,7 +1365,7 @@ const handleBatchGridDoubleClick =async (e: any) => {
         document.head.removeChild(style);
       };
     }, []);
-    console.log("mj233333333333-2");
+  
     // Render DataGrid components in a portal
     const renderDataGridPortal = () => {
       if (!portalContainerRef.current) return null;
@@ -1265,6 +1403,7 @@ const handleBatchGridDoubleClick =async (e: any) => {
                       gridId={productGridId}
                       onApplyPreferences={onApplyProductPreferences}
                       showChooserOnGridHead={true}
+                      initialPreferences={productInitialPreferences}
                       eclipseClass={
                         "absolute z-10 top-[-5px] left-[2px] pointer-events-auto"
                       }
@@ -1326,6 +1465,7 @@ const handleBatchGridDoubleClick =async (e: any) => {
                     gridId={batchGridId}
                     onApplyPreferences={onApplyBatchPreferences}
                     showChooserOnGridHead={true}
+                    initialPreferences={batchInitialPreferences}
                     eclipseClass={"absolute z-10 pointer-events-auto"}
                   />
                   <DataGrid

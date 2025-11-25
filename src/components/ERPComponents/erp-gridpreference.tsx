@@ -85,18 +85,29 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
   const [preferences, setPreferences] = useState<GridPreference>(initialPreferences??initialGridPreference);
 
   useEffect(() => {
+  // If initialPreferences provided from parent, use them
+  if (initialPreferences && initialPreferences !== initialGridPreference) {
+    console.log("✅ Using parent-provided preferences");
+    setPreferences(initialPreferences);
+    return;
+  }
 
-    const fetchPreferences = async () => {
-      const initialPreferences = await getInitialPreference(gridId, columns, new APIClient());
-      onApplyPreferences && onApplyPreferences(initialGridPreference)
-      setPreferences(initialPreferences);
-    };
-    if(showChooserOnGridHead){
-     fetchPreferences();
+  // Otherwise fetch (for standalone usage)
+  const fetchPreferences = async () => {
+    if (showChooserOnGridHead) {
+      console.log("🔵 Fetching preferences in GridPreferenceChooser");
+      const initialPrefs = await getInitialPreference(
+        gridId, 
+        columns, 
+        new APIClient()
+      );
+      onApplyPreferences && onApplyPreferences(initialPrefs);
+      setPreferences(initialPrefs);
     }
-   
-  }, [gridId, columns, onApplyPreferences]);
-  
+  };
+
+  fetchPreferences();
+}, [initialPreferences, gridId,columns]);
 
   const getDefaultColumnPreference = (column: DevGridColumn, index: number): ColumnPreference => ({
     ...column,

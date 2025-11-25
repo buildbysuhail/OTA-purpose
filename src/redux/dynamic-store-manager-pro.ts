@@ -25,6 +25,7 @@ import DeviceStateReducer from "../redux/slices/device/reducer";
 import ApplicationSettingsReducer from "../redux/slices/app/application-settings-reducer";
 import InvTransactionReducer from "../pages/inventory/transactions/reducer";
 import AccTransactionReducer from "../pages/accounts/transactions/reducer";
+import ServiceTransactionReducer from "../pages/inventory/transactions/service/service-transaction-reducer";
 import DataContainerReducer from "../redux/slices/data/reducer";
 
 import { APIClient } from "../helpers/api-client";
@@ -218,6 +219,7 @@ class DynamicReduxManager {
       ApplicationSettings: ApplicationSettingsReducer,
       AccTransaction: AccTransactionReducer,
       InventoryTransaction: InvTransactionReducer,
+      ServiceTransaction: ServiceTransactionReducer,
       Data: DataContainerReducer,
 
       ...reducerMap,

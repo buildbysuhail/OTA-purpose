@@ -46,7 +46,7 @@ import DownloadBarcodePreview from "../../../LabelDesigner/download-preview-barc
 import { customJsonParse, safeBase64Decode } from "../../../../utilities/jsonConverter";
 import { getInitialPreference } from "../../../../utilities/dx-grid-preference-updater";
 import GridTheme from "./grid-theme";
-import { purchaseGridCol } from "./transaction-grid-cols";
+import { stockGridCol } from "./transaction-grid-cols";
 import SavingOverlay from "../transaction-saving";
 import { BusinessType } from "../../../../enums/business-types";
 import MemoEditorModal from "./memo-editor";
@@ -1448,7 +1448,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   }, [formState.quantityFactorData]);
 
 
-  const _purchaseGridCol: ColumnModel[] = purchaseGridCol(applicationSettings, userSession
+  const _purchaseGridCol: ColumnModel[] = stockGridCol(applicationSettings, userSession
     , voucherType ?? formState.transaction.master.voucherType
     , formType ?? formState.transaction.master.voucherForm, t, formState) ?? []
   // const [invoiceNo, setInvoiceNo] = useState<number>(3); // Default Invoice No.

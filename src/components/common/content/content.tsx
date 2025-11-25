@@ -101,6 +101,9 @@ const DailyBalanceAmount = lazy(() => import("../../../pages/inventory/reports/o
 const StockFlow = lazy(() => import("../../../pages/inventory/reports/other-inventory-reports/stock-flow/stock-flow-report"));
 const TransactionAnalysisReport = lazy(() => import("../../../pages/inventory/reports/other-inventory-reports/transaction-analysis-report/transaction-analysis-report"));
 
+// Service Transaction
+const ServiceTransaction = lazy(() => import("../../../pages/inventory/transactions/service"));
+
 // Other Inventory Masters
 const TaxCategoryIndia = lazy(() => import("../../../pages/inventory/masters/tax-category-india/tax-category-india"));
 const TcsCategory = lazy(() => import("../../../pages/inventory/masters/tcs-category/tcs-category"));
@@ -519,6 +522,7 @@ const PrintJobIndicator = () => {
                 /> */}
               </>
             )}
+            
           </Fragment>
         ))}
        <Route
@@ -534,6 +538,16 @@ const PrintJobIndicator = () => {
           element={
             <RouteGuard formCode="PDC" action={UserAction.Show}>
               <PostDatedCheques />
+            </RouteGuard>
+          }
+        />
+
+        {/* Service Transaction */}
+        <Route
+          path="otherTransactions/transactions/ServiceInvoice"
+          element={
+            <RouteGuard formCode="SVI" action={UserAction.Show}>
+              <ServiceTransaction />
             </RouteGuard>
           }
         />

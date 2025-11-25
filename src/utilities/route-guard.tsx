@@ -1,6 +1,8 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { UserAction, useUserRights } from '../helpers/user-right-helper';
+import moment from 'moment';
+import { clearStorage } from './storage-utils';
 
 interface RouteGuardProps {
   children: ReactNode;
@@ -10,31 +12,57 @@ interface RouteGuardProps {
   onlyBaCa?: boolean;
 }
 
-const RouteGuard: React.FC<RouteGuardProps> = ({ 
-  children, 
-  formCode, 
-  action, 
+const isTokenExpired = (): boolean => {
+  const token = localStorage.getItem('token');
+  if (!token) return true;
+
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const exp = payload.exp;
+    if (!exp) return true;
+debugger
+    // exp is in seconds, compare with current UTC time in seconds
+    const nowUtc = moment().utc().toDate().getTime() / 1000;
+    return nowUtc >= exp;
+  } catch {
+    return true;
+  }
+};
+
+const RouteGuard: React.FC<RouteGuardProps> = ({
+  children,
+  formCode,
+  action,
   redirectPath = '/login' ,
   onlyBaCa = false
 }) => {
-  const { hasRight } = useUserRights();
-  debugger;
-    // return <>{children}</>;
-  // Early return if no formCode
-  if (!formCode && onlyBaCa) {
-    return <>{children}</>;
-  }
+const { hasRight } = useUserRights();
 
-  const isAllowed = hasRight(formCode, action,onlyBaCa);
-  
-  if (isAllowed) {
-     return <>{children}</>;
-  }
-  else {
-    return <Navigate to={redirectPath} replace />;
-  }
+  const [checking, setChecking] = useState(true);
+  const [redirect, setRedirect] = useState(false);
 
+  useEffect(() => {
+    const run = async () => {
+      if (isTokenExpired()) {
+        await clearStorage();
+        setRedirect(true);
+        return;
+      }
+      setChecking(false);
+    };
 
+    run();
+  }, []);
+
+  if (redirect) return <Navigate to={redirectPath} replace />;
+  if (checking) return null; // or loading spinner
+
+  // After async check is done:
+  if (!formCode && onlyBaCa) return <>{children}</>;
+
+  const isAllowed = hasRight(formCode, action, onlyBaCa);
+
+  return isAllowed ? <>{children}</> : <Navigate to={redirectPath} replace />;
 };
 
 export default RouteGuard;

@@ -55,6 +55,7 @@ export enum TransactionTitles {
   ItemLoadRequest = "item_load_request",
   StockCount = "stock_count",
   ServiceInvoice = "service_invoice",
+  ServiceTransaction = "service_transaction",
 }
 export enum TransactionListTitles {
   CashPayment = "cash_payments",
@@ -112,4 +113,5 @@ export enum TransactionListTitles {
   ItemLoadRequests = "item_load_requests",
   StockCounts = "stock_counts",
   ServiceInvoices = "service_invoices",
+  ServiceTransactions = "service_transactions",
 }

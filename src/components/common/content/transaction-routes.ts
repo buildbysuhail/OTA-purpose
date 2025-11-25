@@ -312,7 +312,7 @@ export const transactionRoutes: TransactionRoute[] = [
     voucherType: VoucherType.GoodRequest,
     transactionType: "GoodsRequest",
     formType: "",
-    title: TransactionTitles.GoodsRequest,
+    title: TransactionTitles.GoodsRequest, // so
     drCr: "Cr",
     listTitle: TransactionListTitles.GoodsRequests,
     icon: PackageSearch,
@@ -421,7 +421,7 @@ export const transactionRoutes: TransactionRoute[] = [
     voucherType: VoucherType.RequestForQuotation,
     transactionType: "RequestForQuotation",
     formType: "",
-    title: TransactionTitles.RequestForSalesQuotation,
+    title: TransactionTitles.RequestForSalesQuotation, //so
     drCr: "Cr",
     listTitle: TransactionListTitles.RequestForSalesQuotations,
     icon: HandCoins,
@@ -460,7 +460,7 @@ export const transactionRoutes: TransactionRoute[] = [
     voucherType: VoucherType.GoodsDeliveryNote,
     transactionType: "GoodsDelivery",
     formType: "",
-    title: TransactionTitles.GoodsDelivery,
+    title: TransactionTitles.GoodsDelivery, 
     drCr: "Cr",
     listTitle: TransactionListTitles.GoodsDeliveries,
     icon: HandCoins,
@@ -473,7 +473,7 @@ export const transactionRoutes: TransactionRoute[] = [
     voucherType: VoucherType.GoodsDeliveryReturn,
     transactionType: "GoodsDeliveryReturn",
     formType: "",
-    title: TransactionTitles.GoodsDeliveryReturn,
+    title: TransactionTitles.GoodsDeliveryReturn, //GRR
     drCr: "Cr",
     listTitle: TransactionListTitles.GoodsDeliveryReturns,
     icon: HandCoins,
@@ -499,7 +499,7 @@ export const transactionRoutes: TransactionRoute[] = [
     voucherType: VoucherType.GoodsReceiptReturn,
     transactionType: "GoodsReceiptReturn",
     formType: "",
-    title: TransactionTitles.GoodsReceiptReturn,
+    title: TransactionTitles.GoodsReceiptReturn, //GDR
     drCr: "Cr",
     listTitle: TransactionListTitles.GoodsReceiptReturns,
     icon: PackageCheck,

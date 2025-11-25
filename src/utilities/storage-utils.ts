@@ -38,6 +38,7 @@ export async function removeStorageString(key: string): Promise<boolean> {
 export async function clearStorage(): Promise<boolean> {
   try {
     await localforage.clear();
+    localStorage.clear()
     return true;
   } catch (error) {
     console.error("clearStorage error:", error);

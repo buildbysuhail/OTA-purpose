@@ -6,8 +6,12 @@ import Urls from "../../../redux/urls";
 import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import { useTranslation } from "react-i18next";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
-import { toggleCompanyProfilePopup } from "../../../redux/slices/popup-reducer";
+import { toggleCompanyProfilePopup, toggleConfigureEgs } from "../../../redux/slices/popup-reducer";
 import { ActionType } from "../../../redux/types";
+import ERPButton from "../../../components/ERPComponents/erp-button";
+import ERPModal from "../../../components/ERPComponents/erp-modal";
+import { useRootState } from "../../../utilities/hooks/useRootState";
+import ConfigureEgs from "./configure-egs";
 
 export interface CompanyProfileData {
   registeredName: string,
@@ -45,7 +49,10 @@ const CompanyProfileManage: React.FC = React.memo(() => {
     useApiClient: true
   });
   const { t } = useTranslation("administration");
-
+  const rootState = useRootState();
+  const handleConfigureEgs = () => {
+    dispatch(toggleConfigureEgs({ isOpen: true }));
+  }
   return (
     <div className=" w-full modal-content">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-0">
@@ -85,6 +92,7 @@ const CompanyProfileManage: React.FC = React.memo(() => {
           {...getFieldProps("buildingNo")}
           label={t("building_number")}
           placeholder={t("building_number")}
+          required={true}
           onChangeData={(data: any) => handleFieldChange("buildingNo", data.buildingNo)}
         />
 
@@ -92,6 +100,7 @@ const CompanyProfileManage: React.FC = React.memo(() => {
           {...getFieldProps("streetName")}
           label={t("street")}
           placeholder={t("street")}
+          required={true}
           onChangeData={(data: any) => handleFieldChange("streetName", data.streetName)}
         />
 
@@ -99,6 +108,7 @@ const CompanyProfileManage: React.FC = React.memo(() => {
           {...getFieldProps("district")}
           label={t("district")}
           placeholder={t("district")}
+          required={true}
           onChangeData={(data: any) => handleFieldChange("district", data.district)}
         />
 
@@ -119,7 +129,8 @@ const CompanyProfileManage: React.FC = React.memo(() => {
             valueKey: "name",
             labelKey: "name",
           }}
-          onChangeData={(data: any) => {  handleFieldChange("country", data.country)}}
+          required={true}
+          onChangeData={(data: any) => { handleFieldChange("country", data.country) }}
           label={t("country")}
         />
 
@@ -135,6 +146,7 @@ const CompanyProfileManage: React.FC = React.memo(() => {
           {...getFieldProps("additionalNo")}
           label={t("additional_number")}
           placeholder={t("additional_number")}
+          required={true}
           onChangeData={(data: any) => handleFieldChange("additionalNo", data.additionalNo)}
         />
 
@@ -142,6 +154,7 @@ const CompanyProfileManage: React.FC = React.memo(() => {
           {...getFieldProps("countrySubEntity")}
           label={t("region_country_sub_entity")}
           placeholder={t("region")}
+          required={true}
           onChangeData={(data: any) => handleFieldChange("countrySubEntity", data.countrySubEntity)}
         />
 
@@ -158,13 +171,19 @@ const CompanyProfileManage: React.FC = React.memo(() => {
           placeholder={t("telephone")}
           onChangeData={(data: any) => handleFieldChange("telephone", data.telephone)}
         />
-        
+
         <ERPInput
           {...getFieldProps("mobile")}
           label={t("mobile")}
           placeholder={t("mobile")}
           onChangeData={(data: any) => handleFieldChange("mobile", data.mobile)}
         />
+        <div>
+          <ERPButton
+            title={t('configure_egs')}
+            onClick={handleConfigureEgs}
+          />
+        </div>
       </div>
       <ERPFormButtons
         onClear={handleClear}
@@ -172,6 +191,13 @@ const CompanyProfileManage: React.FC = React.memo(() => {
         isLoading={isLoading}
         onCancel={handleClose}
         onSubmit={handleSubmit}
+      />
+
+      <ERPModal
+        title={t("production_production_certificate_generated")}
+        isOpen={rootState.PopupData.configureEgs.isOpen ?? false}
+        closeModal={() => { dispatch(toggleConfigureEgs({ isOpen: false })) }}
+        content={<ConfigureEgs />}
       />
     </div>
   );

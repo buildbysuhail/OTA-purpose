@@ -76,5 +76,19 @@
   "username": "اسم المستخدم",
   "password": "كلمة المرور",
   "confirm_password": "تأكيد كلمة المرور",
-  "branch": "الفرع"
+  "branch": "الفرع",
+
+  "online": "متصل بالإنترنت",
+  "online_with_customer_care_support": "متصل بالإنترنت (مع دعم خدمة العملاء)",
+  "simulation": "محاكاة",
+  "production": "إنتاج",
+  "company_type": "نوع الشركة",
+  "otp": "كلمة المرور لمرة واحدة (OTP)",
+  "certificate_generation_method": "طريقة إنشاء الشهادة",
+  "generate_compilance_csid": "إنشاء رمز CSID الامتثالي",
+  "generate_production_certificate": "إنشاء شهادة الإنتاج",
+  "register_system_codes": "تسجيل رموز النظام",
+  "api_portal_registration": "تسجيل بوابة API",
+  "production_production_certificate_generated": "إنتاج - تم إنشاء شهادة الإنتاج",
+  "configure_egs": "تكوين EGS"
 }

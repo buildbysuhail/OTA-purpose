@@ -76,5 +76,19 @@
   "username": "User Name",
   "password": "Password",
   "confirm_password": "Confirm Password",
-  "branch": "Branch"
+  "branch": "Branch",
+
+  "online": "Online",
+  "online_with_customer_care_support": "Online (With Customer Care Support)",
+  "simulation": "Simulation",
+  "production": "Production",
+  "company_type": "Company Type",
+  "otp": "OTP",
+  "certificate_generation_method": "Certificate Generation Method",
+  "generate_compilance_csid": "Generate Compilance CSID",
+  "generate_production_certificate": "Generate Production Certificate",
+  "register_system_codes": "Register System Codes",
+  "api_portal_registration": "API Portal Registration",
+  "production_production_certificate_generated": "Production - Production Certificate Generated",
+  "configure_egs": "Configure EGS"
 }

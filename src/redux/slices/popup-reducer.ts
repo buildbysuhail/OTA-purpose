@@ -87,6 +87,7 @@ interface popupData {
   CustomDesignerPopup: popupDataProps;
   IsPrintPreviewPopup: popupDataProps;
   TemplateChooserModal: popupDataProps;
+  configureEgs: popupDataProps;
 }
 const initialState: popupData = {
   IsPrintPreviewPopup: { isOpen: false, templateGroup:"",formState:"",customerType:""},
@@ -158,6 +159,7 @@ const initialState: popupData = {
   productSummaryReport: { isOpen: false, key: null, mode: "edit", reload: true },
   GrnNumber: { isOpen: false, key: null, mode: "edit", reload: true },
   TemplateChooserModal: { isOpen: false,},
+  configureEgs: { isOpen: false, key: null, mode: "edit", reload: true },
 };
 
 const popupDataSlice = createSlice({
@@ -390,6 +392,9 @@ const popupDataSlice = createSlice({
     toggleTemplateChooserModal: (state, action: PayloadAction<popupDataProps>) => {
       state.TemplateChooserModal = action.payload;
     },
+    toggleConfigureEgs: (state, action: PayloadAction<popupDataProps>) => {
+      state.configureEgs = action.payload;
+    },
   },
 });
 
@@ -464,6 +469,7 @@ export const {
   toggleGrnNumber,
   toggleIsPrintPreviewPopup,
   toggleTemplateChooserModal,
+  toggleConfigureEgs,
 } = popupDataSlice.actions;
 
 export default popupDataSlice.reducer;

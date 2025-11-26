@@ -700,41 +700,23 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
   };
 
   return (
-    <div>
-        {/* <div> */}
-             {/* <li> 
-                        <GridPreferenceChooser
-                        initialPreferences={preferences}
-                        ref={preferenceChooserRef}
-                        gridId={gridId}
-                        columns={
-                          (formState.gridColumns ?? []) as DevGridColumn[]
-                        }
-                        onApplyPreferences={onApplyPreferences}
-                        showChooserName={true}
-                      />
-                 </li> */}
-        {/* </div> */}
     <div
-      key={`${column.dataField}`}
-      style={{
-        width: typeof cellWidth === 'number' ? `${cellWidth}px` : cellWidth,
-        minWidth: typeof cellWidth === 'number' ? `${cellWidth}px` : cellWidth,
-        maxWidth: typeof cellWidth === 'number' ? `${cellWidth}px` : cellWidth,
-        height:"100%" ,
-        // height: '33px',
-        // height: '100px',
-        //  height: '100%',
-        ...(isMobile ? getMobileBorderStyles() : getDesktopBorderStyles()),
-        fontSize: `${gridFontSize}px`,
-        textAlign: column.dataField === "slNo" ? "center" : ["qty"].includes(column.dataField ?? "") ? "right" : "left",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        whiteSpace: "nowrap",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor:
+    key={`${column.dataField}`}
+    style={{
+      width: typeof cellWidth === 'number' ? `${cellWidth}px` : cellWidth,
+      minWidth: typeof cellWidth === 'number' ? `${cellWidth}px` : cellWidth,
+      maxWidth: typeof cellWidth === 'number' ? `${cellWidth}px` : cellWidth,
+      height: "100%",
+      ...(isMobile ? getMobileBorderStyles() : getDesktopBorderStyles()),
+      fontSize: `${gridFontSize}px`,
+      textAlign: column.dataField === "slNo" ? "center" : ["qty"].includes(column.dataField ?? "") ? "right" : "left",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor:
         isMobile ? 
         appState.mode === "dark"
                 ? "#555555"
@@ -759,23 +741,22 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
                 : appState.mode === "dark"
                     ? "#444444"
                     : "#f9f9f9",
-        position: isMobile ? 'relative' : (isFixed ? "sticky" : "relative"),
-        left: !isMobile && isFirstColumn ? "0px" : "auto",
-        right: !isMobile && isLastColumn ? "0px" : "auto",
-        zIndex: !isMobile && isFixed ? 50 : 1,
-        gap: isLastColumn ? "8px" : "0",
-        }}
-        onClick={(e: React.MouseEvent<HTMLElement>) => {
-        e.preventDefault();
-        setCurrentCell({
-            column: column.dataField ?? "",
-            data: item,
-            rowIndex: index,
-        });
-        }}
-    >
-      {renderCellValue()}
-    </div>
+      position: isMobile ? 'relative' : (isFixed ? "sticky" : "relative"),
+      left: !isMobile && isFirstColumn ? "0px" : "auto",
+      right: !isMobile && isLastColumn ? "0px" : "auto",
+      zIndex: !isMobile && isFixed ? 50 : 1,
+      gap: isLastColumn ? "8px" : "0",
+    }}
+    onClick={(e: React.MouseEvent<HTMLElement>) => {
+      e.preventDefault();
+      setCurrentCell({
+        column: column.dataField ?? "",
+        data: item,
+        rowIndex: index,
+      });
+    }}
+  >
+    {renderCellValue()}
     </div>
   );
 });

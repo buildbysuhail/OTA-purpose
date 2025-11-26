@@ -77,6 +77,7 @@ const EditableCell: React.FC<{
   gridIsBold: boolean;
   formState: any;
   rowHeight: number;
+  isMobile: boolean;
 }> = React.memo(({
   appState,
   type,
@@ -96,6 +97,7 @@ const EditableCell: React.FC<{
   gridIsBold,
   formState,
   rowHeight,
+  isMobile
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const { round } = useNumberFormat();
@@ -191,7 +193,7 @@ const EditableCell: React.FC<{
   }, [onKeyDown, column, rowIndex]);
 
   const cellStyle = useMemo(() => ({
-    height: `${rowHeight - 0.6}px`,
+    height: `${ rowHeight - 0.6}px`,
     minHeight: `${rowHeight - 0.6}px`,
     maxHeight: `${rowHeight}px`,
     lineHeight: "normal",
@@ -231,12 +233,14 @@ const EditableCell: React.FC<{
       className="bg-transparent border-none focus:ring-0 focus:outline-none"
       style={{
         ...cellStyle,
+        height: isMobile ? "20px" : cellStyle.height,
+        
         whiteSpace: "nowrap",
         overflow: "hidden",
         textOverflow: "ellipsis",
         backgroundColor: "transparent",
         color: appState.mode === "dark" ? "#e0e0e0" : "#000000",
-        border: "none",
+        border: isMobile ? "1px solid blue" :"none",
         width: "100%",
       }}
       value={localValue}
@@ -346,6 +350,22 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
       })
     );
   }, [dispatch]);
+  
+  console.log("mmmjjjj22333",
+  merge(
+    {},
+    formState.userConfig?.inputBoxStyle,
+    initialUserConfig.inputBoxStyle,
+    {
+      inputHeight: 2,
+      inputSize: "customize",
+      fontColor: "0, 0, 0",
+      borderColor: "200, 200, 200",
+      showBorder: true,
+    }
+  )
+);
+
 
   const renderCellValue = useCallback(() => {
     if (formState.transactionLoading) {
@@ -484,10 +504,12 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
       currentCell?.rowIndex === index
     ) {
       return (
+        // <div className="erp-product-search-wrapper" style={{ border: "1px solid rgba(200, 200, 200, 1)" }}>
+
         <ERPProductSearch
           showInputSymbol={true}
         //   customStyle={formState.userConfig?.inputBoxStyle}
-          customStyle={merge( {}, formState.userConfig?.inputBoxStyle, initialUserConfig.inputBoxStyle, { inputHeight: 2, fontSize: 25, fontColor: "0, 0, 0", borderColor: "200, 200, 200"})}
+          customStyle={merge( {}, formState.userConfig?.inputBoxStyle, initialUserConfig.inputBoxStyle, { inputHeight: 2, inputSize: "customize", fontColor: "0, 0, 0", borderColor: "200, 200, 200", showBorder: true})}
           appState={appState}
           zIndexController={zIndexController}
           textAlign={column.alignment === "right" ? "right" : "left"}
@@ -524,6 +546,7 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
             dispatch(formStateHandleFieldChange({ fields: { batchSelectionData: JSON.stringify(res) } }));
           }}
         />
+        // </div>
       );
     }
 
@@ -580,6 +603,7 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
           gridIsBold={gridIsBold}
           formState={formState}
           rowHeight={rowHeight}
+          isMobile={isMobile}
         />
       );
     }
@@ -676,40 +700,23 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
   };
 
   return (
-    <div>
-        <div>
-             {/* <li> 
-                        <GridPreferenceChooser
-                        initialPreferences={preferences}
-                        ref={preferenceChooserRef}
-                        gridId={gridId}
-                        columns={
-                          (formState.gridColumns ?? []) as DevGridColumn[]
-                        }
-                        onApplyPreferences={onApplyPreferences}
-                        showChooserName={true}
-                      />
-                 </li> */}
-        </div>
     <div
-      key={`${column.dataField}`}
-      style={{
-        width: typeof cellWidth === 'number' ? `${cellWidth}px` : cellWidth,
-        minWidth: typeof cellWidth === 'number' ? `${cellWidth}px` : cellWidth,
-        maxWidth: typeof cellWidth === 'number' ? `${cellWidth}px` : cellWidth,
-        height: '33px',
-        // height: '100px',
-        //  height: '100%',
-        ...(isMobile ? getMobileBorderStyles() : getDesktopBorderStyles()),
-        fontSize: `${gridFontSize}px`,
-        textAlign: column.dataField === "slNo" ? "center" : ["qty"].includes(column.dataField ?? "") ? "right" : "left",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        whiteSpace: "nowrap",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor:
+    key={`${column.dataField}`}
+    style={{
+      width: typeof cellWidth === 'number' ? `${cellWidth}px` : cellWidth,
+      minWidth: typeof cellWidth === 'number' ? `${cellWidth}px` : cellWidth,
+      maxWidth: typeof cellWidth === 'number' ? `${cellWidth}px` : cellWidth,
+      height: "100%",
+      ...(isMobile ? getMobileBorderStyles() : getDesktopBorderStyles()),
+      fontSize: `${gridFontSize}px`,
+      textAlign: column.dataField === "slNo" ? "center" : ["qty"].includes(column.dataField ?? "") ? "right" : "left",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor:
         isMobile ? 
         appState.mode === "dark"
                 ? "#555555"
@@ -734,23 +741,22 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
                 : appState.mode === "dark"
                     ? "#444444"
                     : "#f9f9f9",
-        position: isMobile ? 'relative' : (isFixed ? "sticky" : "relative"),
-        left: !isMobile && isFirstColumn ? "0px" : "auto",
-        right: !isMobile && isLastColumn ? "0px" : "auto",
-        zIndex: !isMobile && isFixed ? 50 : 1,
-        gap: isLastColumn ? "8px" : "0",
-        }}
-        onClick={(e: React.MouseEvent<HTMLElement>) => {
-        e.preventDefault();
-        setCurrentCell({
-            column: column.dataField ?? "",
-            data: item,
-            rowIndex: index,
-        });
-        }}
-    >
-      {renderCellValue()}
-    </div>
+      position: isMobile ? 'relative' : (isFixed ? "sticky" : "relative"),
+      left: !isMobile && isFirstColumn ? "0px" : "auto",
+      right: !isMobile && isLastColumn ? "0px" : "auto",
+      zIndex: !isMobile && isFixed ? 50 : 1,
+      gap: isLastColumn ? "8px" : "0",
+    }}
+    onClick={(e: React.MouseEvent<HTMLElement>) => {
+      e.preventDefault();
+      setCurrentCell({
+        column: column.dataField ?? "",
+        data: item,
+        rowIndex: index,
+      });
+    }}
+  >
+    {renderCellValue()}
     </div>
   );
 });

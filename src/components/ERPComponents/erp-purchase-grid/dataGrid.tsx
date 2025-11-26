@@ -1458,6 +1458,8 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
   ) {
     const dispatch = useAppDispatch();
     console.log("zIndexController:",zIndexController);
+    console.log("gridBorderColor:",gridBorderColor);
+    
     
     const formState = useAppSelector(
       (state: RootState) => state.InventoryTransaction
@@ -3082,7 +3084,7 @@ const hidColumns: string[] = [
                  }`}
                >
                  {/* Header */}
-                 <header className="flex items-center px-4 py-2 bg-white shadow-sm sticky top-0 z-10 dark:bg-[#2d2d2d]">
+                 <header className="flex items-center px-4 py-0 bg-white shadow-sm sticky top-0 z-10 dark:bg-[#2d2d2d]">
                    <button
                      onClick={() =>
                        dispatch(

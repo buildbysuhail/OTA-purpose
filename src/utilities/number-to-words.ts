@@ -711,15 +711,15 @@ export const useNumberToWords = () => {
   }, []);
 
   const getCurrentCurrency = useMemo(() => {
-    const currencyData = currencyDatabase[applicationSettings.mainSettings.currency];
+    const currencyData = currencyDatabase[applicationSettings.mainSettings?.currency];
     return currencyData || DEFAULT_CURRENCY_DATABASE[Currencies.UAE];
-  }, [applicationSettings.mainSettings.currency, currencyDatabase]);
+  }, [applicationSettings.mainSettings?.currency, currencyDatabase]);
 
   const convertToWords = useMemo(() => {
     return (options: ConversionOptions): ConversionResult => {
       const currency = options.currency !== undefined 
         ? options.currency 
-        : applicationSettings.mainSettings.currency as Currencies;
+        : applicationSettings.mainSettings?.currency as Currencies;
       
       const currencyInfo = new CurrencyInfo(currency);
       

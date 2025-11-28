@@ -1,8 +1,4 @@
-/**
- * Service Tab - Service Processing with Spare Parts
- */
-
-import React, { useRef, useState, useCallback } from "react";
+import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
@@ -11,25 +7,13 @@ import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import ERPDatePicker from "../../../../../components/ERPComponents/erp-date-input";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
-import { Save, X, Trash2 } from "lucide-react";
-import {
-  updateMasterField,
-  updateServiceDetails,
-  addSpareDetail,
-  updateSpareDetail,
-  removeSpareDetail,
-  setSearchParams,
-} from "../service-transaction-reducer";
-import {
-  ServiceTransactionFormState,
-  ServiceSpareDetail,
-  ServiceStatus,
-} from "../service-transaction-types";
-import { statusOptions, searchInOptions, initialSpareDetail } from "../service-transaction-data";
+import { Save, X, Trash2, Package } from "lucide-react";
+import { updateServiceDetails, updateSpareDetail, removeSpareDetail, setSearchParams, } from "../service-transaction-reducer";
+import { ServiceTransactionFormState, ServiceStatus, } from "../service-transaction-types";
+import { statusOptions, searchInOptions } from "../service-transaction-data";
 import Urls from "../../../../../redux/urls";
 import moment from "moment";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
-
 interface ServiceTabProps {
   onSave: () => void;
   onClear: () => void;
@@ -40,16 +24,11 @@ const ServiceTab: React.FC<ServiceTabProps> = ({ onSave, onClear, onSearch }) =>
   const { t } = useTranslation("transaction");
   const dispatch = useDispatch();
   const { getFormattedValue } = useNumberFormat();
-  const formState = useSelector(
-    (state: RootState) => state.ServiceTransaction as ServiceTransactionFormState
-  );
-
+  const formState = useSelector((state: RootState) => state.ServiceTransaction as ServiceTransactionFormState);
   const { master, serviceDetails, spareDetails } = formState.transaction;
   const { formElements, searchJobNo, searchIn } = formState;
-
   const [barcodeInput, setBarcodeInput] = useState("");
   const barcodeRef = useRef<HTMLInputElement>(null);
-
   const handleSearchKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       onSearch(searchJobNo, searchIn);
@@ -58,8 +37,6 @@ const ServiceTab: React.FC<ServiceTabProps> = ({ onSave, onClear, onSearch }) =>
 
   const handleBarcodeKeyDown = async (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && barcodeInput.trim()) {
-      // TODO: Fetch product by barcode and add to grid
-      // For now, clear the input
       setBarcodeInput("");
     }
   };
@@ -73,284 +50,301 @@ const ServiceTab: React.FC<ServiceTabProps> = ({ onSave, onClear, onSearch }) =>
   };
 
   const gridColumns = [
-    { field: "pCode", header: t("pcode"), width: 80 },
-    { field: "barcode", header: t("barcode"), width: 100 },
-    { field: "product", header: t("product"), width: 200 },
-    { field: "qty", header: t("qty"), width: 80, editable: true },
-    { field: "purchasePrice", header: t("pprice"), width: 100, align: "right" },
-    { field: "total", header: t("total"), width: 100, align: "right" },
+    { field: "pCode", header: t("pcode"), width: "100px" },
+    { field: "barcode", header: t("barcode"), width: "140px" },
+    { field: "product", header: t("product"), width: "auto" },
+    { field: "qty", header: t("qty"), width: "100px", editable: true },
+    { field: "purchasePrice", header: t("pprice"), width: "130px", align: "right" },
+    { field: "total", header: t("total"), width: "130px", align: "right" },
   ];
 
   return (
-    <div className="p-4">
-      {/* Header - Job No Search */}
-      <div className="flex flex-wrap gap-4 mb-4 items-center">
-        <div className="flex items-center gap-2">
-          <label className="text-sm font-medium">{t("job_no")}.</label>
-          <ERPInput
-            id="searchJobNo"
-            type="number"
-            value={searchJobNo || ""}
-            onChange={(e) =>
-              dispatch(setSearchParams({ jobNo: parseInt(e.target.value) || 0 }))
-            }
-            onKeyDown={handleSearchKeyDown}
-            className="w-24"
-            textAlignStyle="right"
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          <label className="text-sm font-medium">{t("search_in")}</label>
-          <select
-            value={searchIn}
-            onChange={(e) => dispatch(setSearchParams({ searchIn: e.target.value }))}
-            className="border rounded px-2 py-1 text-sm"
-          >
-            {searchInOptions.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      {/* Main Form Panel */}
-      <div className="bg-gray-100 dark:bg-dark-bg-card p-4 rounded-lg">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
-          {/* Left Column - Service Info (Readonly) */}
-          <div className="space-y-3">
-            <div className="flex items-center">
-              <label className="text-sm w-40">{t("service")}</label>
-              <ERPInput
-                id="serviceName"
-                value={master.serviceName}
-                disabled
-                className="flex-1"
-              />
-            </div>
-            <div className="flex items-center">
-              <label className="text-sm w-40">{t("product_remarks")}</label>
-              <ERPInput
-                id="productRemarks"
-                value={master.productRemarks}
-                disabled
-                className="flex-1"
-              />
-            </div>
-            <div className="flex items-center">
-              <label className="text-sm w-40">{t("serial_no")}</label>
-              <ERPInput
-                id="serialNo"
-                value={master.serialNo}
-                disabled
-                className="flex-1"
-              />
-            </div>
-            <div className="flex items-center">
-              <label className="text-sm w-40">{t("received_items")}</label>
-              <ERPInput
-                id="receivedItems"
-                value={master.receivedItems}
-                disabled
-                className="flex-1"
-              />
-            </div>
-            <div className="flex items-center">
-              <label className="text-sm w-40">{t("complaints")}</label>
-              <ERPInput
-                id="complaints"
-                value={master.complaints}
-                disabled
-                className="flex-1"
-              />
-            </div>
-          </div>
-
-          {/* Right Column - Service Details */}
-          <div className="space-y-3">
-            <div className="flex items-center">
-              <label className="text-sm w-40">{t("status")}</label>
-              <select
-                value={serviceDetails.status}
-                onChange={(e) =>
-                  dispatch(
-                    updateServiceDetails({ status: e.target.value as ServiceStatus })
-                  )
-                }
-                disabled={formElements.status.disabled}
-                className="border rounded px-2 py-1 text-sm flex-1"
-              >
-                {statusOptions.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="flex items-center">
-              <label className="text-sm w-40">{t("expected_delivery_date")}</label>
-              <ERPDatePicker
-                id="expectedDeliveryDate"
-                value={
-                  master.expectedDeliveryDate
-                    ? moment(master.expectedDeliveryDate).toDate()
-                    : new Date()
-                }
-                disabled
-              />
-              <div className="ml-4 flex items-center">
-                <ERPCheckbox
-                  id="isWarrantyService"
-                  label={t("is_warranty_service")}
-                  checked={master.isWarrantyService}
-                  disabled
-                />
-              </div>
-            </div>
-            <div className="flex items-center">
-              <label className="text-sm w-40">{t("date")}</label>
-              <ERPDatePicker
-                id="serviceDoneDate"
-                value={
-                  serviceDetails.serviceDoneDate
-                    ? moment(serviceDetails.serviceDoneDate).toDate()
-                    : new Date()
-                }
-                onChange={(date) =>
-                  dispatch(
-                    updateServiceDetails({
-                      serviceDoneDate: date.target.value,
-                    })
-                  )
-                }
-                disabled={formElements.serviceDoneDate.disabled}
-              />
-            </div>
-            <div className="flex items-center gap-4">
-              <label className="text-sm w-40">{t("service_charge")}</label>
-              <ERPInput
-                id="serviceCharge"
-                type="number"
-                value={serviceDetails.serviceCharge}
-                onChange={(e) =>
-                  dispatch(
-                    updateServiceDetails({
-                      serviceCharge: parseFloat(e.target.value) || 0,
-                    })
-                  )
-                }
-                disabled={formElements.serviceCharge.disabled}
-                className="w-24"
-                textAlignStyle="right"
-              />
-              <label className="text-sm">{t("consumed_qty_amt")}</label>
-              <ERPInput
-                id="consumedQtyAmount"
-                type="number"
-                value={serviceDetails.consumedQtyAmount}
-                disabled
-                className="w-24"
-                textAlignStyle="right"
-              />
-            </div>
-            <div className="flex items-center gap-4">
-              <label className="text-sm w-40">{t("unit_rate")}</label>
-              <ERPInput
-                id="unitRate"
-                type="number"
-                value={master.unitRate}
-                disabled
-                className="w-24"
-                textAlignStyle="right"
-              />
-              <label className="text-sm">{t("warehouse")}</label>
-              <ERPDataCombobox
-                id="warehouseID"
-                value={serviceDetails.warehouseID}
-                dataUrl={Urls.data_warehouse}
-                valueField="id"
-                displayField="warehouseName"
-                onChange={(item) =>
-                  dispatch(
-                    updateServiceDetails({
-                      warehouseID: item?.id || 0,
-                      warehouseName: item?.warehouseName || "",
-                    })
-                  )
-                }
-                disabled={formElements.warehouseID.disabled}
-                className="flex-1"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Spare Parts Grid */}
-        <div className="mt-4">
-          <div className="mb-2">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Header Card - Job Search */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+          <div className="flex items-end justify-between">
             <ERPInput
-              id="barcodeInput"
-              ref={barcodeRef}
-              value={barcodeInput}
-              onChange={(e) => setBarcodeInput(e.target.value)}
-              onKeyDown={handleBarcodeKeyDown}
-              placeholder={t("scan_barcode")}
-              className="w-64"
+              id="searchJobNo"
+              type="number"
+              value={searchJobNo || ""}
+              className="w-24"
+              label={t("job_no")}
+              onChange={(e) => dispatch(setSearchParams({ jobNo: parseInt(e.target.value) || 0 }))}
+              onKeyDown={handleSearchKeyDown}
+              textAlignStyle="right"
+            />
+            <ERPDataCombobox
+              id="searchIn"
+              value={searchIn}
+              label={t("search_in")}
+              options={searchInOptions}
+              onChange={(item: any) => dispatch(setSearchParams({ searchIn: item?.value }))}
             />
           </div>
-          <div className="border rounded overflow-hidden">
-            <table className="w-full text-sm">
-              <thead className="bg-gray-200 dark:bg-dark-bg-header">
+        </div>
+
+        {/* Main Service Information Card */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+          <div className="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 px-6 py-4">
+            <h2 className="text-lg font-semibold text-white">{t("service_information")}</h2>
+          </div>
+
+          <div className="p-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Left Column - Service Info (Readonly) */}
+              <div className="space-y-4">
+                <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 space-y-4">
+                  <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-3">
+                    {t("service_details")}
+                  </h3>
+
+                  <div className="space-y-3">
+                    <ERPInput
+                      id="serviceName"
+                      label={t("service")}
+                      value={master.serviceName}
+                      disabled
+                      className="w-full"
+                    />
+
+                    <ERPInput
+                      id="productRemarks"
+                      label={t("product_remarks")}
+                      value={master.productRemarks}
+                      disabled
+                      className="w-full"
+                    />
+
+                    <div className="grid grid-cols-2 gap-2">
+                      <ERPInput
+                        id="serialNo"
+                        label={t("serial_no")}
+                        value={master.serialNo}
+                        disabled
+                        className="w-full"
+                      />
+
+                      <ERPInput
+                        id="unitRate"
+                        type="number"
+                        label={t("unit_rate")}
+                        value={master.unitRate}
+                        disabled
+                        className="w-full"
+                        textAlignStyle="right"
+                      />
+                    </div>
+
+                    <ERPInput
+                      id="receivedItems"
+                      label={t("received_items")}
+                      value={master.receivedItems}
+                      disabled
+                      className="w-full"
+                    />
+
+                    <ERPInput
+                      id="complaints"
+                      label={t("complaints")}
+                      value={master.complaints}
+                      disabled
+                      className="w-full"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column - Service Processing */}
+              <div className="space-y-4">
+                <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 space-y-4">
+                  <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-3">
+                    {t("service_processing")}
+                  </h3>
+
+                  <div className="space-y-3">
+                    <ERPDataCombobox
+                      id="status"
+                      label={t("status")}
+                      value={serviceDetails.status}
+                      options={statusOptions}
+                      onChange={(item: any) => dispatch(updateServiceDetails({ status: item?.value as ServiceStatus }))}
+                      disabled={formElements.status.disabled}
+                      className="w-full"
+                    />
+
+                    <div className="flex items-end gap-2">
+                      <ERPDatePicker
+                        id="expectedDeliveryDate"
+                        label={t("expected_delivery_date")}
+                        value={master.expectedDeliveryDate ? moment(master.expectedDeliveryDate).toDate() : new Date()}
+                        disabled
+                      />
+
+                      <ERPDatePicker
+                        id="serviceDoneDate"
+                        label={t("date")}
+                        value={serviceDetails.serviceDoneDate ? moment(serviceDetails.serviceDoneDate).toDate() : new Date()}
+                        disabled={formElements.serviceDoneDate.disabled}
+                        onChange={(e) => {
+                          let dateValue: string;
+                          if (e && typeof e === 'object' && 'target' in e) {
+                            dateValue = e.target.value ? moment(e.target.value).toISOString() : "";
+                          } else {
+                            dateValue = e ? moment(e).toISOString() : "";
+                          }
+                          dispatch(
+                            updateServiceDetails({
+                              serviceDoneDate: dateValue,
+                            })
+                          );
+                        }}
+                      />
+                      <ERPCheckbox
+                        id="isWarrantyService"
+                        label={t("is_warranty_service")}
+                        checked={master.isWarrantyService}
+                        disabled
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <ERPInput
+                        id="serviceCharge"
+                        type="number"
+                        label={t("service_charge")}
+                        value={serviceDetails.serviceCharge}
+                        disabled={formElements.serviceCharge.disabled}
+                        className="w-full"
+                        textAlignStyle="right"
+                        onChange={(e) =>
+                          dispatch(
+                            updateServiceDetails({
+                              serviceCharge: parseFloat(e.target.value) || 0,
+                            })
+                          )
+                        }
+                      />
+                      <ERPInput
+                        label={t("consumed_qty_amt")}
+                        id="consumedQtyAmount"
+                        type="number"
+                        value={serviceDetails.consumedQtyAmount}
+                        disabled
+                        className="w-full"
+                        textAlignStyle="right"
+                      />
+                    </div>
+
+                    <ERPDataCombobox
+                      id="warehouseID"
+                      label={t("warehouse")}
+                      value={serviceDetails.warehouseID}
+                      disabled={formElements.warehouseID.disabled}
+                      className="w-full"
+                      field={{
+                        getListUrl: Urls.data_warehouse,
+                        valueKey: "id",
+                        labelKey: "warehouseName",
+                      }}
+                      onChange={(item: any) =>
+                        dispatch(
+                          updateServiceDetails({
+                            warehouseID: item?.value || 0,
+                            warehouseName: item?.label || "",
+                          })
+                        )
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Spare Parts Card */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+          <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 dark:from-emerald-700 dark:to-emerald-800 px-6 py-4 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Package size={20} className="text-white" />
+              <h2 className="text-lg font-semibold text-white">{t("spare_parts")}</h2>
+            </div>
+            <div className="w-72">
+              <ERPInput
+                id="barcodeInput"
+                ref={barcodeRef}
+                value={barcodeInput}
+                onChange={(e) => setBarcodeInput(e.target.value)}
+                onKeyDown={handleBarcodeKeyDown}
+                placeholder={t("scan_barcode")}
+                className="w-full"
+                noLabel={true}
+              />
+            </div>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-100 dark:bg-gray-900">
                 <tr>
                   {gridColumns.map((col) => (
-                    <th
-                      key={col.field}
-                      className="px-2 py-1 text-left border-r"
-                      style={{ width: col.width }}
-                    >
+                    <th key={col.field} className={`px-4 py-3 text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider border-b-2 border-gray-200 dark:border-gray-700 ${col.align === 'right' ? 'text-right' : 'text-left'}`} style={{ width: col.width }}>
                       {col.header}
                     </th>
                   ))}
-                  <th className="w-10 px-2 py-1">X</th>
+                  <th className="w-16 px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider border-b-2 border-gray-200 dark:border-gray-700">
+                    {t("action")}
+                  </th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                 {spareDetails.map((item, index) => (
-                  <tr key={index} className="border-t hover:bg-gray-50 dark:hover:bg-dark-bg-hover">
-                    <td className="px-2 py-1 border-r">{item.pCode}</td>
-                    <td className="px-2 py-1 border-r">{item.barcode}</td>
-                    <td className="px-2 py-1 border-r">{item.product}</td>
-                    <td className="px-2 py-1 border-r">
+                  <tr key={index} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                    <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">
+                      {item.pCode}
+                    </td>
+                    <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">
+                      {item.barcode}
+                    </td>
+                    <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">
+                      {item.product}
+                    </td>
+                    <td className="px-4 py-3">
                       <input
                         type="number"
                         value={item.qty}
                         onChange={(e) =>
                           handleQtyChange(index, parseFloat(e.target.value) || 0)
                         }
-                        className="w-full text-right bg-transparent"
+                        className="w-full px-2 py-1 text-sm text-right bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </td>
-                    <td className="px-2 py-1 border-r text-right">
+                    <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-gray-100 font-medium">
                       {getFormattedValue(item.purchasePrice)}
                     </td>
-                    <td className="px-2 py-1 border-r text-right">
+                    <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-gray-100 font-semibold">
                       {getFormattedValue(item.total)}
                     </td>
-                    <td className="px-2 py-1 text-center">
+                    <td className="px-4 py-3 text-center">
                       <button
                         onClick={() => handleRemoveSpare(index)}
-                        className="text-red-500 hover:text-red-700"
+                        className="inline-flex items-center justify-center w-8 h-8 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                        title={t("remove")}
                       >
-                        <Trash2 size={14} />
+                        <Trash2 size={16} />
                       </button>
                     </td>
                   </tr>
                 ))}
                 {spareDetails.length === 0 && (
                   <tr>
-                    <td colSpan={7} className="px-2 py-4 text-center text-gray-400">
-                      {t("no_spare_parts")}
+                    <td colSpan={7} className="px-4 py-12 text-center">
+                      <div className="flex flex-col items-center justify-center text-gray-400 dark:text-gray-500">
+                        <Package size={48} className="mb-3 opacity-50" />
+                        <p className="text-sm font-medium">{t("no_spare_parts")}</p>
+                        <p className="text-xs mt-1">{t("scan_barcode_to_add")}</p>
+                      </div>
                     </td>
                   </tr>
                 )}
@@ -358,30 +352,33 @@ const ServiceTab: React.FC<ServiceTabProps> = ({ onSave, onClear, onSearch }) =>
             </table>
           </div>
         </div>
-      </div>
 
-      {/* Action Buttons */}
-      <div className="flex items-center justify-center gap-3 mt-6">
-        <ERPButton
-          title={t("save")}
-          onClick={onSave}
-          startIcon={<Save size={16} />}
-          variant="primary"
-          disabled={formElements.btnSave.disabled}
-        />
-        <ERPButton
-          title={t("clear")}
-          onClick={onClear}
-          startIcon={<X size={16} />}
-          variant="secondary"
-          disabled={formElements.btnClear.disabled}
-        />
-        <ERPButton
-          title={t("close")}
-          onClick={() => window.history.back()}
-          startIcon={<X size={16} />}
-          variant="secondary"
-        />
+        {/* Action Buttons */}
+        <div className="flex items-center justify-end gap-4 pb-6">
+          <ERPButton
+            title={t("save")}
+            onClick={onSave}
+            startIcon={<Save size={18} />}
+            variant="primary"
+            disabled={formElements.btnSave.disabled}
+            className="px-8 py-3 text-base font-medium"
+          />
+          <ERPButton
+            title={t("clear")}
+            onClick={onClear}
+            startIcon={<X size={18} />}
+            variant="secondary"
+            disabled={formElements.btnClear.disabled}
+            className="px-8 py-3 text-base font-medium"
+          />
+          <ERPButton
+            title={t("close")}
+            onClick={() => window.history.back()}
+            startIcon={<X size={18} />}
+            variant="secondary"
+            className="px-8 py-3 text-base font-medium"
+          />
+        </div>
       </div>
     </div>
   );

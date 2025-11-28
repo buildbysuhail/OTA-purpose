@@ -104,6 +104,8 @@ const TransactionAnalysisReport = lazy(() => import("../../../pages/inventory/re
 // Service Transaction
 const ServiceTransaction = lazy(() => import("../../../pages/inventory/transactions/service"));
 
+// Post Transactions
+const PostTransactionsLayout = lazy(() => import("../../ERPComponents/post-transactions"));
 // Other Inventory Masters
 const TaxCategoryIndia = lazy(() => import("../../../pages/inventory/masters/tax-category-india/tax-category-india"));
 const TcsCategory = lazy(() => import("../../../pages/inventory/masters/tcs-category/tcs-category"));
@@ -125,19 +127,19 @@ const loading = (
 
 const Content: FC<ContentProps> = () => {
   const [myClass, setMyClass] = useState("");
-   const popupData = useSelector((state: RootState) => state?.PopupData);
+  const popupData = useSelector((state: RootState) => state?.PopupData);
   const userSession = useSelector((state: RootState) => state.UserSession);
   const clientSession = useSelector((state: RootState) => state.ClientSession);
-  
-const PrintJobIndicator = () => {
-  if (!popupData.printJobLoader?.isPrinting) return null; 
 
-  return (
-  <div className="fixed bottom-5 right-5 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg z-[99999] print-indicator">
-  🖨️ Printing…
-  </div>
-  );
-};
+  const PrintJobIndicator = () => {
+    if (!popupData.printJobLoader?.isPrinting) return null;
+
+    return (
+      <div className="fixed bottom-5 right-5 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg z-[99999] print-indicator">
+        🖨️ Printing…
+      </div>
+    );
+  };
   const guardedRoutes = [
     // Profile
     { path: "/profile/workspace-logo", element: <WorkSpaceSettings /> },
@@ -226,37 +228,37 @@ const PrintJobIndicator = () => {
   return (
     <>
       <PrintJobIndicator />
-    <Suspense fallback={loading}>
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/profile/avatar" element={<AccountSettingsProfile />} />
-        <Route path="/profile/basic-information" element={<AccountSettingsProfile />} />
-        <Route path="/profile/email-address" element={<AccountSettingsProfile />} />
-        <Route path="/profile/phone-number" element={<AccountSettingsProfile />} />
-        <Route path="/security/password" element={<AccountSettingsSecurity />} />
-        <Route path="/preferences/theme" element={<AccountSettingsPreference />} />
-        <Route path="/preferences/language" element={<AccountSettingsPreference />} />
-        <Route path="/preferences/system-preferences" element={<AccountSettingsPreference />} />
-        <Route path="/sessions" element={<AccountSettingsSessions />} />
-        
-        <Route path="/members" element={<WorkspaceSettingsMembers />} />
-        {guardedRoutes.map(({ path, element }, idx) => (
-        <Route
-          key={idx}
-          path={path}
-          element={
-            <RouteGuard formCode="" action={UserAction.Show} onlyBaCa={true}>
-              {element}
-            </RouteGuard>
-          }
-        />
-      ))}
-  
-        
-        <Route path="/pdf/download" element={<TwilioPdfDownloader  />} />
+      <Suspense fallback={loading}>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/profile/avatar" element={<AccountSettingsProfile />} />
+          <Route path="/profile/basic-information" element={<AccountSettingsProfile />} />
+          <Route path="/profile/email-address" element={<AccountSettingsProfile />} />
+          <Route path="/profile/phone-number" element={<AccountSettingsProfile />} />
+          <Route path="/security/password" element={<AccountSettingsSecurity />} />
+          <Route path="/preferences/theme" element={<AccountSettingsPreference />} />
+          <Route path="/preferences/language" element={<AccountSettingsPreference />} />
+          <Route path="/preferences/system-preferences" element={<AccountSettingsPreference />} />
+          <Route path="/sessions" element={<AccountSettingsSessions />} />
 
-        {/* Accounts Transaction */}
-        {/* <Route
+          <Route path="/members" element={<WorkspaceSettingsMembers />} />
+          {guardedRoutes.map(({ path, element }, idx) => (
+            <Route
+              key={idx}
+              path={path}
+              element={
+                <RouteGuard formCode="" action={UserAction.Show} onlyBaCa={true}>
+                  {element}
+                </RouteGuard>
+              }
+            />
+          ))}
+
+
+          <Route path="/pdf/download" element={<TwilioPdfDownloader />} />
+
+          {/* Accounts Transaction */}
+          {/* <Route
             key={index}
             path={route.path}
             element={
@@ -275,66 +277,66 @@ const PrintJobIndicator = () => {
             }
           /> */}
 
-        {transactionRoutes.map((route, index) => (
-          <Fragment key={`transaction-route-${route.transactionBase}-${route.transactionType}-${index}`}>
-            {route.transactionBase === TransactionBase.Accounts && (
-              <>
-                <Route
-                  key={`accounts-new-${route.transactionType}-${index}`}
-                  path={`${route.transactionBase}/${route.transactionType}`}
-                  element={
-                    <RouteGuard formCode={route.formCode} action={route.action}>
-                      <AccTransactionFormContainer
-                        voucherType={route.voucherType}
-                        transactionType={route.transactionType}
-                        formCode={route.formCode}
-                        voucherPrefix={""}
-                        formType={route.formType}
-                        title={route.title}
-                        drCr={route.drCr}
-                        voucherNo={0}
-                      />
-                    </RouteGuard>
-                  }
-                />
-                <Route
-                  key={`accounts-list-${route.transactionType}-${index}`}
-                  path={`${route.transactionBase}/${route.transactionType}List`}
-                  element={
-                    <RouteGuard formCode={route.formCode} action={route.action}>
-                       <SearchProvider>
-                      <AccTransactionGrid
-                        voucherType={route.voucherType}
-                        transactionType={route.transactionType}
-                        title={route.listTitle}
-                        addTitle={route.title}
-                      />
-                      </SearchProvider>
-                    </RouteGuard>
-                  }
-                />
-                <Route
-                  key={`accounts-view-${route.transactionType}-${index}`}
-                  path={`${route.transactionBase}/${route.transactionType}/:voucherNo`}
-                  element={
-                    <RouteGuard formCode={route.formCode} action={route.action}>
-                       <SearchProvider>
-                      <AccTransactionFormContainerView
-                        voucherType={route.voucherType}
-                        transactionType={route.transactionType}
-                        formCode={route.formCode}
-                        voucherPrefix={""}
-                        formType={route.formType}
-                        title={route.title}
-                        drCr={route.drCr}
-                        voucherNo={0}
-                        
-                      />
-                      </SearchProvider>
-                    </RouteGuard>
-                  }
-                />
-                {/* <Route
+          {transactionRoutes.map((route, index) => (
+            <Fragment key={`transaction-route-${route.transactionBase}-${route.transactionType}-${index}`}>
+              {route.transactionBase === TransactionBase.Accounts && (
+                <>
+                  <Route
+                    key={`accounts-new-${route.transactionType}-${index}`}
+                    path={`${route.transactionBase}/${route.transactionType}`}
+                    element={
+                      <RouteGuard formCode={route.formCode} action={route.action}>
+                        <AccTransactionFormContainer
+                          voucherType={route.voucherType}
+                          transactionType={route.transactionType}
+                          formCode={route.formCode}
+                          voucherPrefix={""}
+                          formType={route.formType}
+                          title={route.title}
+                          drCr={route.drCr}
+                          voucherNo={0}
+                        />
+                      </RouteGuard>
+                    }
+                  />
+                  <Route
+                    key={`accounts-list-${route.transactionType}-${index}`}
+                    path={`${route.transactionBase}/${route.transactionType}List`}
+                    element={
+                      <RouteGuard formCode={route.formCode} action={route.action}>
+                        <SearchProvider>
+                          <AccTransactionGrid
+                            voucherType={route.voucherType}
+                            transactionType={route.transactionType}
+                            title={route.listTitle}
+                            addTitle={route.title}
+                          />
+                        </SearchProvider>
+                      </RouteGuard>
+                    }
+                  />
+                  <Route
+                    key={`accounts-view-${route.transactionType}-${index}`}
+                    path={`${route.transactionBase}/${route.transactionType}/:voucherNo`}
+                    element={
+                      <RouteGuard formCode={route.formCode} action={route.action}>
+                        <SearchProvider>
+                          <AccTransactionFormContainerView
+                            voucherType={route.voucherType}
+                            transactionType={route.transactionType}
+                            formCode={route.formCode}
+                            voucherPrefix={""}
+                            formType={route.formType}
+                            title={route.title}
+                            drCr={route.drCr}
+                            voucherNo={0}
+
+                          />
+                        </SearchProvider>
+                      </RouteGuard>
+                    }
+                  />
+                  {/* <Route
                   key={index}
                   path={`${route.transactionBase}/${route.transactionType}/:voucherNo/edit`}
                   element={
@@ -352,157 +354,64 @@ const PrintJobIndicator = () => {
                     </RouteGuard>
                   }
                 /> */}
-              </>
-            )}
-            {route.transactionBase == TransactionBase.Purchase && (
-              <>
-                <Route
-                  key={`${index}-${route.transactionBase}-${route.transactionType}-`}
-                  path={`${route.transactionBase}/${route.transactionType}`}
-                  element={
-                    <RouteGuard formCode={route.formCode} action={route.action}>
-                      <TransactionFormContainer
-                        voucherType={route.voucherType}
-                        transactionType={route.transactionType}
-                        formCode={route.formCode}
-                        voucherPrefix={""}
-                        formType={route.formType}
-                        title={route.title}
-                        drCr={route.drCr}
-                        voucherNo={0}
-                      />
-                    </RouteGuard>
-                  }
-                />
-                <Route
-                  key={index}
-                  path={`${route.transactionBase}/${route.transactionType}List`}
-                  element={
-                    <RouteGuard formCode={route.formCode} action={route.action}>
-                      <TransactionGrid
-                        voucherType={route.voucherType}
-                        transactionType={route.transactionType}
-                        title={route.listTitle}
-                        addTitle={route.title}
-                      />
-                    </RouteGuard>
-                  }
-                />
-                <Route
-                  key={index}
-                  path={`${route.transactionBase}/${route.transactionType}/:voucherNo`}
-                  element={
-                    <RouteGuard formCode={route.formCode} action={route.action}>
-                      <SearchProvider>
-                      <AccTransactionFormContainerView ///abc
-                        isInvTrans={true}
-                        voucherType={route.voucherType}
-                        transactionType={route.transactionType}
-                        formCode={route.formCode}
-                        voucherPrefix={""}
-                        formType={route.formType}
-                        title={route.title}
-                        drCr={route.drCr}
-                        voucherNo={0}
-                      />
-                      </SearchProvider>
-                    </RouteGuard>
-                  }
-                />
-                {/* <Route
-                  key={index}
-                  path={`${route.transactionBase}/${route.transactionType}/:voucherNo/edit`}
-                  element={
-                    <RouteGuard formCode={route.formCode} action={route.action}>
-                      <TransactionFormContainer
-                        voucherType={route.voucherType}
-                        transactionType={route.transactionType}
-                        formCode={route.formCode}
-                        voucherPrefix={""}
-                        formType={route.formType}
-                        title={route.title}
-                        drCr={route.drCr}
-                        voucherNo={0}
-                      />
-                    </RouteGuard>
-                  }
-                /> */}
-              </>
-            )}
-            <Route
-                  key={`${123}-purchase/transactions-lpo-`}
-                  path={`purchase/transactions/LPO`}
-                  element={
-                    <RouteGuard formCode={route.formCode} action={UserAction.Show}>
-                      <TransactionFormContainer
-                        voucherType={"LPO"}
-                        transactionType={"LocalPurchaseOrder"}
-                        formCode={""}
-                        voucherPrefix={""}
-                        formType={""}
-                        title={"LPO"}
-                        drCr={route.drCr}
-                        voucherNo={0}
-                      />
-                    </RouteGuard>
-                  }
-                />
-            {route.transactionBase == TransactionBase.Sales && (
-              <>
-                <Route
-                  key={`${index}-${route.transactionBase}-${route.transactionType}-`}
-                  path={`${route.transactionBase}/${route.transactionType}`}
-                  element={
-                    <RouteGuard formCode={route.formCode} action={route.action}>
-                      <SalesTransactionFormContainer
-                        voucherType={route.voucherType}
-                        transactionType={route.transactionType}
-                        formCode={route.formCode}
-                        voucherPrefix={""}
-                        formType={route.formType}
-                        title={route.title}
-                        drCr={route.drCr}
-                        voucherNo={0}
-                      />
-                    </RouteGuard>
-                  }
-                />
-                <Route
-                  key={index}
-                  path={`${route.transactionBase}/${route.transactionType}List`}
-                  element={
-                    <RouteGuard formCode={route.formCode} action={route.action}>
-                      <SalesTransactionGrid
-                        voucherType={route.voucherType}
-                        transactionType={route.transactionType}
-                        title={route.listTitle}
-                        addTitle={route.title}
-                      />
-                    </RouteGuard>
-                  }
-                />
-                <Route
-                  key={index}
-                  path={`${route.transactionBase}/${route.transactionType}/:voucherNo`}
-                  element={
-                    <RouteGuard formCode={route.formCode} action={route.action}>
-                      <SearchProvider>
-                      <AccTransactionFormContainerView ///abc
-                        voucherType={route.voucherType}
-                        isInvTrans={true}
-                        transactionType={route.transactionType}
-                        formCode={route.formCode}
-                        voucherPrefix={""}
-                        formType={route.formType}
-                        title={route.title}
-                        drCr={route.drCr}
-                        voucherNo={0}
-                      />
-                      </SearchProvider>
-                    </RouteGuard>
-                  }
-                />
-                {/* <Route
+                </>
+              )}
+              {route.transactionBase == TransactionBase.Purchase && (
+                <>
+                  <Route
+                    key={`${index}-${route.transactionBase}-${route.transactionType}-`}
+                    path={`${route.transactionBase}/${route.transactionType}`}
+                    element={
+                      <RouteGuard formCode={route.formCode} action={route.action}>
+                        <TransactionFormContainer
+                          voucherType={route.voucherType}
+                          transactionType={route.transactionType}
+                          formCode={route.formCode}
+                          voucherPrefix={""}
+                          formType={route.formType}
+                          title={route.title}
+                          drCr={route.drCr}
+                          voucherNo={0}
+                        />
+                      </RouteGuard>
+                    }
+                  />
+                  <Route
+                    key={index}
+                    path={`${route.transactionBase}/${route.transactionType}List`}
+                    element={
+                      <RouteGuard formCode={route.formCode} action={route.action}>
+                        <TransactionGrid
+                          voucherType={route.voucherType}
+                          transactionType={route.transactionType}
+                          title={route.listTitle}
+                          addTitle={route.title}
+                        />
+                      </RouteGuard>
+                    }
+                  />
+                  <Route
+                    key={index}
+                    path={`${route.transactionBase}/${route.transactionType}/:voucherNo`}
+                    element={
+                      <RouteGuard formCode={route.formCode} action={route.action}>
+                        <SearchProvider>
+                          <AccTransactionFormContainerView ///abc
+                            isInvTrans={true}
+                            voucherType={route.voucherType}
+                            transactionType={route.transactionType}
+                            formCode={route.formCode}
+                            voucherPrefix={""}
+                            formType={route.formType}
+                            title={route.title}
+                            drCr={route.drCr}
+                            voucherNo={0}
+                          />
+                        </SearchProvider>
+                      </RouteGuard>
+                    }
+                  />
+                  {/* <Route
                   key={index}
                   path={`${route.transactionBase}/${route.transactionType}/:voucherNo/edit`}
                   element={
@@ -520,70 +429,166 @@ const PrintJobIndicator = () => {
                     </RouteGuard>
                   }
                 /> */}
-              </>
-            )}
-            
-          </Fragment>
-        ))}
-       <Route
-          path={`/accounts/transactions/BankReconciliation`}
-          element={
-            <RouteGuard formCode="BRC" action={UserAction.Show}>
-              <BankReconciliation />
-            </RouteGuard>
-          }
-        />
-        <Route
-          path="accounts/transactions/PostDatedCheques"
-          element={
-            <RouteGuard formCode="PDC" action={UserAction.Show}>
-              <PostDatedCheques />
-            </RouteGuard>
-          }
-        />
+                </>
+              )}
+              <Route
+                key={`${123}-purchase/transactions-lpo-`}
+                path={`purchase/transactions/LPO`}
+                element={
+                  <RouteGuard formCode={route.formCode} action={UserAction.Show}>
+                    <TransactionFormContainer
+                      voucherType={"LPO"}
+                      transactionType={"LocalPurchaseOrder"}
+                      formCode={""}
+                      voucherPrefix={""}
+                      formType={""}
+                      title={"LPO"}
+                      drCr={route.drCr}
+                      voucherNo={0}
+                    />
+                  </RouteGuard>
+                }
+              />
+              {route.transactionBase == TransactionBase.Sales && (
+                <>
+                  <Route
+                    key={`${index}-${route.transactionBase}-${route.transactionType}-`}
+                    path={`${route.transactionBase}/${route.transactionType}`}
+                    element={
+                      <RouteGuard formCode={route.formCode} action={route.action}>
+                        <SalesTransactionFormContainer
+                          voucherType={route.voucherType}
+                          transactionType={route.transactionType}
+                          formCode={route.formCode}
+                          voucherPrefix={""}
+                          formType={route.formType}
+                          title={route.title}
+                          drCr={route.drCr}
+                          voucherNo={0}
+                        />
+                      </RouteGuard>
+                    }
+                  />
+                  <Route
+                    key={index}
+                    path={`${route.transactionBase}/${route.transactionType}List`}
+                    element={
+                      <RouteGuard formCode={route.formCode} action={route.action}>
+                        <SalesTransactionGrid
+                          voucherType={route.voucherType}
+                          transactionType={route.transactionType}
+                          title={route.listTitle}
+                          addTitle={route.title}
+                        />
+                      </RouteGuard>
+                    }
+                  />
+                  <Route
+                    key={index}
+                    path={`${route.transactionBase}/${route.transactionType}/:voucherNo`}
+                    element={
+                      <RouteGuard formCode={route.formCode} action={route.action}>
+                        <SearchProvider>
+                          <AccTransactionFormContainerView ///abc
+                            voucherType={route.voucherType}
+                            isInvTrans={true}
+                            transactionType={route.transactionType}
+                            formCode={route.formCode}
+                            voucherPrefix={""}
+                            formType={route.formType}
+                            title={route.title}
+                            drCr={route.drCr}
+                            voucherNo={0}
+                          />
+                        </SearchProvider>
+                      </RouteGuard>
+                    }
+                  />
+                  {/* <Route
+                  key={index}
+                  path={`${route.transactionBase}/${route.transactionType}/:voucherNo/edit`}
+                  element={
+                    <RouteGuard formCode={route.formCode} action={route.action}>
+                      <TransactionFormContainer
+                        voucherType={route.voucherType}
+                        transactionType={route.transactionType}
+                        formCode={route.formCode}
+                        voucherPrefix={""}
+                        formType={route.formType}
+                        title={route.title}
+                        drCr={route.drCr}
+                        voucherNo={0}
+                      />
+                    </RouteGuard>
+                  }
+                /> */}
+                </>
+              )}
 
-        {/* Service Transaction */}
-        <Route
-          path="otherTransactions/transactions/ServiceInvoice"
-          element={
-            <RouteGuard formCode="SVI" action={UserAction.Show}>
-              <ServiceTransaction />
-            </RouteGuard>
-          }
-        />
-        {/* Accounts Masters End */}
+            </Fragment>
+          ))}
+          <Route
+            path={`/accounts/transactions/BankReconciliation`}
+            element={
+              <RouteGuard formCode="BRC" action={UserAction.Show}>
+                <BankReconciliation />
+              </RouteGuard>
+            }
+          />
+          <Route
+            path="accounts/transactions/PostDatedCheques"
+            element={
+              <RouteGuard formCode="PDC" action={UserAction.Show}>
+                <PostDatedCheques />
+              </RouteGuard>
+            }
+          />
 
-        {/* Reports */}
-        <Route path="/reports" element={<ReportList />} />
+          {/* Service Transaction */}
+          <Route
+            path="otherTransactions/transactions/ServiceInvoice"
+            element={
+              <RouteGuard formCode="SVI" action={UserAction.Show}>
+                <ServiceTransaction />
+              </RouteGuard>
+            }
+          />
+          {/* Accounts Masters End */}
 
- {ReportsMenuItems.map((route, index) => (
-  <Fragment key={`route-group-${index}`}>
-    {route?.children?.map((routeChild, indexChild) => {
-      const childPath = routeChild.path.includes("/_/")
-        ? "/" + routeChild.path.split("/_/")[1]
-        : routeChild.path;
-              // console.log(childPath);
-              // console.log("path");
+          {/* Reports */}
+          <Route path="/reports" element={<ReportList />} />
 
-      return (
-        <Route
-          key={`route-${index}-${indexChild}-${childPath}`}
-          path={childPath}
-          element={
-            <RouteGuard formCode={routeChild.formCode} action={routeChild.action}>
-              {routeChild.element}
-            </RouteGuard>
-          } 
-        />
-      );
-    })}
-  </Fragment>
-))}
-      
+          {/* Post Transaction */}
+          <Route path="/post_transactions" element={<PostTransactionsLayout />} />
 
-        
-      </Routes>
-    </Suspense>
+          {ReportsMenuItems.map((route, index) => (
+            <Fragment key={`route-group-${index}`}>
+              {route?.children?.map((routeChild, indexChild) => {
+                const childPath = routeChild.path.includes("/_/")
+                  ? "/" + routeChild.path.split("/_/")[1]
+                  : routeChild.path;
+                // console.log(childPath);
+                // console.log("path");
+
+                return (
+                  <Route
+                    key={`route-${index}-${indexChild}-${childPath}`}
+                    path={childPath}
+                    element={
+                      <RouteGuard formCode={routeChild.formCode} action={routeChild.action}>
+                        {routeChild.element}
+                      </RouteGuard>
+                    }
+                  />
+                );
+              })}
+            </Fragment>
+          ))}
+
+
+
+        </Routes>
+      </Suspense>
     </>
   );
 };

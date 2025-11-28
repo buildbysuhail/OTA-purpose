@@ -1,10 +1,8 @@
 /**
  * Reports Tab - Service Transaction Reports
  */
-
 import React, { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import ERPDatePicker from "../../../../../components/ERPComponents/erp-datepicker";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import ErpDevGrid, {
   SummaryConfig,
@@ -17,11 +15,12 @@ import Urls from "../../../../../redux/urls";
 import moment from "moment";
 import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
+import ERPInput from "../../../../../components/ERPComponents/erp-input";
+import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
 
 const ReportsTab: React.FC = () => {
   const { t } = useTranslation("accountsReport");
   const { getFormattedValue } = useNumberFormat();
-
   const [filter, setFilter] = useState<ServiceReportFilter>({
     fromDate: moment().startOf("month").format("YYYY-MM-DD"),
     toDate: moment().format("YYYY-MM-DD"),
@@ -29,7 +28,6 @@ const ReportsTab: React.FC = () => {
     serviceID: 0,
     isWarrantyService: "",
   });
-
   const [reload, setReload] = useState(false);
 
   const columns: DevGridColumn[] = [
@@ -281,40 +279,41 @@ const ReportsTab: React.FC = () => {
   const FilterComponent = () => (
     <div className="flex flex-wrap gap-4 items-center mb-4 p-4 bg-gray-50 dark:bg-dark-bg-card rounded-lg">
       <div className="flex items-center gap-2">
-        <label className="text-sm">{t("from")}</label>
-        <ERPDatePicker
+        <ERPInput
           id="fromDate"
-          value={moment(filter.fromDate).toDate()}
-          onChange={(date) =>
-            setFilter({ ...filter, fromDate: moment(date).format("YYYY-MM-DD") })
-          }
-        />
-      </div>
-      <div className="flex items-center gap-2">
-        <label className="text-sm">{t("to")}</label>
-        <ERPDatePicker
-          id="toDate"
-          value={moment(filter.toDate).toDate()}
-          onChange={(date) =>
-            setFilter({ ...filter, toDate: moment(date).format("YYYY-MM-DD") })
-          }
-        />
-      </div>
-      <div className="flex items-center gap-2">
-        <label className="text-sm">{t("status")}</label>
-        <select
-          value={filter.status}
+          label={t("from")}
+          type="date"
+          value={filter.fromDate}
           onChange={(e) =>
-            setFilter({ ...filter, status: e.target.value as ServiceStatus | "" })
+            setFilter({ ...filter, fromDate: e.target.value })
           }
-          className="border rounded px-2 py-1 text-sm w-32"
-        >
-          {statusOptions.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
+        />
+      </div>
+      <div className="flex items-center gap-2">
+        <ERPInput
+          id="toDate"
+          label={t("to")}
+          type="date"
+          value={filter.toDate}
+          onChange={(e) =>
+            setFilter({ ...filter, toDate: e.target.value })
+          }
+        />
+      </div>
+      <div className="flex items-center gap-2">
+        <ERPDataCombobox
+          id="filterStatus"
+          label={t("status")}
+          value={filter.status}
+          options={[
+            { value: "", label: t("all") },
+            ...statusOptions
+          ]}
+          onChange={(item: any) =>
+            setFilter({ ...filter, status: item?.value as ServiceStatus | "" })
+          }
+          className="w-32"
+        />
       </div>
       <ERPButton
         title={t("show")}
@@ -324,7 +323,7 @@ const ReportsTab: React.FC = () => {
       />
       <ERPButton
         title=""
-        onClick={() => {}}
+        onClick={() => { }}
         startIcon={<FileSpreadsheet size={16} />}
         variant="secondary"
         className="ml-auto"
@@ -343,7 +342,7 @@ const ReportsTab: React.FC = () => {
             paging: false,
             sorting: false,
           }}
-          filterText={`Between : ${filter.fromDate} - ${filter.toDate}`}
+          filterText={`Between: ${moment(filter.fromDate).format("DD-MMM-YYYY")} - ${moment(filter.toDate).format("DD-MMM-YYYY")}`}
           columns={columns}
           gridHeader={t("service_report")}
           dataUrl={Urls.service_report}

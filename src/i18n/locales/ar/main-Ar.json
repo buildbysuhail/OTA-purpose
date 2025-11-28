@@ -761,5 +761,7 @@
   "grouped_brandwise_sales_summary": "ملخص المبيعات المجمعة حسب العلامة التجارية",
   "salesmanwise_sales_summary_report": "تقرير ملخص المبيعات حسب مندوب المبيعات",
   "sales_register_report": "تقرير سجل المبيعات",
-  "sales_return_estimate_register_report": "تقرير سجل تقديرات مرتجعات المبيعات"
+  "sales_return_estimate_register_report": "تقرير سجل تقديرات مرتجعات المبيعات",
+
+  "post_transactions": "ترحيل المعاملات"
 }

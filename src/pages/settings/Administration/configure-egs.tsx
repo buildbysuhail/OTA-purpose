@@ -50,7 +50,7 @@ const ConfigureEgs: React.FC = () => {
                         { value: "Business", label: "Business" },
                     ]}
                     value={formData.companyType}
-                    onChange={(selected) => handleChange("companyType", selected?.value || selected)}
+                    onChange={(e) => handleChange("companyType", e?.value || e)}
                     className="w-full"
                 />
 

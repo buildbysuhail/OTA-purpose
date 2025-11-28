@@ -651,7 +651,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
   };
 
   // Property change handlers
-  const handlePropertyChange = (property: keyof PlacedComponent, value: string | number | boolean, id?: number | undefined, isUndoOrRedo?: boolean | false) => {
+  const handlePropertyChange = (property: keyof PlacedComponent, value: string | number | boolean, id?: number | undefined,) => {
     if (selectedComponent) {
       const updatedComponent = { ...selectedComponent, [property]: value };
       const updatedComponents =
@@ -2030,6 +2030,22 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
             )}
           </div>
           <div className="flex items-center gap-2">
+            <ERPButton
+              startIcon="ri-arrow-go-back-fill"
+              variant="custom"
+              // onClick={}
+              backgroundColor="#5F6368" 
+              foreColor="white"    
+              disabled={loading}
+            />
+             <ERPButton
+              startIcon="ri-arrow-go-forward-fill"
+              // onClick={}
+              foreColor="white"     
+              variant="custom"
+              backgroundColor="#5F6368"
+              disabled={loading}
+            />
             <ERPButton
               title={t("clear")}
               onClick={() => {

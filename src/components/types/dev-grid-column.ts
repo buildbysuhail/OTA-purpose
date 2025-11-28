@@ -83,7 +83,7 @@ export interface DevGridColumn {
     format?: string;
     width?: number;
     // Actionswidth?: number;
-    isMobile:boolean;
+    isMobile?:boolean;
     minWidth?: number;
     alignment: 'left' | 'center' | 'right';
     visible: boolean;

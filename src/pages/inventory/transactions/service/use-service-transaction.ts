@@ -26,6 +26,7 @@ import {
 } from "./service-transaction-types";
 import { useTranslation } from "react-i18next";
 import moment from "moment";
+import { handleResponse } from "../../../../utilities/HandleResponse";
 
 const api = new APIClient();
 
@@ -39,6 +40,7 @@ export const useServiceTransaction = () => {
     (state: RootState) => state.ServiceTransaction as ServiceTransactionFormState
   );
   const userSession = useSelector((state: RootState) => state.UserSession);
+  const clientSession = useSelector((state: RootState) => state.ClientSession);
   const applicationSettings = useSelector(
     (state: RootState) => state.ApplicationSettings
   );
@@ -47,10 +49,10 @@ export const useServiceTransaction = () => {
   const clearForm = useCallback(() => {
     dispatch(
       resetState({
-        branchID: userSession.branchId,
-        financialYearID: userSession.financialYearId,
+        branchID: 0,
+        financialYearID: 0,
         userID: userSession.userId,
-        softwareDate: applicationSettings?.softwareDate,
+        softwareDate: clientSession?.softwareDate,
       })
     );
   }, [dispatch, userSession, applicationSettings]);
@@ -65,7 +67,7 @@ export const useServiceTransaction = () => {
 
         const response = await api.getAsync(
           `${SERVICE_TRANSACTION_BASE}/GetByJobNo/${jobNo}`,
-          `branchID=${userSession.branchId}&context=${tabContext}`
+          `context=${tabContext}`
         );
 
         if (response && response.master) {
@@ -110,7 +112,6 @@ export const useServiceTransaction = () => {
         dispatch(setLoading(true));
 
         const params = new URLSearchParams({
-          branchID: userSession.branchId.toString(),
           searchIn,
           searchValue: searchValue.toString(),
         });
@@ -146,7 +147,7 @@ export const useServiceTransaction = () => {
       try {
         const response = await api.getAsync(
           `${SERVICE_TRANSACTION_BASE}/History`,
-          `serialNo=${encodeURIComponent(serialNo)}&branchID=${userSession.branchId}`
+          `serialNo=${encodeURIComponent(serialNo)}`
         );
 
         if (response && Array.isArray(response)) {
@@ -268,7 +269,7 @@ export const useServiceTransaction = () => {
         spareDetails,
       });
 
-      if (response && response.success) {
+      if (response && response.isOk) {
         ERPAlert.show({
           title: t("success"),
           text: t("service_details_saved"),
@@ -378,26 +379,14 @@ export const useServiceTransaction = () => {
       const response = isUpdate
         ? await api.putAsync(url, { master, invoice })
         : await api.postAsync(url, { master, invoice });
-
-      if (response && response.success) {
-        ERPAlert.show({
-          title: t("success"),
-          text: isUpdate ? t("invoice_updated") : t("invoice_created"),
-          icon: "success",
-        });
-
+       handleResponse(response, async() => {
         // Reload the data
         await loadByJobNo(master.jobNo, "invoice");
-
-        return true;
-      } else {
-        ERPAlert.show({
-          title: t("error"),
-          text: response?.message || t("error_saving_invoice"),
-          icon: "error",
+         return true;
+        },()=>{
+          return false;
         });
-        return false;
-      }
+
     } catch (error) {
       console.error("Error saving invoice:", error);
       ERPAlert.show({
@@ -438,23 +427,13 @@ export const useServiceTransaction = () => {
       const response = await api.delete(
         `${SERVICE_TRANSACTION_BASE}/Order/Delete/${master.serviceTransMasterID}`
       );
+       handleResponse(response, () => {
+         clearForm();
+         return true;
+        },()=>{
+          return false;
+        });
 
-      if (response && response.success) {
-        ERPAlert.show({
-          title: t("success"),
-          text: t("order_deleted"),
-          icon: "success",
-        });
-        clearForm();
-        return true;
-      } else {
-        ERPAlert.show({
-          title: t("error"),
-          text: response?.message || t("error_deleting_order"),
-          icon: "error",
-        });
-        return false;
-      }
     } catch (error) {
       console.error("Error deleting order:", error);
       ERPAlert.show({
@@ -495,23 +474,13 @@ export const useServiceTransaction = () => {
       const response = await api.delete(
         `${SERVICE_TRANSACTION_BASE}/Invoice/Delete/${invoice.serviceInvoiceID}`
       );
+       handleResponse(response, () => {
+         clearForm();
+         return true;
+        },()=>{
+          return false;
+        });
 
-      if (response && response.success) {
-        ERPAlert.show({
-          title: t("success"),
-          text: t("invoice_deleted"),
-          icon: "success",
-        });
-        clearForm();
-        return true;
-      } else {
-        ERPAlert.show({
-          title: t("error"),
-          text: response?.message || t("error_deleting_invoice"),
-          icon: "error",
-        });
-        return false;
-      }
     } catch (error) {
       console.error("Error deleting invoice:", error);
       ERPAlert.show({

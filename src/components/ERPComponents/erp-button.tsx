@@ -163,11 +163,15 @@ const ERPButton = forwardRef<HTMLButtonElement, ERPButtonProps>(
         data-jump-to={jumpTo}
         data-jump-target={jumpTarget}
         style={{
-          backgroundColor: backgroundColor ? backgroundColor : isFocused
-            ? `rgb(${inputBoxState?.buttonFocusBg || '89, 137, 232'})`
-            : undefined,
+        backgroundColor: isFocused
+          ? `rgb(${inputBoxState?.buttonFocusBg || '89, 137, 232'})`
+          : backgroundColor
+          ? backgroundColor
+          : undefined,
+
           marginBottom: `${inputBoxState?.marginBottom ?? 0}px`,
           marginTop: `${inputBoxState?.marginTop ?? 0}px`,
+          color: foreColor ? foreColor : undefined,
         }}
         className={`
         ${variant !== "status" ? "ti-btn ti-btn-full" : ""} 

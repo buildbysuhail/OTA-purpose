@@ -10,8 +10,8 @@ export default defineConfig({
     port: 5173, 
   },
   build: {
-    // outDir: 'build',
-    outDir: 'D:\\Host\\Polosys\\PolosysERP.UI',
+    outDir: 'C:\\inetpub\\wwwroot',
+    // outDir: 'D:\\Host\\Polosys\\PolosysERP.UI',
     chunkSizeWarningLimit: 50000,
     rollupOptions: {
       onwarn(warning, warn) {

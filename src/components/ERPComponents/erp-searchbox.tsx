@@ -70,6 +70,8 @@ interface InputProps {
   advancedProductSearching?: boolean;
   searchKey?: string;
   rowIndex?: number;
+  height?: number;
+  isMobileInput?:boolean;
   textAlign?: "left" | "right" | "center";
   onNextCellFind?: (
     rowIndex: number,
@@ -404,6 +406,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       advancedProductSearching = false,
       searchKey = "",
       rowIndex,
+      height,
+      isMobileInput,
       onNextCellFind,
       textAlign,
       customStyle,
@@ -1541,6 +1545,8 @@ const handleBatchGridDoubleClick =async (e: any) => {
               textAlignStyle={textAlign}
               ignoreRandomId={true}
               noLabel={noLabel}
+              height_={height}
+              isMobileInput={isMobileInput}
               label={label}
               type="text"
               id={inputId || "test"}

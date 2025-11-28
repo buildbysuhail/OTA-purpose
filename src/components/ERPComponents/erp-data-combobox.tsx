@@ -141,6 +141,7 @@ interface ERPDataComboboxProps {
     content?: any;
   };
   fetching?: boolean;
+  style?: React.CSSProperties;
 }
 
 interface RowProps {
@@ -230,6 +231,7 @@ const getSizeClasses = (
   switch (customSize) {
     case "sm":
       return {
+        // input: "!h-[33px] text-xs px-2",
         input: "h-7 text-xs px-2",
         label: "text-[10px]",
         options: "text-xs",
@@ -445,6 +447,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       addNewOption = false,
       addNewOptionCobonent,
       fetching = false,
+      style,
     }: ERPDataComboboxProps,
     ref
   ) => {
@@ -1735,6 +1738,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                   data-jump-target={jumpTarget}
                   InputProps={{
                     ...params.InputProps,
+                    style: style,
                     endAdornment: (
                       <React.Fragment>
                         {fetching ? (
@@ -1884,6 +1888,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                   transition: "border-color 0.2s ease-in-out",
                   borderRadius: `${inputBoxState?.borderRadius}px`,
                   backgroundColor: bgColor,
+                  ...style,
+                  
                   // overflow: "hidden",
                   // textOverflow: "ellipsis",
                   // whiteSpace: "nowrap",

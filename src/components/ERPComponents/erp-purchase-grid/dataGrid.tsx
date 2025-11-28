@@ -3336,7 +3336,7 @@ const hidColumns: string[] = [
                          {/* <div className="text-sm font-medium">{formatCurrency(subtotal)}</div> */}
 
                           <GridCell
-                       isMobile={true}
+                       isMobile={false}
                       column={formState.gridColumns.find((x) => x.dataField == "total") as ColumnModel}
                       item={formState.row ?? initialTransactionDetailData}
                       index={formState.itemPopup?.index ?? 0}
@@ -3350,7 +3350,7 @@ const hidColumns: string[] = [
                       gridBorderColor={gridBorderColor}
                       isFirstColumn={false}
                       isLastColumn={false}
-                      showBorder={true}
+                      showBorder={false}
                       columnWidths={columnWidths}
                       onChange={onChange}
                       onKeyDown={onKeyDown}
@@ -3529,7 +3529,13 @@ const hidColumns: string[] = [
                            
                          </div>
                        </div>
-                       <div className="col-span-1 flex">
+                       <div className="col-span-1 mj23233 flex" 
+                       style={{
+                                border: isMobile
+                                  ? "1px solid red"
+                                  : `3px solid rgb(${formState.userConfig?.inputBoxStyle?.focusBgColor})`,
+                              }}
+                       >
                         <GridCell
                        isMobile={true}
                       column={col as ColumnModel}

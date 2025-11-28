@@ -343,7 +343,7 @@ export const purchaseGridCol = (
         decimalPoint: 4,
       },
       {
-        dataField: "minSalePrice",
+        dataField: "MinSalePrice",
         caption: t("min_sale_price"),
         dataType: "number",
         width: 150,
@@ -476,7 +476,7 @@ export const purchaseGridCol = (
         alignment: "left",
       },
       {
-        dataField: "arabicName",
+        dataField: "ArabicName",
         caption: t("arabic_name"),
         dataType: "string",
         visible: false,
@@ -1164,10 +1164,10 @@ export const purchaseGridCol = (
       }
       // ---------------- SALES ORDER ----------------
       if (
-        (userSession.countryId != Countries.India &&
-          (voucherType == VoucherType.SalesOrder ||
+        userSession.countryId != Countries.India &&
+        (voucherType == VoucherType.SalesOrder ||
           VoucherType.RequestForQuotation ||
-          VoucherType.GoodRequest))
+          VoucherType.GoodRequest)
       ) {
         return ![
           // sales india
@@ -1518,6 +1518,145 @@ export const purchaseGridCol = (
           "adjQty",
         ].includes(field);
       }
+      // ---------------- SERVICE INVOICE ----------------
+      if (
+        userSession.countryId != Countries.India &&
+        voucherType == VoucherType.ServiceInvoice
+      ) {
+        return ![
+          // sales india
+          "cgst",
+          "cgstPerc",
+          "sgstPerc",
+          "sgst",
+          "igstPerc",
+          "igst",
+          "cessPerc",
+          "cessAmt",
+          "additionalCessPerc",
+          "additionalCess",
+          "mrp",
+          "hsnCode",
+          "purchaseCost",
+          "taxCategoryID",
+          "productCategoryID",
+          "invTransactionDetailID",
+          "gatePass",
+          "colour",
+          //SR
+          "sITransDetailID",
+          //sales
+          "manualBarcode",
+          "cstPerc",
+          "cst",
+          "employeeCode",
+          "employeeName",
+          "stock",
+          "minSalePrice",
+          "serial",
+          "customer_LSP",
+          "arabicName",
+          "memo",
+          "memoEditor",
+          "flavors",
+          "fLV",
+          "nosQty",
+          "grossConvert",
+          "soTransDetailsID",
+          "gdTransDetailsID",
+          "warehouseID",
+          "profit",
+          "schemeQtyLimit",
+          "schemeFreeQty",
+          "isSchemeProcessed",
+          "imf",
+          "image",
+          "nLA_SalesPrice",
+          "boxQty",
+          "itemType",
+          "location",
+          "refBranchID",
+          "isSchemeItem",
+          "actualPrice",
+          "schemeType",
+          "btnPrintBarcode",
+          "unitDiscount",
+          //gcc sales
+          "netConvert",
+          "schemeID",
+          "isQtyFreezed",
+          "profitPercentage",
+          "expDate",
+          "unitPriceFC",
+          "grossFC",
+          //DR and GRR
+          "refTransDtailId",
+          "supplierReferenceProductCode",
+        ].includes(field);
+      } else if (
+        userSession.countryId == Countries.India &&
+      voucherType == VoucherType.ServiceInvoice
+      ) {
+        return ![
+          //sales gcc only
+          "netConvert",
+          "schemeID",
+          "isQtyFreezed",
+          "profitPercentage",
+          "expDate",
+          "unitPriceFC",
+          "grossFC",
+          //sales
+          "manualBarcode",
+          "cstPerc",
+          "cst",
+          "employeeCode",
+          "employeeName",
+          "stock",
+          "minSalePrice",
+          "serial",
+          "customer_LSP",
+          "arabicName",
+          "memo",
+          "memoEditor",
+          "flavors",
+          "fLV",
+          "nosQty",
+          "grossConvert",
+          "soTransDetailsID",
+          "gdTransDetailsID",
+          "warehouseID",
+          "profit",
+          "schemeQtyLimit",
+          "schemeFreeQty",
+          "isSchemeProcessed",
+          "imf",
+          "image",
+          "nLA_SalesPrice",
+          "boxQty",
+          "itemType",
+          "location",
+          "refBranchID",
+          "isSchemeItem",
+          "actualPrice",
+          "schemeType",
+          "btnPrintBarcode",
+          "unitDiscount",
+          //india sales
+          "hsnCode",
+          "purchaseCost",
+          "taxCategoryID",
+          "productCategoryID",
+          "invTransactionDetailID",
+          "gatePass",
+          "colour",
+          //SR
+          "sITransDetailID",
+          //DR and GRR
+          "refTransDtailId",
+          "supplierReferenceProductCode",
+        ].includes(field);
+      }
       return true;
     })
     .map((mi) => {
@@ -1568,6 +1707,15 @@ export const purchaseGridCol = (
           VoucherType.RequestForQuotation ||
           VoucherType.GoodRequest) &&
         (mi.dataField == "stock" || mi.dataField == "stdPurchasePrice")
+      ) {
+        return {
+          ...mi,
+          visible: true,
+        };
+      }
+      if (
+        (voucherType == VoucherType.ServiceInvoice &&
+        mi.dataField == "stdPurchasePrice")
       ) {
         return {
           ...mi,

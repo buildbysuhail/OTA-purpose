@@ -46,7 +46,7 @@ import DownloadBarcodePreview from "../../../LabelDesigner/download-preview-barc
 import { customJsonParse, safeBase64Decode } from "../../../../utilities/jsonConverter";
 import { getInitialPreference } from "../../../../utilities/dx-grid-preference-updater";
 import GridTheme from "./grid-theme";
-import { stockGridCol } from "./transaction-grid-cols";
+import { stockGridCol } from "./transaction-grid-cols-opening-stock";
 import SavingOverlay from "../transaction-saving";
 import { BusinessType } from "../../../../enums/business-types";
 import MemoEditorModal from "./memo-editor";

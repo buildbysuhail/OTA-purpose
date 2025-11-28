@@ -215,7 +215,8 @@ const EditableCell: React.FC<{
       enableClearOption={false}
       style={{
         border: isMobile ? "1px solid orange" :"none",
-        height: isMobile ? "20px" : cellStyle.height,
+        // height: isMobile ? "20px" : cellStyle.height,
+        height: isMobile ? rowHeight  : cellStyle.height,
       }}
       className="!w-full !h-full !bg-inherit !p-0 !space-y-0"
       disableEnterNavigation

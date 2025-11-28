@@ -82,23 +82,7 @@ function App() {
     });
   }, []);
 
-//   useEffect(() => {
-//   const handler = (e:any) => e.preventDefault();
   
-//   document.addEventListener("copy", handler);
-//   document.addEventListener("cut", handler);
-//   document.addEventListener("paste", handler);
-//   document.addEventListener("contextmenu", handler);
-//   document.addEventListener("selectstart", handler);
-
-//   return () => {
-//     document.removeEventListener("copy", handler);
-//     document.removeEventListener("cut", handler);
-//     document.removeEventListener("paste", handler);
-//     document.removeEventListener("contextmenu", handler);
-//     document.removeEventListener("selectstart", handler);
-//   };
-// }, []);
 
 
   useEffect(() => {
@@ -190,6 +174,27 @@ function App() {
 
     initializeApp();
   }, []);
+
+
+  if (deviceInfo?.isMobile) {
+  useEffect(() => {
+  const handler = (e:any) => e.preventDefault();
+  
+  document.addEventListener("copy", handler);
+  document.addEventListener("cut", handler);
+  document.addEventListener("paste", handler);
+  document.addEventListener("contextmenu", handler);
+  document.addEventListener("selectstart", handler);
+
+  return () => {
+    document.removeEventListener("copy", handler);
+    document.removeEventListener("cut", handler);
+    document.removeEventListener("paste", handler);
+    document.removeEventListener("contextmenu", handler);
+    document.removeEventListener("selectstart", handler);
+  };
+}, []);
+  }
 
 
 

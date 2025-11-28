@@ -1,7 +1,3 @@
-/**
- * Agent Transfer Tab - Agent Assignment for Service
- */
-
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,20 +5,14 @@ import { RootState } from "../../../../../redux/store";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
-import ERPDatePicker from "../../../../../components/ERPComponents/erp-datepicker";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
 import { Save, X, Plus } from "lucide-react";
-import {
-  updateAgentTransfer,
-  setSearchParams,
-} from "../service-transaction-reducer";
-import {
-  ServiceTransactionFormState,
-  ServiceStatus,
-} from "../service-transaction-types";
-import { statusOptions, searchInOptions } from "../service-transaction-data";
+import { updateAgentTransfer, setSearchParams, } from "../service-transaction-reducer";
+import { ServiceTransactionFormState, ServiceStatus, } from "../service-transaction-types";
+import { searchInOptions } from "../service-transaction-data";
 import Urls from "../../../../../redux/urls";
 import moment from "moment";
+import ERPDateInput from "../../../../../components/ERPComponents/erp-date-input";
 
 interface AgentTransferTabProps {
   onSave: () => void;
@@ -31,264 +21,257 @@ interface AgentTransferTabProps {
   onAddAgent: () => void;
 }
 
-const AgentTransferTab: React.FC<AgentTransferTabProps> = ({
-  onSave,
-  onClear,
-  onSearch,
-  onAddAgent,
-}) => {
+const AgentTransferTab: React.FC<AgentTransferTabProps> = ({ onSave, onClear, onSearch, onAddAgent, }) => {
   const { t } = useTranslation("transaction");
   const dispatch = useDispatch();
-  const formState = useSelector(
-    (state: RootState) => state.ServiceTransaction as ServiceTransactionFormState
-  );
-
+  const formState = useSelector((state: RootState) => state.ServiceTransaction as ServiceTransactionFormState);
   const { master, agentTransfer } = formState.transaction;
   const { formElements, searchJobNo, searchIn } = formState;
-
-  const handleSearchKeyDown = (e: React.KeyboardEvent) => {
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       onSearch(searchJobNo, searchIn);
     }
   };
 
+  const statusOptions = [
+    { value: ServiceStatus.Pending, label: t("pending") },
+    { value: ServiceStatus.Completed, label: t("completed") },
+    { value: ServiceStatus.Cancelled, label: t("cancelled") },
+  ];
+
   return (
-    <div className="p-4">
-      {/* Header - Job No Search */}
-      <div className="flex flex-wrap gap-4 mb-4 items-center">
-        <div className="flex items-center gap-2">
-          <label className="text-sm font-medium">{t("job_no")}.</label>
-          <ERPInput
-            id="searchJobNo"
-            type="number"
-            value={searchJobNo || ""}
-            onChange={(e) =>
-              dispatch(setSearchParams({ jobNo: parseInt(e.target.value) || 0 }))
-            }
-            onKeyDown={handleSearchKeyDown}
-            className="w-24"
-            textAlignStyle="right"
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Header Card - Job Search */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+          <div className="flex items-end justify-between">
+            <ERPInput
+              id="searchJobNo"
+              type="number"
+              value={searchJobNo || ""}
+              className="w-24"
+              label={t("job_no")}
+              onChange={(e) => dispatch(setSearchParams({ jobNo: parseInt(e.target.value) || 0 }))}
+              onKeyDown={handleSearchKeyDown}
+              textAlignStyle="right"
+            />
+            <ERPDataCombobox
+              id="searchIn"
+              value={searchIn}
+              label={t("search_in")}
+              options={searchInOptions}
+              onChange={(item: any) => dispatch(setSearchParams({ searchIn: item?.value }))}
+            />
+          </div>
+        </div>
+
+        {/* Main Agent Transfer Information Card */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+          <div className="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 px-6 py-4">
+            <h2 className="text-lg font-semibold text-white">{t("agent_transfer_details")}</h2>
+          </div>
+
+          <div className="p-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Left Column - Basic Info */}
+              <div className="space-y-4">
+                <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 space-y-4">
+                  <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-3">
+                    {t("transfer_information")}
+                  </h3>
+
+                  <div className="space-y-3">
+                    <ERPDateInput
+                      id="transferDate"
+                      label={t("date")}
+                      value={agentTransfer.transferDate ? moment(agentTransfer.transferDate).toDate() : new Date()}
+                      disabled={formElements.transferDate.disabled}
+                      onChange={(e) =>
+                        dispatch(
+                          updateAgentTransfer({
+                            transferDate: e.target.value ? moment(e.target.value).toISOString() : "",
+                          })
+                        )
+                      }
+                    />
+
+                    <div className="flex items-end gap-2">
+                      <ERPDataCombobox
+                        id="agentID"
+                        label={t("agent_name")}
+                        value={agentTransfer.agentID}
+                        disabled={formElements.agentID.disabled}
+                        field={{
+                          getListUrl: `${Urls.data_acc_ledgers}?ledgerType=6`,
+                          valueKey: "id",
+                          labelKey: "ledgerName",
+                        }}
+                        onChange={(item: any) =>
+                          dispatch(
+                            updateAgentTransfer({
+                              agentID: item?.value || 0,
+                              agentName: item?.label || "",
+                            })
+                          )
+                        }
+                        className="flex-1"
+                      />
+                      <button onClick={onAddAgent} className="w-10 h-10 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white rounded-lg flex items-center justify-center transition-colors">
+                        <Plus size={18} />
+                      </button>
+                    </div>
+
+                    <ERPDateInput
+                      id="despatchedReturnDate"
+                      label={t("despatched_return_date")}
+                      value={agentTransfer.despatchedReturnDate ? moment(agentTransfer.despatchedReturnDate).toDate() : new Date()}
+                      disabled={formElements.despatchedReturnDate.disabled}
+                      onChange={(e) =>
+                        dispatch(
+                          updateAgentTransfer({
+                            despatchedReturnDate: e.target.value
+                              ? moment(e.target.value).toISOString()
+                              : "",
+                          })
+                        )
+                      }
+                    />
+
+                    <ERPDateInput
+                      id="expectedDeliveryDate"
+                      label={t("expected_delivery_date")}
+                      value={agentTransfer.expectedDeliveryDate ? moment(agentTransfer.expectedDeliveryDate).toDate() : new Date()}
+                      disabled={formElements.expectedDeliveryDate.disabled}
+                      onChange={(e) =>
+                        dispatch(
+                          updateAgentTransfer({
+                            expectedDeliveryDate: e.target.value
+                              ? moment(e.target.value).toISOString()
+                              : "",
+                          })
+                        )
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column - Processing Details */}
+              <div className="space-y-4">
+                <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 space-y-4">
+                  <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-3">
+                    {t("processing_details")}
+                  </h3>
+
+                  <div className="space-y-3">
+                    <ERPDataCombobox
+                      id="agentTransferStatus"
+                      label={t("status")}
+                      value={agentTransfer.status}
+                      options={statusOptions}
+                      disabled={formElements.status.disabled}
+                      className="w-full"
+                      onChange={(item: any) =>
+                        dispatch(
+                          updateAgentTransfer({
+                            status: item?.value as ServiceStatus,
+                          })
+                        )
+                      }
+                    />
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <ERPInput
+                        id="agentCharge"
+                        label={t("agent_charge")}
+                        type="number"
+                        value={agentTransfer.agentCharge}
+                        disabled={formElements.agentCharge.disabled}
+                        className="w-full"
+                        textAlignStyle="right"
+                        onChange={(e) =>
+                          dispatch(
+                            updateAgentTransfer({
+                              agentCharge: parseFloat(e.target.value) || 0,
+                            })
+                          )
+                        }
+                      />
+                      <ERPInput
+                        id="unitRate"
+                        label={t("unit_rate")}
+                        type="number"
+                        value={agentTransfer.unitRate}
+                        disabled={formElements.unitRate.disabled}
+                        className="w-full"
+                        textAlignStyle="right"
+                        onChange={(e) =>
+                          dispatch(
+                            updateAgentTransfer({
+                              unitRate: parseFloat(e.target.value) || 0,
+                            })
+                          )
+                        }
+                      />
+                    </div>
+
+                    <div className="flex items-end gap-2">
+                      <ERPInput
+                        id="consumedQtyAmount"
+                        label={t("consumed_qty_amt")}
+                        type="number"
+                        value={agentTransfer.consumedQtyAmount}
+                        disabled
+                        className="flex-1"
+                        textAlignStyle="right"
+                      />
+                      <ERPCheckbox
+                        id="isWarrantyService"
+                        label={t("is_warranty_service")}
+                        checked={!!agentTransfer.isWarrantyService}
+                        disabled={formElements.isWarrantyService.disabled}
+                        onChange={(e) =>
+                          dispatch(
+                            updateAgentTransfer({
+                              isWarrantyService: e.target.checked,
+                            })
+                          )
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex items-center justify-end gap-4 pb-6">
+          <ERPButton
+            title={t("save")}
+            onClick={onSave}
+            startIcon={<Save size={18} />}
+            variant="primary"
+            disabled={formElements.btnSave.disabled}
+            className="px-8 py-3 text-base font-medium"
+          />
+          <ERPButton
+            title={t("clear")}
+            onClick={onClear}
+            startIcon={<X size={18} />}
+            variant="secondary"
+            disabled={formElements.btnClear.disabled}
+            className="px-8 py-3 text-base font-medium"
+          />
+          <ERPButton
+            title={t("close")}
+            onClick={() => window.history.back()}
+            startIcon={<X size={18} />}
+            variant="secondary"
+            className="px-8 py-3 text-base font-medium"
           />
         </div>
-        <div className="flex items-center gap-2">
-          <label className="text-sm font-medium">{t("search_in")}</label>
-          <select
-            value={searchIn}
-            onChange={(e) => dispatch(setSearchParams({ searchIn: e.target.value }))}
-            className="border rounded px-2 py-1 text-sm"
-          >
-            {searchInOptions.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      {/* Main Form Panel */}
-      <div className="bg-gray-100 dark:bg-dark-bg-card p-4 rounded-lg max-w-xl mx-auto">
-        <div className="space-y-4">
-          {/* Date */}
-          <div className="flex items-center">
-            <label className="text-sm w-44">{t("date")}</label>
-            <ERPDatePicker
-              id="transferDate"
-              value={
-                agentTransfer.transferDate
-                  ? moment(agentTransfer.transferDate).toDate()
-                  : new Date()
-              }
-              onChange={(date) =>
-                dispatch(
-                  updateAgentTransfer({
-                    transferDate: moment(date).toISOString(),
-                  })
-                )
-              }
-              disabled={formElements.transferDate.disabled}
-            />
-          </div>
-
-          {/* Agent Name with Add Button */}
-          <div className="flex items-center">
-            <label className="text-sm w-44">{t("agent_name")}</label>
-            <div className="flex-1 flex gap-2">
-              <ERPDataCombobox
-                id="agentID"
-                value={agentTransfer.agentID}
-                displayValue={agentTransfer.agentName}
-                dataUrl={`${Urls.data_acc_ledgers}?ledgerType=6`}
-                valueField="id"
-                displayField="ledgerName"
-                onChange={(item) =>
-                  dispatch(
-                    updateAgentTransfer({
-                      agentID: item?.id || 0,
-                      agentName: item?.ledgerName || "",
-                    })
-                  )
-                }
-                disabled={formElements.agentID.disabled}
-                className="flex-1"
-                placeholder={t("select_agent")}
-              />
-              <ERPButton
-                onClick={onAddAgent}
-                startIcon={<Plus size={16} />}
-                variant="secondary"
-                className="px-2"
-              />
-            </div>
-          </div>
-
-          {/* Despatched Return Date */}
-          <div className="flex items-center">
-            <label className="text-sm w-44">{t("despatched_return_date")}</label>
-            <ERPDatePicker
-              id="despatchedReturnDate"
-              value={
-                agentTransfer.despatchedReturnDate
-                  ? moment(agentTransfer.despatchedReturnDate).toDate()
-                  : new Date()
-              }
-              onChange={(date) =>
-                dispatch(
-                  updateAgentTransfer({
-                    despatchedReturnDate: moment(date).toISOString(),
-                  })
-                )
-              }
-              disabled={formElements.despatchedReturnDate.disabled}
-            />
-          </div>
-
-          {/* Expected Delivery Date */}
-          <div className="flex items-center">
-            <label className="text-sm w-44">{t("expected_delivery_date")}</label>
-            <ERPDatePicker
-              id="expectedDeliveryDate"
-              value={
-                agentTransfer.expectedDeliveryDate
-                  ? moment(agentTransfer.expectedDeliveryDate).toDate()
-                  : new Date()
-              }
-              onChange={(date) =>
-                dispatch(
-                  updateAgentTransfer({
-                    expectedDeliveryDate: moment(date).toISOString(),
-                  })
-                )
-              }
-              disabled={formElements.expectedDeliveryDate.disabled}
-            />
-          </div>
-
-          {/* Status */}
-          <div className="flex items-center">
-            <label className="text-sm w-44">{t("status")}</label>
-            <select
-              value={agentTransfer.status}
-              onChange={(e) =>
-                dispatch(
-                  updateAgentTransfer({ status: e.target.value as ServiceStatus })
-                )
-              }
-              disabled={formElements.status.disabled}
-              className="border rounded px-2 py-1 text-sm flex-1"
-            >
-              {statusOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Agent Charge and Unit Rate */}
-          <div className="flex items-center gap-4">
-            <label className="text-sm w-44">{t("agent_charge")}</label>
-            <ERPInput
-              id="agentCharge"
-              type="number"
-              value={agentTransfer.agentCharge}
-              onChange={(e) =>
-                dispatch(
-                  updateAgentTransfer({
-                    agentCharge: parseFloat(e.target.value) || 0,
-                  })
-                )
-              }
-              disabled={formElements.agentCharge.disabled}
-              className="w-24"
-              textAlignStyle="right"
-            />
-            <label className="text-sm">{t("unit_rate")}</label>
-            <ERPInput
-              id="unitRate"
-              type="number"
-              value={agentTransfer.unitRate}
-              onChange={(e) =>
-                dispatch(
-                  updateAgentTransfer({
-                    unitRate: parseFloat(e.target.value) || 0,
-                  })
-                )
-              }
-              disabled={formElements.unitRate.disabled}
-              className="w-24"
-              textAlignStyle="right"
-            />
-          </div>
-
-          {/* Consumed Qty Amount */}
-          <div className="flex items-center">
-            <label className="text-sm w-44">{t("consumed_qty_amt")}</label>
-            <ERPInput
-              id="consumedQtyAmount"
-              type="number"
-              value={agentTransfer.consumedQtyAmount}
-              disabled
-              className="w-24"
-              textAlignStyle="right"
-            />
-            <div className="ml-4 flex items-center">
-              <ERPCheckbox
-                id="isWarrantyService"
-                label={t("is_warranty_service")}
-                checked={agentTransfer.isWarrantyService}
-                onChange={(checked) =>
-                  dispatch(updateAgentTransfer({ isWarrantyService: checked }))
-                }
-                disabled={formElements.isWarrantyService.disabled}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Action Buttons */}
-      <div className="flex items-center justify-center gap-3 mt-6">
-        <ERPButton
-          title={t("save")}
-          onClick={onSave}
-          startIcon={<Save size={16} />}
-          variant="primary"
-          disabled={formElements.btnSave.disabled}
-        />
-        <ERPButton
-          title={t("clear")}
-          onClick={onClear}
-          startIcon={<X size={16} />}
-          variant="secondary"
-          disabled={formElements.btnClear.disabled}
-        />
-        <ERPButton
-          title={t("close")}
-          onClick={() => window.history.back()}
-          startIcon={<X size={16} />}
-          variant="secondary"
-        />
       </div>
     </div>
   );

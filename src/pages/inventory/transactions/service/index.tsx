@@ -89,10 +89,9 @@ const ServiceTransaction: React.FC = () => {
   const HistoryModal = () => (
     <ERPModal
       isOpen={showHistoryModal}
-      onClose={() => setShowHistoryModal(false)}
+      closeModal={() => setShowHistoryModal(false)}
       title={t("service_history")}
-      size="lg"
-    >
+      content={
       <div className="p-4">
         <table className="w-full text-sm border">
           <thead className="bg-gray-100 dark:bg-dark-bg-header">
@@ -137,6 +136,8 @@ const ServiceTransaction: React.FC = () => {
           </tbody>
         </table>
       </div>
+      }
+    >
     </ERPModal>
   );
 

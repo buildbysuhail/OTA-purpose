@@ -1,13 +1,9 @@
 import VoucherType from "../../../enums/voucher-types";
 import { UserAction } from "../../../helpers/user-right-helper";
-import {
-  Countries,
-  UserModel,
-} from "../../../redux/slices/user-session/reducer";
+import { Countries, UserModel, } from "../../../redux/slices/user-session/reducer";
 import { TransactionListTitles, TransactionTitles } from "./transaction-titles";
 import {
   Wallet,
-  CreditCard,
   FileText,
   Receipt,
   Scale,
@@ -23,7 +19,6 @@ import {
   ClipboardList,
   FileSearch,
   RotateCcw,
-  Truck,
   Undo2,
   ArrowDownToLine,
   FileBadge,
@@ -33,6 +28,26 @@ import {
   ReceiptText,
   ScrollText,
   ShoppingCart,
+  Landmark,
+  BadgeDollarSign,
+  PackageOpen,
+  PackagePlus,
+  Package,
+  PackageMinus,
+  FileOutput,
+  FileInput,
+  ClipboardCheck,
+  Wrench,
+  Replace,
+  FolderOpen,
+  ArrowRightLeft,
+  AlertTriangle,
+  TrendingUpDown,
+  Send,
+  Download,
+  ArrowUpFromLine,
+  ClipboardSignature,
+  ScanSearch,
 } from "lucide-react";
 import { TbReceipt2 } from "react-icons/tb";
 import { TbReceipt } from "react-icons/tb";
@@ -87,7 +102,7 @@ export const transactionRoutes: TransactionRoute[] = [
     listTitle: TransactionListTitles.CashReceipt,
     drCr: "Cr",
     shortKey: "ctrl+alt+r",
-    icon: CreditCard,
+    icon: HandCoins,
   },
   {
     transactionBase: TransactionBase.Accounts,
@@ -100,7 +115,7 @@ export const transactionRoutes: TransactionRoute[] = [
     listTitle: TransactionListTitles.BankPayment,
     drCr: "Dr",
     shortKey: "ctrl+alt+b",
-    icon: Banknote,
+    icon: Landmark,
   },
   {
     transactionBase: TransactionBase.Accounts,
@@ -113,7 +128,7 @@ export const transactionRoutes: TransactionRoute[] = [
     listTitle: TransactionListTitles.BankReceipt,
     drCr: "Cr",
     shortKey: "ctrl+alt+k",
-    icon: Receipt,
+    icon: Banknote,
   },
   {
     transactionBase: TransactionBase.Accounts,
@@ -125,8 +140,7 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.ChequePayment,
     listTitle: TransactionListTitles.ChequePayment,
     drCr: "Dr",
-    visibleFn: (userSession: UserModel) =>
-      userSession.countryId == Countries.India,
+    visibleFn: (userSession: UserModel) => userSession.countryId == Countries.India,
     icon: TbReceipt2,
   },
   {
@@ -139,8 +153,7 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.ChequeReceipt,
     listTitle: TransactionListTitles.ChequeReceipt,
     drCr: "Cr",
-    visibleFn: (userSession: UserModel) =>
-      userSession.countryId == Countries.India,
+    visibleFn: (userSession: UserModel) => userSession.countryId == Countries.India,
     icon: TbReceipt,
   },
   {
@@ -218,9 +231,8 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.TaxOnExpensePayment,
     drCr: "Dr",
     listTitle: TransactionListTitles.TaxOnExpensePayment,
-    visibleFn: (userSession: UserModel) =>
-      userSession.countryId == Countries.Saudi,
-    icon: HandCoins,
+    visibleFn: (userSession: UserModel) => userSession.countryId == Countries.Saudi,
+    icon: BadgeDollarSign,
   },
   //#region inventory
   {
@@ -235,7 +247,6 @@ export const transactionRoutes: TransactionRoute[] = [
     listTitle: TransactionListTitles.SalesInvoices,
     icon: FileText,
   },
-
   {
     transactionBase: TransactionBase.Sales,
     formCode: "SI",
@@ -246,11 +257,9 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.SalesInvoiceVAT,
     drCr: "Cr",
     listTitle: TransactionListTitles.SalesInvoicesVAT,
-    visibleFn: (userSession: UserModel) =>
-      userSession.countryId !== Countries.Saudi,
+    visibleFn: (userSession: UserModel) => userSession.countryId !== Countries.Saudi,
     icon: ReceiptText,
   },
-
   {
     transactionBase: TransactionBase.Sales,
     formCode: "SR",
@@ -263,7 +272,6 @@ export const transactionRoutes: TransactionRoute[] = [
     listTitle: TransactionListTitles.SalesReturns,
     icon: Undo2,
   },
-
   {
     transactionBase: TransactionBase.Sales,
     formCode: "SR",
@@ -274,11 +282,9 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.SalesReturnVAT,
     drCr: "Dr",
     listTitle: TransactionListTitles.SalesReturnsVAT,
-    visibleFn: (userSession: UserModel) =>
-      userSession.countryId !== Countries.Saudi,
+    visibleFn: (userSession: UserModel) => userSession.countryId !== Countries.Saudi,
     icon: RotateCcw,
   },
-
   {
     transactionBase: TransactionBase.Sales,
     formCode: "SQ",
@@ -291,7 +297,6 @@ export const transactionRoutes: TransactionRoute[] = [
     listTitle: TransactionListTitles.SalesQuotations,
     icon: FileSignature,
   },
-
   {
     transactionBase: TransactionBase.Sales,
     formCode: "SO",
@@ -304,7 +309,6 @@ export const transactionRoutes: TransactionRoute[] = [
     listTitle: TransactionListTitles.SalesOrders,
     icon: ShoppingCart,
   },
-
   {
     transactionBase: TransactionBase.Goods,
     formCode: "GR",
@@ -317,7 +321,6 @@ export const transactionRoutes: TransactionRoute[] = [
     listTitle: TransactionListTitles.GoodsRequests,
     icon: PackageSearch,
   },
-
   {
     transactionBase: TransactionBase.Purchase,
     formCode: "PI",
@@ -341,11 +344,9 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.PurchaseInvoiceVAT,
     drCr: "Dr",
     listTitle: TransactionListTitles.PurchaseInvoicesVAT,
-    visibleFn: (userSession: UserModel) =>
-      userSession.countryId !== Countries.Saudi,
+    visibleFn: (userSession: UserModel) => userSession.countryId !== Countries.Saudi,
     icon: FileSpreadsheet,
   },
-
   {
     transactionBase: TransactionBase.Purchase,
     formCode: "PE",
@@ -358,7 +359,6 @@ export const transactionRoutes: TransactionRoute[] = [
     listTitle: TransactionListTitles.PurchaseEstimates,
     icon: ScrollText,
   },
-
   {
     transactionBase: TransactionBase.Purchase,
     formCode: "PI",
@@ -371,7 +371,6 @@ export const transactionRoutes: TransactionRoute[] = [
     listTitle: TransactionListTitles.PurchaseImports,
     icon: Ship,
   },
-
   {
     transactionBase: TransactionBase.Purchase,
     formCode: "PR",
@@ -384,7 +383,6 @@ export const transactionRoutes: TransactionRoute[] = [
     listTitle: TransactionListTitles.PurchaseReturns,
     icon: ArrowDownToLine,
   },
-
   {
     transactionBase: TransactionBase.Purchase,
     formCode: "PR",
@@ -395,11 +393,9 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.PurchaseReturnVAT,
     drCr: "Cr",
     listTitle: TransactionListTitles.PurchaseReturnsVAT,
-    visibleFn: (userSession: UserModel) =>
-      userSession.countryId !== Countries.Saudi,
+    visibleFn: (userSession: UserModel) => userSession.countryId !== Countries.Saudi,
     icon: FileCheck,
   },
-
   {
     transactionBase: TransactionBase.Purchase,
     formCode: "PO",
@@ -412,7 +408,6 @@ export const transactionRoutes: TransactionRoute[] = [
     listTitle: TransactionListTitles.PurchaseOrders,
     icon: ClipboardList,
   },
-
   // request for sales
   {
     transactionBase: TransactionBase.Sales,
@@ -424,9 +419,8 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.RequestForSalesQuotation, //so
     drCr: "Cr",
     listTitle: TransactionListTitles.RequestForSalesQuotations,
-    icon: HandCoins,
+    icon: ClipboardSignature,
   },
-
   {
     transactionBase: TransactionBase.Purchase,
     formCode: "PQ",
@@ -439,7 +433,6 @@ export const transactionRoutes: TransactionRoute[] = [
     listTitle: TransactionListTitles.PurchaseQuotations,
     icon: FileSearch,
   },
-
   // {
   //   transactionBase: TransactionBase.Purchase,
   //   formCode: "POT",
@@ -452,7 +445,6 @@ export const transactionRoutes: TransactionRoute[] = [
   //   listTitle: TransactionListTitles.PurchaseReturns,
   //   icon: Truck,
   // },
-
   {
     transactionBase: TransactionBase.Goods,
     formCode: "GD",
@@ -460,12 +452,11 @@ export const transactionRoutes: TransactionRoute[] = [
     voucherType: VoucherType.GoodsDeliveryNote,
     transactionType: "GoodsDelivery",
     formType: "",
-    title: TransactionTitles.GoodsDelivery, 
+    title: TransactionTitles.GoodsDelivery,
     drCr: "Cr",
     listTitle: TransactionListTitles.GoodsDeliveries,
-    icon: HandCoins,
+    icon: Send,
   },
-
   {
     transactionBase: TransactionBase.Goods,
     formCode: "DR",
@@ -476,9 +467,8 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.GoodsDeliveryReturn, //GRR
     drCr: "Cr",
     listTitle: TransactionListTitles.GoodsDeliveryReturns,
-    icon: HandCoins,
+    icon: ArrowUpFromLine,
   },
-
   {
     transactionBase: TransactionBase.Goods,
     formCode: "GRN",
@@ -489,9 +479,8 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.GoodsReceipt,
     drCr: "Dr",
     listTitle: TransactionListTitles.GoodsReceipts,
-    icon: PackageCheck,
+    icon: Download,
   },
-
   {
     transactionBase: TransactionBase.Goods,
     formCode: "GRR",
@@ -504,7 +493,6 @@ export const transactionRoutes: TransactionRoute[] = [
     listTitle: TransactionListTitles.GoodsReceiptReturns,
     icon: PackageCheck,
   },
-
   {
     transactionBase: TransactionBase.OtherTransactions,
     formCode: "SRV",
@@ -515,7 +503,7 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.Service,
     drCr: "Dr",
     listTitle: TransactionListTitles.Services,
-    icon: HandCoins,
+    icon: Wrench,
   },
   {
     transactionBase: TransactionBase.OtherTransactions,
@@ -527,7 +515,7 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.Substitute,
     drCr: "Dr",
     listTitle: TransactionListTitles.Substitutes,
-    icon: HandCoins,
+    icon: Replace,
   },
   //#region stock journal
   {
@@ -540,7 +528,7 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.OpeningStock,
     drCr: "Dr",
     listTitle: TransactionListTitles.OpeningStocks,
-    icon: HandCoins,
+    icon: FolderOpen,
   },
   {
     transactionBase: TransactionBase.StockJournal,
@@ -552,7 +540,7 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.StockTransfer,
     drCr: "Dr",
     listTitle: TransactionListTitles.StockTransfers,
-    icon: HandCoins,
+    icon: ArrowRightLeft,
   },
   {
     transactionBase: TransactionBase.StockJournal,
@@ -564,7 +552,7 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.DamageEntry,
     drCr: "Dr",
     listTitle: TransactionListTitles.DamageEntries,
-    icon: HandCoins,
+    icon: AlertTriangle,
   },
   {
     transactionBase: TransactionBase.StockJournal,
@@ -576,7 +564,7 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.ExcessStockAddStock,
     drCr: "Dr",
     listTitle: TransactionListTitles.ExcessStocksAddStocks,
-    icon: HandCoins,
+    icon: PackagePlus,
   },
   {
     transactionBase: TransactionBase.StockJournal,
@@ -588,7 +576,7 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.ShortageStockLessStock,
     drCr: "Dr",
     listTitle: TransactionListTitles.ShortageStocksLessStocks,
-    icon: HandCoins,
+    icon: PackageMinus,
   },
   //check
   {
@@ -601,7 +589,7 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.StockAdjuster,
     drCr: "Dr",
     listTitle: TransactionListTitles.StockAdjusters,
-    icon: HandCoins,
+    icon: TrendingUpDown,
   },
   {
     transactionBase: TransactionBase.StockJournal,
@@ -613,7 +601,7 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.BranchTransferOut,
     drCr: "Dr",
     listTitle: TransactionListTitles.BranchTransferOuts,
-    icon: HandCoins,
+    icon: FileOutput,
   },
   {
     transactionBase: TransactionBase.StockJournal,
@@ -625,7 +613,7 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.BranchTransferIn,
     drCr: "Dr",
     listTitle: TransactionListTitles.BranchTransferIns,
-    icon: HandCoins,
+    icon: FileInput,
   },
   //check
   {
@@ -638,7 +626,7 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.StockTransferToBranch,
     drCr: "Dr",
     listTitle: TransactionListTitles.StockTransfersToBranch,
-    icon: HandCoins,
+    icon: PackageOpen,
   },
   {
     transactionBase: TransactionBase.StockJournal,
@@ -650,7 +638,7 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.StockTransferFromBranch,
     drCr: "Dr",
     listTitle: TransactionListTitles.StockTransfersFromBranch,
-    icon: HandCoins,
+    icon: Package,
   },
   {
     transactionBase: TransactionBase.StockJournal,
@@ -662,7 +650,7 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.ItemLoadRequest,
     drCr: "Dr",
     listTitle: TransactionListTitles.ItemLoadRequests,
-    icon: HandCoins,
+    icon: ClipboardCheck,
   },
   {
     transactionBase: TransactionBase.StockJournal,
@@ -674,7 +662,7 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.StockCount,
     drCr: "Dr",
     listTitle: TransactionListTitles.StockCounts,
-    icon: HandCoins,
+    icon: ScanSearch,
   },
   //#endregion stock journal
   {
@@ -687,7 +675,7 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.ServiceInvoice,
     drCr: "Cr",
     listTitle: TransactionListTitles.ServiceInvoices,
-    icon: HandCoins,
+    icon: Receipt,
   },
   // 3 pending post transaction ,sales view ,packing slip
   //#endregion Inventory
@@ -696,10 +684,7 @@ export const transactionRoutes: TransactionRoute[] = [
 export const exludedRoutes = [
   { title: TransactionTitles.ChequePayment, countries: [Countries.Saudi] },
   { title: TransactionTitles.ChequeReceipt, countries: [Countries.Saudi] },
-  {
-    title: TransactionTitles.TaxOnExpensePayment,
-    countries: [Countries.India],
-  },
+  { title: TransactionTitles.TaxOnExpensePayment, countries: [Countries.India], },
   { title: TransactionTitles.PurchaseInvoiceVAT, countries: [Countries.India] },
   { title: TransactionTitles.PurchaseReturnVAT, countries: [Countries.India] },
 ];
@@ -718,21 +703,10 @@ export const isChooseVoucherEnabled = (title: string, userSession: UserModel) =>
     { title: TransactionTitles.PurchaseReturn, countries: [Countries.India] },
     { title: TransactionTitles.PurchaseOrder, countries: [Countries.India] },
     { title: TransactionTitles.PurchaseEstimate, countries: [Countries.India] },
-    {
-      title: TransactionTitles.PurchaseQuotation,
-      countries: [Countries.India],
-    },
+    { title: TransactionTitles.PurchaseQuotation, countries: [Countries.India], },
     //{ title: TransactionTitles.PurchaseImport, countries: [Countries.India] },
     { title: TransactionTitles.PurchaseReturn, countries: [Countries.Saudi] },
-    {
-      title: TransactionTitles.MultiJournalEntry,
-      countries: [Countries.Saudi],
-    },
+    { title: TransactionTitles.MultiJournalEntry, countries: [Countries.Saudi], },
   ].find(
-    (x) =>
-      userSession.countryId != undefined &&
-      x.title == title &&
-      (x.countries == undefined ||
-        (x.countries != undefined &&
-          x.countries.find((x) => x == userSession.countryId) != undefined))
+    (x) => userSession.countryId != undefined && x.title == title && (x.countries == undefined || (x.countries != undefined && x.countries.find((x) => x == userSession.countryId) != undefined))
   );

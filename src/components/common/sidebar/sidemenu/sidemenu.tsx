@@ -408,7 +408,7 @@ export const MENUITEMS = [
     ],
   },
   {
-    icon: <i className="side-menu__icon ri-shopping-cart-line"></i>, 
+    icon: <i className="side-menu__icon ri-shopping-cart-line"></i>,
     type: "sub",
     Name: "",
     active: false,
@@ -441,7 +441,7 @@ export const MENUITEMS = [
     ],
   },
   {
-    icon: <i className="side-menu__icon ri-store-2-line"></i>, 
+    icon: <i className="side-menu__icon ri-store-2-line"></i>,
     type: "sub",
     Name: "",
     active: false,
@@ -465,7 +465,7 @@ export const MENUITEMS = [
     ],
   },
   {
-    icon: <i className="side-menu__icon ri-stack-line"></i>, 
+    icon: <i className="side-menu__icon ri-stack-line"></i>,
     type: "sub",
     Name: "",
     active: false,
@@ -489,7 +489,7 @@ export const MENUITEMS = [
     ],
   },
   {
-    icon: <i className="side-menu__icon ri-stack-line"></i>, 
+    icon: <i className="side-menu__icon ri-inbox-line"></i>,
     type: "sub",
     Name: "",
     active: false,
@@ -513,7 +513,7 @@ export const MENUITEMS = [
     ],
   },
   {
-    icon: <i className="side-menu__icon ri-stack-line"></i>, 
+    icon: <i className="side-menu__icon ri-file-list-2-line"></i>,
     type: "sub",
     Name: "",
     active: false,
@@ -544,7 +544,6 @@ export const MENUITEMS = [
       },
     ],
   },
-
   // {
   //   icon: <i className="side-menu__icon ri-coins-fill"></i>,
   //   type: "sub",
@@ -595,6 +594,18 @@ export const MENUITEMS = [
     selected: false,
     title: "reports",
     path: "/reports",
+    badge: "",
+    badgetxt: "",
+    class: "badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2",
+  },
+  {
+    icon: <i className="side-menu__icon ri-database-2-line"></i>,
+    type: "link",
+    Name: "",
+    active: false,
+    selected: false,
+    title: "post_transactions",
+    path: "/post_transactions",
     badge: "",
     badgetxt: "",
     class: "badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2",

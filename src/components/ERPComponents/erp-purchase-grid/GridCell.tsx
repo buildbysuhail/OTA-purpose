@@ -213,6 +213,10 @@ const EditableCell: React.FC<{
       id={`${gridId}_${column.dataField}_${rowIndex}`}
       noLabel
       enableClearOption={false}
+      style={{
+        border: isMobile ? "1px solid orange" :"none",
+        height: isMobile ? "20px" : cellStyle.height,
+      }}
       className="!w-full !h-full !bg-inherit !p-0 !space-y-0"
       disableEnterNavigation
       value={value}
@@ -240,7 +244,7 @@ const EditableCell: React.FC<{
         textOverflow: "ellipsis",
         backgroundColor: "transparent",
         color: appState.mode === "dark" ? "#e0e0e0" : "#000000",
-        border: isMobile ? "1px solid blue" :"none",
+        border: isMobile ? "1px solid yellow" :"none",
         width: "100%",
       }}
       value={localValue}
@@ -509,21 +513,25 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
         <ERPProductSearch
           showInputSymbol={true}
         //   customStyle={formState.userConfig?.inputBoxStyle}
-          customStyle={merge( {}, formState.userConfig?.inputBoxStyle, initialUserConfig.inputBoxStyle, { inputHeight: 2, inputSize: "customize", fontColor: "0, 0, 0", borderColor: "200, 200, 200", showBorder: true})}
+          customStyle={merge( {},  formState.userConfig?.inputBoxStyle, initialUserConfig.inputBoxStyle, { inputSize: "customize", fontColor: "0, 0, 0", borderColor: "200, 200, 200", showBorder: !isMobile, rowHeight: "22px" })}
           appState={appState}
           zIndexController={zIndexController}
           textAlign={column.alignment === "right" ? "right" : "left"}
           rowIndex={index}
+          height={rowHeight}
+          isMobileInput={true}
           id={cellId}
           inputId={`${gridId}_${column.dataField}_${index}`}
           searchType={applicationSettings?.productsSettings?.usePopupWindowForItemSearch ? "modal" : "grid"}
           noLabel={true}
           showCheckBox={false}
-          contextClassNametwo={`!text-sm !px-1 !py-0 !border-none !bg-transparent`}
+          contextClassNametwo={`!text-sm !px-1 !py-0 !bg-transparent`}
           value={String(cellValue || "")}
           productDataUrl={`${Urls.inv_transaction_base}${transactionType}/products`}
           batchDataUrl={`${Urls.inv_transaction_base}${transactionType}/batches/`}
-          className="h-[22px] text-sm"
+          // className="w-full text-sm"
+          className="!h-[22px] mj23333333 text-sm"
+          // style={{ height: `${rowHeight}px`, ...(isMobile && { border: "1px solid blue" }) }}
           onFocus={() => handleFocus?.(column.dataField!)}
           onBlur={handleBlur}
           onKeyDown={(value, e) => handlRowKeyDown(value, e, column, index, details)}
@@ -552,11 +560,13 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
 
     if (column.dataField === "product" && !column.readOnly) {
       return (
-        <div style={{ ...getCellContentStyle(column), border: `solid 1px ${borderColor}` }} id={cellId}
+        // <div className="bg-black">
+        <div style={{ ...getCellContentStyle(column), border: isMobile ? "1px solid blue" : "none" }} id={cellId}
              tabIndex={0} onFocus={() => handleFocus?.(column.dataField!)} onBlur={handleBlur}
              onKeyDown={(e) => handlRowKeyDown(cellValue, e, column, index, details)}>
           {productId > 0 ? String(cellValue || "") : ""}
         </div>
+        // </div>
       );
     }
 
@@ -612,8 +622,12 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
     return (
       <div
         style={currentCell?.column === column.dataField && currentCell?.rowIndex === index ?
-          { ...getCellContentStyle(column), border: `solid 3px rgb(${formState.userConfig?.inputBoxStyle?.focusBgColor})`, background: "#fff" } :
-          { ...getCellContentStyle(column) }}
+          { ...getCellContentStyle(column), 
+            border: isMobile
+            ? "1px solid pink"
+            : `3px solid rgb(${formState.userConfig?.inputBoxStyle?.focusBgColor})`,
+             background: "#fff" } :
+          { ...getCellContentStyle(column) , border : isMobile ? "1px solid pink" : ""  }}
         id={cellId}
         tabIndex={0}
         className="px-1 cursor-default"
@@ -621,6 +635,7 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
         onBlur={handleBlur}
         onKeyDown={(e) => handlRowKeyDown(cellValue ?? "", e, column, index, details)}
       >
+        {/* <p>233333333333333333333</p> */}
         {productId > 0 ?
           (column.decimalPoint ?
             getFormattedValue(cellValue as any, false, column.decimalPoint) :
@@ -702,51 +717,57 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
   return (
     <div
     key={`${column.dataField}`}
-    style={{
-      width: typeof cellWidth === 'number' ? `${cellWidth}px` : cellWidth,
-      minWidth: typeof cellWidth === 'number' ? `${cellWidth}px` : cellWidth,
-      maxWidth: typeof cellWidth === 'number' ? `${cellWidth}px` : cellWidth,
-      height: "100%",
-      ...(isMobile ? getMobileBorderStyles() : getDesktopBorderStyles()),
-      fontSize: `${gridFontSize}px`,
-      textAlign: column.dataField === "slNo" ? "center" : ["qty"].includes(column.dataField ?? "") ? "right" : "left",
-      overflow: "hidden",
-      textOverflow: "ellipsis",
-      whiteSpace: "nowrap",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor:
-        isMobile ? 
-        appState.mode === "dark"
-                ? "#555555"
-                : "#fff" 
-        :
-            currentCell?.rowIndex === index && currentCell?.column === column.dataField
-            ? appState.mode === "dark"
+    style={
+      isMobile
+        ? { border: "" }
+        // ? { border: "1px solid blue" }
+        : {
+            width: typeof cellWidth === "number" ? `${cellWidth}px` : cellWidth,
+            minWidth: typeof cellWidth === "number" ? `${cellWidth}px` : cellWidth,
+            maxWidth: typeof cellWidth === "number" ? `${cellWidth}px` : cellWidth,
+            height: "100%",
+            ...(isMobile ? getMobileBorderStyles() : getDesktopBorderStyles()),
+            fontSize: `${gridFontSize}px`,
+            textAlign:
+              column.dataField === "slNo"
+                ? "center"
+                : ["qty"].includes(column.dataField ?? "")
+                ? "right"
+                : "left",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: currentCell?.rowIndex === index &&
+              currentCell?.column === column.dataField
+              ? appState.mode === "dark"
                 ? "#555555"
                 : formState.userConfig?.inputBoxStyle?.focusBgColor
                 ? `rgb(${formState.userConfig.inputBoxStyle.focusBgColor})`
                 : "#bfdbfe"
-            : currentCell?.rowIndex === index
-                ? appState.mode === "dark"
+              : currentCell?.rowIndex === index
+              ? appState.mode === "dark"
                 ? "#444444"
                 : formState.userConfig?.activeRowBg
-                    ? `rgb(${formState.userConfig.activeRowBg})`
-                    : "#e3f2fd"
-                : index % 2 === 0
-                ? appState.mode === "dark"
-                    ? "#333333"
-                    : "#fff"
-                : appState.mode === "dark"
-                    ? "#444444"
-                    : "#f9f9f9",
-      position: isMobile ? 'relative' : (isFixed ? "sticky" : "relative"),
-      left: !isMobile && isFirstColumn ? "0px" : "auto",
-      right: !isMobile && isLastColumn ? "0px" : "auto",
-      zIndex: !isMobile && isFixed ? 50 : 1,
-      gap: isLastColumn ? "8px" : "0",
-    }}
+                ? `rgb(${formState.userConfig.activeRowBg})`
+                : "#e3f2fd"
+              : index % 2 === 0
+              ? appState.mode === "dark"
+                ? "#333333"
+                : "#fff"
+              : appState.mode === "dark"
+              ? "#444444"
+              : "#f9f9f9",
+            position: isFixed ? "sticky" : "relative",
+            left: isFirstColumn ? "0px" : "auto",
+            right: isLastColumn ? "0px" : "auto",
+            zIndex: isFixed ? 50 : 1,
+            gap: isLastColumn ? "8px" : "0",
+          }
+    }
+
     onClick={(e: React.MouseEvent<HTMLElement>) => {
       e.preventDefault();
       setCurrentCell({

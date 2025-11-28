@@ -256,7 +256,7 @@ clearInFlightRequests = () => {
     url: string,
     data: any,
     token?: string
-  ): Promise<AxiosResponse> => {
+  ): Promise<any> => {
    await setAuthorization(token);
     return await axios.put(url, data);
   };

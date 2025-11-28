@@ -30,6 +30,8 @@ interface ERPInputProps extends ERPInputBaseProps {
   defaultValue?: any;
   label?: string;
   placeholder?: string;
+  height_?:number;
+  isMobileInput?:boolean;
   onChangeData?: (data: any) => void;
   disableEnterNavigation?: boolean;
   onKeyDown?: (e: any) => void;
@@ -143,6 +145,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       initialValue,
       label,
       placeholder,
+      height_,
+      isMobileInput,
       disabled,
       labelClassName,
       className,
@@ -839,6 +843,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     }
 
     const { height, fontSize, fontWeight, color } = sizeStyles.regular;
+    console.log("mj input height", height );
+    
 
     const VALID = new Set(["left", "right", "center"]);
     const inputTextAlign = textAlignStyle !== undefined && textAlignStyle !== null && VALID.has(textAlignStyle) ? textAlignStyle : (type === "number" ? "right" : "left");
@@ -851,8 +857,10 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             : "flex items-center space-x-2"
             }`}
           style={{
-            marginBottom: `${inputBoxState?.marginBottom ?? 0}px`,
-            marginTop: `${inputBoxState?.marginTop ?? 0}px`,
+            // marginBottom: `${inputBoxState?.marginBottom ?? 0}px`,
+            // marginTop: `${inputBoxState?.marginTop ?? 0}px`,
+            marginBottom: isMobileInput ?  "" : `${inputBoxState?.marginBottom ?? 0}px`,
+            marginTop: isMobileInput ?  "" : `${inputBoxState?.marginTop ?? 0}px`,
           }}>
 
           <div className="flex justify-between">
@@ -964,7 +972,9 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                   onBlur && onBlur(e);
                 }}
                 style={{
-                  height: !inputClassName ? height : "",
+                  // height: !inputClassName ? height : "",
+                  height: isMobileInput ? height_ : !inputClassName ? height : "",
+                  // height: height_,
                   fontSize,
                   fontWeight: boldInput || inputBoxState?.bold ? 700 : fontWeight,
                   color: disabled ? "#606060" : foreColor,

@@ -761,5 +761,7 @@
   "grouped_brandwise_sales_summary": "Grouped Brandwise Sales Summary",
   "salesmanwise_sales_summary_report": "Salesman Wise Sales Summary Report",
   "sales_register_report": "Sales Register Report",
-  "sales_return_estimate_register_report": "Sales Return Estimate Register Report"
+  "sales_return_estimate_register_report": "Sales Return Estimate Register Report",
+  
+  "post_transactions": "Post Transactions"
 }

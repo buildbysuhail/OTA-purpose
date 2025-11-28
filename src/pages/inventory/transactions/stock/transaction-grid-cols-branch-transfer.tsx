@@ -5,7 +5,9 @@ import {
 } from "../../../../redux/slices/user-session/reducer";
 import { ApplicationSettingsType } from "../../../settings/system/application-settings-types/application-settings-types";
 import { ColumnModel, TransactionFormState } from "../transaction-types";
-export const purchaseGridCol = (
+// voucherType ?? formState.transaction.master.voucherType
+// formType ?? formState.transaction.master.voucherForm
+export const stockGridColBranchTransfer = (
   applicationSettings: ApplicationSettingsType,
   userSession: UserModel,
   voucherType: string,
@@ -24,6 +26,14 @@ export const purchaseGridCol = (
         alignment: "center",
       },
       {
+        dataField: "pCode",
+        caption: t("code"),
+        dataType: "string",
+        allowEditing: true,
+        width: 150,
+        alignment: "left",
+      },
+      {
         dataField: "barCode",
         caption: t("barcode"),
         dataType: "string",
@@ -32,25 +42,17 @@ export const purchaseGridCol = (
         alignment: "left",
       },
       {
-        dataField: "pCode",
-        caption: t("code"),
-        dataType: "string",
-        allowEditing: true,
-        width: 150,
-        alignment: "left",
-        visible: false,
-      },
-      {
         dataField: "productBatchID",
         caption: t("item_batch_id"),
         dataType: "number",
         width: 200,
+        readOnly: true,
         alignment: "right",
         visible: false,
       },
       {
         dataField: "product",
-        caption: t("service"),
+        caption: t("product"),
         dataType: "string",
         allowEditing: true,
         width: 250,
@@ -61,6 +63,7 @@ export const purchaseGridCol = (
         caption: t("product_id"),
         dataType: "number",
         width: 100,
+        readOnly: true,
         alignment: "right",
         visible: false,
       },
@@ -72,8 +75,8 @@ export const purchaseGridCol = (
         field: { valueKey: "name", labelKey: "name" },
         width: 150,
         alignment: "left",
-        visible: false,
         allowEditing: true,
+        visible: false,
       },
       {
         dataField: "brandID",
@@ -105,15 +108,6 @@ export const purchaseGridCol = (
         readOnly: true,
       },
       {
-        dataField: "free",
-        caption: t("free"),
-        dataType: "number",
-        allowEditing: true,
-        width: 100,
-        alignment: "right",
-        visible: false,
-      },
-      {
         dataField: "unitID",
         caption: t("unit_id"),
         detailsOptionKey: "units",
@@ -124,12 +118,12 @@ export const purchaseGridCol = (
       },
       {
         dataField: "ratePlusTax",
-        caption: t("rate_plus_tax"),
+        caption: t("rate"),
         dataType: "number",
-        visible: false,
+        allowEditing: true,
         width: 130,
         alignment: "right",
-        // decimalPoint: applicationSettings.mainSettings.decimalPoints,
+        visible: false,
       },
       {
         dataField: "unitPrice",
@@ -175,7 +169,6 @@ export const purchaseGridCol = (
         width: 100,
         alignment: "right",
         readOnly: true,
-        visible: false,
       },
       {
         dataField: "vatPerc",
@@ -185,6 +178,7 @@ export const purchaseGridCol = (
         allowEditing: true,
         width: 100,
         alignment: "right",
+        visible: false,
       },
       {
         dataField: "vatAmount",
@@ -194,8 +188,8 @@ export const purchaseGridCol = (
         width: 100,
         alignment: "right",
         decimalPoint: applicationSettings.mainSettings.decimalPoints,
+        visible: false,
       },
-
       {
         dataField: "total",
         caption: t("total"),
@@ -219,18 +213,17 @@ export const purchaseGridCol = (
         dataField: "salesPrice",
         caption: t("sales_price"),
         dataType: "number",
-        visible: false,
         allowEditing: true,
         width: 200,
         alignment: "right",
+        readOnly: true,
+        visible: false,
         decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
       {
         dataField: "size",
         caption: t("size"),
         dataType: "string",
-        visible: false,
-        readOnly: true,
         width: 150,
         alignment: "left",
       },
@@ -270,38 +263,92 @@ export const purchaseGridCol = (
         alignment: "center",
       },
       {
-        dataField: "productDescription",
-        caption: t("product_description"),
-        dataType: "string",
-        width: 250,
-        alignment: "left",
-        visible: false,
+        dataField: "mrp",
+        decimalPoint: applicationSettings.mainSettings?.decimalPoints,
+        caption: t("mrp"),
+        dataType: "number",
+        allowEditing: true,
+        width: 100,
+        readOnly: false,
+        alignment: "right",
       },
       {
-        dataField: "stockDetails",
-        caption: t("stock_details"),
-        dataType: "string",
-        readOnly: true,
-        visible: false,
-        width: 200,
-        alignment: "left",
-      },
-      {
-        dataField: "adjQty",
-        caption: t("adj_qty"),
+        dataField: "purchasePrice",
+        caption: t("purchase_price"),
         dataType: "number",
         visible: false,
+        allowEditing: true,
+        width: 200,
+        alignment: "right",
+        readOnly: true,
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
+      },
+      {
+        dataField: "stock",
+        caption: t("stock"),
+        dataType: "number",
+        visible: false,
+        readOnly: true,
         width: 100,
         alignment: "right",
         decimalPoint: 4,
       },
       {
-        dataField: "stdPurchasePrice",
-        caption: t("purchase_price"),
+        dataField: "productDescription",
+        caption: t("product_description"),
+        dataType: "string",
+        width: 250,
+        readOnly: true,
+        alignment: "left",
+        visible: false,
+      },
+      {
+        dataField: "serial",
+        caption: t("sl"),
+        dataType: "btn",
+        visible: false,
+        width: 150,
+        readOnly: true,
+        alignment: "left",
+        allowEditing: false,
+      },
+      {
+        dataField: "toBranchStock",
+        caption: t("to_br_stock"),
         dataType: "number",
-        width: 55,
-        alignment: "center",
-        decimalPoint: applicationSettings.mainSettings.decimalPoints,
+        visible: false,
+        readOnly: true,
+        width: 100,
+        alignment: "right",
+        decimalPoint: 4,
+      },
+      {
+        dataField: "fromBrStock",
+        caption: t("from_br_stock"),
+        dataType: "number",
+        visible: false,
+        readOnly: true,
+        width: 100,
+        alignment: "right",
+        decimalPoint: 4,
+      },
+      {
+        dataField: "free",
+        caption: t("free"),
+        dataType: "number",
+        visible: false,
+        readOnly: true,
+        width: 100,
+        alignment: "right",
+        decimalPoint: 4,
+      },
+      {
+        dataField: "arabicName",
+        caption: t("arabic_name"),
+        dataType: "string",
+        visible: false,
+        width: 150,
+        alignment: "left",
       },
       {
         dataField: "batchNo",
@@ -310,6 +357,22 @@ export const purchaseGridCol = (
         visible: false,
         width: 150,
         alignment: "left",
+      },
+      //india only
+      {
+        dataField: "cgstPerc",
+        caption: t("cgst_perc"),
+        dataType: "number",
+        width: 100,
+        alignment: "right",
+      },
+      {
+        dataField: "cgst",
+        caption: t("cgst"),
+        dataType: "number",
+        width: 100,
+        alignment: "right",
+        decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
       {
         dataField: "sgstPerc",
@@ -327,22 +390,6 @@ export const purchaseGridCol = (
         alignment: "right",
         decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
-      {
-        dataField: "cgstPerc",
-        caption: t("cgst_perc"),
-        dataType: "number",
-        width: 100,
-        alignment: "right",
-      },
-      {
-        dataField: "cgst",
-        caption: t("cgst"),
-        dataType: "number",
-        width: 100,
-        alignment: "right",
-        decimalPoint: applicationSettings.mainSettings.decimalPoints,
-      },
-
       {
         dataField: "igstPerc",
         caption: t("igst_perc"),
@@ -395,14 +442,33 @@ export const purchaseGridCol = (
         alignment: "right",
       },
       {
-        dataField: "mrp",
-        decimalPoint: applicationSettings.mainSettings?.decimalPoints,
-        caption: t("mrp"),
+        dataField: "gdTransDetailsID",
+        caption: t("gd_trans_details_id"),
         dataType: "number",
-        allowEditing: true,
-        width: 100,
-        readOnly: false,
+        width: 180,
         alignment: "right",
+      },
+      {
+        dataField: "refBranchID",
+        caption: t("ref_branch_id"),
+        dataType: "string",
+        width: 55,
+        readOnly: true,
+        alignment: "center",
+      },
+      {
+        dataField: "employeeCode",
+        caption: t("sm_code"),
+        dataType: "string",
+        width: 55,
+        alignment: "center",
+      },
+      {
+        dataField: "employeeName",
+        caption: t("sales_man"),
+        dataType: "string",
+        width: 55,
+        alignment: "center",
       },
       {
         dataField: "actionCol",
@@ -414,28 +480,29 @@ export const purchaseGridCol = (
         alignment: "center",
       },
     ] as ColumnModel[]
-  )
-    .filter((gc: ColumnModel) => {
-      const field = gc.dataField ?? "";
-
-      // ---------------- SERVICE INVOICE ----------------
-      if (
-        userSession.countryId != Countries.India &&
-        voucherType == VoucherType.ServiceInvoice
-      ) {
-        return ![
-          "cgst",
-          "cgstPerc",
-          "sgstPerc",
-          "sgst",
-          "igstPerc",
-          "igst",
-          "cessPerc",
-          "cessAmt",
-          "additionalCessPerc",
-          "additionalCess",
-          "mrp",
-        ].includes(field);
-      } 
-      return true;
-    });
+  ).filter((gc: ColumnModel) => {
+    const field = gc.dataField ?? "";
+    if (userSession.countryId != Countries.India) {
+      return ![
+        "mrp",
+        "cgst",
+        "cgstPerc",
+        "sgstPerc",
+        "sgst",
+        "igstPerc",
+        "igst",
+        "cessPerc",
+        "cessAmt",
+        "additionalCessPerc",
+        "additionalCess",
+        "gdTransDetailsID",
+        "refBranchID",
+        "employeeCode",
+        "employeeName",
+      ].includes(field);
+    }
+    if (userSession.countryId == Countries.India) {
+      return !["batchNo"].includes(field);
+    }
+    return true;
+  });

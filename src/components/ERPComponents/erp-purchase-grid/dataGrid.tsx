@@ -2494,7 +2494,7 @@ const hidColumns: string[] = [
     return (
       <>
       
-          <div>{isMobile && !formState.transactionLoading && <DraggablePlusButton onClick={() => {
+          <>{isMobile && !formState.transactionLoading && <DraggablePlusButton onClick={() => {
             debugger;
             dispatch(formStateHandleFieldChangeKeysOnly({fields:{
               row: {
@@ -2503,7 +2503,7 @@ const hidColumns: string[] = [
               },
               itemPopup: {isOpen:true, index:formState.transaction.details.length}
             }}))
-          }} />}</div>
+          }} />}</>
       <div
         style={{
           position: isMobile ? "relative" : "static",

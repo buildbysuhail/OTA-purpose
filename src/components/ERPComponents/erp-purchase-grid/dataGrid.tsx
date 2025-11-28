@@ -1439,7 +1439,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       onKeyDown,
       onChange,
       gridId,
-      rowHeight = 33,
+      rowHeight = 55,
       className = "",
       height = 800,
       allowColumnReordering = true,
@@ -3098,6 +3098,7 @@ const hidColumns: string[] = [
                      <StepBack  className="w-3 h-3" />
                    </button>
                    <h6 className="text-sm font-medium">Add Items to Sale</h6>
+                   {/* <p>{rowHeight}</p> */}
                     <div className="ml-auto"> 
                         <GridPreferenceChooser
                         initialPreferences={preferences}

@@ -50,11 +50,11 @@ const ServiceTab: React.FC<ServiceTabProps> = ({ onSave, onClear, onSearch }) =>
   };
 
   const gridColumns = [
-    { field: "pCode", header: t("pcode"), width: "100px" },
+    { field: "pCode", header: t("p_code"), width: "100px" },
     { field: "barcode", header: t("barcode"), width: "140px" },
     { field: "product", header: t("product"), width: "auto" },
     { field: "qty", header: t("qty"), width: "100px", editable: true },
-    { field: "purchasePrice", header: t("pprice"), width: "130px", align: "right" },
+    { field: "purchasePrice", header: t("p_price"), width: "130px", align: "right" },
     { field: "total", header: t("total"), width: "130px", align: "right" },
   ];
 
@@ -86,15 +86,15 @@ const ServiceTab: React.FC<ServiceTabProps> = ({ onSave, onClear, onSearch }) =>
 
         {/* Main Service Information Card */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 px-6 py-4">
-            <h2 className="text-lg font-semibold text-white">{t("service_information")}</h2>
+          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 rounded-t-xl shadow-sm border-t border-l border-r border-blue-200 dark:border-gray-600 px-6 py-4">
+            <h2 className="text-lg font-semibold text-[#2b6cb0]">{t("service_information")}</h2>
           </div>
 
           <div className="p-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 items-stretch gap-8">
               {/* Left Column - Service Info (Readonly) */}
-              <div className="space-y-4">
-                <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 space-y-4">
+              <div className="h-full">
+                <div className="bg-gray-50 dark:bg-gray-900 rounded-lg shadow-sm p-4 space-y-4 h-full border border-gray-200 dark:border-gray-600">
                   <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-3">
                     {t("service_details")}
                   </h3>
@@ -156,8 +156,8 @@ const ServiceTab: React.FC<ServiceTabProps> = ({ onSave, onClear, onSearch }) =>
               </div>
 
               {/* Right Column - Service Processing */}
-              <div className="space-y-4">
-                <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 space-y-4">
+              <div className="h-full">
+                <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg shadow-sm p-4 space-y-4 h-full border border-blue-200 dark:border-gray-600">
                   <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-3">
                     {t("service_processing")}
                   </h3>
@@ -265,10 +265,10 @@ const ServiceTab: React.FC<ServiceTabProps> = ({ onSave, onClear, onSearch }) =>
 
         {/* Spare Parts Card */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-          <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 dark:from-emerald-700 dark:to-emerald-800 px-6 py-4 flex items-center justify-between">
+          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 rounded-t-xl shadow-sm border-t border-l border-r border-blue-200 dark:border-gray-600 px-6 py-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Package size={20} className="text-white" />
-              <h2 className="text-lg font-semibold text-white">{t("spare_parts")}</h2>
+              <Package size={20} className="text-[#2b6cb0]" />
+              <h2 className="text-lg font-semibold text-[#2b6cb0]">{t("spare_parts")}</h2>
             </div>
             <div className="w-72">
               <ERPInput

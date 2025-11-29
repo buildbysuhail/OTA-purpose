@@ -8,7 +8,7 @@ import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import ERPDatePicker from "../../../../../components/ERPComponents/erp-date-input";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
 import { Save, X, Printer, Trash2, History } from "lucide-react";
-import { updateMasterField, toggleHistory, setPrintOnSave, } from "../service-transaction-reducer";
+import { updateMasterField, setPrintOnSave, } from "../service-transaction-reducer";
 import { ServiceTransactionFormState } from "../service-transaction-types";
 import Urls from "../../../../../redux/urls";
 import moment from "moment";
@@ -36,7 +36,7 @@ const OrderTab: React.FC<OrderTabProps> = ({ onSave, onClear, onDelete, onPrint,
     dispatch(updateMasterField({ [field]: value }));
   };
 
-    const handleLedgerChange = (selectedItem: any) => {
+  const handleLedgerChange = (selectedItem: any) => {
     if (selectedItem) {
       dispatch(
         updateMasterField({
@@ -102,8 +102,10 @@ const OrderTab: React.FC<OrderTabProps> = ({ onSave, onClear, onDelete, onPrint,
 
         {/* Account Information Card */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 px-6 py-4">
-            <h2 className="text-lg font-semibold text-white">{t("account_information")}</h2>
+          <div className="  bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 rounded-t-xl shadow-sm border-t border-l border-r border-blue-200 dark:border-gray-600 px-6 py-4">
+            <h2 className="text-lg font-semibold text-[#2b6cb0]">
+              {t("account_information")}
+            </h2>
           </div>
 
           <div className="p-6">
@@ -150,15 +152,15 @@ const OrderTab: React.FC<OrderTabProps> = ({ onSave, onClear, onDelete, onPrint,
 
         {/* Customer & Service Details Card */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 px-6 py-4">
-            <h2 className="text-lg font-semibold text-white">{t("customer_service_details")}</h2>
+          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 rounded-t-xl shadow-sm border-t border-l border-r border-blue-200 dark:border-gray-600 px-6 py-4">
+            <h2 className="text-lg font-semibold text-[#2b6cb0]">{t("customer_service_details")}</h2>
           </div>
 
           <div className="p-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
               {/* Left Column - Customer Info */}
-              <div className="space-y-4">
-                <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 space-y-4">
+              <div className="h-full">
+                <div className="bg-gray-50 dark:bg-gray-900 rounded-lg shadow-sm p-4 space-y-4 h-full border border-gray-200 dark:border-gray-600">
                   <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-3">
                     {t("customer_details")}
                   </h3>
@@ -231,8 +233,8 @@ const OrderTab: React.FC<OrderTabProps> = ({ onSave, onClear, onDelete, onPrint,
               </div>
 
               {/* Right Column - Product & Service Info */}
-              <div className="space-y-4">
-                <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 space-y-4">
+              <div className="h-full">
+                <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg shadow-sm p-4 space-y-4 h-full border border-blue-200 dark:border-gray-600">
                   <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-3">
                     {t("service_details")}
                   </h3>
@@ -337,7 +339,7 @@ const OrderTab: React.FC<OrderTabProps> = ({ onSave, onClear, onDelete, onPrint,
 
         {/* Action Buttons */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
+          <div className="flex items-end gap-4">
             <ERPCheckbox
               id="isEdit"
               label={t("edit")}
@@ -351,8 +353,11 @@ const OrderTab: React.FC<OrderTabProps> = ({ onSave, onClear, onDelete, onPrint,
               onChange={(e) => dispatch(setPrintOnSave(e.target.checked))}
             />
             {/* Hidden ID label for reference */}
-            <div className="text-xs text-gray-400">
-              {t("id")}: {master.serviceTransMasterID}
+            <div className="flex items-center text-xs">
+              <span className="inline-flex items-end px-2 py-1 bg-indigo-50 text-indigo-600 rounded-md font-medium">
+                <span className="text-gray-500 mr-2">{t("id")}</span>
+                : {master.serviceTransMasterID}
+              </span>
             </div>
           </div>
 

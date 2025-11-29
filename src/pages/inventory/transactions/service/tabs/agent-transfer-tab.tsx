@@ -67,15 +67,15 @@ const AgentTransferTab: React.FC<AgentTransferTabProps> = ({ onSave, onClear, on
 
         {/* Main Agent Transfer Information Card */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 px-6 py-4">
-            <h2 className="text-lg font-semibold text-white">{t("agent_transfer_details")}</h2>
+          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 rounded-t-xl shadow-sm border-t border-l border-r border-blue-200 dark:border-gray-600 px-6 py-4">
+            <h2 className="text-lg font-semibold text-[#2b6cb0]">{t("agent_transfer_details")}</h2>
           </div>
 
           <div className="p-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Left Column - Basic Info */}
-              <div className="space-y-4">
-                <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 space-y-4">
+              <div className="h-full">
+                <div className="bg-gray-50 dark:bg-gray-900 rounded-lg shadow-sm p-4 space-y-4 h-full border border-gray-200 dark:border-gray-600">
                   <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-3">
                     {t("transfer_information")}
                   </h3>
@@ -158,7 +158,7 @@ const AgentTransferTab: React.FC<AgentTransferTabProps> = ({ onSave, onClear, on
 
               {/* Right Column - Processing Details */}
               <div className="space-y-4">
-                <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 space-y-4">
+                <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg shadow-sm p-4 space-y-4 h-full border border-blue-200 dark:border-gray-600">
                   <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-3">
                     {t("processing_details")}
                   </h3>

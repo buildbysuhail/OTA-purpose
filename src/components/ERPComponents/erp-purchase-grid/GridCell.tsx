@@ -390,6 +390,7 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
         <input
           disabled={formState.formElements.pnlMasters?.disabled}
           type="checkbox"
+          // height={rowHeight}
           checked={cellValue === true}
           onChange={(e) => onChange(e.target.checked, column.dataField as keyof TransactionDetail, index)}
         />
@@ -530,8 +531,8 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
           value={String(cellValue || "")}
           productDataUrl={`${Urls.inv_transaction_base}${transactionType}/products`}
           batchDataUrl={`${Urls.inv_transaction_base}${transactionType}/batches/`}
-          // className="w-full text-sm"
-          className="!h-[22px] mj23333333 text-sm"
+          className="w-full text-sm"
+          // className="!h-[22px] mj23333333 text-sm"
           // style={{ height: `${rowHeight}px`, ...(isMobile && { border: "1px solid blue" }) }}
           onFocus={() => handleFocus?.(column.dataField!)}
           onBlur={handleBlur}
@@ -686,6 +687,7 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
   };
 
   // NEW: Updated border logic for desktop
+
   const getDesktopBorderStyles = () => {
     return {
       borderRight: (() => {

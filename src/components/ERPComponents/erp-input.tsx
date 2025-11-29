@@ -1004,7 +1004,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                       ? "20px"
                       : undefined,
                   width: "100%",
-                  border: `1px solid ${borderStyles}`,
+                  // border:  `1px solid ${borderStyles}`,
+                  border: isMobileInput ? "none" : `1px solid ${borderStyles}`,
                   ...(type === "number" && {
                     "-moz-appearance": "number-input", // Firefox
                     "-webkit-appearance": "number-input", // WebKit (though limited effect)

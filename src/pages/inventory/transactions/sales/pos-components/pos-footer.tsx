@@ -20,7 +20,7 @@ const PosFooter: React.FC<TransactionHeaderProps> = ({
 }) => {
   const { t } = useTranslation("transaction");
   return (
-    <div className="w-full h-[240px] flex flex-col justify-between px-2 gap-1">
+    <div className="w-full h-fit flex flex-col justify-between px-2 gap-1">
       {/* <div className="flex gap-2 items-center justify-between">
         <div className="flex gap-1 items-center justify-center">
           <div>Name</div>
@@ -36,54 +36,57 @@ const PosFooter: React.FC<TransactionHeaderProps> = ({
           <ERPInput id="round" type="text" noLabel={true} />
         </div>
       </div> */}
-      <div className="flex flex-row w-full h-full mt-1 gap-4 justify-end">
+      <div className="flex flex-row w-full h-full py-2 gap-4 justify-end">
         <div className="flex flex-col gap-2 ">
-          <div className="w-full grid grid-cols-[100px_1fr] items-center justify-center">
+          <div className="w-full grid grid-cols-[110px_1fr] items-center justify-center">
             <label className="font-medium">{t("tax_on_disc")}</label>
-            <div className="flex ">
-              <ERPButton variant="secondary" className="w-8 h-8" title="" startIcon={<ArrowBigDownDash size={20} />}/>
+            <div className="flex items-center">
+              <ERPButton variant="secondary" className="w-8 h-6" title="" startIcon={<ArrowBigDownDash size={16} />}/>
               <ERPInput
               localInputBox={merge({}, initialUserConfig.inputBoxStyle, {
-                inputHeight: 2,
-                fontSize: 20,
-                fontColor: "0, 0, 0",
-                marginTop: 0,
+                inputHeight: 1.5,
+                fontSize: 16,
+                fontColor: "255, 0, 0",
+                marginTop: 2,
                 marginBottom: 0,
+                borderColor: "211, 211, 211"
               })}
               id={t("taxOnDisc")}
               type="number"
               customSize="customize"
               value={0.00}
               noLabel
-              className="w-36 text-center"
+              className="w-24 text-center"
             />
             </div>
             <label className="font-medium">{t("tot_tax")}</label>
             <ERPInput
               localInputBox={merge({}, initialUserConfig.inputBoxStyle, {
-                inputHeight: 2,
-                fontSize: 20,
-                fontColor: "0, 0, 0",
-                marginTop: 0,
+                inputHeight: 1.5,
+                fontSize: 16,
+                fontColor: "255, 0, 0",
+                marginTop: 3,
                 marginBottom: 0,
+                borderColor: "211, 211, 211"
               })}
               id={t("totalTax")}
               type="number"
               customSize="customize"
               value={1}
               noLabel
-              className="w-44 text-center"
+              className="w-32 text-center"
             />
             <label className="font-medium">{t("round")}</label>
             <ERPInput
               localInputBox={merge({}, initialUserConfig.inputBoxStyle, {
-                inputHeight: 2,
-                fontSize: 20,
+                inputHeight: 1.5,
+                fontSize: 16,
                 fontColor: "0, 0, 0",
-                marginTop: 0,
+                marginTop: 3,
                 marginBottom: 0,
+                borderColor: "211, 211, 211"
               })}
-              className="w-44"
+              className="w-32"
               customSize="customize"
               id={t("round")}
               type="number"
@@ -93,45 +96,48 @@ const PosFooter: React.FC<TransactionHeaderProps> = ({
             <label className="font-medium">{t("credit_note")}</label>
             <ERPInput
               localInputBox={merge({}, initialUserConfig.inputBoxStyle, {
-                inputHeight: 2,
-                fontSize: 20,
+                inputHeight: 1.5,
+                fontSize: 16,
                 fontColor: "0, 0, 0",
-                marginTop: 0,
+                marginTop: 3,
                 marginBottom: 0,
+                borderColor: "211, 211, 211"
               })}
-              className="w-44"
+              className="w-32"
               customSize="customize"
               id="creditNote"
               type="number"
               noLabel={true}
               value={0.0}
             />
-            <label className="font-medium">{t("cr.card_amount")}</label>
+            <label className="font-medium">{t("cr_card_amount")}</label>
             <ERPInput
               localInputBox={merge({}, initialUserConfig.inputBoxStyle, {
-                inputHeight: 2,
-                fontSize: 20,
+                inputHeight: 1.5,
+                fontSize: 16,
                 fontColor: "0, 0, 0",
-                marginTop: 0,
+                marginTop: 3,
                 marginBottom: 0,
+                borderColor: "211, 211, 211"
               })}
-              className="w-44"
+              className="w-32"
               customSize="customize"
               id="crCardAmount"
               type="number"
               noLabel={true}
               value={0.0}
             />
-            <label className="font-medium">{t("cash_recd")}</label>
+            <label className="font-medium">{t("cash_rcvd")}</label>
             <ERPInput
               localInputBox={merge({}, initialUserConfig.inputBoxStyle, {
-                inputHeight: 2,
-                fontSize: 20,
+                inputHeight: 1.5,
+                fontSize: 16,
                 fontColor: "0, 0, 0",
-                marginTop: 0,
+                marginTop: 3,
                 marginBottom: 0,
+                borderColor: "211, 211, 211"
               })}
-              className="w-44"
+              className="w-32"
               customSize="customize"
               id="cashReceived"
               type="number"
@@ -140,7 +146,7 @@ const PosFooter: React.FC<TransactionHeaderProps> = ({
             />
             <ERPCheckbox
               id="printAfterSave"
-              label={t("print_after_save")}
+              label={t("print_on_save")}
               // onChangeData={(data: any) => handleFieldChange("isDeletable", data.isDeletable)}
             />
             <ERPCheckbox
@@ -152,16 +158,17 @@ const PosFooter: React.FC<TransactionHeaderProps> = ({
         </div>
         <div className="flex flex-col gap-2 ">
           <div className="w-full grid grid-cols-[100px_1fr] items-center justify-center">
-            <label className="font-medium">{t("coupon_amt")}</label>
+            <label className="font-medium">{t("coupon_amount")}</label>
             <ERPInput
               localInputBox={merge({}, initialUserConfig.inputBoxStyle, {
-                inputHeight: 2,
-                fontSize: 20,
+                inputHeight: 1.5,
+                fontSize: 16,
                 fontColor: "0, 0, 0",
-                marginTop: 0,
+                marginTop: 3,
                 marginBottom: 0,
+                borderColor: "211, 211, 211"
               })}
-              className="w-52"
+              className="w-44"
               customSize="customize"
               id="couponAmount"
               type="number"
@@ -171,13 +178,14 @@ const PosFooter: React.FC<TransactionHeaderProps> = ({
             <label className="font-medium">{t("net_amount")}</label>
             <ERPInput
               localInputBox={merge({}, initialUserConfig.inputBoxStyle, {
-                inputHeight: 2,
-                fontSize: 20,
+                inputHeight: 1.5,
+                fontSize: 16,
                 fontColor: "0, 0, 0",
-                marginTop: 0,
+                marginTop: 3,
                 marginBottom: 0,
+                borderColor: "211, 211, 211"
               })}
-              className="w-52"
+              className="w-44"
               customSize="customize"
               id="netAmount"
               type="number"
@@ -188,13 +196,14 @@ const PosFooter: React.FC<TransactionHeaderProps> = ({
             <div className="flex">
               <ERPInput
                 localInputBox={merge({}, initialUserConfig.inputBoxStyle, {
-                  inputHeight: 2,
-                  fontSize: 20,
+                  inputHeight: 1.5,
+                  fontSize: 16,
                   fontColor: "0, 0, 0",
-                  marginTop: 0,
+                  marginTop: 3,
                   marginBottom: 0,
+                  borderColor: "211, 211, 211"
                 })}
-                className="w-24"
+                className="w-20"
                 customSize="customize"
                 id="billDiscountPercentage"
                 type="number"
@@ -203,13 +212,14 @@ const PosFooter: React.FC<TransactionHeaderProps> = ({
               />
               <ERPInput
                 localInputBox={merge({}, initialUserConfig.inputBoxStyle, {
-                  inputHeight: 2,
-                  fontSize: 20,
+                  inputHeight: 1.5,
+                  fontSize: 16,
                   fontColor: "0, 0, 0",
-                  marginTop: 0,
+                  marginTop: 3,
                   marginBottom: 0,
+                  borderColor: "211, 211, 211"
                 })}
-                className="w-28"
+                className="w-24"
                 customSize="customize"
                 id="billDiscountAmount"
                 type="number"
@@ -220,13 +230,14 @@ const PosFooter: React.FC<TransactionHeaderProps> = ({
             <label className="font-medium">{t("grand_total")}</label>
             <ERPInput
               localInputBox={merge({}, initialUserConfig.inputBoxStyle, {
-                inputHeight: 3,
-                fontSize: 30,
-                fontColor: "255, 255, 255",
-                marginTop: 0,
+                inputHeight: 2,
+                fontSize: 24,
+                fontColor: "255, 0, 0",
+                marginTop: 5,
                 marginBottom: 0,
+                borderColor: "211, 211, 211"
               })}
-              className="w-52"
+              className="w-44"
               customSize="customize"
               id="grandTotal"
               type="number"
@@ -237,13 +248,14 @@ const PosFooter: React.FC<TransactionHeaderProps> = ({
             <label className="font-medium">{t("balance")}</label>
             <ERPInput
               localInputBox={merge({}, initialUserConfig.inputBoxStyle, {
-                inputHeight: 3,
-                fontSize: 30,
-                fontColor: "255, 255, 255",
-                marginTop: 0,
+                inputHeight: 2,
+                fontSize: 24,
+                fontColor: "255, 0, 0",
+                marginTop: 5,
                 marginBottom: 0,
+                borderColor: "211, 211, 211"
               })}
-              className="w-52"
+              className="w-44"
               customSize="customize"
               id="balance"
               type="number"

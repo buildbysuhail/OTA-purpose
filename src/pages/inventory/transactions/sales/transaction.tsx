@@ -2443,7 +2443,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
       
       ) : (
       <div className="flex w-full h-[100dvh]  ">
-        <div className="h-full flex flex-col gap-2 md:w-[calc(100%-440px)] lg:w-[calc(100%-500px)]">
+        <div className="h-full flex flex-col gap-2 md:w-[calc(100%-440px)] lg:w-[calc(100%-450px)] xl:w-[calc(100%-500px)]">
           <div className="flex flex-col gap-1 h-24 py-1 ">
             <PosHeader formState={formState} dispatch={dispatch} />
             <div className="flex items-center justify-between px-2">
@@ -2452,11 +2452,11 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 NAFTALIN WHITE FAMILY 20PSC{" "}
               </div>
               <div className="font-bold text-back text-md">
-                {t("expired_date")}:{new Date().toLocaleDateString()}
+                {t("expiry_date")}:{new Date().toLocaleDateString()}
               </div>
             </div>
           </div>
-          <div className="flex flex-col justify-between  h-full">
+          <div className="flex flex-col justify-between h-full">
             {/* <div className="h-[calc(100%-(350)px)]"> */}
               <ErpPurchaseGrid
               ref={purchaseGridRef}
@@ -2477,7 +2477,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               transactionType={transactionType}
               _columns={_purchaseGridCol}
               keyField={"productID"}
-              height={window.innerHeight-360}  // 260 footer/ 32 header
+              height={window.innerHeight-310}  // 260 footer/ 32 header
               // height={300} //window.innerHeight-350
               gridId={`${gridCode}`}
               onAddData={handleAddData}
@@ -2502,7 +2502,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           </div>
         </div>
 
-        <div className=" md:w-[440px] lg:w-[500px] h-full">
+        <div className=" md:w-[440px] lg:w-[450px] xl:w-[500px] h-full">
           <PosSideMenu formState={formState} dispatch={dispatch} />
         </div>
       </div>

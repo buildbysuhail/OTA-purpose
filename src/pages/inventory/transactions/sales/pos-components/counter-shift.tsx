@@ -29,11 +29,11 @@ const CounterShift: React.FC<CounterShiftProps> = ({ formState, dispatch }) => {
         label={t("counter")}
       />
       <div className="flex gap-2">
-        <ERPInput id="openingCash" type="number" value={0.0} />
+        <ERPInput id="openingCash" label={t("opening_cash")} type="number" value={0.0} />
         <ERPButton title={t("teller")} variant="secondary" />
       </div>
       <div className="flex gap-2">
-        <ERPInput id="closingCash" type="number" value={0.0} />
+        <ERPInput id="closingCash" label={t("closing_cash")} type="number" value={0.0} />
         <ERPButton title={t("teller")} variant="secondary" />
       </div>
 
@@ -48,7 +48,7 @@ const CounterShift: React.FC<CounterShiftProps> = ({ formState, dispatch }) => {
           labelKey: "name",
         }}
         //   onChangeData={(data: any) => handleFieldChange("priceCategoryID", data.priceCategoryID)}
-        label={t("opened_employeee")}
+        label={t("opened_employee")}
       />
       <ERPInput
         id="remarks"

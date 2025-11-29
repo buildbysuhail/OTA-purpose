@@ -763,5 +763,12 @@
   "sales_register_report": "Sales Register Report",
   "sales_return_estimate_register_report": "Sales Return Estimate Register Report",
   
-  "post_transactions": "Post Transactions"
+  "post_transactions": "Post Transactions",
+  "substitute": "Substitute",
+  "substitutes": "Substitutes",
+  "service_invoice": "Service Invoice",
+  "service_invoices": "Service Invoices",
+  "pdf_width": "PDF Width",
+  "other": "Other",
+  "cashier_view": "Cashier View"
 }

@@ -763,5 +763,12 @@
   "sales_register_report": "تقرير سجل المبيعات",
   "sales_return_estimate_register_report": "تقرير سجل تقديرات مرتجعات المبيعات",
 
-  "post_transactions": "ترحيل المعاملات"
+  "post_transactions": "ترحيل المعاملات",
+  "substitute": "بديل",
+  "substitutes": "بدائل",
+  "service_invoice": "فاتورة خدمة",
+  "service_invoices": "فواتير الخدمات",
+  "pdf_width": "عرض قوات الدفاع الشعبي",
+  "other": "أخرى",
+  "cashier_view": "عرض الكاشير"
 }

@@ -46,7 +46,7 @@ import DownloadBarcodePreview from "../../../LabelDesigner/download-preview-barc
 import { customJsonParse, safeBase64Decode } from "../../../../utilities/jsonConverter";
 import { getInitialPreference } from "../../../../utilities/dx-grid-preference-updater";
 import GridTheme from "./grid-theme";
-import { stockGridCol } from "./transaction-grid-cols-opening-stock";
+
 import SavingOverlay from "../transaction-saving";
 import { BusinessType } from "../../../../enums/business-types";
 import MemoEditorModal from "./memo-editor";
@@ -59,6 +59,9 @@ import { TransactionProps, UserConfig, TransactionDetail, TransactionFormState, 
 import { initialUserConfig, transactionInitialData, TransactionFormStateInitialData, initialFormElements, initialInventoryTotals, initialTransactionDetailData } from "../transaction-type-data";
 import { toggleIsPrintPreviewPopup } from "../../../../redux/slices/popup-reducer";
 import TemplatesPreView from "../../../transaction-base/transaction-print-preview";
+import { TFunction } from "i18next";
+import { UserModel } from "../../../../redux/slices/user-session/reducer";
+import { ApplicationSettingsType } from "../../../settings/system/application-settings-types/application-settings-types";
 // import { fetchUserConfig } from "../transaction-utils";
 
 interface BilledItem {
@@ -2579,3 +2582,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 };
 
 export default TransactionForm;
+function stockGridCol(applicationSettings: ApplicationSettingsType, userSession: UserModel, arg2: string, arg3: string, t: TFunction<"transaction", undefined>, formState: TransactionFormState): ColumnModel[] {
+  throw new Error("Function not implemented.");
+}
+

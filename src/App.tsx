@@ -16,6 +16,7 @@ const ReportsLayout = React.lazy(() => import("./components/common/layout/report
 const TemplateDesignerLayout = React.lazy(() => import("./components/common/layout/template-designer-layout"));
 const RPosLayout = React.lazy(() => import("./components/common/layout/rpos-layout"));
 const PDFBarcodeDesigner = React.lazy(() => import("./pages/LabelDesigner/label_designer"));
+const PosLayout = React.lazy(() => import("./components/common/layout/pos-layout"));
 const Login = React.lazy(() => import("./pages/auth/Login"));
 const Logout = React.lazy(() => import("./pages/auth/Logout"));
 const OrgSelect = React.lazy(() => import("./pages/OrgSelect"));
@@ -53,6 +54,7 @@ import ERPResizableSidebar from "./components/ERPComponents/erp-resizable-sideba
 import TemplatesView from "./pages/transaction-base/template_picker";
 import { formStateHandleFieldChange } from "./pages/inventory/transactions/reducer";
 import { accFormStateHandleFieldChange } from "./pages/accounts/transactions/reducer";
+import TransactionForm from "./pages/inventory/transactions/sales/transaction";  
 // ====
 // import ERPModal from "./components/ERPComponents/erp-modal";
 // import 'devextreme/dist/css/dx.dark.css';  
@@ -313,10 +315,22 @@ function App() {
               <Route path="logout" element={<Logout />} />
               <Route path="select-organization" element={<OrgSelect />} />
               <Route path="switch-organization" element={<OrgSelect />} />
+              <Route path="pos" element={<TransactionForm
+                  voucherType="SI"
+                  voucherPrefix=""
+                  formType="VAT"
+                  formCode=""
+                  isPos={true}
+                  title="POS"
+                  drCr="CR"
+                  transactionType={"SalesInvoice"}
+                />} />
+
               {/* <Route path="create-organization" element={<Organization />} />
                */}
               <Route path="account-settings/*" element={<AccountSettingsLayout setMyClass={setMyClass} />} />
               <Route path="rpos/*" element={<RPosLayout setMyClass={setMyClass} />} />
+              <Route path="pos/*" element={<PosLayout />} />
               <Route path="settings/_/*" element={<SettingsLayout setMyClass={setMyClass} />} />
               <Route path="reports/_/*" element={<ReportsLayout setMyClass={setMyClass} />} />
               <Route path="invoice_designer/*" element={<TemplateDesignerLayout />} />

@@ -59,6 +59,9 @@ import UnsavedChangesModal from "./unsavedChangesModal";
 import { useTransaction } from "./use-transaction";
 import BillWisePopup from "../../../transaction-base/billwise-popup";
 import ErpPurchaseGrid from "../../../../components/ERPComponents/erp-purchase-grid/dataGrid";
+import PosFooter from "./pos-components/pos-footer";
+import PosHeader from "./pos-components/pos-header";
+import PosSideMenu from "./pos-components/pos-side-menu";
 
 interface BilledItem {
   id?: number;
@@ -92,6 +95,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   transactionMasterID,
   financialYearID,
   isTeller = false,
+  isPos = false,
   // localInputBox,
 }) => {
   const [_st, setSt] = useState<UserConfig>(initialUserConfig);
@@ -1976,7 +1980,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   return (
     <>
-      {/* { !formState.transactionLoading ?( */}
+      { !isPos ?(
       <div className="relative">
         {/* <h1>SAFVAN{transactionType}</h1> */}
         {!deviceInfo?.isMobile && (
@@ -2434,7 +2438,77 @@ const TransactionForm: React.FC<TransactionProps> = ({
           />
         )}
         {/* footer ends here */}
+</div>
+      // If pos
+      
+      ) : (
+      <div className="flex w-full h-[100dvh]  ">
+        <div className="h-full flex flex-col gap-2 md:w-[calc(100%-440px)] lg:w-[calc(100%-500px)]">
+          <div className="flex flex-col gap-1 h-24 py-1 ">
+            <PosHeader formState={formState} dispatch={dispatch} />
+            <div className="flex items-center justify-between px-2">
+              <div className="font-bold text-danger text-md">
+                {" "}
+                NAFTALIN WHITE FAMILY 20PSC{" "}
+              </div>
+              <div className="font-bold text-back text-md">
+                {t("expired_date")}:{new Date().toLocaleDateString()}
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col justify-between  h-full">
+            {/* <div className="h-[calc(100%-(350)px)]"> */}
+              <ErpPurchaseGrid
+              ref={purchaseGridRef}
+              onChange={handleTextDataChange}
+              zIndexController={40}
+              onKeyDown={(
+                value: any,
+                e: React.KeyboardEvent<any>,
+                column: keyof TransactionDetail,
+                rowIndex: number
+              ) => {
+                handleTextDataKeyDown(value, e, column, rowIndex, {
+                  result: {},
+                  formStateHandleFieldChangeKeysOnly:
+                    formStateHandleFieldChangeKeysOnly,
+                });
+              }}
+              transactionType={transactionType}
+              _columns={_purchaseGridCol}
+              keyField={"productID"}
+              height={window.innerHeight-360}  // 260 footer/ 32 header
+              // height={300} //window.innerHeight-350
+              gridId={`${gridCode}`}
+              onAddData={handleAddData}
+              summaryConfig={formState.summaryConfig}
+              gridFontSize={formState.userConfig?.gridFontSize}
+              gridIsBold={formState.userConfig?.gridIsBold}
+              rowHeight={formState.userConfig?.gridRowHeight ?? _st.gridRowHeight}
+              headerRowHeight={
+                formState.userConfig?.gridHeaderRowHeight ?? _st.gridHeaderRowHeight
+              }
+              gridBorderColor={formState.userConfig?.gridBorderColor}
+              gridHeaderBg={formState.userConfig?.gridHeaderBg}
+              gridHeaderFontColor={formState.userConfig?.gridHeaderFontColor}
+              gridBorderRadius={formState.userConfig?.gridBorderRadius}
+              showColumnBorder={formState.userConfig?.showColumnBorder ?? true}
+              activeRowBg={formState.userConfig?.activeRowBg}
+              gridFooterBg={formState.userConfig?.gridFooterBg}
+              gridFooterFontColor={formState.userConfig?.gridFooterFontColor}
+            />
+            {/* </div> */}
+            <PosFooter formState={formState} dispatch={dispatch} />
+          </div>
+        </div>
 
+        <div className=" md:w-[440px] lg:w-[500px] h-full">
+          <PosSideMenu formState={formState} dispatch={dispatch} />
+        </div>
+      </div>
+
+    
+      )}
         {formState.transaction && (
           <ERPModal
             isOpen={(formState.userConfig?.printPreview ?? false) && (popupData.IsPrintPreviewPopup.isOpen ?? false)}
@@ -2830,8 +2904,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
             }
           />
         )}
-      </div>
-
       {formState.saving && (
         <SavingOverlay
           saving={true}

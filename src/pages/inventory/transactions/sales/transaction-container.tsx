@@ -263,6 +263,7 @@ const TransactionFormContainer: React.FC<TransactionProps> = (props) => {
             voucherNo={readyToShowVoucher.input.voucherNo}
             transactionMasterID={readyToShowVoucher.input.transactionMasterID}
             transactionType={readyToShowVoucher.input.transactionType}
+            isPos={props.isPos}
           />
         )
       )}

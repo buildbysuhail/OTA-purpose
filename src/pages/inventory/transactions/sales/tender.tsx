@@ -88,30 +88,136 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
     <ERPModal
       isOpen={isOpen}
       closeModal={onClose}
-      title={""}
+      title={t("tender")}
       width={480}
-      height={400}
+      height={470}
       content={
-        <div className="px-4">
-          <h1 className="text-2xl font-bold text-purple-800 my-3 text-center">
-            TENDER
+        <div className="flex items-center justify-center w-full">
+        <div className="px-2">
+          <h1 className="text-2xl font-bold text-purple-800 my-3 text-center mx-w-md">
+            {t("tender").toUpperCase()}
           </h1>
           {/* Total */}
-          <div className="grid grid-cols-[120px_1fr] gap-4 items-center">
+          <div className="grid grid-cols-[120px_1fr] gap-4 items-center bg-gray-300 px-2 rounded-md">
             <label className="text-left sm:text-[10px] leading-[12px] font-bold md:text-lg  text-black">{t("total").toUpperCase()}</label>
-            <ERPInput
-              localInputBox={merge({}, initialUserConfig.inputBoxStyle, {inputHeight:2, fontSize:30, fontColor:"255, 0, 0", borderColor: '200, 200, 200'})}
+            {/* <ERPInput
+              localInputBox={merge({}, initialUserConfig.inputBoxStyle, {inputHeight:3, fontSize:30, fontColor:"255, 0, 0", borderColor: '255, 255, 255'})}
               id=""
               customSize="customize"
               type="number"
               value={total}
               noLabel={true}
               onChange={(e) => setTotal(parseFloat(e.target.value) || 0)}
+            /> */}
+            <div className="text-red-700 text-4xl px-2 font-bold text-right">{999.00}</div>
+          </div>
+          {/* ------------------------------ */}
+          <div className="flex flex-col gap-1 items-start py-2 rounded-md px-2">
+
+        {/* Checkbox Left Section */}
+        <div className="flex items-start pt-1">
+          <ERPCheckbox
+            id="discEnabled"
+            checked={discEnabled}
+            label={t('disc').toUpperCase()}
+            onChange={(e) => setDiscEnabled(e.target.checked)}
+            labelClassName="font-semibold text-base text-gray-800"
+          />
+        </div>
+
+        {/* Discount Inputs */}
+        <div className="flex flex-row gap-3">
+
+          {/* Discount Amount */}
+          <div className="flex flex-col">
+            <label className="text-xs font-medium text-gray-600">
+              {t('discount_amount')}
+            </label>
+            <ERPInput
+              localInputBox={merge({}, initialUserConfig.inputBoxStyle, {
+                inputHeight: 2,
+                fontSize: 24,
+                fontColor: "0, 0, 0",
+                borderColor: "180, 180, 180",
+                marginTop:0,
+              })}
+              ref={discAmountRef}
+              id="discAmount"
+              customSize="customize"
+              type="number"
+              noLabel={true}
+              value={discAmount}
+              onChange={(e) => handleDiscAmountChange(parseFloat(e.target.value) || 0)}
+              disabled={!discEnabled}
             />
           </div>
 
+          {/* Discount Percentage */}
+          <div className="flex flex-col">
+            <label className="text-xs font-medium text-gray-600">
+              {t('discount_percent')}
+            </label>
+            <ERPInput
+              localInputBox={merge({}, initialUserConfig.inputBoxStyle, {
+                inputHeight: 2,
+                fontSize: 24,
+                fontColor: "0, 0, 0",
+                borderColor: "180, 180, 180",
+                marginTop:0
+              })}
+              id="discPercent"
+              customSize="customize"
+              type="number"
+              noLabel={true}
+              value={discPercent?.toFixed(2)}
+              onChange={(e) => handleDiscPercentChange(parseFloat(e.target.value) || 0)}
+              disabled={!discEnabled}
+            />
+          </div>
+
+        </div>
+        <div className="flex flex-row gap-2 items-center justify-between w-full">
+          {/* FIELD ROW (button + input) */}
+          <div className="mt-3">
+            <button
+              type="button"
+              className="h-7 w-7 flex items-center justify-center rounded-md bg-gray-500 hover:bg-gray-600 transition text-white"
+              // onClick={() => { if (applyDiscountsToItems) applyDiscountsToItems(); }}
+            >
+              <ChevronUp size={16} />
+            </button>
+            </div>
+            <div className="flex flex-col">
+              <label className="text-xs font-medium text-gray-600">
+                {t('tax_on_disc')}
+              </label>
+              <ERPInput
+                localInputBox={merge({}, initialUserConfig.inputBoxStyle, {
+                  inputHeight: 2,
+                  fontSize: 25,
+                  fontColor: "255, 0, 0",
+                  borderColor: "200, 200, 200",
+                  marginTop:0,
+                })}
+                id="taxOnDisc"
+                customSize="customize"
+                type="number"
+                noLabel={true}
+                value={discPercent.toFixed(2)}
+                onChange={(e) => handleDiscPercentChange(parseFloat(e.target.value) || 0)}
+                disabled={!discEnabled}
+              />
+            </div>
+
+            {/* Input Field */}
+            
+          </div>
+
+      </div>
+
+
           {/* Discount Row */}
-          <div className="grid grid-cols-[120px_1fr] gap-4 items-center">
+          {/* <div className="grid grid-cols-[120px_1fr] gap-4 items-center">
             <div className="flex items-center gap-2">
               <ERPCheckbox
                 id="discEnabled"
@@ -144,12 +250,14 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                 disabled={!discEnabled}
               />
             </div>
-          </div>
+          </div> */}
+          {/* ------------------- */}
+          
 
           {/* Tax on Disc */}
-          <div className="grid grid-cols-[120px_1fr] gap-4 items-center">
+          {/* <div className="grid grid-cols-[120px_1fr] gap-4 items-center">
             <label className="text-left text-[10px] leading-[12px] font-semibold md:text-[12px] text-black">{t('tax_on_disc').toUpperCase()}</label>
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-2 items-center"> */}
               {/* <ERPDataComboBox
                 id="taxOnDisc"
                 noLabel={true}
@@ -159,7 +267,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                 disabled={!discEnabled}
               /> */}
               {/* This button component is available in footer, can use that component if needed */}
-              <button
+              {/* <button
                 type="button"
                 style={{
                   background: "#8080809c",
@@ -170,29 +278,29 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                   display: "flex",
                   alignItems: "center",
                   cursor: "pointer",
-                }}
-                // onClick={() => { if (applyDiscountsToItems) applyDiscountsToItems(); }}
-                >
-                <ChevronUp size={20} color="#fff" />
-              </button>
+                }} */}
+                {/* // onClick={() => { if (applyDiscountsToItems) applyDiscountsToItems(); }}
+          //       >
+          //       <ChevronUp size={20} color="#fff" />
+          //     </button>
 
-              <ERPInput
-                localInputBox={merge({}, initialUserConfig.inputBoxStyle, {inputHeight:2, fontSize:20, fontColor:"255, 0, 0", borderColor: '200, 200, 200'})}
-                id="taxOnDisc"
-                customSize="customize"
-                type="number"
-                noLabel={true}
-                value={discPercent.toFixed(2)}
-                onChange={(e) => handleDiscPercentChange(parseFloat(e.target.value) || 0)}
-                disabled={!discEnabled}
-              />
-            </div>
-          </div>
+          //     <ERPInput */}
+          {/* //       localInputBox={merge({}, initialUserConfig.inputBoxStyle, {inputHeight:2, fontSize:20, fontColor:"255, 0, 0", borderColor: '200, 200, 200'})}
+          //       id="taxOnDisc"
+          //       customSize="customize"
+          //       type="number"
+          //       noLabel={true}
+          //       value={discPercent.toFixed(2)}
+          //       onChange={(e) => handleDiscPercentChange(parseFloat(e.target.value) || 0)}
+          //       disabled={!discEnabled}
+          //     />
+          //   </div>
+          // </div> */}
 
           {/* Net Total */}
-          <div className="grid grid-cols-[120px_1fr] gap-4 items-center">
-            <label className="text-left text-[10px] leading-[12px] font-semibold md:text-[12px] text-black">{t('net_total').toUpperCase()}</label>
-            <ERPInput
+          <div className="grid grid-cols-[120px_1fr] gap-4 items-center px-2 bg-gray-300 rounded-md ">
+            <label className="text-left text-[10px] leading-[12px] font-semibold md:text-[12px] text-black ">{t('net_total').toUpperCase()}</label>
+            {/* <ERPInput
               localInputBox={merge({}, initialUserConfig.inputBoxStyle, {inputHeight:2, fontSize:30, fontColor:"255, 0, 0", borderColor: '200, 200, 200'})}
               id="netTotal"
               customSize="customize"
@@ -200,15 +308,16 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
               noLabel={true}
               value={netTotal.toFixed(2)}
               readOnly
-            />
+            /> */}
+            <div className="text-red-700 text-3xl px-2 font-bold text-right">{netTotal.toFixed(2)}</div>
           </div>
 
           {/* Cash Received */}
-          <div className="grid grid-cols-[120px_1fr] gap-4 items-center">
+          <div className="flex flex-col my-2 p-2 rounded-md">
             <label className="text-left text-[10px] leading-[12px] font-semibold md:text-[12px] text-black">{t('cash_received').toUpperCase()}</label>
             <div className="flex gap-2 items-center">
               <ERPButton
-                className="h-8 bg-[#8080809c] text-white"
+                className="h-8 bg-[#8080809c] text-black"
                 title="ADD"
               />
             <ERPInput
@@ -221,11 +330,8 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
               onChange={(e) => setCashRcvd(parseFloat(e.target.value) || 0)}
             />
             </div>
-          </div>
-
-          {/* Card Amount */}
-          <div className="grid grid-cols-[120px_1fr] gap-4 items-center">
-            <div className="flex flex-col items-left">
+            <div className="flex flex-col">
+            <div className="flex flex-row gap-2 mt-1">
               <ERPCheckbox
                 id="cardAmtEnabled"
                 label={t('bank_card')}
@@ -241,12 +347,12 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                 labelClassName="font-bold text-lg text-black"
               />
             </div>
-            <div className="flex gap-2 items-center">
+            <div className="flex items-center">
               {/* <button className="px-2 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded">
                 <ChevronUp size={16} />
               </button> */}
               <ERPInput
-                localInputBox={merge({}, initialUserConfig.inputBoxStyle, {inputHeight:2, fontSize:25, fontColor:"0, 0, 0", borderColor: '200, 200, 200'})}
+                localInputBox={merge({}, initialUserConfig.inputBoxStyle, {inputHeight:2, fontSize:30, fontColor:"0, 0, 0", borderColor: '200, 200, 200', marginTop:0})}
                 customSize="customize"
                 id="cardAmt"
                 type="number"
@@ -257,6 +363,10 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
               />
             </div>
           </div>
+          </div>
+
+          {/* Card Amount */}
+          
 
           {/* Bank Account */}
           {/* <div className="grid grid-cols-[120px_1fr] gap-4 items-center">
@@ -279,9 +389,9 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
           </div> */}
 
           {/* Balance */}
-          <div className="grid grid-cols-[120px_1fr] gap-4 items-center">
+          <div className="grid grid-cols-[120px_1fr] gap-4 items-center px-2 bg-gray-300 rounded-md">
             <label className="text-left text-[10px] leading-[12px] font-bold md:text-lg text-black">{t('balance').toUpperCase()}</label>
-            <ERPInput
+            {/* <ERPInput
               id="balance"
               localInputBox={merge({}, initialUserConfig.inputBoxStyle, {inputHeight:2, fontSize:30, fontColor:"255, 0, 0", borderColor: '200, 200, 200'})}
               customSize="customize"
@@ -289,20 +399,23 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
               noLabel={true}
               value={balance.toFixed(2)}
               readOnly
-            />
+            /> */}
+            <div className="text-red-700 text-3xl px-2 font-bold text-right">{balance.toFixed(2)}</div>
           </div>
 
           {/* Apply Button */}
-          <div className="flex justify-center py-4">
+          <div className="flex justify-end py-2">
             <ERPButton
               title={t("apply")}
               onClick={handleApply}
               variant="primary"
-              className="w-60"
+              className=""
             />
           </div>
         </div>
+        </div>
       }
+      
     />
   );
 };

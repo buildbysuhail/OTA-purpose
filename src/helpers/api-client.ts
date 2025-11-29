@@ -16,7 +16,7 @@ import { getCacheStoreKey } from "../redux/cached-urls";
 
 //  const formState = useAppSelector((state: RootState) => state.AccTransaction);
 // default
-axios.defaults.baseURL = Urls.baseUrl;
+// axios.defaults.baseURL = Urls.baseUrl;
 // content type
 axios.defaults.headers.post["Content-Type"] = "application/json";
 

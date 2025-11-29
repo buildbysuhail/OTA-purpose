@@ -46,7 +46,6 @@ import DownloadBarcodePreview from "../../../LabelDesigner/download-preview-barc
 import { customJsonParse, safeBase64Decode } from "../../../../utilities/jsonConverter";
 import { getInitialPreference } from "../../../../utilities/dx-grid-preference-updater";
 import GridTheme from "./grid-theme";
-import { stockGridCol } from "./transaction-grid-cols-opening-stock";
 import SavingOverlay from "../transaction-saving";
 import { BusinessType } from "../../../../enums/business-types";
 import MemoEditorModal from "./memo-editor";
@@ -59,6 +58,7 @@ import { TransactionProps, UserConfig, TransactionDetail, TransactionFormState, 
 import { initialUserConfig, transactionInitialData, TransactionFormStateInitialData, initialFormElements, initialInventoryTotals, initialTransactionDetailData } from "../transaction-type-data";
 import { toggleIsPrintPreviewPopup } from "../../../../redux/slices/popup-reducer";
 import TemplatesPreView from "../../../transaction-base/transaction-print-preview";
+import { stockGridColOpeningStock } from "./transaction-grid-cols-opening-stock";
 // import { fetchUserConfig } from "../transaction-utils";
 
 interface BilledItem {
@@ -1448,7 +1448,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   }, [formState.quantityFactorData]);
 
 
-  const _purchaseGridCol: ColumnModel[] = stockGridCol(applicationSettings, userSession
+  const _purchaseGridCol: ColumnModel[] = stockGridColOpeningStock(applicationSettings, userSession
     , voucherType ?? formState.transaction.master.voucherType
     , formType ?? formState.transaction.master.voucherForm, t, formState) ?? []
   // const [invoiceNo, setInvoiceNo] = useState<number>(3); // Default Invoice No.

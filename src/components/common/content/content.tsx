@@ -106,6 +106,7 @@ const ServiceTransaction = lazy(() => import("../../../pages/inventory/transacti
 
 // Post Transactions
 const PostTransactionsLayout = lazy(() => import("../../ERPComponents/post-transactions"));
+const CashierView = lazy(() => import("../../ERPComponents/cashier-view"));
 // Other Inventory Masters
 const TaxCategoryIndia = lazy(() => import("../../../pages/inventory/masters/tax-category-india/tax-category-india"));
 const TcsCategory = lazy(() => import("../../../pages/inventory/masters/tcs-category/tcs-category"));
@@ -561,6 +562,8 @@ const Content: FC<ContentProps> = () => {
 
           {/* Post Transaction */}
           <Route path="/post_transactions" element={<PostTransactionsLayout />} />
+          {/* Cashier View */}
+          <Route path="/cashier_view" element={<CashierView />} />
 
           {ReportsMenuItems.map((route, index) => (
             <Fragment key={`route-group-${index}`}>

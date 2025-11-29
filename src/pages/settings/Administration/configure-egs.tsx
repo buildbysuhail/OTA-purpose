@@ -4,9 +4,14 @@ import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPRadio from "../../../components/ERPComponents/erp-radio";
 import { useTranslation } from "react-i18next";
+import ERPModal from "../../../components/ERPComponents/erp-modal";
+import SystemCodes from "./system-codes";
+import ApiPortalRegistration from "./api-portal-registration";
 
 const ConfigureEgs: React.FC = () => {
     const { t } = useTranslation('administration');
+    const [systemModalOpen, setSystemModalOpen] = useState(false);
+    const [apiPortalModalOpen, setApiPortalModalOpen] = useState(false);
     const [formData, setFormData] = useState({
         companyType: "Trading Company",
         otp: "",
@@ -119,14 +124,30 @@ const ConfigureEgs: React.FC = () => {
                         title={t("register_system_codes")}
                         variant="secondary"
                         className="flex-1"
+                        onClick={() => setSystemModalOpen(true)}
                     />
                     <ERPButton
                         title={t("api_portal_registration")}
                         variant="secondary"
                         className="flex-1"
+                        onClick={() => setApiPortalModalOpen(true)}
                     />
                 </div>
             </div>
+            <ERPModal
+                width={700}
+                title={(t("system_codes"))}
+                isOpen={systemModalOpen}
+                closeModal={() => setSystemModalOpen(false)}
+                content={<SystemCodes />}
+            />
+            <ERPModal
+                width={800}
+                title={(t("api_portal_registration"))}
+                isOpen={apiPortalModalOpen}
+                closeModal={() => setApiPortalModalOpen(false)}
+                content={<ApiPortalRegistration />}
+            />
         </div>
     );
 };

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Check } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight } from "lucide-react";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import PosComponents from "./pos-sections";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
@@ -77,7 +77,7 @@ const PosSideSection: React.FC<TransactionHeaderProps> = ({
   // ----------------- Quantity and Barcode section --------------------------
   const QtyBarcodeControl = () => {
     return (
-      <div className="flex items-center gap-4 px-3 py-2  rounded-sm mx-1" >
+      <div className="flex items-center gap-4 px-3 py-2  rounded-sm mx-1">
         {/* Qty Section */}
         <div className="flex gap-2 flex-col">
           <label className="text-xs font-medium text-gray-600">
@@ -170,33 +170,41 @@ const PosSideSection: React.FC<TransactionHeaderProps> = ({
     return (
       <div className="grid grid-cols-4 gap-2 p-1 bg-white border w-full">
         {/* Row 1 */}
-        <button className={`${baseBtn} bg-white text-gray-900 h-14`}>7</button>
-        <button className={`${baseBtn} bg-white text-gray-900 h-14`}>8</button>
-        <button className={`${baseBtn} bg-white text-gray-900 h-14`}>9</button>
-        <button className={`${baseBtn} bg-gray-200 text-gray-800 h-14 text-base`}> KB </button>
+        <button className={`${baseBtn} bg-white text-gray-900 h-12`}>7</button>
+        <button className={`${baseBtn} bg-white text-gray-900 h-12`}>8</button>
+        <button className={`${baseBtn} bg-white text-gray-900 h-12`}>9</button>
+        <button
+          className={`${baseBtn} bg-gray-200 text-gray-800 h-12 text-base`}
+        >
+          KB
+        </button>
 
         {/* Row 2 */}
-        <button className={`${baseBtn} bg-white text-gray-900 h-14`}>4</button>
-        <button className={`${baseBtn} bg-white text-gray-900 h-14`}>5</button>
-        <button className={`${baseBtn} bg-white text-gray-900 h-14`}>6</button>
-        <button className={`${baseBtn} bg-gray-200 text-gray-800 h-14 text-base`}>
+        <button className={`${baseBtn} bg-white text-gray-900 h-12`}>4</button>
+        <button className={`${baseBtn} bg-white text-gray-900 h-12`}>5</button>
+        <button className={`${baseBtn} bg-white text-gray-900 h-12`}>6</button>
+        <button
+          className={`${baseBtn} bg-gray-200 text-gray-800 h-12 text-base`}
+        >
           Clear
         </button>
 
         {/* Row 3 */}
-        <button className={`${baseBtn} bg-white text-gray-900 h-14 `}>1</button>
-        <button className={`${baseBtn} bg-white text-gray-900 h-14`}>2</button>
-        <button className={`${baseBtn} bg-white text-gray-900 h-14`}>3</button>
-        <button className={`${baseBtn} bg-gray-200 text-gray-800 h-14 text-base`}>
+        <button className={`${baseBtn} bg-white text-gray-900 h-12`}>1</button>
+        <button className={`${baseBtn} bg-white text-gray-900 h-12`}>2</button>
+        <button className={`${baseBtn} bg-white text-gray-900 h-12`}>3</button>
+        <button
+          className={`${baseBtn} bg-gray-200 text-gray-800 h-12 text-base`}
+        >
           Enter
         </button>
 
         {/* Row 4 */}
-        <button className={`${baseBtn} bg-white text-gray-900 h-14 col-span-2`}>
+        <button className={`${baseBtn} bg-white text-gray-900 h-12 col-span-2`}>
           0
         </button>
-        <button className={`${baseBtn} bg-white text-gray-900 h-14`}>.</button>
-        <button className={`${baseBtn} bg-gray-200 text-gray-800 h-14`}>
+        <button className={`${baseBtn} bg-white text-gray-900 h-12`}>.</button>
+        <button className={`${baseBtn} bg-gray-200 text-gray-800 h-12`}>
           ←
         </button>
       </div>
@@ -563,20 +571,48 @@ const PosSideSection: React.FC<TransactionHeaderProps> = ({
     );
   };
 
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scrollLeft = () => {
+    if (scrollRef.current) scrollRef.current.scrollLeft -= 200; // Move left
+  };
+  const scrollRight = () => {
+    if (scrollRef.current) scrollRef.current.scrollLeft += 200; // Move right
+  };
+
   return (
-    <div className="w-full h-full flex px-1">
+    <div className="w-full h-full flex p-1">
       {/* Screen section */}
       <div className="w-[80%] h-full flex flex-col *shrink">
         {/* Top Bill Tabs */}
-        <div className="flex gap-1 overflow-x-auto no-scrollbar px-1 py-1 rounded-md h-24 ">
-          {[1, 2, 3, 4, 5, 6].map((billNumber) => (
-            <button
-              key={billNumber}
-              className="bg-primary min-w-[22%] h-16 text-white text-lg font-semibold rounded-sm shadow-sm hover:opacity-90"
-            >
-              {billNumber}
-            </button>
-          ))}
+        <div className="relative group flex items-center w-full h-24">
+          <button
+            onClick={scrollLeft}
+            className="absolute left-0 bg-gray-200 text-black w-8 h-12 rounded-md opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center"
+          >
+            <ChevronLeft size={20} />
+          </button>
+
+          <div
+            ref={scrollRef}
+            className="flex flex-1 mx-10 gap-2 overflow-x-auto no-scrollbar scroll-smooth h-full items-center"
+          >
+            {[1, 2, 3, 4, 5, 6,8,9,10,11].map((billNumber) => (
+              <button
+                key={billNumber}
+                className="bg-primary text-white text-lg font-semibold min-w-[22%] h-16 rounded-sm shadow-sm flex items-center justify-center"
+              >
+                {billNumber}
+              </button>
+            ))}
+          </div>
+
+          <button
+            onClick={scrollRight}
+            className="absolute right-0 bg-gray-200 text-black w-8 h-12 rounded-md opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center"
+          >
+            <ChevronRight size={20} />
+          </button>
         </div>
 
         {/* Middle Working Area */}
@@ -601,7 +637,7 @@ const PosSideSection: React.FC<TransactionHeaderProps> = ({
         <div className="w-full h-[10%] flex items-center justify-center">
           <QtyBarcodeControl />
         </div>
-        <div className="w-full h-[30%]">
+        <div className="w-full h-[25%]">
           <PosNumericKeypad />
         </div>
       </div>
@@ -609,15 +645,15 @@ const PosSideSection: React.FC<TransactionHeaderProps> = ({
       {/* Menubar section */}
       <div className="w-[20%] h-full flex flex-col pt-1">
         {/* Main Buttons */}
-        <div className="flex flex-row">
+        <div className="flex flex-row px-1">
           <button
-            className="flex flex-col items-center px-2 py-2 w-1/2 border rounded bg-gray-200 border-gray-300"
+            className="flex flex-col items-center px-2 py-2 w-1/2 border rounded bg-gray-200 border-gray-300 text-xs"
             onClick={() => setSelectedBtn("main")}
           >
             {t("main")}
           </button>
           <button
-            className="flex flex-col items-center px-2 py-2 w-1/2 border rounded bg-gray-200 border-gray-300"
+            className="flex flex-col items-center px-2 py-2 w-1/2 border rounded bg-gray-200 border-gray-300 text-xs"
             onClick={() => setSelectedBtn("more")}
           >
             {t("more")}
@@ -638,7 +674,7 @@ const PosSideSection: React.FC<TransactionHeaderProps> = ({
 
         {/* Sub Button List */}
         {selectedBtn === "main" && (
-          <div className="flex flex-col gap-0.5 text-sm">
+          <div className="flex flex-col gap-0.5 text-sm p-1">
             {/* <ERPButton
               title={t("item_lookup")}
               variant="primary"
@@ -748,11 +784,11 @@ const PosSideSection: React.FC<TransactionHeaderProps> = ({
           </div>
         )}
         {selectedBtn === "more" && (
-          <div className="flex flex-col gap-0.5 text-sm">
+          <div className="flex flex-col gap-0.5 text-sm p-1">
             <ERPButton
               title={t("close")}
               variant="primary"
-              className="w-24 text-sm"
+              className=" text-sm"
             />
             <ERPButton
               title={t("lock")}
@@ -761,7 +797,11 @@ const PosSideSection: React.FC<TransactionHeaderProps> = ({
             />
             <ERPButton title={t("refresh")} variant="primary" />
             <ERPButton title={t("open_cash")} variant="primary" />
-            <ERPButton title={t("sales_report")} variant="primary" />
+            <ERPButton
+              title={t("sales_report")}
+              variant="primary"
+              className="text-sm"
+            />
             <ERPButton title={t("pending_so")} variant="primary" />
             <ERPButton title={t("reprint")} variant="primary" />
             <ERPButton title={t("order")} variant="primary" />
@@ -774,7 +814,7 @@ const PosSideSection: React.FC<TransactionHeaderProps> = ({
             <ERPButton title={t("next_customer")} variant="primary" />
             <ERPButton title={t("load")} variant="primary" />
             <ERPButton
-              title={t("shift_open/close")}
+              title={t("shift_open/cash")}
               variant="primary"
               // onClick={() => setChooseSubBtnModals("shift")}
             />

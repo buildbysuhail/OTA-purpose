@@ -6,7 +6,7 @@ import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
-import { Save, X, Printer, Trash2, Search } from "lucide-react";
+import { Save, X, Printer, Trash2 } from "lucide-react";
 import { updateInvoice, setSearchParams, calculateInvoiceTotals, setPrintOnSave, } from "../service-transaction-reducer";
 import { ServiceTransactionFormState } from "../service-transaction-types";
 import { searchInOptions, closingRemarksOptions } from "../service-transaction-data";
@@ -77,7 +77,7 @@ const InvoiceTab: React.FC<InvoiceTabProps> = ({ onSave, onClear, onDelete, onPr
           <div className="lg:col-span-2">
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-slate-200 dark:border-gray-700 p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 pb-3 border-b border-slate-200 dark:border-gray-700">
-                Customer Information
+                {t("customer_information")}
               </h3>
               <div className="space-y-4">
                 <ERPDataCombobox
@@ -165,7 +165,7 @@ const InvoiceTab: React.FC<InvoiceTabProps> = ({ onSave, onClear, onDelete, onPr
             {/* Invoice Details Card */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-slate-200 dark:border-gray-700 p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 pb-3 border-b border-slate-200 dark:border-gray-700">
-                Invoice Details
+                {t("invoice_details")}
               </h3>
               <div className="space-y-4">
                 <div className="flex items-end justify-between">
@@ -204,7 +204,7 @@ const InvoiceTab: React.FC<InvoiceTabProps> = ({ onSave, onClear, onDelete, onPr
             {/* Financial Summary Card */}
             <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 rounded-xl shadow-sm border border-blue-200 dark:border-gray-600 p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 pb-3 border-b border-blue-200 dark:border-gray-600">
-                Financial Summary
+                {t("financial_summary")}
               </h3>
               <div className="space-y-3">
                 <ERPInput
@@ -282,9 +282,12 @@ const InvoiceTab: React.FC<InvoiceTabProps> = ({ onSave, onClear, onDelete, onPr
                 checked={printOnSave || false}
                 onChange={(e) => dispatch(setPrintOnSave(e.target.checked))}
               />
-              <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">
-                ID: {invoice.serviceInvoiceID}
-              </span>
+              <div className="flex items-center text-xs">
+                <span className="inline-flex items-end px-2 py-1 bg-indigo-50 text-indigo-600 rounded-md font-medium">
+                  <span className="text-gray-500 mr-2">{t("id")}</span>
+                  : {invoice.serviceInvoiceID}
+                </span>
+              </div>
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <ERPButton

@@ -292,7 +292,7 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
                 <span>{t("pdf")}</span>
                 )}
                 {!deviceInfo?.isMobile && (
-                <span>{t("pdf-width")}</span>
+                <span>{t("pdf_width")}</span>
                 )}
               </div>
               {preferences.columnPreferences.length}

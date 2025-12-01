@@ -3,12 +3,12 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { initialTableColumn, TableColumn, templateDesignerFormatOptions } from "../../../../Designer/interfaces";
 import { addTemplateTableColumn,  } from "../../../../../../redux/slices/templates/reducer";
-import { PrintDetailDto } from "../../../../../use-print-type";
+import { InvDetail2ForPrint, PrintDetailDto } from "../../../../../use-print-type";
 import ErpInput from "../../../../../../components/ERPComponents/erp-input";
 import ERPButton from "../../../../../../components/ERPComponents/erp-button";
 import ERPDataCombobox from "../../../../../../components/ERPComponents/erp-data-combobox";
 import { modelToListFromObject } from "../../../../../../utilities/Utils";
-import { initialPrintDetailDto } from "../../../../../use-print-type-data";
+import { initialInvDetail2ForPrint, initialPrintDetailDto } from "../../../../../use-print-type-data";
 import { RootState } from "../../../../../../redux/store";
 import ERPToast from "../../../../../../components/ERPComponents/erp-toast";
 
@@ -24,8 +24,9 @@ export const TableColumnAddOrEdit: React.FC<TableManagerContentProps> = React.me
     const [_column, setColumn] = useState<TableColumn<PrintDetailDto>>( initialTableColumn);
     const [options, setOptions] = useState<any>([]);
     useEffect(() => {
-      const list =modelToListFromObject<PrintDetailDto>(initialPrintDetailDto)
-      setOptions(list)
+      const list =modelToListFromObject<PrintDetailDto>(initialPrintDetailDto, "details___")
+      const list2 =modelToListFromObject<InvDetail2ForPrint>(initialInvDetail2ForPrint, "details2___")
+      setOptions([...list, ...list2]);
     }, [])
 useEffect(() => {
   if (lastMessage === "COLUMN_FIELD_ALREADY_EXISTS") {

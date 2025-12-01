@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import type { CSSProperties } from "react";
 import type { TableColumn, TemplateState } from "../../Designer/interfaces";
-import { PrintDetailDto } from "../../../use-print-type";
+import { InvDetail2ForPrint, PrintDetailDto } from "../../../use-print-type";
 import { containsArabicString } from "../../utils/pdf-util";
 import { formatValue } from "../../../use-print";
 
@@ -216,7 +216,19 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
               ? `${BORDER_WIDTH}pt solid ${tableMasterState?.tableColBorderColor || "#000"}`
               : undefined;
       // Get cell value
-        const cellValue = row?.[String(col.field)] ?? "";
+      
+        const splitData = String(col.field).split("___");
+  const group = splitData[0] as any;
+  const key = splitData[1];
+        let cellValue = ""; row?.[String(col.field)] ?? "";
+ if (group == "details") {
+    cellValue = row?.[String(col.field)] ?? ""
+
+  }
+  else if (group == "details2") {
+    cellValue = row?.detail2Data?.[key as (keyof InvDetail2ForPrint)]
+
+  }
       // Check if text is Arabic
         const isArabic = containsArabicString(cellValue);
               return(

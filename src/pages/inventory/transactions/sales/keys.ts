@@ -59,3 +59,8 @@
 // ok -> OK
 
 // profit_percentage
+//text: t(`Qualified for Gift: ${gt.productName} at price ${price}. Proceed?`),
+// "Product not found in bill. Please check!"
+// "Product Not Found",
+// "checkTheProductPriceInSchemes error",
+// Qualified for Gift: ${gt.productName} at Price ${price}. Proceed?`,

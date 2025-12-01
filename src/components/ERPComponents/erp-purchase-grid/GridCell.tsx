@@ -214,7 +214,8 @@ const EditableCell: React.FC<{
       noLabel
       enableClearOption={false}
       style={{
-        border: isMobile ? "1px solid orange" :"none",
+        // border: isMobile ? "1px solid orange" :"none",
+        border: isMobile ? "none" :"none",
         // height: isMobile ? "20px" : cellStyle.height,
         height: isMobile ? rowHeight  : cellStyle.height,
       }}
@@ -245,7 +246,8 @@ const EditableCell: React.FC<{
         textOverflow: "ellipsis",
         backgroundColor: "transparent",
         color: appState.mode === "dark" ? "#e0e0e0" : "#000000",
-        border: isMobile ? "1px solid yellow" :"none",
+        // border: isMobile ? "1px solid yellow" :"none",
+        border: isMobile ? "none" :"none",
         width: "100%",
       }}
       value={localValue}
@@ -387,10 +389,11 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
 
     if (column.dataType === "chk") {
       return (
+        
         <input
           disabled={formState.formElements.pnlMasters?.disabled}
           type="checkbox"
-          // height={rowHeight}
+          height={rowHeight}
           checked={cellValue === true}
           onChange={(e) => onChange(e.target.checked, column.dataField as keyof TransactionDetail, index)}
         />
@@ -626,10 +629,12 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
         style={currentCell?.column === column.dataField && currentCell?.rowIndex === index ?
           { ...getCellContentStyle(column), 
             border: isMobile
-            ? "1px solid pink"
+            // ? "1px solid pink"
+            ? "none"
             : `3px solid rgb(${formState.userConfig?.inputBoxStyle?.focusBgColor})`,
              background: "#fff" } :
-          { ...getCellContentStyle(column) , border : isMobile ? "1px solid pink" : ""  }}
+          // { ...getCellContentStyle(column) , border : isMobile ? "1px solid pink" : ""  }}
+          { ...getCellContentStyle(column) , border : isMobile ? "none" : ""  }}
         id={cellId}
         tabIndex={0}
         className="px-1 cursor-default"
@@ -722,13 +727,14 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
     key={`${column.dataField}`}
     style={
       isMobile
-        ? { border: "" }
+        ? { border: "" , height: rowHeight ,display: "flex",  alignItems: "center",  justifyContent: "center", }
         // ? { border: "1px solid blue" }
         : {
             width: typeof cellWidth === "number" ? `${cellWidth}px` : cellWidth,
             minWidth: typeof cellWidth === "number" ? `${cellWidth}px` : cellWidth,
             maxWidth: typeof cellWidth === "number" ? `${cellWidth}px` : cellWidth,
-            height: "100%",
+            // height: "100%",
+            height: rowHeight,
             ...(isMobile ? getMobileBorderStyles() : getDesktopBorderStyles()),
             fontSize: `${gridFontSize}px`,
             textAlign:

@@ -3309,9 +3309,13 @@ const hidColumns: string[] = [
                        <div className="text-sm text-gray-600 dark:text-gray-400">
                          Subtotal <span className="text-xs">(Rate × Qty)</span>
                        </div>
-                       <div className="text-base font-semibold text-gray-800 dark:text-gray-200">
+                       <div className="text-base font-semibold text-gray-800 dark:text-gray-200  flex items-center">
+                         <div className="px-3 py-2  font-medium">
+                           ₹
+                         </div>
+                         <div className="flex-1">
                          <GridCell
-                           isMobile={false}
+                           isMobile={true}                
                            column={formState.gridColumns.find((x) => x.dataField == "total") as ColumnModel}
                            item={formState.row ?? initialTransactionDetailData}
                            index={formState.itemPopup?.index ?? 0}
@@ -3342,6 +3346,7 @@ const hidColumns: string[] = [
                            }}
                          />
                        </div>
+                       </div>
                      </div>
                      
                      {/* Discount row */}
@@ -3349,71 +3354,81 @@ const hidColumns: string[] = [
                        <div className="text-sm text-gray-600 dark:text-gray-400">
                          {t("discount")}
                        </div>
-                       <div className="border border-orange-300 rounded-lg overflow-hidden bg-orange-50 dark:bg-orange-900/20">
-                         <GridCell
-                           isMobile={true}
-                           column={formState.gridColumns.find((x) => x.dataField == "discPerc") as ColumnModel}
-                           item={formState.row ?? initialTransactionDetailData}
-                           index={formState.itemPopup?.index ?? 0}
-                           currentCell={currentCell}
-                           setCurrentCell={setCurrentCell}
-                           formState={formState}
-                           appState={appState}
-                           gridFontSize={gridFontSize}
-                           gridIsBold={gridIsBold}
-                           rowHeight={rowHeight}
-                           gridBorderColor={gridBorderColor}
-                           isFirstColumn={false}
-                           isLastColumn={false}
-                           showBorder={false}
-                           columnWidths={columnWidths}
-                           onChange={onChange}
-                           onKeyDown={onKeyDown}
-                           handlRowKeyDown={handlRowKeyDown}
-                           handleFocus={handleFocus}
-                           handleBlur={handleBlur}
-                           gridId={gridId}
-                           zIndexController={55}
-                           details={formState.transaction.details} 
-                           blockUnitOnDecimalPoint={false} 
-                           applicationSettings={undefined} 
-                           nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
-                             throw new Error("Function not implemented.");
-                           }}
-                         />
+                       <div className="border border-orange-300 rounded-lg overflow-hidden bg-orange-50 dark:bg-orange-900/20 flex items-center">
+                         <div className="flex-1">
+                           <GridCell
+                             isMobile={true}
+                             column={formState.gridColumns.find((x) => x.dataField == "discPerc") as ColumnModel}
+                             item={formState.row ?? initialTransactionDetailData}
+                             index={formState.itemPopup?.index ?? 0}
+                             currentCell={currentCell}
+                             setCurrentCell={setCurrentCell}
+                             formState={formState}
+                             appState={appState}
+                             gridFontSize={gridFontSize}
+                             gridIsBold={gridIsBold}
+                             rowHeight={rowHeight}
+                             gridBorderColor={gridBorderColor}
+                             isFirstColumn={false}
+                             isLastColumn={false}
+                             showBorder={false}
+                             columnWidths={columnWidths}
+                             onChange={onChange}
+                             onKeyDown={onKeyDown}
+                             handlRowKeyDown={handlRowKeyDown}
+                             handleFocus={handleFocus}
+                             handleBlur={handleBlur}
+                             gridId={gridId}
+                             zIndexController={55}
+                             details={formState.transaction.details} 
+                             blockUnitOnDecimalPoint={false} 
+                             applicationSettings={undefined} 
+                             nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
+                               throw new Error("Function not implemented.");
+                             }}
+                           />
+                         </div>
+                         <div className="px-3 py-2 bg-orange-100 dark:bg-orange-800/30 border-l border-orange-300 text-orange-600 dark:text-orange-400 font-medium">
+                           %
+                         </div>
                        </div>
-                       <div className="border border-gray-300 rounded-lg overflow-hidden dark:border-gray-600">
-                         <GridCell
-                           isMobile={true}
-                           column={formState.gridColumns.find((x) => x.dataField == "discount") as ColumnModel}
-                           item={formState.row ?? initialTransactionDetailData}
-                           index={formState.itemPopup?.index ?? 0}
-                           currentCell={currentCell}
-                           setCurrentCell={setCurrentCell}
-                           formState={formState}
-                           appState={appState}
-                           gridFontSize={gridFontSize}
-                           gridIsBold={gridIsBold}
-                           rowHeight={rowHeight}
-                           gridBorderColor={gridBorderColor}
-                           isFirstColumn={false}
-                           isLastColumn={false}
-                           showBorder={false}
-                           columnWidths={columnWidths}
-                           onChange={onChange}
-                           onKeyDown={onKeyDown}
-                           handlRowKeyDown={handlRowKeyDown}
-                           handleFocus={handleFocus}
-                           handleBlur={handleBlur}
-                           gridId={gridId}
-                           zIndexController={55}
-                           details={formState.transaction.details} 
-                           blockUnitOnDecimalPoint={false} 
-                           applicationSettings={undefined} 
-                           nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
-                             throw new Error("Function not implemented.");
-                           }}
-                         />
+                       <div className="border border-gray-300 rounded-lg overflow-hidden dark:border-gray-600 flex items-center">
+                         <div className="px-3 py-2 bg-gray-100 dark:bg-gray-700 border-r border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 font-medium">
+                           ₹
+                         </div>
+                         <div className="flex-1">
+                           <GridCell
+                             isMobile={true}
+                             column={formState.gridColumns.find((x) => x.dataField == "discount") as ColumnModel}
+                             item={formState.row ?? initialTransactionDetailData}
+                             index={formState.itemPopup?.index ?? 0}
+                             currentCell={currentCell}
+                             setCurrentCell={setCurrentCell}
+                             formState={formState}
+                             appState={appState}
+                             gridFontSize={gridFontSize}
+                             gridIsBold={gridIsBold}
+                             rowHeight={rowHeight}
+                             gridBorderColor={gridBorderColor}
+                             isFirstColumn={false}
+                             isLastColumn={false}
+                             showBorder={false}
+                             columnWidths={columnWidths}
+                             onChange={onChange}
+                             onKeyDown={onKeyDown}
+                             handlRowKeyDown={handlRowKeyDown}
+                             handleFocus={handleFocus}
+                             handleBlur={handleBlur}
+                             gridId={gridId}
+                             zIndexController={55}
+                             details={formState.transaction.details} 
+                             blockUnitOnDecimalPoint={false} 
+                             applicationSettings={undefined} 
+                             nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
+                               throw new Error("Function not implemented.");
+                             }}
+                           />
+                         </div>
                        </div>
                      </div>
                      
@@ -3455,7 +3470,11 @@ const hidColumns: string[] = [
                            }}
                          />
                        </div>
-                       <div className="border border-gray-300 rounded-lg overflow-hidden dark:border-gray-600">
+                       <div className="border border-gray-300 rounded-lg overflow-hidden dark:border-gray-600 flex items-center">
+                         <div className="px-3 py-2 bg-gray-100 dark:bg-gray-700 border-r border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 font-medium">
+                           ₹
+                         </div>
+                         <div className="flex-1">
                          <GridCell
                            isMobile={true}
                            column={formState.gridColumns.find((x) => x.dataField == "vatAmount") as ColumnModel}
@@ -3487,6 +3506,7 @@ const hidColumns: string[] = [
                              throw new Error("Function not implemented.");
                            }}
                          />
+                        </div>
                        </div>
                      </div>
                      
@@ -3550,10 +3570,14 @@ const hidColumns: string[] = [
                        <div className="text-base font-bold text-gray-800 dark:text-gray-200">
                          Total Amount:
                        </div>
-                       <div className="text-lg font-bold text-gray-800 dark:text-gray-200">
+                       <div className="text-lg font-bold text-gray-800 dark:text-gray-200 flex items-center">
                         {/* <div className="text-base font-semibold text-gray-800 dark:text-gray-200"> */}
+                        <div className="px-3 py-2  font-medium">
+                           ₹
+                         </div>
+                         <div className="flex-1">
                          <GridCell
-                           isMobile={false}
+                           isMobile={true}
                            column={formState.gridColumns.find((x) => x.dataField == "total") as ColumnModel}
                            item={formState.row ?? initialTransactionDetailData}
                            index={formState.itemPopup?.index ?? 0}
@@ -3583,6 +3607,7 @@ const hidColumns: string[] = [
                              throw new Error("Function not implemented.");
                            }}
                          />
+                       </div>
                        </div>
                      </div>
                    </div>

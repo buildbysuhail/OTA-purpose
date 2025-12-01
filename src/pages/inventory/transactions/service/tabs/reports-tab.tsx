@@ -1,12 +1,7 @@
-/**
- * Reports Tab - Service Transaction Reports
- */
 import React, { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
-import ErpDevGrid, {
-  SummaryConfig,
-} from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { Search, FileSpreadsheet } from "lucide-react";
 import { statusOptions } from "../service-transaction-data";
@@ -29,7 +24,6 @@ const ReportsTab: React.FC = () => {
     isWarrantyService: "",
   });
   const [reload, setReload] = useState(false);
-
   const columns: DevGridColumn[] = [
     {
       dataField: "jobCardNo",

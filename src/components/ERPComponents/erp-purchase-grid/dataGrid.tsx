@@ -968,6 +968,8 @@ const VirtualRow = React.memo(
               const isLastColumn = colIndex === columns.length - 1;
               const isFixed = isFirstColumn || isLastColumn;
               const showBorder = formState.userConfig?.showColumnBorder ?? true;
+              console.log("showBorder:",showBorder);
+              
               let options: any[] = [];
               if (fieldKey === "unit") {
                 options =
@@ -3073,9 +3075,9 @@ const hidColumns: string[] = [
             </div>
           </ERPScrollArea>
         </div>
-       {formState.itemPopup?.isOpen &&
+      {formState.itemPopup?.isOpen &&
         ReactDOM.createPortal(
-          <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
+          <div className="fixed inset-0 z-50 flex items-center justify-center">
                <div
                  className={`relative w-full h-full overflow-y-auto ${
                    appState.mode === "dark"
@@ -3095,592 +3097,518 @@ const hidColumns: string[] = [
                      }
                      className="p-2 mr-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
                    >
-                     <StepBack  className="w-3 h-3" />
+                     <StepBack className="w-3 h-3" />
                    </button>
-                   <h6 className="text-sm font-medium">Add Items to Sale</h6>
-                   {/* <p>{rowHeight}</p> */}
-                    <div className="ml-auto"> 
-                        <GridPreferenceChooser
-                        initialPreferences={preferences}
-                        ref={preferenceChooserRef}
-                        gridId={gridId}
-                        columns={
-                          (formState.gridColumns ?? []) as DevGridColumn[]
-                        }
-                        onApplyPreferences={onApplyPreferences}
-                        showChooserName={true}
-                        isMobile={true}
-                      />
-                 </div>
+                   <h6 className="text-base font-semibold">Add Items to Sale</h6>
+                   <div className="ml-auto"> 
+                     <GridPreferenceChooser
+                       initialPreferences={preferences}
+                       ref={preferenceChooserRef}
+                       gridId={gridId}
+                       columns={
+                         (formState.gridColumns ?? []) as DevGridColumn[]
+                       }
+                       onApplyPreferences={onApplyPreferences}
+                       showChooserName={true}
+                       isMobile={true}
+                     />
+                   </div>
                  </header>
          
                  {/* Content */}
-                 <main className="flex-1 overflow-auto px-4 py-4">
+                 <main className="flex-1 overflow-auto px-4 py-4 pb-32">
                    {/* Item name */}
-                   <div>
-                    {/* Grid Preferences */}
-                  {/* <li> 
-                        <GridPreferenceChooser
-                        initialPreferences={preferences}
-                        ref={preferenceChooserRef}
-                        gridId={gridId}
-                        columns={
-                          (formState.gridColumns ?? []) as DevGridColumn[]
-                        }
-                        onApplyPreferences={onApplyPreferences}
-                        showChooserName={true}
-                        isMobile={true}
-                      />
-                 </li> */}
-                     <label className="block text-sm text-gray-600 mb-1 dark:text-gray-400">
-                       {t("product")}
+                   <div className="mb-4">
+                     <label className="block text-xs font-medium text-blue-600 mb-2 dark:text-blue-400">
+                       Item Name
                      </label>
-                     <GridCell
-                       isMobile={true}
-                       column={formState.gridColumns.find((x) => x?.dataField == "product") as ColumnModel}
-                       item={formState.row ?? initialTransactionDetailData}
-                       index={formState.itemPopup?.index ?? 0}
-                       currentCell={currentCell}
-                       setCurrentCell={setCurrentCell}
-                       formState={formState}
-                       appState={appState}
-                       gridFontSize={gridFontSize}
-                       gridIsBold={gridIsBold}
-                       rowHeight={rowHeight}
-                       gridBorderColor={gridBorderColor}
-                       isFirstColumn={false}
-                       isLastColumn={false}
-                       showBorder={true}
-                       columnWidths={columnWidths}
-                       onChange={onChange}
-                       onKeyDown={onKeyDown}
-                       handlRowKeyDown={handlRowKeyDown}
-                       handleFocus={handleFocus}
-                       handleBlur={handleBlur}
-                       gridId={gridId}
-                       details={formState.transaction.details}
-                       blockUnitOnDecimalPoint={
-                         applicationSettings?.inventorySettings?.blockUnitOnDecimalPoint
-                       }
-                       applicationSettings={applicationSettings}
-                       useInSearch={formState.userConfig?.useInSearch}
-                       searchByCodeAndName={
-                         formState.userConfig?.enableItemCodeSearchInNameColumn
-                       }
-                       advancedProductSearching={
-                         applicationSettings?.productsSettings?.advancedProductSearching
-                       }
-                       transactionType={transactionType}
-                      //  zIndexController={zIndexController}
-                       zIndexController= {55}
-                       nextCellFind={nextCellFind}
-                     />
+                     <div className="border-2 border-blue-500 rounded-lg overflow-hidden">
+                       <GridCell
+                         isMobile={true}
+                         column={formState.gridColumns.find((x) => x?.dataField == "product") as ColumnModel}
+                         item={formState.row ?? initialTransactionDetailData}
+                         index={formState.itemPopup?.index ?? 0}
+                         currentCell={currentCell}
+                         setCurrentCell={setCurrentCell}
+                         formState={formState}
+                         appState={appState}
+                         gridFontSize={gridFontSize}
+                         gridIsBold={gridIsBold}
+                         rowHeight={rowHeight}
+                         gridBorderColor={gridBorderColor}
+                         isFirstColumn={false}
+                         isLastColumn={false}
+                         showBorder={false}
+                         columnWidths={columnWidths}
+                         onChange={onChange}
+                         onKeyDown={onKeyDown}
+                         handlRowKeyDown={handlRowKeyDown}
+                         handleFocus={handleFocus}
+                         handleBlur={handleBlur}
+                         gridId={gridId}
+                         details={formState.transaction.details}
+                         blockUnitOnDecimalPoint={
+                           applicationSettings?.inventorySettings?.blockUnitOnDecimalPoint
+                         }
+                         applicationSettings={applicationSettings}
+                         useInSearch={formState.userConfig?.useInSearch}
+                         searchByCodeAndName={
+                           formState.userConfig?.enableItemCodeSearchInNameColumn
+                         }
+                         advancedProductSearching={
+                           applicationSettings?.productsSettings?.advancedProductSearching
+                         }
+                         transactionType={transactionType}
+                         zIndexController={55}
+                         nextCellFind={nextCellFind}
+                       />
+                     </div>
                    </div>
          
                    {/* Row: Quantity | Unit */}
-                   <div className="mt-2 grid grid-cols-2 gap-3">
-                   
+                   <div className="grid grid-cols-2 gap-3 mb-4">
                      <div>
-                       <label className="block text-sm text-gray-600 mb-1 dark:text-gray-400">
-                        {t("qty")}
+                       <label className="block text-xs font-medium text-gray-600 mb-2 dark:text-gray-400">
+                         Quantity
                        </label>
-                       <GridCell
-                       isMobile={true}
-                      column={formState.gridColumns.find((x) => x.dataField == "qty") as ColumnModel}
-                      item={formState.row ?? initialTransactionDetailData}
-                      index={formState.itemPopup?.index ?? 0}
-                      currentCell={currentCell}
-                      setCurrentCell={setCurrentCell}
-                      formState={formState}
-                      appState={appState}
-                      gridFontSize={gridFontSize}
-                      gridIsBold={gridIsBold}
-                      rowHeight={rowHeight}
-                      gridBorderColor={gridBorderColor}
-                      isFirstColumn={false}
-                      isLastColumn={false}
-                      showBorder={true}
-                      columnWidths={columnWidths}
-                      onChange={(value: string, column: any, rowIndex: number) => {debugger; onChange(value, column, rowIndex);}}
-                      onKeyDown={onKeyDown}
-                      handlRowKeyDown={handlRowKeyDown}
-                      handleFocus={handleFocus}
-                      handleBlur={handleBlur}
-                      gridId={gridId}
-                      zIndexController= {55}
-                      details={formState.transaction.details} blockUnitOnDecimalPoint={false} applicationSettings={undefined} nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
-                        throw new Error("Function not implemented.");
-                      } }                       />
+                       <div className="border border-gray-300 rounded-lg overflow-hidden dark:border-gray-600">
+                         <GridCell
+                           isMobile={true}
+                           column={formState.gridColumns.find((x) => x.dataField == "qty") as ColumnModel}
+                           item={formState.row ?? initialTransactionDetailData}
+                           index={formState.itemPopup?.index ?? 0}
+                           currentCell={currentCell}
+                           setCurrentCell={setCurrentCell}
+                           formState={formState}
+                           appState={appState}
+                           gridFontSize={gridFontSize}
+                           gridIsBold={gridIsBold}
+                           rowHeight={rowHeight}
+                           gridBorderColor={gridBorderColor}
+                           isFirstColumn={false}
+                           isLastColumn={false}
+                           showBorder={false}
+                           columnWidths={columnWidths}
+                           onChange={(value: string, column: any, rowIndex: number) => {debugger; onChange(value, column, rowIndex);}}
+                           onKeyDown={onKeyDown}
+                           handlRowKeyDown={handlRowKeyDown}
+                           handleFocus={handleFocus}
+                           handleBlur={handleBlur}
+                           gridId={gridId}
+                           zIndexController={55}
+                           details={formState.transaction.details} 
+                           blockUnitOnDecimalPoint={false} 
+                           applicationSettings={undefined} 
+                           nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
+                             throw new Error("Function not implemented.");
+                           }}
+                         />
+                       </div>
                      </div>
-                     <>
-                     {/* {
-                      // JSON.stringify(_columns.find((x) => x.dataField == "unit") as ColumnModel)
-                     } */}
-                     </>
+                     
                      <div>
-                       <label className="block text-sm text-gray-600 mb-1 dark:text-gray-400">
-                        {t("unit")}
+                       <label className="block text-xs font-medium text-gray-600 mb-2 dark:text-gray-400">
+                         Unit
                        </label>
-                       <GridCell
-                       isMobile={true}
-                      column={formState.gridColumns.find((x) => x.dataField == "unit") as ColumnModel}
-                      item={formState.row ?? initialTransactionDetailData}
-                      index={formState.itemPopup?.index ?? 0}
-                      currentCell={currentCell}
-                      setCurrentCell={setCurrentCell}
-                      formState={formState}
-                      appState={appState}
-                      gridFontSize={gridFontSize}
-                      gridIsBold={gridIsBold}
-                      rowHeight={rowHeight}
-                      gridBorderColor={gridBorderColor}
-                      isFirstColumn={false}
-                      isLastColumn={false}
-                      showBorder={true}
-                      columnWidths={columnWidths}
-                      onChange={onChange}
-                      onKeyDown={onKeyDown}
-                      handlRowKeyDown={handlRowKeyDown}
-                      handleFocus={handleFocus}
-                      handleBlur={handleBlur}
-                      gridId={gridId}
-                      zIndexController= {55}
-                      details={formState.transaction.details} blockUnitOnDecimalPoint={false} applicationSettings={undefined} nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
-                        throw new Error("Function not implemented.");
-                      } }                       />
+                       <div className="border border-gray-300 rounded-lg overflow-hidden dark:border-gray-600">
+                         <GridCell
+                           isMobile={true}
+                           column={formState.gridColumns.find((x) => x.dataField == "unit") as ColumnModel}
+                           item={formState.row ?? initialTransactionDetailData}
+                           index={formState.itemPopup?.index ?? 0}
+                           currentCell={currentCell}
+                           setCurrentCell={setCurrentCell}
+                           formState={formState}
+                           appState={appState}
+                           gridFontSize={gridFontSize}
+                           gridIsBold={gridIsBold}
+                           rowHeight={rowHeight}
+                           gridBorderColor={gridBorderColor}
+                           isFirstColumn={false}
+                           isLastColumn={false}
+                           showBorder={false}
+                           columnWidths={columnWidths}
+                           onChange={onChange}
+                           onKeyDown={onKeyDown}
+                           handlRowKeyDown={handlRowKeyDown}
+                           handleFocus={handleFocus}
+                           handleBlur={handleBlur}
+                           gridId={gridId}
+                           zIndexController={55}
+                           details={formState.transaction.details} 
+                           blockUnitOnDecimalPoint={false} 
+                           applicationSettings={undefined} 
+                           nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
+                             throw new Error("Function not implemented.");
+                           }}
+                         />
+                       </div>
                      </div>
                    </div>
          
                    {/* Row: Rate | Tax Mode */}
-                   <div className="mt-2 grid grid-cols-2 gap-3">
+                   <div className="grid grid-cols-2 gap-3 mb-6">
                      <div>
-                       <label className="block text-sm text-gray-600 mb-1 dark:text-gray-400">
+                       <label className="block text-xs font-medium text-gray-600 mb-2 dark:text-gray-400">
                          Rate (Price/Unit)
                        </label>
-                       <GridCell
-                       isMobile={true}
-                      column={formState.gridColumns.find((x) => x.dataField == "unitPrice") as ColumnModel} 
-                      item={formState.row ?? initialTransactionDetailData}
-                      index={formState.itemPopup?.index ?? 0}
-                      currentCell={currentCell}
-                      setCurrentCell={setCurrentCell}
-                      formState={formState}
-                      appState={appState}
-                      gridFontSize={gridFontSize}
-                      gridIsBold={gridIsBold}
-                      rowHeight={rowHeight}
-                      gridBorderColor={gridBorderColor}
-                      isFirstColumn={false}
-                      isLastColumn={false}
-                      showBorder={true}
-                      columnWidths={columnWidths}
-                      onChange={onChange}
-                      onKeyDown={onKeyDown}
-                      handlRowKeyDown={handlRowKeyDown}
-                      handleFocus={handleFocus}
-                      handleBlur={handleBlur}
-                      gridId={gridId}
-                      zIndexController= {55}
-                      details={formState.transaction.details} blockUnitOnDecimalPoint={false} applicationSettings={undefined} nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
-                        throw new Error("Function not implemented.");
-                      } }                       />
+                       <div className="border border-gray-300 rounded-lg overflow-hidden dark:border-gray-600">
+                         <GridCell
+                           isMobile={true}
+                           column={formState.gridColumns.find((x) => x.dataField == "unitPrice") as ColumnModel} 
+                           item={formState.row ?? initialTransactionDetailData}
+                           index={formState.itemPopup?.index ?? 0}
+                           currentCell={currentCell}
+                           setCurrentCell={setCurrentCell}
+                           formState={formState}
+                           appState={appState}
+                           gridFontSize={gridFontSize}
+                           gridIsBold={gridIsBold}
+                           rowHeight={rowHeight}
+                           gridBorderColor={gridBorderColor}
+                           isFirstColumn={false}
+                           isLastColumn={false}
+                           showBorder={false}
+                           columnWidths={columnWidths}
+                           onChange={onChange}
+                           onKeyDown={onKeyDown}
+                           handlRowKeyDown={handlRowKeyDown}
+                           handleFocus={handleFocus}
+                           handleBlur={handleBlur}
+                           gridId={gridId}
+                           zIndexController={55}
+                           details={formState.transaction.details} 
+                           blockUnitOnDecimalPoint={false} 
+                           applicationSettings={undefined} 
+                           nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
+                             throw new Error("Function not implemented.");
+                           }}
+                         />
+                       </div>
                      </div>
-                    
-                      {/* <div>
-                       <label className="block text-sm text-gray-600 mb-1 dark:text-gray-400">
-                         Tax Mode
+                     {/* <div>
+                       <label className="block text-xs font-medium text-gray-600 mb-2 dark:text-gray-400">
+                         &nbsp;
                        </label>
-                       <GridCell
-                       isMobile={true}
-                      column={_columns.find((x) => x.dataField == "unit") as ColumnModel}
-                      item={formState.row ?? initialTransactionDetailData}
-                      index={formState.itemPopup?.index ?? 0}
-                      currentCell={currentCell}
-                      setCurrentCell={setCurrentCell}
-                      formState={formState}
-                      appState={appState}
-                      gridFontSize={gridFontSize}
-                      gridIsBold={gridIsBold}
-                      rowHeight={rowHeight}
-                      gridBorderColor={gridBorderColor}
-                      isFirstColumn={false}
-                      isLastColumn={false}
-                      showBorder={true}
-                      columnWidths={columnWidths}
-                      onChange={onChange}
-                      onKeyDown={onKeyDown}
-                      handlRowKeyDown={handlRowKeyDown}
-                      handleFocus={handleFocus}
-                      handleBlur={handleBlur}
-                      gridId={gridId}
-                      zIndexController= {55}
-                      details={formState.transaction.details} blockUnitOnDecimalPoint={false} applicationSettings={undefined} nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
-                        throw new Error("Function not implemented.");
-                      } }                       />
+                       <div className="border border-gray-300 rounded-lg overflow-hidden dark:border-gray-600">
+                         <div className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300">
+                           Without Tax
+                         </div>
+                       </div>
                      </div> */}
                    </div>
          
                    {/* Totals & Taxes Card */}
-                   <div className="mt-2 bg-white dark:bg-[#3c3c3c] rounded-lg shadow-sm p-0 pb-[95px]">
-                     <h6 className="font-medium text-sm text-gray-800 dark:text-gray-200 mb-3">
+                   <div className="bg-white dark:bg-[#2d2d2d] rounded-lg p-4 border-t border-gray-200 dark:border-gray-700">
+                     <h6 className="font-semibold text-base text-gray-800 dark:text-gray-200 mb-4">
                        Totals &amp; Taxes
                      </h6>
+                     
                      {/* Subtotal */}
-                     <div className="flex justify-between items-center text-sm text-gray-600 dark:text-gray-400">
-                       <div>
-                         <div className="text-xs text-gray-400 dark:text-gray-500">
-                           Subtotal{" "}
-                           <span className="text-[11px]">(Rate × Qty)</span>
-                         </div>
+                     <div className="flex justify-between items-center mb-4">
+                       <div className="text-sm text-gray-600 dark:text-gray-400">
+                         Subtotal <span className="text-xs">(Rate × Qty)</span>
                        </div>
-                       <div className="text-right">
-                         {/* <div className="text-sm font-medium">{formatCurrency(subtotal)}</div> */}
-
-                          <GridCell
-                       isMobile={false}
-                      column={formState.gridColumns.find((x) => x.dataField == "total") as ColumnModel}
-                      item={formState.row ?? initialTransactionDetailData}
-                      index={formState.itemPopup?.index ?? 0}
-                      currentCell={currentCell}
-                      setCurrentCell={setCurrentCell}
-                      formState={formState}
-                      appState={appState}
-                      gridFontSize={gridFontSize}
-                      gridIsBold={gridIsBold}
-                      rowHeight={rowHeight}
-                      gridBorderColor={gridBorderColor}
-                      isFirstColumn={false}
-                      isLastColumn={false}
-                      showBorder={false}
-                      columnWidths={columnWidths}
-                      onChange={onChange}
-                      onKeyDown={onKeyDown}
-                      handlRowKeyDown={handlRowKeyDown}
-                      handleFocus={handleFocus}
-                      handleBlur={handleBlur}
-                      gridId={gridId}
-                      zIndexController= {55}
-                      details={formState.transaction.details} blockUnitOnDecimalPoint={false} applicationSettings={undefined} nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
-                        throw new Error("Function not implemented.");
-                      } }                       />
+                       <div className="text-base font-semibold text-gray-800 dark:text-gray-200">
+                         <GridCell
+                           isMobile={false}
+                           column={formState.gridColumns.find((x) => x.dataField == "total") as ColumnModel}
+                           item={formState.row ?? initialTransactionDetailData}
+                           index={formState.itemPopup?.index ?? 0}
+                           currentCell={currentCell}
+                           setCurrentCell={setCurrentCell}
+                           formState={formState}
+                           appState={appState}
+                           gridFontSize={gridFontSize}
+                           gridIsBold={gridIsBold}
+                           rowHeight={rowHeight}
+                           gridBorderColor={gridBorderColor}
+                           isFirstColumn={false}
+                           isLastColumn={false}
+                           showBorder={false}
+                           columnWidths={columnWidths}
+                           onChange={onChange}
+                           onKeyDown={onKeyDown}
+                           handlRowKeyDown={handlRowKeyDown}
+                           handleFocus={handleFocus}
+                           handleBlur={handleBlur}
+                           gridId={gridId}
+                           zIndexController={55}
+                           details={formState.transaction.details} 
+                           blockUnitOnDecimalPoint={false} 
+                           applicationSettings={undefined} 
+                           nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
+                             throw new Error("Function not implemented.");
+                           }}
+                         />
                        </div>
                      </div>
+                     
                      {/* Discount row */}
-                     <div className="mt-2 grid grid-cols-3 gap-3 items-center">
-                       <div className="col-span-1">
-                         <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">
-                          { t("discount")}
-                         </div>
+                     <div className="grid grid-cols-[80px_1fr_1fr] gap-2 items-center mb-4">
+                       <div className="text-sm text-gray-600 dark:text-gray-400">
+                         {t("discount")}
                        </div>
-                       <div className="col-span-1 flex">
-                         
-                         <div>
-                       
-                       <GridCell
-                       isMobile={true}
-                      column={formState.gridColumns.find((x) => x.dataField == "discPerc") as ColumnModel}
-                      item={formState.row ?? initialTransactionDetailData}
-                      index={formState.itemPopup?.index ?? 0}
-                      currentCell={currentCell}
-                      setCurrentCell={setCurrentCell}
-                      formState={formState}
-                      appState={appState}
-                      gridFontSize={gridFontSize}
-                      gridIsBold={gridIsBold}
-                      rowHeight={rowHeight}
-                      gridBorderColor={gridBorderColor}
-                      isFirstColumn={false}
-                      isLastColumn={false}
-                      showBorder={true}
-                      columnWidths={columnWidths}
-                      onChange={onChange}
-                      onKeyDown={onKeyDown}
-                      handlRowKeyDown={handlRowKeyDown}
-                      handleFocus={handleFocus}
-                      handleBlur={handleBlur}
-                      gridId={gridId}
-                      zIndexController= {55}
-                      details={formState.transaction.details} blockUnitOnDecimalPoint={false} applicationSettings={undefined} nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
-                        throw new Error("Function not implemented.");
-                      } }                       />
+                       <div className="border border-orange-300 rounded-lg overflow-hidden bg-orange-50 dark:bg-orange-900/20">
+                         <GridCell
+                           isMobile={true}
+                           column={formState.gridColumns.find((x) => x.dataField == "discPerc") as ColumnModel}
+                           item={formState.row ?? initialTransactionDetailData}
+                           index={formState.itemPopup?.index ?? 0}
+                           currentCell={currentCell}
+                           setCurrentCell={setCurrentCell}
+                           formState={formState}
+                           appState={appState}
+                           gridFontSize={gridFontSize}
+                           gridIsBold={gridIsBold}
+                           rowHeight={rowHeight}
+                           gridBorderColor={gridBorderColor}
+                           isFirstColumn={false}
+                           isLastColumn={false}
+                           showBorder={false}
+                           columnWidths={columnWidths}
+                           onChange={onChange}
+                           onKeyDown={onKeyDown}
+                           handlRowKeyDown={handlRowKeyDown}
+                           handleFocus={handleFocus}
+                           handleBlur={handleBlur}
+                           gridId={gridId}
+                           zIndexController={55}
+                           details={formState.transaction.details} 
+                           blockUnitOnDecimalPoint={false} 
+                           applicationSettings={undefined} 
+                           nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
+                             throw new Error("Function not implemented.");
+                           }}
+                         />
+                       </div>
+                       <div className="border border-gray-300 rounded-lg overflow-hidden dark:border-gray-600">
+                         <GridCell
+                           isMobile={true}
+                           column={formState.gridColumns.find((x) => x.dataField == "discount") as ColumnModel}
+                           item={formState.row ?? initialTransactionDetailData}
+                           index={formState.itemPopup?.index ?? 0}
+                           currentCell={currentCell}
+                           setCurrentCell={setCurrentCell}
+                           formState={formState}
+                           appState={appState}
+                           gridFontSize={gridFontSize}
+                           gridIsBold={gridIsBold}
+                           rowHeight={rowHeight}
+                           gridBorderColor={gridBorderColor}
+                           isFirstColumn={false}
+                           isLastColumn={false}
+                           showBorder={false}
+                           columnWidths={columnWidths}
+                           onChange={onChange}
+                           onKeyDown={onKeyDown}
+                           handlRowKeyDown={handlRowKeyDown}
+                           handleFocus={handleFocus}
+                           handleBlur={handleBlur}
+                           gridId={gridId}
+                           zIndexController={55}
+                           details={formState.transaction.details} 
+                           blockUnitOnDecimalPoint={false} 
+                           applicationSettings={undefined} 
+                           nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
+                             throw new Error("Function not implemented.");
+                           }}
+                         />
+                       </div>
                      </div>
-                       </div>
-                       <div className="col-span-1 flex">
-                        
-                        <GridCell
-                       isMobile={true}
-                      column={formState.gridColumns.find((x) => x.dataField == "discount") as ColumnModel}
-                      item={formState.row ?? initialTransactionDetailData}
-                      index={formState.itemPopup?.index ?? 0}
-                      currentCell={currentCell}
-                      setCurrentCell={setCurrentCell}
-                      formState={formState}
-                      appState={appState}
-                      gridFontSize={gridFontSize}
-                      gridIsBold={gridIsBold}
-                      rowHeight={rowHeight}
-                      gridBorderColor={gridBorderColor}
-                      isFirstColumn={false}
-                      isLastColumn={false}
-                      showBorder={true}
-                      columnWidths={columnWidths}
-                      onChange={onChange}
-                      onKeyDown={onKeyDown}
-                      handlRowKeyDown={handlRowKeyDown}
-                      handleFocus={handleFocus}
-                      handleBlur={handleBlur}
-                      gridId={gridId}
-                      zIndexController= {55}
-                      details={formState.transaction.details} blockUnitOnDecimalPoint={false} applicationSettings={undefined} nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
-                        throw new Error("Function not implemented.");
-                      } }                       />
-                       </div>
-                     </div>
+                     
                      {/* Tax row */}
-                     <div className="mt-2 grid grid-cols-3 gap-3 items-center">
-                       <div className="col-span-1 text-sm text-gray-600 dark:text-gray-400">
+                     <div className="grid grid-cols-[80px_1fr_1fr] gap-2 items-center mb-4">
+                       <div className="text-sm text-gray-600 dark:text-gray-400">
                          Tax %
                        </div>
-                       <div className="col-span-1">
-                      
-                      <GridCell
-                       isMobile={true}
-                      column={formState.gridColumns.find((x) => x.dataField == "vatPerc") as ColumnModel}
-                      item={formState.row ?? initialTransactionDetailData}
-                      index={formState.itemPopup?.index ?? 0}
-                      currentCell={currentCell}
-                      setCurrentCell={setCurrentCell}
-                      formState={formState}
-                      appState={appState}
-                      gridFontSize={gridFontSize}
-                      gridIsBold={gridIsBold}
-                      rowHeight={rowHeight}
-                      gridBorderColor={gridBorderColor}
-                      isFirstColumn={false}
-                      isLastColumn={false}
-                      showBorder={true}
-                      columnWidths={columnWidths}
-                      onChange={onChange}
-                      onKeyDown={onKeyDown}
-                      handlRowKeyDown={handlRowKeyDown}
-                      handleFocus={handleFocus}
-                      handleBlur={handleBlur}
-                      gridId={gridId}
-                      zIndexController= {55}
-                      details={formState.transaction.details} blockUnitOnDecimalPoint={false} applicationSettings={undefined} nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
-                        throw new Error("Function not implemented.");
-                      } }                       />
+                       <div className="border border-gray-300 rounded-lg overflow-hidden dark:border-gray-600">
+                         <GridCell
+                           isMobile={true}
+                           column={formState.gridColumns.find((x) => x.dataField == "vatPerc") as ColumnModel}
+                           item={formState.row ?? initialTransactionDetailData}
+                           index={formState.itemPopup?.index ?? 0}
+                           currentCell={currentCell}
+                           setCurrentCell={setCurrentCell}
+                           formState={formState}
+                           appState={appState}
+                           gridFontSize={gridFontSize}
+                           gridIsBold={gridIsBold}
+                           rowHeight={rowHeight}
+                           gridBorderColor={gridBorderColor}
+                           isFirstColumn={false}
+                           isLastColumn={false}
+                           showBorder={false}
+                           columnWidths={columnWidths}
+                           onChange={onChange}
+                           onKeyDown={onKeyDown}
+                           handlRowKeyDown={handlRowKeyDown}
+                           handleFocus={handleFocus}
+                           handleBlur={handleBlur}
+                           gridId={gridId}
+                           zIndexController={55}
+                           details={formState.transaction.details} 
+                           blockUnitOnDecimalPoint={false} 
+                           applicationSettings={undefined} 
+                           nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
+                             throw new Error("Function not implemented.");
+                           }}
+                         />
                        </div>
-                       <div className="col-span-1 text-right text-sm text-gray-600 dark:text-gray-400">
-                         {/* <div className="text-sm">{formatCurrency(taxAmount)}</div> */}
-                          <GridCell
-                       isMobile={true}
-                      column={formState.gridColumns.find((x) => x.dataField == "vatAmount") as ColumnModel}
-                      item={formState.row ?? initialTransactionDetailData}
-                      index={formState.itemPopup?.index ?? 0}
-                      currentCell={currentCell}
-                      setCurrentCell={setCurrentCell}
-                      formState={formState}
-                      appState={appState}
-                      gridFontSize={gridFontSize}
-                      gridIsBold={gridIsBold}
-                      rowHeight={rowHeight}
-                      gridBorderColor={gridBorderColor}
-                      isFirstColumn={false}
-                      isLastColumn={false}
-                      showBorder={true}
-                      columnWidths={columnWidths}
-                      onChange={onChange}
-                      onKeyDown={onKeyDown}
-                      handlRowKeyDown={handlRowKeyDown}
-                      handleFocus={handleFocus}
-                      handleBlur={handleBlur}
-                      gridId={gridId}
-                      zIndexController= {55}
-                      details={formState.transaction.details} blockUnitOnDecimalPoint={false} applicationSettings={undefined} nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
-                        throw new Error("Function not implemented.");
-                      } }                       />
-                       </div>
-                       <div className="text-center col-span-full">
-                         <button
-                         aria-label="showMore"
-                          onClick={() => setShowMore(prev => !prev)}
-                          className="p-2 bg-slate-600 hover:bg-slate-900 rounded-full"
-                        >
-                          {showMore ? <ChevronUp className="text-warmGray-100" size={20} /> : <ChevronDown className="text-warmGray-100" size={20} />}
-                        </button>
-
-                        
+                       <div className="border border-gray-300 rounded-lg overflow-hidden dark:border-gray-600">
+                         <GridCell
+                           isMobile={true}
+                           column={formState.gridColumns.find((x) => x.dataField == "vatAmount") as ColumnModel}
+                           item={formState.row ?? initialTransactionDetailData}
+                           index={formState.itemPopup?.index ?? 0}
+                           currentCell={currentCell}
+                           setCurrentCell={setCurrentCell}
+                           formState={formState}
+                           appState={appState}
+                           gridFontSize={gridFontSize}
+                           gridIsBold={gridIsBold}
+                           rowHeight={rowHeight}
+                           gridBorderColor={gridBorderColor}
+                           isFirstColumn={false}
+                           isLastColumn={false}
+                           showBorder={false}
+                           columnWidths={columnWidths}
+                           onChange={onChange}
+                           onKeyDown={onKeyDown}
+                           handlRowKeyDown={handlRowKeyDown}
+                           handleFocus={handleFocus}
+                           handleBlur={handleBlur}
+                           gridId={gridId}
+                           zIndexController={55}
+                           details={formState.transaction.details} 
+                           blockUnitOnDecimalPoint={false} 
+                           applicationSettings={undefined} 
+                           nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
+                             throw new Error("Function not implemented.");
+                           }}
+                         />
                        </div>
                      </div>
-                     <div className="">
-                           {showMore && (
-                            <div>
-                              {/* Show more content */}
-                               {formState.gridColumns.filter(x => x && x.visible == true && !["slNo", "action", ...hidColumns].includes(x.dataField??""))?.map((col, index) => (
-                              <div key={generateUniqueKey()} className="mt-2 grid grid-cols-2 gap-3 items-center">
-                                <div className="col-span-1">
-                         <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">
-                           
-                            <div>
-                                <div key={index}>
-                                    {col.caption}
-                                </div>
-                            </div>
-                           
-                         </div>
-                       </div>
-                       <div className="col-span-1 mj23233 flex" 
-                       style={{
-                                border: isMobile
-                                  ? "1px solid red"
-                                  : `3px solid rgb(${formState.userConfig?.inputBoxStyle?.focusBgColor})`,
-                              }}
-                       >
-                        <GridCell
-                       isMobile={true}
-                      column={col as ColumnModel}
-                      // column={_columns.find((x) => x.dataField == col.dataField) as ColumnModel}
-                      //  column={formState.gridColumns.find((x) => x.dataField == "vatAmount") as ColumnModel}
-                      item={formState.row ?? initialTransactionDetailData}
-                      index={formState.itemPopup?.index ?? 0}
-                      currentCell={currentCell}
-                      setCurrentCell={setCurrentCell}
-                      formState={formState}
-                      appState={appState}
-                      gridFontSize={gridFontSize}
-                      gridIsBold={gridIsBold}
-                      rowHeight={rowHeight}
-                      gridBorderColor={gridBorderColor}
-                      isFirstColumn={false}
-                      isLastColumn={false}
-                      showBorder={true}
-                      columnWidths={columnWidths}
-                      onChange={onChange}
-                      onKeyDown={onKeyDown}
-                      handlRowKeyDown={handlRowKeyDown}
-                      handleFocus={handleFocus}
-                      handleBlur={handleBlur}
-                      gridId={gridId}
-                      zIndexController= {55}
-                      details={formState.transaction.details} blockUnitOnDecimalPoint={false} applicationSettings={undefined} nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
-                        throw new Error("Function not implemented.");
-                      } }  
-                        />
-
-                      </div>
-                     </div>
-                      ))}
-                              
-                              
-                            </div>
-                          )}
-                        </div>
-                     {/* Divider */}
                      
+                     <div className="text-center">
+                       <button
+                         aria-label="showMore"
+                         onClick={() => setShowMore(prev => !prev)}
+                         className="p-2 bg-slate-600 hover:bg-slate-900 rounded-full"
+                       >
+                         {showMore ? <ChevronUp className="text-warmGray-100" size={20} /> : <ChevronDown className="text-warmGray-100" size={20} />}
+                       </button>
+                     </div>
+                     
+                     {showMore && (
+                       <div className="mt-4">
+                         {formState.gridColumns.filter(x => x && x.visible == true && !["slNo", "action", ...hidColumns].includes(x.dataField??""))?.map((col, index) => (
+                           <div key={generateUniqueKey()} className="grid grid-cols-2 gap-3 items-center mb-3">
+                             <div className="text-sm text-gray-600 dark:text-gray-400">
+                               {col.caption}
+                             </div>
+                             <div className="border border-gray-300 rounded-lg overflow-hidden dark:border-gray-600">
+                               <GridCell
+                                 isMobile={true}
+                                 column={col as ColumnModel}
+                                 item={formState.row ?? initialTransactionDetailData}
+                                 index={formState.itemPopup?.index ?? 0}
+                                 currentCell={currentCell}
+                                 setCurrentCell={setCurrentCell}
+                                 formState={formState}
+                                 appState={appState}
+                                 gridFontSize={gridFontSize}
+                                 gridIsBold={gridIsBold}
+                                 rowHeight={rowHeight}
+                                 gridBorderColor={gridBorderColor}
+                                 isFirstColumn={false}
+                                 isLastColumn={false}
+                                 showBorder={false}
+                                 columnWidths={columnWidths}
+                                 onChange={onChange}
+                                 onKeyDown={onKeyDown}
+                                 handlRowKeyDown={handlRowKeyDown}
+                                 handleFocus={handleFocus}
+                                 handleBlur={handleBlur}
+                                 gridId={gridId}
+                                 zIndexController={55}
+                                 details={formState.transaction.details} 
+                                 blockUnitOnDecimalPoint={false} 
+                                 applicationSettings={undefined} 
+                                 nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
+                                   throw new Error("Function not implemented.");
+                                 }}
+                               />
+                             </div>
+                           </div>
+                         ))}
+                       </div>
+                     )}
+                     
+                     {/* Total Amount Section */}
+                     <div className="flex justify-between items-center pt-4 border-t border-gray-200 dark:border-gray-700">
+                       <div className="text-base font-bold text-gray-800 dark:text-gray-200">
+                         Total Amount:
+                       </div>
+                       <div className="text-lg font-bold text-gray-800 dark:text-gray-200">
+                        {/* <div className="text-base font-semibold text-gray-800 dark:text-gray-200"> */}
+                         <GridCell
+                           isMobile={false}
+                           column={formState.gridColumns.find((x) => x.dataField == "total") as ColumnModel}
+                           item={formState.row ?? initialTransactionDetailData}
+                           index={formState.itemPopup?.index ?? 0}
+                           currentCell={currentCell}
+                           setCurrentCell={setCurrentCell}
+                           formState={formState}
+                           appState={appState}
+                           gridFontSize={gridFontSize}
+                           gridIsBold={gridIsBold}
+                           rowHeight={rowHeight}
+                           gridBorderColor={gridBorderColor}
+                           isFirstColumn={false}
+                           isLastColumn={false}
+                           showBorder={false}
+                           columnWidths={columnWidths}
+                           onChange={onChange}
+                           onKeyDown={onKeyDown}
+                           handlRowKeyDown={handlRowKeyDown}
+                           handleFocus={handleFocus}
+                           handleBlur={handleBlur}
+                           gridId={gridId}
+                           zIndexController={55}
+                           details={formState.transaction.details} 
+                           blockUnitOnDecimalPoint={false} 
+                           applicationSettings={undefined} 
+                           nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
+                             throw new Error("Function not implemented.");
+                           }}
+                         />
+                       </div>
+                     </div>
                    </div>
                  </main>
          
                  {/* Bottom action bar */}
-                 {/* <div className="bg-white dark:bg-[#2d2d2d] border-t dark:border-gray-700 shadow-md sticky bottom-0 left-0 right-0 flex">
-                   <button
-                     className="flex-1 py-4 text-center text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                     onClick={() => {
-                       console.log("Save & New", state);
-                       setState((s) => ({
-                         ...s,
-                         itemName: "",
-                         quantity: 1,
-                         rate: 100,
-                         discountAmount: undefined,
-                         discountPercent: undefined,
-                       }));
-                     }}
-                   >
-                     Save & New
-                   </button>
-                   <button
-                     className="flex-1 py-4 text-center bg-red-600 text-white font-medium hover:bg-red-700"
-                     onClick={() => {
-                       console.log("Save", {
-                         ...state,
-                         subtotal,
-                         discountFromPercent,
-                         taxAmount,
-                         total,
-                       });
-                       alert("Saved (demo)");
-                     }}
-                   >
-                     Save
-                   </button>
-                 </div> */}
-                 {/* ===== */}
-                <div className="fixed bottom-0 left-0 right-0 w-full bg-[#f8f8ff] dark:bg-dark-bg-card border-t dark:border-gray-700 shadow-md z-[60]">
-  <div className="flex items-center justify-between px-3 py-2">
-    {/* GRAND TOTAL */}
-    <div className="flex flex-col">
-      <span className="text-xs font-bold text-gray-900 dark:text-dark-text uppercase">
-        Total Amount:
-      </span>
-    </div>
-
-    <span className="text-base font-bold text-[#3b82f6]">
-       <GridCell
-                      //  isMobile={true}
-                      column={formState.gridColumns.find((x) => x.dataField == "total") as ColumnModel}
-                      item={formState.row ?? initialTransactionDetailData}
-                      index={formState.itemPopup?.index ?? 0}
-                      currentCell={currentCell}
-                      setCurrentCell={setCurrentCell}
-                      formState={formState}
-                      appState={appState}
-                      gridFontSize={gridFontSize}
-                      gridIsBold={gridIsBold}
-                      rowHeight={rowHeight}
-                      gridBorderColor={gridBorderColor}
-                      isFirstColumn={false}
-                      isLastColumn={false}
-                      showBorder={true}
-                      columnWidths={columnWidths}
-                      onChange={onChange}
-                      onKeyDown={onKeyDown}
-                      handlRowKeyDown={handlRowKeyDown}
-                      handleFocus={handleFocus}
-                      handleBlur={handleBlur}
-                      gridId={gridId}
-                      zIndexController= {55}
-                      details={formState.transaction.details} blockUnitOnDecimalPoint={false} applicationSettings={undefined} nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
-                        throw new Error("Function not implemented.");
-                      } }                       />
-    </span>
-  </div>
-
-  {/* BUTTON ROW */}
-  <div className="flex gap-2 px-3 pb-2">
-    <ERPButton
-      title={t("cancel")}
-      className="flex-1 rounded-md !m-0 bg-white dark:bg-dark-bg-card border border-gray-300 text-black dark:text-dark-text text-sm sm:text-base"
-      localInputBox={formState?.userConfig?.inputBoxStyle}
-    />
-
-    <ERPButton
-      localInputBox={formState?.userConfig?.inputBoxStyle}
-      title={formState.transaction.master.voucherType === "LPO" ? t("generate_lpo") : t("save")}
-      jumpTarget="save"
-      variant="primary"
-      className="flex-1 rounded-md !m-0 bg-[#94a3b8] text-white text-sm sm:text-base"
-      disabled={
-        formState.formElements.pnlMasters?.disabled ||
-        !formState.transaction.details ||
-        formState.transaction.details.length === 0 ||
-        formState.transactionLoading
-      }
-    />
-  </div>
-</div>
-
-
+                 <div className="fixed bottom-0 left-0 right-0 w-full bg-white dark:bg-[#2d2d2d] border-t border-gray-200 dark:border-gray-700 shadow-lg z-[60]">
+                   <div className="flex gap-0">
+                     <button
+                       className="flex-1 py-4 text-center text-base font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
+                       onClick={() => {
+                         console.log("Save & New");
+                       }}
+                     >
+                       Save & New
+                     </button>
+                     <button
+                       className="flex-1 py-4 text-center bg-red-600 text-white text-base font-medium hover:bg-red-700"
+                       onClick={() => {
+                         console.log("Save");
+                       }}
+                     >
+                       Save
+                     </button>
+                   </div>
+                 </div>
                </div>
              </div>,
              document.body

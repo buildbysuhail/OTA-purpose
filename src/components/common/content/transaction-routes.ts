@@ -73,6 +73,7 @@ export interface TransactionRoute {
   drCr: string;
   shortKey?: string;
   shortKeyList?: string;
+  isPOS?: boolean
   icon?: any; // Changed to React.ElementType to accept Lucide icons
   visibleFn?: (userSession: UserModel) => boolean;
 }
@@ -420,6 +421,20 @@ export const transactionRoutes: TransactionRoute[] = [
     drCr: "Cr",
     listTitle: TransactionListTitles.RequestForSalesQuotations,
     icon: ClipboardSignature,
+  },
+   // Created for pos - need to change later
+  {
+    transactionBase: TransactionBase.Sales,
+    formCode: "RFQ",
+    isPOS: true,
+    action: UserAction.Show,
+    voucherType: VoucherType.SalesInvoice,
+    transactionType: "SalesInvoice",
+    formType: "",
+    title: TransactionTitles.SalesInvoice,
+    drCr: "Cr",
+    listTitle: TransactionListTitles.SalesInvoices,
+    icon: HandCoins,
   },
   {
     transactionBase: TransactionBase.Purchase,

@@ -453,7 +453,7 @@ const Content: FC<ContentProps> = () => {
                 <>
                   <Route
                     key={`${index}-${route.transactionBase}-${route.transactionType}-`}
-                    path={`${route.transactionBase}/${route.transactionType}`}
+                    path={`${route.isPOS == true ? "/pos" : route.transactionBase}/${route.transactionType}`}
                     element={
                       <RouteGuard formCode={route.formCode} action={route.action}>
                         <SalesTransactionFormContainer
@@ -465,6 +465,7 @@ const Content: FC<ContentProps> = () => {
                           title={route.title}
                           drCr={route.drCr}
                           voucherNo={0}
+                          isPos={route.isPOS == true}
                         />
                       </RouteGuard>
                     }

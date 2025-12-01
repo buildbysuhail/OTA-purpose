@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "./useAppDispatch";
 import { getAction } from "../../redux/slices/app-thunks";
@@ -12,6 +12,7 @@ const usePreferenceData = (columns: DevGridColumn[], gridId?: string) => {
 
   const [preferences, setPreferences] = useState<GridPreference>();
   const [gridCols, setGridCols] = useState<DevGridColumn[]>(columns);
+
    useEffect(() => {
         
       const fetchPreferences = async () => {

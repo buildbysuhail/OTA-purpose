@@ -454,7 +454,7 @@ export const MENUITEMS = [
     children: [
       ...transactionRoutes.filter(x => x.transactionBase == TransactionBase.Sales).map((route) => ({
         path: `${import.meta.env.BASE_URL}${TransactionBase.Sales}/${route.transactionType}List`,
-        addPath: `${import.meta.env.BASE_URL}${TransactionBase.Sales}/${route.transactionType}`,
+        addPath: route.isPOS ? "/pos" : `${import.meta.env.BASE_URL}${TransactionBase.Sales}/${route.transactionType}`,
         type: "link",
         active: false,
         selected: false,

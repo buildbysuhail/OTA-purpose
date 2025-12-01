@@ -627,13 +627,14 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     const {
       onApplyPreferences: onApplyProductPreferences,
       gridCols: productGridCol,
-    } = usePreferenceData(productColumns, productGridId,productInitialPreferences );
+    } = usePreferenceData(productColumns, productGridId );
 
     // Use the hook for batch grid preferences
     const {
       onApplyPreferences: onApplyBatchPreferences,
       gridCols: batchGridCol,
-    } = usePreferenceData(batchColumns, batchGridId,batchInitialPreferences );
+    } = usePreferenceData(batchColumns, batchGridId );
+
     const preferenceChooserRef = useRef<{
       handleDragStart: (e: React.DragEvent<HTMLElement>) => void;
       handleDragEnd: (e: React.DragEvent<HTMLElement>) => void;

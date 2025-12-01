@@ -43,6 +43,7 @@ export interface TransactionProps {
   transactionMasterID?: number;
   financialYearID?: number;
   isTeller?: boolean | false;
+  isPos?: boolean | false;
   // localInputBox?: inputBox;
 }
 

@@ -36,7 +36,7 @@ import ProductSummaryMaster from "../../reports/other-inventory-reports/product-
 import { formStateHandleFieldChangeKeysOnly, resetState, formStateHandleFieldChange, updateFormElement } from "../reducer";
 import DeletingOverlay from "../transaction-deleting";
 import SavingOverlay from "../transaction-saving";
-import { initialUserConfig, transactionInitialData, TransactionFormStateInitialData, initialFormElements, initialInventoryTotals } from "../transaction-type-data";
+import { initialUserConfig, transactionInitialData, TransactionFormStateInitialData, initialFormElements, initialInventoryTotals, initialTransactionDetailData } from "../transaction-type-data";
 import { TransactionProps, UserConfig, TransactionDetail, TransactionFormState, TransactionData, SummaryItems, GridQtyFactors, ColumnModel } from "../transaction-types";
 import BatchEntryModal from "./batch-entry";
 import ObjectViewer from "./components/fomstate-view";
@@ -738,8 +738,11 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
 
       if (!isInvoker) {
-        const voucher: TransactionData = transactionInitialData;
-        _formState = {
+         const voucher: TransactionData = {...transactionInitialData,details:!deviceInfo.isMobile ? Array.from({ length: 30 }, (_, index) => ({
+                   ...initialTransactionDetailData,
+                   slNo: generateUniqueKey()
+                 })) : []};
+                   _formState = {
           ...TransactionFormStateInitialData,
           transaction: {
             ...voucher,
@@ -1977,6 +1980,18 @@ const TransactionForm: React.FC<TransactionProps> = ({
     setHeaderHeight(height)
   }
 
+  const [posGridHeight, setPosGridHeight] = useState(window.innerHeight - 380);
+
+  useEffect(() => {
+    const resizeListener = () => {
+      setPosGridHeight(window.innerHeight - 380);
+    };
+
+    window.addEventListener("resize", resizeListener);
+    return () => window.removeEventListener("resize", resizeListener);
+  }, []);
+
+
 
   return (
     <>
@@ -2477,7 +2492,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               transactionType={transactionType}
               _columns={_purchaseGridCol}
               keyField={"productID"}
-              height={window.innerHeight-310}  // 260 footer/ 32 header
+              height={posGridHeight}  // 260 footer/ 32 header
               // height={300} //window.innerHeight-350
               gridId={`${gridCode}`}
               onAddData={handleAddData}

@@ -4,7 +4,7 @@ import Urls from '../redux/urls';
 import { APIClient } from '../helpers/api-client';
 import { DeepPartial } from 'redux';
 import { getAmountInWords, getArabicNumber, isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero, val } from '../utilities/Utils';
-import { PrintResponse, PrintDetailDto, PrintMasterDto, CompanyDetailsForPrint, PartyDetailsForPrint } from './use-print-type';
+import { PrintResponse, PrintDetailDto, PrintMasterDto, CompanyDetailsForPrint, PartyDetailsForPrint, InvDetail2ForPrint } from './use-print-type';
 import { initialPrintCustomFields, initialPrintResponse } from './use-print-type-data';
 import { merge } from 'lodash';
 import { TemplateState } from './InvoiceDesigner/Designer/interfaces';
@@ -1720,6 +1720,10 @@ console.log(master[key as (keyof PrintMasterDto)]);
   }
   else if (group == "details") {
     val = details[rowIndex]?.[key as (keyof PrintDetailDto)]
+
+  }
+  else if (group == "details2") {
+    val = details[rowIndex]?.detail2Data?.[key as (keyof InvDetail2ForPrint)]
 
   }
   else if (group == "custom") {

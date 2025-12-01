@@ -4,8 +4,8 @@ import { initialHeaderFooter } from "../../redux/slices/user-session/reducer";
 import { modelToListFromObject } from "../../utilities/Utils";
 import { TransactionMasterInitialData, initialTransactionDetailData, initialProductData } from "../inventory/transactions/transaction-type-data";
 import { TransactionMaster, TransactionDetail, BarcodeLabel } from "../inventory/transactions/transaction-types";
-import { CompanyDetailsForPrint, HeaderFooter, PartyDetailsForPrint, PrintCustomFields, PrintDetailDto, PrintMasterDto } from "../use-print-type";
-import { initialCompanyDetailsForPrint, initialPartyDetailsForPrint, initialPrintCustomFields, initialPrintDetailDto, initialPrintMasterDto } from "../use-print-type-data";
+import { CompanyDetailsForPrint, HeaderFooter, InvDetail2ForPrint, PartyDetailsForPrint, PrintCustomFields, PrintDetailDto, PrintMasterDto } from "../use-print-type";
+import { initialCompanyDetailsForPrint, initialInvDetail2ForPrint, initialPartyDetailsForPrint, initialPrintCustomFields, initialPrintDetailDto, initialPrintMasterDto } from "../use-print-type-data";
 interface fdf {
   fdd: number
 }
@@ -14,6 +14,7 @@ export const inventoryFields: OptionGroup[] = [
   { groupName: 'Custom', options: modelToListFromObject<PrintCustomFields>(initialPrintCustomFields, "custom___") },
   { groupName: 'Master', options: modelToListFromObject<PrintMasterDto>(initialPrintMasterDto, "master___") },
   { groupName: 'Details', options: modelToListFromObject<PrintDetailDto>(initialPrintDetailDto, "details___") },
+  { groupName: 'Details', options: modelToListFromObject<InvDetail2ForPrint>(initialInvDetail2ForPrint, "details2___") },
   { groupName: 'Organization', options: modelToListFromObject<CompanyDetailsForPrint>(initialCompanyDetailsForPrint, "org___") },
   { groupName: 'Customer',  options: modelToListFromObject<PartyDetailsForPrint>(initialPartyDetailsForPrint,"customer___") },
   { groupName: 'HeaderFooter', options: modelToListFromObject<HeaderFooter>(initialHeaderFooter, "headerFooter___") },
@@ -22,6 +23,7 @@ export const accountsFields: OptionGroup[] = [
   { groupName: 'Custom', options: modelToListFromObject<PrintCustomFields>(initialPrintCustomFields, "custom___") },
   { groupName: 'Master', options: modelToListFromObject<PrintMasterDto>(initialPrintMasterDto, "master___") },
   { groupName: 'Details', options: modelToListFromObject<PrintDetailDto>(initialPrintDetailDto, "details___") },
+  { groupName: 'Details', options: modelToListFromObject<InvDetail2ForPrint>(initialInvDetail2ForPrint, "details2___") },
   { groupName: 'Organization', options: modelToListFromObject<CompanyDetailsForPrint>(initialCompanyDetailsForPrint, "org___") },
   { groupName: 'Customer',  options: modelToListFromObject<PartyDetailsForPrint>(initialPartyDetailsForPrint,"customer___") },
   { groupName: 'HeaderFooter', options: modelToListFromObject<HeaderFooter>(initialHeaderFooter, "headerFooter___") },

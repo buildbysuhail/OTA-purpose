@@ -77,7 +77,7 @@ const PosSideSection: React.FC<TransactionHeaderProps> = ({
   // ----------------- Quantity and Barcode section --------------------------
   const QtyBarcodeControl = () => {
     return (
-      <div className="flex items-center gap-4 px-3 py-2  rounded-sm mx-1">
+      <div className="flex items-center gap-4 px-3 py-2 rounded-sm mx-1">
         {/* Qty Section */}
         <div className="flex gap-2 flex-col">
           <label className="text-xs font-medium text-gray-600">
@@ -168,7 +168,7 @@ const PosSideSection: React.FC<TransactionHeaderProps> = ({
       "flex items-center justify-center text-[22px] font-semibold rounded-md select-none border border-gray-300 shadow-sm";
 
     return (
-      <div className="grid grid-cols-4 gap-2 p-1 bg-white border w-full">
+      <div className="grid grid-cols-4 gap-2 px-1 bg-white border w-full">
         {/* Row 1 */}
         <button className={`${baseBtn} bg-white text-gray-900 h-12`}>7</button>
         <button className={`${baseBtn} bg-white text-gray-900 h-12`}>8</button>
@@ -585,7 +585,7 @@ const PosSideSection: React.FC<TransactionHeaderProps> = ({
       {/* Screen section */}
       <div className="w-[80%] h-full flex flex-col *shrink">
         {/* Top Bill Tabs */}
-        <div className="relative group flex items-center w-full h-24">
+        <div className="relative group flex items-center w-full h-16 my-1">
           <button
             onClick={scrollLeft}
             className="absolute left-0 bg-gray-200 text-black w-8 h-12 rounded-md opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center"
@@ -616,7 +616,7 @@ const PosSideSection: React.FC<TransactionHeaderProps> = ({
         </div>
 
         {/* Middle Working Area */}
-        <div className="w-full h-[45%] ">
+        <div className="w-full h-[40%] ">
           {chooseSubBtn === "settlement" && (
             <PosComponents formState={formState} dispatch={dispatch} />
           )}

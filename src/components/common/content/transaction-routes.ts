@@ -431,7 +431,7 @@ export const transactionRoutes: TransactionRoute[] = [
     voucherType: VoucherType.SalesInvoice,
     transactionType: "SalesInvoice",
     formType: "",
-    title: TransactionTitles.SalesInvoice,
+    title: "POS",
     drCr: "Cr",
     listTitle: TransactionListTitles.SalesInvoices,
     icon: HandCoins,

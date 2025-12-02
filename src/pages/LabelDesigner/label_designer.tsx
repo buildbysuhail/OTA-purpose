@@ -16,7 +16,7 @@ import ERPCheckbox from "../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../components/ERPComponents/erp-button";
 import { ResizableBox } from "react-resizable";
 import "react-resizable/css/styles.css";
-import { DesignerElementType, initialBacodeTemplateState, PlacedComponent, PropertiesState, QRCodeProps, templateDesignerFormatOptions, TemplateDto, TemplateState, } from "../InvoiceDesigner/Designer/interfaces";
+import { DesignerElementType, initialBacodeTemplateState, LabelState, PlacedComponent, PropertiesState, QRCodeProps, templateDesignerFormatOptions, TemplateDto, TemplateState, } from "../InvoiceDesigner/Designer/interfaces";
 import { useAppState } from "../../utilities/hooks/useAppState";
 import ERPPreviousUrlButton from "../../components/ERPComponents/erp-previous-uirl-button";
 import { setTemplateCustomElements } from "../../redux/slices/templates/reducer";
@@ -34,6 +34,7 @@ import { hexToRgb } from "../../components/common/switcher/switcherdata/switcher
 import { generateUniqueKey } from "../../utilities/Utils";
 import ERPSlider from "../../components/ERPComponents/erp-slider";
 import { fetchTemplateFromApiById } from "../use-print";
+import { useUndoRedo } from "../../utilities/hooks/use-undoRedo";
 
 // Interfaces
 interface SaveDialogProps {
@@ -181,6 +182,59 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
   const selectedPageSize = getPageDimensions(pageSize, template?.propertiesState?.width, template?.propertiesState?.height);
   const customePageWidth = selectedPageSize.width - ((template?.propertiesState?.padding?.left ?? 0) + (template?.propertiesState?.padding?.right ?? 0))
   const [customePageHeight, setCustomePageHeight] = useState(200);
+
+
+    // Initialize undo/redo
+  const {
+    canUndo,
+    canRedo,
+    undo: undoAction,
+    redo: redoAction,
+    clearHistory,
+    pushState,
+    history,
+    historyIndex,
+  } = useUndoRedo(templateData);
+
+    // Track current state to detect changes
+  const prevTemplateDataRef = useRef(templateData);
+
+    // Helper: Push state to history when templateData changes
+  const pushToHistory = useCallback(
+    (newState: TemplateState<unknown>, action: string) => {
+      pushState(newState, action);
+      prevTemplateDataRef.current = newState;
+    },
+    [pushState]
+  );
+
+    // Override undo/redo to also update templateData
+const handleUndo = useCallback(() => {
+  if (canUndo && historyIndex > 0) {
+    const previousIndex = historyIndex - 1;
+    if (history[previousIndex]) {
+      setTemplateData(history[previousIndex].templateData);
+      undoAction(); // Call the hook's undo to update historyIndex
+    }
+  }
+}, [canUndo, historyIndex, history, undoAction]);
+
+const handleRedo = useCallback(() => {
+  if (canRedo && historyIndex < history.length - 1) {
+    const nextIndex = historyIndex + 1;
+    if (history[nextIndex]) {
+      setTemplateData(history[nextIndex].templateData);
+      redoAction(); // Call the hook's redo to update historyIndex
+    }
+  }
+}, [canRedo, historyIndex, history, redoAction]);
+
+// ===== ADD DEBOUNCED DRAG HISTORY PUSH =====
+const dragHistoryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+const isDraggingRef = useRef(false);
+const dragStartStateRef = useRef<TemplateState<unknown> | null>(null);
+
+
   // Components configuration
   const components = [
     {
@@ -375,19 +429,21 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
           newComponent.children = [];
         }
 
-        const updatedComponents = [
-          ...(templateData?.barcodeState?.placedComponents || []),
-          newComponent,
-        ];
+      const newUpdatedComponents = [
+        ...(templateData?.barcodeState?.placedComponents || []),
+        newComponent,
+      ];
 
-        setTemplateData((prev: TemplateState<unknown>) => ({
-          ...prev,
-          barcodeState: {
-            ...prev.barcodeState,
-            placedComponents: updatedComponents,
-          },
-        }));
+      const newTemplateData : TemplateState<unknown> = {
+        ...templateData,
+        barcodeState: {
+          ...templateData.barcodeState,
+          placedComponents: newUpdatedComponents,
+        },
+      };
 
+      setTemplateData(newTemplateData);
+      pushToHistory(newTemplateData, `Added ${componentType} containers`);
         setTimeout(() => {
           setSelectedComponent(newComponent);
         }, 0);
@@ -509,18 +565,21 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
           newComponent.y = Math.max(0, newComponent.y);
         }
 
-        const updatedComponents = [
-          ...(templateData?.barcodeState?.placedComponents || []),
-          newComponent,
-        ];
+      const newUpdatedComponents = [
+        ...(templateData?.barcodeState?.placedComponents || []),
+        newComponent,
+      ];
 
-        setTemplateData((prev: TemplateState<unknown>) => ({
-          ...prev,
-          barcodeState: {
-            ...prev.barcodeState,
-            placedComponents: updatedComponents,
-          },
-        }));
+      const newTemplateData : TemplateState<unknown> = {
+        ...templateData,
+        barcodeState: {
+          ...templateData.barcodeState,
+          placedComponents: newUpdatedComponents,
+        },
+      };
+
+      setTemplateData(newTemplateData);
+      pushToHistory(newTemplateData, `Added ${componentType} component`);
 
         setTimeout(() => {
           setSelectedComponent(newComponent);
@@ -597,7 +656,8 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
         console.error('Component not found in main list:', component.id);
         return;
       }
-
+   // Capture state BEFORE drag starts
+    dragStartStateRef.current = JSON.parse(JSON.stringify(templateData));
       setDraggingComponent(null);
 
       setTimeout(() => {
@@ -619,37 +679,47 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
 
   // Delete handler - cascades through nested containers
   const handleDelete = (componentId: string) => {
-    setTemplateData((prev: TemplateState<unknown>) => {
-      const componentsToDelete = new Set<string>();
-      const components = prev.barcodeState?.placedComponents || [];
-
-      // Recursively find all children
+    const newTemplateData : TemplateState<unknown> = {
+      ...templateData,
+    };
+    const componentsToDelete = new Set<string>();
+    const components = newTemplateData.barcodeState?.placedComponents || [];  
       const findAllChildren = (id: string) => {
-        componentsToDelete.add(id);
-        components.forEach(comp => {
-          if (comp.containerId === id) {
-            findAllChildren(comp.id);
-          }
-        });
-      };
+      componentsToDelete.add(id);
+      components.forEach(comp => {
+        if (comp.containerId === id) {
+          findAllChildren(comp.id);
+        }
+      });
+    };
 
-      findAllChildren(componentId);
+    findAllChildren(componentId);
 
-      const updatedComponents = components.filter(
-        comp => !componentsToDelete.has(comp.id)
-      );
+    const updatedComponents = components.filter(
+      comp => !componentsToDelete.has(comp.id)
+    );
 
-      return {
-        ...prev,
-        barcodeState: {
-          ...prev.barcodeState,
-          placedComponents: updatedComponents,
-        },
-      };
-    });
+    newTemplateData.barcodeState = {
+      ...newTemplateData.barcodeState,
+      placedComponents: updatedComponents,
+    };  
+    setTemplateData(newTemplateData);
+    pushToHistory(newTemplateData, 'Deleted component(s)');
     setSelectedComponent(null);
   };
-
+ //  clear all in desinger buttons:
+  const handleClear = () => {
+    const newTemplateData : TemplateState<unknown> = {
+      ...templateData,
+      barcodeState: {
+        ...templateData.barcodeState,
+        placedComponents: [],
+      },
+    };
+    setTemplateData(newTemplateData);
+    pushToHistory(newTemplateData, 'Cleared canvas');
+    setSelectedComponent(null);
+  };
   // Property change handlers
   const handlePropertyChange = (property: keyof PlacedComponent, value: string | number | boolean, id?: number | undefined,) => {
     if (selectedComponent) {
@@ -658,13 +728,20 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
         templateData?.barcodeState?.placedComponents?.map((comp) =>
           comp.id === (id ? id : selectedComponent.id) ? updatedComponent : comp
         );
-      setTemplateData((prev: TemplateState<unknown>) => ({
-        ...prev,
+
+      const newTemplateData : TemplateState<unknown> = {
+        ...templateData,
         barcodeState: {
-          ...prev.barcodeState,
+          ...templateData.barcodeState,
           placedComponents: updatedComponents || [],
         },
-      }));
+      };
+
+      setTemplateData(newTemplateData);
+      pushToHistory(
+        newTemplateData,
+        `Changed ${String(property)} to ${value}`
+      );
       setSelectedComponent(updatedComponent);
       if (updatedComponent.type === DesignerElementType.barcode) {
         generateBarcode(updatedComponent);
@@ -686,13 +763,16 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
         (comp) => (comp.id === selectedComponent.id ? updatedComponent : comp)
       );
 
-      setTemplateData((prev: TemplateState<unknown>) => ({
-        ...prev,
-        barcodeState: {
-          ...prev.barcodeState,
-          placedComponents: updatedComponents,
-        },
-      }));
+    const newTemplateData : TemplateState<unknown> = {
+      ...templateData,
+      barcodeState: {
+        ...templateData.barcodeState,
+        placedComponents: updatedComponents,
+      },
+    };
+
+    setTemplateData(newTemplateData);
+    pushToHistory(newTemplateData, `Changed container ${property}`);
 
       setSelectedComponent(updatedComponent);
     }
@@ -713,13 +793,22 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
             }
             : comp
         );
-      setTemplateData((prev: TemplateState<unknown>) => ({
-        ...prev,
+
+
+      const newTemplateData : TemplateState<unknown> = {
+        ...templateData,
         barcodeState: {
-          ...prev.barcodeState,
+          ...templateData.barcodeState,
           placedComponents: updatedComponents || [],
         },
-      }));
+      };
+
+      setTemplateData(newTemplateData);
+      pushToHistory(
+        newTemplateData,
+        `Changed ${String(property)} to ${value}`
+      );
+
       setSelectedComponent({
         ...selectedComponent,
         barcodeProps: { ...selectedComponent.barcodeProps, [property]: value },
@@ -755,13 +844,19 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
             : comp
       ) as PlacedComponent[];
 
-      setTemplateData((prev: TemplateState<unknown>) => ({
-        ...prev,
+        const newTemplateData : TemplateState<unknown> = {
+        ...templateData,
         barcodeState: {
-          ...prev.barcodeState,
+          ...templateData.barcodeState,
           placedComponents: updatedComponents || [],
         },
-      }));
+      };
+
+      setTemplateData(newTemplateData);
+      pushToHistory(
+        newTemplateData,
+        `Changed ${String(property)} to ${value}`
+      );
       setSelectedComponent({
         ...selectedComponent,
         qrCodeProps: updatedQRCodeProps,
@@ -881,13 +976,16 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
                 ? { ...comp, width: widthPt, height: heightPt }
                 : comp
             ) || [];
-          setTemplateData((prev) => ({
-            ...prev,
-            barcodeState: {
-              ...prev.barcodeState,
-              placedComponents: updatedComponents,
-            },
-          }));
+                              const newTemplateData : TemplateState<unknown> = {
+                      ...templateData,
+                      barcodeState: {
+                        ...templateData.barcodeState,
+                        placedComponents: updatedComponents,
+                      },
+                    };
+                    setTemplateData(newTemplateData);
+                   pushToHistory(newTemplateData, `resize ${container.containerId} ${depth} containers`);
+
           if (selectedComponent?.id === container.id) {
             setSelectedComponent((prev) => ({
               ...prev!,
@@ -1081,14 +1179,15 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
                     ? { ...comp, width: widthPt, height: heightPt }
                     : comp
                 ) || [];
-
-              setTemplateData((prev: TemplateState<unknown>) => ({
-                ...prev,
-                barcodeState: {
-                  ...prev.barcodeState,
-                  placedComponents: updatedComponents,
-                },
-              }));
+                   const newTemplateData : TemplateState<unknown> = {
+                      ...templateData,
+                      barcodeState: {
+                        ...templateData.barcodeState,
+                        placedComponents: updatedComponents,
+                      },
+                    };
+                    setTemplateData(newTemplateData);
+                   pushToHistory(newTemplateData, `resize ${component.type} containers`);
               if (selectedComponent?.id === component.id) {
                 setSelectedComponent((prev) => ({
                   ...prev!,
@@ -1204,14 +1303,15 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
                     }
                     : comp
                 ) || [];
-
-              setTemplateData((prev) => ({
-                ...prev,
-                barcodeState: {
-                  ...prev.barcodeState,
-                  placedComponents: updatedComponents,
-                },
-              }));
+                  const newTemplateData : TemplateState<unknown> = {
+                      ...templateData,
+                      barcodeState: {
+                        ...templateData.barcodeState,
+                        placedComponents: updatedComponents,
+                      },
+                    };
+                    setTemplateData(newTemplateData);
+                   pushToHistory(newTemplateData, `resize ${component.type} `);
 
               if (selectedComponent?.id === component.id) {
                 setSelectedComponent((prev) => ({
@@ -1284,14 +1384,16 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
                     ? { ...comp, width: widthPt, height: heightPt }
                     : comp
                 ) || [];
+                  const newTemplateData : TemplateState<unknown> = {
+                      ...templateData,
+                      barcodeState: {
+                        ...templateData.barcodeState,
+                        placedComponents: updatedComponents,
+                      },
+                    };
+                    setTemplateData(newTemplateData);
+                   pushToHistory(newTemplateData, `resize ${component.type}`);
 
-              setTemplateData((prev: TemplateState<unknown>) => ({
-                ...prev,
-                barcodeState: {
-                  ...prev.barcodeState,
-                  placedComponents: updatedComponents,
-                },
-              }));
               if (selectedComponent?.id === component.id) {
                 setSelectedComponent((prev) => ({
                   ...prev!,
@@ -1481,14 +1583,29 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
     };
 
     const handleGlobalMouseUp = (e: MouseEvent) => {
-      if (draggingRef.current) {
+      if (draggingRef.current&& isDraggingRef.current) {
         e.preventDefault();
         e.stopPropagation();
-
+      // ONLY push to history when drag ends, not during drag
+      setTemplateData((current) => {
+        if (
+          dragStartStateRef.current &&
+          JSON.stringify(dragStartStateRef.current) !==
+            JSON.stringify(current)
+        ) {
+          // Only push if position actually changed
+          pushToHistory(current, "Moved component");
+        }
+        return current;
+      });
         setDraggingComponent(null);
         setDragOffset({ x: 0, y: 0 });
         draggingRef.current = null;
+        isDraggingRef.current = false;
         dragOffsetRef.current = { x: 0, y: 0 };
+        if (dragHistoryTimeoutRef.current) {
+        clearTimeout(dragHistoryTimeoutRef.current);
+      }
       }
     };
 
@@ -1499,10 +1616,13 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
       }
+    if (dragHistoryTimeoutRef.current) {
+      clearTimeout(dragHistoryTimeoutRef.current);
+    }
       document.removeEventListener('mousemove', handleGlobalMouseMove);
       document.removeEventListener('mouseup', handleGlobalMouseUp);
     };
-  }, []);
+  }, [pushToHistory]);
 
   // Consolidate container children before saving - UPDATED for nested containers
   const consolidateContainerChildren = () => {
@@ -1608,23 +1728,31 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
     property: keyof PropertiesState,
     value: any,
   ) => {
-    setTemplateData((prev: TemplateState<unknown>) => ({
-      ...prev,
-      propertiesState: { ...prev.propertiesState, [property]: value },
-    }));
+  const newTemplateData : TemplateState<unknown>=  {
+    ...templateData,
+    propertiesState: { ...templateData.propertiesState, [property]: value },
+  };
+
+  setTemplateData(newTemplateData);
+  pushToHistory(newTemplateData, `Changed page ${String(property)}`);
   };
 
   const handleLabelPropsChange = (property: any, value: any) => {
-    setTemplateData((prev: any) => ({
-      ...prev,
-      barcodeState: {
-        ...prev.barcodeState,
-        labelState: {
-          ...prev.barcodeState?.labelState,
-          [property]: value,
-        },
-      },
-    }));
+const newTemplateData : TemplateState<unknown> = {
+  ...templateData,
+  barcodeState: {
+    ...templateData.barcodeState,
+    placedComponents: templateData?.barcodeState?.placedComponents ?? [],
+   labelState: {
+  ...templateData?.barcodeState?.labelState,
+  [property]: value,
+  } as LabelState,
+  },
+};
+
+setTemplateData(newTemplateData);
+pushToHistory(newTemplateData, `Changed label ${property}`);
+
   };
 
   const handleImagePropsChange = async (property: any, value: any) => {
@@ -1810,84 +1938,245 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
     setTemplateData(_template);
   };
 
-  // Effects
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!selectedComponent) return;
-      // DELETE HANDLER
-      if (e.key === "Delete") {
-        handleDelete(selectedComponent.id);
-        e.preventDefault();
-        return; // stop further key handling
-      }
-      const step = 1; // step size (points or px)
+useEffect(() => {
+  const handleKeyDown = (e: KeyboardEvent) => {
+    // Check if user is typing in an input/textarea - don't intercept
+    const target = e.target as HTMLElement;
+    const isInputElement = 
+      target.tagName === 'INPUT' || 
+      target.tagName === 'TEXTAREA' ||
+      target.contentEditable === 'true';
+
+    // ============ UNDO: Ctrl+Z (Windows/Linux) or Cmd+Z (Mac) ============
+    if (
+      (e.ctrlKey || e.metaKey) && 
+      e.key === 'z' && 
+      !e.shiftKey && 
+      !isInputElement &&
+      canUndo
+    ) {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('Undo triggered');
+      handleUndo();
+      return;
+    }
+
+    // ============ REDO: Ctrl+Shift+Z (Windows/Linux) or Cmd+Shift+Z (Mac) ============
+    if (
+      (e.ctrlKey || e.metaKey) && 
+      e.key === 'z' && 
+      e.shiftKey && 
+      !isInputElement &&
+      canRedo
+    ) {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('Redo triggered');
+      handleRedo();
+      return;
+    }
+
+    // ============ REDO (Alternative): Ctrl+Y (Windows/Linux) or Cmd+Y (Mac) ============
+    if (
+      (e.ctrlKey || e.metaKey) && 
+      e.key === 'y' && 
+      !isInputElement &&
+      canRedo
+    ) {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('Redo triggered (Ctrl+Y)');
+      handleRedo();
+      return;
+    }
+
+    // ============ DELETE: Delete key or Backspace ============
+    if (
+      (e.key === 'Delete' ) && 
+      selectedComponent && 
+      !isInputElement
+    ) {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('Delete triggered');
+      handleDelete(selectedComponent.id);
+      return;
+    }
+
+    // ============ DUPLICATE: Ctrl+D (Windows/Linux) or Cmd+D (Mac) ============
+
+
+    // ============ DESELECT: Escape key ============
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('Deselect triggered');
+      setSelectedComponent(null);
+      setDraggingComponent(null);
+      setDragOffset({ x: 0, y: 0 });
+      return;
+    }
+
+    // ============ ARROW KEYS: Move or Resize selected component ============
+    if (
+      selectedComponent && 
+      ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key) &&
+      !isInputElement
+    ) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const step = e.shiftKey ? 10 : 1; // Shift+Arrow = larger movement
       let { x, y, width, height } = selectedComponent;
 
-      if (e.shiftKey) {
-        // --- Resize Mode ---
+      if (e.altKey) {
+        // -------- RESIZE MODE (Alt+Arrow) --------
+        console.log('Resize mode');
         switch (e.key) {
-          case "ArrowUp":
+          case 'ArrowUp':
             height = Math.max(20, height - step);
             break;
-          case "ArrowDown":
-            height = height + step;
+          case 'ArrowDown':
+            height = Math.max(20, height + step);
             break;
-          case "ArrowLeft":
+          case 'ArrowLeft':
             width = Math.max(20, width - step);
             break;
-          case "ArrowRight":
-            width = width + step;
+          case 'ArrowRight':
+            width = Math.max(20, width + step);
             break;
-          default:
-            return;
         }
       } else {
-        // --- Move Mode ---
+        // -------- MOVE MODE (Arrow only) --------
+        console.log('Move mode');
         switch (e.key) {
-          case "ArrowUp":
-            y = y - step;
+          case 'ArrowUp':
+            y = Math.max(0, y - step);
             break;
-          case "ArrowDown":
+          case 'ArrowDown':
             y = y + step;
             break;
-          case "ArrowLeft":
-            x = x - step;
+          case 'ArrowLeft':
+            x = Math.max(0, x - step);
             break;
-          case "ArrowRight":
+          case 'ArrowRight':
             x = x + step;
             break;
-          default:
-            return;
         }
       }
 
-      // Update placedComponents
-      const updatedComponents =
-        templateData?.barcodeState?.placedComponents?.map((comp) =>
-          comp.id === selectedComponent.id
-            ? { ...comp, x, y, width, height }
-            : comp
-        ) || [];
-
-      setTemplateData((prev: TemplateState<unknown>) => ({
-        ...prev,
+      // Update templateData
+      const newTemplateData : TemplateState<unknown> = {
+        ...templateData,
         barcodeState: {
-          ...prev.barcodeState,
-          placedComponents: updatedComponents,
+          ...templateData.barcodeState,
+          placedComponents: (templateData?.barcodeState?.placedComponents || []).map((comp) =>
+            comp.id === selectedComponent.id
+              ? { ...comp, x, y, width, height }
+              : comp
+          ),
         },
-      }));
+      };
 
-      // Update selectedComponent
+      setTemplateData(newTemplateData);
+      pushToHistory(newTemplateData, `${e.altKey ? 'Resized' : 'Moved'} component with keyboard`);
       setSelectedComponent((prev) =>
         prev ? { ...prev, x, y, width, height } : prev
       );
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedComponent, templateData]);
+      return;
+    }
 
 
+
+    // ============ SAVE: Ctrl+S (Windows/Linux) or Cmd+S (Mac) ============
+    if (
+      (e.ctrlKey || e.metaKey) && 
+      e.key === 's' && 
+      !isInputElement
+    ) {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('Save triggered');
+      manageSaveTemplate();
+      return;
+    }
+
+    // ============ ZOOM IN: Ctrl++ (Windows/Linux) or Cmd++ (Mac) ============
+    if (
+      (e.ctrlKey || e.metaKey) && 
+      (e.key === '+' || e.key === '=') && 
+      !isInputElement
+    ) {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('Zoom in triggered');
+      setZoom((prev) => Math.min(prev + 10, 200)); // Max 200%
+      return;
+    }
+
+    // ============ ZOOM OUT: Ctrl+- (Windows/Linux) or Cmd+- (Mac) ============
+    if (
+      (e.ctrlKey || e.metaKey) && 
+      e.key === '-' && 
+      !isInputElement
+    ) {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('Zoom out triggered');
+      setZoom((prev) => Math.max(prev - 10, 50)); // Min 50%
+      return;
+    }
+
+    // ============ ZOOM TO 100%: Ctrl+0 (Windows/Linux) or Cmd+0 (Mac) ============
+    if (
+      (e.ctrlKey || e.metaKey) && 
+      e.key === '0' && 
+      !isInputElement
+    ) {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('Zoom to 100% triggered');
+      setZoom(100);
+      return;
+    }
+
+    // ============ GROUP: Ctrl+G (Windows/Linux) or Cmd+G (Mac) ============
+    // (Advanced feature - optional)
+    if (
+      (e.ctrlKey || e.metaKey) && 
+      e.key === 'g' && 
+      !isInputElement
+    ) {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('Group triggered');
+      // handleGroup();
+      return;
+    }
+
+  };
+
+  window.addEventListener('keydown', handleKeyDown);
+  
+  return () => {
+    window.removeEventListener('keydown', handleKeyDown);
+  };
+}, [
+  canUndo,
+  canRedo,
+  selectedComponent,
+  templateData,
+  handleUndo,
+  handleRedo,
+  handleDelete,
+  setSelectedComponent,
+  setDraggingComponent,
+  setDragOffset,
+  setZoom,
+  pushToHistory,
+  manageSaveTemplate,
+]);
 
   useEffect(() => {
     if (id !== "new" && !forCustomRows) getPDFTemplateData();
@@ -2033,31 +2322,24 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
             <ERPButton
               startIcon="ri-arrow-go-back-fill"
               variant="custom"
-              // onClick={}
+              onClick={handleUndo}
+              title="Undo (Ctrl+Z)"
               backgroundColor="#5F6368" 
               foreColor="white"    
-              disabled={loading}
+              disabled={loading || !canUndo}
             />
              <ERPButton
               startIcon="ri-arrow-go-forward-fill"
-              // onClick={}
+              title="Redo (Ctrl+Shift+Z)"
+              onClick={handleRedo}
               foreColor="white"     
               variant="custom"
               backgroundColor="#5F6368"
-              disabled={loading}
+              disabled={loading || !canRedo}
             />
             <ERPButton
               title={t("clear")}
-              onClick={() => {
-                setTemplateData((prev: TemplateState<unknown>) => ({
-                  ...prev,
-                  barcodeState: {
-                    ...prev.barcodeState,
-                    placedComponents: [],
-                  },
-                }));
-                setSelectedComponent(null);
-              }}
+              onClick={handleClear}
               variant="secondary"
             />
             <ERPButton
@@ -2066,6 +2348,10 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
               variant="primary"
               loading={loading}
             />
+               {/* Optional: Show history counter */}
+    <div className="text-xs text-gray-500 px-2 border-l border-gray-300">
+      {historyIndex + 1}/{history.length}
+    </div>
           </div>
         </div>
 

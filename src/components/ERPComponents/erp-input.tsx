@@ -952,6 +952,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 placeholder={fetching
                   ? "" : iPlaceholder}
                 // ref={ref}
+                autoFocus={isMobileInput ? false : autoFocus}
                 autoComplete="off"
                 autoCorrect="off"
                 autoCapitalize="off"

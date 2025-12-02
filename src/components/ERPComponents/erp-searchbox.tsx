@@ -997,14 +997,22 @@ const handleEnterAction = async () => {
         setShowProductGrid(false);
 
         if (inputRef && "current" in inputRef && inputRef.current) {
-                  inputRef.current.focus();
-         }
+          if (isMobileInput) {
+            inputRef.current.blur();
+          } else {
+            inputRef.current.focus();
+          }
+        }
       }
     }
   } catch (err) {
     setShowProductGrid(false);
     if (inputRef && "current" in inputRef && inputRef.current) {
-      inputRef.current.focus();
+      if (isMobileInput) {
+        inputRef.current.blur();
+      } else {
+        inputRef.current.focus();
+      }
     }
   }
 };
@@ -1025,7 +1033,11 @@ const handleBatchEnterAction = async () => {
             }));
           }
           if (inputRef && "current" in inputRef && inputRef.current) {
-            inputRef.current.focus();
+            if (isMobileInput) {
+              inputRef.current.blur();
+            } else {
+              inputRef.current.focus();
+            }
           }
   } catch (err) {
     console.log("batchselect",err);  
@@ -1338,8 +1350,8 @@ const handleBatchGridDoubleClick =async (e: any) => {
       setProductGridReady(true);
 
       if (!productInitialized) {
-        gridInstance.option("focusedRowIndex", 0);
-        gridInstance.focus();
+        // gridInstance.option("focusedRowIndex", 0);
+        // gridInstance.focus();
         setProductInitialized(true);
       }
     }
@@ -1552,6 +1564,7 @@ const handleBatchGridDoubleClick =async (e: any) => {
               type="text"
               id={inputId || "test"}
               placeholder={placeholder}
+              autoFocus={isMobileInput ? false : true }
               labelDirection={labelDirection}
               contextClassName={contextClassNametwo?.replace("!px-1", "")} // Remove !px-1 to avoid padding
               value={inputValue.searchValue}

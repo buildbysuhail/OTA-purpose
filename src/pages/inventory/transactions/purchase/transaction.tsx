@@ -2019,9 +2019,12 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   summaryConfig={formState.summaryConfig}
                   gridFontSize={formState.userConfig?.gridFontSize}
                   gridIsBold={formState.userConfig?.gridIsBold}
-                  rowHeight={
-                    formState.userConfig?.gridRowHeight ?? _st.gridRowHeight
-                  }
+                  // rowHeight={
+                  //   formState.userConfig?.gridRowHeight ?? _st.gridRowHeight
+                  // }
+                   rowHeight={ deviceInfo.isMobile ? 55 :
+                      formState.userConfig?.gridRowHeight ?? _st.gridRowHeight
+                    }
                   headerRowHeight={formState.userConfig?.gridHeaderRowHeight ?? _st.gridHeaderRowHeight}
                   gridBorderColor={formState.userConfig?.gridBorderColor}
                   gridHeaderBg={formState.userConfig?.gridHeaderBg}

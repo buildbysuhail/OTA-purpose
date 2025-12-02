@@ -1556,7 +1556,7 @@ const handleBatchGridDoubleClick =async (e: any) => {
             <ERPInput
               localInputBox={customStyle}
               textAlignStyle={textAlign}
-              ignoreRandomId={true}
+              ignoreRandomId={isMobileInput ?false: true}
               noLabel={noLabel}
               height_={height}
               isMobileInput={isMobileInput}

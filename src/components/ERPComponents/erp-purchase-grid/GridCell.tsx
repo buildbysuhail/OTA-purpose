@@ -103,6 +103,10 @@ const EditableCell: React.FC<{
   const { round } = useNumberFormat();
   const [localValue, setLocalValue] = useState<string>(value?.toString() || "");
 
+  useEffect(() => {
+    setLocalValue(value?.toString() || "");
+  }, [value]);
+
   const validateNumberInput = useCallback(
     (value: string, _blockUnitOnDecimalPoint: boolean) => {
       if (value === "") return true;
@@ -303,6 +307,9 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
   const isFixed = isFirstColumn || isLastColumn;
   const cellValue = item[column.dataField as keyof TransactionDetail];
   const productId = item.productID;
+
+  console.log("gcrowHeight:",rowHeight);
+  
 
   const borderColor = useMemo(() =>
     (column.readOnly || column.allowEditing === false || formState.formElements.pnlMasters?.disabled !== true) &&

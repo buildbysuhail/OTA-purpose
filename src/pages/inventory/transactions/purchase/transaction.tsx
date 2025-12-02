@@ -2022,7 +2022,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   // rowHeight={
                   //   formState.userConfig?.gridRowHeight ?? _st.gridRowHeight
                   // }
-                   rowHeight={ deviceInfo.isMobile ? 55 :
+                   rowHeight={ deviceInfo.isMobile ? 40 :
                       formState.userConfig?.gridRowHeight ?? _st.gridRowHeight
                     }
                   headerRowHeight={formState.userConfig?.gridHeaderRowHeight ?? _st.gridHeaderRowHeight}

@@ -428,7 +428,7 @@ export const useTransactionHelper = (transactionType: string) => {
       }
 
       // Handle discount percentage calculation
-      if (discPerc > 0 && currentColumn !== "discount") {
+      if ( currentColumn !== "discount") {
         const calculatedDisc = round((discPerc * gross) / 100, 5);
         if ((discPerc * gross) / 100 !== disc) {
           disc = calculatedDisc;

@@ -3102,7 +3102,7 @@ const hidColumns: string[] = [
                    >
                      <StepBack className="w-3 h-3" />
                    </button>
-                   <h6 className="text-base font-semibold">Add Items to Sale</h6>
+                   <h6 className="text-sm font-semibold">Add Items to Sale</h6>
                    <div className="ml-auto"> 
                      <GridPreferenceChooser
                        initialPreferences={preferences}
@@ -3121,8 +3121,8 @@ const hidColumns: string[] = [
                  {/* Content */}
                  <main className="flex-1 overflow-auto px-4 py-4 pb-32">
                    {/* Item name */}
-                   <div className="mb-4">
-                     <label className="block text-xs font-medium text-blue-600 mb-2 dark:text-blue-400">
+                   <div className="mb-2">
+                     <label className="block text-xs font-medium text-blue-600 mb-1 dark:text-blue-400">
                        Item Name
                      </label>
                      <div className="border-2 border-blue-500 rounded-lg overflow-hidden">
@@ -3169,9 +3169,9 @@ const hidColumns: string[] = [
                    </div>
          
                    {/* Row: Quantity | Unit */}
-                   <div className="grid grid-cols-2 gap-3 mb-4">
+                   <div className="grid grid-cols-2 gap-3 mb-2">
                      <div>
-                       <label className="block text-xs font-medium text-gray-600 mb-2 dark:text-gray-400">
+                       <label className="block text-xs font-medium text-gray-600 mb-1 dark:text-gray-400">
                          Quantity
                        </label>
                        <div className="border border-gray-300 rounded-lg overflow-hidden dark:border-gray-600">
@@ -3210,7 +3210,7 @@ const hidColumns: string[] = [
                      </div>
                      
                      <div>
-                       <label className="block text-xs font-medium text-gray-600 mb-2 dark:text-gray-400">
+                       <label className="block text-xs font-medium text-gray-600 mb-1 dark:text-gray-400">
                          Unit
                        </label>
                        <div className="border border-gray-300 rounded-lg overflow-hidden dark:border-gray-600">
@@ -3250,9 +3250,9 @@ const hidColumns: string[] = [
                    </div>
          
                    {/* Row: Rate | Tax Mode */}
-                   <div className="grid grid-cols-2 gap-3 mb-6">
+                   <div className="grid grid-cols-2 gap-3 mb-3">
                      <div>
-                       <label className="block text-xs font-medium text-gray-600 mb-2 dark:text-gray-400">
+                       <label className="block text-xs font-medium text-gray-600 mb-1 dark:text-gray-400">
                          Rate (Price/Unit)
                        </label>
                        <div className="border border-gray-300 rounded-lg overflow-hidden dark:border-gray-600">
@@ -3303,12 +3303,12 @@ const hidColumns: string[] = [
          
                    {/* Totals & Taxes Card */}
                    <div className="bg-white dark:bg-[#2d2d2d] rounded-lg p-4 border-t border-gray-200 dark:border-gray-700">
-                     <h6 className="font-semibold text-base text-gray-800 dark:text-gray-200 mb-4">
+                     <h6 className="font-semibold text-base text-gray-800 dark:text-gray-200 mb-2">
                        Totals &amp; Taxes
                      </h6>
                      
                      {/* Subtotal */}
-                     <div className="flex justify-between items-center mb-4">
+                     <div className="flex justify-between items-center mb-2">
                        <div className="text-sm text-gray-600 dark:text-gray-400">
                          Subtotal <span className="text-xs">(Rate × Qty)</span>
                        </div>
@@ -3353,7 +3353,7 @@ const hidColumns: string[] = [
                      </div>
                      
                      {/* Discount row */}
-                     <div className="grid grid-cols-[80px_1fr_1fr] gap-2 items-center mb-4">
+                     <div className="grid grid-cols-[80px_1fr_1fr] gap-2 items-center mb-2">
                        <div className="text-sm text-gray-600 dark:text-gray-400">
                          {t("discount")}
                        </div>
@@ -3440,7 +3440,7 @@ const hidColumns: string[] = [
                      </div>
                      
                      {/* Tax row */}
-                     <div className="grid grid-cols-[80px_1fr_1fr] gap-2 items-center mb-4">
+                     <div className="grid grid-cols-[80px_1fr_1fr] gap-2 items-center mb-2">
                        <div className="text-sm text-gray-600 dark:text-gray-400">
                          Tax %
                        </div>

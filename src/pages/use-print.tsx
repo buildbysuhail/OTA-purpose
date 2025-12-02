@@ -866,13 +866,13 @@ export const getCommonValues = (field: string,
       break;
     // GST calculations
     case "sumOfCGST":
-      v = data.custom.sumOfCGST.toString();
+      v = data.custom?.sumOfCGST.toString();
       break;
     case "sumOfSGST":
-      v = data.custom.sumOfSGST.toString();
+      v = data.custom?.sumOfSGST.toString();
       break;
     case "sumOfIGST":
-      v = data.custom.sumOfIGST.toString();
+      v = data.custom?.sumOfIGST.toString();
       break;
     case "sumOfCessAmt":
       v = data.custom.sumOfCessAmt.toString();

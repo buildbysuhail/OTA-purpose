@@ -13,6 +13,8 @@ import { useEffect, useRef, useState } from "react";
 import { Check, ChevronUp, X, EllipsisVertical, PanelBottom, PanelRight } from "lucide-react";
 import BottomSidebar from "../../../../components/ERPComponents/bottom-sidebar";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
+import ERPInput from "../../../../components/ERPComponents/erp-input";
+import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPTextarea from "../../../../components/ERPComponents/erp-textarea";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
@@ -24,6 +26,7 @@ import React from "react";
 import { TransactionFormState } from "../transaction-types";
 import { formStateHandleFieldChangeKeysOnly, formStateHandleFieldChange, formStateTransactionMasterHandleFieldChange } from "../reducer";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
+import AutoCalculationCheckbox from "./components/AutoCalculationCheckbox";
 
 interface TransactionFooterProps {
   formState: TransactionFormState;
@@ -389,6 +392,99 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
     </div>
   );
 
+  const priceCategoryComponent = (
+    <PriceCategoryCombobox
+      formState={formState}
+      dispatch={dispatch}
+      t={t}
+      handleKeyDown={handleKeyDown}
+      handleFieldKeyDown={handleFieldKeyDown}
+    />
+  )
+
+  {/* -------------------------- stock transfer footer contents ------------------------- */}
+  const stockTransferFooterComponents = (
+        <div className="flex flex-wrap items-end gap-1">
+          {[VoucherType.BranchTransferIn, VoucherType.BranchTransferOut].includes(formState.transaction.master.voucherType as VoucherType) && (
+            <div className="flex flex-col gap-1">
+              <div className="flex gap-1 flex-wrap">
+                {showWarehouseOutside && warehouseComponent}
+                <>{showAdjustmentOutside && adjustmentComponent}</>
+                {priceCategoryComponent}
+                <ERPDataCombobox
+                  // {...getFieldProps("ledgerID")}
+                  id="ToBrWareHouse"
+                  field={{
+                    id: "wareHouseID",
+                    required: true,
+                    // getListUrl: Urls.data_BankAccounts,
+                    valueKey: "id",
+                    labelKey: "name",
+                  }}
+                  // onChangeData={(data: any) => {  handleFieldChange("ledgerID", data.ledgerID)}}
+                  label={t("to_br._warehouse")}
+                />
+                <ERPButton title={t("load_products")} variant="secondary"/>
+                <ERPButton title={t("refresh_inventory")} variant="secondary" disabled={true}/>
+                <AutoCalculationCheckbox
+                  formState={formState}
+                   dispatch={dispatch}
+                  t={t}
+               />
+
+              </div>
+            </div>
+          )}
+          {[VoucherType.StockTransfer, VoucherType.DamageEntry, VoucherType.ExcessStock, VoucherType.ShortageStock, VoucherType.StockCount, VoucherType.StockAdjuster, VoucherType.ItemLoadRequest ].includes(formState.transaction.master.voucherType as VoucherType) && (
+              <div className="flex gap-1 px-1">
+                {/* Need to manage the checking status based on the field names */}
+                <ERPCheckbox
+                  id="allowMultiUnit"
+                  label={t("allow_multi_unit")}
+                  // checked={relatedInfo.showStockDetails}
+                  // onChange={e => onChange("showStockDetails", e.target.checked)}
+                />
+              </div>
+            )} 
+            {[VoucherType.StockAdjuster].includes(formState.transaction.master.voucherType as VoucherType) && (
+              <ERPInput id="IDontKnow" title={t("find_what_here")} />
+            )}
+          {[VoucherType.ShortageStock, VoucherType.ExcessStock,VoucherType.StockAdjuster].includes(formState.transaction.master.voucherType as VoucherType) && (
+              <div className="flex">
+                <ERPButton title={t("add_products")} variant="secondary"/>
+              </div>
+             )}
+            {formState.transaction.master.voucherType == VoucherType.OpeningStock && (
+              <div className="flex gap-1 px-1">
+                <ERPButton title={t("load_products")} variant="secondary"/>
+              </div>
+            )} 
+             
+             <div className="flex flex-col">  
+              {[VoucherType.ExcessStock,VoucherType.ShortageStock].includes(formState.transaction.master.voucherType as VoucherType) && (
+              <div className="flex">
+                <ERPCheckbox
+                  id="loadCostFromExcel"
+                  label={t("load_cost_from_excel")}
+                  // checked={relatedInfo.showStockDetails}
+                  // onChange={e => onChange("showStockDetails", e.target.checked)}
+                />
+              </div>
+             )}
+             
+            
+             </div>
+             {[VoucherType.StockCount, VoucherType.OpeningStock,VoucherType.StockAdjuster].includes(formState.transaction.master.voucherType as VoucherType) && (
+              <div className="flex px-1">
+                <ERPButton title={t("load_excel")} variant="secondary"/>
+              </div>
+             )}
+            
+            
+            
+          </div>
+  );
+
   // const checkboxesComponent = (
   //   <div className="flex items-center gap-2 w-full justify-start sm:justify-center">
   //     <AutoCalculationCheckbox
@@ -418,14 +514,15 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
     <div className="flex flex-col gap-1 pr-4">
       {showCheckboxesOutside ? (
         <>
-          <div className="flex flex-wrap items-end gap-1">
-            {showWarehouseOutside && warehouseComponent}
+        {/* {showWarehouseOutside && warehouseComponent}
             {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
               <>
                 {showAdjustmentOutside && adjustmentComponent}
               </>
-            )}
-          </div>
+            )} */}
+        {/* -------------------------- stock transfer footer contents ------------------------- */}
+          {stockTransferFooterComponents}
+        {/* -------------------------- stock transfer footer contents ------------------------- */}
           <div className="flex items-end gap-1">
             {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
               <>
@@ -439,13 +536,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             }
             {clientSession.isAppGlobal && (
               <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
-                <PriceCategoryCombobox
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                  handleKeyDown={handleKeyDown}
-                  handleFieldKeyDown={handleFieldKeyDown}
-                />
+                {priceCategoryComponent}
               </div>
             )}
           </div>
@@ -465,13 +556,20 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         </>
       ) : (
         <>
-          {showWarehouseOutside && warehouseComponent}
-          {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+          {/* {showWarehouseOutside && warehouseComponent} */}
+          {/* {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
             <>{showCostCentreOutside && costCentreComponent}</>
           )}
           {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
             <>{showAdjustmentOutside && adjustmentComponent}</>
-          )}
+          )} */}
+          {stockTransferFooterComponents}
+          {formState.transaction.master.voucherType == VoucherType.OpeningStock && (
+              <div className="flex gap-1">
+                <ERPButton title={t("load_products")} variant="secondary"/>
+                <ERPButton title={t("load_excel")} variant="secondary"/>
+              </div>
+            )} 
         </>
       )}
     </div>
@@ -580,13 +678,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   />
                 </div>
                 <div className="w-full">
-                  <PriceCategoryCombobox
-                    formState={formState}
-                    dispatch={dispatch}
-                    t={t}
-                    handleKeyDown={handleKeyDown}
-                    handleFieldKeyDown={handleFieldKeyDown}
-                  />
+                  {priceCategoryComponent}
                 </div>
                 <div className="w-full">
                   <CostCentreCombobox
@@ -634,25 +726,15 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               <div className={`hidden md:flex ${footerLayout === "vertical" ? "flex-col items-start w-full" : "flex-col items-start w-full md:w-auto"}`}>
                 <div className={`flex ${footerLayout === "vertical" ? "flex-col items-start" : "items-end"} gap-2 mb-2`}>
                   <div className={`flex items-center w-full ${footerLayout === "vertical" ? "justify-between" : "gap-2"}`}>
-                    {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && formState.transaction.master.voucherType !== VoucherType.PurchaseEstimate && (
-                      <CashPaidSection
-                        formState={formState}
-                        dispatch={dispatch}
-                        t={t}
-                        focusDiscount={focusDiscount}
-                        focusAmount={focusAmount}
-                      />
-                    )}
-                    <RoundOffInput
-                      formState={formState}
-                      dispatch={dispatch}
-                      t={t}
-                      handleKeyDown={handleKeyDown}
-                      focusDiscount={() => document.getElementById("discountID")?.focus()}
-                      focusAmount={() => document.getElementById("amountID")?.focus()}
-                    />
-                  </div>
-                  <div className="flex flex-col w-full">
+                    {formState.transaction.master.voucherType == VoucherType.BranchTransferIn || formState.transaction.master.voucherType == VoucherType.BranchTransferOut && (
+                      // <CashPaidSection
+                      //   formState={formState}
+                      //   dispatch={dispatch}
+                      //   t={t}
+                      //   focusDiscount={focusDiscount}
+                      //   focusAmount={focusAmount}
+                      // />
+                       <div className="flex flex-col w-full">
                     <BillDiscountInput
                       formState={formState}
                       dispatch={dispatch}
@@ -662,6 +744,26 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                       applyDiscountsToItems={applyDiscountsToItems}
                     />
                   </div>
+                    )}
+                    {/* <RoundOffInput
+                      formState={formState}
+                      dispatch={dispatch}
+                      t={t}
+                      handleKeyDown={handleKeyDown}
+                      focusDiscount={() => document.getElementById("discountID")?.focus()}
+                      focusAmount={() => document.getElementById("amountID")?.focus()}
+                    /> */}
+                  </div>
+                  {/* <div className="flex flex-col w-full">
+                    <BillDiscountInput
+                      formState={formState}
+                      dispatch={dispatch}
+                      t={t}
+                      handleKeyDown={handleKeyDown}
+                      footerLayout={footerLayout}
+                      applyDiscountsToItems={applyDiscountsToItems}
+                    />
+                  </div> */}
                 </div>
 
                 <div className={`${footerLayout === "vertical" ? "w-full max-w-[265px]" : "w-full md:w-[345px]"}`}>
@@ -681,9 +783,12 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               </div>
             </div>
 
+            
             <div className="py-2 pl-2 pr-4 dark:bg-dark-bg-card bg-gray-50 border-l dark:border-dark-border border-gray-200">
               <div className="flex flex-col gap-1.5">
-                <NetAmountInput
+                {(formState.transaction.master.voucherType === VoucherType.BranchTransferIn || formState.transaction.master.voucherType === VoucherType.BranchTransferOut) && (
+                <div className="flex flex-col gap-1.5">
+                  <NetAmountInput
                   formState={formState}
                   dispatch={dispatch}
                   t={t}
@@ -700,6 +805,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   dispatch={dispatch}
                   t={t}
                 />
+                </div>
+                )}
                 {/* <NetTotalLabel formState={formState} dispatch={dispatch} t={t} /> */}
                 {formState.formElements.grandTotalFc.visible && (
                   <div>
@@ -783,13 +890,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
       <div className="flex items-end gap-2 flex-wrap">
         {clientSession.isAppGlobal && (
           <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
-            <PriceCategoryCombobox
-              formState={formState}
-              dispatch={dispatch}
-              t={t}
-              handleKeyDown={handleKeyDown}
-              handleFieldKeyDown={handleFieldKeyDown}
-            />
+            {priceCategoryComponent}
           </div>
         )}
         {clientSession.isAppGlobal && (
@@ -805,10 +906,17 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         )}
         {!showWarehouseOutside && (
           <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
-            {warehouseComponent}
+            {/* {warehouseComponent} */}
+            {stockTransferFooterComponents}
+            {formState.transaction.master.voucherType == VoucherType.OpeningStock || formState.transaction.master.voucherType == VoucherType.StockAdjuster  && (
+              <div className="flex gap-1">
+                <ERPButton title={t("load_products")} variant="secondary"/>
+                {/* <ERPButton title={t("load_excel")} variant="secondary"/> */}
+              </div>
+            )} 
           </div>
         )}
-        {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
+        {/* {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
           <>
             {!showCostCentreOutside && (
               <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
@@ -825,7 +933,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               </div>
             )}
           </>
-        )}
+        )} */}
         {applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && !showAttachmentOutside && (
           <div className="w-full mb-2 sm:mb-0 sm:w-auto">
             {attachmentComponent}

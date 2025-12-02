@@ -62,6 +62,7 @@ import TemplatesPreView from "../../../transaction-base/transaction-print-previe
 import { TFunction } from "i18next";
 import { UserModel } from "../../../../redux/slices/user-session/reducer";
 import { ApplicationSettingsType } from "../../../settings/system/application-settings-types/application-settings-types";
+import { stockGridColOpeningStock } from "./transaction-grid-cols-opening-stock";  // CheckIt
 // import { fetchUserConfig } from "../transaction-utils";
 
 interface BilledItem {

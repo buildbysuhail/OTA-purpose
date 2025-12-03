@@ -265,6 +265,7 @@ export interface TransactionDetail {
   brandID: number;
   qty: number;
   qtyTag?: number;
+  schemeFreeQty?: number;
   free: number;
   multiFactor: number;
   unit: string;
@@ -702,8 +703,8 @@ export interface TransactionFormState {
   taxBreakdown?: { name: string, amount: number }[];
 }
 export interface GiftModel {
-  productBatchId: number;
-  productId: number;
+  productBatchID: number;
+  productID: number;
   productName: string;
   productCode: string;
   barcode: string;

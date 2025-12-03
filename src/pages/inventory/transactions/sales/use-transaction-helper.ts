@@ -14,9 +14,10 @@ import { RootState } from "../../../../redux/store";
 import VoucherType from "../../../../enums/voucher-types";
 import { formStateHandleFieldChangeKeysOnly } from "../reducer";
 import { TransactionMaster3InitialData, initialTransactionDetails2, initialInventoryTotals, initialTransactionDetailData, TransactionMasterInitialData, } from "../transaction-type-data";
-import { TransactionFormState, TransactionMaster, SummaryItems, FormElementsState, CommonParams, TransactionDetail, TransactionDetailKeys, TransactionDetails2, } from "../transaction-types";
+import { TransactionFormState, TransactionMaster, SummaryItems, FormElementsState, CommonParams, TransactionDetail, TransactionDetailKeys, TransactionDetails2, GiftModel, } from "../transaction-types";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import { useTranslation } from "react-i18next";
+import warehouseId from "./components/warehouse-id ";
 
 export const useTransactionHelper = (transactionType: string) => {
   const dispatch = useDispatch();
@@ -1061,7 +1062,7 @@ export const useTransactionHelper = (transactionType: string) => {
     }
   };
 
-  const refactorDetails = async(
+  const refactorDetails = async (
     _details: any[],
     formType: string,
     voucherType: string,
@@ -1727,6 +1728,24 @@ export const useTransactionHelper = (transactionType: string) => {
     }
   }
 
+  const checkGiftOnBilling = async () => {
+    try {
+      if (!applicationSettings.productsSettings.giftOnBilling && applicationSettings.productsSettings.giftOnBillingAs != "CashCoupons") {
+        if (!formState.giftClaimed && formState.transaction.master.invTransactionMasterID > 0) {
+          const api = new APIClient();
+          const param = {
+            grandTotal: formState.transaction.master.grandTotal,
+            warehouseID: formState.transaction.master.fromWarehouseID,
+          }
+          return await api.postAsync( `${Urls.inv_transaction_base}${transactionType}/IsGiftOnBillingAvailable`, param)
+        }
+      }
+      return false
+    } catch (error) {
+      console.error("Error in checkGiftOnBilling:", error);
+      return false
+    }
+  }
   const calculateTotal = async (
     master: TransactionMaster,
     summary: SummaryItems,
@@ -1914,6 +1933,11 @@ export const useTransactionHelper = (transactionType: string) => {
       }
     }
 
+    const giftEnabled = await checkGiftOnBilling();
+    result.formElements = result.formElements || {} as FormElementsState;
+    result.formElements.btnGiftOnBilling = result.formElements.btnGiftOnBilling || { visible: false };
+    result.formElements.btnGiftOnBilling.visible = giftEnabled;
+
     // dispatch only changed fields (keep pattern identical to PI)
     commonParams.formStateHandleFieldChangeKeysOnly &&
       dispatch &&
@@ -1921,7 +1945,239 @@ export const useTransactionHelper = (transactionType: string) => {
 
     return result;
   };
+  const checkTheProductInSchemes = async (qty: number, price: number, giftModels?: []) => {
+    try {
+      let result = false;
 
+      // Gift model (same as C# FirstOrDefault)
+      let finalRows = [...formState.transaction.details.filter(
+        (x) => x.productID > 0
+      )];
+      let giftClaimed = formState.giftClaimed || false;
+      const gt = (giftModels ?? formState.giftModels)[0];
+      if (!gt) return;
+
+      const details = formState.transaction.details; // your SI items list
+
+      for (let i = 0; i < details.length; i++) {
+        const row = details[i];
+        if (!row) continue;
+
+        const rowBatchID = Number(row.productBatchID || 0);
+        const rowProductID = Number(row.productID || 0);
+        const rowQty = Number(row.qty || 0);
+
+        if (
+          Number(gt.productBatchID) === rowBatchID &&
+          Number(gt.productID) === rowProductID &&
+          rowQty === 1
+        ) {
+          const confirm = await ERPAlert.show({
+            icon: "info",
+            title: t("warning"),
+            text: t(`Qualified for Gift: ${gt.productName} at price ${price}. Proceed?`),
+            confirmButtonText: t("yes"),
+            cancelButtonText: t("no"),
+            showCancelButton: true,
+            onCancel: () => {
+              return false;
+            },
+          });
+          if (confirm) {
+            row.qty = qty;
+            row.schemeFreeQty = qty;
+            row.unitPrice = 0;
+            row.vatPerc = 0;
+            row.discPerc = 0;
+            row.ratePlusTax = 0;
+
+            const outRow = await calculateRowAmount(row, "qty", { result: {} }, false, i);
+            finalRows[i] = outRow.transaction!.details![0] as TransactionDetail;
+            giftClaimed = true;
+            result = true;
+            break;
+          } else {
+          }
+        }
+      }
+
+      if (!result) {
+        ERPAlert.show({
+          icon: "warning",
+          title: "Product Not Found",
+          text: "Product not found in bill. Please check!",
+          confirmButtonText: "OK",
+        });
+      } else {
+        const summaryRes = calculateSummary(details, formState, {
+          result: { giftClaimed: giftClaimed },
+        });
+        let totalRes = await calculateTotal(
+          formState.transaction.master,
+          summaryRes
+            ? (summaryRes.summary as SummaryItems)
+            : initialInventoryTotals,
+          formState.formElements,
+          {
+            result: {},
+          }
+        );
+        if (totalRes) {
+          totalRes.summary = summaryRes.summary;
+          totalRes.transaction = totalRes.transaction ?? {};
+          totalRes.transaction.master = totalRes.transaction.master ?? {};
+          totalRes.transaction.master.billDiscount = 0;
+          totalRes.transaction.details = finalRows
+
+          dispatch(
+            formStateHandleFieldChangeKeysOnly({
+              fields: totalRes,
+              updateOnlyGivenDetailsColumns: true,
+            })
+          );
+        }
+      }
+    } catch (err: any) {
+      ERPAlert.show({
+        icon: "error",
+        title: "Error",
+        text: err.message || "checkTheProductPriceInSchemes error",
+        confirmButtonText: "OK",
+      });
+    }
+  };
+  const checkTheProductPriceInSchemes = async (
+    qty: number,
+    price: number,
+    giftModels?: GiftModel[]
+  ) => {
+    try {
+      let result = false;
+
+      let finalRows = [
+        ...formState.transaction.details.filter((x) => x.productID > 0),
+      ];
+
+      let giftClaimed = formState.giftClaimed || false;
+
+      const gt = (giftModels ?? formState.giftModels)[0];
+      if (!gt) return;
+
+      const details = formState.transaction.details;
+
+      for (let i = 0; i < details.length; i++) {
+        const row = details[i];
+        if (!row) continue;
+
+        const rowBatchID = Number(row.productBatchID || 0);
+        const rowProductID = Number(row.productID || 0);
+        const rowQty = Number(row.qty || 0);
+
+        // Same as C#:
+        if (
+          Number(gt.productBatchID) === rowBatchID &&
+          Number(gt.productID) === rowProductID &&
+          rowQty === 1
+        ) {
+          // ---------- ERPAlert Dialog EXACT FORMAT ----------
+          const confirm = await ERPAlert.show({
+            icon: "info",
+            title: t("warning"),
+            text: `Qualified for Gift: ${gt.productName} at Price ${price}. Proceed?`,
+            confirmButtonText: t("yes"),
+            cancelButtonText: t("no"),
+            showCancelButton: true,
+            onCancel: () => false,
+          });
+          // ---------------------------------------------------
+
+          if (confirm) {
+            // Exact field updates from C#
+            row.qty = qty;
+            row.schemeFreeQty = qty;
+            row.unitPrice = price;
+            row.ratePlusTax = price;
+
+            // Reverse VAT into base price
+            let taxP = Number(row.vatPerc || 0);
+            if (taxP > 0) {
+              const uRate =
+                Number(row.ratePlusTax || 0) / (1 + taxP / 100);
+              row.unitPrice = Number(uRate.toFixed(3)); // "0.000"
+            }
+
+            // Recalculate row
+            const outRow = await calculateRowAmount(
+              row,
+              "qty",
+              { result: {} },
+              false,
+              i
+            );
+
+            finalRows[i] = outRow.transaction!.details![0] as TransactionDetail;
+
+            giftClaimed = true;
+            result = true;
+            break;
+          } else {
+            result = true;
+            break;
+          }
+        }
+      }
+
+      // If no matching row found
+      if (!result) {
+        ERPAlert.show({
+          icon: "warning",
+          title: "Product Not Found",
+          text: "Product not found in bill. Please check!",
+          confirmButtonText: "OK",
+        });
+      } else {
+        // Recalculate summary + totals
+        const summaryRes = calculateSummary(details, formState, {
+          result: { giftClaimed },
+        });
+
+        let totalRes = await calculateTotal(
+          formState.transaction.master,
+          summaryRes
+            ? (summaryRes.summary as SummaryItems)
+            : initialInventoryTotals,
+          formState.formElements,
+          { result: {} }
+        );
+
+        if (totalRes) {
+          totalRes.summary = summaryRes.summary;
+          totalRes.transaction = totalRes.transaction ?? {};
+          totalRes.transaction.master = totalRes.transaction.master ?? {};
+
+          // Same as C#: Reset bill discount when applying gift
+          totalRes.transaction.master.billDiscount = 0;
+
+          // Replace updated rows
+          totalRes.transaction.details = finalRows;
+
+          dispatch(
+            formStateHandleFieldChangeKeysOnly({
+              fields: totalRes,
+              updateOnlyGivenDetailsColumns: true,
+            })
+          );
+        }
+      }
+    } catch (err: any) {
+      ERPAlert.show({
+        icon: "error",
+        title: "Error",
+        text: err.message || "checkTheProductPriceInSchemes error",
+        confirmButtonText: "OK",
+      });
+    }
+  };
 
 
   return {
@@ -1940,5 +2196,8 @@ export const useTransactionHelper = (transactionType: string) => {
     attachDetails,
     attachMaster,
     applyDiscountsToItems,
+    calculateTaxOnDiscount,
+    checkTheProductInSchemes,
+    checkTheProductPriceInSchemes,
   };
 };

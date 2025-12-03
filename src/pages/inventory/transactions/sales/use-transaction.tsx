@@ -119,7 +119,10 @@ export const useTransaction = (
     clearEntryControl,
     changeGrossToUnitRate,
     calculateRowAmount,
-    applyDiscountsToItems,
+    applyDiscountsToItems,    
+    calculateTaxOnDiscount,
+    checkTheProductInSchemes,
+    checkTheProductPriceInSchemes,
   } = useTransactionHelper(transactionType);
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
@@ -1184,16 +1187,16 @@ export const useTransaction = (
             formState.transaction.master.invTransactionMasterID
           );
           if (formState.printOnSave == true && saveMode != "LPO" && saveMode != "LPQ") {
-              await  printVoucher(
+            await printVoucher(
               saveRes?.item?.master?.invTransactionMasterID, // masterID
               transactionType ?? "", // transactionType
               formState.transaction?.master.voucherType ?? "", // voucherType
               formState.transaction?.master?.voucherForm ?? "", // formType
               formState.transaction?.master.customerType ?? "", // customerType
               true, //isInv
-              formState.userConfig?.printPreview?? false, // printPreview
+              formState.userConfig?.printPreview ?? false, // printPreview
               undefined, //template
-              formState.transaction?.master.transactionDate ?? "",    
+              formState.transaction?.master.transactionDate ?? "",
               undefined,  //tempData   
               formState?.lastChoosedTemplate?.id //lastChooseTempId
             );
@@ -2568,17 +2571,17 @@ export const useTransaction = (
     // }
   };
 
- type LogUserActionParams = {
-  action: string;
-  actionForm: string;
-};
+  type LogUserActionParams = {
+    action: string;
+    actionForm: string;
+  };
 
-const logUserAction = async (input: LogUserActionParams) => {
-  const response = await api.postAsync(
-    `${Urls.log_user_action}`, input as any
-  );
-  return response;
-};
+  const logUserAction = async (input: LogUserActionParams) => {
+    const response = await api.postAsync(
+      `${Urls.log_user_action}`, input as any
+    );
+    return response;
+  };
 
 
   const handleTextDataChange = async (
@@ -2594,8 +2597,8 @@ const logUserAction = async (input: LogUserActionParams) => {
         return false;
       }
 
-      const detail = isMobRow?  { ...formState.row } :  { ...formState.transaction.details[rowIndex] };
-      if(!detail) return;
+      const detail = isMobRow ? { ...formState.row } : { ...formState.transaction.details[rowIndex] };
+      if (!detail) return;
       let outState: DeepPartial<TransactionFormState> = {
         transaction: { details: [{ [columnName]: value, slNo: detail.slNo }] },
       };
@@ -2639,7 +2642,7 @@ const logUserAction = async (input: LogUserActionParams) => {
           outDetail.unitPrice = round(unitPriceFC * exchangeRate, 4);
           outDetail.grossFC = round(unitPriceFC * qty, 3);
           outState = await calculateRowAmount(
-            merge({},detail, outDetail as any),
+            merge({}, detail, outDetail as any),
             columnName,
             {
               result: {
@@ -2662,7 +2665,7 @@ const logUserAction = async (input: LogUserActionParams) => {
         outDetail[columnName] = value;
         // Calculate row amount
         outState = await calculateRowAmount(
-          merge({},detail, outDetail as any),
+          merge({}, detail, outDetail as any),
           columnName,
           {
             result: {
@@ -2677,7 +2680,7 @@ const logUserAction = async (input: LogUserActionParams) => {
       } else if (columnName === "margin") {
         outDetail.margin = value;
         outState = await calculateRowAmount(
-          merge({},detail, outDetail as any),
+          merge({}, detail, outDetail as any),
           columnName,
           {
             result: {
@@ -2705,7 +2708,7 @@ const logUserAction = async (input: LogUserActionParams) => {
 
         outDetail.margin = round(marginPerc, 6);
         outState = await calculateRowAmount(
-         merge({},detail, outDetail as any),
+          merge({}, detail, outDetail as any),
           columnName,
           {
             result: {
@@ -2719,14 +2722,14 @@ const logUserAction = async (input: LogUserActionParams) => {
         calculateSummaryAndTotal = true;
       }
 
-      if (isMobRow){
+      if (isMobRow) {
         dispatch(
-        formStateHandleFieldChangeKeysOnly({
-          fields: {row: {...outState!.transaction!.details![0]}}
-        })
-      );
-      } 
-      else if(calculateSummaryAndTotal) {
+          formStateHandleFieldChangeKeysOnly({
+            fields: { row: { ...outState!.transaction!.details![0] } }
+          })
+        );
+      }
+      else if (calculateSummaryAndTotal) {
         const details = [...formState.transaction.details] as any;
         let final = { ...detail, ...outState!.transaction!.details![0] };
         details[rowIndex] = final;
@@ -3262,40 +3265,40 @@ const logUserAction = async (input: LogUserActionParams) => {
         },
         true
       );
-      if(rowIndex > -1) {
-      const details = [...formState.transaction.details];
-      let final = { ...detail, ...outState!.transaction!.details![0] };
-      details[rowIndex] = final;
-      const summaryRes = calculateSummary(details, formState, { result: {} });
+      if (rowIndex > -1) {
+        const details = [...formState.transaction.details];
+        let final = { ...detail, ...outState!.transaction!.details![0] };
+        details[rowIndex] = final;
+        const summaryRes = calculateSummary(details, formState, { result: {} });
 
-      const totalRes = await calculateTotal(
-        formState.transaction.master,
-        summaryRes.summary as SummaryItems,
-        formState.formElements,
-        { result: {} }
-      );
-      if (totalRes) {
-        totalRes.summary = summaryRes.summary;
-        totalRes.transaction = totalRes.transaction ?? {};
-        totalRes.transaction.details = outState?.transaction
-          ?.details as TransactionDetail[];
+        const totalRes = await calculateTotal(
+          formState.transaction.master,
+          summaryRes.summary as SummaryItems,
+          formState.formElements,
+          { result: {} }
+        );
+        if (totalRes) {
+          totalRes.summary = summaryRes.summary;
+          totalRes.transaction = totalRes.transaction ?? {};
+          totalRes.transaction.details = outState?.transaction
+            ?.details as TransactionDetail[];
+        }
+        outState = totalRes;
+
+        dispatch(
+          formStateHandleFieldChangeKeysOnly({
+            fields: totalRes,
+            updateOnlyGivenDetailsColumns: true,
+            rowIndex: rowIndex,
+          })
+        );
+      } else {
+        dispatch(
+          formStateHandleFieldChangeKeysOnly({
+            fields: { row: outState!.transaction!.details![0] }
+          })
+        );
       }
-      outState = totalRes;
-
-      dispatch(
-        formStateHandleFieldChangeKeysOnly({
-          fields: totalRes,
-          updateOnlyGivenDetailsColumns: true,
-          rowIndex: rowIndex,
-        })
-      );
-    } else {
-      dispatch(
-        formStateHandleFieldChangeKeysOnly({
-          fields: {row: outState!.transaction!.details![0]}
-        })
-      );
-    }
     }
   };
 
@@ -3892,10 +3895,10 @@ const logUserAction = async (input: LogUserActionParams) => {
               })
             );
           }
-          else if( columnName == "imf"){
+          else if (columnName == "imf") {
             const rowData: TransactionDetail = formState.transaction.details[rowIndex];
             // const rowIndex = details.findIndex((x) => x.slNo == row.slNo);
-            
+
             dispatch(
               commonParams.formStateHandleFieldChangeKeysOnly({
                 fields: {
@@ -4460,18 +4463,18 @@ const logUserAction = async (input: LogUserActionParams) => {
     }
   }
   interface LoadInvTransactionMasterParams {
-  voucherNumber: string;
-  voucherPrefix: string;
-  voucherType: string;
-  voucherForm: string;
-}
+    voucherNumber: string;
+    voucherPrefix: string;
+    voucherType: string;
+    voucherForm: string;
+  }
 
-const handleLoadSr = async ({ voucherNumber, voucherPrefix, voucherForm }: LoadSrParams) => {
-  const voucherNum = Number(voucherNumber || 0);
-    
+  const handleLoadSr = async ({ voucherNumber, voucherPrefix, voucherForm }: LoadSrParams) => {
+    const voucherNum = Number(voucherNumber || 0);
+
     if (voucherNum > 0) {
       const api = new APIClient();
-      
+
       const params = {
         voucherNumber: voucherNumber,
         voucherPrefix: voucherPrefix,
@@ -4479,177 +4482,252 @@ const handleLoadSr = async ({ voucherNumber, voucherPrefix, voucherForm }: LoadS
         voucherForm: voucherForm,
       };
       const query = new URLSearchParams(params).toString();
-  let srAmount = 0;
-  const response = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/loadInvTransactionMasterByVouchNo}?${query}`);
-  if(response && !response.isInvoiced){
-    srAmount = response.grandTotal;
-    dispatch(formStateMasterHandleFieldChange({
-      fields: {
-        srAmount: srAmount,  
-      },
-    }));
-  } else  {
-    dispatch(formStateMasterHandleFieldChange({
-      fields: {
-        srAmount: srAmount,  
-      },
-    }));
-    ERPAlert.show({
-      icon: "warning",
-      title: t("sales_return"),
-      text: t("This Voucher is already Cleared.."),
-      confirmButtonText: t("ok"), 
-    });
-  }
-  } else {
-    dispatch(formStateMasterHandleFieldChange({
-      fields: {
-        srAmount: 0,  
-      },
-    }));
-    ERPAlert.show({
-      icon: "warning",
-      title: t("sales_return"),
-      text: t("voucher_number_cannot_be_empty"),
-      confirmButtonText: t("ok"),
-    });
-    return null;
-  }
-};
-
-const handleDiscountSlab = async() => {
-  if (
-    applicationSettings.inventorySettings.enableDiscountSlabOffer &&
-    applicationSettings.accountsSettings.showTenderDialogInSales === false
-  ) {
-    try {
-      let outState: DeepPartial<TransactionFormState> = {
-        transaction: { master: {}, details: [] },
-      };
-      let discPerc = 0;
-
-      let details = formState.transaction.details.filter(
-        (x) => x.productID > 0
-      );
-      // Apply discount to each item with productID > 0
-      if (details.length > 0) {
-        const api = new APIClient()
-        const pids = formState.transaction.details.filter(x => x.productID && x.productID > 0).map(x => Number(x.productID)).join(',');
-      const res = await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/isDiscountable`, { productIDs: pids });
-        let lastRowIndex = -1
-      if(res && res.pids?.lengh > 0){
-        const netPerc = res.netPerc;
-        const _pids:number[] = res.pids.split(',').map((id: string) => Number(id.trim()));
-        details =  await Promise.all( details.map(async(item, i) => {
-          if(_pids.includes(item.productID))
-          {
-          lastRowIndex = details.findIndex(x => x.slNo === item.slNo);
-          const detail = { slNo: item.slNo, discPerc: res.discPerc??0 };
-          const updatedRow = await calculateRowAmount(
-            item,
-            "discPerc",
-            { result: { transaction: { details: [detail] } } },
-            true
-          );
-          if (updatedRow?.transaction?.details?.length ?? 0 > 0) {
-            outState.transaction!.details!.push(
-              updatedRow.transaction!.details![0]
-            );
-            return { ...item, ...updatedRow.transaction!.details![0] };
-          }
-        }
-          return item;
-        })
-      );
-
-        const summaryRes = calculateSummary(details, formState, {
-          result: {},
+      let srAmount = 0;
+      const response = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/loadInvTransactionMasterByVouchNo}?${query}`);
+      if (response && !response.isInvoiced) {
+        srAmount = response.grandTotal;
+        dispatch(formStateMasterHandleFieldChange({
+          fields: {
+            srAmount: srAmount,
+          },
+        }));
+      } else {
+        dispatch(formStateMasterHandleFieldChange({
+          fields: {
+            srAmount: srAmount,
+          },
+        }));
+        ERPAlert.show({
+          icon: "warning",
+          title: t("sales_return"),
+          text: t("This Voucher is already Cleared.."),
+          confirmButtonText: t("ok"),
         });
-        let totalRes = await calculateTotal(
-          formState.transaction.master,
-          summaryRes
-            ? (summaryRes.summary as SummaryItems)
-            : initialInventoryTotals,
-          formState.formElements,
-          {
-            result: {},
-          }
-        );
-        if (totalRes) {
-          totalRes.summary = summaryRes.summary;
-          totalRes.transaction = totalRes.transaction ?? {};
-          totalRes.transaction.master = totalRes.transaction.master ?? {};
-          totalRes.transaction.master.billDiscount = 0;
-          totalRes.transaction.details = outState?.transaction
-            ?.details as TransactionDetail[];
-
-          dispatch(
-            formStateHandleFieldChangeKeysOnly({
-              fields: totalRes,
-              updateOnlyGivenDetailsColumns: true,
-            })
-          );
-           const res = focusCurrentColumn(lastRowIndex, "qty");
-            setCurrentCell(res, details[lastRowIndex], lastRowIndex != res?.rowIndex);
-        }
       }
-      }
-    } catch (ex: any) {
-      console.error("Error applying discounts:", ex);
+    } else {
+      dispatch(formStateMasterHandleFieldChange({
+        fields: {
+          srAmount: 0,
+        },
+      }));
+      ERPAlert.show({
+        icon: "warning",
+        title: t("sales_return"),
+        text: t("voucher_number_cannot_be_empty"),
+        confirmButtonText: t("ok"),
+      });
+      return null;
     }
-  }
+  };
+
+  const handleDiscountSlab = async () => {
+    if (
+      applicationSettings.inventorySettings.enableDiscountSlabOffer &&
+      applicationSettings.accountsSettings.showTenderDialogInSales === false
+    ) {
+      try {
+        let outState: DeepPartial<TransactionFormState> = {
+          transaction: { master: {}, details: [] },
+        };
+        let discPerc = 0;
+
+        let details = formState.transaction.details.filter(
+          (x) => x.productID > 0
+        );
+        // Apply discount to each item with productID > 0
+        if (details.length > 0) {
+          const api = new APIClient()
+          const pids = formState.transaction.details.filter(x => x.productID && x.productID > 0).map(x => Number(x.productID)).join(',');
+          const res = await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/isDiscountable`, { productIDs: pids });
+          let lastRowIndex = -1
+          if (res && res.pids?.lengh > 0) {
+            const netPerc = res.netPerc;
+            const _pids: number[] = res.pids.split(',').map((id: string) => Number(id.trim()));
+            details = await Promise.all(details.map(async (item, i) => {
+              if (_pids.includes(item.productID)) {
+                lastRowIndex = details.findIndex(x => x.slNo === item.slNo);
+                const detail = { slNo: item.slNo, discPerc: res.discPerc ?? 0 };
+                const updatedRow = await calculateRowAmount(
+                  item,
+                  "discPerc",
+                  { result: { transaction: { details: [detail] } } },
+                  true
+                );
+                if (updatedRow?.transaction?.details?.length ?? 0 > 0) {
+                  outState.transaction!.details!.push(
+                    updatedRow.transaction!.details![0]
+                  );
+                  return { ...item, ...updatedRow.transaction!.details![0] };
+                }
+              }
+              return item;
+            })
+            );
+
+            const summaryRes = calculateSummary(details, formState, {
+              result: {},
+            });
+            let totalRes = await calculateTotal(
+              formState.transaction.master,
+              summaryRes
+                ? (summaryRes.summary as SummaryItems)
+                : initialInventoryTotals,
+              formState.formElements,
+              {
+                result: {},
+              }
+            );
+            if (totalRes) {
+              totalRes.summary = summaryRes.summary;
+              totalRes.transaction = totalRes.transaction ?? {};
+              totalRes.transaction.master = totalRes.transaction.master ?? {};
+              totalRes.transaction.master.billDiscount = 0;
+              totalRes.transaction.details = outState?.transaction
+                ?.details as TransactionDetail[];
+
+              dispatch(
+                formStateHandleFieldChangeKeysOnly({
+                  fields: totalRes,
+                  updateOnlyGivenDetailsColumns: true,
+                })
+              );
+              const res = focusCurrentColumn(lastRowIndex, "qty");
+              setCurrentCell(res, details[lastRowIndex], lastRowIndex != res?.rowIndex);
+            }
+          }
+        }
+      } catch (ex: any) {
+        console.error("Error applying discounts:", ex);
+      }
+    }
   };
 
   function getCustomerTypeAndTitle(
-  formType: string,
-  title: string,
-  isAppGlobal: boolean,
-  maintainKSAEInvoice: boolean
-) {
-  let CUSTOMER_TYPE = "";
-  let formTitle = title;
+    formType: string,
+    title: string,
+    isAppGlobal: boolean,
+    maintainKSAEInvoice: boolean
+  ) {
+    let CUSTOMER_TYPE = "";
+    let formTitle = title;
 
-  // 🔹 When not global app, override logic
-  if (!isAppGlobal) {
-    if (maintainKSAEInvoice) {
-      CUSTOMER_TYPE = "B2C";
-    } else {
-      CUSTOMER_TYPE = "";
+    // 🔹 When not global app, override logic
+    if (!isAppGlobal) {
+      if (maintainKSAEInvoice) {
+        CUSTOMER_TYPE = "B2C";
+      } else {
+        CUSTOMER_TYPE = "";
+      }
+      return { CUSTOMER_TYPE, formTitle };
     }
+
+    // 🔹 Normal logic based on form type
+    switch (formType.toUpperCase()) {
+      case "INTERSTATE":
+        formTitle = `${title}[${formType}][Ctrl+F2]`;
+        CUSTOMER_TYPE = "Interstate";
+        break;
+
+      case "INT":
+        formTitle = `${title}[${formType}][Ctrl+F2]`;
+        CUSTOMER_TYPE = "Int";
+        break;
+
+      case "WHOLESALE":
+      case "B2B":
+        formTitle = `${title}[${formType}][B2B][F2]`;
+        CUSTOMER_TYPE = "B2B";
+        break;
+
+      default:
+        if (formType.toUpperCase() !== "BT") {
+          formTitle = `${title}[${formType}][B2C][F3]`;
+          CUSTOMER_TYPE = "B2C";
+        } else {
+          formTitle = `${title}[${formType}]`;
+          CUSTOMER_TYPE = "";
+        }
+        break;
+    }
+
     return { CUSTOMER_TYPE, formTitle };
   }
 
-  // 🔹 Normal logic based on form type
-  switch (formType.toUpperCase()) {
-    case "INTERSTATE":
-      formTitle = `${title}[${formType}][Ctrl+F2]`;
-      CUSTOMER_TYPE = "Interstate";
-      break;
+  const giftOnBilling = async () => {
+    try {
+      // Gift on billing settings
+      const invSettings = applicationSettings.productsSettings;
 
-    case "INT":
-      formTitle = `${title}[${formType}][Ctrl+F2]`;
-      CUSTOMER_TYPE = "Int";
-      break;
+      if (
+        invSettings.giftOnBilling &&
+        invSettings.giftOnBillingAs !== "CashCoupons"
+      ) {
+        dispatch(
+          formStateHandleFieldChangeKeysOnly({
+            fields: {
+              userConfig: {
+                duplicationMessage: false
+              }
+            },
+          })
+        );
 
-    case "WHOLESALE":
-    case "B2B":
-      formTitle = `${title}[${formType}][B2B][F2]`;
-      CUSTOMER_TYPE = "B2B";
-      break;
+        if (!formState.giftClaimed && formState.transaction.master.invTransactionMasterID <= 0) {
+     const params = {
+  grandTotal: String(formState.transaction.master.grandTotal || 0),
+  warehouseID: String(formState.transaction.master.fromWarehouseID),
+};
 
-    default:
-      if (formType.toUpperCase() !== "BT") {
-        formTitle = `${title}[${formType}][B2C][F3]`;
-        CUSTOMER_TYPE = "B2C";
-      } else {
-        formTitle = `${title}[${formType}]`;
-        CUSTOMER_TYPE = "";
+const query = new URLSearchParams(params).toString();
+
+const ds = await api.getAsync("/giftOnBilling", query);
+
+          if (ds?.giftProducts?.length > 0) {
+            const row = ds.giftProductPrice;
+
+            const Qty = Number(row.quantity ?? 0);
+            formState.giftProductQty = Qty;
+
+            const Price = Number(row.SpecialPrice ?? 0);
+            formState.giftProductPrice = Price;
+
+            const giftProductBatchId = Number(row.GiftProductBatchID ?? 0);
+            const products =  ds?.giftProducts.map((dr: any) => ({
+                  barcode: dr.AutoBarcode,
+                  productBatchID: Number(dr.ProductBatchID),
+                  productCode: dr.ProductCode,
+                  productID: Number(dr.ProductID),
+                  productName: dr.ProductName,
+                }));
+            dispatch(
+              formStateHandleFieldChangeKeysOnly({
+                fields: {
+                  giftProductQty: Qty,
+                  giftProductPrice: Price,
+                  giftBatchId: giftProductBatchId,
+                  giftModels: products
+                }
+              })
+            );
+
+            for (const dr of products) {
+                          
+              // Apply scheme logic based on setting
+              if (invSettings.giftOnBillingAs === "Products") {
+                checkTheProductInSchemes(Qty, Price, products);
+              } else if (invSettings.giftOnBillingAs === "Special Price") {
+                checkTheProductPriceInSchemes(Qty, Price,products);
+              }
+            }
+          }
+        }
       }
-      break;
-  }
+    } catch (err: any) {
+      // showAlert(err.message || "GiftOnBilling Error");
+    }
+  };
 
-  return { CUSTOMER_TYPE, formTitle };
-}
+  
 
   return {
     downloadImportTemplateHeadersOnly,
@@ -4699,6 +4777,7 @@ const handleDiscountSlab = async() => {
     logUserAction,
     handleLoadSr,
     handleDiscountSlab,
-    getCustomerTypeAndTitle
+    getCustomerTypeAndTitle,
+    giftOnBilling
   };
 };

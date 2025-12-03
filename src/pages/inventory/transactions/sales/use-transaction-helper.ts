@@ -1,6 +1,6 @@
 import moment from "moment";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
-import { UserAction } from "../../../../helpers/user-right-helper";
+import { UserAction, useUserRights } from "../../../../helpers/user-right-helper";
 import { UserModel } from "../../../../redux/slices/user-session/reducer";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { APIClient } from "../../../../helpers/api-client";
@@ -12,14 +12,24 @@ import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
 import VoucherType from "../../../../enums/voucher-types";
-import { formStateHandleFieldChangeKeysOnly } from "../reducer";
+import { formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly } from "../reducer";
 import { TransactionMaster3InitialData, initialTransactionDetails2, initialInventoryTotals, initialTransactionDetailData, TransactionMasterInitialData, } from "../transaction-type-data";
-import { TransactionFormState, TransactionMaster, SummaryItems, FormElementsState, CommonParams, TransactionDetail, TransactionDetailKeys, TransactionDetails2, GiftModel, } from "../transaction-types";
+import { TransactionFormState, TransactionMaster, SummaryItems, FormElementsState, CommonParams, TransactionDetail, TransactionDetailKeys, TransactionDetails2, GiftModel, DataAutoBarcode, LoadProductDetailsByAutoBarcodeProps, CurrentCell, } from "../transaction-types";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import { useTranslation } from "react-i18next";
 import warehouseId from "./components/warehouse-id ";
+import { getStorageString } from "../../../../utilities/storage-utils";
 
-export const useTransactionHelper = (transactionType: string) => {
+const api = new APIClient();
+export const useTransactionHelper = (transactionType: string, focusToNextColumn: (
+  rowIndex: number,
+  column: string,
+  excludedColumns?: (keyof TransactionDetail)[]
+) => { column: string; rowIndex: number } | null,
+  focusColumn: (
+    rowIndex: number,
+    column: string
+  ) => { column: string; rowIndex: number } | null) => {
   const dispatch = useDispatch();
   const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
   const userSession = useAppSelector((state: RootState) => state.UserSession);
@@ -37,10 +47,30 @@ export const useTransactionHelper = (transactionType: string) => {
     getTaxFormat,
   } = useNumberFormat();
 
+  const { hasRight, hasBlockedRight } = useUserRights();
   const clearEntryControl = (state: TransactionFormState, defaultCostCenterID: number): TransactionFormState => {
     return state;
   };
-
+  const setCurrentCell = (
+    input: { column: string; rowIndex: number } | null,
+    data: TransactionDetail,
+    reCenterRow: boolean
+  ) => {
+    if (input) {
+      dispatch(
+        formStateHandleFieldChange({
+          fields: {
+            currentCell: {
+              reCenterRow: reCenterRow,
+              column: input?.column,
+              data: data,
+              rowIndex: input?.rowIndex,
+            },
+          },
+        })
+      );
+    }
+  };
   const setUserRightsFn = (
     state: TransactionFormState,
     userSession: UserModel,
@@ -1573,6 +1603,476 @@ export const useTransactionHelper = (transactionType: string) => {
     );
     return _master;
   };
+  const loadProductDetailsByAutoBarcode = async (
+    data: LoadProductDetailsByAutoBarcodeProps,
+    commonParams: CommonParams,
+    proceedAll?: boolean,
+    forImport?: boolean
+  ): Promise<DeepPartial<TransactionFormState> | null> => {
+    let { result } = commonParams;
+
+    try {
+      let detail = data.detail;
+      let outDetail: DeepPartial<TransactionDetail> = {};
+
+      outDetail.slNo = detail.slNo;
+      outDetail.warehouseID = detail.warehouseID;
+      outDetail.salesPrice = detail.salesPrice;
+      outDetail.unitID = detail.unitID;
+      outDetail.productBatchID = detail.productBatchID;
+      if (!detail) {
+        return {};
+      }
+
+      let warehouseId = 1;
+      if (applicationSettings?.inventorySettings?.maintainWarehouse === true) {
+        warehouseId = formState.transaction.master.fromWarehouseID;
+      }
+      if (applicationSettings?.productsSettings?.enableMultiWarehouseBilling) {
+        const detailWarehouseId = outDetail.warehouseID;
+        if (detailWarehouseId ?? 0 > 0) {
+          warehouseId = detailWarehouseId ?? 0;
+        }
+      }
+      const _lastSelectedWarehouseIDOfItemPopupsSearch = (async () => {
+        try {
+          const stored = await getStorageString(
+            "lastSelectedWarehouseIDOfItemPopupsSearch"
+          );
+          return stored ? Number(stored) || 0 : 0;
+        } catch (error) {
+          console.warn("Failed to read from localStorage:", error);
+          return 0;
+        }
+      })();
+
+      let payload = {
+        useProductCode: data.useProductCode,
+        productCode: data.productCode,
+        barCode: data.autoBarcode,
+        wareHouseId: warehouseId,
+        txtData: data.searchText,
+        partyId: formState.transaction.master.ledgerID,
+        isUnitDetailsRequired: true,
+        isCheckUseSupplierProductCode:
+          formState.userConfig?.useSupplierProductCode,
+        isActualPriceVisible: formState.gridColumns?.find(
+          (x) => x.dataField == "actualSalesPrice"
+        )?.visible,
+        isStockDetailsVisible: formState.gridColumns?.find(
+          (x) => x.dataField == "stockDetails"
+        )?.visible,
+        lastSelectedWareHouseIdOfItemPopUpsSearch:
+          await _lastSelectedWarehouseIDOfItemPopupsSearch,
+      };
+      const queryParams = new URLSearchParams();
+      Object.entries(payload).forEach(([key, value]) => {
+        if (value !== null && value !== undefined && value !== "") {
+          queryParams.append(key, value as any);
+        }
+      });
+
+      const res: DataAutoBarcode = await api.getAsync(
+        `${Urls.inv_transaction_base
+        }${transactionType}/LoadProductDetailsByAutoBarCode?${queryParams.toString()}`
+      );
+
+      warehouseId = -1;
+
+      if (applicationSettings?.productsSettings?.enableMultiWarehouseBilling) {
+        warehouseId = 0;
+      }
+      if (res?.isShowItemPopUp && forImport != true) {
+        dispatch(
+          formStateHandleFieldChangeKeysOnly({
+            fields: {
+              formElements: {
+                productSearchPopupWindow: {
+                  visible: true,
+                  data: {
+                    searchColumn: data.searchColumn,
+                    rowIndex: data.rowIndex,
+                    searchCriteria: data.useProductCode ? "pCode" : "product",
+                    searchText: data.searchText,
+                    voucherType: formState.transaction.master.voucherType,
+                    warehouseId: warehouseId,
+                  },
+                },
+              },
+            },
+          })
+        );
+      } else if (res?.products?.length === 1) {
+        let product = res.products[0];
+        product.productName = product.productName.replace(/^\s+/, (m) =>
+          "\u00A0".repeat(m.length)
+        );
+        const _index =
+          forImport != true
+            ? formState.transaction.details.findIndex(
+              (x) =>
+                x.barCode == product.autoBarcode &&
+                x.productID > 0 &&
+                x.slNo != detail.slNo
+            )
+            : -1;
+        if (
+          product.autoBarcode != "" &&
+          _index > -1 &&
+          formState.userConfig?.duplicationMessage
+        ) {
+          const confirm = await ERPAlert.show({
+            icon: "info",
+            title: t("warning"),
+            text: t("item_already_selected", { row: _index + 1 }),
+            confirmButtonText: t("yes"),
+            cancelButtonText: t("no"),
+            showCancelButton: true,
+            onCancel: () => {
+              return false;
+            },
+          });
+          if (confirm) {
+            let pld: DeepPartial<TransactionFormState> = {
+              transaction: {
+                details: [
+                  { ...initialTransactionDetailData, slNo: detail.slNo },
+                ],
+              },
+            };
+            const res = focusColumn(_index, "qty");
+            if (res) {
+              pld.currentCell = {
+                ...res,
+                data: formState.transaction.details[_index],
+                reCenterRow: false,
+              };
+            }
+            dispatch(
+              formStateHandleFieldChangeKeysOnly({
+                fields: pld,
+                updateOnlyGivenDetailsColumns: false,
+                rowIndex: data.rowIndex,
+              })
+            );
+
+            return {};
+          } else {
+          }
+        }
+
+        outDetail.pCode = product.productCode;
+        outDetail.product = product.productName;
+        outDetail.productID = product.productID;
+        outDetail.barCode = product.autoBarcode;
+        outDetail.manualBarcode = product.mannualBarcode;
+        outDetail.productBatchID = product.productBatchID;
+
+        // Set default quantity if configured
+        if (applicationSettings?.productsSettings?.setDefaultQty1) {
+          outDetail.qty = 1;
+        }
+
+        outDetail.unit = product.unitName;
+        outDetail.unitID = product.basicUnitID;
+        outDetail.brandID = product.brandID;
+        outDetail.brand = product.brandName;
+        outDetail.size = product.specification;
+        outDetail.batchNo = product.batchNo;
+        outDetail.expDate = product.expiryDate;
+        outDetail.expDays = 100;
+        outDetail.mfdDate = product.mfgDate;
+        outDetail.lpc = round(product.lastPurchaseCost || 0);
+        outDetail.lpr = round(product.lastPurchaseRate || 0);
+        outDetail.stock = product.stock;
+        outDetail.productDescription = product.serialNumber;
+        outDetail.warranty = product.warranty;
+        outDetail.location = product.location;
+        outDetail.arabicName = product.itemNameinSecondLanguage;
+        outDetail.colour = product.colour;
+        outDetail.multiFactor = product.multiFactor;
+
+        // Handle Unit2 barcode
+        if (product.isUnit2BarCode) {
+          outDetail.unit = product.unit2;
+          outDetail.unitID = product.unit2ID;
+          outDetail.unitPrice = Number(product.stdPurchasePrice || 0);
+        }
+
+        // Handle Unit3 barcode
+        if (product.isUnit3BarCode) {
+          outDetail.unit = product.unit3;
+          outDetail.unitID = product.unit3ID;
+          outDetail.unitPrice = Number(product.stdPurchasePrice || 0);
+        }
+
+        // Unit 2 information
+        outDetail.unitID2 = product.unit2ID;
+        outDetail.unit2Qty = product.unit2Qty;
+        outDetail.unit2MBarcode = product.unit2Barcode;
+        outDetail.unit2SalesRate = product.unit2SalesPrice;
+        outDetail.unit2MRP = product.unit2MRP;
+
+        // Unit 3 information
+        outDetail.unitID3 = product.unit3ID;
+        outDetail.unit3Qty = product.unit3Qty;
+        outDetail.unit3MBarcode = product.unit3Barcode;
+        outDetail.unit3SalesRate = product.unit3SalesPrice;
+        outDetail.unit3MRP = product.unit3MRP;
+
+        // Handle supplier reference code
+        if (formState.userConfig?.useSupplierProductCode) {
+          outDetail.supplierReferenceProductCode =
+            product.supplierReferenceProductCode;
+        }
+
+        // Handle default purchase unit
+        if (
+          Number(product.defPurchaseUnitID || 0) > 0 &&
+          !product.isMultiUnitBarCode &&
+          product.basicUnitID !== product.defPurchaseUnitID &&
+          product.isBasicUnitBarcode
+        ) {
+          if (!isNullOrUndefinedOrEmpty(product.defUnitName)) {
+            outDetail.unit = product.defUnitName;
+            outDetail.multiFactor = product.defUnitMultiFactor;
+          }
+          outDetail.unitID = product.defPurchaseUnitID;
+        }
+
+        // Handle stock details if visible
+        if (payload.isStockDetailsVisible) {
+          outDetail.stockDetails = product.stockDetails;
+        }
+
+        // Set MRP
+        outDetail.mrp = round(product.mrp);
+
+        // Calculate pricing based on multi-factor
+        if (outDetail.multiFactor > 0) {
+          const pPrice = Number(product.stdPurchasePrice || 0);
+          outDetail.unitPrice = pPrice * outDetail.multiFactor;
+
+          const sPrice = Number(product.stdSalesPrice || 0);
+          outDetail.salesPrice = sPrice * outDetail.multiFactor;
+
+          const minSPrice = Number(product.minSalePrice || 0);
+          outDetail.minSalePrice = minSPrice * outDetail.multiFactor;
+        } else {
+          outDetail.unitPrice = Number(product.stdPurchasePrice || 0);
+          outDetail.salesPrice = round(product.stdSalesPrice || 0);
+          outDetail.minSalePrice = Number(product.minSalePrice || 0);
+        }
+
+        // Handle actual sales price if column is visible
+        if (payload.isActualPriceVisible) {
+          outDetail.actualSalesPrice = product.actualSalesPrice;
+        }
+
+        // Handle listed product prices
+        if (product.hasListedProductPrice) {
+          outDetail.unitPrice = product.listedProductPrice;
+        }
+
+        // Handle VAT and CST based on form type
+        if (clientSession.isAppGlobal) {
+          outDetail.hsnCode = product.hsnCode || "";
+          outDetail.details2 = {
+            ...(outDetail.details2 ?? initialTransactionDetails2),
+          };
+          // if (formState.transaction.master.voucherType !== "PI") {
+          outDetail.details2!.cgstPerc = Number(product.p_CGSTPerc || 0);
+          outDetail.details2!.sgstPerc = Number(product.p_SGSTPerc || 0);
+
+          if (
+            formState.transaction.master.voucherForm.toLowerCase() ===
+            "interstate" ||
+            formState.transaction.master.voucherForm.toLowerCase() === "int" ||
+            formState.transaction.master.voucherForm.toLowerCase() === "import"
+          ) {
+            outDetail.details2!.cgstPerc = 0;
+            outDetail.details2!.sgstPerc = 0;
+            outDetail.details2!.igstPerc = Number(product.p_IGSTPerc || 0);
+          }
+
+          outDetail.details2!.cessPerc = Number(product.p_CessPerc || 0);
+          outDetail.details2!.additionalCessPerc = Number(
+            product.p_AdditionalCessPerc || 0
+          );
+          // } else {
+          //   outDetail.details2!.cgstPerc = 0;
+          //   outDetail.details2!.sgstPerc = 0;
+          //   outDetail.details2!.igstPerc = 0;
+          //   outDetail.details2!.cessPerc = 0;
+          //   outDetail.details2!.additionalCessPerc = 0;
+          // }
+        } else {
+          const { voucherType, voucherForm } = formState.transaction.master;
+
+          if (
+            !clientSession.isAppGlobal &&
+            (voucherType === "PO" ||
+              voucherType === "PE" ||
+              voucherType === "GRN" ||
+              voucherType === "PQ" ||
+              voucherType === "LPO") ||
+            (formState.transaction.master.voucherForm === "VAT" &&
+              voucherType !== "PO" &&
+              voucherType !== "PE" &&
+              voucherType !== "GRN" &&
+              voucherType !== "PQ" &&
+              voucherType !== "LPO")
+          ) {
+            outDetail.vatPerc = Number(product.pVatPerc || 0);
+            outDetail.cstPerc = Number(product.purchaseExciseTaxPerc || 0);
+          } else {
+            outDetail.vatPerc = 0;
+            outDetail.cstPerc = 0;
+          }
+        }
+
+        // Special handling for meter units
+        const unitName = product.unitName?.toUpperCase().trim();
+        if (unitName === "MTR" || unitName === "MTRS" || unitName === "METER") {
+          outDetail.stickerQty = 4;
+        }
+
+        // Handle empty form type
+        // if (formState.transaction.master.voucherForm == "") {
+        //   outDetail.vatPerc = 0;
+        // }
+
+        // Set row header
+        outDetail.unitPriceTag = outDetail.unitPrice;
+        if (!result.transaction) {
+          result.transaction = {};
+        }
+        result.transaction.details = [outDetail];
+
+        // Update UI state for button enabling
+        result.formElements = {
+          ...result.formElements,
+          btnSave: {
+            disabled:
+              !hasRight(formState.userRightsFormCode, UserAction.Add) ||
+              applicationSettings?.branchSettings
+                ?.maintainInventoryTransactionsEntry == false,
+          },
+          btnEdit: {
+            disabled:
+              applicationSettings?.branchSettings
+                ?.maintainInventoryTransactionsEntry == false,
+          },
+          btnDelete: {
+            disabled:
+              applicationSettings?.branchSettings
+                ?.maintainInventoryTransactionsEntry == false,
+          },
+        };
+        if (proceedAll) {
+          const latestData = outDetail;
+
+          let _res = await calculateRowAmount(
+            latestData as TransactionDetail,
+            "pCode",
+            { result: { transaction: { details: [latestData] } } },
+            true
+          );
+          let currentDetails = [
+            ...formState.transaction.details.filter(
+              (x) => x.productID > 0 || x.slNo == latestData.slNo
+            ),
+          ];
+          let final =
+            _res?.transaction?.details != undefined &&
+              _res?.transaction?.details.length > 0
+              ? (_res?.transaction
+                ?.details[0] as DeepPartial<TransactionDetail>)
+              : latestData;
+          currentDetails[data.rowIndex] = final as TransactionDetail;
+          const summaryRes = calculateSummary(currentDetails, formState, {
+            result: {},
+          });
+
+          const totalRes = await calculateTotal(
+            formState.transaction.master,
+            summaryRes.summary as SummaryItems,
+            {
+              ...formState.formElements,
+              ...result.formElements,
+            } as FormElementsState,
+            { result: {} }
+          );
+          result = {
+            ...totalRes,
+            summary: summaryRes.summary,
+            showQuantityFactors: { visible: false, rowIndex: -1, qtyDesc: "" },
+            transaction: {
+              ...totalRes.transaction,
+              details: [final],
+            },
+          };
+        }
+
+        for (const unit of product.units) {
+          if (!result.batchesUnits) {
+            result.batchesUnits = [];
+          }
+          const exists = result.batchesUnits.some(
+            (u) =>
+              u.productBatchID === unit.productBatchID && u.value == unit.value
+          );
+          if (!exists) {
+            result.batchesUnits.push(unit);
+          }
+        }
+
+        commonParams.formStateHandleFieldChangeKeysOnly &&
+          dispatch &&
+          dispatch(
+            commonParams.formStateHandleFieldChangeKeysOnly({
+              fields: result,
+              updateOnlyGivenDetailsColumns: true,
+            })
+          );
+        if (data.setFocusToNextColumn) {
+          const res = focusToNextColumn(data.rowIndex, data.searchColumn, [
+            "pCode",
+            "product",
+            "barCode",
+          ]);
+          setCurrentCell(
+            res,
+            result.transaction!.details[0] as TransactionDetail,
+            false
+          );
+        }
+
+        return result;
+      } else if (res?.productId > 0 && forImport != true) {
+        dispatch(
+          formStateHandleFieldChangeKeysOnly({
+            fields: {
+              batchGridShowKey: res?.productId,
+            },
+          })
+        );
+      } else if (forImport != true && data.searchColumn != "product") {
+        const res = focusToNextColumn(data.rowIndex, data.searchColumn, [
+          "pCode",
+          "product",
+          "barCode",
+        ]);
+        setCurrentCell(res, data.detail as TransactionDetail, false);
+      }
+
+      return result;
+    } catch (err) {
+      console.log(err);
+
+      return result;
+    }
+  };
   const applyDiscountsToItems = async () => {
     try {
       let outState: DeepPartial<TransactionFormState> = {
@@ -1737,7 +2237,7 @@ export const useTransactionHelper = (transactionType: string) => {
             grandTotal: formState.transaction.master.grandTotal,
             warehouseID: formState.transaction.master.fromWarehouseID,
           }
-          return await api.postAsync( `${Urls.inv_transaction_base}${transactionType}/IsGiftOnBillingAvailable`, param)
+          return await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/IsGiftOnBillingAvailable`, param)
         }
       }
       return false
@@ -2178,6 +2678,143 @@ export const useTransactionHelper = (transactionType: string) => {
       });
     }
   };
+  const removeGiftFromGrid = async (detailsInput?: TransactionDetail[], currentCell?: CurrentCell | undefined) => {
+    try {
+      let giftClaimed = formState.giftClaimed || false;
+
+      if (!giftClaimed) return;
+
+      // ------------------ 1. Ask user for confirmation ------------------
+      const confirm = await ERPAlert.show({
+        icon: "warning",
+        title: "Gift Product",
+        text: "Gift Product added! Gift will be removed. add it later if you want",
+        confirmButtonText: "OK",
+        showCancelButton: false,
+      });
+
+      if (!confirm) return;
+
+      // ------------------ 2. Lookup gift model ------------------
+      const gt = formState.giftModels?.[0];
+      if (!gt) return;
+
+      const giftBatchID = formState.giftBatchId;
+      const giftProductQty = formState.giftProductQty;
+      const giftProductPrice = formState.giftProductPrice;
+
+      // API call that replaces:
+      // GetProductsForSalesTransactionsByCode(barcode, productCode, warehouse, type, false, date)
+      const apiParams = {
+        barcode: gt.barcode,
+        productCode: gt.productCode,
+        warehouseID: formState.transaction.master.fromWarehouseID,
+        voucherType: formState.transaction.master.voucherType,
+        transDate: formState.transaction.master.transactionDate,
+      };
+
+      const query = new URLSearchParams(
+        Object.fromEntries(
+          Object.entries(apiParams).map(([k, v]) => [k, String(v ?? "")])
+        )
+      ).toString();
+
+      const url = `${Urls.inv_transaction_base}${transactionType}/GetProductsForSalesTransactionsByCode/?${query}`;
+
+      const dtGiftItem = await api.getAsync(url);
+      if (!dtGiftItem) return;
+
+      const stdItem = dtGiftItem;
+      const details = detailsInput ? [...detailsInput] : [...formState.transaction.details];
+      let finalRows = [...details];
+
+      // ------------------ 3. Loop through grid (details) ------------------
+      for (let i = 0; i < details.length; i++) {
+        const row = details[i];
+        if (!row || Number(row.productID) <= 0) continue;
+
+        const rowBatchID = Number(row.productBatchID || 0);
+        const rowRatePlusTax = Number(row.ratePlusTax || 0);
+        const rowSchemeQty = Number(row.schemeFreeQty || 0);
+
+        // Same C# matching conditions:
+        // Batch match + same gift price + same gift qty
+        const isGiftRow =
+          rowBatchID === Number(giftBatchID) &&
+          rowRatePlusTax === Number(giftProductPrice) &&
+          rowSchemeQty === Number(giftProductQty);
+
+        if (isGiftRow) {
+          // ------------------ 4. Reset to normal product values ------------------
+          row.qty = 1;
+          row.schemeFreeQty = 0;
+          row.unitPrice = Number(stdItem.stdSalesPrice || 0);
+          row.vatPerc = (clientSession.isAppGlobal === true && formState.transaction.master.voucherType != VoucherType.SalesEstimate)
+            || (!clientSession.isAppGlobal && formState.transaction.master.voucherForm === "VAT") ? Number(stdItem.sVatPerc || 0) : 0;
+          row.ratePlusTax = row.unitPrice;
+
+          // Reverse calculate base price from ratePlusTax
+          const taxP = Number(row.vatPerc || 0);
+
+          if (taxP > 0) {
+            const uRate =
+              Number(row.ratePlusTax || 0) / (1 + taxP / 100);
+            row.unitPrice = Number(uRate.toFixed(3));
+          }
+
+          // Recalculate the row
+          const newRow = await calculateRowAmount(
+            row,
+            "qty",
+            { result: {} },
+            false,
+            i
+          );
+
+          finalRows[i] = newRow.transaction!.details![0] as TransactionDetail;
+
+          giftClaimed = false;
+        }
+      }
+
+      // ------------------ 5. Recalculate totals ------------------
+      const summaryRes = calculateSummary(finalRows, formState, {
+        result: { giftClaimed },
+      });
+
+      let totalRes = await calculateTotal(
+        formState.transaction.master,
+        summaryRes?.summary ?? initialInventoryTotals as any,
+        formState.formElements,
+        { result: {} }
+      );
+
+      if (totalRes) {
+        totalRes.summary = summaryRes.summary;
+        totalRes.transaction = totalRes.transaction ?? {};
+        totalRes.transaction.master = totalRes.transaction.master ?? {};
+        totalRes.transaction.details = finalRows;
+        totalRes.giftClaimed = false;
+        if (currentCell) {
+          totalRes.currentCell = currentCell;
+        }
+        // Update UI
+        dispatch(
+          formStateHandleFieldChangeKeysOnly({
+            fields: totalRes,
+            updateOnlyGivenDetailsColumns: true,
+          })
+        );
+      }
+    } catch (err: any) {
+      ERPAlert.show({
+        icon: "error",
+        title: "Error",
+        text: err.message || "removeGiftFromGrid error",
+        confirmButtonText: "OK",
+      });
+    }
+  };
 
 
   return {
@@ -2199,5 +2836,8 @@ export const useTransactionHelper = (transactionType: string) => {
     calculateTaxOnDiscount,
     checkTheProductInSchemes,
     checkTheProductPriceInSchemes,
+    setCurrentCell,
+    loadProductDetailsByAutoBarcode,
+    removeGiftFromGrid
   };
 };

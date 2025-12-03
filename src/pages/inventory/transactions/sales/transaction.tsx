@@ -62,6 +62,7 @@ import ErpPurchaseGrid from "../../../../components/ERPComponents/erp-purchase-g
 import PosFooter from "./pos-components/pos-footer";
 import PosHeader from "./pos-components/pos-header";
 import PosSideMenu from "./pos-components/pos-side-menu";
+import { fetchUserConfig } from "../transaction-utils";
 
 interface BilledItem {
   id?: number;
@@ -600,7 +601,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
     logUserAction,
     handleLoadSr,
     handleDiscountSlab,
-    getCustomerTypeAndTitle
+    getCustomerTypeAndTitle,
+    fetchUserConfig
   } = useTransaction(
     transactionType ?? "",
     btnSaveRef,
@@ -710,6 +712,17 @@ const TransactionForm: React.FC<TransactionProps> = ({
       const dataBrands = voucherType != "LPO" ? await api.getAsync(
         `${Urls.inv_transaction_base}${transactionType}/data/brands`
       ) : [];
+
+      const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`);
+    const Utc = await getStorageString(key);
+    let userConfig: UserConfig | undefined;
+    if (Utc) {
+      const decoded = safeBase64Decode(Utc) ?? "{}";
+      userConfig = customJsonParse(decoded ?? "{}");
+    } else {
+      userConfig = await fetchUserConfig();
+    }
+    
       let _formState: TransactionFormState;
       const isInvoker = (voucherNo && voucherNo > 0) || (transactionMasterID && transactionMasterID > 0);
 
@@ -729,10 +742,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
         );
 
         employeeID = userSession.employeeId ?? 0;
-        if (["PR", "PQ", "PO"].includes(voucherType as any) && employeeID <= 0) {
-          const emps = await getApLocalDataByUrl(`${Urls.inv_transaction_base}${transactionType}/Data/Employee/`);
-          employeeID = emps && emps.length > 0 ? emps[0].id : employeeID;
-        }
+        // if (["PR", "PQ", "PO"].includes(voucherType as any) && employeeID <= 0) {
+        //   const emps = await getApLocalDataByUrl(`${Urls.inv_transaction_base}${transactionType}/Data/Employee/`);
+        //   employeeID = emps && emps.length > 0 ? emps[0].id : employeeID;
+        // }
       }
 
 
@@ -790,7 +803,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           transactionMasterID
         )) as TransactionFormState;
       }
-
+      _formState.userConfig = userConfig;
       _formState.dataWarranty = dataWarranty;
       _formState.dataBrands = dataBrands;
 
@@ -807,21 +820,21 @@ const TransactionForm: React.FC<TransactionProps> = ({
       _formState.transaction.master.fromWarehouseID =
         applicationSettings.inventorySettings.maintainWarehouse
           ? _formState.userConfig?.presetWarehouseId ?? 0 > 0
-            ? _formState.userConfig?.presetWarehouseId
+            ? _formState.userConfig?.presetWarehouseId??0
             : applicationSettings.accountsSettings.allowSalesCounter &&
               (_formState.userConfig?.counterWiseWarehouseId ?? 0) > 0
               ? _formState.userConfig?.counterWiseWarehouseId ?? 0
               : applicationSettings.inventorySettings.defaultWareHouse
-          : _formState.formElements.cbWarehouse?.selectedValue
+          : (_formState.transaction.master.fromWarehouseID??0)
       _formState.transaction.master.costCentreID =
         _formState.userConfig?.presetCostenterId ?? 0 > 0
           ? _formState.userConfig?.presetCostenterId ?? 0
           : _formState.transaction.master.costCentreID
 
       _formState.transaction.master.inventoryLedgerID = applicationSettings.inventorySettings.defaultSalesAcc
-      _formState.transaction.master.employeeID = userSession.employeeId > 0
-        ? userSession.employeeId.toString()
-        : _formState.formElements.cbSalesMan?.selectedValue,
+      _formState.transaction.master.employeeID = _formState.userConfig.holdSalesMan ? formState.transaction.master.employeeID : userSession.employeeId > 0
+        ? userSession.employeeId
+        : _formState.transaction.master.employeeID,
 
         _formState.transaction.master.hasroundOff = !(
           applicationSettings.mainSettings.pOSRoundingMethod === "No Rounding" ||
@@ -830,7 +843,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         )
       _formState.transaction.master.costCentreID = _formState.userConfig?.presetCostenterId ?? 0 > 0
         ? _formState.userConfig?.presetCostenterId ?? 0
-        : _formState.formElements.cbCostCentre?.selectedValue,
+        : _formState.transaction.master.costCentreID,
         _formState.transaction.master.inventoryLedgerID = Number(applicationSettings.inventorySettings.defaultSalesAcc || 0),
         _formState.formElements = {
           ..._formState.formElements,
@@ -852,10 +865,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
           // 🔘 Round Off checkbox logic
           chkRound: {
             ..._formState.formElements.chkRound,
-            enabled:
-              applicationSettings.mainSettings.pOSRoundingMethod === "No Rounding" ||
+            disabled:
+              !(applicationSettings.mainSettings.pOSRoundingMethod === "No Rounding" ||
               (applicationSettings.mainSettings.pOSRoundingMethod === "Not Set" &&
-                applicationSettings.mainSettings.roundingMethod === "No Rounding"),
+                applicationSettings.mainSettings.roundingMethod === "No Rounding")),
           },
 
           // 🧾 Cost Centre
@@ -868,22 +881,20 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
           /////////////////////////////////
           // Reset initial states
-          lblCustomerType: { ..._formState.formElements.lblCustomerType, text: "" },
-          txtPartyName: { ..._formState.formElements.txtPartyName, text: "" },
-          txtAddress: { ..._formState.formElements.txtAddress, text: "" },
+          lblCustomerType: { ..._formState.formElements.lblCustomerType, label: "" },
 
           // Hide or disable elements based on settings
           btnSave: {
             ..._formState.formElements.btnSave,
-            enabled: applicationSettings.branchSettings.maintainInventoryTransactionsEntry
+            disabled: !applicationSettings.branchSettings.maintainInventoryTransactionsEntry
           },
           btnEdit: {
             ..._formState.formElements.btnEdit,
-            enabled: applicationSettings.branchSettings.maintainInventoryTransactionsEntry
+            disabled: !applicationSettings.branchSettings.maintainInventoryTransactionsEntry
           },
           btnDelete: {
             ..._formState.formElements.btnDelete,
-            enabled: applicationSettings.branchSettings.maintainInventoryTransactionsEntry
+            disabled: !applicationSettings.branchSettings.maintainInventoryTransactionsEntry
           },
 
           // By default
@@ -896,7 +907,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
           txtVrPrefix: {
             ..._formState.formElements.voucherPrefix,
-            readOnly:
+            disabled:
               (_formState.transaction.master.voucherForm === "CSI" &&
                 applicationSettings.mainSettings.maintainSeperatePrefixforCashSales &&
                 !applicationSettings.branchSettings.maintainKSA_EInvoice) ||
@@ -904,37 +915,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 userSession.counter_vr_prefix !== "" &&
                 !applicationSettings.branchSettings.maintainKSA_EInvoice),
           },
-          chkEnableVrPrefix: {
-            ..._formState.formElements.chkEnableVrPrefix,
-            checked:
-              applicationSettings.branchSettings.maintainCounterWisePrefixForTransaction &&
-              userSession.counter_vr_prefix !== "" &&
-              !applicationSettings.branchSettings.maintainKSA_EInvoice,
-          },
+          
 
           // Default customer handling
-          cbParty: (() => {
-            let selectedValue = _formState.formElements.cbParty?.selectedValue;
-
-            if (
-              ["543140180640", "BAHAMDOON", "HANAPLASTICS"].includes(
-                userSession.dbIdValue?.trim()
-              )
-            ) {
-              selectedValue = applicationSettings.accountsSettings.defaultCustomerLedgerID;
-            }
-
-            if (applicationSettings.accountsSettings.setDefaultCustomerInSales) {
-              if (!_formState.formElements.chkNotSetDefaultCustomer?.checked) {
-                selectedValue = applicationSettings.accountsSettings.defaultCustomerLedgerID;
-              }
-            }
-
-            return {
-              ..._formState.formElements.cbParty,
-              selectedValue
-            };
-          })(),
+          
 
           // Draft mode and import options
           btnDraftList: {
@@ -950,24 +934,35 @@ const TransactionForm: React.FC<TransactionProps> = ({
             visible: applicationSettings.inventorySettings.enableImportSales ?? false
           },
 
-          // Salesman handling
-          cbSalesMan: (() => {
-            let selectedIndex = -1;
-            if (!_formState.formElements.chkHoldSalesman?.checked) {
-              selectedIndex = -1;
-            }
-            return {
-              ..._formState.formElements.cbSalesMan,
-              selectedIndex,
-              focus: !_formState.formElements.chkHoldSalesman?.checked
-            };
-          })(),
         };
+         _formState.transaction.master.ledgerID = (() => {
+            let selectedValue = _formState.transaction.master.ledgerID;
+
+            if (
+              ["543140180640", "BAHAMDOON", "HANAPLASTICS"].includes(
+                userSession.dbIdValue?.trim()
+              )
+            ) {
+              selectedValue = applicationSettings.accountsSettings.defaultCustomerLedgerID;
+            }
+
+            if (applicationSettings.accountsSettings.setDefaultCustomerInSales) {
+              if (!_formState.formElements.chkNotSetDefaultCustomer?.checked) {
+                selectedValue = applicationSettings.accountsSettings.defaultCustomerLedgerID;
+              }
+            }
+
+            return selectedValue;
+          })(),
+        _formState.userConfig.enableVoucherPrefix =
+              applicationSettings.branchSettings.maintainCounterWisePrefixForTransaction &&
+              userSession.counter_vr_prefix !== "" &&
+              !applicationSettings.branchSettings.maintainKSA_EInvoice;
       _formState.transaction.master.ledgerID =
         ["543140180640", "BAHAMDOON", "HANAPLASTICS"].includes(userSession.dbIdValue?.trim())
           ? applicationSettings.accountsSettings.defaultCustomerLedgerID
           : applicationSettings.accountsSettings.setDefaultCustomerInSales &&
-            !_formState.formElements.chkNotSetDefaultCustomer?.checked
+            !_formState.userConfig.notSetDefaultCustomer
             ? applicationSettings.accountsSettings.defaultCustomerLedgerID
             : _formState.transaction.master.ledgerID
       _formState.transaction.master.voucherPrefix = _formState.transaction.master.voucherForm === "CSI" &&

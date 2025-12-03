@@ -395,25 +395,25 @@ const InvTransactionSlice = createSlice({
         ) => TransactionFormState;
       }>
     ) => {
-      const slNo = action.payload.slNo;
-      if (slNo != "" ) {
-        state = action.payload.clearEntryControl(
-          state,
-          action.payload.applicationSettings?.accountsSettings
-            ?.defaultCostCenterID ?? 0
-        );
-        const index = state.transaction.details.findIndex(x => x.slNo == slNo);
-        state.transaction.details.splice(index, 1);
+      // const slNo = action.payload.slNo;
+      // if (slNo != "" ) {
+      //   state = action.payload.clearEntryControl(
+      //     state,
+      //     action.payload.applicationSettings?.accountsSettings
+      //       ?.defaultCostCenterID ?? 0
+      //   );
+      //   const index = state.transaction.details.findIndex(x => x.slNo == slNo);
+      //   state.transaction.details.splice(index, 1);
 
-        state.transaction.details = state.transaction.details.map(
-          (x, index) => ({
-            ...x,
-            slNo: generateUniqueKey(), // Reset slNo to start from 1
-          })
-        );
+      //   state.transaction.details = state.transaction.details.map(
+      //     (x, index) => ({
+      //       ...x,
+      //       slNo: generateUniqueKey(), // Reset slNo to start from 1
+      //     })
+      //   );
 
        
-      }
+      // }
     },
 
     // Remove a specific row from the transaction details by index

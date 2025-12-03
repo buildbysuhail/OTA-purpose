@@ -119,11 +119,15 @@ export const useTransaction = (
     clearEntryControl,
     changeGrossToUnitRate,
     calculateRowAmount,
-    applyDiscountsToItems,    
+    applyDiscountsToItems,
     calculateTaxOnDiscount,
     checkTheProductInSchemes,
     checkTheProductPriceInSchemes,
-  } = useTransactionHelper(transactionType);
+    setCurrentCell,
+    loadProductDetailsByAutoBarcode,
+    removeGiftFromGrid
+
+  } = useTransactionHelper(transactionType, focusToNextColumn, focusColumn);
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
@@ -256,26 +260,7 @@ export const useTransaction = (
     }
   };
 
-  const setCurrentCell = (
-    input: { column: string; rowIndex: number } | null,
-    data: TransactionDetail,
-    reCenterRow: boolean
-  ) => {
-    if (input) {
-      dispatch(
-        formStateHandleFieldChange({
-          fields: {
-            currentCell: {
-              reCenterRow: reCenterRow,
-              column: input?.column,
-              data: data,
-              rowIndex: input?.rowIndex,
-            },
-          },
-        })
-      );
-    }
-  };
+
   const { hasRight, hasBlockedRight } = useUserRights();
   const fetchUserConfig = async () => {
     try {
@@ -436,16 +421,8 @@ export const useTransaction = (
     _formState: TransactionFormState,
     loadUserConfig: boolean = false
   ) => {
-
-    const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`);
-    const Utc = await getStorageString(key);
-    let userConfig: UserConfig | undefined;
-    if (Utc) {
-      const decoded = safeBase64Decode(Utc) ?? "{}";
-      userConfig = customJsonParse(decoded ?? "{}");
-    } else {
-      userConfig = await fetchUserConfig();
-    }
+    const userConfig = _formState.userConfig;
+    
     const ct = {
       themeName: userConfig?.themeName ?? "Custom",
       gridFontSize: userConfig?.gridFontSize,
@@ -1474,48 +1451,57 @@ export const useTransaction = (
       `${formState.transaction.master.voucherType}${formState.transaction.master.voucherForm}`,
       JSON.stringify(details)
     );
-    if (
-      calculateSummary &&
-      calculateTotal &&
-      formState &&
-      dispatch &&
-      formStateHandleFieldChangeKeysOnly
-    ) {
-      const summaryRes = calculateSummary(details, formState, {
-        result: {},
+    if (formState.giftClaimed) {
+      await removeGiftFromGrid(details, {
+        reCenterRow: false,
+        column: editableColumn?.dataField ?? "",
+        data: data ?? initialTransactionDetailData,
+        rowIndex: rowIndex ?? 0,
       });
-
-      const totalRes = await calculateTotal(
-        formState.transaction.master,
-        summaryRes
-          ? (summaryRes.summary as SummaryItems)
-          : initialInventoryTotals,
-        formState.formElements,
-        {
+    } else {
+      if (
+        calculateSummary &&
+        calculateTotal &&
+        formState &&
+        dispatch &&
+        formStateHandleFieldChangeKeysOnly
+      ) {
+        const summaryRes = calculateSummary(details, formState, {
           result: {},
+        });
+
+        const totalRes = await calculateTotal(
+          formState.transaction.master,
+          summaryRes
+            ? (summaryRes.summary as SummaryItems)
+            : initialInventoryTotals,
+          formState.formElements,
+          {
+            result: {},
+          }
+        );
+
+        if (totalRes) {
+          totalRes.summary = summaryRes.summary;
+          totalRes.transaction = totalRes.transaction ?? {};
+          totalRes.transaction.master = { ...totalRes.transaction.master };
+          totalRes.transaction.details = [];
+          totalRes.loading = { isLoading: false, text: "" };
+          (totalRes.currentCell = {
+            reCenterRow: false,
+            column: editableColumn?.dataField ?? "",
+            data: data ?? initialTransactionDetailData,
+            rowIndex: rowIndex ?? 0,
+          }),
+            // Dispatch the state update
+
+            dispatch(
+              formStateHandleFieldChangeKeysOnly({
+                fields: totalRes,
+                updateOnlyGivenDetailsColumns: true,
+              })
+            );
         }
-      );
-
-      if (totalRes) {
-        totalRes.summary = summaryRes.summary;
-        totalRes.transaction = totalRes.transaction ?? {};
-        totalRes.transaction.master = { ...totalRes.transaction.master };
-        totalRes.transaction.details = [];
-        totalRes.loading = { isLoading: false, text: "" };
-        (totalRes.currentCell = {
-          reCenterRow: false,
-          column: editableColumn?.dataField ?? "",
-          data: data ?? initialTransactionDetailData,
-          rowIndex: rowIndex ?? 0,
-        }),
-          // Dispatch the state update
-
-          dispatch(
-            formStateHandleFieldChangeKeysOnly({
-              fields: totalRes,
-              updateOnlyGivenDetailsColumns: true,
-            })
-          );
       }
     }
   };
@@ -2761,475 +2747,7 @@ export const useTransaction = (
     } finally {
     }
   };
-  const loadProductDetailsByAutoBarcode = async (
-    data: LoadProductDetailsByAutoBarcodeProps,
-    commonParams: CommonParams,
-    proceedAll?: boolean,
-    forImport?: boolean
-  ): Promise<DeepPartial<TransactionFormState> | null> => {
-    let { result } = commonParams;
 
-    try {
-      let detail = data.detail;
-      let outDetail: DeepPartial<TransactionDetail> = {};
-
-      outDetail.slNo = detail.slNo;
-      outDetail.warehouseID = detail.warehouseID;
-      outDetail.salesPrice = detail.salesPrice;
-      outDetail.unitID = detail.unitID;
-      outDetail.productBatchID = detail.productBatchID;
-      if (!detail) {
-        return {};
-      }
-
-      let warehouseId = 1;
-      if (applicationSettings?.inventorySettings?.maintainWarehouse === true) {
-        warehouseId = formState.transaction.master.fromWarehouseID;
-      }
-      if (applicationSettings?.productsSettings?.enableMultiWarehouseBilling) {
-        const detailWarehouseId = outDetail.warehouseID;
-        if (detailWarehouseId ?? 0 > 0) {
-          warehouseId = detailWarehouseId ?? 0;
-        }
-      }
-      const _lastSelectedWarehouseIDOfItemPopupsSearch = (async () => {
-        try {
-          const stored = await getStorageString(
-            "lastSelectedWarehouseIDOfItemPopupsSearch"
-          );
-          return stored ? Number(stored) || 0 : 0;
-        } catch (error) {
-          console.warn("Failed to read from localStorage:", error);
-          return 0;
-        }
-      })();
-
-      let payload = {
-        useProductCode: data.useProductCode,
-        productCode: data.productCode,
-        barCode: data.autoBarcode,
-        wareHouseId: warehouseId,
-        txtData: data.searchText,
-        partyId: formState.transaction.master.ledgerID,
-        isUnitDetailsRequired: true,
-        isCheckUseSupplierProductCode:
-          formState.userConfig?.useSupplierProductCode,
-        isActualPriceVisible: formState.gridColumns?.find(
-          (x) => x.dataField == "actualSalesPrice"
-        )?.visible,
-        isStockDetailsVisible: formState.gridColumns?.find(
-          (x) => x.dataField == "stockDetails"
-        )?.visible,
-        lastSelectedWareHouseIdOfItemPopUpsSearch:
-          await _lastSelectedWarehouseIDOfItemPopupsSearch,
-      };
-      const queryParams = new URLSearchParams();
-      Object.entries(payload).forEach(([key, value]) => {
-        if (value !== null && value !== undefined && value !== "") {
-          queryParams.append(key, value as any);
-        }
-      });
-      const res: DataAutoBarcode = await api.getAsync(
-        `${Urls.inv_transaction_base
-        }${transactionType}/LoadProductDetailsByAutoBarCode?${queryParams.toString()}`
-      );
-
-      warehouseId = -1;
-
-      if (applicationSettings?.productsSettings?.enableMultiWarehouseBilling) {
-        warehouseId = 0;
-      }
-      if (res?.isShowItemPopUp && forImport != true) {
-        dispatch(
-          formStateHandleFieldChangeKeysOnly({
-            fields: {
-              formElements: {
-                productSearchPopupWindow: {
-                  visible: true,
-                  data: {
-                    searchColumn: data.searchColumn,
-                    rowIndex: data.rowIndex,
-                    searchCriteria: data.useProductCode ? "pCode" : "product",
-                    searchText: data.searchText,
-                    voucherType: formState.transaction.master.voucherType,
-                    warehouseId: warehouseId,
-                  },
-                },
-              },
-            },
-          })
-        );
-      } else if (res?.products?.length === 1) {
-        let product = res.products[0];
-        product.productName = product.productName.replace(/^\s+/, (m) =>
-          "\u00A0".repeat(m.length)
-        );
-        const _index =
-          forImport != true
-            ? formState.transaction.details.findIndex(
-              (x) =>
-                x.barCode == product.autoBarcode &&
-                x.productID > 0 &&
-                x.slNo != detail.slNo
-            )
-            : -1;
-        if (
-          product.autoBarcode != "" &&
-          _index > -1 &&
-          formState.userConfig?.duplicationMessage
-        ) {
-          const confirm = await ERPAlert.show({
-            icon: "info",
-            title: t("warning"),
-            text: t("item_already_selected", { row: _index + 1 }),
-            confirmButtonText: t("yes"),
-            cancelButtonText: t("no"),
-            showCancelButton: true,
-            onCancel: () => {
-              return false;
-            },
-          });
-          if (confirm) {
-            let pld: DeepPartial<TransactionFormState> = {
-              transaction: {
-                details: [
-                  { ...initialTransactionDetailData, slNo: detail.slNo },
-                ],
-              },
-            };
-            const res = focusColumn(_index, "qty");
-            if (res) {
-              pld.currentCell = {
-                ...res,
-                data: formState.transaction.details[_index],
-                reCenterRow: false,
-              };
-            }
-            dispatch(
-              formStateHandleFieldChangeKeysOnly({
-                fields: pld,
-                updateOnlyGivenDetailsColumns: false,
-                rowIndex: data.rowIndex,
-              })
-            );
-
-            return {};
-          } else {
-          }
-        }
-
-        outDetail.pCode = product.productCode;
-        outDetail.product = product.productName;
-        outDetail.productID = product.productID;
-        outDetail.barCode = product.autoBarcode;
-        outDetail.manualBarcode = product.mannualBarcode;
-        outDetail.productBatchID = product.productBatchID;
-
-        // Set default quantity if configured
-        if (applicationSettings?.productsSettings?.setDefaultQty1) {
-          outDetail.qty = 1;
-        }
-
-        outDetail.unit = product.unitName;
-        outDetail.unitID = product.basicUnitID;
-        outDetail.brandID = product.brandID;
-        outDetail.brand = product.brandName;
-        outDetail.size = product.specification;
-        outDetail.batchNo = product.batchNo;
-        outDetail.expDate = product.expiryDate;
-        outDetail.expDays = 100;
-        outDetail.mfdDate = product.mfgDate;
-        outDetail.lpc = round(product.lastPurchaseCost || 0);
-        outDetail.lpr = round(product.lastPurchaseRate || 0);
-        outDetail.stock = product.stock;
-        outDetail.productDescription = product.serialNumber;
-        outDetail.warranty = product.warranty;
-        outDetail.location = product.location;
-        outDetail.arabicName = product.itemNameinSecondLanguage;
-        outDetail.colour = product.colour;
-        outDetail.multiFactor = product.multiFactor;
-
-        // Handle Unit2 barcode
-        if (product.isUnit2BarCode) {
-          outDetail.unit = product.unit2;
-          outDetail.unitID = product.unit2ID;
-          outDetail.unitPrice = Number(product.stdPurchasePrice || 0);
-        }
-
-        // Handle Unit3 barcode
-        if (product.isUnit3BarCode) {
-          outDetail.unit = product.unit3;
-          outDetail.unitID = product.unit3ID;
-          outDetail.unitPrice = Number(product.stdPurchasePrice || 0);
-        }
-
-        // Unit 2 information
-        outDetail.unitID2 = product.unit2ID;
-        outDetail.unit2Qty = product.unit2Qty;
-        outDetail.unit2MBarcode = product.unit2Barcode;
-        outDetail.unit2SalesRate = product.unit2SalesPrice;
-        outDetail.unit2MRP = product.unit2MRP;
-
-        // Unit 3 information
-        outDetail.unitID3 = product.unit3ID;
-        outDetail.unit3Qty = product.unit3Qty;
-        outDetail.unit3MBarcode = product.unit3Barcode;
-        outDetail.unit3SalesRate = product.unit3SalesPrice;
-        outDetail.unit3MRP = product.unit3MRP;
-
-        // Handle supplier reference code
-        if (formState.userConfig?.useSupplierProductCode) {
-          outDetail.supplierReferenceProductCode =
-            product.supplierReferenceProductCode;
-        }
-
-        // Handle default purchase unit
-        if (
-          Number(product.defPurchaseUnitID || 0) > 0 &&
-          !product.isMultiUnitBarCode &&
-          product.basicUnitID !== product.defPurchaseUnitID &&
-          product.isBasicUnitBarcode
-        ) {
-          if (!isNullOrUndefinedOrEmpty(product.defUnitName)) {
-            outDetail.unit = product.defUnitName;
-            outDetail.multiFactor = product.defUnitMultiFactor;
-          }
-          outDetail.unitID = product.defPurchaseUnitID;
-        }
-
-        // Handle stock details if visible
-        if (payload.isStockDetailsVisible) {
-          outDetail.stockDetails = product.stockDetails;
-        }
-
-        // Set MRP
-        outDetail.mrp = round(product.mrp);
-
-        // Calculate pricing based on multi-factor
-        if (outDetail.multiFactor > 0) {
-          const pPrice = Number(product.stdPurchasePrice || 0);
-          outDetail.unitPrice = pPrice * outDetail.multiFactor;
-
-          const sPrice = Number(product.stdSalesPrice || 0);
-          outDetail.salesPrice = sPrice * outDetail.multiFactor;
-
-          const minSPrice = Number(product.minSalePrice || 0);
-          outDetail.minSalePrice = minSPrice * outDetail.multiFactor;
-        } else {
-          outDetail.unitPrice = Number(product.stdPurchasePrice || 0);
-          outDetail.salesPrice = round(product.stdSalesPrice || 0);
-          outDetail.minSalePrice = Number(product.minSalePrice || 0);
-        }
-
-        // Handle actual sales price if column is visible
-        if (payload.isActualPriceVisible) {
-          outDetail.actualSalesPrice = product.actualSalesPrice;
-        }
-
-        // Handle listed product prices
-        if (product.hasListedProductPrice) {
-          outDetail.unitPrice = product.listedProductPrice;
-        }
-
-        // Handle VAT and CST based on form type
-        if (clientSession.isAppGlobal) {
-          outDetail.hsnCode = product.hsnCode || "";
-          outDetail.details2 = {
-            ...(outDetail.details2 ?? initialTransactionDetails2),
-          };
-          // if (formState.transaction.master.voucherType !== "PI") {
-          outDetail.details2!.cgstPerc = Number(product.p_CGSTPerc || 0);
-          outDetail.details2!.sgstPerc = Number(product.p_SGSTPerc || 0);
-
-          if (
-            formState.transaction.master.voucherForm.toLowerCase() ===
-            "interstate" ||
-            formState.transaction.master.voucherForm.toLowerCase() === "int" ||
-            formState.transaction.master.voucherForm.toLowerCase() === "import"
-          ) {
-            outDetail.details2!.cgstPerc = 0;
-            outDetail.details2!.sgstPerc = 0;
-            outDetail.details2!.igstPerc = Number(product.p_IGSTPerc || 0);
-          }
-
-          outDetail.details2!.cessPerc = Number(product.p_CessPerc || 0);
-          outDetail.details2!.additionalCessPerc = Number(
-            product.p_AdditionalCessPerc || 0
-          );
-          // } else {
-          //   outDetail.details2!.cgstPerc = 0;
-          //   outDetail.details2!.sgstPerc = 0;
-          //   outDetail.details2!.igstPerc = 0;
-          //   outDetail.details2!.cessPerc = 0;
-          //   outDetail.details2!.additionalCessPerc = 0;
-          // }
-        } else {
-          const { voucherType, voucherForm } = formState.transaction.master;
-
-          if (
-            !clientSession.isAppGlobal &&
-            (voucherType === "PO" ||
-              voucherType === "PE" ||
-              voucherType === "GRN" ||
-              voucherType === "PQ" ||
-              voucherType === "LPO") ||
-            (formState.transaction.master.voucherForm === "VAT" &&
-              voucherType !== "PO" &&
-              voucherType !== "PE" &&
-              voucherType !== "GRN" &&
-              voucherType !== "PQ" &&
-              voucherType !== "LPO")
-          ) {
-            outDetail.vatPerc = Number(product.pVatPerc || 0);
-            outDetail.cstPerc = Number(product.purchaseExciseTaxPerc || 0);
-          } else {
-            outDetail.vatPerc = 0;
-            outDetail.cstPerc = 0;
-          }
-        }
-
-        // Special handling for meter units
-        const unitName = product.unitName?.toUpperCase().trim();
-        if (unitName === "MTR" || unitName === "MTRS" || unitName === "METER") {
-          outDetail.stickerQty = 4;
-        }
-
-        // Handle empty form type
-        // if (formState.transaction.master.voucherForm == "") {
-        //   outDetail.vatPerc = 0;
-        // }
-
-        // Set row header
-        outDetail.unitPriceTag = outDetail.unitPrice;
-        if (!result.transaction) {
-          result.transaction = {};
-        }
-        result.transaction.details = [outDetail];
-
-        // Update UI state for button enabling
-        result.formElements = {
-          ...result.formElements,
-          btnSave: {
-            disabled:
-              !hasRight(formState.userRightsFormCode, UserAction.Add) ||
-              applicationSettings?.branchSettings
-                ?.maintainInventoryTransactionsEntry == false,
-          },
-          btnEdit: {
-            disabled:
-              applicationSettings?.branchSettings
-                ?.maintainInventoryTransactionsEntry == false,
-          },
-          btnDelete: {
-            disabled:
-              applicationSettings?.branchSettings
-                ?.maintainInventoryTransactionsEntry == false,
-          },
-        };
-        if (proceedAll) {
-          const latestData = outDetail;
-
-          let _res = await calculateRowAmount(
-            latestData as TransactionDetail,
-            "pCode",
-            { result: { transaction: { details: [latestData] } } },
-            true
-          );
-          let currentDetails = [
-            ...formState.transaction.details.filter(
-              (x) => x.productID > 0 || x.slNo == latestData.slNo
-            ),
-          ];
-          let final =
-            _res?.transaction?.details != undefined &&
-              _res?.transaction?.details.length > 0
-              ? (_res?.transaction
-                ?.details[0] as DeepPartial<TransactionDetail>)
-              : latestData;
-          currentDetails[data.rowIndex] = final as TransactionDetail;
-          const summaryRes = calculateSummary(currentDetails, formState, {
-            result: {},
-          });
-
-          const totalRes = await calculateTotal(
-            formState.transaction.master,
-            summaryRes.summary as SummaryItems,
-            {
-              ...formState.formElements,
-              ...result.formElements,
-            } as FormElementsState,
-            { result: {} }
-          );
-          result = {
-            ...totalRes,
-            summary: summaryRes.summary,
-            showQuantityFactors: { visible: false, rowIndex: -1, qtyDesc: "" },
-            transaction: {
-              ...totalRes.transaction,
-              details: [final],
-            },
-          };
-        }
-
-        for (const unit of product.units) {
-          if (!result.batchesUnits) {
-            result.batchesUnits = [];
-          }
-          const exists = result.batchesUnits.some(
-            (u) =>
-              u.productBatchID === unit.productBatchID && u.value == unit.value
-          );
-          if (!exists) {
-            result.batchesUnits.push(unit);
-          }
-        }
-
-        commonParams.formStateHandleFieldChangeKeysOnly &&
-          dispatch &&
-          dispatch(
-            commonParams.formStateHandleFieldChangeKeysOnly({
-              fields: result,
-              updateOnlyGivenDetailsColumns: true,
-            })
-          );
-        if (data.setFocusToNextColumn) {
-          const res = focusToNextColumn(data.rowIndex, data.searchColumn, [
-            "pCode",
-            "product",
-            "barCode",
-          ]);
-          setCurrentCell(
-            res,
-            result.transaction!.details[0] as TransactionDetail,
-            false
-          );
-        }
-
-        return result;
-      } else if (res?.productId > 0 && forImport != true) {
-        dispatch(
-          formStateHandleFieldChangeKeysOnly({
-            fields: {
-              batchGridShowKey: res?.productId,
-            },
-          })
-        );
-      } else if (forImport != true && data.searchColumn != "product") {
-        const res = focusToNextColumn(data.rowIndex, data.searchColumn, [
-          "pCode",
-          "product",
-          "barCode",
-        ]);
-        setCurrentCell(res, data.detail as TransactionDetail, false);
-      }
-
-      return result;
-    } catch (err) {
-      console.log(err);
-
-      return result;
-    }
-  };
 
   const handleChangeUnit = async (
     outDetail: DeepPartial<TransactionDetail>,
@@ -3914,6 +3432,10 @@ export const useTransaction = (
 
           }
           else {
+            if (columnName === "qty") {
+              await removeGiftFromGrid();
+
+            }
             const res = focusToNextColumn(rowIndex, columnName);
             setCurrentCell(res, data, rowIndex != res?.rowIndex);
           }
@@ -4673,14 +4195,14 @@ export const useTransaction = (
         );
 
         if (!formState.giftClaimed && formState.transaction.master.invTransactionMasterID <= 0) {
-     const params = {
-  grandTotal: String(formState.transaction.master.grandTotal || 0),
-  warehouseID: String(formState.transaction.master.fromWarehouseID),
-};
+          const params = {
+            grandTotal: String(formState.transaction.master.grandTotal || 0),
+            warehouseID: String(formState.transaction.master.fromWarehouseID),
+          };
 
-const query = new URLSearchParams(params).toString();
+          const query = new URLSearchParams(params).toString();
 
-const ds = await api.getAsync("/giftOnBilling", query);
+          const ds = await api.getAsync("/giftOnBilling", query);
 
           if (ds?.giftProducts?.length > 0) {
             const row = ds.giftProductPrice;
@@ -4692,13 +4214,13 @@ const ds = await api.getAsync("/giftOnBilling", query);
             formState.giftProductPrice = Price;
 
             const giftProductBatchId = Number(row.GiftProductBatchID ?? 0);
-            const products =  ds?.giftProducts.map((dr: any) => ({
-                  barcode: dr.AutoBarcode,
-                  productBatchID: Number(dr.ProductBatchID),
-                  productCode: dr.ProductCode,
-                  productID: Number(dr.ProductID),
-                  productName: dr.ProductName,
-                }));
+            const products = ds?.giftProducts.map((dr: any) => ({
+              barcode: dr.AutoBarcode,
+              productBatchID: Number(dr.ProductBatchID),
+              productCode: dr.ProductCode,
+              productID: Number(dr.ProductID),
+              productName: dr.ProductName,
+            }));
             dispatch(
               formStateHandleFieldChangeKeysOnly({
                 fields: {
@@ -4711,12 +4233,12 @@ const ds = await api.getAsync("/giftOnBilling", query);
             );
 
             for (const dr of products) {
-                          
+
               // Apply scheme logic based on setting
               if (invSettings.giftOnBillingAs === "Products") {
                 checkTheProductInSchemes(Qty, Price, products);
               } else if (invSettings.giftOnBillingAs === "Special Price") {
-                checkTheProductPriceInSchemes(Qty, Price,products);
+                checkTheProductPriceInSchemes(Qty, Price, products);
               }
             }
           }
@@ -4727,7 +4249,7 @@ const ds = await api.getAsync("/giftOnBilling", query);
     }
   };
 
-  
+
 
   return {
     downloadImportTemplateHeadersOnly,
@@ -4778,6 +4300,7 @@ const ds = await api.getAsync("/giftOnBilling", query);
     handleLoadSr,
     handleDiscountSlab,
     getCustomerTypeAndTitle,
-    giftOnBilling
+    giftOnBilling,
+    fetchUserConfig
   };
 };

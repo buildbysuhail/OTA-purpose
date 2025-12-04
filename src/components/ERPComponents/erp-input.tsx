@@ -32,6 +32,7 @@ interface ERPInputProps extends ERPInputBaseProps {
   placeholder?: string;
   height_?:number;
   isMobileInput?:boolean;
+  gridHeightAdjust?:boolean;
   onChangeData?: (data: any) => void;
   disableEnterNavigation?: boolean;
   onKeyDown?: (e: any) => void;
@@ -147,6 +148,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       placeholder,
       height_,
       isMobileInput,
+      gridHeightAdjust,
       disabled,
       labelClassName,
       className,
@@ -221,6 +223,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     const [initial, setInitial] = useState<Option | null>(initialValue);
 
     const input_Ref = useRef<HTMLInputElement | null>(null);
+
+  
 
     useEffect(() => {
       if (autoFocus) {
@@ -974,7 +978,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 }}
                 style={{
                   // height: !inputClassName ? height : "",
-                  height: isMobileInput ? height_ : !inputClassName ? height : "",
+                  height: isMobileInput ? height_ : !gridHeightAdjust ?  (!inputClassName ? height : ""):height_ ,
                   // height: height_,
                   fontSize,
                   fontWeight: boldInput || inputBoxState?.bold ? 700 : fontWeight,

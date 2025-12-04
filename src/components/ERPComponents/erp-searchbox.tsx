@@ -72,6 +72,7 @@ interface InputProps {
   rowIndex?: number;
   height?: number;
   isMobileInput?:boolean;
+  gridHeightAdjust?:boolean;
   textAlign?: "left" | "right" | "center";
   onNextCellFind?: (
     rowIndex: number,
@@ -408,6 +409,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       rowIndex,
       height,
       isMobileInput,
+      gridHeightAdjust,
       onNextCellFind,
       textAlign,
       customStyle,
@@ -420,6 +422,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
     ref
   ) => {
     const { t } = useTranslation("inventory");
+   
     const productColumns: DevGridColumn[] = useMemo(
       () => [
         // ====
@@ -1331,6 +1334,7 @@ const handleBatchGridDoubleClick =async (e: any) => {
 
     const [productInitialized, setProductInitialized] = useState(false);
     const [isGridInitializing, setIsGridInitializing] = useState(true);
+    
 
     const handleProductGridContentReady = useCallback((e: any) => {
          console.log("handleProductGridContentReady called")
@@ -1561,7 +1565,9 @@ const handleBatchGridDoubleClick =async (e: any) => {
               ignoreRandomId={isMobileInput ?false: true}
               noLabel={noLabel}
               height_={height}
-              isMobileInput={isMobileInput}
+              // isMobileInput={isMobileInput}
+              isMobileInput={true}
+              gridHeightAdjust={gridHeightAdjust}
               label={label}
               type="text"
               id={inputId || "test"}

@@ -3127,7 +3127,7 @@ const hidColumns: string[] = [
                      </label>
                      <div className="border-2 border-blue-500 rounded-lg overflow-hidden">
                        <GridCell
-                         isMobile={true}
+                         isMobile_={true}
                          column={formState.gridColumns.find((x) => x?.dataField == "product") as ColumnModel}
                          item={formState.row ?? initialTransactionDetailData}
                          index={formState.itemPopup?.index ?? 0}
@@ -3176,7 +3176,7 @@ const hidColumns: string[] = [
                        </label>
                        <div className="border border-gray-300 rounded-lg overflow-hidden dark:border-gray-600">
                          <GridCell
-                           isMobile={true}
+                           isMobile_={true}
                            column={formState.gridColumns.find((x) => x.dataField == "qty") as ColumnModel}
                            item={formState.row ?? initialTransactionDetailData}
                            index={formState.itemPopup?.index ?? 0}
@@ -3215,7 +3215,7 @@ const hidColumns: string[] = [
                        </label>
                        <div className="border border-gray-300 rounded-lg overflow-hidden dark:border-gray-600">
                          <GridCell
-                           isMobile={true}
+                           isMobile_={true}
                            column={formState.gridColumns.find((x) => x.dataField == "unit") as ColumnModel}
                            item={formState.row ?? initialTransactionDetailData}
                            index={formState.itemPopup?.index ?? 0}
@@ -3257,7 +3257,7 @@ const hidColumns: string[] = [
                        </label>
                        <div className="border border-gray-300 rounded-lg overflow-hidden dark:border-gray-600">
                          <GridCell
-                           isMobile={true}
+                           isMobile_={true}
                            column={formState.gridColumns.find((x) => x.dataField == "unitPrice") as ColumnModel} 
                            item={formState.row ?? initialTransactionDetailData}
                            index={formState.itemPopup?.index ?? 0}
@@ -3318,7 +3318,7 @@ const hidColumns: string[] = [
                          </div>
                          <div className="flex-1">
                          <GridCell
-                           isMobile={true}                
+                           isMobile_={true}                
                            column={formState.gridColumns.find((x) => x.dataField == "total") as ColumnModel}
                            item={formState.row ?? initialTransactionDetailData}
                            index={formState.itemPopup?.index ?? 0}
@@ -3360,7 +3360,7 @@ const hidColumns: string[] = [
                        <div className="border border-orange-300 rounded-lg overflow-hidden bg-orange-50 dark:bg-orange-900/20 flex items-center">
                          <div className="flex-1">
                            <GridCell
-                             isMobile={true}
+                             isMobile_={true}
                              column={formState.gridColumns.find((x) => x.dataField == "discPerc") as ColumnModel}
                              item={formState.row ?? initialTransactionDetailData}
                              index={formState.itemPopup?.index ?? 0}
@@ -3405,7 +3405,7 @@ const hidColumns: string[] = [
                          </div>
                          <div className="flex-1">
                            <GridCell
-                             isMobile={true}
+                             isMobile_={true}
                              column={formState.gridColumns.find((x) => x.dataField == "discount") as ColumnModel}
                              item={formState.row ?? initialTransactionDetailData}
                              index={formState.itemPopup?.index ?? 0}
@@ -3446,7 +3446,7 @@ const hidColumns: string[] = [
                        </div>
                        <div className="border border-gray-300 rounded-lg overflow-hidden dark:border-gray-600">
                          <GridCell
-                           isMobile={true}
+                           isMobile_={true}
                            column={formState.gridColumns.find((x) => x.dataField == "vatPerc") as ColumnModel}
                            item={formState.row ?? initialTransactionDetailData}
                            index={formState.itemPopup?.index ?? 0}
@@ -3485,7 +3485,7 @@ const hidColumns: string[] = [
                          </div>
                          <div className="flex-1">
                          <GridCell
-                           isMobile={true}
+                           isMobile_={true}
                            column={formState.gridColumns.find((x) => x.dataField == "vatAmount") as ColumnModel}
                            item={formState.row ?? initialTransactionDetailData}
                            index={formState.itemPopup?.index ?? 0}
@@ -3538,7 +3538,7 @@ const hidColumns: string[] = [
                              </div>
                              <div className="border border-gray-300 rounded-lg overflow-hidden dark:border-gray-600">
                                <GridCell
-                                 isMobile={true}
+                                 isMobile_={true}
                                  column={col as ColumnModel}
                                  item={formState.row ?? initialTransactionDetailData}
                                  index={formState.itemPopup?.index ?? 0}
@@ -3586,7 +3586,7 @@ const hidColumns: string[] = [
                          </div>
                          <div className="flex-1">
                          <GridCell
-                           isMobile={true}
+                           isMobile_={true}
                            column={formState.gridColumns.find((x) => x.dataField == "total") as ColumnModel}
                            item={formState.row ?? initialTransactionDetailData}
                            index={formState.itemPopup?.index ?? 0}

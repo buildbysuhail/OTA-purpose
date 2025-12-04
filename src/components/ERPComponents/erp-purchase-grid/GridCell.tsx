@@ -13,6 +13,8 @@ import { AppState } from "../../../redux/slices/app/types";
 import useDebounce from "../../../pages/inventory/transactions/purchase/use-debounce";
 import { merge } from "lodash";
 import { initialUserConfig } from "../../../pages/inventory/transactions/transaction-type-data";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
 
 interface GridCellProps {
   column: ColumnModel;
@@ -29,7 +31,7 @@ interface GridCellProps {
   isFirstColumn: boolean;
   isLastColumn: boolean;
   showBorder: boolean;
-  isMobile?: boolean; // NEW PROP
+  isMobile_?: boolean; // NEW PROP
   columnWidths: { width: number; field: string }[];
   onChange: (value: any, column: keyof TransactionDetail, rowIndex: number) => void;
   onKeyDown: (value: any, e: React.KeyboardEvent<HTMLElement>, column: keyof TransactionDetail, rowIndex: number) => void;
@@ -77,7 +79,7 @@ const EditableCell: React.FC<{
   gridIsBold: boolean;
   formState: any;
   rowHeight: number;
-  isMobile: boolean;
+  isMobile_: boolean;
 }> = React.memo(({
   appState,
   type,
@@ -97,7 +99,7 @@ const EditableCell: React.FC<{
   gridIsBold,
   formState,
   rowHeight,
-  isMobile
+  isMobile_
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const { round } = useNumberFormat();
@@ -218,10 +220,10 @@ const EditableCell: React.FC<{
       noLabel
       enableClearOption={false}
       style={{
-        // border: isMobile ? "1px solid orange" :"none",
-        border: isMobile ? "none" :"none",
-        // height: isMobile ? "20px" : cellStyle.height,
-        height: isMobile ? rowHeight  : cellStyle.height,
+        // border: isMobile_ ? "1px solid orange" :"none",
+        border: isMobile_ ? "none" :"none",
+        // height: isMobile_ ? "20px" : cellStyle.height,
+        height: isMobile_ ? rowHeight  : cellStyle.height,
       }}
       className="!w-full !h-full !bg-inherit !p-0 !space-y-0"
       disableEnterNavigation
@@ -243,15 +245,15 @@ const EditableCell: React.FC<{
       className="bg-transparent border-none focus:ring-0 focus:outline-none"
       style={{
         ...cellStyle,
-        height: isMobile ? "20px" : cellStyle.height,
+        height: isMobile_ ? "20px" : cellStyle.height,
         
         whiteSpace: "nowrap",
         overflow: "hidden",
         textOverflow: "ellipsis",
         backgroundColor: "transparent",
         color: appState.mode === "dark" ? "#e0e0e0" : "#000000",
-        // border: isMobile ? "1px solid yellow" :"none",
-        border: isMobile ? "none" :"none",
+        // border: isMobile_ ? "1px solid yellow" :"none",
+        border: isMobile_ ? "none" :"none",
         width: "100%",
       }}
       value={localValue}
@@ -280,7 +282,7 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
   isFirstColumn,
   isLastColumn,
   showBorder,
-  isMobile = false,
+  isMobile_ = false,
   columnWidths,
   onChange,
   onKeyDown,
@@ -307,8 +309,10 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
   const isFixed = isFirstColumn || isLastColumn;
   const cellValue = item[column.dataField as keyof TransactionDetail];
   const productId = item.productID;
+  const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
 
   console.log("gcrowHeight:",rowHeight);
+  
   
 
   const borderColor = useMemo(() =>
@@ -525,13 +529,15 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
         <ERPProductSearch
           showInputSymbol={true}
         //   customStyle={formState.userConfig?.inputBoxStyle}
-          customStyle={merge( {},  formState.userConfig?.inputBoxStyle, initialUserConfig.inputBoxStyle, { inputSize: "customize", fontColor: "0, 0, 0", borderColor: "200, 200, 200", showBorder: !isMobile, rowHeight: "22px" })}
+          customStyle={merge( {},  formState.userConfig?.inputBoxStyle, initialUserConfig.inputBoxStyle, { inputSize: "customize", fontColor: "0, 0, 0", borderColor: "200, 200, 200", showBorder: !isMobile_, rowHeight: "22px" })}
           appState={appState}
           zIndexController={zIndexController}
           textAlign={column.alignment === "right" ? "right" : "left"}
           rowIndex={index}
           height={rowHeight}
-          isMobileInput={true}
+          isMobileInput={deviceInfo.isMobile}
+          // isMobileInput={true}
+          gridHeightAdjust={true}
           id={cellId}
           inputId={`${gridId}_${column.dataField}_${index}`}
           searchType={applicationSettings?.productsSettings?.usePopupWindowForItemSearch ? "modal" : "grid"}
@@ -543,7 +549,7 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
           batchDataUrl={`${Urls.inv_transaction_base}${transactionType}/batches/`}
           className="w-full text-sm"
           // className="!h-[22px] mj23333333 text-sm"
-          // style={{ height: `${rowHeight}px`, ...(isMobile && { border: "1px solid blue" }) }}
+          // style={{ height: `${rowHeight}px`, ...(isMobile_ && { border: "1px solid blue" }) }}
           onFocus={() => handleFocus?.(column.dataField!)}
           onBlur={handleBlur}
           onKeyDown={(value, e) => handlRowKeyDown(value, e, column, index, details)}
@@ -555,7 +561,7 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
           onRowSelected={(data: any, rowValue?: string) => {
             const res = {
               slNo: item.slNo,
-              rowIndex: isMobile ? - 1 : index,
+              rowIndex: isMobile_ ? - 1 : index,
               productBatchID: data.productBatchID,
               autoBarcode: data.autoBarcode,
               productCode: data.productCode,
@@ -573,7 +579,7 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
     if (column.dataField === "product" && !column.readOnly) {
       return (
         // <div className="bg-black">
-        <div style={{ ...getCellContentStyle(column), border: isMobile ? "1px solid blue" : "none" }} id={cellId}
+        <div style={{ ...getCellContentStyle(column), border: isMobile_ ? "1px solid blue" : "none" }} id={cellId}
              tabIndex={0} onFocus={() => handleFocus?.(column.dataField!)} onBlur={handleBlur}
              onKeyDown={(e) => handlRowKeyDown(cellValue, e, column, index, details)}>
           {productId > 0 ? String(cellValue || "") : ""}
@@ -601,7 +607,7 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
     }
 
     if (column.allowEditing === true && !column.readOnly && formState.formElements.pnlMasters?.disabled !== true &&
-        ((currentCell?.column === column.dataField && currentCell?.rowIndex === index )|| isMobile) 
+        ((currentCell?.column === column.dataField && currentCell?.rowIndex === index )|| isMobile_) 
     ) {
       return (
         <EditableCell
@@ -625,7 +631,7 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
           gridIsBold={gridIsBold}
           formState={formState}
           rowHeight={rowHeight}
-          isMobile={isMobile}
+          isMobile_={isMobile_}
         />
       );
     }
@@ -635,13 +641,13 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
       <div
         style={currentCell?.column === column.dataField && currentCell?.rowIndex === index ?
           { ...getCellContentStyle(column), 
-            border: isMobile
+            border: isMobile_
             // ? "1px solid pink"
             ? "none"
             : `3px solid rgb(${formState.userConfig?.inputBoxStyle?.focusBgColor})`,
              background: "#fff" } :
-          // { ...getCellContentStyle(column) , border : isMobile ? "1px solid pink" : ""  }}
-          { ...getCellContentStyle(column) , border : isMobile ? "none" : ""  }}
+          // { ...getCellContentStyle(column) , border : isMobile_ ? "1px solid pink" : ""  }}
+          { ...getCellContentStyle(column) , border : isMobile_ ? "none" : ""  }}
         id={cellId}
         tabIndex={0}
         className="px-1 cursor-default"
@@ -668,11 +674,11 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
   ]);
 
     const cellWidth = useMemo(() => {
-    if (isMobile) {
+    if (isMobile_) {
         return '100%';
     }
     return columnWidths?.find((x) => x.field === column.dataField)?.width || 150;
-    }, [columnWidths, column.dataField, isMobile]);
+    }, [columnWidths, column.dataField, isMobile_]);
 //   console.log("mjjjjjjjjjjj",
 //     cellWidth
 //   );
@@ -683,7 +689,7 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
 
   // NEW: Mobile border styles
   const getMobileBorderStyles = () => {
-    if (!isMobile) return {};
+    if (!isMobile_) return {};
     
     const borderStyle = `1px solid ${
       appState.mode === "dark" 
@@ -733,7 +739,7 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
     <div
     key={`${column.dataField}`}
     style={
-      isMobile
+      isMobile_
         ? { border: "" , height: rowHeight ,display: "flex",  alignItems: "center",  justifyContent: "center", }
         // ? { border: "1px solid blue" }
         : {
@@ -742,7 +748,7 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
             maxWidth: typeof cellWidth === "number" ? `${cellWidth}px` : cellWidth,
             // height: "100%",
             height: rowHeight,
-            ...(isMobile ? getMobileBorderStyles() : getDesktopBorderStyles()),
+            ...(isMobile_ ? getMobileBorderStyles() : getDesktopBorderStyles()),
             fontSize: `${gridFontSize}px`,
             textAlign:
               column.dataField === "slNo"

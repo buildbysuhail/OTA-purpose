@@ -3628,7 +3628,32 @@ const hidColumns: string[] = [
                      <button
                        className="flex-1 py-4 text-center text-base font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
                        onClick={() => {
-                         console.log("Save & New");
+                         const exist = formState.transaction.details.find(x => x.slNo == formState.row?.slNo);
+                        if(exist) {
+                          if(formState.row) {
+                            dispatch(formStateHandleFieldChangeKeysOnly({fields:{
+                             
+                              transaction:{
+                                details:[formState.row]
+                              }, row: {
+                                ...initialTransactionDetailData,
+                                slNo: generateUniqueKey()
+                              },
+                            }}))
+                          }
+                        } else {
+                          if(formState.row) {
+                            
+                            dispatch(formStateHandleFieldChangeKeysOnly({fields:{
+                             
+                              row: {
+                                  ...initialTransactionDetailData,
+                                  slNo: generateUniqueKey()
+                                },
+                            }}))
+                            dispatch(formStateTransactionDetailsRowsAdd([formState.row]))
+                          }
+                        }
                        }}
                      >
                        Save & New
@@ -3636,7 +3661,26 @@ const hidColumns: string[] = [
                      <button
                        className="flex-1 py-4 text-center bg-red-600 text-white text-base font-medium hover:bg-red-700"
                        onClick={() => {
-                         console.log("Save");
+                        const exist = formState.transaction.details.find(x => x.slNo == formState.row?.slNo);
+                        if(exist) {
+                          const ind = formState.transaction.details.findIndex(x => x.slNo == formState.row?.slNo)
+                          if(formState.row) {
+                            dispatch(formStateHandleFieldChangeKeysOnly({fields:{
+                              itemPopup: {isOpen:false, index:0},
+                              transaction:{
+                                details:[formState.row]
+                              }
+                            },itemsToAddToDetails: undefined, rowIndex:ind}))
+                          }
+                        } else {
+                          if(formState.row) {
+                            
+                            dispatch(formStateHandleFieldChangeKeysOnly({fields:{
+                              itemPopup: {isOpen:false, index:0}
+                            }}))
+                            dispatch(formStateTransactionDetailsRowsAdd([formState.row]))
+                          }
+                        }
                        }}
                      >
                        Save

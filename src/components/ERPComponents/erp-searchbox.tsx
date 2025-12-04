@@ -1350,8 +1350,10 @@ const handleBatchGridDoubleClick =async (e: any) => {
       setProductGridReady(true);
 
       if (!productInitialized) {
-        // gridInstance.option("focusedRowIndex", 0);
-        // gridInstance.focus();
+        if (!isMobileInput) {
+          gridInstance.option("focusedRowIndex", 0);
+          gridInstance.focus();
+        }
         setProductInitialized(true);
       }
     }

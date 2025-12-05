@@ -30,6 +30,12 @@ import IsLockedCheckbox from "./components/IsLockedCheckbox";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import VoucherLoader from "./components/grn-Number";
+import BtnOfferAchieved from "./components/btnGiftOnBilling";
+import BtnDiscountSlab from "./components/btnDiscountSlab";
+import BtnTender from "./components/btnTender";
+import BtnPrivilegeCard from "./components/btnPrivilegeCard";
+import BtnPending from "./components/btnPending";
+import BtnSr from "./components/btnSr";
 
 interface TransactionFooterProps {
   formState: TransactionFormState;
@@ -51,6 +57,7 @@ interface TransactionFooterProps {
   calculateTotal: any
   applicationSettings: any;
   handleDiscountSlab: any;
+  giftOnBilling: any;
 }
 
 interface Confetti {
@@ -179,6 +186,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   applicationSettings,
   loadAndSetTransVoucher,
   handleDiscountSlab,
+  giftOnBilling
 }) => {
   const [hasAnimated, setHasAnimated] = useState(false);
   const [isOpentwo, setIsOpentwo] = useState(false);
@@ -559,10 +567,16 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               </div>
               {(formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
                 formState.transaction.master.voucherType === VoucherType.SalesReturn) && (
-                  <ERPButton
-                    title={t("sr")}
-                    className="!h-[38px] !px-3"
-                    onClick={() => handleSalesReturnOpen(formState.transaction.master.voucherType)}
+                  // <ERPButton
+                  //   title={t("sr")}
+                  //   className="!h-[38px] !px-3"
+                  //   onClick={() => handleSalesReturnOpen(formState.transaction.master.voucherType)}
+                  // />
+                  <BtnSr
+                    formState={formState}
+                    dispatch={dispatch}
+                    srBtnClick={()=> handleSalesReturnOpen(formState.transaction.master.voucherType)}
+                    t={t}
                   />
                 )}
             </div>
@@ -578,32 +592,57 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
 
           {(formState.transaction.master.voucherType === VoucherType.SalesInvoice) && showButtonsOutside && (
             <div className="flex items-center gap-1">
-              <ERPButton
+              <BtnTender
+                 formState={formState}
+                 dispatch={dispatch}
+                 tenderBtnClick={()=>handleTenderOpen()}
+                 t={t}
+              />
+              {/* <ERPButton
                 title={t('tender')}
                 onClick={handleTenderOpen}
-              />
-              <ERPButton
+              /> */}
+              {/* <ERPButton
                 title={t('pending')}
                 variant="custom"
                 customVariant="bg-[#0d7377] hover:bg-[#0a5c5f] text-white"
+              /> */}
+              <BtnPending
+                formState={formState}
+                dispatch={dispatch}
+                pendingBtnClick={()=> console.log("Pending Clicked")}
+                t={t}
               />
-              <ERPButton
+              <BtnPrivilegeCard
+                formState={formState}
+                dispatch={dispatch}
+                privilegeCardBtnClick={()=>handlePrivilegeCardOpen()}
+                t={t}
+              />
+              {/* <ERPButton
                 title={t('privilege_card')}
                 onClick={handlePrivilegeCardOpen}
                 variant="custom"
                 customVariant="bg-[#9b87f5] hover:bg-[#8b75e5] text-white"
+              /> */}
+              <BtnOfferAchieved 
+                 formState={formState}
+                 dispatch={dispatch}
+                 offerAchievedBtnClick={()=>giftOnBilling()}
+                 t={t}
               />
-              <ERPButton
-                title={t('offer_achieved')}
-                variant="custom"
-                customVariant="bg-[#00ff00] hover:bg-[#00dd00] text-black"
+              <BtnDiscountSlab
+                formState={formState}
+                dispatch={dispatch}
+                discSlabBtnClick={()=>handleDiscountSlab()}
+                t={t}
               />
-              <ERPButton
+              {/* <ERPButton
                 title={t('disc_slab')}
                 onClick={() => handleDiscountSlab()}
                 variant="custom"
                 customVariant="bg-[#ff0000] hover:bg-[#dd0000] text-white"
-              />
+              /> */}
               {/* {formState.srOpen && (
                 <div>
                   <SalesReturn
@@ -616,14 +655,26 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           )}
           {(formState.transaction.master.voucherType === VoucherType.SalesQuotation) && showButtonsOutside && (
             <div className="flex items-center gap-1">
-              <ERPButton
+              <BtnTender
+                 formState={formState}
+                 dispatch={dispatch}
+                 tenderBtnClick={()=>handleTenderOpen()}
+                 t={t}
+              />
+              {/* <ERPButton
                 title={t('tender')}
                 onClick={handleTenderOpen}
-              />
-              <ERPButton
+              /> */}
+              {/* <ERPButton
                 title={t('pending')}
                 variant="custom"
                 customVariant="bg-[#0d7377] hover:bg-[#0a5c5f] text-white"
+              /> */}
+              <BtnPending
+                formState={formState}
+                dispatch={dispatch}
+                pendingBtnClick={()=> console.log("Pending Clicked")}
+                t={t}
               />
             </div>
           )}
@@ -684,10 +735,16 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 </div>
                 {(formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
                   formState.transaction.master.voucherType === VoucherType.SalesReturn) && (
-                    <ERPButton
-                      title={t("sr")}
-                      className="!h-[38px] !px-3"
-                      onClick={() => handleSalesReturnOpen(formState.transaction.master.voucherType)}
+                    // <ERPButton
+                    //   title={t("sr")}
+                    //   className="!h-[38px] !px-3"
+                    //   onClick={() => handleSalesReturnOpen(formState.transaction.master.voucherType)}
+                    // />
+                    <BtnSr
+                      formState={formState}
+                      dispatch={dispatch}
+                      srBtnClick={()=> handleSalesReturnOpen(formState.transaction.master.voucherType)}
+                      t={t}
                     />
                   )}
               </div>
@@ -1069,54 +1126,93 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             </div>
             {(formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
               formState.transaction.master.voucherType === VoucherType.SalesReturn) && (
-                <ERPButton
-                  title={t("sr")}
-                  className="!h-[38px] !px-3"
-                  onClick={() => handleSalesReturnOpen(formState.transaction.master.voucherType)}
-                />
+                // <ERPButton
+                //   title={t("sr")}
+                //   className="!h-[38px] !px-3"
+                //   onClick={() => handleSalesReturnOpen(formState.transaction.master.voucherType)}
+                // />
+                <BtnSr
+                    formState={formState}
+                    dispatch={dispatch}
+                    srBtnClick={()=> handleSalesReturnOpen(formState.transaction.master.voucherType)}
+                    t={t}
+                  />
               )}
           </div>
         )}
         {(formState.transaction.master.voucherType === VoucherType.SalesInvoice) && !showButtonsOutside && (
           <>
-            <ERPButton
+           <BtnTender
+                 formState={formState}
+                 dispatch={dispatch}
+                 tenderBtnClick={()=>handleTenderOpen()}
+                 t={t}
+              />
+            {/* <ERPButton
               title={t('tender')}
               onClick={handleTenderOpen}
-            />
-            <ERPButton
+            /> */}
+            {/* <ERPButton
               title={t('pending')}
               variant="custom"
               customVariant="bg-[#0d7377] hover:bg-[#0a5c5f] text-white"
+            /> */}
+            <BtnPending
+                formState={formState}
+                dispatch={dispatch}
+                pendingBtnClick={()=> console.log("Pending Clicked")}
+                t={t}
+              />
+
+            <BtnPrivilegeCard
+              formState={formState}
+              dispatch={dispatch}
+              privilegeCardBtnClick={()=>handlePrivilegeCardOpen()}
+              t={t}
             />
-            <ERPButton
+            {/* <ERPButton
               title={t('privilege_card')}
               onClick={handlePrivilegeCardOpen}
               variant="custom"
               customVariant="bg-[#9b87f5] hover:bg-[#8b75e5] text-white"
-            />
-            <ERPButton
-              title={t('offer_achieved')}
-              variant="custom"
-              customVariant="bg-[#00ff00] hover:bg-[#00dd00] text-black"
-            />
-            <ERPButton
-              title={t('disc_slab')}
-              onClick={() => handleDiscountSlab()}
-              variant="custom"
-              customVariant="bg-[#ff0000] hover:bg-[#dd0000] text-white"
-            />
+            /> */}
+             <BtnOfferAchieved 
+                formState={formState} 
+                dispatch={dispatch} 
+                offerAchievedBtnClick={()=>giftOnBilling()}
+                t={t}
+              />
+            
+            <BtnDiscountSlab
+                formState={formState}
+                dispatch={dispatch}
+                discSlabBtnClick={()=>handleDiscountSlab()}
+                t={t}
+              />
           </>
         )}
         {(formState.transaction.master.voucherType === VoucherType.SalesQuotation) && !showButtonsOutside && (
             <div className="flex items-center gap-1">
-              <ERPButton
+              <BtnTender
+                 formState={formState}
+                 dispatch={dispatch}
+                 tenderBtnClick={()=>handleTenderOpen()}
+                 t={t}
+              />
+              {/* <ERPButton
                 title={t('tender')}
                 onClick={handleTenderOpen}
-              />
-              <ERPButton
+              /> */}
+              {/* <ERPButton
                 title={t('pending')}
                 variant="custom"
                 customVariant="bg-[#0d7377] hover:bg-[#0a5c5f] text-white"
+              /> */}
+              <BtnPending
+                formState={formState}
+                dispatch={dispatch}
+                pendingBtnClick={()=> console.log("Pending Clicked")}
+                t={t}
               />
             </div>
           )}

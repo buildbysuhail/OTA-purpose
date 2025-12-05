@@ -581,6 +581,7 @@ export interface TransactionFormState {
   isInv: boolean;
   summaryConfig: SummaryConfig<TransactionDetail>[];
   showQuantityFactors: { visible: boolean; rowIndex: number; qtyDesc: string };
+  showQuantityFactorsM: { visible: boolean; rowIndex: number; qtyDesc: string };
   showPcode: boolean;
   batchEntryData: { visible: boolean; data: string; rowIndex: number };
   serialNoEntryData: { visible: boolean; data: string; rowIndex: number };
@@ -588,6 +589,7 @@ export interface TransactionFormState {
   batchSelectionData: string;
   popupSearchSelectionData: string;
   quantityFactorData: string;
+  quantityFactorDataM: string;
   currentCell?: CurrentCell;
   batchesUnits?: UnitByBatchDetailsDto[];
   productInfo: boolean;
@@ -701,6 +703,7 @@ export interface TransactionFormState {
   lastChoosedTemplate?: { id?: number, group?: string, formType?: string, customerType?: string }; // nizam
   itemPopup?:{isOpen?: boolean, index?:number}
   taxBreakdown?: { name: string, amount: number }[];
+  billDiscountPerc: number;
 }
 export interface GiftModel {
   productBatchID: number;
@@ -769,6 +772,15 @@ export interface GridQtyFactors {
   slNo: number;
   width: number;
   height: number;
+  nos: number;
+  total: number;
+}
+
+export interface GridQtyFactorsM {
+  id: string;
+  slNo: number;
+  mann: number;
+  kg: number;
   nos: number;
   total: number;
 }

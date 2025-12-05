@@ -421,6 +421,19 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   chkDraftMode: { visible: false, disabled: false, label: "" },
   importFromExcelToolStripMenuItem: { visible: false, disabled: false, label: "" },
   lblLedgerBal: { visible: false, disabled: false, label: "" },
+  btnGiftOnBilling: { visible: false, disabled: false, label:"offer_achieved"},
+  btnPrivilegeCard: { visible: true, disabled: false, label:""},
+  btnPending: { visible: true, disabled: false, label:""},
+  btnSr: { visible: true, disabled: false, label:""},
+
+  // Need to verify the below 6
+  lblProject: { visible: false, disabled: false, label: "" },
+  rbCash: { visible: false, disabled: false, label: "" },
+  rbCredit: { visible: false, disabled: false, label: "" },
+  txtBillDiscount: { visible: false, disabled: false, label: "" },
+  txtBillDiscPerc: { visible: false, disabled: false, label: "" },
+  chkPrintAfterSave: { visible: false, disabled: false, label: "" },
+
 
 };export const initialUserConfig: UserConfig = {
     clearDetailsAfterSaveAccounts: true,
@@ -527,6 +540,7 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   userRightsFormCode: "",
   isPostedTransaction: false,
   isInv: false,
+  billDiscountPerc: 0,
   summaryConfig: [
     {
       column: "qty",
@@ -637,10 +651,12 @@ export const TransactionFormStateInitialData: TransactionFormState = {
     },
   ],
   showQuantityFactors: { visible: false, rowIndex: 0, qtyDesc: "" },
+  showQuantityFactorsM: { visible: false, rowIndex: 0, qtyDesc: "", },
   batchSelectionData: "",
   popupSearchSelectionData: "",
   showPcode: false,
   quantityFactorData: "",
+  quantityFactorDataM: "",
   batchEntryData: { visible: false, data: "", rowIndex: -1 },
   serialNoEntryData: { visible: false, data: "", rowIndex: -1 },
   imfData: { visible: false, data: "", rowIndex: -1, slNo: 0 },

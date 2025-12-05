@@ -37,7 +37,7 @@ import { formStateHandleFieldChangeKeysOnly, resetState, formStateHandleFieldCha
 import DeletingOverlay from "../transaction-deleting";
 import SavingOverlay from "../transaction-saving";
 import { initialUserConfig, transactionInitialData, TransactionFormStateInitialData, initialFormElements, initialInventoryTotals, initialTransactionDetailData } from "../transaction-type-data";
-import { TransactionProps, UserConfig, TransactionDetail, TransactionFormState, TransactionData, SummaryItems, GridQtyFactors, ColumnModel } from "../transaction-types";
+import { TransactionProps, UserConfig, TransactionDetail, TransactionFormState, TransactionData, SummaryItems, GridQtyFactors, ColumnModel, GridQtyFactorsM } from "../transaction-types";
 import BatchEntryModal from "./batch-entry";
 import ObjectViewer from "./components/fomstate-view";
 import Header from "./components/header";
@@ -63,6 +63,7 @@ import PosFooter from "./pos-components/pos-footer";
 import PosHeader from "./pos-components/pos-header";
 import PosSideMenu from "./pos-components/pos-side-menu";
 import { fetchUserConfig } from "../transaction-utils";
+import MQtyFactorsModal from "./mqty-factors";
 
 interface BilledItem {
   id?: number;
@@ -602,7 +603,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
     handleLoadSr,
     handleDiscountSlab,
     getCustomerTypeAndTitle,
-    fetchUserConfig
+    fetchUserConfig,
+    giftOnBilling
   } = useTransaction(
     transactionType ?? "",
     btnSaveRef,
@@ -1669,7 +1671,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 fields: {
                   ...totalRes,
                   summary: summaryRes.summary,
-                  showQuantityFactors: { visible: false, rowIndex: -1, qtyDesc: "" },
+                  showQuantityFactors: { visible: false, rowIndex: -1, qtyDesc: "" }, // For Q
+                  showQuantityFactorsM: { visible: false, rowIndex: -1, qtyDesc: "" }, // For M  CheckIt
                   transaction: {
                     ...totalRes.transaction,
                     details: res.transaction?.details,
@@ -1748,7 +1751,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           fields: {
             ...totalRes,
             summary: summaryRes.summary,
-            showQuantityFactors: { visible: false, rowIndex: -1, qtyDesc: "" },
+            showQuantityFactors: { visible: false, rowIndex: -1, qtyDesc: "" }, // For Q
             transaction: {
               ...totalRes.transaction,
               details: res.transaction?.details,
@@ -1764,6 +1767,73 @@ const TransactionForm: React.FC<TransactionProps> = ({
     }
     run()
   }, [formState.quantityFactorData]);
+
+  useEffect(() => {
+     const run = async()=>{
+    // This for quantity factor factor m, We can also optimize the code from the above if have time - CheckIt
+    if (formState.quantityFactorDataM != "") {
+      const data = JSON.parse(formState.quantityFactorDataM);
+      const rowIndex = data.rowIndex;
+      const quantityFactor = data.data;
+      const baseRowData = formState.transaction.details[rowIndex];
+      let currentDetails = [
+        ...formState.transaction.details.filter((x) => x.productID > 0),
+      ];
+      let res: DeepPartial<TransactionFormState> = {};
+      let addDetails: TransactionDetail[] = [];
+      quantityFactor.forEach(async(value: GridQtyFactorsM, index: number) => {
+        if (index == 0) {
+          const rowData = { ...baseRowData, qty: value.total };
+          currentDetails[rowIndex] = rowData;
+          res = await calculateRowAmount(rowData, "qty", { result: { transaction: { details: [{ qty: value.total, slNo: baseRowData.slNo }] } } }, true);
+          res!.transaction!.details![0]!.productDescription = `${value.mann} X ${value.kg} X ${value.nos}`;
+        } else {
+          const rowData = {
+            ...baseRowData,
+            qty: value.total,
+            slNo: generateUniqueKey(),
+            productDescription: `${value.mann} X ${value.kg} X ${value.nos}`,
+          };
+          res = await calculateRowAmount(rowData, "qty", { result: { transaction: { details: [rowData] } } }, true);
+          if (
+            res?.transaction?.details &&
+            res?.transaction?.details.length > 0
+          ) {
+            addDetails.push(res!.transaction!.details![0] as TransactionDetail);
+          }
+        }
+      });
+
+      let final = [...currentDetails, ...addDetails];
+      const summaryRes = calculateSummary(final, formState, { result: {} });
+
+      const totalRes = await calculateTotal(
+        formState.transaction.master,
+        summaryRes.summary as SummaryItems,
+        formState.formElements,
+        { result: {} }
+      );
+      dispatch(
+        formStateHandleFieldChangeKeysOnly({
+          fields: {
+            ...totalRes,
+            summary: summaryRes.summary,
+            showQuantityFactorsM: { visible: false, rowIndex: -1, qtyDesc: "" }, // For M
+            transaction: {
+              ...totalRes.transaction,
+              details: res.transaction?.details,
+            },
+          },
+          updateOnlyGivenDetailsColumns: true,
+          rowIndex: rowIndex,
+          itemsToAddToDetails: addDetails,
+        })
+      );
+    }
+      
+    }
+    run()
+  }, [formState.quantityFactorDataM]);
 
 
   const _purchaseGridCol: ColumnModel[] = purchaseGridCol(applicationSettings, userSession
@@ -2197,6 +2267,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                         applicationSettings={applicationSettings}
                         loadAndSetTransVoucher={loadAndSetTransVoucher}
                         handleDiscountSlab={handleDiscountSlab}
+                        giftOnBilling={giftOnBilling}
                       // generateLPO={generateLPO}
                       // generateLPQ={generateLPQ}
                       // clientSession={clientSession}
@@ -2386,6 +2457,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   applicationSettings={applicationSettings}
                   loadAndSetTransVoucher={loadAndSetTransVoucher}
                   handleDiscountSlab={handleDiscountSlab}
+                  giftOnBilling={giftOnBilling}
                   // generateLPO={generateLPO}
                   // generateLPQ={generateLPQ}
                   // clientSession={clientSession}
@@ -2442,6 +2514,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
             applicationSettings={applicationSettings}
             loadAndSetTransVoucher={loadAndSetTransVoucher}
             handleDiscountSlab={handleDiscountSlab}
+            giftOnBilling={giftOnBilling}
           // generateLPO={generateLPO}
           // generateLPQ={generateLPQ}
           // clientSession={clientSession}
@@ -2768,6 +2841,22 @@ const TransactionForm: React.FC<TransactionProps> = ({
               dispatch(
                 formStateHandleFieldChangeKeysOnly({
                   fields: { showQuantityFactors: false },
+                })
+              )
+            }
+            t={t}
+          />
+        )}
+         {/* This is qty factors for mass(M) */}
+        {formState.showQuantityFactorsM.visible && (
+          <MQtyFactorsModal
+            qtyDesc={formState.showQuantityFactorsM.qtyDesc}
+            isOpen={formState.showQuantityFactorsM.visible}
+            rowIndex={formState.showQuantityFactorsM.rowIndex}
+            onClose={() =>
+              dispatch(
+                formStateHandleFieldChangeKeysOnly({
+                  fields: { showQuantityFactorsM: false },
                 })
               )
             }

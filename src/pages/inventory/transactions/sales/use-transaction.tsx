@@ -3005,6 +3005,25 @@ export const useTransaction = (
           }
           break;
 
+          case "m":
+          case "M":
+            if (columnName === "qty") {
+              const data: TransactionDetail =
+                formState.transaction.details[rowIndex];
+              dispatch(
+                commonParams.formStateHandleFieldChangeKeysOnly({
+                  fields: {
+                    showQuantityFactorsM: {
+                      visible: true,
+                      rowIndex: rowIndex,
+                      qtyDesc: data.productDescription,
+                    },
+                  },
+                })
+              );
+            }
+            break;
+
         // case "M":
         // case "m":
         //   if (isCtrlPressed) {

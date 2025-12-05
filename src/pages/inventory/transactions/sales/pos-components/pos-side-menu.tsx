@@ -20,6 +20,7 @@ import GiftOrCashCouponSelector from "../giftOrCash-Coupon-Selector";
 import { Link } from "react-router-dom";
 import { inputBox } from "../../../../../redux/slices/app/types";
 import PosKeyBoard from "./pos-keyboard";
+import PosPaymentSection from "./pos-payment-section";
 
 interface TransactionHeaderProps {
   formState: any;
@@ -619,6 +620,8 @@ const PosSideSection: React.FC<TransactionHeaderProps> = ({
         <div className="w-full h-[40%] ">
           {chooseSubBtn === "settlement" && (
             <PosComponents formState={formState} dispatch={dispatch} />
+            // The below one is for cash, upi, card, coupons section, need to set where it place
+            // <PosPaymentSection formState={formState} dispatch={dispatch}/> 
           )}
           {chooseSubBtn === "finalVerify" && <FinalVerifySection />}
           {chooseSubBtn === "discount" && <DiscountSection />}

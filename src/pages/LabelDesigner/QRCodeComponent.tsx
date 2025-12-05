@@ -5,6 +5,7 @@ import { DeleteButton } from "./label_designer";
 import { ResizableBox } from "react-resizable";
 import "react-resizable/css/styles.css";
 import { ptToPx, pxToPt } from "../InvoiceDesigner/utils/pdf-util";
+import useDebounce from "../inventory/transactions/purchase/use-debounce";
 
 interface QRCodeComponentProps {
   component: PlacedComponent;
@@ -18,6 +19,7 @@ interface QRCodeComponentProps {
   setTemplateData?: (updater: (prev: any) => any) => void;
   selectedComponent?: PlacedComponent | null;
   setSelectedComponent?: (updater: (prev: PlacedComponent | null) => PlacedComponent | null) => void;
+  pushToHistory: (newState: any, action: string) => void;
 }
 
 export const QRCodeComponent: React.FC<QRCodeComponentProps> = ({
@@ -32,6 +34,7 @@ export const QRCodeComponent: React.FC<QRCodeComponentProps> = ({
   setTemplateData,
   selectedComponent,
   setSelectedComponent,
+  pushToHistory
 }) => {
   // 1) Change this ref to point at a DIV, not a CANVAS
   const props = component.qrCodeProps;
@@ -100,6 +103,56 @@ export const QRCodeComponent: React.FC<QRCodeComponentProps> = ({
     props,
     qrCodeRefs,
   ]);
+ const debouncedResizeQR = useDebounce(
+  (
+    id: string,
+    widthPt: number,
+    heightPt: number
+  ) => {
+
+    // -----------------------------
+    //  Update placedComponents
+    // -----------------------------
+    const updatedComponents =
+      templateData?.barcodeState?.placedComponents?.map((comp: PlacedComponent) => {
+        if (comp.id !== id) return comp;
+
+        return {
+          ...comp,
+          qrCodeProps: {
+            ...comp.qrCodeProps,
+            width: widthPt,
+            height: heightPt,
+          },
+        };
+      }) || [];
+
+    const newTemplateData = {
+      ...templateData,
+      barcodeState: {
+        ...templateData.barcodeState,
+        placedComponents: updatedComponents,
+      },
+    };
+   if(setTemplateData)setTemplateData(newTemplateData);
+   
+    pushToHistory(newTemplateData, "resize qrcode");
+
+
+    if (selectedComponent?.id === id && setSelectedComponent) {
+      setSelectedComponent((prev) => ({
+        ...prev!,
+        qrCodeProps: {
+          ...prev?.qrCodeProps,
+          width: widthPt,
+          height: heightPt,
+          value: prev?.qrCodeProps?.value || "",
+        },
+      }));
+    }
+  },
+  150
+);
 
   // 5) Render a ResizableBox container
  return (
@@ -111,43 +164,11 @@ export const QRCodeComponent: React.FC<QRCodeComponentProps> = ({
               maxConstraints={[ptToPx(800), ptToPx(600)]}
               resizeHandles={isSelected ? ['se', 'sw', 'ne', 'nw', 'n', 's', 'e', 'w'] : []}
    
-                 onResize={(e, { size }) => {
-               const widthPt = pxToPt(size.width);
-              const heightPt = pxToPt(size.height);
-         if (setTemplateData && templateData) {
-          const updatedComponents = templateData?.barcodeState?.placedComponents?.map((comp: PlacedComponent) => {
-            if (comp.id === component.id) {
-              return {
-                ...comp,
-                qrCodeProps: {
-                  ...comp.qrCodeProps,
-                  width: widthPt,
-                  height:heightPt,
-                },
-              };
-            }
-            return comp;
-          }) || [];
-          setTemplateData((prev: any) => ({
-            ...prev,
-            barcodeState: {
-              ...prev.barcodeState,
-              placedComponents: updatedComponents,
-            },
-          }));
-        }
-        if (setSelectedComponent && selectedComponent?.id === component.id) {
-          setSelectedComponent((prev) => ({
-            ...prev!,
-            qrCodeProps: {
-              ...prev?.qrCodeProps,
-              width: widthPt,
-              height: heightPt,
-              value: prev?.qrCodeProps?.value || "",
-            },
-          }));
-        }
-      }}     
+              onResize={(e, { size }) => {
+                  const widthPt = pxToPt(size.width);
+                  const heightPt = pxToPt(size.height);
+                  debouncedResizeQR(component.id, widthPt, heightPt);
+              }}     
   
 
       style={{

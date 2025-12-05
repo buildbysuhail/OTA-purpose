@@ -7,6 +7,11 @@ interface HistoryState {
   action: string; // For debugging/logging
 }
 
+interface UIState {
+  leftSidebarWidth: number;
+  rightSidebarWidth: number;
+  zoom: number;
+}
 interface UseUndoRedoReturn {
   canUndo: boolean;
   canRedo: boolean;
@@ -19,7 +24,11 @@ interface UseUndoRedoReturn {
 }
 
 const MAX_HISTORY_DEPTH = 50; // Standard for most design tools (Figma, Adobe XD use 50-100)
-
+const defaultUIState: UIState = {
+  leftSidebarWidth: 250,
+  rightSidebarWidth: 380,
+  zoom: 100,
+};
 export const useUndoRedo = (
   initialState: TemplateState<unknown>
 ): UseUndoRedoReturn => {
@@ -32,14 +41,19 @@ export const useUndoRedo = (
   ]);
 const [historyIndex, setHistoryIndex] = useState(0);
 const historyIndexRef = useRef(0); // Keep ref in sync
+    // Update ref when historyIndex changes
+  useEffect(() => {
+    historyIndexRef.current = historyIndex;
+  }, [historyIndex]);
 
   // Push new state to history
   const pushState = useCallback(
-    (newState: TemplateState<unknown>, action: string) => {
+    (newState: TemplateState<unknown>, action: string, uiState?: UIState) => {
       setHistory((prevHistory) => {
         // Remove any "future" history if user makes a change after undo
          const currentIndex = historyIndexRef.current;
         const newHistory = prevHistory.slice(0, currentIndex  + 1);
+
        // Don't add duplicate states
         if (
           newHistory.length > 0 &&
@@ -72,11 +86,18 @@ const historyIndexRef = useRef(0); // Keep ref in sync
     },
     []
   );
+const resetHistory = useCallback((newInitial: TemplateState<unknown>) => {
+  const base: HistoryState = {
+    templateData: JSON.parse(JSON.stringify(newInitial)),
+    timestamp: Date.now(),
+    action: "Reset Initial",
+  };
 
-    // Update ref when historyIndex changes
-  useEffect(() => {
-    historyIndexRef.current = historyIndex;
-  }, [historyIndex]);
+  // Replace history with single base entry and reset index
+  setHistory([base]);
+  historyIndexRef.current = 0;
+  setHistoryIndex(0);
+}, []);
 
   // Undo action
   const undo = useCallback(() => {

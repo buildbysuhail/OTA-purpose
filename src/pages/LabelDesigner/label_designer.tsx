@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { Settings, Minus, Menu, Edit, Scan, Printer, X, Image, QrCode as QrCodeIcon, Package, } from "lucide-react";
 import JsBarcode from "jsbarcode";
 import html2canvas from "html2canvas";
@@ -183,18 +183,22 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
   const customePageWidth = selectedPageSize.width - ((template?.propertiesState?.padding?.left ?? 0) + (template?.propertiesState?.padding?.right ?? 0))
   const [customePageHeight, setCustomePageHeight] = useState(200);
 
+  const [leftSidebarWidth, setLeftSidebarWidth] = useState(250);
+  const [rightSidebarWidth, setRightSidebarWidth] = useState(380);
 
-    // Initialize undo/redo
-  const {
-    canUndo,
-    canRedo,
-    undo: undoAction,
-    redo: redoAction,
-    clearHistory,
-    pushState,
-    history,
-    historyIndex,
-  } = useUndoRedo(templateData);
+
+
+const {
+  canUndo,
+  canRedo,
+  undo: undoAction,
+  redo: redoAction,
+  clearHistory,
+  pushState,
+  history,
+  historyIndex,
+} = useUndoRedo(templateData);
+
 
     // Track current state to detect changes
   const prevTemplateDataRef = useRef(templateData);
@@ -205,7 +209,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
       pushState(newState, action);
       prevTemplateDataRef.current = newState;
     },
-    [pushState]
+    [pushState,leftSidebarWidth, rightSidebarWidth, zoom]
   );
 
     // Override undo/redo to also update templateData
@@ -213,7 +217,8 @@ const handleUndo = useCallback(() => {
   if (canUndo && historyIndex > 0) {
     const previousIndex = historyIndex - 1;
     if (history[previousIndex]) {
-      setTemplateData(history[previousIndex].templateData);
+      const previousState = history[previousIndex];
+      setTemplateData(previousState.templateData);
       undoAction(); // Call the hook's undo to update historyIndex
     }
   }
@@ -223,18 +228,19 @@ const handleRedo = useCallback(() => {
   if (canRedo && historyIndex < history.length - 1) {
     const nextIndex = historyIndex + 1;
     if (history[nextIndex]) {
-      setTemplateData(history[nextIndex].templateData);
+      const nextState = history[nextIndex];
+      setTemplateData(nextState.templateData);
       redoAction(); // Call the hook's redo to update historyIndex
     }
   }
 }, [canRedo, historyIndex, history, redoAction]);
 
-// ===== ADD DEBOUNCED DRAG HISTORY PUSH =====
-const dragHistoryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-const isDraggingRef = useRef(false);
-const dragStartStateRef = useRef<TemplateState<unknown> | null>(null);
-
-
+const debouncedPushDragHistory = useDebounce(
+  (currentState: TemplateState<unknown>) => {
+    pushToHistory(currentState, "Moved component");
+  },
+  150 // Matches your drag debounce timing
+);
   // Components configuration
   const components = [
     {
@@ -647,8 +653,9 @@ const dragStartStateRef = useRef<TemplateState<unknown> | null>(null);
     }
 
     const canvasRect = canvasRef.current?.getBoundingClientRect();
-    if (canvasRect) {
-      const fullComponent = templateData?.barcodeState?.placedComponents?.find(
+
+      if (canvasRect) {
+        const fullComponent = templateData?.barcodeState?.placedComponents?.find(
         c => c.id === component.id
       );
 
@@ -656,10 +663,8 @@ const dragStartStateRef = useRef<TemplateState<unknown> | null>(null);
         console.error('Component not found in main list:', component.id);
         return;
       }
-   // Capture state BEFORE drag starts
-    dragStartStateRef.current = JSON.parse(JSON.stringify(templateData));
-      setDraggingComponent(null);
 
+      setDraggingComponent(null);
       setTimeout(() => {
         setDraggingComponent(fullComponent);
         setSelectedComponent(fullComponent);
@@ -717,7 +722,8 @@ const dragStartStateRef = useRef<TemplateState<unknown> | null>(null);
       },
     };
     setTemplateData(newTemplateData);
-    pushToHistory(newTemplateData, 'Cleared canvas');
+    // pushToHistory(newTemplateData, 'Cleared canvas');
+    clearHistory();
     setSelectedComponent(null);
   };
   // Property change handlers
@@ -970,29 +976,8 @@ const dragStartStateRef = useRef<TemplateState<unknown> | null>(null);
           // Convert px -> pt before saving
           const widthPt = pxToPt(size.width);
           const heightPt = pxToPt(size.height);
-          const updatedComponents =
-            templateData?.barcodeState?.placedComponents?.map((comp) =>
-              comp.id === container.id
-                ? { ...comp, width: widthPt, height: heightPt }
-                : comp
-            ) || [];
-                              const newTemplateData : TemplateState<unknown> = {
-                      ...templateData,
-                      barcodeState: {
-                        ...templateData.barcodeState,
-                        placedComponents: updatedComponents,
-                      },
-                    };
-                    setTemplateData(newTemplateData);
-                   pushToHistory(newTemplateData, `resize ${container.containerId} ${depth} containers`);
-
-          if (selectedComponent?.id === container.id) {
-            setSelectedComponent((prev) => ({
-              ...prev!,
-              width: widthPt,
-              height: heightPt,
-            }));
-          }
+          // Debounce only the expensive state updates
+          debouncedResize(container.id, widthPt, heightPt, container);
         }}
         className="container-component"
         style={{
@@ -1172,29 +1157,8 @@ const dragStartStateRef = useRef<TemplateState<unknown> | null>(null);
             onResize={(e, { size }) => {
               const widthPt = pxToPt(size.width);
               const heightPt = pxToPt(size.height);
-
-              const updatedComponents =
-                templateData?.barcodeState?.placedComponents?.map((comp) =>
-                  comp.id === component.id
-                    ? { ...comp, width: widthPt, height: heightPt }
-                    : comp
-                ) || [];
-                   const newTemplateData : TemplateState<unknown> = {
-                      ...templateData,
-                      barcodeState: {
-                        ...templateData.barcodeState,
-                        placedComponents: updatedComponents,
-                      },
-                    };
-                    setTemplateData(newTemplateData);
-                   pushToHistory(newTemplateData, `resize ${component.type} containers`);
-              if (selectedComponent?.id === component.id) {
-                setSelectedComponent((prev) => ({
-                  ...prev!,
-                  width: widthPt,
-                  height: heightPt,
-                }));
-              }
+              // Debounce only the expensive state updates
+              debouncedResize(component.id, widthPt, heightPt, component);
             }}
             style={{
               position: "absolute",
@@ -1292,34 +1256,8 @@ const dragStartStateRef = useRef<TemplateState<unknown> | null>(null);
             onResize={(e, { size }) => {
               const widthPt = pxToPt(size.width);
               const thicknessPt = pxToPt(size.height); // ✅ vertical resize = thickness
+               debouncedResize(component.id, widthPt, thicknessPt, component);
 
-              const updatedComponents =
-                templateData?.barcodeState?.placedComponents?.map((comp) =>
-                  comp.id === component.id
-                    ? {
-                      ...comp,
-                      lineWidth: widthPt,
-                      lineThickness: thicknessPt   // ✅ update thickness
-                    }
-                    : comp
-                ) || [];
-                  const newTemplateData : TemplateState<unknown> = {
-                      ...templateData,
-                      barcodeState: {
-                        ...templateData.barcodeState,
-                        placedComponents: updatedComponents,
-                      },
-                    };
-                    setTemplateData(newTemplateData);
-                   pushToHistory(newTemplateData, `resize ${component.type} `);
-
-              if (selectedComponent?.id === component.id) {
-                setSelectedComponent((prev) => ({
-                  ...prev!,
-                  lineWidth: widthPt,
-                  lineThickness: thicknessPt,
-                }));
-              }
             }}
             style={{
               position: "absolute",
@@ -1378,29 +1316,8 @@ const dragStartStateRef = useRef<TemplateState<unknown> | null>(null);
               const widthPt = pxToPt(size.width);
               const heightPt = pxToPt(size.height);
 
-              const updatedComponents =
-                templateData?.barcodeState?.placedComponents?.map((comp) =>
-                  comp.id === component.id
-                    ? { ...comp, width: widthPt, height: heightPt }
-                    : comp
-                ) || [];
-                  const newTemplateData : TemplateState<unknown> = {
-                      ...templateData,
-                      barcodeState: {
-                        ...templateData.barcodeState,
-                        placedComponents: updatedComponents,
-                      },
-                    };
-                    setTemplateData(newTemplateData);
-                   pushToHistory(newTemplateData, `resize ${component.type}`);
-
-              if (selectedComponent?.id === component.id) {
-                setSelectedComponent((prev) => ({
-                  ...prev!,
-                  width: widthPt,
-                  height: heightPt,
-                }));
-              }
+              // Debounce only the expensive state updates
+              debouncedResize(component.id, widthPt, heightPt, component);
             }}
 
             style={{
@@ -1469,6 +1386,7 @@ const dragStartStateRef = useRef<TemplateState<unknown> | null>(null);
             setTemplateData={setTemplateData}
             selectedComponent={selectedComponent}
             setSelectedComponent={setSelectedComponent}
+            pushToHistory={pushToHistory}
           />
         );
 
@@ -1510,63 +1428,68 @@ const dragStartStateRef = useRef<TemplateState<unknown> | null>(null);
           let newX = pxToPt(e.clientX - canvasRect.left) - dragOffsetRef.current.x;
           let newY = pxToPt(e.clientY - canvasRect.top) - dragOffsetRef.current.y;
 
-          setTemplateData((prev: TemplateState<unknown>) => {
-            const components = prev?.barcodeState?.placedComponents || [];
+        // Calculate relative position if inside a container
+        if (draggingRef.current?.containerId) {
+          const containerChain = [];
+          let currentContainerId = draggingRef.current.containerId;
 
-            // Calculate relative position if inside a container
-            if (draggingRef.current?.containerId) {
-              const containerChain = [];
-              let currentContainerId = draggingRef.current.containerId;
-
-              // Build the container chain
-              while (currentContainerId) {
-                const container = components.find(c => c.id === currentContainerId);
-                if (container) {
-                  containerChain.push(container);
-                  currentContainerId = container.containerId ?? "";
-                } else {
-                  break;
-                }
-              }
-
-              // Calculate position relative to immediate parent
-              if (containerChain.length > 0) {
-                const immediateParent = containerChain[0];
-                const parentAbsolutePos = getAbsolutePosition(immediateParent, components);
-                const containerPadding = immediateParent.containerProps?.padding || 10;
-
-                newX = newX - parentAbsolutePos.x - containerPadding;
-                newY = newY - parentAbsolutePos.y - containerPadding;
-
-                // Keep within container bounds
-                const maxX = immediateParent.width - (containerPadding * 2) - draggingRef.current!.width;
-                const maxY = immediateParent.height - (containerPadding * 2) - draggingRef.current!.height;
-                newX = Math.max(0, Math.min(newX, maxX));
-                newY = Math.max(0, Math.min(newY, maxY));
-              }
+          while (currentContainerId) {
+            const container = (templateData?.barcodeState?.placedComponents || []).find(
+              c => c.id === currentContainerId
+            );
+            if (container) {
+              containerChain.push(container);
+              currentContainerId = container.containerId ?? "";
+            } else {
+              break;
             }
+          }
 
-            const updatedComponents = components.map((comp) => {
-              if (comp.id === draggingRef.current!.id) {
-                return {
-                  ...comp,
-                  x: newX,
-                  y: newY,
-                };
-              }
-              return comp;
-            });
+          if (containerChain.length > 0) {
+            const immediateParent = containerChain[0];
+            const parentAbsolutePos = getAbsolutePosition(
+              immediateParent,
+              templateData?.barcodeState?.placedComponents || []
+            );
+            const containerPadding = immediateParent.containerProps?.padding || 10;
 
-            return {
-              ...prev,
-              barcodeState: {
-                ...prev.barcodeState,
-                placedComponents: updatedComponents,
-              },
-            };
+            newX = newX - parentAbsolutePos.x - containerPadding;
+            newY = newY - parentAbsolutePos.y - containerPadding;
+
+            const maxX = immediateParent.width - (containerPadding * 2) - draggingRef.current!.width;
+            const maxY = immediateParent.height - (containerPadding * 2) - draggingRef.current!.height;
+            newX = Math.max(0, Math.min(newX, maxX));
+            newY = Math.max(0, Math.min(newY, maxY));
+          }
+        }
+
+        // Update templateData WITHOUT pushing to history yet
+        setTemplateData((prev: TemplateState<unknown>) => {
+          const updatedComponents = (prev?.barcodeState?.placedComponents || []).map((comp) => {
+            if (comp.id === draggingRef.current!.id) {
+              return {
+                ...comp,
+                x: newX,
+                y: newY,
+              };
+            }
+            return comp;
           });
 
+          const newState = {
+            ...prev,
+            barcodeState: {
+              ...prev.barcodeState,
+              placedComponents: updatedComponents,
+            },
+          };
 
+          // Call debounced history push with the new state
+          debouncedPushDragHistory(newState);
+
+          return newState;
+        });
+         // Update selected component for UI feedback
           setSelectedComponent((prevSelected) => {
             const draggingId = draggingRef.current?.id; // safe access
             if (prevSelected && draggingId && prevSelected.id === draggingId) {
@@ -1583,29 +1506,17 @@ const dragStartStateRef = useRef<TemplateState<unknown> | null>(null);
     };
 
     const handleGlobalMouseUp = (e: MouseEvent) => {
-      if (draggingRef.current&& isDraggingRef.current) {
+      if (draggingRef.current) {
         e.preventDefault();
         e.stopPropagation();
-      // ONLY push to history when drag ends, not during drag
-      setTemplateData((current) => {
-        if (
-          dragStartStateRef.current &&
-          JSON.stringify(dragStartStateRef.current) !==
-            JSON.stringify(current)
-        ) {
-          // Only push if position actually changed
-          pushToHistory(current, "Moved component");
-        }
-        return current;
-      });
+      // ✅ Flush any pending debounced history push on mouse up
+      debouncedPushDragHistory.flush();
         setDraggingComponent(null);
         setDragOffset({ x: 0, y: 0 });
         draggingRef.current = null;
-        isDraggingRef.current = false;
+       
         dragOffsetRef.current = { x: 0, y: 0 };
-        if (dragHistoryTimeoutRef.current) {
-        clearTimeout(dragHistoryTimeoutRef.current);
-      }
+   
       }
     };
 
@@ -1616,13 +1527,11 @@ const dragStartStateRef = useRef<TemplateState<unknown> | null>(null);
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
       }
-    if (dragHistoryTimeoutRef.current) {
-      clearTimeout(dragHistoryTimeoutRef.current);
-    }
+ 
       document.removeEventListener('mousemove', handleGlobalMouseMove);
       document.removeEventListener('mouseup', handleGlobalMouseUp);
     };
-  }, [pushToHistory]);
+  }, [debouncedPushDragHistory, templateData]);
 
   // Consolidate container children before saving - UPDATED for nested containers
   const consolidateContainerChildren = () => {
@@ -1707,6 +1616,7 @@ const dragStartStateRef = useRef<TemplateState<unknown> | null>(null);
   ) => {
     const newWidthPt = pxToPt(size.width);
     const newHeightPt = pxToPt(size.height);
+
     setTemplateData((prevData: TemplateState<unknown>) => {
       const updated = {
         ...prevData,
@@ -2182,6 +2092,8 @@ useEffect(() => {
     if (id !== "new" && !forCustomRows) getPDFTemplateData();
   }, []);
 
+
+
   useEffect(() => {
     if (forCustomRows && template) {
       const fields = customTemplate?.split(".");
@@ -2224,6 +2136,73 @@ useEffect(() => {
   // Debounced handlers
   const debouncedHandleAreaPropetFieldChange = useDebounce(handleDesignerChange, 300);
   const debouncedHandlePropetFieldChange = useDebounce(handlePropertyChange, 300);
+const debouncedResize = useDebounce(
+  (
+    id: string,
+    widthPt: number,
+    heightPt: number,
+    component: any
+  ) => {
+
+    const updatedComponents =
+      templateData?.barcodeState?.placedComponents?.map((comp) => {
+        if (comp.id !== id) return comp;
+
+        //  If Line element → update lineWidth + lineThickness
+        if (component.type === DesignerElementType.line) {
+          return {
+            ...comp,
+            lineWidth: widthPt,
+            lineThickness: heightPt,
+          };
+        }
+
+        //  Otherwise → normal width/height update
+        return {
+          ...comp,
+          width: widthPt,
+          height: heightPt,
+        };
+      }) || [];
+
+    const newTemplateData: TemplateState<unknown> = {
+      ...templateData,
+      barcodeState: {
+        ...templateData.barcodeState,
+        placedComponents: updatedComponents,
+      },
+    };
+
+    setTemplateData(newTemplateData);
+    pushToHistory(newTemplateData, `resize ${component.type} containers`);
+
+    // ----------------------------------------------------
+    //    UPDATE SELECTED COMPONENT (same logic as above)
+    // ----------------------------------------------------
+    if (selectedComponent?.id === id) {
+      setSelectedComponent((prev) => {
+        if (!prev) return prev;
+        // If line → update line values
+        if (component.type === DesignerElementType.line) {
+          return {
+            ...prev,
+            lineWidth: widthPt,
+            lineThickness: heightPt,
+          };
+        }
+
+        // Otherwise → update width/height
+        return {
+          ...prev,
+          width: widthPt,
+          height: heightPt,
+        };
+      });
+    }
+  },
+  150
+);
+
 
   const getFieldContent = () => {
     if (!forCustomRows) return barCodeField;
@@ -2250,18 +2229,23 @@ useEffect(() => {
     ? designerData?.bg_image_objectFit
     : templateData?.barcodeState?.labelState?.bg_image_objectFit;
 
+
   // Main render
   return (
     <div className={`flex h-dvh max-h-dvh bg-gray-100 overflow-hidden w-full ${templateData.propertiesState?.language_prefer === "Eng" ? "dir-ltr" : templateData.propertiesState?.language_prefer === "Arb" ? "dir-rtl" : "dir-ltr"}`}>
       {/* Left Sidebar - Components */}
       <ResizableBox
-        width={250}
+        key={`left-sidebar-${leftSidebarWidth}`} 
+        width={leftSidebarWidth}
         height={Infinity}
         minConstraints={[150, Infinity]}
         maxConstraints={[400, Infinity]}
         resizeHandles={[templateData.propertiesState?.language_prefer === "Arb" ? "w" : "e",]}
         handle={<div className={`custom-handle ${templateData.propertiesState?.language_prefer === "Arb" ? "rtl" : "ltr"}`} />}
         className="bg-card text-card-foreground rounded-lg shadow-lg overflow-hidden"
+          onResize={(e, { size }) => {
+            setLeftSidebarWidth(size.width);
+          }}
       >
         <div className="border-r border-gray-200 p-4">
           <div className="bg-[] border-b border-dashed pb-2 mb-1 border-gray-600">
@@ -2358,7 +2342,7 @@ useEffect(() => {
         {/* Design Canvas */}
         <div
           id="teplate-container-base"
-          className="flex-1 bg-gray-50"
+          className="flex-1 bg-black"
           onDrop={handleDrop}
           onDragOver={(e) => e.preventDefault()}
           onClick={(e) => {
@@ -2383,7 +2367,8 @@ useEffect(() => {
               ((templateData?.propertiesState?.gap?.hgap ?? 0) *
                 ((templateData?.barcodeState?.labelState?.rowsPerPage ?? 1) - 1))
               }pt`,
-            padding: forCustomRows ? `${template?.propertiesState?.padding?.top ?? 0}pt 
+              
+              padding: forCustomRows ? `${template?.propertiesState?.padding?.top ?? 0}pt 
                       ${template?.propertiesState?.padding?.right ?? 0}pt 
                       ${0}pt 
                       ${template?.propertiesState?.padding?.left ?? 0}pt`
@@ -2447,7 +2432,8 @@ useEffect(() => {
 
       {/* Right Sidebar - Properties */}
       <ResizableBox
-        width={380} // Initial width
+        key={`right-sidebar-${rightSidebarWidth}`} 
+        width={rightSidebarWidth} // Initial width
         height={Infinity}
         minConstraints={[200, Infinity]} // Minimum width
         maxConstraints={[400, Infinity]} // Maximum width
@@ -2455,7 +2441,9 @@ useEffect(() => {
           templateData.propertiesState?.language_prefer === "Arb" ? "e" : "w",
         ]}
         handle={<div className={`custom-handle ${templateData.propertiesState?.language_prefer === "Arb" ? "ltr" : "rtl"}`} />}
-        // onResize={(e, { size }) => }
+          onResize={(e, { size }) => {
+            setRightSidebarWidth(size.width);
+          }}
         className="bg-card text-card-foreground rounded-lg shadow-lg overflow-hidden relative"
       >
         <div className="p-4 h-full">

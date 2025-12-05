@@ -73,6 +73,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
   const [isExpanded, setIsExpanded] = useState<boolean>(formState.userConfig?.isExpanded || false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { appState, updateAppState } = useAppState();
+  const userSession = useAppSelector((state: RootState) => state.UserSession);
   const isRtl = appState.locale.rtl;
   const [stockUpdate, setStockUpdate] = useState<boolean>(false);
   useEffect(() => {
@@ -245,6 +246,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
         </div>
 
         {/* Main Configuration Options - All checkboxes in one section */}
+        {(userSession.userTypeCode === "CA" || userSession.userTypeCode ==="BA") && (
         <CollapsibleSection title={t("configuration_options")} defaultExpanded={true} icon={<Settings className="w-4 h-4 text-[#2563eb] dark:text-[#60a5fa]" />}>
           <div className="flex flex-row">
             <div className="flex flex-wrap space-y-1 px-4">
@@ -571,6 +573,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
             )}
           </div>
         </CollapsibleSection>
+        ) }
 
 
         {/* Cost Center Settings */}

@@ -3,7 +3,7 @@ import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
 import { ChevronUp } from "lucide-react";
 import VoucherType from "../../../../../enums/voucher-types";
-import { formStateMasterHandleFieldChange } from "../../reducer";
+import { formStateHandleFieldChange, formStateMasterHandleFieldChange } from "../../reducer";
 import { VoucherElementProps } from "../../transaction-types";
 
 interface BillDiscountInputProps extends VoucherElementProps {
@@ -14,37 +14,84 @@ interface BillDiscountInputProps extends VoucherElementProps {
 }
 
 const BillDiscountInput: React.FC<BillDiscountInputProps> = ({ formState, dispatch, t, handleKeyDown, footerLayout, applyDiscountsToItems, }) => {
-  const { value, onChange } = useDebouncedInput(
-    formState.transaction.master.billDiscount || "",
-    (debouncedValue) => {
-      dispatch(
-        formStateMasterHandleFieldChange({
-          fields: { billDiscount: debouncedValue },
-        })
-      );
-    },
-    300
-  );
+  
+     // Find discount amount from percentage
+      const { value, onChange } = useDebouncedInput(
+        formState.billDiscountPerc || 0,
+        (debouncedValue) => {
+          const netAmount = formState.netAmount || 0;
+          const discPerc = Number(debouncedValue);
+          const billDisc = (netAmount * discPerc) / 100;
+          // Need to add in nexxt level
+          // txtTaxOnDisc.Text = "0.00";
+          // txtBillDiscount.Text = BillDisc.ToString("##0.00");
+          // CalculateTaxOnDiscount();
+          // CalculateTotal();
+
+          dispatch(
+            formStateHandleFieldChange({
+              fields: { billDiscountPerc: discPerc },
+            })
+          );
+
+          dispatch(
+            formStateMasterHandleFieldChange({
+              fields: { billDiscount: billDisc },
+            })
+          );
+        },
+        100
+    );
+
+    // Find percentage from bill dic amount
+    const { value: valuePerc, onChange: onChangePerc } = useDebouncedInput(
+      formState.transaction.master.billDiscount || 0,
+      (debouncedValue) => {
+        const netAmount = formState.netAmount || 0;
+        const BillDisc = Number(debouncedValue);
+        const discPerc = netAmount > 0 ? (BillDisc / netAmount) * 100 : 0;
+        // in the default code - use if needed
+        // if(BillDisc === 0){
+        //   txtTaxOnDisc.Text = "0.00";
+        // }
+        // txtBillDiscPerc.Text = BilldiscPerc.ToString();
+        //  CalculateTaxOnDiscount();
+
+        dispatch(
+          formStateMasterHandleFieldChange({
+            fields: { billDiscount: BillDisc },
+          })
+        );
+
+        dispatch(
+          formStateHandleFieldChange({
+            fields: { billDiscountPerc: discPerc },
+          })
+        );
+      },
+      100
+    );
 
   return (
-    <ERPInput
+   <div className="flex flex-col gap-0.5">
+      <ERPInput
       localInputBox={formState?.userConfig?.inputBoxStyle}
       fetching={formState.transactionLoading}
       id="billDiscount"
       type="number"
       labelDirection={footerLayout === "vertical" ? "horizontal" : "vertical"}
       label={t(formState.formElements.billDiscount.label)}
-      value={value}
+      value={formState.billDiscountPerc}
       disableEnterNavigation={true}
       onKeyDown={(e) => { handleKeyDown && handleKeyDown(e, "billDiscount"); }}
-      onChange={(e) => onChange(e.target.value)}
-      className={`${footerLayout === "vertical" ? "w-full" : "max-w-[110px] min-w-[110px] !m-0"}`}
+      onChange={(e) => onChange(Number(e.target.value))}
+      className={`${footerLayout === "vertical" ? "w-full" : "max-w-[110px] min-w-[110px] !m-0 "}`}
       disabled={formState.formElements.billDiscount?.disabled || formState.formElements.pnlMasters?.disabled}
       customButton={
         formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
           <button
-            type="button"
-            style={{
+              type="button"
+              style={{
               background: "#8080809c",
               border: "none",
               borderRadius: "6px 6px 6px 6px",
@@ -62,6 +109,22 @@ const BillDiscountInput: React.FC<BillDiscountInputProps> = ({ formState, dispat
         )
       }
     />
+      <ERPInput
+       localInputBox={formState?.userConfig?.inputBoxStyle}
+      fetching={formState.transactionLoading}
+      id="billDiscount"
+      type="number"
+      labelDirection={footerLayout === "vertical" ? "horizontal" : "vertical"}
+      label={t(formState.formElements.billDiscount.label)}
+      value={formState.transaction.master.billDiscount}
+      noLabel
+      disableEnterNavigation={true}
+      onKeyDown={(e) => { handleKeyDown && handleKeyDown(e, "billDiscount"); }}
+      onChange={(e) => onChangePerc(Number(e.target.value))}
+      className={`${footerLayout === "vertical" ? "w-full" : "max-w-[11px] min-w-[110px] !m-0"}`}
+      disabled={formState.formElements.billDiscount?.disabled || formState.formElements.pnlMasters?.disabled}
+    />
+   </div>
   );
 };
 

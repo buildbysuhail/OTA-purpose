@@ -40,7 +40,7 @@ const NetAmountInput: React.FC<NetAmountInputProps> = ({ formState, dispatch, t,
     //   }
     // />
     <div className="flex items-center">
-      <span className="text-xs dark:text-dark-text text-gray-600 font-medium w-20">{t(formState.formElements.netAmount.label)}</span>
+      <span className="text-xs dark:text-dark-text text-gray-600 font-medium w-24">{t(formState.formElements.netAmount.label)}</span>
       <span className="text-xs dark:text-dark-text text-gray-600 mr-2">:</span>
       <span className={`text-sm font-semibold dark:text-dark-text text-gray-900 flex-1 ${isRtl ? "text-left" : "text-right"}`}>{getFormattedValue(formState.summary.netValue ?? 0)}</span>
     </div>

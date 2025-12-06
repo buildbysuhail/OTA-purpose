@@ -36,6 +36,7 @@ import BtnTender from "./components/btnTender";
 import BtnPrivilegeCard from "./components/btnPrivilegeCard";
 import BtnPending from "./components/btnPending";
 import BtnSr from "./components/btnSr";
+import TaxOnDiscount from "./components/tax-on-discount";
 
 interface TransactionFooterProps {
   formState: TransactionFormState;
@@ -583,8 +584,17 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             <div className="flex items-center gap-2 text-sm dark:text-dark-text">
               {checkboxesComponent}
               {(formState.transaction.master.voucherType === VoucherType.SalesInvoice) && (
-                <div>
+                <div className="flex gap-1">
                   <span className="text-xs font-medium whitespace-nowrap">{t("l_bill_amount")}:</span><span className="text-xs font-semibold">0.00</span>
+                  <span className="text-xs font-medium whitespace-nowrap">{t("adv_bal")}:</span><span className="text-xs font-semibold">0.00</span>
+                </div>
+              )}
+              {(
+                formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
+                formState.transaction.master.voucherType === VoucherType.SalesQuotation
+              ) && (
+                <div>
+                  <span className="text-xs font-medium whitespace-nowrap">{t("bal")}:</span><span className="text-xs font-semibold">0.00</span>
                 </div>
               )}
             </div>
@@ -676,14 +686,42 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 pendingBtnClick={()=> console.log("Pending Clicked")}
                 t={t}
               />
+              {/* Need to make the P button into standard btn component format */}
+              <ERPButton
+                 title={t("p")}
+                 variant="secondary"
+                 onClick={()=> alert("P Button clicked")}
+              />
             </div>
           )}
           {(formState.transaction.master.voucherType === VoucherType.SalesOrder) && showButtonsOutside && (
-              <ERPButton
+              <div className="flex gap-1">
+                <ERPButton
                 title={t('load_excel')}
                 onClick={handleTenderOpen}
                 className="px-2 w-fit"
-              />
+                />
+                {/* If needed make this component */}
+                <div className="flex flex-col p-1 border border-gray-300 ">
+                  <label>{t("advance_amount")}</label>
+                  <div className="flex flex-row  gap-1">
+                  <ERPInput
+                    id="AdvanceCashAmount"
+                    label={t("cash")}
+                    labelDirection="horizontal"
+                    type="number"
+                    value={0.00}
+                  />
+                  <ERPInput
+                    id="AdvanceCardAmount"
+                    label={t("card")}
+                    labelDirection="horizontal"
+                    type="number"
+                    value={0.00}
+                  />
+                </div>
+                </div>
+              </div>
           )}
         </>
       ) : (
@@ -750,10 +788,19 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               </div>
               <div className="flex items-center gap-2 text-sm dark:text-dark-text">
               {(formState.transaction.master.voucherType === VoucherType.SalesInvoice) && (
-                <div>
+                <div className="flex gap-1">
                   <span className="text-xs font-medium whitespace-nowrap">{t("l_bill_amount")}:</span><span className="text-xs font-semibold">0.00</span>
+                  <span className="text-xs font-medium whitespace-nowrap">{t("adv_bal")}:</span><span className="text-xs font-semibold">0.00</span>
                 </div>
               )}
+              {(
+              formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
+              formState.transaction.master.voucherType === VoucherType.SalesQuotation
+                ) && (
+                  <div>
+                    <span className="text-xs font-medium whitespace-nowrap">{t("bal")}:</span><span className="text-xs font-semibold">0.00</span>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -970,6 +1017,12 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 dispatch={dispatch}
                 t={t}
                 taxData={taxData}
+              />
+              <TaxOnDiscount
+                formState={formState}
+                dispatch={dispatch}
+                taxOnDiscBtnClick={()=> alert("Tax On discount button clicked!")}
+                t={t}
               />
               <BillDiscountLabel
                 formState={formState}
@@ -1214,23 +1267,59 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 pendingBtnClick={()=> console.log("Pending Clicked")}
                 t={t}
               />
+              {/* Need to make the P button into standard btn component format */}
+              <ERPButton
+                 title={t("p")}
+                 variant="secondary"
+                 onClick={()=> alert("P Button clicked")}
+              />
             </div>
           )}
           {(formState.transaction.master.voucherType === VoucherType.SalesOrder) && !showButtonsOutside && (
-              <ERPButton
+              <div className="flex gap-1">
+                <ERPButton
                 title={t('load_excel')}
                 onClick={handleTenderOpen}
                 className="px-2 w-fit"
-              />
+                />
+                <div className="flex flex-col p-1 border border-gray-300 ">
+                  <label>{t("advance_amount")}</label>
+                  <div className="flex flex-row  gap-1">
+                  <ERPInput
+                    id="AdvanceCashAmount"
+                    label={t("cash")}
+                    labelDirection="horizontal"
+                    type="number"
+                    value={0.00}
+                  />
+                  <ERPInput
+                    id="AdvanceCardAmount"
+                    label={t("card")}
+                    labelDirection="horizontal"
+                    type="number"
+                    value={0.00}
+                  />
+                </div>
+                </div>
+              </div>
           )}
         {!showSecondHalf && (
           <div className="flex items-center gap-2 text-sm dark:text-dark-text">
             {(formState.transaction.master.voucherType === VoucherType.SalesInvoice) && (
-                <div>
-                  <span className="text-xs font-medium whitespace-nowrap">{t("l_bill_amount")}:</span>
-                  <span className="text-xs font-semibold">0.00</span>
+                <div className="flex gap-1">
+                  <span className="text-xs font-medium whitespace-nowrap">{t("l_bill_amount")}:</span><span className="text-xs font-semibold">0.00</span>
+                  <span className="text-xs font-medium whitespace-nowrap">{t("adv_bal")}:</span><span className="text-xs font-semibold">0.00</span>
                 </div>
               )}
+              {(
+                  formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
+                  formState.transaction.master.voucherType === VoucherType.SalesQuotation
+                ) && (
+                  <div>
+                  <span className="text-xs font-medium whitespace-nowrap">{t("bal")}:</span><span className="text-xs font-semibold">0.00</span>
+                  </div>
+                )}
+
           </div>
         )}
         {!showCheckboxesOutside && (
@@ -1309,6 +1398,12 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           dispatch={dispatch}
           t={t}
           taxData={taxData}
+        />
+        <TaxOnDiscount
+          formState={formState}
+          dispatch={dispatch}
+          taxOnDiscBtnClick={()=> alert("Tax On discount button clicked!")}
+          t={t}
         />
         <BillDiscountLabel
           formState={formState}

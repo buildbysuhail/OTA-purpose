@@ -266,7 +266,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         setShowWarehouseOutside(width >= 1400);
       } else {
         setShowAttachmentOutside(width >= 1300);
-        setShowCheckboxesOutside(width >= 1250);
+        setShowCheckboxesOutside(width >= 1200);
         setShowAdjustmentOutside(width >= 1200);
         setShowCostCentreOutside(width >= 1200);
         setShowWarehouseOutside(width >= 1200);
@@ -404,12 +404,14 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
 
   {/* -------------------------- stock transfer footer contents ------------------------- */}
   const stockTransferFooterComponents = (
-        <div className="flex flex-wrap items-end gap-1">
+        <div className="flex flex-row items-end gap-1 w-full">
           {[VoucherType.BranchTransferIn, VoucherType.BranchTransferOut].includes(formState.transaction.master.voucherType as VoucherType) && (
             <div className="flex flex-col gap-1">
               <div className="flex gap-1 flex-wrap">
-                {showWarehouseOutside && warehouseComponent}
-                <>{showAdjustmentOutside && adjustmentComponent}</>
+                {/* {showWarehouseOutside && warehouseComponent}
+                <>{showAdjustmentOutside && adjustmentComponent}</> */}
+                {warehouseComponent}
+                <>{adjustmentComponent}</>
                 {priceCategoryComponent}
                 <ERPDataCombobox
                   // {...getFieldProps("ledgerID")}
@@ -511,7 +513,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   );
 
   const outsideComponents = (
-    <div className="flex flex-col gap-1 pr-4">
+    <div className="flex flex-col gap-1 pr-4 w-full">
       {showCheckboxesOutside ? (
         <>
         {/* {showWarehouseOutside && warehouseComponent}
@@ -523,7 +525,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         {/* -------------------------- stock transfer footer contents ------------------------- */}
           {stockTransferFooterComponents}
         {/* -------------------------- stock transfer footer contents ------------------------- */}
-          <div className="flex items-end gap-1">
+          {/* <div className="flex items-end gap-1">
             {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
               <>
                 {showCostCentreOutside && costCentreComponent}
@@ -552,7 +554,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 />
               </div>
             )}
-          </div>
+          </div> */}
         </>
       ) : (
         <>
@@ -563,13 +565,13 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
             <>{showAdjustmentOutside && adjustmentComponent}</>
           )} */}
-          {stockTransferFooterComponents}
-          {formState.transaction.master.voucherType == VoucherType.OpeningStock && (
+          {/* {stockTransferFooterComponents} */}
+          {/* {formState.transaction.master.voucherType == VoucherType.OpeningStock && (
               <div className="flex gap-1">
                 <ERPButton title={t("load_products")} variant="secondary"/>
                 <ERPButton title={t("load_excel")} variant="secondary"/>
               </div>
-            )} 
+            )}  */}
         </>
       )}
     </div>
@@ -816,7 +818,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     </div>
                   </div>
                 )}
-                <div className="flex justify-between items-center border-t-2 border-[#3b82f6] mt-1">
+                <div className="flex justify-between items-center mt-1">
                   <span className="text-sm font-bold dark:text-dark-text text-gray-900 uppercase">
                     {t(formState.formElements.grandTotal.label)}
                   </span>
@@ -905,10 +907,10 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           </div>
         )}
         {!showWarehouseOutside && (
-          <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
+          <div className="w-full  mb-2 sm:mb-0">
             {/* {warehouseComponent} */}
             {stockTransferFooterComponents}
-            {formState.transaction.master.voucherType == VoucherType.OpeningStock || formState.transaction.master.voucherType == VoucherType.StockAdjuster  && (
+            {formState.transaction.master.voucherType == VoucherType.OpeningStock  && (
               <div className="flex gap-1">
                 <ERPButton title={t("load_products")} variant="secondary"/>
                 {/* <ERPButton title={t("load_excel")} variant="secondary"/> */}

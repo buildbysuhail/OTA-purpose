@@ -182,6 +182,9 @@ const createStore = async (
   });
 };
 
+// This is for handling multiple api call when search - Need to test deeply
+let firstCall = true;
+
 const createStoreWithCache = async (
   value: string,
   payload: any,
@@ -196,8 +199,9 @@ const createStoreWithCache = async (
   return new CustomStore({
     key: "productID",
     async load(loadOptions: any) {
-      // Only make API call on first load
-      if (!hasFetchedOnce) {
+      // Managing multiple api calls
+      if (firstCall || !hasFetchedOnce) {
+        firstCall = false;
         hasFetchedOnce = true;
         console.log("🔵 Making API call for:", value);
 
@@ -867,7 +871,7 @@ useEffect(() => {
                 desc: true,
               },
             ],
-            closeIfNodata
+            // closeIfNodata
           );
 
           //  CRITICAL CHANGE: Remove the manual store.load() call
@@ -905,6 +909,7 @@ const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         ...prev,
         searchValue: value,
       }));
+      firstCall = false;  // Managing multiple api calls - checkIt
     // Reset grid ready state
       setProductGridReady(false);
       setShowBatchGrid(false);
@@ -1087,7 +1092,7 @@ const handleBatchGridDoubleClick =async (e: any) => {
           if (
             !["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(key)
           ) {
-            setShowProductGrid(false);
+            // setShowProductGrid(false);  // Commented for removing the grid blinking
             setProductInitialized(false);
 
             if (inputRef && "current" in inputRef && inputRef.current) {
@@ -1095,6 +1100,10 @@ const handleBatchGridDoubleClick =async (e: any) => {
               const val = inputRef.current.value;
               inputRef.current.setSelectionRange(val.length, val.length);
             }
+          }
+          // Managing multiple api calls - checkIt
+          else{
+            firstCall = true;  
           }
         }
       },

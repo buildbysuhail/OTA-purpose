@@ -738,32 +738,32 @@ const VirtualRow = React.memo(
         : "hover:bg-gradient-to-r hover:from-[#eff6ff66] hover:to-[#eef2ff4d]"
       }`;
 
-    const [itemName, setItemName] = useState("");
-    const [quantity, setQuantity] = useState("");
-    const [rate, setRate] = useState("");
-    const [unit, setUnit] = useState("Bag");
-    const [taxType, setTaxType] = useState("With Tax");
-    const [discount, setDiscount] = useState("0");
-    const [discountType, setDiscountType] = useState("₹");
-    const [taxPercentage, setTaxPercentage] = useState("None");
+    // const [itemName, setItemName] = useState("");
+    // const [quantity, setQuantity] = useState("");
+    // const [rate, setRate] = useState("");
+    // const [unit, setUnit] = useState("Bag");
+    // const [taxType, setTaxType] = useState("With Tax");
+    // const [discount, setDiscount] = useState("0");
+    // const [discountType, setDiscountType] = useState("₹");
+    // const [taxPercentage, setTaxPercentage] = useState("None");
 
-    const calculateSubtotal = () => {
-      const qty = parseFloat(quantity) || 0;
-      const rateValue = parseFloat(rate) || 0;
-      return qty * rateValue;
-    };
+    // const calculateSubtotal = () => {
+    //   const qty = parseFloat(quantity) || 0;
+    //   const rateValue = parseFloat(rate) || 0;
+    //   return qty * rateValue;
+    // };
 
-    const calculateDiscount = () => {
-      const discountValue = parseFloat(discount) || 0;
-      if (discountType === "%") {
-        return (calculateSubtotal() * discountValue) / 100;
-      }
-      return discountValue;
-    };
+    // const calculateDiscount = () => {
+    //   const discountValue = parseFloat(discount) || 0;
+    //   if (discountType === "%") {
+    //     return (calculateSubtotal() * discountValue) / 100;
+    //   }
+    //   return discountValue;
+    // };
 
-    const calculatedTotal = () => {
-      return calculateSubtotal() - calculateDiscount();
-    };
+    // const calculatedTotal = () => {
+    //   return calculateSubtotal() - calculateDiscount();
+    // };
 
   // This is for handling multiple times showing draggable button in mobile, may need to change the concept CheckIt
   // const [showButton, setShowButton] = useState(false);
@@ -796,14 +796,26 @@ const VirtualRow = React.memo(
                 // marginTop: index === 0 ? '8px' : '0',
                 paddingBottom: index === details.length - 1 ? "0.5rem" : "0",
               }}
-              onDoubleClick={() => dispatch(formStateHandleFieldChange({fields:{row:item, itemPopup: {isOpen: true,index}}}) )}
+              onClick={() => dispatch(formStateHandleFieldChange({fields:{
+                 currentCell: {
+                                      column: "slNo",
+                                      rowIndex: index,
+                                      data: item,
+                                    },
+                row:item, itemPopup: {isOpen: true,index}}}) )}
+              
             >
               <div className="p-1 w-full">
                 <div
-                  className={`rounded-lg shadow-sm w-full max-w-[730px] mx-auto ${
+                  className={`rounded-lg shadow-sm w-full hover:bg-[#8e8bdf] max-w-[730px] mx-auto ${
                     appState.mode === "dark"
-                    ? "bg-[#2d2d2d] border border-[#444444]"
-                    : "bg-[#f8f8f8] border border-[#e4e3e8]"
+                    ? "border border-[#444444]"
+                    :  "border border-[#e4e3e8]"
+                    }
+                   ${
+                    appState.mode === "dark"
+                    ? "bg-[#2d2d2d]"
+                    : formState.currentCell?.rowIndex == index ? "bg-[#605cce]" :  "bg-[#bfddd4]"
                     }`}
                 >
                   <div className="flex flex-col md:flex-row sm:flex-row xs:flex-row xs:items-center xs:justify-between p-2 xs:p-3 sm:p-4 !pb-0 gap-2 xs:gap-3">
@@ -858,7 +870,7 @@ const VirtualRow = React.memo(
                           : "text-gray-600"
                           }`}
                       >
-                        1 X ₹ 0 = ₹ {item.total || "Sub Total"}
+                        {item.qty} X  {item.unitPrice} = ₹ {item.total || "Sub Total"}
                       </span>
                     </div>
                     <div className="flex items-start xs:items-center justify-between gap-2">
@@ -2671,7 +2683,7 @@ const hidColumns: string[] = [
               overflowX: "auto",
               position: "relative",
               scrollbarWidth: "auto",
-              paddingTop: isMobile ? "8px" : "",
+              paddingTop: isMobile ? "35px" : "",
               // scrollbarColor: appState.mode === "dark" ? "#555 #333" : "#ddd #f1f1f1",
             }}
             onScroll={(e) => {
@@ -3642,7 +3654,7 @@ const hidColumns: string[] = [
                             }}))
                           }
                         } else {
-                          if(formState.row) {
+                          if(formState.row) { 
                             
                             dispatch(formStateHandleFieldChangeKeysOnly({fields:{
                              

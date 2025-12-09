@@ -71,7 +71,7 @@ const SalesmanwiseSalesAndCollection = () => {
         if (exportCell != undefined) {
           const value =
             cellElement.data?.salesTarget == null
-              ? 0
+              ? ""
               : getFormattedValue(cellElement.data.salesTarget);
           return {
             ...exportCell,
@@ -81,7 +81,7 @@ const SalesmanwiseSalesAndCollection = () => {
           };
         } else {
           return cellElement.data?.salesTarget == null
-            ? 0
+            ? ""
             : getFormattedValue(cellElement.data.salesTarget);
         }
       },
@@ -106,7 +106,7 @@ const SalesmanwiseSalesAndCollection = () => {
         if (exportCell != undefined) {
           const value =
             cellElement.data?.incentivePercentage == null
-              ? 0
+              ? ""
               : getFormattedValue(cellElement.data.incentivePercentage, false, 2);
           return {
             ...exportCell,
@@ -116,7 +116,7 @@ const SalesmanwiseSalesAndCollection = () => {
           };
         } else {
           return cellElement.data?.incentivePercentage == null
-            ? 0
+            ? ""
             : getFormattedValue(cellElement.data.incentivePercentage, false, 2);
         }
       },

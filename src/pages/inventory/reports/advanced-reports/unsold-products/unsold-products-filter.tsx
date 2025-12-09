@@ -10,7 +10,9 @@ const UnsoldProductReportFilter = ({  getFieldProps,  handleFieldChange,  formSt
   const { t } = useTranslation("accountsReport");
   const userSession = useSelector((state: RootState) => state.UserSession);
   const fromDate = getFieldProps("fromDate").value;
+  const fromDateSales = getFieldProps("fromDateSales").value;
   const toDate = getFieldProps("toDate").value;
+  const toDateSales = getFieldProps("toDateSales").value;
 
   return (
   <div className="grid grid-cols-1 gap-6">
@@ -78,13 +80,13 @@ const UnsoldProductReportFilter = ({  getFieldProps,  handleFieldChange,  formSt
             }
           />
         </div>
-        {fromDate && toDate && (
+        {fromDateSales && toDateSales && (
           <div className="mt-4 p-3 bg-white dark:bg-dark-bg-card rounded-lg border border-blue-200 dark:border-blue-800">
             <p className="text-sm text-slate-600 dark:text-gray-300">
               {t("selected_range")}:{" "}
               <span className="font-semibold text-blue-700 dark:text-blue-400">
                 {Math.ceil(
-                  (new Date(toDate).getTime() - new Date(fromDate).getTime()) /
+                  (new Date(toDateSales).getTime() - new Date(fromDateSales).getTime()) /
                     (1000 * 60 * 60 * 24)
                 )}{" "}
                 {t("days")}

@@ -1199,5 +1199,10 @@
   "inventory_price_reports": "تقارير أسعار المخزون",
   "sales_period": "فترة المبيعات",
   "total_sold": "إجمالي المباع",
-  "gst_included": "ضريبة السلع والخدمات متضمنة"
+  "gst_included": "ضريبة السلع والخدمات متضمنة",
+
+  "converted": "مُحَوَّل",
+  "Locked": "مُقْفَل",
+  "show_converted_transactions": "إظهار المعاملات المُحَوَّلة",
+   "show_adjustment_transactions": "إظهار معاملات التسوية"
 }

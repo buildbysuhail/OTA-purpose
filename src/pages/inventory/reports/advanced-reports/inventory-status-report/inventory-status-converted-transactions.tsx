@@ -6,11 +6,17 @@ import ErpDevGrid, {
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import Urls from "../../../../../redux/urls";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
+import { APIClient } from "../../../../../helpers/api-client";
 
-const InventoryStatusConvertedTransactions = () => {
+export interface InventoryStatusConvertedTransactionsProps {
+  masterId: any;
+}
+const api = new APIClient();
+const InventoryStatusConvertedTransactions = ({ masterId }: InventoryStatusConvertedTransactionsProps ) => {
   const { t } = useTranslation("accountsReport");
+  const [gridDataSource, setGridDataSource] = useState<any[]>([]);
   const columns: DevGridColumn[] = [
     {
       dataField: "voucherType",
@@ -68,6 +74,19 @@ const InventoryStatusConvertedTransactions = () => {
       showInPdf: true,
     },
   ];
+
+  useEffect(() => {
+      const fetchGridData = async () => {
+          try {
+              const priceCatData = await api.getAsync(`${Urls.inventory_status_converted_transactions}${masterId}`);
+              setGridDataSource(priceCatData);
+          } catch (error) {
+              console.error("Error fetching price categories:", error);
+          }
+      };
+      fetchGridData();
+  }, []);
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -82,11 +101,17 @@ const InventoryStatusConvertedTransactions = () => {
                 }}
                 columns={columns}
                 gridHeader={t("converted_transactions")}
-                dataUrl={Urls.inventory_status_converted_transactions}
+                // dataUrl={`${Urls.inventory_status_converted_transactions}${masterId}`}
+                data={gridDataSource}
                 hideGridAddButton={true}
                 method={ActionType.GET}
                 reload={true}
                 gridId="grd_converted_transactions"
+                height={500}
+                hideGridHeader={true}
+                hideToolbar={true}
+                allowExport={false}
+                allowSearching={false}
               />
             </div>
           </div>

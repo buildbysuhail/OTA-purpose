@@ -6,12 +6,22 @@ import ErpDevGrid, {
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import Urls from "../../../../../redux/urls";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
+import { APIClient } from "../../../../../helpers/api-client";
 
-const InventoryStatusPaymentAdjustmentTransactions = () => {
+export interface InventoryStatusPaymentAdjustmentTransactionsProps {
+  masterId: any;
+  branchId: any;
+  ledgerId: any;
+}
+
+const api = new APIClient();
+
+const InventoryStatusPaymentAdjustmentTransactions = ({branchId, ledgerId, masterId}:InventoryStatusPaymentAdjustmentTransactionsProps) => {
   const { t } = useTranslation("accountsReport");
   const { getFormattedValue } = useNumberFormat();
+  const [gridDataSource, setDataSource] = useState<any[]>([]);
   const columns: DevGridColumn[] = [
     {
       dataField: "transactionDate",
@@ -92,6 +102,29 @@ const InventoryStatusPaymentAdjustmentTransactions = () => {
       },
     },
   ];
+
+ useEffect(() => {
+  if (!branchId || !ledgerId || !masterId) return;
+
+  const fetchData = async () => {
+    try {
+      const response = await api.postAsync(
+        Urls.inventory_status_payment_adjustment_transactions,
+        {
+          branchId,
+          ledgerId,
+          masterId,
+        }
+      );
+      setDataSource(response.data);
+    } catch (error) {
+      console.error("Payment adjustment API error", error);
+    }
+  };
+
+  fetchData();
+}, [branchId, ledgerId, masterId]);
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -107,11 +140,16 @@ const InventoryStatusPaymentAdjustmentTransactions = () => {
                 columns={columns}
                 filterText="{Status}"
                 gridHeader={t("payment_adjusted_transactions")}
-                dataUrl={Urls.inventory_status_payment_adjustment_transactions}
+                data={gridDataSource} 
                 hideGridAddButton={true}
                 method={ActionType.POST}
                 reload={true}
                 gridId="grd_inventory_status_payment_adjustment_transactions"
+                height={500}
+                hideGridHeader={true}
+                hideToolbar={true}
+                allowExport={false}
+                allowSearching={false}
               />
             </div>
           </div>

@@ -1199,5 +1199,11 @@
   "inventory_price_reports": "Inventory Price Reports",
   "sales_period": "Sales Period",
   "total_sold": "Total Sold",
-  "gst_included": "GST Included"
+  "gst_included": "GST Included",
+
+  "converted": "Converted",
+  "locked": "Locked",
+  "show_converted_transactions": "Show Converted Transactions",
+  "show_adjustment_transactions": "Show Adjustment Transactions"
+
 }

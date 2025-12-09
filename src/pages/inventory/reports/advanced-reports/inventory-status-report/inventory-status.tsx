@@ -4,13 +4,25 @@ import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import Urls from "../../../../../redux/urls";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import InventoryStatusFilter, { InventoryStatusFilterInitialState, } from "./inventory-status-filter";
 import moment from "moment";
+import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
+import ERPButton from "../../../../../components/ERPComponents/erp-button";
+import { APIClient } from "../../../../../helpers/api-client";
+import ERPModal from "../../../../../components/ERPComponents/erp-modal";
+import InventoryStatusConvertedTransactions from "./inventory-status-converted-transactions";
+import InventoryStatusPaymentAdjustmentTransactions from "./inventory-status-payment-adjustment-transactions";
 
+const api = new APIClient();
 const InventoryStatusReport = () => {
   const { t } = useTranslation("accountsReport");
+  const [showHeaderFields, setShowHeaderFields] = useState(false);
+  const [searchFilters, setSearchFilters] = useState({ converted: false, locked: false, masterId: 0, branchId: 0, ledgerId: 0  });
+  const [showConvertedGrid,setShowConvertedGrid] =  useState(false) 
+  const [showAdjustmentGrid,setShowAdjustmentGrid] =  useState(false)
+
   const columns: DevGridColumn[] = [
     {
       dataField: "si",
@@ -482,6 +494,53 @@ const InventoryStatusReport = () => {
 
   //               if (PolosysFrameWork.General.ShowMessageBox("Are you sure to change the Locked status?", "Converted", MessageBoxButtons.YesNo) == DialogResult.Yes)
 
+
+  // Updating the converted status 
+    const handleConvertedChange = async (value: boolean) => {
+      try {
+        await api.postAsync(
+          Urls.inventory_status_report_to_convert,
+          { masterID: searchFilters.masterId, isConverted: value }
+        );
+
+        setSearchFilters((prev) => ({
+          ...prev,
+          converted: value,
+        }));
+        } catch (error) {
+          console.error("Error in updating Converted status", error);
+        }
+      };
+
+    // Updating the locked status
+    const handleLockedChange = async (value: boolean) => {
+      try{
+        const response = await api.postAsync(
+        Urls.inventory_status_report_to_locked,
+        { masterID: searchFilters.masterId, isLocked: value }
+        );
+        setSearchFilters((prev) => ({
+          ...prev,
+          locked: value,
+        }));
+
+      }catch (error) {
+          console.error("Error in updating Locked status", error);
+        }
+    };
+
+    // Handle Row click function definition
+    const handleRowClick = (rowData: any) => {
+      setShowHeaderFields(true)
+      setSearchFilters({
+          masterId: rowData.masterID,
+          ledgerId: rowData.ledgerID,
+          branchId: rowData.branchID,
+          converted: rowData.converted,
+          locked: rowData.isLocked,
+      });
+    };
+
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) => {
@@ -524,11 +583,63 @@ const InventoryStatusReport = () => {
                 filterInitialData={InventoryStatusFilterInitialState}
                 reload={true}
                 gridId="grd_inventory_status"
+                onRowClick={(e) => handleRowClick(e.data)}
+                customToolbarItems={[
+                  {
+                    location: 'before',
+                    item: (
+                      <>
+                      {showHeaderFields && (
+                      <div className="flex gap-1 px-2">
+                        <div className="flex flex-col px-2">
+                           <ERPCheckbox
+                              id="converted"
+                              label={t("converted")}
+                              checked={searchFilters.converted}
+                              onChange={(e: any) => handleConvertedChange(!searchFilters.converted)}
+   
+                            />
+                           <ERPCheckbox
+                              id="locked"
+                              label={t("locked")}
+                              checked={searchFilters.locked}
+                              onChange={(e: any) => handleLockedChange(!searchFilters.locked)}
+   
+                            />
+                        </div>
+                        <div className="flex gap-1">
+                          <ERPButton title={t("show_converted_transactions")} onClick={()=> setShowConvertedGrid(true)}/>
+                          <ERPButton title={t("show_adjustment_transactions")} onClick={()=> setShowAdjustmentGrid(true)}/>
+                        </div>
+                    </div>
+                    )}
+                    </>
+                    )
+                  },
+                ]}
               />
             </div>
           </div>
         </div>
       </div>
+      <ERPModal
+        isOpen={showConvertedGrid}
+        title={t("show_converted_transactions")}
+        width={600}
+        height={200}
+        isForm={true}
+        closeModal={() => setShowConvertedGrid(false)}
+        content={<InventoryStatusConvertedTransactions masterId={searchFilters.masterId} />}
+      />
+      <ERPModal
+        isOpen={showAdjustmentGrid}
+        title={t("show_adjustment_transactions")}
+        width={600}
+        height={200}
+        isForm={true}
+        closeModal={() => setShowAdjustmentGrid(false)}
+        content={<InventoryStatusPaymentAdjustmentTransactions branchId={searchFilters.branchId} ledgerId={searchFilters.ledgerId} masterId={searchFilters.masterId} />}
+      />
     </Fragment>
   );
 };

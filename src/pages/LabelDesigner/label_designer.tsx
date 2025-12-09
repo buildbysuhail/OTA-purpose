@@ -197,6 +197,7 @@ const {
   pushState,
   history,
   historyIndex,
+  resetHistory,
 } = useUndoRedo(templateData);
 
 
@@ -1846,6 +1847,7 @@ pushToHistory(newTemplateData, `Changed label ${property}`);
 
     setSelectedComponent(null);
     setTemplateData(_template);
+    resetHistory(_template);
   };
 
 useEffect(() => {
@@ -2104,19 +2106,33 @@ useEffect(() => {
       const loadedElements = nestedValue?.elements || [];
       const expandedComponents = expandContainerChildren(loadedElements);
       setCustomePageHeight((nestedValue?.height || 200) - (template.propertiesState?.padding?.top ?? 0));
-      setTemplateData((prev: TemplateState<unknown>) => ({
-        ...prev,
-        barcodeState: {
-          ...prev.barcodeState,
-          placedComponents: expandedComponents || [],
-          labelState: {
-            ...prev.barcodeState?.labelState,
-            labelHeight: (nestedValue?.height || 200) + (template.propertiesState?.padding?.top ?? 0),
-            labelWidth: selectedPageSize.width,
-          },
+      
+        const newTemplateData: TemplateState<unknown> = {
+      ...templateData,
+      barcodeState: {
+        ...templateData.barcodeState,
+        placedComponents: expandedComponents || [],
+        labelState: {
+          ...templateData.barcodeState?.labelState,
+          labelHeight: (nestedValue?.height || 200) + (template.propertiesState?.padding?.top ?? 0),
+          labelWidth: selectedPageSize.width,
         },
-      }));
-
+      },
+    };
+      // setTemplateData((prev: TemplateState<unknown>) => ({
+      //   ...prev,
+      //   barcodeState: {
+      //     ...prev.barcodeState,
+      //     placedComponents: expandedComponents || [],
+      //     labelState: {
+      //       ...prev.barcodeState?.labelState,
+      //       labelHeight: (nestedValue?.height || 200) + (template.propertiesState?.padding?.top ?? 0),
+      //       labelWidth: selectedPageSize.width,
+      //     },
+      //   },
+      // }));
+      setTemplateData(newTemplateData);
+      resetHistory(newTemplateData);
       setDesignerData((prev) => ({
         ...prev,
         background_image: nestedValue?.background_image || "",
@@ -2342,7 +2358,7 @@ const debouncedResize = useDebounce(
         {/* Design Canvas */}
         <div
           id="teplate-container-base"
-          className="flex-1 bg-black"
+          className="flex-1 bg-gray-50"
           onDrop={handleDrop}
           onDragOver={(e) => e.preventDefault()}
           onClick={(e) => {

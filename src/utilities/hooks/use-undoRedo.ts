@@ -7,28 +7,21 @@ interface HistoryState {
   action: string; // For debugging/logging
 }
 
-interface UIState {
-  leftSidebarWidth: number;
-  rightSidebarWidth: number;
-  zoom: number;
-}
+
 interface UseUndoRedoReturn {
   canUndo: boolean;
   canRedo: boolean;
   undo: () => void;
   redo: () => void;
   clearHistory: () => void;
+  resetHistory: (newInitial: TemplateState<unknown>) => void;
   pushState: (newState: TemplateState<unknown>, action: string) => void;
   history: HistoryState[];
   historyIndex: number;
 }
 
 const MAX_HISTORY_DEPTH = 50; // Standard for most design tools (Figma, Adobe XD use 50-100)
-const defaultUIState: UIState = {
-  leftSidebarWidth: 250,
-  rightSidebarWidth: 380,
-  zoom: 100,
-};
+
 export const useUndoRedo = (
   initialState: TemplateState<unknown>
 ): UseUndoRedoReturn => {
@@ -48,7 +41,7 @@ const historyIndexRef = useRef(0); // Keep ref in sync
 
   // Push new state to history
   const pushState = useCallback(
-    (newState: TemplateState<unknown>, action: string, uiState?: UIState) => {
+    (newState: TemplateState<unknown>, action: string,) => {
       setHistory((prevHistory) => {
         // Remove any "future" history if user makes a change after undo
          const currentIndex = historyIndexRef.current;
@@ -138,6 +131,7 @@ const resetHistory = useCallback((newInitial: TemplateState<unknown>) => {
     undo,
     redo,
     clearHistory,
+    resetHistory,
     pushState,
     history,
     historyIndex,

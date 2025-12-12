@@ -221,6 +221,12 @@ const handleUndo = useCallback(() => {
       const previousState = history[previousIndex];
       setTemplateData(previousState.templateData);
       undoAction(); // Call the hook's undo to update historyIndex
+      // Sync selectedComponent with new templateData ----
+      setSelectedComponent((prev) => {
+      if (!prev) return null;
+      return previousState?.templateData?.barcodeState?.placedComponents
+        .find(c => c.id === prev.id) || null;
+    });
     }
   }
 }, [canUndo, historyIndex, history, undoAction]);
@@ -232,6 +238,12 @@ const handleRedo = useCallback(() => {
       const nextState = history[nextIndex];
       setTemplateData(nextState.templateData);
       redoAction(); // Call the hook's redo to update historyIndex
+      // Sync selectedComponent with new templateData ----
+      setSelectedComponent((prev) => {
+      if (!prev) return null;
+      return nextState?.templateData?.barcodeState?.placedComponents
+        .find(c => c.id === prev.id) || null;
+    })
     }
   }
 }, [canRedo, historyIndex, history, redoAction]);
@@ -1611,7 +1623,28 @@ const debouncedPushDragHistory = useDebounce(
     setActiveTab(newValue);
   };
 
-  const handleContentLabelResize = (
+
+const debouncedLabelResize = useDebounce(
+  (widthPt: number, heightPt: number) => {
+     
+    const newTemplateData: TemplateState<unknown> = {
+      ...templateData,
+      barcodeState: {
+        ...templateData.barcodeState,
+        placedComponents: templateData.barcodeState?.placedComponents ?? [],
+        labelState: {
+          ...templateData?.barcodeState?.labelState,
+          labelWidth: widthPt,
+          labelHeight: heightPt,
+        },
+      },
+    };
+    setTemplateData(newTemplateData);
+    //  pushToHistory(newTemplateData, "Resized main label");
+  },
+  150
+);
+ const handleContentLabelResize = (
     e: React.SyntheticEvent,
     { size }: { size: { width: number; height: number } }
   ) => {
@@ -1634,6 +1667,7 @@ const debouncedPushDragHistory = useDebounce(
       return updated;
     });
   };
+
 
   const handlePagePropsChange = async (
     property: keyof PropertiesState,
@@ -2407,7 +2441,28 @@ const debouncedResize = useDebounce(
                   : "se",
             ]}
             className="box"
-            onResize={handleContentLabelResize}
+       onResize={handleContentLabelResize}
+  //         onResizeStop={(e, { size }) => {
+  //   const widthPt = pxToPt(size.width);
+  //   const heightPt = pxToPt(size.height);
+
+  //   // Build final state from current templateData (or from size direct)
+  //   const newTemplateData: TemplateState<unknown> = {
+  //     ...templateData,
+  //     barcodeState: {
+  //       ...templateData.barcodeState,
+  //       placedComponents: templateData.barcodeState?.placedComponents ?? [],
+  //       labelState: {
+  //         ...templateData?.barcodeState?.labelState,
+  //         labelWidth: widthPt,
+  //         labelHeight: heightPt,
+  //       },
+  //     },
+  //   };
+
+  //   // setTemplateData(newTemplateData);
+  //   pushToHistory(newTemplateData, "Resized main label"); // single, reliable undo entry
+  // }}  
           >
             <div
               ref={canvasRef}

@@ -225,6 +225,8 @@ const Content: FC<ContentProps> = () => {
     { path: "/inventory-masters/sales-route", element: <SalesRoute /> },
     { path: "/inventory-masters/group-category", element: <GroupCategory /> },
     { path: "/inventory-masters/general_master", element: <GeneralMaster /> },
+
+    { path: "/hr-masters/test-route", element: "nizma" },
   ];
 
   return (

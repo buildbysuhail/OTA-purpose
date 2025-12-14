@@ -709,10 +709,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
   useEffect(() => {
     const initializeFormElements = async () => {
 const dataWarranty = voucherType != "LPO" ? await api.getWithCacheAsync(
-        ${Urls.inv_transaction_base}${transactionType}/data/warranty
+        `${Urls.inv_transaction_base}${transactionType}/data/warranty`
       ) : [];
       const dataBrands = voucherType != "LPO" ? await api.getWithCacheAsync(
-        ${Urls.inv_transaction_base}${transactionType}/data/brands
+        `${Urls.inv_transaction_base}${transactionType}/data/brands`
       ) : [];
 
       const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`);
@@ -1259,7 +1259,7 @@ const dataWarranty = voucherType != "LPO" ? await api.getWithCacheAsync(
             customerType: getCustomerTypeAndTitle(_formState.transaction.master.voucherForm, _formState.title, clientSession.isAppGlobal, applicationSettings.branchSettings.maintainKSA_EInvoice).CUSTOMER_TYPE,
           },
         },
-        gridColumns: _gridCols,
+        gridColumns: _gridCols as any,
         userConfig: {
           ...formState.userConfig,
         },

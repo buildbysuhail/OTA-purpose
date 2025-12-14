@@ -2764,10 +2764,10 @@ export const useTransaction = (
   ledgerId: formState.transaction.master.ledgerID,
   vatPerc: detail.vatPerc,
 
-  isCustomerLspVisible: formState.gridColumns.find(x => x.dataField == "lsp")?.visible == true,
-  showRateBeforeTax: showRateBeforeTax,
-  userSalesPriceForTransfer: userSalesPriceForTransfer,
-  formType: formType,
+  // isCustomerLspVisible: formState.gridColumns.find(x => x.dataField == "lsp")?.visible == true,
+  // showRateBeforeTax: showRateBeforeTax,
+  // userSalesPriceForTransfer: userSalesPriceForTransfer,
+  // formType: formType,
 };
 
 
@@ -2776,7 +2776,7 @@ export const useTransaction = (
           Object.entries(apiParams).map(([k, v]) => [k, String(v ?? "")])
         )
       ).toString();
-    const url = ${Urls.inv_transaction_base}${transactionType}/getProductOtherUnitPrice/?${query};
+    const url = `${Urls.inv_transaction_base}${transactionType}/getProductOtherUnitPrice/?${query}`;
     
     const res = await api.getAsync(url );
      outState = await calculateRowAmount(

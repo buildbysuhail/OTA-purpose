@@ -708,11 +708,11 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   useEffect(() => {
     const initializeFormElements = async () => {
-      const dataWarranty = voucherType != "LPO" ? await api.getAsync(
-        `${Urls.inv_transaction_base}${transactionType}/data/warranty`
+const dataWarranty = voucherType != "LPO" ? await api.getWithCacheAsync(
+        ${Urls.inv_transaction_base}${transactionType}/data/warranty
       ) : [];
-      const dataBrands = voucherType != "LPO" ? await api.getAsync(
-        `${Urls.inv_transaction_base}${transactionType}/data/brands`
+      const dataBrands = voucherType != "LPO" ? await api.getWithCacheAsync(
+        ${Urls.inv_transaction_base}${transactionType}/data/brands
       ) : [];
 
       const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`);
@@ -939,7 +939,13 @@ const TransactionForm: React.FC<TransactionProps> = ({
         };
          _formState.transaction.master.ledgerID = (() => {
             let selectedValue = _formState.transaction.master.ledgerID;
-
+           if (
+              ["SAMAPLASTICS"].includes(
+                userSession.dbIdValue?.trim()
+              ) && (formState.userConfig?.presetPriceCategoryId??0) > 0
+            ) {
+              return formState.userConfig?.presetPriceCategoryId??0;
+            }
             if (
               ["543140180640", "BAHAMDOON", "HANAPLASTICS"].includes(
                 userSession.dbIdValue?.trim()
@@ -949,7 +955,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
             }
 
             if (applicationSettings.accountsSettings.setDefaultCustomerInSales) {
-              if (!_formState.formElements.chkNotSetDefaultCustomer?.checked) {
+              if (!_formState.userConfig.notSetDefaultCustomer) {
                 selectedValue = applicationSettings.accountsSettings.defaultCustomerLedgerID;
               }
             }
@@ -960,13 +966,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
               applicationSettings.branchSettings.maintainCounterWisePrefixForTransaction &&
               userSession.counter_vr_prefix !== "" &&
               !applicationSettings.branchSettings.maintainKSA_EInvoice;
-      _formState.transaction.master.ledgerID =
-        ["543140180640", "BAHAMDOON", "HANAPLASTICS"].includes(userSession.dbIdValue?.trim())
-          ? applicationSettings.accountsSettings.defaultCustomerLedgerID
-          : applicationSettings.accountsSettings.setDefaultCustomerInSales &&
-            !_formState.userConfig.notSetDefaultCustomer
-            ? applicationSettings.accountsSettings.defaultCustomerLedgerID
-            : _formState.transaction.master.ledgerID
       _formState.transaction.master.voucherPrefix = _formState.transaction.master.voucherForm === "CSI" &&
         applicationSettings.mainSettings.maintainSeperatePrefixforCashSales &&
         !applicationSettings.branchSettings.maintainKSA_EInvoice
@@ -1149,14 +1148,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
       if (!isInvoker) {
         // C# logic: if (PolosysFrameWork.General.DBID_VALUE.Trim() == "543140180640" || PolosysFrameWork.General.DBID_VALUE.Trim() == "BAHAMDOON" || PolosysFrameWork.General.DBID_VALUE.Trim() == "HANAPLASTICS")
-        if (
-          userSession.dbIdValue?.trim() === "543140180640" ||
-          userSession.dbIdValue?.trim() === "BAHAMDOON" ||
-          userSession.dbIdValue?.trim() === "HANAPLASTICS"
-        ) {
-          _formState.transaction.master.ledgerID = applicationSettings.accountsSettings?.defaultCustomerLedgerID;
-        }
-
         if (applicationSettings.accountsSettings?.setDefaultCustomerInSales) {
           if (_formState.userConfig?.notSetDefaultCustomer !== true) {
             _formState.transaction.master.ledgerID = applicationSettings.accountsSettings?.defaultCustomerLedgerID;

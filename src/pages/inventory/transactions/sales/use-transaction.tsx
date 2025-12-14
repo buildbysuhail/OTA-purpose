@@ -2749,7 +2749,7 @@ export const useTransaction = (
   };
 
 
-  const handleChangeUnit = async (
+ const handleChangeUnit = async (
     outDetail: DeepPartial<TransactionDetail>,
     detail: TransactionDetail,
     actualPriceVisible: boolean,
@@ -2757,27 +2757,35 @@ export const useTransaction = (
     columnName: keyof TransactionDetail,
     rowIndex: number
   ) => {
-    const res = await api.getAsync(
-      `${Urls.inv_transaction_base}${transactionType}/ProductBatchUnitPrices/${detail.productBatchID}/${outDetail.unitID}/${actualPriceVisible}`
-    );
-    if (res) {
-      outDetail.unitPrice = res.stdPurchasePrice;
-      outDetail.unitPriceTag = res.stdPurchasePrice;
-      outDetail.salesPrice = res.stdSalesPrice;
-      outDetail.minSalePrice = res.minSalePrice;
-      outDetail.actualSalesPrice = res.salesPrice;
-      if (actualPriceVisible) {
-        if (res.actualSalesPrice > 0) {
-          outDetail.actualSalesPrice = res.actualSalesPrice;
-        }
-      }
-      outState = await calculateRowAmount(
-        Object.assign(detail, outDetail),
+    const apiParams = {
+  productBatchId: detail.productBatchID,
+  unitId: outDetail.unitID,
+  priceCategoryId: formState.transaction.master.priceCategoryID,
+  ledgerId: formState.transaction.master.ledgerID,
+  vatPerc: detail.vatPerc,
+
+  isCustomerLspVisible: formState.gridColumns.find(x => x.dataField == "lsp")?.visible == true,
+  showRateBeforeTax: showRateBeforeTax,
+  userSalesPriceForTransfer: userSalesPriceForTransfer,
+  formType: formType,
+};
+
+
+      const query = new URLSearchParams(
+        Object.fromEntries(
+          Object.entries(apiParams).map(([k, v]) => [k, String(v ?? "")])
+        )
+      ).toString();
+    const url = ${Urls.inv_transaction_base}${transactionType}/getProductOtherUnitPrice/?${query};
+    
+    const res = await api.getAsync(url );
+     outState = await calculateRowAmount(
+        Object.assign(detail, {...outDetail, ...res}),
         columnName as any,
         {
           result: {
             transaction: {
-              details: [outDetail],
+              details: [{...outDetail, ...res}],
             },
           },
         },
@@ -2810,14 +2818,8 @@ export const useTransaction = (
             rowIndex: rowIndex,
           })
         );
-      } else {
-        dispatch(
-          formStateHandleFieldChangeKeysOnly({
-            fields: { row: outState!.transaction!.details![0] }
-          })
-        );
       }
-    }
+    return outState;
   };
 
   const handlePrintBarcode = async () => {
@@ -2985,7 +2987,30 @@ export const useTransaction = (
             })
           );
           break;
+        case "F":
+        case "f":
+          if(columnName === "qty"){
+            if(formState.gridColumns?.find((x) => x.dataField == "free")?.visible){
+              let data = { ...formState.transaction.details[rowIndex]};
+              data.free == 1;
+              data.qty = 0;
+              let sd = await calculateRowAmount(
+              data,
+              columnName,
+              {
+                result: {
+                  transaction: {
+                    details: [data],
+                  },
+                },
+                formStateHandleFieldChangeKeysOnly:
+                  formStateHandleFieldChangeKeysOnly,
+              },false,rowIndex
+            );
 
+            break;  
+            }
+          }
         case "q":
         case "Q":
           if (columnName === "qty") {
@@ -3102,6 +3127,31 @@ export const useTransaction = (
               isMobRow ? -1 : rowIndex
             );
           }
+          // else if (columnName === "unitPrice") {
+          //   const units = formState.batchesUnits?.filter(
+          //     (xer) => xer.productBatchID == detail.productBatchID
+          //   );
+          //   const unitIndex =
+          //     units?.findIndex((xer) => xer.value == detail.unitID) ?? 0;
+          //   const nextUnitIndex =
+          //     unitIndex < (units?.length ?? 0) - 1 ? unitIndex + 1 : 0;
+          //   if (!units) {
+          //     return { handled: true };
+          //   }
+          //   const unitName = units[nextUnitIndex].label;
+          //   const unitID = units[nextUnitIndex].value;
+          //   outDetail.unit = unitName;
+          //   outDetail.unitID = unitID;
+
+          //   handleChangeUnit(
+          //     outDetail,
+          //     detail,
+          //     actualPriceVisible ?? false,
+          //     outState,
+          //     columnName,
+          //     isMobRow ? -1 : rowIndex
+          //   );
+          // }
           break;
         }
 
@@ -3246,7 +3296,7 @@ export const useTransaction = (
             data.salesPrice =
               columnName == "salesPrice" ? value : data.salesPrice;
 
-            calculateRowAmount(
+            await calculateRowAmount(
               data,
               columnName,
               {

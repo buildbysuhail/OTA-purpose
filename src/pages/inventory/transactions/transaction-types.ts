@@ -264,6 +264,7 @@ export interface TransactionDetail {
   brand: string;
   brandID: number;
   qty: number;
+  boxQty?: number;
   qtyTag?: number;
   schemeFreeQty?: number;
   free: number;
@@ -361,6 +362,7 @@ export interface TransactionDetail {
   pO_PITransDetailQtys: number;
   netConvert?:string;
   customer_LSP?:number;
+  nLA_StdSalesPrice?: number;
 }
 
 export interface TransactionDetailsMore {
@@ -393,6 +395,7 @@ export interface UserConfig {
   maximizeBillwiseScreenInitially?: boolean;
   alignment?: "left" | "center" | "right";
   presetCostenterId?: number;
+  presetPriceCategoryId?: number;
   counterAssignedCashLedgerId?: number;
   outerPageBg?: string;
   innerPageBg?: string;

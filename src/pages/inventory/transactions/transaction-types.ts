@@ -359,7 +359,8 @@ export interface TransactionDetail {
   pOTransDetailID: number;
   pO_PITransDetailIDs: number;
   pO_PITransDetailQtys: number;
-  netConvert?:string
+  netConvert?:string;
+  customer_LSP?:number;
 }
 
 export interface TransactionDetailsMore {

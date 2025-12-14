@@ -731,12 +731,12 @@ export interface CurrentCell {
 export type PartialTransactionFormFields = {
   [K in keyof TransactionFormState]?: TransactionFormState[K];
 };
-export interface ColumnModel {
-  dataField?: string;
+export type ColumnModel = {
+  dataField?: keyof TransactionDetail | keyof TransactionDetails2 | keyof TransactionDetailsMore;
   decimalPoint?: number;
   formStateOptionKey?: string;
   cssClass?: string;
-  caption?: string;
+  caption?: string | number;
   dataType?: "string" | "number" | "cb" | "date" | "boolean" | any;
   allowEditing?: boolean;
   alignment?: "center" | "left" | "right";

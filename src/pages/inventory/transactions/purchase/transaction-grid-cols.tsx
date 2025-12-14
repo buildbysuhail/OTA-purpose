@@ -11,16 +11,15 @@ export const purchaseGridCol = (
   formType: string,
   t: any,
   formState: TransactionFormState
-) =>
-  (
-    [
+): ColumnModel[] => {
+  const columns = [
       {
-        dataField: "slNo",
+        dataField: "sdsdsdsd",
         caption: "",
         dataType: "number",
         width: 40,
         isLocked: true,
-        alignment: "center",
+        alignment: "center"
       },
       {
         dataField: "pCode",
@@ -1061,17 +1060,17 @@ export const purchaseGridCol = (
       //   alignment: "left",
       // },
       {
-        dataField: "actionCol",
-        caption: "",
+        dataField: "actsdsdsdionCol",
+        caption: 2323,
         dataType: "boolean",
         width: 55,
         readOnly: true,
         isLocked: true,
         alignment: "center",
       },
-    ] as ColumnModel[]
-  )
-    .filter((gc: ColumnModel) => {
+    ] satisfies ColumnModel[];
+
+  return columns.filter((gc: ColumnModel) => {
       const field = gc.dataField ?? "";
 
       // ---------------- PURCHASE INVOICE ----------------
@@ -1530,7 +1529,7 @@ export const purchaseGridCol = (
 //       }
       return mi;
     });
-
+}
 
 
 // [formType, voucherType, formState.transaction.master.voucherType, formState.transaction.master.voucherForm]

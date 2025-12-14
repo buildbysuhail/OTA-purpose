@@ -14,7 +14,7 @@ export const purchaseGridCol = (
 ): ColumnModel[] => {
   const columns = [
       {
-        dataField: "sdsdsdsd",
+        dataField: "slNo",
         caption: "",
         dataType: "number",
         width: 40,
@@ -81,7 +81,7 @@ export const purchaseGridCol = (
       },
       {
         dataField: "avgSales",
-        caption: t("avg_sales"),
+        caption: t("30_days_avg_sales"),
         dataType: "number",
         width: 100,
         readOnly: true,
@@ -1060,8 +1060,8 @@ export const purchaseGridCol = (
       //   alignment: "left",
       // },
       {
-        dataField: "actsdsdsdionCol",
-        caption: 2323,
+        dataField: "actionCol",
+        caption: "",
         dataType: "boolean",
         width: 55,
         readOnly: true,

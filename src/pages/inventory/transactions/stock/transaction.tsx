@@ -864,7 +864,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
             customerType: customerType
           },
         },
-        gridColumns: _gridCols,
+        gridColumns: _gridCols as any,
         userConfig: {
           // userConfig: userConfig ? userConfig : {
           ...formState.userConfig,

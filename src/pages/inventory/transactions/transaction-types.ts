@@ -733,7 +733,7 @@ export type PartialTransactionFormFields = {
   [K in keyof TransactionFormState]?: TransactionFormState[K];
 };
 export type ColumnModel = {
-  dataField?: keyof TransactionDetail | keyof TransactionDetails2 | keyof TransactionDetailsMore;
+  dataField?: keyof TransactionDetail | keyof TransactionDetails2 | keyof TransactionDetailsMore|"supplier"|"avgSales"|"sold";
   decimalPoint?: number;
   formStateOptionKey?: string;
   cssClass?: string;

@@ -364,6 +364,8 @@ export interface TransactionDetail {
   netConvert?:string;
   customer_LSP?:number;
   nLA_StdSalesPrice?: number;
+  refBranchID?: number;
+  itemType?: string;
 }
 
 export interface TransactionDetailsMore {
@@ -733,7 +735,7 @@ export type PartialTransactionFormFields = {
   [K in keyof TransactionFormState]?: TransactionFormState[K];
 };
 export type ColumnModel = {
-  dataField?: keyof TransactionDetail | keyof TransactionDetails2 | keyof TransactionDetailsMore|"supplier"|"avgSales"|"sold";
+  dataField?: keyof TransactionDetail | keyof TransactionDetails2 | keyof TransactionDetailsMore|"supplier"|"avgSales"|"sold"|"salesLast30Days"|"salesLast90Days"|"supplierRefCode"|"lastSoldDate"|"poPendingQty"|"salesLast180Days"|"pqPendingQty"|"status";
   decimalPoint?: number;
   formStateOptionKey?: string;
   cssClass?: string;
@@ -754,6 +756,7 @@ export type ColumnModel = {
     filter?: any,
     pdfCell?: any
   ) => any;
+  detailsOptionKey?:any
 }
 export interface PrintTransProps {
   masterAccount: string;

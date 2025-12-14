@@ -336,6 +336,7 @@ export interface TransactionDetail {
   location: string;
   grTransDetailsID: number;
   grTransDetailsIDTag?: number;
+  supplierID?: number;
   arabicName: string;
   supplierReferenceProductCode: string;
   poTransDetailsID: number;

@@ -13,6 +13,61 @@ export const companyName = import.meta.env.VITE_COMPANY_NAME;
 export const cdnUrl = import.meta.env.VITE_CDN_URL;
 export const projectName = import.meta.env.VITE_PROJECT_NAME;
 const CachedUrls = {
+  warranty: [
+    btoa(Urls.data_warranty),
+    ...transactionRoutes.map((x: any) =>
+      btoa(
+        `/${x.transactionBase == TransactionBase.Accounts
+          ? "Accounts"
+          : "Inventory"
+        }/${x.transactionType}/data/warranty/`
+      )
+    ),
+  ],
+  Brands: [
+    btoa(Urls.data_brands),
+    ...transactionRoutes.map((x: any) =>
+      btoa(
+        `/${x.transactionBase == TransactionBase.Accounts
+          ? "Accounts"
+          : "Inventory"
+        }/${x.transactionType}/data/brands/`
+      )
+    ),
+  ],
+  PriceCategories: [
+    btoa(Urls.data_pricectegory),
+    ...transactionRoutes.map((x: any) =>
+      btoa(
+        `/${x.transactionBase == TransactionBase.Accounts
+          ? "Accounts"
+          : "Inventory"
+        }/${x.transactionType}/Data/PriceCategory/`
+      )
+    ),
+  ],
+  Warehouses: [
+    btoa(Urls.data_warehouse),
+    ...transactionRoutes.map((x: any) =>
+      btoa(
+        `/${x.transactionBase == TransactionBase.Accounts
+          ? "Accounts"
+          : "Inventory"
+        }/${x.transactionType}/Data/Warehouses/`
+      )
+    ),
+  ],
+  ProjectsByLedger: [
+    btoa(Urls.data_projects_by_ledgerid),
+    ...transactionRoutes.map((x: any) =>
+      btoa(
+        `/${x.transactionBase == TransactionBase.Accounts
+          ? "Accounts"
+          : "Inventory"
+        }/${x.transactionType}/Data/ProjectsByLedger/`
+      )
+    ),
+  ],
   AccLedgers: [
     btoa(Urls.data_acc_ledgers),
     ...transactionRoutes.map((x: any) =>
@@ -45,6 +100,8 @@ const CachedUrls = {
 } as const;
 export default CachedUrls;
 export function existsInCache(url: string): boolean {
+  console.log(CachedUrls);
+  
   const encoded = url.startsWith("/") ? btoa(url) : url;
   return Object.values(CachedUrls).some((group) => group.includes(encoded));
 }

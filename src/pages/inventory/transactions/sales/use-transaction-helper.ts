@@ -1664,6 +1664,8 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         )?.visible,
         lastSelectedWareHouseIdOfItemPopUpsSearch:
           await _lastSelectedWarehouseIDOfItemPopupsSearch,
+        priceCategoryId: formState.transaction.master.priceCategoryID,
+
       };
       const queryParams = new URLSearchParams();
       Object.entries(payload).forEach(([key, value]) => {
@@ -1682,6 +1684,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       if (applicationSettings?.productsSettings?.enableMultiWarehouseBilling) {
         warehouseId = 0;
       }
+      debugger;
       if (res?.isShowItemPopUp && forImport != true) {
         dispatch(
           formStateHandleFieldChangeKeysOnly({
@@ -2013,7 +2016,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
             },
           };
         }
-
+        if(product.units) {
         for (const unit of product.units) {
           if (!result.batchesUnits) {
             result.batchesUnits = [];
@@ -2026,6 +2029,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
             result.batchesUnits.push(unit);
           }
         }
+      }
 
         commonParams.formStateHandleFieldChangeKeysOnly &&
           dispatch &&

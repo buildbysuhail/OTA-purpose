@@ -1204,6 +1204,9 @@
   "converted": "Converted",
   "locked": "Locked",
   "show_converted_transactions": "Show Converted Transactions",
-  "show_adjustment_transactions": "Show Adjustment Transactions"
+  "show_adjustment_transactions": "Show Adjustment Transactions",
+
+  "save_xml":"Save XML",
+  "fix&send_again":"Fix & Send Again"
 
 }

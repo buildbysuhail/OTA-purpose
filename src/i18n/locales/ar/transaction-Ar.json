@@ -1050,6 +1050,42 @@
   "counter_shift": "وردية العداد",
   "summary": "ملخص",
   "exit": "خروج",
-  "main": "الرئيسية"
+  "main": "الرئيسية",
+
+  "line_items": "عناصر البند",
+  "add_and_new": "إضافة وجديد",
+  "opening_stock": "المخزون الافتتاحي",
+  "stock_transfer": "تحويل المخزون",
+  "opening_date": "تاريخ الافتتاح",
+  "sm": "إدارة المبيعات",
+  "load_product": "تحميل المنتج",
+  "load_excel": "تحميل إكسل",
+  "from_warehouse": "من المستودع",
+  "to_warehouse": "إلى المستودع",
+  "m_invoice_no": "رقم الفاتورة الرئيسي",
+  "load_request": "تحميل الطلب",
+  "allow_multi_unit": "السماح بوحدات متعددة",
+  "damage_entry": "إدخال التلف",
+  "load_products": "تحميل المنتجات",
+  "stock_adjuster": "مُعدّل المخزون",
+  "stock_count": "عد المخزون",
+  "add_products": "إضافة منتجات",
+  "f_type": "نوع F",
+  "pul_inv_bti": "سحب فاتورة BTI",
+  "load_pi_import": "تحميل استيراد PI",
+  "load_os": "تحميل OS",
+  "load_b_req": "تحميل طلب B",
+  "load_pi": "تحميل PI",
+  "load_bti": "تحميل BTI",
+  "load_grn": "تحميل GRN",
+  "load_po": "تحميل PO",
+  "to_br_warehouse": "إلى مستودع الفرع",
+  "refresh_inventory": "تحديث المخزون",
+  "item_load_request": "طلب تحميل البند",
+  "load_vouchers": "تحميل القسائم",
+  "stock_transfer_from_branch[BT]": "تحويل المخزون من الفرع [BT]",
+  "stock_transfer_to_branch[BT]": "تحويل المخزون إلى الفرع [BT]"
+
+
 }
 

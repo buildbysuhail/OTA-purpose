@@ -1204,5 +1204,8 @@
   "converted": "مُحَوَّل",
   "Locked": "مُقْفَل",
   "show_converted_transactions": "إظهار المعاملات المُحَوَّلة",
-   "show_adjustment_transactions": "إظهار معاملات التسوية"
+  "show_adjustment_transactions": "إظهار معاملات التسوية",
+
+  "save_xml": "حفظ XML",
+  "fix&send_again": "إصلاح وإرسال مرة أخرى"
 }

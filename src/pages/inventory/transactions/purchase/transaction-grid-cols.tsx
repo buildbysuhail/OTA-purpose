@@ -14,7 +14,7 @@ export const purchaseGridCol = (
 ): ColumnModel[] => {
   const columns = [
       {
-        dataField: "sdsdsdsd",
+        dataField: "slNo",
         caption: "",
         dataType: "number",
         width: 40,
@@ -81,7 +81,7 @@ export const purchaseGridCol = (
       },
       {
         dataField: "avgSales",
-        caption: t("avg_sales"),
+        caption: t("30_days_avg_sales"),
         dataType: "number",
         width: 100,
         readOnly: true,
@@ -445,15 +445,16 @@ export const purchaseGridCol = (
         allowEditing: true,
         alignment: "right",
       },
-      {
-        dataField: "mR",
-        caption: t("mr"),
-        dataType: "number",
-        width: 100,
-        visible: false,
-        allowEditing: true,
-        alignment: "right",
-      },
+      //multirate only in india
+      // {
+      //   dataField: "mR",
+      //   caption: t("mr"),
+      //   dataType: "number",
+      //   width: 100,
+      //   visible: false,
+      //   allowEditing: true,
+      //   alignment: "right",
+      // },
         {
         dataField: "mrp",
         decimalPoint: applicationSettings.mainSettings?.decimalPoints,
@@ -464,16 +465,17 @@ export const purchaseGridCol = (
         readOnly: false,
         alignment: "right",
       },
-      {
-        dataField: "netRate",
-        caption: t("net_rate"),
-        dataType: "number",
-        decimalPoint: applicationSettings.mainSettings.decimalPoints,
-        width: 100,
-        visible: false,
-        allowEditing: true,
-        alignment: "right",
-      },
+      //only in india for change rate and tax to included qty also included to netrate in the row
+      // {
+      //   dataField: "netRate",
+      //   caption: t("net_rate"),
+      //   dataType: "number",
+      //   decimalPoint: applicationSettings.mainSettings.decimalPoints,
+      //   width: 100,
+      //   visible: false,
+      //   allowEditing: true,
+      //   alignment: "right",
+      // },
       {
         dataField: "cost",
         caption: t("cost"),
@@ -918,9 +920,18 @@ export const purchaseGridCol = (
         // decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
       {
-        dataField: "warehouse",
+        dataField: "warehouseName",
         caption: t("warehouse"),
         dataType: "string",
+        visible: false,
+        width: 130,
+        readOnly: true,
+        alignment: "right",
+      },
+      {
+        dataField: "warehouseID",
+        caption: t("warehouse"),
+        dataType: "int",
         visible: false,
         width: 130,
         readOnly: true,
@@ -1017,39 +1028,40 @@ export const purchaseGridCol = (
         visible: false,
         alignment: "center",
       },
-      {
-        dataField: "employeeCode",
-        caption: t("sm_code"),
-        dataType: "string",
-        width: 55,
-        visible: false,
-        alignment: "center",
-      },
-      {
-        dataField: "employeeName",
-        caption: t("sales_man"),
-        dataType: "string",
-        width: 55,
-        visible: false,
-        alignment: "center",
-      },
-      {
-        dataField: "stdPurchasePrice",
-        caption: t("purchase_price"),
-        dataType: "number",
-        width: 55,
-        visible: false,
-        alignment: "center",
-        decimalPoint: applicationSettings.mainSettings.decimalPoints,
-      },
-      {
-        dataField: "refTransDtailId",
-        caption: t("ref_trans_detail_id"),
-        dataType: "number",
-        width: 55,
-        visible: false,
-        alignment: "center",
-      },
+      // for GRR only added in sales
+      // {
+      //   dataField: "employeeCode",
+      //   caption: t("sm_code"),
+      //   dataType: "string",
+      //   width: 55,
+      //   visible: false,
+      //   alignment: "center",
+      // },
+      // {
+      //   dataField: "employeeName",
+      //   caption: t("sales_man"),
+      //   dataType: "string",
+      //   width: 55,
+      //   visible: false,
+      //   alignment: "center",
+      // },
+      // {
+      //   dataField: "stdPurchasePrice",
+      //   caption: t("purchase_price"),
+      //   dataType: "number",
+      //   width: 55,
+      //   visible: false,
+      //   alignment: "center",
+      //   decimalPoint: applicationSettings.mainSettings.decimalPoints,
+      // },
+      // {
+      //   dataField: "refTransDtailId",
+      //   caption: t("ref_trans_detail_id"),
+      //   dataType: "number",
+      //   width: 55,
+      //   visible: false,
+      //   alignment: "center",
+      // },
       //not in web
       // {
       //   dataField: "btnPrintBarcodeStd",
@@ -1060,8 +1072,8 @@ export const purchaseGridCol = (
       //   alignment: "left",
       // },
       {
-        dataField: "actsdsdsdionCol",
-        caption: 2323,
+        dataField: "actionCol",
+        caption: "",
         dataType: "boolean",
         width: 55,
         readOnly: true,
@@ -1081,8 +1093,10 @@ export const purchaseGridCol = (
         return ![
           "mrp", "hsnCode", "cgst", "cgstPerc", "sgstPerc", "sgst",
           "igstPerc", "igst", "cessPerc", "cessAmt", "additionalCessPerc",
-          "additionalCess", "mR", "netRate", "itemType", "refBranchID",
-          "employeeCode", "employeeName", "stdPurchasePrice", "refTransDtailId",
+          "additionalCess",
+          //  "mR", "netRate", 
+           "itemType", "refBranchID",
+          // "employeeCode", "employeeName", "stdPurchasePrice", "refTransDtailId", for GRR only
 
           "supplier", "supplierID", "avgSales", "sold", "status", "salesLast30Days",
           "salesLast90Days", "supplierRefCode", "lastSoldDate", "poPendingQty",
@@ -1094,8 +1108,8 @@ export const purchaseGridCol = (
       ) {
         return ![
           "vatPerc","vatAmount",
-          "itemType", "employeeCode", "employeeName",
-          "stdPurchasePrice", "refTransDtailId",
+          "itemType", 
+          // "employeeCode", "employeeName", "stdPurchasePrice", "refTransDtailId",
 
           "supplier", "supplierID", "avgSales", "sold", "status", "salesLast30Days",
           "salesLast90Days", "supplierRefCode", "lastSoldDate", "poPendingQty",
@@ -1111,8 +1125,11 @@ export const purchaseGridCol = (
         return ![
           "mrp", "hsnCode", "cgst", "cgstPerc", "sgstPerc", "sgst",
           "igstPerc", "igst", "cessPerc", "cessAmt", "additionalCessPerc",
-          "additionalCess", "mR", "netRate", "refBranchID", "employeeCode",
-          "employeeName", "stdPurchasePrice", "refTransDtailId",
+          "additionalCess",
+          //  "mR", 
+          //  "netRate",
+            "refBranchID",
+            //  "employeeCode", "employeeName", "stdPurchasePrice", "refTransDtailId",
           "free", "manualBarcode", "stockDetails", "lastPurchaseRate",
           "lastPurchaseCost", "btnPrintBarcode", "expDate", "expDays",
           "minSalePrice", "additionalExpense", "totalAddExpense", "grossConvert",
@@ -1134,9 +1151,11 @@ export const purchaseGridCol = (
       ) {
         return ![
           "vatPerc","vatAmount",
-          "refBranchID", "employeeCode", "employeeName",
-          "stdPurchasePrice", "refTransDtailId",
-          "mR", "netRate", "manualBarcode", "stockDetails", "lastPurchaseRate",
+          "refBranchID",
+          //  "employeeCode", "employeeName", "stdPurchasePrice", "refTransDtailId",
+          // "mR", 
+          // "netRate",
+           "manualBarcode", "stockDetails", "lastPurchaseRate",
           "lastPurchaseCost", "btnPrintBarcode", "expDate", "expDays",
           "minSalePrice", "additionalExpense", "totalAddExpense", "grossConvert",
           "unitID2", "unit2Qty", "unit2SalesRate", "unit2MRP", "unit2MBarcode",
@@ -1162,8 +1181,11 @@ export const purchaseGridCol = (
         return ![
           "mrp", "hsnCode", "cgst", "cgstPerc", "sgstPerc", "sgst",
           "igstPerc", "igst", "cessPerc", "cessAmt", "additionalCessPerc",
-          "additionalCess", "mR", "netRate", "itemType", "refBranchID",
-          "employeeCode", "employeeName", "stdPurchasePrice", "refTransDtailId",
+          "additionalCess",
+          //  "mR", 
+          //  "netRate",
+            "itemType", "refBranchID",
+          // "employeeCode", "employeeName", "stdPurchasePrice", "refTransDtailId",
           "free", "stock", "stockDetails", "lastPurchaseRate", "lastPurchaseCost",
           "productDescription", "serial", "minSalePrice", "additionalExpense",
           "unitPriceFC", "colour", "warranty", "nosQty", "totalAddExpense",
@@ -1186,8 +1208,9 @@ export const purchaseGridCol = (
       ) {
         return ![
           "vatPerc","vatAmount",
-          "hsnCode", "itemType", "refBranchID", "employeeCode", "employeeName",
-          "stdPurchasePrice", "refTransDtailId", "stock", "stockDetails",
+          "hsnCode", "itemType", "refBranchID", 
+          // "employeeCode", "employeeName", "stdPurchasePrice", "refTransDtailId",
+           "stock", "stockDetails",
           "lastPurchaseRate", "lastPurchaseCost", "serial", "additionalExpense",
           "unitPriceFC", "colour", "warranty", "nosQty", "totalAddExpense",
           "grossConvert", "grossFC", "tagQty", "barcodeTagPrinted",
@@ -1212,8 +1235,11 @@ export const purchaseGridCol = (
         return ![
           "mrp", "hsnCode", "cgst", "cgstPerc", "sgstPerc", "sgst",
           "igstPerc", "igst", "cessPerc", "cessAmt", "additionalCessPerc",
-          "additionalCess", "mR", "netRate", "itemType", "employeeCode",
-          "employeeName", "stdPurchasePrice", "refTransDtailId", "lastPurchaseRate",
+          "additionalCess",
+          //  "mR", 
+          //  "netRate", 
+           "itemType", 
+          //  "employeeCode","employeeName", "stdPurchasePrice", "refTransDtailId", "lastPurchaseRate",
           "lastPurchaseCost", "bd", "btnPrintBarcode", "mfdDate", "expDate",
           "expDays", "minSalePrice", "additionalExpense", "unitPriceFC",
           "warranty", "nosQty", "totalAddExpense", "grossConvert", "grossFC",
@@ -1236,8 +1262,11 @@ export const purchaseGridCol = (
       ) {
         return ![
           "vatPerc","vatAmount",
-          "mR", "netRate", "itemType", "employeeCode", "employeeName",
-          "stdPurchasePrice", "refTransDtailId", "lastPurchaseRate",
+          // "mR",
+          //  "netRate",
+            "itemType",
+            //  "employeeCode", "employeeName","stdPurchasePrice", "refTransDtailId", 
+          "lastPurchaseRate",
           "lastPurchaseCost", "bd", "btnPrintBarcode", "mfdDate", "expDate",
           "expDays", "minSalePrice", "additionalExpense", "unitPriceFC",
           "warranty", "nosQty", "totalAddExpense", "grossConvert", "grossFC",
@@ -1263,8 +1292,12 @@ export const purchaseGridCol = (
         return ![
           "mrp", "hsnCode", "cgst", "cgstPerc", "sgstPerc", "sgst",
           "igstPerc", "igst", "cessPerc", "cessAmt", "additionalCessPerc",
-          "additionalCess", "mR", "netRate", "itemType", "employeeCode",
-          "employeeName", "stdPurchasePrice", "refTransDtailId", "nosQty",
+          "additionalCess", 
+          // "mR", 
+          // "netRate", 
+          "itemType",
+          //  "employeeCode","employeeName", "stdPurchasePrice", "refTransDtailId",
+            "nosQty",
           "totalAddExpense", "grossConvert", "grossFC", "unitID2", "unit2Qty",
           "unit2SalesRate", "unit2MRP", "unit2MBarcode", "unit2StickerQty",
           "unitID3", "unit3Qty", "unit3SalesRate", "unit3MRP", "unit3MBarcode",
@@ -1279,34 +1312,37 @@ export const purchaseGridCol = (
         ].includes(field);
       }
 
-      // ---------------- GOODS RECEIPT RETURN ----------------
-      else if (
-        userSession.countryId != Countries.India &&
-        voucherType == VoucherType.GoodsReceiptReturn
-      ) {
-        return ![
-          "mrp", "hsnCode", "cgst", "cgstPerc", "sgstPerc", "sgst",
-          "igstPerc", "igst", "cessPerc", "cessAmt", "additionalCessPerc",
-          "additionalCess", "mR", "netRate", "itemType", "refBranchID",
+      // // ---------------- GOODS RECEIPT RETURN ----------------
+      // else if (
+      //   userSession.countryId != Countries.India &&
+      //   voucherType == VoucherType.GoodsReceiptReturn
+      // ) {
+      //   return ![
+      //     "mrp", "hsnCode", "cgst", "cgstPerc", "sgstPerc", "sgst",
+      //     "igstPerc", "igst", "cessPerc", "cessAmt", "additionalCessPerc",
+      //     "additionalCess",
+      //     //  "mR", 
+      //     //  "netRate",
+      //       "itemType", "refBranchID",
 
-          "supplier", "supplierID", "avgSales", "sold", "status", "salesLast30Days",
-          "salesLast90Days", "supplierRefCode", "lastSoldDate", "poPendingQty",
-          "salesLast180Days", "pqPendingQty",
+      //     "supplier", "supplierID", "avgSales", "sold", "status", "salesLast30Days",
+      //     "salesLast90Days", "supplierRefCode", "lastSoldDate", "poPendingQty",
+      //     "salesLast180Days", "pqPendingQty",
 
 
-          "lastPurchaseRate", "lastPurchaseCost", "bd", "btnPrintBarcode",
-          "mfdDate", "expDate", "expDays", "additionalExpense", "unitPriceFC",
-          "colour", "warranty", "nosQty", "totalAddExpense", "grossConvert",
-          "grossFC", "unitID2", "unit2Qty", "unit2SalesRate", "unit2MRP",
-          "unit2MBarcode", "unit2StickerQty", "unitID3", "unit3Qty",
-          "unit3SalesRate", "unit3MRP", "unit3MBarcode", "unit3StickerQty",
-          "tagQty", "barcodeTagPrinted", "barcodeUnit2Printed",
-          "barcodeUnit3Printed", "location", "grTransDetailsID",
-          "poTransDetailsID", "ratePlusTax", "sortOrder", "profitPercentage",
-          "schemeDiscount", "memo", "memoEditor", "rowNumber",
-          "actualSalesPrice", "unit2", "unit3",
-        ].includes(field);
-      }
+      //     "lastPurchaseRate", "lastPurchaseCost", "bd", "btnPrintBarcode",
+      //     "mfdDate", "expDate", "expDays", "additionalExpense", "unitPriceFC",
+      //     "colour", "warranty", "nosQty", "totalAddExpense", "grossConvert",
+      //     "grossFC", "unitID2", "unit2Qty", "unit2SalesRate", "unit2MRP",
+      //     "unit2MBarcode", "unit2StickerQty", "unitID3", "unit3Qty",
+      //     "unit3SalesRate", "unit3MRP", "unit3MBarcode", "unit3StickerQty",
+      //     "tagQty", "barcodeTagPrinted", "barcodeUnit2Printed",
+      //     "barcodeUnit3Printed", "location", "grTransDetailsID",
+      //     "poTransDetailsID", "ratePlusTax", "sortOrder", "profitPercentage",
+      //     "schemeDiscount", "memo", "memoEditor", "rowNumber",
+      //     "actualSalesPrice", "unit2", "unit3",
+      //   ].includes(field);
+      // }
             // ---------------- LPO ----------------
         else if (
         userSession.countryId != Countries.India &&
@@ -1315,7 +1351,10 @@ export const purchaseGridCol = (
         return ![
             "mrp", "hsnCode", "cgst", "cgstPerc", "sgstPerc", "sgst",
           "igstPerc", "igst", "cessPerc", "cessAmt", "additionalCessPerc",
-          "additionalCess", "mR", "netRate", "itemType", "refBranchID",
+          "additionalCess",
+          //  "mR",
+            // "netRate",
+             "itemType", "refBranchID",
           "employeeCode", "employeeName", "stdPurchasePrice", "refTransDtailId",
 
             "mrp", "brand", "brandID", "free", "discPerc", "discount", "lpr", "lpc",
@@ -1339,7 +1378,10 @@ export const purchaseGridCol = (
         return ![
              //not in pi added from others
             "vatPerc","vatAmount",
-            "mrp", "hsnCode","igstPerc", "igst","mR", "netRate", "itemType", "refBranchID",
+            "mrp", "hsnCode","igstPerc", "igst",
+            // "mR", 
+            // "netRate",
+             "itemType", "refBranchID",
             "employeeCode", "employeeName", "stdPurchasePrice", "refTransDtailId",
              //common
             "mrp", "brand", "brandID", "free", "discPerc", "discount", "lpr", "lpc",
@@ -1454,21 +1496,21 @@ export const purchaseGridCol = (
         }
       }
 
-      if (
-        userSession.countryId != Countries.India &&
-        voucherType == VoucherType.GoodsReceiptReturn &&
-        (mi.dataField?.includes("pCode") ||
-          mi.dataField?.includes("manualBarcode") ||
-          mi.dataField?.includes("salesPrice") ||
-          mi.dataField?.includes("cost") ||
-          mi.dataField?.includes("stock"))
-        //check rate field present in GRR
-      ) {
-        return {
-          ...mi,
-          visible: false,
-        };
-      }
+      // if (
+      //   userSession.countryId != Countries.India &&
+      //   voucherType == VoucherType.GoodsReceiptReturn &&
+      //   (mi.dataField?.includes("pCode") ||
+      //     mi.dataField?.includes("manualBarcode") ||
+      //     mi.dataField?.includes("salesPrice") ||
+      //     mi.dataField?.includes("cost") ||
+      //     mi.dataField?.includes("stock"))
+      //   //check rate field present in GRR
+      // ) {
+      //   return {
+      //     ...mi,
+      //     visible: false,
+      //   };
+      // }
       if (voucherType == VoucherType.LPO
       ) {
         return {

@@ -107,7 +107,7 @@ const KsaEInvoiceReportFilter = ({
       </div>
 
       <div className="flex items-center gap-4">
-        <a href="#">{t("show_xml")}</a>
+        {/* <a href="#">{t("show_xml")}</a> */}
         {/* <ERPButton
           type="button"
           title={t("save_template")}

@@ -797,6 +797,8 @@ const Urls = {
   lpo_data_Section: '/Inventory/LocalPurchaseOrder/Data/Section/',
   lpo_data_Product: '/Inventory/LocalPurchaseOrder/Data/Product/',
   lpo_data_ProductsCode: '/Inventory/LocalPurchaseOrder/Data/ProductsCode/',
+
+  ksa_eInvoice_saveXml: '/Inventory/RptTAXReport/KSAEinvoiceSaveXml',
 };
 
 export default Urls;

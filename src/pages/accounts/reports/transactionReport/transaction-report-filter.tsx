@@ -7,8 +7,9 @@ import TransactionReportfilterCheckboxes from "./transaction-report-filter-forms
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
+import React from "react";
 
-const TransactionReportFilter = ({
+const TransactionReportFilter = React.memo(({
   getFieldProps,
   handleFieldChange,
   _formState,
@@ -93,6 +94,7 @@ const TransactionReportFilter = ({
                   isCr: boolean;
                 }) => {
                   let updates = frmState;
+                  let drCrData = ""
                   // if (frmState.allChecked) {
                   //   updates["vTypes"] = "All";
                   //   updates["isDr"] = frmState?.isDr;
@@ -105,15 +107,16 @@ const TransactionReportFilter = ({
                   //   // updates["vTypes"] = sds || '';
                   // }
                   if (frmState.isDr && frmState.isCr) {
-                    updates["drCr"] = "drCr";
+                    drCrData = "drCr";
                   } else if (frmState.isDr) {
-                    updates["drCr"] = "dr";
+                    drCrData = "dr";
                   } else if (frmState.isCr) {
-                    updates["drCr"] = "cr";
+                    drCrData = "cr";
                   } else {
-                    updates["drCr"] = "drCr";
+                    drCrData = "drCr";
                   }
-                  handleFieldChange(updates);
+                 const newUpdates = {...updates, drCr: drCrData};
+                 handleFieldChange(newUpdates);
                 }}
                 getFormState={getFormState}
                 allTransactions={allTransactions}
@@ -125,7 +128,7 @@ const TransactionReportFilter = ({
       </div>
     </div>
   );
-};
+});
 export default TransactionReportFilter;
 export const TransactionReportFilterInitialState = {
   dateFrom: new Date(),

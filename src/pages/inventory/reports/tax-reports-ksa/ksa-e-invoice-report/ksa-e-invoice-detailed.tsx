@@ -6,10 +6,127 @@ import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../../redux/urls";
 import KsaEInvoiceReportFilter, { KsaEInvoiceReportFilterInitialState } from "./ksa-e-invoice-filter";
+import { useCallback, useRef, useState } from "react";
+import ERPButton from "../../../../../components/ERPComponents/erp-button";
+import { APIClient } from "../../../../../helpers/api-client";
 
+interface XmlPayloadData {
+  invTransactionMasterId: number;
+  voucherType: string;
+  voucherForm: string;
+  voucherPrefix: string;
+  voucherNumber: string;
+  customerType: string;
+}
+
+const api = new APIClient();
 const KsaEInvoiceReportDetailed = () => {
   const { getFormattedValue } = useNumberFormat();
   const { t } = useTranslation("accountsReport");
+  const [showHeaderButtons, setShowHeaderButtons] = useState(false)
+  const [xmlPayloadData, setXmlPayloadData] = useState<XmlPayloadData>({
+    invTransactionMasterId: 0,
+    voucherType: "",
+    voucherForm: "",
+    voucherPrefix: "",
+    voucherNumber: "",
+    customerType: "",
+  });
+
+  // Row Click Function definition
+  const handleRowClick = useCallback((rowData: any) => {
+   setShowHeaderButtons(true);
+    setXmlPayloadData({
+      invTransactionMasterId: rowData.data.invTransactionMasterID,
+      voucherType: rowData.data.voucherType,
+      voucherForm: rowData.data.voucherForm,
+      voucherPrefix: rowData.data.voucherPrefix,
+      voucherNumber: rowData.data.voucherNumber,
+      customerType: rowData.data.customerType,
+    });
+    }, []);
+
+    // Row Click Function definition
+    // const handleRowClick = (rowData: any) => {
+    // setShowHeaderButtons(true);
+    // setXmlPayloadData({
+    //   invTransactionMasterId: rowData.invTransactionMasterID,
+    //   voucherType: rowData.voucherType,
+    //   voucherForm: rowData.voucherForm,
+    //   voucherPrefix: rowData.voucherPrefix,
+    //   voucherNumber: rowData.voucherNumber,
+    //   customerType: rowData.customerType,
+    // });
+    // };
+
+  // It will save into selected folder, but default it shows a verifying alert box, if that fails, it will download
+  // Also need to check is there any other methods available for this -  CheckIt
+  const saveXmlFile = async (
+      fileContent: string,
+      suggestedFileName: string,
+      contentType: string,
+    ): Promise<void> => {
+      // Decode base64
+      const decodedData = atob(fileContent);
+      const byteNumbers = new Array(decodedData.length);
+      for (let i = 0; i < decodedData.length; i++) {
+        byteNumbers[i] = decodedData.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: contentType });
+
+      // Check if the modern File System Access API is supported
+      if ("showSaveFilePicker" in window) {
+        try {
+          const fileHandle = await (window as any).showSaveFilePicker({
+            suggestedName: suggestedFileName,
+            types: [
+              {
+                description: "XML Files",
+                accept: { [contentType]: [".xml"] },
+              },
+            ],
+          });
+          
+          const writable = await fileHandle.createWritable();
+          await writable.write(blob);
+          await writable.close();
+
+          console.log("File saved successfully at user-chosen location!");
+          return;
+        } catch (err: any) {
+          if (err.name !== "AbortError") {
+            console.error("Error saving file:", err);
+          }
+        }
+      }
+      // Otherwise Download Option
+      console.warn("File System Access API not supported – falling back to download");
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = suggestedFileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    };
+
+
+  // Handle SaveXml button click
+  const handleSaveXMLClick = async () => {
+    if (!xmlPayloadData.invTransactionMasterId) return;
+
+    try {
+      const response = await api.postAsync(
+        Urls.ksa_eInvoice_saveXml,
+        xmlPayloadData
+      );
+      saveXmlFile(response.fileContents, response.fileDownloadName, response.contentType);
+    } catch (error) {
+      console.error("SaveXML API error", error);
+    }
+  };
   const columns: DevGridColumn[] = [
     {
       dataField: "transactionDate",
@@ -397,6 +514,22 @@ const KsaEInvoiceReportDetailed = () => {
                 filterInitialData={KsaEInvoiceReportFilterInitialState}
                 reload={true}
                 gridId="grd_ksa_e_invoice_report_detailed"
+                onRowClick={handleRowClick}
+                customToolbarItems={[
+                  {
+                    location: 'before',
+                    item: (
+                      <>
+                      {showHeaderButtons && (
+                      <div className="flex gap-1 px-2">
+                          <ERPButton title={t("save_xml")} variant="secondary" onClick={()=> handleSaveXMLClick()}/>
+                          <ERPButton title={t("fix&send_again")} variant="secondary" onClick={()=> alert("Need to manage the action")}/>
+                    </div>
+                    )}
+                    </>
+                    )
+                  },
+                ]}
               />
             </div>
           </div>

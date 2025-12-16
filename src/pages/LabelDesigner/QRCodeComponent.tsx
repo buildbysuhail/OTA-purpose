@@ -19,7 +19,7 @@ interface QRCodeComponentProps {
   setTemplateData?: (updater: (prev: any) => any) => void;
   selectedComponent?: PlacedComponent | null;
   setSelectedComponent?: (updater: (prev: PlacedComponent | null) => PlacedComponent | null) => void;
-  pushToHistory: (newState: any, action: string) => void;
+  pushToHistory?: (newState: any, action: string) => void;
 }
 
 export const QRCodeComponent: React.FC<QRCodeComponentProps> = ({
@@ -135,10 +135,7 @@ export const QRCodeComponent: React.FC<QRCodeComponentProps> = ({
       },
     };
    if(setTemplateData)setTemplateData(newTemplateData);
-   
-    pushToHistory(newTemplateData, "resize qrcode");
-
-
+   if(pushToHistory) pushToHistory(newTemplateData, "resize qrcode");
     if (selectedComponent?.id === id && setSelectedComponent) {
       setSelectedComponent((prev) => ({
         ...prev!,

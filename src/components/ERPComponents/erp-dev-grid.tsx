@@ -2199,7 +2199,47 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             columnAutoWidth={columnAutoWidth}
             onRowPrepared={handleRowPrepared}
             columnHidingEnabled={columnHidingEnabled}
-            // columns={gridCols}
+            columns={gridCols.map((column) => {
+              return {
+                ...column,
+                caption:column.captionDynamic != undefined
+                    ? column.captionDynamic(filter)
+                    : column.caption,
+                allowEditing: column.allowEditing || false,
+                width: column.minWidth,
+                cellRender: column.cellRenderDynamic === undefined &&
+                    column.cellRender === undefined &&
+                    column.cellRenderDynamicRootState === undefined
+                    ? undefined
+                    : (cellElement: any, cellInfo: any) => {
+                      if (column.cellRenderDynamic) {
+                        return column.cellRenderDynamic(
+                          cellElement,
+                          cellInfo,
+                          filter
+                        );
+                      }
+                      if (column.cellRenderDynamicRootState) {
+                        return column.cellRenderDynamicRootState(
+                          cellElement,
+                          cellInfo,
+                          rootState
+                        );
+                      }
+                      if (column.cellRender) {
+                        return column.cellRender(
+                          cellElement,
+                          cellInfo,
+                          filter
+                        );
+                      }
+                    },
+                    visible: column.visibleDynamic != undefined
+                    ? column.visibleDynamic(filter)
+                    : column.visible || false
+                  
+              }
+            })  }
             onRowClick={(e) =>
               onClickByRootState != undefined
                 ? onClickByRootState(e, rootState)
@@ -2780,7 +2820,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               </Toolbar>
             )}
 
-            {gridCols?.map((column, index) => (
+            {/* {gridCols?.map((column, index) => (
               <Column
                 buttons={column?.buttons}
                 customizeText={column.customizeText}
@@ -2854,7 +2894,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               // fixed={column.dataField === 'actions' ? true : column.fixed}
               // fixedPosition={column.dataField === 'actions' ? 'right' : column.fixedPosition}
               />
-            ))}
+            ))} */}
 
             {/* <Grouping autoExpandAll={true} allowCollapsing={false} /> */}
 

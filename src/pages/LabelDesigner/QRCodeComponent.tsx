@@ -135,10 +135,7 @@ export const QRCodeComponent: React.FC<QRCodeComponentProps> = ({
       },
     };
    if(setTemplateData)setTemplateData(newTemplateData);
-   
     pushToHistory(newTemplateData, "resize qrcode");
-
-
     if (selectedComponent?.id === id && setSelectedComponent) {
       setSelectedComponent((prev) => ({
         ...prev!,

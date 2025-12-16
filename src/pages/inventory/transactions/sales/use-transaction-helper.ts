@@ -1803,14 +1803,14 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         if (product.isUnit2BarCode) {
           outDetail.unit = product.unit2;
           outDetail.unitID = product.unit2ID;
-          outDetail.unitPrice = Number(product.stdPurchasePrice || 0);
+          outDetail.unitPrice = Number(product.unit2SalesPrice || 0);
         }
 
         // Handle Unit3 barcode
         if (product.isUnit3BarCode) {
           outDetail.unit = product.unit3;
           outDetail.unitID = product.unit3ID;
-          outDetail.unitPrice = Number(product.stdPurchasePrice || 0);
+          outDetail.unitPrice = Number(product.unit3SalesPrice || 0);
         }
 
         // Unit 2 information

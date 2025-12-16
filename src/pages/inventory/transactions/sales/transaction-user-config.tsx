@@ -345,11 +345,11 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
               {[VoucherType.SalesOrder].includes(formState.transaction.master.voucherType as VoucherType) &&
                 <>
                   <ERPCheckbox
-                    id="blockNonStockItems"
+                    id="blockNonStockItemsSO"
                     label={t("block_non_stock_items")}
                     data={formState.userConfig}
-                    checked={formState?.userConfig?.blockNonStockItems}
-                    onChangeData={(e) => handleFieldChange("blockNonStockItems", e.blockNonStockItems)}
+                    checked={formState?.userConfig?.blockNonStockItemsSO}
+                    onChangeData={(e) => handleFieldChange("blockNonStockItemsSO", e.blockNonStockItemsSO)}
                     className="w-1/3"
                   />
                   <ERPCheckbox

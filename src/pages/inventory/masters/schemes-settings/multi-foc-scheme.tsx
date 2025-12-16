@@ -345,7 +345,7 @@ const MultiFOCScheme: React.FC = () => {
               </div>
               <div className="md:col-span-4">
                 <ERPProductSearch
-                closeIfNodata ={true}
+                  closeIfNodata ={false}
                   showInputSymbol={false}
                   value={focSchemeForm.data.nameOrCode}
                   onChange={(e) => {
@@ -385,6 +385,7 @@ const MultiFOCScheme: React.FC = () => {
                   }}
                   batchDataUrl={Urls.select_foc_product_batch_grid_multi_foc}
                   clearAfterSelection={false}
+                  isMainPurchaseGrid={false}
                 />
               </div>
             </div>
@@ -466,7 +467,7 @@ const MultiFOCScheme: React.FC = () => {
                 </div>
                 <div className="md:col-span-4">
                   <ERPProductSearch
-                closeIfNodata ={true}
+                    closeIfNodata ={false}
                     showInputSymbol={false}
                     value={focSchemeForm.data.nameOrCode_free}
                     onChange={(e) => {
@@ -503,6 +504,7 @@ const MultiFOCScheme: React.FC = () => {
                       }));
                     }}
                     batchDataUrl={Urls.select_foc_product_batch_grid_multi_foc}
+                    isMainPurchaseGrid={false}
                   />
                 </div>
               </div>

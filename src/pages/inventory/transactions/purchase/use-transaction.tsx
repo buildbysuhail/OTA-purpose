@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { usePurchasePrint } from "./use-print";
 import { useCommenPrint } from "../../../transaction-base/use-commen-print";
@@ -3621,9 +3621,13 @@ debugger;
             }
             break;
           }
+          const productApiInProgressRef = useRef(false);  // Need Test
           if (columnName == "pCode") {
             data.pCode = value;
             if (!isNullOrUndefinedOrEmpty(value)) {
+              if (productApiInProgressRef.current) {   // Need Test
+                return { handled: true }}  // For handling multiple AutoBarcode api calling when continuous enter pressing - CheckIt
+              productApiInProgressRef.current = true;
               await loadProductDetailsByAutoBarcode(
                 {
                   productCode: data.pCode,
@@ -3639,6 +3643,7 @@ debugger;
                 { result: {}, formStateHandleFieldChangeKeysOnly },
                 true
               );
+              productApiInProgressRef.current = false;  // Need Test
             } else {
               const res = focusToNextColumn(rowIndex, columnName);
               setCurrentCell(res, data, false);
@@ -3646,6 +3651,9 @@ debugger;
           } else if (columnName == "product") {
             data.product = value;
             if (!isNullOrUndefinedOrEmpty(value)) {
+              if (productApiInProgressRef.current) {   //// Need Test
+                return { handled: true }}  // For handling multiple AutoBarcode api calling when continuous enter pressing - CheckIt
+              productApiInProgressRef.current = true;
               await loadProductDetailsByAutoBarcode(
                 {
                   productCode: data.pCode,
@@ -3661,6 +3669,7 @@ debugger;
                 { result: {}, formStateHandleFieldChangeKeysOnly },
                 true
               );
+              productApiInProgressRef.current = false;  // Need Test
             } else {
               const res = focusToNextColumn(rowIndex, columnName);
               setCurrentCell(res, data, false);

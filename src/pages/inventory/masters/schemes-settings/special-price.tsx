@@ -456,12 +456,13 @@ export const SpecialPrice: React.FC = () => {
                 </div>
                 <div className="flex-1">
                   <ERPProductSearch
-                closeIfNodata ={true}
+                    closeIfNodata ={false}
                     showInputSymbol={false}
                     noLabel={true}
                     // isGridCell={false}
                     onChange={(e) => console.log("Input changed:", e.target.value)}
                     productDataUrl={Urls.load_product_details}
+                    isMainPurchaseGrid={false}
                     onRowSelected={(data: any) => {
                       setSpecialPriceForm((prev) => ({
                         ...prev,

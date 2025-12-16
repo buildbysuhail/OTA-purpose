@@ -571,6 +571,7 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
             };
             dispatch(formStateHandleFieldChange({ fields: { batchSelectionData: JSON.stringify(res) } }));
           }}
+          isMainPurchaseGrid={true}
         />
         // </div>
       );

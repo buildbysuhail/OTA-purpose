@@ -191,6 +191,7 @@ export const ProductManageGcc: React.FC<{
                 onEnterKeyDown={() => {
                   productGroupRef?.current?.focus()
                 }}
+                isMainPurchaseGrid={false}
               />
               {/* <ERPDataCombobox
                 ref={productNameRef}
@@ -246,6 +247,7 @@ export const ProductManageGcc: React.FC<{
                     content: <ProductGroupManage />,
                   }}
                   fetching={formState?.loading !== false ? true : false}
+                  isMainPurchaseGrid={false}
                 />
 
                 {/* <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">

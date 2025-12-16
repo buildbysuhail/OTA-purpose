@@ -84,6 +84,7 @@ interface InputProps {
   showInputSymbol?:boolean;
   disabled?: boolean;
   zIndexController?: number;
+  isMainPurchaseGrid?: boolean;  // This is for managing warehouseId passing in main purchase grid bachGrid dataUrl
 }
 
 interface LoadResult {
@@ -331,7 +332,8 @@ const createBatchStore = async (productID: string, warehouseId: number, batchDat
 const createBatchStoreWithCache = async (
   productID: string,
   warehouseId: number,
-  batchDataUrl?: string
+  batchDataUrl?: string,
+  isMainPurchaseGrid?: boolean,
 ) => {
   let cachedResult: any = null;
   let hasFetchedOnce = false;
@@ -356,7 +358,7 @@ const createBatchStoreWithCache = async (
           .join("&");
 
         try {
-          const url = `${batchDataUrl}${productID}/${warehouseId ?? 1}` || "";
+          const url = isMainPurchaseGrid ? `${batchDataUrl}${productID}/${warehouseId ?? 1}` || "" : `${batchDataUrl}${productID}/` || "";
           const response = await api.getAsync(
             queryString && queryString !== "" ? `${url}?${queryString}` : `${url}?skip=0`
           );
@@ -419,8 +421,9 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
       customStyle,
       appState,
       showInputSymbol = true,
-       disabled = false,
-       zIndexController = 9999  ,
+      disabled = false,
+      zIndexController = 9999,
+      isMainPurchaseGrid = false,
       ...rest
     },
     ref
@@ -434,7 +437,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
           dataField: "productName",
           caption: t("product_name"),
           dataType: "string",
-          minWidth: 150,
+          minWidth: isMobileInput ? undefined : 150,
+          width: isMobileInput ? 150 : undefined,
           allowSorting: true,
           allowSearch: true,
           allowFiltering: true,
@@ -462,6 +466,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
           allowSorting: true,
           allowSearch: true,
           allowFiltering: true,
+          minWidth: isMobileInput ? undefined : 100,
+          width: isMobileInput ? 100 : undefined,
         },
         {
           dataField: "arabicName",
@@ -485,7 +491,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
           dataField: "stockDetails",
           caption: t("stock_details"),
           dataType: "string",
-          minWidth: 150,
+          minWidth: isMobileInput ? undefined : 150,
+          width: isMobileInput ? 150 : undefined,
           allowSorting: true,
           allowSearch: true,
           allowFiltering: true,
@@ -563,7 +570,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
           dataField: "unitID",
           caption: t("unit_id"),
           dataType: "number",
-          minWidth: 100,
+          minWidth: isMobileInput ? undefined : 100,
+          width: isMobileInput ? 100 : undefined,
           allowSorting: true,
           allowSearch: true,
           allowFiltering: true,
@@ -572,7 +580,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
           dataField: "unit",
           caption: t("unit"),
           dataType: "string",
-          minWidth: 100,
+          minWidth: isMobileInput ? undefined : 100,
+          width: isMobileInput ? 100 : undefined,
           allowSorting: true,
           allowSearch: true,
           allowFiltering: true,
@@ -581,7 +590,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
           dataField: "brandID",
           caption: t("brandID"),
           dataType: "number",
-          minWidth: 100,
+          minWidth: isMobileInput ? undefined : 100,
+          width: isMobileInput ? 100 : undefined,
           allowSorting: true,
           allowSearch: true,
           allowFiltering: true,
@@ -590,7 +600,8 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
           dataField: "brandName",
           caption: t("brand_name"),
           dataType: "string",
-          minWidth: 100,
+          minWidth: isMobileInput ? undefined : 100,
+          width: isMobileInput ? 100 : undefined,
           allowSorting: true,
           allowSearch: true,
           allowFiltering: true,
@@ -748,7 +759,8 @@ useEffect(() => {
           const batchStore = await createBatchStoreWithCache(
             (formState.batchGridShowKey ?? 0).toString(),
             formState.transaction.master.fromWarehouseID,
-            batchDataUrl
+            batchDataUrl,
+            isMainPurchaseGrid,
           );
           setProductDetailStore(batchStore);
         }
@@ -871,7 +883,7 @@ useEffect(() => {
                 desc: true,
               },
             ],
-            // closeIfNodata
+            closeIfNodata
           );
 
           //  CRITICAL CHANGE: Remove the manual store.load() call
@@ -996,7 +1008,8 @@ const handleEnterAction = async () => {
         const batchStore = await createBatchStoreWithCache(
           rowData.productID,
           formState.transaction.master.fromWarehouseID,
-          batchDataUrl
+          batchDataUrl,
+          isMainPurchaseGrid
         );
         setProductDetailStore(batchStore);
         setShowBatchGrid(true);
@@ -1110,12 +1123,22 @@ const handleBatchGridDoubleClick =async (e: any) => {
       [batchDataUrl, onProductSelected, inputRef]
     );
 
+    // The below changes(isProcessingRef) is for handling for handling multiple enter press sometimes leads to batch enter not working or taking more time
+    const isProcessingRef = useRef(false);
     const handleBatchGridKeyDown = useCallback(
       async (e: any) => {
         if (disabled) return;
-        console.log(`Batch grid key: ${e.event.key}`); 
+        // console.log(`Batch grid key: ${e.event.key}`);
         if (e.event.key === "Enter") {
-            await handleBatchEnterAction()
+          e.event.preventDefault();
+          e.event.stopPropagation();
+          if (isProcessingRef.current) return;
+          isProcessingRef.current = true;
+          try {
+            await handleBatchEnterAction();
+          } finally {
+            isProcessingRef.current = false;
+          }
         }
         // else if (e.event.key === 'Escape') {
         //   dispatch(formStateHandleFieldChangeKeysOnly({fields: {formElements:{dgvProductBatches: {visible: false}}}}));
@@ -1130,7 +1153,7 @@ const handleBatchGridDoubleClick =async (e: any) => {
           e.event.preventDefault();
         }
       },
-      [onRowSelected, clearAfterSelection, inputRef, inputValue]
+      [onRowSelected, clearAfterSelection, inputRef, inputValue, handleBatchEnterAction, setShowBatchGrid]
     );
 
     const [batchInitialized, setBatchInitialized] = useState(false);
@@ -1350,6 +1373,7 @@ const handleBatchGridDoubleClick =async (e: any) => {
         const gridInstance = e.component;
         const visibleRows = gridInstance.getVisibleRows();
         const hasValidData = visibleRows.length > 0 && visibleRows[0].data?.productID;
+        setBatchInitialized(false);  // For handling when click on wrong batch product - then i cant select the item in product grid issue fix
 
             // Handle closeIfNodata here instead of in debouncedFetch
     if (!hasValidData && closeIfNodata && visibleRows.length === 0) {

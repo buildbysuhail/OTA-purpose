@@ -387,7 +387,7 @@ const FOCScheme: React.FC = () => {
                 </div>
                 <div>
                   <ERPProductSearch
-                closeIfNodata ={true}
+                    closeIfNodata ={false}
                     showInputSymbol={false}
                     id="test"
                     keyId="testserch"
@@ -417,6 +417,7 @@ const FOCScheme: React.FC = () => {
                       }));
                     }}
                     batchDataUrl={Urls.select_foc_product_batch_grid_foc}
+                    isMainPurchaseGrid={false}
                   />
                 </div>
               </div>

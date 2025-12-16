@@ -3088,9 +3088,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 <div className="flex left-0 bg-white mt-auto fixed bottom-0 w-full z-10  space-x-2 p-0 m-0 px-[5px] pb-[5px]">
                   <ERPButton
                     localInputBox={formState?.userConfig?.inputBoxStyle}
-                    title={`${t(formState.formElements.btnAdd.label)} ${t(
-                      "and_new"
-                    )}`}
+                    title={t("add_and_new")}
                     onClick={() => {
                       addOrEditRow();
                       handleClearControls();

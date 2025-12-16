@@ -485,7 +485,7 @@ const PosSideSection: React.FC<TransactionHeaderProps> = ({
           <ERPProductSearch
             //  disabled={isView}
             showInputSymbol={false}
-            closeIfNodata={true}
+            closeIfNodata={false}
             noLabel={true}
             label="Product Name"
             placeholder="Product Name"
@@ -510,6 +510,7 @@ const PosSideSection: React.FC<TransactionHeaderProps> = ({
             onEnterKeyDown={() => {
               productGroupRef?.current?.focus();
             }}
+            isMainPurchaseGrid={false}  // Change based on the use
           />
         </div>
         <div className="w-[10%] flex items-center">

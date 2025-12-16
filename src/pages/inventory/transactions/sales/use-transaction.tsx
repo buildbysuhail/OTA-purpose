@@ -3029,6 +3029,11 @@ export const useTransaction = (
               })
             );
           }
+          if (columnName === "barCode") {
+            const details = formState.transaction.details;
+            const res = focusColumn(rowIndex, "qty");
+            setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
+          }
           break;
 
           case "m":
@@ -3050,6 +3055,30 @@ export const useTransaction = (
             }
             break;
 
+          case "u":
+          case "U":
+            if (columnName === "barCode") {
+              const details = formState.transaction.details;
+              const res = focusColumn(rowIndex, "unitPrice");
+              setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
+            }
+            break;
+
+          case "r":
+          case "R":
+            const details = formState.transaction.details;
+            if (columnName === "barCode") {
+              if(formState.gridColumns?.find((x)=> x.dataField === "ratePlusTax")?.readOnly === false){
+                const res = focusColumn(rowIndex, "ratePlusTax");
+                setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
+              }else{
+                if(formState.gridColumns?.find((x)=> x.dataField === "unitPrice")?.readOnly === false){
+                  const res = focusColumn(rowIndex, "unitPrice");
+                  setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
+                }
+              }
+            }
+            break;
         // case "M":
         // case "m":
         //   if (isCtrlPressed) {

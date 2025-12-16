@@ -12,7 +12,7 @@ import { setData } from "../redux/slices/data/reducer";
 const { api } = config;
 import {decryptAES} from '../utilities/Utils'
 import { getStorageString, setStorageString } from "../utilities/storage-utils";
-import { getCacheStoreKey } from "../redux/cached-urls";
+import { getApLocalData, getCacheStoreKey } from "../redux/cached-urls";
 
 //  const formState = useAppSelector((state: RootState) => state.AccTransaction);
 // default
@@ -86,11 +86,15 @@ clearInFlightRequests = () => {
       await setAuthorization(token);
       // Construct a stable cache key (you could change the delimiter if needed)
       const cacheKey = `${getCacheStoreKey(url)}`;
-      
-      // Check if a request is already in-flight
-      if (inFlightRequests.has(cacheKey) && !ignoreCach) {
-        return inFlightRequests.get(cacheKey);
+      const data = await getApLocalData(cacheKey as any, "", true);
+      if (data) {
+        return data;
       }
+
+      // Check if a request is already in-flight
+      // if (inFlightRequests.has(cacheKey) && !ignoreCach && cacheKey != null && cacheKey != undefined && cacheKey != "null") {
+      //   return inFlightRequests.get(cacheKey);
+      // }
       
       const fullUrl = queryString !== "" ? `${url}?${queryString}` : url;
       // Start the axios GET request and store its Promise
@@ -102,7 +106,7 @@ clearInFlightRequests = () => {
       else {
         resData = response
       }      
-      inFlightRequests.set(cacheKey, resData);      
+      // inFlightRequests.set(cacheKey, resData);      
       await setStorageString(cacheKey, JSON.stringify(resData))
       return resData
     

@@ -709,10 +709,13 @@ const TransactionForm: React.FC<TransactionProps> = ({
   useEffect(() => {
     const initializeFormElements = async () => {
 const dataWarranty = voucherType != "LPO" ? await api.getWithCacheAsync(
-        `${Urls.inv_transaction_base}${transactionType}/data/warranty`
+        `${Urls.inv_transaction_base}${transactionType}/data/warranty/`
       ) : [];
       const dataBrands = voucherType != "LPO" ? await api.getWithCacheAsync(
-        `${Urls.inv_transaction_base}${transactionType}/data/brands`
+        `${Urls.inv_transaction_base}${transactionType}/data/brands/`
+      ) : [];debugger;
+      const priceCategory = voucherType != "LPO" ? await api.getWithCacheAsync(
+        `${Urls.inv_transaction_base}${transactionType}/Data/PriceCategories/`
       ) : [];
 
       const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`);
@@ -750,7 +753,7 @@ const dataWarranty = voucherType != "LPO" ? await api.getWithCacheAsync(
         // }
       }
 
-
+debugger;
 
       if (!isInvoker) {
          const voucher: TransactionData = {...transactionInitialData,details:!deviceInfo.isMobile ? Array.from({ length: 30 }, (_, index) => ({
@@ -939,13 +942,7 @@ const dataWarranty = voucherType != "LPO" ? await api.getWithCacheAsync(
         };
          _formState.transaction.master.ledgerID = (() => {
             let selectedValue = _formState.transaction.master.ledgerID;
-           if (
-              ["SAMAPLASTICS"].includes(
-                userSession.dbIdValue?.trim()
-              ) && (formState.userConfig?.presetPriceCategoryId??0) > 0
-            ) {
-              return formState.userConfig?.presetPriceCategoryId??0;
-            }
+           
             if (
               ["543140180640", "BAHAMDOON", "HANAPLASTICS"].includes(
                 userSession.dbIdValue?.trim()
@@ -1024,7 +1021,7 @@ const dataWarranty = voucherType != "LPO" ? await api.getWithCacheAsync(
         _formState.transaction.master.transactionDate = today.toISOString();
         _formState.transaction.master.purchaseInvoiceDate = today.toISOString();
 
-        _formState.transaction.master.priceCategoryID = 0;
+        _formState.transaction.master.priceCategoryID = priceCategory[0]?.id;
 
 
         // 4️⃣ Party assignment logic

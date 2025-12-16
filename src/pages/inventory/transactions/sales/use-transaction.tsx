@@ -530,6 +530,7 @@ export const useTransaction = (
       voucherPrefix: out_voucherPrefix,
       voucherType: out_voucherType,
       voucherForm: out_voucherForm,
+      InvokeUsingVoucherNumber: !usingManualInvNumber,
       isUsingManualInvNo: usingManualInvNumber, // Convert boolean to string
       isActualPriceVisible:
         formState.gridColumns.find((x) => x.dataField == "actualSalesPrice")

@@ -92,6 +92,10 @@ const TransactionReportFilter = React.memo(({
                   allChecked: boolean;
                   isDr: boolean;
                   isCr: boolean;
+                  dateFrom: Date;
+                  dateTo: Date;
+                  salesRouteID: number;
+                  salesRouteName: string;
                 }) => {
                   let updates = frmState;
                   let drCrData = ""
@@ -115,7 +119,9 @@ const TransactionReportFilter = React.memo(({
                   } else {
                     drCrData = "drCr";
                   }
-                 const newUpdates = {...updates, drCr: drCrData};
+                 const newUpdates = (({ dateFrom, dateTo, salesRouteID, salesRouteName, ...rest }) => ({
+                  ...rest,
+                  drCr: drCrData,}))(updates);
                  handleFieldChange(newUpdates);
                 }}
                 getFormState={getFormState}

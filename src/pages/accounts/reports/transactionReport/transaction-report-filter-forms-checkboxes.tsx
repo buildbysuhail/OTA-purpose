@@ -19,6 +19,10 @@ interface TransactionReportCheckboxProps {
     allChecked: boolean;
     isDr: boolean;
     isCr: boolean;
+    dateFrom: Date;
+    dateTo: Date;
+    salesRouteID : number;
+    salesRouteName: string;
   }) => void;
   getFormState: any;
 }

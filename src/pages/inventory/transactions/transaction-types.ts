@@ -464,7 +464,7 @@ export interface UserConfig {
   showSrInProductInfoPopup?: boolean;
   setDefaultCashPaid?: boolean;
   showProductInfoPopupForSq?: boolean;
-  blockNonStockItems?: boolean;
+  blockNonStockItemsSO?: boolean;
   stockOutConfirmation?: boolean;
 }
 

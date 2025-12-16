@@ -551,16 +551,13 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   />
                 )} */}
 
-                <ERPDataCombobox
-                  id="sm"
-                  field={{
-                    id: "sm",
-                    // getListUrl: Urls.,
-                    valueKey: "sm",
-                    labelKey: "smName",
-                  }}
-                  onChangeData={(data: any) => { handleFieldChange("sm", data.sm); }}
-                  label={t("sm")}
+                <Employee
+                  dispatch={dispatch}
+                  formState={formState}
+                  t={t}
+                  transactionType={transactionType}
+                  handleKeyDown={handleKeyDown}
+                  handleFieldKeyDown={handleFieldKeyDown}
                 />
 
                 <ERPInput

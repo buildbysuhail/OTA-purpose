@@ -37,7 +37,7 @@ const PriceCategoryCombobox = React.forwardRef<
         id: "priceCategoryID",
         valueKey: "id",
         labelKey: "name",
-        getListUrl: Urls.data_pricectegory,
+        getListUrl: `${Urls.inv_transaction_base}${formState.transactionType}/Data/PriceCategories/`,
       }}
       disabled={
         formState.formElements.priceCategory.disabled ||

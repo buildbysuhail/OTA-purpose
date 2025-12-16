@@ -1665,6 +1665,10 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         lastSelectedWareHouseIdOfItemPopUpsSearch:
           await _lastSelectedWarehouseIDOfItemPopupsSearch,
         priceCategoryId: formState.transaction.master.priceCategoryID,
+        isPrintGatepassChecked: formState.userConfig?.gatePass,
+        lsAlowExcessCashReceipt: formState.userConfig?.allowExcessCashReceipt,
+        lsBlockZeroFigureEntry: formState.userConfig?.blockZeroFigureEntry,
+        lsBlockNonStockItemInSO: formState.userConfig?.blockNonStockItemsSO,
 
       };
       const queryParams = new URLSearchParams();
@@ -2016,20 +2020,20 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
             },
           };
         }
-        if(product.units) {
-        for (const unit of product.units) {
-          if (!result.batchesUnits) {
-            result.batchesUnits = [];
-          }
-          const exists = result.batchesUnits.some(
-            (u) =>
-              u.productBatchID === unit.productBatchID && u.value == unit.value
-          );
-          if (!exists) {
-            result.batchesUnits.push(unit);
+        if (product.units) {
+          for (const unit of product.units) {
+            if (!result.batchesUnits) {
+              result.batchesUnits = [];
+            }
+            const exists = result.batchesUnits.some(
+              (u) =>
+                u.productBatchID === unit.productBatchID && u.value == unit.value
+            );
+            if (!exists) {
+              result.batchesUnits.push(unit);
+            }
           }
         }
-      }
 
         commonParams.formStateHandleFieldChangeKeysOnly &&
           dispatch &&

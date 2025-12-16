@@ -42,7 +42,7 @@ const CachedUrls = {
         `/${x.transactionBase == TransactionBase.Accounts
           ? "Accounts"
           : "Inventory"
-        }/${x.transactionType}/Data/PriceCategory/`
+        }/${x.transactionType}/Data/PriceCategories/`
       )
     ),
   ],
@@ -146,8 +146,8 @@ export const getApLocalDataByUrl = async (url: string,
   return null;
 };
 export const getApLocalData = async (groupKey: keyof typeof CachedUrls,
-  queryString: string = "",) => {
-  const encoded = btoa(groupKey);
+  queryString: string = "",isKyeBase64: boolean = false) => {
+  const encoded = isKyeBase64 ?  groupKey:btoa(groupKey);
   const df = await getStorageString(encoded);
   if (df == null || df == undefined || df == "undefined") {
     return null;

@@ -67,15 +67,12 @@ export const purchaseGridCol = (
         visible: false,
       },
       {
-        dataField: "brand",
+        dataField: "brandName",
         caption: t("brand"),
-        idField: "brand",
-        dataType: "cb",
-        field: { valueKey: "name", labelKey: "name" },
+        dataType: "string",
         width: 150,
         alignment: "left",
         visible: false,
-        allowEditing: true,
       },
       {
         dataField: "brandID",

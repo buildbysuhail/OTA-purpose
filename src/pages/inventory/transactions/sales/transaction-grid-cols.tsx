@@ -341,7 +341,7 @@ export const purchaseGridCol = (
         decimalPoint: 4,
       },
       {
-        dataField: "MinSalePrice",
+        dataField: "minSalePrice",
         caption: t("min_sale_price"),
         dataType: "number",
         width: 150,

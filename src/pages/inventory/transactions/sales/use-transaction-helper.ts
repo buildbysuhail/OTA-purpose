@@ -19,6 +19,7 @@ import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import { useTranslation } from "react-i18next";
 import warehouseId from "./components/warehouse-id ";
 import { getStorageString } from "../../../../utilities/storage-utils";
+import { merge } from "lodash";
 
 const api = new APIClient();
 export const useTransactionHelper = (transactionType: string, focusToNextColumn: (
@@ -1128,6 +1129,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       detail.nosQty = row.qtyInNumbers;
       detail.unit = row.unitName;
       detail.unitID = row.unitID;
+      detail.actualSalesPrice = row.transMRP;
 
       // Foreign currency pricing
       detail.unitPriceFC = Number(row.xRate || 0);
@@ -1369,6 +1371,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       outputRow.quantity = detail.qty;
       outputRow.qtyInNumbers = detail.nosQty;
       outputRow.free = detail.free;
+      outputRow.actualPrice = detail.actualSalesPrice;
 
       // Pricing and transaction details
       outputRow.unitPrice = detail.unitPrice;
@@ -1603,6 +1606,141 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     );
     return _master;
   };
+  async function applySpecialSpriceExactQtyLimitReached(
+  qtyLimit: number,
+  baseRow: TransactionDetail,
+  slNo: string,
+  chkShowRateBeforeTax: boolean,
+  SpecialSchemePrice: number
+): Promise<any> {
+  try {
+    let totalQty = 0;
+
+    if (!baseRow) return false;
+    const rowIndex = formState.transaction.details.findIndex(
+      (d) => d.slNo === slNo
+    );
+    if (rowIndex === -1) return false;
+    const productBatchID = Number(baseRow.productBatchID || 0);
+    const unitID = Number(baseRow.unitID || 0);
+
+    // ----------------------------
+    // 1. Calculate total qty (only unprocessed scheme rows)
+    // ----------------------------
+    for (let i = 0; i <= rowIndex; i++) {
+      const row = formState.transaction.details[i];
+      if (!row) continue;
+
+      if (
+        Number(row.productBatchID || 0) === productBatchID &&
+        Number(row.unitID || 0) === unitID &&
+        row.isSchemeProcessed === "N"
+      ) {
+        totalQty += Number(row.qty || 0);
+      }
+    }
+
+    // ----------------------------
+    // 2. Apply scheme ONLY if qty == limit
+    // ----------------------------
+    if (totalQty === qtyLimit) {
+
+      const taxPerc = Number(baseRow.vatPerc || 0);
+      let hascurrentRowProcessed = false;
+      for (let i = 0; i <= rowIndex; i++) {
+        let row = formState.transaction.details[i];
+        let outRow: DeepPartial<TransactionDetail> = {slNo: row.slNo};
+        if (!row) continue;
+        
+        if (row.slNo === slNo) { row = merge({}, row, baseRow);}
+
+        if (
+          Number(row.productBatchID || 0) === productBatchID &&
+          Number(row.unitID || 0) === unitID &&
+          row.isSchemeProcessed === "N"
+        ) {
+          // Set scheme price
+          outRow.unitPrice = SpecialSchemePrice;
+          outRow.ratePlusTax = SpecialSchemePrice;
+
+          // Handle rate-before-tax logic
+          if (
+            taxPerc > 0 &&
+            chkShowRateBeforeTax &&
+            i !== rowIndex
+          ) {
+            const uRate =
+              Number(outRow.unitPrice || 0) / (1 + taxPerc / 100);
+            outRow.unitPrice = round(uRate);
+          }
+
+          outRow.isSchemeProcessed = "Y";
+
+          // Recalculate row
+          if(row.slNo !== slNo) {
+          const outRowd = await calculateRowAmount(
+            row,
+            "qty",
+            { result: {transaction:{details:[outRow]}} },
+            true,
+            i
+          );
+          dispatch(
+            formStateHandleFieldChangeKeysOnly({
+              fields: {
+                transaction: {
+                  details: [outRowd.transaction!.details![0]],
+                },
+              },
+            })
+          );
+          
+          } else {
+            hascurrentRowProcessed = true;
+          }
+        }
+
+        }
+      }
+      return null
+  } catch {
+    return null
+  }
+
+  return false;
+}
+
+  function checkSpecialSpriceLimitReached(
+  qtyLimit: number,
+  rowIndex: number,
+  details: TransactionDetail[]
+): boolean {
+  try {
+    let totalQty = 0;
+
+    const row = details[rowIndex];
+    if (!row) return false;
+
+    const productBatchID = Number(row.productBatchID || 0);
+    const unitID = Number(row.unitID || 0);
+
+    for (let i = 0; i <= rowIndex; i++) {
+      const d = details[i];
+      if (!d) continue;
+
+      if (
+        Number(d.productBatchID || 0) === productBatchID &&
+        Number(d.unitID || 0) === unitID
+      ) {
+        totalQty += Number(d.qty || 0);
+      }
+    }
+
+    return totalQty > qtyLimit;
+  } catch {
+    return false;
+  }
+}
   const loadProductDetailsByAutoBarcode = async (
     data: LoadProductDetailsByAutoBarcodeProps,
     commonParams: CommonParams,
@@ -1768,189 +1906,425 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
           }
         }
 
+        /* ---------------- BASIC PRODUCT INFO ---------------- */
         outDetail.pCode = product.productCode;
         outDetail.product = product.productName;
         outDetail.productID = product.productID;
         outDetail.barCode = product.autoBarcode;
         outDetail.manualBarcode = product.mannualBarcode;
         outDetail.productBatchID = product.productBatchID;
-
-        // Set default quantity if configured
-        if (applicationSettings?.productsSettings?.setDefaultQty1) {
-          outDetail.qty = 1;
-        }
+        outDetail.batchNo = product.batchNo;
 
         outDetail.unit = product.unitName;
         outDetail.unitID = product.basicUnitID;
-        outDetail.brandID = product.brandID;
-        outDetail.brand = product.brandName;
-        outDetail.size = product.specification;
-        outDetail.batchNo = product.batchNo;
-        outDetail.expDate = product.expiryDate;
-        outDetail.expDays = 100;
-        outDetail.mfdDate = product.mfgDate;
-        outDetail.lpc = round(product.lastPurchaseCost || 0);
-        outDetail.lpr = round(product.lastPurchaseRate || 0);
-        outDetail.stock = product.stock;
-        outDetail.productDescription = product.serialNumber;
-        outDetail.warranty = product.warranty;
-        outDetail.location = product.location;
-        outDetail.arabicName = product.itemNameinSecondLanguage;
-        outDetail.colour = product.colour;
-        outDetail.multiFactor = product.multiFactor;
 
-        // Handle Unit2 barcode
+        outDetail.brand = product.brandName;
+        outDetail.brandID = product.brandID;
+
+        outDetail.arabicName = product.itemNameinSecondLanguage;
+        outDetail.location = product.location;
+        outDetail.itemType = product.itemType;
+
+        outDetail.size = product.specification;
+        outDetail.purchasePrice = product.stdPurchasePrice;
+        outDetail.minSalePrice = product.minSalePrice;
+        outDetail.productDescription = product.serialNumber;
+        outDetail.image = "Show";
+
+        /* ---------------- DEFAULT QTY ---------------- */
+        if (applicationSettings?.productsSettings?.setDefaultQty1) {
+          outDetail.qty = detail.qty || 1;
+        }
+
+        if (product.weighingQty && product.weighingQty > 0) {
+          outDetail.qty = product.weighingQty;
+        }
+
+        /* ---------------- MULTI UNIT / BARCODE ---------------- */
+        let multiFactor = product.multiFactor ?? 1;
+
         if (product.isUnit2BarCode) {
           outDetail.unit = product.unit2;
           outDetail.unitID = product.unit2ID;
-          outDetail.unitPrice = Number(product.unit2SalesPrice || 0);
+          outDetail.unitPrice = product.unit2SalesPrice || 0;
         }
 
-        // Handle Unit3 barcode
         if (product.isUnit3BarCode) {
           outDetail.unit = product.unit3;
           outDetail.unitID = product.unit3ID;
-          outDetail.unitPrice = Number(product.unit3SalesPrice || 0);
+          outDetail.unitPrice = product.unit3SalesPrice || 0;
         }
 
-        // Unit 2 information
-        outDetail.unitID2 = product.unit2ID;
-        outDetail.unit2Qty = product.unit2Qty;
-        outDetail.unit2MBarcode = product.unit2Barcode;
-        outDetail.unit2SalesRate = product.unit2SalesPrice;
-        outDetail.unit2MRP = product.unit2MRP;
-
-        // Unit 3 information
-        outDetail.unitID3 = product.unit3ID;
-        outDetail.unit3Qty = product.unit3Qty;
-        outDetail.unit3MBarcode = product.unit3Barcode;
-        outDetail.unit3SalesRate = product.unit3SalesPrice;
-        outDetail.unit3MRP = product.unit3MRP;
-
-        // Handle supplier reference code
-        if (formState.userConfig?.useSupplierProductCode) {
-          outDetail.supplierReferenceProductCode =
-            product.supplierReferenceProductCode;
-        }
-
-        // Handle default purchase unit
         if (
-          Number(product.defPurchaseUnitID || 0) > 0 &&
-          !product.isMultiUnitBarCode &&
-          product.basicUnitID !== product.defPurchaseUnitID &&
-          product.isBasicUnitBarcode
+          product.isMultiUnitBarCode &&
+          Number(product.unitSPrice || 0) > 0
         ) {
-          if (!isNullOrUndefinedOrEmpty(product.defUnitName)) {
-            outDetail.unit = product.defUnitName;
-            outDetail.multiFactor = product.defUnitMultiFactor;
-          }
-          outDetail.unitID = product.defPurchaseUnitID;
+          outDetail.unitPrice = product.unitSPrice;
         }
 
-        // Handle stock details if visible
-        if (payload.isStockDetailsVisible) {
-          outDetail.stockDetails = product.stockDetails;
+        /* ---------------- FALLBACK SALES PRICE ---------------- */
+        if (!outDetail.unitPrice || outDetail.unitPrice === 0) {
+          outDetail.unitPrice = product.stdSalesPrice;
         }
 
-        // Set MRP
-        outDetail.mrp = round(product.mrp);
+        /* ---------------- MULTI FACTOR PRICE ADJUST ---------------- */
+        if (multiFactor > 0) {
+          outDetail.unitPrice = round(outDetail.unitPrice * multiFactor);
+          outDetail.purchasePrice = round(product.stdPurchasePrice * multiFactor);
+          outDetail.minSalePrice = round(product.minSalePrice * multiFactor);
+          outDetail.boxQty = multiFactor;
+        }
 
-        // Calculate pricing based on multi-factor
-        if (outDetail.multiFactor > 0) {
-          const pPrice = Number(product.stdPurchasePrice || 0);
-          outDetail.unitPrice = pPrice * outDetail.multiFactor;
-
-          const sPrice = Number(product.stdSalesPrice || 0);
-          outDetail.salesPrice = sPrice * outDetail.multiFactor;
-
-          const minSPrice = Number(product.minSalePrice || 0);
-          outDetail.minSalePrice = minSPrice * outDetail.multiFactor;
+        /* ---------------- VAT / GST ---------------- */
+        if (userSession.dbIdValue === "543140180640") {
+          // NAHLA
+          outDetail.vatPerc = product.sVatPerc;
         } else {
-          outDetail.unitPrice = Number(product.stdPurchasePrice || 0);
-          outDetail.salesPrice = round(product.stdSalesPrice || 0);
-          outDetail.minSalePrice = Number(product.minSalePrice || 0);
-        }
-
-        // Handle actual sales price if column is visible
-        if (payload.isActualPriceVisible) {
-          outDetail.actualSalesPrice = product.actualSalesPrice;
-        }
-
-        // Handle listed product prices
-        if (product.hasListedProductPrice) {
-          outDetail.unitPrice = product.listedProductPrice;
-        }
-
-        // Handle VAT and CST based on form type
-        if (clientSession.isAppGlobal) {
-          outDetail.hsnCode = product.hsnCode || "";
-          outDetail.details2 = {
-            ...(outDetail.details2 ?? initialTransactionDetails2),
-          };
-          // if (formState.transaction.master.voucherType !== "PI") {
-          outDetail.details2!.cgstPerc = Number(product.p_CGSTPerc || 0);
-          outDetail.details2!.sgstPerc = Number(product.p_SGSTPerc || 0);
-
           if (
-            formState.transaction.master.voucherForm.toLowerCase() ===
-            "interstate" ||
-            formState.transaction.master.voucherForm.toLowerCase() === "int" ||
-            formState.transaction.master.voucherForm.toLowerCase() === "import"
+            formState.transaction.master.voucherType === "VAT" ||
+            formState.initialFormType === "VAT"
           ) {
-            outDetail.details2!.cgstPerc = 0;
-            outDetail.details2!.sgstPerc = 0;
-            outDetail.details2!.igstPerc = Number(product.p_IGSTPerc || 0);
-          }
-
-          outDetail.details2!.cessPerc = Number(product.p_CessPerc || 0);
-          outDetail.details2!.additionalCessPerc = Number(
-            product.p_AdditionalCessPerc || 0
-          );
-          // } else {
-          //   outDetail.details2!.cgstPerc = 0;
-          //   outDetail.details2!.sgstPerc = 0;
-          //   outDetail.details2!.igstPerc = 0;
-          //   outDetail.details2!.cessPerc = 0;
-          //   outDetail.details2!.additionalCessPerc = 0;
-          // }
-        } else {
-          const { voucherType, voucherForm } = formState.transaction.master;
-
-          if (
-            !clientSession.isAppGlobal &&
-            (voucherType === "PO" ||
-              voucherType === "PE" ||
-              voucherType === "GRN" ||
-              voucherType === "PQ" ||
-              voucherType === "LPO") ||
-            (formState.transaction.master.voucherForm === "VAT" &&
-              voucherType !== "PO" &&
-              voucherType !== "PE" &&
-              voucherType !== "GRN" &&
-              voucherType !== "PQ" &&
-              voucherType !== "LPO")
-          ) {
-            outDetail.vatPerc = Number(product.pVatPerc || 0);
-            outDetail.cstPerc = Number(product.purchaseExciseTaxPerc || 0);
+            outDetail.vatPerc = product.sVatPerc;
+            outDetail.cstPerc = product.salesExciseTaxPerc;
           } else {
             outDetail.vatPerc = 0;
-            outDetail.cstPerc = 0;
           }
         }
 
-        // Special handling for meter units
-        const unitName = product.unitName?.toUpperCase().trim();
-        if (unitName === "MTR" || unitName === "MTRS" || unitName === "METER") {
-          outDetail.stickerQty = 4;
+        /* ---------------- PRICE CATEGORY ---------------- */
+        if (product.priceCategoryPrice == 0) {
+          outDetail.discPerc = product.priceCategoryDiscPerc;
         }
 
-        // Handle empty form type
-        // if (formState.transaction.master.voucherForm == "") {
-        //   outDetail.vatPerc = 0;
-        // }
+        let priceWithoutScheme = Number(outDetail.unitPrice || 0);
 
-        // Set row header
-        outDetail.unitPriceTag = outDetail.unitPrice;
+        outDetail.actualSalesPrice = priceWithoutScheme;
+        outDetail.schemeType = "";
+        outDetail.schemeID = 0;
+
+        /** ---------------- Price category ---------------- */
+        if (product.priceCategoryPrice > 0) {
+          outDetail.unitPrice = product.priceCategoryPrice;
+          priceWithoutScheme = product.priceCategoryPrice;
+
+          if (userSession.dbIdValue === "543140180640") {
+            outDetail.nLA_StdSalesPrice = product.priceCategoryPrice;
+          }
+
+          if (applicationSettings.productsSettings.maintainSchemes) {
+
+            outDetail.schemeType = product.schemeType;
+            outDetail.schemeID = product.schemeID;
+            if (product.schemeDiscount > 0) {
+              outDetail.discPerc = product.schemeDiscount;
+              outDetail.isSchemeItem = "S";
+              outDetail.actualSalesPrice = priceWithoutScheme;
+            }
+          }
+        }
+
+        /** ---------------- Scheme logic ---------------- */
+        if (applicationSettings.productsSettings.maintainSchemes) {
+          let schemeApplied = false;
+
+          if (product.schemeDiscount > 0) {
+            outDetail.discPerc = product.schemeDiscount;
+            outDetail.isSchemeItem = "S";
+            schemeApplied = true;
+          }
+
+          /** ---- Special scheme price ---- */
+          if (product.schemeDiscount === 0) {
+            let loadSchemePrice = true;
+
+
+            if (product.schemeID > 0) {
+              outDetail.schemeQtyLimit = product.schemeQtyLimit;
+              outDetail.schemeFreeQty = product.schemeFreeQty;
+              outDetail.schemeType = product.schemeType;
+              outDetail.schemeID = product.schemeID;
+              outDetail.isSchemeProcessed = "N";
+            } else {
+              {
+                outDetail.schemeQtyLimit = 0;
+                outDetail.schemeFreeQty = 0;
+                outDetail.schemeType = "";
+                outDetail.schemeID = 0;
+              }
+            }
+
+            if (
+              outDetail.schemeType !== "Buy Exact N for off" &&
+              (outDetail.schemeFreeQty ?? 0) === 0 &&
+              (outDetail.schemeQtyLimit ?? 0) > 0
+            ) {
+              const reached = checkSpecialSpriceLimitReached(
+                outDetail.schemeQtyLimit!,
+                outDetail as any,
+                formState.transaction.details.filter((x) => x.productID > 0)
+              );
+              if (reached) {
+                loadSchemePrice = false;
+                schemeApplied = true;
+              }
+            }
+
+            if (
+              loadSchemePrice &&
+              outDetail.schemeType !== "Buy Exact N for off"
+            ) {
+              if (product.specialSchemePrice > 0) {
+                outDetail.unitPrice = product.specialSchemePrice;
+                outDetail.isSchemeItem = "S";
+                outDetail.actualSalesPrice = priceWithoutScheme;
+              }
+            }
+
+            /** ---- Qty based scheme ---- */
+            if (!schemeApplied && product.specialSchemePrice == 0) {
+              if( outDetail.schemeType === "Buy Exact N for off") {
+                if ((outDetail.schemeQtyLimit ?? 0) > 0) {
+                  const dfg = await applySpecialSpriceExactQtyLimitReached(
+                  outDetail.schemeQtyLimit!,
+                  outDetail as TransactionDetail,
+                  outDetail.slNo!,
+                  formState.userConfig?.showRateBeforeTax || false,
+                  product.specialSchemePrice!
+                );
+                if(dfg !== null) {
+                  outDetail = merge({}, outDetail, dfg);
+                }
+              } else {
+              if (product.isCheckQtyLimit) {
+                outDetail.schemeQtyLimit = product.schemeQtyLimit;
+                outDetail.schemeFreeQty = product.schemeFreeQty;
+                outDetail.isSchemeProcessed = "N";
+
+                outDetail.isSchemeItem = "S";
+              } 
+              if(product) {
+                //do
+              }
+              }
+              }
+            } 
+          }
+        }
+
+        /** ---------------- Customer last rate ---------------- */
+
+        if (product.blnCustLastPriceLoaded
+        ) {
+
+          if (product.partyLastSalesRate > 0) {
+            if (formState.gridColumns?.find(x => x.dataField === "customer_LSP")?.visible) {
+              outDetail.customer_LSP = product.partyLastSalesRate;
+            } else {
+              outDetail.unitPrice = product.partyLastSalesRate;
+            }
+          }
+        }
+
+        /** ---------------- Tax / MRP inclusive ---------------- */
+        let uRate = 0;
+        let taxPerc = Number(outDetail.vatPerc || 0);
+
+        // DBID check (same as C#)
+        if (userSession.dbIdValue !== "543140180640") {
+          // Draft mode / form type condition
+          if (
+            formState.transaction.master.voucherForm === "" &&
+            formState.initialFormType === "" &&
+            !formState.draftMode
+          ) {
+            taxPerc = 0;
+            outDetail.vatPerc = 0;
+          }
+
+          // -------------------------------
+          // Show rate INCLUDING tax
+          // -------------------------------
+          if (taxPerc > 0 && !formState.userConfig?.showRateBeforeTax) {
+            const rateWithTax =
+              Number(outDetail.unitPrice || 0) * (1 + taxPerc / 100);
+
+            outDetail.ratePlusTax = round(rateWithTax);
+          }
+
+          // -------------------------------
+          // Show rate INCLUDING tax (customer last price loaded)
+          // -------------------------------
+          else if (
+            taxPerc > 0 &&
+            formState.userConfig?.showRateBeforeTax &&
+            product.blnCustLastPriceLoaded
+          ) {
+            const rateWithTax =
+              Number(outDetail.unitPrice || 0) * (1 + taxPerc / 100);
+
+            outDetail.ratePlusTax = round(rateWithTax);
+          }
+
+          // -------------------------------
+          // Show rate BEFORE tax
+          // -------------------------------
+          if (
+            taxPerc > 0 &&
+            formState.formElements.chkShowRateBeforeTax.checked &&
+            !product.blnCustLastPriceLoaded
+          ) {
+            uRate =
+              Number(outDetail.ratePlusTax || 0) / (1 + taxPerc / 100);
+
+            outDetail.unitPrice = round(uRate);
+          }
+        }
+
+let continueProcessing = false;
+// ------------------------------------
+// NORMAL FLOW (NO AUTO INCREMENT)
+// ------------------------------------
+if (
+  !formState.userConfig?.qtyAfterBarcode &&
+  !formState.userConfig?.autoIncrementQty
+) {
+ continueProcessing = true;
+}
+// ------------------------------------
+// AUTO INCREMENT FLOW
+// ------------------------------------
+// else {
+//   let isWeighingScaleProduct = false;
+
+//   if ((product.weighingQty || 0) > 0 || (product.weighingPrice || 0) > 0) {
+//     isWeighingScaleProduct = true;
+//   }
+
+//   const firstFreeRow = details.length;
+
+//   if (
+//     formState.formElements.chkAutoIncrement.checked &&
+//     !isWeighingScaleProduct &&
+//     !detail.isSchemeProcessed
+//   ) {
+//     const serial = product.serialNumber || "";
+//     const autoBarcode = product.autoBarcode;
+//     const rowUnit = detail.unit;
+
+//     for (let i = 0; i < firstFreeRow; i++) {
+//       if (i === rowIndex) continue;
+
+//       const row = details[i];
+
+//       if (
+//         row.barCode === autoBarcode &&
+//         row.unit === rowUnit
+//       ) {
+//         // -------------------------------
+//         // CASE 1: NO SERIAL
+//         // -------------------------------
+//         if (serial === "") {
+//           const rIndex = rowIndex;
+//           let incrementValue = 1;
+
+//           if ((weighQty || 0) > 0) incrementValue = weighQty;
+
+//           row.qty = Number(row.qty || 0) + incrementValue;
+
+//           // Move row
+//           details.splice(rowIndex, 1);
+//           details.splice(i, 0, detail);
+
+//           await calculateRowAmount(i);
+//           reArrangeRowNumber(i, rIndex);
+
+//           focusCell(currentColumnIndex, rIndex);
+//           txtData.value = "";
+
+//           dispatchUpdate(details);
+//           return;
+//         }
+//         // -------------------------------
+//         // CASE 2: SERIAL EXISTS CHECK
+//         // -------------------------------
+//         else {
+//           const desc = row.productDescription || "";
+//           if (!desc.includes(serial)) {
+//             let incrementValue = 1;
+//             if ((weighQty || 0) > 0) incrementValue = weighQty;
+
+//             const rIndex = rowIndex;
+
+//             row.qty = Number(row.qty || 0) + incrementValue;
+//             row.productDescription = desc
+//               ? `${desc},${serial}`
+//               : serial;
+
+//             await calculateRowAmount(i);
+
+//             // Move row
+//             details.splice(rowIndex, 1);
+//             details.splice(i, 0, detail);
+
+//             reArrangeRowNumber(i, rIndex);
+//             focusCell(currentColumnIndex, rIndex);
+
+//             dispatchUpdate(details);
+//             return;
+//           } else {
+//             await ERPAlert.show({
+//               icon: "warning",
+//               title: "Duplicate Serial",
+//               text: `Serial exists in Row: ${i + 1}`,
+//               confirmButtonText: "OK",
+//             });
+
+//             details.splice(rowIndex, 1);
+//             txtData.value = "";
+
+//             dispatchUpdate(details);
+//             return;
+//           }
+//         }
+//       }
+//     }
+//   }
+
+//   // Restore NLA sales price
+//   detail.nlaSalesPrice = nlaStdsalesPrice;
+
+//   // ------------------------------------
+//   // NEXT COLUMN NAVIGATION
+//   // ------------------------------------
+//   let nextCol = getNextVisibleColumn(
+//     "R",
+//     productColumnIndex
+//   );
+
+//   if (
+//     Number(detail.unitPrice || 0) > 0 &&
+//     formState.formElements.chkAutoIncrement.checked
+//   ) {
+//     nextCol = -1;
+//   }
+
+//   if (nextCol !== -1) {
+//     focusCell(nextCol, rowIndex);
+//   } else {
+//     if (Number(detail.unitPrice || 0) > 0) {
+//       focusCell(
+//         firstVisibleWritableColumnIndex,
+//         details.length
+//       );
+//     } else {
+//       focusCell(unitPriceColumnIndex, rowIndex);
+//     }
+//   }
+
+//   dispatchUpdate(details);
+// }
+
+
         if (!result.transaction) {
           result.transaction = {};
         }

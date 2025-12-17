@@ -762,6 +762,7 @@ debugger;
                  })) : []};
                    _formState = {
           ...TransactionFormStateInitialData,
+              initialFormType: formType ?? "",
           transaction: {
             ...voucher,
             master: {

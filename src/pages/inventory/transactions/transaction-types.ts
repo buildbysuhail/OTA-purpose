@@ -366,6 +366,12 @@ export interface TransactionDetail {
   nLA_StdSalesPrice?: number;
   refBranchID?: number;
   itemType?: string;
+  image?: string;
+  schemeType?: string;
+  schemeID?: number;
+  isSchemeItem?: string;
+  schemeQtyLimit?: number;
+  isSchemeProcessed?: string;
 }
 
 export interface TransactionDetailsMore {
@@ -855,6 +861,7 @@ interface ProductBatchDetailsForAutoBarcodeData {
   unit3: string;
   unit3ID?: number;
   unit3Qty?: number;
+  unitSPrice?: number;
   unit3SalesPrice?: number;
   unit3Barcode: string;
   unit3MRP?: number;
@@ -883,6 +890,44 @@ interface ProductBatchDetailsForAutoBarcodeData {
   isBasicUnitBarcode: boolean;
   isMultiUnitBarCode: boolean;
   stickerQty: number;
+
+
+  costPerItem: number;
+  puchaseExciseTaxPerc: number;
+  defSalesUnitID: number;
+
+  isWeighingScaleItem: boolean;
+  // ---------------- GST / TAX BREAKUP ----------------
+  s_CGSTPerc: number;
+  s_SGSTPerc: number;
+  s_IGSTPerc: number;
+  s_CessPerc: number;
+  s_AdditionalCessPerc: number;
+  s_CalamityCessPerc: number;
+
+  muQty: number;
+  isMannualBarCode: boolean;
+
+  priceCategoryPrice: number;
+  priceCategoryDiscPerc: number;
+
+  schemeDiscount: number;
+  schemeID: number;
+  schemeType?: string;
+  schemeQtyLimit: number;
+  schemeFreeQty: number;
+  specialSchemePrice: number;
+
+  isSchemeProcessed?: string;
+
+  partyLastSalesRate: number;
+  blnCustLastPriceLoaded: boolean;
+
+  weighingPrice: number;
+  weighingQty: number;
+
+  isCheckDuplicate: boolean;
+  isCheckQtyLimit: boolean;
   units: UnitByBatchDetailsDto[];
 }
 

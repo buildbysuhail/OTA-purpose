@@ -687,7 +687,7 @@ export const purchaseGridCol = (
         dataType: "date",
         visible: false,
         width: 100,
-        format: "DD-MMM-YYYY",
+        format: "dd-MMM-yyyy",
         alignment: "left",
       },
       {

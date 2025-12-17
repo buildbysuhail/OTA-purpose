@@ -119,6 +119,7 @@ export const purchaseGridCol = (
         visible: false,
         width: 130,
         alignment: "right",
+        allowEditing: true,
         // decimalPoint: applicationSettings.mainSettings.decimalPoints,
       },
       {

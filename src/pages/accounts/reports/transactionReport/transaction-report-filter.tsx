@@ -81,7 +81,7 @@ const TransactionReportFilter = React.memo(({
       {/* <div className="relative"> */}
       {/* <label className="block text-sm font-medium text-gray-700 p-3 sticky top-0 bg-white z-10">
             </label> */}
-      <div className="overflow-auto border dark:!border-dark-border border-gray-400 rounded w-full max-w-full h-auto max-h-[260px] dark-scrollbar">
+      <div className="overflow-auto border dark:!border-dark-border border-gray-400 rounded w-full max-w-full h-auto max-h-[350px] dark-scrollbar">
         <div className="grid grid-flow-col auto-cols-max gap-4 p-4 text-left">
           {
             allTransactions && allTransactions.length > 0 && (
@@ -92,6 +92,10 @@ const TransactionReportFilter = React.memo(({
                   allChecked: boolean;
                   isDr: boolean;
                   isCr: boolean;
+                  dateFrom: Date;
+                  dateTo: Date;
+                  salesRouteID: number;
+                  salesRouteName: string;
                 }) => {
                   let updates = frmState;
                   let drCrData = ""
@@ -115,7 +119,9 @@ const TransactionReportFilter = React.memo(({
                   } else {
                     drCrData = "drCr";
                   }
-                 const newUpdates = {...updates, drCr: drCrData};
+                 const newUpdates = (({ dateFrom, dateTo, salesRouteID, salesRouteName, ...rest }) => ({
+                  ...rest,
+                  drCr: drCrData,}))(updates);
                  handleFieldChange(newUpdates);
                 }}
                 getFormState={getFormState}

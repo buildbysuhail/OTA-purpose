@@ -270,7 +270,7 @@ const TransactionReport = () => {
                   // gridAddButtonType="popup"
                   reload={true}
                   filterWidth={1000}
-                  filterHeight={140}
+                  filterHeight={450}
                   enablefilter={true}
                   showFilterInitially={true}
                   filterContent={<TransactionReportFilter />}

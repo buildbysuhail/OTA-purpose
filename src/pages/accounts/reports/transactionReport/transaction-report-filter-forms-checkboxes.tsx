@@ -19,6 +19,10 @@ interface TransactionReportCheckboxProps {
     allChecked: boolean;
     isDr: boolean;
     isCr: boolean;
+    dateFrom: Date;
+    dateTo: Date;
+    salesRouteID : number;
+    salesRouteName: string;
   }) => void;
   getFormState: any;
 }
@@ -148,7 +152,8 @@ const TransactionReportfilterCheckboxes: React.FC<
           });
         }}
       />
-      <ERPCheckbox
+      <div className="flex flex-col gap-1">
+        <ERPCheckbox
         id="isDr"
         checked={formState.isDr}
         data={formState}
@@ -181,6 +186,7 @@ const TransactionReportfilterCheckboxes: React.FC<
             return st;})
         }
       />
+      </div>
       <div className="max-w-3xl">
         <div className="flex space-x-4">
           {[...Array(fullColumns + (remainingItems > 0 ? 1 : 0))].map(

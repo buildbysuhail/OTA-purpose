@@ -741,7 +741,8 @@ export type PartialTransactionFormFields = {
   [K in keyof TransactionFormState]?: TransactionFormState[K];
 };
 export type ColumnModel = {
-  dataField?: keyof TransactionDetail | keyof TransactionDetails2 | keyof TransactionDetailsMore|"supplier"|"avgSales"|"sold"|"salesLast30Days"|"salesLast90Days"|"supplierRefCode"|"lastSoldDate"|"poPendingQty"|"salesLast180Days"|"pqPendingQty"|"status";
+  // dataField?: keyof TransactionDetail | keyof TransactionDetails2 | keyof TransactionDetailsMore|"supplier"|"avgSales"|"sold"|"salesLast30Days"|"salesLast90Days"|"supplierRefCode"|"lastSoldDate"|"poPendingQty"|"salesLast180Days"|"pqPendingQty"|"status";
+  dataField?: string
   decimalPoint?: number;
   formStateOptionKey?: string;
   cssClass?: string;

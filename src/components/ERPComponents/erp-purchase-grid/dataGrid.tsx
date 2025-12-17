@@ -1575,7 +1575,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       return visibleColumns;
     }, [columnOrder, formState.gridColumns]);
 
-    const { preferences } = usePreferenceData(formState.gridColumns, gridId);
+    const { preferences } = usePreferenceData(formState.gridColumns as any, gridId);
     const ITEM_HEIGHT =
       window.innerWidth < 480
         ? 125
@@ -1717,7 +1717,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
           header: col.caption || col.dataField,
           key: col.dataField,
           width: Math.max(col.width ? col.width / 7 : 15, 12),
-        }));
+        })) as any;
 
         const titleRow = worksheet.insertRow(1, [`${gridId} Export Report`]);
         worksheet.mergeCells(1, 1, 1, excelColumns?.length || 1);

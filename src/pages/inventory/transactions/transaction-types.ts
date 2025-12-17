@@ -472,6 +472,8 @@ export interface UserConfig {
   showProductInfoPopupForSq?: boolean;
   blockNonStockItemsSO?: boolean;
   stockOutConfirmation?: boolean;
+  taxOnMRP?: boolean;
+  taxOnFreeItem?: boolean;
 }
 
 export type FormElementsState = {

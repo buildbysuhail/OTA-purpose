@@ -255,9 +255,9 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       const isIndia = clientSession.isAppGlobal === true; // true = India (GST), false = GCC (VAT)
       const settings = applicationSettings || {};
       const form = formState;
-      const chkShowRateBeforeTax = !!(form?.formElements?.chkShowRateBeforeTax?.checked);
-      const chkTaxOnMRP = !!(form?.formElements?.chkTaxOnMRP?.checked);
-      const chkTaxOnFreeItem = !!(form?.formElements?.chkTaxOnFreeItem?.checked);
+      const chkShowRateBeforeTax = !!(formState?.userConfig?.showRateBeforeTax);
+      const chkTaxOnMRP = !!(formState?.userConfig?.taxOnMRP);
+      const chkTaxOnFreeItem = !!(formState?.userConfig?.taxOnFreeItem);
 
       // read numeric values directly (no toNum helper)
       let Qty = Number(detail.qty ?? 0);
@@ -1848,6 +1848,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
           })
         );
       } else if (res?.products?.length === 1) {
+        debugger;
         let product = res.products[0];
         product.productName = product.productName.replace(/^\s+/, (m) =>
           "\u00A0".repeat(m.length)
@@ -2170,7 +2171,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
           // -------------------------------
           if (
             taxPerc > 0 &&
-            formState.formElements.chkShowRateBeforeTax.checked &&
+            formState.userConfig?.showRateBeforeTax &&
             !product.blnCustLastPriceLoaded
           ) {
             uRate =

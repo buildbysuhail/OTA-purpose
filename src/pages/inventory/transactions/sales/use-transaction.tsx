@@ -347,6 +347,7 @@ export const useTransaction = (
       );
     }
 
+debugger;
     let _formState = await loadTransVoucher(
       usingManualInvNumber,
       voucherNumber,
@@ -444,7 +445,6 @@ export const useTransaction = (
       _formState.currentTheme = ct;
       _formState.selectedTheme = ct;
     }
-
     _formState.prev = modelToBase64Unicode(
       setTransactionForHistory(_formState, "inv")
     );
@@ -604,7 +604,7 @@ export const useTransaction = (
         cashReceived: vch?.master?.cashReceived,
         hasCashPaid: vch?.master?.cashReceived != 0,
       },
-      details: refactorDetails(
+      details: await refactorDetails(
         vch.details,
         formType ?? vch.master.voucherForm,
         voucherType ?? vch.master.voucherType,

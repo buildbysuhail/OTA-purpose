@@ -207,8 +207,10 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
     const isAbove768 = useMediaQuery('(min-width: 768px)');
     const isAbove640 = useMediaQuery('(min-width: 640px)');
     const isAbove480 = useMediaQuery('(min-width: 480px)');
+    
     const postUserConfig = async () => {
       try {
+        debugger;
         const base64 = modelToBase64Unicode({ ...formState.userConfig, themeName: 'Custom' });
         const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, base64);
         handleResponse(response, async () => {

@@ -369,22 +369,6 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
     );
   }, [dispatch]);
   
-  console.log("mmmjjjj22333",
-  merge(
-    {},
-    formState.userConfig?.inputBoxStyle,
-    initialUserConfig.inputBoxStyle,
-    {
-      inputHeight: 2,
-      inputSize: "customize",
-      fontColor: "0, 0, 0",
-      borderColor: "200, 200, 200",
-      showBorder: true,
-    }
-  )
-);
-
-
   const renderCellValue = useCallback(() => {
     if (formState.transactionLoading) {
       return (

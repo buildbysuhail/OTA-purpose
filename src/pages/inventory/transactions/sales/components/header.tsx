@@ -284,6 +284,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
         const base64 = modelToBase64Unicode({ ...formState.userConfig, themeName: 'Custom' });
         const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, base64);
         handleResponse(response, async () => {
+          debugger;
           const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`);
           await setStorageString(key, base64);
           dispatch(

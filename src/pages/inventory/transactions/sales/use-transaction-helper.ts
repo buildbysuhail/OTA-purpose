@@ -287,7 +287,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       let IGST = Number(detail.details2?.igst ?? 0);
       let AddnlCess = Number(detail.details2?.additionalCess ?? 0);
       let Cess = Number(detail.details2?.cessAmt ?? 0);
-
+debugger;
       // Flags
       const isEdit = form?.isEdit ?? false;
       const TenderClosed = formState?.tenderOpen !== true;
@@ -320,7 +320,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
           Rate = Rate || Number(detail.unitPrice ?? 0);
         }
       }
-
+debugger;
       // ---------- Gross ----------
       let Gross = round(Qty * Rate, 4);
 
@@ -374,7 +374,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       if (RatePlusTax > 0 && VatPerc > 0 && Disc === 0 && chkShowRateBeforeTax && Math.abs(CalculationDiff) < 0.5) {
         Gross = round(Qty * (RatePlusTax / (1 + VatPerc / 100)), 5);
       }
-
+debugger;
       // ---------- NetValue ----------
       let NetValue = round(Gross - Disc, 4);
 
@@ -388,7 +388,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         if (applicationSettings?.branchSettings?.maintainKSA_EInvoice && applicationSettings?.branchSettings.apply_KSA_EInvoice_Validation_Rules) {
           NetValue = round(NetValue, 2);
         }
-
+debugger;
         Vat = round(NetValue * VatPerc / 100, 4);
 
         // Map values to detail (matching C# cell writes)
@@ -1975,7 +1975,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
           outDetail.minSalePrice = round(product.minSalePrice * multiFactor);
           outDetail.boxQty = multiFactor;
         }
-
+debugger;
         /* ---------------- VAT / GST ---------------- */
         if (userSession.dbIdValue === "543140180640") {
           // NAHLA
@@ -2113,11 +2113,12 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         }
 
         /** ---------------- Customer last rate ---------------- */
-
+        outDetail.ratePlusTax = round(outDetail.unitPrice || 0);
+        outDetail.netConvert = "0.00";
         if (product.blnCustLastPriceLoaded
         ) {
 
-          if (product.partyLastSalesRate > 0) {
+              if (product.partyLastSalesRate > 0) {
             if (formState.gridColumns?.find(x => x.dataField === "customer_LSP")?.visible) {
               outDetail.customer_LSP = product.partyLastSalesRate;
             } else {
@@ -2125,7 +2126,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
             }
           }
         }
-
+debugger;
         /** ---------------- Tax / MRP inclusive ---------------- */
         let uRate = 0;
         let taxPerc = Number(outDetail.vatPerc || 0);

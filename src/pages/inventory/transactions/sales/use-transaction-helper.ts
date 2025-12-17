@@ -1519,10 +1519,11 @@ debugger;
       outputRow.stock = detail.stock;
       outputRow.minSalePrice = detail.minSalePrice;
       outputRow.multiFactor = 1; // Default or calculate if needed
-
+debugger;
       // Date handling
-      outputRow.mfgDate = detail.mfdDate;
-      outputRow.expiryDate = detail.expDate;
+      outputRow.mfgDate = detail.mfdDate == "" ? null : detail.mfdDate;
+      outputRow.mfdDate = detail.mfdDate == "" ? null : detail.mfdDate;
+      outputRow.expiryDate = detail.expDate == "" ? null : detail.expDate;
       outputRow.batchNo = detail.batchNo;
       outputRow.mannualBarcode = detail.manualBarcode;
 

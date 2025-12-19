@@ -1259,7 +1259,8 @@ debugger;
   };
   const clearControls = async (
     isEdit: boolean,
-    transactionMasterID?: number
+    transactionMasterID?: number,
+    focusFirstRow: boolean = true
   ) => {
     if (transactionMasterID ?? 0 > 0) {
       await undoEditMode(isEdit, transactionMasterID ?? 0);
@@ -1345,6 +1346,11 @@ debugger;
       })
     );
     dispatch(formStateClearDetails(deviceInfo.isMobile));
+    dispatch(
+      formStateHandleFieldChange({
+        fields: { currentCell: undefined },
+      })
+    );
     dispatch(formStateClearAttachments());
     dispatch(
       formStateTransactionUpdate({ key: "invAccTransactions", value: [] })
@@ -1413,7 +1419,7 @@ debugger;
         col.readOnly !== true
     );
 
-    if (editableColumns && editableColumns.length > 0) {
+    if (focusFirstRow && editableColumns && editableColumns.length > 0) {
       const res = focusColumn(0, editableColumns[0].dataField ?? "");
       setCurrentCell(
         res,

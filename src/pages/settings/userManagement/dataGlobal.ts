@@ -599,6 +599,11 @@ export const userRights: UserRight[] = [
 { id: 2011803, headId: 20118, name: "TCSCategory_Delete", fullName: "Delete", formCode: "D", treeNode: 4, description: "Delete TCS Category" },
 { id: 2011804, headId: 20118, name: "TCSCategory_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print TCS Category" },
 
+{ id: 20119, headId: 201, name: "GroupCategory", fullName: "Group Category", formCode: "INVGPGRY", treeNode: 3, description: "Manage Group Category" },
+{ id: 2011901, headId: 20119, name: "GroupCategory_Add", fullName: "Add", formCode: "A", treeNode: 4, description: "Add Group Category" },
+{ id: 2011902, headId: 20119, name: "GroupCategory_Edit", fullName: "Edit", formCode: "E", treeNode: 4, description: "Edit Group Category" },
+{ id: 2011903, headId: 20119, name: "GroupCategory_Delete", fullName: "Delete", formCode: "D", treeNode: 4, description: "Delete Group Category" },
+{ id: 2011904, headId: 20119, name: "GroupCategory_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Group Category" },
 //#endregion not in 1050
 //global end
 

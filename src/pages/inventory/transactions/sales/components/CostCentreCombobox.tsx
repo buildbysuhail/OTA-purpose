@@ -19,7 +19,7 @@ const CostCentreCombobox = React.forwardRef<HTMLInputElement, CostCentreCombobox
           enableClearOption={false}
           id="costCentreID"
           className="min-w-[180px] !m-0"
-          required={formState.transaction.master.voucherType !== "PE"}
+          // required={formState.transaction.master.voucherType !== "PE"}
           label={t(formState.formElements.cbCostCentre.label)}
           data={formState.transaction.master}
           onSelectItem={(e) => {

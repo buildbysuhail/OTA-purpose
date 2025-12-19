@@ -1122,30 +1122,19 @@ const handleBatchGridDoubleClick =async (e: any) => {
       },
       [batchDataUrl, onProductSelected, inputRef]
     );
-
-    // The below changes(isProcessingRef) is for handling for handling multiple enter press sometimes leads to batch enter not working or taking more time
-    const isProcessingRef = useRef(false);
-    const handleBatchGridKeyDown = useCallback(
-      async (e: any) => {
+// Setting the batch grid operation also like product grid, (solving issue in edge(enter clicking issue))
+    const handleBatchGridKeyDown = useCallback(async (e: any) => {
         if (disabled) return;
         // console.log(`Batch grid key: ${e.event.key}`);
-        if (e.event.key === "Enter") {
-          e.event.preventDefault();
-          e.event.stopPropagation();
-          if (isProcessingRef.current) return;
-          isProcessingRef.current = true;
-          try {
-            await handleBatchEnterAction();
-          } finally {
-            isProcessingRef.current = false;
-          }
+        if (e.event?.key === "Enter") {
+            await handleBatchEnterAction()
         }
         // else if (e.event.key === 'Escape') {
         //   dispatch(formStateHandleFieldChangeKeysOnly({fields: {formElements:{dgvProductBatches: {visible: false}}}}));
         //   setShowProductGrid(true);
         //   e.event.preventDefault();
         // }
-        else if (e.event.key === "Escape") {
+        else if (e.event?.key === "Escape") {
           setShowBatchGrid(false);
           if (inputRef && "current" in inputRef && inputRef.current) {
             inputRef.current.focus();
@@ -1153,11 +1142,34 @@ const handleBatchGridDoubleClick =async (e: any) => {
           e.event.preventDefault();
         }
       },
-      [onRowSelected, clearAfterSelection, inputRef, inputValue, handleBatchEnterAction, setShowBatchGrid]
+      [onRowSelected, clearAfterSelection, inputRef, inputValue]
     );
 
     const [batchInitialized, setBatchInitialized] = useState(false);
 
+    const handleBatchContentReadyLatest = useCallback((e: any) => {
+    const gridInstance = e.component;
+    const visibleRows = gridInstance.getVisibleRows();
+    const hasValidData = visibleRows.length > 0 && visibleRows[0].data?.productBatchID;
+    if (!hasValidData && closeIfNodata && visibleRows.length === 0) {
+        setShowBatchGrid(false);
+        setIsLoading(false);
+        return;
+      }
+      if (hasValidData) {
+        // setShowBatchGrid(true) // Actually not needed here, it already done before
+        if (!batchInitialized) {
+          if (!isMobileInput) {
+            gridInstance.option("focusedRowIndex", 0);
+            gridInstance.focus();
+          }
+          setBatchInitialized(true);
+        }
+      }
+    
+    },[batchInitialized, showBatchGrid]);
+
+    // Old handleBatchContentReady, Found an issue in this in some browser
     const handleBatchContentReady = useCallback((e: any) => {
     if (!batchInitialized) {
       const grid = e.component;
@@ -1174,12 +1186,10 @@ const handleBatchGridDoubleClick =async (e: any) => {
 
     const handleBatchFocusedRowChanged = useCallback((e: any) => {
       // whenever focus moves (via arrow keys), select that row
-      if (!e.row) {
-        return;
+      const gridInstance = e.component;
+      if (e?.row?.key !== undefined) {
+        gridInstance.selectRows([e.row.key], false);
       }
-      setTimeout(() => {
-        e.component.selectRows([e.row.key], false);
-      }, 0);
     }, []);
 
     const handleInputKeyDown = useCallback(
@@ -1549,8 +1559,8 @@ const handleBatchGridDoubleClick =async (e: any) => {
                     }}
                     // paging={{}}
                     focusedRowEnabled={true}
-                    onContentReady={handleBatchContentReady}
                     onFocusedRowChanged={handleBatchFocusedRowChanged}
+                    onContentReady={handleBatchContentReadyLatest}
                     onKeyDown={handleBatchGridKeyDown}
                     onCellDblClick={handleBatchGridDoubleClick}
                     tabIndex={0}

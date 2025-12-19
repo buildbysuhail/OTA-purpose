@@ -643,7 +643,7 @@ export const purchaseGridCol = (
         width: 140,
         readOnly: true,
         alignment: "right",
-        decimalPoint: applicationSettings.mainSettings.decimalPoints,
+        decimalPoint: applicationSettings?.mainSettings?.decimalPoints,
       },
       //gcc only
       {

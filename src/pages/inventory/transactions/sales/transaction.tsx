@@ -174,7 +174,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
       const maybePromise = clearControls(
         formState.isEdit,
-        formState.transaction.master.invTransactionMasterID
+        formState.transaction.master.invTransactionMasterID,
+        false // don't focus first grid row when invoked from header button
       );
 
       if (maybePromise && typeof maybePromise.then === "function") {
@@ -488,7 +489,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
   };
   const handleKeyDown = (e: any, field: string, rowIndex: number) => {
 
-    if (field === "address2" && isEnterKey(e.key)) {
+    if (field === "address4" && isEnterKey(e.key)) {
+      //  if (field === "address2" && isEnterKey(e.key)) {
       if (refNoRef?.current) {
         refNoRef?.current.focus();
         refNoRef?.current.select();

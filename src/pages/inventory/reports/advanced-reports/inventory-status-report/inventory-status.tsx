@@ -14,6 +14,7 @@ import { APIClient } from "../../../../../helpers/api-client";
 import ERPModal from "../../../../../components/ERPComponents/erp-modal";
 import InventoryStatusConvertedTransactions from "./inventory-status-converted-transactions";
 import InventoryStatusPaymentAdjustmentTransactions from "./inventory-status-payment-adjustment-transactions";
+import ERPAlert from "../../../../../components/ERPComponents/erp-sweet-alert";
 
 const api = new APIClient();
 const InventoryStatusReport = () => {
@@ -495,38 +496,58 @@ const InventoryStatusReport = () => {
   //               if (PolosysFrameWork.General.ShowMessageBox("Are you sure to change the Locked status?", "Converted", MessageBoxButtons.YesNo) == DialogResult.Yes)
 
 
-  // Updating the converted status 
+ // Updating the converted status 
     const handleConvertedChange = async (value: boolean) => {
-      try {
-        await api.postAsync(
-          Urls.inventory_status_report_to_convert,
-          { masterID: searchFilters.masterId, isConverted: value }
-        );
+      ERPAlert.show({
+        icon: "warning",
+        title: t("are_you_sure_to_change_the_converted_status?"),
+        onConfirm: async() => {
+          try {
+            await api.postAsync(
+              Urls.inventory_status_report_to_convert,
+              { masterID: searchFilters.masterId, isConverted: value }
+            );
 
-        setSearchFilters((prev) => ({
-          ...prev,
-          converted: value,
-        }));
-        } catch (error) {
-          console.error("Error in updating Converted status", error);
-        }
+            setSearchFilters((prev) => ({
+              ...prev,
+              converted: value,
+            }));
+            } catch (error) {
+              console.error("Error in updating Converted status", error);
+            }
+        },
+        onCancel() {
+          return false;
+        },
+      });
+      
       };
 
     // Updating the locked status
     const handleLockedChange = async (value: boolean) => {
-      try{
-        const response = await api.postAsync(
-        Urls.inventory_status_report_to_locked,
-        { masterID: searchFilters.masterId, isLocked: value }
-        );
-        setSearchFilters((prev) => ({
-          ...prev,
-          locked: value,
-        }));
+      ERPAlert.show({
+        icon: "warning",
+        title: t("are_you_sure_to_change_the_locked_status?"),
+        onConfirm: async() => {
+          try{
+            const response = await api.postAsync(
+            Urls.inventory_status_report_to_locked,
+            { masterID: searchFilters.masterId, isLocked: value }
+            );
+            setSearchFilters((prev) => ({
+              ...prev,
+              locked: value,
+            }));
 
-      }catch (error) {
-          console.error("Error in updating Locked status", error);
-        }
+          }catch (error) {
+              console.error("Error in updating Locked status", error);
+          }
+          },
+        onCancel() {
+          return false;
+        },
+      });
+      
     };
 
     // Handle Row click function definition
@@ -624,8 +645,8 @@ const InventoryStatusReport = () => {
       </div>
       <ERPModal
         isOpen={showConvertedGrid}
-        title={t("show_converted_transactions")}
-        width={600}
+        title={t("converted_transactions")}
+        width={650}
         height={200}
         isForm={true}
         closeModal={() => setShowConvertedGrid(false)}
@@ -633,7 +654,7 @@ const InventoryStatusReport = () => {
       />
       <ERPModal
         isOpen={showAdjustmentGrid}
-        title={t("show_adjustment_transactions")}
+        title={t("payment_adjusted_transactions")}
         width={600}
         height={200}
         isForm={true}

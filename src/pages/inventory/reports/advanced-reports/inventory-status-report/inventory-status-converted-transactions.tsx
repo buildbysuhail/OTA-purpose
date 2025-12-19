@@ -59,7 +59,7 @@ const InventoryStatusConvertedTransactions = ({ masterId }: InventoryStatusConve
       allowFiltering: true,
       allowSorting: true,
       width: 150,
-      visible: false,
+      visible: true,
       showInPdf: true,
     },
     {
@@ -70,7 +70,7 @@ const InventoryStatusConvertedTransactions = ({ masterId }: InventoryStatusConve
       allowFiltering: true,
       allowSorting: true,
       width: 150,
-      visible: false,
+      visible: true,
       showInPdf: true,
     },
   ];
@@ -79,7 +79,7 @@ const InventoryStatusConvertedTransactions = ({ masterId }: InventoryStatusConve
       const fetchGridData = async () => {
           try {
               const priceCatData = await api.getAsync(`${Urls.inventory_status_converted_transactions}${masterId}`);
-              setGridDataSource(priceCatData);
+              setGridDataSource(priceCatData.data);
           } catch (error) {
               console.error("Error fetching price categories:", error);
           }

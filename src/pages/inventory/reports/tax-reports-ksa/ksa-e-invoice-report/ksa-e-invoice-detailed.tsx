@@ -19,6 +19,12 @@ interface XmlPayloadData {
   customerType: string;
 }
 
+interface ZatCaPayloadData {
+  invTransactionMasterId: number;
+  sentCount: number;
+  result: string;
+}
+
 const api = new APIClient();
 const KsaEInvoiceReportDetailed = () => {
   const { getFormattedValue } = useNumberFormat();
@@ -33,6 +39,13 @@ const KsaEInvoiceReportDetailed = () => {
     customerType: "",
   });
 
+  // Set Za-tca  data
+  const [zatPayloadData, setZatPayloadData] = useState<ZatCaPayloadData>({
+    invTransactionMasterId: 0,
+    sentCount: 0,
+    result: "",
+  });
+
   // Row Click Function definition
   const handleRowClick = useCallback((rowData: any) => {
    setShowHeaderButtons(true);
@@ -43,6 +56,11 @@ const KsaEInvoiceReportDetailed = () => {
       voucherPrefix: rowData.data.voucherPrefix,
       voucherNumber: rowData.data.voucherNumber,
       customerType: rowData.data.customerType,
+    });
+    setZatPayloadData({
+      invTransactionMasterId: rowData.data.invTransactionMasterID,
+      sentCount: rowData.data.sentCount,
+      result: rowData.data.result,
     });
     }, []);
 
@@ -127,6 +145,21 @@ const KsaEInvoiceReportDetailed = () => {
       console.error("SaveXML API error", error);
     }
   };
+
+  const handleInvoiceToZatCa = async () => {
+    if (!xmlPayloadData.invTransactionMasterId) return;
+
+    try {
+      
+      const response = await api.postAsync(
+        Urls.eInvoice_to_zatCa,
+        zatPayloadData
+      );
+    } catch (error) {
+      console.error("SaveXML API error", error);
+    }
+  };
+
   const columns: DevGridColumn[] = [
     {
       dataField: "transactionDate",
@@ -523,7 +556,8 @@ const KsaEInvoiceReportDetailed = () => {
                       {showHeaderButtons && (
                       <div className="flex gap-1 px-2">
                           <ERPButton title={t("save_xml")} variant="secondary" onClick={()=> handleSaveXMLClick()}/>
-                          <ERPButton title={t("fix&send_again")} variant="secondary" onClick={()=> alert("Need to manage the action")}/>
+                          {/* This button is fix and send again*/}
+                          <ERPButton title={t("fix&send_again")} variant="secondary" onClick={()=> handleInvoiceToZatCa()}/>
                     </div>
                     )}
                     </>

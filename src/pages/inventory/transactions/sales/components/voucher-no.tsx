@@ -71,7 +71,7 @@ const AccVoucherNo = React.forwardRef<HTMLInputElement, VoucherNoPrefixProps>(
             }
             value={value}
             type="number"
-            required={true}
+            // required={true}
             fetching={formState.transactionLoading}
             // transactionLoading={true}
             showCustomNumberChanger={

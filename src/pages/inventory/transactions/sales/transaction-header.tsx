@@ -700,6 +700,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   </div>
                 )} */}
 
+                {userSession.dbIdValue == "SEMAKA" && (
                 <div className="flex items-end gap-3 ml-2">
                   <ERPRadio
                     id="cash"
@@ -718,6 +719,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     onChange={(e) => handleChange(e.target.value)}
                   />
                 </div>
+                )}
 
                 {formState.formElements.inSearch?.visible && (
                   <ERPCheckbox
@@ -917,12 +919,14 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
                 />
 
+                {["DURRAH_RYD", "986797588010", "BRIDCO"].includes(userSession.dbIdValue) && (
                 <ERPButton
                   title={t("b_stock")}
                   variant="secondary"
                   disabled={formState.transactionLoading}
                   className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
                 />
+                )}
               </div>
 
               {conditionalFooterComponents}
@@ -1222,6 +1226,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       label={t("mobile_number")}
                       value={formState.transaction.master.address4}
                       className="max-w-full"
+                      disableEnterNavigation
                       onChange={(e) =>
                         dispatch(
                           formStateMasterHandleFieldChange({

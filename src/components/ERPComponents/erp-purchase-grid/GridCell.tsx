@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import { ColumnModel, TransactionDetail, CurrentCell } from "../../../pages/inventory/transactions/transaction-types";
+// import { ColumnModel, TransactionDetail, CurrentCell } from "../../../pages/inventory/transactions/transaction-types";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import ERPProductSearch from "../erp-searchbox";
 import ERPDataCombobox from "../erp-data-combobox";
@@ -15,6 +15,9 @@ import { merge } from "lodash";
 import { initialUserConfig } from "../../../pages/inventory/transactions/transaction-type-data";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
+import { initialTransactionDetails2, transactionInitialMoreDetails } from "../../../pages/inventory/transactions/transaction-type-data";
+import { TransactionDetailKeys, ColumnModel, TransactionDetail, CurrentCell,  TransactionDetails2, TransactionDetailsMore } from "../../../pages/inventory/transactions/transaction-types";
+
 
 interface GridCellProps {
   column: ColumnModel;
@@ -307,8 +310,22 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
   const dispatch = useAppDispatch();
   const cellId = `${gridId}_${column.dataField}_${index}`;
   const isFixed = isFirstColumn || isLastColumn;
-  const cellValue = item[column.dataField as keyof TransactionDetail];
-  const productId = item.productID;
+  const isDetails2 = Object.keys(
+                  initialTransactionDetails2
+                ).includes(column.dataField as keyof TransactionDetails2);
+                const isMoreDetails = Object.keys(
+                  transactionInitialMoreDetails
+                ).includes(column.dataField as keyof TransactionDetailsMore);
+                const fieldKey = column.dataField as TransactionDetailKeys;
+                const idField = column.idField as keyof TransactionDetail;
+                const productId = item.productID;
+                const cellValue = ((isDetails2
+                  ? item.details2?.[fieldKey as keyof TransactionDetails2]
+                  : isMoreDetails
+                    ? item.moreDetail?.[fieldKey as keyof TransactionDetailsMore]
+                    : item[fieldKey as keyof TransactionDetail]) ?? "") as
+                  | string
+                  | boolean;
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
 
   console.log("gcrowHeight:",rowHeight);
@@ -417,7 +434,7 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
         <button
           disabled={formState.formElements.pnlMasters?.disabled}
           onClick={() =>
-            handlRowKeyDown(
+             handlRowKeyDown(
               cellValue,
               { key: "Enter" } as React.KeyboardEvent<HTMLElement>,
               column,

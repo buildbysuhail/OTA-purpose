@@ -153,7 +153,7 @@ debugger;
 
     try {
       let dtUserRights: UserTypeRights[] = __userRights;
-
+      
       return formCodes.filter((formCode) => {
         const filteredRows = dtUserRights.filter(
           (row: any) => row.formCode === formCode

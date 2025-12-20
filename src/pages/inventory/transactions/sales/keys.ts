@@ -64,3 +64,5 @@
 // "Product Not Found",
 // "checkTheProductPriceInSchemes error",
 // Qualified for Gift: ${gt.productName} at Price ${price}. Proceed?`,
+// sales_man
+// customer

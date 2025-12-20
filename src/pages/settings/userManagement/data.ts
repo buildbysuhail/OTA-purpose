@@ -81,6 +81,13 @@ export const userRightsgcc: UserRight[] = [
   
     { id: 10112, headId: 101, name: "AccMaster_AccountPrivilages", fullName: "Account Privileges", formCode: "ACCPRIVLG", treeNode: 3, description: "Manage Account Privileges" },
     { id: 1011201, headId: 10112, name: "AccMaster_AccountPrivilages_Add", fullName: "Add", formCode: "A", treeNode: 4, description: "Add Account Privilege" },
+
+    //only in gcc and not in 1050
+    { id: 10113, headId: 101, name: "Qr_Pay", fullName: "QR Pay", formCode: "QRPay", treeNode: 3, description: "Manage QR Pay" },
+    { id: 1011301, headId: 10113, name: "Qr_Pay_Add", fullName: "Add", formCode: "A", treeNode: 4, description: "Add QR Pay" },
+    { id: 1011302, headId: 10113, name: "Qr_Pay_Edit", fullName: "Edit", formCode: "E", treeNode: 4, description: "Edit QR Pay" },
+    { id: 1011303, headId: 10113, name: "Qr_Pay_Delete", fullName: "Delete", formCode: "D", treeNode: 4, description: "Delete QR Pay" },
+    { id: 1011304, headId: 10113, name: "Qr_Pay_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print QR Pay" },
     //#endregion End Accounts Master
 
 
@@ -498,6 +505,12 @@ export const userRightsgcc: UserRight[] = [
 { id: 2011402, headId: 20114, name: "Schemes_Add", fullName: "Add", formCode: "A", treeNode: 4, description: "Add Schemes" },
 { id: 2011403, headId: 20114, name: "Schemes_Edit", fullName: "Edit", formCode: "E", treeNode: 4, description: "Edit Schemes" },
 { id: 2011404, headId: 20114, name: "Schemes_Delete", fullName: "Delete", formCode: "D", treeNode: 4, description: "Delete Schemes" },
+
+  { id: 20119, headId: 201, name: "GroupCategory", fullName: "Group Category", formCode: "INVGPGRY", treeNode: 3, description: "Manage Group Category" },
+  { id: 2011901, headId: 20119, name: "GroupCategory_Add", fullName: "Add", formCode: "A", treeNode: 4, description: "Add Group Category" },
+  { id: 2011902, headId: 20119, name: "GroupCategory_Edit", fullName: "Edit", formCode: "E", treeNode: 4, description: "Edit Group Category" },
+  { id: 2011903, headId: 20119, name: "GroupCategory_Delete", fullName: "Delete", formCode: "D", treeNode: 4, description: "Delete Group Category" },
+  { id: 2011904, headId: 20119, name: "GroupCategory_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Group Category" },
 //#region not in 1050
 
 //#endregion not in 1050

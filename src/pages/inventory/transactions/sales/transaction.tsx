@@ -658,7 +658,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
     ) {
       height = window.innerHeight - 296;
     } else {
-      height = window.innerHeight - (484 + 15);
+      // height = window.innerHeight - (484 +15); - in Sales
+      height = window.innerHeight - (484 + 60); // Need to set up correctly after the footer set
     }
 
     console.log('Max safe integer:', Number.MAX_SAFE_INTEGER);
@@ -1283,9 +1284,15 @@ debugger;
           accLedgerType: applicationSettings.inventorySettings.showAccountPayableInSales ?
             LedgerType.Cash_Bank_Suppliers_Customers_Employees
             : applicationSettings.accountsSettings.showEmployeesInSales ?
-              LedgerType.Cash_Bank_Customers_Employees : LedgerType.Cash_Bank_Suppliers_Customers_Employees
+              LedgerType.Cash_Bank_Customers_Employees : LedgerType.Cash_Bank_Suppliers_Customers_Employees,
+          label: "customer",
 
         },
+        cbEmployee: {
+          ...initialFormElements.cbEmployee,
+          label: "sales_man"
+        },
+        
         chkTaxNumber: {
           ...initialFormElements.chkTaxNumber,
           label: clientSession.isAppGlobal ? "GSTIN" : "VAT",

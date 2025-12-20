@@ -20,6 +20,7 @@ import { useTranslation } from "react-i18next";
 import warehouseId from "./components/warehouse-id ";
 import { getStorageString } from "../../../../utilities/storage-utils";
 import { merge } from "lodash";
+import { getApLocalData } from "../../../../redux/cached-urls";
 
 const api = new APIClient();
 export const useTransactionHelper = (transactionType: string, focusToNextColumn: (
@@ -1772,7 +1773,9 @@ debugger;
           return 0;
         }
       })();
-
+const isStockDetailsVisible = formState.gridColumns?.find(
+          (x) => x.dataField == "stockDetails"
+        )?.visible
       let payload = {
         useProductCode: data.useProductCode,
         productCode: data.productCode,
@@ -1786,9 +1789,7 @@ debugger;
         isActualPriceVisible: formState.gridColumns?.find(
           (x) => x.dataField == "actualSalesPrice"
         )?.visible,
-        isStockDetailsVisible: formState.gridColumns?.find(
-          (x) => x.dataField == "stockDetails"
-        )?.visible,
+        isStockDetailsVisible: isStockDetailsVisible,
         lastSelectedWareHouseIdOfItemPopUpsSearch:
           await _lastSelectedWarehouseIDOfItemPopupsSearch,
         priceCategoryId: formState.transaction.master.priceCategoryID,
@@ -1916,6 +1917,7 @@ debugger;
         outDetail.itemType = product.itemType;
 
         outDetail.size = product.specification;
+        outDetail.stockDetails = product.stockDetails;
         outDetail.purchasePrice = product.stdPurchasePrice;
         outDetail.minSalePrice = product.minSalePrice;
         outDetail.productDescription = product.serialNumber;
@@ -1956,15 +1958,156 @@ debugger;
         if (!outDetail.unitPrice || outDetail.unitPrice === 0) {
           outDetail.unitPrice = product.stdSalesPrice;
         }
-
+        if (
+            applicationSettings?.productsSettings?.enableMultiWarehouseBilling &&
+            userSession.dbIdValue === "SAMAPLASTICS"
+          ) {
+            try {
+              const sd = await getApLocalData("Warehouses");
+              outDetail.warehouseName = sd && sd.length > 0 ? sd.find((x) => x.id === formState.transaction.master.fromWarehouseID)?.name : "";
+              outDetail.warehouseID =formState.transaction.master.fromWarehouseID;
+              outDetail.warehouseID = formState.transaction.master.fromWarehouseID;
+            } catch (err) {
+              // intentionally ignored (same as C#)
+            }
+          }
         /* ---------------- MULTI FACTOR PRICE ADJUST ---------------- */
         if (multiFactor > 0) {
-          outDetail.unitPrice = round(outDetail.unitPrice * multiFactor);
-          outDetail.purchasePrice = round(product.stdPurchasePrice * multiFactor);
+          // outDetail.unitPrice = round(outDetail.unitPrice * multiFactor);
+          // outDetail.purchasePrice = round(product.stdPurchasePrice * multiFactor);
           outDetail.minSalePrice = round(product.minSalePrice * multiFactor);
-          outDetail.boxQty = multiFactor;
+          // outDetail.boxQty = multiFactor;
         }
+          outDetail.boxQty = multiFactor;
+          outDetail.stock = round(product.stock);
+
+          if(isStockDetailsVisible ) {
+            outDetail.stockDetails = product.stockDetails;
+          }
 debugger;
+
+          // -----------------------------
+// UNIT 2 BARCODE
+// -----------------------------
+if (product.isUnit2BarCode) {
+  if (Number(product.unit2SalesPrice || 0) === 0) {
+    if (multiFactor > 0) {
+      const salePrice = Number(product.stdSalesPrice || 0);
+      const purchasePrice = Number(product.stdPurchasePrice || 0);
+
+      outDetail.unitPrice = salePrice * multiFactor;
+      outDetail.purchasePrice = purchasePrice * multiFactor;
+      outDetail.boxQty = multiFactor;
+    }
+  }
+}
+
+// -----------------------------
+// UNIT 3 BARCODE
+// -----------------------------
+else if (product.isUnit3BarCode) {
+  if (Number(product.unit3SalesPrice || 0) === 0) {
+    if (multiFactor > 0) {
+      const salePrice = Number(product.stdSalesPrice || 0);
+      const purchasePrice = Number(product.stdPurchasePrice || 0);
+
+      outDetail.unitPrice = salePrice * multiFactor;
+      outDetail.purchasePrice = purchasePrice * multiFactor;
+      outDetail.boxQty = multiFactor;
+    }
+  }
+}
+
+// -----------------------------
+// NORMAL / MULTI UNIT BARCODE
+// -----------------------------
+else {
+  // Multi-unit barcode with special price
+  if (product.isMultiUnitBarCode && Number(product.unitSPrice || 0) > 0) {
+    outDetail.unitPrice = Number(product.unitSPrice || 0);
+  }
+  // Multi-factor calculation
+  else if (multiFactor > 0) {
+    const salePrice = Number(product.stdSalesPrice || 0);
+    const purchasePrice = Number(product.stdPurchasePrice || 0);
+
+    outDetail.unitPrice = salePrice * multiFactor;
+    outDetail.purchasePrice = purchasePrice * multiFactor;
+
+    // DB-specific logic
+    if (userSession.dbIdValue === "543140180640") {
+      outDetail.nLA_StdSalesPrice = salePrice * multiFactor;
+    }
+
+    outDetail.boxQty = multiFactor;
+  }
+  // Default price
+  else {
+    outDetail.unitPrice = Number(product.stdSalesPrice || 0);
+
+    if (userSession.dbIdValue === "543140180640") {
+      outDetail.nLA_StdSalesPrice = Number(product.stdSalesPrice || 0);
+    }
+  }
+}
+
+// -----------------------------
+// APPLY MULTI FACTOR (COMMON)
+// -----------------------------
+if (multiFactor > 0) {
+  const minSalePrice = Number(product.minSalePrice || 0);
+  const purchasePrice = Number(product.stdPurchasePrice || 0);
+
+  outDetail.purchasePrice = purchasePrice * multiFactor;
+  outDetail.minSalePrice = minSalePrice * multiFactor;
+  outDetail.boxQty = multiFactor;
+}
+if (
+  Number(product.defSalesUnitID || 0) > 0 &&
+  !product.isMultiUnitBarCode &&
+  !product.isUnit2BarCode &&
+  !product.isUnit3BarCode &&
+  !product.isMannualBarCode &&
+  Number(product.basicUnitID) !== Number(product.defSalesUnitID)
+) {
+  try {
+    
+    if(!isNullOrUndefinedOrEmpty(product.defUnitName)) {
+      outDetail.unit = product.unitName;
+    }
+if ((product.defUnitSPrice??0) > 0) {
+      outDetail.unitPrice = round(Number(product.defUnitSPrice));
+    } else {
+      if (multiFactor > 0) {
+        
+        Number(product.minSalePrice || 0) * multiFactor;
+
+      outDetail.unitPrice =
+        round(product.stdSalesPrice || 0);
+    }
+
+    
+      }
+
+
+    // Assign default sales unit
+    outDetail.unitID = product.defSalesUnitID;
+
+    if (multiFactor > 0) {
+      outDetail.minSalePrice =
+        Number(product.minSalePrice || 0) * multiFactor;
+
+      outDetail.purchasePrice =
+        Number(product.stdPurchasePrice || 0) * multiFactor;
+
+      outDetail.boxQty = multiFactor;
+    }
+  } catch (err) {
+    // same as C#: swallow exception
+  }
+}
+
+
         /* ---------------- VAT / GST ---------------- */
         if (userSession.dbIdValue === "543140180640") {
           // NAHLA
@@ -2115,7 +2258,10 @@ debugger;
             }
           }
         }
-debugger;
+if (product.weighingPrice > 0) {
+  outDetail.unitPrice = product.weighingPrice;
+  outDetail.ratePlusTax = product.weighingPrice;
+}
         /** ---------------- Tax / MRP inclusive ---------------- */
         let uRate = 0;
         let taxPerc = Number(outDetail.vatPerc || 0);

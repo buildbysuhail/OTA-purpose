@@ -90,11 +90,6 @@ const getAllChildIds = (parentId: number, data: UserRight[]): number[] => {
   return () => window.removeEventListener("resize", calcHeight);
 }, [isMaximized, modalHeight]);
 
-// console.log("mj223333-treeHeight:", treeHeight);
-// console.log("mj223333-modalHeight:", modalHeight);
-// console.log("mj223333-window.innerHeight:", window.innerHeight);
-// console.log("mj223333-isMaximized:", isMaximized);
-
 
 
   const getImmediateParentsOfEndNodes = (rights: UserRight[]): UserRight[] => {
@@ -109,13 +104,6 @@ const getAllChildIds = (parentId: number, data: UserRight[]): number[] => {
     // Step 2: Filter rights to get only the nodes with ids in `endNodeIds`
     return rights.filter((right) => endNodeIds.has(right.id));
   };
-  // const handleSelectAll = () => {
-  //   const allKeys = userRights.map(item => item.id);
-  //   setSelectedRowKeys(allKeys);
-  // };
-  // const handleClearSelection = () => {
-  //   setSelectedRowKeys([]);
-  // };
   const handleSelectSpecific = (permission: string, checked: boolean) => {
     // Map of permissions to user rights IDs
     const permissionMap: Record<string, number[]> = {
@@ -161,48 +149,15 @@ const getAllChildIds = (parentId: number, data: UserRight[]): number[] => {
       }
     });
   };
-
-  // const calculateInitialSelectedKeys = (
-  //   userRightTypes: UserRightData[],
-  //   userRights: UserRight[]
-  // ) => {
-  //   const immediateParentsOfEndNodes =
-  //     getImmediateParentsOfEndNodes(userRights);
-  //   return userRightTypes
-  //     ?.map((item: UserRightData) => {
-  //       const matchingParent = immediateParentsOfEndNodes.find(
-  //         (parent) => parent.formCode === item.formCode
-  //       );
-  //       
-  //       if (matchingParent && typeof item.userRights === "string") {
-  //         const rightsIds = Array.from(item.userRights).map(
-  //           (permission: string) => {
-  //             const permissionRight = userRights.find(
-  //               (right) =>
-  //                 right.headId === matchingParent.id &&
-  //                 right.formCode === permission
-  //             );
-  //             return permissionRight ? permissionRight.id : null;
-  //           }
-  //         );
-  //         // Filter out null values and return
-  //         return rightsIds.filter((id): id is number => id !== null); // Type predicate to filter null
-  //       }
-  //       return [];
-  //     })
-  //     .flat(); // Flatten the array
-  // };
+  
   const calculateInitialSelectedKeys = (
     userRightTypes: UserRightData[],
     userRights: UserRight[]
   ) => {
-    // const formCodes =  userRightTypes.map( x=> x.formCode);
-    // const headIds = userRightsData?.map(x => x.headId)
-    // return userRightsData?.filter(x => formCodes.includes(x.formCode) && !headIds?.includes(x.id))?.map(x => x.id)??[]
+    
     const immediateParentsOfEndNodes =
       getImmediateParentsOfEndNodes(userRights);
 
-    // Helper function to collect all ancestor IDs up to the root node
     const getAncestorIds = (parentId: number): number[] => {
       const ancestorIds: number[] = [];
       let currentParentId = parentId;
@@ -252,15 +207,7 @@ const getAllChildIds = (parentId: number, data: UserRight[]): number[] => {
               rightsIds.push(_permissionRight?.id);
               }
           }
-          // Include matchingParent.id if it's not already in rightsIds
-          // if (!rightsIds.includes(matchingParent.id)) {
-          //   rightsIds.push(matchingParent.id);
-          // }
-          // Add all ancestors of the matching parent up to the root node
           const ancestorIds = getAncestorIds(matchingParent.headId);
-          // Only push the immediate parent, not all ancestors
-          // rightsIds.push(matchingParent.id);
-          // Filter out null values and return
           return rightsIds.filter((id): id is number => id !== null); // Type predicate to filter null
         }
         return [];
@@ -303,28 +250,20 @@ const onSelectionChanged = useCallback(
           // Add the selected node
           newSelected.add(key);
           
-          // Add all children
           const children = getAllChildIds(key, (userRightsData??[]));
           children.forEach(childId => newSelected.add(childId));
           
-          // Add all parents (so parent stays checked when child is selected)
-          // const parents = getAllParentIds(key, userRights);
-          // parents.forEach(parentId => newSelected.add(parentId));
         });
       }
 
       // When deselecting
       if (currentDeselected.length > 0) {
         currentDeselected.forEach(key => {
-          // Remove the deselected node
           newSelected.delete(key);
           
-          // Remove all children
           const children = getAllChildIds(key, (userRightsData??[]));
           children.forEach(childId => newSelected.delete(childId));
           
-          // DON'T remove parents - this is the key difference
-          // Parents stay checked even when children are unchecked
         });
       }
 
@@ -386,6 +325,7 @@ const onSelectionChanged = useCallback(
       userRights: string;
       treeNodeIndex: number;
     }[] = [];
+    debugger;
     const immediateParentsOfEndNodes =
       getImmediateParentsOfEndNodes(userRightsData??[]);
     // Map to aggregate data by formCode
@@ -480,18 +420,6 @@ const onSelectionChanged = useCallback(
       `${Urls.user_rights}${postData.data.userType}`
     );
     setUserRightTypes(res);
-//     setUserRightTypes([{
-//     "userRightID": 55369,
-//     "branchID": 1,
-//     "createdUserID": 1,
-//     "createdDate": "2025-11-12T13:06:57.94",
-//     "modifiedUserID": 1,
-//     "modifiedDate": "2025-11-12T13:06:57.94",
-//     "userTypeCode": "A2",
-//     "formCode": "SO",
-//     "userRights": "SAEDPBD",
-//     "treeNodeIndex": 3
-// }]);
   };
   const handleSubmit = useCallback(async () => {
     setPostUserTypeLoading(true);
@@ -607,13 +535,6 @@ const onSelectionChanged = useCallback(
           validation={postData.validations.userType}
           data={postData?.data}
           defaultData={postData?.data}
-        // value={
-        //   postData != undefined &&
-        //     postData?.data != undefined &&
-        //     postData?.data?.userType != undefined
-        //     ? postData?.data?.userType
-        //     : 0
-        // }
         />
         {/* Checkbox options */}
         <div className="gap-3 grid grid-cols-1 sm:grid-cols-2 mb-5 py-4 text-left">
@@ -662,23 +583,6 @@ const onSelectionChanged = useCallback(
             validation={postData.validations.showAllDelete}
           />
 
-          {/* <ERPCheckbox
-            id="showAll"
-            label={t("show_all")}
-            data={postData.data}
-            checked={postData.data.showAll}
-            onChangeData={(data) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: {
-                  ...prev.data,
-                  showAll: !prev.data.showAll,
-                },
-              }));
-              handleSelectSpecific('S', data.showAll);
-            }}
-            validation={postData.validations.showAll}
-          /> */}
         </div>
 
         <ERPCheckbox
@@ -707,46 +611,10 @@ const onSelectionChanged = useCallback(
                 validation={postData.validations.userType2}
                 data={{ userTypeForClone: userTypeForClone }}
               />
-              {/* <ERPButton
-                title={t("load_rights")}
-                variant="secondary"
-                disabled={
-                  postDataLoading ||
-                  postData.data.userType == undefined ||
-                  postData.data.userType == null ||
-                  postData.data.userType == "" ||
-                  userTypeForClone == undefined ||
-                  userTypeForClone == null ||
-                  userTypeForClone == ""
-                }
-                loading={postDataLoading}
-                onClick={handleClone}
-              /> */}
             </div>
           )
         }
-        {/* Form Buttons */}
-        {/* <div className="flex justify-end space-x-2 mt-6">
-          <ERPButton
-            title={t("save")}
-            variant="primary"
-            disabled={
-              postDataLoading ||
-              postData.data.userType == undefined ||
-              postData.data.userType == null ||
-              postData.data.userType == ""
-            }
-            loading={postDataLoading}
-            onClick={handleSubmit}
-          />
-          <ERPButton
-            title={t("close")}
-            variant="secondary"
-            disabled={postDataLoading}
-            onClick={onClose}
-          />
-        </div> */}
-
+       
         <ERPFormButtons
           isLoading={postDataLoading}
           customButtons={

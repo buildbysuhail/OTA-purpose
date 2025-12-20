@@ -506,14 +506,18 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   );
 
   const attachmentComponent = (
-    applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && (
+    applicationSettings?.branchSettings?.fileAttachmentMethod !== 'No' && (
       <button className="text-[#2563eb] dark:text-[#60a5fa] w-full text-left">
-        <span className="hover:underline text-[#0ea5e9] dark:text-[#60a5fa] capitalize" onClick={selectAttachment}>
+        <span
+          className="hover:underline text-[#0ea5e9] dark:text-[#60a5fa] capitalize"
+          onClick={selectAttachment}
+        >
           {t("attachment")}
         </span>
       </button>
     )
   );
+
 
   const outsideComponents = (
     <div className="flex flex-col gap-1 pr-4 w-full">

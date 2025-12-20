@@ -821,6 +821,7 @@ interface ProductBatchDetailsForAutoBarcodeData {
   commodityCode: string;
   basicUnitID: number;
   unitName: string;
+  defUnitSPrice?: number;
   taxCategoryID: number;
   productCategoryID: number;
   productGroupID: number;

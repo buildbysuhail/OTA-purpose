@@ -106,7 +106,18 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
 
   useEffect(() => {
     if (type == "settings") {
-      let st = menuitems;
+      let st = menuitems.map((parent: any) => {
+        const filteredChildren = parent.children?.filter(
+          (child: any) =>
+            hasRight(child.formCode, UserAction.Show)
+        );
+        return {
+          ...parent,
+          children: filteredChildren,
+        };
+      })
+      .filter((parent: any) => parent.children?.length > 0);
+;
       if (userSession.userTypeCode == "BA") {
         st = st.filter((x: any) => x.title != "branches");
       }
@@ -182,13 +193,13 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
           }
         })
       );
-      setMenuitems(st);
+      setMenuitems(sd);
     } else if (type == "reports") {
       let st = menuitems;
       setMenuitems(getFilteredReports(st, clientSession, applicationSettings, hasRight));
     } else if (type == "erp") {
       let st: [] = [];
-
+debugger;
       st = menuitems;
 
       const allRights = extractRights(menuitems).filter((r) => r && r.trim() !== "");
@@ -256,7 +267,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
       //     return item;
       //   })
       // );
-      setMenuitems(st);
+      setMenuitems(sd);
     }
   }, [userSession.countryId, userSession.userTypeCode, MENUITEMS, SettingsMenuItems]);
   const { t } = useTranslation('main');

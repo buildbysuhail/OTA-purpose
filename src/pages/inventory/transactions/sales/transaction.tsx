@@ -1296,9 +1296,15 @@ debugger;
           accLedgerType: applicationSettings.inventorySettings.showAccountPayableInSales ?
             LedgerType.Cash_Bank_Suppliers_Customers_Employees
             : applicationSettings.accountsSettings.showEmployeesInSales ?
-              LedgerType.Cash_Bank_Customers_Employees : LedgerType.Cash_Bank_Suppliers_Customers_Employees
+              LedgerType.Cash_Bank_Customers_Employees : LedgerType.Cash_Bank_Suppliers_Customers_Employees,
+          label: "customer",
 
         },
+        cbEmployee: {
+          ...initialFormElements.cbEmployee,
+          label: "sales_man"
+        },
+        
         chkTaxNumber: {
           ...initialFormElements.chkTaxNumber,
           label: clientSession.isAppGlobal ? "GSTIN" : "VAT",

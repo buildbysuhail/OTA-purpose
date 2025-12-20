@@ -174,6 +174,16 @@ export const purchaseGridCol = (
         alignment: "right",
         readOnly: true,
         decimalPoint: applicationSettings?.mainSettings?.decimalPoints,
+       cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+          return <span className={'font-bold text-[#DC143C]'}>
+            {cellElement.data.total}
+          </span>
+        }
       },
       {
         dataField: "stockDetails",
@@ -183,6 +193,16 @@ export const purchaseGridCol = (
         visible: false,
         width: 200,
         alignment: "left",
+       cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+          return (<span className={`${cellElement.data.stock < 0 ? 'font-bold text-[#DC143C]':''}`}>
+            {cellElement.data.stockDetails}
+          </span>)
+        }
       },
       {
         dataField: "adjQty",
@@ -337,6 +357,16 @@ export const purchaseGridCol = (
         visible: false,
         alignment: "right",
         decimalPoint: 4,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+          return (<span className={`${cellElement.data.stock < 0 ? 'font-bold text-[#DC143C]':''}`}>
+            {cellElement.data.stock}
+          </span>)
+        }
       },
       {
         dataField: "minSalePrice",
@@ -1673,17 +1703,23 @@ export const purchaseGridCol = (
       return true;
     })
     .map((mi) => {
-      if (
-        (userSession.countryId == Countries.India &&
-          voucherType == VoucherType.SalesInvoice) ||
-        (voucherType != VoucherType.SalesInvoice &&
-          (mi.dataField == "vatPerc" || mi.dataField == "vatAmount"))
-      ) {
-        return {
-          ...mi,
-          visible: false,
-        };
-      }
+     const isVatField =
+  mi.dataField === "vatPerc" || mi.dataField === "vatAmount";
+
+const isSalesInvoiceIndia =
+  voucherType === VoucherType.SalesInvoice &&
+  userSession.countryId === Countries.India;
+
+const isOtherVoucherNonIndia =
+  voucherType !== VoucherType.SalesInvoice 
+
+if (isVatField && (isSalesInvoiceIndia || isOtherVoucherNonIndia)) {
+  return {
+    ...mi,
+    visible: false,
+  };
+}
+
       if (
         userSession.countryId != Countries.India &&
         voucherType == VoucherType.SalesInvoice &&

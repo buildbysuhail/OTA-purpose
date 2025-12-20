@@ -67,6 +67,7 @@ interface TransactionHeaderProps {
   onHeightChange?: (height: number) => void;
   footerLayout: "horizontal" | "vertical";
   userSession: any;
+  inputRefs: Record<string, React.RefObject<HTMLInputElement>>
 }
 
 const TransactionHeader: React.FC<TransactionHeaderProps> = ({
@@ -89,6 +90,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   footerLayout,
   focusToNextColumn,
   userSession,
+  inputRefs
 }) => {
   const { appState } = useAppState();
   const [isMoreModalOpen, setIsMoreModalOpen] = useState(false);
@@ -171,6 +173,29 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   const handleChange = (value: string) => {
     setPaymentMethod(value as "cash" | "credit");
   };
+
+  // Input navigation refs
+  const partyNameRef = useRef<HTMLInputElement>(null);
+  const address1Ref = useRef<HTMLInputElement>(null);
+  const mobileNumberRef = useRef<HTMLInputElement>(null);
+  // const ordCardNoRef = useRef<HTMLInputElement>(null);
+  // const ReferenceNumberRef = useRef<HTMLInputElement>(null);
+  const referenceNumberInputRef = useRef<HTMLInputElement>(null);
+
+
+  // Handle sequential input navigation
+  const handleInputNavigation = useCallback(
+    (e: React.KeyboardEvent, nextRef: React.RefObject<HTMLInputElement | any>) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        setTimeout(() => {
+          nextRef.current?.focus();
+          nextRef.current?.select?.();
+        }, 0);
+      }
+    },
+    []
+  );
 
   const handleApproveClick = async () => {
     const result: any = await ERPAlert.show({
@@ -347,6 +372,21 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
       observer.disconnect();
     };
   }, [onHeightChange]);
+  
+function mergeRefs<T>(...refs: React.Ref<T>[]) {
+  return (value: T | null) => {
+    refs.forEach(ref => {
+      if (!ref) return;
+
+      if (typeof ref === "function") {
+        ref(value);
+      } else {
+        // ✅ cast is required because RefObject.current is readonly
+        (ref as React.MutableRefObject<T | null>).current = value;
+      }
+    });
+  };
+}
 
   return (
     <div>
@@ -410,30 +450,20 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   formState={formState}
                   dispatch={dispatch}
                   handleLoadByRefNo={handleLoadByRefNo}
-                  ref={refNoRef}
+                  // ref={referenceNumberInputRef}
+                  ref={mergeRefs(referenceNumberInputRef, refNoRef)}
+
                   t={t}
+                  onKeyDown={(e:any) => handleInputNavigation(e, mobileNumberRef)}
+
                 />
               )}
 
             <ReferenceDate
+              ref={inputRefs?.refDate}
               dispatch={dispatch}
               formState={formState}
-              handleKeyDown={(e) => {
-                if (isEnterKey(e.key)) {
-                  if (
-                    formState.currentCell &&
-                    formState.currentCell.rowIndex > 0 &&
-                    formState.currentCell.column != ""
-                  ) {
-                    focusToNextColumn(
-                      formState.currentCell.rowIndex,
-                      formState.currentCell.column
-                    );
-                  } else {
-                    focusToNextColumn(0, "slNo");
-                  }
-                }
-              }}
+              handleKeyDown={(e) => { handleKeyDown(e,"refDate")}}
               t={t}
             />
 
@@ -562,6 +592,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
 
                 <ERPInput
                   localInputBox={formState?.userConfig?.inputBoxStyle}
+                  // disableEnterNavigation
+                  // ref={partyNameRef}
                   id="partyName"
                   label={t("name")}
                   value={formState.transaction.master.partyName}
@@ -573,11 +605,14 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       })
                     )
                   }
+                  // onKeyDown={(e) => handleInputNavigation(e, address1Ref)}
                   disabled={formState.formElements.pnlMasters?.disabled}
                 />
 
                 <ERPInput
                   localInputBox={formState?.userConfig?.inputBoxStyle}
+                  disableEnterNavigation
+                  ref={address1Ref}
                   id="address1"
                   label={t("address_1")}
                   value={formState.transaction.master.address1}
@@ -589,11 +624,15 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       })
                     )
                   }
+                  onKeyDown={(e) => handleInputNavigation(e, mobileNumberRef)}
                   disabled={formState.formElements.pnlMasters?.disabled}
                 />
 
-                <ERPInput
+                {/* <ERPInput
                   localInputBox={formState?.userConfig?.inputBoxStyle}
+                  disableEnterNavigation
+                  ref={mobileNumberRef}
+                  onKeyDown={(e) => handleInputNavigation(e, ReferenceNumberRef)}
                   id="address4"
                   label={t("mobile_number")}
                   value={formState.transaction.master.address4}
@@ -606,15 +645,56 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     )
                   }
                   disabled={formState.formElements.pnlMasters?.disabled}
-                />
+                /> */}
+<ERPInput
+  localInputBox={formState?.userConfig?.inputBoxStyle}
+  disableEnterNavigation
+  ref={mobileNumberRef}
+  onKeyDown={(e) => handleInputNavigation(e, referenceNumberInputRef)}
+  id="address4"
+  label={t("mobile_number")}
+  value={formState.transaction.master.address4}
+  className="max-w-full"
+  onChange={(e) =>
+    dispatch(
+      formStateMasterHandleFieldChange({
+        fields: { address4: e.target?.value },
+      })
+    )
+  }
+  disabled={formState.formElements.pnlMasters?.disabled}
+/>
 
                 <ERPInput
+                  // ref={ordCardNoRef}
                   id="ordCardNo"
                   label={t("ord_card_no")}
                   placeholder={t("enter_ord_card_no")}
+                  // onKeyDown={(e) => {
+                  //   if (e.key === "Enter") {
+                  //     e.preventDefault();
+                  //   }
+                  // }}
                   onChangeData={(data: any) => handleFieldChange("ordCardNo", data.ordCardNo)}
                 />
 
+                <div className="flex items-end gap-2">
+                  <ERPDataCombobox
+                    id="customer"
+                    field={{
+                      id: "customer",
+                      // getListUrl: Urls.,
+                      valueKey: "customer",
+                      labelKey: "customerName",
+                    }}
+                    onChangeData={(data: any) => { handleFieldChange("customer", data.customer); }}
+                    label={t("customer")}
+                  />
+
+                  <button className="bg-gray-300 p-2 rounded-md transition duration-300 flex items-end gap-2 hover:shadow-md">
+                    {t('new')}<BadgePlus className="w-4 h-4" />
+                  </button>
+                </div>
 
                 {formState.transaction.master.voucherType ===
                   VoucherType.PurchaseOrder &&

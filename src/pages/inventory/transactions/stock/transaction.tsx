@@ -63,6 +63,8 @@ import { TFunction } from "i18next";
 import { UserModel } from "../../../../redux/slices/user-session/reducer";
 import { ApplicationSettingsType } from "../../../settings/system/application-settings-types/application-settings-types";
 import { stockGridColOpeningStock } from "./transaction-grid-cols-opening-stock";  // CheckIt
+import { useStockGridColumns } from "./useStockGridColumns";
+
 // import { fetchUserConfig } from "../transaction-utils";
 
 interface BilledItem {
@@ -100,34 +102,18 @@ const TransactionForm: React.FC<TransactionProps> = ({
   // localInputBox,
 }) => {
   const [_st, setSt] = useState<UserConfig>(initialUserConfig);
-
   useEffect(() => {
     const fetchData = async () => {
       const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`);
       const storedUtc = await getStorageString(key); // use get, not set
-      if (storedUtc &&
-        storedUtc !== "" &&
-        storedUtc !== "undefined" &&
-        storedUtc !== "null" &&
-        storedUtc !== undefined &&
-        storedUtc !== null) {
-        const decoded = safeBase64Decode(storedUtc) ?? "{}";
-        setSt(customJsonParse(decoded));
-      }
+      if(!storedUtc) return;
+      const decoded = safeBase64Decode(storedUtc) ?? "{}";
+       setSt(customJsonParse(decoded));
     };
 
     fetchData();
   }, []);
 
-  const [triggerEffect, setTriggerEffect] = useState(false);
-  // const handleClearControls = () => {
-  //   clearControls(
-  //     formState.isEdit,
-  //     formState.transaction.master.invTransactionMasterID
-  //   );
-  //   // setTriggerEffect(prev => !prev); // Toggle the triggerEffect state
-  //   // setTriggerEffect(true);
-  // };
   const handleClearControls = async () => {
     // 1) Guard: check voucher locked
     if (formState?.transaction?.master?.isLocked) {
@@ -179,17 +165,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
         await maybePromise;
       }
 
-      // 5) Force UI refresh if you used that pattern earlier (uncomment/wire setTriggerEffect)
-      if (typeof setTriggerEffect === "function") {
-        // toggle to force re-render/update data grid etc.
-        setTriggerEffect((prev: any) => !prev);
-      }
-
-      // ERPAlert.show({
-      //   title: t("success"),
-      //   text: t("controls_cleared_successfully"),
-      //   icon: "success",
-      // });
     } catch (err) {
       console.error("Error in handleClearControls:", err);
       ERPAlert.show({
@@ -205,11 +180,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   const popupData = useSelector((state: RootState) => state?.PopupData);
   const dispatch = useDispatch();
-  const appDispatch = useAppDispatch();
   const formState = useAppSelector(
     (state: RootState) => state.InventoryTransaction
   );
-  const currentBranch = useCurrentBranch();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   const clientSession = useAppSelector(
     (state: RootState) => state.ClientSession
@@ -233,9 +206,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const taxNoRef = useRef<HTMLInputElement>(null);
   const discountRef = useRef<HTMLInputElement>(null);
   const chequeStatusRef = useRef<HTMLInputElement>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const dropdownRef = useRef(null);
-  const contentRef = useRef(null);
+
   const isFooterOnRight = formState.transactionLoading
     ? _st.footerPosition === "right"
     : formState.userConfig?.footerPosition === "right";
@@ -252,14 +223,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     right: isRtl ? headerLeft : "0",
   };
 
-  const [tempTheme, setTempTheme] = useState<any>(null);
-  const handleSelectTheme = (theme: any) => {
-    setTempTheme(theme);
-  };
 
-  const handleResetTheme = () => {
-    setTempTheme(null);
-  };
   const [countdown, setCountdown] = useState(8);
   const [startCountdown, setStartCountdown] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -273,7 +237,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
   useEffect(() => {
     if (formState.selectedTheme && formState.selectedTheme.isInitial !== true) {
       console.log('Theme selected, triggering countdown');
-      setCountdown(8);
       setStartCountdown(true);
 
       // Apply the preview theme
@@ -387,49 +350,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
     return () => clearTimeout(timer);
   }, []);
 
-  const handleButtonClick = () => {
-    setIsModalOpen(true); // Open the modal
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false); // Close the modal
-  };
 
   const [isPartyDetailsOpen, setIsPartyDetailsOpen] = useState(false);
   const [showValidation, setShowValidation] = useState(false);
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
-  const focusTaxNoField = () => {
-    setTimeout(() => {
-      if (taxNoRef.current) {
-        taxNoRef.current.select();
-        taxNoRef.current.focus();
-      }
-    }, 0);
-  };
-
-  const onSelectionChanged = (
-    e: any,
-    state: RootState,
-    isRowClick: boolean
-  ) => {
-    if (state.InventoryTransaction.formElements.pnlMasters?.disabled == true) {
-      return false;
-    }
-
-    const selectedIndexes = e.component.getSelectedRowKeys();
-    const row = formState?.transaction?.details.find(
-      (x: any) => x.slNo == selectedIndexes[0]
-    );
-
-    if (selectedIndexes.length > 0 && row) {
-      if (deviceInfo.isMobile) {
-        setIsOpen(true);
-      }
-      handleRowClick({
-        row: row,
-      });
-    }
-  };
 
   const closeDocumentModal = () => {
     dispatch(
@@ -438,11 +362,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
       })
     )
   };
-  const focusCBledger = () => {
-    if (cbLedger.current) {
-      cbLedger.current.focus();
-    }
-  };
 
   const focusAdd1 = () => {
     if (address1.current) {
@@ -450,25 +369,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
     }
   };
 
-  const focusAdd2 = () => {
-    if (address2.current) {
-      address2.current.focus();
-    }
-  };
-
-  const focusReferenceNumber = () => {
-    if (referenceNumber.current) {
-      referenceNumber.current.focus();
-    }
-  };
-
-  const focusReferenceDate = () => {
-    if (referenceDate.current) {
-      referenceDate.current.focus();
-    }
-
-
-  };
   const inputRefs = {
     ledgerID: useRef<HTMLInputElement>(null),
     address1: useRef<HTMLInputElement>(null),
@@ -477,12 +377,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
     refNo: useRef<HTMLInputElement>(null)
   };
 
-  const focusInput = (refName: keyof typeof inputRefs) => {
-    if (inputRefs[refName]?.current) {
-      inputRefs[refName].current.focus();
-      inputRefs[refName].current.select();
-    }
-  };
   const handleKeyDown = (e: any, field: string, rowIndex: number) => {
 
     if (field === "address2" && isEnterKey(e.key)) {
@@ -629,7 +523,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
-  const { hasRight } = useUserRights();
   const gridHeight = useMemo(() => {
     if (formState?.transaction?.master?.voucherType === "LPO") {
       return window.innerHeight - 425;
@@ -700,16 +593,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   useEffect(() => {
     const initializeFormElements = async () => {
-
-      //  const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`) ;
-      //     const Utc = await getStorageString(key);
-      //     let userConfig: UserConfig | undefined;
-      //     if (Utc) {
-      //       const decoded = safeBase64Decode(Utc) ?? "{}";
-      //       userConfig = customJsonParse(decoded ?? "{}");
-      //     } else {
-      //       userConfig = await fetchUserConfig();
-      //     }
 
       const dataWarranty = voucherType != "LPO" ? await api.getAsync(
         `${Urls.inv_transaction_base}${transactionType}/data/warranty`
@@ -811,7 +694,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         }
       }
 
-      let __gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new APIClient()))
+      let __gridCols = (await getInitialPreference(gridCode, _stockGridCol, new APIClient()))
       const _gridCols = __gridCols.columnPreferences.map(x => {
         return {
           ...x,
@@ -1448,10 +1331,14 @@ const TransactionForm: React.FC<TransactionProps> = ({
     }
   }, [formState.quantityFactorData]);
 
-
-  const _purchaseGridCol: ColumnModel[] = stockGridColOpeningStock(applicationSettings, userSession
-    , voucherType ?? formState.transaction.master.voucherType
-    , formType ?? formState.transaction.master.voucherForm, t, formState) ?? []
+    const _stockGridCol = useStockGridColumns({
+        voucherType: voucherType ?? formState.transaction.master.voucherType,
+        formType: formType ?? formState.transaction.master.voucherForm,
+        applicationSettings,
+        userSession,
+        t,
+        formState,
+      });
   // const [invoiceNo, setInvoiceNo] = useState<number>(3); // Default Invoice No.
   // const [date, setDate] = useState<string>("2024-09-23"); // Default Date
 
@@ -1817,7 +1704,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                       });
                     }}
                     transactionType={transactionType}
-                    _columns={_purchaseGridCol}
+                    _columns={_stockGridCol}
                     keyField={"productID"}
                     height={gridHeight}
                     gridId={`${gridCode}`}
@@ -2012,7 +1899,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     });
                   }}
                   transactionType={transactionType}
-                  _columns={_purchaseGridCol}
+                  _columns={_stockGridCol}
                   keyField={"productID"}
                   height={gridHeight}
                   gridId={`${gridCode}`}

@@ -64,6 +64,7 @@ import PosHeader from "./pos-components/pos-header";
 import PosSideMenu from "./pos-components/pos-side-menu";
 import { fetchUserConfig } from "../transaction-utils";
 import MQtyFactorsModal from "./mqty-factors";
+import { merge } from "lodash";
 
 interface BilledItem {
   id?: number;
@@ -173,7 +174,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
       const maybePromise = clearControls(
         formState.isEdit,
-        formState.transaction.master.invTransactionMasterID
+        formState.transaction.master.invTransactionMasterID,
+        false // don't focus first grid row when invoked from header button
       );
 
       if (maybePromise && typeof maybePromise.then === "function") {
@@ -487,7 +489,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
   };
   const handleKeyDown = (e: any, field: string, rowIndex: number) => {
 
-    if (field === "address2" && isEnterKey(e.key)) {
+    if (field === "address4" && isEnterKey(e.key)) {
+      //  if (field === "address2" && isEnterKey(e.key)) {
       if (refNoRef?.current) {
         refNoRef?.current.focus();
         refNoRef?.current.select();
@@ -655,7 +658,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
     ) {
       height = window.innerHeight - 296;
     } else {
-      height = window.innerHeight - (484 + 15);
+      // height = window.innerHeight - (484 +15); - in Sales
+      height = window.innerHeight - (484 + 60); // Need to set up correctly after the footer set
     }
 
     console.log('Max safe integer:', Number.MAX_SAFE_INTEGER);
@@ -717,7 +721,7 @@ const dataWarranty = voucherType != "LPO" ? await api.getWithCacheAsync(
       const priceCategory = voucherType != "LPO" ? await api.getWithCacheAsync(
         `${Urls.inv_transaction_base}${transactionType}/Data/PriceCategories/`
       ) : [];
-
+  debugger;
       const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`);
     const Utc = await getStorageString(key);
     let userConfig: UserConfig | undefined;
@@ -809,7 +813,7 @@ debugger;
           transactionMasterID
         )) as TransactionFormState;
       }
-      _formState.userConfig = userConfig;
+      _formState.userConfig = userConfig??{};
       _formState.dataWarranty = dataWarranty;
       _formState.dataBrands = dataBrands;
 
@@ -817,9 +821,7 @@ debugger;
         applicationSettings.productsSettings?.batchCriteria != "NB"
           ? false
           : true;
-      _formState.userConfig = {
-        ...formState.userConfig,
-      }
+
 
 
       ////////////////////////////////////////////////////
@@ -1222,21 +1224,6 @@ debugger;
         } as any;
       }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       let __gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new APIClient()))
       const _gridCols = __gridCols.columnPreferences.map(x => {
         return {
@@ -1246,6 +1233,8 @@ debugger;
             _formState.transaction.master.voucherForm.toUpperCase() == "IMPORT") && ["cgst", "sgst", "sgstPerc", "cgstPerc"].includes(x.dataField)) ? false : x.visible
         }
       });
+       
+      const mergedUserConfig = merge({}, formState.userConfig, userConfig);
       _formState = {
         ..._formState,
         isInv: true,
@@ -1258,9 +1247,8 @@ debugger;
           },
         },
         gridColumns: _gridCols as any,
-        userConfig: {
-          ...formState.userConfig,
-        },
+        
+        userConfig: mergedUserConfig,
         transactionType: transactionType ?? "",
         dummyProducts: applicationSettings.productsSettings?.loadDummyProducts,
 
@@ -1325,6 +1313,7 @@ debugger;
       if (_formState.formElements.cbDebitAccount ?? {})
 
 
+  debugger;
         //
         // _formState = await loadLedgerData(_formState) as any;
         // _formState.isInitialLedger = true;

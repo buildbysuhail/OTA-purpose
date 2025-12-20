@@ -1205,6 +1205,11 @@
   "Locked": "مُقْفَل",
   "show_converted_transactions": "إظهار المعاملات المُحَوَّلة",
   "show_adjustment_transactions": "إظهار معاملات التسوية",
+  "converted_transactions": "المعاملات المحولة",
+  "payment_adjusted_transactions": "المعاملات المعدلة للدفع",
+  "payment_status": "حالة الدفع",
+  "are_you_sure_to_change_the_converted_status?": "هل أنت متأكد من تغيير حالة التحويل؟",
+  "are_you_sure_to_change_the_locked_status?": "هل أنت متأكد من تغيير حالة القفل؟",
 
   "save_xml": "حفظ XML",
   "fix&send_again": "إصلاح وإرسال مرة أخرى"

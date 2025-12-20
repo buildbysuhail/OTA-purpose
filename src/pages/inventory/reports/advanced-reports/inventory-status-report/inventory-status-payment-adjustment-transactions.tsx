@@ -22,6 +22,7 @@ const InventoryStatusPaymentAdjustmentTransactions = ({branchId, ledgerId, maste
   const { t } = useTranslation("accountsReport");
   const { getFormattedValue } = useNumberFormat();
   const [gridDataSource, setDataSource] = useState<any[]>([]);
+  const [paymentStatus, setPaymentStatus] = useState<string>("")
   const columns: DevGridColumn[] = [
     {
       dataField: "transactionDate",
@@ -117,6 +118,7 @@ const InventoryStatusPaymentAdjustmentTransactions = ({branchId, ledgerId, maste
         }
       );
       setDataSource(response.data);
+      setPaymentStatus(response.status);
     } catch (error) {
       console.error("Payment adjustment API error", error);
     }
@@ -130,6 +132,9 @@ const InventoryStatusPaymentAdjustmentTransactions = ({branchId, ledgerId, maste
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="px-4 pt-4 pb-2 ">
+            <div className="w-full flex justify-center py-2">
+              <div className="font-semibold text-lg">{t("payment_status")}:{paymentStatus}</div>
+            </div>
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 remoteOperations={{

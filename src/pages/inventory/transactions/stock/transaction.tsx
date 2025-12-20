@@ -201,9 +201,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
   };
 
   const { t } = useTranslation("transaction");
-  const [gridCode, setGridCode] = useState<string>(
-    `grd_inv_transaction_${(voucherType ?? "") + (formType ?? "")}`
-  );
+  const gridCode = `grd_inv_transaction_${(voucherType ?? "") + (formType ?? "")}`;
+
   const popupData = useSelector((state: RootState) => state?.PopupData);
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
@@ -742,8 +741,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
           employeeID = emps && emps.length > 0 ? emps[0].id : employeeID;
         }
       }
-
-
 
       if (!isInvoker) {
         debugger;

@@ -799,6 +799,7 @@ const Urls = {
   lpo_data_ProductsCode: '/Inventory/LocalPurchaseOrder/Data/ProductsCode/',
 
   ksa_eInvoice_saveXml: '/Inventory/RptTAXReport/KSAEinvoiceSaveXml',
+  eInvoice_to_zatCa: '/Inventory/RptTAXReport/SendEinvoiceToZatca',
 };
 
 export default Urls;

@@ -1205,6 +1205,11 @@
   "locked": "Locked",
   "show_converted_transactions": "Show Converted Transactions",
   "show_adjustment_transactions": "Show Adjustment Transactions",
+  "converted_transactions":"Converted Transactions",
+  "payment_adjusted_transactions":"Payment Adjusted Transactions",
+  "payment_status":"Payment Status",
+  "are_you_sure_to_change_the_converted_status?":"Are you sure to change the Converted status",
+  "are_you_sure_to_change_the_locked_status?":"Are you sure to change the Locked status",
 
   "save_xml":"Save XML",
   "fix&send_again":"Fix & Send Again"

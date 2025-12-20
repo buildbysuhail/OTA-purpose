@@ -416,7 +416,7 @@ export const MENUITEMS = [
     title: "purchase",
     badge: "",
     badgetxt: "",
-    rights: "",
+    rights: "INVT",
     class: "badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2",
     children: [
       ...transactionRoutes.filter(x => x.transactionBase == TransactionBase.Purchase).map((route) => ({
@@ -435,7 +435,7 @@ export const MENUITEMS = [
         active: false,
         selected: false,
         title: TransactionTitles.LPO,
-        rights: "BRC",
+        rights: "LPO",
         icon: Landmark
       },
     ],
@@ -449,7 +449,7 @@ export const MENUITEMS = [
     title: "sales",
     badge: "",
     badgetxt: "",
-    rights: "",
+    rights: "INVT",
     class: "badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2",
     children: [
       ...transactionRoutes.filter(x => x.transactionBase == TransactionBase.Sales).map((route) => ({
@@ -473,7 +473,7 @@ export const MENUITEMS = [
     title: "stock",
     badge: "",
     badgetxt: "",
-    rights: "",
+    rights: "INVT",
     class: "badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2",
     children: [
       ...transactionRoutes.filter(x => x.transactionBase == TransactionBase.StockJournal).map((route) => ({
@@ -497,7 +497,7 @@ export const MENUITEMS = [
     title: "goods",
     badge: "",
     badgetxt: "",
-    rights: "",
+    rights: "INVT",
     class: "badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2",
     children: [
       ...transactionRoutes.filter(x => x.transactionBase == TransactionBase.Goods).map((route) => ({
@@ -521,7 +521,7 @@ export const MENUITEMS = [
     title: "other",
     badge: "",
     badgetxt: "",
-    rights: "",
+    rights: "INVT",
     class: "badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2",
     children: [
       ...transactionRoutes.filter(x => x.transactionBase == TransactionBase.OtherTransactions).map((route) => ({
@@ -607,6 +607,7 @@ export const MENUITEMS = [
     title: "post_transactions",
     path: "/post_transactions",
     badge: "",
+    right:"INVT",
     badgetxt: "",
     class: "badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2",
   },
@@ -619,6 +620,7 @@ export const MENUITEMS = [
     title: "cashier_view",
     path: "/cashier_view",
     badge: "",
+    right:"INVT",
     badgetxt: "",
     class: "badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2",
   },

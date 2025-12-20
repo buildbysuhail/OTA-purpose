@@ -28,7 +28,7 @@ const AccTransactionDate = React.forwardRef<
             label={t(formState.formElements.transactionDate.label)}
             fetching={formState.transactionLoading}
             className="md:w-[150px]"
-            required={true}
+            // required={true}
             value={formState.transaction.master.transactionDate}
             onChange={(e) =>
               dispatch(

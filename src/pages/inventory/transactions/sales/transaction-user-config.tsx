@@ -17,14 +17,17 @@ import useDebounce from "./use-debounce";
 import { useAppState } from "../../../../utilities/hooks/useAppState";
 import { ERPScrollArea } from "../../../../components/ERPComponents/erp-scrollbar";
 import { formStateHandleFieldChange, formStateMasterHandleFieldChange, formStateHandleFieldChangeKeysOnly } from "../reducer";
-import { UserConfig } from "../transaction-types";
+import { TransactionFormState, UserConfig } from "../transaction-types";
 import VoucherType from "../../../../enums/voucher-types";
 import { appInitialState } from "../../../../redux/slices/app/reducer";
+import { customJsonParse, safeBase64Decode } from "../../../../utilities/jsonConverter";
+import { getStorageString } from "../../../../utilities/storage-utils";
 
 const api = new APIClient();
 
 interface TransactionUserConfigProps {
   phone?: boolean;
+  // formState: TransactionFormState;
   transactionType: string;
   undoEditMode?: (
     isEdit: boolean,
@@ -134,6 +137,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
   // };
 
   const handleFieldChange = (field: keyof UserConfig, value: any) => {
+    debugger
     const updatedUserConfig = {
       ...formState.userConfig,
       [field]: value,
@@ -556,6 +560,19 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                     value={formState?.userConfig?.qtyDecimalPoint}
                     onChangeData={(e) => handleFieldChange("qtyDecimalPoint", e.qtyDecimalPoint)}
                   />
+
+                  <button name="sds"  onClick={ async() =>  {
+                     const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`);
+                        const Utc = await getStorageString(key);
+                        let userConfig: UserConfig | undefined;
+                        if (Utc) {
+                          const decoded = safeBase64Decode(Utc) ?? "{}";
+                          userConfig = customJsonParse(decoded ?? "{}");
+                          console.log(userConfig);
+                          
+                        } 
+                  }}
+                  > Log</button>
                 </>
               }
             </div>
@@ -1131,47 +1148,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
             </div>
           </div>
         </CollapsibleSection>
-
-        {/* Reset Section */}
-        {/* <div className="bg-gradient-to-r from-[#fef2f2] to-[#fdf2f8] dark:from-[#7f1d1d33] dark:to-[#83184333] border border-[#fecaca] dark:border-[#991b1b] rounded-xl p-2 shadow-sm">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-[#fee2e2] dark:bg-[#7f1d1d4D]">
-                    <RotateCcw className="w-4 h-4 text-[#dc2626] dark:text-[#f87171]" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-[#991b1b] dark:text-[#fca5a5] text-sm">{t("reset_settings")}</h4>
-                    <p className="text-xs text-[#dc2626] dark:text-[#f87171] mt-1">
-                      {t("reset_all_settings_to_default")}
-                    </p>
-                  </div>
-                </div>
-                <ERPButton
-                  title={t("reset_to_default")}
-                  variant="secondary"
-                  // className="bg-[#fee2e2] hover:bg-[#fecaca] text-[#b91c1c] border-[#fca5a5] hover:border-[#f87171] transition-all duration-300 min-w-[140px]"
-                  onClick={resetThemeChange}
-                />
-              </div>
-            </div> */}
       </div>
-      {/* // footer={
-        //   <div className="w-full flex justify-end items-center gap-2 dark:!border-dark-border dark:!bg-dark-bg rounded-b-md">
-        //     <ERPButton
-        //       title={t("reset_all")}
-        //       onClick={resetThemeChange}
-        //       type="reset"
-        //       variant="secondary"
-        //       className="min-w-[100px] transition-all duration-300"
-        //     />
-        //     <ERPButton
-        //       title={t("save_changes")}
-        //       onClick={postUserConfig}
-        //       variant="primary"
-        //       className="min-w-[140px] bg-gradient-to-r from-[#2563eb] to-[#4f46e5] hover:from-[#1d4ed8] hover:to-[#4338ca] transition-all duration-300"
-        //     />
-        //   </div>
-        // } */}
     </>
   );
 };

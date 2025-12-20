@@ -991,7 +991,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 <div className="flex flex-col">
                   <ERPTextarea
                     id="remarks"
-                    required={true}
+                    // required={true}
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     label={t(formState.formElements.remarks.label)}
                     value={formState.transaction.master.remarks}

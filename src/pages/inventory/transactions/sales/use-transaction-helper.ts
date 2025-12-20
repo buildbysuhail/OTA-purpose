@@ -1560,18 +1560,6 @@ debugger;
   const attachMaster = (formState: TransactionFormState) => {
     const master: TransactionMaster = {
       ...formState.transaction.master,
-      address2:
-        formState.transaction.master.voucherType == VoucherType.PurchaseReturn
-          ? formState.transaction.master.address2
-          : "",
-      address3:
-        formState.transaction.master.voucherType == VoucherType.PurchaseReturn
-          ? formState.transaction.master.address3
-          : "",
-      address4:
-        formState.transaction.master.voucherType == VoucherType.PurchaseReturn
-          ? formState.transaction.master.address4
-          : "",
       salesManID: formState.transaction.master.employeeID
     };
 

@@ -9,39 +9,45 @@ const api = new APIClient();
 
 interface ReferenceNumberProps extends VoucherElementProps {
   handleLoadByRefNo: () => Promise<void>;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
-const ReferenceNumber = React.forwardRef<HTMLInputElement, ReferenceNumberProps>(({ formState, dispatch, handleLoadByRefNo, t, }, ref) => {
-  const { value, onChange } = useDebouncedInput(
-    formState.transaction.master.purchaseInvoiceNumber || '',
-    (debouncedValue) => {
-      dispatch(
-        formStateMasterHandleFieldChange({
-          fields: { purchaseInvoiceNumber: debouncedValue },
-        })
-      );
-    },
-    300
-  );
+const ReferenceNumber = React.forwardRef<HTMLInputElement, ReferenceNumberProps>(
+  ({ formState, dispatch, handleLoadByRefNo, t, onKeyDown }, ref) => {
+    const { value, onChange } = useDebouncedInput(
+      formState.transaction.master.purchaseInvoiceNumber || '',
+      (debouncedValue) => {
+        dispatch(
+          formStateMasterHandleFieldChange({
+            fields: { purchaseInvoiceNumber: debouncedValue },
+          })
+        );
+      },
+      300
+    );
 
-  return (
-    <>
-      {formState.formElements.referenceNumber.visible && (
-        <>
-          <div>
-            <ERPInput
-              ref={ref}
-              localInputBox={formState?.userConfig?.inputBoxStyle}
-              id="purchaseInvoiceDate"
-              // required={formState.transaction.master.voucherType !== "PE"}
-              label={t(formState.formElements.referenceNumber.label)}
-              value={value}
-              className="w-full min-w-[135px]"
-              fetching={formState.transactionLoading}
-              // transactionLoading={true}
-              onChange={(e) => onChange(e.target.value)}
-              disabled={formState.formElements.referenceNumber?.disabled || formState.formElements.pnlMasters?.disabled}
-            // labelInfo={
+    return (
+      <>
+        {formState.formElements.referenceNumber.visible && (
+          <>
+            <div>
+              <ERPInput
+                ref={ref}
+                localInputBox={formState?.userConfig?.inputBoxStyle}
+                id="purchaseInvoiceDate"
+                // required={formState.transaction.master.voucherType !== "PE"}
+                label={t(formState.formElements.referenceNumber.label)}
+                value={value}
+                className="w-full min-w-[135px]"
+                fetching={formState.transactionLoading}
+                // transactionLoading={true}
+                onChange={(e) => onChange(e.target.value)}
+                onKeyDown={onKeyDown}
+                disabled={
+                  formState.formElements.referenceNumber?.disabled ||
+                  formState.formElements.pnlMasters?.disabled
+                }
+                // labelInfo={
             //   // <ERPButton
             //   //   id="btnLoadByRef"
             //   //   title=":"
@@ -58,13 +64,13 @@ const ReferenceNumber = React.forwardRef<HTMLInputElement, ReferenceNumberProps>
             //     </button>
             //   </div>
             // }
-            />
-          </div>
-        </>
-      )}
-    </>
-  );
-}
+              />
+            </div>
+          </>
+        )}
+      </>
+    );
+  }
 );
 
 export default React.memo(ReferenceNumber);

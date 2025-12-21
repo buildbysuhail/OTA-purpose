@@ -742,10 +742,131 @@ debugger;
     return response;
   };
 
+type CreditLimitResult = {
+  exceeded: boolean;
+  message: string;
+};
+
+const checkThePartyCreditLimit = (
+  partyLedgerID: number,
+  grandTotal: number,
+  oldPartyLedgerID: number,
+  previousGrandTotal: number
+): CreditLimitResult => {
+  let result = false;
+  let msg = "";
+
+  let partyBalance = 0;
+  let creditAmt = 0;
+  let dueBalance = 0;
+  let creditDays = 0;
+
+  try {
+
+      creditAmt = formState.ledgerData.creditAmount || 0;
+      creditDays = formState?.ledgerData.creditDays || 0;
+      partyBalance = formState?.ledgerData.ledgerBalance || 0;
+      dueBalance = formState?.ledgerData.dueBalance || 0;
+
+      /* ---------------- CREDIT AMOUNT CHECK ---------------- */
+      if (creditAmt > 0) {
+
+        partyBalance +=
+          grandTotal -
+          (partyLedgerID === oldPartyLedgerID ? previousGrandTotal : 0);
+
+        if (partyBalance > creditAmt) {
+          result = true;
+          msg = `Credit Amount: ${creditAmt} is exceeded`;
+
+          if (creditDays > 0) {
+            msg = `Credit Amount: ${creditAmt} or Credit days ${creditDays} is exceeded`;
+          }
+        } else {
+          result = false;
+        }
+      }
+
+      // If credit amount itself exceeded → return immediately (same as C#)
+      if (result) {
+        return { exceeded: true, message: msg };
+      }
+
+      /* ---------------- CREDIT DAYS CHECK ---------------- */
+      if (creditDays > 0) {
+        if (dueBalance > 0) {
+          msg = `\nCredit Days : ${creditDays} is exceeded.`;
+          result = true;
+        } else {
+          result = false;
+        }
+      }
+  } catch {
+    return { exceeded: result, message: msg };
+  }
+
+  return {
+    exceeded: result,
+    message: msg,
+  };
+};
 
   async function validate(): Promise<boolean> {
     const master = formState.transaction.master;
     const details = formState.transaction.details;
+
+    const creditMode = applicationSettings.accountsSettings.blockOnCreditLimit; // "Block" | "Allow Cash Sales" | "Warn"
+
+const creditRes = checkThePartyCreditLimit(
+  formState.transaction.master.ledgerID,
+  formState.transaction.master.grandTotal || 0,
+  formState.oldLedgerId || 0,
+  formState.previousGrandTotal || 0
+);
+
+/* ---------------- BLOCK ---------------- */
+if (creditMode === "Block") {
+  if (creditRes.exceeded) {
+    ERPAlert.show({
+      icon: "error",
+      title: "Credit Limit Exceeded",
+      text: `${creditRes.message}. Cannot be proceeded.`,
+      confirmButtonText: "OK",
+    });
+    return false;
+  }
+}
+
+/* ----------- ALLOW CASH SALES ----------- */
+if (creditMode === "Allow Cash Sales") {
+  if (creditRes.exceeded) {
+    const grandTotal = formState.transaction.master.grandTotal || 0;
+    const cashReceived = formState.transaction.master.cashReceived || 0;
+    const cardAmount = formState.transaction.master.bankAmt || 0;
+
+    if (grandTotal > cashReceived + cardAmount) {
+      ERPAlert.show({
+        icon: "warning",
+        title: "Credit Limit Exceeded",
+        text: `${creditRes.message}. Please proceed with Cash/Bank receipt amount`,
+        confirmButtonText: "OK",
+      });
+      return false;
+    }
+  }
+}
+
+/* ---------------- WARN ---------------- */
+if (creditMode === "Warn") {
+  if (creditRes.exceeded) {
+    ERPAlert.show({
+      icon: "warning",
+      title: "Warning",
+      text: creditRes.message,
+      confirmButtonText: "OK",
+    });
+  }
+}
 
     // Stock update restriction
 

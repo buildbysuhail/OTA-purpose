@@ -56,7 +56,6 @@ export const useUserRights = () => {
     const userTypeCode = __userSession.userTypeCode;
     const branchId = __userSession.currentBranchId;
     const userId = __userSession.userId;
-debugger;
     if (userTypeCode === "BA" || userTypeCode === "CA") {
       
       let has = planRights?.includes(formCode) ?? false; 
@@ -141,7 +140,6 @@ debugger;
     action: UserAction
   ): string[] => {
     const userTypeCode = __userSession?.userTypeCode;
-debugger;
     const planRights = __clientSession.planFormCodes?.split(",");
 
     // Automatically grant rights if userTypeCode is "BA" or "CA"

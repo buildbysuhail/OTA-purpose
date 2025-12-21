@@ -75,27 +75,27 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
       return menuitems;
     }
 
-  const filterItems = (items: any[]): any[] => {
-    const result: any[] = [];
-    for (const item of items) {
-      if (item.menutitle !== undefined) {
-        result.push(item);
-        continue;
-      }
-      const matches = item.title?.toLowerCase().includes(searchTerm.toLowerCase());
-      const childMatches = item.children ? filterItems(item.children) : [];
-      if (matches || childMatches.length > 0) {
-        if (childMatches.length > 0) {
-          item.children = childMatches; // preserve same object reference
+    const filterItems = (items: any[]): any[] => {
+      const result: any[] = [];
+      for (const item of items) {
+        if (item.menutitle !== undefined) {
+          result.push(item);
+          continue;
         }
-        result.push(item);
+        const matches = item.title?.toLowerCase().includes(searchTerm.toLowerCase());
+        const childMatches = item.children ? filterItems(item.children) : [];
+        if (matches || childMatches.length > 0) {
+          if (childMatches.length > 0) {
+            item.children = childMatches; // preserve same object reference
+          }
+          result.push(item);
+        }
       }
-    }
-    return result;
-  };
+      return result;
+    };
 
-  return filterItems(menuitems);
-}, [menuitems, searchTerm]);
+    return filterItems(menuitems);
+  }, [menuitems, searchTerm]);
   const extractRights = (items: any[]): string[] => {
     return items.flatMap((item) => {
       const rights = item.rights ? [item.rights] : [];
@@ -106,18 +106,20 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
 
   useEffect(() => {
     if (type == "settings") {
+      debugger
+      ;
       let st = menuitems.map((parent: any) => {
         const filteredChildren = parent.children?.filter(
           (child: any) =>
-            hasRight(child.formCode, UserAction.Show)
+            !child.formCode || hasRight(child.formCode, UserAction.Show)
         );
         return {
           ...parent,
           children: filteredChildren,
         };
       })
-      .filter((parent: any) => parent.children?.length > 0);
-;
+        .filter((parent: any) => parent.children?.length > 0);
+      ;
       if (userSession.userTypeCode == "BA") {
         st = st.filter((x: any) => x.title != "branches");
       }
@@ -125,8 +127,9 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
       if (userSession.userTypeCode == "BA") {
         st = st.filter((x: any) => x.title != "branch_info");
       }
-      const sd = st.map((x: any) =>
-        x.children?.map((item: any) => {
+      debugger;
+      const sd = st.map((parent: any) => {
+        const filteredChildren =  parent.children?.map((item: any) => {
           item.visible = true;
           item.disabled = false;
           if (item.title === "refresh_all_branches") {
@@ -191,15 +194,22 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
           ) {
             item.visible = false;
           }
+          return item; // <-- Make sure this is not on a new line after `return`
         })
+        return {
+          ...parent,
+          children: filteredChildren,
+        };
+      }
       );
+      debugger;
       setMenuitems(sd);
     } else if (type == "reports") {
       let st = menuitems;
       setMenuitems(getFilteredReports(st, clientSession, applicationSettings, hasRight));
     } else if (type == "erp") {
       let st: [] = [];
-debugger;
+      debugger;
       st = menuitems;
 
       const allRights = extractRights(menuitems).filter((r) => r && r.trim() !== "");
@@ -949,10 +959,10 @@ debugger;
       e.preventDefault();
       const prevIndex = (currentIndex - 1 + focusable.length) % focusable.length;
       focusable[prevIndex]?.focus();
-    } 
+    }
     else if (e.key === "ArrowDown") {
       e.preventDefault();
-    } 
+    }
     else if (e.key === "Enter") {
       e.preventDefault();
       const current = focusable[currentIndex];
@@ -964,7 +974,7 @@ debugger;
     const inputClassName = `w-full px-3 py-1 ${appState.mode === "light" ? "bg-white" : "!bg-gray-800"} border rounded-md ${appState.mode === "light" ? "border-gray-300" : "border-gray-600"} text-xs placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[rgb(${appState.colorPrimaryRgb})] dark:focus:ring-[rgb(${appState.colorPrimaryRgb}/0.5)] focus:border-[rgb(${appState.inputBox.borderFocus})] ${appState.mode === "light" ? "text-gray-800" : "text-gray-200"}`;
     return (
       <Fragment>
-        <div 
+        <div
           id="responsive-overlay"
           onClick={() => {
             menuClose();
@@ -1023,11 +1033,11 @@ debugger;
                       if (e.key === "ArrowDown") {
                         e.preventDefault();
                         const elmnts = document.getElementsByClassName("first-menu-link-navigate-helper");
-                        if(elmnts && elmnts.length > 0) {
+                        if (elmnts && elmnts.length > 0) {
                           const fdf = elmnts[0] as any;
-                          fdf?.focus(); 
+                          fdf?.focus();
                         }
-                        
+
                       }
                     }}
                   />

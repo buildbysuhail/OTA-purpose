@@ -23,7 +23,7 @@ export interface ApplicationAccountSettings {
     minimumShiftDuration: number;
     // Checkbox fields
     allowMinimumShiftDuration: boolean;
-    blockOnCreditLimit: 'Ignore' | 'Block';
+    blockOnCreditLimit: 'Ignore' | 'Block' | 'Warn' | 'Allow Cash Sales';
     maintainCostCenter: boolean;
     allowSalesCounter: boolean;
     maintainProjectSite: boolean;

@@ -11,7 +11,7 @@ export default defineConfig({
   },
   build: {
     // outDir: 'C:\\inetpub\\wwwroot',
-    outDir: 'D:\\Host\\Polosys\\PolosysERP.UI',
+    outDir: 'C:\\Host\\Polosys\\PolosysERP.UI',
     chunkSizeWarningLimit: 50000,
     rollupOptions: {
       onwarn(warning, warn) {

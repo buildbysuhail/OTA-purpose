@@ -210,7 +210,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const popupData = useSelector((state: RootState) => state?.PopupData);
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
-  const formState = useAppSelector(
+  const formState = useSelector(
     (state: RootState) => state.InventoryTransaction
   );
   const currentBranch = useCurrentBranch();
@@ -750,11 +750,6 @@ const dataWarranty = voucherType != "LPO" ? await api.getWithCacheAsync(
           false
         );
 
-        employeeID = userSession.employeeId ?? 0;
-        // if (["PR", "PQ", "PO"].includes(voucherType as any) && employeeID <= 0) {
-        //   const emps = await getApLocalDataByUrl(`${Urls.inv_transaction_base}${transactionType}/Data/Employee/`);
-        //   employeeID = emps && emps.length > 0 ? emps[0].id : employeeID;
-        // }
       }
 
 debugger;
@@ -776,16 +771,33 @@ debugger;
               voucherForm: formType ?? "",
               transactionDate: softwareDate.toISOString(),
               purchaseInvoiceDate: moment().local().toISOString(),
-              employeeID: employeeID,
               voucherNumber: _voucherNo,
               inventoryLedgerID:
-                voucherType == VoucherType.PurchaseReturn
-                  ? applicationSettings.inventorySettings?.defaultPurchaseReturnAcc
-                  : voucherType == "DNS"
-                    ? applicationSettings.inventorySettings?.defaultSalesAcc
-                    : applicationSettings.inventorySettings?.defaultPurchaseAcc,
+                voucherType == VoucherType.SalesReturn
+                  ? applicationSettings.inventorySettings?.defaultSalesReturnAcc
+                  :  applicationSettings.inventorySettings?.defaultSalesAcc,
               ledgerID: applicationSettings.accountsSettings?.defaultCashAcc,
-
+              fromWarehouseID:
+        applicationSettings.inventorySettings.maintainWarehouse
+          ? TransactionFormStateInitialData.userConfig?.presetWarehouseId ?? 0 > 0
+            ? TransactionFormStateInitialData.userConfig?.presetWarehouseId??0
+            : applicationSettings.accountsSettings.allowSalesCounter &&
+              (TransactionFormStateInitialData.userConfig?.counterWiseWarehouseId ?? 0) > 0
+              ? TransactionFormStateInitialData.userConfig?.counterWiseWarehouseId ?? 0
+              : applicationSettings.inventorySettings.defaultWareHouse
+          : (TransactionFormStateInitialData.transaction.master.fromWarehouseID??0),
+          costCentreID:
+        TransactionFormStateInitialData.userConfig?.presetCostenterId ?? 0 > 0
+          ? TransactionFormStateInitialData.userConfig?.presetCostenterId ?? 0
+          : TransactionFormStateInitialData.transaction.master.costCentreID,
+      employeeID:formState.userConfig?.holdSalesMan ? formState.transaction.master.employeeID : userSession.employeeId > 0
+        ? userSession.employeeId
+        : voucher.master.employeeID,
+        hasroundOff:  !(
+          applicationSettings.mainSettings.pOSRoundingMethod === "No Rounding" ||
+          (applicationSettings.mainSettings.pOSRoundingMethod === "Not Set" &&
+            applicationSettings.mainSettings.roundingMethod === "No Rounding")
+        ),
             },
           },
           formElements: {
@@ -812,6 +824,15 @@ debugger;
           undefined,
           transactionMasterID
         )) as TransactionFormState;
+
+        _formState = {
+          ..._formState,
+          oldLedgerId:
+            _formState.transaction.master.ledgerID,
+          previousGrandTotal:
+            _formState.transaction.master.grandTotal,
+            
+        }
       }
       _formState.userConfig = userConfig??{};
       _formState.dataWarranty = dataWarranty;
@@ -824,35 +845,7 @@ debugger;
 
 
 
-      ////////////////////////////////////////////////////
-      _formState.transaction.master.fromWarehouseID =
-        applicationSettings.inventorySettings.maintainWarehouse
-          ? _formState.userConfig?.presetWarehouseId ?? 0 > 0
-            ? _formState.userConfig?.presetWarehouseId??0
-            : applicationSettings.accountsSettings.allowSalesCounter &&
-              (_formState.userConfig?.counterWiseWarehouseId ?? 0) > 0
-              ? _formState.userConfig?.counterWiseWarehouseId ?? 0
-              : applicationSettings.inventorySettings.defaultWareHouse
-          : (_formState.transaction.master.fromWarehouseID??0)
-      _formState.transaction.master.costCentreID =
-        _formState.userConfig?.presetCostenterId ?? 0 > 0
-          ? _formState.userConfig?.presetCostenterId ?? 0
-          : _formState.transaction.master.costCentreID
-
-      _formState.transaction.master.inventoryLedgerID = applicationSettings.inventorySettings.defaultSalesAcc
-      _formState.transaction.master.employeeID = _formState.userConfig.holdSalesMan ? formState.transaction.master.employeeID : userSession.employeeId > 0
-        ? userSession.employeeId
-        : _formState.transaction.master.employeeID,
-
-        _formState.transaction.master.hasroundOff = !(
-          applicationSettings.mainSettings.pOSRoundingMethod === "No Rounding" ||
-          (applicationSettings.mainSettings.pOSRoundingMethod === "Not Set" &&
-            applicationSettings.mainSettings.roundingMethod === "No Rounding")
-        )
-      _formState.transaction.master.costCentreID = _formState.userConfig?.presetCostenterId ?? 0 > 0
-        ? _formState.userConfig?.presetCostenterId ?? 0
-        : _formState.transaction.master.costCentreID,
-        _formState.transaction.master.inventoryLedgerID = Number(applicationSettings.inventorySettings.defaultSalesAcc || 0),
+      
         _formState.formElements = {
           ..._formState.formElements,
           ////////////////////////

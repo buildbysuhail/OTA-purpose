@@ -1560,7 +1560,8 @@ debugger;
   const attachMaster = (formState: TransactionFormState) => {
     const master: TransactionMaster = {
       ...formState.transaction.master,
-      salesManID: formState.transaction.master.employeeID
+      salesManID: formState.transaction.master.employeeID,
+      voucherPrefix: formState.transaction.master.voucherPrefix || "",
     };
 
     master.partyName = !isNullOrUndefinedOrEmpty(master.displayName)

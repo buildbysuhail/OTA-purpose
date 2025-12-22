@@ -805,6 +805,9 @@ const Urls = {
   generate_compliance_csid: '/EInvoiceIntegrationSettings/generate-compliance-csid',
   generate_production_csid: 'EInvoiceIntegrationSettings/generate-production-csid',
   eInvoice_apiPortal_register: '/EInvoiceAPIPortal/register',
+  eInvoice_apiPortal_balance: '/EInvoiceAPIPortal/api-balance',
+  eInvoice_apiPortal_send_otp: '/EInvoiceAPIPortal/send-otp',
+  eInvoice_apiPortal_validate_otp: '/EInvoiceAPIPortal/validate-otp'
 
 };
 

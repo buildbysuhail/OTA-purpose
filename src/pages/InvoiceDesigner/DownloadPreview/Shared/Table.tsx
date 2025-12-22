@@ -110,21 +110,19 @@ const visibleColumns = accTableState?.filter((c) => c.show) ?? [];
       {data?.map((row, rowIndex) => (
         <View key={rowIndex} style={styles.tr} wrap={false}>
           {visibleColumns.map((col, idx) => {
-      // Get cell value
-      
         const splitData = String(col.field).split("___");
-          const group = splitData[0] as any;
-          const key = splitData[1];
-            let cellValue = "";
+        const group = splitData[0] as any;
+        const key = splitData[1];
+        let cellValue :any = ""; 
+        row?.[key  as keyof PrintDetailDto] ?? "";
+        if (group == "details") {
+          cellValue =   (row?.[key as keyof PrintDetailDto] ?? "");;
 
-            if (group === "details") {
-              cellValue = String(row?.[col.field as keyof PrintDetailDto] ?? "");
-            } 
-            else if (group === "details2") {
-              cellValue = String(row?.detail2Data?.[key as keyof InvDetail2ForPrint] ?? "");
-            }
+        }
+        else if (group == "details2") {
+          cellValue = row?.detail2Data?.[key as (keyof InvDetail2ForPrint)]
 
-
+        }
 
       // Check if text is Arabic
         const isArabic = containsArabicString(cellValue);

@@ -125,14 +125,36 @@ const LabelsEditor = <T,>({ currentTableState, onChange, }: ItemTableLabelDesign
                     onChange(item.field as keyof T, { label: e.target.value })
                   }
                 />
+                        {/* <ERPDataCombobox
+                                            id="arabicFont"
+                                            data={selectedComponent}
+                                            defaultValue={"Amiri"}
+                                            label={t("arabic_font")}
+                                            field={{
+                                              id: "arabicFont",
+                                              valueKey: "value",
+                                              labelKey: "label",
+                                            }}
+                                            options={[
+                                              { value: "NotoNaskhArabic", label: "NotoNaskhArabic" },
+                                              { value: "Amiri", label: "Amiri" },
+                                            ]}
+                                            onChange={(e) =>
+                                              handlePropertyChange("arabicFont", e.value)
+                                            }
+                                          /> */}
                 <ERPDataCombobox
+              
                   disabled={item.show != true}
                   id="tb_col_format"
                   label={t("format")}
                   field={{
+                    id: "tb_col_format",
                     labelKey: "label",
                     valueKey: "value"
                   }}
+                  data={item}
+                  defaultValue={"NONE"}
                   options={templateDesignerFormatOptions}
                   value={item.format}
                   onChange={(e) =>

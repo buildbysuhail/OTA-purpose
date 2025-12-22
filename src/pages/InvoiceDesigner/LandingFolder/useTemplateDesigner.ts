@@ -155,10 +155,11 @@ export const useTemplateDesigner = ({
             isAppGlobal
           )) as any;
         }
-
+          console.log("data for print",data);
+          
         setPrintData(data);
         
-           debugger
+           
         // Fetch template if needed
         if (manuvalTemplateFeatch) {
           let _template;
@@ -167,7 +168,7 @@ export const useTemplateDesigner = ({
             data?.master?.voucherForm,
             data?.master?.customerType
           );
-           debugger
+          
           if (!_template || _template.content == null){
                 _template = await getOrFetchTemplate(
             data?.master?.voucherType,
@@ -339,6 +340,7 @@ export const useTemplateDesigner = ({
           template_type: designerType,
 
         },
+
       } as TemplateState<unknown>;
       console.log(tmpTemplate);
       

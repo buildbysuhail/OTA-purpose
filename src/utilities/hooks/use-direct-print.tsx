@@ -89,6 +89,7 @@ export const useDirectPrint = () => {
   // Function to fetch template data (extracted from useTemplateDesigner)
   const fetchTemplateData = async (params: DirectPrintArgs) => {
     try {
+      debugger;
       let printData = params.data;
       if (params.masterIDParam && params.masterIDParam !=0){
         printData = (await loadPrintData(
@@ -197,7 +198,6 @@ export const useDirectPrint = () => {
           <SharedDownloadTemplate
             template={templateData.template}
             data={templateData.data}
-            isTemplateDesigner={false}
             qrCodeImages={templateData.qrCodeImages}
             AmountToArabic={templateData.amountInArabic}
             AmountToEnglish={templateData.amountInEnglish}
@@ -318,6 +318,6 @@ export const useDirectPrint = () => {
       closePrintJob();
     }
   }, []);
-
+ 
   return { directPrint };
 };

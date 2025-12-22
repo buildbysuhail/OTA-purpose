@@ -15,7 +15,7 @@ export interface AccountTransactionProps {
   qrCodeImages?: { [key: string]: string };
   AmountToEnglish?: any;
   AmountToArabic?: any;
-  isTemplateDesigner: boolean
+  isTemplateDesigner?: boolean
   isInvTrans?: boolean;
 }
 export type TemplateChangeHandler = {

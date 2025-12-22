@@ -1702,28 +1702,26 @@ export function bindDataForPrint(field: string, printData: PrintResponse,
   convertAmountToEnglish?: (amount: number, currency?: Currencies | undefined) => string,
   convertAmountToArabic?: (amount: number, currency?: Currencies | undefined) => string,
   rowIndex: number = 0): any {
+    if (!field) return "";
   const splitData = field.split("___");
   const group = splitData[0] as any;
   const key = splitData[1];
-console.log('bindDataForPrint');
 
-  if (isNullOrUndefinedOrEmpty(printData?.master))
-    return "";
+ 
+  if (isNullOrUndefinedOrEmpty(printData?.master)) return "";
   const master = printData?.master
   const details = printData?.details
   let val;
   if (group == "master") {
-console.log(key);
-console.log(master[key as (keyof PrintMasterDto)]);
    val =  master[key as (keyof PrintMasterDto)]
 
   }
   else if (group == "details") {
-    val = details[rowIndex]?.[key as (keyof PrintDetailDto)]
+    val = details?.[rowIndex]?.[key as keyof PrintDetailDto];
 
   }
   else if (group == "details2") {
-    val = details[rowIndex]?.detail2Data?.[key as (keyof InvDetail2ForPrint)]
+    val = details?.[rowIndex]?.detail2Data?.[key as keyof InvDetail2ForPrint];
 
   }
   else if (group == "custom") {
@@ -1733,96 +1731,21 @@ console.log(master[key as (keyof PrintMasterDto)]);
   //   return userSession.currentBranchDetails?.[key as keyof BranchDetails]
   // }
   else if (group == "org") {
-    val = printData.companyDetails?.[key as (keyof CompanyDetailsForPrint)]
+   val = printData.companyDetails?.[key as keyof CompanyDetailsForPrint];
   }
   else if (group == "headerFooter") {
-    val = printData.headerFooter?.[key as keyof HeaderFooter]
+      val = printData.headerFooter?.[key as keyof HeaderFooter];
   }
   else if (group == "customer") {
     val = printData?.master?.partyData?.[key as keyof PartyDetailsForPrint]
   }
+  if (isNullOrUndefinedOrEmpty(val)) {
+    return "";
+  }
+
   return val = formatValue(val, format)
 
 }
-// format field values based on format specification
-// const getFormatedValues = useCallback((value, format) => {
-//   let t = "";
-//   const ws = " ".repeat(200);
-
-//   if (isQRCodeFont(fldFont)) return value;
-
-//   if (format && format.includes("#") && !format.includes("**")) {
-//     t = parseFloat(value || 0).toLocaleString(undefined, {
-//       minimumFractionDigits: format.includes(".") ? 2 : 0,
-//       maximumFractionDigits: format.includes(".") ? 2 : 0
-//     });
-//   } else if (format && format.toUpperCase() === "QTY") {
-//     t = Math.round(parseFloat(value || 0)).toString();
-//   } else if (format && format.toUpperCase() === "QTY1") {
-//     const t1 = parseFloat(value || 0);
-//     const t2 = Math.round(t1);
-//     t = t1 !== t2 ? t1.toFixed(1) : t2.toString();
-//   } else if (format && format.toUpperCase() === "QTY2") {
-//     const t1 = parseFloat(value || 0);
-//     const t2 = Math.round(t1);
-//     t = t1 !== t2 ? t1.toFixed(2) : t2.toString();
-//   } else if (format && format.toUpperCase() === "QTY3") {
-//     const t1 = parseFloat(value || 0);
-//     const t2 = Math.round(t1);
-//     t = t1 !== t2 ? t1.toFixed(3) : t2.toString();
-//   } else if (format && format.toUpperCase() === "AR_NUM") {
-//     t = Math.round(parseFloat(value || 0)).toString();
-//     t = getArabicNumber(t);
-//   } else if (format && format.toUpperCase() === "SHRINK") {
-//     t = value;
-//   } else if (format && format.toUpperCase() === "AR_DIG2") {
-//     t = parseFloat(value || 0).toFixed(2);
-//     t = getArabicNumber(t);
-//   } else if (format && format.toUpperCase() === "AR_DATE") {
-//     t = transDate.toLocaleDateString('en-GB');
-//     t = getArabicDateNumber(t);
-//   } else if (format && format.toUpperCase() === "AR_DIG3") {
-//     t = parseFloat(value || 0).toFixed(3);
-//     t = getArabicNumber(t);
-//   } else if (format && (format.includes("d") || format.includes("M") || format.includes("y"))) {
-//     t = new Date(value).toLocaleDateString();
-//   } else if (format && (format.includes("H") || format.includes("h") || format.includes("m") || format.includes("s"))) {
-//     t = new Date(value).toLocaleTimeString();
-//   } else if (format && format.toUpperCase() === "NONE") {
-//     t = value;
-//   } else if (format && format.toUpperCase() === "BIZ") {
-//     const num = parseFloat(value || 0);
-//     t = num === 0 ? "" : num.toFixed(2);
-//   } else {
-//     t = value;
-//   }
-
-//   // Apply alignment
-//   // const fieldLen = parseInt(fldLength || t.length);
-
-//   // if (fldAlign === "Left") {
-//   //   t = (t + ws).substring(0, fieldLen);
-//   // } else if (fldAlign === "Right" || fldAlign === "Right Justify") {
-//   //   t = (ws + t).slice(-fieldLen);
-//   // } else if (fldAlign === "Center") {
-//   //   const totalPad = fieldLen - t.length;
-//   //   const leftPad = Math.floor(totalPad / 2);
-//   //   const rightPad = totalPad - leftPad;
-//   //   t = " ".repeat(leftPad) + t + " ".repeat(rightPad);
-//   //   t = t.substring(0, fieldLen);
-//   // } else {
-//   //   try {
-//   //     t = (t + ws).substring(0, fieldLen);
-//   //   } catch (error) {
-//   //     // Handle error
-//   //   }
-//   // }
-
-//   return t;
-// }, [fldFont, fldAlign, fldLength, transDate]);
-
-// Detail printing functions
-
 
 export const addTemplateToStore = async (data: TemplateState<unknown>, id?: number) => {
   if (!data) {

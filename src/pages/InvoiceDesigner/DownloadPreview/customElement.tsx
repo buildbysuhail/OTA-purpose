@@ -26,9 +26,9 @@ export const RenderComponentPDF: React.FC<Props> = ({
     left: component.x,
     top: component.y,
     height: component.height || 50,
-    maxHeight: component.height| 50, 
+    maxHeight: component.height|| 50, 
     width: component.width || 50,
-    maxWidth: component.width| 50,     
+    maxWidth: component.width|| 50,     
     transform: component.rotate ? `rotate(${component.rotate}deg)` : undefined,
   };
 
@@ -147,7 +147,7 @@ const DEFAULT_FONT_CONFIG = {
 
   );  
     case DesignerElementType.image:
-      const imgUrl = component?.imgFromDevice ?component.content : bindDataForPrint(component.content, data);
+      const imgUrl = component?.imgFromDevice ?component.content : bindDataForPrint(component?.content, data);
       return (
       <View style={baseStyle}>       
       <Image

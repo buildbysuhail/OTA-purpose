@@ -216,13 +216,13 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
               ? `${BORDER_WIDTH}pt solid ${tableMasterState?.tableColBorderColor || "#000"}`
               : undefined;
       // Get cell value
-      
+
         const splitData = String(col.field).split("___");
   const group = splitData[0] as any;
   const key = splitData[1];
-        let cellValue = ""; row?.[String(col.field)] ?? "";
+        let cellValue = ""; row?.[String(key)] ?? "";
  if (group == "details") {
-    cellValue = row?.[String(col.field)] ?? ""
+    cellValue = row?.[String(key)] ?? ""
 
   }
   else if (group == "details2") {

@@ -4557,7 +4557,7 @@ if (creditMode === "Warn") {
 
   try {
     const taxPerc = getMaxTaxPercInItemList();
-    if (taxPerc <= 0) return;
+    // if (taxPerc < 0) return;
 
     const billDiscTemp = billDiscount;
 

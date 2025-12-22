@@ -20,7 +20,7 @@ const BillDiscountInput: React.FC<BillDiscountInputProps> = ({ formState, dispat
       const { value, onChange } = useDebouncedInput(
         formState.billDiscountPerc || 0,
         (debouncedValue) => {
-          const netAmount = formState.transaction.master.grandTotal || 0;
+          const netAmount = formState.summary.total || 0;
           const discPerc = Number(debouncedValue);
           const billDisc = (netAmount * discPerc) / 100;
          
@@ -45,7 +45,7 @@ debugger;
     const { value: valuePerc, onChange: onChangePerc } = useDebouncedInput(
       formState.transaction.master.billDiscount || 0,
       (debouncedValue) => {
-        const netAmount = formState.transaction.master.grandTotal || 0;
+        const netAmount = formState.summary.total || 0;
         const BillDisc = Number(debouncedValue);
         const discPerc = netAmount > 0 ? (BillDisc / netAmount) * 100 : 0;
 

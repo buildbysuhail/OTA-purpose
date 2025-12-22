@@ -4568,8 +4568,7 @@ if (creditMode === "Warn") {
     );
 
     let taxOnDisc = roundAwayFromZero(
-      billDiscTemp - netDisc,
-      2
+      (billDiscTemp* taxPerc/ 100),3
     );
     if (Math.abs(billDiscount * 100 - taxOnDisc * 100) >= 0.75) {
   const dp = applicationSettings.mainSettings.decimalPoints;

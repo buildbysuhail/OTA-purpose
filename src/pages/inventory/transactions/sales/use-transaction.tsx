@@ -4547,11 +4547,10 @@ if (creditMode === "Warn") {
       // showAlert(err.message || "GiftOnBilling Error");
     }
   };
-  const applyTaxOnBillDiscount = async () => {
+  const applyTaxOnBillDiscount = async (billDiscount: number, ) => {
     debugger;
   if (
-    !applicationSettings.branchSettings.enableTaxOnBillDiscount ||
-    !applicationSettings.branchSettings.maintainKSA_EInvoice
+    !applicationSettings.branchSettings.enableTaxOnBillDiscount 
   ) {
     return;
   }
@@ -4560,12 +4559,11 @@ if (creditMode === "Warn") {
     const taxPerc = getMaxTaxPercInItemList();
     if (taxPerc <= 0) return;
 
-    let billDisc = Number(formState.transaction.master.billDiscount || 0);
-    const billDiscTemp = billDisc;
+    const billDiscTemp = billDiscount;
 
     // Equivalent to MidpointRounding.AwayFromZero (2 decimals)
     const netDisc = roundAwayFromZero(
-      billDisc / (1 + taxPerc / 100),
+      billDiscount / (1 + taxPerc / 100),
       2
     );
 

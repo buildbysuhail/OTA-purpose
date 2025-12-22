@@ -989,6 +989,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     handleKeyDown={handleKeyDown}
                     footerLayout={footerLayout}
                     applyDiscountsToItems={applyDiscountsToItems}
+                applyTaxOnBillDiscount={applyTaxOnBillDiscount}
                   />
                 </div>
               </div>
@@ -1372,6 +1373,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 t={t}
                 handleKeyDown={handleKeyDown}
                 applyDiscountsToItems={applyDiscountsToItems}
+                applyTaxOnBillDiscount={applyTaxOnBillDiscount}
               />
             </div>
             <ERPTextarea

@@ -11,9 +11,10 @@ interface BillDiscountInputProps extends VoucherElementProps {
   dispatch: any;
   footerLayout?: "horizontal" | "vertical";
   applyDiscountsToItems?: () => void; // Add this line
+  applyTaxOnBillDiscount: (billDiscount: number) => void;
 }
 
-const BillDiscountInput: React.FC<BillDiscountInputProps> = ({ formState, dispatch, t, handleKeyDown, footerLayout, applyDiscountsToItems, }) => {
+const BillDiscountInput: React.FC<BillDiscountInputProps> = ({ formState, dispatch, t, handleKeyDown, footerLayout, applyDiscountsToItems, applyTaxOnBillDiscount}) => {
   
      // Find discount amount from percentage
       const { value, onChange } = useDebouncedInput(
@@ -22,12 +23,8 @@ const BillDiscountInput: React.FC<BillDiscountInputProps> = ({ formState, dispat
           const netAmount = formState.netAmount || 0;
           const discPerc = Number(debouncedValue);
           const billDisc = (netAmount * discPerc) / 100;
-          // Need to add in nexxt level
-          // txtTaxOnDisc.Text = "0.00";
-          // txtBillDiscount.Text = BillDisc.ToString("##0.00");
-          // CalculateTaxOnDiscount();
-          // CalculateTotal();
-
+         
+debugger;
           dispatch(
             formStateHandleFieldChange({
               fields: { billDiscountPerc: discPerc },
@@ -39,6 +36,7 @@ const BillDiscountInput: React.FC<BillDiscountInputProps> = ({ formState, dispat
               fields: { billDiscount: billDisc },
             })
           );
+          applyTaxOnBillDiscount && applyTaxOnBillDiscount(billDisc);
         },
         100
     );
@@ -50,12 +48,6 @@ const BillDiscountInput: React.FC<BillDiscountInputProps> = ({ formState, dispat
         const netAmount = formState.netAmount || 0;
         const BillDisc = Number(debouncedValue);
         const discPerc = netAmount > 0 ? (BillDisc / netAmount) * 100 : 0;
-        // in the default code - use if needed
-        // if(BillDisc === 0){
-        //   txtTaxOnDisc.Text = "0.00";
-        // }
-        // txtBillDiscPerc.Text = BilldiscPerc.ToString();
-        //  CalculateTaxOnDiscount();
 
         dispatch(
           formStateMasterHandleFieldChange({
@@ -68,6 +60,7 @@ const BillDiscountInput: React.FC<BillDiscountInputProps> = ({ formState, dispat
             fields: { billDiscountPerc: discPerc },
           })
         );
+        applyTaxOnBillDiscount && applyTaxOnBillDiscount(BillDisc);
       },
       100
     );
@@ -77,7 +70,7 @@ const BillDiscountInput: React.FC<BillDiscountInputProps> = ({ formState, dispat
       <ERPInput
       localInputBox={formState?.userConfig?.inputBoxStyle}
       fetching={formState.transactionLoading}
-      id="billDiscount"
+      id="billDiscountPerc"
       type="number"
       labelDirection={footerLayout === "vertical" ? "horizontal" : "vertical"}
       label={t(formState.formElements.billDiscount.label)}

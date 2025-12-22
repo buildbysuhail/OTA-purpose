@@ -764,7 +764,9 @@ debugger;
                  })) : []};
                    _formState = {
           ...TransactionFormStateInitialData,
-              initialFormType: formType ?? "",
+              initialFormType: formType ?? "",              
+              initialVrType: voucherType ?? "",
+              initialVrPrefix: voucherPrefix ?? "",
           transaction: {
             ...voucher,
             master: {
@@ -1250,6 +1252,13 @@ debugger;
 
         formCode: formCode ?? "",
         title:
+          (formType == undefined || formType.trim() == ""
+            ? t(title)
+            : clientSession.isAppGlobal ?
+              getCustomerTypeAndTitle(_formState.transaction.master.voucherForm, _formState.title, clientSession.isAppGlobal, applicationSettings.branchSettings.maintainKSA_EInvoice).formTitle
+              :
+              t(title) + "[" + formType + "]") ?? "",
+        initialTitle:
           (formType == undefined || formType.trim() == ""
             ? t(title)
             : clientSession.isAppGlobal ?

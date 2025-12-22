@@ -4567,10 +4567,22 @@ if (creditMode === "Warn") {
       2
     );
 
-    const taxOnDisc = roundAwayFromZero(
+    let taxOnDisc = roundAwayFromZero(
       billDiscTemp - netDisc,
       2
     );
+    if (Math.abs(billDiscount * 100 - taxOnDisc * 100) >= 0.75) {
+  const dp = applicationSettings.mainSettings.decimalPoints;
+
+  // MidpointRounding.AwayFromZero equivalent
+  const factor = Math.pow(10, dp);
+  taxOnDisc =
+    Math.sign(taxOnDisc) *
+    Math.round(Math.abs(taxOnDisc) * factor) /
+    factor;
+} else {
+  taxOnDisc = formState.transaction.master.taxOnDiscount || 0;
+}
     const res =await calculateTotal(formState.transaction.master, formState.summary as SummaryItems, formState.formElements, { result: {transaction: {
             master: { 
               taxOnDiscount: taxOnDisc,

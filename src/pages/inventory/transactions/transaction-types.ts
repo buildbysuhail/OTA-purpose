@@ -641,6 +641,7 @@ export interface TransactionFormState {
   tenderOpen?: boolean;
   templateChooserModal?: boolean;
   srOpen?: boolean;
+  vatChecked?: boolean;
 
   //Sales
   privilegeCardOpen?: boolean;

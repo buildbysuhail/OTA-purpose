@@ -24,7 +24,7 @@ import { DeepPartial } from "redux";
 import ExcelJS from "exceljs";
 import { sanitizeDataAdvanced } from "../../../../utilities/Utils";
 import { getStorageString, setStorageString, } from "../../../../utilities/storage-utils";
-import { getApLocalDataByUrl } from "../../../../redux/cached-urls";
+import { getApLocalData, getApLocalDataByUrl } from "../../../../redux/cached-urls";
 import { formStateHandleFieldChangeKeysOnly, formStateHandleFieldChange, formStateTransactionMasterHandleFieldChange, formStateTransactionUpdate, clearState, formStateMasterHandleFieldChange, formStateClearDetails, formStateClearAttachments, formStateTransactionDetailsRowRemove, formStateSetDetails, updateFormElement, } from "../reducer";
 import { transactionInitialData, initialInventoryTotals, TransactionMasterInitialData, initialTransactionDetailData, initialTransactionDetails2, initialUserConfig, } from "../transaction-type-data";
 import { TransactionDetail, UserConfig, TransactionFormState, SummaryItems, TransactionMaster, TransactionData, LoadProductDetailsByAutoBarcodeProps, CommonParams, DataAutoBarcode, ExcelRowData, LoadSrParams, } from "../transaction-types";
@@ -4093,9 +4093,64 @@ if (creditMode === "Warn") {
                 ? _formState.transaction?.master?.address4
                 : ledgerData?.mobileNumber ?? "",
               address3: ledgerData?.address3 ?? "",
+              address2: ledgerData?.address2 ?? "",
             },
           },
         };
+        if (applicationSettings.branchSettings.maintainTaxes) {
+          const vatNo = ledgerData?.taxNumber?.trim() ?? "";
+
+          if (vatNo.length > 0) {
+            if (applicationSettings.branchSettings.countryName === 1) {
+              const isValidVat =
+                vatNo.length === 15 &&
+                vatNo.startsWith("3") &&
+                vatNo.endsWith("3");
+
+              if (!isValidVat) {
+                await ERPAlert.show({
+                  icon: "error",
+                  title: "Invalid VAT Number",
+                  text: "Invalid VAT Registration number. Please correct and try again",
+                });
+                return;
+              }
+            }
+          }
+        }
+
+        if (formState.formElements?.priceCategory.visible) {
+
+        const priceCategoryId = Number(ledgerData?.PriceCategoryID || 0);
+        const partyCategoryId = Number(ledgerData?.PartyCategoryID || 0);
+
+        if (priceCategoryId > 0) {
+            ret = {
+            ...ret,
+            transaction: {
+              ...ret.transaction,
+              master: {
+                ...ret.transaction?.master,
+                priceCategoryID: priceCategoryId,
+              },
+            },
+          };
+        }
+
+        // DB-specific rule
+        if (userSession.dbIdValue === "543140180640") {
+          const datas = await getApLocalData("PriceCategories");
+          const data = datas?.find((dc: any) => dc.id === priceCategoryId);
+          if (data && data.name  === "Delivery Customer") {
+            await ERPAlert.show({
+              icon: "info",
+              title: "Delivery Customer",
+              text: "Delivery Customer.!",
+            });
+          }
+        }
+        // setPartyColor(partyCategoryId);
+      }
 
         if (!clientSession.isAppGlobal) {
           let customerType = "";

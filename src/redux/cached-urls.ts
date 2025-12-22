@@ -58,7 +58,6 @@ const CachedUrls = {
     ),
   ],
   ProjectsByLedger: [
-    btoa(Urls.data_projects_by_ledgerid),
     ...transactionRoutes.map((x: any) =>
       btoa(
         `/${x.transactionBase == TransactionBase.Accounts

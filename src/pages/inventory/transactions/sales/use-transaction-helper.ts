@@ -1189,17 +1189,17 @@ debugger;
       detail.profit = row.totalProfit;
 
       // Sales pricing
-      detail.salesPrice = getFormattedValueIgnoreRoundingToNumber(
-        Number(row.stdSalesPrice || 0)
-      );
+      // detail.salesPrice = getFormattedValueIgnoreRoundingToNumber(
+      //   Number(row.stdSalesPrice || 0)
+      // );
       detail.ratePlusTax = getFormattedValueIgnoreRoundingToNumber(
         Number(row.rateWithTax || 0)
       );
 
       // Fallback sales price
-      if (Number(detail.salesPrice || 0) === 0) {
-        detail.salesPrice = row.stdSalesPricePB;
-      }
+      // if (Number(detail.salesPrice || 0) === 0) {
+      //   detail.salesPrice = row.stdSalesPricePB;
+      // }
 
       detail.margin = row.marginPer;
       detail.stock = row.stock;

@@ -2122,7 +2122,7 @@ debugger;
 
             {/* header starts here */}
             <TransactionHeader
-              // inputRefs={inputRefs}
+              inputRefs={inputRefs}
               onHeightChange={handleHeightChange}
               formState={formState}
               dispatch={dispatch}
@@ -2344,7 +2344,7 @@ debugger;
               <div className="flex items-center justify-between gap-2 bg-white px-4 py-2 shadow-md text-gray-600 h-[70px]">
                 <div className="flex items-center gap-2 flex-1">
                   <TransactionHeader
-                    // inputRefs={inputRefs}
+                    inputRefs={inputRefs}
                     focusToNextColumn={focusToNextColumn}
                     formState={formState}
                     dispatch={dispatch}

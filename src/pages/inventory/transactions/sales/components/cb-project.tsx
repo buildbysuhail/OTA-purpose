@@ -18,7 +18,7 @@ const Project = React.forwardRef<HTMLInputElement, ProjectProps>(({
 }, ref) => {
   return (
     <>
-      {formState.formElements.cbProject.visible && !isNullOrUndefinedOrZero(formState.transaction.master.ledgerID) && (
+      {formState.formElements.cbProject.visible && !isNullOrUndefinedOrZero(formState.transaction.master.ledgerID) && formState.transaction.master.ledgerID > 0 && (
         <ERPDataCombobox
           localInputBox={formState?.userConfig?.inputBoxStyle}
           enableClearOption={false}

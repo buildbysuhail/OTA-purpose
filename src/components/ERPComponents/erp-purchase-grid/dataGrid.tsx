@@ -194,7 +194,7 @@ interface RowData {
     excludedColumns?: (keyof TransactionDetail)[]
   ) => { column: string; rowIndex: number } | null;
   currentCell?: { column: string; rowIndex: number; data: TransactionDetail };
-  setCurrentCell: React.Dispatch<React.SetStateAction<CurrentCell | undefined>>;
+  setCurrentCell:(data: any) => void;
   gridFontSize: number;
   gridIsBold: boolean;
   rowHeight: number;
@@ -2082,6 +2082,10 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
     const [currentCell, setCurrentCell] = useState<CurrentCell | undefined>(
       formState.currentCell
     );
+    
+  const _setCurrentCell = (data: any) =>  {
+    setCurrentCell(data)
+  };
     const [prevCell, setPrevCell] = useState<number>(
       formState.currentCell?.rowIndex ?? -1
     );
@@ -2259,6 +2263,8 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
             );
           }
         }
+        // Need to verify - safwan sir
+        dispatch(formStateHandleFieldChangeKeysOnly({fields:{currentCell: currentCell}}))
         if (
           prevCell !== currentCell?.rowIndex &&
           isNullOrUndefinedOrZero(currentCell?.data?.productID
@@ -2940,7 +2946,7 @@ const hidColumns: string[] = [
                       focusCell={focusCell}
                       nextCellFind={nextCellFind}
                       currentCell={currentCell}
-                      setCurrentCell={setCurrentCell}
+                      setCurrentCell={_setCurrentCell}
                       gridFontSize={gridFontSize}
                       gridIsBold={gridIsBold}
                       dir={appState.direction as "ltr" | "rtl"}

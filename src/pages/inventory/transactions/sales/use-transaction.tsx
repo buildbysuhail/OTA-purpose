@@ -4581,12 +4581,11 @@ if (creditMode === "Warn") {
     Math.round(Math.abs(taxOnDisc) * factor) /
     factor;
 } else {
-  taxOnDisc = formState.transaction.master.taxOnDiscount || 0;
+  taxOnDisc = billDiscount == 0 ? 0 : formState.transaction.master.taxOnDiscount || 0;
 }
     const res =await calculateTotal(formState.transaction.master, formState.summary as SummaryItems, formState.formElements, { result: {transaction: {
             master: { 
               taxOnDiscount: taxOnDisc,
-              billDiscount: netDisc
             }
         }} });
     dispatch(

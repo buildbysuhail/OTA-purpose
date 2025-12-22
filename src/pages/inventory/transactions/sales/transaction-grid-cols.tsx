@@ -118,7 +118,7 @@ export const purchaseGridCol = (
         width: 130,
         alignment: "right",
         allowEditing: true,
-        // decimalPoint: applicationSettings.mainSettings.decimalPoints,
+        decimalPoint: 3,
       },
       {
         dataField: "unitPrice",
@@ -127,6 +127,7 @@ export const purchaseGridCol = (
         allowEditing: true,
         width: 130,
         alignment: "right",
+        decimalPoint:3,
       },
       {
         dataField: "gross",
@@ -725,6 +726,7 @@ export const purchaseGridCol = (
         width: 140,
         readOnly: true,
         alignment: "right",
+        decimalPoint:applicationSettings?.mainSettings?.decimalPoints,
       },
       {
         dataField: "expDate",

@@ -276,6 +276,12 @@ export const useNumberFormat = (): UseNumberFormatResult => {
   return Math.sign(value) *
          (Math.round((Math.abs(value) + Number.EPSILON) * factor) / factor);
   }
+  function roundAwayFromZero(value: number, decimals: number): number {
+  const factor = Math.pow(10, decimals);
+
+  return Math.sign(value) *
+    Math.round(Math.abs(value) * factor) / factor;
+}
   function getAmountInWords(amount: number): string {
     
     return convertAmountToWords(amount.toString());
@@ -414,7 +420,7 @@ export const useNumberFormat = (): UseNumberFormatResult => {
   return r;
 }
 
-  return { formatNumberByDecimalPoint,getNumericFormat, getFormattedValue, getTaxFormat, getFormattedValueToNumber, getAmountInWords, round, getFormattedValueIgnoreRoundingToNumber, getFormattedValueIgnoreRounding, posRoundAmount }
+  return { formatNumberByDecimalPoint,getNumericFormat, getFormattedValue, getTaxFormat, getFormattedValueToNumber, getAmountInWords, round, getFormattedValueIgnoreRoundingToNumber, getFormattedValueIgnoreRounding, posRoundAmount, roundAwayFromZero }
 };
 export interface UseNumberFormatResult {
   getNumericFormat: () => string;
@@ -436,6 +442,7 @@ export interface UseNumberFormatResult {
   formatNumberByDecimalPoint(value: string, decimalPoint?: number): string ;
   getAmountInWords: (amount: number) => string;
   round: (value: number, decimalPoints?: number,taxFormatted?: boolean) => number;
+  roundAwayFromZero(value: number, decimals: number): number
   getFormattedValueIgnoreRoundingToNumber: (val: number) => number;
   getFormattedValueIgnoreRounding: (val: number) => string;
   getTaxFormat: (val: number) => string;

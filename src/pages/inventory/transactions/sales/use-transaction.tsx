@@ -133,7 +133,7 @@ export const useTransaction = (
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
-  const { round } = useNumberFormat();
+  const { round , roundAwayFromZero} = useNumberFormat();
   const clientSession = useAppSelector(
     (state: RootState) => state.ClientSession
   );
@@ -4547,6 +4547,64 @@ if (creditMode === "Warn") {
       // showAlert(err.message || "GiftOnBilling Error");
     }
   };
+  const applyTaxOnBillDiscount = async () => {
+  if (
+    !applicationSettings.branchSettings.enableTaxOnBillDiscount ||
+    !applicationSettings.branchSettings.maintainKSAEInvoice
+  ) {
+    return;
+  }
+
+  try {
+    const taxPerc = getMaxTaxPercInItemList();
+    if (taxPerc <= 0) return;
+
+    let billDisc = Number(formState.transaction.master.billDiscount || 0);
+    const billDiscTemp = billDisc;
+
+    // Equivalent to MidpointRounding.AwayFromZero (2 decimals)
+    const netDisc = roundAwayFromZero(
+      billDisc / (1 + taxPerc / 100),
+      2
+    );
+
+    const taxOnDisc = roundAwayFromZero(
+      billDiscTemp - netDisc,
+      2
+    );
+    const res =await calculateTotal(formState.transaction.master, formState.summary as SummaryItems, formState.formElements, { result: {transaction: {
+            master: { 
+              taxOnDiscount: taxOnDisc,
+              billDiscount: netDisc
+            }
+        }} });
+    dispatch(
+      formStateHandleFieldChangeKeysOnly({
+        fields: res},)
+    );
+    
+  } catch {
+    // intentionally ignored (same as C#)
+  }
+};
+
+  const getMaxTaxPercInItemList = (): number => {
+  let maxTaxPerc = 0;
+
+  try {
+    const list = formState.transaction.details.filter(x => x.productID > 0);
+    for (const row of list) {
+      const vat = row.vatPerc ?? 0;
+      if (vat > maxTaxPerc) {
+        maxTaxPerc = vat;
+      }
+    }
+  } catch {
+    // silent catch (same as C#)
+  }
+
+  return maxTaxPerc;
+};
 
 
 

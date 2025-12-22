@@ -58,6 +58,7 @@ interface TransactionFooterProps {
   calculateTotal: any
   applicationSettings: any;
   handleDiscountSlab: any;
+  applyTaxOnBillDiscount: any;
   giftOnBilling: any;
 }
 
@@ -187,7 +188,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   applicationSettings,
   loadAndSetTransVoucher,
   handleDiscountSlab,
-  giftOnBilling
+  giftOnBilling,
+  applyTaxOnBillDiscount
 }) => {
   const [hasAnimated, setHasAnimated] = useState(false);
   const [isOpentwo, setIsOpentwo] = useState(false);
@@ -1025,7 +1027,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               <TaxOnDiscount
                 formState={formState}
                 dispatch={dispatch}
-                taxOnDiscBtnClick={()=> alert("Tax On discount button clicked!")}
+                taxOnDiscBtnClick={applyTaxOnBillDiscount}
                 t={t}
               />
               <BillDiscountLabel
@@ -1406,7 +1408,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         <TaxOnDiscount
           formState={formState}
           dispatch={dispatch}
-          taxOnDiscBtnClick={()=> alert("Tax On discount button clicked!")}
+          taxOnDiscBtnClick={applyTaxOnBillDiscount}
           t={t}
         />
         <BillDiscountLabel

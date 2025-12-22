@@ -4548,9 +4548,10 @@ if (creditMode === "Warn") {
     }
   };
   const applyTaxOnBillDiscount = async () => {
+    debugger;
   if (
     !applicationSettings.branchSettings.enableTaxOnBillDiscount ||
-    !applicationSettings.branchSettings.maintainKSAEInvoice
+    !applicationSettings.branchSettings.maintainKSA_EInvoice
   ) {
     return;
   }
@@ -4658,6 +4659,6 @@ if (creditMode === "Warn") {
     handleDiscountSlab,
     getCustomerTypeAndTitle,
     giftOnBilling,
-    fetchUserConfig
+    fetchUserConfig, applyTaxOnBillDiscount
   };
 };

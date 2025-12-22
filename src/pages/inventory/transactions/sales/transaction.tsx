@@ -608,7 +608,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
     handleDiscountSlab,
     getCustomerTypeAndTitle,
     fetchUserConfig,
-    giftOnBilling
+    giftOnBilling,
+    applyTaxOnBillDiscount
   } = useTransaction(
     transactionType ?? "",
     btnSaveRef,
@@ -2258,6 +2259,7 @@ debugger;
                         loadAndSetTransVoucher={loadAndSetTransVoucher}
                         handleDiscountSlab={handleDiscountSlab}
                         giftOnBilling={giftOnBilling}
+                        applyTaxOnBillDiscount={applyTaxOnBillDiscount}
                       // generateLPO={generateLPO}
                       // generateLPQ={generateLPQ}
                       // clientSession={clientSession}
@@ -2449,6 +2451,7 @@ debugger;
                   loadAndSetTransVoucher={loadAndSetTransVoucher}
                   handleDiscountSlab={handleDiscountSlab}
                   giftOnBilling={giftOnBilling}
+                  applyTaxOnBillDiscount={applyTaxOnBillDiscount}
                   // generateLPO={generateLPO}
                   // generateLPQ={generateLPQ}
                   // clientSession={clientSession}
@@ -2506,6 +2509,7 @@ debugger;
             loadAndSetTransVoucher={loadAndSetTransVoucher}
             handleDiscountSlab={handleDiscountSlab}
             giftOnBilling={giftOnBilling}
+            applyTaxOnBillDiscount={applyTaxOnBillDiscount}
           // generateLPO={generateLPO}
           // generateLPQ={generateLPQ}
           // clientSession={clientSession}

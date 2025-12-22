@@ -91,11 +91,13 @@ export const useTransaction = (
   partyNameRef?: any,
   taxableAmountRef?: any,
   refNoRef?: any,
+  mobileNumRef?: any,
   discountRef?: any,
   chequeStatusRef?: any,
   handleKeyDown?: (e: any, field: string, rowIndex: number) => void,
   formStateRef?: any,
-  purchaseGridRef?: any
+  purchaseGridRef?: any,
+  setIsDropDownOpen?: (value: { open: boolean, autoAddressFocus: boolean }) => void
 ) => {
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
@@ -1310,10 +1312,26 @@ if (creditMode === "Warn") {
           // ERPToast.show(saveRes.message, "success");
         } else {
           // dispatch(acc)
-          ERPAlert.show({
-            icon: "warning",
-            title: saveRes.message,
-          });
+          const isMobileNumberError = saveRes?.errorCode === 3055 || saveRes?.message?.toLowerCase().includes("please enter the mobile number,invalid mobile number");
+            if (isMobileNumberError) {
+              ERPAlert.show({
+                icon: "warning",
+                title: saveRes.message,
+                onConfirm: () => {
+                  // Open the sales header dropdown and focus mobile number field
+                  setIsDropDownOpen?.({ open: true, autoAddressFocus: false });
+                  setTimeout(() => {
+                    mobileNumRef?.current?.focus();
+                    mobileNumRef?.current?.select();
+                  }, 100);
+                },
+              });
+            }else{
+              ERPAlert.show({
+                icon: "warning",
+                title: saveRes.message,
+              });
+            }
 
           dispatch(
             formStateTransactionUpdate({

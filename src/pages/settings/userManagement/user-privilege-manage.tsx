@@ -353,6 +353,8 @@ const onSelectionChanged = useCallback(
       }
       // Verify the working of S
       else{
+        // If any of the A, E, D or P is available, Then need to set the show permission
+        parentUserRights += "S";   // So added Show permission to the immediate parent userRights
         childNodes.forEach((child) => {
           if (keys.includes(child.id)) {
             hasSelectedRights = true;

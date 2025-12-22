@@ -234,6 +234,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const taxableAmountRef = useRef<HTMLInputElement>(null);
   const partyNameRef = useRef<HTMLInputElement>(null);
   const refNoRef = useRef<HTMLInputElement>(null);
+  const mobileNumRef = useRef<HTMLInputElement>(null);
   const taxNoRef = useRef<HTMLInputElement>(null);
   const discountRef = useRef<HTMLInputElement>(null);
   const chequeStatusRef = useRef<HTMLInputElement>(null);
@@ -628,11 +629,13 @@ const TransactionForm: React.FC<TransactionProps> = ({
     partyNameRef,
     taxableAmountRef,
     refNoRef,
+    mobileNumRef,
     discountRef,
     chequeStatusRef,
     handleKeyDown,
     formStateRef,
     purchaseGridRef,
+    setIsDropDownOpen, // For opening heder dropdown when mobile number error alert
 
 
   );
@@ -2142,6 +2145,7 @@ debugger;
               toggleDropdown={toggleHeaderDropdown}
               footerLayout="vertical"
               userSession={userSession}
+              mobileNumRef={mobileNumRef}
               // isDropDownOpen={false}
             // refactorDetails={refactorDetails}
             // voucherType={voucherType}
@@ -2363,6 +2367,7 @@ debugger;
                     toggleDropdown={toggleHeaderDropdown}
                     footerLayout="vertical"
                     userSession={userSession}
+                    mobileNumRef={mobileNumRef}
                     // isDropDownOpen={false}
                   // refactorDetails={refactorDetails}
                   // voucherType={voucherType}

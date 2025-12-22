@@ -800,6 +800,12 @@ const Urls = {
 
   ksa_eInvoice_saveXml: '/Inventory/RptTAXReport/KSAEinvoiceSaveXml',
   eInvoice_to_zatCa: '/Inventory/RptTAXReport/SendEinvoiceToZatca',
+
+  eInvoice_integration_settings: '/EInvoiceIntegrationSettings/settings',
+  generate_compliance_csid: '/EInvoiceIntegrationSettings/generate-compliance-csid',
+  generate_production_csid: 'EInvoiceIntegrationSettings/generate-production-csid',
+  eInvoice_apiPortal_register: '/EInvoiceAPIPortal/register',
+
 };
 
 export default Urls;

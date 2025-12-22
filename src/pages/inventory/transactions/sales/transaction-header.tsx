@@ -59,6 +59,7 @@ interface TransactionHeaderProps {
   ledgerCodeRef: any;
   voucherNumberRef: any;
   refNoRef: any;
+  mobileNumRef: any;
   isDropDownOpen: {
     open: boolean;
     autoAddressFocus: boolean;
@@ -84,6 +85,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   ledgerCodeRef,
   voucherNumberRef,
   refNoRef,
+  mobileNumRef,
   isDropDownOpen,
   toggleDropdown,
   onHeightChange,
@@ -646,24 +648,25 @@ function mergeRefs<T>(...refs: React.Ref<T>[]) {
                   }
                   disabled={formState.formElements.pnlMasters?.disabled}
                 /> */}
-<ERPInput
-  localInputBox={formState?.userConfig?.inputBoxStyle}
-  disableEnterNavigation
-  ref={mobileNumberRef}
-  onKeyDown={(e) => handleInputNavigation(e, referenceNumberInputRef)}
-  id="address4"
-  label={t("mobile_number")}
-  value={formState.transaction.master.address4}
-  className="max-w-full"
-  onChange={(e) =>
-    dispatch(
-      formStateMasterHandleFieldChange({
-        fields: { address4: e.target?.value },
-      })
-    )
-  }
-  disabled={formState.formElements.pnlMasters?.disabled}
-/>
+                <ERPInput
+                  localInputBox={formState?.userConfig?.inputBoxStyle}
+                  disableEnterNavigation
+                  // ref={mobileNumberRef}
+                  ref={mobileNumRef}
+                  onKeyDown={(e) => handleInputNavigation(e, referenceNumberInputRef)}
+                  id="address4"
+                  label={t("mobile_number")}
+                  value={formState.transaction.master.address4}
+                  className="max-w-full"
+                  onChange={(e) =>
+                    dispatch(
+                      formStateMasterHandleFieldChange({
+                        fields: { address4: e.target?.value },
+                      })
+                    )
+                  }
+                  disabled={formState.formElements.pnlMasters?.disabled}
+                />
 
                 <ERPInput
                   // ref={ordCardNoRef}
@@ -1287,6 +1290,7 @@ function mergeRefs<T>(...refs: React.Ref<T>[]) {
                       localInputBox={formState?.userConfig?.inputBoxStyle}
                       id="address4"
                       label={t("mobile_number")}
+                      ref={mobileNumRef}
                       value={formState.transaction.master.address4}
                       className="max-w-full"
                       disableEnterNavigation

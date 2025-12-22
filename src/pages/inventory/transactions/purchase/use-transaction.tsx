@@ -1246,10 +1246,26 @@ export const useTransaction = (
           // ERPToast.show(saveRes.message, "success");
         } else {
           // dispatch(acc)
-          ERPAlert.show({
-            icon: "warning",
-            title: saveRes.message,
-          });
+          // Managing the reference number validation separately for focusing reference field
+          const isReferenceError = saveRes?.errorCode === 3050 || saveRes?.message?.toLowerCase().includes("reference number is mandatory");
+          if (isReferenceError) {
+            ERPAlert.show({
+              icon: "warning",
+              title: saveRes.message,
+              onConfirm: () => {
+                // Focusing the reference number filed on click ok
+                setTimeout(() => {
+                  refNoRef?.current?.focus();
+                  refNoRef?.current?.select();
+                }, 0);
+              },
+            });
+          }else{
+            ERPAlert.show({
+              icon: "warning",
+              title: saveRes.message,
+            });
+         }
 
           dispatch(
             formStateTransactionUpdate({

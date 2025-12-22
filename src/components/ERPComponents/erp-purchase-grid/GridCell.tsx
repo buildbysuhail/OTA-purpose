@@ -24,7 +24,7 @@ interface GridCellProps {
   item: TransactionDetail;
   index: number;
   currentCell?: CurrentCell;
-  setCurrentCell: React.Dispatch<React.SetStateAction<CurrentCell | undefined>>;
+  setCurrentCell: (data: any) => void;
   formState: any;
   appState: AppState;
   gridFontSize: number;
@@ -45,6 +45,8 @@ interface GridCellProps {
     rowIndex: number,
     details: TransactionDetail[]
   ) => void;
+  backgroundColor?: string; 
+  foreColor?: string
   handleFocus?: (field: string) => void;
   handleBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   gridId: string;
@@ -83,6 +85,8 @@ const EditableCell: React.FC<{
   formState: any;
   rowHeight: number;
   isMobile_: boolean;
+  backgroundColor?: string;
+  foreColor?: string;
 }> = React.memo(({
   appState,
   type,
@@ -102,7 +106,9 @@ const EditableCell: React.FC<{
   gridIsBold,
   formState,
   rowHeight,
-  isMobile_
+  isMobile_,
+  backgroundColor,
+  foreColor,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const { round } = useNumberFormat();
@@ -253,8 +259,8 @@ const EditableCell: React.FC<{
         whiteSpace: "nowrap",
         overflow: "hidden",
         textOverflow: "ellipsis",
-        backgroundColor: "transparent",
-        color: appState.mode === "dark" ? "#e0e0e0" : "#000000",
+        backgroundColor: backgroundColor,
+        color: foreColor,
         // border: isMobile_ ? "1px solid yellow" :"none",
         border: isMobile_ ? "none" :"none",
         width: "100%",
@@ -302,6 +308,8 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
   transactionType,
   zIndexController,
   nextCellFind,
+  backgroundColor,
+  foreColor,
 }) => {
 //   if (!column) {
 //     return null;
@@ -530,7 +538,17 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
         <ERPProductSearch
           showInputSymbol={true}
         //   customStyle={formState.userConfig?.inputBoxStyle}
-          customStyle={merge( {},  formState.userConfig?.inputBoxStyle, initialUserConfig.inputBoxStyle, { inputSize: "customize", fontColor: "0, 0, 0", borderColor: "200, 200, 200", showBorder: !isMobile_, rowHeight: "22px" })}
+          // customStyle={merge( {},  formState.userConfig?.inputBoxStyle, initialUserConfig.inputBoxStyle, { inputSize: "customize", fontColor: "0, 0, 0", borderColor: "200, 200, 200", showBorder: !isMobile_, rowHeight: "22px" })}
+          customStyle={merge({}, initialUserConfig.inputBoxStyle, formState.userConfig?.inputBoxStyle, {inputBgColor: backgroundColor,
+              defaultBgColor: backgroundColor,
+              fontColor: foreColor,
+              fontWeight: "bold",
+              inputSize: "customize",
+              borderColor: "rgb(200, 200, 200)",
+              showBorder: !isMobile_,
+              rowHeight: 22,
+            }
+          )}
           appState={appState}
           zIndexController={zIndexController}
           textAlign={column.alignment === "right" ? "right" : "left"}

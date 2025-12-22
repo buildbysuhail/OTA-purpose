@@ -95,7 +95,7 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
   // Apply filters callback
   const handleApply = () => {
     
-    // setIsOpen(false);
+    setIsOpen(false);  // Done for For solving filter initially not opening issue after fix grid reorder issue
     if (onApplyFilters) onApplyFilters(formState.data ?? {});
   };
   useEffect(() => {
@@ -103,9 +103,10 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
     if (toogleFilter == true) {
       setIsOpen(true);
     }
-    else {
-      setIsOpen(false);
-    }
+    // Done for For solving filter initially not opening issue after fix grid reorder issue
+    // else {
+    //   setIsOpen(false);
+    // }
   }, [toogleFilter]);
   useEffect(() => {
     

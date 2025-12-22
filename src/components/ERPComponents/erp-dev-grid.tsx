@@ -666,6 +666,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     const totalRowCountDisplayRef = useRef<HTMLSpanElement>(null);
     const totalRowCountRef = useRef<number>(0);
     const { onApplyPreferences, gridCols, preferences } = usePreferenceData(columns, gridId);
+    // Create a unique key based on column order to force grid remount when preferences change
+    // This is done for solving grid reorder issue - Detailed check is needed
+    const gridKey = useMemo(() => {
+      return gridCols.map(col => col.dataField).join('_');
+    }, [gridCols]);
     const actionColumn = gridCols.find((col) => col.Actionswidth !== undefined);
     const actionsWidth = actionColumn?.Actionswidth || 123; // Default width if not found
     const [isMoreOptionVisible, setMoreOptionVisible] = useState(false);
@@ -1800,13 +1805,17 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           }}
         >
           {summaryItems?.map((config: SummaryConfig, index: number) => {
+            // Explicitly set showInColumn to the column dataField if not provided
+            // This ensures summaries stay with their columns after reordering
+            // This below one line is done for solving grid reorder issue - Detailed check is needed
+            const showInColumn = config.showInColumn ?? config.column;
             return config.isGroupItem == true ? (
               <GroupItem
                 key={`GroupItem_${index}`}
                 column={config.column}
                 summaryType={config.summaryType}
                 valueFormat={config.valueFormat}
-                showInColumn={config.showInColumn}
+                showInColumn={showInColumn}  // This is done for solving grid reorder issue - Detailed check is needed
                 customizeText={config.customizeText}
                 skipEmptyValues={false}
                 alignByColumn={config.alignByColumn}
@@ -1820,7 +1829,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 name={config.column}
                 summaryType={config.summaryType}
                 valueFormat={config.valueFormat}
-                showInColumn={config.showInColumn}
+                showInColumn={showInColumn}  // This is done for solving grid reorder issue - Detailed check is needed
                 alignment={config.alignment}
                 customizeText={config.customizeText}
                 skipEmptyValues={false}
@@ -1829,7 +1838,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           })}
         </Summary>
       );
-    }, [summaryItems, columns]);
+    }, [summaryItems, gridCols]);
 
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -2182,7 +2191,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           style={gridStyle}
         >
           <DataGrid
-
+            key={gridKey}  // This is done for solving grid reorder issue - Detailed check is needed
             loadPanel={{ enabled: loadPanelEnabled }}
             onOptionChanged={handleOptionChanged}
             onRowUpdating={onRowUpdating}
@@ -2831,6 +2840,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 allowEditing={column.allowEditing || false}
                 key={column.dataField}
                 dataField={column.dataField}
+                visibleIndex={index}   // This is done for solving grid reorder issue - Detailed check is needed
                 caption={
                   column.captionDynamic != undefined
                     ? column.captionDynamic(filter)

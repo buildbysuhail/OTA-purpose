@@ -177,7 +177,8 @@ const GridPreferenceChooser = forwardRef(function GridPreferenceChooser({ gridId
       await setStorageString(`gridPreferences_${gridId}`, preference)
       await api.postAsync(Urls.grid_preference, { GridID: gridId, Design: preference, });
       setIsOpen(false);
-      onChange(preferences);
+      // The below line commented for fixing, when save grid order col position, two columns are changing instead of one. - Test it
+      // onChange(preferences);
       ERPToast.show("Grid saved successfully.", "success");
     } catch (error) {
       console.error("Error saving preferences:", error);

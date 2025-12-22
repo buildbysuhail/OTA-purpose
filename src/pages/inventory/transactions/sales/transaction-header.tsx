@@ -681,23 +681,7 @@ function mergeRefs<T>(...refs: React.Ref<T>[]) {
                   onChangeData={(data: any) => handleFieldChange("ordCardNo", data.ordCardNo)}
                 />
 
-                <div className="flex items-end gap-2">
-                  <ERPDataCombobox
-                    id="customer"
-                    field={{
-                      id: "customer",
-                      // getListUrl: Urls.,
-                      valueKey: "customer",
-                      labelKey: "customerName",
-                    }}
-                    onChangeData={(data: any) => { handleFieldChange("customer", data.customer); }}
-                    label={t("customer")}
-                  />
-
-                  <button className="bg-gray-300 p-2 rounded-md transition duration-300 flex items-end gap-2 hover:shadow-md">
-                    {t('new')}<BadgePlus className="w-4 h-4" />
-                  </button>
-                </div>
+   
 
                 {formState.transaction.master.voucherType ===
                   VoucherType.PurchaseOrder &&

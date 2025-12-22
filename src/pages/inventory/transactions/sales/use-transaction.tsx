@@ -4583,7 +4583,7 @@ if (creditMode === "Warn") {
 } else {
   taxOnDisc = billDiscount == 0 ? 0 : formState.transaction.master.taxOnDiscount || 0;
 }
-    const res =await calculateTotal(formState.transaction.master, formState.summary as SummaryItems, formState.formElements, { result: {transaction: {
+    const res =await calculateTotal({...formState.transaction.master, taxOnDiscount: taxOnDisc,billDiscount:billDiscount}, formState.summary as SummaryItems, formState.formElements, { result: {transaction: {
             master: { 
               taxOnDiscount: taxOnDisc,
             }

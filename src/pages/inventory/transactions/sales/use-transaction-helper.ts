@@ -1232,17 +1232,9 @@ debugger;
       // VAT handling based on form type
       if (
         !clientSession.isAppGlobal &&
-        (voucherType === "PO" ||
-          voucherType === "PE" ||
-          voucherType === "GRN" ||
-          voucherType === "PQ" ||
-          voucherType === "LPO") ||
-        (formType === "VAT" &&
-          voucherType !== "PO" &&
-          voucherType !== "PE" &&
-          voucherType !== "GRN" &&
-          voucherType !== "PQ" &&
-          voucherType !== "LPO")
+        ((["SI", "SR"].includes(voucherType)) &&(
+            formType === "VAT" 
+            )) || !["SI", "SR"].includes(voucherType)
       ) {
         detail.vatPerc = row.vatPercentage;
         detail.vatAmount = getFormattedValueIgnoreRoundingToNumber(
@@ -2108,15 +2100,17 @@ if ((product.defUnitSPrice??0) > 0) {
   }
 }
 
-
+debugger;
         /* ---------------- VAT / GST ---------------- */
         if (userSession.dbIdValue === "543140180640") {
           // NAHLA
           outDetail.vatPerc = product.sVatPerc;
         } else {
           if (
-            formState.transaction.master.voucherType === "VAT" ||
+            ((["SI", "SR"].includes(formState.transaction.master.voucherType)) &&(
+            formState.transaction.master.voucherForm === "VAT" ||
             formState.initialFormType === "VAT"
+            )) || !["SI", "SR"].includes(formState.transaction.master.voucherType)
           ) {
             outDetail.vatPerc = product.sVatPerc;
             outDetail.cstPerc = product.salesExciseTaxPerc;
@@ -2271,9 +2265,10 @@ if (product.weighingPrice > 0) {
         if (userSession.dbIdValue !== "543140180640") {
           // Draft mode / form type condition
           if (
-            formState.transaction.master.voucherForm === "" &&
-            formState.initialFormType === "" &&
-            !formState.draftMode
+             !(((["SI", "SR"].includes(formState.transaction.master.voucherType)) &&(
+            formState.transaction.master.voucherForm === "VAT" ||
+            formState.initialFormType === "VAT"
+            )) || !["SI", "SR"].includes(formState.transaction.master.voucherType))
           ) {
             taxPerc = 0;
             outDetail.vatPerc = 0;
@@ -2946,6 +2941,61 @@ if (
     const lblGrandTot = Number(result.transaction!.master!.grandTotal ?? 0) + Number(result.transaction!.master!.master3!.totTCS ?? 0);
     result.transaction!.master!.grandTotal = round(lblGrandTot - SRAmt);
 
+    result.formElements = result.formElements || {} as FormElementsState;
+  result.formElements.lblBillBalance = result.formElements.lblBillBalance || { visible: false, Text: "" };
+  debugger
+  const safeNum = (v: any): number =>
+  Number.isFinite(Number(v)) ? Number(v) : 0;
+  const total = safeNum(result.transaction!.master!.grandTotal);
+const adv = safeNum(master?.advAmntFroSO);
+const cash = safeNum(master?.cashReceived);
+const coupon = safeNum(master?.couponAmt);
+const cardAmound = safeNum(master?.bankAmt);
+const balance = round(total - adv - cash - coupon - cardAmound);
+
+result.formElements.lblBillBalance.visible = true;
+
+result.formElements.lblBillBalance.label =
+  Number.isFinite(balance) && balance !== 0
+    ? balance.toString()
+    : "";
+result.formElements.lblBillBalance.visible = true;
+
+try {if((cash+cardAmound + adv) > 0) {
+
+  result.formElements.lblBillBalance.label =
+    Number.isFinite(balance) ? balance.toString() : "";
+    result.formElements.lblBillBalance.visible = true; 
+} else {
+
+  result.formElements.lblBillBalance.label = "";
+    result.formElements.lblBillBalance.visible = false;
+}
+} catch {
+  result.formElements.lblBillBalance.label = "";
+}
+
+//     if ((Number(master.cashReceived || "") + master.creditAmt +  master.advAmntFroSO) > 0)
+// {
+//   result.formElements.lblBillBalance.visible = true;
+//     const label =  round(
+//         formState.summary.total
+//         - master.advAmntFroSO
+//         - master.cashReceived
+//         - master.couponAmt
+//         - master.creditAmt
+//     ).toString();
+    
+//   result.formElements.lblBillBalance.label = label;
+// }
+// else
+// {
+    
+//   result.formElements.lblBillBalance.visible = true;
+  
+//   result.formElements.lblBillBalance.label = "";
+// }
+
     // if foreign currency conversion needed (similar to PI)
     if (formElements.pnlImport.visible && master.exchangeRate > 0) {
       const exchangeRate = master.exchangeRate;
@@ -2954,8 +3004,8 @@ if (
       }
     }
 
+
     const giftEnabled = await checkGiftOnBilling();
-    result.formElements = result.formElements || {} as FormElementsState;
     result.formElements.btnGiftOnBilling = result.formElements.btnGiftOnBilling || { visible: false };
     result.formElements.btnGiftOnBilling.visible = giftEnabled;
 

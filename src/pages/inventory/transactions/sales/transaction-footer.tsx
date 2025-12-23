@@ -21,7 +21,8 @@ import { RootState } from "../../../../redux/store";
 import { useAppState } from "../../../../utilities/hooks/useAppState";
 import VoucherType from "../../../../enums/voucher-types";
 import React from "react";
-import { formStateHandleFieldChangeKeysOnly, formStateHandleFieldChange, formStateTransactionMasterHandleFieldChange } from "../reducer";
+import { formStateHandleFieldChangeKeysOnly, formStateHandleFieldChange, formStateTransactionMasterHandleFieldChange, formStateMasterHandleFieldChange } from "../reducer";
+import { useDebouncedInput } from "../../../../utilities/hooks/useDebounce";
 import { TransactionFormState, UserConfig } from "../transaction-types";
 import PrivilegeCardEntry from "./privilege-card-entry";
 import Tender from "./tender";
@@ -37,6 +38,7 @@ import BtnPrivilegeCard from "./components/btnPrivilegeCard";
 import BtnPending from "./components/btnPending";
 import BtnSr from "./components/btnSr";
 import TaxOnDiscount from "./components/tax-on-discount";
+import { tr } from "date-fns/locale";
 
 interface TransactionFooterProps {
   formState: TransactionFormState;
@@ -216,6 +218,55 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   const [isSmallDevice, setIsSmallDevice] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState({ visible: false, type: "" });
 
+  // Debounced input hooks for transaction master fields
+  const { value: creditAmtValue, onChange: onCreditAmtChange } = useDebouncedInput(
+    formState.transaction.master.bankAmt || "",
+    (debouncedValue) => {
+      dispatch(
+        formStateMasterHandleFieldChange({
+          fields: { bankAmt: debouncedValue },
+        })
+      );
+    },
+    300
+  );
+
+  const { value: couponAmtValue, onChange: onCouponAmtChange } = useDebouncedInput(
+    formState.transaction.master.couponAmt || "",
+    (debouncedValue) => {
+      dispatch(
+        formStateMasterHandleFieldChange({
+          fields: { couponAmt: debouncedValue },
+        })
+      );
+    },
+    300
+  );
+
+  const { value: srAmountValue, onChange: onSrAmountChange } = useDebouncedInput(
+    formState.transaction.master.srAmount || "",
+    async (debouncedValue) => {
+      dispatch(
+        formStateMasterHandleFieldChange({
+          fields: { srAmount: debouncedValue },
+        })
+      );
+    },
+    300
+  );
+
+  const { value: tokenNumberValue, onChange: onTokenNumberChange } = useDebouncedInput(
+    formState.transaction.master.tokenNumber || "",
+    (debouncedValue) => {
+      dispatch(
+        formStateMasterHandleFieldChange({
+          fields: { tokenNumber: debouncedValue },
+        })
+      );
+    },
+    300
+  );
+
   const handleFieldChange = (field: keyof UserConfig, value: any) => {
     const updatedUserConfig = {
       ...formState.userConfig,
@@ -302,8 +353,24 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   }, [isSidebar]);
 
   useEffect(() => {
-    calculateTotal(formState.transaction.master, formState.summary, formState.formElements, { result: {}, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly })
-  }, [formState.transaction.master.billDiscount, formState.transaction.master.hasroundOff, formState.transaction.master.adjustmentAmount]);
+    calculateTotal(
+      {...formState.transaction.master
+        ,hasroundOff:formState.transaction.master.hasroundOff
+        , adjustmentAmount:formState.transaction.master.adjustmentAmount
+        , creditAmt: formState.transaction.master.creditAmt
+        , couponAmt: formState.transaction.master.couponAmt
+        , srAmount: formState.transaction.master.srAmount}, formState.summary, formState.formElements, { result: {
+          transaction: {
+              master: {
+                hasroundOff:formState.transaction.master.hasroundOff,
+                adjustmentAmount:formState.transaction.master.adjustmentAmount,
+                creditAmt: formState.transaction.master.creditAmt,
+                couponAmt: formState.transaction.master.couponAmt,
+                srAmount: formState.transaction.master.srAmount,
+              }
+            }
+        }, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly })
+  }, [formState.transaction.master.billDiscount, formState.transaction.master.hasroundOff, formState.transaction.master.adjustmentAmount, formState.transaction.master.creditAmt, formState.transaction.master.couponAmt, formState.transaction.master.srAmount]);
 
   let clickTimer: NodeJS.Timeout | null = null;
 
@@ -507,11 +574,9 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 id="vatNo"
                 label={t("Tax no")}
                 type="string"
-                value={formState.transaction.master.tokenNumber}
+                value={tokenNumberValue}
                 readOnly={!formState?.vatChecked}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  dispatch(formStateHandleFieldChangeKeysOnly({ fields: { transaction:{master:{tokenNumber: e.target.value}}} }))
-                }
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => onTokenNumberChange(e.target.value)}
               />
       </>
       )}
@@ -554,28 +619,16 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 id="creditCardAmount"
                 label={t("credit_card_amount")}
                 type="number"
-                // value={creditCardAmount}
-                value={formState.transaction.master.creditAmt}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  dispatch(formStateHandleFieldChangeKeysOnly({ fields: { transaction:{master:{creditAmt: e.target.value}}} }))
-                }
-                // onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                //   setCreditCardAmount(parseInt(e.target.value) || 0)
-                // }
+                value={creditAmtValue}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCreditAmtChange(e.target.value)}
               />
               {(formState.transaction.master.voucherType === VoucherType.SalesInvoice && (
                 <ERPInput
                 id="couponAmount"
                 label={t("coupon_amount")}
                 type="number"
-                // value={couponAmount}
-                // onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                //   setCreditCardAmount(parseInt(e.target.value) || 0)
-                // }
-                value={formState.transaction.master.couponAmt}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  dispatch(formStateHandleFieldChangeKeysOnly({ fields: { transaction:{master:{couponAmt: e.target.value}}} }))
-                }
+                value={couponAmtValue}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCouponAmtChange(e.target.value)}
               />
               ))}
             </div>
@@ -585,14 +638,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   id="srAmount"
                   label={t('sr_amount')}
                   type="number"
-                  // value={srAmount}
-                  // onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  //   setSrAmount(parseInt(e.target.value) || 0)
-                  // }
-                  value={formState.transaction.master.srAmount}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    dispatch(formStateHandleFieldChangeKeysOnly({ fields: { transaction:{master:{srAmount: e.target.value}}} }))
-                  }
+                  value={srAmountValue}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSrAmountChange(e.target.value)}
                 />
               </div>
               {(formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
@@ -612,18 +659,18 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             </div>
             <div className="flex items-center gap-2 text-sm dark:text-dark-text">
               {checkboxesComponent}
-              {(formState.transaction.master.voucherType === VoucherType.SalesInvoice) && (
+              {/* {(formState.transaction.master.voucherType === VoucherType.SalesInvoice) && (
                 <div className="flex gap-1">
                   <span className="text-xs font-medium whitespace-nowrap">{t("l_bill_amount")}:</span><span className="text-xs font-semibold">0.00</span>
                   <span className="text-xs font-medium whitespace-nowrap">{t("adv_bal")}:</span><span className="text-xs font-semibold">0.00</span>
                 </div>
-              )}
+              )} */}
               {(
                 formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
                 formState.transaction.master.voucherType === VoucherType.SalesQuotation
-              ) && (
+              ) && formState.formElements.lblBillBalance.visible && (
                 <div>
-                  <span className="text-xs font-medium whitespace-nowrap">{t("bal")}:</span><span className="text-xs font-semibold">0.00</span>
+                  <span className="text-xs font-medium whitespace-nowrap">{t("bal")}: {formState.formElements.lblBillBalance.label}</span><span className="text-xs font-semibold"></span>
                 </div>
               )}
             </div>
@@ -772,30 +819,16 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 id="creditCardAmount"
                 label={t("credit_card_amount")}
                 type="number"
-                // value={creditCardAmount}
-                // onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                //   setCreditCardAmount(parseInt(e.target.value) || 0)
-                // }
-                value={formState.transaction.master.creditAmt}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  dispatch(formStateHandleFieldChangeKeysOnly({ fields: { transaction:{master:{creditAmt: e.target.value}}} }))
-                }
-                
-                
+                value={creditAmtValue}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCreditAmtChange(e.target.value)}
               />
               {(formState.transaction.master.voucherType === VoucherType.SalesInvoice && (
                 <ERPInput
                 id="couponAmount"
                 label={t("coupon_amount")}
                 type="number"
-                // value={couponAmount}
-                // onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                //   setCouponAmount(parseInt(e.target.value) || 0)
-                // }
-                value={formState.transaction.master.couponAmt}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  dispatch(formStateHandleFieldChangeKeysOnly({ fields: { transaction:{master:{couponAmt: e.target.value}}} }))
-                }
+                value={couponAmtValue}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCouponAmtChange(e.target.value)}
               />
               ))}
               <div className="flex items-end gap-1">
@@ -804,14 +837,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     id="srAmount"
                     label={t('sr_amount')}
                     type="number"
-                    // value={srAmount}
-                    // onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    //   setSrAmount(parseInt(e.target.value) || 0)
-                    // }
-                    value={formState.transaction.master.srAmount}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      dispatch(formStateHandleFieldChangeKeysOnly({ fields: { transaction:{master:{srAmount: e.target.value}}} }))
-                    }
+                    value={srAmountValue}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSrAmountChange(e.target.value)}
                   />
                 </div>
                 {(formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
@@ -830,20 +857,20 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   )}
               </div>
               <div className="flex items-center gap-2 text-sm dark:text-dark-text">
-              {(formState.transaction.master.voucherType === VoucherType.SalesInvoice) && (
+              {/* {(formState.transaction.master.voucherType === VoucherType.SalesInvoice) && (
                 <div className="flex gap-1">
                   <span className="text-xs font-medium whitespace-nowrap">{t("l_bill_amount")}:</span><span className="text-xs font-semibold">0.00</span>
                   <span className="text-xs font-medium whitespace-nowrap">{t("adv_bal")}:</span><span className="text-xs font-semibold">0.00</span>
                 </div>
-              )}
+              )} */}
               {(
-              formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
-              formState.transaction.master.voucherType === VoucherType.SalesQuotation
-                ) && (
-                  <div>
-                    <span className="text-xs font-medium whitespace-nowrap">{t("bal")}:</span><span className="text-xs font-semibold">0.00</span>
-                  </div>
-                )}
+                formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
+                formState.transaction.master.voucherType === VoucherType.SalesQuotation
+              ) && formState.formElements.lblBillBalance.visible && (
+                <div>
+                  <span className="text-xs font-medium whitespace-nowrap">{t("bal")}: {formState.formElements.lblBillBalance.label}</span><span className="text-xs font-semibold"></span>
+                </div>
+              )}
               </div>
             </div>
           )}
@@ -1190,28 +1217,16 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               id="creditCardAmount"
               label={t("credit_card_amount")}
               type="number"
-              // value={creditCardAmount}
-              // onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              //   setCreditCardAmount(parseInt(e.target.value) || 0)
-              // }
-              value={formState.transaction.master.creditAmt}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                dispatch(formStateHandleFieldChangeKeysOnly({ fields: { transaction:{master:{creditAmt: e.target.value}}} }))
-              }
+              value={creditAmtValue}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCreditAmtChange(e.target.value)}
             />
             {(formState.transaction.master.voucherType === VoucherType.SalesInvoice && (
                 <ERPInput
                 id="couponAmount"
                 label={t("coupon_amount")}
                 type="number"
-                // value={couponAmount}
-                // onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                //   setCreditCardAmount(parseInt(e.target.value) || 0)
-                // }
-                value={formState.transaction.master.couponAmt}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  dispatch(formStateHandleFieldChangeKeysOnly({ fields: { transaction:{master:{couponAmt: e.target.value}}} }))
-                }
+                value={couponAmtValue}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCouponAmtChange(e.target.value)}
               />
               ))}
           </div>
@@ -1223,14 +1238,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 id="srAmount"
                 label={t('sr_amount')}
                 type="number"
-                // value={srAmount}
-                // onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                //   setSrAmount(parseInt(e.target.value) || 0)
-                // }
-                value={formState.transaction.master.srAmount}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  dispatch(formStateHandleFieldChangeKeysOnly({ fields: { transaction:{master:{srAmount: e.target.value}}} }))
-                }
+                value={srAmountValue}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSrAmountChange(e.target.value)}
               />
             </div>
             {(formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
@@ -1361,20 +1370,20 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           )}
         {!showSecondHalf && (
           <div className="flex items-center gap-2 text-sm dark:text-dark-text">
-            {(formState.transaction.master.voucherType === VoucherType.SalesInvoice) && (
+            {/* {(formState.transaction.master.voucherType === VoucherType.SalesInvoice) && (
                 <div className="flex gap-1">
                   <span className="text-xs font-medium whitespace-nowrap">{t("l_bill_amount")}:</span><span className="text-xs font-semibold">0.00</span>
                   <span className="text-xs font-medium whitespace-nowrap">{t("adv_bal")}:</span><span className="text-xs font-semibold">0.00</span>
                 </div>
+              )} */}
+             {(
+                formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
+                formState.transaction.master.voucherType === VoucherType.SalesQuotation
+              ) && formState.formElements.lblBillBalance.visible && (
+                <div>
+                  <span className="text-xs font-medium whitespace-nowrap">{t("bal")}: {formState.formElements.lblBillBalance.label}</span><span className="text-xs font-semibold"></span>
+                </div>
               )}
-              {(
-                  formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
-                  formState.transaction.master.voucherType === VoucherType.SalesQuotation
-                ) && (
-                  <div>
-                  <span className="text-xs font-medium whitespace-nowrap">{t("bal")}:</span><span className="text-xs font-semibold">0.00</span>
-                  </div>
-                )}
 
           </div>
         )}

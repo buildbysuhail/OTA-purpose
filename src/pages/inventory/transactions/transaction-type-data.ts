@@ -185,11 +185,12 @@ export const TransactionMasterInitialData: TransactionMaster = {
   oldLedgerID: 0,
   dueDays: 0,
   gRNMasterID: 0,
-  billWiseString:"",
-  accTransactionDetailIDForBillwise:0,
+  billWiseString: "",
+  accTransactionDetailIDForBillwise: 0,
   master2: initialInvTransactionMaster2,
   master3: TransactionMaster3InitialData,
-  lblSRAmount:""
+  lblSRAmount: "",
+  advAmntFroSO: 0
 }
 export const initialTransactionDetailData: TransactionDetail = {
   slNo: "",
@@ -433,6 +434,7 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   txtBillDiscount: { visible: false, disabled: false, label: "" },
   txtBillDiscPerc: { visible: false, disabled: false, label: "" },
   chkPrintAfterSave: { visible: false, disabled: false, label: "" },
+  lblBillBalance: { visible: false, disabled: false, label: "" },
 
 
 };export const initialUserConfig: UserConfig = {

@@ -1568,7 +1568,7 @@ if (creditMode === "Warn") {
     }
   };
   const handleRemoveItem = async (slNo: string) => {
-
+debugger;
     dispatch(
       formStateTransactionDetailsRowRemove({
         slNo: slNo,

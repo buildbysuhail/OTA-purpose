@@ -1283,7 +1283,7 @@ debugger;
           label:
             voucherType == "SR"
               ? "cash_paid"
-              : initialFormElements.hasCashPaid?.label,
+              : "cash_received",
         },
         ledgerID: {
           ...initialFormElements.ledgerID,

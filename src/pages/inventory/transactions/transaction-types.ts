@@ -214,6 +214,7 @@ export interface TransactionMaster {
   master3: TransactionMaster3;
   lblSRAmount: string; //new
   totalTax?: number; //new
+  advAmntFroSO: number;
 }
 
 export interface TransactionMaster3 {

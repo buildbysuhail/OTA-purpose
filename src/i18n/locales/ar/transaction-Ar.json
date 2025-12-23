@@ -1084,7 +1084,25 @@
   "item_load_request": "طلب تحميل البند",
   "load_vouchers": "تحميل القسائم",
   "stock_transfer_from_branch[BT]": "تحويل المخزون من الفرع [BT]",
-  "stock_transfer_to_branch[BT]": "تحويل المخزون إلى الفرع [BT]"
+  "stock_transfer_to_branch[BT]": "تحويل المخزون إلى الفرع [BT]",
+
+  "gr": "إشعار استلام",
+  "so_trans_details_id": "رقم تفاصيل حركة أمر البيع",
+  "gd_trans_details_id": "رقم تفاصيل حركة استلام البضائع",
+  "flv": "النكهة",
+  "scheme_qty_limit": "حد كمية المخطط",
+  "scheme_free_qty": "الكمية المجانية للمخطط",
+  "is_scheme_processed": "هل تم معالجة المخطط",
+  "imf": "صندوق النقد الدولي / IMF",
+  "nLA_sales_price": "سعر بيع NLA",
+  "box_qty": "كمية الصناديق",
+  "is_scheme_item": "هل هو صنف ضمن المخطط",
+  "actual_price": "السعر الفعلي",
+  "scheme_type": "نوع المخطط",
+  "unit_discount": "خصم الوحدة",
+  "nr": "السعر الصافي",
+  "is_qty_freezed": "هل الكمية مجمدة",
+  "scheme_id": "رقم المخطط"
 
 
 }

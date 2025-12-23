@@ -48,7 +48,7 @@ const APIPortalRegistration = () => {
             ERPAlert.show({
                 title: t("warning"),
                 // text: balanceMessage,
-                text: "please_top_up_add_api_for_uninterrupted_service_keep_enough_api_balance_for_e_invoice_submission",
+                text: t("please_top_up_add_api_for_uninterrupted_service_keep_enough_api_balance"),
                 icon: "warning",
             });
         }
@@ -92,7 +92,14 @@ const APIPortalRegistration = () => {
 
                 };
                 const res = await api.postAsync(Urls.eInvoice_apiPortal_register, payload);
-                // console.log("Response:",res)
+                // Need to manage the below section alert based on the response -  need discussion for this, now added for not forgetting
+                if(res){
+                    ERPAlert.show({
+                    title: t("warning"),
+                    text: res?.message,
+                    icon: "warning",
+                });
+                }
             } catch (error) {
                 console.error("Error", error);
             }
@@ -197,7 +204,10 @@ const APIPortalRegistration = () => {
                                             id="email"
                                             label={t("email")}
                                             value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
+                                            onChange={(e) => {
+                                                setEmail(e.target.value);
+                                                setVerifyBtnStyle(false);
+                                            }}
                                             placeholder={t("enter_your_email")}
                                             className="w-full"
                                             type="email"
@@ -207,7 +217,7 @@ const APIPortalRegistration = () => {
                                             
                                             <button
                                                 onClick={handleValidateEmail}
-                                                className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium underline transition-colors">
+                                                className={`text-sm text-blue-600 dark:text-blue-400 ${verifyBtnStyle ? "hidden" : "visible" } hover:text-blue-700 dark:hover:text-blue-300 font-medium underline transition-colors`}>
                                                 {t("send_otp_to_email")}
                                             </button>
                                                    
@@ -233,7 +243,8 @@ const APIPortalRegistration = () => {
                                         <ERPButton
                                           title={verifyBtnStyle ? t("verified") :t("verify")}
                                           onClick={handleValidateOtp}
-                                          className={`${verifyBtnStyle ? "bg-green-600" : "bg-gray-400"} h-8`} // Need to change
+                                          variant={verifyBtnStyle ? "primary" : "secondary"}
+                                          className="h-8"
                                         />
                                     </div>
 

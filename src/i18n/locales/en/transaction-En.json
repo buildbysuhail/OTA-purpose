@@ -1088,6 +1088,30 @@
   "item_load_request":"Item Load Request",
   "load_vouchers":"Load Vouchers",
   "stock_transfer_from_branch[BT]":"Stock Transfer From Branch[BT]",
-  "stock_transfer_to_branch[BT]":"Stock Transfer To Branch[BT]"
+  "stock_transfer_to_branch[BT]":"Stock Transfer To Branch[BT]",
+
+  "gr":"GR",
+  "so_trans_details_id":"SO TransDetailsID",
+  "gd_trans_details_id":"GD TransDetailsID",
+  "flv":"FLV",
+  "scheme_qty_limit":"SchemeQtyLimit",
+  "scheme_free_qty":"SchemeFreeQty",
+  "is_scheme_processed":"IsSchemeProcessed",
+  "imf":"IMF",
+  "nLA_sales_price":"NLA SalesPrice",
+  "box_qty":"Box Qty",
+  "is_scheme_item":"IsSchemeItem",
+  "actual_price":"ActualPrice",
+  "scheme_type":"Scheme Type",
+  "unit_discount":"Unit Discount",
+  "nr":"NR",
+  "is_qty_freezed":"IsQtyFreezed",
+  "scheme_id":"SchemeID"
+
+
+
+
+
+
 
 }

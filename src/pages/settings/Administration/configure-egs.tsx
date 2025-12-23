@@ -58,7 +58,7 @@ const ConfigureEgs: React.FC = () => {
         setFormData((prev) => ({ ...prev, [field]: newValue }));
     };
 
-    
+
     // GenerateComplianceBtn Api call 
     const handleGenerateComplianceBtnClick = async () => {
         try {
@@ -67,13 +67,14 @@ const ConfigureEgs: React.FC = () => {
             const category =  formData.companyType;
             const otp = formData.otp;
             const res = await api.postAsync(`${Urls.generate_compliance_csid}?isSimulation=${isSimulation}&isOnline=${isOnline}&category=${category}&otp=${otp}`, {});
-            // ERPAlert.show({
-            //     title: t("suc"),
-            //     // text: balanceMessage,
-            //     text: "please_top_up_add_api_for_uninterrupted_service_keep_enough_api_balance_for_e_invoice_submission",
-            //     icon: "warning",
-            // });
-
+            // Need to manage the below section alert based on the response -  need discussion for this, now added for not forgetting
+            if(res){
+                ERPAlert.show({
+                title: t("warning"),
+                text: res?.message,
+                icon: "warning",
+            });
+            }
         } catch (error) {
             console.error("Error", error);
         }
@@ -84,7 +85,14 @@ const ConfigureEgs: React.FC = () => {
         try {
             const isSimulation = formData.isSimulation;
             const res = await api.postAsync(`${Urls.generate_production_csid}/?isSimulation=${isSimulation}`, {});
-
+            // Need to manage the below section alert based on the response -  need discussion for this, now added for not forgetting
+            if(res){
+                ERPAlert.show({
+                title: t("warning"),
+                text: res?.message,
+                icon: "warning",
+            });
+            }
         } catch (error) {
             console.error("Error", error);
         }

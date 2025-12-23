@@ -340,21 +340,31 @@ const createBatchStoreWithCache = async (
   const api = new APIClient();
 
   return new CustomStore({
-    key: "productBatchID",
+    key: "guid",
     async load(loadOptions: any) {
       if (!hasFetchedOnce) {
         hasFetchedOnce = true;
         console.log("🔵 Making BATCH API call for product:", productID);
-
+      // Handling the issue in special scheme settings searchbox batch-grid
+       let filteredSort = loadOptions.sort;
+        if (Array.isArray(loadOptions.sort)) {
+          filteredSort = loadOptions.sort.filter(
+            (s: any) => s.selector !== "guid"
+          );
+          if (filteredSort.length === 0) {
+            filteredSort = [{selector:"productBatchID", desc:false}];
+          }
+        }
+        const modifiedLoadOptions = { ...loadOptions, sort: filteredSort };
         const paramNames = ["skip", "take", "requireTotalCount", "sort", "filter"];
         const queryString = paramNames
           .filter(
             (paramName) =>
-              loadOptions[paramName] !== undefined &&
-              loadOptions[paramName] !== null &&
-              loadOptions[paramName] !== ""
+              modifiedLoadOptions[paramName] !== undefined &&
+              modifiedLoadOptions[paramName] !== null &&
+              modifiedLoadOptions[paramName] !== ""
           )
-          .map((paramName) => `${paramName}=${JSON.stringify(loadOptions[paramName])}`)
+          .map((paramName) => `${paramName}=${JSON.stringify(modifiedLoadOptions[paramName])}`)
           .join("&");
 
         try {
@@ -511,6 +521,7 @@ const ERPProductSearch = forwardRef<HTMLInputElement, InputProps>(
           allowSorting: true,
           allowSearch: true,
           allowFiltering: true,
+          sortIndex:0,
         },
         {
           dataField: "productCode",
@@ -1542,7 +1553,7 @@ const handleBatchGridDoubleClick =async (e: any) => {
                     className="custom-data-grid-dark-only"
                     dataSource={productDetailStore}
                     height={300}
-                    keyExpr={"productBatchID"}
+                    keyExpr={"guid"}
                     allowColumnReordering={true}
                     allowColumnResizing
                     columnResizingMode={"widget"}
@@ -1582,7 +1593,7 @@ const handleBatchGridDoubleClick =async (e: any) => {
                     <Paging pageSize={30} />
                     <Selection mode="single" />
                     {batchGridCol.map((col) => (
-                      <Column key={col.dataField} {...col} />
+                      <Column sortIndex={col.sortIndex} key={col.dataField} {...col} />
                     ))}
                   </DataGrid>
                 </div>              

@@ -399,6 +399,7 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   billDiscount: { visible: true, disabled: false, label: "bill_discount" },
   exchangeRate: { visible: true, disabled: false, label: "exchange_rate" },
   hasCashPaid: { visible: true, disabled: false, label: "cash_paid" },
+  hasCashReceived: { visible: true, disabled: false, label: "cash_received" },
   isLocked: { visible: true, disabled: false, label: "lb" },
   autoCalculation: { visible: true, disabled: false, label: "auto_calculation" },
   supplyType: { visible: true, disabled: false, label: "supply_type" },

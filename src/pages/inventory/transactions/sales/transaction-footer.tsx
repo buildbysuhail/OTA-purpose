@@ -1034,6 +1034,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                       t={t}
                       focusDiscount={focusDiscount}
                       focusAmount={focusAmount}
+                      cashPaidVoucherType={formState.transaction.master.voucherType} // Managing cash paid or received
                     />
                   )}
                   <RoundOffInput
@@ -1415,6 +1416,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   t={t}
                   focusDiscount={focusDiscount}
                   focusAmount={focusAmount}
+                  cashPaidVoucherType={formState.transaction.master.voucherType} // Managing cash paid or received
                 />
               )}
               <RoundOffInput

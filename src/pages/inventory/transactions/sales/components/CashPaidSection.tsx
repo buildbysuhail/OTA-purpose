@@ -5,14 +5,16 @@ import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
 import { useAppState } from "../../../../../utilities/hooks/useAppState";
 import { formStateMasterHandleFieldChange } from "../../reducer";
 import { VoucherElementProps } from "../../transaction-types";
+import VoucherType from "../../../../../enums/voucher-types";
 
 interface CashPaidSectionProps extends VoucherElementProps {
   focusDiscount: () => void;
   focusAmount: () => void;
+  cashPaidVoucherType: string;
 }
 
 const CashPaidSection = React.forwardRef<HTMLInputElement, CashPaidSectionProps>(
-  ({ formState, dispatch, t, focusDiscount, focusAmount }, ref) => {
+  ({ formState, dispatch, t, focusDiscount, focusAmount, cashPaidVoucherType }, ref) => {
     // Debounced input for cashReceived
     const { appState } = useAppState();
     const isRtl = appState.locale.rtl;
@@ -37,7 +39,7 @@ const CashPaidSection = React.forwardRef<HTMLInputElement, CashPaidSectionProps>
           localInputBox={formState?.userConfig?.inputBoxStyle}
           id="hasCashPaid"
           className={isRtl ? "text-right" : "text-left"}
-          label={t(formState.formElements.hasCashPaid.label)}
+          label={cashPaidVoucherType === VoucherType.SalesReturn ? t(formState.formElements.hasCashPaid.label) :t(formState.formElements.hasCashReceived.label)}
           checked={formState.transaction.master.hasCashPaid}
           onChange={(e) => {
             const isChecked = e.target.checked;

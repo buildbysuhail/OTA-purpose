@@ -340,7 +340,7 @@ const createBatchStoreWithCache = async (
   const api = new APIClient();
 
   return new CustomStore({
-    key: "guid",
+    key: isMainPurchaseGrid ? "productBatchID" : "guid",
     async load(loadOptions: any) {
       if (!hasFetchedOnce) {
         hasFetchedOnce = true;
@@ -1553,7 +1553,7 @@ const handleBatchGridDoubleClick =async (e: any) => {
                     className="custom-data-grid-dark-only"
                     dataSource={productDetailStore}
                     height={300}
-                    keyExpr={"guid"}
+                    keyExpr={isMainPurchaseGrid ? "productBatchID" : "guid"}
                     allowColumnReordering={true}
                     allowColumnResizing
                     columnResizingMode={"widget"}

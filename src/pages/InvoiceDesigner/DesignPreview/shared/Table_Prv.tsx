@@ -216,19 +216,53 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
               ? `${BORDER_WIDTH}pt solid ${tableMasterState?.tableColBorderColor || "#000"}`
               : undefined;
       // Get cell value
-
+              console.log(`col.field-${col.field}`);
+              
         const splitData = String(col.field).split("___");
+        const field = col.field as string;
   const group = splitData[0] as any;
   const key = splitData[1];
         let cellValue = ""; row?.[String(key)] ?? "";
+        if(!field.includes("___")) {
+          
+              console.log(`col.field-1`);
+          if (![
+  "cgst",
+  "cgstPerc",
+  "sgst",
+  "sgstPerc",
+  "igst",
+  "igstPerc",
+  "cessAmt",
+  "cessPerc",
+  "additionalCess",
+  "additionalCessPerc",
+  "gstPerc"
+].includes(col.field)) {
+  console.log(`col.field-2`);
+    cellValue = row?.[String(col.field)] ?? ""
+    console.log(row);
+    
+
+  }
+  else  {
+    console.log(`col.field-3`);
+    cellValue = row?.detail2Data?.[col.field as (keyof InvDetail2ForPrint)]
+
+  }
+        } else {
+          console.log(`col.field-4`);
  if (group == "details") {
+  console.log(`col.field-5`);
     cellValue = row?.[String(key)] ?? ""
 
   }
   else if (group == "details2") {
+    console.log(`col.field-6`);
     cellValue = row?.detail2Data?.[key as (keyof InvDetail2ForPrint)]
 
   }
+}
       // Check if text is Arabic
         const isArabic = containsArabicString(cellValue);
               return(
@@ -248,7 +282,8 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
                   ...styles.cellText 
                 }}>
                   {/* safely access value */}
-                  {formatValue(cellValue,col.format)} 
+                  {/* {formatValue(cellValue,col.format)}  */}
+                  {cellValue} 
                 </span>
               </div>
               )

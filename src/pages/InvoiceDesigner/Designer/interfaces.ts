@@ -551,6 +551,7 @@ export interface ItemTableMasterState {
   showTableHeaderBg?: boolean;
   tableHeaderBgColor?: string;
   headerFontColor?: string;
+  borderStyle?: "dashed" | "solid" | "doted";
   headerFontSize?: number;
   headerFontWeight?: number;
   headerFontFamily?: string;

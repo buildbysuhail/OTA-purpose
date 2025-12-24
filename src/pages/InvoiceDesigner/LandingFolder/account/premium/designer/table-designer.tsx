@@ -385,6 +385,27 @@ const LayoutEditor = ({ masterState, onChange, }: ItemTableLayoutDesignerProps) 
         }}
         checked={masterState?.showTableHeaderBg}
       />
+        <ERPDataCombobox
+        id="borderStyle"
+        label={t("border_style")}
+        field={{
+          id: "borderStyle",
+          required: true,
+          valueKey: "value",
+          labelKey: "label",
+        }}
+        data={masterState}
+        defaultValue={masterState?.borderStyle ?? "Roboto"}
+        value={masterState?.borderStyle ?? "Roboto"}
+        onChangeData={(data: any) => {
+          onChange?.({ ...masterState, borderStyle: data.borderStyle })
+        }}
+        options={[
+          { value: "dashed", label: "dashed" },
+          { value: "solid", label: "solid" },
+          { value: "doted", label: "doted" },
+        ]}
+      />
 
       {masterState?.showTableHeaderBg && (
         <ErpInput

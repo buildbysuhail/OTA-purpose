@@ -561,18 +561,13 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                     onChangeData={(e) => handleFieldChange("qtyDecimalPoint", e.qtyDecimalPoint)}
                   />
 
-                  <button name="sds"  onClick={ async() =>  {
-                     const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`);
-                        const Utc = await getStorageString(key);
-                        let userConfig: UserConfig | undefined;
-                        if (Utc) {
-                          const decoded = safeBase64Decode(Utc) ?? "{}";
-                          userConfig = customJsonParse(decoded ?? "{}");
-                          console.log(userConfig);
-                          
-                        } 
-                  }}
-                  > Log</button>
+                <ERPCheckbox
+                  id="printPreview"
+                  label={t("print_preview")}
+                  data={formState.userConfig}
+                  checked={formState?.userConfig?.printPreview}
+                  onChangeData={(e) => handleFieldChange("printPreview", e.printPreview)}
+                />
                 </>
               }
             </div>

@@ -289,7 +289,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       let IGST = Number(detail.details2?.igst ?? 0);
       let AddnlCess = Number(detail.details2?.additionalCess ?? 0);
       let Cess = Number(detail.details2?.cessAmt ?? 0);
-      debugger;
+      
       // Flags
       const isEdit = form?.isEdit ?? false;
       const TenderClosed = formState?.tenderOpen !== true;
@@ -322,7 +322,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
           Rate = Rate || Number(detail.unitPrice ?? 0);
         }
       }
-      debugger;
+      
       // ---------- Gross ----------
       let Gross = round(Qty * Rate, 4);
 
@@ -376,7 +376,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       if (RatePlusTax > 0 && VatPerc > 0 && Disc === 0 && chkShowRateBeforeTax && Math.abs(CalculationDiff) < 0.5) {
         Gross = round(Qty * (RatePlusTax / (1 + VatPerc / 100)), 5);
       }
-      debugger;
+      
       // ---------- NetValue ----------
       let NetValue = round(Gross - Disc, 4);
 
@@ -390,7 +390,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         if (applicationSettings?.branchSettings?.maintainKSA_EInvoice && applicationSettings?.branchSettings.apply_KSA_EInvoice_Validation_Rules) {
           NetValue = round(NetValue, 2);
         }
-        debugger;
+        
         Vat = round(NetValue * VatPerc / 100, 4);
 
         // Map values to detail (matching C# cell writes)
@@ -1522,7 +1522,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       outputRow.stock = detail.stock;
       outputRow.minSalePrice = detail.minSalePrice;
       outputRow.multiFactor = 1; // Default or calculate if needed
-      debugger;
+      
       // Date handling
       outputRow.mfgDate = detail.mfdDate == "" ? null : detail.mfdDate;
       outputRow.mfdDate = detail.mfdDate == "" ? null : detail.mfdDate;
@@ -1621,8 +1621,10 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       // 1. Calculate total qty (only unprocessed scheme rows)
       // ----------------------------
       for (let i = 0; i <= rowIndex; i++) {
-        const row = formState.transaction.details[i];
+        let row = formState.transaction.details[i];
         if (!row) continue;
+
+        if (row.slNo === slNo) { row = merge({}, row, baseRow); }
 
         if (
           Number(row.productBatchID || 0) === productBatchID &&
@@ -1638,6 +1640,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       // ----------------------------
       if (totalQty === qtyLimit) {
 
+          let _outRow: DeepPartial<TransactionDetail> = { };
         const taxPerc = Number(baseRow.vatPerc || 0);
         let hascurrentRowProcessed = false;
         for (let i = 0; i <= rowIndex; i++) {
@@ -1689,11 +1692,119 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
               );
 
             } else {
+              _outRow = outRow;
               hascurrentRowProcessed = true;
             }
           }
 
         }
+        if( hascurrentRowProcessed ) {
+          return _outRow;
+        }
+        return null
+      }
+      return null
+    } catch {
+      return null
+    }
+
+    return false;
+  }
+ async function applyQtyDiscount(
+    qtyLimit: number,
+    baseRow: TransactionDetail,
+    slNo: string,
+    freeQty: number,
+  ): Promise<any> { 
+    try {
+      let totalQty = 0;
+ debugger;
+      if (!baseRow) return false;
+      const rowIndex = formState.transaction.details.findIndex(
+        (d) => d.slNo === slNo
+      );
+      if (rowIndex === -1) return false;
+      const productBatchID = Number(baseRow.productBatchID || 0);
+      const unitID = Number(baseRow.unitID || 0);
+
+      // ----------------------------
+      // 1. Calculate total qty (only unprocessed scheme rows)
+      // ----------------------------
+      for (let i = 0; i <= rowIndex; i++) {
+        
+        let row = formState.transaction.details[i];
+        if (row.slNo === slNo) { row = merge({}, row, baseRow); }
+        if (!row) continue;
+
+        if (
+          Number(row.productBatchID || 0) === productBatchID &&
+          Number(row.unitID || 0) === unitID &&
+          row.isSchemeProcessed === "N"
+        ) {
+          totalQty += Number(row.slNo === slNo ? baseRow.qty : row.qty || 0);
+        }
+      }
+
+      // ----------------------------
+      // 2. Apply scheme ONLY if qty == limit
+      // ----------------------------
+      if (totalQty > qtyLimit) {
+
+        
+          let _outRow: DeepPartial<TransactionDetail> = {  };
+
+        debugger;
+        let hascurrentRowProcessed = false;
+        for (let i = 0; i <= rowIndex; i++) {
+          let row = formState.transaction.details[i];
+          if (row.slNo === slNo) { row = merge({}, row, baseRow); }
+          let outRow: DeepPartial<TransactionDetail> = { slNo: row.slNo };
+          if (!row) continue;
+
+          
+
+          if (
+            Number(row.productBatchID || 0) === productBatchID &&
+            Number(row.unitID || 0) === unitID &&
+            row.isSchemeProcessed === "N"
+          ) {
+            
+
+            outRow.isSchemeProcessed = "Y";
+
+            // Recalculate row
+            if (row.slNo !== slNo) {
+              const outRowd = await calculateRowAmount(
+                row,
+                "qty",
+                { result: { transaction: { details: [outRow] } } },
+                true,
+                i
+              );
+              dispatch(
+                formStateHandleFieldChangeKeysOnly({
+                  fields: {
+                    transaction: {
+                      details: [outRowd.transaction!.details![0]],
+                    },
+                  },
+                })
+              );
+
+            } else {
+              hascurrentRowProcessed = true;
+              outRow.free = freeQty,
+              outRow.qty = 0
+              _outRow = outRow;debugger;
+            }
+          }
+
+        }
+        debugger;
+        if(hascurrentRowProcessed) {
+          return _outRow
+        }
+        return null
       }
       return null
     } catch {
@@ -1819,7 +1930,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       if (applicationSettings?.productsSettings?.enableMultiWarehouseBilling) {
         warehouseId = 0;
       }
-      debugger;
+      
       if (res?.isShowItemPopUp && forImport != true) {
         dispatch(
           formStateHandleFieldChangeKeysOnly({
@@ -1841,7 +1952,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
           })
         );
       } else if (res?.products?.length === 1) {
-        debugger;
+        
         let product = res.products[0];
         product.productName = product.productName.replace(/^\s+/, (m) =>
           "\u00A0".repeat(m.length)
@@ -1958,7 +2069,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         }
 
         /* ---------------- FALLBACK SALES PRICE ---------------- */
-        if (!outDetail.unitPrice || outDetail.unitPrice === 0) {
+        if ((!outDetail.unitPrice || outDetail.unitPrice === 0) && product.stdSalesPrice>0) {
           outDetail.unitPrice = product.stdSalesPrice;
         }
         if (
@@ -1987,7 +2098,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         if (isStockDetailsVisible) {
           outDetail.stockDetails = product.stockDetails;
         }
-        debugger;
+        
 
         // -----------------------------
         // UNIT 2 BARCODE
@@ -2083,10 +2194,10 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
             } else {
               if (multiFactor > 0) {
 
-                Number(product.minSalePrice || 0) * multiFactor;
+               // Number(product.minSalePrice || 0) * multiFactor;
 
                 outDetail.unitPrice =
-                  round(product.stdSalesPrice || 0);
+                  round(product.stdSalesPrice || 0)*multiFactor;
               }
 
 
@@ -2110,7 +2221,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
           }
         }
 
-        debugger;
+        
         /* ---------------- VAT / GST ---------------- */
         if (userSession.dbIdValue === "543140180640") {
           // NAHLA
@@ -2232,19 +2343,27 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
                   if (dfg !== null) {
                     outDetail = merge({}, outDetail, dfg);
                   }
-                } else {
+                }
+              } else {
                   if (product.isCheckQtyLimit) {
                     outDetail.schemeQtyLimit = product.schemeQtyLimit;
                     outDetail.schemeFreeQty = product.schemeFreeQty;
                     outDetail.isSchemeProcessed = "N";
 
+                    const dfg = await applyQtyDiscount(
+                    outDetail.schemeQtyLimit!,
+                    outDetail as TransactionDetail,
+                    outDetail.slNo!,
+                    product.schemeFreeQty
+                  );
+                  debugger;
+                  if (dfg !== null) {
+                    outDetail = merge({}, outDetail, dfg);
+                  }
                     outDetail.isSchemeItem = "S";
                   }
-                  if (product) {
-                    //do
-                  }
                 }
-              }
+              
             }
           }
         }
@@ -2778,7 +2897,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     commonParams: CommonParams,
     isEdit: boolean = false
   ) => {
-    debugger;
+    
     let { result } = commonParams;
     result = result
       ? result

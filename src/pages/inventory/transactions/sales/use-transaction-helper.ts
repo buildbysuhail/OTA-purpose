@@ -259,6 +259,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       const chkShowRateBeforeTax = !!(formState?.userConfig?.showRateBeforeTax);
       const chkTaxOnMRP = !!(formState?.userConfig?.taxOnMRP);
       const chkTaxOnFreeItem = !!(formState?.userConfig?.taxOnFreeItem);
+      const master = formState.transaction.master;
 
       // read numeric values directly (no toNum helper)
       let Qty = Number(detail.qty ?? 0);
@@ -288,7 +289,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       let IGST = Number(detail.details2?.igst ?? 0);
       let AddnlCess = Number(detail.details2?.additionalCess ?? 0);
       let Cess = Number(detail.details2?.cessAmt ?? 0);
-debugger;
+      debugger;
       // Flags
       const isEdit = form?.isEdit ?? false;
       const TenderClosed = formState?.tenderOpen !== true;
@@ -321,7 +322,7 @@ debugger;
           Rate = Rate || Number(detail.unitPrice ?? 0);
         }
       }
-debugger;
+      debugger;
       // ---------- Gross ----------
       let Gross = round(Qty * Rate, 4);
 
@@ -352,7 +353,7 @@ debugger;
       }
 
       // Discount slab offer behavior (exact mapping)
-      if (settings?.inventorySettings?.enableDiscountSlabOffer || settings?.inventorySettings?.enableDiscountSlabOffer) {
+      if ( master.voucherType == VoucherType.SalesInvoice && (settings?.inventorySettings?.enableDiscountSlabOffer || settings?.inventorySettings?.enableDiscountSlabOffer)) {
         // C# checks for EnableDiscountSlabOffer and DiscPerc == 0 and (isEdit || TenderClosed)
         if ((DiscPerc === 0) && (isEdit || TenderClosed)) {
           if (DiscPerc !== Disc) {
@@ -375,7 +376,7 @@ debugger;
       if (RatePlusTax > 0 && VatPerc > 0 && Disc === 0 && chkShowRateBeforeTax && Math.abs(CalculationDiff) < 0.5) {
         Gross = round(Qty * (RatePlusTax / (1 + VatPerc / 100)), 5);
       }
-debugger;
+      debugger;
       // ---------- NetValue ----------
       let NetValue = round(Gross - Disc, 4);
 
@@ -389,7 +390,7 @@ debugger;
         if (applicationSettings?.branchSettings?.maintainKSA_EInvoice && applicationSettings?.branchSettings.apply_KSA_EInvoice_Validation_Rules) {
           NetValue = round(NetValue, 2);
         }
-debugger;
+        debugger;
         Vat = round(NetValue * VatPerc / 100, 4);
 
         // Map values to detail (matching C# cell writes)
@@ -563,7 +564,8 @@ debugger;
           detail.details2.sgstPerc = 0;
           // C# doesn't zero IGST here (IGST used for interstate)
         }
-        if ((form?.transaction?.master?.voucherType ?? "") === "PE") {
+        if (((form?.transaction?.master?.voucherType ?? "") === VoucherType.SalesEstimate) 
+            || ((form?.transaction?.master?.voucherForm == "" || (form?.transaction?.master?.voucherType?? "") ===  VoucherType.SaleReturnEstimate ))) {
           detail.details2.cgst = 0;
           detail.details2.sgst = 0;
           detail.details2.igst = 0;
@@ -591,11 +593,19 @@ debugger;
         detail.gross = getFormattedValueIgnoreRoundingToNumber(Gross);
         detail.total = NetAmount;
         detail.cost = Qty !== 0 ? (NetValue / Qty) : 0;
+        if(master.voucherType == VoucherType.SalesReturn) {
+          detail.cost = Qty !== 0 ? (NetAmount / Qty) : 0;
+        }
 
         // Profit
         const purchasePrice = Number(detail.purchasePrice ?? detail.purchaseRate ?? 0);
         const Profit = NetValue - (Qty * purchasePrice);
-        detail.profit = Profit;
+        if([VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(master.voucherType as VoucherType) ) {
+          detail.profit =  -1*Profit;
+        } else {
+          detail.profit =  Profit;
+        }
+        
       }
 
       // ---------- Final profit percentage (common) ----------
@@ -1232,9 +1242,9 @@ debugger;
       // VAT handling based on form type
       if (
         !clientSession.isAppGlobal &&
-        ((["SI", "SR"].includes(voucherType)) &&(
-            formType === "VAT" 
-            )) || !["SI", "SR"].includes(voucherType)
+        ((["SI", "SR"].includes(voucherType)) && (
+          formType === "VAT"
+        )) || !["SI", "SR"].includes(voucherType)
       ) {
         detail.vatPerc = row.vatPercentage;
         detail.vatAmount = getFormattedValueIgnoreRoundingToNumber(
@@ -1512,7 +1522,7 @@ debugger;
       outputRow.stock = detail.stock;
       outputRow.minSalePrice = detail.minSalePrice;
       outputRow.multiFactor = 1; // Default or calculate if needed
-debugger;
+      debugger;
       // Date handling
       outputRow.mfgDate = detail.mfdDate == "" ? null : detail.mfdDate;
       outputRow.mfdDate = detail.mfdDate == "" ? null : detail.mfdDate;
@@ -1590,140 +1600,140 @@ debugger;
     return _master;
   };
   async function applySpecialSpriceExactQtyLimitReached(
-  qtyLimit: number,
-  baseRow: TransactionDetail,
-  slNo: string,
-  chkShowRateBeforeTax: boolean,
-  SpecialSchemePrice: number
-): Promise<any> {
-  try {
-    let totalQty = 0;
+    qtyLimit: number,
+    baseRow: TransactionDetail,
+    slNo: string,
+    chkShowRateBeforeTax: boolean,
+    SpecialSchemePrice: number
+  ): Promise<any> {
+    try {
+      let totalQty = 0;
 
-    if (!baseRow) return false;
-    const rowIndex = formState.transaction.details.findIndex(
-      (d) => d.slNo === slNo
-    );
-    if (rowIndex === -1) return false;
-    const productBatchID = Number(baseRow.productBatchID || 0);
-    const unitID = Number(baseRow.unitID || 0);
+      if (!baseRow) return false;
+      const rowIndex = formState.transaction.details.findIndex(
+        (d) => d.slNo === slNo
+      );
+      if (rowIndex === -1) return false;
+      const productBatchID = Number(baseRow.productBatchID || 0);
+      const unitID = Number(baseRow.unitID || 0);
 
-    // ----------------------------
-    // 1. Calculate total qty (only unprocessed scheme rows)
-    // ----------------------------
-    for (let i = 0; i <= rowIndex; i++) {
-      const row = formState.transaction.details[i];
-      if (!row) continue;
-
-      if (
-        Number(row.productBatchID || 0) === productBatchID &&
-        Number(row.unitID || 0) === unitID &&
-        row.isSchemeProcessed === "N"
-      ) {
-        totalQty += Number(row.qty || 0);
-      }
-    }
-
-    // ----------------------------
-    // 2. Apply scheme ONLY if qty == limit
-    // ----------------------------
-    if (totalQty === qtyLimit) {
-
-      const taxPerc = Number(baseRow.vatPerc || 0);
-      let hascurrentRowProcessed = false;
+      // ----------------------------
+      // 1. Calculate total qty (only unprocessed scheme rows)
+      // ----------------------------
       for (let i = 0; i <= rowIndex; i++) {
-        let row = formState.transaction.details[i];
-        let outRow: DeepPartial<TransactionDetail> = {slNo: row.slNo};
+        const row = formState.transaction.details[i];
         if (!row) continue;
-        
-        if (row.slNo === slNo) { row = merge({}, row, baseRow);}
 
         if (
           Number(row.productBatchID || 0) === productBatchID &&
           Number(row.unitID || 0) === unitID &&
           row.isSchemeProcessed === "N"
         ) {
-          // Set scheme price
-          outRow.unitPrice = SpecialSchemePrice;
-          outRow.ratePlusTax = SpecialSchemePrice;
-
-          // Handle rate-before-tax logic
-          if (
-            taxPerc > 0 &&
-            chkShowRateBeforeTax &&
-            i !== rowIndex
-          ) {
-            const uRate =
-              Number(outRow.unitPrice || 0) / (1 + taxPerc / 100);
-            outRow.unitPrice = round(uRate);
-          }
-
-          outRow.isSchemeProcessed = "Y";
-
-          // Recalculate row
-          if(row.slNo !== slNo) {
-          const outRowd = await calculateRowAmount(
-            row,
-            "qty",
-            { result: {transaction:{details:[outRow]}} },
-            true,
-            i
-          );
-          dispatch(
-            formStateHandleFieldChangeKeysOnly({
-              fields: {
-                transaction: {
-                  details: [outRowd.transaction!.details![0]],
-                },
-              },
-            })
-          );
-          
-          } else {
-            hascurrentRowProcessed = true;
-          }
+          totalQty += Number(row.qty || 0);
         }
+      }
+
+      // ----------------------------
+      // 2. Apply scheme ONLY if qty == limit
+      // ----------------------------
+      if (totalQty === qtyLimit) {
+
+        const taxPerc = Number(baseRow.vatPerc || 0);
+        let hascurrentRowProcessed = false;
+        for (let i = 0; i <= rowIndex; i++) {
+          let row = formState.transaction.details[i];
+          let outRow: DeepPartial<TransactionDetail> = { slNo: row.slNo };
+          if (!row) continue;
+
+          if (row.slNo === slNo) { row = merge({}, row, baseRow); }
+
+          if (
+            Number(row.productBatchID || 0) === productBatchID &&
+            Number(row.unitID || 0) === unitID &&
+            row.isSchemeProcessed === "N"
+          ) {
+            // Set scheme price
+            outRow.unitPrice = SpecialSchemePrice;
+            outRow.ratePlusTax = SpecialSchemePrice;
+
+            // Handle rate-before-tax logic
+            if (
+              taxPerc > 0 &&
+              chkShowRateBeforeTax &&
+              i !== rowIndex
+            ) {
+              const uRate =
+                Number(outRow.unitPrice || 0) / (1 + taxPerc / 100);
+              outRow.unitPrice = round(uRate);
+            }
+
+            outRow.isSchemeProcessed = "Y";
+
+            // Recalculate row
+            if (row.slNo !== slNo) {
+              const outRowd = await calculateRowAmount(
+                row,
+                "qty",
+                { result: { transaction: { details: [outRow] } } },
+                true,
+                i
+              );
+              dispatch(
+                formStateHandleFieldChangeKeysOnly({
+                  fields: {
+                    transaction: {
+                      details: [outRowd.transaction!.details![0]],
+                    },
+                  },
+                })
+              );
+
+            } else {
+              hascurrentRowProcessed = true;
+            }
+          }
 
         }
       }
       return null
-  } catch {
-    return null
-  }
-
-  return false;
-}
-
-  function checkSpecialSpriceLimitReached(
-  qtyLimit: number,
-  rowIndex: number,
-  details: TransactionDetail[]
-): boolean {
-  try {
-    let totalQty = 0;
-
-    const row = details[rowIndex];
-    if (!row) return false;
-
-    const productBatchID = Number(row.productBatchID || 0);
-    const unitID = Number(row.unitID || 0);
-
-    for (let i = 0; i <= rowIndex; i++) {
-      const d = details[i];
-      if (!d) continue;
-
-      if (
-        Number(d.productBatchID || 0) === productBatchID &&
-        Number(d.unitID || 0) === unitID
-      ) {
-        totalQty += Number(d.qty || 0);
-      }
+    } catch {
+      return null
     }
 
-    return totalQty > qtyLimit;
-  } catch {
     return false;
   }
-}
+
+  function checkSpecialSpriceLimitReached(
+    qtyLimit: number,
+    rowIndex: number,
+    details: TransactionDetail[]
+  ): boolean {
+    try {
+      let totalQty = 0;
+
+      const row = details[rowIndex];
+      if (!row) return false;
+
+      const productBatchID = Number(row.productBatchID || 0);
+      const unitID = Number(row.unitID || 0);
+
+      for (let i = 0; i <= rowIndex; i++) {
+        const d = details[i];
+        if (!d) continue;
+
+        if (
+          Number(d.productBatchID || 0) === productBatchID &&
+          Number(d.unitID || 0) === unitID
+        ) {
+          totalQty += Number(d.qty || 0);
+        }
+      }
+
+      return totalQty > qtyLimit;
+    } catch {
+      return false;
+    }
+  }
   const loadProductDetailsByAutoBarcode = async (
     data: LoadProductDetailsByAutoBarcodeProps,
     commonParams: CommonParams,
@@ -1766,9 +1776,9 @@ debugger;
           return 0;
         }
       })();
-const isStockDetailsVisible = formState.gridColumns?.find(
-          (x) => x.dataField == "stockDetails"
-        )?.visible
+      const isStockDetailsVisible = formState.gridColumns?.find(
+        (x) => x.dataField == "stockDetails"
+      )?.visible
       let payload = {
         useProductCode: data.useProductCode,
         productCode: data.productCode,
@@ -1952,18 +1962,18 @@ const isStockDetailsVisible = formState.gridColumns?.find(
           outDetail.unitPrice = product.stdSalesPrice;
         }
         if (
-            applicationSettings?.productsSettings?.enableMultiWarehouseBilling &&
-            userSession.dbIdValue === "SAMAPLASTICS"
-          ) {
-            try {
-              const sd = await getApLocalData("Warehouses");
-              outDetail.warehouseName = sd && sd.length > 0 ? sd.find((x) => x.id === formState.transaction.master.fromWarehouseID)?.name : "";
-              outDetail.warehouseID =formState.transaction.master.fromWarehouseID;
-              outDetail.warehouseID = formState.transaction.master.fromWarehouseID;
-            } catch (err) {
-              // intentionally ignored (same as C#)
-            }
+          applicationSettings?.productsSettings?.enableMultiWarehouseBilling &&
+          userSession.dbIdValue === "SAMAPLASTICS"
+        ) {
+          try {
+            const sd = await getApLocalData("Warehouses");
+            outDetail.warehouseName = sd && sd.length > 0 ? sd.find((x) => x.id === formState.transaction.master.fromWarehouseID)?.name : "";
+            outDetail.warehouseID = formState.transaction.master.fromWarehouseID;
+            outDetail.warehouseID = formState.transaction.master.fromWarehouseID;
+          } catch (err) {
+            // intentionally ignored (same as C#)
           }
+        }
         /* ---------------- MULTI FACTOR PRICE ADJUST ---------------- */
         if (multiFactor > 0) {
           // outDetail.unitPrice = round(outDetail.unitPrice * multiFactor);
@@ -1971,145 +1981,145 @@ const isStockDetailsVisible = formState.gridColumns?.find(
           outDetail.minSalePrice = round(product.minSalePrice * multiFactor);
           // outDetail.boxQty = multiFactor;
         }
-          outDetail.boxQty = multiFactor;
-          outDetail.stock = round(product.stock);
+        outDetail.boxQty = multiFactor;
+        outDetail.stock = round(product.stock);
 
-          if(isStockDetailsVisible ) {
-            outDetail.stockDetails = product.stockDetails;
+        if (isStockDetailsVisible) {
+          outDetail.stockDetails = product.stockDetails;
+        }
+        debugger;
+
+        // -----------------------------
+        // UNIT 2 BARCODE
+        // -----------------------------
+        if (product.isUnit2BarCode) {
+          if (Number(product.unit2SalesPrice || 0) === 0) {
+            if (multiFactor > 0) {
+              const salePrice = Number(product.stdSalesPrice || 0);
+              const purchasePrice = Number(product.stdPurchasePrice || 0);
+
+              outDetail.unitPrice = salePrice * multiFactor;
+              outDetail.purchasePrice = purchasePrice * multiFactor;
+              outDetail.boxQty = multiFactor;
+            }
           }
-debugger;
+        }
 
-          // -----------------------------
-// UNIT 2 BARCODE
-// -----------------------------
-if (product.isUnit2BarCode) {
-  if (Number(product.unit2SalesPrice || 0) === 0) {
-    if (multiFactor > 0) {
-      const salePrice = Number(product.stdSalesPrice || 0);
-      const purchasePrice = Number(product.stdPurchasePrice || 0);
+        // -----------------------------
+        // UNIT 3 BARCODE
+        // -----------------------------
+        else if (product.isUnit3BarCode) {
+          if (Number(product.unit3SalesPrice || 0) === 0) {
+            if (multiFactor > 0) {
+              const salePrice = Number(product.stdSalesPrice || 0);
+              const purchasePrice = Number(product.stdPurchasePrice || 0);
 
-      outDetail.unitPrice = salePrice * multiFactor;
-      outDetail.purchasePrice = purchasePrice * multiFactor;
-      outDetail.boxQty = multiFactor;
-    }
-  }
-}
+              outDetail.unitPrice = salePrice * multiFactor;
+              outDetail.purchasePrice = purchasePrice * multiFactor;
+              outDetail.boxQty = multiFactor;
+            }
+          }
+        }
 
-// -----------------------------
-// UNIT 3 BARCODE
-// -----------------------------
-else if (product.isUnit3BarCode) {
-  if (Number(product.unit3SalesPrice || 0) === 0) {
-    if (multiFactor > 0) {
-      const salePrice = Number(product.stdSalesPrice || 0);
-      const purchasePrice = Number(product.stdPurchasePrice || 0);
+        // -----------------------------
+        // NORMAL / MULTI UNIT BARCODE
+        // -----------------------------
+        else {
+          // Multi-unit barcode with special price
+          if (product.isMultiUnitBarCode && Number(product.unitSPrice || 0) > 0) {
+            outDetail.unitPrice = Number(product.unitSPrice || 0);
+          }
+          // Multi-factor calculation
+          else if (multiFactor > 0) {
+            const salePrice = Number(product.stdSalesPrice || 0);
+            const purchasePrice = Number(product.stdPurchasePrice || 0);
 
-      outDetail.unitPrice = salePrice * multiFactor;
-      outDetail.purchasePrice = purchasePrice * multiFactor;
-      outDetail.boxQty = multiFactor;
-    }
-  }
-}
+            outDetail.unitPrice = salePrice * multiFactor;
+            outDetail.purchasePrice = purchasePrice * multiFactor;
 
-// -----------------------------
-// NORMAL / MULTI UNIT BARCODE
-// -----------------------------
-else {
-  // Multi-unit barcode with special price
-  if (product.isMultiUnitBarCode && Number(product.unitSPrice || 0) > 0) {
-    outDetail.unitPrice = Number(product.unitSPrice || 0);
-  }
-  // Multi-factor calculation
-  else if (multiFactor > 0) {
-    const salePrice = Number(product.stdSalesPrice || 0);
-    const purchasePrice = Number(product.stdPurchasePrice || 0);
+            // DB-specific logic
+            if (userSession.dbIdValue === "543140180640") {
+              outDetail.nLA_StdSalesPrice = salePrice * multiFactor;
+            }
 
-    outDetail.unitPrice = salePrice * multiFactor;
-    outDetail.purchasePrice = purchasePrice * multiFactor;
+            outDetail.boxQty = multiFactor;
+          }
+          // Default price
+          else {
+            outDetail.unitPrice = Number(product.stdSalesPrice || 0);
 
-    // DB-specific logic
-    if (userSession.dbIdValue === "543140180640") {
-      outDetail.nLA_StdSalesPrice = salePrice * multiFactor;
-    }
+            if (userSession.dbIdValue === "543140180640") {
+              outDetail.nLA_StdSalesPrice = Number(product.stdSalesPrice || 0);
+            }
+          }
+        }
 
-    outDetail.boxQty = multiFactor;
-  }
-  // Default price
-  else {
-    outDetail.unitPrice = Number(product.stdSalesPrice || 0);
+        // -----------------------------
+        // APPLY MULTI FACTOR (COMMON)
+        // -----------------------------
+        if (multiFactor > 0) {
+          const minSalePrice = Number(product.minSalePrice || 0);
+          const purchasePrice = Number(product.stdPurchasePrice || 0);
 
-    if (userSession.dbIdValue === "543140180640") {
-      outDetail.nLA_StdSalesPrice = Number(product.stdSalesPrice || 0);
-    }
-  }
-}
+          outDetail.purchasePrice = purchasePrice * multiFactor;
+          outDetail.minSalePrice = minSalePrice * multiFactor;
+          outDetail.boxQty = multiFactor;
+        }
+        if (
+          Number(product.defSalesUnitID || 0) > 0 &&
+          !product.isMultiUnitBarCode &&
+          !product.isUnit2BarCode &&
+          !product.isUnit3BarCode &&
+          !product.isMannualBarCode &&
+          Number(product.basicUnitID) !== Number(product.defSalesUnitID)
+        ) {
+          try {
 
-// -----------------------------
-// APPLY MULTI FACTOR (COMMON)
-// -----------------------------
-if (multiFactor > 0) {
-  const minSalePrice = Number(product.minSalePrice || 0);
-  const purchasePrice = Number(product.stdPurchasePrice || 0);
+            if (!isNullOrUndefinedOrEmpty(product.defUnitName)) {
+              outDetail.unit = product.unitName;
+            }
+            if ((product.defUnitSPrice ?? 0) > 0) {
+              outDetail.unitPrice = round(Number(product.defUnitSPrice));
+            } else {
+              if (multiFactor > 0) {
 
-  outDetail.purchasePrice = purchasePrice * multiFactor;
-  outDetail.minSalePrice = minSalePrice * multiFactor;
-  outDetail.boxQty = multiFactor;
-}
-if (
-  Number(product.defSalesUnitID || 0) > 0 &&
-  !product.isMultiUnitBarCode &&
-  !product.isUnit2BarCode &&
-  !product.isUnit3BarCode &&
-  !product.isMannualBarCode &&
-  Number(product.basicUnitID) !== Number(product.defSalesUnitID)
-) {
-  try {
-    
-    if(!isNullOrUndefinedOrEmpty(product.defUnitName)) {
-      outDetail.unit = product.unitName;
-    }
-if ((product.defUnitSPrice??0) > 0) {
-      outDetail.unitPrice = round(Number(product.defUnitSPrice));
-    } else {
-      if (multiFactor > 0) {
-        
-        Number(product.minSalePrice || 0) * multiFactor;
+                Number(product.minSalePrice || 0) * multiFactor;
 
-      outDetail.unitPrice =
-        round(product.stdSalesPrice || 0);
-    }
-
-    
-      }
+                outDetail.unitPrice =
+                  round(product.stdSalesPrice || 0);
+              }
 
 
-    // Assign default sales unit
-    outDetail.unitID = product.defSalesUnitID;
+            }
 
-    if (multiFactor > 0) {
-      outDetail.minSalePrice =
-        Number(product.minSalePrice || 0) * multiFactor;
 
-      outDetail.purchasePrice =
-        Number(product.stdPurchasePrice || 0) * multiFactor;
+            // Assign default sales unit
+            outDetail.unitID = product.defSalesUnitID;
 
-      outDetail.boxQty = multiFactor;
-    }
-  } catch (err) {
-    // same as C#: swallow exception
-  }
-}
+            if (multiFactor > 0) {
+              outDetail.minSalePrice =
+                Number(product.minSalePrice || 0) * multiFactor;
 
-debugger;
+              outDetail.purchasePrice =
+                Number(product.stdPurchasePrice || 0) * multiFactor;
+
+              outDetail.boxQty = multiFactor;
+            }
+          } catch (err) {
+            // same as C#: swallow exception
+          }
+        }
+
+        debugger;
         /* ---------------- VAT / GST ---------------- */
         if (userSession.dbIdValue === "543140180640") {
           // NAHLA
           outDetail.vatPerc = product.sVatPerc;
         } else {
           if (
-            ((["SI", "SR"].includes(formState.transaction.master.voucherType)) &&(
-            formState.transaction.master.voucherForm === "VAT" ||
-            formState.initialFormType === "VAT"
+            ((["SI", "SR"].includes(formState.transaction.master.voucherType)) && (
+              formState.transaction.master.voucherForm === "VAT" ||
+              formState.initialFormType === "VAT"
             )) || !["SI", "SR"].includes(formState.transaction.master.voucherType)
           ) {
             outDetail.vatPerc = product.sVatPerc;
@@ -2210,32 +2220,32 @@ debugger;
 
             /** ---- Qty based scheme ---- */
             if (!schemeApplied && product.specialSchemePrice == 0) {
-              if( outDetail.schemeType === "Buy Exact N for off") {
+              if (outDetail.schemeType === "Buy Exact N for off") {
                 if ((outDetail.schemeQtyLimit ?? 0) > 0) {
                   const dfg = await applySpecialSpriceExactQtyLimitReached(
-                  outDetail.schemeQtyLimit!,
-                  outDetail as TransactionDetail,
-                  outDetail.slNo!,
-                  formState.userConfig?.showRateBeforeTax || false,
-                  product.specialSchemePrice!
-                );
-                if(dfg !== null) {
-                  outDetail = merge({}, outDetail, dfg);
-                }
-              } else {
-              if (product.isCheckQtyLimit) {
-                outDetail.schemeQtyLimit = product.schemeQtyLimit;
-                outDetail.schemeFreeQty = product.schemeFreeQty;
-                outDetail.isSchemeProcessed = "N";
+                    outDetail.schemeQtyLimit!,
+                    outDetail as TransactionDetail,
+                    outDetail.slNo!,
+                    formState.userConfig?.showRateBeforeTax || false,
+                    product.specialSchemePrice!
+                  );
+                  if (dfg !== null) {
+                    outDetail = merge({}, outDetail, dfg);
+                  }
+                } else {
+                  if (product.isCheckQtyLimit) {
+                    outDetail.schemeQtyLimit = product.schemeQtyLimit;
+                    outDetail.schemeFreeQty = product.schemeFreeQty;
+                    outDetail.isSchemeProcessed = "N";
 
-                outDetail.isSchemeItem = "S";
-              } 
-              if(product) {
-                //do
+                    outDetail.isSchemeItem = "S";
+                  }
+                  if (product) {
+                    //do
+                  }
+                }
               }
-              }
-              }
-            } 
+            }
           }
         }
 
@@ -2245,7 +2255,7 @@ debugger;
         if (product.blnCustLastPriceLoaded
         ) {
 
-              if (product.partyLastSalesRate > 0) {
+          if (product.partyLastSalesRate > 0) {
             if (formState.gridColumns?.find(x => x.dataField === "customer_LSP")?.visible) {
               outDetail.customer_LSP = product.partyLastSalesRate;
             } else {
@@ -2253,10 +2263,10 @@ debugger;
             }
           }
         }
-if (product.weighingPrice > 0) {
-  outDetail.unitPrice = product.weighingPrice;
-  outDetail.ratePlusTax = product.weighingPrice;
-}
+        if (product.weighingPrice > 0) {
+          outDetail.unitPrice = product.weighingPrice;
+          outDetail.ratePlusTax = product.weighingPrice;
+        }
         /** ---------------- Tax / MRP inclusive ---------------- */
         let uRate = 0;
         let taxPerc = Number(outDetail.vatPerc || 0);
@@ -2265,9 +2275,9 @@ if (product.weighingPrice > 0) {
         if (userSession.dbIdValue !== "543140180640") {
           // Draft mode / form type condition
           if (
-             !(((["SI", "SR"].includes(formState.transaction.master.voucherType)) &&(
-            formState.transaction.master.voucherForm === "VAT" ||
-            formState.initialFormType === "VAT"
+            !(((["SI", "SR"].includes(formState.transaction.master.voucherType)) && (
+              formState.transaction.master.voucherForm === "VAT" ||
+              formState.initialFormType === "VAT"
             )) || !["SI", "SR"].includes(formState.transaction.master.voucherType))
           ) {
             taxPerc = 0;
@@ -2313,149 +2323,149 @@ if (product.weighingPrice > 0) {
           }
         }
 
-let continueProcessing = false;
-// ------------------------------------
-// NORMAL FLOW (NO AUTO INCREMENT)
-// ------------------------------------
-if (
-  !formState.userConfig?.qtyAfterBarcode &&
-  !formState.userConfig?.autoIncrementQty
-) {
- continueProcessing = true;
-}
-// ------------------------------------
-// AUTO INCREMENT FLOW
-// ------------------------------------
-// else {
-//   let isWeighingScaleProduct = false;
+        let continueProcessing = false;
+        // ------------------------------------
+        // NORMAL FLOW (NO AUTO INCREMENT)
+        // ------------------------------------
+        if (
+          !formState.userConfig?.qtyAfterBarcode &&
+          !formState.userConfig?.autoIncrementQty
+        ) {
+          continueProcessing = true;
+        }
+        // ------------------------------------
+        // AUTO INCREMENT FLOW
+        // ------------------------------------
+        // else {
+        //   let isWeighingScaleProduct = false;
 
-//   if ((product.weighingQty || 0) > 0 || (product.weighingPrice || 0) > 0) {
-//     isWeighingScaleProduct = true;
-//   }
+        //   if ((product.weighingQty || 0) > 0 || (product.weighingPrice || 0) > 0) {
+        //     isWeighingScaleProduct = true;
+        //   }
 
-//   const firstFreeRow = details.length;
+        //   const firstFreeRow = details.length;
 
-//   if (
-//     formState.formElements.chkAutoIncrement.checked &&
-//     !isWeighingScaleProduct &&
-//     !detail.isSchemeProcessed
-//   ) {
-//     const serial = product.serialNumber || "";
-//     const autoBarcode = product.autoBarcode;
-//     const rowUnit = detail.unit;
+        //   if (
+        //     formState.formElements.chkAutoIncrement.checked &&
+        //     !isWeighingScaleProduct &&
+        //     !detail.isSchemeProcessed
+        //   ) {
+        //     const serial = product.serialNumber || "";
+        //     const autoBarcode = product.autoBarcode;
+        //     const rowUnit = detail.unit;
 
-//     for (let i = 0; i < firstFreeRow; i++) {
-//       if (i === rowIndex) continue;
+        //     for (let i = 0; i < firstFreeRow; i++) {
+        //       if (i === rowIndex) continue;
 
-//       const row = details[i];
+        //       const row = details[i];
 
-//       if (
-//         row.barCode === autoBarcode &&
-//         row.unit === rowUnit
-//       ) {
-//         // -------------------------------
-//         // CASE 1: NO SERIAL
-//         // -------------------------------
-//         if (serial === "") {
-//           const rIndex = rowIndex;
-//           let incrementValue = 1;
+        //       if (
+        //         row.barCode === autoBarcode &&
+        //         row.unit === rowUnit
+        //       ) {
+        //         // -------------------------------
+        //         // CASE 1: NO SERIAL
+        //         // -------------------------------
+        //         if (serial === "") {
+        //           const rIndex = rowIndex;
+        //           let incrementValue = 1;
 
-//           if ((weighQty || 0) > 0) incrementValue = weighQty;
+        //           if ((weighQty || 0) > 0) incrementValue = weighQty;
 
-//           row.qty = Number(row.qty || 0) + incrementValue;
+        //           row.qty = Number(row.qty || 0) + incrementValue;
 
-//           // Move row
-//           details.splice(rowIndex, 1);
-//           details.splice(i, 0, detail);
+        //           // Move row
+        //           details.splice(rowIndex, 1);
+        //           details.splice(i, 0, detail);
 
-//           await calculateRowAmount(i);
-//           reArrangeRowNumber(i, rIndex);
+        //           await calculateRowAmount(i);
+        //           reArrangeRowNumber(i, rIndex);
 
-//           focusCell(currentColumnIndex, rIndex);
-//           txtData.value = "";
+        //           focusCell(currentColumnIndex, rIndex);
+        //           txtData.value = "";
 
-//           dispatchUpdate(details);
-//           return;
-//         }
-//         // -------------------------------
-//         // CASE 2: SERIAL EXISTS CHECK
-//         // -------------------------------
-//         else {
-//           const desc = row.productDescription || "";
-//           if (!desc.includes(serial)) {
-//             let incrementValue = 1;
-//             if ((weighQty || 0) > 0) incrementValue = weighQty;
+        //           dispatchUpdate(details);
+        //           return;
+        //         }
+        //         // -------------------------------
+        //         // CASE 2: SERIAL EXISTS CHECK
+        //         // -------------------------------
+        //         else {
+        //           const desc = row.productDescription || "";
+        //           if (!desc.includes(serial)) {
+        //             let incrementValue = 1;
+        //             if ((weighQty || 0) > 0) incrementValue = weighQty;
 
-//             const rIndex = rowIndex;
+        //             const rIndex = rowIndex;
 
-//             row.qty = Number(row.qty || 0) + incrementValue;
-//             row.productDescription = desc
-//               ? `${desc},${serial}`
-//               : serial;
+        //             row.qty = Number(row.qty || 0) + incrementValue;
+        //             row.productDescription = desc
+        //               ? `${desc},${serial}`
+        //               : serial;
 
-//             await calculateRowAmount(i);
+        //             await calculateRowAmount(i);
 
-//             // Move row
-//             details.splice(rowIndex, 1);
-//             details.splice(i, 0, detail);
+        //             // Move row
+        //             details.splice(rowIndex, 1);
+        //             details.splice(i, 0, detail);
 
-//             reArrangeRowNumber(i, rIndex);
-//             focusCell(currentColumnIndex, rIndex);
+        //             reArrangeRowNumber(i, rIndex);
+        //             focusCell(currentColumnIndex, rIndex);
 
-//             dispatchUpdate(details);
-//             return;
-//           } else {
-//             await ERPAlert.show({
-//               icon: "warning",
-//               title: "Duplicate Serial",
-//               text: `Serial exists in Row: ${i + 1}`,
-//               confirmButtonText: "OK",
-//             });
+        //             dispatchUpdate(details);
+        //             return;
+        //           } else {
+        //             await ERPAlert.show({
+        //               icon: "warning",
+        //               title: "Duplicate Serial",
+        //               text: `Serial exists in Row: ${i + 1}`,
+        //               confirmButtonText: "OK",
+        //             });
 
-//             details.splice(rowIndex, 1);
-//             txtData.value = "";
+        //             details.splice(rowIndex, 1);
+        //             txtData.value = "";
 
-//             dispatchUpdate(details);
-//             return;
-//           }
-//         }
-//       }
-//     }
-//   }
+        //             dispatchUpdate(details);
+        //             return;
+        //           }
+        //         }
+        //       }
+        //     }
+        //   }
 
-//   // Restore NLA sales price
-//   detail.nlaSalesPrice = nlaStdsalesPrice;
+        //   // Restore NLA sales price
+        //   detail.nlaSalesPrice = nlaStdsalesPrice;
 
-//   // ------------------------------------
-//   // NEXT COLUMN NAVIGATION
-//   // ------------------------------------
-//   let nextCol = getNextVisibleColumn(
-//     "R",
-//     productColumnIndex
-//   );
+        //   // ------------------------------------
+        //   // NEXT COLUMN NAVIGATION
+        //   // ------------------------------------
+        //   let nextCol = getNextVisibleColumn(
+        //     "R",
+        //     productColumnIndex
+        //   );
 
-//   if (
-//     Number(detail.unitPrice || 0) > 0 &&
-//     formState.formElements.chkAutoIncrement.checked
-//   ) {
-//     nextCol = -1;
-//   }
+        //   if (
+        //     Number(detail.unitPrice || 0) > 0 &&
+        //     formState.formElements.chkAutoIncrement.checked
+        //   ) {
+        //     nextCol = -1;
+        //   }
 
-//   if (nextCol !== -1) {
-//     focusCell(nextCol, rowIndex);
-//   } else {
-//     if (Number(detail.unitPrice || 0) > 0) {
-//       focusCell(
-//         firstVisibleWritableColumnIndex,
-//         details.length
-//       );
-//     } else {
-//       focusCell(unitPriceColumnIndex, rowIndex);
-//     }
-//   }
+        //   if (nextCol !== -1) {
+        //     focusCell(nextCol, rowIndex);
+        //   } else {
+        //     if (Number(detail.unitPrice || 0) > 0) {
+        //       focusCell(
+        //         firstVisibleWritableColumnIndex,
+        //         details.length
+        //       );
+        //     } else {
+        //       focusCell(unitPriceColumnIndex, rowIndex);
+        //     }
+        //   }
 
-//   dispatchUpdate(details);
-// }
+        //   dispatchUpdate(details);
+        // }
 
 
         if (!result.transaction) {
@@ -2942,59 +2952,60 @@ if (
     result.transaction!.master!.grandTotal = round(lblGrandTot - SRAmt);
 
     result.formElements = result.formElements || {} as FormElementsState;
-  result.formElements.lblBillBalance = result.formElements.lblBillBalance || { visible: false, Text: "" };
-  debugger
-  const safeNum = (v: any): number =>
-  Number.isFinite(Number(v)) ? Number(v) : 0;
-  const total = safeNum(result.transaction!.master!.grandTotal);
-const adv = safeNum(master?.advAmntFroSO);
-const cash = safeNum(master?.cashReceived);
-const coupon = safeNum(master?.couponAmt);
-const cardAmound = safeNum(master?.bankAmt);
-const balance = round(total - adv - cash - coupon - cardAmound);
+    result.formElements.lblBillBalance = result.formElements.lblBillBalance || { visible: false, Text: "" };
+    debugger
+    const safeNum = (v: any): number =>
+      Number.isFinite(Number(v)) ? Number(v) : 0;
+    const total = safeNum(result.transaction!.master!.grandTotal);
+    const adv = safeNum(master?.advAmntFroSO);
+    const cash = safeNum(master?.cashReceived);
+    const coupon = safeNum(master?.couponAmt);
+    const cardAmound = safeNum(master?.bankAmt);
+    const balance = round(total - adv - cash - coupon - cardAmound);
 
-result.formElements.lblBillBalance.visible = true;
+    result.formElements.lblBillBalance.visible = true;
 
-result.formElements.lblBillBalance.label =
-  Number.isFinite(balance) && balance !== 0
-    ? balance.toString()
-    : "";
-result.formElements.lblBillBalance.visible = true;
+    result.formElements.lblBillBalance.label =
+      Number.isFinite(balance) && balance !== 0
+        ? balance.toString()
+        : "";
+    result.formElements.lblBillBalance.visible = true;
 
-try {if((cash+cardAmound + adv) > 0) {
+    try {
+      if ((cash + cardAmound + adv) > 0) {
 
-  result.formElements.lblBillBalance.label =
-    Number.isFinite(balance) ? balance.toString() : "";
-    result.formElements.lblBillBalance.visible = true; 
-} else {
+        result.formElements.lblBillBalance.label =
+          Number.isFinite(balance) ? balance.toString() : "";
+        result.formElements.lblBillBalance.visible = true;
+      } else {
 
-  result.formElements.lblBillBalance.label = "";
-    result.formElements.lblBillBalance.visible = false;
-}
-} catch {
-  result.formElements.lblBillBalance.label = "";
-}
+        result.formElements.lblBillBalance.label = "";
+        result.formElements.lblBillBalance.visible = false;
+      }
+    } catch {
+      result.formElements.lblBillBalance.label = "";
+    }
 
-//     if ((Number(master.cashReceived || "") + master.creditAmt +  master.advAmntFroSO) > 0)
-// {
-//   result.formElements.lblBillBalance.visible = true;
-//     const label =  round(
-//         formState.summary.total
-//         - master.advAmntFroSO
-//         - master.cashReceived
-//         - master.couponAmt
-//         - master.creditAmt
-//     ).toString();
-    
-//   result.formElements.lblBillBalance.label = label;
-// }
-// else
-// {
-    
-//   result.formElements.lblBillBalance.visible = true;
-  
-//   result.formElements.lblBillBalance.label = "";
-// }
+    //     if ((Number(master.cashReceived || "") + master.creditAmt +  master.advAmntFroSO) > 0)
+    // {
+    //   result.formElements.lblBillBalance.visible = true;
+    //     const label =  round(
+    //         formState.summary.total
+    //         - master.advAmntFroSO
+    //         - master.cashReceived
+    //         - master.couponAmt
+    //         - master.creditAmt
+    //     ).toString();
+
+    //   result.formElements.lblBillBalance.label = label;
+    // }
+    // else
+    // {
+
+    //   result.formElements.lblBillBalance.visible = true;
+
+    //   result.formElements.lblBillBalance.label = "";
+    // }
 
     // if foreign currency conversion needed (similar to PI)
     if (formElements.pnlImport.visible && master.exchangeRate > 0) {

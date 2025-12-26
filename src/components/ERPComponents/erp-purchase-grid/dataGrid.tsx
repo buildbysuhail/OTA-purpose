@@ -2681,6 +2681,7 @@ const hidColumns: string[] = [
             />
           )}
           <ERPScrollArea
+            scrollbarColor={formState.userConfig?.scrollbarColor}
             ref={containerRef}
             className="border border-gray-300 "
             style={{

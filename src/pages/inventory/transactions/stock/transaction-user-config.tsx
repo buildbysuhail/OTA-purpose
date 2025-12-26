@@ -537,15 +537,15 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                     <div className="flex items-center gap-2">
                       <div
                         className="relative h-12 w-12 flex-shrink-0 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                        style={{ backgroundColor: `rgb(${appState.scrollbarColor ?? "128, 128, 128"})` }}>
+                        style={{ backgroundColor: `rgb(${formState.userConfig?.scrollbarColor ?? "128, 128, 128"})` }}>
                         <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
                         <input
                           type="color"
-                          value={rgbToHex(appState.scrollbarColor || "128,128,128")}
+                          value={rgbToHex(formState.userConfig?.scrollbarColor || "128,128,128")}
                           onChange={(e) => {
                             const rgb = hexToRgb(e.target?.value);
                             if (rgb) {
-                              debouncedHandleScrollbarChange(
+                              debouncedHandleFieldChange(
                                 "scrollbarColor",
                                 `${rgb?.r},${rgb?.g},${rgb?.b}`
                               );
@@ -559,7 +559,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                           {t("scrollbar_color")}
                         </label>
                         <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-2 rounded-md break-all">
-                          rgb({appState.scrollbarColor || "128,128,128"})
+                          rgb({formState.userConfig?.scrollbarColor || "128,128,128"})
                         </div>
                       </div>
                     </div>

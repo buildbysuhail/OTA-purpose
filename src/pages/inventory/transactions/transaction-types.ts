@@ -408,6 +408,7 @@ export interface UserConfig {
   presetPriceCategoryId?: number;
   counterAssignedCashLedgerId?: number;
   outerPageBg?: string;
+  scrollbarColor?: string;
   innerPageBg?: string;
   inputBoxStyle?: inputBox;
   isExpanded?: boolean;

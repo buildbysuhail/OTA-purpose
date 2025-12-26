@@ -935,6 +935,13 @@ interface ProductBatchDetailsForAutoBarcodeData {
   isCheckDuplicate: boolean;
   isCheckQtyLimit: boolean;
   units: UnitByBatchDetailsDto[];
+
+  barCode?: string | null;
+  actualBasicUnitID: number;
+  scstPerc: number;
+  pcstPerc: number;
+  productUnitRemarks?: string | null;
+  lastSoldSerialWisePrice?: number | null;
 }
 
 export interface DataAutoBarcode {

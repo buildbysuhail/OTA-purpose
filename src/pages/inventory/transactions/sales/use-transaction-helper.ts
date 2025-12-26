@@ -2010,6 +2010,12 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
           } else {
           }
         }
+const voucherType = formState.transaction.master.voucherType;
+
+const isSI = voucherType === VoucherType.SalesInvoice;
+const isSR = voucherType === VoucherType.SalesReturn;
+const isSO = voucherType === VoucherType.SalesOrder;
+const isSQ = voucherType === VoucherType.SalesQuotation;
 
         /* ---------------- BASIC PRODUCT INFO ---------------- */
         outDetail.pCode = product.productCode;
@@ -2252,7 +2258,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         outDetail.schemeID = 0;
 
         /** ---------------- Price category ---------------- */
-        if (product.priceCategoryPrice > 0) {
+if ((isSI || isSO) && product.priceCategoryPrice > 0) {
           outDetail.unitPrice = product.priceCategoryPrice;
           priceWithoutScheme = product.priceCategoryPrice;
 
@@ -2273,115 +2279,236 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         }
 
         /** ---------------- Scheme logic ---------------- */
-        if (applicationSettings.productsSettings.maintainSchemes) {
-          let schemeApplied = false;
+        // if (isSI&&applicationSettings.productsSettings.maintainSchemes) {
+        //   let schemeApplied = false;
 
-          if (product.schemeDiscount > 0) {
-            outDetail.discPerc = product.schemeDiscount;
-            outDetail.isSchemeItem = "S";
-            schemeApplied = true;
-          }
+        //   if (product.schemeDiscount > 0) {
+        //     outDetail.discPerc = product.schemeDiscount;
+        //     outDetail.isSchemeItem = "S";
+        //     schemeApplied = true;
+        //   }
 
-          /** ---- Special scheme price ---- */
-          if (product.schemeDiscount === 0) {
-            let loadSchemePrice = true;
+        //   /** ---- Special scheme price ---- */
+        //   if (product.schemeDiscount === 0) {
+        //     let loadSchemePrice = true;
 
+        // if (product.schemeID > 0) {
+        //       outDetail.schemeQtyLimit = product.schemeQtyLimit;
+        //       outDetail.schemeFreeQty = product.schemeFreeQty;
+        //       outDetail.schemeType = product.schemeType;
+        //       outDetail.schemeID = product.schemeID;
+        //       outDetail.isSchemeProcessed = "N";
+        //     } else {
+              
+        //         outDetail.schemeQtyLimit = 0;
+        //         outDetail.schemeFreeQty = 0;
+        //         outDetail.schemeType = "";
+        //         outDetail.schemeID = 0;
+        //     }
 
-            if (product.schemeID > 0) {
-              outDetail.schemeQtyLimit = product.schemeQtyLimit;
-              outDetail.schemeFreeQty = product.schemeFreeQty;
-              outDetail.schemeType = product.schemeType;
-              outDetail.schemeID = product.schemeID;
-              outDetail.isSchemeProcessed = "N";
-            } else {
-              {
-                outDetail.schemeQtyLimit = 0;
-                outDetail.schemeFreeQty = 0;
-                outDetail.schemeType = "";
-                outDetail.schemeID = 0;
-              }
-            }
+        //     if (
+        //       outDetail.schemeType !== "Buy Exact N for off" &&
+        //       (outDetail.schemeFreeQty ?? 0) === 0 &&
+        //       (outDetail.schemeQtyLimit ?? 0) > 0
+        //     ) {
+        //       const reached = checkSpecialSpriceLimitReached(
+        //         outDetail.schemeQtyLimit!,
+        //         outDetail as any,
+        //         formState.transaction.details.filter((x) => x.productID > 0)
+        //       );
+        //       if (reached) {
+        //         loadSchemePrice = false;
+        //         schemeApplied = true;
+        //       }
+        //     }
 
-            if (
-              outDetail.schemeType !== "Buy Exact N for off" &&
-              (outDetail.schemeFreeQty ?? 0) === 0 &&
-              (outDetail.schemeQtyLimit ?? 0) > 0
-            ) {
-              const reached = checkSpecialSpriceLimitReached(
+        //     if (
+        //       loadSchemePrice &&
+        //       outDetail.schemeType !== "Buy Exact N for off"
+        //     ) {
+        //       if (product.specialSchemePrice > 0) {
+        //         outDetail.unitPrice = product.specialSchemePrice;
+        //         outDetail.isSchemeItem = "S";
+        //         outDetail.actualSalesPrice = priceWithoutScheme;
+        //       }
+        //     }
+
+            
+
+        //     /** ---- Qty based scheme ---- */
+        //     if (!schemeApplied && product.specialSchemePrice == 0) {
+        //       if (outDetail.schemeType === "Buy Exact N for off") {
+        //         if ((outDetail.schemeQtyLimit ?? 0) > 0) {
+        //           const dfg = await applySpecialSpriceExactQtyLimitReached(
+        //             outDetail.schemeQtyLimit!,
+        //             outDetail as TransactionDetail,
+        //             outDetail.slNo!,
+        //             formState.userConfig?.showRateBeforeTax || false,
+        //             product.specialSchemePrice!
+        //           );
+        //           if (dfg !== null) {
+        //             outDetail = merge({}, outDetail, dfg);
+        //           }
+        //         }
+        //       } else {
+        //           if (product.isCheckQtyLimit) {
+        //             outDetail.schemeQtyLimit = product.schemeQtyLimit;
+        //             outDetail.schemeFreeQty = product.schemeFreeQty;
+        //             outDetail.isSchemeProcessed = "N";
+
+        //             const dfg = await applyQtyDiscount(
+        //             outDetail.schemeQtyLimit!,
+        //             outDetail as TransactionDetail,
+        //             outDetail.slNo!,
+        //             product.schemeFreeQty
+        //           );
+        //           debugger;
+        //           if (dfg !== null) {
+        //             outDetail = merge({}, outDetail, dfg);
+        //           }
+        //             outDetail.isSchemeItem = "S";
+        //           }
+        //         }
+              
+        //     }
+        //   }
+        // }
+if (isSI && applicationSettings.productsSettings.maintainSchemes) {
+    let schemeApplied = false;
+
+    // Direct scheme discount
+    if (product.schemeDiscount > 0) {
+        outDetail.discPerc = product.schemeDiscount;
+        outDetail.isSchemeItem = "S";
+        schemeApplied = true;
+    }
+
+    // Special scheme price
+    if (product.schemeDiscount === 0) {
+        let loadSchemePrice = true;
+
+        // Assign scheme details if exists
+        if (product.schemeID > 0) {
+            outDetail.schemeQtyLimit = product.schemeQtyLimit;
+            outDetail.schemeFreeQty = product.schemeFreeQty;
+            outDetail.schemeType = product.schemeType;
+            outDetail.schemeID = product.schemeID;
+            outDetail.isSchemeProcessed = "N";
+        } else {
+            outDetail.schemeQtyLimit = 0;
+            outDetail.schemeFreeQty = 0;
+            outDetail.schemeType = "";
+            outDetail.schemeID = 0;
+        }
+
+        // Check special scheme quantity limits
+        if (
+            outDetail.schemeType !== "Buy Exact N for off" &&
+            (outDetail.schemeFreeQty ?? 0) === 0 &&
+            (outDetail.schemeQtyLimit ?? 0) > 0
+        ) {
+            const reached = checkSpecialSpriceLimitReached(
                 outDetail.schemeQtyLimit!,
                 outDetail as any,
                 formState.transaction.details.filter((x) => x.productID > 0)
-              );
-              if (reached) {
+            );
+            if (reached) {
                 loadSchemePrice = false;
                 schemeApplied = true;
-              }
             }
+        }
 
-            if (
-              loadSchemePrice &&
-              outDetail.schemeType !== "Buy Exact N for off"
-            ) {
-              if (product.specialSchemePrice > 0) {
+        // Apply special scheme price if allowed
+        if (loadSchemePrice && outDetail.schemeType !== "Buy Exact N for off") {
+            if (product.specialSchemePrice > 0) {
                 outDetail.unitPrice = product.specialSchemePrice;
                 outDetail.isSchemeItem = "S";
                 outDetail.actualSalesPrice = priceWithoutScheme;
-              }
             }
+        }
 
-            /** ---- Qty based scheme ---- */
-            if (!schemeApplied && product.specialSchemePrice == 0) {
-              if (outDetail.schemeType === "Buy Exact N for off") {
-                if ((outDetail.schemeQtyLimit ?? 0) > 0) {
-                  const dfg = await applySpecialSpriceExactQtyLimitReached(
+        // Quantity-based schemes
+        if (!schemeApplied && product.specialSchemePrice === 0) {
+            // Buy Exact N for off
+            if (outDetail.schemeType === "Buy Exact N for off" && (outDetail.schemeQtyLimit ?? 0) > 0) {
+                const result = await applySpecialSpriceExactQtyLimitReached(
                     outDetail.schemeQtyLimit!,
                     outDetail as TransactionDetail,
                     outDetail.slNo!,
                     formState.userConfig?.showRateBeforeTax || false,
                     product.specialSchemePrice!
-                  );
-                  if (dfg !== null) {
-                    outDetail = merge({}, outDetail, dfg);
-                  }
+                );
+                if (result !== null) {
+                    outDetail = merge({}, outDetail, result);
                 }
-              } else {
-                  if (product.isCheckQtyLimit) {
-                    outDetail.schemeQtyLimit = product.schemeQtyLimit;
-                    outDetail.schemeFreeQty = product.schemeFreeQty;
-                    outDetail.isSchemeProcessed = "N";
-
-                    const dfg = await applyQtyDiscount(
+            }
+            // Qty discount schemes
+            else if (product.isCheckQtyLimit && (outDetail.schemeQtyLimit ?? 0) > 0) {
+                const result = await applyQtyDiscount(
                     outDetail.schemeQtyLimit!,
                     outDetail as TransactionDetail,
                     outDetail.slNo!,
-                    product.schemeFreeQty
-                  );
-                  debugger;
-                  if (dfg !== null) {
-                    outDetail = merge({}, outDetail, dfg);
-                  }
-                    outDetail.isSchemeItem = "S";
-                  }
+                    outDetail.schemeFreeQty!
+                );
+                if (result !== null) {
+                    outDetail = merge({}, outDetail, result);
                 }
-              
+                outDetail.isSchemeItem = "S";
             }
-          }
         }
+    }
+}
+/** ---- Sales Return ---- */
+if (isSR && applicationSettings.productsSettings.maintainSchemes) {
+    // Apply direct scheme discount
+    if (product.schemeDiscount > 0) {
+        outDetail.discPerc = product.schemeDiscount;
+    }
+    // Apply special scheme price
+    else if (product.specialSchemePrice > 0) {
+        outDetail.unitPrice = product.specialSchemePrice;
+    }
+    // Apply quantity-based scheme
+    else if (product.isCheckQtyLimit && product.schemeQtyLimit > 0 && product.schemeFreeQty > 0) {
+        outDetail.schemeQtyLimit = product.schemeQtyLimit;
+        outDetail.schemeFreeQty = product.schemeFreeQty;
+        outDetail.isSchemeProcessed = "N";
+
+        const result = await applyQtyDiscount(
+            product.schemeQtyLimit,
+            outDetail as TransactionDetail,
+            outDetail.slNo!,
+            product.schemeFreeQty
+        );
+
+        if (result !== null) {
+            outDetail = merge({}, outDetail, result);
+        }
+        outDetail.isSchemeItem = "S";
+    }
+}
+
+
+
+
 
         /** ---------------- Customer last rate ---------------- */
         outDetail.ratePlusTax = round(outDetail.unitPrice || 0);
         outDetail.netConvert = "0.00";
-        if (product.blnCustLastPriceLoaded
+
+  if (isSI && product.blnCustLastPriceLoaded && product.partyLastSalesRate > 0
         ) {
 
-          if (product.partyLastSalesRate > 0) {
             if (formState.gridColumns?.find(x => x.dataField === "customer_LSP")?.visible) {
               outDetail.customer_LSP = product.partyLastSalesRate;
             } else {
               outDetail.unitPrice = product.partyLastSalesRate;
             }
-          }
         }
+else if(isSR&&(product.lastSoldSerialWisePrice || 0 > 0)){
+          outDetail.unitPrice = product.lastSoldSerialWisePrice ?? 0;
+        }
+
         if (product.weighingPrice > 0) {
           outDetail.unitPrice = product.weighingPrice;
           outDetail.ratePlusTax = product.weighingPrice;
@@ -2406,7 +2533,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
           // -------------------------------
           // Show rate INCLUDING tax
           // -------------------------------
-          if (taxPerc > 0 && !formState.userConfig?.showRateBeforeTax) {
+    if (isSI && taxPerc > 0 && !formState.userConfig?.showRateBeforeTax) {
             const rateWithTax =
               Number(outDetail.unitPrice || 0) * (1 + taxPerc / 100);
 
@@ -2426,11 +2553,15 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
 
             outDetail.ratePlusTax = round(rateWithTax);
           }
+          
+          if (!isSI) {
+  outDetail.ratePlusTax = outDetail.unitPrice;
+}
 
           // -------------------------------
           // Show rate BEFORE tax
           // -------------------------------
-          if (
+          if ( isSI &&
             taxPerc > 0 &&
             formState.userConfig?.showRateBeforeTax &&
             !product.blnCustLastPriceLoaded
@@ -2455,6 +2586,13 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         // ------------------------------------
         // AUTO INCREMENT FLOW
         // ------------------------------------
+
+
+        if (isSI || isSO) {
+  // allow auto increment flow
+} else {
+  continueProcessing = true;
+}
         // else {
         //   let isWeighingScaleProduct = false;
 

@@ -539,6 +539,7 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   isProductSummaryOpen: false,
   isPartyWiseSummaryOpen: false,
   isFormStateDetailOpen: false,
+  showProductInformation: { show: false, index: 0 },
   selectedRow: undefined,
   userRightsFormCode: "",
   isPostedTransaction: false,

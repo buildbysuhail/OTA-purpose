@@ -94,6 +94,7 @@ export const useTransaction = (
   mobileNumRef?: any,
   discountRef?: any,
   chequeStatusRef?: any,
+  employeeRef?: any,
   handleKeyDown?: (e: any, field: string, rowIndex: number) => void,
   formStateRef?: any,
   purchaseGridRef?: any,
@@ -3044,14 +3045,14 @@ debugger;
       const isShiftPressed = event.shiftKey;
       const isCtrlPressed = event.ctrlKey;
       if (columnName === "global") {
-        if (event.shiftKey && event.key === "F") {
+        if (event.shiftKey && event.key.toUpperCase() === "F") {
           event.preventDefault();
           if (voucherNumberRef.current) {
             voucherNumberRef.current.focus();
           }
         }
         // Focus Voucher Number ☝
-        if (event.shiftKey && event.key === "D") {
+        if (event.shiftKey && event.key.toUpperCase() === "D") {
           event.preventDefault();
           dispatch(
             formStateHandleFieldChange({
@@ -3105,7 +3106,7 @@ debugger;
           }
         }
         // Focus Inventory Grid ☝
-        if (event.shiftKey && event.key.toUpperCase() === "F5") {
+        if (event.key.toUpperCase() === "F5") {
           event.preventDefault();
           const currentFormState = formStateRef.current;
           if (
@@ -3117,6 +3118,105 @@ debugger;
           }
         }
         // Save Document ☝
+        if (event.altKey && event.key.toUpperCase() === "R") {
+          // Delete the focused row
+          event.preventDefault();
+          const currentFormState = formStateRef.current;
+          const currentRowIndex = currentFormState.currentCell?.rowIndex ?? -1;
+          if (currentRowIndex >= 0 && currentFormState.transaction.details[currentRowIndex]) {
+            const slNo = currentFormState.transaction.details[currentRowIndex].slNo;
+            if (slNo) {
+              handleRemoveItem(slNo);
+            }
+          }
+        }
+        if (event.ctrlKey && event.key === "Delete") {
+          // Delete the focused row
+          event.preventDefault();
+          const currentFormState = formStateRef.current;
+          const currentRowIndex = currentFormState.currentCell?.rowIndex ?? -1;
+          if (currentRowIndex >= 0 && currentFormState.transaction.details[currentRowIndex]) {
+            const slNo = currentFormState.transaction.details[currentRowIndex].slNo;
+            if (slNo) {
+              handleRemoveItem(slNo);
+            }
+          }
+        }
+        // Alt + A => party focus
+        if (event.altKey && event.key.toUpperCase() === "A") {
+          event.preventDefault();
+          setTimeout(() => {
+              ledgerIdRef?.current?.focus();
+              ledgerIdRef?.current?.select();
+          }, 100);
+        }
+        // Alt + M => salesman focus
+        if (event.altKey && event.key.toUpperCase() === "M") {
+          event.preventDefault();
+          setIsDropDownOpen?.({ open: true, autoAddressFocus: false });
+          setTimeout(() => {
+            employeeRef?.current?.focus();
+            employeeRef?.current?.select();
+          }, 100);
+        }
+
+        // Shift + F1 => toggle product info for focused row
+        if (event.shiftKey && event.key.toUpperCase() === "F1") {
+          event.preventDefault();
+          const currentFormState = formStateRef.current;
+          const currentRowIndex = currentFormState.currentCell?.rowIndex ?? 0;
+          const rowData = currentFormState.transaction.details[currentRowIndex];
+          if (rowData && rowData.productID > 0) {
+            const isCurrentlyOpen = currentFormState.showProductInformation?.show;
+            dispatch(formStateHandleFieldChange({
+              fields: {
+                showProductInformation: {
+                  show: !isCurrentlyOpen,
+                  index: currentRowIndex
+                },
+              },
+            }));
+          }
+        }
+        // page down => close product info
+        if (event.key.toUpperCase() === "PAGEDOWN") {
+          event.preventDefault();
+          const currentFormState = formStateRef.current;
+          const currentRowIndex = currentFormState.currentCell?.rowIndex ?? 0;
+          const rowData = currentFormState.transaction.details[currentRowIndex];
+          if (rowData && rowData.productID > 0) {
+            const isCurrentlyOpen = currentFormState.showProductInformation?.show;
+            dispatch(formStateHandleFieldChange({
+              fields: {
+                showProductInformation: {
+                  show: !isCurrentlyOpen,
+                  index: currentRowIndex
+                },
+              },
+            }));
+          }
+        }
+
+        // ctrl + F11 => if draft mode checked then do something
+        if (event.ctrlKey && event.key.toUpperCase() === "F11") {
+          const currentFormState = formStateRef.current;
+          if(currentFormState?.draftMode){
+            dispatch(
+                  formStateHandleFieldChange({
+                    fields: { draftModeModal: true },
+                  })
+                );
+          }
+        }
+        if (event.key.toUpperCase() === "ESCAPE") {
+          const currentFormState = formStateRef.current;
+          if(currentFormState.isUserConfigOpen === true){
+            dispatch(formStateHandleFieldChange(
+              { fields: { isUserConfigOpen: false } }
+            ))
+          }
+        }
+
         return { handled: true };
       }
       if (!result.formElements) {
@@ -3239,13 +3339,15 @@ debugger;
         case "i":
         case "I":
           if (isCtrlPressed) {
-            dispatch(
+            if(hasRight("PSUMRPT", UserAction.Show)){
+              dispatch(
               formStateHandleFieldChange({
                 fields: {
                   showProductInformation: { show: true, index: rowIndex },
                 },
               })
             );
+            }
             return { handled: true };
           }
           break;

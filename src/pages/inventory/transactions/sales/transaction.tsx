@@ -221,7 +221,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const btnSaveRef = useRef<HTMLButtonElement>(null);
   const btnAddRef = useRef<HTMLButtonElement>(null);
   const ledgerCodeRef = useRef<HTMLInputElement>(null);
-  const ledgerIdRef = useRef<any>(null);
+  const ledgerIdRef = useRef<HTMLInputElement>(null);
   const masterAccountRef = useRef<HTMLInputElement>(null);
   const costCenterRef = useRef<HTMLInputElement>(null);
   const amountRef = useRef<HTMLInputElement>(null);
@@ -238,6 +238,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const taxNoRef = useRef<HTMLInputElement>(null);
   const discountRef = useRef<HTMLInputElement>(null);
   const chequeStatusRef = useRef<HTMLInputElement>(null);
+  const employeeRef = useRef<HTMLInputElement>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dropdownRef = useRef(null);
   const contentRef = useRef(null);
@@ -633,6 +634,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     mobileNumRef,
     discountRef,
     chequeStatusRef,
+    employeeRef,
     handleKeyDown,
     formStateRef,
     purchaseGridRef,
@@ -2149,6 +2151,7 @@ debugger;
               transactionType={transactionType ?? formState.transactionType}
               handleFieldKeyDown={handleFieldKeyDown}
               ledgerCodeRef={ledgerCodeRef}
+              ledgerIdRef={ledgerIdRef}
               voucherNumberRef={voucherNumberRef}
               refNoRef={refNoRef}
               isDropDownOpen={isDropDownOpen}
@@ -2156,6 +2159,7 @@ debugger;
               footerLayout="vertical"
               userSession={userSession}
               mobileNumRef={mobileNumRef}
+              employeeRef={employeeRef}
               // isDropDownOpen={false}
             // refactorDetails={refactorDetails}
             // voucherType={voucherType}
@@ -2372,6 +2376,7 @@ debugger;
                     transactionType={transactionType ?? formState.transactionType}
                     handleFieldKeyDown={handleFieldKeyDown}
                     ledgerCodeRef={ledgerCodeRef}
+                    ledgerIdRef={ledgerIdRef}
                     voucherNumberRef={voucherNumberRef}
                     refNoRef={refNoRef}
                     isDropDownOpen={isDropDownOpen}
@@ -2379,6 +2384,7 @@ debugger;
                     footerLayout="vertical"
                     userSession={userSession}
                     mobileNumRef={mobileNumRef}
+                    employeeRef={employeeRef}
                     // isDropDownOpen={false}
                   // refactorDetails={refactorDetails}
                   // voucherType={voucherType}

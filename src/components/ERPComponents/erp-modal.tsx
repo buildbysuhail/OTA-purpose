@@ -64,6 +64,7 @@ type ERPModalProps = {
   dynamicMinWidth?: number;
   dynamicMinHeight?: number;
   dynamicPadding?: number;
+  closeOnEscape?: boolean; // Close modal on press Escape
 };
 
 const ERPModal = React.memo(
@@ -109,6 +110,7 @@ const ERPModal = React.memo(
     dynamicMinWidth = 400,
     dynamicMinHeight = 150,
     dynamicPadding = 40,
+    closeOnEscape = false,
   }: ERPModalProps) => {
     // Detect mobile device
     const isMobile = window.innerWidth <= 768;
@@ -307,6 +309,25 @@ const ERPModal = React.memo(
         );
       };
     }, [isOpen]);
+
+    // Handle Escape key to close modal when closeOnEscape is true
+    useEffect(() => {
+      if (!isOpen || !closeOnEscape) return;
+
+      const handleEscapeKey = (event: KeyboardEvent) => {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          event.stopPropagation();
+          handleClose();
+        }
+      };
+
+      document.addEventListener("keydown", handleEscapeKey);
+
+      return () => {
+        document.removeEventListener("keydown", handleEscapeKey);
+      };
+    }, [isOpen, closeOnEscape]);
 
     const effectiveMinWidth = enableDynamicSize ? effectiveDynamicMinWidth : minWidth;
     const effectiveMinHeight = enableDynamicSize ? effectiveDynamicMinHeight : minHeight;
@@ -617,7 +638,8 @@ const ERPModal = React.memo(
       prevProps.initialPosition === nextProps.initialPosition &&
       prevProps.enableDynamicSize === nextProps.enableDynamicSize &&
       prevProps.width === nextProps.width &&
-      prevProps.height === nextProps.height
+      prevProps.height === nextProps.height &&
+      prevProps.closeOnEscape === nextProps.closeOnEscape
     );
   }
 );

@@ -57,9 +57,11 @@ interface TransactionHeaderProps {
   transactionType: string;
   handleFieldKeyDown: any;
   ledgerCodeRef: any;
+  ledgerIdRef: any;
   voucherNumberRef: any;
   refNoRef: any;
   mobileNumRef: any;
+  employeeRef?: any;
   isDropDownOpen: {
     open: boolean;
     autoAddressFocus: boolean;
@@ -83,9 +85,11 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   transactionType,
   handleFieldKeyDown,
   ledgerCodeRef,
+  ledgerIdRef,
   voucherNumberRef,
   refNoRef,
   mobileNumRef,
+  employeeRef,
   isDropDownOpen,
   toggleDropdown,
   onHeightChange,
@@ -101,7 +105,6 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   const [updateTriggered, setUpdateTriggered] = useState(false);
   const [isSmallHeight, setIsSmallHeight] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
-  const ledgerIdRef = useRef<any>(null);
   const isMinimized = appState.toggled && appState.toggled.includes("close");
   const sidebarWidth = isMinimized ? "80px" : "240px";
   const isLargeScreen = window.innerWidth >= 1000;
@@ -584,6 +587,7 @@ function mergeRefs<T>(...refs: React.Ref<T>[]) {
                 )} */}
 
                 <Employee
+                  ref={employeeRef}
                   dispatch={dispatch}
                   formState={formState}
                   t={t}
@@ -950,6 +954,7 @@ function mergeRefs<T>(...refs: React.Ref<T>[]) {
                     width={710}
                     height={450}
                     closeModal={closeMoreModal}
+                    closeOnEscape={true}
                     content={
                       <MoreOptionsModalContent
                         transactionType={transactionType}
@@ -1157,6 +1162,7 @@ function mergeRefs<T>(...refs: React.Ref<T>[]) {
               </div>
               <div className="grid items-end grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-2 my-2">
                 <Employee
+                  ref={employeeRef}
                   dispatch={dispatch}
                   formState={formState}
                   t={t}

@@ -285,6 +285,11 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true}
+                  scrolling={{
+                    mode: 'virtual',
+                    useNative: true,  // For fixing the issue when click on item does not work after sidebar scroll
+                    showScrollbar: 'always'
+                  }}
                   rowData={rowData}
                   childPopupProps={{
                     content: <CashBookDayWise postData={{ ...mergeObjectsRemovingIdenticalKeys(postData, contentProps) }} />,

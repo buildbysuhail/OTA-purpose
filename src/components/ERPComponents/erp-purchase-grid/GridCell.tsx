@@ -494,7 +494,11 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
       return (
         <div className="flex items-center justify-center gap-1" style={{ border: `solid 1px ${borderColor}` }}>
           <button
-            onClick={() => handleInfoClick(index)}
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleInfoClick(index);
+            }}
             className={`group relative flex items-center justify-center w-7 h-7 transition-all duration-500 ease-out hover:rounded-full hover:scale-105 hover:shadow-lg hover:border ${
               appState.mode === "dark" ? "hover:bg-blue-900 hover:border-blue-700" : "hover:bg-blue-50 hover:border-blue-200"
             }`}
@@ -504,15 +508,17 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
             }`} />
           </button>
           <button
+            type="button"
             disabled={formState.formElements.pnlMasters?.disabled}
-            onClick={() =>
+            onClick={(e) => {
+              e.stopPropagation();
               onKeyDown(
                 item.slNo,
                 { key: "Enter" } as React.KeyboardEvent<HTMLElement>,
                 "actionCol",
                 index
-              )
-            }
+              );
+            }}
             className={`group relative flex items-center justify-center w-7 h-7 transition-all duration-500 ease-out hover:rounded-full hover:scale-105 hover:shadow-lg hover:border ${
               appState.mode === "dark" ? "hover:bg-red-900 hover:border-red-700" : "hover:bg-red-50 hover:border-red-200"
             }`}

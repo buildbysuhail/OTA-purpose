@@ -945,27 +945,31 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLAnchorElement>) => {
-    const focusableSelector =
-      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const sidebar = document.getElementById('sidebar');
+    if (!sidebar) return;
 
-    // Get all visible and focusable elements
-    const focusable = Array.from(
-      document.querySelectorAll<HTMLElement>(focusableSelector)
+    const menuLinks = Array.from(
+      sidebar.querySelectorAll<HTMLElement>('.side-menu__item')
     ).filter((el) => el.offsetParent !== null);
 
-    const currentIndex = focusable.indexOf(document.activeElement as HTMLElement);
+    const currentIndex = menuLinks.indexOf(document.activeElement as HTMLElement);
 
     if (e.key === "ArrowUp") {
       e.preventDefault();
-      const prevIndex = (currentIndex - 1 + focusable.length) % focusable.length;
-      focusable[prevIndex]?.focus();
+      if (currentIndex > 0) {
+        menuLinks[currentIndex - 1]?.focus();
+      }
     }
     else if (e.key === "ArrowDown") {
       e.preventDefault();
+      // Stop at the last item when click arrow down
+      if (currentIndex < menuLinks.length - 1) {
+        menuLinks[currentIndex + 1]?.focus();
+      }
     }
     else if (e.key === "Enter") {
       e.preventDefault();
-      const current = focusable[currentIndex];
+      const current = menuLinks[currentIndex];
       current?.click();
     }
   };

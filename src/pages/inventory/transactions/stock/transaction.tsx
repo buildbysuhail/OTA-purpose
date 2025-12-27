@@ -227,11 +227,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const [countdown, setCountdown] = useState(8);
   const [startCountdown, setStartCountdown] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const cbLedger = useRef<HTMLInputElement>(null);
   const address1 = useRef<HTMLInputElement>(null);
-  const address2 = useRef<HTMLInputElement>(null);
-  const referenceNumber = useRef<HTMLInputElement>(null);
-  const referenceDate = useRef<HTMLInputElement>(null);
+
 
   // Start countdown when a theme is selected
   useEffect(() => {
@@ -308,6 +305,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     console.log('🔄 selectedTheme changed:', formState.selectedTheme);
     console.log('  - isInitial flag:', formState.selectedTheme?.isInitial);
   }, [formState.selectedTheme]);
+
   const purchaseGridRef = useRef<{
     focusCell: (
       targetRow: number,
@@ -591,15 +589,12 @@ const TransactionForm: React.FC<TransactionProps> = ({
     })();
   }, [formState.transaction.master.ledgerID]);
 
+
   useEffect(() => {
     const initializeFormElements = async () => {
 
-      const dataWarranty = voucherType != "LPO" ? await api.getAsync(
-        `${Urls.inv_transaction_base}${transactionType}/data/warranty`
-      ) : [];
-      const dataBrands = voucherType != "LPO" ? await api.getAsync(
-        `${Urls.inv_transaction_base}${transactionType}/data/brands`
-      ) : [];
+      const dataWarranty = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/data/warranty`)
+      const dataBrands =await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/data/brands`) ;
       let _formState: TransactionFormState;
       const isInvoker = (voucherNo && voucherNo > 0) || (transactionMasterID && transactionMasterID > 0);
 
@@ -608,7 +603,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
         "DD/MM/YYYY"
       ).local();
 
-      let employeeID = 0;
       let _voucherNo = 0;
       if (!isInvoker) {
         _voucherNo = await getNextVoucherNumber(
@@ -617,12 +611,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
           voucherPrefix ?? "",
           false
         );
-
-        employeeID = userSession.employeeId ?? 0;
-        if (["PR", "PQ", "PO"].includes(voucherType as any) && employeeID <= 0) {
-          const emps = await getApLocalDataByUrl(`${Urls.inv_transaction_base}${transactionType}/Data/Employee/`);
-          employeeID = emps && emps.length > 0 ? emps[0].id : employeeID;
-        }
       }
 
       if (!isInvoker) {
@@ -642,15 +630,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               voucherForm: formType ?? "",
               transactionDate: softwareDate.toISOString(),
               purchaseInvoiceDate: moment().local().toISOString(),
-              employeeID: employeeID,
               voucherNumber: _voucherNo,
-              inventoryLedgerID:
-                voucherType == VoucherType.PurchaseReturn
-                  ? applicationSettings.inventorySettings?.defaultPurchaseReturnAcc
-                  : voucherType == "DNS"
-                    ? applicationSettings.inventorySettings?.defaultSalesAcc
-                    : applicationSettings.inventorySettings?.defaultPurchaseAcc,
-              ledgerID: applicationSettings.accountsSettings?.defaultCashAcc,
 
             },
           },
@@ -666,8 +646,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
           printOnSave: applicationSettings.accountsSettings?.printAccAftersave,
         };
-        _formState = await loadLedgerData(_formState) as any;
-        _formState.isInitialLedger = true;
       } else {
         _formState = (await loadTransVoucher(
           false,
@@ -688,47 +666,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
           ? false
           : true;
       _formState.userRightsFormCode = formCode ?? "";
-      if (voucherType == "PI") {
-        if (isInvoker && formType == "IMPORT") {
-          _formState.userRightsFormCode = "PIIMPORT"
-        }
-      }
 
       let __gridCols = (await getInitialPreference(gridCode, _stockGridCol, new APIClient()))
-      const _gridCols = __gridCols.columnPreferences.map(x => {
-        return {
-          ...x,
-          visible: (clientSession.isAppGlobal && (_formState.transaction.master.voucherForm.toUpperCase() == "INTERSTATE" ||
-            _formState.transaction.master.voucherForm.toUpperCase() == "INT" ||
-            _formState.transaction.master.voucherForm.toUpperCase() == "IMPORT") && ["cgst", "sgst", "sgstPerc", "cgstPerc"].includes(x.dataField)) ? false : x.visible
-        }
-      });
-      const accountKey =
-        formType == "PI-IND" ? applicationSettings.accountsSettings.defaultIndirectExpenseAccount as keyof typeof LedgerType
-          : formType == "PI-ASST" ? applicationSettings.accountsSettings.defaultPurchaseAssetsAccount as keyof typeof LedgerType : LedgerType.All;
-      const customerType = clientSession.isAppGlobal
-        ? ["PI", "PR"].includes(voucherType ?? "")
-          ? formType?.toUpperCase() === "PI-IND"
-            ? "B2B"
-            : formType?.toUpperCase() === "PI-ASST"
-              ? "B2B"
-              : formType?.toUpperCase() === "IMPORT"
-                ? "IMPORT"
-                : formType?.toUpperCase() === "INTERSTATE"
-                  ? "Interstate"
-                  : formType?.toUpperCase() === "INT"
-                    ? "Int"
-                    : ["WHOLESALE", "B2B"].includes(formType?.toUpperCase() ?? "")
-                      ? "B2B"
-                      : formType !== "BT"
-                        ? "B2C"
-                        : ""
-          : ""
-        : VoucherType.PurchaseReturn
-          ? applicationSettings.branchSettings.maintainKSA_EInvoice
-            ? "B2C"
-            : ""
-          : "";
+      const _gridCols = __gridCols.columnPreferences;
       _formState = {
         ..._formState,
         isInv: true,
@@ -737,11 +677,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           master: {
             ..._formState.transaction.master,
             costCentreID: applicationSettings.accountsSettings?.defaultCostCenterID,
-            hasroundOff:
-              formType == "Import"
-                ? true
-                : _formState.transaction.master.hasroundOff,
-            customerType: customerType
+           
           },
         },
         gridColumns: _gridCols as any,

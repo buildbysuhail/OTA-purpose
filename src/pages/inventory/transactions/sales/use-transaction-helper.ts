@@ -1124,7 +1124,6 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       // Set row header/index
       detail.slNo = generateUniqueKey();
 
-      // Basic product information
       detail.pCode = row.productCode;
       detail.productBatchID = row.productBatchID;
       detail.barCode = row.autoBarcode;
@@ -1132,101 +1131,36 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       detail.productID = row.productID;
       detail.brandID = row.brandID;
       detail.brand = row.brandName;
-      detail.arabicName = row.arabicName;
-
-      // Quantity and pricing
+      detail.arabicName = row.itemNameInSecondLanguage;
       detail.free = round(Number(row.free || 0), 4);
+      if(loadType == "SO"){
+        detail.isQtyFreezed = Number(row.qtyOut | 0) > 0;
+      }
       detail.qty = round(Number(row.quantity || 0), 4);
       detail.nosQty = row.qtyInNumbers;
+      detail.stickerQty = Number(row.barcodeQty || 0);
+      detail.stock = row.stock;
       detail.unit = row.unitName;
       detail.unitID = row.unitID;
-      detail.actualSalesPrice = row.transMRP;
-
-      // Foreign currency pricing
-      detail.unitPriceFC = Number(row.xRate || 0);
-      const qtyVal = Number(detail.qty || 0);
-      const unitPriceFCVal = Number(detail.unitPriceFC || 0);
-      detail.grossFC = qtyVal * unitPriceFCVal;
-
-      // Local currency pricing
       detail.unitPrice = getFormattedValueIgnoreRoundingToNumber(
         Number(row.unitPrice || 0)
       );
-
-      // Special handling for GRN type
-      if (loadType === "GRN") {
-        detail.unitPriceTag = getFormattedValueIgnoreRoundingToNumber(
-          Number(row.unitPrice || 0)
-        );
-        detail.qtyTag = getFormattedValueIgnoreRoundingToNumber(
-          Number(row.quantity || 0)
-        );
-        detail.grTransDetailsID = row.invTransactionDetailID;
-        detail.grTransDetailsIDTag = row.pendingQty;
-      }
-
-      // Special handling for GRN type
-      if (loadType === "PO") {
-        detail.poTransDetailsID = row.invTransactionDetailID;
-        detail.poTransDetailsIDTag = row.pendingQty;
-      }
-      if (loadType === "PO") {
-        detail.poTransDetailsIDTag = row.pendingQty;
-      }
-
-      // Cost calculations
-      const costPerItem = Number(row.costPerItem || 0);
-      const additionalExpense = Number(row.additionalExpense || 0);
-      detail.cost = getFormattedValueIgnoreRoundingToNumber(costPerItem);
-      detail.cost = costPerItem - additionalExpense;
-
-      // Tax information
-      detail.cstPerc = row.cstPerc;
-      detail.cst = row.cst;
-
-      // Product specifications
-      detail.size = row.specification;
-      detail.stickerQty = 0;
-      detail.additionalExpense = row.additionalExpense;
-
-      // Color handling with fallback
-      detail.colour = row.colour || row.color;
-
-      detail.warranty = row.warranty;
-      detail.totalAddExpense =
-        Number(row.quantity || 0) * Number(row.additionalExpense || 0);
-      detail.location = row.location;
-      detail.profit = row.totalProfit;
-
-      // Sales pricing
-      // detail.salesPrice = getFormattedValueIgnoreRoundingToNumber(
-      //   Number(row.stdSalesPrice || 0)
-      // );
-      detail.ratePlusTax = getFormattedValueIgnoreRoundingToNumber(
-        Number(row.rateWithTax || 0)
+      detail.purchasePrice = getFormattedValueIgnoreRoundingToNumber(
+        Number(row.costPerItem || 0)
       );
-
-      // Fallback sales price
-      // if (Number(detail.salesPrice || 0) === 0) {
-      //   detail.salesPrice = row.stdSalesPricePB;
-      // }
-
-      detail.margin = row.marginPer;
-      detail.stock = row.stock;
-
-      // Minimum sale price calculation
-      const minSalePrice = Number(row.minSalePrice || 0);
-      const multiFactor = Number(row.multiFactor || 1);
-      detail.minSalePrice = minSalePrice * multiFactor;
-
-      // Date handling
-      detail.mfdDate = row.mfgDate;
-      detail.expDate = row.expiryDate;
-
+      detail.minSalePrice = row.minSalePrice;
       detail.batchNo = row.batchNo;
-      detail.manualBarcode = row.manualBarcode;
+      detail.warehouseID = row.warehouseID;
+      detail.warehouseName = row.warehouse;
 
-      // Financial calculations
+      if(loadType != "" && Number(row.multiFactor || 0) > 0){
+        detail.purchasePrice = Number(row.multiFactor)*Number(row.stdSalesPrice);
+        detail.boxQty = Number(row.multiFactor);
+      }
+      else{
+        detail.boxQty = Number(row.multiFactor || 0);
+      }
+
       detail.gross = getFormattedValueIgnoreRoundingToNumber(
         Number(row.grossValue || 0)
       );
@@ -1236,67 +1170,83 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       detail.discount = getFormattedValueIgnoreRoundingToNumber(
         Number(row.discountAmt1 || 0)
       );
-      detail.schemeDiscount = getFormattedValueIgnoreRoundingToNumber(
-        Number(row.schemeDiscAmt || 0)
+      detail.unitDiscount = getFormattedValueIgnoreRoundingToNumber(
+        Number(row.discountAmt1 || 0)
       );
-      // VAT handling based on form type
-      if (
-        !clientSession.isAppGlobal &&
-        ((["SI", "SR"].includes(voucherType)) && (
-          formType === "VAT"
-        )) || !["SI", "SR"].includes(voucherType)
-      ) {
-        detail.vatPerc = row.vatPercentage;
-        detail.vatAmount = getFormattedValueIgnoreRoundingToNumber(
-          Number(row.totalVatAmount || 0)
-        );
-      } else {
-        detail.vatPerc = 0;
-        detail.vatAmount = 0;
-      }
-
+      detail.vatPerc = getFormattedValueIgnoreRoundingToNumber(
+        Number(row.vatPercentage || 0)
+      );
+      detail.vatAmount = getFormattedValueIgnoreRoundingToNumber(
+        Number(row.totalVatAmount || 0)
+      );
+      detail.cstPerc = getFormattedValueIgnoreRoundingToNumber(
+        Number(row.cstPerc || 0)
+      );
+      detail.cst = getFormattedValueIgnoreRoundingToNumber(
+        Number(row.cst || 0)
+      );
+      detail.ratePlusTax = getFormattedValueIgnoreRoundingToNumber(
+        Number(row.rateWithTax || 0)
+      );
+      detail.productDescription = row.productDescription;
+      detail.actualSalesPrice = row.transMRP;
       detail.netValue = getFormattedValueIgnoreRoundingToNumber(
         Number(row.netValue || 0)
       );
       detail.total = getFormattedValueIgnoreRoundingToNumber(
         Number(row.netAmount || 0)
       );
-      detail.productDescription = row.productDescription;
-
-      // Unit 2 information
-      detail.unitID2 = row.unit2ID;
-      detail.unit2Qty = row.unit2Qty;
-      detail.unit2MBarcode = row.unit2Barcode;
-      detail.unit2SalesRate = row.unit2SalesPrice;
-      detail.unit2MRP = row.unit2MRP;
-
-      // Unit 3 information
-      detail.unitID3 = row.unit3ID;
-      detail.unit3Qty = row.unit3Qty;
-      detail.unit3MBarcode = row.unit3Barcode;
-      detail.unit3SalesRate = row.unit3SalesPrice;
-      detail.unit3MRP = row.unit3MRP;
-
-      // detail.moreDetails.memo = row.memo;
-      detail.actualSalesPrice = row.actualSalesPrice;
-
-      // Optional fields with error handling
-      try {
-        detail.supplierReferenceProductCode = row.supplierReferenceProductCode;
-      } catch (error) {
-        console.error("Error setting supplier reference product code:", error);
-      }
-
-      try {
-        detail.warehouseID = row.warehouseID;
-        detail.warehouseName = row.warehouseName;
-      } catch (error) {
-        console.error("Error setting warehouse information:", error);
-      }
-
-      // Additional flags
-      detail.barcodePrinted = false;
+      detail.memo = row.memo;
+      detail.barcodePrinted = true;
       detail.batchCreated = true;
+
+      if(userSession.dbIdValue == "543140180640"){
+        detail.nLA_StdSalesPrice = row.valuationPrice
+      }
+
+if (row.productPriceCategoryMSP > 0) {
+    detail.minSalePrice = row.productPriceCategoryMSP;
+  } else if (Number(row.MinSalePrice || 0) > 0) {
+   detail.minSalePrice = row.productStandardUnitMSP;
+  }
+
+  if (userSession.dbIdValue === "MALABAR_RIYADH" && loadType === "GD") {
+    try {
+      detail.minSalePrice = getFormattedValueIgnoreRoundingToNumber(
+        Number(row.modelNo || 0)
+      );
+    } catch {}
+  }
+
+  detail.profit = Number(row.totalProfit || 0);
+
+  //if (ctx.profitPercentageVisible) {
+    const purchasePrice = Number(detail.purchasePrice || 0);
+    const qty = Number(detail.qty || 0);
+
+    let profitPerc = 0;
+    if (purchasePrice > 0 && qty > 0) {
+      profitPerc = (detail.profit / (purchasePrice * qty)) * 100;
+    }
+
+    detail.profitPercentage = profitPerc;
+//  }
+
+
+  // detail.removeCol = "Remove";
+  detail.image = "Show";
+
+  detail.flavors = row.Color ?? "";
+  detail.brand = row.brandName ?? "";
+  detail.brandID = Number(row.brandID || 0);
+
+  detail.itemType = row.ItemType ?? "";
+  detail.smCode = row?.employeeCode ?? "";
+  detail.salesman = row?.employeeName ?? "";
+  detail.salesmanID = row.salesManID;
+
+
+  detail.size = row.specification ?? "";
 
       // Store original cost for restoration after calculation
       const originalCost = detail.cost;
@@ -2487,10 +2437,6 @@ if (isSR && applicationSettings.productsSettings.maintainSchemes) {
         outDetail.isSchemeItem = "S";
     }
 }
-
-
-
-
 
         /** ---------------- Customer last rate ---------------- */
         outDetail.ratePlusTax = round(outDetail.unitPrice || 0);

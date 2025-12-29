@@ -373,6 +373,13 @@ export interface TransactionDetail {
   isSchemeItem?: string;
   schemeQtyLimit?: number;
   isSchemeProcessed?: string;
+
+  isQtyFreezed:boolean; // new 
+  memo:string; // new
+  flavors:string; // new
+  smCode:string; // new
+  salesman:string; // new
+  salesmanID:number; // new
 }
 
 export interface TransactionDetailsMore {

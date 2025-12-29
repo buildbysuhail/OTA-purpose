@@ -904,7 +904,22 @@ export const purchaseGridCol = (
         alignment: "left",
         visible: false,
       },
-
+      {
+        dataField: "smCode",
+        caption: t("smCode"),
+        dataType: "string",
+        width: 150,
+        alignment: "left",
+        visible: false,
+      },
+      {
+        dataField: "salesman",
+        caption: t("salesman"),
+        dataType: "string",
+        width: 150,
+        alignment: "left",
+        visible: false,
+      },
       {
         dataField: "actionCol",
         caption: "",

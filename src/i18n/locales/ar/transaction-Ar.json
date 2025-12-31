@@ -1062,8 +1062,8 @@
   "load_excel": "تحميل إكسل",
   "from_warehouse": "من المستودع",
   "to_warehouse": "إلى المستودع",
-  "m_invoice_no": "رقم الفاتورة الرئيسي",
-  "load_request": "تحميل الطلب",
+  "m_invoice_no": "#رقم الفاتورة الرئيسي",
+  "load_request": "#تحميل الطلب",
   "allow_multi_unit": "السماح بوحدات متعددة",
   "damage_entry": "إدخال التلف",
   "load_products": "تحميل المنتجات",
@@ -1079,7 +1079,7 @@
   "load_bti": "تحميل BTI",
   "load_grn": "تحميل GRN",
   "load_po": "تحميل PO",
-  "to_br_warehouse": "إلى مستودع الفرع",
+  "to_br._warehouse": "إلى مستودع الفرع",
   "refresh_inventory": "تحديث المخزون",
   "item_load_request": "طلب تحميل البند",
   "load_vouchers": "تحميل القسائم",
@@ -1102,7 +1102,18 @@
   "unit_discount": "خصم الوحدة",
   "nr": "السعر الصافي",
   "is_qty_freezed": "هل الكمية مجمدة",
-  "scheme_id": "رقم المخطط"
+  "scheme_id": "رقم المخطط",
+
+  "from_wh_stk": "من مخزن",
+  "to_wh_stk": "إلى مخزن",
+  "stock_max": "الحد الأقصى للمخزون",
+  "stock_to": "المخزون المستهدف",
+  "sales_total": "إجمالي المبيعات",
+  "w_stock_list": "قائمة مخزون W",
+  "pdt_status": "حالة PDT",
+  "load_cost_from_excel": "تحميل التكلفة من إكسل",
+  "branch_transfer_out": "تحويل صادر من الفرع",
+  "branch_transfer_in": "تحويل وارد إلى الفرع"
 
 
 }

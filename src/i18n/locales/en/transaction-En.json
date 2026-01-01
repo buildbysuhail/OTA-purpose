@@ -1065,8 +1065,8 @@
   "load_excel":"Load Excel",
   "from_warehouse":"From Warehouse",
   "to_warehouse":"To Warehouse",
-  "m_invoice_no":"M Invoice No",
-  "load_request":"Load Request",
+  "m_invoice_no":"M Invoice No#",
+  "load_request":"Load Request#",
   "allow_multi_unit":"Allow Multi Unit",
   "damage_entry":"Damage Entry",
   "load_products":"Load Products",
@@ -1082,7 +1082,7 @@
   "load_bti":"Load BTI",
   "load_grn":"Load GRN",
   "load_po":"Load PO",
-  "to_br_warehouse":"To Br.Warehouse",
+  "to_br._warehouse":"To Br.Warehouse",
   "refresh_inventory":"Refresh Inventory",
   "stock_count":"Stock Count",
   "item_load_request":"Item Load Request",
@@ -1106,11 +1106,18 @@
   "unit_discount":"Unit Discount",
   "nr":"NR",
   "is_qty_freezed":"IsQtyFreezed",
-  "scheme_id":"SchemeID"
+  "scheme_id":"SchemeID",
 
-
-
-
+  "from_wh_stk":"FromWhStk",
+  "to_wh_stk":"ToWhStk",
+  "stock_max":"StockMax",
+  "stock_to":"StockTo",
+  "sales_total":"SalesTotal",
+  "w_stock_list":"W Stock List",
+  "pdt_status":"PDT Status",
+  "load_cost_from_excel":"Load Cost From Excel",
+  "branch_transfer_out":"Branch Transfer Out",
+  "branch_transfer_in":"Branch Transfer In"
 
 
 

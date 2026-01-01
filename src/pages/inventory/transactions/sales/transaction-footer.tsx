@@ -353,6 +353,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   }, [isSidebar]);
 
   useEffect(() => {
+    debugger;
     calculateTotal(
       {...formState.transaction.master
         ,hasroundOff:formState.transaction.master.hasroundOff
@@ -370,7 +371,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               }
             }
         }, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly })
-  }, [formState.transaction.master.billDiscount, formState.transaction.master.hasroundOff, formState.transaction.master.adjustmentAmount, formState.transaction.master.creditAmt, formState.transaction.master.couponAmt, formState.transaction.master.srAmount]);
+  }, [formState.transaction.master.hasCashPaid, formState.transaction.master.billDiscount, formState.transaction.master.hasroundOff, formState.transaction.master.adjustmentAmount, formState.transaction.master.bankAmt, formState.transaction.master.couponAmt, formState.transaction.master.srAmount]);
 
   let clickTimer: NodeJS.Timeout | null = null;
 
@@ -615,6 +616,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               attachmentComponent
             )}
             <div className="w-[270px] gap-0.5 flex">
+              {formState.transaction.master.voucherType !== VoucherType.SalesReturn && (
               <ERPInput
                 id="creditCardAmount"
                 label={t("credit_card_amount")}
@@ -622,17 +624,20 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 value={creditAmtValue}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCreditAmtChange(e.target.value)}
               />
+              )}
               {(formState.transaction.master.voucherType === VoucherType.SalesInvoice && (
                 <ERPInput
                 id="couponAmount"
                 label={t("coupon_amount")}
                 type="number"
                 value={couponAmtValue}
+                disabled
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCouponAmtChange(e.target.value)}
               />
               ))}
             </div>
             <div className="flex items-end gap-1">
+          {formState.transaction.master.voucherType === VoucherType.SalesInvoice && (
               <div className="w-[130px]">
                 <ERPInput
                   id="srAmount"
@@ -642,6 +647,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSrAmountChange(e.target.value)}
                 />
               </div>
+          )}
               {(formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
                 formState.transaction.master.voucherType === VoucherType.SalesReturn) && (
                   // <ERPButton
@@ -670,7 +676,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 formState.transaction.master.voucherType === VoucherType.SalesQuotation
               ) && formState.formElements.lblBillBalance.visible && (
                 <div>
-                  <span className="text-xs font-medium whitespace-nowrap">{t("bal")}: {formState.formElements.lblBillBalance.label}</span><span className="text-xs font-semibold"></span>
+                  <span className="text-xs font-medium whitespace-nowrap">{t("bal")}sdsdsdsdsds: {formState.formElements.lblBillBalance.label}</span><span className="text-xs font-semibold"></span>
                 </div>
               )}
             </div>
@@ -815,6 +821,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           {/* second half */}
           {showSecondHalf && (
             <div className="flex">
+              
+          {formState.transaction.master.voucherType !== VoucherType.SalesReturn && (
               <ERPInput
                 id="creditCardAmount"
                 label={t("credit_card_amount")}
@@ -822,16 +830,20 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 value={creditAmtValue}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCreditAmtChange(e.target.value)}
               />
+          )}
               {(formState.transaction.master.voucherType === VoucherType.SalesInvoice && (
                 <ERPInput
                 id="couponAmount"
                 label={t("coupon_amount")}
                 type="number"
+                disabled
                 value={couponAmtValue}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCouponAmtChange(e.target.value)}
               />
               ))}
               <div className="flex items-end gap-1">
+                
+          {formState.transaction.master.voucherType === VoucherType.SalesInvoice && (
                 <div className="w-[140px]">
                   <ERPInput
                     id="srAmount"
@@ -841,6 +853,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSrAmountChange(e.target.value)}
                   />
                 </div>
+          )}
                 {(formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
                   formState.transaction.master.voucherType === VoucherType.SalesReturn) && (
                     // <ERPButton
@@ -1214,6 +1227,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         )}
         {!showSecondHalf && (
           <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0 flex">
+            {formState.transaction.master.voucherType !== VoucherType.SalesReturn && (
             <ERPInput
               id="creditCardAmount"
               label={t("credit_card_amount")}
@@ -1221,11 +1235,13 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               value={creditAmtValue}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCreditAmtChange(e.target.value)}
             />
+            )}
             {(formState.transaction.master.voucherType === VoucherType.SalesInvoice && (
                 <ERPInput
                 id="couponAmount"
                 label={t("coupon_amount")}
                 type="number"
+                disabled
                 value={couponAmtValue}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCouponAmtChange(e.target.value)}
               />
@@ -1234,6 +1250,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         )}
         {!showSecondHalf && (
           <div className="flex items-end gap-1">
+          {formState.transaction.master.voucherType === VoucherType.SalesInvoice && (
             <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
               <ERPInput
                 id="srAmount"
@@ -1243,6 +1260,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSrAmountChange(e.target.value)}
               />
             </div>
+              )}
             {(formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
               formState.transaction.master.voucherType === VoucherType.SalesReturn) && (
                 // <ERPButton

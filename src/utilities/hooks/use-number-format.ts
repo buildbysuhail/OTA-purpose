@@ -286,6 +286,11 @@ export const useNumberFormat = (): UseNumberFormatResult => {
     
     return convertAmountToWords(amount.toString());
   }
+  function toTaxFormat(val: number): number {
+    const format = getTaxFormat(val);
+    val = parseFloat(formatNumber(val, format));
+    return val;
+  }
   function getTaxFormat(val: number): string {
     let decimalPoint: number;
     decimalPoint = applicationSettings.mainSettings.decimalPoints;
@@ -420,9 +425,10 @@ export const useNumberFormat = (): UseNumberFormatResult => {
   return r;
 }
 
-  return { formatNumberByDecimalPoint,getNumericFormat, getFormattedValue, getTaxFormat, getFormattedValueToNumber, getAmountInWords, round, getFormattedValueIgnoreRoundingToNumber, getFormattedValueIgnoreRounding, posRoundAmount, roundAwayFromZero }
+  return {toTaxFormat, formatNumberByDecimalPoint,getNumericFormat, getFormattedValue, getTaxFormat, getFormattedValueToNumber, getAmountInWords, round, getFormattedValueIgnoreRoundingToNumber, getFormattedValueIgnoreRounding, posRoundAmount, roundAwayFromZero }
 };
 export interface UseNumberFormatResult {
+  toTaxFormat(val: number): number ;
   getNumericFormat: () => string;
   getFormattedValue: (
     val: number,

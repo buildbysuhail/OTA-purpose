@@ -49,6 +49,7 @@ interface TransactionFooterProps {
   calculateTotal: any
   applicationSettings: any;
   clientSession: any;
+  importFromExcel?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 interface Confetti {
@@ -179,10 +180,12 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   applyDiscountsToItems,
   applicationSettings,
   clientSession,
+  importFromExcel,
 }) => {
   const [hasAnimated, setHasAnimated] = useState(false);
   const [isOpentwo, setIsOpentwo] = useState(false);
   const btnSaveRef = useRef<HTMLButtonElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { getFormattedValue } = useNumberFormat();
   const dropUpRef = useRef<HTMLDivElement | null>(null);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
@@ -329,6 +332,23 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
     return true;
   };
 
+  const handleLoadProductBtn = () => {
+    alert("Need to manage this section")
+    // Calling an api which get products items in that warehouse
+  }
+  
+  const handleAddProduct = () =>  {
+    fileInputRef.current?.click();
+  }
+
+  const handleLoadExcel = () =>  {
+    fileInputRef.current?.click();
+  }
+
+  const onSelectExcel = (event: React.ChangeEvent<HTMLInputElement>) => {
+    importFromExcel && importFromExcel(event);
+  }
+
   const taxData = [
     { label: "SGST", value: 0 },
     { label: "CGST", value: 0 },
@@ -426,7 +446,11 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   // onChangeData={(data: any) => {  handleFieldChange("ledgerID", data.ledgerID)}}
                   label={t("to_br._warehouse")}
                 />
-                <ERPButton title={t("load_products")} variant="secondary"/>
+                <ERPButton 
+                   title={t("load_products")} 
+                   variant="secondary"
+                   onClick={()=> handleLoadProductBtn()}
+                   />
                 <ERPButton title={t("refresh_inventory")} variant="secondary" disabled={true}/>
                 <AutoCalculationCheckbox
                   formState={formState}
@@ -443,22 +467,40 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 <ERPCheckbox
                   id="allowMultiUnit"
                   label={t("allow_multi_unit")}
-                  // checked={relatedInfo.showStockDetails}
-                  // onChange={e => onChange("showStockDetails", e.target.checked)}
+                  checked={formState?.allowMultiUnits}
+                  onChange={(e) =>{
+                      dispatch(
+                      formStateHandleFieldChangeKeysOnly(
+                        { fields: { allowMultiUnits: e.target.checked} }
+                      ))
+                  }}
                 />
               </div>
+
             )} 
-            {[VoucherType.StockAdjuster].includes(formState.transaction.master.voucherType as VoucherType) && (
+            {/* {[VoucherType.StockAdjuster].includes(formState.transaction.master.voucherType as VoucherType) && (
               <ERPInput id="IDontKnow" title={t("find_what_here")} />
-            )}
+            )} */}
           {[VoucherType.ShortageStock, VoucherType.ExcessStock,VoucherType.StockAdjuster].includes(formState.transaction.master.voucherType as VoucherType) && (
               <div className="flex">
-                <ERPButton title={t("add_products")} variant="secondary"/>
+                <ERPButton
+                   title={t("add_products")}
+                   variant="secondary"
+                   disabled={formState.formElements?.pnlMasters?.disabled}
+                   onClick={()=> handleAddProduct()}
+                />
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={onSelectExcel}
+                  accept=".xlsx,.xls"
+                  className="hidden"
+                />
               </div>
              )}
             {formState.transaction.master.voucherType == VoucherType.OpeningStock && (
               <div className="flex gap-1 px-1">
-                <ERPButton title={t("load_products")} variant="secondary"/>
+                <ERPButton title={t("load_products")} variant="secondary" onClick={()=> handleLoadProductBtn()}/>
               </div>
             )} 
              
@@ -468,8 +510,14 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 <ERPCheckbox
                   id="loadCostFromExcel"
                   label={t("load_cost_from_excel")}
-                  // checked={relatedInfo.showStockDetails}
-                  // onChange={e => onChange("showStockDetails", e.target.checked)}
+                  checked={formState?.chkCostFromExcel}
+                  onChange={(e) =>{
+                      dispatch(
+                      formStateHandleFieldChangeKeysOnly(
+                        { fields: { chkCostFromExcel: e.target.checked} }
+                      ))
+                  }}
+                  
                 />
               </div>
              )}
@@ -478,11 +526,37 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
              </div>
              {[VoucherType.StockCount, VoucherType.OpeningStock,VoucherType.StockAdjuster].includes(formState.transaction.master.voucherType as VoucherType) && (
               <div className="flex px-1">
-                <ERPButton title={t("load_excel")} variant="secondary"/>
+                <ERPButton
+                  title={t("load_excel")}
+                  variant="secondary"
+                  disabled={formState.formElements?.pnlMasters?.disabled}
+                  onClick={() => handleLoadExcel()}
+                />
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={onSelectExcel}
+                  accept=".xlsx,.xls"
+                  className="hidden"
+                />
               </div>
              )}
-            
-            
+
+             {/* Is Global section */}
+              {/* {clientSession.isAppGlobal === true &&
+                [VoucherType.StockTransfer, VoucherType.ShortageStock, VoucherType.DamageEntry, VoucherType.ExcessStock].includes(
+                  formState.transaction.master.voucherType as VoucherType ) && (
+                  <div>
+                    <ERPCheckbox
+                      id="eWayBill"
+                      label={t("e_way_bill")}
+                      // checked={relatedInfo.showStockDetails}
+                      // onChange={e => onChange("showStockDetails", e.target.checked)}
+                    />
+                    
+                  </div>
+                )} */}
+
             
           </div>
   );
@@ -912,7 +986,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             {stockTransferFooterComponents}
             {formState.transaction.master.voucherType == VoucherType.OpeningStock  && (
               <div className="flex gap-1">
-                <ERPButton title={t("load_products")} variant="secondary"/>
+                <ERPButton title={t("load_products")} variant="secondary" onClick={()=> handleLoadProductBtn()}/>
                 {/* <ERPButton title={t("load_excel")} variant="secondary"/> */}
               </div>
             )} 

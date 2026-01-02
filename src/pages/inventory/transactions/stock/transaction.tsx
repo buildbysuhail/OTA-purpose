@@ -489,6 +489,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     importFromExcel,
     loadLedgerData,
     postBillWiseDetails,
+    onILRRefNoKeyUp,
     // fetchUserConfig
   } = useTransaction(
     transactionType ?? "",
@@ -654,7 +655,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
           voucherType,
           formType,
           undefined,
-          transactionMasterID
         )) as TransactionFormState;
       }
 
@@ -758,6 +758,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
         //     ? EmployeeType.Purchaser
         //     : _formState.formElements.cbEmployee.employeeType
         // },
+        cbEmployee: {
+          ...initialFormElements.cbEmployee,
+          label: "sales_man"
+        },
         ledgerID: {
           ...initialFormElements.ledgerID,
           accLedgerType:
@@ -1592,6 +1596,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               refactorDetails={refactorDetails}
               voucherType={voucherType}
               focusAdd1={focusAdd1}
+              onILRRefNoKeyUp={onILRRefNoKeyUp}
             />
             {/* header ends here */}
 
@@ -1691,6 +1696,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                         generateLPO={generateLPO}
                         generateLPQ={generateLPQ}
                         clientSession={clientSession}
+                        importFromExcel={importFromExcel}
                       />
                     )}
                 </div>
@@ -1809,6 +1815,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     userSession={userSession}
                     refactorDetails={refactorDetails}
                     voucherType={voucherType}
+                    onILRRefNoKeyUp={onILRRefNoKeyUp}
                   />
                 </div>
               </div>
@@ -1879,6 +1886,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   generateLPO={generateLPO}
                   generateLPQ={generateLPQ}
                   clientSession={clientSession}
+                  importFromExcel={importFromExcel}
                   footerLayout={
                     ((formState.transactionLoading
                       ? _st.footerPosition
@@ -1933,6 +1941,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
             generateLPO={generateLPO}
             generateLPQ={generateLPQ}
             clientSession={clientSession}
+            importFromExcel={importFromExcel}
           />
         )}
         {/* footer ends here */}

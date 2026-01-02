@@ -335,7 +335,6 @@ export const useTransaction = (
   };
   const { hasRight, hasBlockedRight } = useUserRights();
 
-
   const loadAndSetTransVoucher: LoadAndSetTransVoucherFn = async (
     usingManualInvNumber = false,
     voucherNumber,
@@ -353,7 +352,6 @@ export const useTransaction = (
     showLoading,
     disablePnlMasters = true
   ) => {
-
     const _s_isDirty = isDirtyTransaction(
       formState.prev,
       {
@@ -398,12 +396,8 @@ export const useTransaction = (
       voucherType,
       formType,
       manualInvoiceNumber,
-      transactionMasterID,
-      loadVType,
-      loadFType,
-      loadPrefix
+      false
     );
-
 
     if (loadVType == "GRN" || loadVType == "GRR") {
       _formState = merge({}, _formState, {
@@ -444,7 +438,8 @@ export const useTransaction = (
         ..._formState.formElements.pnlMasters,
         disabled:
           _formState.transaction.master.invTransactionMasterID > 0 &&
-          !["GRN", "PO", "SO"].includes(loadVType ?? "") && disablePnlMasters,
+          !["GRN", "PO", "SO"].includes(loadVType ?? "") &&
+          disablePnlMasters,
       },
       btnSave: {
         ..._formState.formElements.btnSave,
@@ -465,7 +460,6 @@ export const useTransaction = (
     _formState: TransactionFormState,
     loadUserConfig: boolean = false
   ) => {
-
     const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`);
     const Utc = await getStorageString(key);
     let userConfig: UserConfig | undefined;
@@ -517,15 +511,11 @@ export const useTransaction = (
     voucherNumber?: number,
     voucherPrefix?: string,
     voucherType?: string,
-    formType?: string,
+    voucherForm?: string,
     manualInvoiceNumber?: any,
-    transactionMasterID?: number,
-    loadVType?: string,
-    loadFType?: string,
-    loadPrefix?: string,
+    isPDTTrans: boolean = false,
     pDTInvTransMasterID?: number
   ) => {
-    loadVType = loadVType ?? "PI";
     let voucher: TransactionFormState = JSON.parse(
       JSON.stringify({
         ...formState,
@@ -535,141 +525,90 @@ export const useTransaction = (
 
     let url = `${Urls.inv_transaction_base}${transactionType}`;
 
-    let _voucherNumber =
+    voucherNumber =
       voucherNumber ?? (formState.transaction?.master?.voucherNumber || 0);
-    let out_voucherNumber =
-      voucherNumber ?? (formState.transaction?.master?.voucherNumber || 0);
-    let out_voucherType =
+    voucherType =
       voucherType ?? (formState.transaction?.master?.voucherType || "");
-    let out_voucherForm =
-      formType ?? (formState.transaction?.master?.voucherForm || "");
-    let out_voucherPrefix =
+    voucherForm =
+      voucherForm ?? (formState.transaction?.master?.voucherForm || "");
+    voucherPrefix =
       voucherPrefix ?? (formState.transaction?.master?.voucherPrefix || "");
 
-    if (loadVType == "PO") {
-      out_voucherNumber = manualInvoiceNumber ?? 0;
-      out_voucherType = loadVType;
-      out_voucherForm = loadFType ?? "";
-      out_voucherPrefix = loadPrefix ?? "";
-    }
-    if (loadVType == "GRN") {
-      out_voucherNumber = manualInvoiceNumber ?? 0;
-      out_voucherType = loadVType;
-      out_voucherForm = loadFType ?? "";
-      out_voucherPrefix = loadPrefix ?? "";
-      url = url + "/ByGRN";
-    }
-    if (loadVType == "GRR") {
-      out_voucherNumber = manualInvoiceNumber ?? 0;
-      out_voucherType = loadVType;
-      out_voucherForm = loadFType ?? "";
-      out_voucherPrefix = loadPrefix ?? "";
-      url = url + "/ByGRN";
-    }
-    if (loadVType == "PI_Ref") {
-      out_voucherNumber = manualInvoiceNumber ?? 0;
-      out_voucherType = "PI";
-      out_voucherForm = "VAT";
-      out_voucherPrefix = loadPrefix ?? "";
-      url = url + "/ByReferenceNo";
-    }
-
-    if (_voucherNumber == undefined || _voucherNumber <= 0) {
+    if (voucherNumber == undefined || voucherNumber <= 0) {
       return voucher;
     }
     const params: Record<any, any> = {
-      VoucherNumber: out_voucherNumber, // Ensuring it's always a string
-      voucherPrefix: out_voucherPrefix,
-      voucherType: out_voucherType,
-      voucherForm: out_voucherForm,
+      VoucherNumber: voucherNumber, // Ensuring it's always a string
+      voucherPrefix: voucherPrefix,
+      voucherType: voucherType,
+      voucherForm: voucherForm,
       isUsingManualInvNo: usingManualInvNumber, // Convert boolean to string
-      isActualPriceVisible:
-        formState.gridColumns.find((x) => x.dataField == "actualSalesPrice")
-          ?.visible ?? false,
-      referenceNumber: loadVType == "PI_Ref" ? out_voucherNumber : null,
+      mannualInvoiceNumber: manualInvoiceNumber,
+      pDTInvTransMasterID:
+        pDTInvTransMasterID ??
+        formState.transaction.master.refInvTransactionMasterID,
     };
 
     // ByGRN
     let vch = await api.getAsync(url, new URLSearchParams(params).toString());
-    if (loadVType == "GRN") {
-      if (vch?.isOk == false) {
-        ERPAlert.show({
-          title: "",
-          text: `${vch?.message}`,
-          icon: t("warning"),
-        });
-        return false;
-      }
-    }
 
     if (vch == null || vch?.master == null) {
-      debugger;
-      // const vno = await getNextVoucherNumber(params.formType,params.voucherType,params.voucherPrefix, false);
       vch = {
         ...transactionInitialData,
-        details: !deviceInfo.isMobile ? Array.from({ length: 30 }, (_, index) => ({
-          ...initialTransactionDetailData,
-          slNo: generateUniqueKey()
-        })) : [],
-        master: {
-          ...transactionInitialData.master,
-          voucherNumber: _voucherNumber,
-          voucherType: voucherType ?? formState.transaction.master.voucherType,
-          voucherPrefix:
-            voucherPrefix ?? formState.transaction.master.voucherPrefix,
-          voucherForm: formType ?? formState.transaction.master.voucherForm,
-        },
+        details: !deviceInfo.isMobile
+          ? Array.from({ length: 30 }, (_, index) => ({
+              ...initialTransactionDetailData,
+              slNo: generateUniqueKey(),
+            }))
+          : [],
       };
     }
 
-    if (usingManualInvNumber) {
-      vch.master = {
-        ...vch.master,
-        voucherNumber: _voucherNumber,
-        voucherType: voucherType ?? formState.transaction.master.voucherType,
-        voucherPrefix:
-          voucherPrefix ?? formState.transaction.master.voucherPrefix,
-        voucherForm: formType ?? formState.transaction.master.voucherForm,
-        invTransactionMasterID: ["GRN", "PO", "SO"].includes(loadVType ?? "")
-          ? null
-          : vch.master.invTransactionMasterID,
-      };
-    }
-    // clearControlForNew();
     await undoEditMode(
       formState.isEdit,
-      transactionMasterID ?? formState.transaction.master.invTransactionMasterID
+      formState.transaction.master.invTransactionMasterID
     );
-    voucher.transaction.master.inventoryLedgerID =
-      loadVType == "PR" || loadVType == "DNS"
-        ? vch.master.inventoryLedgerID
-        : formState.transaction.master.inventoryLedgerID;
-    voucher.transaction.master.orderNumber =
-      loadVType !== "PO" && loadVType !== "GRN"
-        ? voucher.transaction.master.orderNumber
-        : undefined;
-    if (loadVType == "GRN" && voucherType == "PI") {
-      voucher.transaction.master.gRNMasterID =
-        voucher.transaction.master.invTransactionMasterID;
+    if (isPDTTrans) {
+      if (voucherType == "EX" || voucherType == "EX-SP") {
+        voucher.transaction = {
+          ...(vch || {}),
+          master: {
+            ...(vch?.master || {}),
+            fromWarehouseID: 4,
+            toWarehouseID: vch.master.fromWarehouseID
+          },
+        };
+      }
     }
+    voucher.allowStockUpdate = vch.stockUpdate;
     voucher.transaction = {
-      ...(vch || {}),
-      master: {
-        ...(vch?.master || {}),
-        hasroundOff: vch?.master?.roundAmount != 0,
-        cashReceived: vch?.master?.cashReceived,
-        hasCashPaid: vch?.master?.cashReceived != 0,
-      },
+      ...(vch || {}), 
       details: refactorDetails(
         vch.details,
-        formType ?? vch.master.voucherForm,
+        voucherForm ?? vch.master.voucherForm,
         voucherType ?? vch.master.voucherType,
-        { result: {} },
-        loadVType
+        { result: {} }
       ),
       attachments: [...(vch.transaction?.attachments || [])],
     };
+const remarks = String(vch.master.pdtRemarks ?? "");
+const verified = Boolean(vch.master.pdtVerified);
 
+      if (remarks !== "0000") {
+        voucher.formElements.pdtStatus = {
+          ...voucher.formElements.pdtStatus,
+          visible: true,
+          text: verified
+            ? `PDT Verified Successfully : [${remarks}]`
+            : `PDT Not Verified : [${remarks}]`,
+          color: verified ? "green" : "red",
+        };
+      } else {
+        voucher.formElements.pdtStatus = {
+          ...voucher.formElements.pdtStatus,
+          visible: false,
+        };
+      }
     const summaryRes = calculateSummary(voucher.transaction.details, voucher, {
       result: {},
     });
@@ -699,38 +638,16 @@ export const useTransaction = (
     voucher.formElements.lblPosted.visible = voucher.isPostedTransaction;
     voucher.formElements.cbCostCentre.disabled =
       voucher.transaction.master.costCentreID <= 0 &&
-        (formState.userConfig?.presetCostenterId ?? 0) > 0
+      (formState.userConfig?.presetCostenterId ?? 0) > 0
         ? true
         : false;
-    // voucher.transaction = vch;
-    if (vch?.master) {
-      const updatedMaster: TransactionMaster = {
-        ...voucher.transaction.master,
-        costCentreID:
-          voucher.transaction.master.costCentreID <= 0
-            ? formState.userConfig?.presetCostenterId ?? 0 > 0
-              ? formState.userConfig?.presetCostenterId ?? 0
-              : applicationSettings.accountsSettings.defaultCostCenterID
-            : voucher.transaction.master.costCentreID,
-      };
-      voucher.transaction.master = updatedMaster;
-    }
-    // if (vch?.details) {
-    //   voucher.transaction.details = refactorDetails(
-    //     vch.details,
-    //     "",
-    //     { result: {} },
-    //     formType ?? ""
-    //   );
-    // }
+    
     if (voucher.transaction.attachments) {
       voucher.transaction.attachments = refactorAttachments(
         voucher.transaction
       );
     }
 
-    voucher.isInitialLedger = true;
-    voucher = (await loadLedgerData(voucher)) as any;
     return voucher;
   };
   const refactorAttachments = (transaction: TransactionData) => {
@@ -779,12 +696,17 @@ export const useTransaction = (
       !clientSession.isAppGlobal && voucherType == VoucherType.PurchaseReturn
         ? true
         : isVoucherPrefix;
-    const response = voucherType !== "LPO" ? await api.getAsync(
-      `${Urls.inv_transaction_base}${transactionType}/GetNextVoucherNumber/`,
-      `formType=${formType ? formType : ""}&voucherType=${voucherType ? voucherType : ""
-      }&voucherPrefix=${voucherPrefix ? voucherPrefix : ""}&isVoucherPrefix=${isVoucherPrefix ? isVoucherPrefix : false
-      }`
-    ) : undefined;
+    const response =
+      voucherType !== "LPO"
+        ? await api.getAsync(
+            `${Urls.inv_transaction_base}${transactionType}/GetNextVoucherNumber/`,
+            `formType=${formType ? formType : ""}&voucherType=${
+              voucherType ? voucherType : ""
+            }&voucherPrefix=${
+              voucherPrefix ? voucherPrefix : ""
+            }&isVoucherPrefix=${isVoucherPrefix ? isVoucherPrefix : false}`
+          )
+        : undefined;
 
     const nextVoucherNumber = response || 1;
 
@@ -798,81 +720,34 @@ export const useTransaction = (
     return response;
   };
 
-
   async function validate(): Promise<boolean> {
     const master = formState.transaction.master;
     const details = formState.transaction.details;
-
-    // Stock update restriction
-
     const setting = applicationSettings.productsSettings.mRPLessThanSalesPrice;
 
-    // Equivalent condition:
-    // if ((setting is not "Block" && UserSession.IsAPPGlobal) || !UserSession.IsAPPGlobal)
-    if (setting == "Block" && clientSession.isAppGlobal) {
-      // Find invalid rows (Sales price greater than MRP)
-      const invalidRows = details
-        .map((item, index) => ({ item, index }))
-        .filter(({ item }) => item.salesPrice > item.mrp)
-        .map(({ index }) => index + 1);
+    const firstFreeRow = details.findIndex((d) => !d.productBatchID);
+    const lastRowIndex = firstFreeRow === -1 ? details.length : firstFreeRow;
 
-      if (invalidRows.length > 0) {
-        await ERPAlert.show({
-          icon: "error",
-          title: t("validation_error"),
-          text: t(
-            `Sales price greater than MRP at rows: ${invalidRows.join(", ")}`
-          ),
-          confirmButtonText: t("ok"),
-        });
-        return false;
-      }
-    }
-
-    if (
-      !formState.transaction.master.stockUpdate &&
-      (formState.transaction.master.voucherType === "PI" ||
-        formState.transaction.master.voucherType === "PR")
-    ) {
-      const voucherType = formState.transaction.master.voucherType;
-      const confirm = await ERPAlert.show({
-        icon: "info",
-        title: t("stock_update_warning"),
-        text:
-          voucherType === "PI"
-            ? "Stock cannot be updated in this invoice.In goods Receipt voucher stock already updated. Do you want to continue?"
-            : voucherType === "PR"
-              ? "Stock cannot be updated in this invoice.In Goods Receipt Return voucher stock already updated. Do you want to continue?"
-              : "",
-        confirmButtonText: t("yes"),
-        cancelButtonText: t("no"),
-        showCancelButton: true,
-      });
-      if (!confirm) {
-        return false;
-      }
-    }
-
-    // Cost centre validation
-    // if (
-    //   applicationSettings.accountsSettings.maintainCostCenter &&
-    //   isNullOrUndefinedOrZero(master.costCentreID)
-    // ) {
-    //   await ERPAlert.show({
-    //     icon: "error",
-    //     title: t("validation_error"),
-    //     text: t("select_valid_cost_centre"),
-    //     confirmButtonText: t("ok"),
-    //   });
-    //   return false;
-    // }
-
-    // Grand total check
-    if (master.grandTotal < 0) {
+    // Ware house validation
+    if (!master.fromWarehouseID || !master.toWarehouseID) {
       await ERPAlert.show({
-        icon: "error",
+        icon: "warning",
         title: t("validation_error"),
-        text: t("wrong_discount_or_value"),
+        text: t("Please Select the  Warehouse !!"),
+        confirmButtonText: t("ok"),
+      });
+      return false;
+    }
+
+    // Same Ware house validation
+    if (
+      master.fromWarehouseID === master.toWarehouseID &&
+      master.voucherType !== "SC"
+    ) {
+      await ERPAlert.show({
+        icon: "warning",
+        title: t("validation_error"),
+        text: t("Please Select the Different Warehouse !!"),
         confirmButtonText: t("ok"),
       });
       return false;
@@ -892,6 +767,178 @@ export const useTransaction = (
         icon: "warning",
       });
     }
+
+    //     if(PDTInvTransMasterID>0)
+    // {
+    //     int Active = new PolosysERPInventoryClass.Transaction.InventoryTransactionMaster().GetIsInvTransactionIsActiveOrInvoiced(PDTInvTransMasterID);
+    //     if (Active == 0)
+    //     {
+    //         PolosysFrameWork.General.ShowMessageBox("Already converted.");
+    //         return false;
+    //     }
+    //     }
+    //     if (PolosysFrameWork.General.ValiddateTransactionDate(dtpTransDate.Value) == 0)
+    //     {
+    //         PolosysFrameWork.General.ShowMessageBox("Transaction Date validation failed(Check Financial Year period)", "Invalid Transaction Date");
+    //         return false;
+    //     }
+
+    //  No stock items validation
+    if (lastRowIndex === 0) {
+      await ERPAlert.show({
+        icon: "warning",
+        title: t("validation_error"),
+        text: t("Please Enter the Stock Details, No Data in Detail Fields"),
+        confirmButtonText: t("ok"),
+      });
+      return false;
+    }
+
+    // Need to verify coorectly - just aaded now
+    for (let i = 0; i < lastRowIndex; i++) {
+      const row = details[i];
+
+      if (!row.productBatchID) {
+        await ERPAlert.show({
+          icon: "warning",
+          title: t("validation_error"),
+          text: t(
+            `Invalid Item Details in Row ${
+              i + 1
+            } Please correct it or remove the row.`
+          ),
+          confirmButtonText: t("ok"),
+        });
+        return false;
+      }
+
+      if (!row.unitID || Number(row.unitID) === 0) {
+        await ERPAlert.show({
+          icon: "warning",
+          title: t("validation_error"),
+          text: t(`"Product Unit ID is missing  Please cross-check:${i + 1}`),
+        });
+        return false;
+      }
+    }
+
+    //   // Zero Quantity validation
+    //   for (let i = 0; i < lastRowIndex; i++) {
+    //   if (Number(details[i].qty) === 0) {
+    //     const confirm = await ERPAlert.show({
+    //       icon: "warning",
+    //         title: t("validation_error"),
+    //         text: t(`Zero Qty in Row ${i + 1} Do you want to continue?`),
+    //         confirmButtonText: t("ok"),
+    //     });
+
+    //     if (!confirm) return false;
+    //   }
+    // }
+
+    // Item entered in a blank row
+    for (let i = lastRowIndex; i < details.length; i++) {
+      if (details[i].productID) {
+        await ERPAlert.show({
+          title: t("validation_error"),
+          text: t(
+            `Items entered after a blank row will be skipped.Please remove blank Row:: ${
+              lastRowIndex + 1
+            }`
+          ),
+          confirmButtonText: t("ok"),
+        });
+        return false;
+      }
+    }
+
+    // Stock update restriction
+
+    // Equivalent condition:
+    // if ((setting is not "Block" && UserSession.IsAPPGlobal) || !UserSession.IsAPPGlobal)
+    // if (setting == "Block" && clientSession.isAppGlobal) {
+    //   // Find invalid rows (Sales price greater than MRP)
+    //   const invalidRows = details
+    //     .map((item, index) => ({ item, index }))
+    //     .filter(({ item }) => item.salesPrice > item.mrp)
+    //     .map(({ index }) => index + 1);
+
+    //   if (invalidRows.length > 0) {
+    //     await ERPAlert.show({
+    //       icon: "error",
+    //       title: t("validation_error"),
+    //       text: t(
+    //         `Sales price greater than MRP at rows: ${invalidRows.join(", ")}`
+    //       ),
+    //       confirmButtonText: t("ok"),
+    //     });
+    //     return false;
+    //   }
+    // }
+
+    // if (
+    //   !formState.transaction.master.stockUpdate &&
+    //   (formState.transaction.master.voucherType === "PI" ||
+    //     formState.transaction.master.voucherType === "PR")
+    // ) {
+    //   const voucherType = formState.transaction.master.voucherType;
+    //   const confirm = await ERPAlert.show({
+    //     icon: "info",
+    //     title: t("stock_update_warning"),
+    //     text:
+    //       voucherType === "PI"
+    //         ? "Stock cannot be updated in this invoice.In goods Receipt voucher stock already updated. Do you want to continue?"
+    //         : voucherType === "PR"
+    //           ? "Stock cannot be updated in this invoice.In Goods Receipt Return voucher stock already updated. Do you want to continue?"
+    //           : "",
+    //     confirmButtonText: t("yes"),
+    //     cancelButtonText: t("no"),
+    //     showCancelButton: true,
+    //   });
+    //   if (!confirm) {
+    //     return false;
+    //   }
+    // }
+
+    // Cost centre validation
+    // if (
+    //   applicationSettings.accountsSettings.maintainCostCenter &&
+    //   isNullOrUndefinedOrZero(master.costCentreID)
+    // ) {
+    //   await ERPAlert.show({
+    //     icon: "error",
+    //     title: t("validation_error"),
+    //     text: t("select_valid_cost_centre"),
+    //     confirmButtonText: t("ok"),
+    //   });
+    //   return false;
+    // }
+
+    // Grand total check
+    // if (master.grandTotal < 0) {
+    //   await ERPAlert.show({
+    //     icon: "error",
+    //     title: t("validation_error"),
+    //     text: t("wrong_discount_or_value"),
+    //     confirmButtonText: t("ok"),
+    //   });
+    //   return false;
+    // }
+
+    // // Transaction date check
+    // const transDateValidation = validateTransactionDate(
+    //   new Date(new Date(formState.transaction.master.transactionDate)),
+    //   false,
+    //   undefined,
+    //   hasBlockedRight
+    // );
+    // if (!transDateValidation.valid) {
+    //   await ERPAlert.show({
+    //     title: t("warning"),
+    //     text: transDateValidation.message,
+    //     icon: "warning",
+    //   });
+    // }
 
     // Day close check
     // const closedDate = await getClosedDate(api, formState.transactionType);
@@ -1178,13 +1225,13 @@ export const useTransaction = (
             saveMode === "LPO"
               ? "PO"
               : saveMode === "LPQ"
-                ? "PQ"
-                : master.voucherType,
+              ? "PQ"
+              : master.voucherType,
           customerType:
             !clientSession.isAppGlobal &&
-              master.voucherType == "PR" &&
-              master.customerType == "" &&
-              applicationSettings.branchSettings.maintainKSA_EInvoice
+            master.voucherType == "PR" &&
+            master.customerType == "" &&
+            applicationSettings.branchSettings.maintainKSA_EInvoice
               ? "B2C"
               : master.customerType,
           transactionDate:
@@ -1202,13 +1249,13 @@ export const useTransaction = (
         const saveRes =
           formState.transaction.master.invTransactionMasterID > 0
             ? await api.putAsync(
-              `${Urls.inv_transaction_base}${transactionType}`,
-              params
-            )
+                `${Urls.inv_transaction_base}${transactionType}`,
+                params
+              )
             : await api.postAsync(
-              `${Urls.inv_transaction_base}${transactionType}`,
-              params
-            );
+                `${Urls.inv_transaction_base}${transactionType}`,
+                params
+              );
         if (saveRes.isOk == true) {
           dispatch(
             formStateTransactionUpdate({
@@ -1220,7 +1267,11 @@ export const useTransaction = (
             formState.transaction.master.invTransactionMasterID > 0,
             formState.transaction.master.invTransactionMasterID
           );
-          if (formState.printOnSave == true && saveMode != "LPO" && saveMode != "LPQ") {
+          if (
+            formState.printOnSave == true &&
+            saveMode != "LPO" &&
+            saveMode != "LPQ"
+          ) {
             // masterID: number,transactionType: string,printTmeplate?:any ,transDate?: string,voucherType?: string,formType?:string,customerType?:string,
             await printVoucher(
               saveRes?.item?.master?.invTransactionMasterID, // masterID
@@ -1232,7 +1283,7 @@ export const useTransaction = (
               formState.userConfig?.printPreview ?? false, // printPreview
               undefined, //template
               formState.transaction?.master.transactionDate ?? "",
-              undefined,  //tempData   
+              undefined, //tempData
               formState?.lastChoosedTemplate?.id //lastChooseTempId
             );
           }
@@ -1352,8 +1403,8 @@ export const useTransaction = (
         formState.transaction.master.voucherType == VoucherType.PurchaseReturn
           ? applicationSettings.inventorySettings?.defaultPurchaseReturnAcc
           : formState.transaction.master.voucherType == "DNS"
-            ? applicationSettings.inventorySettings?.defaultSalesAcc
-            : applicationSettings.inventorySettings?.defaultPurchaseAcc,
+          ? applicationSettings.inventorySettings?.defaultSalesAcc
+          : applicationSettings.inventorySettings?.defaultPurchaseAcc,
       ledgerID: applicationSettings.accountsSettings.defaultCashAcc,
       isLocked: false,
       grandTotal: 0,
@@ -1480,7 +1531,6 @@ export const useTransaction = (
     }
   };
   const handleRemoveItem = async (slNo: string) => {
-
     dispatch(
       formStateTransactionDetailsRowRemove({
         slNo: slNo,
@@ -2612,14 +2662,16 @@ export const useTransaction = (
     rowIndex: number
   ) => {
     try {
-    const isMobRow = deviceInfo.isMobile
+      const isMobRow = deviceInfo.isMobile;
       console.log("handleTextDataChange");
 
       if (!isMobRow && !formState.transaction?.details?.[rowIndex]) {
         return false;
       }
 
-      const detail = isMobRow ? { ...formState.row } : { ...formState.transaction.details[rowIndex] };
+      const detail = isMobRow
+        ? { ...formState.row }
+        : { ...formState.transaction.details[rowIndex] };
       if (!detail) return;
       let outState: DeepPartial<TransactionFormState> = {
         transaction: { details: [{ [columnName]: value, slNo: detail.slNo }] },
@@ -2743,15 +2795,14 @@ export const useTransaction = (
         );
         calculateSummaryAndTotal = true;
       }
-debugger;
+      debugger;
       if (isMobRow) {
         dispatch(
           formStateHandleFieldChangeKeysOnly({
-            fields: { row: { ...outState!.transaction!.details![0] } }
+            fields: { row: { ...outState!.transaction!.details![0] } },
           })
         );
-      }
-      else if (calculateSummaryAndTotal) {
+      } else if (calculateSummaryAndTotal) {
         const details = [...formState.transaction.details] as any;
         let final = { ...detail, ...outState!.transaction!.details![0] };
         details[rowIndex] = final;
@@ -2852,7 +2903,8 @@ debugger;
         }
       });
       const res: DataAutoBarcode = await api.getAsync(
-        `${Urls.inv_transaction_base
+        `${
+          Urls.inv_transaction_base
         }${transactionType}/LoadProductDetailsByAutoBarCode?${queryParams.toString()}`
       );
 
@@ -2889,11 +2941,11 @@ debugger;
         const _index =
           forImport != true
             ? formState.transaction.details.findIndex(
-              (x) =>
-                x.barCode == product.autoBarcode &&
-                x.productID > 0 &&
-                x.slNo != detail.slNo
-            )
+                (x) =>
+                  x.barCode == product.autoBarcode &&
+                  x.productID > 0 &&
+                  x.slNo != detail.slNo
+              )
             : -1;
         if (
           product.autoBarcode != "" &&
@@ -2940,189 +2992,93 @@ debugger;
           }
         }
 
+        // set addqty here for temp purpose, change if needed
+        const addQty: number = 1;
+        // basic product mapping
         outDetail.pCode = product.productCode;
         outDetail.product = product.productName;
         outDetail.productID = product.productID;
         outDetail.barCode = product.autoBarcode;
-        outDetail.manualBarcode = product.mannualBarcode;
         outDetail.productBatchID = product.productBatchID;
 
-        // Set default quantity if configured
-        if (applicationSettings?.productsSettings?.setDefaultQty1) {
-          outDetail.qty = 1;
-        }
-
+        // unit & brand
         outDetail.unit = product.unitName;
         outDetail.unitID = product.basicUnitID;
         outDetail.brandID = product.brandID;
         outDetail.brand = product.brandName;
+
+        // size / batch / language
         outDetail.size = product.specification;
         outDetail.batchNo = product.batchNo;
-        outDetail.expDate = product.expiryDate;
-        outDetail.expDays = 100;
-        outDetail.mfdDate = product.mfgDate;
-        outDetail.lpc = round(product.lastPurchaseCost || 0);
-        outDetail.lpr = round(product.lastPurchaseRate || 0);
-        outDetail.stock = product.stock;
-        outDetail.productDescription = product.serialNumber;
-        outDetail.warranty = product.warranty;
-        outDetail.location = product.location;
         outDetail.arabicName = product.itemNameinSecondLanguage;
-        outDetail.colour = product.colour;
-        outDetail.multiFactor = product.multiFactor;
 
-        // Handle Unit2 barcode
-        if (product.isUnit2BarCode) {
-          outDetail.unit = product.unit2;
-          outDetail.unitID = product.unit2ID;
-          outDetail.unitPrice = Number(product.stdPurchasePrice || 0);
+        // serial / description
+        outDetail.productDescription = product.serialNumber;
+
+        // default qty
+        if (applicationSettings?.productsSettings?.setDefaultQty1) {
+          if (!outDetail.qty || outDetail.qty === 0) {
+            outDetail.qty = 1;
+          }
         }
 
-        // Handle Unit3 barcode
-        if (product.isUnit3BarCode) {
-          outDetail.unit = product.unit3;
-          outDetail.unitID = product.unit3ID;
-          outDetail.unitPrice = Number(product.stdPurchasePrice || 0);
+        // added qty
+        if (addQty !== 0) {
+          outDetail.qty = Number(addQty);
         }
 
-        // Unit 2 information
-        outDetail.unitID2 = product.unit2ID;
-        outDetail.unit2Qty = product.unit2Qty;
-        outDetail.unit2MBarcode = product.unit2Barcode;
-        outDetail.unit2SalesRate = product.unit2SalesPrice;
-        outDetail.unit2MRP = product.unit2MRP;
-
-        // Unit 3 information
-        outDetail.unitID3 = product.unit3ID;
-        outDetail.unit3Qty = product.unit3Qty;
-        outDetail.unit3MBarcode = product.unit3Barcode;
-        outDetail.unit3SalesRate = product.unit3SalesPrice;
-        outDetail.unit3MRP = product.unit3MRP;
-
-        // Handle supplier reference code
-        if (formState.userConfig?.useSupplierProductCode) {
-          outDetail.supplierReferenceProductCode =
-            product.supplierReferenceProductCode;
+        // weighing qty
+        if (product.weighingQty > 0) {
+          outDetail.qty = product.weighingQty;
         }
 
-        // Handle default purchase unit
+        if (formState.chkCostFromExcel && product.stdPurchasePrice !== 0) {
+          outDetail.cost = Number(product.stdPurchasePrice);
+        } else {
+          outDetail.cost = Number(product.stdPurchasePrice);
+        }
+
+        // sales / mrp / stock
+        outDetail.salesPrice = Number(product.stdSalesPrice);
+        outDetail.mrp = Number(product.mrp);
+        outDetail.stock = Number(product.stock);
+
+        // warehouse stock
+        if (!product.mulUnitManualBarcode) {
+          outDetail.stockTo = Number(product.toWarehouseStock || 0);
+          outDetail.stockMax = Number(product.stockMax || 0);
+        }
+
+        outDetail.fromWhouseStock = product.fromWarehouseStock;
+        outDetail.toWhouseStock = product.toWarehouseStock;
+
+        // multi factor logic
+        if (product.multiFactor > 0) {
+          const pPrice = Number(product.stdPurchasePrice);
+          outDetail.cost = pPrice * product.multiFactor;
+          outDetail.unitPrice = pPrice * product.multiFactor;
+
+          const sPrice = Number(product.stdSalesPrice);
+          outDetail.salesPrice = sPrice * product.multiFactor;
+        } else {
+          outDetail.unitPrice = Number(product.stdPurchasePrice);
+          outDetail.salesPrice = Number(product.stdSalesPrice);
+        }
+
+        // stock transfer – use sales price
         if (
-          Number(product.defPurchaseUnitID || 0) > 0 &&
-          !product.isMultiUnitBarCode &&
-          product.basicUnitID !== product.defPurchaseUnitID &&
-          product.isBasicUnitBarcode
+          formState.formElements.chkUserSalesPriceForStockTransfer?.visible &&
+          Number(product.stdSalesPrice) > 0 &&
+          formState.transaction.master.voucherType === "ST"
         ) {
-          if (!isNullOrUndefinedOrEmpty(product.defUnitName)) {
-            outDetail.unit = product.defUnitName;
-            outDetail.multiFactor = product.defUnitMultiFactor;
-          }
-          outDetail.unitID = product.defPurchaseUnitID;
+          outDetail.cost = Number(product.stdSalesPrice);
         }
 
-        // Handle stock details if visible
-        if (payload.isStockDetailsVisible) {
-          outDetail.stockDetails = product.stockDetails;
+        // multi-unit manual barcode sales price
+        if (product.mulUnitManualBarcode && Number(product.unitSPrice) > 0) {
+          outDetail.salesPrice = Number(product.unitSPrice);
         }
 
-        // Set MRP
-        outDetail.mrp = round(product.mrp);
-
-        // Calculate pricing based on multi-factor
-        if (outDetail.multiFactor > 0) {
-          const pPrice = Number(product.stdPurchasePrice || 0);
-          outDetail.unitPrice = pPrice * outDetail.multiFactor;
-
-          const sPrice = Number(product.stdSalesPrice || 0);
-          outDetail.salesPrice = sPrice * outDetail.multiFactor;
-
-          const minSPrice = Number(product.minSalePrice || 0);
-          outDetail.minSalePrice = minSPrice * outDetail.multiFactor;
-        } else {
-          outDetail.unitPrice = Number(product.stdPurchasePrice || 0);
-          outDetail.salesPrice = round(product.stdSalesPrice || 0);
-          outDetail.minSalePrice = Number(product.minSalePrice || 0);
-        }
-
-        // Handle actual sales price if column is visible
-        if (payload.isActualPriceVisible) {
-          outDetail.actualSalesPrice = product.actualSalesPrice;
-        }
-
-        // Handle listed product prices
-        if (product.hasListedProductPrice) {
-          outDetail.unitPrice = product.listedProductPrice;
-        }
-
-        // Handle VAT and CST based on form type
-        if (clientSession.isAppGlobal) {
-          outDetail.hsnCode = product.hsnCode || "";
-          outDetail.details2 = {
-            ...(outDetail.details2 ?? initialTransactionDetails2),
-          };
-          // if (formState.transaction.master.voucherType !== "PI") {
-          outDetail.details2!.cgstPerc = Number(product.p_CGSTPerc || 0);
-          outDetail.details2!.sgstPerc = Number(product.p_SGSTPerc || 0);
-
-          if (
-            formState.transaction.master.voucherForm.toLowerCase() ===
-            "interstate" ||
-            formState.transaction.master.voucherForm.toLowerCase() === "int" ||
-            formState.transaction.master.voucherForm.toLowerCase() === "import"
-          ) {
-            outDetail.details2!.cgstPerc = 0;
-            outDetail.details2!.sgstPerc = 0;
-            outDetail.details2!.igstPerc = Number(product.p_IGSTPerc || 0);
-          }
-
-          outDetail.details2!.cessPerc = Number(product.p_CessPerc || 0);
-          outDetail.details2!.additionalCessPerc = Number(
-            product.p_AdditionalCessPerc || 0
-          );
-          // } else {
-          //   outDetail.details2!.cgstPerc = 0;
-          //   outDetail.details2!.sgstPerc = 0;
-          //   outDetail.details2!.igstPerc = 0;
-          //   outDetail.details2!.cessPerc = 0;
-          //   outDetail.details2!.additionalCessPerc = 0;
-          // }
-        } else {
-          const { voucherType, voucherForm } = formState.transaction.master;
-
-          if (
-            !clientSession.isAppGlobal &&
-            (voucherType === "PO" ||
-              voucherType === "PE" ||
-              voucherType === "GRN" ||
-              voucherType === "PQ" ||
-              voucherType === "LPO") ||
-            (formState.transaction.master.voucherForm === "VAT" &&
-              voucherType !== "PO" &&
-              voucherType !== "PE" &&
-              voucherType !== "GRN" &&
-              voucherType !== "PQ" &&
-              voucherType !== "LPO")
-          ) {
-            outDetail.vatPerc = Number(product.pVatPerc || 0);
-            outDetail.cstPerc = Number(product.purchaseExciseTaxPerc || 0);
-          } else {
-            outDetail.vatPerc = 0;
-            outDetail.cstPerc = 0;
-          }
-        }
-
-        // Special handling for meter units
-        const unitName = product.unitName?.toUpperCase().trim();
-        if (unitName === "MTR" || unitName === "MTRS" || unitName === "METER") {
-          outDetail.stickerQty = 4;
-        }
-
-        // Handle empty form type
-        // if (formState.transaction.master.voucherForm == "") {
-        //   outDetail.vatPerc = 0;
-        // }
-
-        // Set row header
-        outDetail.unitPriceTag = outDetail.unitPrice;
         if (!result.transaction) {
           result.transaction = {};
         }
@@ -3139,11 +3095,13 @@ debugger;
           },
           btnEdit: {
             disabled:
+              !hasRight(formState.userRightsFormCode, UserAction.Edit) ||
               applicationSettings?.branchSettings
                 ?.maintainInventoryTransactionsEntry == false,
           },
           btnDelete: {
             disabled:
+              !hasRight(formState.userRightsFormCode, UserAction.Delete) ||
               applicationSettings?.branchSettings
                 ?.maintainInventoryTransactionsEntry == false,
           },
@@ -3165,9 +3123,9 @@ debugger;
           ];
           final =
             _res?.transaction?.details != undefined &&
-              _res?.transaction?.details.length > 0
+            _res?.transaction?.details.length > 0
               ? (_res?.transaction
-                ?.details[0] as DeepPartial<TransactionDetail>)
+                  ?.details[0] as DeepPartial<TransactionDetail>)
               : latestData;
           if (!deviceInfo.isMobile) {
             currentDetails[data.rowIndex] = final as TransactionDetail;
@@ -3187,7 +3145,11 @@ debugger;
             result = {
               ...totalRes,
               summary: summaryRes.summary,
-              showQuantityFactors: { visible: false, rowIndex: -1, qtyDesc: "" },
+              showQuantityFactors: {
+                visible: false,
+                rowIndex: -1,
+                qtyDesc: "",
+              },
               transaction: {
                 ...totalRes.transaction,
                 details: [final],
@@ -3196,7 +3158,7 @@ debugger;
           }
         }
         if (deviceInfo.isMobile && result.transaction) {
-          result.transaction!.details = []
+          result.transaction!.details = [];
           result.row = final as TransactionDetail;
         }
         for (const unit of product.units) {
@@ -3323,7 +3285,7 @@ debugger;
       } else {
         dispatch(
           formStateHandleFieldChangeKeysOnly({
-            fields: { row: outState!.transaction!.details![0] }
+            fields: { row: outState!.transaction!.details![0] },
           })
         );
       }
@@ -3384,7 +3346,7 @@ debugger;
           false
         );
       }
-    } catch (error) { }
+    } catch (error) {}
   };
   const handleTextDataKeyDown = async (
     value: any,
@@ -3558,42 +3520,45 @@ debugger;
 
         case " ": {
           // Space key
+          if (formState.allowMultiUnits) {
+            let outState: DeepPartial<TransactionFormState> = {
+              transaction: { details: [] },
+            };
+            const actualPriceVisible = formState.gridColumns?.find(
+              (x) => x.dataField == "actualSalesPrice"
+            )?.visible;
+            let detail = { ...formState.transaction.details[rowIndex] };
+            let outDetail: DeepPartial<TransactionDetail> = {
+              slNo: detail.slNo,
+            };
 
-          let outState: DeepPartial<TransactionFormState> = {
-            transaction: { details: [] },
-          };
-          const actualPriceVisible = formState.gridColumns?.find(
-            (x) => x.dataField == "actualSalesPrice"
-          )?.visible;
-          let detail = { ...formState.transaction.details[rowIndex] };
-          let outDetail: DeepPartial<TransactionDetail> = { slNo: detail.slNo };
+            if (columnName === "qty") {
+              const units = formState.batchesUnits?.filter(
+                (xer) => xer.productBatchID == detail.productBatchID
+              );
+              const unitIndex =
+                units?.findIndex((xer) => xer.value == detail.unitID) ?? 0;
+              const nextUnitIndex =
+                unitIndex < (units?.length ?? 0) - 1 ? unitIndex + 1 : 0;
+              if (!units) {
+                return { handled: true };
+              }
+              const unitName = units[nextUnitIndex].label;
+              const unitID = units[nextUnitIndex].value;
+              outDetail.unit = unitName;
+              outDetail.unitID = unitID;
 
-          if (columnName === "qty") {
-            const units = formState.batchesUnits?.filter(
-              (xer) => xer.productBatchID == detail.productBatchID
-            );
-            const unitIndex =
-              units?.findIndex((xer) => xer.value == detail.unitID) ?? 0;
-            const nextUnitIndex =
-              unitIndex < (units?.length ?? 0) - 1 ? unitIndex + 1 : 0;
-            if (!units) {
-              return { handled: true };
+              handleChangeUnit(
+                outDetail,
+                detail,
+                actualPriceVisible ?? false,
+                outState,
+                columnName,
+                isMobRow ? -1 : rowIndex
+              );
             }
-            const unitName = units[nextUnitIndex].label;
-            const unitID = units[nextUnitIndex].value;
-            outDetail.unit = unitName;
-            outDetail.unitID = unitID;
-
-            handleChangeUnit(
-              outDetail,
-              detail,
-              actualPriceVisible ?? false,
-              outState,
-              columnName,
-              isMobRow ? -1 : rowIndex
-            );
+            break;
           }
-          break;
         }
 
         case "F2":
@@ -3754,7 +3719,7 @@ debugger;
 
             if (
               applicationSettings.inventorySettings?.showRateWarning.toUpperCase() ==
-              "WARN" &&
+                "WARN" &&
               data.salesPrice > 0
             ) {
               if (data.unitPrice > data.salesPrice) {
@@ -3785,7 +3750,7 @@ debugger;
               }
             } else if (
               applicationSettings.inventorySettings?.showRateWarning.toUpperCase() ==
-              "BLOCK" &&
+                "BLOCK" &&
               data.salesPrice > 0
             ) {
               if (data.unitPrice > data.salesPrice) {
@@ -3796,7 +3761,7 @@ debugger;
           } else if (columnName == "btnPrintBarcode") {
             if (
               formState.transaction.details[rowIndex].qty +
-              formState.transaction.details[rowIndex].stickerQty <=
+                formState.transaction.details[rowIndex].stickerQty <=
               0
             ) {
               break;
@@ -3887,25 +3852,27 @@ debugger;
                 updateOnlyGivenDetailsColumns: true,
               })
             );
-          } else if (columnName == "memoEditor") {
-            const data: TransactionDetail =
-              formState.transaction.details[rowIndex];
-            const memoDetails = {
-              memo: data.moreDetail.memo || "",
-            };
-            dispatch(
-              commonParams.formStateHandleFieldChangeKeysOnly({
-                fields: {
-                  memoEditor: {
-                    visible: true,
-                    data: JSON.stringify(memoDetails),
-                    rowIndex,
-                  },
-                },
-                updateOnlyGivenDetailsColumns: true,
-              })
-            );
-          } else if (columnName == "grossConvert") {
+          }
+          //  else if (columnName == "memoEditor") {
+          //   const data: TransactionDetail =
+          //     formState.transaction.details[rowIndex];
+          //   const memoDetails = {
+          //     memo: data.moreDetail.memo || "",
+          //   };
+          //   dispatch(
+          //     commonParams.formStateHandleFieldChangeKeysOnly({
+          //       fields: {
+          //         memoEditor: {
+          //           visible: true,
+          //           data: JSON.stringify(memoDetails),
+          //           rowIndex,
+          //         },
+          //       },
+          //       updateOnlyGivenDetailsColumns: true,
+          //     })
+          //   );
+          // }
+          else if (columnName == "grossConvert") {
             changeGrossToUnitRate(rowIndex, columnName);
           } else if (columnName == "serial") {
             const rowData: TransactionDetail =
@@ -4035,8 +4002,9 @@ debugger;
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `Purchase_Import_Template_${new Date().toISOString().split("T")[0]
-        }.xlsx`;
+      link.download = `Purchase_Import_Template_${
+        new Date().toISOString().split("T")[0]
+      }.xlsx`;
       link.style.display = "none";
 
       document.body.appendChild(link);
@@ -4317,8 +4285,8 @@ debugger;
           [ledgerBalance, ledgerData] = await Promise.all([
             (ledgerID ?? 0) > 0
               ? api.getAsync(
-                `${Urls.inv_transaction_base}${transactionType}/LedgerBalance/${ledgerID}`
-              )
+                  `${Urls.inv_transaction_base}${transactionType}/LedgerBalance/${ledgerID}`
+                )
               : 0,
             api.getAsync(
               `${Urls.inv_transaction_base}${transactionType}/LedgerDetails?LedgerId=${ledgerID}`
@@ -4461,7 +4429,8 @@ debugger;
       dispatch(
         formStateHandleFieldChange({
           fields: {
-            showbillwise: false, ledgerBillWiseSaving: false
+            showbillwise: false,
+            ledgerBillWiseSaving: false,
           },
         })
       );
@@ -4471,6 +4440,123 @@ debugger;
       throw error;
     }
   }
+  async function onILRRefNoKeyUp(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key !== "Enter") return;
+
+    try {
+      // 1️⃣ Check if ILR already loaded
+      const response = await api.getAsync(
+        `SelectSTAgainstILR/?RefNo=${formState.transaction.master.deliveryNoteNumber}`
+      );
+
+      if (response?.isOk == true) {
+        handleLoadRequest(response);
+      } else {
+        const proceed = confirm(response.message);
+        if (!proceed) return;
+        handleLoadRequest(response);
+      }
+
+      // 2️⃣ Load ILR master
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  // {
+  //   isOk:tr
+  //   data: TransactionData
+  // }
+  const handleLoadRequest = (data: any) => {
+    let tm: DeepPartial<TransactionFormState> = { transaction: { master: {} } };
+
+    if (!tm.transaction) {
+      tm.transaction = { master: {} };
+    }
+    if (!tm.transaction.master) {
+      tm.transaction.master = {};
+    }
+    tm.transaction.master.voucherType = "ILR";
+    tm.transaction.master.voucherForm = "";
+    tm.transaction.master.voucherPrefix = "";
+    tm.transaction.master.voucherNumber = data.txtILRRefNo;
+
+    const master = data.master;
+    if (!master || master.length === 0) return;
+
+    const invMasterID = Number(master.invTransactionMasterID);
+    const ILRInvTransMasterID = invMasterID;
+
+    // 3️⃣ Warehouse assignment
+    if (master.deliveryNoteNumber === "P-POS") {
+      tm.transaction.master.fromWarehouseID = master.fromWarehouseID;
+    } else {
+      tm.transaction.master.fromWarehouseID = master.fromWarehouseID;
+      tm.transaction.master.toWarehouseID = master.toWarehouseID;
+    }
+
+    tm.transaction.master.remarks = master.remarks ?? "";
+
+    // 4️⃣ Load ILR item details
+    const items = data.details;
+    // let items: DeepPartial<TransactionFormState> = {transaction:{master:{}}}
+
+    if (!items || items.length === 0) return;
+
+    // dgvInventory.showAutoSummary = false;
+
+    // const ilrRef = txtILRRefNo.value;
+    // dgvInventory.clear();
+    // txtILRRefNo.value = ilrRef;
+
+    // 5️⃣ Populate grid
+    const details = [...formState.transaction.details];
+    items.forEach((row: any, i: any) => {
+      const r = details[i] ?? { ...initialTransactionDetailData };
+
+      r.slNo = i + 1;
+      r.pCode = row.productCode;
+      r.product = row.productName;
+      r.productID = row.productID;
+      r.qty = Number(row.qty);
+      r.barCode = row.autoBarcode;
+      r.productBatchID = row.productBatchID;
+      r.unit = row.unitName;
+      r.unitID = row.unitID;
+      r.brandID = 0;
+      r.brand = "";
+      r.size = "";
+      r.salesPrice = Number(row.sPrice);
+      r.unitPrice = Number(row.pPrice);
+      r.cost = Number(row.pPrice);
+      r.fromWhouseStock = Number(row.fromStock);
+      r.stock = Number(row.fromStock);
+      r.toWhouseStock = Number(row.toStock);
+      r.mrp = 0;
+      r.batchNo = row.batchNo;
+
+      const netAmount = r.qty * r.unitPrice;
+      r.total = Number(netAmount);
+
+      details[i] = r;
+      // calculateRowAmount(i);
+    });
+    dispatch(formStateSetDetails(details));
+
+    // 6️⃣ Finalize grid
+    // dgvInventory.showAutoSummary = true;
+    // dgvInventory.calculateAutoSummary();
+    // calculateTotal();
+
+    // dgvInventory.setCurrentCell(
+    //   dgvInventory.firstVisibleWritableColumnIndex,
+    //   dgvInventory.firstFreeRow
+    // );
+
+    // if (UserRights.hasAddRight(FormCode)) {
+    //   btnSave.enabled = true;
+    // }
+  };
+
   return {
     downloadImportTemplateHeadersOnly,
     importFromExcel,
@@ -4516,6 +4602,7 @@ debugger;
     handlePrintBarcode,
     loadLedgerData,
     postBillWiseDetails,
-    fetchUserConfig
+    fetchUserConfig,
+    onILRRefNoKeyUp,
   };
 };

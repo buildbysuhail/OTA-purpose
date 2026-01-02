@@ -807,7 +807,9 @@ const Urls = {
   eInvoice_apiPortal_register: '/EInvoiceAPIPortal/register',
   eInvoice_apiPortal_balance: '/EInvoiceAPIPortal/api-balance',
   eInvoice_apiPortal_send_otp: '/EInvoiceAPIPortal/send-otp',
-  eInvoice_apiPortal_validate_otp: '/EInvoiceAPIPortal/validate-otp'
+  eInvoice_apiPortal_validate_otp: '/EInvoiceAPIPortal/validate-otp',
+
+  stockTransfer_warehouseStock:"Inventory/StockTransfer/WareHouseStock"
 
 };
 

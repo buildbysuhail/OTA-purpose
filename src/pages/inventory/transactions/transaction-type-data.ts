@@ -293,7 +293,14 @@ export const initialTransactionDetailData: TransactionDetail = {
   pO_PITransDetailQtys: 0,
   unitDiscount: 0,
   purchasePrice: 0,
-  purchaseRate: 0
+  purchaseRate: 0,
+
+  isQtyFreezed: false,
+  memo: "",
+  flavors: "",
+  smCode: "",
+  salesman: "",
+  salesmanID: 0
 };
 export const transactionInitialData: TransactionData = {
   master: TransactionMasterInitialData, 
@@ -437,6 +444,9 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   chkPrintAfterSave: { visible: false, disabled: false, label: "" },
   lblBillBalance: { visible: false, disabled: false, label: "" },
 
+  //stock
+  chkUserSalesPriceForStockTransfer: { visible: false, disabled: false, label: "" },
+  warehouseStockList: { visible: false, disabled: false, label: "" },
 
 };export const initialUserConfig: UserConfig = {
     clearDetailsAfterSaveAccounts: true,

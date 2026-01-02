@@ -224,37 +224,9 @@ export const useTransactionHelper = (transactionType: string) => {
     summary: SummaryItems,
     formElements: FormElementsState,
     commonParams: CommonParams
-  ) => {
+  ): DeepPartial<TransactionFormState> => {
     let { result } = commonParams;
-    result = result
-      ? result
-      : {
-          netAmount: 0,
-          transaction: {
-            master: {
-              grandTotal: 0,
-              grandTotalFc: undefined,
-              vatAmount: 0,
-              roundAmount: 0,
-            },
-          },
-        };
-
-    const netVal = summary.netValue;
     let netAmt = summary.total;
-    const tax = summary.vatAmount;
-    const cgst = summary.cgst;
-    const sgst = summary.sgst;
-    const igst = summary.igst;
-    const cessAmt = summary.cessAmt;
-    const additionalCess = summary.additionalCess;
-
-    if (+(netVal + tax) !== +netAmt) {
-      netAmt = round(netVal + tax);
-    }
-
-    const billDisc = master.billDiscount;
-    const additionalAmt = master.adjustmentAmount;
 
     if (!result.transaction) {
       result.transaction = { master: {} };
@@ -262,54 +234,11 @@ export const useTransactionHelper = (transactionType: string) => {
     if (!result.transaction.master) {
       result.transaction.master = {};
     }
-    if (!result.transaction.master.master3) {
-      result.transaction.master.master3 = {};
-    }
-    result.transaction.master.vatAmount = round(tax);
-    if (clientSession.isAppGlobal) {
-      result.transaction.master.master3 ?? TransactionMaster3InitialData;
-      result.transaction.master.master3!.totCGST = round(cgst);
-      result.transaction.master.master3!.totSGST = round(sgst);
-      result.transaction.master.master3!.totIGST = round(igst);
-      result.transaction.master.master3!.totCess = round(cessAmt);
-      result.transaction.master.master3!.totAdditionalCess =
-        round(additionalCess);
-    }
-    result.netAmount = round(netAmt);
-
-    let tcsAmt = 0;
-    let _grandTotal = netAmt + additionalAmt - billDisc;
-
-    if (master.hasroundOff) {
-      try {
-        result.transaction!.master!.roundAmount = parseFloat(
-          (Math.round(_grandTotal) - _grandTotal).toFixed(3)
-        );
-        _grandTotal =
-          _grandTotal ?? 0 - result.transaction!.master!.roundAmount;
-        result.transaction!.master!.grandTotal = Math.round(_grandTotal);
-      } catch (err) {
-        // handle error if needed
-        console.error("Error in rounding calculation:", err);
-      }
-    } else {
-      result.transaction!.master!.roundAmount = 0;
-      result.transaction!.master!.grandTotal = _grandTotal;
-    }
-
-    // if(clientSession.isAppGlobal && master.other.tcs > 0) {
-    //   result.transaction!.master!.other?.totTCS = result.transaction!.master!.grandTotal
+    // if (!result.transaction.master.master3) {
+    //   result.transaction.master.master3 = {};
     // }
-    result.transaction!.master!.totalGross = summary.gross;
-    result.transaction!.master!.totalDiscount = summary.discount;
-
-    // Check if foreign currency calculation is needed
-    if (formElements.pnlImport.visible && master.exchangeRate > 0) {
-      const exchangeRate = master.exchangeRate;
-      if (exchangeRate > 0) {
-        result.transaction!.master!.grandTotalFc = _grandTotal / exchangeRate;
-      }
-    }
+    let _grandTotal = netAmt;
+    result.transaction!.master!.grandTotal = _grandTotal;
     commonParams.formStateHandleFieldChangeKeysOnly &&
       dispatch &&
       dispatch(
@@ -344,366 +273,22 @@ export const useTransactionHelper = (transactionType: string) => {
       // Initialize variables with proper null checks and defaults
 
       transactionDetail = { ...transactionDetail, ...detail };
-      let qty = Number(transactionDetail.qty || 0);
-      let freeQty = Number(transactionDetail.free || 0);
-      let rate = Number(transactionDetail.unitPrice || 0);
-      let addAmt = Number(transactionDetail.additionalExpense || 0);
-      let vatPerc = Number(transactionDetail.vatPerc || 0);
-      let disc = Number(transactionDetail.discount || 0);
-      let discPerc = Number(transactionDetail.discPerc || 0);
-      let exciseTaxPer = Number(transactionDetail.cstPerc || 0);
-      let exciseTax = Number(transactionDetail.cst || 0);
-      let ratePlusTax = 0;
-      let cost = 0;
-      let unitPrice = Number(transactionDetail.unitPrice || 0);
 
-      // India
-      let cgstPerc = Number(transactionDetail.details2?.cgstPerc || 0);
-      let sgstPerc = Number(transactionDetail.details2?.sgstPerc || 0);
-      let igstPerc = Number(transactionDetail.details2?.igstPerc || 0);
-      let addnlCessPerc = Number(
-        transactionDetail.details2?.additionalCessPerc || 0
-      );
-      let cessPerc = Number(transactionDetail.details2?.cessPerc || 0);
-      let cess = Number(transactionDetail.details2?.cessAmt || 0);
+      const qty = Number(transactionDetail.qty || 0);
+      const rate = Number(transactionDetail.cost || 0);
 
-      if (clientSession.isAppGlobal) {
-        vatPerc = cgstPerc + sgstPerc + igstPerc + addnlCessPerc + cessPerc;
-      }
-      detail.unitPrice = transactionDetail.unitPrice;
-      // Handle RatePlusTax visibility and calculation
-      if (
-        transactionDetail.ratePlusTax !== undefined &&
-        transactionDetail.ratePlusTax !== null
-      ) {
-        ratePlusTax = Number(transactionDetail.ratePlusTax || 0);
-      } else {
-        ratePlusTax = 0;
-      }
+      const gross = qty * rate;
+      const netValue = gross;
+      const netAmount = netValue;
 
-      // Calculate gross amount (Qty * Rate)
-      let gross = round(qty * rate, 5);
+      detail.netValue = netValue;
+      detail.gross = gross;
+      detail.total = netAmount;
 
-      // Handle RatePlusTax calculation when current column is RatePlusTax
-      if (ratePlusTax > 0 && currentColumn === "ratePlusTax") {
-        if (
-          clientSession.isAppGlobal &&
-          formState.transaction.master.voucherForm !== ""
-        ) {
-          let dval =
-            (Number(transactionDetail.details2?.cgstPerc || 0) +
-              Number(transactionDetail.details2?.sgstPerc || 0) +
-              Number(transactionDetail.details2?.igstPerc || 0) +
-              Number(transactionDetail.details2?.additionalCessPerc || 0)) /
-              100 +
-            1;
+      const salesRate = Number(transactionDetail.salesPrice || 0);
+      const salesTotal = qty * salesRate;
 
-          let qty1 = Number(transactionDetail.qty || 1);
-          if (qty1 === 0) qty1 = 1;
-
-          let rate = round((ratePlusTax * qty1) / dval, 3);
-
-          rate = Number(rate) / qty1; // convert back to number
-        } else {
-          const dval = vatPerc / 100 + 1;
-          let qty1 = qty || 1;
-
-          if (qty1 === 0) qty1 = 1;
-
-          rate = round((ratePlusTax * qty1) / dval, 3);
-          rate = rate / qty1;
-
-          // Update unit price in form state
-        }
-
-        detail.unitPrice = rate;
-      } else {
-        const dval = vatPerc / 100 + 1;
-        detail.ratePlusTax = round(unitPrice * dval, 4);
-      }
-
-      // Fallback for rate if still 0
-      if (rate === 0) {
-        rate = Number(detail.unitPrice || 0);
-      }
-
-      // Handle discount percentage calculation
-      if (discPerc > 0 && currentColumn !== "discount") {
-        const calculatedDisc = round((discPerc * gross) / 100, 5);
-        if ((discPerc * gross) / 100 !== disc) {
-          disc = calculatedDisc;
-        }
-      }
-
-      // Handle discount percentage when discount amount is being edited
-      if (rate > 0 && currentColumn === "discount") {
-        discPerc = round((100 * disc) / gross, 5);
-      }
-
-      // Calculate net value after discount
-      let netValue = gross - disc;
-
-      // Calculate excise tax
-      exciseTax = (netValue * exciseTaxPer) / 100;
-      netValue += exciseTax;
-
-      // Update form state with calculated values
-      detail.cst = getFormattedValueIgnoreRoundingToNumber(exciseTax);
-      detail.netValue = getFormattedValueIgnoreRoundingToNumber(netValue);
-      detail.discPerc = getFormattedValueIgnoreRoundingToNumber(discPerc);
-      detail.discount = getFormattedValueIgnoreRoundingToNumber(disc);
-
-      // Calculate total additional expense
-      detail.totalAddExpense = round(addAmt * qty);
-
-      // Calculate VAT amount
-
-      // India tax
-      if (clientSession.isAppGlobal) {
-        // === Case 1: Additional Cess calculation ===
-        detail.details2 = {
-          ...(transactionDetail.details2 ?? initialTransactionDetails2),
-        };
-        if (netValue > 0 && currentColumn === "details2.additionalCess") {
-          if (Number(detail.details2?.additionalCess || 0) > 0) {
-            const addCessAmount = Number(detail.details2?.additionalCess || 0);
-            detail.details2!.additionalCessPerc = Number(
-              ((addCessAmount * 100) / netValue).toFixed(3)
-            );
-          }
-        }
-
-        // // === Case 2: Tax on MRP ===
-        // // if (formState.formElements) {
-        // //   const taxableMRP =
-        // //     Number(detail.mrp || 0) /
-        // //     (1 +
-        // //       (Number(detail.details2?.cgstPerc || 0) +
-        // //         Number(detail.details2?.sgstPerc || 0) +
-        // //         Number(detail.details2?.igstPerc || 0)) /
-        // //         100);
-
-        //   // if (ckbTaxOnFreeItems) {
-        //   //   // including free qty
-        //   //   detail.details2!.cgst =
-        //   //     (qty + freeQty) * taxableMRP * (detail.details2?.cgstPerc || 0) / 100;
-        //   //   detail.details2!.sgst =
-        //   //     (qty + freeQty) * taxableMRP * (detail.details2?.sgstPerc || 0) / 100;
-        //   //   detail.details2!.igst =
-        //   //     (qty + freeQty) * taxableMRP * (detail.details2?.igstPerc || 0) / 100;
-        //   //   detail.details2!.additionalCess =
-        //   //     (qty + freeQty) * taxableMRP * (detail.details2?.additionalCessPerc || 0) / 100;
-
-        //   //   if (detail.details2!.cessPerc > 0 && currentColumn !== "details2.cessAmt") {
-        //   //     detail.details2!.cessAmt =
-        //   //       (qty + freeQty) * taxableMRP * (detail.details2!.cessPerc || 0) / 100;
-        //   //   } else if (
-        //   //     (qty + freeQty) * taxableMRP > 0 &&
-        //   //     currentColumn === "details2.cessAmt"
-        //   //   ) {
-        //   //     detail.details2!.cessPerc =
-        //   //       (detail.details2!.cessAmt * 100) /
-        //   //       ((qty + freeQty) * taxableMRP);
-        //   //   } else {
-        //   //     detail.details2!.cessAmt = 0;
-        //   //     detail.details2!.cessPerc = 0;
-        //   //   }
-        //   // } else {
-        //     // without free qty
-        //     detail.details2!.cgst =
-        //       qty * taxableMRP * (detail.details2!.cgstPerc || 0) / 100;
-        //     detail.details2!.sgst =
-        //       qty * taxableMRP * (detail.details2!.sgstPerc || 0) / 100;
-        //     detail.details2!.igst =
-        //       qty * taxableMRP * (detail.details2!.igstPerc || 0) / 100;
-        //     detail.details2!.additionalCess =
-        //       qty * taxableMRP * (detail.details2!.additionalCessPerc || 0) / 100;
-
-        //     if (detail.details2!.cessPerc > 0 && currentColumn !== "details2.cessAmt") {
-        //       detail.details2!.cessAmt =
-        //         qty * taxableMRP * (detail.details2!.cessPerc || 0) / 100;
-        //     } else if (
-        //       qty * taxableMRP > 0 &&
-        //       currentColumn === "details2.cessAmt"
-        //     ) {
-        //       detail.details2!.cessPerc =
-        //         (detail.details2!.cessAmt * 100) / (qty * taxableMRP);
-        //     } else {
-        //       detail.details2!.cessAmt = 0;
-        //       detail.details2!.cessPerc = 0;
-        //     }
-        //   // }
-        // } else {
-        // === Case 3: Tax on NetValue ===
-        
-        detail.details2.cgst =
-          (netValue * (transactionDetail.details2!.cgstPerc || 0)) / 100;
-        detail.details2.sgst =
-          (netValue * (transactionDetail.details2!.sgstPerc || 0)) / 100;
-        detail.details2.igst =
-          (netValue * (transactionDetail.details2!.igstPerc || 0)) / 100;
-        detail.details2.additionalCess =
-          (netValue * (transactionDetail.details2!.additionalCessPerc || 0)) /
-          100;
-
-        if (transactionDetail.details2!.cessPerc > 0) {
-          detail.details2!.cessAmt =
-            (netValue * (transactionDetail.details2!.cessPerc || 0)) / 100;
-        } else if (netValue > 0 && currentColumn === "details2.cessAmt") {
-          detail.details2!.cessPerc =
-            (detail.details2!.cessAmt * 100) / netValue;
-        } else {
-          detail.details2!.cessAmt = 0;
-          detail.details2!.cessPerc = 0;
-        }
-
-        // Handle free items tax
-        // if (ckbTaxOnFreeItems && freeQty > 0) {
-        //   const gross1 = freeQty * rate;
-        //   const netValue1 = gross1 - disc;
-
-        //   const freeCgst = netValue1 * (detail.details2!.cgstPerc || 0) / 100;
-        //   const freeSgst = netValue1 * (detail.details2!.sgstPerc || 0) / 100;
-        //   const freeIgst = netValue1 * (detail.details2!.igstPerc || 0) / 100;
-        //   const freeAddCess =
-        //     netValue1 * (detail.details2!.additionalCessPerc || 0) / 100;
-        //   const freeCess =
-        //     detail.details2!.cessPerc > 0
-        //       ? netValue1 * (detail.details2!.cessPerc || 0) / 100
-        //       : 0;
-
-        //   detail.details2!.cgst += freeCgst;
-        //   detail.details2!.sgst += freeSgst;
-        //   detail.details2!.igst += freeIgst;
-        //   detail.details2!.additionalCess += freeAddCess;
-        //   detail.details2!.cessAmt += freeCess;
-        // }
-        // }
-
-        // === Final update (equivalent to dgvInventory cell values) ===
-        detail.details2.cgst = round(detail.details2!.cgst);
-        detail.details2.sgst = round(detail.details2!.sgst);
-        detail.details2.igst = round(detail.details2!.igst);
-        detail.details2.additionalCess = round(detail.details2!.additionalCess);
-        detail.details2.cessAmt = round(detail.details2!.cessAmt);
-        detail.details2.cessPerc = round(detail.details2!.cessPerc);
-        if (
-          formState.transaction.master.voucherForm.toUpperCase() == "INTERSTATE" ||
-          formState.transaction.master.voucherForm.toUpperCase() == "INT" ||
-          formState.transaction.master.voucherForm.toUpperCase() == "IMPORT"
-        ) {
-          detail.details2.cgst = 0;
-          detail.details2.sgst = 0;
-          detail.details2.sgstPerc = 0;
-          detail.details2.sgstPerc = 0;
-        }
-
-         if (
-          formState.transaction.master.voucherType == "PE"
-        ) {
-          detail.details2.cgst = 0;
-          detail.details2.sgst = 0;
-          detail.details2.igst = 0;
-          detail.details2.cessAmt = 0;
-          detail.details2.additionalCess = 0;
-          detail.details2.sgstPerc = 0;
-          detail.details2.cgstPerc = 0;
-          detail.details2.igstPerc = 0;
-          detail.details2.cessPerc = 0;
-          detail.details2.additionalCessPerc = 0;
-        }
-      }
-
-      let vat = round((netValue * vatPerc) / 100, 4);
-      // Calculate net value per unit for cost calculation
-      let netVal = rate - (rate * discPerc) / 100;
-      if (clientSession.isAppGlobal) {
-        vat =
-          detail.details2!.cgst +
-          detail.details2!.sgst +
-          detail.details2!.igst +
-          detail.details2!.cessAmt +
-          detail.details2!.additionalCess;
-      }
-      // Calculate cost based on settings
-      if (applicationSettings?.inventorySettings?.setProductCostWithVATAmount) {
-        if (clientSession.isAppGlobal) {
-          cost = round(
-            netVal +
-              (netVal *
-                (detail.details2!.cgstPerc +
-                  detail.details2!.sgstPerc +
-                  detail.details2!.igstPerc +
-                  detail.details2!.cessPerc +
-                  detail.details2!.additionalCessPerc)) /
-                100
-          );
-        } else {
-          cost = round(netVal + (netVal * vatPerc) / 100);
-        }
-      } else {
-        cost = netVal;
-      }
-
-      // Update cost and VAT amount
-      detail.cost = round(cost);
-      detail.vatAmount = getFormattedValueIgnoreRoundingToNumber(vat);
-
-      // Calculate final net amount (NetValue + VAT)
-      let netAmount = 0;
-      if (clientSession.isAppGlobal) {
-        netAmount = round(netValue + vat);
-      } else {
-        netAmount = round(netValue + vat, 4);
-      }
-
-      // Update gross and total
-      detail.gross = getFormattedValueIgnoreRoundingToNumber(gross);
-      detail.total = round(netAmount);
-
-      // Calculate margin per row
-      const sp_margin = calculateMarginPerRow(
-        {
-          total: detail.total,
-          margin: transactionDetail.margin,
-          qty,
-          salesPrice: transactionDetail.salesPrice,
-        },
-        formState
-      );
-      detail.salesPrice = sp_margin ?? transactionDetail.salesPrice;
-
-      // Calculate profit and profit percentage
-      let sp = Number(detail.salesPrice || 0);
-
-      // Use actual sales price if available
-      if (Number(transactionDetail.actualSalesPrice || 0) > 0) {
-        sp = Number(transactionDetail.actualSalesPrice || 0);
-      }
-
-      // Adjust sales price if showing rate before tax
-      if (applicationSettings?.productsSettings?.showRateBeforeTax) {
-        sp = sp / (1 + vatPerc / 100);
-      }
-
-      if (sp > 0) {
-        const profit = qty * (sp - netVal);
-        detail.profit = round(profit);
-
-        const profitPerc =
-          Math.round(((sp - netVal) / netVal) * 100 * 1000) / 1000;
-        detail.profitPercentage = profitPerc;
-      } else {
-        detail.profit = 0.0;
-        detail.profitPercentage = 0.0;
-      }
-
-      // Auto calculation and summary
-      // if (formState.autoCalculation || rowIndex < 15) {
-      //   calculateAutoSummary(formState);
-      //   calculateTotal(formState);
-      // }
-
+      detail.salesTotal = salesTotal;
       result.transaction.details = [detail];
 
       if (!ignoreCalculateTotal && rowIndex >= 0) {
@@ -1206,189 +791,36 @@ export const useTransactionHelper = (transactionType: string) => {
       // Set row header/index
       detail.slNo = generateUniqueKey();
 
-      // Basic product information
       detail.pCode = row.productCode;
       detail.productBatchID = row.productBatchID;
       detail.barCode = row.autoBarcode;
       detail.product = row.productName;
       detail.productID = row.productID;
-      detail.brandID = row.brandID;
-      detail.brand = row.brandName;
-      detail.arabicName = row.arabicName;
 
-      // Quantity and pricing
-      detail.free = round(Number(row.free || 0), 4);
       detail.qty = round(Number(row.quantity || 0), 4);
+      detail.qtyTag = row.quantity;
       detail.nosQty = row.qtyInNumbers;
+
+      detail.productDescription = row.productDescription;
       detail.unit = row.unitName;
       detail.unitID = row.unitID;
-
-      // Foreign currency pricing
-      detail.unitPriceFC = Number(row.xRate || 0);
-      const qtyVal = Number(detail.qty || 0);
-      const unitPriceFCVal = Number(detail.unitPriceFC || 0);
-      detail.grossFC = qtyVal * unitPriceFCVal;
-
-      // Local currency pricing
-      detail.unitPrice = getFormattedValueIgnoreRoundingToNumber(
-        Number(row.unitPrice || 0)
-      );
-
-      // Special handling for GRN type
-      if (loadType === "GRN") {
-        detail.unitPriceTag = getFormattedValueIgnoreRoundingToNumber(
-          Number(row.unitPrice || 0)
-        );
-        detail.qtyTag = getFormattedValueIgnoreRoundingToNumber(
-          Number(row.quantity || 0)
-        );
-        detail.grTransDetailsID = row.invTransactionDetailID;
-        detail.grTransDetailsIDTag = row.pendingQty;
-      }
-
-      // Special handling for GRN type
-      if (loadType === "PO") {
-        detail.poTransDetailsID = row.invTransactionDetailID;
-        detail.poTransDetailsIDTag = row.pendingQty;
-      }
-      if (loadType === "PO") {
-        detail.poTransDetailsIDTag = row.pendingQty;
-      }
-
-      // Cost calculations
-      const costPerItem = Number(row.costPerItem || 0);
-      const additionalExpense = Number(row.additionalExpense || 0);
-      detail.cost = getFormattedValueIgnoreRoundingToNumber(costPerItem);
-      detail.cost = costPerItem - additionalExpense;
-
-      // Tax information
-      detail.cstPerc = row.cstPerc;
-      detail.cst = row.cst;
-
-      // Product specifications
+      detail.mrp = row.mrp;
+      detail.cost = row.costPerItem;
       detail.size = row.specification;
-      detail.stickerQty = 0;
-      detail.additionalExpense = row.additionalExpense;
-
-      // Color handling with fallback
-      detail.colour = row.colour || row.color;
-
-      detail.warranty = row.warranty;
-      detail.totalAddExpense =
-        Number(row.quantity || 0) * Number(row.additionalExpense || 0);
-      detail.location = row.location;
-      detail.profit = row.totalProfit;
-
-      // Sales pricing
       detail.salesPrice = getFormattedValueIgnoreRoundingToNumber(
         Number(row.stdSalesPrice || 0)
       );
-      detail.ratePlusTax = getFormattedValueIgnoreRoundingToNumber(
-        Number(row.rateWithTax || 0)
-      );
-
-      // Fallback sales price
-      if (Number(detail.salesPrice || 0) === 0) {
-        detail.salesPrice = row.stdSalesPricePB;
-      }
-
-      detail.margin = row.marginPer;
-      detail.stock = row.stock;
-
-      // Minimum sale price calculation
-      const minSalePrice = Number(row.minSalePrice || 0);
-      const multiFactor = Number(row.multiFactor || 1);
-      detail.minSalePrice = minSalePrice * multiFactor;
-
-      // Date handling
-      detail.mfdDate = row.mfgDate;
-      detail.expDate = row.expiryDate;
-
-      detail.batchNo = row.batchNo;
-      detail.manualBarcode = row.manualBarcode;
-
-      // Financial calculations
+      detail.arabicName = row.itemNameinSecondLanguage;
       detail.gross = getFormattedValueIgnoreRoundingToNumber(
         Number(row.grossValue || 0)
       );
-      detail.discPerc = getFormattedValueIgnoreRoundingToNumber(
-        Number(row.discountPer1 || 0)
-      );
-      detail.discount = getFormattedValueIgnoreRoundingToNumber(
-        Number(row.discountAmt1 || 0)
-      );
-      detail.schemeDiscount = getFormattedValueIgnoreRoundingToNumber(
-        Number(row.schemeDiscAmt || 0)
-      );
-      // VAT handling based on form type
-      if (
-        !clientSession.isAppGlobal &&
-        (voucherType === "PO" ||
-          voucherType === "PE" ||
-          voucherType === "GRN" ||
-          voucherType === "PQ" ||
-          voucherType === "LPO") ||
-          (formType === "VAT" &&
-            voucherType !== "PO" &&
-            voucherType !== "PE" &&
-            voucherType !== "GRN" &&
-            voucherType !== "PQ"&&
-            voucherType !== "LPO")
-      ) {
-        detail.vatPerc = row.vatPercentage;
-        detail.vatAmount = getFormattedValueIgnoreRoundingToNumber(
-          Number(row.totalVatAmount || 0)
-        );
-      } else {
-        detail.vatPerc = 0;
-        detail.vatAmount = 0;
-      }
+      detail.batchNo = row.batchNo;
+      detail.stock = row.stock;
 
       detail.netValue = getFormattedValueIgnoreRoundingToNumber(
         Number(row.netValue || 0)
       );
-      detail.total = getFormattedValueIgnoreRoundingToNumber(
-        Number(row.netAmount || 0)
-      );
-      detail.productDescription = row.productDescription;
 
-      // Unit 2 information
-      detail.unitID2 = row.unit2ID;
-      detail.unit2Qty = row.unit2Qty;
-      detail.unit2MBarcode = row.unit2Barcode;
-      detail.unit2SalesRate = row.unit2SalesPrice;
-      detail.unit2MRP = row.unit2MRP;
-
-      // Unit 3 information
-      detail.unitID3 = row.unit3ID;
-      detail.unit3Qty = row.unit3Qty;
-      detail.unit3MBarcode = row.unit3Barcode;
-      detail.unit3SalesRate = row.unit3SalesPrice;
-      detail.unit3MRP = row.unit3MRP;
-
-      // detail.moreDetails.memo = row.memo;
-      detail.actualSalesPrice = row.actualSalesPrice;
-
-      // Optional fields with error handling
-      try {
-        detail.supplierReferenceProductCode = row.supplierReferenceProductCode;
-      } catch (error) {
-        console.error("Error setting supplier reference product code:", error);
-      }
-
-      try {
-        detail.warehouseID = row.warehouseID;
-        detail.warehouseName = row.warehouseName;
-      } catch (error) {
-        console.error("Error setting warehouse information:", error);
-      }
-
-      // Additional flags
-      detail.barcodePrinted = false;
-      detail.batchCreated = true;
-
-      // Store original cost for restoration after calculation
-      const originalCost = detail.cost;
 
       // Calculate row amounts
       const res = calculateRowAmount(
@@ -1408,7 +840,7 @@ export const useTransactionHelper = (transactionType: string) => {
         detail = res.transaction!.details[0] as TransactionDetail;
       }
       // Restore original cost
-      detail.cost = originalCost;
+      // detail.cost = originalCost;
       details[i] = detail;
     }
 
@@ -1610,9 +1042,9 @@ export const useTransactionHelper = (transactionType: string) => {
       outputRow.minSalePrice = detail.minSalePrice;
       outputRow.multiFactor = 1; // Default or calculate if needed
 
-      // Date handling
-      outputRow.mfgDate = detail.mfdDate;
-      outputRow.expiryDate = detail.expDate;
+      // Date handling - convert empty strings to null for nullable DateTime fields
+      outputRow.mfgDate = isNullOrUndefinedOrEmpty(detail.mfdDate) ? null : detail.mfdDate; // Done for handle "" value when save - change if needed
+      outputRow.expiryDate = isNullOrUndefinedOrEmpty(detail.expDate) ? null : detail.expDate;  // Done for handle "" value when save
       outputRow.batchNo = detail.batchNo;
       outputRow.mannualBarcode = detail.manualBarcode;
 

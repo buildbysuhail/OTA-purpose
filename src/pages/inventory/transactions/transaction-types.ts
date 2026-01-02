@@ -380,6 +380,13 @@ export interface TransactionDetail {
   smCode:string; // new
   salesman:string; // new
   salesmanID:number; // new
+
+  // stock
+  stockTo?: number;
+  stockMax?: number;
+  fromWhouseStock?: number;
+  toWhouseStock?: number;
+  salesTotal?: number;
 }
 
 export interface TransactionDetailsMore {
@@ -729,6 +736,11 @@ export interface TransactionFormState {
   itemPopup?:{isOpen?: boolean, index?:number}
   taxBreakdown?: { name: string, amount: number }[];
   billDiscountPerc: number;
+
+  // Stocks
+  chkCostFromExcel?: boolean;
+  wStockListOpen?: boolean;
+  allowMultiUnits?: boolean;
 }
 export interface GiftModel {
   productBatchID: number;
@@ -950,6 +962,11 @@ interface ProductBatchDetailsForAutoBarcodeData {
   pcstPerc: number;
   productUnitRemarks?: string | null;
   lastSoldSerialWisePrice?: number | null;
+
+  // stock
+  mulUnitManualBarcode?: string | null;
+  toWarehouseStock?: number;
+  fromWarehouseStock?: number;
 }
 
 export interface DataAutoBarcode {

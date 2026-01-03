@@ -872,8 +872,8 @@ debugger;
 
 
           // 🔘 Round Off checkbox logic
-          chkRound: {
-            ..._formState.formElements.chkRound,
+          hasroundOff: {
+            ..._formState.formElements.hasroundOff,
             disabled:
               !(applicationSettings.mainSettings.pOSRoundingMethod === "No Rounding" ||
               (applicationSettings.mainSettings.pOSRoundingMethod === "Not Set" &&

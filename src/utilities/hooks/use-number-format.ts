@@ -19,6 +19,29 @@ export const useNumberFormat = (): UseNumberFormatResult => {
   const clientSession = useAppSelector(
     (state: RootState) => state.ClientSession
   );
+function roundAmount(amt: number): number {
+  let r = 0;
+
+  const decimals = applicationSettings.mainSettings.decimalPoints;
+  const roundingMethod = applicationSettings.mainSettings.roundingMethod;
+
+  if (roundingMethod === "Ceiling") {
+    r = Math.ceil(roundAwayFromZero(amt, decimals));
+  }
+  else if (roundingMethod === "Floor") {
+    r = Math.floor(roundAwayFromZero(amt, decimals));
+  }
+  else if (roundingMethod === "Normal") {
+    r = roundAwayFromZero(amt, 0);
+  }
+  else {
+    r = amt;
+  }
+
+  return r;
+}
+
+
   function getNumericFormat(decimalPoint?: number): string {
     const _decimalPoint = decimalPoint??applicationSettings.mainSettings?.decimalPoints;
   
@@ -424,8 +447,132 @@ export const useNumberFormat = (): UseNumberFormatResult => {
   
   return r;
 }
+ const RoundAmountGlobal = (Amt: number): number => {
+  let r = 0;
 
-  return {toTaxFormat, formatNumberByDecimalPoint,getNumericFormat, getFormattedValue, getTaxFormat, getFormattedValueToNumber, getAmountInWords, round, getFormattedValueIgnoreRoundingToNumber, getFormattedValueIgnoreRounding, posRoundAmount, roundAwayFromZero }
+  const decimals: number = applicationSettings.mainSettings.decimalPoints;
+  let RMethod: string = applicationSettings.mainSettings.roundingMethodGLOBAL;
+
+  if (RMethod === "Not Set") {
+    RMethod = applicationSettings.mainSettings.roundingMethodGLOBAL;
+  }
+
+  if (RMethod === "Ceiling") {
+    r = Math.ceil(round(Amt, decimals));
+  }
+
+  else if (RMethod === "Floor") {
+    r = Math.floor(round(Amt, decimals));
+  }
+
+  else if (RMethod === "Normal") {
+    r = round(Amt, 0);
+  }
+
+  else if (RMethod === "Round to 0.25") {
+    const FAmt = Math.floor(round(Amt, 2));
+    const DecAmt = Amt - FAmt;
+    let AddAMt = 0;
+
+    if (DecAmt >= 0.125 && DecAmt < 0.375) {
+      AddAMt = 0.25;
+    }
+    else if (DecAmt >= 0.375 && DecAmt < 0.625) {
+      AddAMt = 0.50;
+    }
+    else if (DecAmt >= 0.625 && DecAmt < 0.875) {
+      AddAMt = 0.75;
+    }
+    else if (DecAmt >= 0.875) {
+      AddAMt = 1;
+    }
+
+    r = round(FAmt + AddAMt, 2);
+  }
+
+  else if (RMethod === "Floor Round to 0.25") {
+    const FAmt = Math.floor(round(Amt, 2));
+    const DecAmt = Amt - FAmt;
+    let AddAMt = 0;
+
+    if (DecAmt >= 0.750) {
+      AddAMt = 0.750;
+    }
+    else if (DecAmt >= 0.50) {
+      AddAMt = 0.50;
+    }
+    else if (DecAmt >= 0.25) {
+      AddAMt = 0.25;
+    }
+    else {
+      AddAMt = 0;
+    }
+
+    r = round(FAmt + AddAMt, 2);
+  }
+
+  else if (RMethod === "Round to 0.50") {
+    const FAmt = Math.floor(round(Amt, 2));
+    const DecAmt = Amt - FAmt;
+    let AddAMt = 0;
+
+    if (DecAmt >= 0.25 && DecAmt < 0.75) {
+      AddAMt = 0.50;
+    }
+    else if (DecAmt >= 0.75) {
+      AddAMt = 1;
+    }
+
+    r = round(FAmt + AddAMt, decimals);
+  }
+
+  else if (RMethod === "Floor Round to 0.50") {
+    const FAmt = Math.floor(round(Amt, 2));
+    const DecAmt = Amt - FAmt;
+    let AddAMt = 0;
+
+    if (DecAmt >= 0.50) {
+      AddAMt = 0.50;
+    }
+    else {
+      AddAMt = 0;
+    }
+
+    r = round(FAmt + AddAMt, decimals);
+  }
+
+  else if (RMethod === "Round to 0.10") {
+    r = round(Amt, 1);
+  }
+
+  else if (RMethod === "Floor Round to 0.10") {
+    const diff = round(Amt, 1) - round(Amt, 2);
+
+    if (diff > 0) {
+      r = round(Amt - diff, 1);
+    }
+    else {
+      r = round(Amt, 1);
+    }
+  }
+
+  else if (RMethod === "Round to 0.010") {
+    const FAmt = Math.floor(round(Amt, 3));
+    const DecAmt = FAmt - Math.floor(round(Amt, 2));
+    const AddAMt = -1 * DecAmt;
+
+    r = round(FAmt + AddAMt, 2);
+  }
+
+  else {
+    r = Amt;
+  }
+
+  return r;
+};
+
+
+  return {toTaxFormat, formatNumberByDecimalPoint,getNumericFormat, getFormattedValue, getTaxFormat, getFormattedValueToNumber, getAmountInWords, round, getFormattedValueIgnoreRoundingToNumber, getFormattedValueIgnoreRounding, posRoundAmount, roundAwayFromZero,roundAmount,RoundAmountGlobal }
 };
 export interface UseNumberFormatResult {
   toTaxFormat(val: number): number ;
@@ -453,4 +600,6 @@ export interface UseNumberFormatResult {
   getFormattedValueIgnoreRounding: (val: number) => string;
   getTaxFormat: (val: number) => string;
   posRoundAmount: (amt: number) => number;
+  roundAmount: (amt: number) => number;
+  RoundAmountGlobal: (amt: number) => number;
 }

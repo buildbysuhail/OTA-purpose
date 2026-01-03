@@ -654,8 +654,10 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       type: "number", // Use tel instead of number to have more control
       inputMode: "decimal" as const, // Shows numeric keyboard with decimal support
       pattern: "[0-9]*\\.?[0-9]*", // Allows numbers and decimal point
+      // enterKeyHint: "done" as const, // Shows "Done" on mobile keyboard instead of "Next"
     } : {
       type: type === "text" || type === undefined ? "text" : type,
+      // enterKeyHint: "done" as const, // Shows "Done" on mobile keyboard instead of "Next"
     };
 
     if (_useMUI == true) {

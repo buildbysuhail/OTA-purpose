@@ -66,6 +66,8 @@ import usePreferenceData from "../../../utilities/hooks/usePreference";
 import DraggablePlusButton from "../../ERPComponents/erp-purchase-grid/draggable-button"
 import GridCell from "./GridCell";
 import ReactDOM from "react-dom";
+import BarcodeModalScanner from "../../barcode-scanner-modal";
+import { BarcodeScanResult } from "../../../utilities/barcode-scanner-service";
 
 type DataItem = Record<string, any>;
 export interface SummaryConfig<T = any> {
@@ -194,7 +196,7 @@ interface RowData {
     excludedColumns?: (keyof TransactionDetail)[]
   ) => { column: string; rowIndex: number } | null;
   currentCell?: { column: string; rowIndex: number; data: TransactionDetail };
-  setCurrentCell:(data: any) => void;
+  setCurrentCell: React.Dispatch<React.SetStateAction<CurrentCell | undefined>>;
   gridFontSize: number;
   gridIsBold: boolean;
   rowHeight: number;
@@ -476,6 +478,8 @@ console.log(`safvan${column.dataField}`);
             ref={inputRef}
             id={`${gridId}_${column.dataField}_${rowIndex}`}
             type={column.dataType === "number" ? "text" : "text"}
+            inputMode={column.dataType === "number" ? "decimal" : "text"}
+            enterKeyHint="done"
             className="bg-transparent border-none focus:ring-0 focus:outline-none"
             style={{
               ...cellStyle,
@@ -1524,6 +1528,8 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
     // const [isGridMenuOpen, setIsGridMenuOpen] = useState(false);
     const [isExcelMenuOpen, setIsExcelMenuOpen] = useState(false);
     const [exportVisibleColumns, setExportVisibleColumns] = useState(true);
+    const [showBarcodeScanner, setShowBarcodeScanner] = useState(false);
+    const [barcodeTargetRow, setBarcodeTargetRow] = useState<number>(-1);
     const buttonRef = useRef<HTMLButtonElement | null>(null);
     const popupRef = useRef<HTMLDivElement | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -1671,6 +1677,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
     const closeExcelMenu = () => {
       setIsExcelMenuOpen(false);
     };
+
     const exportToExcel = async () => {
       try {
         const workbook = new ExcelJS.Workbook();
@@ -2094,6 +2101,64 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
 
       setCurrentCell(formState.currentCell);
     }, [formState.currentCell]);
+
+    const handleBarcodeScan = useCallback((result: BarcodeScanResult) => {
+      const targetRow = barcodeTargetRow >= 0 ? barcodeTargetRow :
+        (formState.currentCell?.rowIndex ?? 0);
+
+      if (targetRow >= 0) {
+        onChange(
+          result.text,
+          'barCode' as keyof TransactionDetail,
+          targetRow,
+          true
+        );
+
+        // Auto-advance to next field after small delay
+        setTimeout(() => {
+          const nextCell = nextCellFind(
+            targetRow,
+            'barCode',
+            ['barCode']
+          );
+          if (nextCell) {
+            setCurrentCell({
+              column: nextCell.column,
+              rowIndex: nextCell.rowIndex,
+              data: formState.transaction.details[nextCell.rowIndex],
+            } as any);
+          }
+        }, 150);
+      }
+    }, [barcodeTargetRow, formState.currentCell?.rowIndex, formState.transaction.details, nextCellFind, onChange]);
+
+    // Callback to trigger Enter key logic after barcode scan
+    const handleBarcodeEnterTrigger = useCallback((result: BarcodeScanResult) => {
+      const targetRow = barcodeTargetRow >= 0 ? barcodeTargetRow :
+        (formState.currentCell?.rowIndex ?? 0);
+
+      if (targetRow >= 0 && formState.transaction.details[targetRow]) {
+        // Find the barCode column
+        const barcodeColumn = columns.find(col => col.dataField === 'barCode');
+
+        if (barcodeColumn) {
+          // Simulate Enter key press to trigger the same logic as manual Enter
+          const syntheticEvent = {
+            key: 'Enter',
+            preventDefault: () => {},
+            stopPropagation: () => {},
+          } as React.KeyboardEvent<HTMLElement>;
+
+          onKeyDown(
+            result.text,
+            syntheticEvent,
+            'barCode' as keyof TransactionDetail,
+            targetRow
+          );
+        }
+      }
+    }, [barcodeTargetRow, formState.currentCell?.rowIndex, formState.transaction.details, columns, onKeyDown]);
+
     const scrollToCenter = useCallback(
       (rowIndex: number, column?: string, duration: number = 300) => {
         if (rowIndex < 0 || rowIndex >= formState.transaction.details.length) {
@@ -2496,6 +2561,8 @@ const units = ["Bag", "Box", "Piece", "Kg", "Litre"];
 const taxOptions = [0, 5, 12, 18, 28];
 
 const [showMore , setShowMore] = useState (false)
+const [openScanner, setOpenScanner] = useState(false);
+const barcodeInputRef = useRef<HTMLInputElement>(null);
 
 const hidColumns: string[] = [
   "product",
@@ -2648,6 +2715,51 @@ const hidColumns: string[] = [
                       </span>
                     </button>
                   </li>
+
+                  {/* Barcode Scanner */}
+                  <li>
+                    <button
+                      onClick={() => {
+                        closeGridMenu();
+                        setBarcodeTargetRow(formState.itemPopup?.index ?? -1);
+                        setShowBarcodeScanner(true);
+                      }}
+                      className={`w-full flex items-center gap-3 px-3 py-[5px] rounded-md group text-left transition-all duration-200 ${
+                        appState.mode === "dark"
+                          ? "hover:bg-[#7c2d1255] hover:text-[#fed7aa]"
+                          : "hover:bg-[#fed7aa] hover:text-[#92400e]"
+                      }`}
+                    >
+                      <div
+                        className={`w-8 h-8 rounded-full flex items-center justify-center group-hover:scale-110 transition-all duration-200 ${
+                          appState.mode === "dark"
+                            ? "bg-[#7c2d1255] group-hover:bg-[#92400e4d]"
+                            : "bg-[#fed7aa] group-hover:bg-[#fdba74]"
+                        }`}
+                      >
+                        <svg
+                          className={`h-4 w-4 ${
+                            appState.mode === "dark"
+                              ? "text-[#fbbf24]"
+                              : "text-[#b45309]"
+                          }`}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                      </div>
+                      <span className="font-medium">
+                        {t("scan_barcode")}
+                      </span>
+                    </button>
+                  </li>
                 </ul>
               </nav>
             </div>
@@ -2680,6 +2792,14 @@ const hidColumns: string[] = [
               }
             />
           )}
+          {/* Barcode Scanner Modal */}
+          <BarcodeModalScanner
+            isOpen={showBarcodeScanner}
+            onClose={() => setShowBarcodeScanner(false)}
+            onScan={handleBarcodeScan}
+            onEnterTrigger={handleBarcodeEnterTrigger}
+            title={t("scan_barcode")}
+          />
           <ERPScrollArea
             scrollbarColor={formState.userConfig?.scrollbarColor}
             ref={containerRef}
@@ -3307,6 +3427,7 @@ const hidColumns: string[] = [
                            }}
                          />
                        </div>
+                       
                      </div>
                      {/* <div>
                        <label className="block text-xs font-medium text-gray-600 mb-2 dark:text-gray-400">
@@ -3319,6 +3440,143 @@ const hidColumns: string[] = [
                        </div>
                      </div> */}
                    </div>
+                   <div className="grid grid-cols-2 gap-3 mb-3">
+                     <div>
+                       <label className="block text-xs font-medium text-gray-600 mb-1 dark:text-gray-400">
+                         barCode
+                       </label>
+                       <div className="border border-gray-300 rounded-lg overflow-hidden dark:border-gray-600">
+                         <GridCell
+                           isMobile_={true}
+                           column={formState.gridColumns.find((x) => x.dataField == "barCode") as ColumnModel} 
+                           item={formState.row ?? initialTransactionDetailData}
+                           index={formState.itemPopup?.index ?? 0}
+                           currentCell={currentCell}
+                           setCurrentCell={setCurrentCell}
+                           formState={formState}
+                           appState={appState}
+                           gridFontSize={gridFontSize}
+                           gridIsBold={gridIsBold}
+                           rowHeight={rowHeight}
+                           gridBorderColor={gridBorderColor}
+                           isFirstColumn={false}
+                           isLastColumn={false}
+                           showBorder={false}
+                           columnWidths={columnWidths}
+                           onChange={onChange}
+                           onKeyDown={onKeyDown}
+                           handlRowKeyDown={handlRowKeyDown}
+                           handleFocus={handleFocus}
+                           handleBlur={handleBlur}
+                           gridId={gridId}
+                           zIndexController={55}
+                           details={formState.transaction.details} 
+                           blockUnitOnDecimalPoint={false} 
+                           applicationSettings={undefined} 
+                           nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
+                             throw new Error("Function not implemented.");
+                           }}
+                         />
+                         <p>mj23</p>
+                       </div>
+                       
+                     </div>
+                     {/* <div>
+                       <label className="block text-xs font-medium text-gray-600 mb-2 dark:text-gray-400">
+                         &nbsp;
+                       </label>
+                       <div className="border border-gray-300 rounded-lg overflow-hidden dark:border-gray-600">
+                         <div className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300">
+                           Without Tax
+                         </div>
+                       </div>
+                     </div> */}
+                   </div>
+
+                   <div className="border border-gray-300 rounded-lg overflow-hidden dark:border-gray-600 flex items-center">
+  {/* GridCell field */}
+  <div className="flex-1">
+    <GridCell
+      // inputRef={barcodeInputRef}
+      isMobile_={true}
+      column={formState.gridColumns.find((x) => x.dataField == "barCode") as ColumnModel}
+      item={formState.row ?? initialTransactionDetailData}
+      index={formState.itemPopup?.index ?? 0}
+      currentCell={currentCell}
+      setCurrentCell={setCurrentCell}
+      formState={formState}
+      appState={appState}
+      gridFontSize={gridFontSize}
+      gridIsBold={gridIsBold}
+      rowHeight={rowHeight}
+      gridBorderColor={gridBorderColor}
+      isFirstColumn={false}
+      isLastColumn={false}
+      showBorder={false}
+      columnWidths={columnWidths}
+      onChange={onChange}
+      onKeyDown={onKeyDown}
+      handlRowKeyDown={handlRowKeyDown}
+      handleFocus={handleFocus}
+      handleBlur={handleBlur}
+      gridId={gridId}
+      zIndexController={55}
+      details={formState.transaction.details}
+      blockUnitOnDecimalPoint={false}
+      applicationSettings={undefined}
+      nextCellFind={() => null}
+    />
+  </div>
+
+  {/* Barcode Scanner Button - Uses unified barcode scanner */}
+  <button
+    type="button"
+    onClick={() => {
+      setBarcodeTargetRow(formState.itemPopup?.index ?? -1);
+      setShowBarcodeScanner(true);
+    }}
+    className="px-2 border-l border-gray-300 dark:border-gray-600 bg-green-100 dark:bg-green-900 hover:bg-green-200 dark:hover:bg-green-800 text-green-700 dark:text-green-300 transition-colors duration-200"
+    title="Scan barcode"
+  >
+    <span className="text-lg">📷</span>
+  </button>
+
+</div>
+{/* {openScanner && (
+  <MobileBarcodeScanner
+    onScan={(scannedCode) => {
+      onChange(
+        scannedCode,
+        "barCode",
+        formState.itemPopup?.index ?? 0,
+        true
+      );
+    }}
+    onClose={() => setOpenScanner(false)}
+  />
+)} */}
+{/* {openScanner && (
+  <ZXingScanner
+    onScan={(code) => {
+      onChange(code, "barCode", formState.itemPopup?.index ?? 0, true);
+
+      setTimeout(() => {
+        const input = document.querySelector('input[data-field="barCode"]') as HTMLInputElement | null;
+        if (input) {
+          input.focus();
+          input.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+        }
+      }, 80);
+    }}
+    onClose={() => setOpenScanner(false)}
+  />
+)} */}
+
+
+
+
+
+
          
                    {/* Totals & Taxes Card */}
                    <div className="bg-white dark:bg-[#2d2d2d] rounded-lg p-4 border-t border-gray-200 dark:border-gray-700">
@@ -3558,6 +3816,8 @@ const hidColumns: string[] = [
                              <div className="border border-gray-300 rounded-lg overflow-hidden dark:border-gray-600">
                                <GridCell
                                  isMobile_={true}
+                                //  columnIndex={index}
+
                                  column={col as ColumnModel}
                                  item={formState.row ?? initialTransactionDetailData}
                                  index={formState.itemPopup?.index ?? 0}
@@ -3587,7 +3847,7 @@ const hidColumns: string[] = [
                                    throw new Error("Function not implemented.");
                                  }}
                                />
-                             </div>
+                             </div>                  
                            </div>
                          ))}
                        </div>

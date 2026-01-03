@@ -316,27 +316,32 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       }
 
       // ---------- Gross ----------
-      let Gross = round(Qty * Rate, 4);
+      let Gross = [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation,VoucherType.SalesQuotation].includes(master.voucherType as any) ? round(Qty * Rate, 5) : round(Qty * Rate, 4);
 
       // ---------- Discount logic (mirror C# branches exactly) ----------
       // Case: Discount amount edited
+      if (master.voucherType == "SO") {
+        if (DiscPerc > 0 && currentColumn !== "discount") {
+          if (DiscPerc * Gross / 100 != Disc) {
+            Disc = round(DiscPerc * Gross / 100, 5);
+          }
+        }
+      }
       if (Disc > 0 && currentColumn === "discount") {
         DiscPerc = Gross !== 0 ? round((100 * Disc) / Gross, 5) : 0;
         UnitDiscount = round(Disc / (Qty === 0 ? 1 : Qty), 5);
       }
       // Case: Discount % edited
       else if (DiscPerc > 0 && currentColumn === "discPerc") {
-        const calcDisc = round(DiscPerc * Gross / 100, 5);
-        if (Math.abs(calcDisc - Disc) > 0.000001) {
-          Disc = calcDisc;
+        if (DiscPerc * Gross / 100 != Disc) {
+          Disc = round(DiscPerc * Gross / 100, 5);
           UnitDiscount = Disc / (Qty === 0 ? 1 : Qty);
         }
       }
       // Case: ReverseDiscountClicked or other edits where discPerc > 0 and discount column not being edited
       else if (DiscPerc > 0 && (reverseDiscountClicked === true || currentColumn !== "discount")) {
-        const calcDisc = round(DiscPerc * Gross / 100, 5);
-        if (Math.abs(calcDisc - Disc) > 0.000001) {
-          Disc = calcDisc;
+        if (DiscPerc * Gross / 100 != Disc) {
+          Disc = round(DiscPerc * Gross / 100, 5);
           UnitDiscount = Disc / (Qty === 0 ? 1 : Qty);
         }
       } else {
@@ -345,7 +350,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       }
 
       // Discount slab offer behavior (exact mapping)
-      if (master.voucherType == VoucherType.SalesInvoice && (settings?.inventorySettings?.enableDiscountSlabOffer || settings?.inventorySettings?.enableDiscountSlabOffer)) {
+      if (master.voucherType == VoucherType.SalesInvoice && settings?.inventorySettings?.enableDiscountSlabOffer) {
         // C# checks for EnableDiscountSlabOffer and DiscPerc == 0 and (isEdit || TenderClosed)
         if ((DiscPerc === 0) && (isEdit || TenderClosed)) {
           if (DiscPerc !== Disc) {
@@ -405,26 +410,32 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         detail.gross = getFormattedValueIgnoreRoundingToNumber(Gross);
         detail.total = NetAmount;
         detail.cost = Qty !== 0 ? (NetValue / Qty) : 0;
+        if ([VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(master.voucherType as any)) {
+          detail.cost = Qty !== 0 ? (NetAmount / Qty) : 0;
+        }
 
         // Profit calculation (same as C#)
-        const purchasePrice = Number(detail.purchasePrice ?? detail.purchaseRate ?? 0);
-        const Profit = NetValue - (Qty * purchasePrice);
-        detail.profit = Profit;
-        // Profit percentage only if column visible in grid (mimic C# try/catch)
-        try {
-          const profitColumn = formState.gridColumns?.find((x: any) => x.dataField == "profitPercentage");
-          if (profitColumn?.visible !== false) {
-            let profit_perc = 0;
-            if (purchasePrice > 0 && Qty > 0) {
-              profit_perc = (Profit / (purchasePrice * Qty)) * 100;
-            } else {
-              profit_perc = 0;
+        if ([VoucherType.SalesInvoice, VoucherType.SalesReturn].includes(master.voucherType as any)) {
+          const purchasePrice = Number(detail.purchasePrice ?? detail.purchaseRate ?? 0);
+          const Profit = NetValue - (Qty * purchasePrice);
+          detail.profit = Profit;
+          // Profit percentage only if column visible in grid (mimic C# try/catch)
+          try {
+            const profitColumn = formState.gridColumns?.find((x: any) => x.dataField == "profitPercentage");
+            if (profitColumn?.visible !== false) {
+              let profit_perc = 0;
+              if (purchasePrice > 0 && Qty > 0) {
+                profit_perc = (Profit / (purchasePrice * Qty)) * 100;
+              } else {
+                profit_perc = 0;
+              }
+              detail.profitPercentage = profit_perc;
             }
-            detail.profitPercentage = profit_perc;
+          } catch {
+            /* ignore like C# */
           }
-        } catch {
-          /* ignore like C# */
         }
+
       }
       // ---------- GST path (India) ----------
       else {
@@ -462,7 +473,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         }
 
         // Tax on MRP branch (exact C#)
-        if (chkTaxOnMRP) {
+        if (chkTaxOnMRP && master.voucherType==VoucherType.SalesInvoice) {
           let TaxableMRP = 0;
           const denom = 1 + ((CGSTPerc + SGSTPerc + IGSTPerc) / 100 || 0);
           TaxableMRP = denom !== 0 ? (Number(detail.mrp ?? 0) / denom) : 0;
@@ -557,7 +568,9 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
           // C# doesn't zero IGST here (IGST used for interstate)
         }
         if (((form?.transaction?.master?.voucherType ?? "") === VoucherType.SalesEstimate)
-          || ((form?.transaction?.master?.voucherForm == "" || (form?.transaction?.master?.voucherType ?? "") === VoucherType.SaleReturnEstimate))) {
+          || (((form?.transaction?.master?.voucherForm == ""
+            && ![VoucherType.SalesInvoice, VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(form?.transaction?.master?.voucherType as any))
+            || (form?.transaction?.master?.voucherType ?? "") === VoucherType.SaleReturnEstimate))) {
           detail.details2.cgst = 0;
           detail.details2.sgst = 0;
           detail.details2.igst = 0;
@@ -2970,17 +2983,17 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       if (formState.transaction.master.voucherType !== VoucherType.SaleReturnEstimate) {
 
         if (
-          ![VoucherType.SalesInvoice, VoucherType.SalesOrder]
+          ![VoucherType.SalesInvoice, VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation]
             .includes(formState.transaction.master.voucherType as any)
         ) {
 
           if (formState.transaction.master.voucherForm !== "") {
-          result.transaction!.master!.master3 ??= (TransactionMaster3InitialData as any);
-      result.transaction!.master!.master3!.totCGST = round(cgst);
-      result.transaction!.master!.master3!.totSGST = round(sgst);
-      result.transaction!.master!.master3!.totIGST = round(igst);
-      result.transaction!.master!.master3!.totCess = round(cessAmt);
-      result.transaction!.master!.master3!.totAdditionalCess = round(additionalCess);
+            result.transaction!.master!.master3 ??= (TransactionMaster3InitialData as any);
+            result.transaction!.master!.master3!.totCGST = round(cgst);
+            result.transaction!.master!.master3!.totSGST = round(sgst);
+            result.transaction!.master!.master3!.totIGST = round(igst);
+            result.transaction!.master!.master3!.totCess = round(cessAmt);
+            result.transaction!.master!.master3!.totAdditionalCess = round(additionalCess);
           }
         }
       }
@@ -3035,7 +3048,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       tax = Number((TaxableAmt_StdRate * TaxPerc / 100).toFixed(3));
       if (
         !clientSession.isAppGlobal &&
-        formState.transaction.master.voucherType === VoucherType.SalesOrder
+        [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(formState.transaction.master.voucherType as any)
       ) {
         const decimals = applicationSettings.mainSettings.decimalPoints;
         const factor = Math.pow(10, decimals);
@@ -3070,7 +3083,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       tax = Math.round(tax * 100) / 100;//Math.Round(Tax, 2);
       result.transaction!.master!.totalTax = Number(tax.toFixed(2));// Tax.ToString("###0.00");
     } else {
-      result.transaction!.master!.totalTax = [VoucherType.SalesOrder, VoucherType.SalesInvoice].includes(formState.transaction.master.voucherType as any) ? toTaxFormat(tax) : round(tax);
+      result.transaction!.master!.totalTax = [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.SalesInvoice].includes(formState.transaction.master.voucherType as any) ? toTaxFormat(tax) : round(tax);
     }
 
 
@@ -3152,7 +3165,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     const cardAmound = safeNum(master?.bankAmt);
     const balance = round(total - adv - cash - coupon - cardAmound);
     debugger;
-    result.formElements.lblBillBalance.visible = formState.transaction.master.voucherType !== VoucherType.SalesReturn;
+    result.formElements.lblBillBalance.visible = formState.transaction.master.voucherType == VoucherType.SalesInvoice;
 
     result.formElements.lblBillBalance.label =
       Number.isFinite(balance) && balance !== 0

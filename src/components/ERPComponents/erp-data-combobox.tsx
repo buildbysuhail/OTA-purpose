@@ -490,7 +490,20 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     const [isFocused, setIsFocused] = useState(false);
     const handleMouseEnter = () => setIsHovered(true);
     const handleMouseLeave = () => setIsHovered(false);
-    const handleFocus = () => setIsFocused(true);
+    const handleFocus = (e?: React.FocusEvent<HTMLInputElement>) => {
+      setIsFocused(true);
+      
+      // Auto-select all text on focus for better UX
+      // This allows users to immediately start typing or press Backspace to replace
+      if (input__Ref.current) {
+        setTimeout(() => {
+          input__Ref.current?.select();
+        }, 0);
+      }
+      
+      // Call the external onFocus callback if provided
+      onFocus?.(e as React.FocusEvent<HTMLInputElement>);
+    };
     const handleBlur = (e: any) => {
       e.stopPropagation();
       setTimeout(() => {
@@ -1913,6 +1926,10 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                 onClick={(e) => {
                   e.stopPropagation();
                   !disabled && !isOpen && setIsOpen(true);
+                  // Select all text on click for better UX
+                  setTimeout(() => {
+                    input__Ref.current?.select();
+                  }, 0);
                 }}
                 onKeyDown={(e) => {
                   handleKeyDown(e);

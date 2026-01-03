@@ -50,6 +50,7 @@ interface TransactionFooterProps {
   applicationSettings: any;
   clientSession: any;
   importFromExcel?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  loadProducts: () => void;
 }
 
 interface Confetti {
@@ -181,6 +182,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   applicationSettings,
   clientSession,
   importFromExcel,
+  loadProducts,
 }) => {
   const [hasAnimated, setHasAnimated] = useState(false);
   const [isOpentwo, setIsOpentwo] = useState(false);
@@ -333,8 +335,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   };
 
   const handleLoadProductBtn = () => {
-    alert("Need to manage this section")
-    // Calling an api which get products items in that warehouse
+    loadProducts()
   }
   
   const handleAddProduct = () =>  {
@@ -500,7 +501,10 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
              )}
             {formState.transaction.master.voucherType == VoucherType.OpeningStock && (
               <div className="flex gap-1 px-1">
-                <ERPButton title={t("load_products")} variant="secondary" onClick={()=> handleLoadProductBtn()}/>
+                <ERPButton 
+                  title={t("load_products")} 
+                  variant="secondary" 
+                  onClick={()=> handleLoadProductBtn()}/>
               </div>
             )} 
              

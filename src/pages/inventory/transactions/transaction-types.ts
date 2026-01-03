@@ -215,6 +215,10 @@ export interface TransactionMaster {
   lblSRAmount: string; //new
   totalTax?: number; //new
   advAmntFroSO: number;
+
+  // stock
+  stockCountPrefix?: string;
+  stockCountVrNumber?: number; 
 }
 
 export interface TransactionMaster3 {
@@ -741,6 +745,9 @@ export interface TransactionFormState {
   chkCostFromExcel?: boolean;
   wStockListOpen?: boolean;
   allowMultiUnits?: boolean;
+  dateCheckbox?: boolean;
+  allPositiveStockToZero?: boolean;
+  allNegativeStockToZero?: boolean;
 }
 export interface GiftModel {
   productBatchID: number;

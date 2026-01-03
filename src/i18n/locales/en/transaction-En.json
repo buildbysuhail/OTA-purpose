@@ -1117,7 +1117,16 @@
   "pdt_status":"PDT Status",
   "load_cost_from_excel":"Load Cost From Excel",
   "branch_transfer_out":"Branch Transfer Out",
-  "branch_transfer_in":"Branch Transfer In"
+  "branch_transfer_in":"Branch Transfer In",
+
+  "reset_stock_to_zero":"Reset Stock To Zero",
+  "all_positive_stock_to_zero":"All Positive Stock To Zero",
+  "all_negative_stock_to_zero":"All Negative Stock To Zero",
+  "positive_stock_reset":"Positive Stock reset",
+  "do_you_want_to_reset_all_positive_stock_to_zero?":"Do you want to reset all positive stock to zero?",
+  "do_you_want_to_reset_all_negative_stock_to_zero":"Do you want to reset all negative stock to zero?",
+  "negative_stock_reset":"Negative Stock reset",
+  "no_record_found_with_this_voucher_number":"No records found with this voucher number"
 
 
 

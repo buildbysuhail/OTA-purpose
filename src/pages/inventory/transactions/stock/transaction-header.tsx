@@ -35,7 +35,7 @@ import axios from "axios";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import OrderNo from "./components/order-number";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
-import { formStateHandleFieldChange, formStateMasterHandleFieldChange } from "../reducer";
+import { formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly, formStateMasterHandleFieldChange } from "../reducer";
 import { TransactionFormState, TransactionDetail } from "../transaction-types";
 import LPOGeneration from "./LPOGeneration";
 import { LoadAndSetTransVoucherFn } from "./use-transaction";
@@ -76,6 +76,8 @@ interface TransactionHeaderProps {
   focusAdd1?:any;
   inputRefs: Record<string, React.RefObject<HTMLInputElement>>;
   onILRRefNoKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  handleResetStockToZero: () => void;
+  HandleLoadStockCountBtn: () => void;
 }
 
 const TransactionHeader: React.FC<TransactionHeaderProps> = ({
@@ -102,6 +104,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   voucherType,
   inputRefs,
   onILRRefNoKeyUp,
+  handleResetStockToZero,
+  HandleLoadStockCountBtn,
 
 },ref) => {
   const { appState } = useAppState();
@@ -457,7 +461,27 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                           t={t}
                         />
               )}
-              <TransactionDate formState={formState} dispatch={dispatch} t={t} />
+              {[VoucherType.StockAdjuster].includes(formState.transaction.master.voucherType as VoucherType) && (
+                <ERPCheckbox
+                    localInputBox={formState?.userConfig?.inputBoxStyle}
+                    id="date"
+                    className="text-left dark:text-dark-text flex items-end pb-1 px-1"
+                    label={t("date")}
+                    checked={formState.dateCheckbox}
+                    onChange={(e) => {
+                      dispatch(
+                        formStateHandleFieldChangeKeysOnly({
+                          fields: { dateCheckbox: e.target.checked },
+                        })
+                      );
+                    }}
+                  />
+              )}
+              <TransactionDate 
+                 formState={formState} 
+                 dispatch={dispatch} 
+                 t={t} 
+              />
               {[VoucherType.OpeningStock].includes(formState.transaction.master.voucherType as VoucherType) && (
                 <div className="flex gap-1 pb-1.5">
                   <ERPDateInput
@@ -644,16 +668,39 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       id="stockCount"
                       label={t("stock_count")}
                       type="number"
-                      noLabel
+                      placeholder=""
                       className="w-20"
+                      value={formState.transaction.master.stockCountPrefix}
+                      fetching={formState.transactionLoading}
+                      onChange={(e) =>
+                        dispatch(
+                          formStateMasterHandleFieldChange({
+                            fields: { stockCountPrefix: e.target?.value },
+                          })
+                        )
+                      }
                     />
                     <ERPInput
-                      id="stockCount"
-                      label={t("stock_count")}
+                      id="stockCountVhrNumber"
                       type="number"
+                      noLabel={true}
                       className="w-28"
+                      value={formState.transaction.master.stockCountVrNumber}
+                      fetching={formState.transactionLoading}
+                      onChange={(e) =>
+                        dispatch(
+                          formStateMasterHandleFieldChange({
+                            fields: { stockCountVrNumber: e.target?.value },
+                          })
+                        )
+                      }
                     />
-                    <ERPButton title={t("..")} variant="primary" className="h-7 w-7" />
+                    <ERPButton 
+                       title={t("..")} 
+                       variant="secondary" 
+                       className="h-7 w-7"
+                       onClick={() => HandleLoadStockCountBtn()}
+                    />
                   </div>
 
              </div>
@@ -765,15 +812,29 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     <ERPButton
                       title={t("reset_stock_to_zero")}
                       variant="secondary"
-                      // disabled={formState.transactionLoading}
+                      onClick={() => handleResetStockToZero()}
                     />
                       <ERPCheckbox
                       id="AllPositiveStocksToZero"
                       label={t("all_positive_stock_to_zero")}
-                    />
+                      checked={formState?.allPositiveStockToZero}
+                        onChange={(e) =>{
+                            dispatch(
+                            formStateHandleFieldChangeKeysOnly(
+                              { fields: { allPositiveStockToZero: e.target.checked} }
+                            ))
+                      }}
+                      />
                     <ERPCheckbox
                       id="AllNegativeStocksToZero"
                       label={t("all_negative_stock_to_zero")}
+                      checked={formState?.allNegativeStockToZero}
+                        onChange={(e) =>{
+                            dispatch(
+                            formStateHandleFieldChangeKeysOnly(
+                              { fields: { allNegativeStockToZero: e.target.checked} }
+                            ))
+                      }}
                     />
                     </div>
                 )}

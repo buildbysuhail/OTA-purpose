@@ -182,7 +182,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   // Input navigation refs
   const partyNameRef = useRef<HTMLInputElement>(null);
   const address1Ref = useRef<HTMLInputElement>(null);
-  const mobileNumberRef = useRef<HTMLInputElement>(null);
+  // const mobileNumberRef = useRef<HTMLInputElement>(null);
+  const mobileNumberRef = React.useRef<HTMLInputElement | null>(null);
   // const ordCardNoRef = useRef<HTMLInputElement>(null);
   // const ReferenceNumberRef = useRef<HTMLInputElement>(null);
   const referenceNumberInputRef = useRef<HTMLInputElement>(null);
@@ -656,7 +657,11 @@ function mergeRefs<T>(...refs: React.Ref<T>[]) {
                   localInputBox={formState?.userConfig?.inputBoxStyle}
                   disableEnterNavigation
                   // ref={mobileNumberRef}
-                  ref={mobileNumRef}
+                  // ref={mobileNumRef}
+                   ref={(el) => {
+                    mobileNumRef.current = el;
+                    mobileNumberRef.current = el;
+                  }}
                   onKeyDown={(e) => handleInputNavigation(e, referenceNumberInputRef)}
                   id="address4"
                   label={t("mobile_number")}

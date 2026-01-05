@@ -1074,7 +1074,7 @@
   "stock_count":"Stock Count",
   "add_products":"Add Products",
   "f_type":"F Type",
-  "pul_inv_bti":"Pul Inv Bti",
+  "pur_inv#/_bti":"PurInv#/ BTI",
   "load_pi_import":"Load PI Import",
   "load_os":"Load OS",
   "load_b_req":"Load B Req",
@@ -1126,7 +1126,13 @@
   "do_you_want_to_reset_all_positive_stock_to_zero?":"Do you want to reset all positive stock to zero?",
   "do_you_want_to_reset_all_negative_stock_to_zero":"Do you want to reset all negative stock to zero?",
   "negative_stock_reset":"Negative Stock reset",
-  "no_record_found_with_this_voucher_number":"No records found with this voucher number"
+  "no_record_found_with_this_voucher_number":"No records found with this voucher number",
+
+  "ilr":"ILR",
+  "this_ilr_is_already_loaded_in_st :":"This ILR is already loaded in ST",
+  "do_you_want_to_load_again":"Do you want to load again",
+  "positive_and_negative_stock_reset":"Positive and Negative stock reset",
+  "do_you_want_to_reset_all_positive_and_negative_stock_to_zero?":"Do you want to reset all positive & Negative stock to zero?"
 
 
 

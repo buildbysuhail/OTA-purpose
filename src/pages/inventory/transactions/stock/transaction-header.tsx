@@ -607,10 +607,29 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                         ref={refNoRef}
                         t={t}
                       />
-                      <ERPInput 
-                        id="fType"
-                        label={t("f_type")}
-                        type="number"
+                      <ERPDataCombobox
+                          localInputBox={formState?.userConfig?.inputBoxStyle}
+                          fetching={formState.transactionLoading}
+                          id="fType"
+                          className="min-w-[180px] !m-0"
+                          label={t("f_type")}
+                          data={formState.transaction.master}
+                          onSelectItem={(e: { label: string; value: string | number }) => {
+                            dispatch(
+                              formStateMasterHandleFieldChange({
+                                fields: {
+                                  fType: e.value,
+                                },
+                              })
+                            );
+                          }}
+                          value={formState.transaction.master.fType}
+                          field={{
+                            id: "fType",
+                            valueKey: "id",
+                            labelKey: "name",
+                            getListUrl: `${Urls.inv_transaction_base}${transactionType}/Data/FormTypeByVoucherType/${formState.transaction.master.voucherType}`,
+                          }}
                         />
                         <ERPDataCombobox
                           id="branch"
@@ -768,29 +787,67 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       <div className="flex flex-row gap-1">
 
                         <div className="flex gap-1">
-                             <ERPInput 
-                                id="Name"
-                                label={t("name")}
-                                type="text"
-                              />
-                              <ERPInput 
-                                id="Address"
-                                label={t("address")}
-                                type="text"
-                              />
+                             <ERPInput
+                              localInputBox={formState?.userConfig?.inputBoxStyle}
+                              id="name"
+                              label={t("name")}
+                              value={formState.transaction.master.name}
+                              className="max-w-full"
+                              onChange={(e) =>
+                                dispatch(
+                                  formStateMasterHandleFieldChange({
+                                    fields: { name: e.target?.value },
+                                  })
+                                )
+                              }
+                              disabled={formState.formElements.pnlMasters?.disabled}
+                            />
+
+                            <ERPInput
+                              localInputBox={formState?.userConfig?.inputBoxStyle}
+                              id="address"
+                              label={t("address")}
+                              value={formState.transaction.master.address}
+                              className="max-w-full"
+                              onChange={(e) =>
+                                dispatch(
+                                  formStateMasterHandleFieldChange({
+                                    fields: { address: e.target?.value },
+                                  })
+                                )
+                              }
+                              disabled={formState.formElements.pnlMasters?.disabled}
+                            />
                               {formState.transaction.master.voucherType === VoucherType.BranchTransferOut && (
                                 <div className="flex gap-1">
                                     <ERPInput 
-                                      id="PulInv#BTI"
-                                      label={t("pul_inv_bti")}
+                                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                                      id="purInvNumber"
+                                      label={t("pur_inv#/_bti")}
+                                      className="max-w-full"
+                                      value={formState.transaction.master.purInvNumber}
                                       type="number"
+                                      onChange={(e) =>
+                                        dispatch(
+                                          formStateMasterHandleFieldChange({
+                                            fields: { purInvNumber: e.target?.value },
+                                          })
+                                        )
+                                      }
+                                      disabled={formState.formElements.pnlMasters?.disabled}
                                     />
                                 </div>
                               )}
                               <ERPButton title={t("load_pi_import")} variant="secondary"/>
                               <ERPButton title={t("load_os")} variant="secondary"/>
                               <ERPButton title={t("load_b_req")} variant="secondary"/>
-                              <ERPButton title={t("more")} variant="secondary"/>
+                              <ERPButton
+                                title={t("more")}
+                                variant="secondary"
+                                onClick={handleMoreButtonClick}
+                                disabled={formState.transactionLoading}
+                                className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+                              />
                         </div>
                         <div className="flex">
                               {/* Only Branch Transfer Out */}
@@ -1302,6 +1359,25 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     t={t}
                   />
                 )} */}
+                {isMoreModalOpen && (
+                  <ERPModal
+                    isOpen={isMoreModalOpen}
+                    title={t("more_options")}
+                    width={710}
+                    height={450}
+                    closeModal={closeMoreModal}
+                    content={
+                      <MoreOptionsModalContent
+                        transactionType={transactionType}
+                        loadAndSetTransVoucher={loadAndSetTransVoucher}
+                        formState={formState}
+                        dispatch={dispatch}
+                        handleFieldChange={handleFieldChange}
+                        t={t}
+                      />
+                    }
+                  />
+                )} 
               </div>
 
               {conditionalFooterComponents}

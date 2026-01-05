@@ -218,7 +218,11 @@ export interface TransactionMaster {
 
   // stock
   stockCountPrefix?: string;
-  stockCountVrNumber?: number; 
+  stockCountVrNumber?: number;
+  fType?: string;
+  name?: string;
+  address?: string;  // Check use the address1
+  purInvNumber?: number;
 }
 
 export interface TransactionMaster3 {

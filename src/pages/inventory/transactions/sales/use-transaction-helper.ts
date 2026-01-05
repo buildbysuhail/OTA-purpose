@@ -44,7 +44,8 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     toTaxFormat,
     posRoundAmount,
     roundAmount,
-    RoundAmountGlobal
+    RoundAmountGlobal,
+    getFormattedValue
   } = useNumberFormat();
 
   const { hasRight } = useUserRights();
@@ -293,14 +294,23 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
           if (dval === 0) {
             Rate = 0;
           } else {
-            Rate = round(RatePlusTax / dval, 4);
+            if ([VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(master.voucherType as any)) {
+              Rate = Number((RatePlusTax / dval).toFixed(3));
+            } else {
+              Rate = round(RatePlusTax / dval, 4);
+            }
           }
           detail.unitPrice = Rate;
         } else {
           const dval = (VatPerc / 100) + 1;
           let Qty1 = Qty || 1;
           if (Qty1 === 0) Qty1 = 1;
-          Rate = round((RatePlusTax * Qty1) / dval, 4);
+          if ([VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(master.voucherType as any)) {
+            Rate = Number(((RatePlusTax * Qty1) / dval).toFixed(3));
+          } else {
+            Rate = round((RatePlusTax * Qty1) / dval, 4);
+          }
+
           Rate = Rate / Qty1;
           detail.unitPrice = Rate;
         }
@@ -316,11 +326,23 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       }
 
       // ---------- Gross ----------
-      let Gross = [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation,VoucherType.SalesQuotation].includes(master.voucherType as any) ? round(Qty * Rate, 5) : round(Qty * Rate, 4);
+      let precision = 5;
+      if (master.voucherType === VoucherType.SalesInvoice) {
+        precision = 4;
+      }
+      if (
+        isIndia &&
+        [VoucherType.SalesReturn, VoucherType.SaleReturnEstimate]
+          .includes(master.voucherType as any)
+      ) {
+        precision = 4;
+      }
 
+      let Gross = round(Qty * Rate, precision);
       // ---------- Discount logic (mirror C# branches exactly) ----------
       // Case: Discount amount edited
-      if (master.voucherType == "SO") {
+
+      if (master.voucherType === VoucherType.SalesInvoice && !isIndia) {
         if (DiscPerc > 0 && currentColumn !== "discount") {
           if (DiscPerc * Gross / 100 != Disc) {
             Disc = round(DiscPerc * Gross / 100, 5);
@@ -328,7 +350,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         }
       }
       if (Disc > 0 && currentColumn === "discount") {
-        DiscPerc = Gross !== 0 ? round((100 * Disc) / Gross, 5) : 0;
+        DiscPerc = Gross !== 0 ? master.voucherType == VoucherType.ServiceInventory ? 100 * Disc / Gross : round((100 * Disc) / Gross, 5) : 0;
         UnitDiscount = round(Disc / (Qty === 0 ? 1 : Qty), 5);
       }
       // Case: Discount % edited
@@ -374,8 +396,9 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         Gross = round(Qty * (RatePlusTax / (1 + VatPerc / 100)), 5);
       }
 
+
       // ---------- NetValue ----------
-      let NetValue = round(Gross - Disc, 4);
+      let NetValue = master.voucherType == VoucherType.ServiceInventory ? Gross - Disc : round(Gross - Disc, 4);
 
       // ---------- VAT path (GCC, isIndia === false) ----------
       if (!isIndia) {
@@ -384,7 +407,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         NetValue += ExciseTax;
 
         // KSA einvoice rounding
-        if (applicationSettings?.branchSettings?.maintainKSA_EInvoice && applicationSettings?.branchSettings.apply_KSA_EInvoice_Validation_Rules) {
+        if ([VoucherType.SalesInvoice, VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(master.voucherType as any) && !isIndia && applicationSettings?.branchSettings?.maintainKSA_EInvoice && applicationSettings?.branchSettings.apply_KSA_EInvoice_Validation_Rules) {
           NetValue = round(NetValue, 2);
         }
 
@@ -399,20 +422,36 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         detail.vatAmount = getFormattedValueIgnoreRoundingToNumber(Vat);
 
         let NetAmount = NetValue + Vat;
-        NetAmount = round(NetAmount, 4);
 
         // If unit price edited update RatePlusTax similar to C#
         if (currentColumn === "unitPrice" && VatPerc > 0 && UP * (1 + VatPerc / 100) !== RatePlusTax) {
           RatePlusTax = UP * (1 + VatPerc / 100);
           detail.ratePlusTax = round(RatePlusTax, 4);
         }
+        NetAmount = master.voucherType == VoucherType.GoodsDeliveryNote ? NetAmount : round(NetAmount, 4);
+        if (RatePlusTax > 0 && Vat > 0 && Disc == 0 && chkShowRateBeforeTax && Math.abs(Qty * RatePlusTax - NetAmount) < 0.5 && master.voucherType != VoucherType.SalesInvoice) {
 
-        detail.gross = getFormattedValueIgnoreRoundingToNumber(Gross);
-        detail.total = NetAmount;
-        detail.cost = Qty !== 0 ? (NetValue / Qty) : 0;
-        if ([VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(master.voucherType as any)) {
-          detail.cost = Qty !== 0 ? (NetAmount / Qty) : 0;
+          NetAmount = round(Qty * RatePlusTax, applicationSettings?.mainSettings.decimalPoints);
         }
+        //Cost
+        let Cost = 0;
+        if ([VoucherType.SalesInvoice, VoucherType.SalesReturn].includes(master.voucherType as any)) {
+          Cost = Qty !== 0 ? (NetValue / Qty) : 0;
+        } else {
+
+          Cost = Qty !== 0 ? (NetAmount / Qty) : 0;
+        }
+
+        if (master.voucherType == VoucherType.ServiceInventory) {
+          detail.gross = Number((Gross).toFixed(2));
+          detail.total = Number((NetAmount).toFixed(2));
+          detail.cost = Number((Cost).toFixed(2));
+        } else {
+          detail.gross = getFormattedValueIgnoreRoundingToNumber(Gross);
+          detail.total = master.voucherType == VoucherType.SalesQuotation && isIndia ? parseFloat(getFormattedValue(NetAmount)) : NetAmount;
+          detail.cost = round(Cost);
+        }
+
 
         // Profit calculation (same as C#)
         if ([VoucherType.SalesInvoice, VoucherType.SalesReturn].includes(master.voucherType as any)) {
@@ -435,7 +474,6 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
             /* ignore like C# */
           }
         }
-
       }
       // ---------- GST path (India) ----------
       else {
@@ -473,7 +511,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         }
 
         // Tax on MRP branch (exact C#)
-        if (chkTaxOnMRP && master.voucherType==VoucherType.SalesInvoice) {
+        if (chkTaxOnMRP && master.voucherType == VoucherType.SalesInvoice) {
           let TaxableMRP = 0;
           const denom = 1 + ((CGSTPerc + SGSTPerc + IGSTPerc) / 100 || 0);
           TaxableMRP = denom !== 0 ? (Number(detail.mrp ?? 0) / denom) : 0;
@@ -597,20 +635,25 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         detail.vatAmount = getFormattedValueIgnoreRoundingToNumber(Vat);
         detail.gross = getFormattedValueIgnoreRoundingToNumber(Gross);
         detail.total = NetAmount;
-        detail.cost = Qty !== 0 ? (NetValue / Qty) : 0;
-        if (master.voucherType == VoucherType.SalesReturn) {
+
+        if (master.voucherType == VoucherType.SalesInvoice) {
+          detail.cost = Qty !== 0 ? (NetValue / Qty) : 0;
+        } else {
+
           detail.cost = Qty !== 0 ? (NetAmount / Qty) : 0;
         }
 
         // Profit
-        const purchasePrice = Number(detail.purchasePrice ?? detail.purchaseRate ?? 0);
-        const Profit = NetValue - (Qty * purchasePrice);
-        if ([VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(master.voucherType as VoucherType)) {
-          detail.profit = -1 * Profit;
-        } else {
-          detail.profit = Profit;
+        //not need for SQ global- not added condition because already not have that column
+        if (![VoucherType.GoodsDeliveryNote, VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn, VoucherType.ServiceInventory].includes(master.voucherType as any)) {
+          const purchasePrice = Number(detail.purchasePrice ?? detail.purchaseRate ?? 0);
+          const Profit = NetValue - (Qty * purchasePrice);
+          if ([VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(master.voucherType as VoucherType)) {
+            detail.profit = -1 * Profit;
+          } else {
+            detail.profit = Profit;
+          }
         }
-
       }
 
       // ---------- Final profit percentage (common) ----------

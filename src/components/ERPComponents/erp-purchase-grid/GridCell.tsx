@@ -250,6 +250,8 @@ const EditableCell: React.FC<{
     <input
       ref={inputRef}
       id={`${gridId}_${column.dataField}_${rowIndex}`}
+      inputMode={column.dataType === "number" ? "decimal" : "text"}
+      enterKeyHint="done"
       type={column.dataType === "number" ? "text" : "text"}
       className="bg-transparent border-none focus:ring-0 focus:outline-none"
       style={{

@@ -311,9 +311,27 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
         // closeMenu();
       }
     }
-    mainContent!.addEventListener("click", menuClose);
+
+    // Handle main content clicks to close mobile sidebar
+    // Only close sidebar when clicking on non-interactive elements
+    const handleMainContentClick = (e: Event) => {
+      const target = e.target as HTMLElement;
+      if (!target) return;
+
+      // Don't close sidebar when clicking interactive elements
+      const interactiveElements = ['INPUT', 'BUTTON', 'SELECT', 'TEXTAREA', 'A', 'LABEL'];
+      const isInteractive = interactiveElements.includes(target.tagName) ||
+        target.closest('input, button, select, textarea, a, label, [role="button"], [role="checkbox"], [role="switch"], [role="combobox"], [role="listbox"], [role="menu"], [role="menuitem"], [data-interactive]');
+
+      if (!isInteractive) {
+        menuClose();
+      }
+    };
+
+    mainContent?.addEventListener("click", handleMainContentClick);
     return () => {
       window.removeEventListener("resize", menuResizeFn);
+      mainContent?.removeEventListener("click", handleMainContentClick);
       // window.removeEventListener('resize', checkHoriMenu);
     };
   }, []);

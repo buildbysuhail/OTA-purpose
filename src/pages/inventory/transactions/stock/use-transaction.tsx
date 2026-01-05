@@ -727,23 +727,33 @@ const verified = Boolean(vch.master.pdtVerified);
 
     const firstFreeRow = details.findIndex((d) => !d.productBatchID);
     const lastRowIndex = firstFreeRow === -1 ? details.length : firstFreeRow;
-
+    // Check if warehouse id
+    if(master.voucherType !== VoucherType.StockTransfer && master.voucherType !== VoucherType.DamageEntry && master.voucherType !== VoucherType.ExcessStock &&
+       master.voucherType !== VoucherType.ShortageStock && master.voucherType !== VoucherType.ItemLoadRequest ){
+      if (!master.fromWarehouseID ) {
+      await ERPAlert.show({
+        icon: "warning",
+        title: t("validation_error"),
+        text: t("Please Select the  Warehouse !"),
+        confirmButtonText: t("ok"),
+      });
+      return false;
+    }
+    }
+    else{
     // Ware house validation
     if (!master.fromWarehouseID || !master.toWarehouseID) {
       await ERPAlert.show({
         icon: "warning",
         title: t("validation_error"),
-        text: t("Please Select the  Warehouse !!"),
+        text: t("Please Select the  Warehouse!"),
         confirmButtonText: t("ok"),
       });
       return false;
     }
 
     // Same Ware house validation
-    if (
-      master.fromWarehouseID === master.toWarehouseID &&
-      master.voucherType !== "SC"
-    ) {
+    if (master.fromWarehouseID === master.toWarehouseID ) {
       await ERPAlert.show({
         icon: "warning",
         title: t("validation_error"),
@@ -751,6 +761,7 @@ const verified = Boolean(vch.master.pdtVerified);
         confirmButtonText: t("ok"),
       });
       return false;
+    }
     }
 
     // Transaction date check
@@ -4462,10 +4473,8 @@ const verified = Boolean(vch.master.pdtVerified);
       console.error(err);
     }
   }
-  // {
-  //   isOk:tr
-  //   data: TransactionData
-  // }
+
+  // Function for handling load request button in stock
   const handleLoadRequest = (data: any) => {
     let tm: DeepPartial<TransactionFormState> = { transaction: { master: {} } };
 
@@ -4557,6 +4566,297 @@ const verified = Boolean(vch.master.pdtVerified);
     // }
   };
 
+  // Function for handling load products button in stock
+  const loadProducts = async () => {
+    try {
+      dispatch(
+        formStateHandleFieldChange({
+          fields: { transactionLoading: true },
+        })
+      );
+
+      const warehouseId = formState.transaction.master.fromWarehouseID || 1;
+      const response = await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/OpeningProducts/${warehouseId}`, {});
+      if (response?.isOk === false) {
+        console.log("Failed to load Products")
+        return;
+      }
+
+      const products = response || [];
+
+      if (!Array.isArray(products) || products.length === 0) {
+        console.log("No_products_found")
+        return;
+      }
+      // Map API response to the format expected by refactorDetails
+      const mappedProducts = products.map((p: any) => {
+      const qty = Number(p.qty || 0);
+      const cost = Number(p.purchPrice || p.cost || 0);
+      const total = qty * cost;
+
+      return {
+        productCode: p.productCode ?? "",
+        productName: p.productName ?? "",
+        productID: p.productID,
+        autoBarcode: p.autoBarcode,
+        productBatchID: p.productBatchID,
+        unitName: p.unitName,
+        unitID: p.unitID,
+        quantity: qty,
+        costPerItem: cost, 
+        mrp: Number(p.mrp || 0),
+        stdSalesPrice: Number(p.salesPrice || 0),
+        brandID: 0,
+        brand: "",
+        size: "",
+        vatPerc: 0,
+        total: total
+      };
+    });
+
+      // Use refactorDetails like loadTransVoucher does
+      const details = refactorDetails(
+        mappedProducts,
+        formState.transaction.master.voucherForm || "",
+        formState.transaction.master.voucherType || "",
+        { result: {}, formStateHandleFieldChangeKeysOnly }
+      );
+
+      // Create updated formState with new details
+      const updatedFormState = {
+        ...formState,
+        transaction: {
+          ...formState.transaction,
+          details: details,
+        },
+      };
+
+      // Calculate summary
+      const summaryResult = calculateSummary(
+        details,
+        updatedFormState,
+        { result: {}, formStateHandleFieldChangeKeysOnly }
+      );
+
+      // Merge summary result with existing summary to ensure all required fields
+      const updatedSummary = {
+        ...formState.summary,
+        ...summaryResult?.summary,
+      } as SummaryItems;
+
+      // Calculate total
+      const totalResult = calculateTotal(
+        updatedFormState.transaction.master,
+        updatedSummary,
+        formState.formElements,
+        { result: {}, formStateHandleFieldChangeKeysOnly }
+      );
+
+      // Merge master with totalResult to ensure all required fields
+      const updatedMaster = {
+        ...formState.transaction.master,
+        ...(totalResult?.transaction?.master || {}),
+      } as TransactionMaster;
+
+      // Update formState with details, summary, and totals
+      dispatch(
+        formStateHandleFieldChange({
+          fields: {
+            transaction: {
+              ...formState.transaction,
+              details: details,
+              master: updatedMaster,
+            },
+            summary: updatedSummary,
+            transactionLoading: false,
+          },
+        })
+      );
+      console.log("Products loaded successfully")
+    } catch (error: any) {
+      console.error("Error loading products:", error);
+      dispatch(
+        formStateHandleFieldChange({
+          fields: { transactionLoading: false },
+        })
+      );
+    }
+  };
+
+
+  // Function To handle Reset Stock to Zero in Stock Adjuster
+  const handleResetStockToZero = async () => {
+    if(formState.allPositiveStockToZero){
+      try {
+        ERPAlert.show({
+          icon: "question",
+          text: t("do_you_want_to_reset_all_positive_stock_to_zero?"),
+          title: t("positive_stock_reset"),
+          confirmButtonText: t("yes"),
+          cancelButtonText: t("no"),
+          onConfirm: async () => {
+            const warehouseId = formState.transaction.master.fromWarehouseID || 1;
+            // const res = await api.getAsync(`${Urls.inv_transaction_base}${formState.transactionType}/WareHouseStock/${barCode}`);
+            const res = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/SelectProductsforStockAdjuster/${warehouseId}`); // No this end point
+            if(res.length > 0){
+              // progressBar1.Visible = true;
+              // lblCount.Visible = true;
+              // //  lblProgress.Visible = true;
+              // progressBar1.Minimum = 1;
+              // progressBar1.Maximum = dsSet.Tables[0].Rows.Count;
+              // progressBar1.Value = 1;
+              // progressBar1.Step = 1;
+
+              // this.VOUCHERTYPE = "SH";
+              // MasterID = Save1();
+              // if (MasterID > 0)
+              // {
+              //     DB.CommitTrans();
+              // }
+              // else
+              // {
+              //     DB.RollbackTrans();
+              // }
+
+            }
+          },
+        });
+      } catch (error) {
+        console.error("Process Failed:", error);
+      }
+    }
+
+    if(formState.allNegativeStockToZero){
+      try {
+        ERPAlert.show({
+          icon: "question",
+          text: t("do_you_want_to_reset_all_negative_stock_to_zero?"),
+          title: t("negative_stock_reset"),
+          confirmButtonText: t("yes"),
+          cancelButtonText: t("no"),
+          onConfirm: async () => {
+            const warehouseId = formState.transaction.master.fromWarehouseID || 1;
+            const res = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/SelectProductsforStockAdjuster/${warehouseId}`); // No this end point
+            if(res.length > 0){
+              // progressBar1.Visible = true;
+              // lblCount.Visible = true;
+              // //   lblProgress.Visible = true;
+              // progressBar1.Minimum = 1;
+              // progressBar1.Maximum = dsSet.Tables[0].Rows.Count;
+              // progressBar1.Value = 1;
+              // progressBar1.Step = 1;
+              // this.VOUCHERTYPE = "EX";
+              // MasterID = Save1();
+              // if (MasterID > 0)
+              // {
+              // DB.CommitTrans();
+
+              // }
+              // else
+              // {
+              // DB.RollbackTrans();
+              // }
+            }
+          },
+        });
+      } catch (error) {
+        console.error("Process Failed:", error);
+      }
+    }
+
+
+  }
+
+  // handle stock count button click - HandleLoadStockCountBtn
+  const HandleLoadStockCountBtn = async () => {
+    alert("Need to handle this button")
+
+    try {
+    const tm: DeepPartial<TransactionFormState> = {
+      transaction: {
+        master: {}
+      }
+    };
+
+    const master = tm.transaction!.master!;
+    master.voucherNumber = formState.transaction.master.stockCountVrNumber;
+    master.voucherPrefix = formState.transaction.master.stockCountPrefix;
+    master.voucherType = "SC"; // STOCK COUNT
+    master.voucherForm = "";
+
+    // Make correct the endpoint after set
+    // The below is not the correct api endponit - just added for checking
+    const res = await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/LoadStockCount`,
+        {
+          warehouseID: formState.transaction.master.fromWarehouseID,
+          voucherNumber: master.voucherNumber,
+          voucherPrefix: master.voucherPrefix,
+          voucherType: master.voucherType,
+          voucherForm: master.voucherForm,
+          branchID: master.branchID,
+          financialYearID: master.financialYearID,  // Check This is needed!
+        }
+      );
+
+    const data = res.data;
+
+    if (!data || data.length === 0) {
+      ERPAlert.show({
+        icon: "warning",
+        text: t("no_record_found_with_this_voucher_number"),
+        title: "",
+      });
+      return;
+    }
+
+    const details = data.map((p: any, index: number) => {
+      const qty = Number(p.stockQtyInBaseUnit || 0);
+      const stock = Number(p.stock || 0);
+      const diff = qty - stock;
+      const unitPrice = Number(p.stdPurchasePrice || 0);
+      const netAmount = qty * unitPrice;
+
+      return {
+        ...initialTransactionDetailData,
+        slNo: index + 1,
+        pCode: p.productCode ?? "",
+        product: p.productName ?? "",
+        productID: p.productID ?? 0,
+        barCode: p.autoBarcode ?? "",
+        productBatchID: p.productBatchID ?? 0,
+        unitPrice: unitPrice,
+        cost: unitPrice,
+        unit: p.baseUnitName ?? "",
+        unitID: p.basicUnitID ?? 0,
+        qty: qty,
+        stock: stock,
+        fromWhouseStock: stock,
+        excess: diff > 0 ? diff : 0,
+        shortage: diff < 0 ? Math.abs(diff) : 0,
+        total: netAmount,
+      };
+    });
+    // Update grid
+    dispatch(formStateSetDetails(details));
+
+    // Enable Save button (rights check)
+    dispatch(
+      updateFormElement({
+        fields: {
+          btnSave: {
+            disabled: !hasRight(formState.formCode, UserAction.Add),
+          },
+        },
+      })
+    );   
+
+  }catch (error) {
+    console.error(error);
+    console.log("Failed to load stock count data");
+  }
+
+  }
+
   return {
     downloadImportTemplateHeadersOnly,
     importFromExcel,
@@ -4604,5 +4904,8 @@ const verified = Boolean(vch.master.pdtVerified);
     postBillWiseDetails,
     fetchUserConfig,
     onILRRefNoKeyUp,
+    loadProducts,
+    handleResetStockToZero,
+    HandleLoadStockCountBtn,
   };
 };

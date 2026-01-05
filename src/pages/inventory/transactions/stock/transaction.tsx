@@ -490,6 +490,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
     loadLedgerData,
     postBillWiseDetails,
     onILRRefNoKeyUp,
+    loadProducts,
+    handleResetStockToZero,
+    HandleLoadStockCountBtn,
     // fetchUserConfig
   } = useTransaction(
     transactionType ?? "",
@@ -1597,6 +1600,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
               voucherType={voucherType}
               focusAdd1={focusAdd1}
               onILRRefNoKeyUp={onILRRefNoKeyUp}
+              handleResetStockToZero={handleResetStockToZero}
+              HandleLoadStockCountBtn={HandleLoadStockCountBtn}
             />
             {/* header ends here */}
 
@@ -1697,6 +1702,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                         generateLPQ={generateLPQ}
                         clientSession={clientSession}
                         importFromExcel={importFromExcel}
+                        loadProducts={loadProducts}
                       />
                     )}
                 </div>
@@ -1816,6 +1822,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     refactorDetails={refactorDetails}
                     voucherType={voucherType}
                     onILRRefNoKeyUp={onILRRefNoKeyUp}
+                    handleResetStockToZero={handleResetStockToZero}
+                    HandleLoadStockCountBtn={HandleLoadStockCountBtn}
                   />
                 </div>
               </div>
@@ -1887,6 +1895,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   generateLPQ={generateLPQ}
                   clientSession={clientSession}
                   importFromExcel={importFromExcel}
+                  loadProducts={loadProducts}
                   footerLayout={
                     ((formState.transactionLoading
                       ? _st.footerPosition
@@ -1942,6 +1951,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
             generateLPQ={generateLPQ}
             clientSession={clientSession}
             importFromExcel={importFromExcel}
+            loadProducts={loadProducts}
           />
         )}
         {/* footer ends here */}

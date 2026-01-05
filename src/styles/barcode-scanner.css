@@ -1,0 +1,117 @@
+/* Make the WebView content transparent while scanner is active */
+body.scanner-active {
+background: transparent !important;
+-webkit-backface-visibility: hidden;
+-webkit-transform: translateZ(0);
+}
+html.scanner-active, body.scanner-active, #root.scanner-active, ion-app.scanner-active {
+  background: transparent !important;
+  -webkit-backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
+}
+
+/* full-screen overlay shown by the web app while native preview runs */
+.scanner-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* scanning rectangle */
+.scanner-overlay .scan-rect {
+  position: relative;
+  width: 72vw;
+  max-width: 640px;
+  height: 42vh;
+  max-height: 480px;
+  border: 2px solid rgba(255,255,255,0.92);
+  border-radius: 10px;
+  box-shadow: 0 0 0 9999px rgba(0,0,0,0.35);
+  overflow: hidden;
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
+
+/* subtle corner markers (explicit classes only) */
+.scanner-overlay .scan-rect .corner-tl,
+.scanner-overlay .scan-rect .corner-tr,
+.scanner-overlay .scan-rect .corner-bl,
+.scanner-overlay .scan-rect .corner-br {
+  content: '';
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border: 3px solid rgba(0,200,150,0.95);
+  background: transparent;
+  box-sizing: border-box;
+}
+
+/* corners placement */
+.scanner-overlay .scan-rect .corner-tl { left: -3px; top: -3px; border-right: none; border-bottom: none; }
+.scanner-overlay .scan-rect .corner-tr { right: -3px; top: -3px; border-left: none; border-bottom: none; }
+.scanner-overlay .scan-rect .corner-bl { left: -3px; bottom: -3px; border-right: none; border-top: none; }
+.scanner-overlay .scan-rect .corner-br { right: -3px; bottom: -3px; border-left: none; border-top: none; }
+
+/* moving scan line */
+.scanner-overlay .scan-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, rgba(0,200,150,0) 0%, rgba(0,200,150,0.95) 50%, rgba(0,200,150,0) 100%);
+  animation: scanline 1.6s linear infinite;
+  top: 0;
+}
+
+/* animate from top to bottom of the rect */
+@keyframes scanline {
+  0% { transform: translateY(-100%); opacity: 0.6; }
+  10% { opacity: 1; }
+  100% { transform: translateY(100%); opacity: 0.6; }
+}
+
+/* small instruction text under rectangle: safer calc parentheses */
+.scanner-overlay .scan-instructions {
+  position: absolute;
+  bottom: calc(50% - (42vh / 2) - 48px);
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255,255,255,0.95);
+  font-size: 0.95rem;
+  text-align: center;
+  pointer-events: none;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+}
+
+/* accessible hidden element for screen readers when scanning active */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0,0,0,0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* mobile adjustments */
+@media (max-width: 480px) {
+  .scanner-overlay .scan-rect {
+    width: 90vw;
+    height: 40vh;
+    border-width: 1.8px;
+    border-radius: 8px;
+  }
+  .scanner-overlay .scan-instructions { font-size: 0.85rem; }
+}
+
+/* optional: visually hide full-page backgrounds set elsewhere while scanning */
+html, body, #root {
+  background: transparent !important;
+}

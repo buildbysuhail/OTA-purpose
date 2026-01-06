@@ -285,6 +285,13 @@ const AccountSettingsProfile: FC<AccountSettingsProps> = (props) => {
         <div className="xxl:col-span-6 xl:col-span-12  col-span-12">
           <div className="grid grid-cols-12 gap-x-6">
             <div id="avatar" className={`xxl:col-span-12 xl:col-span-12 ${path === "avatar" ? "blink" : ""} col-span-12`}>
+            {Capacitor.isNativePlatform() && _userSession?.asUpdate === false && (
+            <div id="auto-update" className={`xxl:col-span-12 xl:col-span-12 ${path === "auto-update" ? "blink" : ""} col-span-12`}>
+              <div className="box custom-box">
+                <UpdateAvailableCard />
+              </div>
+            </div>
+             )}
               <div className="box">
                 <div className="box-header justify-between">
                   <div className="box-title">
@@ -377,6 +384,8 @@ const AccountSettingsProfile: FC<AccountSettingsProps> = (props) => {
                 content={PopUpModalEmailChange()}
               />
             </div>
+            {/* Show UpdateAvailableCard when auto-update is disabled on native platform */}
+            {Capacitor.isNativePlatform() && _userSession?.asUpdate === false && (
             <div id="auto-update" className={`xxl:col-span-12 xl:col-span-12 ${path === "auto-update" ? "blink" : ""} col-span-12`}>
               <div className="box custom-box">
                 <div className="box-header justify-between">
@@ -405,12 +414,9 @@ const AccountSettingsProfile: FC<AccountSettingsProps> = (props) => {
                   />
                 </div>
               </div>
-
-              {/* Show UpdateAvailableCard when auto-update is disabled on native platform */}
-              {Capacitor.isNativePlatform() && _userSession?.asUpdate === false && (
                 <UpdateAvailableCard />
-              )}
             </div>
+             )}
             <div id="phone-number" className={`xxl:col-span-12 xl:col-span-12 ${path === "phone-number" ? "blink" : ""} col-span-12`}  >
               <div className="box custom-box">
                 <div className="box-header justify-between">

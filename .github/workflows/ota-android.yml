@@ -38,6 +38,7 @@ jobs:
         run: npm run build
         env:
           NODE_OPTIONS: "--max-old-space-size=8192"
+          STORAGE_FETCH_TOKEN: ${{ secrets.STORAGE_FETCH_TOKEN }}
 
       # 5. Generate OTA bundle ZIP
       - name: Generate OTA bundle

@@ -13,21 +13,21 @@ const BUNDLE_DIR = 'live-update-bundles';
 const CURRENT_BUNDLE_KEY = 'ota_current_bundle';
 const PENDING_BUNDLE_KEY = 'ota_pending_bundle';
 
-// GitHub token injected at build time via environment variable
-declare const __GITHUB_TOKEN__: string;
-const GITHUB_TOKEN = typeof __GITHUB_TOKEN__ !== 'undefined' ? __GITHUB_TOKEN__ : '';
+// Storage fetch token injected at build time via environment variable (GitHub secret)
+declare const __STORAGE_FETCH_TOKEN__: string;
+const STORAGE_FETCH_TOKEN = typeof __STORAGE_FETCH_TOKEN__ !== 'undefined' ? __STORAGE_FETCH_TOKEN__ : '';
 
-// Get GitHub token for authentication
-function getGitHubToken(): string | null {
-  const token = GITHUB_TOKEN || null;
+// Get storage fetch token for authentication
+function getStorageFetchToken(): string | null {
+  const token = STORAGE_FETCH_TOKEN || null;
   // Debug: log token presence (not the actual token for security)
-  console.log('[OTA] GitHub token present:', token ? `Yes (${token.length} chars)` : 'No');
+  console.log('[OTA] Storage fetch token present:', token ? `Yes (${token.length} chars)` : 'No');
   return token;
 }
 
 // Get headers for GitHub API requests (private repo authentication)
 function getGitHubHeaders(): HeadersInit {
-  const token = getGitHubToken();
+  const token = getStorageFetchToken();
   const headers: HeadersInit = {
     'Accept': 'application/vnd.github+json',
     'X-GitHub-Api-Version': '2022-11-28',
@@ -43,7 +43,7 @@ function getGitHubHeaders(): HeadersInit {
 
 // Get headers for downloading raw content from GitHub API
 function getGitHubDownloadHeaders(): HeadersInit {
-  const token = getGitHubToken();
+  const token = getStorageFetchToken();
   const headers: HeadersInit = {
     'Accept': 'application/vnd.github.raw+json',
     'X-GitHub-Api-Version': '2022-11-28',

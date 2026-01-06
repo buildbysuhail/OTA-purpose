@@ -16,8 +16,8 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     define: {
       __APP_VERSION__: JSON.stringify(packageJson.version),
-      // GITHUB_TOKEN from .env file or environment variable
-      __GITHUB_TOKEN__: JSON.stringify(env.VITE_GITHUB_TOKEN || env.GITHUB_TOKEN || '')
+      // Storage fetch token from .env file or environment variable (GitHub secret)
+      __STORAGE_FETCH_TOKEN__: JSON.stringify(env.VITE_STORAGE_FETCH_TOKEN || env.STORAGE_FETCH_TOKEN || '')
     },
     server: {
     host: '192.168.20.208',

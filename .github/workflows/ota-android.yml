@@ -36,6 +36,8 @@ jobs:
       # 4. Build frontend
       - name: Build frontend
         run: npm run build
+        env:
+          NODE_OPTIONS: "--max-old-space-size=8192"
 
       # 5. Generate OTA bundle ZIP
       - name: Generate OTA bundle

@@ -353,7 +353,6 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   }, [isSidebar]);
 
   useEffect(() => {
-    debugger;
     calculateTotal(
       {...formState.transaction.master
         ,hasroundOff:formState.transaction.master.hasroundOff

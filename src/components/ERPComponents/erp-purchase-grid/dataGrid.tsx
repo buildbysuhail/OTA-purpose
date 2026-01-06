@@ -66,7 +66,7 @@ import usePreferenceData from "../../../utilities/hooks/usePreference";
 import DraggablePlusButton from "../../ERPComponents/erp-purchase-grid/draggable-button"
 import GridCell from "./GridCell";
 import ReactDOM from "react-dom";
-import BarcodeModalScanner from "../../barcode-scanner-modal";
+// import BarcodeModalScanner from "../../barcode-scanner-modal";
 import { BarcodeScanResult } from "../../../utilities/barcode-scanner-service";
 
 type DataItem = Record<string, any>;
@@ -2793,13 +2793,13 @@ const hidColumns: string[] = [
             />
           )}
           {/* Barcode Scanner Modal */}
-          <BarcodeModalScanner
+          {/* <BarcodeModalScanner
             isOpen={showBarcodeScanner}
             onClose={() => setShowBarcodeScanner(false)}
             onScan={handleBarcodeScan}
             onEnterTrigger={handleBarcodeEnterTrigger}
             title={t("scan_barcode")}
-          />
+          /> */}
           <ERPScrollArea
             scrollbarColor={formState.userConfig?.scrollbarColor}
             ref={containerRef}

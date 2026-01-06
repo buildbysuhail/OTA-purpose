@@ -31,7 +31,7 @@ export default function QuickCreate() {
         >
           <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
         </svg>
-        Quick Create ota-10.0.3-ota.13
+        Quick Create ota-10.0.3-ota.14
       </h2>
       <div className="grid grid-cols-4 gap-3">
         {quickCreateItems.map((item, index) => (

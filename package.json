@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "postcss": "sass ./src/assets/scss/style.scss ./src/assets/css/style.css && postcss ./src/assets/css/style.css -o ./src/assets/css/style.css",
     "sass": "sass ./src/assets/scss:./src/assets/css/",
-    "sass-min": "sass ./src/assets/scss:./src/assets/css/ --style compressed"
+    "sass-min": "sass ./src/assets/scss:./src/assets/css/ --style compressed",
+    "release:ota": "node scripts/release-ota.js"
   },
   "dependencies": {
     "@capacitor-community/barcode-scanner": "^4.0.1",

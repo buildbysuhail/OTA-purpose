@@ -300,7 +300,8 @@ export const initialTransactionDetailData: TransactionDetail = {
   flavors: "",
   smCode: "",
   salesman: "",
-  salesmanID: 0
+  salesmanID: 0,
+  adjQty: 0,
 };
 export const transactionInitialData: TransactionData = {
   master: TransactionMasterInitialData, 

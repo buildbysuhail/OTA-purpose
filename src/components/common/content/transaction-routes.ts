@@ -632,7 +632,7 @@ export const transactionRoutes: TransactionRoute[] = [
   },
   //check
   {
-    transactionBase: TransactionBase.StockJournal,
+    transactionBase: TransactionBase.Sales,
     formCode: "SI",
     action: UserAction.Show,
     voucherType: VoucherType.SalesInvoice,
@@ -644,7 +644,7 @@ export const transactionRoutes: TransactionRoute[] = [
     icon: PackageOpen,
   },
   {
-    transactionBase: TransactionBase.StockJournal,
+    transactionBase: TransactionBase.Purchase,
     formCode: "PI",
     action: UserAction.Show,
     voucherType: VoucherType.PurchaseInvoice,
@@ -722,6 +722,10 @@ export const isChooseVoucherEnabled = (title: string, userSession: UserModel) =>
     //{ title: TransactionTitles.PurchaseImport, countries: [Countries.India] },
     { title: TransactionTitles.PurchaseReturn, countries: [Countries.Saudi] },
     { title: TransactionTitles.MultiJournalEntry, countries: [Countries.Saudi], },
+    { title: TransactionTitles.SalesInvoice, countries: [Countries.India], },
+    { title: TransactionTitles.SalesReturn, countries: [Countries.India], },
+    { title: TransactionTitles.SalesOrder, countries: [Countries.India], },
+    { title: TransactionTitles.SalesQuotation, countries: [Countries.India], },
   ].find(
     (x) => userSession.countryId != undefined && x.title == title && (x.countries == undefined || (x.countries != undefined && x.countries.find((x) => x == userSession.countryId) != undefined))
   );

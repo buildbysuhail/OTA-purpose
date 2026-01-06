@@ -1112,10 +1112,51 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       if (isNullOrUndefinedOrZero(detail.productID)) {
         break;
       }
+      // if (clientSession.isAppGlobal) {
+      //   if (detail.details2) {
+      //     if (formType.toUpperCase() == "INTERSTATE" || formType.toUpperCase() == "INT" && voucherType != "") {
+      //       detail.details2.cessPerc = row.cessPerc;
+      //       detail.details2.cessAmt = row.cessAmt;
+      //       //IGST calculation
+      //       const CGSTPerc = row.cgstPerc ?? 0;
+      //       const CGST = row.cgst ?? 0;
+      //       const SGSTPerc = row.sgstPerc ?? 0;
+      //       const SGST = row.sgst ?? 0;
+      //       const IGSTPerc = row.igstPerc ?? 0;
+      //       const IGST = row.igst ?? 0;
+      //       const totalTaxPerc = CGSTPerc + SGSTPerc + IGSTPerc;
+      //       const totalTax = CGST + SGST + IGST;
+      //       detail.details2.igstPerc = totalTaxPerc;
+      //       detail.details2.igst = totalTax;
+      //       detail.details2.additionalCessPerc = row.additionalCessPerc;
+      //       detail.details2.additionalCess = row.additionalCess;
+      //       detail.details2.cgstPerc = 0;
+      //       detail.details2.cgst = 0;
+      //       detail.details2.sgstPerc = 0;
+      //       detail.details2.sgst = 0;
+      //       detail.mrp == row.MRP;
+      //     } else {
+      //       detail.hsnCode = row.hsnCode;
+      //       detail.details2.cessPerc = row.cessPerc;
+      //       detail.details2.cessAmt = row.cessAmt;
+      //       detail.details2.cgstPerc = row.cgstPerc;
+      //       detail.details2.cgst = row.cgst;
+      //       detail.details2.sgstPerc = row.sgstPerc;
+      //       detail.details2.sgst = row.sgst;
+      //       detail.details2.igstPerc = row.igstPerc;
+      //       detail.details2.igst = row.igst;
+      //       detail.details2.additionalCessPerc = row.additionalCessPerc;
+      //       detail.details2.additionalCess = row.additionalCess;
+      //       detail.mrp = row.mrp;
+      //     }
+      //   }
+      // }
       validDetailsCount++;
       // Set row header/index
       detail.slNo = generateUniqueKey();
-
+if([VoucherType.SalesOrder,VoucherType.GoodRequest,VoucherType.RequestForQuotation,VoucherType.GoodsDeliveryNote,VoucherType.ServiceInvoice].includes(voucherType as any)){
+  detail.adjQty=row.adjQty;
+}
       detail.pCode = row.productCode;
       detail.productBatchID = row.productBatchID;
       detail.barCode = row.autoBarcode;
@@ -1137,9 +1178,9 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       detail.unitPrice = getFormattedValueIgnoreRoundingToNumber(
         Number(row.unitPrice || 0)
       );
-      detail.purchasePrice = getFormattedValueIgnoreRoundingToNumber(
+      detail.purchasePrice = voucherType == VoucherType.SalesInvoice ? getFormattedValueIgnoreRoundingToNumber(
         Number(row.costPerItem || 0)
-      );
+      ) : row.costPerItem;
       detail.minSalePrice = row.minSalePrice;
       detail.batchNo = row.batchNo;
       detail.warehouseID = row.warehouseID;
@@ -1156,30 +1197,32 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       detail.gross = getFormattedValueIgnoreRoundingToNumber(
         Number(row.grossValue || 0)
       );
-      detail.discPerc = getFormattedValueIgnoreRoundingToNumber(
+      detail.discPerc = [VoucherType.SalesInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate, VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(voucherType as any) ? getFormattedValueIgnoreRoundingToNumber(
         Number(row.discountPer1 || 0)
-      );
+      ) : row.discountPer1;
       detail.discount = getFormattedValueIgnoreRoundingToNumber(
         Number(row.discountAmt1 || 0)
       );
       detail.unitDiscount = getFormattedValueIgnoreRoundingToNumber(
         Number(row.discountAmt1 || 0)
       );
-      detail.vatPerc = getFormattedValueIgnoreRoundingToNumber(
+      detail.vatPerc = voucherType == VoucherType.SalesInvoice ? getFormattedValueIgnoreRoundingToNumber(
         Number(row.vatPercentage || 0)
-      );
-      detail.vatAmount = getFormattedValueIgnoreRoundingToNumber(
+      ) : row.vatPercentage;
+      detail.vatAmount = voucherType != VoucherType.ServiceInvoice ? getFormattedValueIgnoreRoundingToNumber(
         Number(row.totalVatAmount || 0)
-      );
-      detail.cstPerc = getFormattedValueIgnoreRoundingToNumber(
+      ) : row.totalVatAmount;
+      detail.cstPerc = voucherType == VoucherType.SalesInvoice ? getFormattedValueIgnoreRoundingToNumber(
         Number(row.cstPerc || 0)
-      );
-      detail.cst = getFormattedValueIgnoreRoundingToNumber(
+      ) : row.cstPerc;
+      detail.cst = voucherType == VoucherType.SalesInvoice ? getFormattedValueIgnoreRoundingToNumber(
         Number(row.cst || 0)
-      );
-      detail.ratePlusTax = getFormattedValueIgnoreRoundingToNumber(
-        Number(row.rateWithTax || 0)
-      );
+      ) : row.cst;
+      detail.ratePlusTax = [VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(voucherType as any) && clientSession.isAppGlobal
+        ? row.rateWithTax
+        : [VoucherType.SalesReturn, VoucherType.ServiceInvoice].includes(voucherType as any)
+          ? Math.round((Number(row.unitPrice) * (1 + Number(row.vatPercentage) / 100)) * 100) / 100
+          : getFormattedValueIgnoreRoundingToNumber(Number(row.rateWithTax || 0));
       detail.productDescription = row.productDescription;
       detail.actualSalesPrice = row.transMRP;
       detail.netValue = getFormattedValueIgnoreRoundingToNumber(
@@ -3198,7 +3241,6 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
 
     result.formElements = result.formElements || {} as FormElementsState;
     result.formElements.lblBillBalance = result.formElements.lblBillBalance || { visible: false, Text: "" };
-    debugger
     const safeNum = (v: any): number =>
       Number.isFinite(Number(v)) ? Number(v) : 0;
     const total = safeNum(result.transaction!.master!.grandTotal);
@@ -3207,7 +3249,6 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     const coupon = safeNum(master?.couponAmt);
     const cardAmound = safeNum(master?.bankAmt);
     const balance = round(total - adv - cash - coupon - cardAmound);
-    debugger;
     result.formElements.lblBillBalance.visible = formState.transaction.master.voucherType == VoucherType.SalesInvoice;
 
     result.formElements.lblBillBalance.label =

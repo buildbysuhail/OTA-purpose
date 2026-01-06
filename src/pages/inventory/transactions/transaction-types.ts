@@ -388,6 +388,7 @@ export interface TransactionDetail {
   smCode:string; // new
   salesman:string; // new
   salesmanID:number; // new
+  adjQty:number; // For SO,GD,SRV
 
   // stock
   stockTo?: number;

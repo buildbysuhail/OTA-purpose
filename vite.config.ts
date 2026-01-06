@@ -1,17 +1,40 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
+import { readFileSync } from 'fs'
+import { resolve } from 'path'
+
+// Read package.json version
+const packageJson = JSON.parse(readFileSync(resolve(__dirname, 'package.json'), 'utf-8'))
 
 // https://vitejs.dev/config/
 // C:\\Host\\Polosys\\Ui
-export default defineConfig({
-  plugins: [react()],
-  server: {
+export default defineConfig(({ mode }) => {
+  // Load env file based on `mode` in the current working directory.
+  const env = loadEnv(mode, process.cwd(), '')
+
+  return {
+    plugins: [react()],
+    define: {
+      __APP_VERSION__: JSON.stringify(packageJson.version),
+      // GITHUB_TOKEN from .env file or environment variable
+      __GITHUB_TOKEN__: JSON.stringify(env.VITE_GITHUB_TOKEN || env.GITHUB_TOKEN || '')
+    },
+    server: {
     host: '192.168.20.208',
     port: 5173, 
+    //  allowedHosts: 'all',
+    allowedHosts: [
+      // 'replacing-eagles-till-reservation.trycloudflare.com',
+      // 'camcorders-janet-flight-joins.trycloudflare.com',
+    ],
   },
   build: {
     // outDir: 'C:\\inetpub\\wwwroot',
     outDir: 'C:\\Host\\Polosys\\PolosysERP.UI',
+    //  outDir: 'build',
+    //  sourcemap: false,
+    //  minify: "esbuild",
+    //  target: "es2018",
     chunkSizeWarningLimit: 50000,
     rollupOptions: {
       onwarn(warning, warn) {
@@ -22,4 +45,5 @@ export default defineConfig({
       },
     },
   },
+  }
 })

@@ -1,0 +1,105 @@
+name: Android OTA Live Update
+
+on:
+  push:
+    tags:
+      - "ota-*"
+
+jobs:
+  android-ota:
+    name: Build & Publish Android OTA
+    runs-on: ubuntu-latest
+
+    env:
+      APP_ID: com.polosys.app
+      CHANNEL: production
+      CDN_REPO: mahirpolosys/live-update
+      GITHUB_API_BASE: https://api.github.com/repos/mahirpolosys/live-update/contents
+      GITHUB_BRANCH: main
+
+    steps:
+      # 1. Checkout source repository
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      # 2. Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # 3. Install dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. Build frontend
+      - name: Build frontend
+        run: npm run build
+
+      # 5. Generate OTA bundle ZIP
+      - name: Generate OTA bundle
+        run: |
+          # Tag format: ota-10.0.3-ota.4 -> version: 10.0.3, bundleId: 10.0.3-ota.4
+          TAG_NAME="${GITHUB_REF_NAME}"
+          # Remove "ota-" prefix to get bundleId (e.g., "10.0.3-ota.4")
+          BUNDLE_ID="${TAG_NAME#ota-}"
+          # Extract version (e.g., "10.0.3" from "10.0.3-ota.4")
+          VERSION=$(echo "$BUNDLE_ID" | sed 's/-ota.*//')
+
+          ZIP_NAME="polosys-${BUNDLE_ID}.zip"
+          cd dist
+          zip -r "../${ZIP_NAME}" .
+
+          echo "ZIP_NAME=${ZIP_NAME}" >> $GITHUB_ENV
+          echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_ENV
+          echo "BUNDLE_ID=${BUNDLE_ID}" >> $GITHUB_ENV
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          echo "BUNDLE_URL=${GITHUB_API_BASE}/bundles/${ZIP_NAME}?ref=${GITHUB_BRANCH}" >> $GITHUB_ENV
+
+      # 6. Clone CDN repository
+      - name: Clone CDN repository
+        run: |
+          git clone https://x-access-token:${{ secrets.CDN_GITHUB_TOKEN }}@github.com/${CDN_REPO}.git cdn-repo
+
+      # 7. Copy bundle to CDN repo
+      - name: Copy bundle to CDN repo
+        run: |
+          mkdir -p cdn-repo/bundles
+          cp "${ZIP_NAME}" cdn-repo/bundles/
+
+      # 8. Generate and copy metadata.json
+      - name: Generate OTA metadata
+        run: |
+          jq -n \
+             --arg appId "$APP_ID" \
+             --arg channel "$CHANNEL" \
+             --arg version "$VERSION" \
+             --arg bundleId "$BUNDLE_ID" \
+             --arg bundleUrl "$BUNDLE_URL" \
+             '{
+               appId: $appId,
+               channel: $channel,
+               version: $version,
+               bundleId: $bundleId,
+               bundleUrl: $bundleUrl
+             }' > cdn-repo/metadata.json
+
+          cat cdn-repo/metadata.json
+
+      # 9. Commit and push to CDN repo
+      - name: Push to CDN repository
+        run: |
+          cd cdn-repo
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "OTA Update: ${TAG_NAME}"
+          git push origin main
+
+      # 10. Verify deployment
+      - name: Verify deployment
+        run: |
+          echo "✅ OTA Bundle uploaded to: ${BUNDLE_URL}"
+          echo "✅ Metadata URL: ${GITHUB_API_BASE}/metadata.json?ref=${GITHUB_BRANCH}"
+          echo "📦 Bundle ID: ${BUNDLE_ID}"

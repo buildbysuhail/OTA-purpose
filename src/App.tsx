@@ -41,7 +41,9 @@ import { useRootState } from "./utilities/hooks/useRootState";
 import { AccessPrinterList } from "./pages/InvoiceDesigner/utils/get_printers";
 import { getStorageString } from "./utilities/storage-utils";
 import { setLightStatusBar } from "./Android/lib/statusBar";
+import { StatusBarManager } from "./Android/routes/StatusBarManager";
 import { registerPush } from "./Android/lib/push";
+import { initBackButtonHandler } from "./Android/lib/backButton";
 import { Device } from "@capacitor/device";
 import "./i18n/config";
 import { APIClient } from "./helpers/api-client";
@@ -54,7 +56,9 @@ import ERPResizableSidebar from "./components/ERPComponents/erp-resizable-sideba
 import TemplatesView from "./pages/transaction-base/template_picker";
 import { formStateHandleFieldChange } from "./pages/inventory/transactions/reducer";
 import { accFormStateHandleFieldChange } from "./pages/accounts/transactions/reducer";
-import TransactionForm from "./pages/inventory/transactions/sales/transaction";  
+import TransactionForm from "./pages/inventory/transactions/sales/transaction";
+import { initOTAWithBackgroundCheck, markBundleAsWorking } from "./utilities/liveUpdate"
+import UpdateAlertModal from "./components/ERPComponents/UpdateAlertModal"
 // ====
 // import ERPModal from "./components/ERPComponents/erp-modal";
 // import 'devextreme/dist/css/dx.dark.css';  
@@ -71,6 +75,7 @@ export const LoadingAnimation = () => {
 function App() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const location = useLocation();
+  const userSession = useAppSelector((state: RootState) => state.UserSession);
 
   useEffect(() => {
     // Example: default UI is light background
@@ -78,9 +83,37 @@ function App() {
   }, []);
 
   useEffect(() => {
+    console.log('[App] ========================================');
+    console.log('[App] INITIALIZING OTA SYSTEM');
+    console.log('[App] ========================================');
+
+    // Initialize OTA with background check - this will:
+    // 1. Promote any pending updates first (apply downloaded update)
+    // 2. If auto-update enabled: check for new updates in background automatically
+    // 3. If auto-update disabled: UpdateAlertModal will show prompt to user
+    initOTAWithBackgroundCheck()
+      .then(() => {
+        console.log('[App] OTA initialization complete');
+        // Mark current bundle as working (for rollback protection)
+        markBundleAsWorking();
+      })
+      .catch((err) => {
+        console.error('[App] OTA initialization error:', err);
+      });
+  }, []);
+
+  useEffect(() => {
     registerPush((token) => {
       // Send token to backend for targeting
       console.log('Device token:', token);
+    });
+  }, []);
+
+  useEffect(() => {
+    // Initialize Android back button handler
+    initBackButtonHandler({
+      showExitConfirmation: true,
+      exitConfirmationMessage: 'Press back again to exit',
     });
   }, []);
 
@@ -178,25 +211,26 @@ function App() {
   }, []);
 
 
-  if (deviceInfo?.isMobile) {
+  // Disable copy/paste on mobile - must be unconditional, use dependency to gate logic
   useEffect(() => {
-  const handler = (e:any) => e.preventDefault();
-  
-  document.addEventListener("copy", handler);
-  document.addEventListener("cut", handler);
-  document.addEventListener("paste", handler);
-  document.addEventListener("contextmenu", handler);
-  document.addEventListener("selectstart", handler);
+    if (!deviceInfo?.isMobile) return;
+    
+    const handler = (e: any) => e.preventDefault();
+    
+    document.addEventListener("copy", handler);
+    document.addEventListener("cut", handler);
+    document.addEventListener("paste", handler);
+    document.addEventListener("contextmenu", handler);
+    document.addEventListener("selectstart", handler);
 
-  return () => {
-    document.removeEventListener("copy", handler);
-    document.removeEventListener("cut", handler);
-    document.removeEventListener("paste", handler);
-    document.removeEventListener("contextmenu", handler);
-    document.removeEventListener("selectstart", handler);
-  };
-}, []);
-  }
+    return () => {
+      document.removeEventListener("copy", handler);
+      document.removeEventListener("cut", handler);
+      document.removeEventListener("paste", handler);
+      document.removeEventListener("contextmenu", handler);
+      document.removeEventListener("selectstart", handler);
+    };
+  }, [deviceInfo?.isMobile]);
 
 
 
@@ -289,6 +323,12 @@ function App() {
 
   return (
     <Fragment>
+      {/* Status bar manager - handles status bar style based on route */}
+      <StatusBarManager />
+
+      {/* Update alert modal - shows at app launch if update available */}
+      <UpdateAlertModal />
+
       {/* <Loader /> */}
       <HelmetProvider>
         <Helmet

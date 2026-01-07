@@ -492,7 +492,7 @@ const Templates = () => {
                     if (!searchQuery) return true;
                     return t(template.name).toLowerCase().includes(searchQuery.toLowerCase());
                   }).map((template, index) => {
-                    const isActive = searchParams?.get("template_group") === template?.template_group_id;
+                    const isActive = templateGroup === template?.template_group_id;
                     return (
                       <button
                         key={`tt_${index}`}

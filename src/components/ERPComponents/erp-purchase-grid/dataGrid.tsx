@@ -22,6 +22,7 @@ import {
   FileUp,
   Info,
   Paintbrush,
+  ScanBarcode,
   Settings,
   StepBack,
   Trash2,
@@ -66,8 +67,9 @@ import usePreferenceData from "../../../utilities/hooks/usePreference";
 import DraggablePlusButton from "../../ERPComponents/erp-purchase-grid/draggable-button"
 import GridCell from "./GridCell";
 import ReactDOM from "react-dom";
-// import BarcodeModalScanner from "../../barcode-scanner-modal";
+import BarcodeModalScanner from "../../barcode-scanner-modal";
 import { BarcodeScanResult } from "../../../utilities/barcode-scanner-service";
+import { Capacitor } from "@capacitor/core";
 
 type DataItem = Record<string, any>;
 export interface SummaryConfig<T = any> {
@@ -2563,6 +2565,8 @@ const taxOptions = [0, 5, 12, 18, 28];
 const [showMore , setShowMore] = useState (false)
 const [openScanner, setOpenScanner] = useState(false);
 const barcodeInputRef = useRef<HTMLInputElement>(null);
+let _userSession = useAppSelector((state: RootState) => state.UserSession);
+
 
 const hidColumns: string[] = [
   "product",
@@ -2574,7 +2578,8 @@ const hidColumns: string[] = [
   "discount",
   "vatPerc",
   "vatAmount",
-  "actionCol"
+  "actionCol",
+  "barCode"
 ];
 
 
@@ -2793,13 +2798,13 @@ const hidColumns: string[] = [
             />
           )}
           {/* Barcode Scanner Modal */}
-          {/* <BarcodeModalScanner
+          <BarcodeModalScanner
             isOpen={showBarcodeScanner}
             onClose={() => setShowBarcodeScanner(false)}
             onScan={handleBarcodeScan}
             onEnterTrigger={handleBarcodeEnterTrigger}
             title={t("scan_barcode")}
-          /> */}
+          />
           <ERPScrollArea
             scrollbarColor={formState.userConfig?.scrollbarColor}
             ref={containerRef}
@@ -3440,145 +3445,70 @@ const hidColumns: string[] = [
                        </div>
                      </div> */}
                    </div>
-                   <div className="grid grid-cols-2 gap-3 mb-3">
-                     <div>
-                       <label className="block text-xs font-medium text-gray-600 mb-1 dark:text-gray-400">
+                   
+                      <div>
+                        <label className="block text-xs font-medium text-gray-600 mb-1 dark:text-gray-400">
                          barCode
                        </label>
-                       <div className="border border-gray-300 rounded-lg overflow-hidden dark:border-gray-600">
-                         <GridCell
-                           isMobile_={true}
-                           column={formState.gridColumns.find((x) => x.dataField == "barCode") as ColumnModel} 
-                           item={formState.row ?? initialTransactionDetailData}
-                           index={formState.itemPopup?.index ?? 0}
-                           currentCell={currentCell}
-                           setCurrentCell={setCurrentCell}
-                           formState={formState}
-                           appState={appState}
-                           gridFontSize={gridFontSize}
-                           gridIsBold={gridIsBold}
-                           rowHeight={rowHeight}
-                           gridBorderColor={gridBorderColor}
-                           isFirstColumn={false}
-                           isLastColumn={false}
-                           showBorder={false}
-                           columnWidths={columnWidths}
-                           onChange={onChange}
-                           onKeyDown={onKeyDown}
-                           handlRowKeyDown={handlRowKeyDown}
-                           handleFocus={handleFocus}
-                           handleBlur={handleBlur}
-                           gridId={gridId}
-                           zIndexController={55}
-                           details={formState.transaction.details} 
-                           blockUnitOnDecimalPoint={false} 
-                           applicationSettings={undefined} 
-                           nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
-                             throw new Error("Function not implemented.");
-                           }}
-                         />
-                         <p>mj23</p>
-                       </div>
-                       
-                     </div>
-                     {/* <div>
-                       <label className="block text-xs font-medium text-gray-600 mb-2 dark:text-gray-400">
-                         &nbsp;
-                       </label>
-                       <div className="border border-gray-300 rounded-lg overflow-hidden dark:border-gray-600">
-                         <div className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300">
-                           Without Tax
-                         </div>
-                       </div>
-                     </div> */}
-                   </div>
-
                    <div className="border border-gray-300 rounded-lg overflow-hidden dark:border-gray-600 flex items-center">
-  {/* GridCell field */}
-  <div className="flex-1">
-    <GridCell
-      // inputRef={barcodeInputRef}
-      isMobile_={true}
-      column={formState.gridColumns.find((x) => x.dataField == "barCode") as ColumnModel}
-      item={formState.row ?? initialTransactionDetailData}
-      index={formState.itemPopup?.index ?? 0}
-      currentCell={currentCell}
-      setCurrentCell={setCurrentCell}
-      formState={formState}
-      appState={appState}
-      gridFontSize={gridFontSize}
-      gridIsBold={gridIsBold}
-      rowHeight={rowHeight}
-      gridBorderColor={gridBorderColor}
-      isFirstColumn={false}
-      isLastColumn={false}
-      showBorder={false}
-      columnWidths={columnWidths}
-      onChange={onChange}
-      onKeyDown={onKeyDown}
-      handlRowKeyDown={handlRowKeyDown}
-      handleFocus={handleFocus}
-      handleBlur={handleBlur}
-      gridId={gridId}
-      zIndexController={55}
-      details={formState.transaction.details}
-      blockUnitOnDecimalPoint={false}
-      applicationSettings={undefined}
-      nextCellFind={() => null}
-    />
-  </div>
+                    {/* GridCell field */}
+                    <div className="flex-1">
+                      <GridCell
+                        // inputRef={barcodeInputRef}
+                        isMobile_={true}
+                        column={formState.gridColumns.find((x) => x.dataField == "barCode") as ColumnModel}
+                        item={formState.row ?? initialTransactionDetailData}
+                        index={formState.itemPopup?.index ?? 0}
+                        currentCell={currentCell}
+                        setCurrentCell={setCurrentCell}
+                        formState={formState}
+                        appState={appState}
+                        gridFontSize={gridFontSize}
+                        gridIsBold={gridIsBold}
+                        rowHeight={rowHeight}
+                        gridBorderColor={gridBorderColor}
+                        isFirstColumn={false}
+                        isLastColumn={false}
+                        showBorder={false}
+                        columnWidths={columnWidths}
+                        onChange={onChange}
+                        onKeyDown={onKeyDown}
+                        handlRowKeyDown={handlRowKeyDown}
+                        handleFocus={handleFocus}
+                        handleBlur={handleBlur}
+                        gridId={gridId}
+                        zIndexController={55}
+                        details={formState.transaction.details}
+                        blockUnitOnDecimalPoint={false}
+                        applicationSettings={undefined}
+                        nextCellFind={() => null}
+                      />
+                    </div>
+                    {/* Barcode Scanner Button - Uses unified barcode scanner */}
+                    {/* {Capacitor.isNativePlatform() && ( */}
+                    <div className="px-3 py-2 bg-orange-100 dark:bg-orange-800/30 border-l border-orange-300 text-orange-600 dark:text-orange-400 font-medium"
+                                            style={{ height: rowHeight , display: "flex", justifyContent: "center",  alignItems: "center"  }}
+                                          >
+                    <button
+                    type="button"
+                    onClick={() => {
+                      setBarcodeTargetRow(formState.itemPopup?.index ?? -1);
+                      setShowBarcodeScanner(true);
+                    }}
+                    title="Scan barcode"
+                    className="
+                      px-2
+                      flex items-center justify-center
+                    "
+                  >
+                    <ScanBarcode className="w-5 h-5 text-black dark:text-white" />
+                  </button>
+                  </div>
+                  {/* )}  */}
 
-  {/* Barcode Scanner Button - Uses unified barcode scanner */}
-  <button
-    type="button"
-    onClick={() => {
-      setBarcodeTargetRow(formState.itemPopup?.index ?? -1);
-      setShowBarcodeScanner(true);
-    }}
-    className="px-2 border-l border-gray-300 dark:border-gray-600 bg-green-100 dark:bg-green-900 hover:bg-green-200 dark:hover:bg-green-800 text-green-700 dark:text-green-300 transition-colors duration-200"
-    title="Scan barcode"
-  >
-    <span className="text-lg">📷</span>
-  </button>
-
-</div>
-{/* {openScanner && (
-  <MobileBarcodeScanner
-    onScan={(scannedCode) => {
-      onChange(
-        scannedCode,
-        "barCode",
-        formState.itemPopup?.index ?? 0,
-        true
-      );
-    }}
-    onClose={() => setOpenScanner(false)}
-  />
-)} */}
-{/* {openScanner && (
-  <ZXingScanner
-    onScan={(code) => {
-      onChange(code, "barCode", formState.itemPopup?.index ?? 0, true);
-
-      setTimeout(() => {
-        const input = document.querySelector('input[data-field="barCode"]') as HTMLInputElement | null;
-        if (input) {
-          input.focus();
-          input.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
-        }
-      }, 80);
-    }}
-    onClose={() => setOpenScanner(false)}
-  />
-)} */}
-
-
-
-
-
-
-         
-                   {/* Totals & Taxes Card */}
+                  </div>
+                  </div>
+                  {/* Totals & Taxes Card */}
                    <div className="bg-white dark:bg-[#2d2d2d] rounded-lg p-4 border-t border-gray-200 dark:border-gray-700">
                      <h6 className="font-semibold text-base text-gray-800 dark:text-gray-200 mb-2">
                        Totals &amp; Taxes

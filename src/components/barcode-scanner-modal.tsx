@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { X, Loader } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { Capacitor } from '@capacitor/core';
 import {
   barcodeScanner,
   type BarcodeScanResult,
@@ -13,6 +14,9 @@ interface BarcodeModalProps {
   onEnterTrigger?: (result: BarcodeScanResult) => void;
   title?: string;
 }
+
+// Check platform once at module load
+const isNativePlatform = Capacitor.isNativePlatform();
 
 const BarcodeModalScanner: React.FC<BarcodeModalProps> = ({
   isOpen,
@@ -55,6 +59,7 @@ const BarcodeModalScanner: React.FC<BarcodeModalProps> = ({
         scannerInitializedRef.current = false;
       }
       initializingRef.current = false;
+      setError(null);
       return;
     }
 
@@ -68,39 +73,62 @@ const BarcodeModalScanner: React.FC<BarcodeModalProps> = ({
       if (!mountedRef.current) return;
 
       initializingRef.current = true;
-      setIsLoading(true);
+
+      // Only show loading for web platform
+      if (!isNativePlatform) {
+        setIsLoading(true);
+      }
       setError(null);
 
       try {
-        await barcodeScanner.startScanning(
-          {
-            onScan: (result: BarcodeScanResult) => {
-              if (mountedRef.current) {
-                onScanRef.current(result);
-                onCloseRef.current();
-              }
-            },
-            onEnterTrigger: (result: BarcodeScanResult) => {
-              if (mountedRef.current && onEnterTriggerRef.current) {
-                onEnterTriggerRef.current(result);
-              }
-            },
-            onError: (err: Error) => {
-              if (mountedRef.current) {
-                setError(err.message);
-              }
-            },
-            enableVibration: true,
-            enableBeep: true,
+        // Configure scanner callbacks
+        const scannerConfig = {
+          onScan: (result: BarcodeScanResult) => {
+            if (mountedRef.current) {
+              onScanRef.current(result);
+              onCloseRef.current();
+            }
           },
-          'barcode-video'
+          onClose: () => {
+            // Called when native scanner closes (back button, etc.)
+            if (mountedRef.current) {
+              onCloseRef.current();
+            }
+          },
+          onEnterTrigger: (result: BarcodeScanResult) => {
+            if (mountedRef.current && onEnterTriggerRef.current) {
+              onEnterTriggerRef.current(result);
+            }
+          },
+          onError: (err: Error) => {
+            // On native, errors are handled by the native scanner UI
+            // Only set error state for web platform
+            if (mountedRef.current && !isNativePlatform) {
+              setError(err.message);
+            }
+          },
+          enableVibration: true,
+          enableBeep: true,
+        };
+
+        // On native platform, don't pass video element ID - native scanner handles its own UI
+        // On web, pass the video element ID for camera stream
+        await barcodeScanner.startScanning(
+          scannerConfig,
+          isNativePlatform ? undefined : 'barcode-video'
         );
 
         scannerInitializedRef.current = true;
       } catch (err) {
         const error = err as Error;
-        if (mountedRef.current) {
+        // On native, don't show error modal - native scanner handles errors
+        if (mountedRef.current && !isNativePlatform) {
           setError(error.message);
+        }
+        // On native, if scanner fails, just close
+        if (isNativePlatform && mountedRef.current) {
+          console.error('Native scanner error:', error.message);
+          onCloseRef.current();
         }
       } finally {
         initializingRef.current = false;
@@ -119,9 +147,16 @@ const BarcodeModalScanner: React.FC<BarcodeModalProps> = ({
       }
       initializingRef.current = false;
     };
-  }, [isOpen]); // Only depend on isOpen - callbacks are accessed via refs
+  }, [isOpen]); // Only depend on isOpen
 
+  // Don't render anything if not open
   if (!isOpen) return null;
+
+  // Native platform: return null - native scanner creates its own fullscreen UI overlay
+  // The scanner service handles everything including the UI
+  if (isNativePlatform) {
+    return null;
+  }
 
   return (
     <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
@@ -149,7 +184,7 @@ const BarcodeModalScanner: React.FC<BarcodeModalProps> = ({
             </div>
           )}
 
-          {error && (
+          {/* {error && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/70 z-20 p-4">
               <div className="bg-red-600 text-white p-6 rounded-lg max-w-sm text-center">
                 <p className="font-semibold mb-2">Camera Error</p>
@@ -162,7 +197,7 @@ const BarcodeModalScanner: React.FC<BarcodeModalProps> = ({
                 </button>
               </div>
             </div>
-          )}
+          )} */}
 
           {!isLoading && !error && (
             <>

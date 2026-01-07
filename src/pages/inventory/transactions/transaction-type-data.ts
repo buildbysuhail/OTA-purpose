@@ -302,6 +302,10 @@ export const initialTransactionDetailData: TransactionDetail = {
   salesman: "",
   salesmanID: 0,
   adjQty: 0,
+  gatePass: "",
+  purchaseCost: 0,
+  taxCategoryID: 0,
+  productCategoryID: 0,
 };
 export const transactionInitialData: TransactionData = {
   master: TransactionMasterInitialData, 

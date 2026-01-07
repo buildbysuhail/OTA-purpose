@@ -389,6 +389,10 @@ export interface TransactionDetail {
   salesman:string; // new
   salesmanID:number; // new
   adjQty:number; // For SO,GD,SRV
+  gatePass:string; // For SI india
+  purchaseCost:number; // For SI india
+  taxCategoryID:number; // For SI india
+  productCategoryID:number; // For SI india
 
   // stock
   stockTo?: number;

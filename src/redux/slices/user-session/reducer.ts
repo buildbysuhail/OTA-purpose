@@ -175,6 +175,7 @@ export interface UserModel {
   systemCode: string | "";
   systemName: string | "";
   counter_vr_prefix?: string | "";
+  asUpdate?: boolean;
 }
 export const initialUserSessionData: UserModel = {
   userId: 0,
@@ -219,7 +220,8 @@ export const initialUserSessionData: UserModel = {
     syncState: ""
   },
   currentCompanyDetails: initialCompanyDetails,
-  currentBranchDetails: initialBranchDetails
+  currentBranchDetails: initialBranchDetails,
+  asUpdate: true
 };
 
   // let ass =await getStorageString("up");

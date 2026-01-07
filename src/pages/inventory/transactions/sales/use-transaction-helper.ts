@@ -43,6 +43,9 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     getFormattedValueIgnoreRoundingToNumber,
     toTaxFormat,
     posRoundAmount,
+    roundAmount,
+    RoundAmountGlobal,
+    getFormattedValue
   } = useNumberFormat();
 
   const { hasRight } = useUserRights();
@@ -291,14 +294,23 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
           if (dval === 0) {
             Rate = 0;
           } else {
-            Rate = round(RatePlusTax / dval, 4);
+            if ([VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(master.voucherType as any)) {
+              Rate = Number((RatePlusTax / dval).toFixed(3));
+            } else {
+              Rate = round(RatePlusTax / dval, 4);
+            }
           }
           detail.unitPrice = Rate;
         } else {
           const dval = (VatPerc / 100) + 1;
           let Qty1 = Qty || 1;
           if (Qty1 === 0) Qty1 = 1;
-          Rate = round((RatePlusTax * Qty1) / dval, 4);
+          if ([VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(master.voucherType as any)) {
+            Rate = Number(((RatePlusTax * Qty1) / dval).toFixed(3));
+          } else {
+            Rate = round((RatePlusTax * Qty1) / dval, 4);
+          }
+
           Rate = Rate / Qty1;
           detail.unitPrice = Rate;
         }
@@ -314,27 +326,44 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       }
 
       // ---------- Gross ----------
-      let Gross = round(Qty * Rate, 4);
+      let precision = 5;
+      if (master.voucherType === VoucherType.SalesInvoice) {
+        precision = 4;
+      }
+      if (
+        isIndia &&
+        [VoucherType.SalesReturn, VoucherType.SaleReturnEstimate]
+          .includes(master.voucherType as any)
+      ) {
+        precision = 4;
+      }
 
+      let Gross = round(Qty * Rate, precision);
       // ---------- Discount logic (mirror C# branches exactly) ----------
       // Case: Discount amount edited
+
+      if (master.voucherType === VoucherType.SalesInvoice && !isIndia) {
+        if (DiscPerc > 0 && currentColumn !== "discount") {
+          if (DiscPerc * Gross / 100 != Disc) {
+            Disc = round(DiscPerc * Gross / 100, 5);
+          }
+        }
+      }
       if (Disc > 0 && currentColumn === "discount") {
-        DiscPerc = Gross !== 0 ? round((100 * Disc) / Gross, 5) : 0;
+        DiscPerc = Gross !== 0 ? master.voucherType == VoucherType.ServiceInventory ? 100 * Disc / Gross : round((100 * Disc) / Gross, 5) : 0;
         UnitDiscount = round(Disc / (Qty === 0 ? 1 : Qty), 5);
       }
       // Case: Discount % edited
       else if (DiscPerc > 0 && currentColumn === "discPerc") {
-        const calcDisc = round(DiscPerc * Gross / 100, 5);
-        if (Math.abs(calcDisc - Disc) > 0.000001) {
-          Disc = calcDisc;
+        if (DiscPerc * Gross / 100 != Disc) {
+          Disc = round(DiscPerc * Gross / 100, 5);
           UnitDiscount = Disc / (Qty === 0 ? 1 : Qty);
         }
       }
       // Case: ReverseDiscountClicked or other edits where discPerc > 0 and discount column not being edited
       else if (DiscPerc > 0 && (reverseDiscountClicked === true || currentColumn !== "discount")) {
-        const calcDisc = round(DiscPerc * Gross / 100, 5);
-        if (Math.abs(calcDisc - Disc) > 0.000001) {
-          Disc = calcDisc;
+        if (DiscPerc * Gross / 100 != Disc) {
+          Disc = round(DiscPerc * Gross / 100, 5);
           UnitDiscount = Disc / (Qty === 0 ? 1 : Qty);
         }
       } else {
@@ -343,7 +372,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       }
 
       // Discount slab offer behavior (exact mapping)
-      if (master.voucherType == VoucherType.SalesInvoice && (settings?.inventorySettings?.enableDiscountSlabOffer || settings?.inventorySettings?.enableDiscountSlabOffer)) {
+      if (master.voucherType == VoucherType.SalesInvoice && settings?.inventorySettings?.enableDiscountSlabOffer) {
         // C# checks for EnableDiscountSlabOffer and DiscPerc == 0 and (isEdit || TenderClosed)
         if ((DiscPerc === 0) && (isEdit || TenderClosed)) {
           if (DiscPerc !== Disc) {
@@ -367,8 +396,9 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         Gross = round(Qty * (RatePlusTax / (1 + VatPerc / 100)), 5);
       }
 
+
       // ---------- NetValue ----------
-      let NetValue = round(Gross - Disc, 4);
+      let NetValue = master.voucherType == VoucherType.ServiceInventory ? Gross - Disc : round(Gross - Disc, 4);
 
       // ---------- VAT path (GCC, isIndia === false) ----------
       if (!isIndia) {
@@ -377,7 +407,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         NetValue += ExciseTax;
 
         // KSA einvoice rounding
-        if (applicationSettings?.branchSettings?.maintainKSA_EInvoice && applicationSettings?.branchSettings.apply_KSA_EInvoice_Validation_Rules) {
+        if ([VoucherType.SalesInvoice, VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(master.voucherType as any) && !isIndia && applicationSettings?.branchSettings?.maintainKSA_EInvoice && applicationSettings?.branchSettings.apply_KSA_EInvoice_Validation_Rules) {
           NetValue = round(NetValue, 2);
         }
 
@@ -392,36 +422,57 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         detail.vatAmount = getFormattedValueIgnoreRoundingToNumber(Vat);
 
         let NetAmount = NetValue + Vat;
-        NetAmount = round(NetAmount, 4);
 
         // If unit price edited update RatePlusTax similar to C#
         if (currentColumn === "unitPrice" && VatPerc > 0 && UP * (1 + VatPerc / 100) !== RatePlusTax) {
           RatePlusTax = UP * (1 + VatPerc / 100);
           detail.ratePlusTax = round(RatePlusTax, 4);
         }
+        NetAmount = master.voucherType == VoucherType.GoodsDeliveryNote ? NetAmount : round(NetAmount, 4);
+        if (RatePlusTax > 0 && Vat > 0 && Disc == 0 && chkShowRateBeforeTax && Math.abs(Qty * RatePlusTax - NetAmount) < 0.5 && master.voucherType != VoucherType.SalesInvoice) {
 
-        detail.gross = getFormattedValueIgnoreRoundingToNumber(Gross);
-        detail.total = NetAmount;
-        detail.cost = Qty !== 0 ? (NetValue / Qty) : 0;
+          NetAmount = round(Qty * RatePlusTax, applicationSettings?.mainSettings.decimalPoints);
+        }
+        //Cost
+        let Cost = 0;
+        if ([VoucherType.SalesInvoice, VoucherType.SalesReturn].includes(master.voucherType as any)) {
+          Cost = Qty !== 0 ? (NetValue / Qty) : 0;
+        } else {
+
+          Cost = Qty !== 0 ? (NetAmount / Qty) : 0;
+        }
+
+        if (master.voucherType == VoucherType.ServiceInventory) {
+          detail.gross = Number((Gross).toFixed(2));
+          detail.total = Number((NetAmount).toFixed(2));
+          detail.cost = Number((Cost).toFixed(2));
+        } else {
+          detail.gross = getFormattedValueIgnoreRoundingToNumber(Gross);
+          detail.total = master.voucherType == VoucherType.SalesQuotation && isIndia ? parseFloat(getFormattedValue(NetAmount)) : NetAmount;
+          detail.cost = round(Cost);
+        }
+
 
         // Profit calculation (same as C#)
-        const purchasePrice = Number(detail.purchasePrice ?? detail.purchaseRate ?? 0);
-        const Profit = NetValue - (Qty * purchasePrice);
-        detail.profit = Profit;
-        // Profit percentage only if column visible in grid (mimic C# try/catch)
-        try {
-          const profitColumn = formState.gridColumns?.find((x: any) => x.dataField == "profitPercentage");
-          if (profitColumn?.visible !== false) {
-            let profit_perc = 0;
-            if (purchasePrice > 0 && Qty > 0) {
-              profit_perc = (Profit / (purchasePrice * Qty)) * 100;
-            } else {
-              profit_perc = 0;
+        if ([VoucherType.SalesInvoice, VoucherType.SalesReturn].includes(master.voucherType as any)) {
+          const purchasePrice = Number(detail.purchasePrice ?? detail.purchaseRate ?? 0);
+          const Profit = NetValue - (Qty * purchasePrice);
+          detail.profit = Profit;
+          // Profit percentage only if column visible in grid (mimic C# try/catch)
+          try {
+            const profitColumn = formState.gridColumns?.find((x: any) => x.dataField == "profitPercentage");
+            if (profitColumn?.visible !== false) {
+              let profit_perc = 0;
+              if (purchasePrice > 0 && Qty > 0) {
+                profit_perc = (Profit / (purchasePrice * Qty)) * 100;
+              } else {
+                profit_perc = 0;
+              }
+              detail.profitPercentage = profit_perc;
             }
-            detail.profitPercentage = profit_perc;
+          } catch {
+            /* ignore like C# */
           }
-        } catch {
-          /* ignore like C# */
         }
       }
       // ---------- GST path (India) ----------
@@ -460,7 +511,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         }
 
         // Tax on MRP branch (exact C#)
-        if (chkTaxOnMRP) {
+        if (chkTaxOnMRP && master.voucherType == VoucherType.SalesInvoice) {
           let TaxableMRP = 0;
           const denom = 1 + ((CGSTPerc + SGSTPerc + IGSTPerc) / 100 || 0);
           TaxableMRP = denom !== 0 ? (Number(detail.mrp ?? 0) / denom) : 0;
@@ -555,7 +606,9 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
           // C# doesn't zero IGST here (IGST used for interstate)
         }
         if (((form?.transaction?.master?.voucherType ?? "") === VoucherType.SalesEstimate)
-          || ((form?.transaction?.master?.voucherForm == "" || (form?.transaction?.master?.voucherType ?? "") === VoucherType.SaleReturnEstimate))) {
+          || (((form?.transaction?.master?.voucherForm == ""
+            && ![VoucherType.SalesInvoice, VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(form?.transaction?.master?.voucherType as any))
+            || (form?.transaction?.master?.voucherType ?? "") === VoucherType.SaleReturnEstimate))) {
           detail.details2.cgst = 0;
           detail.details2.sgst = 0;
           detail.details2.igst = 0;
@@ -582,20 +635,25 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         detail.vatAmount = getFormattedValueIgnoreRoundingToNumber(Vat);
         detail.gross = getFormattedValueIgnoreRoundingToNumber(Gross);
         detail.total = NetAmount;
-        detail.cost = Qty !== 0 ? (NetValue / Qty) : 0;
-        if (master.voucherType == VoucherType.SalesReturn) {
+
+        if (master.voucherType == VoucherType.SalesInvoice) {
+          detail.cost = Qty !== 0 ? (NetValue / Qty) : 0;
+        } else {
+
           detail.cost = Qty !== 0 ? (NetAmount / Qty) : 0;
         }
 
         // Profit
-        const purchasePrice = Number(detail.purchasePrice ?? detail.purchaseRate ?? 0);
-        const Profit = NetValue - (Qty * purchasePrice);
-        if ([VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(master.voucherType as VoucherType)) {
-          detail.profit = -1 * Profit;
-        } else {
-          detail.profit = Profit;
+        //not need for SQ global- not added condition because already not have that column
+        if (![VoucherType.GoodsDeliveryNote, VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn, VoucherType.ServiceInventory].includes(master.voucherType as any)) {
+          const purchasePrice = Number(detail.purchasePrice ?? detail.purchaseRate ?? 0);
+          const Profit = NetValue - (Qty * purchasePrice);
+          if ([VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(master.voucherType as VoucherType)) {
+            detail.profit = -1 * Profit;
+          } else {
+            detail.profit = Profit;
+          }
         }
-
       }
 
       // ---------- Final profit percentage (common) ----------
@@ -1054,10 +1112,51 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       if (isNullOrUndefinedOrZero(detail.productID)) {
         break;
       }
+      // if (clientSession.isAppGlobal) {
+      //   if (detail.details2) {
+      //     if (formType.toUpperCase() == "INTERSTATE" || formType.toUpperCase() == "INT" && voucherType != "") {
+      //       detail.details2.cessPerc = row.cessPerc;
+      //       detail.details2.cessAmt = row.cessAmt;
+      //       //IGST calculation
+      //       const CGSTPerc = row.cgstPerc ?? 0;
+      //       const CGST = row.cgst ?? 0;
+      //       const SGSTPerc = row.sgstPerc ?? 0;
+      //       const SGST = row.sgst ?? 0;
+      //       const IGSTPerc = row.igstPerc ?? 0;
+      //       const IGST = row.igst ?? 0;
+      //       const totalTaxPerc = CGSTPerc + SGSTPerc + IGSTPerc;
+      //       const totalTax = CGST + SGST + IGST;
+      //       detail.details2.igstPerc = totalTaxPerc;
+      //       detail.details2.igst = totalTax;
+      //       detail.details2.additionalCessPerc = row.additionalCessPerc;
+      //       detail.details2.additionalCess = row.additionalCess;
+      //       detail.details2.cgstPerc = 0;
+      //       detail.details2.cgst = 0;
+      //       detail.details2.sgstPerc = 0;
+      //       detail.details2.sgst = 0;
+      //       detail.mrp == row.MRP;
+      //     } else {
+      //       detail.hsnCode = row.hsnCode;
+      //       detail.details2.cessPerc = row.cessPerc;
+      //       detail.details2.cessAmt = row.cessAmt;
+      //       detail.details2.cgstPerc = row.cgstPerc;
+      //       detail.details2.cgst = row.cgst;
+      //       detail.details2.sgstPerc = row.sgstPerc;
+      //       detail.details2.sgst = row.sgst;
+      //       detail.details2.igstPerc = row.igstPerc;
+      //       detail.details2.igst = row.igst;
+      //       detail.details2.additionalCessPerc = row.additionalCessPerc;
+      //       detail.details2.additionalCess = row.additionalCess;
+      //       detail.mrp = row.mrp;
+      //     }
+      //   }
+      // }
       validDetailsCount++;
       // Set row header/index
       detail.slNo = generateUniqueKey();
-
+if([VoucherType.SalesOrder,VoucherType.GoodRequest,VoucherType.RequestForQuotation,VoucherType.GoodsDeliveryNote,VoucherType.ServiceInvoice].includes(voucherType as any)){
+  detail.adjQty=row.adjQty;
+}
       detail.pCode = row.productCode;
       detail.productBatchID = row.productBatchID;
       detail.barCode = row.autoBarcode;
@@ -1079,9 +1178,9 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       detail.unitPrice = getFormattedValueIgnoreRoundingToNumber(
         Number(row.unitPrice || 0)
       );
-      detail.purchasePrice = getFormattedValueIgnoreRoundingToNumber(
+      detail.purchasePrice = voucherType == VoucherType.SalesInvoice ? getFormattedValueIgnoreRoundingToNumber(
         Number(row.costPerItem || 0)
-      );
+      ) : row.costPerItem;
       detail.minSalePrice = row.minSalePrice;
       detail.batchNo = row.batchNo;
       detail.warehouseID = row.warehouseID;
@@ -1098,30 +1197,32 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       detail.gross = getFormattedValueIgnoreRoundingToNumber(
         Number(row.grossValue || 0)
       );
-      detail.discPerc = getFormattedValueIgnoreRoundingToNumber(
+      detail.discPerc = [VoucherType.SalesInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate, VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(voucherType as any) ? getFormattedValueIgnoreRoundingToNumber(
         Number(row.discountPer1 || 0)
-      );
+      ) : row.discountPer1;
       detail.discount = getFormattedValueIgnoreRoundingToNumber(
         Number(row.discountAmt1 || 0)
       );
       detail.unitDiscount = getFormattedValueIgnoreRoundingToNumber(
         Number(row.discountAmt1 || 0)
       );
-      detail.vatPerc = getFormattedValueIgnoreRoundingToNumber(
+      detail.vatPerc = voucherType == VoucherType.SalesInvoice ? getFormattedValueIgnoreRoundingToNumber(
         Number(row.vatPercentage || 0)
-      );
-      detail.vatAmount = getFormattedValueIgnoreRoundingToNumber(
+      ) : row.vatPercentage;
+      detail.vatAmount = voucherType != VoucherType.ServiceInvoice ? getFormattedValueIgnoreRoundingToNumber(
         Number(row.totalVatAmount || 0)
-      );
-      detail.cstPerc = getFormattedValueIgnoreRoundingToNumber(
+      ) : row.totalVatAmount;
+      detail.cstPerc = voucherType == VoucherType.SalesInvoice ? getFormattedValueIgnoreRoundingToNumber(
         Number(row.cstPerc || 0)
-      );
-      detail.cst = getFormattedValueIgnoreRoundingToNumber(
+      ) : row.cstPerc;
+      detail.cst = voucherType == VoucherType.SalesInvoice ? getFormattedValueIgnoreRoundingToNumber(
         Number(row.cst || 0)
-      );
-      detail.ratePlusTax = getFormattedValueIgnoreRoundingToNumber(
-        Number(row.rateWithTax || 0)
-      );
+      ) : row.cst;
+      detail.ratePlusTax = [VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(voucherType as any) && clientSession.isAppGlobal
+        ? row.rateWithTax
+        : [VoucherType.SalesReturn, VoucherType.ServiceInvoice].includes(voucherType as any)
+          ? Math.round((Number(row.unitPrice) * (1 + Number(row.vatPercentage) / 100)) * 100) / 100
+          : getFormattedValueIgnoreRoundingToNumber(Number(row.rateWithTax || 0));
       detail.productDescription = row.productDescription;
       detail.actualSalesPrice = row.transMRP;
       detail.netValue = getFormattedValueIgnoreRoundingToNumber(
@@ -2952,537 +3053,429 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
 
     // if totals mismatch, recompute netAmt from netVal+tax (same as PI)
     if (+ (netVal + tax) !== +netAmt) {
-      if (!clientSession.isAppGlobal && applicationSettings.branchSettings.maintainKSA_EInvoice && applicationSettings.branchSettings.apply_KSA_EInvoice_Validation_Rules && formState.transaction.master.voucherType === 'SI') {
+      if (!clientSession.isAppGlobal && applicationSettings.branchSettings.maintainKSA_EInvoice && applicationSettings.branchSettings.apply_KSA_EInvoice_Validation_Rules && ![VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn, VoucherType.ServiceInvoice].includes(formState.transaction.master.voucherType as any)) {
         netAmt = round(netVal + tax);
       }
     }
-      // Bill discount + tax-on-bill-disc logic (Indian-specific branch will later override if needed)
-      const billDisc = Number(master.billDiscount ?? 0);
-      const additionalAmt = Number(master.adjustmentAmount ?? 0);
+    // Bill discount + tax-on-bill-disc logic (Indian-specific branch will later override if needed)
+    const billDisc = Number(master.billDiscount ?? 0);
+    const additionalAmt = Number(master.adjustmentAmount ?? 0);
 
-      // write vat to result.master
-      result.transaction!.master!.vatAmount = round(tax);
+    // write vat to result.master
+    result.transaction!.master!.vatAmount = round(tax);
+    // If India, populate tax breakup
+    if (clientSession.isAppGlobal === true) {
 
-      // If India, populate tax breakup
-      if ((clientSession.isAppGlobal === true && formState.transaction.master.voucherType != VoucherType.SaleReturnEstimate) && formState.transaction.master.voucherForm != "") {
-        result.transaction!.master!.master3 ??= (TransactionMaster3InitialData as any);
-        result.transaction!.master!.master3!.totCGST = round(cgst);
-        result.transaction!.master!.master3!.totSGST = round(sgst);
-        result.transaction!.master!.master3!.totIGST = round(igst);
-        result.transaction!.master!.master3!.totCess = round(cessAmt);
-        result.transaction!.master!.master3!.totAdditionalCess = round(additionalCess);
-      }
+      if (formState.transaction.master.voucherType !== VoucherType.SaleReturnEstimate) {
 
-      // basic net amount
-      result.netAmount = round(netAmt);
+        if (
+          ![VoucherType.SalesInvoice, VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation]
+            .includes(formState.transaction.master.voucherType as any)
+        ) {
 
-      // tax on bill discount handling (mirror C# Indian logic)
-      let taxOnBilldisc = Number(master.taxOnDiscount ?? 0);
-      let blnApplyTaxonDiscount = true;
-      if ((master.invTransactionMasterID ?? 0) > 0 && isEdit === false && Number(master.taxOnDiscount ?? 0) === 0) {
-        blnApplyTaxonDiscount = false;
-      }
-
-      if (
-        applicationSettings.branchSettings?.maintainKSA_EInvoice &&
-        applicationSettings.branchSettings?.enableTaxOnBillDiscount &&
-        Number(billDisc) > 0 &&
-        blnApplyTaxonDiscount
-      ) {
-        const _BillDiscount = Number(billDisc);
-        const TaxPerc = getMaxTaxPercInItemList();
-        let TaxableAmt_StdRate = getTotalTaxable(TaxPerc);
-        const totalGross = Number(summary.gross ?? 0);
-        const totalDiscount = Number(summary.discount ?? 0);
-        const _TotalNetValue = totalGross - totalDiscount;
-
-        if (TaxableAmt_StdRate >= _BillDiscount) {
-          TaxableAmt_StdRate -= _BillDiscount;
-
-          // taxOnBilldisc rounded to decimalPoints (as C# did)
-          // taxOnBilldisc = Number((_BillDiscount * TaxPerc / 100).toFixed(applicationSettings.mainSettings.decimalPoints));
-        } else if (_BillDiscount > _TotalNetValue && _BillDiscount > 0 && _TotalNetValue > 0) {
-          // reset bill discount
-          // caller said they will set master fields as needed; mirror C# by setting back
-          // but keep result consistent:
-          master.billDiscount = 0;
-          TaxableAmt_StdRate = 0;
-          taxOnBilldisc = 0;
-        } else {
-          TaxableAmt_StdRate = 0;
-          taxOnBilldisc = 0;
+          if (formState.transaction.master.voucherForm !== "") {
+            result.transaction!.master!.master3 ??= (TransactionMaster3InitialData as any);
+            result.transaction!.master!.master3!.totCGST = round(cgst);
+            result.transaction!.master!.master3!.totSGST = round(sgst);
+            result.transaction!.master!.master3!.totIGST = round(igst);
+            result.transaction!.master!.master3!.totCess = round(cessAmt);
+            result.transaction!.master!.master3!.totAdditionalCess = round(additionalCess);
+          }
         }
-
-        // Tax recalc: first round to 3 decimals, then round to decimalPoints
-        tax = Number((TaxableAmt_StdRate * TaxPerc / 100).toFixed(3));
-        tax = Number(tax.toFixed(applicationSettings.mainSettings.decimalPoints));
-
-        // update taxed value in result.master
-        result.transaction!.master!.taxOnDiscount = taxOnBilldisc;
       }
+    }
 
-      // For India: recalc tax breakdown source (if needed) and set totalTax
-      if (clientSession.isAppGlobal === true) {
-        const taxes = [
-          { name: "SGST", amount: round(sgst) },
-          { name: "CGST", amount: round(cgst) },
-          { name: "IGST", amount: round(igst) },
-          { name: "CESS", amount: round(cessAmt) },
-          { name: "AddCESS", amount: round(additionalCess) },
-        ];
-        // keep a copy (optional) and set totalTax
-        result.taxBreakdown = taxes as any;
-        result.transaction!.master!.totalTax = round(taxes.reduce((s, t) => s + t.amount, 0));
-        tax = Number(result.transaction!.master!.totalTax ?? tax);
+    // basic net amount
+    if (formState.transaction.master.voucherType == VoucherType.ServiceInvoice) {
+      result.netAmount = Number(netAmt.toFixed(2)); //NetAmt.ToString("###0.00");
+    } else {
+      result.netAmount = round(netAmt);
+    }
+
+
+    // tax on bill discount handling (mirror C# Indian logic)
+    let taxOnBilldisc = Number(master.taxOnDiscount ?? 0);
+    let blnApplyTaxonDiscount = true;
+    if ((master.invTransactionMasterID ?? 0) > 0 && isEdit === false && Number(master.taxOnDiscount ?? 0) === 0) {
+      blnApplyTaxonDiscount = false;
+    }
+
+    if (
+      applicationSettings.branchSettings?.maintainKSA_EInvoice &&
+      applicationSettings.branchSettings?.enableTaxOnBillDiscount &&
+      Number(billDisc) > 0 &&
+      blnApplyTaxonDiscount
+    ) {
+      const _BillDiscount = Number(billDisc);
+      const TaxPerc = getMaxTaxPercInItemList();
+      let TaxableAmt_StdRate = getTotalTaxable(TaxPerc);
+      const totalGross = Number(summary.gross ?? 0);
+      const totalDiscount = Number(summary.discount ?? 0);
+      const _TotalNetValue = totalGross - totalDiscount;
+
+      if (TaxableAmt_StdRate >= _BillDiscount) {
+        TaxableAmt_StdRate -= _BillDiscount;
+
+        // taxOnBilldisc rounded to decimalPoints (as C# did)
+        // taxOnBilldisc = Number((_BillDiscount * TaxPerc / 100).toFixed(applicationSettings.mainSettings.decimalPoints));
+      } else if (_BillDiscount > _TotalNetValue && _BillDiscount > 0 && _TotalNetValue > 0) {
+        // reset bill discount
+        // caller said they will set master fields as needed; mirror C# by setting back
+        // but keep result consistent:
+        master.billDiscount = 0;
+        TaxableAmt_StdRate = 0;
+        taxOnBilldisc = 0;
       } else {
-        // KSA / non-India: tax remains summary.vatAmount
+        TaxableAmt_StdRate = 0;
+        taxOnBilldisc = 0;
       }
-  result.transaction!.master!.totalTax = formState.transaction.master.voucherType != VoucherType.SalesReturn ? toTaxFormat(tax) : round(tax);
 
-      // if netVal+tax differs and not India, recalc netAmt (mirrors C#)
-      // if (netVal + tax !== netAmt && clientSession.isAppGlobal !== true) {
-      // netAmt = ro((netVal + tax).toFixed(applicationSettings.mainSettings.decimalPoints));
-      // }
+      // Tax recalc: first round to 3 decimals, then round to decimalPoints
+      tax = Number((TaxableAmt_StdRate * TaxPerc / 100).toFixed(3));
+      if (
+        !clientSession.isAppGlobal &&
+        [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(formState.transaction.master.voucherType as any)
+      ) {
+        const decimals = applicationSettings.mainSettings.decimalPoints;
+        const factor = Math.pow(10, decimals);
 
-      // Populating totals into result
-      result.transaction!.master!.totalGross = summary.gross;
-      result.transaction!.master!.totalDiscount = summary.discount;
+        tax = Math.round(tax * factor) / factor;
+      } else {
+        tax = Number(tax.toFixed(applicationSettings.mainSettings.decimalPoints));
+      }
 
-      // Grand total calculation
-      let tcsAmt = 0;
-      let _grandTotal = Number(netAmt) + Number(additionalAmt ?? 0) - Number(billDisc ?? 0) - Number(taxOnBilldisc ?? 0);
 
-        result.transaction!.master!.roundAmount = 0;
-      // Round-off logic (same structure as PI)
-      if (master.hasroundOff && formState.formElements.chkRound.disabled !== true) {
+      // update taxed value in result.master
+      result.transaction!.master!.taxOnDiscount = taxOnBilldisc;
+    }
+
+    // For India: recalc tax breakdown source (if needed) and set totalTax
+    if (clientSession.isAppGlobal === true) {
+      const taxes = [
+        { name: "SGST", amount: round(sgst) },
+        { name: "CGST", amount: round(cgst) },
+        { name: "IGST", amount: round(igst) },
+        { name: "CESS", amount: round(cessAmt) },
+        { name: "AddCESS", amount: round(additionalCess) },
+      ];
+      // keep a copy (optional) and set totalTax
+      result.taxBreakdown = taxes as any;
+      result.transaction!.master!.totalTax = round(taxes.reduce((s, t) => s + t.amount, 0));
+      tax = Number(result.transaction!.master!.totalTax ?? tax);
+    } else {
+      // KSA / non-India: tax remains summary.vatAmount
+    }
+    if (formState.transaction.master.voucherType == VoucherType.ServiceInvoice) {
+      tax = Math.round(tax * 100) / 100;//Math.Round(Tax, 2);
+      result.transaction!.master!.totalTax = Number(tax.toFixed(2));// Tax.ToString("###0.00");
+    } else {
+      result.transaction!.master!.totalTax = [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.SalesInvoice].includes(formState.transaction.master.voucherType as any) ? toTaxFormat(tax) : round(tax);
+    }
+
+
+
+    // if netVal+tax differs and not India, recalc netAmt (mirrors C#)
+    // if (netVal + tax !== netAmt && clientSession.isAppGlobal !== true) {
+    // netAmt = ro((netVal + tax).toFixed(applicationSettings.mainSettings.decimalPoints));
+    // }
+
+    // Populating totals into result
+    result.transaction!.master!.totalGross = summary.gross;
+    result.transaction!.master!.totalDiscount = summary.discount;
+
+    // Grand total calculation
+    let tcsAmt = 0;
+    let _grandTotal = Number(netAmt) + Number(additionalAmt ?? 0) - Number(billDisc ?? 0) - Number(taxOnBilldisc ?? 0);
+
+    result.transaction!.master!.roundAmount = 0;
+    // Round-off logic (same structure as PI)
+    if ([VoucherType.SalesInvoice
+      , VoucherType.SalesReturn
+    ].includes(formState.transaction.master.voucherType as any)
+      && formState.formElements.hasroundOff.visible == true) {
+      if (master.hasroundOff && formState.formElements.hasroundOff.disabled !== true) {
         try {
           result.transaction!.master!.grandTotal = Math.round(_grandTotal);
         } catch (err) {
           console.error("Error in rounding calculation:", err);
         }
-      } else if (!master.hasroundOff && formState.formElements.chkRound.disabled !== true) {
+      } else if (!master.hasroundOff && formState.formElements.hasroundOff.disabled !== true) {
         try {
-          result.transaction!.master!.grandTotal =_grandTotal;
+          result.transaction!.master!.grandTotal = _grandTotal;
         } catch (err) {
           console.error("Error in rounding calculation:", err);
         }
-      }else {
+
+      } else {
         result.transaction!.master!.grandTotal = posRoundAmount(_grandTotal);
       }
-
-          result.transaction!.master!.roundAmount =round(_grandTotal- (result.transaction!.master!.grandTotal||0));
-      if (clientSession.isAppGlobal) {
-        // TCS calculation (Indian SI uses TCS percentage if present)
-        const TCSPerc = Number(formState.ledgerData.tCSPerc ?? master.master3?.totTCS ?? 0);
-        if (TCSPerc > 0) {
-          tcsAmt = (Number(result.transaction!.master!.grandTotal ?? 0) * TCSPerc) / 100;
-          // store into master3 or other as you track it
-          result.transaction!.master!.master3!.totTCS = round(tcsAmt);
-        } else {
-          result.transaction!.master!.master3!.totTCS = 0;
-        }
+    }
+    else {
+      if (clientSession.isAppGlobal && formState.transaction.master.voucherType == VoucherType.GoodsReceiptReturn) {
+        result.transaction!.master!.grandTotal = RoundAmountGlobal(_grandTotal);
+      } else if (clientSession.isAppGlobal) {
+        result.transaction!.master!.grandTotal = posRoundAmount(_grandTotal);
+      } else {
+        result.transaction!.master!.grandTotal = roundAmount(_grandTotal);
       }
+    }
 
-      // Net Grand Total = grandTotal + TCS - SR Amount (SR is service rounding / shipping etc.)
-      const SRAmt = Number(master.srAmount ?? 0);
-      const lblGrandTot = Number(result.transaction!.master!.grandTotal ?? 0) + Number(result.transaction!.master!.master3!.totTCS ?? 0);
-      result.transaction!.master!.grandTotal = round(lblGrandTot - SRAmt);
 
-      result.formElements = result.formElements || {} as FormElementsState;
-      result.formElements.lblBillBalance = result.formElements.lblBillBalance || { visible: false, Text: "" };
-      debugger
-      const safeNum = (v: any): number =>
-        Number.isFinite(Number(v)) ? Number(v) : 0;
-      const total = safeNum(result.transaction!.master!.grandTotal);
-      const adv = safeNum(master?.advAmntFroSO);
-      const cash = safeNum(master?.cashReceived);
-      const coupon = safeNum(master?.couponAmt);
-      const cardAmound = safeNum(master?.bankAmt);
-      const balance = round(total - adv - cash - coupon - cardAmound);
-debugger;
-      result.formElements.lblBillBalance.visible =  formState.transaction.master.voucherType !== VoucherType.SalesReturn;
+    result.transaction!.master!.roundAmount = round(_grandTotal - (result.transaction!.master!.grandTotal || 0));
+    if (clientSession.isAppGlobal && formState.transaction.master.voucherType == VoucherType.SalesInvoice) {
+      // TCS calculation (Indian SI uses TCS percentage if present)
+      const TCSPerc = Number(formState.ledgerData.tCSPerc ?? master.master3?.totTCS ?? 0);
+      if (TCSPerc > 0) {
+        tcsAmt = (Number(result.transaction!.master!.grandTotal ?? 0) * TCSPerc) / 100;
+        // store into master3 or other as you track it
+        result.transaction!.master!.master3!.totTCS = round(tcsAmt);
+      } else {
+        result.transaction!.master!.master3!.totTCS = 0;
+      }
+    }
 
-      result.formElements.lblBillBalance.label =
-        Number.isFinite(balance) && balance !== 0
-          ? balance.toString()
-          : "";
-      result.formElements.lblBillBalance.visible = true;
+    // Net Grand Total = grandTotal + TCS - SR Amount (SR is service rounding / shipping etc.)
+    const SRAmt = Number(master.srAmount ?? 0);
+    const lblGrandTot = Number(result.transaction!.master!.grandTotal ?? 0) + Number(result.transaction!.master!.master3!.totTCS ?? 0);
+    result.transaction!.master!.grandTotal = round(lblGrandTot - SRAmt);
 
-      try {
-        if ((cash + cardAmound + adv) > 0) {
+    result.formElements = result.formElements || {} as FormElementsState;
+    result.formElements.lblBillBalance = result.formElements.lblBillBalance || { visible: false, Text: "" };
+    const safeNum = (v: any): number =>
+      Number.isFinite(Number(v)) ? Number(v) : 0;
+    const total = safeNum(result.transaction!.master!.grandTotal);
+    const adv = safeNum(master?.advAmntFroSO);
+    const cash = safeNum(master?.cashReceived);
+    const coupon = safeNum(master?.couponAmt);
+    const cardAmound = safeNum(master?.bankAmt);
+    const balance = round(total - adv - cash - coupon - cardAmound);
+    result.formElements.lblBillBalance.visible = formState.transaction.master.voucherType == VoucherType.SalesInvoice;
 
-          result.formElements.lblBillBalance.label =
-            Number.isFinite(balance) ? balance.toString() : "";
-          result.formElements.lblBillBalance.visible = true;
-        } else {
+    result.formElements.lblBillBalance.label =
+      Number.isFinite(balance) && balance !== 0
+        ? balance.toString()
+        : "";
+    result.formElements.lblBillBalance.visible = true;
 
-          result.formElements.lblBillBalance.label = "";
-          result.formElements.lblBillBalance.visible = false;
-        }
-      } catch {
+    try {
+      if ((cash + cardAmound + adv) > 0) {
+
+        result.formElements.lblBillBalance.label =
+          Number.isFinite(balance) ? balance.toString() : "";
+        result.formElements.lblBillBalance.visible = true;
+      } else {
+
         result.formElements.lblBillBalance.label = "";
+        result.formElements.lblBillBalance.visible = false;
       }
+    } catch {
+      result.formElements.lblBillBalance.label = "";
+    }
 
-      //     if ((Number(master.cashReceived || "") + master.creditAmt +  master.advAmntFroSO) > 0)
-      // {
-      //   result.formElements.lblBillBalance.visible = true;
-      //     const label =  round(
-      //         formState.summary.total
-      //         - master.advAmntFroSO
-      //         - master.cashReceived
-      //         - master.couponAmt
-      //         - master.creditAmt
-      //     ).toString();
+    //     if ((Number(master.cashReceived || "") + master.creditAmt +  master.advAmntFroSO) > 0)
+    // {
+    //   result.formElements.lblBillBalance.visible = true;
+    //     const label =  round(
+    //         formState.summary.total
+    //         - master.advAmntFroSO
+    //         - master.cashReceived
+    //         - master.couponAmt
+    //         - master.creditAmt
+    //     ).toString();
 
-      //   result.formElements.lblBillBalance.label = label;
-      // }
-      // else
-      // {
+    //   result.formElements.lblBillBalance.label = label;
+    // }
+    // else
+    // {
 
-      //   result.formElements.lblBillBalance.visible = true;
+    //   result.formElements.lblBillBalance.visible = true;
 
-      //   result.formElements.lblBillBalance.label = "";
-      // }
+    //   result.formElements.lblBillBalance.label = "";
+    // }
 
-      // if foreign currency conversion needed (similar to PI)
-      if (formElements.pnlImport.visible && master.exchangeRate > 0) {
-        const exchangeRate = master.exchangeRate;
-        if (exchangeRate > 0) {
-          result.transaction!.master!.grandTotalFc = (result.transaction!.master!.grandTotal ?? 0) / exchangeRate;
-        }
+    // if foreign currency conversion needed (similar to PI)
+    if (formElements.pnlImport.visible && master.exchangeRate > 0) {
+      const exchangeRate = master.exchangeRate;
+      if (exchangeRate > 0) {
+        result.transaction!.master!.grandTotalFc = (result.transaction!.master!.grandTotal ?? 0) / exchangeRate;
       }
+    }
 
 
-      const giftEnabled = await checkGiftOnBilling(result.transaction!.master!.grandTotal);
-      result.formElements.btnGiftOnBilling = result.formElements.btnGiftOnBilling || { visible: false };
-      result.formElements.btnGiftOnBilling.visible = giftEnabled;
+    const giftEnabled = await checkGiftOnBilling(result.transaction!.master!.grandTotal);
+    result.formElements.btnGiftOnBilling = result.formElements.btnGiftOnBilling || { visible: false };
+    result.formElements.btnGiftOnBilling.visible = giftEnabled;
 
-      // dispatch only changed fields (keep pattern identical to PI)
-      commonParams.formStateHandleFieldChangeKeysOnly &&
-        dispatch &&
-        dispatch(commonParams.formStateHandleFieldChangeKeysOnly({ fields: result }));
+    // dispatch only changed fields (keep pattern identical to PI)
+    commonParams.formStateHandleFieldChangeKeysOnly &&
+      dispatch &&
+      dispatch(commonParams.formStateHandleFieldChangeKeysOnly({ fields: result }));
 
-      return result;
-    };
-    const checkTheProductInSchemes = async (qty: number, price: number, giftModels?: []) => {
-      try {
-        let result = false;
+    return result;
+  };
+  const checkTheProductInSchemes = async (qty: number, price: number, giftModels?: []) => {
+    try {
+      let result = false;
 
-        // Gift model (same as C# FirstOrDefault)
-        let finalRows = [...formState.transaction.details.filter(
-          (x) => x.productID > 0
-        )];
-        let giftClaimed = formState.giftClaimed || false;
-        const gt = (giftModels ?? formState.giftModels)[0];
-        if (!gt) return;
+      // Gift model (same as C# FirstOrDefault)
+      let finalRows = [...formState.transaction.details.filter(
+        (x) => x.productID > 0
+      )];
+      let giftClaimed = formState.giftClaimed || false;
+      const gt = (giftModels ?? formState.giftModels)[0];
+      if (!gt) return;
 
-        const details = formState.transaction.details; // your SI items list
+      const details = formState.transaction.details; // your SI items list
 
-        for (let i = 0; i < details.length; i++) {
-          const row = details[i];
-          if (!row) continue;
+      for (let i = 0; i < details.length; i++) {
+        const row = details[i];
+        if (!row) continue;
 
-          const rowBatchID = Number(row.productBatchID || 0);
-          const rowProductID = Number(row.productID || 0);
-          const rowQty = Number(row.qty || 0);
+        const rowBatchID = Number(row.productBatchID || 0);
+        const rowProductID = Number(row.productID || 0);
+        const rowQty = Number(row.qty || 0);
 
-          if (
-            Number(gt.productBatchID) === rowBatchID &&
-            Number(gt.productID) === rowProductID &&
-            rowQty === 1
-          ) {
-            const confirm = await ERPAlert.show({
-              icon: "info",
-              title: t("warning"),
-              text: t(`Qualified for Gift: ${gt.productName} at price ${price}. Proceed?`),
-              confirmButtonText: t("yes"),
-              cancelButtonText: t("no"),
-              showCancelButton: true,
-              onCancel: () => {
-                return false;
-              },
-            });
-            if (confirm) {
-              row.qty = qty;
-              row.schemeFreeQty = qty;
-              row.unitPrice = 0;
-              row.vatPerc = 0;
-              row.discPerc = 0;
-              row.ratePlusTax = 0;
+        if (
+          Number(gt.productBatchID) === rowBatchID &&
+          Number(gt.productID) === rowProductID &&
+          rowQty === 1
+        ) {
+          const confirm = await ERPAlert.show({
+            icon: "info",
+            title: t("warning"),
+            text: t(`Qualified for Gift: ${gt.productName} at price ${price}. Proceed?`),
+            confirmButtonText: t("yes"),
+            cancelButtonText: t("no"),
+            showCancelButton: true,
+            onCancel: () => {
+              return false;
+            },
+          });
+          if (confirm) {
+            row.qty = qty;
+            row.schemeFreeQty = qty;
+            row.unitPrice = 0;
+            row.vatPerc = 0;
+            row.discPerc = 0;
+            row.ratePlusTax = 0;
 
-              const outRow = await calculateRowAmount(row, "qty", { result: {} }, false, i);
-              finalRows[i] = outRow.transaction!.details![0] as TransactionDetail;
-              giftClaimed = true;
-              result = true;
-              break;
-            } else {
-            }
+            const outRow = await calculateRowAmount(row, "qty", { result: {} }, false, i);
+            finalRows[i] = outRow.transaction!.details![0] as TransactionDetail;
+            giftClaimed = true;
+            result = true;
+            break;
+          } else {
           }
         }
+      }
 
-        if (!result) {
-          ERPAlert.show({
-            icon: "warning",
-            title: "Product Not Found",
-            text: "Product not found in bill. Please check!",
-            confirmButtonText: "OK",
-          });
-        } else {
-          const summaryRes = calculateSummary(details, formState, {
-            result: { giftClaimed: giftClaimed },
-          });
-          let totalRes = await calculateTotal(
-            formState.transaction.master,
-            summaryRes
-              ? (summaryRes.summary as SummaryItems)
-              : initialInventoryTotals,
-            formState.formElements,
-            {
-              result: {},
-            }
-          );
-          if (totalRes) {
-            totalRes.summary = summaryRes.summary;
-            totalRes.transaction = totalRes.transaction ?? {};
-            totalRes.transaction.master = totalRes.transaction.master ?? {};
-            totalRes.transaction.master.billDiscount = 0;
-            totalRes.transaction.details = finalRows
-
-            dispatch(
-              formStateHandleFieldChangeKeysOnly({
-                fields: totalRes,
-                updateOnlyGivenDetailsColumns: true,
-              })
-            );
-          }
-        }
-      } catch (err: any) {
+      if (!result) {
         ERPAlert.show({
-          icon: "error",
-          title: "Error",
-          text: err.message || "checkTheProductPriceInSchemes error",
-          confirmButtonText: "OK",
-        });
-      }
-    };
-    const checkTheProductPriceInSchemes = async (
-      qty: number,
-      price: number,
-      giftModels?: GiftModel[]
-    ) => {
-      try {
-        let result = false;
-
-        let finalRows = [
-          ...formState.transaction.details.filter((x) => x.productID > 0),
-        ];
-
-        let giftClaimed = formState.giftClaimed || false;
-
-        const gt = (giftModels ?? formState.giftModels)[0];
-        if (!gt) return;
-
-        const details = formState.transaction.details;
-
-        for (let i = 0; i < details.length; i++) {
-          const row = details[i];
-          if (!row) continue;
-
-          const rowBatchID = Number(row.productBatchID || 0);
-          const rowProductID = Number(row.productID || 0);
-          const rowQty = Number(row.qty || 0);
-
-          // Same as C#:
-          if (
-            Number(gt.productBatchID) === rowBatchID &&
-            Number(gt.productID) === rowProductID &&
-            rowQty === 1
-          ) {
-            // ---------- ERPAlert Dialog EXACT FORMAT ----------
-            const confirm = await ERPAlert.show({
-              icon: "info",
-              title: t("warning"),
-              text: `Qualified for Gift: ${gt.productName} at Price ${price}. Proceed?`,
-              confirmButtonText: t("yes"),
-              cancelButtonText: t("no"),
-              showCancelButton: true,
-              onCancel: () => false,
-            });
-            // ---------------------------------------------------
-
-            if (confirm) {
-              // Exact field updates from C#
-              row.qty = qty;
-              row.schemeFreeQty = qty;
-              row.unitPrice = price;
-              row.ratePlusTax = price;
-
-              // Reverse VAT into base price
-              let taxP = Number(row.vatPerc || 0);
-              if (taxP > 0) {
-                const uRate =
-                  Number(row.ratePlusTax || 0) / (1 + taxP / 100);
-                row.unitPrice = Number(uRate.toFixed(3)); // "0.000"
-              }
-
-              // Recalculate row
-              const outRow = await calculateRowAmount(
-                row,
-                "qty",
-                { result: {} },
-                false,
-                i
-              );
-
-              finalRows[i] = outRow.transaction!.details![0] as TransactionDetail;
-
-              giftClaimed = true;
-              result = true;
-              break;
-            } else {
-              result = true;
-              break;
-            }
-          }
-        }
-
-        // If no matching row found
-        if (!result) {
-          ERPAlert.show({
-            icon: "warning",
-            title: "Product Not Found",
-            text: "Product not found in bill. Please check!",
-            confirmButtonText: "OK",
-          });
-        } else {
-          // Recalculate summary + totals
-          const summaryRes = calculateSummary(details, formState, {
-            result: { giftClaimed },
-          });
-
-          let totalRes = await calculateTotal(
-            formState.transaction.master,
-            summaryRes
-              ? (summaryRes.summary as SummaryItems)
-              : initialInventoryTotals,
-            formState.formElements,
-            { result: {} }
-          );
-
-          if (totalRes) {
-            totalRes.summary = summaryRes.summary;
-            totalRes.transaction = totalRes.transaction ?? {};
-            totalRes.transaction.master = totalRes.transaction.master ?? {};
-
-            // Same as C#: Reset bill discount when applying gift
-            totalRes.transaction.master.billDiscount = 0;
-
-            // Replace updated rows
-            totalRes.transaction.details = finalRows;
-
-            dispatch(
-              formStateHandleFieldChangeKeysOnly({
-                fields: totalRes,
-                updateOnlyGivenDetailsColumns: true,
-              })
-            );
-          }
-        }
-      } catch (err: any) {
-        ERPAlert.show({
-          icon: "error",
-          title: "Error",
-          text: err.message || "checkTheProductPriceInSchemes error",
-          confirmButtonText: "OK",
-        });
-      }
-    };
-    const removeGiftFromGrid = async (detailsInput?: TransactionDetail[], currentCell?: CurrentCell | undefined) => {
-      try {
-        let giftClaimed = formState.giftClaimed || false;
-
-        if (!giftClaimed) return;
-
-        // ------------------ 1. Ask user for confirmation ------------------
-        const confirm = await ERPAlert.show({
           icon: "warning",
-          title: "Gift Product",
-          text: "Gift Product added! Gift will be removed. add it later if you want",
+          title: "Product Not Found",
+          text: "Product not found in bill. Please check!",
           confirmButtonText: "OK",
-          showCancelButton: false,
         });
+      } else {
+        const summaryRes = calculateSummary(details, formState, {
+          result: { giftClaimed: giftClaimed },
+        });
+        let totalRes = await calculateTotal(
+          formState.transaction.master,
+          summaryRes
+            ? (summaryRes.summary as SummaryItems)
+            : initialInventoryTotals,
+          formState.formElements,
+          {
+            result: {},
+          }
+        );
+        if (totalRes) {
+          totalRes.summary = summaryRes.summary;
+          totalRes.transaction = totalRes.transaction ?? {};
+          totalRes.transaction.master = totalRes.transaction.master ?? {};
+          totalRes.transaction.master.billDiscount = 0;
+          totalRes.transaction.details = finalRows
 
-        if (!confirm) return;
+          dispatch(
+            formStateHandleFieldChangeKeysOnly({
+              fields: totalRes,
+              updateOnlyGivenDetailsColumns: true,
+            })
+          );
+        }
+      }
+    } catch (err: any) {
+      ERPAlert.show({
+        icon: "error",
+        title: "Error",
+        text: err.message || "checkTheProductPriceInSchemes error",
+        confirmButtonText: "OK",
+      });
+    }
+  };
+  const checkTheProductPriceInSchemes = async (
+    qty: number,
+    price: number,
+    giftModels?: GiftModel[]
+  ) => {
+    try {
+      let result = false;
 
-        // ------------------ 2. Lookup gift model ------------------
-        const gt = formState.giftModels?.[0];
-        if (!gt) return;
+      let finalRows = [
+        ...formState.transaction.details.filter((x) => x.productID > 0),
+      ];
 
-        const giftBatchID = formState.giftBatchId;
-        const giftProductQty = formState.giftProductQty;
-        const giftProductPrice = formState.giftProductPrice;
+      let giftClaimed = formState.giftClaimed || false;
 
-        // API call that replaces:
-        // GetProductsForSalesTransactionsByCode(barcode, productCode, warehouse, type, false, date)
-        const apiParams = {
-          barcode: gt.barcode,
-          productCode: gt.productCode,
-          warehouseID: formState.transaction.master.fromWarehouseID,
-          voucherType: formState.transaction.master.voucherType,
-          transDate: formState.transaction.master.transactionDate,
-        };
+      const gt = (giftModels ?? formState.giftModels)[0];
+      if (!gt) return;
 
-        const query = new URLSearchParams(
-          Object.fromEntries(
-            Object.entries(apiParams).map(([k, v]) => [k, String(v ?? "")])
-          )
-        ).toString();
+      const details = formState.transaction.details;
 
-        const url = `${Urls.inv_transaction_base}${transactionType}/GetProductsForSalesTransactionsByCode/?${query}`;
+      for (let i = 0; i < details.length; i++) {
+        const row = details[i];
+        if (!row) continue;
 
-        const dtGiftItem = await api.getAsync(url);
-        if (!dtGiftItem) return;
+        const rowBatchID = Number(row.productBatchID || 0);
+        const rowProductID = Number(row.productID || 0);
+        const rowQty = Number(row.qty || 0);
 
-        const stdItem = dtGiftItem;
-        const details = detailsInput ? [...detailsInput] : [...formState.transaction.details];
-        let finalRows = [...details];
+        // Same as C#:
+        if (
+          Number(gt.productBatchID) === rowBatchID &&
+          Number(gt.productID) === rowProductID &&
+          rowQty === 1
+        ) {
+          // ---------- ERPAlert Dialog EXACT FORMAT ----------
+          const confirm = await ERPAlert.show({
+            icon: "info",
+            title: t("warning"),
+            text: `Qualified for Gift: ${gt.productName} at Price ${price}. Proceed?`,
+            confirmButtonText: t("yes"),
+            cancelButtonText: t("no"),
+            showCancelButton: true,
+            onCancel: () => false,
+          });
+          // ---------------------------------------------------
 
-        // ------------------ 3. Loop through grid (details) ------------------
-        for (let i = 0; i < details.length; i++) {
-          const row = details[i];
-          if (!row || Number(row.productID) <= 0) continue;
+          if (confirm) {
+            // Exact field updates from C#
+            row.qty = qty;
+            row.schemeFreeQty = qty;
+            row.unitPrice = price;
+            row.ratePlusTax = price;
 
-          const rowBatchID = Number(row.productBatchID || 0);
-          const rowRatePlusTax = Number(row.ratePlusTax || 0);
-          const rowSchemeQty = Number(row.schemeFreeQty || 0);
-
-          // Same C# matching conditions:
-          // Batch match + same gift price + same gift qty
-          const isGiftRow =
-            rowBatchID === Number(giftBatchID) &&
-            rowRatePlusTax === Number(giftProductPrice) &&
-            rowSchemeQty === Number(giftProductQty);
-
-          if (isGiftRow) {
-            // ------------------ 4. Reset to normal product values ------------------
-            row.qty = 1;
-            row.schemeFreeQty = 0;
-            row.unitPrice = Number(stdItem.stdSalesPrice || 0);
-            row.vatPerc = (clientSession.isAppGlobal === true && formState.transaction.master.voucherType != VoucherType.SalesEstimate)
-              || (!clientSession.isAppGlobal && formState.transaction.master.voucherForm === "VAT") ? Number(stdItem.sVatPerc || 0) : 0;
-            row.ratePlusTax = row.unitPrice;
-
-            // Reverse calculate base price from ratePlusTax
-            const taxP = Number(row.vatPerc || 0);
-
+            // Reverse VAT into base price
+            let taxP = Number(row.vatPerc || 0);
             if (taxP > 0) {
               const uRate =
                 Number(row.ratePlusTax || 0) / (1 + taxP / 100);
-              row.unitPrice = Number(uRate.toFixed(3));
+              row.unitPrice = Number(uRate.toFixed(3)); // "0.000"
             }
 
-            // Recalculate the row
-            const newRow = await calculateRowAmount(
+            // Recalculate row
+            const outRow = await calculateRowAmount(
               row,
               "qty",
               { result: {} },
@@ -3490,20 +3483,37 @@ debugger;
               i
             );
 
-            finalRows[i] = newRow.transaction!.details![0] as TransactionDetail;
+            finalRows[i] = outRow.transaction!.details![0] as TransactionDetail;
 
-            giftClaimed = false;
+            giftClaimed = true;
+            result = true;
+            break;
+          } else {
+            result = true;
+            break;
           }
         }
+      }
 
-        // ------------------ 5. Recalculate totals ------------------
-        const summaryRes = calculateSummary(finalRows, formState, {
+      // If no matching row found
+      if (!result) {
+        ERPAlert.show({
+          icon: "warning",
+          title: "Product Not Found",
+          text: "Product not found in bill. Please check!",
+          confirmButtonText: "OK",
+        });
+      } else {
+        // Recalculate summary + totals
+        const summaryRes = calculateSummary(details, formState, {
           result: { giftClaimed },
         });
 
         let totalRes = await calculateTotal(
           formState.transaction.master,
-          summaryRes?.summary ?? initialInventoryTotals as any,
+          summaryRes
+            ? (summaryRes.summary as SummaryItems)
+            : initialInventoryTotals,
           formState.formElements,
           { result: {} }
         );
@@ -3512,12 +3522,13 @@ debugger;
           totalRes.summary = summaryRes.summary;
           totalRes.transaction = totalRes.transaction ?? {};
           totalRes.transaction.master = totalRes.transaction.master ?? {};
+
+          // Same as C#: Reset bill discount when applying gift
+          totalRes.transaction.master.billDiscount = 0;
+
+          // Replace updated rows
           totalRes.transaction.details = finalRows;
-          totalRes.giftClaimed = false;
-          if (currentCell) {
-            totalRes.currentCell = currentCell;
-          }
-          // Update UI
+
           dispatch(
             formStateHandleFieldChangeKeysOnly({
               fields: totalRes,
@@ -3525,38 +3536,176 @@ debugger;
             })
           );
         }
-      } catch (err: any) {
-        ERPAlert.show({
-          icon: "error",
-          title: "Error",
-          text: err.message || "removeGiftFromGrid error",
-          confirmButtonText: "OK",
-        });
       }
-    };
-
-
-    return {
-      clearEntryControl,
-      setUserRightsFn,
-      disableControlsFn,
-      validateTransactionDate,
-      getClosedDate,
-      calculateTotal,
-      calculateRowAmount,
-      changeGrossToUnitRate,
-      enableControls,
-      disableControls,
-      calculateSummary,
-      refactorDetails,
-      attachDetails,
-      attachMaster,
-      applyDiscountsToItems,
-      calculateTaxOnDiscount,
-      checkTheProductInSchemes,
-      checkTheProductPriceInSchemes,
-      setCurrentCell,
-      loadProductDetailsByAutoBarcode,
-      removeGiftFromGrid
-    };
+    } catch (err: any) {
+      ERPAlert.show({
+        icon: "error",
+        title: "Error",
+        text: err.message || "checkTheProductPriceInSchemes error",
+        confirmButtonText: "OK",
+      });
+    }
   };
+  const removeGiftFromGrid = async (detailsInput?: TransactionDetail[], currentCell?: CurrentCell | undefined) => {
+    try {
+      let giftClaimed = formState.giftClaimed || false;
+
+      if (!giftClaimed) return;
+
+      // ------------------ 1. Ask user for confirmation ------------------
+      const confirm = await ERPAlert.show({
+        icon: "warning",
+        title: "Gift Product",
+        text: "Gift Product added! Gift will be removed. add it later if you want",
+        confirmButtonText: "OK",
+        showCancelButton: false,
+      });
+
+      if (!confirm) return;
+
+      // ------------------ 2. Lookup gift model ------------------
+      const gt = formState.giftModels?.[0];
+      if (!gt) return;
+
+      const giftBatchID = formState.giftBatchId;
+      const giftProductQty = formState.giftProductQty;
+      const giftProductPrice = formState.giftProductPrice;
+
+      // API call that replaces:
+      // GetProductsForSalesTransactionsByCode(barcode, productCode, warehouse, type, false, date)
+      const apiParams = {
+        barcode: gt.barcode,
+        productCode: gt.productCode,
+        warehouseID: formState.transaction.master.fromWarehouseID,
+        voucherType: formState.transaction.master.voucherType,
+        transDate: formState.transaction.master.transactionDate,
+      };
+
+      const query = new URLSearchParams(
+        Object.fromEntries(
+          Object.entries(apiParams).map(([k, v]) => [k, String(v ?? "")])
+        )
+      ).toString();
+
+      const url = `${Urls.inv_transaction_base}${transactionType}/GetProductsForSalesTransactionsByCode/?${query}`;
+
+      const dtGiftItem = await api.getAsync(url);
+      if (!dtGiftItem) return;
+
+      const stdItem = dtGiftItem;
+      const details = detailsInput ? [...detailsInput] : [...formState.transaction.details];
+      let finalRows = [...details];
+
+      // ------------------ 3. Loop through grid (details) ------------------
+      for (let i = 0; i < details.length; i++) {
+        const row = details[i];
+        if (!row || Number(row.productID) <= 0) continue;
+
+        const rowBatchID = Number(row.productBatchID || 0);
+        const rowRatePlusTax = Number(row.ratePlusTax || 0);
+        const rowSchemeQty = Number(row.schemeFreeQty || 0);
+
+        // Same C# matching conditions:
+        // Batch match + same gift price + same gift qty
+        const isGiftRow =
+          rowBatchID === Number(giftBatchID) &&
+          rowRatePlusTax === Number(giftProductPrice) &&
+          rowSchemeQty === Number(giftProductQty);
+
+        if (isGiftRow) {
+          // ------------------ 4. Reset to normal product values ------------------
+          row.qty = 1;
+          row.schemeFreeQty = 0;
+          row.unitPrice = Number(stdItem.stdSalesPrice || 0);
+          row.vatPerc = (clientSession.isAppGlobal === true && formState.transaction.master.voucherType != VoucherType.SalesEstimate)
+            || (!clientSession.isAppGlobal && formState.transaction.master.voucherForm === "VAT") ? Number(stdItem.sVatPerc || 0) : 0;
+          row.ratePlusTax = row.unitPrice;
+
+          // Reverse calculate base price from ratePlusTax
+          const taxP = Number(row.vatPerc || 0);
+
+          if (taxP > 0) {
+            const uRate =
+              Number(row.ratePlusTax || 0) / (1 + taxP / 100);
+            row.unitPrice = Number(uRate.toFixed(3));
+          }
+
+          // Recalculate the row
+          const newRow = await calculateRowAmount(
+            row,
+            "qty",
+            { result: {} },
+            false,
+            i
+          );
+
+          finalRows[i] = newRow.transaction!.details![0] as TransactionDetail;
+
+          giftClaimed = false;
+        }
+      }
+
+      // ------------------ 5. Recalculate totals ------------------
+      const summaryRes = calculateSummary(finalRows, formState, {
+        result: { giftClaimed },
+      });
+
+      let totalRes = await calculateTotal(
+        formState.transaction.master,
+        summaryRes?.summary ?? initialInventoryTotals as any,
+        formState.formElements,
+        { result: {} }
+      );
+
+      if (totalRes) {
+        totalRes.summary = summaryRes.summary;
+        totalRes.transaction = totalRes.transaction ?? {};
+        totalRes.transaction.master = totalRes.transaction.master ?? {};
+        totalRes.transaction.details = finalRows;
+        totalRes.giftClaimed = false;
+        if (currentCell) {
+          totalRes.currentCell = currentCell;
+        }
+        // Update UI
+        dispatch(
+          formStateHandleFieldChangeKeysOnly({
+            fields: totalRes,
+            updateOnlyGivenDetailsColumns: true,
+          })
+        );
+      }
+    } catch (err: any) {
+      ERPAlert.show({
+        icon: "error",
+        title: "Error",
+        text: err.message || "removeGiftFromGrid error",
+        confirmButtonText: "OK",
+      });
+    }
+  };
+
+
+  return {
+    clearEntryControl,
+    setUserRightsFn,
+    disableControlsFn,
+    validateTransactionDate,
+    getClosedDate,
+    calculateTotal,
+    calculateRowAmount,
+    changeGrossToUnitRate,
+    enableControls,
+    disableControls,
+    calculateSummary,
+    refactorDetails,
+    attachDetails,
+    attachMaster,
+    applyDiscountsToItems,
+    calculateTaxOnDiscount,
+    checkTheProductInSchemes,
+    checkTheProductPriceInSchemes,
+    setCurrentCell,
+    loadProductDetailsByAutoBarcode,
+    removeGiftFromGrid
+  };
+};

@@ -1,0 +1,223 @@
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { X, Loader } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import {
+  barcodeScanner,
+  type BarcodeScanResult,
+} from '../utilities/barcode-scanner-service';
+
+interface BarcodeModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onScan: (result: BarcodeScanResult) => void;
+  onEnterTrigger?: (result: BarcodeScanResult) => void;
+  title?: string;
+}
+
+const BarcodeModalScanner: React.FC<BarcodeModalProps> = ({
+  isOpen,
+  onClose,
+  onScan,
+  onEnterTrigger,
+  title = 'Scan Barcode',
+}) => {
+  const { t } = useTranslation('transaction');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const scannerInitializedRef = useRef(false);
+  const mountedRef = useRef(true);
+  const initializingRef = useRef(false);
+
+  // Store callbacks in refs to avoid dependency issues
+  const onScanRef = useRef(onScan);
+  const onCloseRef = useRef(onClose);
+  const onEnterTriggerRef = useRef(onEnterTrigger);
+
+  // Update refs when callbacks change
+  useEffect(() => {
+    onScanRef.current = onScan;
+    onCloseRef.current = onClose;
+    onEnterTriggerRef.current = onEnterTrigger;
+  }, [onScan, onClose, onEnterTrigger]);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isOpen) {
+      if (scannerInitializedRef.current) {
+        barcodeScanner.stopScanning();
+        scannerInitializedRef.current = false;
+      }
+      initializingRef.current = false;
+      return;
+    }
+
+    const initializeScanner = async () => {
+      // Prevent double initialization
+      if (initializingRef.current || scannerInitializedRef.current) {
+        console.log('⚠️ Modal: Scanner already initializing or initialized, skipping');
+        return;
+      }
+
+      if (!mountedRef.current) return;
+
+      initializingRef.current = true;
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        await barcodeScanner.startScanning(
+          {
+            onScan: (result: BarcodeScanResult) => {
+              if (mountedRef.current) {
+                onScanRef.current(result);
+                onCloseRef.current();
+              }
+            },
+            onEnterTrigger: (result: BarcodeScanResult) => {
+              if (mountedRef.current && onEnterTriggerRef.current) {
+                onEnterTriggerRef.current(result);
+              }
+            },
+            onError: (err: Error) => {
+              if (mountedRef.current) {
+                setError(err.message);
+              }
+            },
+            enableVibration: true,
+            enableBeep: true,
+          },
+          'barcode-video'
+        );
+
+        scannerInitializedRef.current = true;
+      } catch (err) {
+        const error = err as Error;
+        if (mountedRef.current) {
+          setError(error.message);
+        }
+      } finally {
+        initializingRef.current = false;
+        if (mountedRef.current) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    initializeScanner();
+
+    return () => {
+      if (scannerInitializedRef.current) {
+        barcodeScanner.stopScanning();
+        scannerInitializedRef.current = false;
+      }
+      initializingRef.current = false;
+    };
+  }, [isOpen]); // Only depend on isOpen - callbacks are accessed via refs
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
+      <div className="relative w-full max-w-md bg-white dark:bg-dark-bg-card rounded-lg overflow-hidden shadow-2xl">
+        {/* Header */}
+        <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/50 to-transparent p-4 z-10 flex justify-between items-center">
+          <h2 className="text-white font-semibold">{title}</h2>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-white/20 rounded-full transition-colors"
+            aria-label="Close scanner"
+          >
+            <X className="w-5 h-5 text-white" />
+          </button>
+        </div>
+
+        {/* Video/Loading Area */}
+        <div className="relative w-full h-96 bg-black overflow-hidden">
+          {isLoading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/50 z-20">
+              <div className="flex flex-col items-center gap-3">
+                <Loader className="w-8 h-8 text-white animate-spin" />
+                <p className="text-white text-sm">Initializing camera...</p>
+              </div>
+            </div>
+          )}
+
+          {error && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/70 z-20 p-4">
+              <div className="bg-red-600 text-white p-6 rounded-lg max-w-sm text-center">
+                <p className="font-semibold mb-2">Camera Error</p>
+                <p className="text-sm mb-4">{error}</p>
+                <button
+                  onClick={onClose}
+                  className="px-4 py-2 bg-white text-red-600 rounded font-semibold hover:bg-gray-100 transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          )}
+
+          {!isLoading && !error && (
+            <>
+              <video
+                ref={videoRef}
+                id="barcode-video"
+                autoPlay
+                playsInline
+                muted
+                className="w-full h-full object-cover"
+              />
+
+              {/* Scan Frame Overlay */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className="relative w-72 h-72">
+                  {/* Border */}
+                  <div className="absolute inset-0 border-4 border-green-500 rounded-xl shadow-lg" />
+
+                  {/* Corners */}
+                  <div className="absolute top-0 left-0 w-6 h-6 border-t-4 border-l-4 border-green-500 rounded-tl" />
+                  <div className="absolute top-0 right-0 w-6 h-6 border-t-4 border-r-4 border-green-500 rounded-tr" />
+                  <div className="absolute bottom-0 left-0 w-6 h-6 border-b-4 border-l-4 border-green-500 rounded-bl" />
+                  <div className="absolute bottom-0 right-0 w-6 h-6 border-b-4 border-r-4 border-green-500 rounded-br" />
+
+                  {/* Scan Line */}
+                  <div className="absolute inset-0 overflow-hidden rounded-xl">
+                    <div
+                      className="w-full h-0.5 bg-gradient-to-r from-transparent via-green-500 to-transparent"
+                      style={{
+                        animation: 'scan-movement 2s linear infinite',
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Instructions */}
+              <div className="absolute bottom-8 left-0 right-0 text-center pointer-events-none">
+                <p className="text-white text-sm font-medium drop-shadow-lg">
+                  Align barcode in frame
+                </p>
+              </div>
+            </>
+          )}
+        </div>
+
+        <style>{`
+          @keyframes scan-movement {
+            0% { transform: translateY(0%); }
+            100% { transform: translateY(100%); }
+          }
+        `}</style>
+      </div>
+    </div>
+  );
+};
+
+export default BarcodeModalScanner;

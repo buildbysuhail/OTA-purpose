@@ -167,6 +167,7 @@ const Urls = {
   getUserThemes: "/Core/Preferences/GetUserThemes/",
   reset_user_theme: "/Core/Preferences/ResetUserTheme/",
   reset_user_settings: "/Core/Preferences/ResetUserSettings/",
+  auto_update: "/Core/Preferences/AutoUpdate",
   // AccountSettings/UserBranches
   userBranches: "/Core/UserBranches/",
   deleteUserBranches: "/Core/UserBranches/{Id}/",
@@ -809,7 +810,7 @@ const Urls = {
   eInvoice_apiPortal_send_otp: '/EInvoiceAPIPortal/send-otp',
   eInvoice_apiPortal_validate_otp: '/EInvoiceAPIPortal/validate-otp',
 
-  stockTransfer_warehouseStock:"Inventory/StockTransfer/WareHouseStock"
+
 
 };
 

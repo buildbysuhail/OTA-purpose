@@ -215,6 +215,14 @@ export interface TransactionMaster {
   lblSRAmount: string; //new
   totalTax?: number; //new
   advAmntFroSO: number;
+
+  // stock
+  stockCountPrefix?: string;
+  stockCountVrNumber?: number;
+  fType?: string;
+  name?: string;
+  address?: string;  // Check use the address1
+  purInvNumber?: number;
 }
 
 export interface TransactionMaster3 {
@@ -380,6 +388,7 @@ export interface TransactionDetail {
   smCode:string; // new
   salesman:string; // new
   salesmanID:number; // new
+  adjQty:number; // For SO,GD,SRV
 
   // stock
   stockTo?: number;
@@ -741,6 +750,9 @@ export interface TransactionFormState {
   chkCostFromExcel?: boolean;
   wStockListOpen?: boolean;
   allowMultiUnits?: boolean;
+  dateCheckbox?: boolean;
+  allPositiveStockToZero?: boolean;
+  allNegativeStockToZero?: boolean;
 }
 export interface GiftModel {
   productBatchID: number;

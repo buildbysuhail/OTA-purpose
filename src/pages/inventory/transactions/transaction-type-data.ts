@@ -300,7 +300,8 @@ export const initialTransactionDetailData: TransactionDetail = {
   flavors: "",
   smCode: "",
   salesman: "",
-  salesmanID: 0
+  salesmanID: 0,
+  adjQty: 0,
 };
 export const transactionInitialData: TransactionData = {
   master: TransactionMasterInitialData, 
@@ -360,7 +361,7 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   cbWarranty: { visible: false, disabled: false, label: "warranty" },
   chkDummyBillWithInventory: { visible: false, disabled: false, label: "dummy_bill_with_inventory" },
   chkIsLocked: { visible: false, disabled: false, label: "is_locked" },
-  chkRound: { visible: true, disabled: false, label: "round" },
+  // chkRound: { visible: true, disabled: false, label: "round" },
   chkSelectDebitAccount: { visible: true, disabled: true, label: "select_debit_account" },
   chkTemporaryVATNumber: { visible: true, disabled: false, label: "temporary_vat_number" },
   dgvInventory: { visible: true, disabled: false, label: "" },

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "464969509116",
+    "project_id": "polotest-8acab",
+    "storage_bucket": "polotest-8acab.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:464969509116:android:b94c6659b2636377ae8f79",
+        "android_client_info": {
+          "package_name": "com.example.webapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXyTeqkVfEiCAkJh-OghXjx0w5sv2FfKk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:464969509116:android:e56a555ccfeeeff7ae8f79",
+        "android_client_info": {
+          "package_name": "com.polosys.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXyTeqkVfEiCAkJh-OghXjx0w5sv2FfKk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -42,7 +42,7 @@ const Employee = React.forwardRef<HTMLInputElement, CostCentreProps>(({
             );
             handleFieldKeyDown("employeeID", "Enter");
           }}
-          value={formState.transaction.master.employeeID}
+          value={formState.transaction.master.employeeID || -2}
           field={{
             id: "employeeID",
             valueKey: "id",

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch} from "react-redux/es/exports";
+import { useDispatch, useSelector} from "react-redux/es/exports";
 import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import Urls from "../../../../../redux/urls";
 import { APIClient } from "../../../../../helpers/api-client";
+import { RootState } from "../../../../../redux/store";
 
 interface WStockListProps {
   closeModal: () => void;
@@ -44,6 +45,7 @@ const WareHouseStockList: React.FC<WStockListProps> = ({ closeModal, t, productN
     },
   ];
   const [warehouseStock, setWarehouseStock] = useState<WarehouseStock[]>([]);
+  const formState = useSelector((state: RootState) => state.InventoryTransaction);
 
   useEffect(() => {
   if (!barCode) return;
@@ -51,9 +53,7 @@ const WareHouseStockList: React.FC<WStockListProps> = ({ closeModal, t, productN
   const loadWarehouseStock = async () => {
     try {
 
-      const res = await api.getAsync(
-        `${Urls.stockTransfer_warehouseStock}/${barCode}`
-      );
+      const res = await api.getAsync(`${Urls.inv_transaction_base}${formState.transactionType}/WareHouseStock/${barCode}`);
       setWarehouseStock(res);
     } catch (error) {
       console.error("Warehouse stock API error:", error);

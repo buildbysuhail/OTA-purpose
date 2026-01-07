@@ -735,7 +735,7 @@ const dataWarranty = voucherType != "LPO" ? await api.getWithCacheAsync(
       const decoded = safeBase64Decode(Utc) ?? "{}";
       userConfig = customJsonParse(decoded ?? "{}");
     } else {
-      userConfig = await fetchUserConfig();
+      userConfig = JSON.parse(JSON.stringify(await fetchUserConfig())) ;
     }
     
       let _formState: TransactionFormState;
@@ -787,16 +787,16 @@ debugger;
               ledgerID: applicationSettings.accountsSettings?.defaultCashAcc,
               fromWarehouseID:
         applicationSettings.inventorySettings.maintainWarehouse
-          ? TransactionFormStateInitialData.userConfig?.presetWarehouseId ?? 0 > 0
-            ? TransactionFormStateInitialData.userConfig?.presetWarehouseId??0
+          ? userConfig?.presetWarehouseId ?? 0 > 0
+            ? userConfig?.presetWarehouseId??0
             : applicationSettings.accountsSettings.allowSalesCounter &&
-              (TransactionFormStateInitialData.userConfig?.counterWiseWarehouseId ?? 0) > 0
-              ? TransactionFormStateInitialData.userConfig?.counterWiseWarehouseId ?? 0
+              (userConfig?.counterWiseWarehouseId ?? 0) > 0
+              ? userConfig?.counterWiseWarehouseId ?? 0
               : applicationSettings.inventorySettings.defaultWareHouse
           : (TransactionFormStateInitialData.transaction.master.fromWarehouseID??0),
           costCentreID:
-        TransactionFormStateInitialData.userConfig?.presetCostenterId ?? 0 > 0
-          ? TransactionFormStateInitialData.userConfig?.presetCostenterId ?? 0
+        userConfig?.presetCostenterId ?? 0 > 0
+          ? userConfig?.presetCostenterId ?? 0
           : TransactionFormStateInitialData.transaction.master.costCentreID,
       employeeID:formState.userConfig?.holdSalesMan ? formState.transaction.master.employeeID : userSession.employeeId > 0
         ? userSession.employeeId
@@ -872,8 +872,8 @@ debugger;
 
 
           // 🔘 Round Off checkbox logic
-          chkRound: {
-            ..._formState.formElements.chkRound,
+          hasroundOff: {
+            ..._formState.formElements.hasroundOff,
             disabled:
               !(applicationSettings.mainSettings.pOSRoundingMethod === "No Rounding" ||
               (applicationSettings.mainSettings.pOSRoundingMethod === "Not Set" &&
@@ -967,15 +967,16 @@ debugger;
               applicationSettings.branchSettings.maintainCounterWisePrefixForTransaction &&
               userSession.counter_vr_prefix !== "" &&
               !applicationSettings.branchSettings.maintainKSA_EInvoice;
-      _formState.transaction.master.voucherPrefix = _formState.transaction.master.voucherForm === "CSI" &&
-        applicationSettings.mainSettings.maintainSeperatePrefixforCashSales &&
-        !applicationSettings.branchSettings.maintainKSA_EInvoice
-        ? applicationSettings.mainSettings.cashSalesVoucherPrefix
-        : applicationSettings.branchSettings.maintainCounterWisePrefixForTransaction &&
-          userSession.counter_vr_prefix !== "" &&
-          !applicationSettings.branchSettings.maintainKSA_EInvoice
-          ? userSession.counter_vr_prefix
-          : _formState.formElements.voucherPrefix.text
+
+      // _formState.transaction.master.voucherPrefix = _formState.transaction.master.voucherForm === "CSI" &&
+      //   applicationSettings.mainSettings.maintainSeperatePrefixforCashSales &&
+      //   !applicationSettings.branchSettings.maintainKSA_EInvoice
+      //   ? applicationSettings.mainSettings.cashSalesVoucherPrefix
+      //   : applicationSettings.branchSettings.maintainCounterWisePrefixForTransaction &&
+      //     userSession.counter_vr_prefix !== "" &&
+      //     !applicationSettings.branchSettings.maintainKSA_EInvoice
+      //     ? userSession.counter_vr_prefix
+      //     : _formState.formElements.voucherPrefix.text
 
       /////////////////////////////////////////////////
 
@@ -1322,7 +1323,7 @@ debugger;
 
 
   debugger;
-        //
+        //  
         // _formState = await loadLedgerData(_formState) as any;
         // _formState.isInitialLedger = true;
         setTransVoucher(_formState, true);

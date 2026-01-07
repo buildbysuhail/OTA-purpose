@@ -6,6 +6,7 @@ import Urls from "../../redux/urls";
 import ERPInput from "../../components/ERPComponents/erp-input";
 import ERPDateInput from "../../components/ERPComponents/erp-date-input";
 import ERPButton from "../../components/ERPComponents/erp-button";
+import ERPCheckbox from "../../components/ERPComponents/erp-checkbox";
 import { useDispatch } from "react-redux";
 import emailImage from "../../assets/images/apps/email-us.44dad893243c82213359c6d8c7c8f201.svg";
 import { ResponseModelWithValidation } from "../../base/response-model";
@@ -18,7 +19,10 @@ import AccountSettingsApis from "./account-settings-apis";
 import { useAppDispatch, useAppSelector, } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
 import { userSession } from "../../redux/slices/user-session/thunk";
+import { setUserSessionItem } from "../../redux/slices/user-session/reducer";
 import { useTranslation } from "react-i18next";
+import UpdateAvailableCard from "../../components/ERPComponents/UpdateAvailableCard";
+import { Capacitor } from "@capacitor/core";
 
 interface AccountSettingsProps { }
 interface UserProfileBasicInfo {
@@ -155,17 +159,42 @@ const AccountSettingsProfile: FC<AccountSettingsProps> = (props) => {
 
   /////////////////////////////////////////////////////////////////////
   const onImageSuccess = useMemo(() => {
-    
+
     return (url: string) => {
       setImage(url);
       appDispatch(userSession());
     };
   }, []);
 
+  // Fetch auto-update setting from API
+  const getAutoUpdateSetting = async () => {
+    try {
+      const response = await api.get(Urls.auto_update);
+      // API returns true or false (may be boolean or string)
+      let value: boolean;
+      if (typeof response === 'boolean') {
+        value = response;
+      } else if (typeof response === 'string') {
+        // Handle string "true" or "false"
+        value = response.toLowerCase() === 'true';
+      } else if (response !== undefined && response !== null) {
+        // Handle wrapped response
+        const rawValue = response.item ?? response.asUpdate ?? response;
+        value = rawValue === true || rawValue === 'true';
+      } else {
+        return; // No valid response
+      }
+      appDispatch(setUserSessionItem({ key: "asUpdate", value }));
+    } catch (error) {
+      console.error("Error fetching auto update setting:", error);
+    }
+  };
+
   useEffect(() => {
     getBasicInfo();
     getEmail();
     getPhone();
+    getAutoUpdateSetting();
     api.get(Urls.getImage_profile).then((url) => {
       setImage(url);
     });
@@ -256,6 +285,13 @@ const AccountSettingsProfile: FC<AccountSettingsProps> = (props) => {
         <div className="xxl:col-span-6 xl:col-span-12  col-span-12">
           <div className="grid grid-cols-12 gap-x-6">
             <div id="avatar" className={`xxl:col-span-12 xl:col-span-12 ${path === "avatar" ? "blink" : ""} col-span-12`}>
+            {Capacitor.isNativePlatform() && _userSession?.asUpdate === false && (
+            <div id="auto-update" className={`xxl:col-span-12 xl:col-span-12 ${path === "auto-update" ? "blink" : ""} col-span-12`}>
+              <div className="box custom-box">
+                <UpdateAvailableCard />
+              </div>
+            </div>
+             )}
               <div className="box">
                 <div className="box-header justify-between">
                   <div className="box-title">
@@ -348,6 +384,39 @@ const AccountSettingsProfile: FC<AccountSettingsProps> = (props) => {
                 content={PopUpModalEmailChange()}
               />
             </div>
+            {/* Show UpdateAvailableCard when auto-update is disabled on native platform */}
+            {Capacitor.isNativePlatform() && _userSession?.asUpdate === false && (
+            <div id="auto-update" className={`xxl:col-span-12 xl:col-span-12 ${path === "auto-update" ? "blink" : ""} col-span-12`}>
+              <div className="box custom-box">
+                <div className="box-header justify-between">
+                  <div className="box-title">
+                    {t("auto_update")}
+                    <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
+                      {t("enable_or_disable_automatic_updates")}
+                    </p>
+                  </div>
+                </div>
+                <div className="box-body">
+                  <ERPCheckbox
+                    id="asUpdate"
+                    label={t("enable_auto_update")}
+                    checked={_userSession?.asUpdate ?? true}
+                    onChange={async (e) => {
+                      const isEnabled = e.target.checked;
+                      try {
+                        // Send boolean value directly to API (single source of truth)
+                        await api.postAsync(Urls.auto_update, isEnabled);
+                        appDispatch(setUserSessionItem({ key: "asUpdate", value: isEnabled }));
+                      } catch (error) {
+                        console.error("Error updating auto update setting:", error);
+                      }
+                    }}
+                  />
+                </div>
+              </div>
+                <UpdateAvailableCard />
+            </div>
+             )}
             <div id="phone-number" className={`xxl:col-span-12 xl:col-span-12 ${path === "phone-number" ? "blink" : ""} col-span-12`}  >
               <div className="box custom-box">
                 <div className="box-header justify-between">

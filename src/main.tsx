@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './index.scss'
 import 'react-toastify/dist/ReactToastify.css';
+import './styles/barcode-scanner.css';
 import { Provider } from 'react-redux';
 import store from './redux/store'
 import App from './App'

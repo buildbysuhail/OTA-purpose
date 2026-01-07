@@ -1027,7 +1027,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         </div>
 
         <div className={`grid ${footerLayout === "vertical" ? "grid-cols-1 gap-1" : "grid-cols-1 md:grid-cols-[1fr_400px]"}`}>
-          <div className={`flex ${footerLayout === "vertical" ? "flex-col items-start justify-start" : "p-2 flex-col md:flex-row items-end justify-end gap-4"}`}>
+          <div className={`flex ${footerLayout === "vertical" ? "flex-col items-start justify-start" : "px-2 py-1 flex-col md:flex-row items-end justify-end gap-4"}`}>
             <div className={`${footerLayout === "vertical" ? "hidden" : "block"}`}>
               <div className="absolute top-1.5 left-1">
                 <button onClick={toggleFooterPosition} className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 dark:bg-dark-bg opacity-50 hover:opacity-100 transition-all duration-300" title={t("display_the_footer_on_the_right")}>

@@ -18,24 +18,24 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
   const accTableState = (template as TemplateState<unknown>)?.tableState as TableColumn<unknown>[] | undefined;
   const tableMasterState = (template as TemplateState<unknown>)?.itemTableMasterState;
   const HeadFontFamily = tableMasterState?.headerFontFamily || "Roboto";
-  const arabicHeadFontFamily = tableMasterState?.arabicHeaderFontFamily?? "Amiri";
+  const arabicHeadFontFamily = tableMasterState?.arabicHeaderFontFamily ?? "Amiri";
   const rowFontFamily = tableMasterState?.itemRowFontFamily || "Roboto";
-  const arabicrowFontFamily = tableMasterState?.arabicItemRowFontFamily?? "Amiri";
- 
+  const arabicrowFontFamily = tableMasterState?.arabicItemRowFontFamily ?? "Amiri";
+
   // label font preferences from propertiesState
   const HeaderFontBase: CSSProperties = {
-    fontWeight: tableMasterState?.headerFontWeight?? undefined,
-    fontStyle: tableMasterState?.headerFontStyle?? undefined,
+    fontWeight: tableMasterState?.headerFontWeight ?? undefined,
+    fontStyle: tableMasterState?.headerFontStyle ?? undefined,
     color: tableMasterState?.headerFontColor || "#000",
-    fontSize: `${tableMasterState?.headerFontSize??12}pt`,
+    fontSize: `${tableMasterState?.headerFontSize ?? 12}pt`,
     lineHeight: 1.2,
   };
 
-    const RowFontBase: CSSProperties = {
+  const RowFontBase: CSSProperties = {
     fontWeight: tableMasterState?.itemRowFontWeight ?? undefined,
-    fontStyle: tableMasterState?.itemRowFontStyle?? undefined,
+    fontStyle: tableMasterState?.itemRowFontStyle ?? undefined,
     color: tableMasterState?.itemRowFontColor || "#000",
-    fontSize: `${tableMasterState?.itemRowFontSize??12}pt`,
+    fontSize: `${tableMasterState?.itemRowFontSize ?? 12}pt`,
     lineHeight: 1.2,
   };
 
@@ -62,7 +62,7 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
       : undefined;
 
     const commonTh: CSSProperties = {
-      padding:`${TABLE_CELL_PADDING}pt`,
+      padding: `${TABLE_CELL_PADDING}pt`,
       textAlign: "center",
       display: "flex",
       flexDirection: "column",
@@ -74,7 +74,7 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
       boxSizing: "border-box",
       // Prevent flex from changing dimensions
       flexShrink: 0,
-      flexGrow: 0,      
+      flexGrow: 0,
     };
 
     return {
@@ -97,16 +97,16 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
           ? tableMasterState?.tableHeaderBgColor
           : "#fff",
 
-         borderBottom: tableMasterState?.showTableRowBorder
+        borderBottom: tableMasterState?.showTableRowBorder
           ? `${BORDER_WIDTH}pt solid ${tableMasterState?.tableRowBorderColor || "#000"}`
-          : undefined,  
-                          
+          : undefined,
+
       } as CSSProperties,
       th: commonTh as CSSProperties,
       tbody: {
         display: "flex",
         flexDirection: "column",
-        
+
       } as CSSProperties,
       tr: {
         display: "flex",
@@ -120,9 +120,9 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
         display: "flex",
         justifyContent: "center",
         boxSizing: "border-box",
-         // Prevent flex from changing dimensions
+        // Prevent flex from changing dimensions
         flexShrink: 0,
-        flexGrow: 0,       
+        flexGrow: 0,
       } as CSSProperties,
       // cellText for DOM: allow wrapping and hyphenation
       cellText: {
@@ -147,26 +147,27 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
             tableMasterState?.showTableColBorder && idx + 1 < visibleColumns.length
               ? `${BORDER_WIDTH}pt solid ${tableMasterState?.tableColBorderColor || "#000"}`
               : undefined;
-              const text =col.label?? String(col.field) 
+          const text = col.label ?? String(col.field)
           const isArabic = containsArabicString(text)
           return (
             <div
               key={String(col.field)}
               style={{
                 ...styles.th,
-                width:`${col.width}pt` || DEFAULT_COLUMN_WIDTH,
+                width: `${col.width}pt` || DEFAULT_COLUMN_WIDTH,
                 minWidth: `${col.width}pt` || DEFAULT_COLUMN_WIDTH,
                 maxWidth: `${col.width}pt` || DEFAULT_COLUMN_WIDTH,
                 borderRight,
               }}
             >
-              <span 
-              style={{ ...HeaderFontBase, 
-                   fontFamily:isArabic ? arabicHeadFontFamily: HeadFontFamily,
-                  ...styles.cellText 
+              <span
+                style={{
+                  ...HeaderFontBase,
+                  fontFamily: isArabic ? arabicHeadFontFamily : HeadFontFamily,
+                  ...styles.cellText
                 }}>
                 {text}
-                </span>
+              </span>
             </div>
           );
         })}
@@ -185,12 +186,12 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
             {visibleColumns.map((col) => (
               <div
                 key={String(col.field)}
-              style={{
-                ...styles.td,
-                width:`${col.width}pt` || DEFAULT_COLUMN_WIDTH,
-                minWidth: `${col.width}pt` || DEFAULT_COLUMN_WIDTH,
-                maxWidth: `${col.width}pt` || DEFAULT_COLUMN_WIDTH,
-              }}
+                style={{
+                  ...styles.td,
+                  width: `${col.width}pt` || DEFAULT_COLUMN_WIDTH,
+                  minWidth: `${col.width}pt` || DEFAULT_COLUMN_WIDTH,
+                  maxWidth: `${col.width}pt` || DEFAULT_COLUMN_WIDTH,
+                }}
               >
                 <span style={styles.cellText}>—</span>
               </div>
@@ -205,87 +206,89 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
         {data.slice(0, 3).map((row: any, rowIndex: number) => (
 
           <div key={rowIndex}
-           style={{...styles.tr,
-           borderBottom: tableMasterState?.showTableRowBorder && rowIndex + 1 < data.length
-          ? `${BORDER_WIDTH}pt solid ${tableMasterState?.tableRowBorderColor || "#000"}`
-          : undefined,
-           }}>
-            {visibleColumns.map((col,index) => {
-          const borderRight =
-            tableMasterState?.showTableColBorder && index + 1 < visibleColumns.length
-              ? `${BORDER_WIDTH}pt solid ${tableMasterState?.tableColBorderColor || "#000"}`
-              : undefined;
-      // Get cell value
+            style={{
+              ...styles.tr,
+              borderBottom: tableMasterState?.showTableRowBorder && rowIndex + 1 < data.length
+                ? `${BORDER_WIDTH}pt solid ${tableMasterState?.tableRowBorderColor || "#000"}`
+                : undefined,
+            }}>
+            {visibleColumns.map((col, index) => {
+              const borderRight =
+                tableMasterState?.showTableColBorder && index + 1 < visibleColumns.length
+                  ? `${BORDER_WIDTH}pt solid ${tableMasterState?.tableColBorderColor || "#000"}`
+                  : undefined;
+              // Get cell value
               console.log(`col.field-${col.field}`);
-              
-        const splitData = String(col.field).split("___");
-        const field = col.field as string;
-  const group = splitData[0] as any;
-  const key = splitData[1];
-        let cellValue = ""; row?.[String(key)] ?? "";
-        if(!field.includes("___")) {
-          
-              console.log(`col.field-1`);
-          if (![
-  "cgst",
-  "cgstPerc",
-  "sgst",
-  "sgstPerc",
-  "igst",
-  "igstPerc",
-  "cessAmt",
-  "cessPerc",
-  "additionalCess",
-  "additionalCessPerc",
-  "gstPerc"
-].includes(col.field)) {
-  console.log(`col.field-2`);
-    cellValue = row?.[String(col.field)] ?? ""
-    console.log(row);
-    
 
-  }
-  else  {
-    console.log(`col.field-3`);
-    cellValue = row?.detail2Data?.[col.field as (keyof InvDetail2ForPrint)]
+              const splitData = String(col.field).split("___");
+              const field = col.field as string;
+              const group = splitData[0] as any;
+              const key = splitData[1];
+              let cellValue = ""; row?.[String(key)] ?? "";
+              if (!field.includes("___")) {
 
-  }
-        } else {
-          console.log(`col.field-4`);
- if (group == "details") {
-  console.log(`col.field-5`);
-    cellValue = row?.[String(key)] ?? ""
+                console.log(`col.field-1`);
+                if (![
+                  "cgst",
+                  "cgstPerc",
+                  "sgst",
+                  "sgstPerc",
+                  "igst",
+                  "igstPerc",
+                  "cessAmt",
+                  "cessPerc",
+                  "additionalCess",
+                  "additionalCessPerc",
+                  "gstPerc"
+                ].includes(col.field)) {
+                  console.log(`col.field-2`);
+                  cellValue = row?.[String(col.field)] ?? ""
+                  console.log(row);
 
-  }
-  else if (group == "details2") {
-    console.log(`col.field-6`);
-    cellValue = row?.detail2Data?.[key as (keyof InvDetail2ForPrint)]
 
-  }
-}
-      // Check if text is Arabic
-        const isArabic = containsArabicString(cellValue);
-              return(
-              <div
-                key={String(col.field)}
-              style={{
-                ...styles.td,
-                width:`${col.width}pt` || DEFAULT_COLUMN_WIDTH,
-                minWidth: `${col.width}pt` || DEFAULT_COLUMN_WIDTH,
-                maxWidth: `${col.width}pt` || DEFAULT_COLUMN_WIDTH,
-                borderRight
-              }}
-              >
-                <span 
-                 style={{ ...RowFontBase, 
-                  fontFamily:isArabic ? arabicrowFontFamily: rowFontFamily,
-                  ...styles.cellText 
-                }}>
-                  {/* safely access value */}
-                  {/* {formatValue(cellValue,col.format)}  */}
-                  {cellValue} 
-                </span>
-              </div>
+                }
+                else {
+                  console.log(`col.field-3`);
+                  cellValue = row?.detail2Data?.[col.field as (keyof InvDetail2ForPrint)]
+
+                }
+              } else {
+                console.log(`col.field-4`);
+                if (group == "details") {
+                  console.log(`col.field-5`);
+                  cellValue = row?.[String(key)] ?? ""
+
+                }
+                else if (group == "details2") {
+                  console.log(`col.field-6`);
+                  cellValue = row?.detail2Data?.[key as (keyof InvDetail2ForPrint)]
+
+                }
+              }
+              // Check if text is Arabic
+              const isArabic = containsArabicString(cellValue);
+              return (
+                <div
+                  key={String(col.field)}
+                  style={{
+                    ...styles.td,
+                    width: `${col.width}pt` || DEFAULT_COLUMN_WIDTH,
+                    minWidth: `${col.width}pt` || DEFAULT_COLUMN_WIDTH,
+                    maxWidth: `${col.width}pt` || DEFAULT_COLUMN_WIDTH,
+                    borderRight
+                  }}
+                >
+                  <span
+                    style={{
+                      ...RowFontBase,
+                      fontFamily: isArabic ? arabicrowFontFamily : rowFontFamily,
+                      ...styles.cellText
+                    }}>
+                    {/* safely access value */}
+                    {/* {formatValue(cellValue,col.format)}  */}
+                    {cellValue}
+                  </span>
+                </div>
               )
 
             })}

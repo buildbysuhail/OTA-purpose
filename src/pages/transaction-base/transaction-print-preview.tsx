@@ -24,8 +24,7 @@ export type TemplatesPreViewHandle = {
     template: any;
     printData?: any
   } | null;
-  openTemplateChooser: () => {}
-};
+  openTemplateChooser: () => {}};
 type TemplatesProps = {
   voucherType: string;
   isInvTrans?: boolean;

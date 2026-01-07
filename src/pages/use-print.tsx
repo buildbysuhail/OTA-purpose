@@ -1,19 +1,42 @@
-import { Currencies } from '../utilities/number-to-words';
-import { HeaderFooter } from '../redux/slices/user-session/reducer';
-import Urls from '../redux/urls';
-import { APIClient } from '../helpers/api-client';
-import { DeepPartial } from 'redux';
-import { getAmountInWords, getArabicNumber, isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero, val } from '../utilities/Utils';
-import { PrintResponse, PrintDetailDto, PrintMasterDto, CompanyDetailsForPrint, PartyDetailsForPrint, InvDetail2ForPrint } from './use-print-type';
-import { initialPrintCustomFields, initialPrintResponse } from './use-print-type-data';
-import { merge } from 'lodash';
-import { TemplateState } from './InvoiceDesigner/Designer/interfaces';
-import { getStorageString, removeStorageString, setStorageString } from '../utilities/storage-utils';
-import { base64UnicodeToModel, modelToBase64Unicode, toCamelCase } from '../utilities/jsonConverter';
-import { decompressData } from '../utilities/compression';
-import { templateInitialState } from '../redux/reducers/TemplateReducer';
-import localforage from 'localforage';
-
+import { Currencies } from "../utilities/number-to-words";
+import { HeaderFooter } from "../redux/slices/user-session/reducer";
+import Urls from "../redux/urls";
+import { APIClient } from "../helpers/api-client";
+import { DeepPartial } from "redux";
+import {
+  getAmountInWords,
+  getArabicNumber,
+  isNullOrUndefinedOrEmpty,
+  isNullOrUndefinedOrZero,
+  val,
+} from "../utilities/Utils";
+import {
+  PrintResponse,
+  PrintDetailDto,
+  PrintMasterDto,
+  CompanyDetailsForPrint,
+  PartyDetailsForPrint,
+  InvDetail2ForPrint,
+} from "./use-print-type";
+import {
+  initialPrintCustomFields,
+  initialPrintResponse,
+} from "./use-print-type-data";
+import { merge } from "lodash";
+import { TemplateState } from "./InvoiceDesigner/Designer/interfaces";
+import {
+  getStorageString,
+  removeStorageString,
+  setStorageString,
+} from "../utilities/storage-utils";
+import {
+  base64UnicodeToModel,
+  modelToBase64Unicode,
+  toCamelCase,
+} from "../utilities/jsonConverter";
+import { decompressData } from "../utilities/compression";
+import { templateInitialState } from "../redux/reducers/TemplateReducer";
+import localforage from "localforage";
 
 // type VoucherType = {
 //   voucherType: string;
@@ -39,21 +62,31 @@ interface ProcessPrintOptions {
   commonKitchenProductGroupIDParam?: number;
   dbIdValue?: string;
   isAppGlobal?: boolean;
-
 }
 
-export function getKsaQrCode(transDate: Date, totalWithVat: string, vat: string, companyData: CompanyDetailsForPrint): string {
+export function getKsaQrCode(
+  transDate: Date,
+  totalWithVat: string,
+  vat: string,
+  companyData: CompanyDetailsForPrint
+): string {
   const sellerName = companyData.registeredName; // replace with config/company profile
-  const vatRegNo = companyData.taxRegNo;        // replace with config/company profile
+  const vatRegNo = companyData.taxRegNo; // replace with config/company profile
 
   // format datetime like "YYYY-MM-DDTHH:mm:ssZ"
-  const dateStr = transDate.getUTCFullYear().toString().padStart(4, "0")
-    + "-" + (transDate.getUTCMonth() + 1).toString().padStart(2, "0")
-    + "-" + transDate.getUTCDate().toString().padStart(2, "0");
+  const dateStr =
+    transDate.getUTCFullYear().toString().padStart(4, "0") +
+    "-" +
+    (transDate.getUTCMonth() + 1).toString().padStart(2, "0") +
+    "-" +
+    transDate.getUTCDate().toString().padStart(2, "0");
 
-  const timeStr = transDate.getUTCHours().toString().padStart(2, "0")
-    + ":" + transDate.getUTCMinutes().toString().padStart(2, "0")
-    + ":" + transDate.getUTCSeconds().toString().padStart(2, "0");
+  const timeStr =
+    transDate.getUTCHours().toString().padStart(2, "0") +
+    ":" +
+    transDate.getUTCMinutes().toString().padStart(2, "0") +
+    ":" +
+    transDate.getUTCSeconds().toString().padStart(2, "0");
 
   const datetime = `${dateStr}T${timeStr}Z`;
 
@@ -63,7 +96,7 @@ export function getKsaQrCode(transDate: Date, totalWithVat: string, vat: string,
     [2, vatRegNo],
     [3, datetime],
     [4, totalWithVat],
-    [5, vat]
+    [5, vat],
   ];
 
   // Encode TLV into bytes
@@ -87,9 +120,12 @@ const getDeliveryAddressPart = (address: string, index: number) => {
   return parts[index] || "";
 };
 
-
-
-const updateDetailsAndSummary = async (printData: PrintResponse, fields: (keyof DeepPartial<PrintDetailDto>)[], voucherType: string, isAppGlobal: boolean) => {
+const updateDetailsAndSummary = async (
+  printData: PrintResponse,
+  fields: (keyof DeepPartial<PrintDetailDto>)[],
+  voucherType: string,
+  isAppGlobal: boolean
+) => {
   const dtTransDetails = printData.details;
   if (!dtTransDetails) return;
 
@@ -97,7 +133,7 @@ const updateDetailsAndSummary = async (printData: PrintResponse, fields: (keyof 
     const row: PrintDetailDto = dtTransDetails[i];
 
     if (fields && fields.length > 0) {
-      const customFields = fields.filter(f =>
+      const customFields = fields.filter((f) =>
         ["groupNameHead", "mannualOrAutoBarcode"].includes(f as string)
       );
       for (let j = 0; j < customFields.length; j++) {
@@ -105,14 +141,17 @@ const updateDetailsAndSummary = async (printData: PrintResponse, fields: (keyof 
           case "groupNameHead":
             dtTransDetails[i].groupNameHead = dtTransDetails[i].groupName;
           case "mannualOrAutoBarcode":
-            dtTransDetails[i].mannualAutoBarcode = dtTransDetails[i].mannualBarcode || dtTransDetails[i].autoBarcode;
-
+            dtTransDetails[i].mannualAutoBarcode =
+              dtTransDetails[i].mannualBarcode || dtTransDetails[i].autoBarcode;
         }
       }
     }
 
-
-    if (!printData.custom.isInvTrans && !printData.custom.isSalesView && !printData.custom.isServiceTrans) {
+    if (
+      !printData.custom.isInvTrans &&
+      !printData.custom.isSalesView &&
+      !printData.custom.isServiceTrans
+    ) {
       printData.custom.pageTotDebit += row.debit ?? 0;
       const amt = (row.debit ?? 0) + (row.credit ?? 0);
       printData.custom.narration = row.narration || "";
@@ -141,10 +180,13 @@ const updateDetailsAndSummary = async (printData: PrintResponse, fields: (keyof 
           break;
       }
       // Set final grant total
-      return
+      return;
     }
     // Group header
-    if (row.groupName?.toUpperCase() !== printData.custom.lastGroupName?.toUpperCase()) {
+    if (
+      row.groupName?.toUpperCase() !==
+      printData.custom.lastGroupName?.toUpperCase()
+    ) {
       printData.custom.lastGroupName = row.groupName?.toUpperCase() || "";
       printData.hasGroupHeaderPrinting = true;
     } else {
@@ -152,10 +194,10 @@ const updateDetailsAndSummary = async (printData: PrintResponse, fields: (keyof 
     }
 
     // Running totals
-    printData.custom.pageTotDebit += (row.netAmount || 0);
-    printData.custom.totalPageQty += (row.quantity || 0)
-    printData.custom.totalNetAmount += (row.netAmount || 0)
-    printData.custom.totalNetValue += (row.netAmount || 0)
+    printData.custom.pageTotDebit += row.netAmount || 0;
+    printData.custom.totalPageQty += row.quantity || 0;
+    printData.custom.totalNetAmount += row.netAmount || 0;
+    printData.custom.totalNetValue += row.netAmount || 0;
 
     // Product info
     printData.custom.prodName = row.productName || "";
@@ -245,7 +287,7 @@ const updateDetailsAndSummary = async (printData: PrintResponse, fields: (keyof 
     const qty = row.quantity ?? 0;
     const rateWithTax = row.rateWithTax ?? 0;
     if (mrp > 0) {
-      printData.custom.mrpDifference += (mrp * qty) - (rateWithTax * qty);
+      printData.custom.mrpDifference += mrp * qty - rateWithTax * qty;
       printData.custom.mrpTotal += mrp * qty;
     }
 
@@ -253,7 +295,11 @@ const updateDetailsAndSummary = async (printData: PrintResponse, fields: (keyof 
   }
   printData.details = dtTransDetails;
 
-  if (!printData.custom.isInvTrans && !printData.custom.isSalesView && !printData.custom.isServiceTrans) {
+  if (
+    !printData.custom.isInvTrans &&
+    !printData.custom.isSalesView &&
+    !printData.custom.isServiceTrans
+  ) {
     const debit = printData.master.totalDebit || 0;
     const credit = printData.master.totalCredit || 0;
     printData.master.grandTotal = debit > 0 ? debit : credit;
@@ -265,13 +311,12 @@ const updateDetailsAndSummary = async (printData: PrintResponse, fields: (keyof 
   if (printData.custom.isInvTrans && printData.master) {
     grantTotal = printData.master.grandTotal ?? 0;
     exchangeRateVal = printData.master.exchangeRate ?? 1;
-    printData.custom.sumOfGrossfc = printData.custom.sumOfGross / exchangeRateVal;
+    printData.custom.sumOfGrossfc =
+      printData.custom.sumOfGross / exchangeRateVal;
   }
 
   return printData;
 };
-
-
 
 export const processPrintResponse = async (
   printData: PrintResponse,
@@ -316,7 +361,8 @@ export const processPrintResponse = async (
     returnData.custom.kitchenPrinterName = kitchenPrinterNameParam ?? "";
     returnData.custom.printerName = kitchenPrinterNameParam ?? "";
     returnData.custom.kitchenName = kitchenNameParam;
-    returnData.custom.commonKitchenProductGroupID = commonKitchenProductGroupIDParam;
+    returnData.custom.commonKitchenProductGroupID =
+      commonKitchenProductGroupIDParam;
   }
 
   // Barcode
@@ -330,7 +376,8 @@ export const processPrintResponse = async (
 
   // Skip kitchen-only prints
   if (isKitchenPrint) {
-    returnData.custom.transactionTime = printData?.master?.systemDateTime.toString();
+    returnData.custom.transactionTime =
+      printData?.master?.systemDateTime.toString();
     return returnData;
   }
 
@@ -373,15 +420,23 @@ export const processPrintResponse = async (
           }
         }
         returnData.custom.totalBillQty = totalBillQtyCalc;
-        returnData.custom.billDiscount = printData.details ? printData.details.length : 0;
+        returnData.custom.billDiscount = printData.details
+          ? printData.details.length
+          : 0;
 
         if (dbIdValue === "SUBAI_SWEETS") {
           const sorted = [...(printData.details || [])].sort((a, b) => {
-            const groupCompare = (a.groupName || "").localeCompare(b.groupName || "");
+            const groupCompare = (a.groupName || "").localeCompare(
+              b.groupName || ""
+            );
             if (groupCompare !== 0) return groupCompare;
-            const unitCompare = (a.unitName || "").localeCompare(b.unitName || "");
+            const unitCompare = (a.unitName || "").localeCompare(
+              b.unitName || ""
+            );
             if (unitCompare !== 0) return unitCompare;
-            return (a.invTransactionDetailID || 0) - (b.invTransactionDetailID || 0);
+            return (
+              (a.invTransactionDetailID || 0) - (b.invTransactionDetailID || 0)
+            );
           });
           returnData.details = sorted;
         } else if (warehouseID > 0) {
@@ -392,7 +447,9 @@ export const processPrintResponse = async (
         }
       }
     } else {
-      returnData.custom.totalItems = printData.details ? printData.details.length : 0;
+      returnData.custom.totalItems = printData.details
+        ? printData.details.length
+        : 0;
       const grandTotalValue =
         printData.master?.totalDebit && printData.master?.totalDebit > 0
           ? printData.master.totalDebit
@@ -435,7 +492,7 @@ export const loadPrintData = async (
   dbIdValue: string = "",
   voucherType: string = "",
   isAppGlobal: boolean = false,
-  template?: TemplateState<unknown>,
+  template?: TemplateState<unknown>
 ): Promise<PrintResponse> => {
   const api = new APIClient();
   // let returnData: PrintResponse = initialPrintResponse;
@@ -443,12 +500,21 @@ export const loadPrintData = async (
   try {
     console.log(`${MasterIDParam}-MasterIDParam`);
     let fields: (keyof any)[] = []; // deepPartial PrintResponse
-    const multiPayment = fields.includes("custom.bankCard") || fields.includes("qrPay")
-    const printCount = fields.includes("printCount")
-    const privilageCardBalance = fields.includes("privilageCardBalance") //&& PrivCardNumber
-    const taxAmountIncludingTaxOnDiscount = fields.includes("total5PercTaxValue") || fields.includes("total15PercTaxValue") || fields.includes("totalzeroPercentTaxValue")
-    const taxableAmountIncludingTaxOnDiscount = fields.includes("total5PerctaxableValue") || fields.includes("total15PerctaxableValue") || fields.includes("totalzeroPercentTaxableValue")
-    const printData: PrintResponse = await api.getAsync(`${isInvTrans ? Urls.inv_transaction_base : Urls.acc_transaction_base}${transactionType}/print/?
+    const multiPayment =
+      fields.includes("custom.bankCard") || fields.includes("qrPay");
+    const printCount = fields.includes("printCount");
+    const privilageCardBalance = fields.includes("privilageCardBalance"); //&& PrivCardNumber
+    const taxAmountIncludingTaxOnDiscount =
+      fields.includes("total5PercTaxValue") ||
+      fields.includes("total15PercTaxValue") ||
+      fields.includes("totalzeroPercentTaxValue");
+    const taxableAmountIncludingTaxOnDiscount =
+      fields.includes("total5PerctaxableValue") ||
+      fields.includes("total15PerctaxableValue") ||
+      fields.includes("totalzeroPercentTaxableValue");
+    const printData: PrintResponse = await api.getAsync(`${
+      isInvTrans ? Urls.inv_transaction_base : Urls.acc_transaction_base
+    }${transactionType}/print/?
         KitchenId=${0}&CommonKitchenProductGroupId=${0}&IncludeStockDetails=${true}&IncludePreviousLedgerBalance=${true}
         &IncludeLoyaltyCardBalance=${true}&masterId=${MasterIDParam}&multiPayment=${multiPayment}
                                             &printCount= ${printCount}
@@ -473,7 +539,6 @@ export const loadPrintData = async (
       kitchenNameParam,
       commonKitchenProductGroupIDParam,
       dbIdValue,
-
     });
 
     return processed;
@@ -483,10 +548,7 @@ export const loadPrintData = async (
   }
 };
 
-export const fetchDefaultTemplateFromToken = async (
-  token: string,
-) => {
-
+export const fetchDefaultTemplateFromToken = async (token: string) => {
   try {
     const api = new APIClient();
     const res = await api.postAsync(Urls.print_helper_byToken, {
@@ -516,7 +578,8 @@ export const fetchDefaultTemplateFromToken = async (
         kitchenIDParam: resTokenInfo?.kitchenId,
         kitchenPrinterNameParam: resTokenInfo?.kitchenPrinterName,
         kitchenNameParam: resTokenInfo?.kitchenName,
-        commonKitchenProductGroupIDParam: resTokenInfo?.commonKitchenProductGroupId,
+        commonKitchenProductGroupIDParam:
+          resTokenInfo?.commonKitchenProductGroupId,
         dbIdValue: resTokenInfo?.dbIdValue,
         isAppGlobal: resTokenInfo?.isAppGlobal,
       });
@@ -524,10 +587,13 @@ export const fetchDefaultTemplateFromToken = async (
       if (Template) {
         if (Template == "" || !Template.id || Template.id <= 0) {
           console.warn("No default template response received.");
-          return Template = null;
+          return (Template = null);
         }
         const templateContent = await decompressData(Template.content);
-        const parsedTemplate = parseTemplateContent<TemplateState<unknown>>(Template, templateContent);
+        const parsedTemplate = parseTemplateContent<TemplateState<unknown>>(
+          Template,
+          templateContent
+        );
         if (!parsedTemplate) {
           console.warn("Failed to parse default template.");
           Template = null;
@@ -539,9 +605,8 @@ export const fetchDefaultTemplateFromToken = async (
       }
       return {
         data: processed,
-        template: Template
-      }
-
+        template: Template,
+      };
     }
   } catch (error) {
     console.error("Error fetching default template:", error);
@@ -704,14 +769,14 @@ export const fetchDefaultTemplateFromToken = async (
 
 // Get field value - this is the massive function with 200+ cases
 
-
 // Get common values - massive function with 200+ field calculations
 
-
-export const getCommonValues = (field: string,
+export const getCommonValues = (
+  field: string,
 
   data: PrintResponse,
-  convertAmountToArabic: any) => {
+  convertAmountToArabic: any
+) => {
   let v = "";
   switch (field) {
     case "amountInWords":
@@ -739,21 +804,36 @@ export const getCommonValues = (field: string,
       v = data.master?.eInvoiceData?.eInvoiceQRCode;
       break;
     case "qrcodeKsaEinvoicePhase1":
-      v = getKsaQrCode(data.master?.transactionDate, data.master.grandTotal.toFixed(2), data.master.vatAmount.toFixed(2), data.master.companyData);
+      v = getKsaQrCode(
+        data.master?.transactionDate,
+        data.master.grandTotal.toFixed(2),
+        data.master.vatAmount.toFixed(2),
+        data.master.companyData
+      );
       break;
     case "qrcodeKsaEinvoice":
     case "qrcodeKsaEinvoiceNotEncrypted":
       if (data.productionReqId) {
-        v = data.master?.eInvoiceData?.iqr
+        v = data.master?.eInvoiceData?.iqr;
       }
-      if (v = "") {
-        v = getKsaQrCode(data.master.transactionDate, data.master.grandTotal.toFixed(2), data.master.vatAmount.toFixed(2), data.master.companyData);
+      if ((v = "")) {
+        v = getKsaQrCode(
+          data.master.transactionDate,
+          data.master.grandTotal.toFixed(2),
+          data.master.vatAmount.toFixed(2),
+          data.master.companyData
+        );
       }
       break;
     case "qrcodeKsaEinvoicePhase2":
-      v = data.master?.eInvoiceData?.iqr
-      if (v = "") {
-        v = getKsaQrCode(data.master.transactionDate, data.master.grandTotal.toFixed(2), data.master.vatAmount.toFixed(2), data.master.companyData);
+      v = data.master?.eInvoiceData?.iqr;
+      if ((v = "")) {
+        v = getKsaQrCode(
+          data.master.transactionDate,
+          data.master.grandTotal.toFixed(2),
+          data.master.vatAmount.toFixed(2),
+          data.master.companyData
+        );
       }
       break;
     case "deliveryPhone":
@@ -792,20 +872,40 @@ export const getCommonValues = (field: string,
       break;
     case "printCopyStatus":
       switch (data.custom.noOfCopies) {
-        case 1: v = "Original"; break;
-        case 2: v = "Duplicate"; break;
-        case 3: v = "Triplicate"; break;
-        case 4: v = "Quadriplicate"; break;
-        default: v = `${data.custom.noOfCopies} Th Copy`; break;
+        case 1:
+          v = "Original";
+          break;
+        case 2:
+          v = "Duplicate";
+          break;
+        case 3:
+          v = "Triplicate";
+          break;
+        case 4:
+          v = "Quadriplicate";
+          break;
+        default:
+          v = `${data.custom.noOfCopies} Th Copy`;
+          break;
       }
       break;
     case "printCopyStatus2":
       switch (data.custom.noOfCopies) {
-        case 1: v = "Customers Copy"; break;
-        case 2: v = "Office Copy"; break;
-        case 3: v = "Store Copy"; break;
-        case 4: v = "Sales man Copy"; break;
-        default: v = `${data.custom.noOfCopies} Th Copy`; break;
+        case 1:
+          v = "Customers Copy";
+          break;
+        case 2:
+          v = "Office Copy";
+          break;
+        case 3:
+          v = "Store Copy";
+          break;
+        case 4:
+          v = "Sales man Copy";
+          break;
+        default:
+          v = `${data.custom.noOfCopies} Th Copy`;
+          break;
       }
       break;
     case "salesBillNumbers":
@@ -818,7 +918,9 @@ export const getCommonValues = (field: string,
       v = data.custom.billAmounts.slice(0, -1);
       break;
     case "retBillAmounts":
-      v = data.custom.retBillAmounts ? data.custom.retBillAmounts.slice(0, -1) : "";
+      v = data.custom.retBillAmounts
+        ? data.custom.retBillAmounts.slice(0, -1)
+        : "";
       break;
     // case "HEADER1":
     // case "HEADER2":
@@ -1301,7 +1403,8 @@ export const getCommonValues = (field: string,
     //   v = zeroPercentTaxValue.toString();
     //   break;
     case "amountInWordsPayable":
-      const payableAmount = data.custom.grantTotal - (data.master ? data.master.srAmount || 0 : 0);
+      const payableAmount =
+        data.custom.grantTotal - (data.master ? data.master.srAmount || 0 : 0);
       v = getAmountInWords(payableAmount);
       break;
     // Balance calculations
@@ -1355,7 +1458,11 @@ export const getCommonValues = (field: string,
       v = data.custom.cashReturned.toString();
       break;
     case "totalAdvance":
-      v = (data.custom.grantTotal - data.custom.cashReceived - data.custom.bankAmt).toString();
+      v = (
+        data.custom.grantTotal -
+        data.custom.cashReceived -
+        data.custom.bankAmt
+      ).toString();
       break;
     case "totNetValueBillDisc":
       v = (data.custom.sumOfNetValue - data.custom.billDiscount).toString();
@@ -1374,38 +1481,38 @@ export const getCommonValues = (field: string,
       v = data.custom.unitNetValue.toString();
       break;
     case "vehicleNumber":
-      v = data.master ? (data.master.vehicleData.vehicleNumber || "") : "";
+      v = data.master ? data.master.vehicleData.vehicleNumber || "" : "";
       break;
     case "billDiscountPlusDiscount":
       v = (data.custom.billDiscount + data.custom.sumOfDisc).toString();
       break;
     case "partyDisplayName":
-      v = data.master ? (data.master.partyData.partyDisplayName || "") : "";
+      v = data.master ? data.master.partyData.partyDisplayName || "" : "";
       break;
     // Vehicle details
     case "vehicleName":
-      v = data.master ? (data.master.vehicleData.vehicleName || "") : "";
+      v = data.master ? data.master.vehicleData.vehicleName || "" : "";
       break;
     case "vehicleModel":
-      v = data.master ? (data.master.vehicleData.vehicleModel || "") : "";
+      v = data.master ? data.master.vehicleData.vehicleModel || "" : "";
       break;
     case "vehicleCapacity":
-      v = data.master ? (data.master.vehicleData.vehicleCapacity || "") : "";
+      v = data.master ? data.master.vehicleData.vehicleCapacity || "" : "";
       break;
     case "vehicleManufacturer":
-      v = data.master ? (data.master.vehicleData.vehicleManufacturer || "") : "";
+      v = data.master ? data.master.vehicleData.vehicleManufacturer || "" : "";
       break;
     case "vehicleOwner":
-      v = data.master ? (data.master.vehicleData.vehicleOwner || "") : "";
+      v = data.master ? data.master.vehicleData.vehicleOwner || "" : "";
       break;
     case "vehicleColor":
-      v = data.master ? (data.master.vehicleData.vehicleColor || "") : "";
+      v = data.master ? data.master.vehicleData.vehicleColor || "" : "";
       break;
     case "vehicleOdometer":
-      v = data.master ? (data.master.vehicleData.vehicleOdometer || "") : "";
+      v = data.master ? data.master.vehicleData.vehicleOdometer || "" : "";
       break;
     case "vehicleRemarks":
-      v = data.master ? (data.master.vehicleData.vehicleRemarks || "") : "";
+      v = data.master ? data.master.vehicleData.vehicleRemarks || "" : "";
       break;
     case "balanceAmtPayable":
       const srAmount = data.master ? data.master.srAmount || 0 : 0;
@@ -1429,7 +1536,7 @@ export const getCommonValues = (field: string,
       break;
     case "chequeAmountInWordsLine":
       v = `***${getAmountInWords(parseFloat(data.custom.chequeAmount))}***`;
-      
+
       break;
     // case "chequeAmountInWordsLine2":
     //   if (!data.custom.chequeAmountInWords) {
@@ -1487,7 +1594,7 @@ export const getCommonValues = (field: string,
     //   }
     //   break;
     case "invoiceStatus":
-      const oldInvTrID = data.master  ? data.master.oldInvTransactionID || 0 : 0;
+      const oldInvTrID = data.master ? data.master.oldInvTransactionID || 0 : 0;
       v = oldInvTrID === 0 ? "NEW" : "EDITED";
       break;
     case "netAmount":
@@ -1621,22 +1728,40 @@ export const getCommonValues = (field: string,
       break;
     // Service items
     case "serviceItemOne":
-      v = data.custom?.serviceItems.length > 0 ? data.custom?.serviceItems[0] : "";
+      v =
+        data.custom?.serviceItems.length > 0
+          ? data.custom?.serviceItems[0]
+          : "";
       break;
     case "serviceItemTwo":
-      v = data.custom?.serviceItems.length > 1 ? data.custom?.serviceItems[1] : "";
+      v =
+        data.custom?.serviceItems.length > 1
+          ? data.custom?.serviceItems[1]
+          : "";
       break;
     case "serviceItemThree":
-      v = data.custom?.serviceItems.length > 2 ? data.custom?.serviceItems[2] : "";
+      v =
+        data.custom?.serviceItems.length > 2
+          ? data.custom?.serviceItems[2]
+          : "";
       break;
     case "serviceItemOneAmt":
-      v = data.custom?.serviceItemsAMT.length > 0 ? data.custom?.serviceItemsAMT[0] : "";
+      v =
+        data.custom?.serviceItemsAMT.length > 0
+          ? data.custom?.serviceItemsAMT[0]
+          : "";
       break;
     case "serviceItemTwoAmt":
-      v = data.custom?.serviceItemsAMT.length > 1 ? data.custom?.serviceItemsAMT[1] : "";
+      v =
+        data.custom?.serviceItemsAMT.length > 1
+          ? data.custom?.serviceItemsAMT[1]
+          : "";
       break;
     case "serviceItemThreeAmt":
-      v = data.custom?.serviceItemsAMT.length > 2 ? data.custom?.serviceItemsAMT[2] : "";
+      v =
+        data.custom?.serviceItemsAMT.length > 2
+          ? data.custom?.serviceItemsAMT[2]
+          : "";
       break;
     case "grandTotalReturn":
       const grandTot = data.custom?.grantTotal;
@@ -1697,121 +1822,198 @@ export const getCommonValues = (field: string,
   return v;
 };
 
-export function bindDataForPrint(field: string, printData: PrintResponse,
+export function bindDataForPrint(
+  field: string,
+  printData: PrintResponse,
   format: string = "NONE",
-  convertAmountToEnglish?: (amount: number, currency?: Currencies | undefined) => string,
-  convertAmountToArabic?: (amount: number, currency?: Currencies | undefined) => string,
-  rowIndex: number = 0): any {
-    if (!field) return "";
+  convertAmountToEnglish?: (
+    amount: number,
+    currency?: Currencies | undefined
+  ) => string,
+  convertAmountToArabic?: (
+    amount: number,
+    currency?: Currencies | undefined
+  ) => string,
+  rowIndex: number = 0
+): any {
+  if (!field) return "";
+  if (isNullOrUndefinedOrEmpty(printData?.master)) return "";
   const splitData = field.split("___");
   const group = splitData[0] as any;
   const key = splitData[1];
 
- 
-  if (isNullOrUndefinedOrEmpty(printData?.master)) return "";
-  const master = printData?.master
-  const details = printData?.details
+  const master = printData?.master;
+  const details = printData?.details;
   let val;
-  if (group == "master") {
-   val =  master[key as (keyof PrintMasterDto)]
 
-  }
-  else if (group == "details") {
-    val = details?.[rowIndex]?.[key as keyof PrintDetailDto];
-
-  }
-  else if (group == "details2") {
-    val = details?.[rowIndex]?.detail2Data?.[key as keyof InvDetail2ForPrint];
-
-  }
-  else if (group == "custom") {
-    val = getCommonValues(key as any, printData, convertAmountToArabic)
-  }
-  // else if (group == "branch") {
-  //   return userSession.currentBranchDetails?.[key as keyof BranchDetails]
-  // }
-  else if (group == "org") {
-   val = printData.companyDetails?.[key as keyof CompanyDetailsForPrint];
-  }
-  else if (group == "headerFooter") {
+  if (!field?.includes("___")) {
+    console.log(`col.field-1`);
+    if (
+      ![
+        "cgst",
+        "cgstPerc",
+        "sgst",
+        "sgstPerc",
+        "igst",
+        "igstPerc",
+        "cessAmt",
+        "cessPerc",
+        "additionalCess",
+        "additionalCessPerc",
+        "gstPerc",
+      ].includes(field)
+    ) {
+      console.log(`col.field-2`);
+      if (group == "master") {
+        val = master[field as keyof PrintMasterDto];
+      } else if (group == "details") {
+        val = details?.[rowIndex]?.[field as keyof PrintDetailDto];
+      } else if (group == "details2") {
+        val =
+          details?.[rowIndex]?.detail2Data?.[field as keyof InvDetail2ForPrint];
+      } else if (group == "custom") {
+        val = getCommonValues(field as any, printData, convertAmountToArabic);
+      }
+      // else if (group == "branch") {
+      //   return userSession.currentBranchDetails?.[key as keyof BranchDetails]
+      // }
+      else if (group == "org") {
+        val = printData.companyDetails?.[field as keyof CompanyDetailsForPrint];
+      } else if (group == "headerFooter") {
+        val = printData.headerFooter?.[field as keyof HeaderFooter];
+      } else if (group == "customer") {
+        val =
+          printData?.master?.partyData?.[field as keyof PartyDetailsForPrint];
+      }
+    } else {
+      val =
+        details?.[rowIndex]?.detail2Data?.[field as keyof InvDetail2ForPrint];
+    }
+  } else {
+    if (group == "master") {
+      val = master[key as keyof PrintMasterDto];
+    } else if (group == "details") {
+      val = details?.[rowIndex]?.[key as keyof PrintDetailDto];
+    } else if (group == "details2") {
+      val = details?.[rowIndex]?.detail2Data?.[key as keyof InvDetail2ForPrint];
+    } else if (group == "custom") {
+      val = getCommonValues(key as any, printData, convertAmountToArabic);
+    }
+    // else if (group == "branch") {
+    //   return userSession.currentBranchDetails?.[key as keyof BranchDetails]
+    // }
+    else if (group == "org") {
+      val = printData.companyDetails?.[key as keyof CompanyDetailsForPrint];
+    } else if (group == "headerFooter") {
       val = printData.headerFooter?.[key as keyof HeaderFooter];
+    } else if (group == "customer") {
+      val = printData?.master?.partyData?.[key as keyof PartyDetailsForPrint];
+    }
+  
   }
-  else if (group == "customer") {
-    val = printData?.master?.partyData?.[key as keyof PartyDetailsForPrint]
-  }
-  if (isNullOrUndefinedOrEmpty(val)) {
-    return "";
-  }
-
-  return val = formatValue(val, format)
-
+      if (isNullOrUndefinedOrEmpty(val)) {
+      return "";
+    }
+   return  formatValue(val, format);
 }
 
-export const addTemplateToStore = async (data: TemplateState<unknown>, id?: number) => {
+export const addTemplateToStore = async (
+  data: TemplateState<unknown>,
+  id?: number
+) => {
   if (!data) {
-    return
+    return;
   }
-  let key = btoa(`${data.templateGroup}-${data.customerType}-${data.formType}`)
-  let idKey = getTemplateStoreKey(id ?? data.id ?? 0, data.templateGroup ?? "", data.customerType, data.formType);
-  const prnt = getTemplateStoreKeyParent(data.templateGroup ?? "", data.customerType, data.formType);
+  let key = btoa(`${data.templateGroup}-${data.customerType}-${data.formType}`);
+  let idKey = getTemplateStoreKey(
+    id ?? data.id ?? 0,
+    data.templateGroup ?? "",
+    data.customerType,
+    data.formType
+  );
+  const prnt = getTemplateStoreKeyParent(
+    data.templateGroup ?? "",
+    data.customerType,
+    data.formType
+  );
   const keys = (await localforage.keys())
-    .map(x => {
+    .map((x) => {
       try {
         return atob(x);
       } catch {
         return null; // skip invalid base64 keys
       }
     })
-    .filter(x => x && x.startsWith(prnt));
+    .filter((x) => x && x.startsWith(prnt));
   debugger;
   for (const x of keys ?? []) {
     if (!x) continue; // skip null or undefined
     const base64 = btoa(x);
     await removeStorageString(base64);
   }
-  const base64 = modelToBase64Unicode(data)
+  const base64 = modelToBase64Unicode(data);
   await setStorageString(key, base64);
   await setStorageString(idKey, key);
-}
-export const getTemplateFromStore = async (templateGroup: string, customerType: string = "", formType: string = "") => {
-  let key = btoa(`${templateGroup}-${customerType}-${formType}`)
-  let _template = await getStorageString(key) ?? '';
+};
+export const getTemplateFromStore = async (
+  templateGroup: string,
+  customerType: string = "",
+  formType: string = ""
+) => {
+  let key = btoa(`${templateGroup}-${customerType}-${formType}`);
+  let _template = (await getStorageString(key)) ?? "";
   if (isNullOrUndefinedOrEmpty(_template)) {
-    return
+    return;
   }
   const template = base64UnicodeToModel(_template);
-  return template
-}
+  return template;
+};
 
-export const getTemplateStoreKeyParent = (templateGroup: string, customerType: string = "", formType: string = "") => {
+export const getTemplateStoreKeyParent = (
+  templateGroup: string,
+  customerType: string = "",
+  formType: string = ""
+) => {
   return `store_temp_${templateGroup}-${customerType}-${formType}-`;
-}
-export const getTemplateStoreKey = (id: number, templateGroup: string, customerType: string = "", formType: string = "") => {
-  return btoa(`${getTemplateStoreKeyParent(templateGroup, customerType, formType)}${id}_`);
-}
-export const getTemplateFromStoreById = async (id: number, templateGroup: string, customerType: string = "", formType: string = "") => {
-  const key = await getStorageString(getTemplateStoreKey(id, templateGroup, customerType, formType));
-  let _template = await getStorageString(key ?? "") ?? '';
+};
+export const getTemplateStoreKey = (
+  id: number,
+  templateGroup: string,
+  customerType: string = "",
+  formType: string = ""
+) => {
+  return btoa(
+    `${getTemplateStoreKeyParent(templateGroup, customerType, formType)}${id}_`
+  );
+};
+export const getTemplateFromStoreById = async (
+  id: number,
+  templateGroup: string,
+  customerType: string = "",
+  formType: string = ""
+) => {
+  const key = await getStorageString(
+    getTemplateStoreKey(id, templateGroup, customerType, formType)
+  );
+  let _template = (await getStorageString(key ?? "")) ?? "";
   if (isNullOrUndefinedOrEmpty(_template)) {
-    return null
+    return null;
   }
   const template = base64UnicodeToModel(_template);
-  return template
-}
-
+  return template;
+};
 
 export const fetchDefaultTemplateFromApi = async (
   voucherType: string,
   formType?: string,
-  customerType?: string,
+  customerType?: string
 ): Promise<TemplateState<unknown> | null> => {
-
   try {
     const api = new APIClient();
     const res = await api.postAsync(`${Urls.default_template}`, {
       template_group: voucherType,
       formType: formType,
-      customerType: customerType
+      customerType: customerType,
     });
 
     if (res == "" || !res.id || res.id <= 0 || res.content == null) {
@@ -1819,7 +2021,10 @@ export const fetchDefaultTemplateFromApi = async (
       return null;
     }
     const templateContent = await decompressData(res.content);
-    const parsedTemplate = parseTemplateContent<TemplateState<unknown>>(res, templateContent);
+    const parsedTemplate = parseTemplateContent<TemplateState<unknown>>(
+      res,
+      templateContent
+    );
     if (!parsedTemplate) {
       console.warn("Failed to parse default template.");
       return null;
@@ -1834,32 +2039,35 @@ export const fetchDefaultTemplateFromApi = async (
 };
 
 export const fetchTemplateById = async (
-  id: any, templateGroup: string, customerType: string = "", formType: string = ""
+  id: any,
+  templateGroup: string,
+  customerType: string = "",
+  formType: string = ""
 ): Promise<TemplateState<unknown> | null> => {
   try {
-
     debugger;
-    const template = await getTemplateFromStoreById(id, templateGroup, customerType, formType);
+    const template = await getTemplateFromStoreById(
+      id,
+      templateGroup,
+      customerType,
+      formType
+    );
     if (template) {
-      return template
+      return template;
     } else {
       if (id > 0) {
-        return fetchTemplateFromApiById(id)
+        return fetchTemplateFromApiById(id);
       } else if (id < 0) {
-        console.log('fetchCRMTemplateFromApiByIdSafvan');
+        console.log("fetchCRMTemplateFromApiByIdSafvan");
 
-        return fetchCRMTemplateFromApiById(-1 * id)
-      } else
-        return null
+        return fetchCRMTemplateFromApiById(-1 * id);
+      } else return null;
     }
-
-
   } catch (error) {
     console.error("Error fetching template:", error);
     return null;
   }
 };
-
 
 export const fetchCRMTemplateFromApiById = async (
   id: any
@@ -1868,7 +2076,10 @@ export const fetchCRMTemplateFromApiById = async (
     const api = new APIClient();
     const res = await api.getAsync(`${Urls.crm_templates}${id}`);
     const templateContent = await decompressData(res.content);
-    const parsed = parseTemplateContent<TemplateState<unknown>>(res, templateContent);
+    const parsed = parseTemplateContent<TemplateState<unknown>>(
+      res,
+      templateContent
+    );
     if (!parsed) {
       console.warn("⚠️ Failed to parse template content.");
       return null;
@@ -1890,7 +2101,10 @@ export const fetchTemplateFromApiById = async (
     const api = new APIClient();
     const res = await api.getAsync(`${Urls.templates}${id}`);
     const templateContent = await decompressData(res.content);
-    const parsed = parseTemplateContent<TemplateState<unknown>>(res, templateContent);
+    const parsed = parseTemplateContent<TemplateState<unknown>>(
+      res,
+      templateContent
+    );
     if (!parsed) {
       console.warn("⚠️ Failed to parse template content.");
       return null;
@@ -1906,13 +2120,14 @@ export const fetchTemplateFromApiById = async (
 };
 
 export function parseTemplateContent<T extends object>(
-  templateRes: any, parsed: any
+  templateRes: any,
+  parsed: any
 ): T | null {
   try {
     let cc = parsed;
 
     // If for some reason it's still a string, parse it
-    if (typeof cc === 'string') {
+    if (typeof cc === "string") {
       cc = JSON.parse(cc);
     }
 
@@ -1928,14 +2143,18 @@ export function parseTemplateContent<T extends object>(
       }
       return obj;
     };
-    debugger
+    debugger;
     const camelCasedContent = convertToCamelCase(cc);
     const _template = {
       ...camelCasedContent,
       id: templateRes.id,
       background_image: templateRes?.background_image as string | undefined,
-      background_image_header: templateRes?.background_image_header as string | undefined,
-      background_image_footer: templateRes?.background_image_footer as string | undefined,
+      background_image_header: templateRes?.background_image_header as
+        | string
+        | undefined,
+      background_image_footer: templateRes?.background_image_footer as
+        | string
+        | undefined,
       signature_image: templateRes?.signature_image as string | undefined,
       branchId: templateRes.branchId,
       content: templateRes.content,
@@ -1959,38 +2178,43 @@ export function parseTemplateContent<T extends object>(
 export const fetchDefaultTemplate = async (
   voucherType: string,
   formType?: string,
-  customerType?: string,
+  customerType?: string
 ) => {
   try {
-
-    const _template = await fetchDefaultTemplateFromApi(voucherType, formType, customerType);
-  debugger
+    const _template = await fetchDefaultTemplateFromApi(
+      voucherType,
+      formType,
+      customerType
+    );
+    debugger;
     if (!_template) return null;
-    await addTemplateToStore(_template)
-    return _template
+    await addTemplateToStore(_template);
+    return _template;
   } catch (error) {
-    console.error("Error fetching Default templates:", error)
+    console.error("Error fetching Default templates:", error);
   }
-}
+};
 
 export const getOrFetchTemplate = async (
   voucherType: string,
   formType?: string,
-  customerType?: string,
+  customerType?: string
 ) => {
-  debugger
-  const template = await getTemplateFromStore(voucherType, customerType, formType);
+  debugger;
+  const template = await getTemplateFromStore(
+    voucherType,
+    customerType,
+    formType
+  );
   if (template) {
-    return template
+    return template;
   } else {
-    return await fetchDefaultTemplate(voucherType, formType, customerType)
+    return await fetchDefaultTemplate(voucherType, formType, customerType);
   }
 };
-export const formatValue = (value: any, format: string,) => {
-
-  let t = '';
-  const ws =
-    ' '.repeat(400); // Same as long ws string in C#
+export const formatValue = (value: any, format: string) => {
+  let t = "";
+  const ws = " ".repeat(400); // Same as long ws string in C#
   // const { fldFont, fldAlign, fldLength } = opts;
 
   // QR Code fonts: return directly
@@ -1999,33 +2223,33 @@ export const formatValue = (value: any, format: string,) => {
   const fmt = format.toUpperCase();
 
   try {
-    if (fmt === 'C###0.00') {
+    if (fmt === "C###0.00") {
       t = val(value).toFixed(2);
-    } else if (fmt === 'C###0.000') {
+    } else if (fmt === "C###0.000") {
       t = val(value).toFixed(3);
-    } else if (format.includes('#') && !format.includes('**')) {
+    } else if (format.includes("#") && !format.includes("**")) {
       t = val(value).toString();
-    } else if (fmt === 'QTY') {
+    } else if (fmt === "QTY") {
       t = val(value).toFixed(0);
-    } else if (fmt === 'QTY1') {
+    } else if (fmt === "QTY1") {
       const t1 = val(value);
       const t2 = Math.trunc(t1);
       t = t1 !== t2 ? t1.toFixed(1) : t1.toFixed(0);
-    } else if (fmt === 'QTY2') {
+    } else if (fmt === "QTY2") {
       const t1 = val(value);
       const t2 = Math.trunc(t1);
       t = t1 !== t2 ? t1.toFixed(2) : t1.toFixed(0);
-    } else if (fmt === 'QTY3') {
+    } else if (fmt === "QTY3") {
       const t1 = val(value);
       const t2 = Math.trunc(t1);
       t = t1 !== t2 ? t1.toFixed(3) : t1.toFixed(0);
-    } else if (fmt === 'AR_NUM') {
+    } else if (fmt === "AR_NUM") {
       t = getArabicNumber(val(value).toFixed(0));
-    } else if (fmt === 'SHRINK') {
+    } else if (fmt === "SHRINK") {
       t = value;
-    } else if (fmt === 'AR_DIG2') {
+    } else if (fmt === "AR_DIG2") {
       t = getArabicNumber(val(value).toFixed(2));
-    } else if (fmt === 'AR_DATE') {
+    } else if (fmt === "AR_DATE") {
       // const date = TransDate ? TransDate : new Date(value);
       // const formatted = date.toLocaleDateString('en-GB', {
       //   day: '2-digit',
@@ -2033,21 +2257,21 @@ export const formatValue = (value: any, format: string,) => {
       //   year: 'numeric',
       // });
       // t = GetArabicDateNumer(formatted.replace(/\//g, '-'));
-    } else if (fmt === 'AR_DIG3') {
+    } else if (fmt === "AR_DIG3") {
       t = getArabicNumber(val(value).toFixed(3));
     } else if (
-      format.includes('d') ||
-      format.includes('M') ||
-      format.includes('y') ||
-      format.includes('H') ||
-      format.includes('h') ||
-      format.includes('m') ||
-      format.includes('s')
+      format.includes("d") ||
+      format.includes("M") ||
+      format.includes("y") ||
+      format.includes("H") ||
+      format.includes("h") ||
+      format.includes("m") ||
+      format.includes("s")
     ) {
       const date = new Date(value);
       if (!isNaN(date.getTime())) {
         // interpret C#-style format tokens manually
-        const pad = (n: number) => n.toString().padStart(2, '0');
+        const pad = (n: number) => n.toString().padStart(2, "0");
         const replacements: Record<string, string> = {
           dd: pad(date.getDate()),
           MM: pad(date.getMonth() + 1),
@@ -2060,11 +2284,11 @@ export const formatValue = (value: any, format: string,) => {
       } else {
         t = value;
       }
-    } else if (fmt === 'NONE') {
+    } else if (fmt === "NONE") {
       t = value;
-    } else if (fmt === 'BIZ') {
+    } else if (fmt === "BIZ") {
       const v = val(value);
-      t = v === 0 ? '' : v.toFixed(2);
+      t = v === 0 ? "" : v.toFixed(2);
     } else {
       t = value;
     }
@@ -2090,13 +2314,13 @@ export const formatValue = (value: any, format: string,) => {
   }
 
   return t;
-}
+};
 
 const formatDate = (value: any, format: string) => {
   const date = new Date(value);
   if (isNaN(date.getTime())) return value.toString();
 
-  const pad = (n: number) => n.toString().padStart(2, '0');
+  const pad = (n: number) => n.toString().padStart(2, "0");
 
   const map: Record<string, string> = {
     dd: pad(date.getDate()),
@@ -2108,12 +2332,12 @@ const formatDate = (value: any, format: string) => {
     hh: pad(date.getHours() % 12 || 12),
     mm: pad(date.getMinutes()),
     ss: pad(date.getSeconds()),
-    a: date.getHours() >= 12 ? 'PM' : 'AM',
-    MMM: date.toLocaleString('en-US', { month: 'short' }),
+    a: date.getHours() >= 12 ? "PM" : "AM",
+    MMM: date.toLocaleString("en-US", { month: "short" }),
   };
 
   return format.replace(
     /(yyyy|yy|dd|d|MM|HH|hh|mm|ss|a|MMM)/g,
     (token) => map[token] || token
   );
-}
+};

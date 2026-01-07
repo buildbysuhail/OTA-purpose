@@ -665,7 +665,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
       height = window.innerHeight - 296;
     } else {
       // height = window.innerHeight - (484 +15); - in Sales
-      height = window.innerHeight - (484 + 60); // Need to set up correctly after the footer set
+      height = window.innerHeight - (484 + 70); // Temporary change setup
     }
 
     console.log('Max safe integer:', Number.MAX_SAFE_INTEGER);

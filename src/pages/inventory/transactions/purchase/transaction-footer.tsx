@@ -622,7 +622,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
 
         {formState.transaction.master.voucherType !== "LPO" && (
           <div className={`grid ${footerLayout === "vertical" ? "grid-cols-1 gap-1" : "grid-cols-1 md:grid-cols-[1fr_400px]"}`}>
-            <div className={`flex ${footerLayout === "vertical" ? "flex-col items-start justify-start" : "p-2 flex-col md:flex-row items-end justify-end gap-4"}`}>
+            <div className={`flex ${footerLayout === "vertical" ? "flex-col items-start justify-start" : "px-2 py-1 flex-col md:flex-row items-end justify-end gap-4"}`}>
               <div className={`${footerLayout === "vertical" ? "hidden" : "block"}`}>
                 <div className="absolute top-1.5 left-1">
                   <button onClick={toggleFooterPosition} className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 dark:bg-dark-bg opacity-50 hover:opacity-100 transition-all duration-300" title={t("display_the_footer_on_the_right")}>
@@ -682,7 +682,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             </div>
 
             <div className="py-2 pl-2 pr-4 dark:bg-dark-bg-card bg-gray-50 border-l dark:border-dark-border border-gray-200">
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-1">
                 <NetAmountInput
                   formState={formState}
                   dispatch={dispatch}
@@ -704,8 +704,9 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 {formState.formElements.grandTotalFc.visible && (
                   <div>
                     <div className="flex items-center justify-between dark:text-dark-text">
-                      <span>{t(formState.formElements.grandTotalFc.label)}:</span>
-                      <span>{formState.transaction.master.grandTotalFc}</span>
+                      <span className="text-xs dark:text-dark-text text-gray-600 font-medium w-20">{t(formState.formElements.grandTotalFc.label)}</span>
+                      <span className="text-xs dark:text-dark-text text-gray-600 mr-2">:</span>
+                      <span className={`text-sm font-semibold dark:text-dark-text text-gray-900 flex-1 ${isRtl ? "text-left" : "text-right"}`}>{formState.transaction.master.grandTotalFc}</span>
                     </div>
                   </div>
                 )}

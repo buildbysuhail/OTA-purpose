@@ -389,12 +389,16 @@ export interface TransactionDetail {
   salesman:string; // new
   salesmanID:number; // new
   adjQty:number; // For SO,GD,SRV
+  gatePass:string; // For SI india
+  purchaseCost:number; // For SI india
+  taxCategoryID:number; // For SI india
+  productCategoryID:number; // For SI india
 
   // stock
   stockTo?: number;
   stockMax?: number;
-  fromWhouseStock?: number;
-  toWhouseStock?: number;
+  fromWhouseStock?: string;
+  toWhouseStock?: string;
   salesTotal?: number;
 }
 
@@ -977,8 +981,8 @@ interface ProductBatchDetailsForAutoBarcodeData {
 
   // stock
   mulUnitManualBarcode?: string | null;
-  toWarehouseStock?: number;
-  fromWarehouseStock?: number;
+  toWareHouseStockDetails?: string;
+  fromWareHouseStockDetails?: string;
 }
 
 export interface DataAutoBarcode {

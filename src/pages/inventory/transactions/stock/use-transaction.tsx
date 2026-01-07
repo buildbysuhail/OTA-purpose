@@ -547,9 +547,9 @@ export const useTransaction = (
       PDTInvTransMasterID: pDTInvTransMasterID ?? formState.transaction.master.refInvTransactionMasterID,
       WarehouseId: formState.transaction.master.fromWarehouseID,
       // FromBranchID: formState.transaction.master.branchID,
-      // IsActualPriceVisible: true,
+      // IsActualPriceVisible: false,
       // IsStockDetailVisible: true,
-      // InvokeUsingVoucherNumber: true,
+      // InvokeUsingVoucherNumber: false,
     };
 
     // ByGRN
@@ -1222,7 +1222,9 @@ const verified = Boolean(vch.master.pdtVerified);
         formState.transaction.master.transactionDate,
         formState.transaction.master.ledgerID,
         formState.transaction.master.fromWarehouseID,
-        formState.transaction.master.stockUpdate
+        formState.transaction.master.stockUpdate,
+        formState.transaction.master.voucherType,
+        formState.transaction.master.toWarehouseID
       );
       if (dtRes.hasError) {
         ERPAlert.show({
@@ -2897,16 +2899,20 @@ const verified = Boolean(vch.master.pdtVerified);
         barCode: data.autoBarcode,
         wareHouseId: warehouseId,
         txtData: data.searchText,
-        partyId: formState.transaction.master.ledgerID,
         isUnitDetailsRequired: true,
-        isCheckUseSupplierProductCode:
-          formState.userConfig?.useSupplierProductCode,
-        isActualPriceVisible: formState.gridColumns?.find(
-          (x) => x.dataField == "actualSalesPrice"
-        )?.visible,
-        isStockDetailsVisible: formState.gridColumns?.find(
-          (x) => x.dataField == "stockDetails"
-        )?.visible,
+        isCheckDate: formState.dateCheckbox,
+        transDate: formState.transaction.master.transactionDate,
+        fromWarehouseID: formState.transaction.master.fromWarehouseID,
+        toWarehouseID: formState.transaction.master.toWarehouseID,
+        // partyId: formState.transaction.master.ledgerID,
+        // isCheckUseSupplierProductCode:
+        //   formState.userConfig?.useSupplierProductCode,
+        // isActualPriceVisible: formState.gridColumns?.find(
+        //   (x) => x.dataField == "actualSalesPrice"
+        // )?.visible,
+        // isStockDetailsVisible: formState.gridColumns?.find(
+        //   (x) => x.dataField == "stockDetails"
+        // )?.visible,
         lastSelectedWareHouseIdOfItemPopUpsSearch:
           await _lastSelectedWarehouseIDOfItemPopupsSearch,
       };
@@ -3059,12 +3065,12 @@ const verified = Boolean(vch.master.pdtVerified);
 
         // warehouse stock
         if (!product.mulUnitManualBarcode) {
-          outDetail.stockTo = Number(product.toWarehouseStock || 0);
+          outDetail.stockTo = Number(product.toWareHouseStockDetails || 0);  // check it
           outDetail.stockMax = Number(product.stockMax || 0);
         }
 
-        outDetail.fromWhouseStock = product.fromWarehouseStock;
-        outDetail.toWhouseStock = product.toWarehouseStock;
+        outDetail.fromWhouseStock = product.fromWareHouseStockDetails; // checkit
+        outDetail.toWhouseStock = product.toWareHouseStockDetails; // check it
 
         // multi factor logic
         if (product.multiFactor > 0) {
@@ -3252,6 +3258,8 @@ const verified = Boolean(vch.master.pdtVerified);
       outDetail.salesPrice = res.stdSalesPrice;
       outDetail.minSalePrice = res.minSalePrice;
       outDetail.actualSalesPrice = res.salesPrice;
+      outDetail.cost = res.stdPurchasePrice;  // Need to check is there any other item changes
+      // Need to make the full logic based on 1050 - tomorrow
       if (actualPriceVisible) {
         if (res.actualSalesPrice > 0) {
           outDetail.actualSalesPrice = res.actualSalesPrice;
@@ -4120,11 +4128,11 @@ const verified = Boolean(vch.master.pdtVerified);
             slNo: generateUniqueKey(),
             barCode: rowData.Barcode,
             qty: rowData.Quantity,
-            discPerc: rowData.Disc_per || 0,
-            discount: rowData.Discount || 0,
-            mrp: rowData.MRP || 0,
-            salesPrice: rowData.SalesPrice,
-            unitPrice: rowData.PurchasePrice,
+            // discPerc: rowData.Disc_per || 0,
+            // discount: rowData.Discount || 0,
+            // mrp: rowData.MRP || 0,
+            // salesPrice: rowData.SalesPrice,
+            // unitPrice: rowData.PurchasePrice,
           };
           const productDetails = await loadProductDetailsByAutoBarcode(
             {
@@ -4791,13 +4799,19 @@ const verified = Boolean(vch.master.pdtVerified);
     // The below is not the correct api endponit - just added for checking
     const res = await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/LoadStockCount`,
         {
-          warehouseID: formState.transaction.master.fromWarehouseID,
+          warehouseId: formState.transaction.master.fromWarehouseID,
           voucherNumber: master.voucherNumber,
           voucherPrefix: master.voucherPrefix,
           voucherType: master.voucherType,
           voucherForm: master.voucherForm,
-          branchID: master.branchID,
+          fromBranchID: master.branchID,
           financialYearID: master.financialYearID,  // Check This is needed!
+          isUsingManualInvoiceNo: false,
+          manualInvoiceNumber:master.mannualInvoiceNumber,
+          // isActualPriceVisible": true,
+          // "isStockDetailVisible": true,
+          // "pdtInvTransMasterID": 0,
+          // "invokeUsingVoucherNumber": true
         }
       );
 

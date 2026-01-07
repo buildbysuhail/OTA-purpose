@@ -56,6 +56,7 @@ export interface ApplicationInventorySettings {
     mobileNumberMandotryInSales: boolean;
     blockUnitOnDecimalPoint:boolean
     enableImportSales?:boolean
+    setMagininSales?:boolean
   }
   export const ApplicationInventorySettingsInitialState: ApplicationInventorySettings = {
       defaultSalesAcc: 1,
@@ -113,4 +114,5 @@ export interface ApplicationInventorySettings {
       holdSalesMan: false,
       mobileNumberMandotryInSales: false,
       blockUnitOnDecimalPoint:false,
+      setMagininSales:false,
     };

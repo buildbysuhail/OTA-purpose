@@ -510,7 +510,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     ![VoucherType.StockCount, VoucherType.OpeningStock, VoucherType.StockAdjuster].includes(
                       formState.transaction.master.voucherType as VoucherType
                     ) ? (
-                      <div className="flex gap-1 items-end">
+                      <div className="flex gap-1 items-center">
 
                         <WarehouseIDFromTo
                           formState={formState}
@@ -565,6 +565,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                             loadAndSetTransVoucher={loadAndSetTransVoucher}
                           />
                           <div className="flex gap-1 items-end">
+                          {formState.formElements.txtILRRefNo?.visible && (
                           <ERPInput
                             id="loadRequest"
                             label={t("load_request")}
@@ -580,6 +581,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                             disableEnterNavigation={true}
                             onKeyDown={onILRRefNoKeyUp}
                           />
+                          )}
                           </div>
                         </div>
 
@@ -905,16 +907,18 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
                   onClick={handleWStockList}
                 />
-                <ERPButton
+                {/* <ERPButton
                   title={t("status")}
                   variant="secondary"
                   className=""
-                />
-                <ERPButton
+                  backgroundColor=""
+                /> */}
+                <button className="bg-violet-600 px-2 rounded-md text-white font-semibold">{t("status")}</button>
+                {/* <ERPButton
                   title={t("pdt_status")}
                   variant="secondary"
                   className=""
-                />
+                /> */}
 
                    </div>
               )}

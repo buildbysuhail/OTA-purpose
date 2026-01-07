@@ -112,7 +112,7 @@ const WarehouseIDFromTo = React.forwardRef<HTMLInputElement, WarehouseIDProps>(
             fetching={formState.transactionLoading}
             enableClearOption={false}
             id={fieldId}
-            className="min-w-[180px] !m-0"
+            className="min-w-[180px]"
             label={displayLabel}
             data={formState.transaction.master}
             onSelectItem={(e: { label: string; value: string | number }) => {

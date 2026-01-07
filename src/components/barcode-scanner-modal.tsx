@@ -85,7 +85,18 @@ const BarcodeModalScanner: React.FC<BarcodeModalProps> = ({
         const scannerConfig = {
           onScan: (result: BarcodeScanResult) => {
             if (mountedRef.current) {
+              // First call the scan handler to update the barcode value
               onScanRef.current(result);
+              // Then trigger Enter key logic after a small delay to allow state update
+              if (onEnterTriggerRef.current) {
+                const enterTrigger = onEnterTriggerRef.current;
+                setTimeout(() => {
+                  if (mountedRef.current && enterTrigger) {
+                    enterTrigger(result);
+                  }
+                }, 150);
+              }
+              // Close the modal
               onCloseRef.current();
             }
           },
@@ -96,9 +107,8 @@ const BarcodeModalScanner: React.FC<BarcodeModalProps> = ({
             }
           },
           onEnterTrigger: (result: BarcodeScanResult) => {
-            if (mountedRef.current && onEnterTriggerRef.current) {
-              onEnterTriggerRef.current(result);
-            }
+            // This is called by the scanner service after successful scan
+            // We handle Enter trigger in onScan callback above for better control
           },
           onError: (err: Error) => {
             // On native, errors are handled by the native scanner UI

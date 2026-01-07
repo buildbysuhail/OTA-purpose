@@ -11,16 +11,16 @@ type DownTableProps = {
 };
 const DEFAULT_COLUMN_WIDTH = "10%";
 
- export const SharedDownTable: React.FC<DownTableProps> = ({ data, template }) => {
+export const SharedDownTable: React.FC<DownTableProps> = ({ data, template }) => {
   const accTableState = (template as any)?.tableState as TableColumn<unknown>[] | undefined;
   const tableMasterState = (template as TemplateState<unknown>)?.itemTableMasterState;
   const HeadFontFamily = tableMasterState?.headerFontFamily || "Roboto";
-  const arabicHeadFontFamily = tableMasterState?.arabicHeaderFontFamily?? "Amiri";
+  const arabicHeadFontFamily = tableMasterState?.arabicHeaderFontFamily ?? "Amiri";
   const rowFontFamily = tableMasterState?.itemRowFontFamily || "Roboto";
-  const arabicrowFontFamily = tableMasterState?.arabicItemRowFontFamily?? "Amiri";
+  const arabicrowFontFamily = tableMasterState?.arabicItemRowFontFamily ?? "Amiri";
 
- // compute visible columns once
-const visibleColumns = accTableState?.filter((c) => c.show) ?? [];
+  // compute visible columns once
+  const visibleColumns = accTableState?.filter((c) => c.show) ?? [];
 
   const styles = StyleSheet.create({
     container: {
@@ -33,14 +33,14 @@ const visibleColumns = accTableState?.filter((c) => c.show) ?? [];
       backgroundColor: tableMasterState?.showTableHeaderBg
         ? tableMasterState?.tableHeaderBgColor
         : "#fff",
-    borderTopWidth: tableMasterState?.showTableRowBorder ? 1 : 0,
-    borderTopColor: tableMasterState?.tableRowBorderColor || "#000",
-    borderBottomWidth: tableMasterState?.showTableRowBorder ? 1 : 0,
-    borderBottomColor: tableMasterState?.tableRowBorderColor || "#000",
-    borderLeftWidth:(tableMasterState?.showTableColBorder)? 1 : 0,
-    borderLeftColor: tableMasterState?.tableColBorderColor || "#000",  
-    borderRightWidth:(tableMasterState?.showTableColBorder)? 1 : 0,
-    borderRightColor: tableMasterState?.tableColBorderColor || "#000",     
+      borderTopWidth: tableMasterState?.showTableRowBorder ? 1 : 0,
+      borderTopColor: tableMasterState?.tableRowBorderColor || "#000",
+      borderBottomWidth: tableMasterState?.showTableRowBorder ? 1 : 0,
+      borderBottomColor: tableMasterState?.tableRowBorderColor || "#000",
+      borderLeftWidth: (tableMasterState?.showTableColBorder) ? 1 : 0,
+      borderLeftColor: tableMasterState?.tableColBorderColor || "#000",
+      borderRightWidth: (tableMasterState?.showTableColBorder) ? 1 : 0,
+      borderRightColor: tableMasterState?.tableColBorderColor || "#000",
 
     },
     th: {
@@ -50,17 +50,17 @@ const visibleColumns = accTableState?.filter((c) => c.show) ?? [];
       color: tableMasterState?.headerFontColor || "#000",
       fontSize: tableMasterState?.headerFontSize || 12,
       fontWeight: tableMasterState?.headerFontWeight || 400,
-      fontStyle:  tableMasterState?.headerFontStyle || "normal",
-      lineHeight:1.2
+      fontStyle: tableMasterState?.headerFontStyle || "normal",
+      lineHeight: 1.2
     },
     tr: {
       flexDirection: "row",
       borderBottomWidth: tableMasterState?.showTableRowBorder ? 1 : 0,
       borderBottomColor: tableMasterState?.tableRowBorderColor || "#000",
-      borderLeftWidth:(tableMasterState?.showTableColBorder)? 1 : 0,
-      borderLeftColor: tableMasterState?.tableColBorderColor || "#000",  
-      borderRightWidth:(tableMasterState?.showTableColBorder)? 1 : 0,
-      borderRightColor: tableMasterState?.tableColBorderColor || "#000",         
+      borderLeftWidth: (tableMasterState?.showTableColBorder) ? 1 : 0,
+      borderLeftColor: tableMasterState?.tableColBorderColor || "#000",
+      borderRightWidth: (tableMasterState?.showTableColBorder) ? 1 : 0,
+      borderRightColor: tableMasterState?.tableColBorderColor || "#000",
       backgroundColor: tableMasterState?.showRowBg
         ? tableMasterState?.itemRowBgColor
         : "#fff",
@@ -72,8 +72,8 @@ const visibleColumns = accTableState?.filter((c) => c.show) ?? [];
       fontSize: tableMasterState?.itemRowFontSize || 12,
       color: tableMasterState?.itemRowFontColor || "#000",
       fontWeight: tableMasterState?.itemRowFontWeight || 400,
-      fontStyle:  tableMasterState?.itemRowFontStyle || "normal",  
-      lineHeight: 1.2,    
+      fontStyle: tableMasterState?.itemRowFontStyle || "normal",
+      lineHeight: 1.2,
     },
   });
 
@@ -81,25 +81,25 @@ const visibleColumns = accTableState?.filter((c) => c.show) ?? [];
     <View style={styles.thead} fixed={tableMasterState?.headerRepeatOnPage}>
       {visibleColumns.map((col, idx) => {
         const isArabic = containsArabicString(col.label)
-        return(
-        <View
-          key={String(col.field)}
-          style={{
-            ...styles.th,
-            fontFamily:isArabic ? arabicHeadFontFamily: HeadFontFamily,
-            width: col.width || DEFAULT_COLUMN_WIDTH,
-            minWidth: col.width || DEFAULT_COLUMN_WIDTH,
-            maxWidth:col.width || DEFAULT_COLUMN_WIDTH,
-            borderRightWidth:(tableMasterState?.showTableColBorder && idx + 1 < visibleColumns.length ) ? 1 : 0,
-            borderRightColor: tableMasterState?.tableColBorderColor || "#000",
-          
-          }}
-        >
-          <Text>{col.label ?? String(col.field)}</Text>
-        </View>
+        return (
+          <View
+            key={String(col.field)}
+            style={{
+              ...styles.th,
+              fontFamily: isArabic ? arabicHeadFontFamily : HeadFontFamily,
+              width: col.width || DEFAULT_COLUMN_WIDTH,
+              minWidth: col.width || DEFAULT_COLUMN_WIDTH,
+              maxWidth: col.width || DEFAULT_COLUMN_WIDTH,
+              borderRightWidth: (tableMasterState?.showTableColBorder && idx + 1 < visibleColumns.length) ? 1 : 0,
+              borderRightColor: tableMasterState?.tableColBorderColor || "#000",
+
+            }}
+          >
+            <Text>{col.label ?? String(col.field)}</Text>
+          </View>
         )
 
-       })}
+      })}
     </View>
   );
 
@@ -110,41 +110,73 @@ const visibleColumns = accTableState?.filter((c) => c.show) ?? [];
       {data?.map((row, rowIndex) => (
         <View key={rowIndex} style={styles.tr} wrap={false}>
           {visibleColumns.map((col, idx) => {
-        const splitData = String(col.field).split("___");
-        const group = splitData[0] as any;
-        const key = splitData[1];
-        let cellValue :any = ""; 
-        row?.[key  as keyof PrintDetailDto] ?? "";
-        if (group == "details") {
-          cellValue =   (row?.[key as keyof PrintDetailDto] ?? "");;
+            const field = col.field as string;
+            const splitData = String(col.field).split("___");
+            const group = splitData[0] as any;
+            const key = splitData[1];
+            let cellValue: any = "";
+            row?.[key as keyof PrintDetailDto] ?? "";
 
-        }
-        else if (group == "details2") {
-          cellValue = row?.detail2Data?.[key as (keyof InvDetail2ForPrint)]
+            if (!field?.includes("___")) {
 
-        }
+              console.log(`col.field-1`);
+              if (![
+                "cgst",
+                "cgstPerc",
+                "sgst",
+                "sgstPerc",
+                "igst",
+                "igstPerc",
+                "cessAmt",
+                "cessPerc",
+                "additionalCess",
+                "additionalCessPerc",
+                "gstPerc"
+              ].includes(col.field)) {
+                console.log(`col.field-2`);
+                cellValue = row?.[field as keyof PrintDetailDto] ?? ""
+                console.log(row);
 
-      // Check if text is Arabic
-        const isArabic = containsArabicString(cellValue);
-            return(
-            <View
-              key={String(col.field)}
-              style={{
-                ...styles.td,
-                fontFamily:isArabic ? arabicrowFontFamily: rowFontFamily,
-                   width:  col.width || DEFAULT_COLUMN_WIDTH,
-                  minWidth:  col.width || DEFAULT_COLUMN_WIDTH,
-                maxWidth: col.width || DEFAULT_COLUMN_WIDTH,
-                borderRightWidth:tableMasterState?.showTableColBorder && idx + 1 < visibleColumns.length ? 1 : 0,
-                borderRightColor: tableMasterState?.tableColBorderColor || "#000",
-              }}
-            >
-             <Text>{formatValue(cellValue,col.format)}</Text>
 
-            </View>
+              }
+              else {
+                console.log(`col.field-3`);
+                cellValue = row?.detail2Data?.[col.field as (keyof InvDetail2ForPrint)]
+
+              }
+            } else {
+              if (group == "details") {
+                cellValue = (row?.[key as keyof PrintDetailDto] ?? "");;
+
+              }
+              else if (group == "details2") {
+                cellValue = row?.detail2Data?.[key as (keyof InvDetail2ForPrint)]
+
+              }
+            }
+
+
+            // Check if text is Arabic
+            const isArabic = containsArabicString(cellValue);
+            return (
+              <View
+                key={String(col.field)}
+                style={{
+                  ...styles.td,
+                  fontFamily: isArabic ? arabicrowFontFamily : rowFontFamily,
+                  width: col.width || DEFAULT_COLUMN_WIDTH,
+                  minWidth: col.width || DEFAULT_COLUMN_WIDTH,
+                  maxWidth: col.width || DEFAULT_COLUMN_WIDTH,
+                  borderRightWidth: tableMasterState?.showTableColBorder && idx + 1 < visibleColumns.length ? 1 : 0,
+                  borderRightColor: tableMasterState?.tableColBorderColor || "#000",
+                }}
+              >
+                <Text>{formatValue(cellValue, col.format)}</Text>
+
+              </View>
             )
 
-         })}
+          })}
         </View>
       ))}
     </View>

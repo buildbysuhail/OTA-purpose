@@ -397,8 +397,8 @@ export interface TransactionDetail {
   // stock
   stockTo?: number;
   stockMax?: number;
-  fromWhouseStock?: number;
-  toWhouseStock?: number;
+  fromWhouseStock?: string;
+  toWhouseStock?: string;
   salesTotal?: number;
 }
 
@@ -981,8 +981,8 @@ interface ProductBatchDetailsForAutoBarcodeData {
 
   // stock
   mulUnitManualBarcode?: string | null;
-  toWarehouseStock?: number;
-  fromWarehouseStock?: number;
+  toWareHouseStockDetails?: string;
+  fromWareHouseStockDetails?: string;
 }
 
 export interface DataAutoBarcode {

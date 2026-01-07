@@ -484,12 +484,13 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             )} */}
           {[VoucherType.ShortageStock, VoucherType.ExcessStock,VoucherType.StockAdjuster].includes(formState.transaction.master.voucherType as VoucherType) && (
               <div className="flex">
+                {formState.formElements.btnAddProducts?.visible && (
                 <ERPButton
                    title={t("add_products")}
                    variant="secondary"
-                   disabled={formState.formElements?.pnlMasters?.disabled}
                    onClick={()=> handleAddProduct()}
                 />
+                )}
                 <input
                   type="file"
                   ref={fileInputRef}
@@ -507,22 +508,23 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   onClick={()=> handleLoadProductBtn()}/>
               </div>
             )} 
-             
              <div className="flex flex-col">  
               {[VoucherType.ExcessStock,VoucherType.ShortageStock].includes(formState.transaction.master.voucherType as VoucherType) && (
               <div className="flex">
+                {formState.formElements.chkCostFromExcel?.visible && (
                 <ERPCheckbox
                   id="loadCostFromExcel"
                   label={t("load_cost_from_excel")}
                   checked={formState?.chkCostFromExcel}
                   onChange={(e) =>{
                       dispatch(
-                      formStateHandleFieldChangeKeysOnly(
+                      formStateHandleFieldChange(
                         { fields: { chkCostFromExcel: e.target.checked} }
                       ))
                   }}
                   
                 />
+                )}
               </div>
              )}
              
@@ -530,12 +532,14 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
              </div>
              {[VoucherType.StockCount, VoucherType.OpeningStock,VoucherType.StockAdjuster].includes(formState.transaction.master.voucherType as VoucherType) && (
               <div className="flex px-1">
+                {formState.formElements.btnLoadExcel?.visible && (
                 <ERPButton
                   title={t("load_excel")}
                   variant="secondary"
                   disabled={formState.formElements?.pnlMasters?.disabled}
                   onClick={() => handleLoadExcel()}
                 />
+                )}
                 <input
                   type="file"
                   ref={fileInputRef}

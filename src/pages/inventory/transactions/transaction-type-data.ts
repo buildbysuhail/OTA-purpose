@@ -452,6 +452,10 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   //stock
   chkUserSalesPriceForStockTransfer: { visible: false, disabled: false, label: "" },
   warehouseStockList: { visible: false, disabled: false, label: "" },
+  chkCostFromExcel: { visible: false, disabled: false, label: "" },
+  btnAddProducts: { visible: false, disabled: false, label: "" },
+  btnLoadExcel: { visible: false, disabled: false, label: "" }, // load excel button, two button are found, need to manage that
+  txtILRRefNo: { visible: true, disabled: false, label: "" }, //Item load request
 
 };export const initialUserConfig: UserConfig = {
     clearDetailsAfterSaveAccounts: true,

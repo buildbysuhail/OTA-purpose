@@ -2923,7 +2923,7 @@ debugger;
           Object.entries(apiParams).map(([k, v]) => [k, String(v ?? "")])
         )
       ).toString();
-    const url = `${Urls.inv_transaction_base}${transactionType}/getProductOtherUnitPrice/?${query}`;
+    const url = `${Urls.inv_transaction_base}${transactionType}/ProductBatchUnitPrices/${detail.productBatchID}/${outDetail.unitID}/${actualPriceVisible}`;
     
     const res = await api.getAsync(url );
      outState = await calculateRowAmount(

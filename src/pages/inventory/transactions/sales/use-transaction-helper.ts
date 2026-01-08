@@ -1112,43 +1112,43 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       if (isNullOrUndefinedOrZero(detail.productID)) {
         break;
       }
-      // if (clientSession.isAppGlobal) 
-      //   {
-      //   if (detail.details2) {
-      //     if (formType.toUpperCase() == "INTERSTATE" || formType.toUpperCase() == "INT" && loadType != "") {
-      //       detail.details2.cessPerc = row.cessPerc;
-      //       detail.details2.cessAmt = row.cessAmt;
-      //       //IGST calculation
-      //       const CGSTPerc = row.cgstPerc ?? 0;
-      //       const CGST = row.cgst ?? 0;
-      //       const SGSTPerc = row.sgstPerc ?? 0;
-      //       const SGST = row.sgst ?? 0;
-      //       const IGSTPerc = row.igstPerc ?? 0;
-      //       const IGST = row.igst ?? 0;
-      //       const totalTaxPerc = CGSTPerc + SGSTPerc + IGSTPerc;
-      //       const totalTax = CGST + SGST + IGST;
-      //       detail.details2.igstPerc = totalTaxPerc;
-      //       detail.details2.igst = totalTax;
-      //       detail.details2.additionalCessPerc = row.additionalCessPerc;
-      //       detail.details2.additionalCess = row.additionalCess;
-      //       detail.details2.cgstPerc = 0;
-      //       detail.details2.cgst = 0;
-      //       detail.details2.sgstPerc = 0;
-      //       detail.details2.sgst = 0;
-      //     } else {
-      //       detail.hsnCode = row.hsnCode;
-      //       detail.details2.cessPerc = row.cessPerc;
-      //       detail.details2.cessAmt = row.cessAmt;
-      //       detail.details2.cgstPerc = row.cgstPerc;
-      //       detail.details2.cgst = row.cgst;
-      //       detail.details2.sgstPerc = row.sgstPerc;
-      //       detail.details2.sgst = row.sgst;
-      //       detail.details2.igstPerc = row.igstPerc;
-      //       detail.details2.igst = row.igst;
-      //       detail.details2.additionalCessPerc = row.additionalCessPerc;
-      //       detail.details2.additionalCess = row.additionalCess;
-
-      //     }
+      // if (clientSession.isAppGlobal) {
+      //   if (voucherType != VoucherType.SaleReturnEstimate && formType != "" || [VoucherType.SalesInvoice, VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(voucherType as any)) {
+      //     if (detail.details2) {
+      //       if (formType.toUpperCase() == "INTERSTATE" || formType.toUpperCase() == "INT" && loadType != "") {
+      //         detail.details2.cessPerc = row.cessPerc;
+      //         detail.details2.cessAmt = row.cessAmt;
+      //         //IGST calculation
+      //         const CGSTPerc = row.cgstPerc ?? 0;
+      //         const CGST = row.cgst ?? 0;
+      //         const SGSTPerc = row.sgstPerc ?? 0;
+      //         const SGST = row.sgst ?? 0;
+      //         const IGSTPerc = row.igstPerc ?? 0;
+      //         const IGST = row.igst ?? 0;
+      //         const totalTaxPerc = CGSTPerc + SGSTPerc + IGSTPerc;
+      //         const totalTax = CGST + SGST + IGST;
+      //         detail.details2.igstPerc = totalTaxPerc;
+      //         detail.details2.igst = totalTax;
+      //         detail.details2.additionalCessPerc = row.additionalCessPerc;
+      //         detail.details2.additionalCess = row.additionalCess;
+      //         detail.details2.cgstPerc = 0;
+      //         detail.details2.cgst = 0;
+      //         detail.details2.sgstPerc = 0;
+      //         detail.details2.sgst = 0;
+      //       } else {
+      //         detail.hsnCode = row.hsnCode;
+      //         detail.details2.cessPerc = row.cessPerc;
+      //         detail.details2.cessAmt = row.cessAmt;
+      //         detail.details2.cgstPerc = row.cgstPerc;
+      //         detail.details2.cgst = row.cgst;
+      //         detail.details2.sgstPerc = row.sgstPerc;
+      //         detail.details2.sgst = row.sgst;
+      //         detail.details2.igstPerc = row.igstPerc;
+      //         detail.details2.igst = row.igst;
+      //         detail.details2.additionalCessPerc = row.additionalCessPerc;
+      //         detail.details2.additionalCess = row.additionalCess;
+      //       }
+      //     } 
       //     detail.mrp = row.mrp;
       //     //customerType is always ""
       //     // if(customerType.toUpperCase() == "INT" &&loadType == "SI"){} 

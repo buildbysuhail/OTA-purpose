@@ -223,6 +223,7 @@ export interface TransactionMaster {
   name?: string;
   address?: string;  // Check use the address1
   purInvNumber?: number;
+  toBranchWarehouseID?: number; // for stock branch transfer
 }
 
 export interface TransactionMaster3 {
@@ -503,6 +504,9 @@ export interface UserConfig {
   stockOutConfirmation?: boolean;
   taxOnMRP?: boolean;
   taxOnFreeItem?: boolean;
+
+  // stock
+  userSalesPriceForStockTransfer?: boolean;
 }
 
 export type FormElementsState = {
@@ -757,6 +761,7 @@ export interface TransactionFormState {
   dateCheckbox?: boolean;
   allPositiveStockToZero?: boolean;
   allNegativeStockToZero?: boolean;
+  branchCheckbox?: boolean; // for stock branch transfer
 }
 export interface GiftModel {
   productBatchID: number;

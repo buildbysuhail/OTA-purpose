@@ -450,7 +450,7 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   lblBillBalance: { visible: false, disabled: false, label: "" },
 
   //stock
-  chkUserSalesPriceForStockTransfer: { visible: false, disabled: false, label: "" },
+  userSalesPriceForStockTransfer: { visible: false, disabled: false, label: "" },
   warehouseStockList: { visible: false, disabled: false, label: "" },
   chkCostFromExcel: { visible: false, disabled: false, label: "" },
   btnAddProducts: { visible: false, disabled: false, label: "" },

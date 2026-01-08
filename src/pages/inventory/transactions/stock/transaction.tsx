@@ -759,7 +759,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         },
         btnAddProducts:{
           ...initialFormElements.btnAddProducts,
-          visible: voucherType ==="SH" ? true : initialFormElements.chkCostFromExcel.visible
+          visible: voucherType ==="SH" || voucherType ==="EX" || voucherType ==="AD" ? true : initialFormElements.chkCostFromExcel.visible
 
         },
         txtILRRefNo: {
@@ -868,8 +868,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
         //   catch (Exception ex) { }
         // }
       }else{
-        _formState.formElements.chkUserSalesPriceForStockTransfer = {
-          ..._formState.formElements.chkUserSalesPriceForStockTransfer,
+        _formState.formElements.userSalesPriceForStockTransfer = {
+          ..._formState.formElements.userSalesPriceForStockTransfer,
           visible: false
         };
       }

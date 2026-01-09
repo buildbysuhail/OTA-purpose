@@ -2,7 +2,24 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--
+      viewport-fit=cover is CRITICAL for safe-area support:
+      - Tells the browser your app will handle safe-area insets
+      - Makes env(safe-area-inset-*) values available in CSS
+      - Without this, env() values return 0 even on notched devices
+
+      iOS: Required for notch/Dynamic Island support
+      Android: Required for camera cutout support
+    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1" />
+
+    <!-- iOS Safari specific meta tags for status bar -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+    <!-- Android theme color (affects status bar on Chrome) -->
+    <meta name="theme-color" content="#FFFFFF" />
+
     <link rel="icon" type="image/svg+xml" href="./src/assets/images/brand-logos/favicon.ico" />
     <title> Polosys ERP</title>
     <link href="https://cdn.jsdelivr.net/npm/dragula@3.7.3/dist/dragula.min.css" rel="stylesheet">

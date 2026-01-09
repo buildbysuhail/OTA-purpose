@@ -4,6 +4,7 @@ import { DesignerElementType, PlacedComponent } from "../Designer/interfaces";
 import { bindDataForPrint } from "../../use-print";
 import { containsArabicString } from "../utils/pdf-util";
 import { Height, Width } from "devextreme-react/cjs/chart";
+import { isNullOrUndefinedOrEmpty } from "../../../utilities/Utils";
 
 interface Props {
   component: PlacedComponent;
@@ -149,7 +150,9 @@ const DEFAULT_FONT_CONFIG = {
     case DesignerElementType.image:
       const imgUrl = component?.imgFromDevice ?component.content : bindDataForPrint(component?.content, data);
       return (
-      <View style={baseStyle}>       
+        
+      <View style={baseStyle}>     
+      { !isNullOrUndefinedOrEmpty(imgUrl) &&
       <Image
         src={imgUrl}
         style={{
@@ -158,7 +161,7 @@ const DEFAULT_FONT_CONFIG = {
           objectFit: component.imgFit || "contain",
         }}
       />
- 
+  }
         </View>
       );
 

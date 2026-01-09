@@ -48,10 +48,72 @@ input {
   z-index: 50 !important;
 }
 
+/* ===========================================
+   SAFE AREA CONFIGURATION FOR MOBILE DEVICES
+   ===========================================
+
+   ANDROID APPROACH (overlaysWebView: false):
+   - Status bar has its OWN space with solid background color
+   - WebView content starts BELOW the status bar
+   - NO safe-area-inset-top padding needed
+   - Status bar icons are ALWAYS visible (solid background)
+
+   iOS APPROACH (overlaysWebView may vary):
+   - Use env(safe-area-inset-*) for notch/Dynamic Island
+   - Content draws behind status bar on iOS
+
+   BOTTOM SAFE AREA:
+   - Still needed for home indicator / gesture bar on both platforms
+   =========================================== */
+
+/* CSS Variables - only bottom is used on Android with overlay:false */
+:root {
+  --safe-inset-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-inset-left: env(safe-area-inset-left, 0px);
+  --safe-inset-right: env(safe-area-inset-right, 0px);
+}
+
+/* ============================================
+   SIDEBAR z-index
+   ============================================ */
 .app-sidebar {
   z-index: 51 !important;
 }
 
+/* ============================================
+   BOTTOM SAFE AREA - For home indicator / gesture bar
+   This is still needed even with overlaysWebView: false
+   ============================================ */
+.app-bottom-bar,
+.bottom-navigation,
+.mobile-footer,
+[class*="fixed-bottom"] {
+  padding-bottom: var(--safe-inset-bottom, env(safe-area-inset-bottom, 0px)) !important;
+}
+
+/* ============================================
+   LANDSCAPE MODE - Handle notch on left/right (iOS)
+   ============================================ */
+@media screen and (orientation: landscape) {
+  .app-header {
+    padding-left: var(--safe-inset-left, env(safe-area-inset-left, 0px));
+    padding-right: var(--safe-inset-right, env(safe-area-inset-right, 0px));
+  }
+
+  .app-sidebar {
+    padding-left: var(--safe-inset-left, env(safe-area-inset-left, 0px));
+  }
+
+  .mobile-screen .content,
+  .mobile-screen .main-content {
+    padding-left: var(--safe-inset-left, env(safe-area-inset-left, 0px));
+    padding-right: var(--safe-inset-right, env(safe-area-inset-right, 0px));
+  }
+}
+
+/* ============================================
+   MOBILE FULL-WIDTH SIDEBAR
+   ============================================ */
 @media (max-width: 768px) {
   .app-sidebar {
     width: 100% !important;

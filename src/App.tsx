@@ -77,7 +77,6 @@ export const LoadingAnimation = () => {
 function App() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const location = useLocation();
-  const userSession = useAppSelector((state: RootState) => state.UserSession);
 
   useEffect(() => {
     // Initialize status bar for edge-to-edge display on app startup
@@ -150,6 +149,8 @@ function App() {
   useEffect(() => {
 
     if (!isOnline) { return }
+    if (location.pathname.startsWith("/pdf/download")) return;
+
     const fetchSettings = async () => {
       try {
         const settings = await api.getAsync(Urls.application_setting);
@@ -168,7 +169,7 @@ function App() {
       }
     };
     fetchSettings();
-  }, [isOnline]);
+  }, [isOnline,location.pathname]);
 
   const _dispatch = useAppDispatch();
   const _setDeviceInfo = async () => {
@@ -325,7 +326,7 @@ function App() {
     }
   }, [deviceInfo?.isMobile]); // Run this effect when isMobile changes
   const { t } = useTranslation('main')
-  if (isLoading || isOnline != true) {
+  if ((isLoading || isOnline != true ) && !location.pathname.startsWith("/pdf/download")) {
     return <><Loader isOnline={isOnline} /></>;
   }
 
@@ -355,7 +356,7 @@ function App() {
         <Switcher />
         <AutoClicker />
         <div className={`page dark:!bg-dark-bg  `} onClick={Bodyclickk}>
-          <Suspense fallback={LoadingAnimation()}>
+           <Suspense fallback={LoadingAnimation()}>
 
             <Routes>
               <Route path="/pdf/download" element={<TwilioPdfDownloader />} />

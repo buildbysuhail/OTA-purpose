@@ -1,195 +1,270 @@
-import React, { useEffect, useState } from 'react';
-import { Download, FileText, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
-import Urls from '../../../redux/urls';
-import { APIClient } from '../../../helpers/api-client';
-import { t } from 'i18next';
-import { fetchDefaultTemplateFromApi, fetchDefaultTemplateFromToken } from '../../use-print';
-import { useCommenPrint } from '../../transaction-base/use-commen-print';
-import { useDirectPrint } from '../../../utilities/hooks/use-direct-print';
-import { de } from 'date-fns/locale';
-
-const TwilioPdfDownloader = ({ 
-  fileName = 'document.pdf',
-  apiEndpoint = 'https://your-api-endpoint.com/api/download', // Replace with your actual API endpoint
-  autoDownload = true
-}) => {
-  const api = new APIClient();
-     const { directPrint } = useDirectPrint();
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Download,
+  FileText,
+  AlertCircle,
+  CheckCircle,
+  Loader2,
+  ZoomOut,
+  ZoomIn,
+  RotateCcw,
+  Settings,
+} from "lucide-react";
+import { useLocation } from "react-router-dom";
+import Urls from "../../../redux/urls";
+import { APIClient } from "../../../helpers/api-client";
+import { t } from "i18next";
+import {
+  fetchDefaultTemplateFromApi,
+  fetchDefaultTemplateFromToken,
+} from "../../use-print";
+import { useCommenPrint } from "../../transaction-base/use-commen-print";
+import { useDirectPrint } from "../../../utilities/hooks/use-direct-print";
+import { de } from "date-fns/locale";
+import { Box } from "@mui/material";
+import SharedTemplatePreview from "../../InvoiceDesigner/DesignPreview/shared";
+import {
+  DesignerElementType,
+  PlacedComponent,
+} from "../../InvoiceDesigner/Designer/interfaces";
+import { generateQRCodeDataUrl } from "../../InvoiceDesigner/utils/qrSvgToImg";
+import {
+  getOrientedDimensions,
+  getPageDimensions,
+} from "../../InvoiceDesigner/utils/pdf-util";
+import { ERPScrollArea } from "../../../components/ERPComponents/erp-scrollbar";
+const TwilioPdfDownloader = ({}) => {
+  const { directPrint } = useDirectPrint();
   const location = useLocation();
-  const [downloadStatus, setDownloadStatus] = useState('idle'); // idle, fetching, generating, success, error
-  const [error, setError] = useState("null");
+  const [error, setError] = useState<any>(null);
   const [token, setToken] = useState("");
-   
+  const [TemplateProps, setTemplateProps] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+  const [maxHeight, setMaxHeight] = useState<number>(500);
+  const previewContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const wh = window.innerHeight;
+    setMaxHeight(wh);
+  }, []);
   // Extract token from query parameters
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
-    const tokenFromUrl = urlParams.get('token');
+    const tokenFromUrl = urlParams.get("token");
     if (tokenFromUrl) {
       setToken(tokenFromUrl);
-      console.log('Token extracted from URL:', tokenFromUrl);
+      console.log("Token extracted from URL:", tokenFromUrl);
     } else {
-      setError('No token found in URL parameters');
-      setDownloadStatus('error');
+      setError("No token found in URL parameters");
     }
   }, [location.search]);
-
+  
+const handlePrintPdf =async()=>{
+  try{
+    setLoading(true)
+ await directPrint({isDirectDownload:true ,template:TemplateProps?.template,data:TemplateProps?.data,})
+  }catch(error){
+ console.log(error);
+ 
+  }finally{
+ setLoading(false)
+  }
+  
+}
   // Main function to fetch and download PDF
-  const generateAndDownloadPdf = async (token:string) => {
+  const generatePdf = async (token: string) => {
     if (!token) {
-      setError('No token available');
-      setDownloadStatus('error');
+      setError("No token available");
       return;
     }
 
     try {
-      setDownloadStatus('fetching');
-      setError("");
+      setLoading(true);
       // Call API to get PDF data
-       const Data = await fetchDefaultTemplateFromToken(token);
-     if(Data){
-      debugger;
-      setDownloadStatus('generating')
-       const { template, data } = Data; 
-      await directPrint({isDirectDownload:true ,template,data,})
-      setDownloadStatus('success');
-    }else{
-      setDownloadStatus('error');
-      setError('No data received from server');
-    }
+      const Data = await fetchDefaultTemplateFromToken(token);
+      if (Data) {
+        debugger;
+
+        const { template, data } = Data;
+        // Generate QR codes
+        const elements: PlacedComponent[] = [
+          ...(template?.headerState?.customElements?.elements ?? []),
+          ...(template?.footerState?.customElements?.elements ?? []),
+        ].filter((comp) => comp.type === DesignerElementType.qrCode);
+
+        const qrImages: { [key: string]: string } = {};
+        for (const comp of elements) {
+          if (comp.qrCodeProps) {
+            qrImages[comp.id] = await generateQRCodeDataUrl(comp.qrCodeProps);
+          }
+        }
+
+        const pageOrientation =
+          template?.propertiesState?.orientation === "landscape"
+            ? "landscape"
+            : "portrait";
+        const pageSize = template?.propertiesState?.pageSize ?? "A4";
+
+        const selectedPageSize = getPageDimensions(
+          pageSize,
+          template?.propertiesState?.width,
+          template?.propertiesState?.height
+        );
+
+        const orientedDimensions = getOrientedDimensions(
+          selectedPageSize,
+          pageOrientation
+        );
+        const props = {
+          template,
+          data,
+          qrCodeImages: qrImages,
+          orientedDimensions,
+        };
+
+        setTemplateProps(props);
+      } else {
+        setError("No data received from server");
+      }
     } catch (err: any) {
-      console.error('PDF generation error:', err);
+      console.error("PDF generation error:", err);
       setError(err.message);
-      setDownloadStatus('error');
+    } finally {
+      setLoading(false);
     }
   };
 
   // Auto-download when token is available
   useEffect(() => {
     debugger;
-    if ( token ) {
-      generateAndDownloadPdf(token);
+    if (token) {
+      generatePdf(token);
     }
   }, [token]);
 
-  const getStatusIcon = () => {
-    switch (downloadStatus) {
-      case 'fetching':
-      case 'generating':
-        return <Loader2 className="w-6 h-6 text-blue-500 animate-spin" />;
-      case 'success':
-        return <CheckCircle className="w-6 h-6 text-green-500" />;
-      case 'error':
-        return <AlertCircle className="w-6 h-6 text-red-500" />;
-      default:
-        return <FileText className="w-6 h-6 text-gray-500" />;
-    }
-  };
 
-  const getStatusText = () => {
-    switch (downloadStatus) {
-      case 'fetching':
-        return 'Fetching PDF data from server...';
-      case 'generating':
-        return 'Preparing download...';
-      case 'success':
-        return 'PDF downloaded successfully!';
-      case 'error':
-        return `Error: ${error}`;
-      default:
-        return 'Ready to download PDF';
-    }
-  };
-
-  const getStatusColor = () => {
-    switch (downloadStatus) {
-      case 'fetching':
-      case 'generating':
-        return 'text-blue-600';
-      case 'success':
-        return 'text-green-600';
-      case 'error':
-        return 'text-red-600';
-      default:
-        return 'text-gray-600';
-    }
-  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-xl shadow-xl border border-gray-200 p-8">
-        <div className="text-center">
-          <div className="mb-6 flex justify-center">
-            {getStatusIcon()}
-          </div>
-          
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            PDF Downloader
-          </h2>
-          
-          <p className={`text-base mb-6 ${getStatusColor()} font-medium`}>
-            {getStatusText()}
-          </p>
-          
-          <div className="mb-6 p-4 bg-gray-50 rounded-lg text-sm text-left space-y-2">
-            <div className="flex justify-between">
-              <span className="text-gray-600">File name:</span>
-              <span className="font-medium text-gray-900">{fileName}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Token status:</span>
-              <span className={`font-medium ${token ? 'text-green-600' : 'text-red-600'}`}>
-                {token ? 'Valid' : 'Missing'}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Auto-download:</span>
-              <span className="font-medium text-gray-900">
-                {autoDownload ? 'Enabled' : 'Disabled'}
-              </span>
-            </div>
-          </div>
-          
-          {error && downloadStatus !== "error" && (
-            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-left">
-              <div className="flex items-start gap-2">
-                <AlertCircle className="w-4 h-4 text-red-600 mt-0.5 flex-shrink-0" />
-                <div>
-                  <strong className="text-red-900">Error:</strong>
-                  <p className="text-red-700 mt-1">{error}</p>
-                </div>
+    <>
+      {/* Main Content */}
+   <div className="flex   dark:text-white bg-white dark:bg-body_dark "
+   style={{ maxHeight, }}
+   >
+        {/* Modern Preview Panel */}
+        <div className="flex-1 flex flex-col bg-gray-50 dark:bg-gray-900">
+          {/* Preview Header */}
+          <div className="flex items-center justify-between p-4 bg-white dark:bg-dark-bg-card border-b border-gray-200 dark:border-gray-700 h-[70px]">
+            <div className="flex items-center gap-2">
+              <h2 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Preview
+              </h2>
+              <div className="text-xs text-gray-500 dark:text-gray-400">
+                {TemplateProps?.orientedDimensions?.width}pt ×{" "}
+                {TemplateProps?.orientedDimensions?.height}pt
               </div>
             </div>
-          )}
-          
-          <button
-            onClick={()=>generateAndDownloadPdf(token)}
-            disabled={!token || downloadStatus === 'fetching' || downloadStatus === 'generating'}
-            className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all font-medium shadow-md hover:shadow-lg"
-          >
-            {downloadStatus === 'fetching' || downloadStatus === 'generating' ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin" />
-                Processing...
-              </>
-            ) : (
-              <>
-                <Download className="w-5 h-5" />
-                Download PDF
-              </>
-            )}
-          </button>
 
-          {downloadStatus === 'success' && (
-            <p className="mt-4 text-sm text-gray-600">
-              Your download should start automatically. If not, click the button above.
-            </p>
-          )}
+            {/* Preview Controls */}
+            <div className="flex items-center gap-2">
+              <button className="p-1.5 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <ZoomOut className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+              </button>
+              <span className="text-xs text-gray-500 dark:text-gray-400 min-w-[40px] text-center">
+                100%
+              </span>
+              <button className="p-1.5 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <ZoomIn className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+              </button>
+              <div className="w-px h-4 bg-gray-300 dark:bg-gray-600 mx-1" />
+              <button className="p-1.5 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <RotateCcw className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+              </button>
+            </div>
+          </div>
+
+          {/* Preview Content   overflow-y-auto overflow-x-hidden  flex h-auto max-h-[${maxHeight - 100}px] flex-col gap-1*/}
+          <ERPScrollArea
+            className={`overflow-auto  flex-1 p-6 bg-gray-50 dark:bg-dark-bg-card`}
+            maxHeight={maxHeight - 100}
+          >
+            <div className="flex justify-center">
+              <div className="relative group">
+                {TemplateProps?.template && (
+                  <div className="absolute top-0 right-0 rounded-bl-md shadow-md overflow-hidden opacity-0 z-[39] group-hover:opacity-100 transition-opacity duration-300">
+                    <button
+                    disabled={loading}
+                      onClick={handlePrintPdf}
+                      className="flex items-center gap-2 px-3 py-2 bg-[#408dfb] text-white font-medium hover:bg-[#2f74e0] focus:bg-[#2f74e0] active:bg-[#255ccf] focus:outline-none focus:ring-2 focus:ring-white transition-all duration-150 rounded-bl-md select-none"
+                    >
+                      <Download className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
+                {/* Preview Container with Modern Styling */}
+                <div
+                  ref={previewContainerRef}
+                  className="shadow-lg   border border-gray-200 dark:border-dark-border overflow-hidden bg-white dark:bg-dark-bg-card"
+                  style={{
+                    width: `${
+                      TemplateProps?.orientedDimensions?.width ?? 500
+                    }pt`,
+                    height: `${
+                      TemplateProps?.orientedDimensions?.height ?? 500
+                    }pt`,
+                    transformOrigin: "top left",
+                  }}
+                >
+                  {loading ? (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                    </div>
+                  ) : (
+                    <div className="relative h-full   w-full ">
+                      {TemplateProps?.template ? (
+                        <SharedTemplatePreview
+                          template={TemplateProps?.template}
+                          data={TemplateProps?.data}
+                          qrCodeImages={TemplateProps?.qrCodeImages}
+                        />
+                      ) : (
+                        <div className="flex items-center justify-center gap-2 h-full">
+                          <AlertCircle className="w-4 h-4 text-red-600 mt-0.5 flex-shrink-0" />
+                          <div className="flex items-center">
+                            <strong className="text-red-700 mt-1 ">{`${error}`}</strong>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* Drop Shadow Effect */}
+                <div
+                  className="absolute -bottom-2 -right-2 bg-gray-400/20 dark:bg-gray-600/20 rounded-lg -z-10"
+                  style={{
+                    width: `${TemplateProps?.orientedDimensions?.width}pt`,
+                    height: `${TemplateProps?.orientedDimensions?.height}pt`,
+                    minHeight: "400px",
+                  }}
+                />
+              </div>
+            </div>
+          </ERPScrollArea>
+                    {/* Preview Footer */}
+          {/* <div className="p-3 bg-white dark:bg-dark-bg-card border-t border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-center">
+              <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
+                <span>Template: {TemplateProps?.template?.templateGroup??""}</span>
+                <div className="w-px h-3 bg-gray-300 dark:bg-gray-600" />
+                <span>Type: {TemplateProps?.template?.designerKind??""}</span>
+              </div>
+            </div>
+          </div> */}
         </div>
       </div>
-    </div>
+    </>
+
   );
 };
 
 export default TwilioPdfDownloader;
-

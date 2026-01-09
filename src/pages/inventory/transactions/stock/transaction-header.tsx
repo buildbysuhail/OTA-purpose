@@ -418,20 +418,85 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 </button>
               </div> */}
               {[VoucherType.ItemLoadRequest].includes(formState.transaction.master.voucherType as VoucherType) && (
+                <div className="flex flex-row gap-1 items-end">
                 <div className="flex flex-col gap-1 px-2">
                   <label className="text-xs">
                     {t("load_vouchers")}
                   </label>
 
-                  <div className="flex gap-1">
+                  <div className="flex gap-3">
                     <ERPRadio id="order" 
                         name="voucherType" label={t("order")}  
-                        // checked={dateChangeStateRef.current === "cheque"}
-                        // onChange={() => handleBankDateTypeChange("cheque")} 
+                        checked={formState.checkedSO}
+                        onChange={(e) => {
+                          dispatch(
+                            formStateHandleFieldChangeKeysOnly({
+                              fields: { checkedSO: e.target.checked, checkedSI: false},
+                            })
+                          );
+                        }}
+
                     />
-                    <ERPRadio id="sales" name="voucherType" label={t("sales")} />
+                    <ERPRadio 
+                      id="sales"
+                      name="voucherType"
+                      label={t("sales")}
+                      checked={formState.checkedSI}
+                        onChange={(e) => {
+                          dispatch(
+                            formStateHandleFieldChangeKeysOnly({
+                              fields: { checkedSI: e.target.checked, checkedSO: false },
+                            })
+                          );
+                      }}
+                     />
+                     
                   </div>
+                  
+
                 </div>
+                <div className="flex gap-1 items-end pb-1.5">
+                    <ERPInput
+                      id="itemLoadVoucherPrefix"
+                      label={t("prefix")}
+                      type="number"
+                      placeholder={t(" ")}
+                      className="w-16"
+                      value={formState.transaction.master.itemLoadVoucherPrefix}
+                      fetching={formState.transactionLoading}
+                      onChange={(e) =>
+                        dispatch(
+                          formStateMasterHandleFieldChange({
+                            fields: { itemLoadVoucherPrefix: e.target?.value },
+                          })
+                        )
+                      }
+                    />
+                    <ERPInput
+                      id="itemLoadVoucherNumber"
+                      type="number"
+                      noLabel={true}
+                      className="w-28"
+                      placeholder={t("voucher_number")}
+                      value={formState.transaction.master.itemLoadVoucherNumber}
+                      fetching={formState.transactionLoading}
+                      onChange={(e) =>
+                        dispatch(
+                          formStateMasterHandleFieldChange({
+                            fields: { itemLoadVoucherNumber: e.target?.value },
+                          })
+                        )
+                      }
+                    />
+                    
+                    <ERPButton 
+                       title={t("⮞")} 
+                       variant="secondary" 
+                       className="h-7 w-7"
+                       onClick={() => HandleLoadStockCountBtn()}  // This is not for the case, Need to change the function
+                    />
+                  </div>
+                  </div>
 
               )}
 

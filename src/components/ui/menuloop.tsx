@@ -155,6 +155,7 @@ function Menuloop({ MENUITEMS, toggleSidemenu, level, t }: any) {
         to="#!"
         id={`first-menu-link_${MENUITEMS.title}_${MENUITEMS.path}`}
         tabIndex={0}
+        type="popup"
         className={`first-menu-link-navigate-helper side-menu__item ${
           MENUITEMS?.selected ? "active" : ""
         }`}

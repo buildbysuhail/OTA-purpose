@@ -510,7 +510,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     ![VoucherType.StockCount, VoucherType.OpeningStock, VoucherType.StockAdjuster].includes(
                       formState.transaction.master.voucherType as VoucherType
                     ) ? (
-                      <div className="flex gap-1 items-end">
+                      <div className="flex gap-1 items-center">
 
                         <WarehouseIDFromTo
                           formState={formState}
@@ -565,6 +565,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                             loadAndSetTransVoucher={loadAndSetTransVoucher}
                           />
                           <div className="flex gap-1 items-end">
+                          {formState.formElements.txtILRRefNo?.visible && (
                           <ERPInput
                             id="loadRequest"
                             label={t("load_request")}
@@ -580,6 +581,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                             disableEnterNavigation={true}
                             onKeyDown={onILRRefNoKeyUp}
                           />
+                          )}
                           </div>
                         </div>
 
@@ -607,6 +609,15 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                         ref={refNoRef}
                         t={t}
                       />
+                      {[VoucherType.BranchTransferIn, VoucherType.BranchTransferOut].includes(formState.transaction.master.voucherType as VoucherType) && (
+                        <ReferenceDate          
+                          ref={inputRefs.refDate}
+                          dispatch={dispatch}
+                          formState={formState}
+                          handleKeyDown={(e) => { handleKeyDown(e,"refDate")}}
+                          t={t}
+                        />
+                      )}
                       <ERPDataCombobox
                           localInputBox={formState?.userConfig?.inputBoxStyle}
                           fetching={formState.transactionLoading}
@@ -631,17 +642,34 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                             getListUrl: `${Urls.inv_transaction_base}${transactionType}/Data/FormTypeByVoucherType/${formState.transaction.master.voucherType}`,
                           }}
                         />
-                        <ERPDataCombobox
-                          id="branch"
-                          label={t("branch")}
-                          field={{
-                            id: "sm",
-                            // getListUrl: Urls.,
-                            valueKey: "sm",
-                            labelKey: "smName",
-                          }}
-                          // onChangeData={(data: any) => { handleFieldChange("sm", data.sm); }}
-                        />
+                        {/* This for stock branch transfer - need to set the branch ebd point below */}
+                        <div className="flex gap-1 flex-row items-start justify-center">
+                            <ERPCheckbox
+                            id="branch"
+                            className="text-left dark:text-dark-text flex px-1"
+                            label={t("branch")}
+                            checked={formState.branchCheckbox}
+                            onChange={(e) => {
+                              dispatch(
+                                formStateHandleFieldChangeKeysOnly({
+                                  fields: { branchCheckbox: e.target.checked },
+                                })
+                              );
+                            }}
+                          />
+                            <ERPDataCombobox
+                            id="branch"
+                            label={t("branch")}
+                            field={{
+                              id: "sm",
+                              // getListUrl: Urls.,
+                              valueKey: "sm",
+                              labelKey: "smName",
+                            }}
+                            // onChangeData={(data: any) => { handleFieldChange("sm", data.sm); }}
+                            disabled={formState.branchCheckbox === false}
+                          />
+                        </div>
                         <Employee
                           dispatch={dispatch}
                           formState={formState}
@@ -687,8 +715,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       id="stockCount"
                       label={t("stock_count")}
                       type="number"
-                      placeholder=""
-                      className="w-20"
+                      placeholder={t("prefix")}
+                      className="w-16"
                       value={formState.transaction.master.stockCountPrefix}
                       fetching={formState.transactionLoading}
                       onChange={(e) =>
@@ -704,6 +732,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       type="number"
                       noLabel={true}
                       className="w-28"
+                      placeholder={t("voucher_number")}
                       value={formState.transaction.master.stockCountVrNumber}
                       fetching={formState.transactionLoading}
                       onChange={(e) =>
@@ -760,16 +789,6 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   />
                 )} */}
 
-              {/* <ReferenceDate
-              
-                ref={inputRefs.refDate}
-                dispatch={dispatch}
-                formState={formState}
-                
-                handleKeyDown={(e) => { handleKeyDown(e,"refDate")}}
-                
-                t={t}
-              /> */}
               
             </div>
           }
@@ -905,16 +924,18 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
                   onClick={handleWStockList}
                 />
-                <ERPButton
+                {/* <ERPButton
                   title={t("status")}
                   variant="secondary"
                   className=""
-                />
-                <ERPButton
+                  backgroundColor=""
+                /> */}
+                <button className="bg-violet-600 px-2 rounded-md text-white font-semibold">{t("status")}</button>
+                {/* <ERPButton
                   title={t("pdt_status")}
                   variant="secondary"
                   className=""
-                />
+                /> */}
 
                    </div>
               )}
@@ -1545,13 +1566,15 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   loadAndSetTransVoucher={loadAndSetTransVoucher}
                   t={t}
                 />
-                {/* <ReferenceDate
-                handleKeyDown={(e) => { handleKeyDown(e,"refDate")}}
-                ref={inputRefs.refDate}
-                  dispatch={dispatch}
-                  formState={formState}
-                  t={t}
-                /> */}
+                {[VoucherType.BranchTransferIn, VoucherType.BranchTransferOut].includes(formState.transaction.master.voucherType as VoucherType) && (
+                <ReferenceDate          
+                    ref={inputRefs.refDate}
+                    dispatch={dispatch}
+                    formState={formState}
+                    handleKeyDown={(e) => { handleKeyDown(e,"refDate")}}
+                    t={t}
+                  />
+                )}
                 <TransactionDate
                   formState={formState}
                   dispatch={dispatch}

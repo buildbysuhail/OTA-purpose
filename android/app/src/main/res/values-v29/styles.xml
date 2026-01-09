@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Android API 29+ (Android 10+) styles
+    This file is automatically used on devices running Android 10+
+
+    Key features:
+    - enforceStatusBarContrast: Disable system auto-contrast so we control icon colors
+    - enforceNavigationBarContrast: Same for navigation bar
+    - gestureNavigationEnabled support for edge gesture navigation
+-->
+<resources>
+    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:background">@null</item>
+
+        <!-- Edge-to-edge display -->
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightNavigationBar">true</item>
+
+        <!-- Allow content to extend into display cutout area -->
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+
+        <!-- CRITICAL for Android 10+: Disable automatic contrast enforcement
+             Without this, Android may add a semi-transparent scrim behind status bar
+             that ruins your seamless header design -->
+        <item name="android:enforceStatusBarContrast">false</item>
+        <item name="android:enforceNavigationBarContrast">false</item>
+    </style>
+</resources>

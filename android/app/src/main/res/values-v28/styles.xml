@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Android API 28+ (Android 9 Pie+) styles
+    This file is automatically used on devices running Android 9+
+
+    Key feature: windowLayoutInDisplayCutoutMode
+    - Allows app to extend content into display cutout (notch/camera hole) area
+    - Options:
+      * default: System decides (usually avoids cutout in portrait)
+      * never: Content never extends into cutout area
+      * shortEdges: Content extends into cutout in portrait/landscape (RECOMMENDED)
+      * always: Always extend into cutout
+-->
+<resources>
+    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:background">@null</item>
+
+        <!-- Edge-to-edge display -->
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightNavigationBar">true</item>
+
+        <!-- CRITICAL: Allow content to extend into display cutout area -->
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+    </style>
+</resources>

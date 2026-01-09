@@ -664,10 +664,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
       _formState.dataWarranty = dataWarranty;
       _formState.dataBrands = dataBrands;
 
-      _formState.inSearch =
-        applicationSettings.productsSettings?.batchCriteria != "NB"
-          ? false
-          : true;
+      _formState.inSearch = true;
       _formState.userRightsFormCode = formCode ?? "";
 
       let __gridCols = (await getInitialPreference(gridCode, _stockGridCol, new APIClient()))
@@ -754,6 +751,22 @@ const TransactionForm: React.FC<TransactionProps> = ({
           visible: applicationSettings.inventorySettings?.maintainWarehouse,
           disabled: _formState.userConfig?.presetWarehouseId ?? 0 > 0 ? true : initialFormElements.cbWarehouse.disabled
         },
+        // stock
+        chkCostFromExcel:{
+          ...initialFormElements.chkCostFromExcel,
+          visible: (voucherType === VoucherType.ShortageStock || voucherType === "EX") && !(clientSession.isAppGlobal) ? true : initialFormElements.chkCostFromExcel.visible
+
+        },
+        btnAddProducts:{
+          ...initialFormElements.btnAddProducts,
+          visible: voucherType ==="SH" || voucherType ==="EX" || voucherType ==="AD" ? true : initialFormElements.chkCostFromExcel.visible
+
+        },
+        txtILRRefNo: {
+          ...initialFormElements.txtILRRefNo,
+          // visible: (applicationSettings.inventorySettings?.AllowSalesDetailedEdit ? true : false) // Need to manage this in stock
+
+        },
         // cbEmployee: {
         //   ...initialFormElements.cbEmployee,
         //   employeeType: _formState.userConfig
@@ -838,6 +851,44 @@ const TransactionForm: React.FC<TransactionProps> = ({
         reCenterRow: false
       }
       if (_formState.formElements.cbDebitAccount ?? {})
+      // stock
+      if(voucherType === "ST"){
+        console.log("do call ReadUseSalesPriceForStockTransfer")
+        // Need to do the below
+        // void ReadUseSalesPriceForStockTransfer()
+        // {
+        //   try
+        //   {
+        //       string s = "";
+        //       System.IO.StreamReader sr = new System.IO.StreamReader("UseSalesPriceForStockTransfer.txt");
+        //       s = sr.ReadLine();
+        //       sr.Close();
+        //       chkUserSalesPriceForStockTransfer.Checked = Convert.ToBoolean(s);
+        //   }
+        //   catch (Exception ex) { }
+        // }
+      }else{
+        _formState.formElements.userSalesPriceForStockTransfer = {
+          ..._formState.formElements.userSalesPriceForStockTransfer,
+          visible: false
+        };
+      }
+      if(voucherType === "SC"){
+        _formState.formElements.btnAddProducts = {
+          ..._formState.formElements.btnAddProducts,
+          visible: false,
+        }; 
+        _formState.formElements.txtILRRefNo = {
+          ..._formState.formElements.txtILRRefNo,
+          visible: false,
+        };
+      }
+      if(voucherType === VoucherType.StockCount || voucherType === VoucherType.StockAdjuster || VoucherType.OpeningStock){
+        _formState.formElements.btnLoadExcel = {
+          ..._formState.formElements.btnLoadExcel,
+          visible: true
+        };
+      }
 
 
         //

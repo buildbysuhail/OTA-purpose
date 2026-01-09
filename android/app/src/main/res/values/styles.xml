@@ -9,15 +9,55 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!--
+        Main app theme with EDGE-TO-EDGE display support.
+        This enables proper handling of:
+        - Android camera punch-holes
+        - Status bar overlays
+        - Navigation bar overlays
+        - Display cutouts (notch areas)
+
+        Key settings explained:
+        - android:windowTranslucentStatus: Makes status bar area available for drawing
+        - android:windowDrawsSystemBarBackgrounds: Allows app to draw behind system bars
+        - android:statusBarColor: Transparent so app content shows through
+        - android:windowLayoutInDisplayCutoutMode: shortEdges ensures content extends into cutout area
+        - android:windowLightStatusBar: true = dark icons, false = light icons
+        - android:enforceStatusBarContrast: Disable system contrast to control it ourselves
+    -->
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:background">@null</item>
-        <!-- White status bar with dark icons -->
-        <item name="android:statusBarColor">@android:color/white</item>
+
+        <!-- EDGE-TO-EDGE: Draw behind status bar -->
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
+        <!-- Transparent status bar - app controls the color via CSS/padding -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+
+        <!-- Dark icons for light backgrounds (true) or light icons for dark backgrounds (false) -->
         <item name="android:windowLightStatusBar">true</item>
+
+        <!-- Navigation bar settings -->
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightNavigationBar">true</item>
     </style>
 
+    <!-- API 28+ (Android 9+): Support for display cutouts -->
+    <style name="AppTheme.NoActionBar.V28" parent="AppTheme.NoActionBar">
+        <!-- shortEdges: Content extends into cutout area in portrait/landscape
+             Options: default, never, shortEdges, always -->
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+    </style>
+
+    <!-- API 29+ (Android 10+): Additional edge-to-edge controls -->
+    <style name="AppTheme.NoActionBar.V29" parent="AppTheme.NoActionBar.V28">
+        <!-- Disable automatic contrast enforcement - we handle it in CSS -->
+        <item name="android:enforceStatusBarContrast">false</item>
+        <item name="android:enforceNavigationBarContrast">false</item>
+    </style>
 
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
         <item name="android:background">@drawable/splash</item>

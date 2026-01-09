@@ -547,9 +547,9 @@ export const useTransaction = (
       PDTInvTransMasterID: pDTInvTransMasterID ?? formState.transaction.master.refInvTransactionMasterID,
       WarehouseId: formState.transaction.master.fromWarehouseID,
       // FromBranchID: formState.transaction.master.branchID,
-      // IsActualPriceVisible: true,
+      // IsActualPriceVisible: false,
       // IsStockDetailVisible: true,
-      // InvokeUsingVoucherNumber: true,
+      // InvokeUsingVoucherNumber: false,
     };
 
     // ByGRN
@@ -1222,7 +1222,9 @@ const verified = Boolean(vch.master.pdtVerified);
         formState.transaction.master.transactionDate,
         formState.transaction.master.ledgerID,
         formState.transaction.master.fromWarehouseID,
-        formState.transaction.master.stockUpdate
+        formState.transaction.master.stockUpdate,
+        formState.transaction.master.voucherType,
+        formState.transaction.master.toWarehouseID
       );
       if (dtRes.hasError) {
         ERPAlert.show({
@@ -2897,16 +2899,20 @@ const verified = Boolean(vch.master.pdtVerified);
         barCode: data.autoBarcode,
         wareHouseId: warehouseId,
         txtData: data.searchText,
-        partyId: formState.transaction.master.ledgerID,
         isUnitDetailsRequired: true,
-        isCheckUseSupplierProductCode:
-          formState.userConfig?.useSupplierProductCode,
-        isActualPriceVisible: formState.gridColumns?.find(
-          (x) => x.dataField == "actualSalesPrice"
-        )?.visible,
-        isStockDetailsVisible: formState.gridColumns?.find(
-          (x) => x.dataField == "stockDetails"
-        )?.visible,
+        isCheckDate: formState.dateCheckbox,
+        transDate: formState.transaction.master.transactionDate,
+        fromWarehouseID: formState.transaction.master.fromWarehouseID,
+        toWarehouseID: formState.transaction.master.toWarehouseID,
+        // partyId: formState.transaction.master.ledgerID,
+        // isCheckUseSupplierProductCode:
+        //   formState.userConfig?.useSupplierProductCode,
+        // isActualPriceVisible: formState.gridColumns?.find(
+        //   (x) => x.dataField == "actualSalesPrice"
+        // )?.visible,
+        // isStockDetailsVisible: formState.gridColumns?.find(
+        //   (x) => x.dataField == "stockDetails"
+        // )?.visible,
         lastSelectedWareHouseIdOfItemPopUpsSearch:
           await _lastSelectedWarehouseIDOfItemPopupsSearch,
       };
@@ -3059,12 +3065,12 @@ const verified = Boolean(vch.master.pdtVerified);
 
         // warehouse stock
         if (!product.mulUnitManualBarcode) {
-          outDetail.stockTo = Number(product.toWarehouseStock || 0);
+          outDetail.stockTo = Number(product.toWareHouseStockDetails || 0);  // check it
           outDetail.stockMax = Number(product.stockMax || 0);
         }
 
-        outDetail.fromWhouseStock = product.fromWarehouseStock;
-        outDetail.toWhouseStock = product.toWarehouseStock;
+        outDetail.fromWhouseStock = product.fromWareHouseStockDetails; // checkit
+        outDetail.toWhouseStock = product.toWareHouseStockDetails; // check it
 
         // multi factor logic
         if (product.multiFactor > 0) {
@@ -3081,7 +3087,7 @@ const verified = Boolean(vch.master.pdtVerified);
 
         // stock transfer – use sales price
         if (
-          formState.formElements.chkUserSalesPriceForStockTransfer?.visible &&
+          formState.formElements.userSalesPriceForStockTransfer?.visible &&
           Number(product.stdSalesPrice) > 0 &&
           formState.transaction.master.voucherType === "ST"
         ) {
@@ -3250,8 +3256,39 @@ const verified = Boolean(vch.master.pdtVerified);
       outDetail.unitPrice = res.stdPurchasePrice;
       outDetail.unitPriceTag = res.stdPurchasePrice;
       outDetail.salesPrice = res.stdSalesPrice;
-      outDetail.minSalePrice = res.minSalePrice;
+      // outDetail.minSalePrice = res.minSalePrice;
       outDetail.actualSalesPrice = res.salesPrice;
+      outDetail.cost = res.stdPurchasePrice;  // Need to check is there any other item changes
+
+      // The below concept is shown in 1050
+      const OtherUnitPrice = await api.getAsync(
+        `${Urls.inv_transaction_base}${transactionType}/ProductsUnitsOtherPrice?ProductBatchId=${detail.productBatchID}&UnitId=${outDetail.unitID}`
+      );
+      
+      if(OtherUnitPrice > 0 ){
+        outDetail.salesPrice = OtherUnitPrice;
+        outDetail.actualSalesPrice = OtherUnitPrice;
+      }
+      if(formState?.userConfig?.userSalesPriceForStockTransfer && VoucherType.StockTransfer){
+        outDetail.unitPrice = res.stdSalesPrice;
+        outDetail.unitPriceTag = res.stdSalesPrice;
+        if(OtherUnitPrice > 0 ){
+          outDetail.unitPrice = OtherUnitPrice;
+          outDetail.unitPriceTag = OtherUnitPrice;
+        }
+      }
+      // Stock - an api call here - do this after idenify the end point
+      // double  PriceCategoryPrice = new PolosysERPInventoryClass.Masters.Products().GetProductPriceCategorySalesPrice(Convert.ToInt64(dgvInventory.CurrentRow.Cells["ProductBatchID"].Value), 1, Convert.ToInt32(dgvInventory.CurrentRow.Cells["UnitID"].Value));
+      // if (PriceCategoryPrice > 0)
+      // {
+      //     dgvInventory.CurrentRow.Cells["SalesPrice"].Value = PriceCategoryPrice;
+      // }
+      // if (priceCategoryPrice > 0) {
+      //   outDetail.salesPrice = priceCategoryPrice;
+      //   outDetail.actualSalesPrice = priceCategoryPrice;
+      // }
+      // The above concept is shown in 1050
+
       if (actualPriceVisible) {
         if (res.actualSalesPrice > 0) {
           outDetail.actualSalesPrice = res.actualSalesPrice;
@@ -4120,11 +4157,11 @@ const verified = Boolean(vch.master.pdtVerified);
             slNo: generateUniqueKey(),
             barCode: rowData.Barcode,
             qty: rowData.Quantity,
-            discPerc: rowData.Disc_per || 0,
-            discount: rowData.Discount || 0,
-            mrp: rowData.MRP || 0,
-            salesPrice: rowData.SalesPrice,
-            unitPrice: rowData.PurchasePrice,
+            // discPerc: rowData.Disc_per || 0,
+            // discount: rowData.Discount || 0,
+            // mrp: rowData.MRP || 0,
+            // salesPrice: rowData.SalesPrice,
+            // unitPrice: rowData.PurchasePrice,
           };
           const productDetails = await loadProductDetailsByAutoBarcode(
             {
@@ -4593,6 +4630,7 @@ const verified = Boolean(vch.master.pdtVerified);
       );
 
       const warehouseId = formState.transaction.master.fromWarehouseID || 1;
+      // The "OpeningProducts" will be some another end point in branch transfer -  need to set the api end point
       const response = await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/OpeningProducts/${warehouseId}`, {});
       if (response?.isOk === false) {
         console.log("Failed to load Products")
@@ -4791,19 +4829,23 @@ const verified = Boolean(vch.master.pdtVerified);
     // The below is not the correct api endponit - just added for checking
     const res = await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/LoadStockCount`,
         {
-          warehouseID: formState.transaction.master.fromWarehouseID,
+          warehouseId: formState.transaction.master.fromWarehouseID,
           voucherNumber: master.voucherNumber,
           voucherPrefix: master.voucherPrefix,
           voucherType: master.voucherType,
           voucherForm: master.voucherForm,
-          branchID: master.branchID,
+          fromBranchID: master.branchID,
           financialYearID: master.financialYearID,  // Check This is needed!
+          isUsingManualInvoiceNo: false,
+          manualInvoiceNumber:master.mannualInvoiceNumber,
+          // isActualPriceVisible: true,
+          // isStockDetailVisible: true,
+          // pdtInvTransMasterID: 0,
+          // invokeUsingVoucherNumber: true
         }
       );
 
-    const data = res.data;
-
-    if (!data || data.length === 0) {
+    if (!res.isOk || !res.item?.details || res.item.details.length === 0) {
       ERPAlert.show({
         icon: "warning",
         text: t("no_record_found_with_this_voucher_number"),
@@ -4812,8 +4854,9 @@ const verified = Boolean(vch.master.pdtVerified);
       return;
     }
 
-    const details = data.map((p: any, index: number) => {
-      const qty = Number(p.stockQtyInBaseUnit || 0);
+    const responseDetails = res.item.details;
+    const mappedDetails = responseDetails.map((p: any, index: number) => {
+      const qty = Number(p.quantity || 0);
       const stock = Number(p.stock || 0);
       const diff = qty - stock;
       const unitPrice = Number(p.stdPurchasePrice || 0);
@@ -4821,7 +4864,7 @@ const verified = Boolean(vch.master.pdtVerified);
 
       return {
         ...initialTransactionDetailData,
-        slNo: index + 1,
+        // slNo: generateUniqueKey(),   
         pCode: p.productCode ?? "",
         product: p.productName ?? "",
         productID: p.productID ?? 0,
@@ -4829,16 +4872,27 @@ const verified = Boolean(vch.master.pdtVerified);
         productBatchID: p.productBatchID ?? 0,
         unitPrice: unitPrice,
         cost: unitPrice,
-        unit: p.baseUnitName ?? "",
-        unitID: p.basicUnitID ?? 0,
+        unit: p.unitName ?? "",
+        unitID: p.unitID ?? 0,
         qty: qty,
         stock: stock,
         fromWhouseStock: stock,
         excess: diff > 0 ? diff : 0,
         shortage: diff < 0 ? Math.abs(diff) : 0,
+        gross: netAmount,  // for fix zero qty validation
+        netValue: netAmount,  // for fix zero qty validation
         total: netAmount,
       };
     });
+
+    // Add empty rows for new entries
+    const emptyRows = Array.from({ length: 30 }, () => ({
+      ...initialTransactionDetailData,
+      slNo: generateUniqueKey(),
+    }));
+
+    const details = [...mappedDetails, ...emptyRows];
+
     // Update grid
     dispatch(formStateSetDetails(details));
 

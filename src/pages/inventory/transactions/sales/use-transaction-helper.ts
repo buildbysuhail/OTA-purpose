@@ -1113,50 +1113,53 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         break;
       }
       // if (clientSession.isAppGlobal) {
-      //   if (detail.details2) {
-      //     if (formType.toUpperCase() == "INTERSTATE" || formType.toUpperCase() == "INT" && voucherType != "") {
-      //       detail.details2.cessPerc = row.cessPerc;
-      //       detail.details2.cessAmt = row.cessAmt;
-      //       //IGST calculation
-      //       const CGSTPerc = row.cgstPerc ?? 0;
-      //       const CGST = row.cgst ?? 0;
-      //       const SGSTPerc = row.sgstPerc ?? 0;
-      //       const SGST = row.sgst ?? 0;
-      //       const IGSTPerc = row.igstPerc ?? 0;
-      //       const IGST = row.igst ?? 0;
-      //       const totalTaxPerc = CGSTPerc + SGSTPerc + IGSTPerc;
-      //       const totalTax = CGST + SGST + IGST;
-      //       detail.details2.igstPerc = totalTaxPerc;
-      //       detail.details2.igst = totalTax;
-      //       detail.details2.additionalCessPerc = row.additionalCessPerc;
-      //       detail.details2.additionalCess = row.additionalCess;
-      //       detail.details2.cgstPerc = 0;
-      //       detail.details2.cgst = 0;
-      //       detail.details2.sgstPerc = 0;
-      //       detail.details2.sgst = 0;
-      //       detail.mrp == row.MRP;
-      //     } else {
-      //       detail.hsnCode = row.hsnCode;
-      //       detail.details2.cessPerc = row.cessPerc;
-      //       detail.details2.cessAmt = row.cessAmt;
-      //       detail.details2.cgstPerc = row.cgstPerc;
-      //       detail.details2.cgst = row.cgst;
-      //       detail.details2.sgstPerc = row.sgstPerc;
-      //       detail.details2.sgst = row.sgst;
-      //       detail.details2.igstPerc = row.igstPerc;
-      //       detail.details2.igst = row.igst;
-      //       detail.details2.additionalCessPerc = row.additionalCessPerc;
-      //       detail.details2.additionalCess = row.additionalCess;
-      //       detail.mrp = row.mrp;
-      //     }
+      //   if (voucherType != VoucherType.SaleReturnEstimate && formType != "" || [VoucherType.SalesInvoice, VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(voucherType as any)) {
+      //     if (detail.details2) {
+      //       if (formType.toUpperCase() == "INTERSTATE" || formType.toUpperCase() == "INT" && loadType != "") {
+      //         detail.details2.cessPerc = row.cessPerc;
+      //         detail.details2.cessAmt = row.cessAmt;
+      //         //IGST calculation
+      //         const CGSTPerc = row.cgstPerc ?? 0;
+      //         const CGST = row.cgst ?? 0;
+      //         const SGSTPerc = row.sgstPerc ?? 0;
+      //         const SGST = row.sgst ?? 0;
+      //         const IGSTPerc = row.igstPerc ?? 0;
+      //         const IGST = row.igst ?? 0;
+      //         const totalTaxPerc = CGSTPerc + SGSTPerc + IGSTPerc;
+      //         const totalTax = CGST + SGST + IGST;
+      //         detail.details2.igstPerc = totalTaxPerc;
+      //         detail.details2.igst = totalTax;
+      //         detail.details2.additionalCessPerc = row.additionalCessPerc;
+      //         detail.details2.additionalCess = row.additionalCess;
+      //         detail.details2.cgstPerc = 0;
+      //         detail.details2.cgst = 0;
+      //         detail.details2.sgstPerc = 0;
+      //         detail.details2.sgst = 0;
+      //       } else {
+      //         detail.hsnCode = row.hsnCode;
+      //         detail.details2.cessPerc = row.cessPerc;
+      //         detail.details2.cessAmt = row.cessAmt;
+      //         detail.details2.cgstPerc = row.cgstPerc;
+      //         detail.details2.cgst = row.cgst;
+      //         detail.details2.sgstPerc = row.sgstPerc;
+      //         detail.details2.sgst = row.sgst;
+      //         detail.details2.igstPerc = row.igstPerc;
+      //         detail.details2.igst = row.igst;
+      //         detail.details2.additionalCessPerc = row.additionalCessPerc;
+      //         detail.details2.additionalCess = row.additionalCess;
+      //       }
+      //     } 
+      //     detail.mrp = row.mrp;
+      //     //customerType is always ""
+      //     // if(customerType.toUpperCase() == "INT" &&loadType == "SI"){} 
       //   }
       // }
       validDetailsCount++;
       // Set row header/index
       detail.slNo = generateUniqueKey();
-if([VoucherType.SalesOrder,VoucherType.GoodRequest,VoucherType.RequestForQuotation,VoucherType.GoodsDeliveryNote,VoucherType.ServiceInvoice].includes(voucherType as any)){
-  detail.adjQty=row.adjQty;
-}
+      if ([VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.GoodsDeliveryNote, VoucherType.ServiceInvoice].includes(voucherType as any)) {
+        detail.adjQty = row.adjQty;
+      }
       detail.pCode = row.productCode;
       detail.productBatchID = row.productBatchID;
       detail.barCode = row.autoBarcode;
@@ -1170,102 +1173,145 @@ if([VoucherType.SalesOrder,VoucherType.GoodRequest,VoucherType.RequestForQuotati
         detail.isQtyFreezed = Number(row.qtyOut | 0) > 0;
       }
       detail.qty = round(Number(row.quantity || 0), 4);
+      detail.qtyTag = row.quantity;
       detail.nosQty = row.qtyInNumbers;
       detail.stickerQty = Number(row.barcodeQty || 0);
       detail.stock = row.stock;
       detail.unit = row.unitName;
       detail.unitID = row.unitID;
-      detail.unitPrice = getFormattedValueIgnoreRoundingToNumber(
-        Number(row.unitPrice || 0)
-      );
       detail.purchasePrice = voucherType == VoucherType.SalesInvoice ? getFormattedValueIgnoreRoundingToNumber(
         Number(row.costPerItem || 0)
       ) : row.costPerItem;
-      detail.minSalePrice = row.minSalePrice;
       detail.batchNo = row.batchNo;
       detail.warehouseID = row.warehouseID;
       detail.warehouseName = row.warehouse;
-
-      if (loadType != "" && Number(row.multiFactor || 0) > 0) {
-        detail.purchasePrice = Number(row.multiFactor) * Number(row.stdSalesPrice);
-        detail.boxQty = Number(row.multiFactor);
+      if (voucherType == VoucherType.SalesInvoice) {
+        if (loadType != "" && Number(row.multiFactor || 0) > 0) {
+          detail.purchasePrice = Number(row.multiFactor) * Number(row.stdSalesPrice);
+          detail.boxQty = Number(row.multiFactor);
+        }
+        else {
+          detail.boxQty = Number(row.multiFactor || 0);
+        }
       }
-      else {
-        detail.boxQty = Number(row.multiFactor || 0);
+      if (voucherType == VoucherType.ServiceInvoice) {
+        detail.unitPrice = row.unitPrice
+        detail.netValue = row.netValue;
+        detail.total = row.netAmount;
+        detail.gross = row.grossValue
+        detail.discount = row.discountAmt1;
+        if (!clientSession.isAppGlobal) {
+          detail.vatAmount = row.totalVatAmount;
+        }
+      } else {
+        detail.unitPrice = getFormattedValueIgnoreRoundingToNumber(
+          Number(row.unitPrice || 0)
+        );
+        detail.netValue = getFormattedValueIgnoreRoundingToNumber(
+          Number(row.netValue || 0)
+        );
+        detail.total = getFormattedValueIgnoreRoundingToNumber(
+          Number(row.netAmount || 0)
+        );
+        detail.gross = getFormattedValueIgnoreRoundingToNumber(
+          Number(row.grossValue || 0)
+        );
+        detail.discount = getFormattedValueIgnoreRoundingToNumber(
+          Number(row.discountAmt1 || 0)
+        );
+        if (!clientSession.isAppGlobal) {
+          detail.vatAmount = getFormattedValueIgnoreRoundingToNumber(
+            Number(row.totalVatAmount || 0)
+          );
+        }
       }
-
-      detail.gross = getFormattedValueIgnoreRoundingToNumber(
-        Number(row.grossValue || 0)
-      );
+      //global
+      if (voucherType == VoucherType.SalesInvoice && clientSession.isAppGlobal) {
+        if (applicationSettings?.inventorySettings?.setMagininSales) {
+          detail.margin = getFormattedValueIgnoreRoundingToNumber(
+            Number(row.marginPer || 0));
+          detail.purchaseCost = getFormattedValueIgnoreRoundingToNumber(
+            Number(row.lastPurchaseCost || 0));
+        }
+        detail.manualBarcode = row.mannualBarcode;
+        detail.colour = row.color;
+      }
+      if ([VoucherType.SalesInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(voucherType as any) && clientSession.isAppGlobal) {
+        detail.colour = row.color;
+        detail.taxCategoryID = row.taxCategoryID;
+        detail.productCategoryID = row.productCategoryID;
+        detail.invTransactionDetailID = row.invTransactionDetailID;
+      }
       detail.discPerc = [VoucherType.SalesInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate, VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(voucherType as any) ? getFormattedValueIgnoreRoundingToNumber(
         Number(row.discountPer1 || 0)
       ) : row.discountPer1;
-      detail.discount = getFormattedValueIgnoreRoundingToNumber(
-        Number(row.discountAmt1 || 0)
-      );
+
       detail.unitDiscount = getFormattedValueIgnoreRoundingToNumber(
         Number(row.discountAmt1 || 0)
       );
-      detail.vatPerc = voucherType == VoucherType.SalesInvoice ? getFormattedValueIgnoreRoundingToNumber(
-        Number(row.vatPercentage || 0)
-      ) : row.vatPercentage;
-      detail.vatAmount = voucherType != VoucherType.ServiceInvoice ? getFormattedValueIgnoreRoundingToNumber(
-        Number(row.totalVatAmount || 0)
-      ) : row.totalVatAmount;
-      detail.cstPerc = voucherType == VoucherType.SalesInvoice ? getFormattedValueIgnoreRoundingToNumber(
-        Number(row.cstPerc || 0)
-      ) : row.cstPerc;
-      detail.cst = voucherType == VoucherType.SalesInvoice ? getFormattedValueIgnoreRoundingToNumber(
-        Number(row.cst || 0)
-      ) : row.cst;
+      if (!clientSession.isAppGlobal) {
+        detail.vatPerc = voucherType == VoucherType.SalesInvoice ? getFormattedValueIgnoreRoundingToNumber(
+          Number(row.vatPercentage || 0)
+        ) : row.vatPercentage;
+        detail.cstPerc = voucherType == VoucherType.SalesInvoice ? getFormattedValueIgnoreRoundingToNumber(
+          Number(row.cstPerc || 0)
+        ) : row.cstPerc;
+        detail.cst = voucherType == VoucherType.SalesInvoice ? getFormattedValueIgnoreRoundingToNumber(
+          Number(row.cst || 0)
+        ) : row.cst;
+      }
+
       detail.ratePlusTax = [VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(voucherType as any) && clientSession.isAppGlobal
         ? row.rateWithTax
-        : [VoucherType.SalesReturn, VoucherType.ServiceInvoice].includes(voucherType as any)
-          ? Math.round((Number(row.unitPrice) * (1 + Number(row.vatPercentage) / 100)) * 100) / 100
-          : getFormattedValueIgnoreRoundingToNumber(Number(row.rateWithTax || 0));
+        : [VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(voucherType as any) && !clientSession.isAppGlobal ?
+          row.rateWithTax
+          : [VoucherType.SalesReturn, VoucherType.ServiceInvoice].includes(voucherType as any)
+            ? Math.round((Number(row.unitPrice) * (1 + Number(row.vatPercentage) / 100)) * 100) / 100
+            : getFormattedValueIgnoreRoundingToNumber(Number(row.rateWithTax || 0));
       detail.productDescription = row.productDescription;
       detail.actualSalesPrice = row.transMRP;
-      detail.netValue = getFormattedValueIgnoreRoundingToNumber(
-        Number(row.netValue || 0)
-      );
-      detail.total = getFormattedValueIgnoreRoundingToNumber(
-        Number(row.netAmount || 0)
-      );
       detail.memo = row.memo;
       detail.barcodePrinted = true;
       detail.batchCreated = true;
 
-      if (userSession.dbIdValue == "543140180640") {
+      if (userSession.dbIdValue == "543140180640" && voucherType == VoucherType.SalesInvoice) {
         detail.nLA_StdSalesPrice = row.valuationPrice
       }
-
-      if (row.productPriceCategoryMSP > 0) {
-        detail.minSalePrice = row.productPriceCategoryMSP;
-      } else if (Number(row.MinSalePrice || 0) > 0) {
-        detail.minSalePrice = row.productStandardUnitMSP;
+      if (voucherType == VoucherType.SalesInvoice) {
+        detail.minSalePrice = row.minSalePrice;
       }
-
-      if (userSession.dbIdValue === "MALABAR_RIYADH" && loadType === "GD") {
+      if ([VoucherType.SalesInvoice, VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(voucherType as any)) {
+        if (row.productPriceCategoryMSP > 0) {
+          detail.minSalePrice = row.productPriceCategoryMSP;
+        } else if (Number(row.MinSalePrice || 0) > 0) {
+          detail.minSalePrice = row.productStandardUnitMSP;
+        }
+      }
+      if (userSession.dbIdValue === "MALABAR_RIYADH" && loadType === "GD" && voucherType == VoucherType.SalesInvoice && !clientSession.isAppGlobal) {
         try {
           detail.minSalePrice = getFormattedValueIgnoreRoundingToNumber(
             Number(row.modelNo || 0)
           );
         } catch { }
       }
-
+      if (voucherType == VoucherType.GoodsDeliveryNote && !clientSession.isAppGlobal && userSession.dbIdValue == "MALABAR_RIYADH" && loadType === "SQ") {
+        detail.minSalePrice = row.modelNo;
+      }
       detail.profit = Number(row.totalProfit || 0);
 
-      //if (ctx.profitPercentageVisible) {
-      const purchasePrice = Number(detail.purchasePrice || 0);
-      const qty = Number(detail.qty || 0);
+      if (formState.gridColumns?.find(
+        (x) => x.dataField == "profitPercentage"
+      )?.visible == true && voucherType == VoucherType.SalesInvoice && !clientSession.isAppGlobal) {
+        const purchasePrice = Number(detail.purchasePrice || 0);
+        const qty = Number(detail.qty || 0);
 
-      let profitPerc = 0;
-      if (purchasePrice > 0 && qty > 0) {
-        profitPerc = (detail.profit / (purchasePrice * qty)) * 100;
+        let profitPerc = 0;
+        if (purchasePrice > 0 && qty > 0) {
+          profitPerc = (detail.profit / (purchasePrice * qty)) * 100;
+        }
+
+        detail.profitPercentage = profitPerc;
       }
-
-      detail.profitPercentage = profitPerc;
-      //  }
 
 
       // detail.removeCol = "Remove";
@@ -1280,8 +1326,16 @@ if([VoucherType.SalesOrder,VoucherType.GoodRequest,VoucherType.RequestForQuotati
       detail.salesman = row?.employeeName ?? "";
       detail.salesmanID = row.salesManID;
 
+      if (voucherType == VoucherType.SalesInvoice && clientSession.isAppGlobal) {
+        detail.gatePass = row.specification ?? "";
+      } else if ([VoucherType.SalesInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(voucherType as any)) {
+        detail.size = row.specification ?? "";
+      }
 
-      detail.size = row.specification ?? "";
+      if ([VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(voucherType as any)) {
+        detail.supplierReferenceProductCode = row.supplierReferenceProductCode;
+      }
+
 
       // Store original cost for restoration after calculation
       const originalCost = detail.cost;

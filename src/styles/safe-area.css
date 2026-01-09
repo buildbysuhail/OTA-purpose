@@ -1,0 +1,375 @@
+/**
+ * Safe Area CSS for Capacitor Apps
+ * ==================================
+ *
+ * This file provides CSS classes and variables for handling safe areas
+ * on devices with camera cutouts, notches, and Dynamic Island.
+ *
+ * IMPORTANT: For env() to work, your index.html MUST have:
+ * <meta name="viewport" content="..., viewport-fit=cover">
+ *
+ * HOW SAFE AREAS WORK:
+ * ====================
+ *
+ * env(safe-area-inset-top)    - Top inset (status bar / notch / Dynamic Island)
+ * env(safe-area-inset-right)  - Right inset (landscape with notch on right)
+ * env(safe-area-inset-bottom) - Bottom inset (home indicator / gesture bar)
+ * env(safe-area-inset-left)   - Left inset (landscape with notch on left)
+ *
+ * DEVICE-SPECIFIC VALUES:
+ * =======================
+ *
+ * iPhone X/XS/11 Pro (Notch):
+ *   - Portrait:  top=44px, bottom=34px
+ *   - Landscape: top=0, left/right=44px, bottom=21px
+ *
+ * iPhone 14 Pro/15 Pro (Dynamic Island):
+ *   - Portrait:  top=59px, bottom=34px
+ *   - Landscape: top=0, left/right=59px, bottom=21px
+ *
+ * Android (Punch-hole cameras):
+ *   - Varies by device: typically top=24-48px
+ *   - Usually 0 for other sides
+ *
+ * USAGE:
+ * ======
+ *
+ * 1. Apply .safe-area-top to your main header/navbar
+ * 2. Apply .safe-area-bottom to fixed bottom bars
+ * 3. Use CSS variables for custom calculations
+ */
+
+/* ===========================================
+   CSS Custom Properties (Variables)
+   =========================================== */
+
+:root {
+  /* Safe area insets with fallbacks for web browsers */
+  --safe-area-inset-top: env(safe-area-inset-top, 0px);
+  --safe-area-inset-right: env(safe-area-inset-right, 0px);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-inset-left: env(safe-area-inset-left, 0px);
+
+  /* Your app's header height (customize this) */
+  --header-height: 56px;
+
+  /* Total header height including safe area */
+  --header-total-height: calc(var(--header-height) + var(--safe-area-inset-top));
+
+  /* Common spacing values */
+  --bottom-bar-height: 56px;
+  --bottom-bar-total-height: calc(var(--bottom-bar-height) + var(--safe-area-inset-bottom));
+}
+
+/* ===========================================
+   HTML & Body Setup
+   =========================================== */
+
+html {
+  /* Ensure safe areas are respected in the root element */
+  height: 100%;
+
+  /* Prevent overscroll bounce revealing content behind status bar */
+  overscroll-behavior-y: none;
+}
+
+body {
+  /* Minimum height should account for safe areas */
+  min-height: 100%;
+  min-height: 100dvh; /* Dynamic viewport height - better for mobile */
+
+  /* Prevent body from being scrolled under status bar */
+  overscroll-behavior-y: none;
+
+  /* Critical: Allow body to extend into safe area while content respects it */
+  padding: 0;
+  margin: 0;
+}
+
+/* ===========================================
+   Safe Area Padding Classes
+   =========================================== */
+
+/* Add top padding for status bar / notch / Dynamic Island */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* Add bottom padding for home indicator / gesture bar */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Add left padding for landscape mode with notch */
+.safe-area-left {
+  padding-left: env(safe-area-inset-left, 0px);
+}
+
+/* Add right padding for landscape mode with notch */
+.safe-area-right {
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+/* Add all safe area padding */
+.safe-area-all {
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
+}
+
+/* ===========================================
+   Fixed Header Pattern
+   =========================================== */
+
+/**
+ * Use this class for your main app header.
+ * The header's background color will extend into the status bar area,
+ * while the content stays below the safe area.
+ *
+ * Example:
+ * <header class="app-header">
+ *   <div class="header-content">Your header content</div>
+ * </header>
+ */
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+
+  /* Extend background into status bar area */
+  background-color: #ffffff;
+
+  /* Add safe area padding so content doesn't overlap notch/Dynamic Island */
+  padding-top: env(safe-area-inset-top, 0px);
+
+  /* Handle landscape mode on iOS */
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+
+  /* Shadow for visual separation */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* The actual header content area */
+.app-header .header-content {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+}
+
+/* Dark mode header */
+.dark .app-header,
+.app-header.dark {
+  background-color: #1f2937;
+  color: #ffffff;
+}
+
+/* ===========================================
+   Fixed Bottom Bar Pattern
+   =========================================== */
+
+/**
+ * Use this class for bottom navigation bars or fixed footers.
+ * Handles the home indicator / gesture area on modern devices.
+ */
+.app-bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+
+  background-color: #ffffff;
+
+  /* Add safe area padding for home indicator */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+
+  /* Handle landscape mode on iOS */
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+
+  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.app-bottom-bar .bar-content {
+  height: var(--bottom-bar-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 16px;
+}
+
+/* Dark mode bottom bar */
+.dark .app-bottom-bar,
+.app-bottom-bar.dark {
+  background-color: #1f2937;
+  color: #ffffff;
+}
+
+/* ===========================================
+   Main Content Area
+   =========================================== */
+
+/**
+ * Use this class for your main scrollable content.
+ * It accounts for fixed header and bottom bar.
+ */
+.app-content {
+  /* Account for fixed header */
+  padding-top: var(--header-total-height);
+
+  /* Account for fixed bottom bar (if you have one) */
+  padding-bottom: var(--bottom-bar-total-height);
+
+  /* Minimum height for proper scrolling */
+  min-height: 100dvh;
+}
+
+/* Content area without bottom bar */
+.app-content.no-bottom-bar {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ===========================================
+   Fullscreen / Immersive Mode
+   =========================================== */
+
+/**
+ * For fullscreen content that should extend edge-to-edge
+ * but still respect safe areas for interactive elements.
+ */
+.fullscreen-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2000;
+}
+
+/* Background that extends everywhere (e.g., images, videos) */
+.fullscreen-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+/* Content that respects safe areas (e.g., controls, buttons) */
+.fullscreen-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
+  box-sizing: border-box;
+}
+
+/* ===========================================
+   Modal / Overlay Pattern
+   =========================================== */
+
+.modal-safe-area {
+  /* Ensure modals don't get hidden behind notch/Dynamic Island */
+  margin-top: max(20px, env(safe-area-inset-top, 20px));
+  margin-bottom: max(20px, env(safe-area-inset-bottom, 20px));
+  margin-left: max(20px, env(safe-area-inset-left, 20px));
+  margin-right: max(20px, env(safe-area-inset-right, 20px));
+}
+
+/* ===========================================
+   Utility Classes
+   =========================================== */
+
+/* Margin utilities for safe areas */
+.mt-safe { margin-top: env(safe-area-inset-top, 0px); }
+.mr-safe { margin-right: env(safe-area-inset-right, 0px); }
+.mb-safe { margin-bottom: env(safe-area-inset-bottom, 0px); }
+.ml-safe { margin-left: env(safe-area-inset-left, 0px); }
+
+/* Min-height utilities */
+.min-h-screen-safe {
+  min-height: calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+}
+
+.min-h-dvh-safe {
+  min-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+}
+
+/* ===========================================
+   Tailwind-style Safe Area Utilities
+   (if you prefer Tailwind naming conventions)
+   =========================================== */
+
+.pt-safe { padding-top: env(safe-area-inset-top, 0px); }
+.pr-safe { padding-right: env(safe-area-inset-right, 0px); }
+.pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+.pl-safe { padding-left: env(safe-area-inset-left, 0px); }
+.px-safe {
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+.py-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.p-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
+}
+
+/* ===========================================
+   Scroll Container with Safe Areas
+   =========================================== */
+
+/**
+ * A scrollable container that respects safe areas.
+ * Use for full-height scrolling lists/content.
+ */
+.scroll-safe {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+
+  /* Ensure scroll content doesn't go behind safe areas */
+  scroll-padding-top: env(safe-area-inset-top, 0px);
+  scroll-padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ===========================================
+   Debug Mode (uncomment to visualize safe areas)
+   =========================================== */
+
+/*
+.debug-safe-areas::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: env(safe-area-inset-top, 0px);
+  background: rgba(255, 0, 0, 0.3);
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.debug-safe-areas::after {
+  content: '';
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: env(safe-area-inset-bottom, 0px);
+  background: rgba(0, 0, 255, 0.3);
+  z-index: 9999;
+  pointer-events: none;
+}
+*/

@@ -867,7 +867,9 @@ export const useTransactionHelper = (transactionType: string) => {
     transDate: string,
     supplierLedgerId: number,
     warehouseId: number,
-    allowStockUpdate: boolean
+    allowStockUpdate: boolean,
+    voucherType?: string,
+    toWarehouseId?: number
   ) => {
     const outputDetails: TransactionDetail[] = [];
     const errors: string[] = [];
@@ -949,7 +951,7 @@ export const useTransactionHelper = (transactionType: string) => {
 
       if (
         Math.abs(
-          outputRow.grossValue - outputRow.quantity * outputRow.unitPrice
+          outputRow.grossValue - outputRow.quantity * outputRow.costPerItem
         ) > 1
       ) {
         hasError = true;
@@ -1042,6 +1044,12 @@ export const useTransactionHelper = (transactionType: string) => {
       outputRow.minSalePrice = detail.minSalePrice;
       outputRow.multiFactor = 1; // Default or calculate if needed
 
+      // Warehouse stock - convert to number for nullable decimal
+      const fromWhouseStockNum = parseFloat(detail.fromWhouseStock);
+      outputRow.fromWhouseStock = isNaN(fromWhouseStockNum) ? null : fromWhouseStockNum;
+      const toWhouseStockNum = parseFloat(detail.toWhouseStock);
+      outputRow.toWhouseStock = isNaN(toWhouseStockNum) ? null : toWhouseStockNum;
+
       // Date handling - convert empty strings to null for nullable DateTime fields
       outputRow.mfgDate = isNullOrUndefinedOrEmpty(detail.mfdDate) ? null : detail.mfdDate; // Done for handle "" value when save - change if needed
       outputRow.expiryDate = isNullOrUndefinedOrEmpty(detail.expDate) ? null : detail.expDate;  // Done for handle "" value when save
@@ -1067,6 +1075,18 @@ export const useTransactionHelper = (transactionType: string) => {
       // outputRow.wareHouseID = detail.warehouse;
       outputRow.grandTotal = outputRow.grandTotal ?? 0;
 
+      // Stock Transfer - set from and to warehouse IDs
+      if (voucherType === "ST") {
+        outputRow.fromWarehouseID = warehouseId;
+        outputRow.toWarehouseID = toWarehouseId;
+      }
+      // Warehouse ID based on voucher type (matching C# logic)
+      if (voucherType === "EX" || voucherType === "EX-SP") {
+        outputRow.wareHouseID = toWarehouseId;
+      } else if (voucherType === "SH" || voucherType === "SH-SP" || voucherType === "DMG") {
+        outputRow.wareHouseID = warehouseId;
+      }
+
       outputDetails.push(outputRow);
     }
 
@@ -1080,6 +1100,10 @@ export const useTransactionHelper = (transactionType: string) => {
   const attachMaster = (formState: TransactionFormState) => {
     const master: TransactionMaster = {
       ...formState.transaction.master,
+      master3: {
+        ...TransactionMaster3InitialData,
+        ...(formState.transaction.master.master3 || {}),
+      },
       address2:
         formState.transaction.master.voucherType == VoucherType.PurchaseReturn
           ? formState.transaction.master.address2

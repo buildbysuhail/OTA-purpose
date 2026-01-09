@@ -24,9 +24,10 @@ import { useAppState } from "../../../../utilities/hooks/useAppState";
 import VoucherType from "../../../../enums/voucher-types";
 import React from "react";
 import { TransactionFormState } from "../transaction-types";
-import { formStateHandleFieldChangeKeysOnly, formStateHandleFieldChange, formStateTransactionMasterHandleFieldChange } from "../reducer";
+import { formStateHandleFieldChangeKeysOnly, formStateHandleFieldChange, formStateTransactionMasterHandleFieldChange, formStateMasterHandleFieldChange } from "../reducer";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import AutoCalculationCheckbox from "./components/AutoCalculationCheckbox";
+import Urls from "../../../../redux/urls";
 
 interface TransactionFooterProps {
   formState: TransactionFormState;
@@ -434,19 +435,36 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 {warehouseComponent}
                 <>{adjustmentComponent}</>
                 {priceCategoryComponent}
+                 {/* This is for stock branch transfer - may use the existing WH component */}
                 <ERPDataCombobox
-                  // {...getFieldProps("ledgerID")}
-                  id="ToBrWareHouse"
-                  field={{
-                    id: "wareHouseID",
-                    required: true,
-                    // getListUrl: Urls.data_BankAccounts,
-                    valueKey: "id",
-                    labelKey: "name",
-                  }}
-                  // onChangeData={(data: any) => {  handleFieldChange("ledgerID", data.ledgerID)}}
-                  label={t("to_br._warehouse")}
-                />
+                    localInputBox={formState?.userConfig?.inputBoxStyle}
+                    fetching={formState.transactionLoading}
+                    enableClearOption={false}
+                    id="toBranchWarehouseID"
+                    className="min-w-[180px] !m-0"
+                    label={t("to_br._warehouse")}
+                    data={formState.transaction.master}
+                    onSelectItem={(e: { label: string; value: string | number }) => {
+                      dispatch(
+                        formStateMasterHandleFieldChange({
+                          fields: {
+                            toBranchWarehouseID: e.value,
+                          },
+                        })
+                      );
+                    }}
+                    value={formState.transaction.master.fromWarehouseID}
+                    field={{
+                      id: "toBranchWarehouseID",
+                      valueKey: "id",
+                      labelKey: "name",
+                      getListUrl: Urls.data_warehouse,
+                    }}
+                    disabled={
+                      formState.formElements.cbWarehouseID.disabled ||
+                      formState.formElements.pnlMasters?.disabled
+                    }
+                  />
                 <ERPButton 
                    title={t("load_products")} 
                    variant="secondary"
@@ -484,12 +502,13 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             )} */}
           {[VoucherType.ShortageStock, VoucherType.ExcessStock,VoucherType.StockAdjuster].includes(formState.transaction.master.voucherType as VoucherType) && (
               <div className="flex">
+                {formState.formElements.btnAddProducts?.visible && (
                 <ERPButton
                    title={t("add_products")}
                    variant="secondary"
-                   disabled={formState.formElements?.pnlMasters?.disabled}
                    onClick={()=> handleAddProduct()}
                 />
+                )}
                 <input
                   type="file"
                   ref={fileInputRef}
@@ -507,22 +526,23 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   onClick={()=> handleLoadProductBtn()}/>
               </div>
             )} 
-             
              <div className="flex flex-col">  
               {[VoucherType.ExcessStock,VoucherType.ShortageStock].includes(formState.transaction.master.voucherType as VoucherType) && (
               <div className="flex">
+                {formState.formElements.chkCostFromExcel?.visible && (
                 <ERPCheckbox
                   id="loadCostFromExcel"
                   label={t("load_cost_from_excel")}
                   checked={formState?.chkCostFromExcel}
                   onChange={(e) =>{
                       dispatch(
-                      formStateHandleFieldChangeKeysOnly(
+                      formStateHandleFieldChange(
                         { fields: { chkCostFromExcel: e.target.checked} }
                       ))
                   }}
                   
                 />
+                )}
               </div>
              )}
              
@@ -530,12 +550,14 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
              </div>
              {[VoucherType.StockCount, VoucherType.OpeningStock,VoucherType.StockAdjuster].includes(formState.transaction.master.voucherType as VoucherType) && (
               <div className="flex px-1">
+                {formState.formElements.btnLoadExcel?.visible && (
                 <ERPButton
                   title={t("load_excel")}
                   variant="secondary"
                   disabled={formState.formElements?.pnlMasters?.disabled}
                   onClick={() => handleLoadExcel()}
                 />
+                )}
                 <input
                   type="file"
                   ref={fileInputRef}
@@ -896,6 +918,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     </div>
                   </div>
                 )}
+                {formState.transaction.master.voucherType !== VoucherType.StockAdjuster && (
                 <div className="flex justify-between items-center mt-1">
                   <span className="text-sm font-bold dark:text-dark-text text-gray-900 uppercase">
                     {t(formState.formElements.grandTotal.label)}
@@ -904,6 +927,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     {getFormattedValue(formState.transaction.master?.grandTotal ?? 0)}
                   </span>
                 </div>
+                )}
               </div>
             </div>
           </div>

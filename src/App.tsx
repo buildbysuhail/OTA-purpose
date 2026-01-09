@@ -40,7 +40,8 @@ import { getUserSessionData } from "./session-data";
 import { useRootState } from "./utilities/hooks/useRootState";
 import { AccessPrinterList } from "./pages/InvoiceDesigner/utils/get_printers";
 import { getStorageString } from "./utilities/storage-utils";
-import { setLightStatusBar } from "./Android/lib/statusBar";
+import { initializeStatusBar, setLightStatusBar } from "./Android/lib/statusBar";
+import { initSafeAreaInsets } from "./utilities/safeAreaInsets";
 import { StatusBarManager } from "./Android/routes/StatusBarManager";
 import { registerPush } from "./Android/lib/push";
 import { initBackButtonHandler } from "./Android/lib/backButton";
@@ -78,8 +79,14 @@ function App() {
   const userSession = useAppSelector((state: RootState) => state.UserSession);
 
   useEffect(() => {
-    // Example: default UI is light background
-    setLightStatusBar();
+    // Initialize status bar for edge-to-edge display on app startup
+    // This enables proper handling of notch/Dynamic Island/camera punch-holes
+    initializeStatusBar();
+
+    // Initialize safe area insets detection (for Android devices where env() doesn't work)
+    initSafeAreaInsets().then((insets) => {
+      console.log('[App] Safe area insets initialized:', insets);
+    });
   }, []);
 
   useEffect(() => {

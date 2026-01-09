@@ -59,6 +59,7 @@ import { accFormStateHandleFieldChange } from "./pages/accounts/transactions/red
 import TransactionForm from "./pages/inventory/transactions/sales/transaction";
 import { initOTAWithBackgroundCheck, markBundleAsWorking } from "./utilities/liveUpdate"
 import UpdateAlertModal from "./components/ERPComponents/UpdateAlertModal"
+import TwilioPdfDownloader from "./pages/inventory/masters/pdf-download";
 // ====
 // import ERPModal from "./components/ERPComponents/erp-modal";
 // import 'devextreme/dist/css/dx.dark.css';  
@@ -350,6 +351,7 @@ function App() {
           <Suspense fallback={LoadingAnimation()}>
 
             <Routes>
+              <Route path="/pdf/download" element={<TwilioPdfDownloader />} />
               <Route path="login" element={<Login />} />
               <Route path="accept-user-invitation" element={<AcceptInvitation />} />
               <Route path="logout" element={<Logout />} />

@@ -259,7 +259,7 @@ const Content: FC<ContentProps> = () => {
           ))}
 
 
-          <Route path="/pdf/download" element={<TwilioPdfDownloader />} />
+          
 
           {/* Accounts Transaction */}
           {/* <Route

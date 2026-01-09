@@ -3052,56 +3052,7 @@ const hidColumns: string[] = [
                 columns.length === 0 ||
                 !formState.transaction.details ||
                 formState.transaction.details.length === 0 ? (
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      padding: "48px 24px",
-                      textAlign: "center",
-                      color: "var(--text-muted, #6b7280)",
-                      gap: "12px",
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: "64px",
-                        height: "64px",
-                        borderRadius: "50%",
-                        backgroundColor: "var(--bg-muted, #f3f4f6)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        marginBottom: "8px",
-                      }}
-                    >
-                      <CirclePlus
-                        size={32}
-                        strokeWidth={1.5}
-                        style={{ color: "var(--text-muted, #9ca3af)" }}
-                      />
-                    </div>
-                    <p
-                      style={{
-                        fontSize: "16px",
-                        fontWeight: 500,
-                        color: "var(--text-primary, #374151)",
-                        margin: 0,
-                      }}
-                    >
-                      {t("No items added yet")}
-                    </p>
-                    <p
-                      style={{
-                        fontSize: "14px",
-                        color: "var(--text-muted, #6b7280)",
-                        margin: 0,
-                      }}
-                    >
-                      {t("Tap the + button to add your first item")}
-                    </p>
-                  </div>
+                  <></>
                 ) : (
                   visibleItems.map(({ index, top }) => (
                     <VirtualRow

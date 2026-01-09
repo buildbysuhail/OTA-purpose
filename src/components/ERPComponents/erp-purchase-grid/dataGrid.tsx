@@ -1532,6 +1532,13 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
     const [exportVisibleColumns, setExportVisibleColumns] = useState(true);
     const [showBarcodeScanner, setShowBarcodeScanner] = useState(false);
     const [barcodeTargetRow, setBarcodeTargetRow] = useState<number>(-1);
+
+    // Ref to always have the latest onKeyDown function
+    const onKeyDownRef = useRef(onKeyDown);
+    useEffect(() => {
+      onKeyDownRef.current = onKeyDown;
+    }, [onKeyDown]);
+
     const buttonRef = useRef<HTMLButtonElement | null>(null);
     const popupRef = useRef<HTMLDivElement | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -2108,7 +2115,10 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       const targetRow = barcodeTargetRow >= 0 ? barcodeTargetRow :
         (formState.currentCell?.rowIndex ?? 0);
 
+      console.log('🔍 handleBarcodeScan called:', { targetRow, barcode: result.text });
+
       if (targetRow >= 0) {
+        // Set the barcode value to the field
         onChange(
           result.text,
           'barCode' as keyof TransactionDetail,
@@ -2116,50 +2126,64 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
           true
         );
 
-        // Auto-advance to next field after small delay
-        setTimeout(() => {
-          const nextCell = nextCellFind(
-            targetRow,
-            'barCode',
-            ['barCode']
-          );
-          if (nextCell) {
-            setCurrentCell({
-              column: nextCell.column,
-              rowIndex: nextCell.rowIndex,
-              data: formState.transaction.details[nextCell.rowIndex],
-            } as any);
-          }
-        }, 150);
+        // Set current cell to barCode field first to ensure proper state
+        const barcodeColumn = formState.gridColumns.find((x: ColumnModel) => x.dataField === 'barCode');
+        if (barcodeColumn) {
+          setCurrentCell({
+            column: barcodeColumn,
+            rowIndex: targetRow,
+            data: formState.transaction.details[targetRow],
+          } as any);
+        }
       }
-    }, [barcodeTargetRow, formState.currentCell?.rowIndex, formState.transaction.details, nextCellFind, onChange]);
+    }, [barcodeTargetRow, formState.currentCell?.rowIndex, formState.transaction.details, formState.gridColumns, onChange]);
 
     // Callback to trigger Enter key logic after barcode scan
     const handleBarcodeEnterTrigger = useCallback((result: BarcodeScanResult) => {
+      // Use barcodeTargetRow if set, otherwise use current cell row, fallback to 0
       const targetRow = barcodeTargetRow >= 0 ? barcodeTargetRow :
         (formState.currentCell?.rowIndex ?? 0);
 
-      if (targetRow >= 0 && formState.transaction.details[targetRow]) {
-        // Find the barCode column
-        const barcodeColumn = columns.find(col => col.dataField === 'barCode');
+      console.log('⌨️ handleBarcodeEnterTrigger called:', {
+        targetRow,
+        barcode: result.text,
+        barcodeTargetRow,
+        currentCellRowIndex: formState.currentCell?.rowIndex,
+        hasOnKeyDownRef: !!onKeyDownRef.current
+      });
 
-        if (barcodeColumn) {
-          // Simulate Enter key press to trigger the same logic as manual Enter
-          const syntheticEvent = {
-            key: 'Enter',
-            preventDefault: () => {},
-            stopPropagation: () => {},
-          } as React.KeyboardEvent<HTMLElement>;
+      if (targetRow >= 0) {
+        // Simulate Enter key press on barCode field to trigger item lookup
+        const syntheticEvent = {
+          key: 'Enter',
+          preventDefault: () => {},
+          stopPropagation: () => {},
+        } as React.KeyboardEvent<HTMLElement>;
 
-          onKeyDown(
+        console.log('⌨️ Triggering onKeyDown with Enter for barCode:', {
+          value: result.text,
+          column: 'barCode',
+          rowIndex: targetRow
+        });
+
+        // Use the ref to get the latest onKeyDown function
+        // This ensures we're not using a stale closure
+        if (onKeyDownRef.current) {
+          console.log('⌨️ Calling onKeyDownRef.current...');
+          onKeyDownRef.current(
             result.text,
             syntheticEvent,
             'barCode' as keyof TransactionDetail,
             targetRow
           );
+          console.log('⌨️ onKeyDownRef.current called successfully');
+        } else {
+          console.error('❌ onKeyDownRef.current is null/undefined!');
         }
+      } else {
+        console.warn('⚠️ targetRow is less than 0:', targetRow);
       }
-    }, [barcodeTargetRow, formState.currentCell?.rowIndex, formState.transaction.details, columns, onKeyDown]);
+    }, [barcodeTargetRow, formState.currentCell?.rowIndex]);
 
     const scrollToCenter = useCallback(
       (rowIndex: number, column?: string, duration: number = 300) => {

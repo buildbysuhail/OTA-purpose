@@ -3042,6 +3042,7 @@ debugger;
     let { result } = commonParams;
     try {
       const key = event.key;
+      console.log('🔑 handleTextDataKeyDown called:', { key, value, columnName, rowIndex });
       const isShiftPressed = event.shiftKey;
       const isCtrlPressed = event.ctrlKey;
       if (columnName === "global") {
@@ -3502,8 +3503,10 @@ debugger;
               setCurrentCell(res, data, false);
             }
           } else if (columnName == "barCode") {
+            console.log('🔍 Enter pressed on barCode column:', { value, rowIndex, columnName });
             data.barCode = value;
             if (!isNullOrUndefinedOrEmpty(value)) {
+              console.log('🔍 Loading product by barcode:', data.barCode);
               await loadProductDetailsByAutoBarcode(
                 {
                   productCode: data.pCode,
@@ -3519,7 +3522,9 @@ debugger;
                 { result: {}, formStateHandleFieldChangeKeysOnly },
                 true
               );
+              console.log('🔍 loadProductDetailsByAutoBarcode completed');
             } else {
+              console.log('⚠️ Barcode value is empty, focusing next column');
               const res = focusToNextColumn(rowIndex, columnName);
               setCurrentCell(res, data, rowIndex != res?.rowIndex);
             }

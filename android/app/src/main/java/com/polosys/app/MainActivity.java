@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.graphics.Rect;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -12,6 +13,9 @@ import android.view.WindowManager;
 
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import com.getcapacitor.BridgeActivity;
 import com.polosys.BarcodeScannerPlugin;
@@ -39,6 +43,10 @@ public class MainActivity extends BridgeActivity {
         // This allows content to draw behind system bars while still
         // reporting proper safe-area insets to CSS via env()
         setupEdgeToEdge();
+
+        // Exclude edge zones from system gesture navigation
+        // This allows our app to handle edge swipes for sidebar
+        setupGestureExclusionZones();
 
         // Load custom OTA bundle if available
         loadOTABundle();
@@ -94,6 +102,45 @@ public class MainActivity extends BridgeActivity {
             Log.d(TAG, "Status bar setup complete (overlaysWebView: false mode)");
         } catch (Exception e) {
             Log.w(TAG, "Failed to setup status bar", e);
+        }
+    }
+
+    /**
+     * Setup gesture exclusion zones to prevent Android's back gesture
+     * from conflicting with our sidebar swipe gesture.
+     *
+     * This excludes the left and right edges from system gesture navigation,
+     * allowing our WebView to receive touch events on the edges.
+     */
+    private void setupGestureExclusionZones() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { // Android 10+
+            try {
+                View decorView = getWindow().getDecorView();
+
+                decorView.post(() -> {
+                    int screenHeight = decorView.getHeight();
+                    int edgeWidth = 50; // Width of edge zone to exclude (in pixels)
+
+                    List<Rect> exclusionRects = new ArrayList<>();
+
+                    // Exclude left edge for LTR sidebar swipe
+                    Rect leftEdge = new Rect(0, 0, edgeWidth, screenHeight);
+                    exclusionRects.add(leftEdge);
+
+                    // Exclude right edge for RTL sidebar swipe
+                    int screenWidth = decorView.getWidth();
+                    Rect rightEdge = new Rect(screenWidth - edgeWidth, 0, screenWidth, screenHeight);
+                    exclusionRects.add(rightEdge);
+
+                    decorView.setSystemGestureExclusionRects(exclusionRects);
+
+                    Log.d(TAG, "Gesture exclusion zones set: left=" + leftEdge + ", right=" + rightEdge);
+                });
+            } catch (Exception e) {
+                Log.w(TAG, "Failed to setup gesture exclusion zones", e);
+            }
+        } else {
+            Log.d(TAG, "Gesture exclusion not supported on API < 29");
         }
     }
 

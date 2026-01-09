@@ -1,16 +1,19 @@
 import { Dispatch, FC, Fragment, SetStateAction, useEffect, useState, lazy, Suspense } from 'react';
 import { getStorageString } from '../../../utilities/storage-utils';
+import { useSidebarSwipe } from '../../../utilities/hooks/useSidebarSwipe';
 
 const Header = lazy(() => import('../header/header'));
 const Sidebar = lazy(() => import('../sidebar/sidebar'));
 const Footer = lazy(() => import('../footer/footer'));
 const Content = lazy(() => import('../content/content'));
 
-interface LayoutProps { 
+interface LayoutProps {
   setMyClass: Dispatch<SetStateAction<string>>;
 }
 
 const AccountSettingsLayout: FC<LayoutProps> = ({setMyClass}) => {
+  // Enable swipe gestures for sidebar on mobile
+  useSidebarSwipe();
   const Bodyclickk = async() => {
     let isCheck = await getStorageString("ynexverticalstyles")
     if (isCheck== "icontext") {

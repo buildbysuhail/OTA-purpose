@@ -20,6 +20,7 @@ import { UserAction, useUserRights } from "../../../helpers/user-right-helper";
 import { exludedRoutes } from "../content/transaction-routes";
 import { getFilteredReports } from "../../ERPComponents/reports/reports-list-filter";
 import { ArrowBigLeftDash, X } from "lucide-react";
+import { unregisterModal } from "../../../Android/lib/backButton";
 
 // Lazy-loaded components
 const SimpleBar = lazy(() => import("simplebar-react"));
@@ -370,6 +371,8 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
     const theme = appState;
     if (window.innerWidth <= 992) {
       updateAppState({ ...theme, toggled: "close" });
+      // Unregister sidebar from back button handler
+      unregisterModal('app-sidebar');
     }
     const overlayElement = document.querySelector(
       "#responsive-overlay"

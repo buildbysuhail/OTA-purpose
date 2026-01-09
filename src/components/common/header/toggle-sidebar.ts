@@ -1,10 +1,13 @@
 // src/utils/toggleSidebar.ts
+import { registerModal, unregisterModal } from '../../../Android/lib/backButton';
+
+const SIDEBAR_MODAL_ID = 'app-sidebar';
 
 export const toggleSidebar = (
   appState: any,
   updateAppState: (state: any) => void,
 ) => {
-  
+
   const theme = appState;
   let sidemenuType = theme.dataNavLayout;
 
@@ -107,8 +110,11 @@ export const toggleSidebar = (
       }
     }
   } else {
-    if (theme.toggled === "close") {
+    if (theme.toggled === "close" || theme.toggled !== "open") {
       updateAppState({ ...theme, toggled: "open" });
+
+      // Register sidebar with back button handler so back closes sidebar
+      registerModal(SIDEBAR_MODAL_ID);
 
       setTimeout(() => {
         const overlay = document.querySelector("#responsive-overlay");
@@ -129,11 +135,14 @@ export const toggleSidebar = (
             if (overlay) {
               overlay.classList.remove("active");
             }
+            unregisterModal(SIDEBAR_MODAL_ID);
           }
         });
       }, 100);
     } else {
       updateAppState({ ...theme, toggled: "close" });
+      // Unregister sidebar from back button handler
+      unregisterModal(SIDEBAR_MODAL_ID);
     }
   }
 };
@@ -141,6 +150,8 @@ export function menuClose(appState: any, updateAppState: (state: any) => void) {
   const theme = appState;
   if (window.innerWidth <= 992) {
     updateAppState({ ...theme, toggled: "close" });
+    // Unregister sidebar from back button handler
+    unregisterModal(SIDEBAR_MODAL_ID);
   }
   if (window.innerWidth >= 992) {
     updateAppState({

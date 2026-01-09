@@ -10,6 +10,7 @@ const Content = lazy(() => import("../content/content"));
 import { ERPScrollArea } from "../../ERPComponents/erp-scrollbar";
 import ERPAttachment from "../../ERPComponents/erp-attachment";
 import { getStorageString } from "../../../utilities/storage-utils";
+import { useSidebarSwipe } from "../../../utilities/hooks/useSidebarSwipe";
 
 interface LayoutProps {
   setMyClass: Dispatch<SetStateAction<string>>;
@@ -17,6 +18,14 @@ interface LayoutProps {
 
 const Layout: FC<LayoutProps> = ({ setMyClass }) => {
   const [isDesktop, setIsDesktop] = useState(window.innerWidth > 992);
+
+  // Enable swipe gestures for sidebar on mobile
+  // Swipe from left edge (LTR) or right edge (RTL) to open sidebar
+  useSidebarSwipe({
+    threshold: 40,      // Min swipe distance to trigger
+    edgeWidth: 50,      // Edge zone width for opening (wider for better Android detection)
+    hapticFeedback: true,
+  });
 
   useEffect(() => {
     const handleResize = () => {

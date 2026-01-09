@@ -120,6 +120,77 @@ input {
   }
 }
 
+/* ============================================
+   MOBILE SIDEBAR SWIPE GESTURES
+   Native-feeling slide transitions for Capacitor
+   ============================================ */
+@media (max-width: 992px) {
+  .app-sidebar {
+    /* Smooth slide-in/out transition for native feel */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 0.3s ease;
+    transform: translateX(-100%);
+    will-change: transform;
+    /* Hardware acceleration for smooth 60fps animations */
+    -webkit-transform: translateX(-100%);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
+  /* RTL support: slide from right */
+  [dir="rtl"] .app-sidebar {
+    transform: translateX(100%);
+    -webkit-transform: translateX(100%);
+  }
+
+  /* When sidebar is open */
+  [data-toggled="open"] .app-sidebar {
+    transform: translateX(0);
+    -webkit-transform: translateX(0);
+    visibility: visible;
+  }
+
+  /* Responsive overlay with smooth fade */
+  #responsive-overlay {
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  #responsive-overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Touch feedback indicator - subtle left edge hint */
+  .swipe-edge-indicator {
+    position: fixed;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 60px;
+    background: rgba(var(--primary-rgb), 0.3);
+    border-radius: 0 4px 4px 0;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+    z-index: 45;
+  }
+
+  /* Show indicator on touch near edge */
+  .swipe-edge-indicator.visible {
+    opacity: 1;
+  }
+
+  /* RTL edge indicator */
+  [dir="rtl"] .swipe-edge-indicator {
+    left: auto;
+    right: 0;
+    border-radius: 4px 0 0 4px;
+  }
+}
+
 .erp-modal {
   z-index: 52 !important;
 }

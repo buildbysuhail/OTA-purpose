@@ -54,7 +54,7 @@ export interface TransactionData {
   invAccTransactions: InvAccTransaction[];
   attachments: any[];
   couponDetails: CouponDetails[]; // new
-  privilegeCardDetails: PrivilegeCardDetails[]; //new
+  privilegeCardDetails: PrivilegeCardDetails; //new
   bankCardDetails: List<SettlementDetails>[]; //new
   uPIDetails: List<SettlementDetails>[]; //new
 }
@@ -224,6 +224,8 @@ export interface TransactionMaster {
   address?: string;  // Check use the address1
   purInvNumber?: number;
   toBranchWarehouseID?: number; // for stock branch transfer
+  itemLoadVoucherPrefix?: string;
+  itemLoadVoucherNumber?: number;
 }
 
 export interface TransactionMaster3 {
@@ -752,7 +754,7 @@ export interface TransactionFormState {
   lastChoosedTemplate?: { id?: number, group?: string, formType?: string, customerType?: string }; // nizam
   itemPopup?:{isOpen?: boolean, index?:number}
   taxBreakdown?: { name: string, amount: number }[];
-  billDiscountPerc: number;
+  billDiscountPerc?: number;
 
   // Stocks
   chkCostFromExcel?: boolean;
@@ -762,6 +764,8 @@ export interface TransactionFormState {
   allPositiveStockToZero?: boolean;
   allNegativeStockToZero?: boolean;
   branchCheckbox?: boolean; // for stock branch transfer
+  checkedSO?: boolean; // Item load request - sales order
+  checkedSI?: boolean; // Item load request - sales
 }
 export interface GiftModel {
   productBatchID: number;

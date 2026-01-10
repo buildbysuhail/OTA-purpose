@@ -1566,6 +1566,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           <PrivilegeCardEntry
             isOpen={formState.privilegeCardOpen}
             onClose={handlePrivilegeCardClose}
+            formState={formState}
             t={t}
             data={""}
           />
@@ -1624,6 +1625,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           <PrivilegeCardEntry
             isOpen={formState.privilegeCardOpen}
             onClose={handlePrivilegeCardClose}
+            formState={formState}
             t={t}
             data={""}
           />

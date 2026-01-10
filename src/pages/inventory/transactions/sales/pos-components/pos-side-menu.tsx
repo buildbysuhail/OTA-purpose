@@ -632,6 +632,7 @@ const PosSideSection: React.FC<TransactionHeaderProps> = ({
           {chooseSubBtnModals === "privilegeCard" && (
             <PrivilegeCardEntry
               isOpen={formState.privilegeCardOpen}
+              formState={formState}
               onClose={handlePrivilegeCardClose}
               t={t}
               data={""}

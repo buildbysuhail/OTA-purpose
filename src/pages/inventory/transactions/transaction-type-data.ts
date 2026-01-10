@@ -307,6 +307,34 @@ export const initialTransactionDetailData: TransactionDetail = {
   taxCategoryID: 0,
   productCategoryID: 0,
 };
+
+  export const initialPrivilegeCardOutput: PrivilegeCardDetails = {
+  privilegeCardsID: 0,
+  branchID: 0,
+  cardNumber: '',
+  cardHolderName: '',
+  address1: '',
+  address2: '',
+  phone: '',
+  mobile: '',
+  priceCategoryID: 0,
+  expiryDate: new Date(0),
+  activatedDate: new Date(0),
+  createdUserID: 0,
+  createdDate: new Date(0),
+  modifiedUserID: 0,
+  modifiedDate: new Date(0),
+  cardType: '',
+  oBalance: 0,
+  cardBalance: 0,
+  dob: new Date(0),
+  email: '',
+  changeID: 0,
+  adjustAmt: 0,
+  marginWiseBalancePoint: 0,
+  totalBalance: 0
+};
+
 export const transactionInitialData: TransactionData = {
   master: TransactionMasterInitialData, 
   details:[],
@@ -314,7 +342,7 @@ export const transactionInitialData: TransactionData = {
   masterValidations: initialTransactionMasterValidations,
   invAccTransactions: [],
   couponDetails:[], //new
-  privilegeCardDetails:[], //new
+  privilegeCardDetails: initialPrivilegeCardOutput, //new
   bankCardDetails:[],// new
   uPIDetails:[],// new
 };
@@ -856,32 +884,6 @@ export const initialCouponDetails: CouponDetails = {
   totalAmount: 0,
   cardHolderName: '',
   couponID: 0
-};
-export const initialPrivilegeCardOutput: PrivilegeCardDetails = {
-  privilegeCardsID: 0,
-  branchID: 0,
-  cardNumber: '',
-  cardHolderName: '',
-  address1: '',
-  address2: '',
-  phone: '',
-  mobile: '',
-  priceCategoryID: 0,
-  expiryDate: new Date(0),
-  activatedDate: new Date(0),
-  createdUserID: 0,
-  createdDate: new Date(0),
-  modifiedUserID: 0,
-  modifiedDate: new Date(0),
-  cardType: '',
-  oBalance: 0,
-  cardBalance: 0,
-  dob: new Date(0),
-  email: '',
-  changeID: 0,
-  adjustAmt: 0,
-  marginWiseBalancePoint: 0,
-  totalBalance: 0
 };
 export const initialSettlement: SettlementDetails = {
   invTransactionMasterID: 0,

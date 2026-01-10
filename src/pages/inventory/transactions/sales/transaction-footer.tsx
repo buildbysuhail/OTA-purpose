@@ -636,6 +636,15 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               ))}
             </div>
             <div className="flex items-end gap-1">
+              {
+                formState.formElements.lBLCashPaid.visible&& (
+                  <>
+                  {formState.formElements.lBLCashPaid.label}
+                  </>
+                )
+              }
+            </div>
+            <div className="flex items-end gap-1">
           {formState.transaction.master.voucherType === VoucherType.SalesInvoice && (
               <div className="w-[130px]">
                 <ERPInput
@@ -842,6 +851,15 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               ))}
               <div className="flex items-end gap-1">
                 
+            <div className="flex items-end gap-1">
+              {
+                formState.formElements.lBLCashPaid.visible&& (
+                  <>
+                  {formState.formElements.lBLCashPaid.label}
+                  </>
+                )
+              }
+            </div>
           {formState.transaction.master.voucherType === VoucherType.SalesInvoice && (
                 <div className="w-[140px]">
                   <ERPInput
@@ -1248,7 +1266,18 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           </div>
         )}
         {!showSecondHalf && (
+          
           <div className="flex items-end gap-1">
+            
+            <div className="flex items-end gap-1">
+              {
+                formState.formElements.lBLCashPaid.visible&& (
+                  <>
+                  {formState.formElements.lBLCashPaid.label}
+                  </>
+                )
+              }
+            </div>
           {formState.transaction.master.voucherType === VoucherType.SalesInvoice && (
             <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
               <ERPInput

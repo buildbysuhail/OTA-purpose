@@ -439,6 +439,7 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   btnPrivilegeCard: { visible: true, disabled: false, label:""},
   btnPending: { visible: true, disabled: false, label:""},
   btnSr: { visible: true, disabled: false, label:""},
+  lBLCashPaid: { visible: false, disabled: false, label:"cash_paid"},
 
   // Need to verify the below 6
   lblProject: { visible: false, disabled: false, label: "" },

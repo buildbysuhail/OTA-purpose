@@ -1161,11 +1161,11 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         detail.adjQty = row.adjQty;
       }
       detail.pCode = row.productCode;
-      detail.productBatchID = row.productBatchID;
+      // detail.productBatchID = row.productBatchID;
       detail.barCode = row.autoBarcode;
       detail.product = row.productName;
-      detail.productID = row.productID;
-      detail.brandID = row.brandID;
+      // detail.productID = row.productID;
+      // detail.brandID = row.brandID;
       detail.brand = row.brandName;
       detail.arabicName = row.itemNameInSecondLanguage;
       detail.free = round(Number(row.free || 0), 4);
@@ -1616,6 +1616,9 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       master.transactionDate == ""
         ? moment().local().toISOString()
         : master.prevTransDate;
+    if ([VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(formState.transaction.master.voucherType as any)) {
+      master.cashReturned = master.cashReceived;
+    }
     master.cashAmt = master.cashReceived;
     master.fromWarehouseID =
       master.fromWarehouseID > 0
@@ -2267,22 +2270,48 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
 
 
         /* ---------------- VAT / GST ---------------- */
-        if (userSession.dbIdValue === "543140180640") {
-          // NAHLA
-          outDetail.vatPerc = product.sVatPerc;
-        } else {
+        if (clientSession.isAppGlobal) {
+          if (!outDetail.details2) {
+            outDetail.details2 = { ...initialTransactionDetails2 };
+          }
+          const voucherForm = formState.transaction.master.voucherForm?.toLowerCase();
           if (
-            ((["SI", "SR"].includes(formState.transaction.master.voucherType)) && (
-              formState.transaction.master.voucherForm === "VAT" ||
-              formState.initialFormType === "VAT"
-            )) || !["SI", "SR"].includes(formState.transaction.master.voucherType)
+            voucherForm === "interstate" ||
+            voucherForm === "int" ||
+            voucherForm === "import"
           ) {
-            outDetail.vatPerc = product.sVatPerc;
-            outDetail.cstPerc = product.salesExciseTaxPerc;
+            outDetail.details2!.igstPerc = product.s_IGSTPerc;
+            outDetail.details2!.additionalCessPerc = product.s_AdditionalCessPerc || 0;
+            outDetail.details2!.sgstPerc = 0;
+            outDetail.details2!.cgstPerc = 0;
           } else {
-            outDetail.vatPerc = 0;
+            outDetail.details2!.sgstPerc = product.s_CGSTPerc;
+            outDetail.details2!.cgstPerc = product.s_CGSTPerc;
+            outDetail.details2!.cessPerc = product.s_CessPerc;
+            outDetail.details2!.additionalCessPerc = product.s_AdditionalCessPerc;
+            outDetail.details2!.igstPerc = 0;
+          }
+
+
+        } else {
+          if (userSession.dbIdValue === "543140180640") {
+            // NAHLA
+            outDetail.vatPerc = product.sVatPerc;
+          } else {
+            if (
+              ((["SI", "SR"].includes(formState.transaction.master.voucherType)) && (
+                formState.transaction.master.voucherForm === "VAT" ||
+                formState.initialFormType === "VAT"
+              )) || !["SI", "SR"].includes(formState.transaction.master.voucherType)
+            ) {
+              outDetail.vatPerc = product.sVatPerc;
+              outDetail.cstPerc = product.salesExciseTaxPerc;
+            } else {
+              outDetail.vatPerc = 0;
+            }
           }
         }
+
 
         /* ---------------- PRICE CATEGORY ---------------- */
         if (product.priceCategoryPrice == 0) {

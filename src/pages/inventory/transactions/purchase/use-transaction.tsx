@@ -667,7 +667,7 @@ export const useTransaction = (
         { result: {} },
         loadVType
       ),
-      attachments: [...(vch.transaction?.attachments || [])],
+      attachments: [...(vch?.attachments || [])],
     };
 
     const summaryRes = calculateSummary(voucher.transaction.details, voucher, {

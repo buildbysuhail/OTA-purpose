@@ -135,7 +135,7 @@ export const useTransaction = (
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
-  const { round, roundAwayFromZero } = useNumberFormat();
+  const { round, roundAwayFromZero,getFormattedValueIgnoreRounding,getNumericFormat } = useNumberFormat();
   const clientSession = useAppSelector(
     (state: RootState) => state.ClientSession
   );
@@ -577,12 +577,16 @@ export const useTransaction = (
       voucher.transaction.master.gRNMasterID =
         voucher.transaction.master.invTransactionMasterID;
     }
-    voucher.transaction = {
+ voucher.transaction = {
       ...(vch || {}),
       master: {
         ...(vch?.master || {}),
         hasroundOff: vch?.master?.roundAmount != 0,
-        cashReceived: vch?.master?.cashReceived,
+        cashReceived: [VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(voucherType as any)
+          ? vch?.master?.cashReturned
+          : voucherType == VoucherType.SalesInvoice && !clientSession.isAppGlobal
+            ? getFormattedValueIgnoreRounding(vch?.master?.cashReceived)
+            : (vch?.master?.cashReceived).toString(getNumericFormat()),
         hasCashPaid: vch?.master?.cashReceived != 0,
       },
       details: await refactorDetails(
@@ -592,7 +596,7 @@ export const useTransaction = (
         { result: {} },
         loadVType
       ),
-      attachments: [...(vch.transaction?.attachments || [])],
+      attachments: [...(vch?.attachments || [])],
     };
 
     const summaryRes = calculateSummary(voucher.transaction.details, voucher, {

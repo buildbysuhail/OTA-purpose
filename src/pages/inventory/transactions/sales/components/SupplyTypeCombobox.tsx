@@ -2,8 +2,10 @@ import React from "react";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
 import { formStateMasterHandleFieldChange } from "../../reducer";
 import { VoucherElementProps } from "../../transaction-types";
+import VoucherType from "../../../../../enums/voucher-types";
 
 interface SupplyTypeComboboxProps extends VoucherElementProps {
+  isAppGlobal: boolean;
   handleKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>, field: string) => void;
   handleFieldKeyDown: (field: string, key: string) => void;
 }
@@ -14,9 +16,13 @@ const SupplyTypeCombobox: React.FC<SupplyTypeComboboxProps> = ({
   t,
   handleKeyDown,
   handleFieldKeyDown,
+  isAppGlobal
 }) => {
   return (
-    <ERPDataCombobox
+    <>
+    {
+      isAppGlobal && [VoucherType.SalesInvoice,VoucherType.SalesReturn].includes(formState.transaction.master.voucherType as any)  && (
+        <ERPDataCombobox
       localInputBox={formState?.userConfig?.inputBoxStyle}
       fetching={formState.transactionLoading}
       enableClearOption={false}
@@ -64,6 +70,10 @@ const SupplyTypeCombobox: React.FC<SupplyTypeComboboxProps> = ({
         handleKeyDown && handleKeyDown(e, "supplyType");
       }}
     />
+      )
+    }
+    </>
+   
   );
 };
 

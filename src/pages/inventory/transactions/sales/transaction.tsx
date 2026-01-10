@@ -2257,7 +2257,7 @@ debugger;
                         goToPreviousPage={goToPreviousPage}
                         save={save}
                         selectAttachment={selectAttachment}
-                        isDropUpOpen={isDropUpOpen}
+                        isAppGlobal={clientSession.isAppGlobal}
                         toggleDropup={toggleFooterDropup}
                         footerLayout={"vertical"}
                         applicationSettings={applicationSettings}
@@ -2452,7 +2452,7 @@ debugger;
                   goToPreviousPage={goToPreviousPage}
                   save={save}
                   selectAttachment={selectAttachment}
-                  isDropUpOpen={isDropUpOpen}
+                  isAppGlobal={clientSession.isAppGlobal}
                   toggleDropup={toggleFooterDropup}
                   applicationSettings={applicationSettings}
                   loadAndSetTransVoucher={loadAndSetTransVoucher}
@@ -2508,7 +2508,7 @@ debugger;
             goToPreviousPage={goToPreviousPage}
             save={save}
             selectAttachment={selectAttachment}
-            isDropUpOpen={isDropUpOpen}
+            isAppGlobal={clientSession.isAppGlobal}
             toggleDropup={toggleFooterDropup}
             footerLayout={"horizontal"}
             applyDiscountsToItems={applyDiscountsToItems}

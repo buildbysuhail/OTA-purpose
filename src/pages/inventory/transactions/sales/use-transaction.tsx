@@ -134,7 +134,7 @@ export const useTransaction = (
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
-  const { round , roundAwayFromZero} = useNumberFormat();
+  const { round, roundAwayFromZero } = useNumberFormat();
   const clientSession = useAppSelector(
     (state: RootState) => state.ClientSession
   );
@@ -350,7 +350,7 @@ export const useTransaction = (
       );
     }
 
-debugger;
+    debugger;
     let _formState = await loadTransVoucher(
       usingManualInvNumber,
       voucherNumber,
@@ -426,7 +426,7 @@ debugger;
     loadUserConfig: boolean = false
   ) => {
     const userConfig = _formState.userConfig;
-    
+
     const ct = {
       themeName: userConfig?.themeName ?? "Custom",
       gridFontSize: userConfig?.gridFontSize,
@@ -625,7 +625,6 @@ debugger;
         ? summaryRes.summary
         : initialInventoryTotals
     ) as SummaryItems;
-
     voucher = await calculateTotal(
       voucher.transaction.master,
       voucher.summary,
@@ -643,6 +642,18 @@ debugger;
     voucher = disableControlsFn(voucher);
 
     // Handle master data
+    if (voucher.transaction.master.voucherType == VoucherType.SalesReturn && userSession.dbIdValue === "SAMAPLASTICS") {
+      voucher.formElements.lBLCashPaid.visible = true;
+      if (voucher.transaction.master.cashReturned < voucher.transaction.master.grandTotal) {
+        if (voucher.transaction.master.cashReturned > 0) {
+          voucher.formElements.lBLCashPaid.label = "PARTIALLY PAID"
+        } else {
+          voucher.formElements.lBLCashPaid.label = "CREDIT"
+        }
+      } else {
+        voucher.formElements.lBLCashPaid.label = "CASH PAID"
+      }
+    }
     voucher.formElements.lblPosted.visible = voucher.isPostedTransaction;
     voucher.formElements.cbCostCentre.disabled =
       voucher.transaction.master.costCentreID <= 0 &&
@@ -745,26 +756,26 @@ debugger;
     return response;
   };
 
-type CreditLimitResult = {
-  exceeded: boolean;
-  message: string;
-};
+  type CreditLimitResult = {
+    exceeded: boolean;
+    message: string;
+  };
 
-const checkThePartyCreditLimit = (
-  partyLedgerID: number,
-  grandTotal: number,
-  oldPartyLedgerID: number,
-  previousGrandTotal: number
-): CreditLimitResult => {
-  let result = false;
-  let msg = "";
+  const checkThePartyCreditLimit = (
+    partyLedgerID: number,
+    grandTotal: number,
+    oldPartyLedgerID: number,
+    previousGrandTotal: number
+  ): CreditLimitResult => {
+    let result = false;
+    let msg = "";
 
-  let partyBalance = 0;
-  let creditAmt = 0;
-  let dueBalance = 0;
-  let creditDays = 0;
+    let partyBalance = 0;
+    let creditAmt = 0;
+    let dueBalance = 0;
+    let creditDays = 0;
 
-  try {
+    try {
 
       creditAmt = formState.ledgerData.creditAmount || 0;
       creditDays = formState?.ledgerData.creditDays || 0;
@@ -804,15 +815,15 @@ const checkThePartyCreditLimit = (
           result = false;
         }
       }
-  } catch {
-    return { exceeded: result, message: msg };
-  }
+    } catch {
+      return { exceeded: result, message: msg };
+    }
 
-  return {
-    exceeded: result,
-    message: msg,
+    return {
+      exceeded: result,
+      message: msg,
+    };
   };
-};
 
   async function validate(): Promise<boolean> {
     const master = formState.transaction.master;
@@ -820,56 +831,56 @@ const checkThePartyCreditLimit = (
 
     const creditMode = applicationSettings.accountsSettings.blockOnCreditLimit; // "Block" | "Allow Cash Sales" | "Warn"
 
-const creditRes = checkThePartyCreditLimit(
-  formState.transaction.master.ledgerID,
-  formState.transaction.master.grandTotal || 0,
-  formState.oldLedgerId || 0,
-  formState.previousGrandTotal || 0
-);
+    const creditRes = checkThePartyCreditLimit(
+      formState.transaction.master.ledgerID,
+      formState.transaction.master.grandTotal || 0,
+      formState.oldLedgerId || 0,
+      formState.previousGrandTotal || 0
+    );
 
-/* ---------------- BLOCK ---------------- */
-if (creditMode === "Block") {
-  if (creditRes.exceeded) {
-    ERPAlert.show({
-      icon: "error",
-      title: "Credit Limit Exceeded",
-      text: `${creditRes.message}. Cannot be proceeded.`,
-      confirmButtonText: "OK",
-    });
-    return false;
-  }
-}
-
-/* ----------- ALLOW CASH SALES ----------- */
-if (creditMode === "Allow Cash Sales") {
-  if (creditRes.exceeded) {
-    const grandTotal = formState.transaction.master.grandTotal || 0;
-    const cashReceived = formState.transaction.master.cashReceived || 0;
-    const cardAmount = formState.transaction.master.bankAmt || 0;
-
-    if (grandTotal > cashReceived + cardAmount) {
-      ERPAlert.show({
-        icon: "warning",
-        title: "Credit Limit Exceeded",
-        text: `${creditRes.message}. Please proceed with Cash/Bank receipt amount`,
-        confirmButtonText: "OK",
-      });
-      return false;
+    /* ---------------- BLOCK ---------------- */
+    if (creditMode === "Block") {
+      if (creditRes.exceeded) {
+        ERPAlert.show({
+          icon: "error",
+          title: "Credit Limit Exceeded",
+          text: `${creditRes.message}. Cannot be proceeded.`,
+          confirmButtonText: "OK",
+        });
+        return false;
+      }
     }
-  }
-}
 
-/* ---------------- WARN ---------------- */
-if (creditMode === "Warn") {
-  if (creditRes.exceeded) {
-    ERPAlert.show({
-      icon: "warning",
-      title: "Warning",
-      text: creditRes.message,
-      confirmButtonText: "OK",
-    });
-  }
-}
+    /* ----------- ALLOW CASH SALES ----------- */
+    if (creditMode === "Allow Cash Sales") {
+      if (creditRes.exceeded) {
+        const grandTotal = formState.transaction.master.grandTotal || 0;
+        const cashReceived = formState.transaction.master.cashReceived || 0;
+        const cardAmount = formState.transaction.master.bankAmt || 0;
+
+        if (grandTotal > cashReceived + cardAmount) {
+          ERPAlert.show({
+            icon: "warning",
+            title: "Credit Limit Exceeded",
+            text: `${creditRes.message}. Please proceed with Cash/Bank receipt amount`,
+            confirmButtonText: "OK",
+          });
+          return false;
+        }
+      }
+    }
+
+    /* ---------------- WARN ---------------- */
+    if (creditMode === "Warn") {
+      if (creditRes.exceeded) {
+        ERPAlert.show({
+          icon: "warning",
+          title: "Warning",
+          text: creditRes.message,
+          confirmButtonText: "OK",
+        });
+      }
+    }
 
     // Stock update restriction
 
@@ -1314,25 +1325,25 @@ if (creditMode === "Warn") {
         } else {
           // dispatch(acc)
           const isMobileNumberError = saveRes?.errorCode === 3055 || saveRes?.message?.toLowerCase().includes("please enter the mobile number,invalid mobile number");
-            if (isMobileNumberError) {
-              ERPAlert.show({
-                icon: "warning",
-                title: saveRes.message,
-                onConfirm: () => {
-                  // Open the sales header dropdown and focus mobile number field
-                  setIsDropDownOpen?.({ open: true, autoAddressFocus: false });
-                  setTimeout(() => {
-                    mobileNumRef?.current?.focus();
-                    mobileNumRef?.current?.select();
-                  }, 100);
-                },
-              });
-            }else{
-              ERPAlert.show({
-                icon: "warning",
-                title: saveRes.message,
-              });
-            }
+          if (isMobileNumberError) {
+            ERPAlert.show({
+              icon: "warning",
+              title: saveRes.message,
+              onConfirm: () => {
+                // Open the sales header dropdown and focus mobile number field
+                setIsDropDownOpen?.({ open: true, autoAddressFocus: false });
+                setTimeout(() => {
+                  mobileNumRef?.current?.focus();
+                  mobileNumRef?.current?.select();
+                }, 100);
+              },
+            });
+          } else {
+            ERPAlert.show({
+              icon: "warning",
+              title: saveRes.message,
+            });
+          }
 
           dispatch(
             formStateTransactionUpdate({
@@ -1569,7 +1580,7 @@ if (creditMode === "Warn") {
     }
   };
   const handleRemoveItem = async (slNo: string) => {
-debugger;
+    debugger;
     dispatch(
       formStateTransactionDetailsRowRemove({
         slNo: slNo,
@@ -2896,7 +2907,7 @@ debugger;
   };
 
 
- const handleChangeUnit = async (
+  const handleChangeUnit = async (
     outDetail: DeepPartial<TransactionDetail>,
     detail: TransactionDetail,
     actualPriceVisible: boolean,
@@ -2905,67 +2916,67 @@ debugger;
     rowIndex: number
   ) => {
     const apiParams = {
-  productBatchId: detail.productBatchID,
-  unitId: outDetail.unitID,
-  priceCategoryId: formState.transaction.master.priceCategoryID,
-  ledgerId: formState.transaction.master.ledgerID,
-  vatPerc: detail.vatPerc,
+      productBatchId: detail.productBatchID,
+      unitId: outDetail.unitID,
+      priceCategoryId: formState.transaction.master.priceCategoryID,
+      ledgerId: formState.transaction.master.ledgerID,
+      vatPerc: detail.vatPerc,
 
-  // isCustomerLspVisible: formState.gridColumns.find(x => x.dataField == "lsp")?.visible == true,
-  // showRateBeforeTax: showRateBeforeTax,
-  // userSalesPriceForTransfer: userSalesPriceForTransfer,
-  // formType: formType,
-};
+      // isCustomerLspVisible: formState.gridColumns.find(x => x.dataField == "lsp")?.visible == true,
+      // showRateBeforeTax: showRateBeforeTax,
+      // userSalesPriceForTransfer: userSalesPriceForTransfer,
+      // formType: formType,
+    };
 
 
-      const query = new URLSearchParams(
-        Object.fromEntries(
-          Object.entries(apiParams).map(([k, v]) => [k, String(v ?? "")])
-        )
-      ).toString();
+    const query = new URLSearchParams(
+      Object.fromEntries(
+        Object.entries(apiParams).map(([k, v]) => [k, String(v ?? "")])
+      )
+    ).toString();
     const url = `${Urls.inv_transaction_base}${transactionType}/ProductBatchUnitPrices/${detail.productBatchID}/${outDetail.unitID}/${actualPriceVisible}`;
-    
-    const res = await api.getAsync(url );
-     outState = await calculateRowAmount(
-        Object.assign(detail, {...outDetail, ...res}),
-        columnName as any,
-        {
-          result: {
-            transaction: {
-              details: [{...outDetail, ...res}],
-            },
+
+    const res = await api.getAsync(url);
+    outState = await calculateRowAmount(
+      Object.assign(detail, { ...outDetail, ...res }),
+      columnName as any,
+      {
+        result: {
+          transaction: {
+            details: [{ ...outDetail, ...res }],
           },
         },
-        true
+      },
+      true
+    );
+    if (rowIndex > -1) {
+      const details = [...formState.transaction.details];
+      let final = { ...detail, ...outState!.transaction!.details![0] };
+      details[rowIndex] = final;
+      const summaryRes = calculateSummary(details, formState, { result: {} });
+
+      const totalRes = await calculateTotal(
+        formState.transaction.master,
+        summaryRes.summary as SummaryItems,
+        formState.formElements,
+        { result: {} }
       );
-      if (rowIndex > -1) {
-        const details = [...formState.transaction.details];
-        let final = { ...detail, ...outState!.transaction!.details![0] };
-        details[rowIndex] = final;
-        const summaryRes = calculateSummary(details, formState, { result: {} });
-
-        const totalRes = await calculateTotal(
-          formState.transaction.master,
-          summaryRes.summary as SummaryItems,
-          formState.formElements,
-          { result: {} }
-        );
-        if (totalRes) {
-          totalRes.summary = summaryRes.summary;
-          totalRes.transaction = totalRes.transaction ?? {};
-          totalRes.transaction.details = outState?.transaction
-            ?.details as TransactionDetail[];
-        }
-        outState = totalRes;
-
-        dispatch(
-          formStateHandleFieldChangeKeysOnly({
-            fields: totalRes,
-            updateOnlyGivenDetailsColumns: true,
-            rowIndex: rowIndex,
-          })
-        );
+      if (totalRes) {
+        totalRes.summary = summaryRes.summary;
+        totalRes.transaction = totalRes.transaction ?? {};
+        totalRes.transaction.details = outState?.transaction
+          ?.details as TransactionDetail[];
       }
+      outState = totalRes;
+
+      dispatch(
+        formStateHandleFieldChangeKeysOnly({
+          fields: totalRes,
+          updateOnlyGivenDetailsColumns: true,
+          rowIndex: rowIndex,
+        })
+      );
+    }
     return outState;
   };
 
@@ -3147,8 +3158,8 @@ debugger;
         if (event.altKey && event.key.toUpperCase() === "A") {
           event.preventDefault();
           setTimeout(() => {
-              ledgerIdRef?.current?.focus();
-              ledgerIdRef?.current?.select();
+            ledgerIdRef?.current?.focus();
+            ledgerIdRef?.current?.select();
           }, 100);
         }
         // Alt + M => salesman focus
@@ -3201,17 +3212,17 @@ debugger;
         // ctrl + F11 => if draft mode checked then do something
         if (event.ctrlKey && event.key.toUpperCase() === "F11") {
           const currentFormState = formStateRef.current;
-          if(currentFormState?.draftMode){
+          if (currentFormState?.draftMode) {
             dispatch(
-                  formStateHandleFieldChange({
-                    fields: { draftModeModal: true },
-                  })
-                );
+              formStateHandleFieldChange({
+                fields: { draftModeModal: true },
+              })
+            );
           }
         }
         if (event.key.toUpperCase() === "ESCAPE") {
           const currentFormState = formStateRef.current;
-          if(currentFormState.isUserConfigOpen === true){
+          if (currentFormState.isUserConfigOpen === true) {
             dispatch(formStateHandleFieldChange(
               { fields: { isUserConfigOpen: false } }
             ))
@@ -3236,26 +3247,26 @@ debugger;
           break;
         case "F":
         case "f":
-          if(columnName === "qty"){
-            if(formState.gridColumns?.find((x) => x.dataField == "free")?.visible){
-              let data = { ...formState.transaction.details[rowIndex]};
+          if (columnName === "qty") {
+            if (formState.gridColumns?.find((x) => x.dataField == "free")?.visible) {
+              let data = { ...formState.transaction.details[rowIndex] };
               data.free == 1;
               data.qty = 0;
               let sd = await calculateRowAmount(
-              data,
-              columnName,
-              {
-                result: {
-                  transaction: {
-                    details: [data],
+                data,
+                columnName,
+                {
+                  result: {
+                    transaction: {
+                      details: [data],
+                    },
                   },
-                },
-                formStateHandleFieldChangeKeysOnly:
-                  formStateHandleFieldChangeKeysOnly,
-              },false,rowIndex
-            );
+                  formStateHandleFieldChangeKeysOnly:
+                    formStateHandleFieldChangeKeysOnly,
+                }, false, rowIndex
+              );
 
-            break;  
+              break;
             }
           }
         case "q":
@@ -3282,49 +3293,49 @@ debugger;
           }
           break;
 
-          case "m":
-          case "M":
-            if (columnName === "qty") {
-              const data: TransactionDetail =
-                formState.transaction.details[rowIndex];
-              dispatch(
-                commonParams.formStateHandleFieldChangeKeysOnly({
-                  fields: {
-                    showQuantityFactorsM: {
-                      visible: true,
-                      rowIndex: rowIndex,
-                      qtyDesc: data.productDescription,
-                    },
+        case "m":
+        case "M":
+          if (columnName === "qty") {
+            const data: TransactionDetail =
+              formState.transaction.details[rowIndex];
+            dispatch(
+              commonParams.formStateHandleFieldChangeKeysOnly({
+                fields: {
+                  showQuantityFactorsM: {
+                    visible: true,
+                    rowIndex: rowIndex,
+                    qtyDesc: data.productDescription,
                   },
-                })
-              );
-            }
-            break;
+                },
+              })
+            );
+          }
+          break;
 
-          case "u":
-          case "U":
-            if (columnName === "barCode") {
-              const details = formState.transaction.details;
-              const res = focusColumn(rowIndex, "unitPrice");
-              setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
-            }
-            break;
-
-          case "r":
-          case "R":
+        case "u":
+        case "U":
+          if (columnName === "barCode") {
             const details = formState.transaction.details;
-            if (columnName === "barCode") {
-              if(formState.gridColumns?.find((x)=> x.dataField === "ratePlusTax")?.readOnly === false){
-                const res = focusColumn(rowIndex, "ratePlusTax");
+            const res = focusColumn(rowIndex, "unitPrice");
+            setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
+          }
+          break;
+
+        case "r":
+        case "R":
+          const details = formState.transaction.details;
+          if (columnName === "barCode") {
+            if (formState.gridColumns?.find((x) => x.dataField === "ratePlusTax")?.readOnly === false) {
+              const res = focusColumn(rowIndex, "ratePlusTax");
+              setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
+            } else {
+              if (formState.gridColumns?.find((x) => x.dataField === "unitPrice")?.readOnly === false) {
+                const res = focusColumn(rowIndex, "unitPrice");
                 setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
-              }else{
-                if(formState.gridColumns?.find((x)=> x.dataField === "unitPrice")?.readOnly === false){
-                  const res = focusColumn(rowIndex, "unitPrice");
-                  setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
-                }
               }
             }
-            break;
+          }
+          break;
         // case "M":
         // case "m":
         //   if (isCtrlPressed) {
@@ -3340,14 +3351,14 @@ debugger;
         case "i":
         case "I":
           if (isCtrlPressed) {
-            if(hasRight("PSUMRPT", UserAction.Show)){
+            if (hasRight("PSUMRPT", UserAction.Show)) {
               dispatch(
-              formStateHandleFieldChange({
-                fields: {
-                  showProductInformation: { show: true, index: rowIndex },
-                },
-              })
-            );
+                formStateHandleFieldChange({
+                  fields: {
+                    showProductInformation: { show: true, index: rowIndex },
+                  },
+                })
+              );
             }
             return { handled: true };
           }
@@ -4246,36 +4257,36 @@ debugger;
 
         if (formState.formElements?.priceCategory.visible) {
 
-        const priceCategoryId = Number(ledgerData?.PriceCategoryID || 0);
-        const partyCategoryId = Number(ledgerData?.PartyCategoryID || 0);
+          const priceCategoryId = Number(ledgerData?.PriceCategoryID || 0);
+          const partyCategoryId = Number(ledgerData?.PartyCategoryID || 0);
 
-        if (priceCategoryId > 0) {
+          if (priceCategoryId > 0) {
             ret = {
-            ...ret,
-            transaction: {
-              ...ret.transaction,
-              master: {
-                ...ret.transaction?.master,
-                priceCategoryID: priceCategoryId,
+              ...ret,
+              transaction: {
+                ...ret.transaction,
+                master: {
+                  ...ret.transaction?.master,
+                  priceCategoryID: priceCategoryId,
+                },
               },
-            },
-          };
-        }
-
-        // DB-specific rule
-        if (userSession.dbIdValue === "543140180640") {
-          const datas = await getApLocalData("PriceCategories");
-          const data = datas?.find((dc: any) => dc.id === priceCategoryId);
-          if (data && data.name  === "Delivery Customer") {
-            await ERPAlert.show({
-              icon: "info",
-              title: "Delivery Customer",
-              text: "Delivery Customer.!",
-            });
+            };
           }
+
+          // DB-specific rule
+          if (userSession.dbIdValue === "543140180640") {
+            const datas = await getApLocalData("PriceCategories");
+            const data = datas?.find((dc: any) => dc.id === priceCategoryId);
+            if (data && data.name === "Delivery Customer") {
+              await ERPAlert.show({
+                icon: "info",
+                title: "Delivery Customer",
+                text: "Delivery Customer.!",
+              });
+            }
+          }
+          // setPartyColor(partyCategoryId);
         }
-        // setPartyColor(partyCategoryId);
-      }
 
         if (!clientSession.isAppGlobal) {
           let customerType = "";
@@ -4654,73 +4665,78 @@ debugger;
       // showAlert(err.message || "GiftOnBilling Error");
     }
   };
-  const applyTaxOnBillDiscount = async (billDiscount: number, ) => {
+  const applyTaxOnBillDiscount = async (billDiscount: number,) => {
     debugger;
-  if (
-    !applicationSettings.branchSettings.enableTaxOnBillDiscount 
-  ) {
-    return;
-  }
+    if (
+      !applicationSettings.branchSettings.enableTaxOnBillDiscount
+    ) {
+      return;
+    }
 
-  try {
-    const taxPerc = getMaxTaxPercInItemList();
-    // if (taxPerc < 0) return;
+    try {
+      const taxPerc = getMaxTaxPercInItemList();
+      // if (taxPerc < 0) return;
 
-    const billDiscTemp = billDiscount;
+      const billDiscTemp = billDiscount;
 
-    // Equivalent to MidpointRounding.AwayFromZero (2 decimals)
-    const netDisc = roundAwayFromZero(
-      billDiscount / (1 + taxPerc / 100),
-      2
-    );
+      // Equivalent to MidpointRounding.AwayFromZero (2 decimals)
+      const netDisc = roundAwayFromZero(
+        billDiscount / (1 + taxPerc / 100),
+        2
+      );
 
-    let taxOnDisc = roundAwayFromZero(
-      (billDiscTemp* taxPerc/ 100),3
-    );
-    if (Math.abs(billDiscount * 100 - taxOnDisc * 100) >= 0.75) {
-  const dp = applicationSettings.mainSettings.decimalPoints;
+      let taxOnDisc = roundAwayFromZero(
+        (billDiscTemp * taxPerc / 100), 3
+      );
+      if (Math.abs(billDiscount * 100 - taxOnDisc * 100) >= 0.75) {
+        const dp = applicationSettings.mainSettings.decimalPoints;
 
-  // MidpointRounding.AwayFromZero equivalent
-  const factor = Math.pow(10, dp);
-  taxOnDisc =
-    Math.sign(taxOnDisc) *
-    Math.round(Math.abs(taxOnDisc) * factor) /
-    factor;
-} else {
-  taxOnDisc = billDiscount == 0 ? 0 : formState.transaction.master.taxOnDiscount || 0;
-}
-    const res =await calculateTotal({...formState.transaction.master, taxOnDiscount: taxOnDisc,billDiscount:billDiscount}, formState.summary as SummaryItems, formState.formElements, { result: {transaction: {
-            master: { 
+        // MidpointRounding.AwayFromZero equivalent
+        const factor = Math.pow(10, dp);
+        taxOnDisc =
+          Math.sign(taxOnDisc) *
+          Math.round(Math.abs(taxOnDisc) * factor) /
+          factor;
+      } else {
+        taxOnDisc = billDiscount == 0 ? 0 : formState.transaction.master.taxOnDiscount || 0;
+      }
+      const res = await calculateTotal({ ...formState.transaction.master, taxOnDiscount: taxOnDisc, billDiscount: billDiscount }, formState.summary as SummaryItems, formState.formElements, {
+        result: {
+          transaction: {
+            master: {
               taxOnDiscount: taxOnDisc,
             }
-        }} });
-    dispatch(
-      formStateHandleFieldChangeKeysOnly({
-        fields: res},)
-    );
-    
-  } catch {
-    // intentionally ignored (same as C#)
-  }
-};
+          }
+        }
+      });
+      dispatch(
+        formStateHandleFieldChangeKeysOnly({
+          fields: res
+        },)
+      );
+
+    } catch {
+      // intentionally ignored (same as C#)
+    }
+  };
 
   const getMaxTaxPercInItemList = (): number => {
-  let maxTaxPerc = 0;
+    let maxTaxPerc = 0;
 
-  try {
-    const list = formState.transaction.details.filter(x => x.productID > 0);
-    for (const row of list) {
-      const vat = row.vatPerc ?? 0;
-      if (vat > maxTaxPerc) {
-        maxTaxPerc = vat;
+    try {
+      const list = formState.transaction.details.filter(x => x.productID > 0);
+      for (const row of list) {
+        const vat = row.vatPerc ?? 0;
+        if (vat > maxTaxPerc) {
+          maxTaxPerc = vat;
+        }
       }
+    } catch {
+      // silent catch (same as C#)
     }
-  } catch {
-    // silent catch (same as C#)
-  }
 
-  return maxTaxPerc;
-};
+    return maxTaxPerc;
+  };
 
 
 

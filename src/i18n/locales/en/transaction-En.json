@@ -1136,7 +1136,13 @@
 
   "please_enter_otp":"Please Enter OTP",
   "verify_otp":"Verify OTP",
-  "please_enter_valid_otp":"Please Enter Valid OTP!"
+  "please_enter_valid_otp":"Please Enter Valid OTP!",
+
+  "product_not_found":"Product Not Found",
+  "product_not_found_please_check!":"Product Not Found, Please Check!,",
+  "qualified_for_gift":"Qualified for Gift",
+  "at_price":" at price ",
+  "proceed":"proceed"
 
 
 

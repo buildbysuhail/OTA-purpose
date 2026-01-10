@@ -37,7 +37,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   const clientSession = useAppSelector((state: RootState) => state.ClientSession);
   const formState = useAppSelector((state: RootState) => state.InventoryTransaction);
-  const { t } = useTranslation();
+  const { t } = useTranslation("transaction");
   const {
     round,
     getFormattedValueIgnoreRoundingToNumber,
@@ -3075,8 +3075,8 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
 
   const checkGiftOnBilling = async (grandTotal: number) => {
     try {
-      if (!applicationSettings.productsSettings.giftOnBilling && applicationSettings.productsSettings.giftOnBillingAs != "CashCoupons") {
-        if (!formState.giftClaimed && formState.transaction.master.invTransactionMasterID > 0) {
+      if (applicationSettings.productsSettings.giftOnBilling && applicationSettings.productsSettings.giftOnBillingAs != "CashCoupons") {
+        if (!formState.giftClaimed && !(formState.transaction.master.invTransactionMasterID > 0)) {
           const api = new APIClient();
           const param = {
             grandTotal: grandTotal,
@@ -3409,7 +3409,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       if (!gt) return;
 
       const details = formState.transaction.details; // your SI items list
-
+      let outRow;
       for (let i = 0; i < details.length; i++) {
         const row = details[i];
         if (!row) continue;
@@ -3424,9 +3424,9 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
           rowQty === 1
         ) {
           const confirm = await ERPAlert.show({
-            icon: "info",
-            title: t("warning"),
-            text: t(`Qualified for Gift: ${gt.productName} at price ${price}. Proceed?`),
+            icon: "question",
+            title: t("qualified_for_gift"),
+            text: `${t("qualified_for_gift")} ${gt.productName} ${t("at_price")} ${price}. ${t("proceed")}`,
             confirmButtonText: t("yes"),
             cancelButtonText: t("no"),
             showCancelButton: true,
@@ -3435,14 +3435,17 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
             },
           });
           if (confirm) {
-            row.qty = qty;
-            row.schemeFreeQty = qty;
-            row.unitPrice = 0;
-            row.vatPerc = 0;
-            row.discPerc = 0;
-            row.ratePlusTax = 0;
+            let updatedRow = {
+              ...row,
+            qty: qty,
+            schemeFreeQty: qty,
+            unitPrice: 0,
+            vatPerc: 0,
+            discPerc: 0,
+            ratePlusTax: 0            
+          }
 
-            const outRow = await calculateRowAmount(row, "qty", { result: {} }, false, i);
+            outRow = await calculateRowAmount(updatedRow, "qty", { result: {} }, false, i);
             finalRows[i] = outRow.transaction!.details![0] as TransactionDetail;
             giftClaimed = true;
             result = true;
@@ -3454,35 +3457,16 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
 
       if (!result) {
         ERPAlert.show({
-          icon: "warning",
-          title: "Product Not Found",
-          text: "Product not found in bill. Please check!",
-          confirmButtonText: "OK",
+          icon: "info",
+          title: t("product_not_found"),
+          text: t("product_not_found_please_check!"),
+          confirmButtonText: t("ok"),
         });
       } else {
-        const summaryRes = calculateSummary(details, formState, {
-          result: { giftClaimed: giftClaimed },
-        });
-        let totalRes = await calculateTotal(
-          formState.transaction.master,
-          summaryRes
-            ? (summaryRes.summary as SummaryItems)
-            : initialInventoryTotals,
-          formState.formElements,
-          {
-            result: {},
-          }
-        );
-        if (totalRes) {
-          totalRes.summary = summaryRes.summary;
-          totalRes.transaction = totalRes.transaction ?? {};
-          totalRes.transaction.master = totalRes.transaction.master ?? {};
-          totalRes.transaction.master.billDiscount = 0;
-          totalRes.transaction.details = finalRows
-
+        if (outRow) {
           dispatch(
             formStateHandleFieldChangeKeysOnly({
-              fields: totalRes,
+              fields: outRow,
               updateOnlyGivenDetailsColumns: true,
             })
           );
@@ -3491,9 +3475,9 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     } catch (err: any) {
       ERPAlert.show({
         icon: "error",
-        title: "Error",
-        text: err.message || "checkTheProductPriceInSchemes error",
-        confirmButtonText: "OK",
+        title: t("error"),
+        text: t(err.message),
+        confirmButtonText: t("ok"),
       });
     }
   };
@@ -3503,6 +3487,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     giftModels?: GiftModel[]
   ) => {
     try {
+      alert("ihfuytdfjh")
       let result = false;
 
       let finalRows = [

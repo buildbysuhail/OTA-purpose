@@ -1132,7 +1132,13 @@
 
   "please_enter_otp": "يرجى إدخال رمز التحقق",
   "verify_otp": "تحقق من رمز التحقق",
-  "please_enter_valid_otp": "يرجى إدخال رمز تحقق صحيح!"
+  "please_enter_valid_otp": "يرجى إدخال رمز تحقق صحيح!",
+
+  "product_not_found": "المنتج غير موجود",
+  "product_not_found_please_check!": "المنتج غير موجود، يرجى التحقق!",
+  "qualified_for_gift": "مؤهل للحصول على هدية",
+  "at_price": " بسعر ",
+  "proceed": "استمرار"
 
 
 }

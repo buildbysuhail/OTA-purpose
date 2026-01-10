@@ -57,7 +57,8 @@ export type LoadAndSetTransVoucherFn = (
   loadFType?: string,
   loadPrefix?: string,
   showLoading?: boolean,
-  disablePnlMasters?: boolean
+  disablePnlMasters?: boolean,
+  invokeUsingVoucherNumber?: boolean,
 ) => Promise<boolean | undefined>; // ✅ fix return type
 
 const api = new APIClient();
@@ -310,7 +311,8 @@ export const useTransaction = (
     loadFType,
     loadPrefix,
     showLoading,
-    disablePnlMasters = true
+    disablePnlMasters = true,
+    invokeUsingVoucherNumber = true,
   ) => {
 
     const _s_isDirty = isDirtyTransaction(
@@ -361,7 +363,9 @@ export const useTransaction = (
       transactionMasterID,
       loadVType,
       loadFType,
-      loadPrefix
+      loadPrefix,
+      transactionMasterID,
+      invokeUsingVoucherNumber
     );
 
 
@@ -474,9 +478,9 @@ export const useTransaction = (
     loadVType?: string,
     loadFType?: string,
     loadPrefix?: string,
-    pDTInvTransMasterID?: number
+    pDTInvTransMasterID?: number,
+    invokeUsingVoucherNumber: boolean = true,
   ) => {
-    loadVType = loadVType ?? "PI";
     let voucher: TransactionFormState = JSON.parse(
       JSON.stringify({
         ...formState,
@@ -486,51 +490,17 @@ export const useTransaction = (
 
     let url = `${Urls.inv_transaction_base}${transactionType}`;
 
-    let _voucherNumber =
-      voucherNumber ?? (formState.transaction?.master?.voucherNumber || 0);
-    let out_voucherNumber =
-      voucherNumber ?? (formState.transaction?.master?.voucherNumber || 0);
     let out_voucherType =
       voucherType ?? (formState.transaction?.master?.voucherType || "");
     let out_voucherForm =
       formType ?? (formState.transaction?.master?.voucherForm || "");
-    let out_voucherPrefix =
-      voucherPrefix ?? (formState.transaction?.master?.voucherPrefix || "");
 
-    if (loadVType == "PO") {
-      out_voucherNumber = manualInvoiceNumber ?? 0;
-      out_voucherType = loadVType;
-      out_voucherForm = loadFType ?? "";
-      out_voucherPrefix = loadPrefix ?? "";
-    }
-    if (loadVType == "GRN") {
-      out_voucherNumber = manualInvoiceNumber ?? 0;
-      out_voucherType = loadVType;
-      out_voucherForm = loadFType ?? "";
-      out_voucherPrefix = loadPrefix ?? "";
-      url = url + "/ByGRN";
-    }
-    if (loadVType == "GRR") {
-      out_voucherNumber = manualInvoiceNumber ?? 0;
-      out_voucherType = loadVType;
-      out_voucherForm = loadFType ?? "";
-      out_voucherPrefix = loadPrefix ?? "";
-      url = url + "/ByGRN";
-    }
-    if (loadVType == "PI_Ref") {
-      out_voucherNumber = manualInvoiceNumber ?? 0;
-      out_voucherType = "PI";
-      out_voucherForm = "VAT";
-      out_voucherPrefix = loadPrefix ?? "";
-      url = url + "/ByReferenceNo";
-    }
-
-    if (_voucherNumber == undefined || _voucherNumber <= 0) {
+    if (voucherNumber == undefined || voucherNumber <= 0) {
       return voucher;
     }
     const params: Record<any, any> = {
-      VoucherNumber: out_voucherNumber, // Ensuring it's always a string
-      voucherPrefix: out_voucherPrefix,
+      VoucherNumber: voucherNumber, // Ensuring it's always a string
+      voucherPrefix: voucherPrefix,
       voucherType: out_voucherType,
       voucherForm: out_voucherForm,
       InvokeUsingVoucherNumber: !usingManualInvNumber,
@@ -538,7 +508,10 @@ export const useTransaction = (
       isActualPriceVisible:
         formState.gridColumns.find((x) => x.dataField == "actualSalesPrice")
           ?.visible ?? false,
-      referenceNumber: loadVType == "PI_Ref" ? out_voucherNumber : null,
+      manualInvoiceNumber: manualInvoiceNumber,
+      invokeUsingVoucherNumber: invokeUsingVoucherNumber,
+      pDTInvTransMasterID:pDTInvTransMasterID,
+      // IsStockDetailVisible
     };
 
     // ByGRN
@@ -560,7 +533,7 @@ export const useTransaction = (
         ...transactionInitialData,
         master: {
           ...transactionInitialData.master,
-          voucherNumber: _voucherNumber,
+          voucherNumber: voucherNumber,
           voucherType: voucherType ?? formState.transaction.master.voucherType,
           voucherPrefix:
             voucherPrefix ?? formState.transaction.master.voucherPrefix,
@@ -572,7 +545,7 @@ export const useTransaction = (
     if (usingManualInvNumber) {
       vch.master = {
         ...vch.master,
-        voucherNumber: _voucherNumber,
+        voucherNumber: voucherNumber,
         voucherType: voucherType ?? formState.transaction.master.voucherType,
         voucherPrefix:
           voucherPrefix ?? formState.transaction.master.voucherPrefix,
@@ -582,6 +555,11 @@ export const useTransaction = (
           : vch.master.invTransactionMasterID,
       };
     }
+    vch.master = {
+        ...vch.master,
+        voucherType: out_voucherType ?? formState.transaction.master.voucherType,
+        voucherForm: out_voucherForm ?? formState.transaction.master.voucherForm,
+      };
     // clearControlForNew();
     await undoEditMode(
       formState.isEdit,
@@ -4611,7 +4589,7 @@ export const useTransaction = (
           })
         );
 
-        if (!formState.giftClaimed && formState.transaction.master.invTransactionMasterID <= 0) {
+        if (!formState.giftClaimed && !(formState.transaction.master.invTransactionMasterID > 0)) {
           const params = {
             grandTotal: String(formState.transaction.master.grandTotal || 0),
             warehouseID: String(formState.transaction.master.fromWarehouseID),
@@ -4619,45 +4597,50 @@ export const useTransaction = (
 
           const query = new URLSearchParams(params).toString();
 
-          const ds = await api.getAsync("/giftOnBilling", query);
+          const ds = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/GiftOnBilling`, query)
 
           if (ds?.giftProducts?.length > 0) {
             const row = ds.giftProductPrice;
 
             const Qty = Number(row.quantity ?? 0);
-            formState.giftProductQty = Qty;
+            // formState.giftProductQty = Qty;
 
-            const Price = Number(row.SpecialPrice ?? 0);
-            formState.giftProductPrice = Price;
+            const Price = Number(row.specialPrice ?? 0);
+            // formState.giftProductPrice = Price;
 
-            const giftProductBatchId = Number(row.GiftProductBatchID ?? 0);
-            const products = ds?.giftProducts.map((dr: any) => ({
-              barcode: dr.AutoBarcode,
-              productBatchID: Number(dr.ProductBatchID),
-              productCode: dr.ProductCode,
-              productID: Number(dr.ProductID),
-              productName: dr.ProductName,
-            }));
-            dispatch(
-              formStateHandleFieldChangeKeysOnly({
-                fields: {
-                  giftProductQty: Qty,
-                  giftProductPrice: Price,
-                  giftBatchId: giftProductBatchId,
-                  giftModels: products
+            const giftProductBatchId = Number(row.giftProductBatchID ?? 0);
+            if(Qty > 0 && giftProductBatchId > 0){
+
+            if (ds?.giftProducts.length > 0) {
+              for (const dr of ds?.giftProducts) {
+
+                const giftModel = {
+                  barcode: dr.autoBarcode,
+                  productBatchID: Number(dr.productBatchID),
+                  productCode: dr.productCode,
+                  productID: Number(dr.productID),
+                  productName: dr.productName,
+                };
+                dispatch(
+                  formStateHandleFieldChangeKeysOnly({
+                    fields: { 
+                      giftProductQty: Qty,
+                      giftProductPrice: Price,
+                      giftBatchId: giftProductBatchId,
+                      giftModels: [giftModel] 
+                    }
+                  })
+                );
+
+                if (invSettings.giftOnBilling && invSettings.giftOnBillingAs === "Products") {
+                  checkTheProductInSchemes(Qty, Price);
+                } 
+                else if (invSettings.giftOnBilling && invSettings.giftOnBillingAs === "Special Price") {
+                  checkTheProductPriceInSchemes(Qty, Price);
                 }
-              })
-            );
-
-            for (const dr of products) {
-
-              // Apply scheme logic based on setting
-              if (invSettings.giftOnBillingAs === "Products") {
-                checkTheProductInSchemes(Qty, Price, products);
-              } else if (invSettings.giftOnBillingAs === "Special Price") {
-                checkTheProductPriceInSchemes(Qty, Price, products);
               }
             }
+          }
           }
         }
       }

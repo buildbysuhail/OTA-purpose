@@ -1132,7 +1132,11 @@
   "this_ilr_is_already_loaded_in_st :":"This ILR is already loaded in ST",
   "do_you_want_to_load_again":"Do you want to load again",
   "positive_and_negative_stock_reset":"Positive and Negative stock reset",
-  "do_you_want_to_reset_all_positive_and_negative_stock_to_zero?":"Do you want to reset all positive & Negative stock to zero?"
+  "do_you_want_to_reset_all_positive_and_negative_stock_to_zero?":"Do you want to reset all positive & Negative stock to zero?",
+
+  "please_enter_otp":"Please Enter OTP",
+  "verify_otp":"Verify OTP",
+  "please_enter_valid_otp":"Please Enter Valid OTP!"
 
 
 

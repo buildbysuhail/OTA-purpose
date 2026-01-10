@@ -32,6 +32,7 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
   const [redeemPoints,setRedeemPoints] = useState(0)
   const [selectedPoint,setSelectedPoint] = useState(0)
   const [confirToken,setConfirToken] = useState("")
+  const [showInvalidOtpMessage, setShowInvalidOtpMessage] = useState(false)
   const [addAmount, setAddAmount] = useState(0)
     const dispatch = useAppDispatch();
     const [addNewEntry, setAddNewEntry] = useState(false)
@@ -181,8 +182,12 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
             })
           );
           setOtpModalOpen(false)
+          setShowInvalidOtpMessage(false)
           setRedeemPoints(selectedPoint)
  
+         }else{
+              // Invalid otp message
+              setShowInvalidOtpMessage(true)
          }
       }catch{
         console.error("Error in verifying Otp")
@@ -291,6 +296,7 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
                     value={formState.transaction.privilegeCardDetails.mobile}
                     className="flex-1 h-7 text-xs"
                     noLabel={true}
+                    placeholder={t(" eg: +911234322345 ")}
                     onChange={(e) =>
                       dispatch(
                         formStateHandleFieldChangeKeysOnly({
@@ -376,7 +382,6 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
                     value={formState.transaction.privilegeCardDetails.totalBalance}
                     className="w-28 h-7 text-xs text-right"
                     noLabel={true}
-                    disabled={true}
                     onChange={(e) =>
                       dispatch(
                         formStateHandleFieldChangeKeysOnly({
@@ -436,24 +441,29 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
             <ERPModal
                 isOpen={otpModalOpen}
                 title={t("verify_otp")}
-                width={300}
-                height={120}
+                width={320}
+                height={150}
                 closeModal={() => setOtpModalOpen(false)}
                 content={
-                  <div className='flex items-center justify-center gap-3'>
+                  <div className='flex flex-col gap-2'>
+                  <div className='flex items-end justify-center gap-3'>
                     <ERPInput
-                       localInputBox={merge({}, initialUserConfig.inputBoxStyle, {inputHeight:2, fontSize:24, fontColor:"255, 0, 0", borderColor: '200, 200, 200'})}
+                       localInputBox={merge({}, initialUserConfig.inputBoxStyle, {inputHeight:2, fontSize:20, marginBottom: 0, fontColor:"255, 0, 0", borderColor: '200, 200, 200'})}
                       customSize="customize"
                       id="otp"
                       value={otpValue}
-                      label = {t("enter_otp")}
+                      label = {t("please_enter_otp")}
                       onChange={(e) => setOtpValue(e.target.value)}
                     />
                     <ERPButton
-                      title = {t("verify_otp")}
+                      title = {t("verify")}
                       variant = "primary"
                       onClick={() => handleVerifyOtpNumber() }
                     />
+                  </div>
+                  {showInvalidOtpMessage === true && (
+                    <div className='text-sm w-full text-red-500 text-center'>{t("please_enter_valid_otp")}</div>
+                  )}
                   </div>
                 }
               />

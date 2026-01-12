@@ -4637,10 +4637,10 @@ export const useTransaction = (
                 );
 
                 if (invSettings.giftOnBilling && invSettings.giftOnBillingAs === "Products") {
-                  checkTheProductInSchemes(Qty, Price);
+                  checkTheProductInSchemes(Qty, Price, [giftModel]);
                 } 
                 else if (invSettings.giftOnBilling && invSettings.giftOnBillingAs === "Special Price") {
-                  checkTheProductPriceInSchemes(Qty, Price);
+                  checkTheProductInSchemes(Qty, Price, [giftModel]);
                 }
               }
             }

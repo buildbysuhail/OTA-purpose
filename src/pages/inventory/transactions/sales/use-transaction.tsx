@@ -135,7 +135,7 @@ export const useTransaction = (
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
-  const { round, roundAwayFromZero,getFormattedValueIgnoreRounding,getNumericFormat } = useNumberFormat();
+  const { round, roundAwayFromZero, getFormattedValueIgnoreRounding, getNumericFormat } = useNumberFormat();
   const clientSession = useAppSelector(
     (state: RootState) => state.ClientSession
   );
@@ -475,7 +475,7 @@ export const useTransaction = (
     formType?: string,
     manualInvoiceNumber: any = "",
     transactionMasterID?: number,
-    loadVType?: string,
+    loadVType: string = "",
     loadFType?: string,
     loadPrefix?: string,
     pDTInvTransMasterID: number = 0,
@@ -497,10 +497,12 @@ export const useTransaction = (
 
     if (voucherNumber == undefined || voucherNumber <= 0) {
       return voucher;
+      
     }
+    debugger;
     const params: Record<any, any> = {
-      VoucherNumber: loadVType === "" ? voucherNumber??formState.transaction.master.voucherNumber : voucherNumber,
-      voucherPrefix:  loadVType === "" ? voucherPrefix??formState.transaction.master.voucherPrefix : loadPrefix,
+      VoucherNumber: loadVType === "" ? voucherNumber ?? formState.transaction.master.voucherNumber : voucherNumber,
+      voucherPrefix: loadVType === "" ? voucherPrefix ?? formState.transaction.master.voucherPrefix : loadPrefix,
       voucherType: loadVType === "" ? out_voucherType : loadVType,
       voucherForm: loadVType === "" ? out_voucherForm : loadFType,
       InvokeUsingVoucherNumber: !usingManualInvNumber,
@@ -510,7 +512,7 @@ export const useTransaction = (
           ?.visible ?? false,
       manualInvoiceNumber: manualInvoiceNumber,
       invokeUsingVoucherNumber: invokeUsingVoucherNumber,
-      pDTInvTransMasterID:pDTInvTransMasterID,
+      pDTInvTransMasterID: pDTInvTransMasterID,
       // IsStockDetailVisible
     };
 
@@ -556,10 +558,10 @@ export const useTransaction = (
       };
     }
     vch.master = {
-        ...vch.master,
-        voucherType: out_voucherType ?? formState.transaction.master.voucherType,
-        voucherForm: out_voucherForm ?? formState.transaction.master.voucherForm,
-      };
+      ...vch.master,
+      voucherType: out_voucherType ?? formState.transaction.master.voucherType,
+      voucherForm: out_voucherForm ?? formState.transaction.master.voucherForm,
+    };
     // clearControlForNew();
     await undoEditMode(
       formState.isEdit,
@@ -577,7 +579,7 @@ export const useTransaction = (
       voucher.transaction.master.gRNMasterID =
         voucher.transaction.master.invTransactionMasterID;
     }
- voucher.transaction = {
+    voucher.transaction = {
       ...(vch || {}),
       master: {
         ...(vch?.master || {}),
@@ -588,6 +590,11 @@ export const useTransaction = (
             ? getFormattedValueIgnoreRounding(vch?.master?.cashReceived)
             : round(vch?.master?.cashReceived),
         hasCashPaid: vch?.master?.cashReceived != 0,
+        billDiscount: voucherType == VoucherType.SalesInvoice && !clientSession.isAppGlobal ? getFormattedValueIgnoreRounding(vch?.master?.billDiscount)
+          : [VoucherType.ServiceInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate, VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(voucherType as any)
+            ? vch?.master?.billDiscount : round(vch?.master?.billDiscount),
+
+
       },
       details: await refactorDetails(
         vch.details,
@@ -598,10 +605,20 @@ export const useTransaction = (
       ),
       attachments: [...(vch?.attachments || [])],
     };
-
     const summaryRes = calculateSummary(voucher.transaction.details, voucher, {
       result: {},
     });
+    debugger;
+    if (voucher.transaction.master.billDiscount > 0) {
+      const net = summaryRes.summary?.total ?? 0;
+      const bilDis = voucher.transaction.master.billDiscount;
+
+      if (net != 0) {
+        voucher.billDiscountPerc = bilDis / net * 100;
+      } else {
+        voucher.billDiscountPerc = 0
+      }
+    }
     voucher.summary = (
       summaryRes && summaryRes.summary
         ? summaryRes.summary
@@ -4613,38 +4630,38 @@ export const useTransaction = (
             // formState.giftProductPrice = Price;
 
             const giftProductBatchId = Number(row.giftProductBatchID ?? 0);
-            if(Qty > 0 && giftProductBatchId > 0){
+            if (Qty > 0 && giftProductBatchId > 0) {
 
-            if (ds?.giftProducts.length > 0) {
-              for (const dr of ds?.giftProducts) {
+              if (ds?.giftProducts.length > 0) {
+                for (const dr of ds?.giftProducts) {
 
-                const giftModel = {
-                  barcode: dr.autoBarcode,
-                  productBatchID: Number(dr.productBatchID),
-                  productCode: dr.productCode,
-                  productID: Number(dr.productID),
-                  productName: dr.productName,
-                };
-                dispatch(
-                  formStateHandleFieldChangeKeysOnly({
-                    fields: { 
-                      giftProductQty: Qty,
-                      giftProductPrice: Price,
-                      giftBatchId: giftProductBatchId,
-                      giftModels: [giftModel] 
-                    }
-                  })
-                );
+                  const giftModel = {
+                    barcode: dr.autoBarcode,
+                    productBatchID: Number(dr.productBatchID),
+                    productCode: dr.productCode,
+                    productID: Number(dr.productID),
+                    productName: dr.productName,
+                  };
+                  dispatch(
+                    formStateHandleFieldChangeKeysOnly({
+                      fields: {
+                        giftProductQty: Qty,
+                        giftProductPrice: Price,
+                        giftBatchId: giftProductBatchId,
+                        giftModels: [giftModel]
+                      }
+                    })
+                  );
 
-                if (invSettings.giftOnBilling && invSettings.giftOnBillingAs === "Products") {
-                  checkTheProductInSchemes(Qty, Price, [giftModel]);
-                } 
-                else if (invSettings.giftOnBilling && invSettings.giftOnBillingAs === "Special Price") {
-                  checkTheProductInSchemes(Qty, Price, [giftModel]);
+                  if (invSettings.giftOnBilling && invSettings.giftOnBillingAs === "Products") {
+                    checkTheProductInSchemes(Qty, Price, [giftModel]);
+                  }
+                  else if (invSettings.giftOnBilling && invSettings.giftOnBillingAs === "Special Price") {
+                    checkTheProductInSchemes(Qty, Price, [giftModel]);
+                  }
                 }
               }
             }
-          }
           }
         }
       }

@@ -23,9 +23,9 @@ export const TransactionMaster3InitialData: TransactionMaster3 = {
   shipTradeName: "",
   shipGstIn: "",
   shipPinCode: 0,
-  shipAddress1: "0",
-  shipAddress2: "0",
-  shipLocation: "0",
+  shipAddress1: "",
+  shipAddress2: "",
+  shipLocation: "",
   shipStateCode: 0,
   invTransactionMasterID: 0,
   branchID: 0

@@ -1,87 +1,657 @@
-import React, { useState } from "react";
-import RPosHeader from "../../components/common/header/rpos-header";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import RPosDropdownPanel from "./rpos-DropdownPanel";
 import { useTranslation } from "react-i18next";
-// import 'remixicon/fonts/remixicon.css';
 
-interface MenuItem {
-  name: string;
-  price: number;
+// Redux actions - UI
+import {
+  setSearchQuery,
+  togglePanel,
+  closePanel,
+  setUiFlag,
+  setFormState,
+  setSelection,
+  setLoading,
+} from "./reducers/ui-reducer";
+
+// Redux actions - Operational
+import {
+  setServeType,
+  setTableNo,
+  setSeatNo,
+  setNumberOfGuests,
+  setCustomerInfo,
+  setVoucherType,
+  setVoucherState,
+  prepareForNewOrder,
+  clearCustomerInfo,
+  clearPendingOrder,
+  setPendingOrder,
+  setSessionInfo,
+} from "./reducers/operational-reducer";
+
+// Redux actions - Transaction
+import {
+  addOrderItem,
+  incrementOrderItemQty,
+  decrementOrderItemQty,
+  removeOrderItem,
+  setPayType,
+  setCashReceived,
+  calculateSummary,
+  clearOrderItems,
+  prepareNewTransaction,
+  setOrderItems,
+  setVoucherIds,
+} from "./reducers/transaction-reducer";
+
+// RTK Query hooks
+import {
+  useGetProductGroupsQuery,
+  useGetProductsByGroupQuery,
+  useLazySearchProductsQuery,
+  useSaveOrderMutation,
+  useSaveKOTMutation,
+  useGetPendingOrderByTableQuery,
+  useLazyLoadOrderQuery,
+  useGetWaitersQuery,
+  ProductGroup,
+  ProductItem,
+} from "./api";
+
+// Types
+import { VoucherType } from "./type/rpos-operational";
+
+// Types (additional imports for component use)
+import type { ServeType } from "./type/rpos-operational";
+import type { RPosUIState } from "./type/rpos-ui-type";
+import type { RPosOperationalState } from "./type/rpos-operational";
+import type { RPosTransactionState, RPosOrderItem } from "./type/rpos-transaction";
+
+// Type for Redux state
+interface RootState {
+  RPosUi: RPosUIState;
+  RPosOperational: RPosOperationalState;
+  RPosTransaction: RPosTransactionState;
 }
 
-interface OrderItem extends MenuItem {
-  quantity: number;
-}
-
-const menuCategories = ["Chinese", "Main Courses", "Sample", "Beverages"];
-
-const menuItems: Record<string, MenuItem[]> = {
-  Chinese: [{ name: "Test Item", price: 100 }],
+// Fallback mock data - used when API is not ready
+const MOCK_CATEGORIES = ["Chinese", "Main Courses", "Sample", "Beverages"];
+const MOCK_PRODUCTS: Record<string, ProductItem[]> = {
+  Chinese: [{
+    productId: 1, productBatchId: 1, productCode: "TST001", productName: "Test Item",
+    barcode: "1001", rate: 100, mrp: 100, taxPercent: 0, taxAmount: 0,
+    unitId: 1, unitName: "PCS", kitchenId: 1, kitchenName: "Main Kitchen",
+    stock: 100, groupId: 1
+  }],
   "Main Courses": [
-    { name: "Khoya Kaju (Full)", price: 80 },
-    { name: "Paneer Labadar", price: 100 },
+    {
+      productId: 2, productBatchId: 2, productCode: "KHO001", productName: "Khoya Kaju (Full)",
+      barcode: "1002", rate: 80, mrp: 80, taxPercent: 0, taxAmount: 0,
+      unitId: 1, unitName: "PCS", kitchenId: 1, kitchenName: "Main Kitchen",
+      stock: 100, groupId: 2
+    },
+    {
+      productId: 3, productBatchId: 3, productCode: "PAN001", productName: "Paneer Labadar",
+      barcode: "1003", rate: 100, mrp: 100, taxPercent: 0, taxAmount: 0,
+      unitId: 1, unitName: "PCS", kitchenId: 1, kitchenName: "Main Kitchen",
+      stock: 100, groupId: 2
+    },
   ],
   Sample: [],
   Beverages: [],
 };
 
-export default function Component() {
+export default function RPos() {
   const { t } = useTranslation();
-  const [selectedCategory, setSelectedCategory] = useState("Chinese");
-  const [orderItems, setOrderItems] = useState<OrderItem[]>([
-    { name: "Test Item", price: 100, quantity: 1 },
-    { name: "Khoya Kaju (Full)", price: 80, quantity: 1 },
-    { name: "Paneer Labadar", price: 100, quantity: 1 },
-  ]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [orderType, setOrderType] = useState("dine_in");
-  const [paymentMethod, setPaymentMethod] = useState("cash");
+  const dispatch = useDispatch();
 
-  const updateQuantity = (itemName: string, delta: number) => {
-    setOrderItems((prev) =>
-      prev
-        .map((item) =>
-          item.name === itemName
-            ? { ...item, quantity: Math.max(0, item.quantity + delta) }
-            : item
-        )
-        .filter((item) => item.quantity > 0)
-    );
-  };
+  // Redux state selectors
+  const uiState = useSelector((state: RootState) => state.RPosUi);
+  const operationalState = useSelector((state: RootState) => state.RPosOperational);
+  const transactionState = useSelector((state: RootState) => state.RPosTransaction);
 
-  const total = orderItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-  const [showInputBox, setShowInputBox] = useState(false);
-
-  const [popupVisible, setPopupVisible] = useState(false);
-
+  // Local UI state for category selection (ephemeral, no need for Redux)
+  const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [isPopupOpen, setIsPopupOpen] = React.useState(false);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [showInputBox, setShowInputBox] = useState(false);
+  const [popupVisible, setPopupVisible] = useState(false);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>(["dine_in"]);
 
-  const handleOptionChange = (option: any) => {
-    if (selectedOptions.includes(option)) {
-      setSelectedOptions(selectedOptions.filter((item) => item !== option));
-    } else {
-      setSelectedOptions([...selectedOptions, option]);
+  // RTK Query hooks for data fetching with caching
+  const {
+    data: productGroups = [],
+    isLoading: isLoadingGroups,
+    isError: isGroupsError
+  } = useGetProductGroupsQuery();
+
+  const {
+    data: products = [],
+    isLoading: isLoadingProducts,
+    isFetching: isFetchingProducts
+  } = useGetProductsByGroupQuery(
+    { groupId: selectedGroupId ?? 0 },
+    { skip: selectedGroupId === null }
+  );
+
+  // Lazy search for products
+  const [searchProducts, { data: searchResults, isLoading: isSearching }] = useLazySearchProductsQuery();
+
+  // Mutations for save operations
+  const [saveOrder, { isLoading: isSavingOrder }] = useSaveOrderMutation();
+  const [saveKOT, { isLoading: isSavingKOT }] = useSaveKOTMutation();
+
+  // Lazy query for loading orders
+  const [loadOrder, { isLoading: isLoadingOrder }] = useLazyLoadOrderQuery();
+
+  // Get waiters for dropdown
+  const { data: waiters = [] } = useGetWaitersQuery();
+
+  // Select first group when groups are loaded
+  useEffect(() => {
+    if (productGroups.length > 0 && selectedGroupId === null) {
+      setSelectedGroupId(productGroups[0].productGroupId);
+    }
+  }, [productGroups, selectedGroupId]);
+
+  // Get display items - use search results if searching, otherwise use products from selected group
+  const searchQuery = uiState.search.productSearchQuery;
+  const displayProducts = useMemo(() => {
+    if (searchQuery && searchQuery.length >= 2) {
+      return searchResults ?? [];
+    }
+    return products;
+  }, [searchQuery, searchResults, products]);
+
+  // Trigger search when search query changes
+useEffect(() => {
+    if (searchQuery && searchQuery.length >= 2) {
+      searchProducts({ searchTerm: searchQuery });
+    }
+  }, [searchQuery, searchProducts]);
+
+
+
+  const selectedCategoryName = productGroups.find(g => g.productGroupId === selectedGroupId)?.groupName ?? MOCK_CATEGORIES[0];
+
+  const menuItems = displayProducts.length > 0
+    ? displayProducts
+    : (MOCK_PRODUCTS[selectedCategoryName] ?? []);
+
+  // Derived state
+  const orderItems = transactionState.activeOrder.items;
+  const summary = transactionState.summary;
+  const dining = operationalState.dining;
+  const payment = transactionState.payment;
+  const voucherType = operationalState.voucher.voucherType;
+  const isEdit = uiState.form.isEdit;
+  const isBillingActive = uiState.form.isBillingActive;
+
+  // Map serve type to UI key
+  const serveTypeToKey = (serveType: ServeType): string => {
+    switch (serveType) {
+      case "DINE IN": return "dine_in";
+      case "TAKE AWAY": return "pick_up";
+      case "DELIVERY": return "delivery";
+      default: return "dine_in";
     }
   };
 
-  const closePopup = () => {
-    setIsPopupOpen(false);
+  const keyToServeType = (key: string): ServeType => {
+    switch (key) {
+      case "dine_in": return "DINE IN";
+      case "pick_up": return "TAKE AWAY";
+      case "delivery": return "DELIVERY";
+      default: return "DINE IN";
+    }
   };
-  const [selectedOptions, setSelectedOptions] = useState<string[]>(["dine_in"]);
 
-  const [dineInSelection, setDineInSelection] = useState<string[]>(["dine_in"]);
+  const orderType = serveTypeToKey(dining.serveType);
 
-  // Function to handle button text based on order type
-  const getButtonText: any = () => {
+  // Handlers
+  const handleOrderTypeChange = useCallback((type: string) => {
+    dispatch(setServeType(keyToServeType(type)));
+  }, [dispatch]);
+
+  const handleTableSelect = useCallback((tableNumber: string) => {
+    dispatch(setTableNo(tableNumber));
+  }, [dispatch]);
+
+  const handleAddItem = useCallback((item: ProductItem) => {
+    const orderItem: RPosOrderItem = {
+      rowIndex: 0, // Will be set by reducer
+      productBatchId: item.productBatchId,
+      productId: item.productId,
+      productCode: item.productCode,
+      productName: item.productName,
+      description: "",
+      quantity: 1,
+      unitId: item.unitId,
+      unitName: item.unitName,
+      rate: item.rate,
+      grossAmount: item.rate,
+      discountPercent: 0,
+      discountAmount: 0,
+      taxAmount: item.taxAmount,
+      vatAmount: 0,
+      cstAmount: 0,
+      netAmount: item.rate + item.taxAmount,
+      kitchenId: item.kitchenId,
+      kitchenName: item.kitchenName,
+      isKOTPrinted: false,
+      isPrinted: false,
+      remarks: "",
+    };
+    dispatch(addOrderItem(orderItem));
+    dispatch(calculateSummary());
+  }, [dispatch]);
+
+  const handleIncrementQty = useCallback((rowIndex: number) => {
+    dispatch(incrementOrderItemQty(rowIndex));
+    dispatch(calculateSummary());
+  }, [dispatch]);
+
+  const handleDecrementQty = useCallback((rowIndex: number) => {
+    dispatch(decrementOrderItemQty(rowIndex));
+    dispatch(calculateSummary());
+  }, [dispatch]);
+
+  const handleRemoveItem = useCallback((rowIndex: number) => {
+    dispatch(removeOrderItem(rowIndex));
+    dispatch(calculateSummary());
+  }, [dispatch]);
+
+  const handleSearchChange = useCallback((value: string) => {
+    dispatch(setSearchQuery({ key: "productSearchQuery", value }));
+  }, [dispatch]);
+
+  // ============================================================================
+  // ORDER/BILLING MODE HANDLERS - Matching WinForms btnOrder_Click/btnBilling_Click
+  // ============================================================================
+
+  /**
+   * Switch to Order mode (KOT) - Equivalent to WinForms btnOrder_Click
+   * VoucherType: SO (Sales Order)
+   */
+  const handleOrderMode = useCallback(() => {
+    // Don't switch if already in order mode
+    if (voucherType === "SO") return;
+
+    // If there are items, confirm switch (like WinForms checks GrandTotal > 0)
+    if (orderItems.length > 0) {
+      // In WinForms this shows a confirmation dialog, for now we just switch
+      // TODO: Add confirmation dialog
+    }
+
+    // Set voucher type to SO (Sales Order/KOT)
+    dispatch(setVoucherType("SO"));
+    dispatch(setFormState({ key: "isBillingActive", value: false }));
+
+    // Reset for new transaction if needed
+    handleNewOrder(false);
+  }, [dispatch, voucherType, orderItems.length]);
+
+  /**
+   * Switch to Billing mode - Equivalent to WinForms btnBilling_Click
+   * VoucherType: SI (Sales Invoice)
+   */
+  const handleBillingMode = useCallback(() => {
+    // Don't switch if already in billing mode
+    if (voucherType === "SI") return;
+
+    // Set voucher type to SI (Sales Invoice)
+    dispatch(setVoucherType("SI"));
+    dispatch(setFormState({ key: "isBillingActive", value: true }));
+    dispatch(setVoucherState({ formType: "VAT" })); // Enable VAT for billing
+
+    // Reset for new transaction if needed
+    handleNewOrder(false);
+  }, [dispatch, voucherType]);
+
+  // ============================================================================
+  // NEW ORDER/CANCEL HANDLER - Matching WinForms SetForNewTransaction/ClearControls
+  // ============================================================================
+
+  /**
+   * Prepare for new transaction - Equivalent to WinForms SetForNewTransaction + ClearControls
+   * @param clearGrid - Whether to clear the order items grid
+   */
+  const handleNewOrder = useCallback((clearGrid: boolean = true) => {
+    // Reset transaction state (items, payment, summary)
+    if (clearGrid) {
+      dispatch(prepareNewTransaction());
+    }
+
+    // Reset operational state for new order (table, customer, etc.)
+    dispatch(prepareForNewOrder());
+
+    // Reset form state
+    dispatch(setFormState({ key: "isEdit", value: false }));
+    dispatch(setFormState({ key: "isReturnFromPaymentPanel", value: false }));
+    dispatch(setFormState({ key: "isSettlementTransaction", value: false }));
+
+    // Clear customer info
+    dispatch(clearCustomerInfo());
+
+    // Clear pending order context
+    dispatch(clearPendingOrder());
+
+    // Clear local panel states
+    setIsTablePanelOpen(false);
+    setIsCustomerPanelOpen(false);
+    setIsGuestsPanelOpen(false);
+    setIsCommentsPanelOpen(false);
+    setShowInputBox(false);
+    setPopupVisible(false);
+
+    // Reset serve type to default
+    dispatch(setServeType(operationalState.voucher.defaultServeType || "DINE IN"));
+
+    // Clear search
+    dispatch(setSearchQuery({ key: "productSearchQuery", value: "" }));
+
+    // TODO: Get next voucher number from API
+    // GetNextVrNo(VOUCHERTYPE) equivalent
+  }, [dispatch, operationalState.voucher.defaultServeType]);
+
+  /**
+   * Cancel current transaction - Equivalent to WinForms btnCancel_Click
+   */
+  const handleCancel = useCallback(() => {
+    handleNewOrder(true);
+
+    // If showWaiterAfterSave is enabled, show waiter selection
+    if (operationalState.waiter.showWaiterAfterSave) {
+      // TODO: Open waiter selection panel
+    }
+  }, [handleNewOrder, operationalState.waiter.showWaiterAfterSave]);
+
+  // ============================================================================
+  // LOAD PENDING ORDER - Matching WinForms LoadPendingOrderItemsByTableAndSeat
+  // ============================================================================
+
+  /**
+   * Load pending order by table number
+   */
+  const handleLoadOrderByTable = useCallback(async () => {
+    if (!dining.tableNo) {
+      console.warn("No table selected");
+      return;
+    }
+
+    try {
+      dispatch(setLoading({ key: "isLoadingOrder", value: true }));
+
+      // This would call the API to get pending order for the table
+      // const result = await loadOrder(invTransMasterId).unwrap();
+
+      // For now, just set the pending order context
+      dispatch(setPendingOrder({
+        tableId: 0, // Would come from API
+        tableNumber: dining.tableNo,
+        token: "",
+        isLoaded: true,
+      }));
+
+      // Set edit mode
+      dispatch(setFormState({ key: "isEdit", value: true }));
+
+    } catch (error) {
+      console.error("Failed to load order:", error);
+    } finally {
+      dispatch(setLoading({ key: "isLoadingOrder", value: false }));
+    }
+  }, [dispatch, dining.tableNo]);
+
+  // ============================================================================
+  // VALIDATION - Matching WinForms Validate() function
+  // ============================================================================
+
+  /**
+   * Validate transaction before save
+   * Returns error message or null if valid
+   */
+  const validateTransaction = useCallback((): string | null => {
+    const serveType = dining.serveType;
+
+    // Check if items exist
+    if (orderItems.length === 0) {
+      return "No items in order";
+    }
+
+    // For DINE IN, table is required (unless table-wise is disabled)
+    if ((serveType === "DINE IN") && !dining.tableNo) {
+      return "Please select table for dine-in order";
+    }
+
+    // For DELIVERY, customer details may be required
+    if (serveType === "DELIVERY" && !operationalState.customer.mobileNo) {
+      // This is optional validation - can be configured
+      // return "Please enter customer mobile for delivery";
+    }
+
+    // Check for zero price items if warning is set to "Block"
+    const zeroPriceItems = orderItems.filter(item => item.rate <= 0);
+    if (zeroPriceItems.length > 0 && operationalState.productConfig.zeroPriceWarning === "Block") {
+      return "Order contains items with zero price";
+    }
+
+    return null;
+  }, [orderItems, dining, operationalState.customer.mobileNo, operationalState.productConfig.zeroPriceWarning]);
+
+  const handlePaymentMethodChange = useCallback((method: string) => {
+    switch (method) {
+      case "cash":
+        dispatch(setPayType("Cash"));
+        break;
+      case "card":
+      case "other":
+        dispatch(setPayType("General"));
+        break;
+      case "due":
+        dispatch(setPayType("Credit"));
+        break;
+    }
+  }, [dispatch]);
+
+  const handleOptionSelection = (option: string) => {
+    setSelectedOptions([option]);
+  };
+
+  // Save order handler - Equivalent to WinForms btnSave_Click + LoadbtnSave
+  const handleSaveOrder = useCallback(async (printBill: boolean = false) => {
+    // Validate before save
+    const validationError = validateTransaction();
+    if (validationError) {
+      // TODO: Show toast/alert with error message
+      console.error("Validation failed:", validationError);
+      return;
+    }
+
+    // For billing mode, show payment panel first (like WinForms)
+    if (isBillingActive && !payment.payLater && !uiState.form.isReturnFromPaymentPanel) {
+      // Show payment panel
+      setShowInputBox(true);
+      dispatch(setFormState({ key: "isReturnFromPaymentPanel", value: false }));
+      return;
+    }
+
+    // If edit mode, check for supervisor authorization (like WinForms)
+    if (isEdit && !uiState.form.isSettlementTransaction) {
+      // TODO: Show supervisor password dialog if required
+      // For now, proceed without authorization check
+    }
+
+    try {
+      dispatch(setLoading({ key: "isSaving", value: true }));
+
+      // Build transaction data matching RPosTransactionData interface
+      const transactionData = {
+        master: {} as any, // Will be populated by server
+        details: [],
+        invAccTransactions: [],
+        couponDetails: [],
+        privilegeCardDetails: [],
+        bankCardDetails: [],
+        upiDetails: [],
+      };
+
+      const result = await saveOrder({
+        transactionData,
+        voucherType: operationalState.voucher.voucherType,
+        formType: operationalState.voucher.formType || "RPOS",
+        tableNo: dining.tableNo,
+        seatNo: dining.seatNo,
+        serveType: dining.serveType,
+        isPaid: !payment.payLater,
+        printKOT: false,
+        printBill: printBill,
+      }).unwrap();
+
+      if (result.success) {
+        console.log("Order saved:", result.voucherNumber);
+
+        // Print if enabled (like WinForms chkPrintAfterSave)
+        if (operationalState.printConfig.printAfterSave && printBill) {
+          // TODO: Trigger print
+        }
+
+        // Clear for new transaction (like WinForms HoldSummaryUntilNextBill logic)
+        handleNewOrder(true);
+
+        // Show waiter selection if configured
+        if (operationalState.waiter.showWaiterAfterSave) {
+          // TODO: Open waiter selection panel
+        }
+      }
+    } catch (error) {
+      console.error("Failed to save order:", error);
+      // TODO: Show error toast
+    } finally {
+      dispatch(setLoading({ key: "isSaving", value: false }));
+    }
+  }, [
+    validateTransaction,
+    isBillingActive,
+    payment.payLater,
+    uiState.form.isReturnFromPaymentPanel,
+    isEdit,
+    uiState.form.isSettlementTransaction,
+    dispatch,
+    operationalState,
+    dining,
+    saveOrder,
+    handleNewOrder,
+  ]);
+
+  // Save KOT handler - For order mode (SO voucher type)
+  const handleSaveKOT = useCallback(async (printKOT: boolean = false) => {
+    // Validate before save
+    const validationError = validateTransaction();
+    if (validationError) {
+      console.error("Validation failed:", validationError);
+      return;
+    }
+
+    // Filter items that haven't been printed to KOT yet
+    const kotItems = orderItems.filter(item => !item.isKOTPrinted);
+    if (kotItems.length === 0) {
+      console.warn("No new items to send to kitchen");
+      return;
+    }
+
+    try {
+      dispatch(setLoading({ key: "isSaving", value: true }));
+
+      const result = await saveKOT({
+        items: kotItems,
+        tableNo: dining.tableNo,
+        seatNo: dining.seatNo,
+        tokenNumber: dining.pendingOrder.token || "",
+        waiterId: operationalState.session.waiterId,
+        waiterName: operationalState.session.waiterName,
+        serveType: dining.serveType,
+        kitchenRemarks: operationalState.customer.notes1 || "",
+      }).unwrap();
+
+      if (result.success) {
+        console.log("KOT saved:", result.voucherNumber);
+
+        // Update token number from response
+        if (result.voucherNumber) {
+          dispatch(setPendingOrder({
+            ...dining.pendingOrder,
+            token: result.voucherNumber,
+            isLoaded: true,
+          }));
+        }
+
+        // Print KOT if enabled
+        if (printKOT && operationalState.printConfig.printKOTFromOrder) {
+          // TODO: Trigger KOT print
+        }
+
+        // For TAKE AWAY / DELIVERY, WinForms also creates TSI (Temp Sales Invoice)
+        // This is handled by the backend API
+
+        // Clear for new transaction
+        handleNewOrder(true);
+      }
+    } catch (error) {
+      console.error("Failed to save KOT:", error);
+    } finally {
+      dispatch(setLoading({ key: "isSaving", value: false }));
+    }
+  }, [
+    validateTransaction,
+    orderItems,
+    dispatch,
+    dining,
+    operationalState,
+    saveKOT,
+    handleNewOrder,
+  ]);
+
+  // Panel states from local state for now (will migrate to Redux panels later)
+  const [isTablePanelOpen, setIsTablePanelOpen] = useState(false);
+  const [isCustomerPanelOpen, setIsCustomerPanelOpen] = useState(false);
+  const [isGuestsPanelOpen, setIsGuestsPanelOpen] = useState(false);
+  const [isCommentsPanelOpen, setIsCommentsPanelOpen] = useState(false);
+
+  const toggleTablePanel = () => {
+    setIsTablePanelOpen(prev => !prev);
+    setIsCustomerPanelOpen(false);
+    setIsGuestsPanelOpen(false);
+    setIsCommentsPanelOpen(false);
+  };
+
+  const toggleCustomerPanel = () => {
+    setIsCustomerPanelOpen(prev => !prev);
+    setIsTablePanelOpen(false);
+    setIsGuestsPanelOpen(false);
+    setIsCommentsPanelOpen(false);
+  };
+
+  const toggleGuestsPanel = () => {
+    setIsGuestsPanelOpen(prev => !prev);
+    setIsTablePanelOpen(false);
+    setIsCustomerPanelOpen(false);
+    setIsCommentsPanelOpen(false);
+  };
+
+  const toggleCommentsPanel = () => {
+    setIsCommentsPanelOpen(prev => !prev);
+    setIsTablePanelOpen(false);
+    setIsCustomerPanelOpen(false);
+    setIsGuestsPanelOpen(false);
+  };
+
+  // Get button text based on order type
+  const getButtonText = (): string => {
     switch (orderType) {
       case "dine_in":
-        return dineInSelection.length === 0
-          ? "dine_in"
-          : dineInSelection.join(", ");
+        return selectedOptions.length === 0 ? "dine_in" : selectedOptions.join(", ");
       case "delivery":
         return "delivery";
       case "pick_up":
@@ -89,76 +659,6 @@ export default function Component() {
       default:
         return "dine_in";
     }
-  };
-
-  // const handleOrderTypeChange = (type: string) => {
-  //   setOrderType(type);
-  //   // Reset selected options when switching to Delivery or Pick Up
-  //   if (type !== "Dine in") {
-  //     setSelectedOptions([type]);
-  //   }
-  // };
-
-  const handleOrderTypeChange = (type: string) => {
-    setOrderType(type);
-    if (type === "dine_in") {
-      // Restore previous dine in selection when switching back to Dine in
-      setSelectedOptions(dineInSelection);
-    }
-  };
-
-  // Handle option selection in popup
-  const handleOptionSelection = (option: string) => {
-    const newSelection = [option];
-    setSelectedOptions(newSelection);
-    setDineInSelection(newSelection); // Update dine in selection storage
-  };
-
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedTable, setSelectedTable] = useState("");
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const handleTableSelect = (tableNumber: string) => {
-    setSelectedTable(tableNumber);
-  };
-
-  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
-
-  const [ispersonDropdownOpen, setIspersonDropdownOpen] = useState(false);
-  const [isCommentsDropdownOpen, setIsCommentsDropdownOpen] = useState(false);
-
-  const handleOptionClick = (option: string) => {
-    setSelectedOption(option);
-    setIsOpen(option === "table" ? !isOpen : isOpen);
-    setIsUserDropdownOpen(
-      option === "user" ? !isUserDropdownOpen : isUserDropdownOpen
-    );
-    setIspersonDropdownOpen(
-      option === "user" ? !ispersonDropdownOpen : ispersonDropdownOpen
-    );
-    setIsCommentsDropdownOpen(
-      option === "user" ? !isCommentsDropdownOpen : isCommentsDropdownOpen
-    );
-  };
-
-  const toggleTableDropdown = () => {
-    setIsOpen((prev) => !prev);
-    setIsUserDropdownOpen(false);
-  };
-
-  const toggleUserDropdown = () => {
-    setIsUserDropdownOpen((prev) => !prev);
-    setIsOpen(false);
-  };
-  const togglepersonDropdown = () => {
-    setIspersonDropdownOpen((prev) => !prev);
-    setIsOpen(false);
-  };
-  const toggleCommentsDropdown = () => {
-    setIsCommentsDropdownOpen((prev) => !prev);
-    setIsOpen(false);
   };
 
   const renderOrderTypeButtons = () => {
@@ -170,40 +670,47 @@ export default function Component() {
               <div className="relative flex-1 min-w-[100px]">
                 <button
                   className={`w-full p-3 flex justify-center items-center border-r ${
-                    selectedOption === "table"
-                      ? "border-t-2 border-[#f90303]"
-                      : ""
+                    selectedOption === "table" ? "border-t-2 border-[#f90303]" : ""
                   }`}
                   onClick={() => {
                     setSelectedOption("table");
-                    toggleTableDropdown();
+                    toggleTablePanel();
                   }}
                 >
                   <i className="ri-restaurant-line text-xl"></i>
                 </button>
                 <RPosDropdownPanel
-                  isOpen={isOpen}
-                  setIsOpen={setIsOpen}
+                  isOpen={isTablePanelOpen}
+                  setIsOpen={setIsTablePanelOpen}
                   title={t("table_no")}
                   content={
                     <div className="p-4">
                       <div className="flex items-center space-x-2">
                         <input
                           type="text"
-                          value={selectedTable}
-                          onChange={(e) => setSelectedTable(e.target?.value)}
+                          value={dining.tableNo}
+                          onChange={(e) => handleTableSelect(e.target?.value)}
                           placeholder=""
                           className="w-20 p-2 border rounded-md text-center me-[6px]"
                         />
                         <button
                           className="px-4 py-2 bg-[#f97316] text-white rounded-md hover:bg-orange-600"
-                          onClick={() => setIsOpen(false)}
+                          onClick={() => setIsTablePanelOpen(false)}
                         >
                           {t("view_kot")}
                         </button>
+                        {/* Load Pending Order Button - Like WinForms btnLoadOrderByTableNo */}
+                        <button
+                          className="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600 disabled:opacity-50"
+                          onClick={() => {
+                            handleLoadOrderByTable();
+                            setIsTablePanelOpen(false);
+                          }}
+                          disabled={!dining.tableNo || isLoadingOrder}
+                        >
+                          {isLoadingOrder ? t("loading") : t("load_order")}
+                        </button>
                       </div>
-
-                      {/* Quick Select Buttons */}
                       <div className="grid grid-cols-4 gap-2 mt-4">
                         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
                           <button
@@ -215,27 +722,19 @@ export default function Component() {
                           </button>
                         ))}
                       </div>
-
-                      {/* Table Status Section */}
                       <div className="p-4 bg-gray-50 rounded-b-md mt-[10px] w-[300px]">
                         <div className="flex justify-between text-sm">
                           <div className="flex items-center space-x-2">
                             <div className="w-3 h-3 bg-[#32d62e] rounded-full me-[6px]"></div>
-                            <span className="text-gray-600 !me-[6px]">
-                              {t("available")}
-                            </span>
+                            <span className="text-gray-600 !me-[6px]">{t("available")}</span>
                           </div>
                           <div className="flex items-center space-x-2">
                             <div className="w-3 h-3 bg-[#f01717] rounded-full me-[6px]"></div>
-                            <span className="text-gray-600 !me-[6px]">
-                              {t("occupied")}
-                            </span>
+                            <span className="text-gray-600 !me-[6px]">{t("occupied")}</span>
                           </div>
                           <div className="flex items-center space-x-2">
                             <div className="w-3 h-3 bg-[#f8e618] rounded-full me-[6px]"></div>
-                            <span className="text-gray-600 !me-[6px]">
-                              {t("reserved")}
-                            </span>
+                            <span className="text-gray-600 !me-[6px]">{t("reserved")}</span>
                           </div>
                         </div>
                       </div>
@@ -247,57 +746,55 @@ export default function Component() {
               <div className="relative flex-1 min-w-[100px]">
                 <button
                   className={`w-full p-3 flex justify-center items-center border-r ${
-                    selectedOption === "user"
-                      ? "border-t-2 border-[#f90303]"
-                      : ""
+                    selectedOption === "user" ? "border-t-2 border-[#f90303]" : ""
                   }`}
                   onClick={() => {
                     setSelectedOption("user");
-                    toggleUserDropdown();
+                    toggleCustomerPanel();
                   }}
                 >
                   <i className="ri-user-line text-xl"></i>
                 </button>
                 <RPosDropdownPanel
-                  isOpen={isUserDropdownOpen}
-                  setIsOpen={setIsUserDropdownOpen}
+                  isOpen={isCustomerPanelOpen}
+                  setIsOpen={setIsCustomerPanelOpen}
                   title={t("customer_details")}
                   content={
                     <div>
                       <form className="space-y-6">
                         <div className="flex items-center">
-                          <label className="w-24 text-right me-4 font-bold">
-                            {t("mobile")}:
-                          </label>
+                          <label className="w-24 text-right me-4 font-bold">{t("mobile")}:</label>
                           <input
                             type="text"
+                            value={operationalState.customer.mobileNo}
+                            onChange={(e) => dispatch(setCustomerInfo({ mobileNo: e.target.value }))}
                             className="flex-1 border rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-blue-500"
                           />
                         </div>
                         <div className="flex items-center">
-                          <label className="w-24 text-right me-4 font-bold">
-                            {t("name")}:
-                          </label>
+                          <label className="w-24 text-right me-4 font-bold">{t("name")}:</label>
                           <input
                             type="text"
+                            value={operationalState.customer.customerName}
+                            onChange={(e) => dispatch(setCustomerInfo({ customerName: e.target.value }))}
                             className="flex-1 border rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-blue-500"
                           />
                         </div>
                         <div className="flex items-center">
-                          <label className="w-24 text-right me-4 font-bold">
-                            {t("add")}:
-                          </label>
+                          <label className="w-24 text-right me-4 font-bold">{t("add")}:</label>
                           <input
                             type="text"
+                            value={operationalState.customer.address.line1}
+                            onChange={(e) => dispatch(setCustomerInfo({ address: { ...operationalState.customer.address, line1: e.target.value } }))}
                             className="flex-1 border rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-blue-500"
                           />
                         </div>
                         <div className="flex items-center">
-                          <label className="w-24 text-right me-4 font-bold">
-                            {t("locality")}:
-                          </label>
+                          <label className="w-24 text-right me-4 font-bold">{t("locality")}:</label>
                           <input
                             type="text"
+                            value={operationalState.customer.address.line2}
+                            onChange={(e) => dispatch(setCustomerInfo({ address: { ...operationalState.customer.address, line2: e.target.value } }))}
                             className="flex-1 border rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-blue-500"
                           />
                         </div>
@@ -310,30 +807,28 @@ export default function Component() {
               <div className="relative flex-1 min-w-[100px]">
                 <button
                   className={`w-full p-3 flex justify-center items-center border-r ${
-                    selectedOption === "group"
-                      ? "border-t-2 border-[#f90303]"
-                      : ""
+                    selectedOption === "group" ? "border-t-2 border-[#f90303]" : ""
                   }`}
                   onClick={() => {
                     setSelectedOption("group");
-                    togglepersonDropdown();
+                    toggleGuestsPanel();
                   }}
                 >
                   <i className="ri-group-line text-xl"></i>
                 </button>
                 <RPosDropdownPanel
-                  isOpen={ispersonDropdownOpen}
-                  setIsOpen={setIspersonDropdownOpen}
+                  isOpen={isGuestsPanelOpen}
+                  setIsOpen={setIsGuestsPanelOpen}
                   title={t("no_of_persons")}
                   content={
                     <div>
                       <form className="space-y-6">
                         <div className="flex items-center">
-                          <label className="w-24 text-right me-4 font-bold">
-                            {t("no_of_persons")}:
-                          </label>
+                          <label className="w-24 text-right me-4 font-bold">{t("no_of_persons")}:</label>
                           <input
-                            type="text"
+                            type="number"
+                            value={dining.numberOfGuests}
+                            onChange={(e) => dispatch(setNumberOfGuests(parseInt(e.target.value) || 1))}
                             className="flex-1 border rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-blue-500"
                           />
                         </div>
@@ -346,30 +841,28 @@ export default function Component() {
               <div className="relative flex-1 min-w-[100px]">
                 <button
                   className={`w-full p-3 flex justify-center items-center border-r ${
-                    selectedOption === "edit"
-                      ? "border-t-2 border-[#f90303]"
-                      : ""
+                    selectedOption === "edit" ? "border-t-2 border-[#f90303]" : ""
                   }`}
                   onClick={() => {
                     setSelectedOption("edit");
-                    toggleCommentsDropdown();
+                    toggleCommentsPanel();
                   }}
                 >
                   <i className="ri-edit-line text-xl"></i>
                 </button>
                 <RPosDropdownPanel
-                  isOpen={isCommentsDropdownOpen}
-                  setIsOpen={setIsCommentsDropdownOpen}
+                  isOpen={isCommentsPanelOpen}
+                  setIsOpen={setIsCommentsPanelOpen}
                   title={t("comments")}
                   content={
                     <div>
                       <form className="space-y-6">
                         <div className="flex items-center">
-                          <label className="w-24 text-right me-4 font-bold">
-                            {t("comments")}:
-                          </label>
+                          <label className="w-24 text-right me-4 font-bold">{t("comments")}:</label>
                           <input
                             type="text"
+                            value={operationalState.customer.notes1}
+                            onChange={(e) => dispatch(setCustomerInfo({ notes1: e.target.value }))}
                             className="flex-1 border rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-blue-500 w-[158px]"
                           />
                         </div>
@@ -382,165 +875,61 @@ export default function Component() {
           );
 
         case "delivery":
-          return (
-            <>
-              <div className="relative flex-1 min-w-[100px]">
-                <button
-                  className={`w-full p-3 flex justify-center items-center border-r ${
-                    selectedOption === "user"
-                      ? "border-t-2 border-[#f90303]"
-                      : ""
-                  }`}
-                  onClick={() => {
-                    setSelectedOption("user");
-                    toggleUserDropdown();
-                  }}
-                >
-                  <i className="ri-user-line text-xl"></i>
-                </button>
-                <RPosDropdownPanel
-                  isOpen={isUserDropdownOpen}
-                  setIsOpen={setIsUserDropdownOpen}
-                  title="customer details"
-                  content={
-                    <div>
-                      <form className="space-y-6">
-                        <div className="flex items-center">
-                          <label className="w-24 text-right me-4 font-bold">
-                            Mobile:
-                          </label>
-                          <input
-                            type="text"
-                            className="flex-1 border rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-blue-500"
-                          />
-                        </div>
-                        <div className="flex items-center">
-                          <label className="w-24 text-right me-4 font-bold">
-                            Name:
-                          </label>
-                          <input
-                            type="text"
-                            className="flex-1 border rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-blue-500"
-                          />
-                        </div>
-                        <div className="flex items-center">
-                          <label className="w-24 text-right me-4 font-bold">
-                            Add:
-                          </label>
-                          <input
-                            type="text"
-                            className="flex-1 border rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-blue-500"
-                          />
-                        </div>
-                        <div className="flex items-center">
-                          <label className="w-24 text-right me-4 font-bold">
-                            Locality:
-                          </label>
-                          <input
-                            type="text"
-                            className="flex-1 border rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-blue-500"
-                          />
-                        </div>
-                      </form>
-                    </div>
-                  }
-                />
-              </div>
-
-              <div className="relative flex-1 min-w-[100px]">
-                <button
-                  className={`w-full p-3 flex justify-center items-center border-r ${
-                    selectedOption === "edit"
-                      ? "border-t-2 border-[#f90303]"
-                      : ""
-                  }`}
-                  onClick={() => {
-                    setSelectedOption("edit");
-                    toggleCommentsDropdown();
-                  }}
-                >
-                  <i className="ri-edit-line text-xl"></i>
-                </button>
-                <RPosDropdownPanel
-                  isOpen={isCommentsDropdownOpen}
-                  setIsOpen={setIsCommentsDropdownOpen}
-                  title="Comments"
-                  content={
-                    <div>
-                      <form className="space-y-6">
-                        <div className="flex items-center">
-                          <label className="w-24 text-right me-4 font-bold">
-                            Comments:
-                          </label>
-                          <input
-                            type="text"
-                            className="flex-1 border rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-blue-500 w-[158px]"
-                          />
-                        </div>
-                      </form>
-                    </div>
-                  }
-                />
-              </div>
-            </>
-          );
         case "pick_up":
           return (
             <>
               <div className="relative flex-1 min-w-[100px]">
                 <button
                   className={`w-full p-3 flex justify-center items-center border-r ${
-                    selectedOption === "user"
-                      ? "border-t-2 border-[#f90303]"
-                      : ""
+                    selectedOption === "user" ? "border-t-2 border-[#f90303]" : ""
                   }`}
                   onClick={() => {
                     setSelectedOption("user");
-                    toggleUserDropdown();
+                    toggleCustomerPanel();
                   }}
                 >
                   <i className="ri-user-line text-xl"></i>
                 </button>
                 <RPosDropdownPanel
-                  isOpen={isUserDropdownOpen}
-                  setIsOpen={setIsUserDropdownOpen}
-                  title="customer details"
+                  isOpen={isCustomerPanelOpen}
+                  setIsOpen={setIsCustomerPanelOpen}
+                  title={t("customer_details")}
                   content={
                     <div>
                       <form className="space-y-6">
                         <div className="flex items-center">
-                          <label className="w-24 text-right me-4 font-bold">
-                            Mobile:
-                          </label>
+                          <label className="w-24 text-right me-4 font-bold">{t("mobile")}:</label>
                           <input
                             type="text"
+                            value={operationalState.customer.mobileNo}
+                            onChange={(e) => dispatch(setCustomerInfo({ mobileNo: e.target.value }))}
                             className="flex-1 border rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-blue-500"
                           />
                         </div>
                         <div className="flex items-center">
-                          <label className="w-24 text-right me-4 font-bold">
-                            Name:
-                          </label>
+                          <label className="w-24 text-right me-4 font-bold">{t("name")}:</label>
                           <input
                             type="text"
+                            value={operationalState.customer.customerName}
+                            onChange={(e) => dispatch(setCustomerInfo({ customerName: e.target.value }))}
                             className="flex-1 border rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-blue-500"
                           />
                         </div>
                         <div className="flex items-center">
-                          <label className="w-24 text-right me-4 font-bold">
-                            Add:
-                          </label>
+                          <label className="w-24 text-right me-4 font-bold">{t("add")}:</label>
                           <input
                             type="text"
+                            value={operationalState.customer.address.line1}
+                            onChange={(e) => dispatch(setCustomerInfo({ address: { ...operationalState.customer.address, line1: e.target.value } }))}
                             className="flex-1 border rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-blue-500"
                           />
                         </div>
                         <div className="flex items-center">
-                          <label className="w-24 text-right me-4 font-bold">
-                            Locality:
-                          </label>
+                          <label className="w-24 text-right me-4 font-bold">{t("locality")}:</label>
                           <input
                             type="text"
+                            value={operationalState.customer.address.line2}
+                            onChange={(e) => dispatch(setCustomerInfo({ address: { ...operationalState.customer.address, line2: e.target.value } }))}
                             className="flex-1 border rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-blue-500"
                           />
                         </div>
@@ -553,30 +942,28 @@ export default function Component() {
               <div className="relative flex-1 min-w-[100px]">
                 <button
                   className={`w-full p-3 flex justify-center items-center border-r ${
-                    selectedOption === "edit"
-                      ? "border-t-2 border-[#f90303]"
-                      : ""
+                    selectedOption === "edit" ? "border-t-2 border-[#f90303]" : ""
                   }`}
                   onClick={() => {
                     setSelectedOption("edit");
-                    toggleCommentsDropdown();
+                    toggleCommentsPanel();
                   }}
                 >
                   <i className="ri-edit-line text-xl"></i>
                 </button>
                 <RPosDropdownPanel
-                  isOpen={isCommentsDropdownOpen}
-                  setIsOpen={setIsCommentsDropdownOpen}
-                  title="Comments"
+                  isOpen={isCommentsPanelOpen}
+                  setIsOpen={setIsCommentsPanelOpen}
+                  title={t("comments")}
                   content={
                     <div>
                       <form className="space-y-6">
                         <div className="flex items-center">
-                          <label className="w-24 text-right me-4 font-bold">
-                            Comments:
-                          </label>
+                          <label className="w-24 text-right me-4 font-bold">{t("comments")}:</label>
                           <input
                             type="text"
+                            value={operationalState.customer.notes1}
+                            onChange={(e) => dispatch(setCustomerInfo({ notes1: e.target.value }))}
                             className="flex-1 border rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-blue-500 w-[158px]"
                           />
                         </div>
@@ -598,7 +985,6 @@ export default function Component() {
         {getVisibleButtons()}
         <button
           className="flex-1 w-full p-3 flex justify-center items-center bg-[#ff7800] text-white"
-          // onClick={() => setIsPopupOpen(true)}
           onClick={() => orderType === "dine_in" && setIsPopupOpen(true)}
         >
           {t(getButtonText())}
@@ -607,30 +993,130 @@ export default function Component() {
     );
   };
 
+  // Get payment method key for radio buttons
+  const getPaymentMethodKey = (): string => {
+    switch (payment.payType) {
+      case "Cash": return "cash";
+      case "Credit": return "due";
+      case "General": return "card";
+      default: return "cash";
+    }
+  };
+
   return (
     <div className="flex lg:h-[91vh] xl:h-[92vh] bg-gray-200 text-gray-800 font-sans">
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Top Navigation */}
+        {/* Top Action Bar - Order/Billing Mode Toggle (like WinForms btnOrder/btnBilling) */}
+        <div className="bg-[#610536] p-1 flex items-center space-x-1">
+          {/* Order Mode Button (KOT) */}
+          <button
+            className={`px-4 py-2 rounded text-white font-semibold transition-colors ${
+              voucherType === "SO"
+                ? "bg-[#a11b3c]"
+                : "bg-[#610536] hover:bg-[#7a1045]"
+            }`}
+            onClick={handleOrderMode}
+          >
+            {t("order")}
+          </button>
+
+          {/* Billing Mode Button */}
+          <button
+            className={`px-4 py-2 rounded text-white font-semibold transition-colors ${
+              voucherType === "SI"
+                ? "bg-[#a11b3c]"
+                : "bg-[#610536] hover:bg-[#7a1045]"
+            }`}
+            onClick={handleBillingMode}
+          >
+            {t("billing")}
+          </button>
+
+          {/* Pending Orders Button */}
+          <button
+            className="px-4 py-2 rounded bg-[#610536] hover:bg-[#7a1045] text-white font-semibold transition-colors"
+            onClick={() => {
+              // TODO: Open pending orders panel
+            }}
+          >
+            {t("pending")}
+          </button>
+
+          {/* Settlement Button */}
+          <button
+            className="px-4 py-2 rounded bg-[#610536] hover:bg-[#7a1045] text-white font-semibold transition-colors"
+            onClick={() => {
+              // TODO: Open settlement panel
+            }}
+          >
+            {t("settlement")}
+          </button>
+
+          {/* Spacer */}
+          <div className="flex-1" />
+
+          {/* Cancel/New Order Button */}
+          <button
+            className="px-4 py-2 rounded bg-gray-600 hover:bg-gray-700 text-white font-semibold transition-colors"
+            onClick={handleCancel}
+          >
+            {t("cancel")}
+          </button>
+
+          {/* Edit Mode Indicator */}
+          {isEdit && (
+            <span className="px-3 py-1 bg-yellow-500 text-black rounded text-sm font-semibold">
+              {t("edit_mode")}
+            </span>
+          )}
+        </div>
 
         {/* Order Type and Search Bar */}
-        <div className="bg-gray-300 p-2 flex justify-between items-center">
-          <div className="w-[59%]">
+        <div className="bg-gray-300 p-2 flex justify-between items-center gap-2">
+          {/* Search Input */}
+          <div className="flex-1 max-w-[40%]">
             <input
               type="text"
               placeholder={t("search_item")}
               className="w-full p-2 rounded rounded-md"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target?.value)}
+              value={uiState.search.productSearchQuery}
+              onChange={(e) => handleSearchChange(e.target?.value)}
             />
           </div>
-          <div className="w-[40%] flex space-x-2">
-            {["dine_in", "delivery", "pick_up"].map((type: any) => (
+
+          {/* Waiter Selection - Like WinForms cbwaiter */}
+          <div className="w-32">
+            <select
+              className="w-full p-2 rounded rounded-md bg-white"
+              value={operationalState.session.waiterId}
+              onChange={(e) => {
+                const selectedWaiter = waiters.find(w => w.employeeId === parseInt(e.target.value));
+                if (selectedWaiter) {
+                  dispatch(setSessionInfo({
+                    waiterId: selectedWaiter.employeeId,
+                    waiterName: selectedWaiter.employeeName,
+                  }));
+                }
+              }}
+            >
+              <option value="">{t("waiter")}</option>
+              {waiters.map((waiter) => (
+                <option key={waiter.employeeId} value={waiter.employeeId}>
+                  {waiter.employeeName}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Serve Type Buttons */}
+          <div className="flex space-x-2">
+            {["dine_in", "delivery", "pick_up"].map((type) => (
               <button
                 key={type}
                 className={`px-4 py-2 rounded rounded-md ${
                   orderType === type ? "bg-primary text-white" : "bg-white"
-                } flex-1`}
+                }`}
                 onClick={() => handleOrderTypeChange(type)}
               >
                 {t(type)}
@@ -638,20 +1124,15 @@ export default function Component() {
             ))}
           </div>
         </div>
+
         {/* Popup for Dine in options */}
         {isPopupOpen && orderType === "dine_in" && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg shadow-lg w-96">
               <div className="p-4">
-                <h2 className="text-lg font-semibold mb-4">
-                  {" "}
-                  {t("select_options")}{" "}
-                </h2>
-                {["dine_in", "ac", "dining"].map((option: any) => (
-                  <div
-                    key={option}
-                    className="flex items-center justify-between py-2 border-b"
-                  >
+                <h2 className="text-lg font-semibold mb-4">{t("select_options")}</h2>
+                {["dine_in", "ac", "dining"].map((option) => (
+                  <div key={option} className="flex items-center justify-between py-2 border-b">
                     <span>{t(option)}</span>
                     <input
                       type="radio"
@@ -686,33 +1167,62 @@ export default function Component() {
           {/* Sidebar */}
           <div className="w-48 bg-gray-800 text-white flex flex-col">
             <nav className="flex-1 overflow-y-auto">
-              {menuCategories.map((category) => (
-                <button
-                  key={category}
-                  className={`w-full text-left p-3 hover:bg-gray-700 ${
-                    selectedCategory === category ? "bg-gray-700" : ""
-                  }`}
-                  onClick={() => setSelectedCategory(category)}
-                >
-                  {category}
-                </button>
-              ))}
+              {isLoadingGroups ? (
+                <div className="p-3 text-gray-400">{t("loading")}...</div>
+              ) : isGroupsError ? (
+                // Fallback to mock categories
+                MOCK_CATEGORIES.map((category) => (
+                  <button
+                    key={category}
+                    className={`w-full text-left p-3 hover:bg-gray-700 ${
+                      selectedCategoryName === category ? "bg-gray-700" : ""
+                    }`}
+                    onClick={() => setSelectedGroupId(null)}
+                  >
+                    {category}
+                  </button>
+                ))
+              ) : (
+                productGroups.map((group) => (
+                  <button
+                    key={group.productGroupId}
+                    className={`w-full text-left p-3 hover:bg-gray-700 ${
+                      selectedGroupId === group.productGroupId ? "bg-gray-700" : ""
+                    }`}
+                    onClick={() => setSelectedGroupId(group.productGroupId)}
+                  >
+                    {group.groupName}
+                  </button>
+                ))
+              )}
             </nav>
           </div>
+
           {/* Menu Items */}
           <div className="flex-1 p-4 overflow-y-auto">
-            <div className="grid grid-cols-4 gap-4">
-              {menuItems[selectedCategory].map((item) => (
-                <button
-                  key={item.name}
-                  className="p-4 bg-white shadow rounded rounded-md text-center"
-                  onClick={() => updateQuantity(item.name, 1)}
-                >
-                  {item.name}
-                  <br />₹{item.price.toFixed(2)}
-                </button>
-              ))}
-            </div>
+            {(isLoadingProducts || isFetchingProducts || isSearching) ? (
+              <div className="flex items-center justify-center h-full">
+                <div className="text-gray-500">{t("loading")}...</div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-4 gap-4">
+                {menuItems.map((item) => (
+                  <button
+                    key={item.productId}
+                    className="p-4 bg-white shadow rounded rounded-md text-center hover:bg-gray-50 transition-colors"
+                    onClick={() => handleAddItem(item)}
+                  >
+                    {item.productName}
+                    <br />₹{item.rate.toFixed(2)}
+                  </button>
+                ))}
+                {menuItems.length === 0 && (
+                  <div className="col-span-4 text-center text-gray-500 py-8">
+                    {searchQuery ? t("no_products_found") : t("select_category")}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Order Summary */}
@@ -730,28 +1240,30 @@ export default function Component() {
                 </thead>
                 <tbody>
                   {orderItems.map((item) => (
-                    <tr key={item.name} className="border-b">
+                    <tr key={item.rowIndex} className="border-b">
                       <td className="py-2 flex items-center">
-                        <i className="ri-close-circle-line text-[#f90303] me-2 rtl:ml-2"></i>
-                        {item.name}
+                        <button onClick={() => handleRemoveItem(item.rowIndex)}>
+                          <i className="ri-close-circle-line text-[#f90303] me-2 rtl:ml-2"></i>
+                        </button>
+                        {item.productName}
                       </td>
                       <td className="py-2 text-center">
                         <button
-                          onClick={() => updateQuantity(item.name, -1)}
+                          onClick={() => handleDecrementQty(item.rowIndex)}
                           className="px-2 text-gray-500"
                         >
                           -
                         </button>
                         <span>{item.quantity}</span>
                         <button
-                          onClick={() => updateQuantity(item.name, 1)}
+                          onClick={() => handleIncrementQty(item.rowIndex)}
                           className="px-2 text-gray-500"
                         >
                           +
                         </button>
                       </td>
                       <td className="py-2 text-right">
-                        ₹{(item.price * item.quantity).toFixed(2)}
+                        ₹{item.netAmount.toFixed(2)}
                       </td>
                     </tr>
                   ))}
@@ -761,7 +1273,6 @@ export default function Component() {
 
             <div className="relative">
               <button
-                // onClick={togglePopup}
                 onClick={() => setShowInputBox(!showInputBox)}
                 className="absolute top-2 left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-3 py-1 rounded rounded-full hover:bg-gray-600 transition-colors"
               >
@@ -773,13 +1284,11 @@ export default function Component() {
               </button>
               {showInputBox && (
                 <div className="w-[100%] absolute bottom-full mb-0 bg-gray-700 p-4 border border-gray-700 rounded-none shadow-lg">
-                  {/* <h1>mj</h1> */}
-                  {/* <p>test</p> */}
                   <div className="bg-gray-700 p-4 text-white rounded-md">
                     <div className="flex justify-between mb-4">
                       <span>{t("sub_total")}</span>
-                      <span>3</span>
-                      <span>181.00</span>
+                      <span>{summary.totalQuantity}</span>
+                      <span>{summary.subTotal.toFixed(2)}</span>
                     </div>
 
                     <div className="flex justify-between mb-4">
@@ -788,15 +1297,14 @@ export default function Component() {
                         onClick={() => setPopupVisible(!popupVisible)}
                         className="flex items-center space-x-1"
                       >
-                        <span>{t("more")}</span>{" "}
+                        <span>{t("more")}</span>
                         <i className="ri-arrow-down-s-line"></i>
                       </button>
-                      <span>(0.00)</span>
+                      <span>({summary.totalDiscount.toFixed(2)})</span>
                     </div>
 
                     {popupVisible && (
                       <div className="bg-gray-600 p-3 rounded mb-4">
-                        {/* Popup content */}
                         <button
                           onClick={() => setPopupVisible(false)}
                           className="flex items-center space-x-1"
@@ -809,20 +1317,15 @@ export default function Component() {
 
                     <div className="grid grid-cols-2 gap-4 mb-4">
                       <div>
-                        <label className="block mb-2">
-                          {t("delivery_charge")}
-                        </label>
+                        <label className="block mb-2">{t("delivery_charge")}</label>
                         <input
                           type="number"
                           defaultValue={0}
                           className="w-full px-2 py-1 bg-gray-800 rounded border-none text-white"
                         />
                       </div>
-
                       <div>
-                        <label className="block mb-2">
-                          {t("container_charge")}
-                        </label>
+                        <label className="block mb-2">{t("container_charge")}</label>
                         <input
                           type="number"
                           defaultValue={0}
@@ -834,10 +1337,10 @@ export default function Component() {
                     <div className="flex justify-between mb-4">
                       <span>{t("tax")}</span>
                       <button className="flex items-center space-x-1">
-                        <span>{t("more")}</span>{" "}
+                        <span>{t("more")}</span>
                         <i className="ri-arrow-down-s-line"></i>
                       </button>
-                      <span>0.00</span>
+                      <span>{summary.totalTax.toFixed(2)}</span>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
@@ -845,38 +1348,34 @@ export default function Component() {
                         <label className="block mb-2">{t("round_off")}</label>
                         <input
                           type="number"
-                          defaultValue={0}
+                          value={payment.roundOff}
+                          onChange={(e) => dispatch(setPayType("General"))}
                           className="w-full px-2 py-1 bg-gray-800 rounded border-none text-white"
                         />
                       </div>
-
                       <div>
-                        <label className="block mb-2">
-                          {t("customer_paid")}
-                        </label>
+                        <label className="block mb-2">{t("customer_paid")}</label>
                         <input
                           type="number"
-                          defaultValue={0}
+                          value={payment.cashReceived}
+                          onChange={(e) => dispatch(setCashReceived(parseFloat(e.target.value) || 0))}
                           className="w-full px-2 py-1 bg-gray-800 rounded border-none text-white"
                         />
                       </div>
-
                       <div>
-                        <label className="block mb-2">
-                          {t("return_to_customer")}
-                        </label>
+                        <label className="block mb-2">{t("return_to_customer")}</label>
                         <input
                           type="number"
-                          defaultValue={0}
+                          value={Math.max(0, payment.cashReceived - summary.grandTotal)}
+                          readOnly
                           className="w-full px-2 py-1 bg-gray-800 rounded border-none text-white"
                         />
                       </div>
-
                       <div>
                         <label className="block mb-2">{t("tip")}</label>
                         <input
                           type="number"
-                          defaultValue={0}
+                          value={payment.cashTip}
                           className="w-full px-2 py-1 bg-gray-800 rounded border-none text-white"
                         />
                       </div>
@@ -891,20 +1390,21 @@ export default function Component() {
                 {t("split")}
               </button>
               <span className="text-white">
-                {t("total")}:₹{total.toFixed(2)}
+                {t("total")}:₹{summary.grandTotal.toFixed(2)}
               </span>
             </div>
+
             <div className="bg-gray-600 p-2 flex justify-center items-center">
               <div className="flex space-x-2">
-                <div className="flex items-center ">
-                  {["cash", "card", "due", "other"].map((method: any) => (
+                <div className="flex items-center">
+                  {["cash", "card", "due", "other"].map((method) => (
                     <label key={method} className="flex items-center space-x-2">
                       <input
                         type="radio"
                         name="paymentMethod"
-                        value={method.toLowerCase()}
-                        checked={paymentMethod === method.toLowerCase()}
-                        onChange={(e) => setPaymentMethod(e.target?.value)}
+                        value={method}
+                        checked={getPaymentMethodKey() === method}
+                        onChange={() => handlePaymentMethodChange(method)}
                         className="form-radio text-[#f90303]"
                       />
                       <span className="text-white pr-1">{t(method)}</span>
@@ -913,31 +1413,61 @@ export default function Component() {
                 </div>
               </div>
             </div>
+
             <div className="bg-gray-800 p-2 flex justify-center items-center">
               <div className="flex space-x-2">
                 <label className="flex items-center text-white">
-                  <input type="checkbox" className="me-2" />
-                  <p className="pr-1"> {t("its_paid")} </p>
+                  <input
+                    type="checkbox"
+                    checked={!payment.payLater}
+                    onChange={(e) => dispatch(setPayType(e.target.checked ? "Cash" : "Credit"))}
+                    className="me-2"
+                  />
+                  <p className="pr-1">{t("its_paid")}</p>
                 </label>
               </div>
             </div>
+
             <div className="flex space-x-2 p-2 ml-1">
-              <button className="px-4 py-2 bg-primary text-white rounded rounded-md rtl:ml-2">
-                {t("save")}
+              <button
+                className="px-4 py-2 bg-primary text-white rounded rounded-md rtl:ml-2 disabled:opacity-50"
+                onClick={() => handleSaveOrder(false)}
+                disabled={isSavingOrder || orderItems.length === 0}
+              >
+                {isSavingOrder ? t("saving") : t("save")}
               </button>
-              <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
+              <button
+                className="px-4 py-2 bg-primary text-white rounded rounded-md disabled:opacity-50"
+                onClick={() => handleSaveOrder(true)}
+                disabled={isSavingOrder || orderItems.length === 0}
+              >
                 {t("save_print")}
               </button>
-              <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
+              <button
+                className="px-4 py-2 bg-primary text-white rounded rounded-md disabled:opacity-50"
+                onClick={() => handleSaveOrder(true)}
+                disabled={isSavingOrder || orderItems.length === 0}
+              >
                 {t("save_ebill")}
               </button>
-              <button className="px-4 py-2 bg-gray-600 text-white rounded rounded-md">
-                {t("kot")}
+              <button
+                className="px-4 py-2 bg-gray-600 text-white rounded rounded-md disabled:opacity-50"
+                onClick={() => handleSaveKOT(false)}
+                disabled={isSavingKOT || orderItems.length === 0}
+              >
+                {isSavingKOT ? t("saving") : t("kot")}
               </button>
-              <button className="px-4 py-2 bg-gray-600 text-white rounded rounded-md">
+              <button
+                className="px-4 py-2 bg-gray-600 text-white rounded rounded-md disabled:opacity-50"
+                onClick={() => handleSaveKOT(true)}
+                disabled={isSavingKOT || orderItems.length === 0}
+              >
                 {t("kot_print")}
               </button>
-              <button className="px-4 py-2 bg-gray-600 text-white rounded rounded-md">
+              <button
+                className="px-4 py-2 bg-gray-600 text-white rounded rounded-md disabled:opacity-50"
+                disabled={orderItems.length === 0}
+              >
                 {t("hold")}
               </button>
             </div>

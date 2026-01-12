@@ -499,10 +499,10 @@ export const useTransaction = (
       return voucher;
     }
     const params: Record<any, any> = {
-      VoucherNumber: loadVType === "" ? formState.transaction.master.voucherNumber : voucherNumber,
-      voucherPrefix:  loadVType === "" ? formState.transaction.master.voucherPrefix : loadPrefix,
-      voucherType: loadVType === "" ? formState.transaction.master.voucherType : loadVType,
-      voucherForm: loadVType === "" ? formState.transaction.master.voucherForm : loadFType,
+      VoucherNumber: loadVType === "" ? voucherNumber??formState.transaction.master.voucherNumber : voucherNumber,
+      voucherPrefix:  loadVType === "" ? voucherPrefix??formState.transaction.master.voucherPrefix : loadPrefix,
+      voucherType: loadVType === "" ? out_voucherType : loadVType,
+      voucherForm: loadVType === "" ? out_voucherForm : loadFType,
       InvokeUsingVoucherNumber: !usingManualInvNumber,
       isUsingManualInvNo: usingManualInvNumber, // Convert boolean to string
       isActualPriceVisible:

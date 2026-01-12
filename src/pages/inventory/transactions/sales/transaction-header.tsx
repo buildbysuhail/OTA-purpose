@@ -60,6 +60,7 @@ interface TransactionHeaderProps {
   ledgerIdRef: any;
   voucherNumberRef: any;
   refNoRef: any;
+  isAppGlobal:boolean;
   mobileNumRef: any;
   employeeRef?: any;
   isDropDownOpen: {
@@ -72,7 +73,7 @@ interface TransactionHeaderProps {
   userSession: any;
   inputRefs: Record<string, React.RefObject<HTMLInputElement>>
 }
-
+// clientSession
 const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   formState,
   dispatch,
@@ -96,6 +97,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   footerLayout,
   focusToNextColumn,
   userSession,
+  isAppGlobal,
   inputRefs
 }) => {
   const { appState } = useAppState();
@@ -341,6 +343,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
             handleFieldKeyDown={handleFieldKeyDown}
           />
           <SupplyTypeCombobox
+           isAppGlobal={isAppGlobal}
             formState={formState}
             dispatch={dispatch}
             t={t}

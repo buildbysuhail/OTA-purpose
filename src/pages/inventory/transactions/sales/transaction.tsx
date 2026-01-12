@@ -2146,6 +2146,7 @@ debugger;
               focusToNextColumn={focusToNextColumn}
               loadAndSetTransVoucher={loadAndSetTransVoucher}
               t={t}
+              isAppGlobal={clientSession.isAppGlobal}
               handleLoadByRefNo={handleLoadByRefNo}
               handleFieldChange={handleFieldChange}
               setIsPartyDetailsOpen={setIsPartyDetailsOpen}
@@ -2371,6 +2372,7 @@ debugger;
                     handleKeyDown={handleKeyDown}
                     loadAndSetTransVoucher={loadAndSetTransVoucher}
                     t={t}
+                    isAppGlobal={clientSession.isAppGlobal}
                     handleLoadByRefNo={handleLoadByRefNo}
                     handleFieldChange={handleFieldChange}
                     setIsPartyDetailsOpen={setIsPartyDetailsOpen}

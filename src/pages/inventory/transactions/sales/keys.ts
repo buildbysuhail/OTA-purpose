@@ -66,4 +66,9 @@
 // Qualified for Gift: ${gt.productName} at Price ${price}. Proceed?`,
 // sales_man
 // customer
-//
+//shipping_details  
+//legal_name  
+//trade_name  
+//gstin  
+//pin_code  
+//state_code  

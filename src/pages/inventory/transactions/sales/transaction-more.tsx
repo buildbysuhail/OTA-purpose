@@ -7,8 +7,10 @@ import { useTranslation } from "react-i18next";
 import Urls from "../../../../redux/urls";
 import OrderNo from "./components/order-number";
 import { LoadAndSetTransVoucherFn } from "./use-transaction";
-import { formStateMasterHandleFieldChange } from "../reducer";
+import { formStateHandleFieldChangeKeysOnly, formStateMasterHandleFieldChange } from "../reducer";
 import { TransactionFormState } from "../transaction-types";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
 
 interface MoreOptionsModalContentProps {
   formState: TransactionFormState;
@@ -21,6 +23,7 @@ interface MoreOptionsModalContentProps {
 
 const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({ formState, dispatch, loadAndSetTransVoucher, transactionType }) => {
   const { t } = useTranslation("transaction");
+  const clientSession = useSelector((state: RootState) => state.ClientSession);
   const { value: despatchDocumentNumberValue, onChange: onDespatchDocumentNumberChange } = useDebouncedInput(
     formState.transaction.master.despatchDocumentNumber || '',
     (debouncedValue) => {
@@ -414,6 +417,211 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({ formS
               </div>
             </div>
           </div>
+          {clientSession.isAppGlobal && (
+            <div className="flex-1 min-w-[300px] rounded-md p-2">
+              <div className="font-bold text-xs sm:text-sm mb-2 bg-gray-200 px-2 py-1">
+                {t("shipping_details")}
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 px-2">
+
+                {/* Legal Name */}
+                <div className="flex flex-col sm:flex-row sm:items-center">
+                  <label className="w-full sm:w-32 text-xs">{t("legal_name")} :</label>
+                  <ERPInput
+                    id="shipLegalName"
+                    noLabel
+                    value={formState.transaction.master.master3.shipLegalName}
+                    className="flex-1 h-6 text-xs"
+                    onChange={(e) =>
+                      dispatch(
+                        formStateHandleFieldChangeKeysOnly({
+                          fields: {
+                            transaction: {
+                              master: {
+                                master3: { shipLegalName: e.target.value }
+                              }
+                            }
+                          }
+                        })
+                      )
+                    }
+                  />
+                </div>
+
+                {/* Address 1 */}
+                <div className="flex flex-col sm:flex-row sm:items-center">
+                  <label className="w-full sm:w-32 text-xs">{t("address_1")} :</label>
+                  <ERPInput
+                    id="shipAddress1"
+                    noLabel
+                    value={formState.transaction.master.master3.shipAddress1}
+                    className="flex-1 h-6 text-xs"
+                    onChange={(e) =>
+                      dispatch(
+                        formStateHandleFieldChangeKeysOnly({
+                          fields: {
+                            transaction: {
+                              master: {
+                                master3: { shipAddress1: e.target.value }
+                              }
+                            }
+                          }
+                        })
+                      )
+                    }
+                  />
+                </div>
+
+                {/* Trade Name */}
+                <div className="flex flex-col sm:flex-row sm:items-center">
+                  <label className="w-full sm:w-32 text-xs">{t("trade_name")} :</label>
+                  <ERPInput
+                    id="shipTradeName"
+                    noLabel
+                    value={formState.transaction.master.master3.shipTradeName}
+                    className="flex-1 h-6 text-xs"
+                    onChange={(e) =>
+                      dispatch(
+                        formStateHandleFieldChangeKeysOnly({
+                          fields: {
+                            transaction: {
+                              master: {
+                                master3: { shipTradeName: e.target.value }
+                              }
+                            }
+                          }
+                        })
+                      )
+                    }
+                  />
+                </div>
+
+                {/* Address 2 */}
+                <div className="flex flex-col sm:flex-row sm:items-center">
+                  <label className="w-full sm:w-32 text-xs">{t("address_2")} :</label>
+                  <ERPInput
+                    id="shipAddress2"
+                    noLabel
+                    value={formState.transaction.master.master3.shipAddress2}
+                    className="flex-1 h-6 text-xs"
+                    onChange={(e) =>
+                      dispatch(
+                        formStateHandleFieldChangeKeysOnly({
+                          fields: {
+                            transaction: {
+                              master: {
+                                master3: { shipAddress2: e.target.value }
+                              }
+                            }
+                          }
+                        })
+                      )
+                    }
+                  />
+                </div>
+
+                {/* GSTIN */}
+                <div className="flex flex-col sm:flex-row sm:items-center">
+                  <label className="w-full sm:w-32 text-xs">{t("gstin")} :</label>
+                  <ERPInput
+                    id="shipGstIn"
+                    noLabel
+                    value={formState.transaction.master.master3.shipGstIn}
+                    className="flex-1 h-6 text-xs"
+                    onChange={(e) =>
+                      dispatch(
+                        formStateHandleFieldChangeKeysOnly({
+                          fields: {
+                            transaction: {
+                              master: {
+                                master3: { shipGstIn: e.target.value }
+                              }
+                            }
+                          }
+                        })
+                      )
+                    }
+                  />
+                </div>
+
+                {/* Location */}
+                <div className="flex flex-col sm:flex-row sm:items-center">
+                  <label className="w-full sm:w-32 text-xs">{t("location")} :</label>
+                  <ERPInput
+                    id="shipLocation"
+                    noLabel
+                    value={formState.transaction.master.master3.shipLocation}
+                    className="flex-1 h-6 text-xs"
+                    onChange={(e) =>
+                      dispatch(
+                        formStateHandleFieldChangeKeysOnly({
+                          fields: {
+                            transaction: {
+                              master: {
+                                master3: { shipLocation: e.target.value }
+                              }
+                            }
+                          }
+                        })
+                      )
+                    }
+                  />
+                </div>
+
+                {/* Pin Code */}
+                <div className="flex flex-col sm:flex-row sm:items-center">
+                  <label className="w-full sm:w-32 text-xs">{t("pin_code")} :</label>
+                  <ERPInput
+                    id="shipPinCode"
+                    noLabel
+                    type="number"
+                    value={formState.transaction.master.master3.shipPinCode}
+                    className="flex-1 h-6 text-xs"
+                    onChange={(e) =>
+                      dispatch(
+                        formStateHandleFieldChangeKeysOnly({
+                          fields: {
+                            transaction: {
+                              master: {
+                                master3: { shipPinCode: Number(e.target.value) }
+                              }
+                            }
+                          }
+                        })
+                      )
+                    }
+                  />
+                </div>
+
+                {/* State Code */}
+                <div className="flex flex-col sm:flex-row sm:items-center">
+                  <label className="w-full sm:w-32 text-xs">{t("state_code")} :</label>
+                  <ERPInput
+                    id="shipStateCode"
+                    noLabel
+                    type="number"
+                    value={formState.transaction.master.master3.shipStateCode}
+                    className="flex-1 h-6 text-xs"
+                    onChange={(e) =>
+                      dispatch(
+                        formStateHandleFieldChangeKeysOnly({
+                          fields: {
+                            transaction: {
+                              master: {
+                                master3: { shipStateCode: Number(e.target.value) }
+                              }
+                            }
+                          }
+                        })
+                      )
+                    }
+                  />
+                </div>
+
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

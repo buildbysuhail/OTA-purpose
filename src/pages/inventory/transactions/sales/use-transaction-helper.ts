@@ -3151,19 +3151,18 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
 
       if (formState.transaction.master.voucherType !== VoucherType.SaleReturnEstimate) {
 
-        if (
-          ![VoucherType.SalesInvoice, VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation]
-            .includes(formState.transaction.master.voucherType as any)
+        if (([VoucherType.SalesInvoice, VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation]
+            .includes(formState.transaction.master.voucherType as any)) ||
+          (![VoucherType.SalesInvoice, VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation]
+            .includes(formState.transaction.master.voucherType as any) && formState.transaction.master.voucherForm !== "")
         ) {
 
-          if (formState.transaction.master.voucherForm !== "") {
-            result.transaction!.master!.master3 ??= (TransactionMaster3InitialData as any);
+        result.transaction!.master!.master3 ??= (TransactionMaster3InitialData as any);
             result.transaction!.master!.master3!.totCGST = round(cgst);
             result.transaction!.master!.master3!.totSGST = round(sgst);
             result.transaction!.master!.master3!.totIGST = round(igst);
             result.transaction!.master!.master3!.totCess = round(cessAmt);
             result.transaction!.master!.master3!.totAdditionalCess = round(additionalCess);
-          }
         }
       }
     }
@@ -3304,7 +3303,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     }
 
 
-    result.transaction!.master!.roundAmount = round(_grandTotal - (result.transaction!.master!.grandTotal || 0));
+    result.transaction!.master!.roundAmount = round((result.transaction!.master!.grandTotal || 0) -_grandTotal);
     if (clientSession.isAppGlobal && formState.transaction.master.voucherType == VoucherType.SalesInvoice) {
       // TCS calculation (Indian SI uses TCS percentage if present)
       const TCSPerc = Number(formState.ledgerData.tCSPerc ?? master.master3?.totTCS ?? 0);

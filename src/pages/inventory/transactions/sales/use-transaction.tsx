@@ -586,7 +586,7 @@ export const useTransaction = (
           ? vch?.master?.cashReturned
           : voucherType == VoucherType.SalesInvoice && !clientSession.isAppGlobal
             ? getFormattedValueIgnoreRounding(vch?.master?.cashReceived)
-            : (vch?.master?.cashReceived).toString(getNumericFormat()),
+            : round(vch?.master?.cashReceived),
         hasCashPaid: vch?.master?.cashReceived != 0,
       },
       details: await refactorDetails(

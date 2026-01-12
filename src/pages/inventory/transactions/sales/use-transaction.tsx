@@ -473,12 +473,12 @@ export const useTransaction = (
     voucherPrefix?: string,
     voucherType?: string,
     formType?: string,
-    manualInvoiceNumber?: any,
+    manualInvoiceNumber: any = "",
     transactionMasterID?: number,
     loadVType?: string,
     loadFType?: string,
     loadPrefix?: string,
-    pDTInvTransMasterID?: number,
+    pDTInvTransMasterID: number = 0,
     invokeUsingVoucherNumber: boolean = true,
   ) => {
     let voucher: TransactionFormState = JSON.parse(
@@ -499,10 +499,10 @@ export const useTransaction = (
       return voucher;
     }
     const params: Record<any, any> = {
-      VoucherNumber: voucherNumber, // Ensuring it's always a string
-      voucherPrefix: voucherPrefix,
-      voucherType: out_voucherType,
-      voucherForm: out_voucherForm,
+      VoucherNumber: loadVType === "" ? formState.transaction.master.voucherNumber : voucherNumber,
+      voucherPrefix:  loadVType === "" ? formState.transaction.master.voucherPrefix : loadPrefix,
+      voucherType: loadVType === "" ? formState.transaction.master.voucherType : loadVType,
+      voucherForm: loadVType === "" ? formState.transaction.master.voucherForm : loadFType,
       InvokeUsingVoucherNumber: !usingManualInvNumber,
       isUsingManualInvNo: usingManualInvNumber, // Convert boolean to string
       isActualPriceVisible:

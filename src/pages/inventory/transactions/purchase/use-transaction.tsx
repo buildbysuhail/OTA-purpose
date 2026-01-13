@@ -313,6 +313,15 @@ export const useTransaction = (
     }
   };
 
+  const playBarcodeNotExistSound = async () => {
+    try {
+      const audio = new Audio('/Barcode-Not-Exist.mp3');
+      await audio.play().catch(() => {});
+    } catch (error) {
+      console.error('Error playing barcode not exist sound:', error);
+    }
+  };
+
   const setCurrentCell = (
     input: { column: string; rowIndex: number } | null,
     data: TransactionDetail,
@@ -3726,9 +3735,19 @@ export const useTransaction = (
                 true
               );
               if(resw?.message == "Barcode Not Exist") {
-                 alert("Barcode Not Exist")
-                return{handled: true, message:"Barcode Not Exist"}
-              }
+                  playBarcodeNotExistSound();
+                  ERPAlert.show({
+                    title: "Barcode Not Exist",
+                    text: "The scanned barcode does not exist in the system. Please check the barcode or add the product.",
+                    icon: "error",
+                    confirmButtonText: "Ok",
+                    showCancelButton: false,
+                    // showAnimation: "animate__shakeX",
+                    hideAnimation: "animate__fadeOutDown",
+                    width: 500
+                  });
+                 return{handled: true, message:"Barcode Not Exist"}
+               }
             } else {
               const res = focusToNextColumn(rowIndex, columnName);
               setCurrentCell(res, data, rowIndex != res?.rowIndex);

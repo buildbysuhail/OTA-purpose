@@ -469,6 +469,11 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   btnSr: { visible: true, disabled: false, label:""},
   lBLCashPaid: { visible: false, disabled: false, label:"cash_paid"},
 
+  btnEWB: { visible: true, disabled: false, label: "" }, 
+  eWBLabel: { visible: true, disabled: false, label: "" }, 
+  btnEinvoice: { visible: true, disabled: false, label: "" }, 
+  einvoiceLabel: { visible: true, disabled: false, label: "" }, 
+
   // Need to verify the below 6
   lblProject: { visible: false, disabled: false, label: "" },
   rbCash: { visible: false, disabled: false, label: "" },
@@ -507,6 +512,8 @@ export const initialFormElements: { [key: string]: FormElementState } = {
     printPreview: false,
     setDefaultQuantity: false,
     editInNewTab:true,
+    autoEwayBill:false,
+    disableEinvoice:false,
     inputBoxStyle: {
       inputStyle: "normal",
       inputSize: "sm",

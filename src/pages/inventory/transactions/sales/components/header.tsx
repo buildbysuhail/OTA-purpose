@@ -412,7 +412,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
           {formState.formElements.lnkUnlockVoucher?.visible !== true && isAbove480 && (
             <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("edit")}>
               <button
-                disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master.invTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
+                disabled={formState.transaction.master.invTransactionMasterID < 1 || formState.formElements.btnEdit.disabled || (formState.transaction.master.invTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
                 className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
                 onClick={handleEdit}>
                 <Pencil className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
@@ -861,7 +861,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         {formState.formElements.lnkUnlockVoucher?.visible !== true && (
                           <li>
                             <button
-                              disabled={formState.transaction.master.invTransactionMasterID < 1 || (formState.transaction.master.invTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
+                              disabled={formState.transaction.master.invTransactionMasterID < 1 || formState.formElements.btnEdit.disabled || (formState.transaction.master.invTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
                               className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#eef2ff] hover:text-[#4338ca] dark:hover:bg-[#312e814d] dark:hover:text-[#c7d2fe] transition-all duration-200 rounded-md group text-left"
                               onClick={handleEdit}>
                               <div className="w-8 h-8 bg-[#eef2ff] dark:bg-[#312e814d] rounded-full flex items-center justify-center group-hover:bg-[#c7d2fe] dark:group-hover:bg-[#312e81cc] group-hover:scale-110 transition-all duration-200">

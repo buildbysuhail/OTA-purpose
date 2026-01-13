@@ -386,6 +386,85 @@ export const useTransaction = (
     if (typeof _formState == "boolean") {
       return;
     }
+      _formState.formElements.btnEdit = {
+            ..._formState.formElements.btnEdit,
+            disabled: false,
+          }
+
+ if (clientSession.isAppGlobal) {
+      if (applicationSettings.gSTTaxesSettings.enableEInvoiceIndia ||
+        ["WHOLESALE", "INTERSTATE", "INT STATE"].includes(
+          _formState?.transaction.master.voucherForm.toUpperCase()
+        )
+      ) {
+        if (_formState?.transaction?.eInvoiceStatus === "IRN_GENERATED") {
+          _formState.formElements.btnEinvoice = {
+            ..._formState.formElements.btnEinvoice,
+            visible: true,
+          }
+          _formState.formElements.einvoiceLabel = {
+            ..._formState.formElements.einvoiceLabel,
+            visible: true,
+            label: "E-Invoice Submitted",
+            bg: "bg-green-400",
+          }
+
+        } else if (_formState?.transaction?.eInvoiceStatus === "IRN_CANCELLED") {
+          _formState.formElements.einvoiceLabel = {
+            ..._formState.formElements.einvoiceLabel,
+            visible: true,
+            label: "E-Invoice Cancelled",
+            bg: "bg-yellow-400",
+          }
+          _formState.formElements.btnSave = {
+            ..._formState.formElements.btnSave,
+            disabled: true,
+          }
+          _formState.formElements.btnEdit = {
+            ..._formState.formElements.btnEdit,
+            disabled: true,
+          }
+          _formState.formElements.btnDelete = {
+            ..._formState.formElements.btnDelete,
+            disabled: true,
+          }
+        }
+      }
+      if(applicationSettings.gSTTaxesSettings.enableEWB&& formState.userConfig?.autoEwayBill){
+         if (_formState?.transaction?.eInvoiceStatus === "EWB_GENERATED") {
+          _formState.formElements.btnEWB = {
+            ..._formState.formElements.btnEWB,
+            visible: true,
+          }
+          _formState.formElements.eWBLabel = {
+            ..._formState.formElements.eWBLabel,
+            visible: true,
+            label: "EWB Submited",
+            bg: "bg-green-400",
+          }
+
+        } else if (_formState?.transaction?.ewbStatus === "EWB_CANCELLED") {
+          _formState.formElements.eWBLabel = {
+            ..._formState.formElements.eWBLabel,
+            visible: true,
+            label: "EWB Cancelled",
+            bg: "bg-yellow-400",
+          }
+          _formState.formElements.btnSave = {
+            ..._formState.formElements.btnSave,
+            disabled: true,
+          }
+          _formState.formElements.btnEdit = {
+            ..._formState.formElements.btnEdit,
+            disabled: true,
+          }
+          _formState.formElements.btnDelete = {
+            ..._formState.formElements.btnDelete,
+            disabled: true,
+          }
+        }
+      }
+    }
     _formState.formElements = {
       ..._formState.formElements,
 
@@ -497,7 +576,7 @@ export const useTransaction = (
 
     if (voucherNumber == undefined || voucherNumber <= 0) {
       return voucher;
-      
+
     }
     debugger;
     const params: Record<any, any> = {
@@ -507,6 +586,7 @@ export const useTransaction = (
       voucherForm: loadVType === "" ? out_voucherForm : loadFType,
       InvokeUsingVoucherNumber: !usingManualInvNumber,
       isUsingManualInvNo: usingManualInvNumber, // Convert boolean to string
+      autoEwayBill: formState.userConfig?.autoEwayBill, // for india sales
       isActualPriceVisible:
         formState.gridColumns.find((x) => x.dataField == "actualSalesPrice")
           ?.visible ?? false,

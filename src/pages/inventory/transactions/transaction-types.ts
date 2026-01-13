@@ -57,6 +57,8 @@ export interface TransactionData {
   privilegeCardDetails: PrivilegeCardDetails; //new
   bankCardDetails: List<SettlementDetails>[]; //new
   uPIDetails: List<SettlementDetails>[]; //new
+  eInvoiceStatus?: string
+  ewbStatus?: string
 }
 
 export interface InvAccTransaction {
@@ -373,8 +375,8 @@ export interface TransactionDetail {
   pOTransDetailID: number;
   pO_PITransDetailIDs: number;
   pO_PITransDetailQtys: number;
-  netConvert?:string;
-  customer_LSP?:number;
+  netConvert?: string;
+  customer_LSP?: number;
   nLA_StdSalesPrice?: number;
   refBranchID?: number;
   itemType?: string;
@@ -385,17 +387,17 @@ export interface TransactionDetail {
   schemeQtyLimit?: number;
   isSchemeProcessed?: string;
 
-  isQtyFreezed:boolean; // new 
-  memo:string; // new
-  flavors:string; // new
-  smCode:string; // new
-  salesman:string; // new
-  salesmanID:number; // new
-  adjQty:number; // For SO,GD,SRV
-  gatePass:string; // For SI india
-  purchaseCost:number; // For SI india
-  taxCategoryID:number; // For SI india
-  productCategoryID:number; // For SI india
+  isQtyFreezed: boolean; // new 
+  memo: string; // new
+  flavors: string; // new
+  smCode: string; // new
+  salesman: string; // new
+  salesmanID: number; // new
+  adjQty: number; // For SO,GD,SRV
+  gatePass: string; // For SI india
+  purchaseCost: number; // For SI india
+  taxCategoryID: number; // For SI india
+  productCategoryID: number; // For SI india
 
   // stock
   stockTo?: number;
@@ -506,6 +508,9 @@ export interface UserConfig {
   stockOutConfirmation?: boolean;
   taxOnMRP?: boolean;
   taxOnFreeItem?: boolean;
+  //india
+  autoEwayBill?: boolean;
+  disableEinvoice?: boolean;
 
   // stock
   userSalesPriceForStockTransfer?: boolean;
@@ -679,7 +684,6 @@ export interface TransactionFormState {
   vatChecked?: boolean;
 
   //Sales
-  message?: string;
   privilegeCardOpen?: boolean;
   schemeDiscount: number;
   postCashMasterId: number;
@@ -753,9 +757,12 @@ export interface TransactionFormState {
   privConfig?: string;
   printGatepass?: boolean;
   lastChoosedTemplate?: { id?: number, group?: string, formType?: string, customerType?: string }; // nizam
-  itemPopup?:{isOpen?: boolean, index?:number}
+  itemPopup?: { isOpen?: boolean, index?: number }
   taxBreakdown?: { name: string, amount: number }[];
   billDiscountPerc?: number;
+
+  // einvoiceLabel?: string;
+  // eWBLabel?: string;
 
   // Stocks
   chkCostFromExcel?: boolean;
@@ -813,7 +820,7 @@ export type ColumnModel = {
     filter?: any,
     pdfCell?: any
   ) => any;
-  detailsOptionKey?:any
+  detailsOptionKey?: any
 }
 export interface PrintTransProps {
   masterAccount: string;
@@ -860,7 +867,6 @@ export interface LoadProductDetailsByAutoBarcodeProps {
   searchColumn: string;
   rowIndex: number;
   setFocusToNextColumn: boolean;
-  validateBarcode?: boolean;
 }
 
 interface ProductBatchDetailsForAutoBarcodeData {

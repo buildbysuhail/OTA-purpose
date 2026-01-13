@@ -39,6 +39,8 @@ import BtnPending from "./components/btnPending";
 import BtnSr from "./components/btnSr";
 import TaxOnDiscount from "./components/tax-on-discount";
 import { tr } from "date-fns/locale";
+import EinvoiceLabel from "./components/EinvoiceLabel";
+import EWBLabel from "./components/EWBLabel";
 
 interface TransactionFooterProps {
   formState: TransactionFormState;
@@ -1116,6 +1118,21 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   />
                 </div>
               </div>
+              
+              <div className={`${footerLayout === "vertical" ? "w-full max-w-[265px]" : "w-full md:w-[345px]"}`}>
+                <div className="flex flex-col">
+                      <EinvoiceLabel
+          formState={formState}
+          dispatch={dispatch}
+          t={t}
+        />
+          <EWBLabel
+          formState={formState}
+          dispatch={dispatch}
+          t={t}
+        />
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1505,6 +1522,16 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               disabled={formState.formElements.remarks?.disabled || formState.formElements.pnlMasters?.disabled}
               className={`dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text ${isNewFooter ? "h-[42px]" : ""} w-full`}
             />
+              <EinvoiceLabel
+          formState={formState}
+          dispatch={dispatch}
+          t={t}
+        />
+          <EWBLabel
+          formState={formState}
+          dispatch={dispatch}
+          t={t}
+        />
           </div>
         </div>
       </div>

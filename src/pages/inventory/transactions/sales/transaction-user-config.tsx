@@ -182,7 +182,9 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
     const [r, g, b] = rgb.split(',').map(Number);
     return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
   };
-
+  const clientSession = useAppSelector(
+    (state: RootState) => state.ClientSession
+  );
   return (
     <>
       <div className="space-y-2 max-h-[calc(100vh-200px)] overflow-y-auto p-2" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
@@ -568,6 +570,24 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                   checked={formState?.userConfig?.printPreview}
                   onChangeData={(e) => handleFieldChange("printPreview", e.printPreview)}
                 />
+                {clientSession.isAppGlobal && (
+                  <>
+                <ERPCheckbox
+                  id="autoEwayBill"
+                  label={t("auto_e_way_bill")}
+                  data={formState.userConfig}
+                  checked={formState?.userConfig?.autoEwayBill}
+                  onChangeData={(e) => handleFieldChange("autoEwayBill", e.autoEwayBill)}
+                />
+                <ERPCheckbox
+                  id="disableEinvoice"
+                  label={t("disable_e_invoice")}
+                  data={formState.userConfig}
+                  checked={formState?.userConfig?.disableEinvoice}
+                  onChangeData={(e) => handleFieldChange("disableEinvoice", e.disableEinvoice)}
+                />
+                </>
+                )}
                 </>
               }
             </div>
@@ -584,6 +604,29 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
               </button>
             )}
           </div>
+           {clientSession.isAppGlobal && ( <div className="absolute top-[200px] right-[30px]">
+            {formState.formElements.btnEWB.visible && (
+              <button
+                className="w-10 h-10 rounded-full flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-md transition-all duration-200 ease-in-out hover:scale-105 active:scale-95"
+                onClick={handleUndoClick}
+                title="undo"
+              >
+                Cancel EWB
+              </button>
+            )}
+          </div>)}
+           {clientSession.isAppGlobal && ( <div className="absolute top-[200px] right-[30px]">
+            {formState.formElements.btnEinvoice.visible && (
+              <button
+                className="w-10 h-10 rounded-full flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-md transition-all duration-200 ease-in-out hover:scale-105 active:scale-95"
+                onClick={handleUndoClick}
+                title="undo"
+              >
+                Cancel E-Invoice
+              </button>
+            )}
+          </div>)}
+          
         </CollapsibleSection>
         ) }
 

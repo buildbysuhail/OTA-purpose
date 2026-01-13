@@ -869,6 +869,7 @@ const PosSideSection: React.FC<TransactionHeaderProps> = ({
           <GiftOrCashCouponSelector
             closeModal={() => setChooseSubBtnModals("")}
             t={t}
+            formState={formState}
           />
         }
       />

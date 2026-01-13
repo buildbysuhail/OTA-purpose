@@ -574,6 +574,20 @@ export const useTransaction = (
     let out_voucherForm =
       formType ?? (formState.transaction?.master?.voucherForm || "");
 
+    if (loadVType == "SO") {
+      url = url + "/LoadSO";
+    }
+    if (loadVType == "SQ") {
+      url = url + "/LoadSQ";
+    }
+    if (loadVType == "GD") {
+      url = url + "/LoadGD";
+    }
+    if (loadVType == "GDQ") {
+      loadVType = "GD"
+      url = url + "/LoadGDQuotation";
+    }
+
     if (voucherNumber == undefined || voucherNumber <= 0) {
       return voucher;
 
@@ -583,8 +597,8 @@ export const useTransaction = (
       VoucherNumber: loadVType === "" ? voucherNumber ?? formState.transaction.master.voucherNumber : voucherNumber,
       voucherPrefix: loadVType === "" ? voucherPrefix ?? formState.transaction.master.voucherPrefix : loadPrefix,
       voucherType: loadVType === "" ? out_voucherType : loadVType,
-      voucherForm: loadVType === "" ? out_voucherForm : loadFType,
-      InvokeUsingVoucherNumber: !usingManualInvNumber,
+      voucherForm: loadVType === "" ? out_voucherForm : formType,
+      // InvokeUsingVoucherNumber: !usingManualInvNumber,
       isUsingManualInvNo: usingManualInvNumber, // Convert boolean to string
       autoEwayBill: formState.userConfig?.autoEwayBill, // for india sales
       isActualPriceVisible:
@@ -593,7 +607,8 @@ export const useTransaction = (
       manualInvoiceNumber: manualInvoiceNumber,
       invokeUsingVoucherNumber: invokeUsingVoucherNumber,
       pDTInvTransMasterID: pDTInvTransMasterID,
-      // IsStockDetailVisible
+      isStockDetailVisible:formState.gridColumns.find((x) => x.dataField == "stockDetails")
+          ?.visible ?? false,
     };
 
     // ByGRN
@@ -608,6 +623,49 @@ export const useTransaction = (
         return false;
       }
     }
+
+    // Under Sales
+    if (loadVType == "GD") {
+      if (vch?.isOk == false) {
+        ERPAlert.show({
+          icon: "warning",
+          title: t(""),
+          text: `${vch?.message}`,
+          confirmButtonText: t("ok"),
+          showCancelButton: false,
+        });
+        return false;
+      }
+    }
+
+    if(loadVType === "SO" || loadVType === "SQ" || loadVType === "GD" || loadVType === "GDQ")
+    {
+      if (vch.master?.invTransactionMasterID > 0) {
+        // uncomment after check - show in 1050 - checkIt
+        const nextVoucherNo = await getNextVoucherNumber(
+          formType ?? formState.transaction.master.voucherForm,
+          voucherType ?? formState.transaction.master.voucherType,
+          voucherPrefix ?? formState.transaction.master.voucherPrefix,
+          false
+        );
+        voucher.isEdit = false;
+        voucher.formElements = {
+          ...voucher.formElements,
+          btnSave: {
+            ...voucher.formElements.btnSave,
+            disabled: !hasRight(formState.formCode, UserAction.Add),
+          },
+          btnEdit: { ...voucher.formElements.btnEdit, disabled: true },
+          btnDelete: { ...voucher.formElements.btnDelete, disabled: true },
+          btnPrint: { ...voucher.formElements.btnPrint, disabled: true },
+        };
+        if (vch?.master) {
+          vch.master.invTransactionMasterID = 0;
+          vch.master.voucherNumber = nextVoucherNo;
+        }
+      }
+    }
+    // The above are newly added for sales
 
     if (vch == null || vch?.master == null) {
       // const vno = await getNextVoucherNumber(params.formType,params.voucherType,params.voucherPrefix, false);

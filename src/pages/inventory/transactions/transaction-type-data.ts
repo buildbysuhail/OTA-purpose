@@ -308,6 +308,18 @@ export const initialTransactionDetailData: TransactionDetail = {
   productCategoryID: 0,
 };
 
+  export const initialCouponDetails: CouponDetails = {
+    cardID: 0,
+    cardNumber: '',
+    amount: 0,
+    cardType: '',
+    customerName: '',
+    totalAmount: 0,
+    cardHolderName: '',
+    couponID: 0,
+    oBalance: 0,
+  };
+
   export const initialPrivilegeCardOutput: PrivilegeCardDetails = {
   privilegeCardsID: 0,
   branchID: 0,
@@ -341,7 +353,7 @@ export const transactionInitialData: TransactionData = {
   attachments: [],
   masterValidations: initialTransactionMasterValidations,
   invAccTransactions: [],
-  couponDetails:[], //new
+  couponDetails: initialCouponDetails, //new
   privilegeCardDetails: initialPrivilegeCardOutput, //new
   bankCardDetails:[],// new
   uPIDetails:[],// new
@@ -881,16 +893,6 @@ export const initialProductDisplayData: ProductDisplayDto = {
   stock: "",
   minSalePrice: "",
   image: ""
-};
-export const initialCouponDetails: CouponDetails = {
-  cardID: 0,
-  cardNumber: '',
-  amount: 0,
-  cardType: '',
-  customerName: '',
-  totalAmount: 0,
-  cardHolderName: '',
-  couponID: 0
 };
 export const initialSettlement: SettlementDetails = {
   invTransactionMasterID: 0,

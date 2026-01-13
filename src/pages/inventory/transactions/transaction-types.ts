@@ -53,7 +53,7 @@ export interface TransactionData {
   details: TransactionDetail[];
   invAccTransactions: InvAccTransaction[];
   attachments: any[];
-  couponDetails: CouponDetails[]; // new
+  couponDetails: CouponDetails; // new
   privilegeCardDetails: PrivilegeCardDetails; //new
   bankCardDetails: List<SettlementDetails>[]; //new
   uPIDetails: List<SettlementDetails>[]; //new
@@ -1127,6 +1127,7 @@ export interface CouponDetails {
   totalAmount: number;
   cardHolderName: string;
   couponID: number;
+  oBalance: number;
 }
 export interface PrivilegeCardDetails {
   privilegeCardsID: number;

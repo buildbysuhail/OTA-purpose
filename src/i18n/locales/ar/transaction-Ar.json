@@ -1138,7 +1138,20 @@
   "product_not_found_please_check!": "المنتج غير موجود، يرجى التحقق!",
   "qualified_for_gift": "مؤهل للحصول على هدية",
   "at_price": " بسعر ",
-  "proceed": "استمرار"
+  "proceed": "استمرار",
+
+  "cash/gift_coupons": "قسائم نقدية/هدايا",
+  "print_packing_slip": "طباعة قسيمة التعبئة",
+  "save_temporary": "حفظ مؤقت",
+  "pending_order_list": "قائمة الطلبات المعلقة",
+  "pending_goods_delivery_list": "قائمة توصيل البضائع المعلقة",
+
+  "this_is_not_vat_invoice": "هذه ليست فاتورة ضريبية",
+  "this_facility_only_available_for_cash/card_customers": "هذه الميزة متاحة فقط لعملاء الدفع نقداً أو بالبطاقة",
+  "no_balance_amount_in_this_card/coupon": "لا يوجد رصيد في هذه البطاقة/القسيمة",
+  "bill_amount_is_too_low_to_add_this_coupon": "قيمة الفاتورة أقل من الحد الأدنى لإضافة هذه القسيمة",
+  "invalid_card_number": "رقم البطاقة غير صالح",
+  "coupon_added_to_list": "تمت إضافة القسيمة إلى القائمة"
 
 
 }

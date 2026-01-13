@@ -2200,6 +2200,7 @@ debugger;
                     downloadImportTemplateHeadersOnly={downloadImportTemplateHeadersOnly}
                     importFromExcel={importFromExcel}
                     undoEditMode={undoEditMode}
+                    loadAndSetTransVoucher={loadAndSetTransVoucher}
                   />
                 </div>
               </div>
@@ -2426,6 +2427,7 @@ debugger;
                       downloadImportTemplateHeadersOnly={downloadImportTemplateHeadersOnly}
                       importFromExcel={importFromExcel}
                       undoEditMode={undoEditMode}
+                      loadAndSetTransVoucher={loadAndSetTransVoucher}
                     />
                   </div>
                 </div>

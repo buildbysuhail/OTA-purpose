@@ -1142,7 +1142,20 @@
   "product_not_found_please_check!":"Product Not Found, Please Check!,",
   "qualified_for_gift":"Qualified for Gift",
   "at_price":" at price ",
-  "proceed":"proceed"
+  "proceed":"proceed",
+
+  "cash/gift_coupons":"Cash/Gift Coupons",
+  "print_packing_slip":"Print Packing Slip",
+  "save_temporary":"Save Temporary",
+  "pending_order_list":"Pending Order List",
+  "pending_goods_delivery_list":"Pending Order Delivery List",
+
+  "this_is_not_vat_invoice":"This is not VAT invoice",
+  "this_facility_only_available_for_cash/card_customers":"This Facility only available for Cash/Card Customers",
+  "no_balance_amount_in_this_card/coupon":"No balance amount in this card/Coupon",
+  "bill_amount_is_too_low_to_add_this_coupon":"Bill Amount is too low to add this coupon",
+  "invalid_card_number":"Invalid Card Number",
+  "coupon_added_to_list":"Coupon added to the list"
 
 
 

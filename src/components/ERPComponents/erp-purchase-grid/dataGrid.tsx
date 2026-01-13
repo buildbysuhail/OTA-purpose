@@ -104,8 +104,9 @@ interface DataGridProps<T extends DataItem> {
     value: any,
     e: React.KeyboardEvent<HTMLElement>,
     column: keyof TransactionDetail,
-    rowIndex: number
-  ) => void;
+    rowIndex: number,
+    validateBarcode?: boolean
+  ) => any;
   allowColumnReordering?: boolean;
   summaryConfig?: SummaryConfig<TransactionDetail>[];
   gridFontSize?: number;
@@ -120,6 +121,7 @@ interface DataGridProps<T extends DataItem> {
   gridFooterBg?: string;
   gridFooterFontColor?: string;
   zIndexController?: number;
+  onSaveItem: (item: TransactionDetail, mode: "Save"|"SaveAndNew") => void;
   
 }
 
@@ -1480,6 +1482,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       gridFooterBg,
       gridFooterFontColor,
       zIndexController,
+      onSaveItem
     }: DataGridProps<T>,
     ref: Ref<any>
   ) {
@@ -2118,47 +2121,12 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       setCurrentCell(formState.currentCell);
     }, [formState.currentCell]);
 
-    const handleBarcodeScan = useCallback((result: BarcodeScanResult) => {
-      const targetRow = barcodeTargetRow >= 0 ? barcodeTargetRow :
-        (formState.currentCell?.rowIndex ?? 0);
-
-      console.log('🔍 handleBarcodeScan called:', { targetRow, barcode: result.text });
-
-      if (targetRow >= 0) {
-        // Set the barcode value to the field
-        onChange(
-          result.text,
-          'barCode' as keyof TransactionDetail,
-          targetRow,
-          true
-        );
-
-        // Set current cell to barCode field first to ensure proper state
-        const barcodeColumn = formState.gridColumns.find((x: ColumnModel) => x.dataField === 'barCode');
-        if (barcodeColumn) {
-          setCurrentCell({
-            column: barcodeColumn,
-            rowIndex: targetRow,
-            data: formState.transaction.details[targetRow],
-          } as any);
-        }
-      }
-    }, [barcodeTargetRow, formState.currentCell?.rowIndex, formState.transaction.details, formState.gridColumns, onChange]);
-
+   
     // Callback to trigger Enter key logic after barcode scan
-    const handleBarcodeEnterTrigger = useCallback((result: BarcodeScanResult) => {
+    const handleBarcodeEnterTrigger = useCallback(async(result: BarcodeScanResult) => {
       // Use barcodeTargetRow if set, otherwise use current cell row, fallback to 0
       const targetRow = barcodeTargetRow >= 0 ? barcodeTargetRow :
         (formState.currentCell?.rowIndex ?? 0);
-
-      console.log('⌨️ handleBarcodeEnterTrigger called:', {
-        targetRow,
-        barcode: result.text,
-        barcodeTargetRow,
-        currentCellRowIndex: formState.currentCell?.rowIndex,
-        hasOnKeyDownRef: !!onKeyDownRef.current
-      });
-
       if (targetRow >= 0) {
         // Simulate Enter key press on barCode field to trigger item lookup
         const syntheticEvent = {
@@ -2167,28 +2135,19 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
           stopPropagation: () => {},
         } as React.KeyboardEvent<HTMLElement>;
 
-        console.log('⌨️ Triggering onKeyDown with Enter for barCode:', {
-          value: result.text,
-          column: 'barCode',
-          rowIndex: targetRow
-        });
-
-        // Use the ref to get the latest onKeyDown function
-        // This ensures we're not using a stale closure
         if (onKeyDownRef.current) {
-          console.log('⌨️ Calling onKeyDownRef.current...');
-          onKeyDownRef.current(
+          debugger;
+         await onKeyDownRef.current(
             result.text,
             syntheticEvent,
             'barCode' as keyof TransactionDetail,
-            targetRow
+            targetRow,
+            true
           );
-          console.log('⌨️ onKeyDownRef.current called successfully');
+         
         } else {
-          console.error('❌ onKeyDownRef.current is null/undefined!');
         }
       } else {
-        console.warn('⚠️ targetRow is less than 0:', targetRow);
       }
     }, [barcodeTargetRow, formState.currentCell?.rowIndex]);
 
@@ -2832,7 +2791,9 @@ const hidColumns: string[] = [
           <BarcodeModalScanner
             isOpen={showBarcodeScanner}
             onClose={() => setShowBarcodeScanner(false)}
-            onScan={handleBarcodeScan}
+            onScan={(e: any) => {
+
+            }}
             onEnterTrigger={handleBarcodeEnterTrigger}
             title={t("scan_barcode")}
           />
@@ -3917,60 +3878,20 @@ const hidColumns: string[] = [
                    <div className="flex gap-0">
                      <button
                        className="flex-1 py-4 text-center text-base font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
-                       onClick={() => {
-                         const exist = formState.transaction.details.find(x => x.slNo == formState.row?.slNo);
-                        if(exist) {
-                          if(formState.row) {
-                            dispatch(formStateHandleFieldChangeKeysOnly({fields:{
-                             
-                              transaction:{
-                                details:[formState.row]
-                              }, row: {
-                                ...initialTransactionDetailData,
-                                slNo: generateUniqueKey()
-                              },
-                            }}))
-                          }
-                        } else {
-                          if(formState.row) { 
-                            
-                            dispatch(formStateHandleFieldChangeKeysOnly({fields:{
-                             
-                              row: {
-                                  ...initialTransactionDetailData,
-                                  slNo: generateUniqueKey()
-                                },
-                            }}))
-                            dispatch(formStateTransactionDetailsRowsAdd([formState.row]))
-                          }
-                        }
+                       onClick={(e: any) =>{
+                        debugger;
+                        if(!formState.row) return;
+                        onSaveItem && onSaveItem(formState.row,"SaveAndNew")
                        }}
                      >
                        Save & New
                      </button>
                      <button
                        className="flex-1 py-4 text-center bg-red-600 text-white text-base font-medium hover:bg-red-700"
-                       onClick={() => {
-                        const exist = formState.transaction.details.find(x => x.slNo == formState.row?.slNo);
-                        if(exist) {
-                          const ind = formState.transaction.details.findIndex(x => x.slNo == formState.row?.slNo)
-                          if(formState.row) {
-                            dispatch(formStateHandleFieldChangeKeysOnly({fields:{
-                              itemPopup: {isOpen:false, index:0},
-                              transaction:{
-                                details:[formState.row]
-                              }
-                            },itemsToAddToDetails: undefined, rowIndex:ind}))
-                          }
-                        } else {
-                          if(formState.row) {
-                            
-                            dispatch(formStateHandleFieldChangeKeysOnly({fields:{
-                              itemPopup: {isOpen:false, index:0}
-                            }}))
-                            dispatch(formStateTransactionDetailsRowsAdd([formState.row]))
-                          }
-                        }
+                       onClick={(e: any) =>{
+                        debugger;
+                        if(!formState.row) return;
+                        onSaveItem && onSaveItem(formState.row,"Save")
                        }}
                      >
                        Save

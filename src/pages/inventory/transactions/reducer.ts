@@ -310,21 +310,11 @@ const InvTransactionSlice = createSlice({
     },
     formStateTransactionDetailsRowAdd: (
       state,
-      action: PayloadAction<{
-        row: TransactionDetail;
-        isForeignCurrencyEnabled: boolean;
-        exchangeRate: number;
-        applicationSettings: ApplicationSettingsType;
-        userSession: UserModel;
-        clearEntryControl: (
-          state: TransactionFormState,
-          defaultCostCenterID: number
-        ) => TransactionFormState;
-      }>
+      action: PayloadAction<any>
     ) => {
       const data = initialTransactionDetailData;
       const serializedRow: TransactionDetail = {
-        ...data,
+        ...data,...action.payload
       };
       if (state.isRowEdit === true) {
         const index = state.transaction.details.findIndex(
@@ -338,17 +328,11 @@ const InvTransactionSlice = createSlice({
           );
         }
       } else {
-        state.transaction.details.push(serializedRow);
-      }
-      state.transaction.details = state.transaction.details.map((x, index) => ({
-        ...x,
+        state.transaction.details.push({
+        ...serializedRow,
         slNo: generateUniqueKey(), // Reset slNo to start from 1
-      }));
-
-      state = action.payload.clearEntryControl(
-        state,
-        action.payload.applicationSettings.accountsSettings?.defaultCostCenterID
-      );
+      });
+      }
 
 
     },

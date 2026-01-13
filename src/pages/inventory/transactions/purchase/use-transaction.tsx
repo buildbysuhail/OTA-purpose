@@ -665,7 +665,7 @@ export const useTransaction = (
         formType ?? vch.master.voucherForm,
         voucherType ?? vch.master.voucherType,
         { result: {} },
-        loadVType
+        loadVType, deviceInfo.isMobile
       ),
       attachments: [...(vch?.attachments || [])],
     };
@@ -2759,8 +2759,25 @@ export const useTransaction = (
         );
         calculateSummaryAndTotal = true;
       }
-debugger;
+
       if (isMobRow) {
+        // For mobile: also calculate summary and total
+        // if (calculateSummaryAndTotal) {
+        //   const details = [...formState.transaction.details] as any;
+        //   const summaryRes = calculateSummary(details, formState, { result: {} });
+
+        //   const totalRes = calculateTotal(
+        //     formState.transaction.master,
+        //     summaryRes.summary as SummaryItems,
+        //     formState.formElements,
+        //     { result: {} }
+        //   );
+        //   if (totalRes) {
+        //     totalRes.summary = summaryRes.summary;
+        //   }
+        //   // Merge the totals with row update
+        //   outState = { ...outState, ...totalRes };
+        // }
         dispatch(
           formStateHandleFieldChangeKeysOnly({
             fields: { row: { ...outState!.transaction!.details![0] } }
@@ -2803,7 +2820,8 @@ debugger;
     data: LoadProductDetailsByAutoBarcodeProps,
     commonParams: CommonParams,
     proceedAll?: boolean,
-    forImport?: boolean
+    forImport?: boolean,
+    validateBarcode?: boolean
   ): Promise<DeepPartial<TransactionFormState> | null> => {
     let { result } = commonParams;
 
@@ -2871,7 +2889,11 @@ debugger;
         `${Urls.inv_transaction_base
         }${transactionType}/LoadProductDetailsByAutoBarCode?${queryParams.toString()}`
       );
-
+      if(data.validateBarcode && !res?.isShowItemPopUp && (!res?.products || res?.products?.length == 0)) {
+        return {
+          message:"Barcode Not Exist"
+        }
+      }
       warehouseId = -1;
 
       if (applicationSettings?.productsSettings?.enableMultiWarehouseBilling) {
@@ -3408,13 +3430,15 @@ debugger;
     columnName: string,
     rowIndex: number,
     commonParams: CommonParams,
-    isMobRow?: boolean
+    isMobRow?: boolean,
+    validateBarcode?: boolean
   ): Promise<{
     handled: boolean;
     preventDefault?: boolean;
     shouldReturn?: boolean;
     focusAction?: string;
     showDialog?: boolean;
+    message?: string
   }> => {
     debugger;
     let { result } = commonParams;
@@ -3685,7 +3709,7 @@ debugger;
           } else if (columnName == "barCode") {
             data.barCode = value;
             if (!isNullOrUndefinedOrEmpty(value)) {
-              await loadProductDetailsByAutoBarcode(
+              const resw = await loadProductDetailsByAutoBarcode(
                 {
                   productCode: data.pCode,
                   autoBarcode: data.barCode,
@@ -3696,10 +3720,15 @@ debugger;
                   rowIndex: rowIndex,
                   searchColumn: "barCode",
                   setFocusToNextColumn: true,
+                  validateBarcode: validateBarcode
                 },
                 { result: {}, formStateHandleFieldChangeKeysOnly },
                 true
               );
+              if(resw?.message == "Barcode Not Exist") {
+                 alert("Barcode Not Exist")
+                return{handled: true, message:"Barcode Not Exist"}
+              }
             } else {
               const res = focusToNextColumn(rowIndex, columnName);
               setCurrentCell(res, data, rowIndex != res?.rowIndex);

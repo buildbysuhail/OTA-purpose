@@ -679,6 +679,7 @@ export interface TransactionFormState {
   vatChecked?: boolean;
 
   //Sales
+  message?: string;
   privilegeCardOpen?: boolean;
   schemeDiscount: number;
   postCashMasterId: number;
@@ -859,6 +860,7 @@ export interface LoadProductDetailsByAutoBarcodeProps {
   searchColumn: string;
   rowIndex: number;
   setFocusToNextColumn: boolean;
+  validateBarcode?: boolean;
 }
 
 interface ProductBatchDetailsForAutoBarcodeData {

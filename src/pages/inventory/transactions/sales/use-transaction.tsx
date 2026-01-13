@@ -386,16 +386,15 @@ export const useTransaction = (
     if (typeof _formState == "boolean") {
       return;
     }
-      _formState.formElements.btnEdit = {
-            ..._formState.formElements.btnEdit,
-            disabled: false,
-          }
+    _formState.formElements.btnEdit = {
+      ..._formState.formElements.btnEdit,
+      disabled: false,
+    }
 
- if (clientSession.isAppGlobal) {
+    if (clientSession.isAppGlobal && [VoucherType.SalesInvoice, VoucherType.SalesReturn].includes(_formState.transaction.master.voucherType as any)) {
       if (applicationSettings.gSTTaxesSettings.enableEInvoiceIndia ||
-        ["WHOLESALE", "INTERSTATE", "INT STATE"].includes(
-          _formState?.transaction.master.voucherForm.toUpperCase()
-        )
+        (["WHOLESALE", "INTERSTATE", "INT STATE"].includes(_formState?.transaction.master.voucherForm.toUpperCase()) && _formState.transaction.master.voucherType == VoucherType.SalesInvoice) ||
+        (["WHOLESALE", "INT", "B2B"].includes(_formState?.transaction.master.voucherForm.toUpperCase()) && _formState.transaction.master.voucherType == VoucherType.SalesReturn)
       ) {
         if (_formState?.transaction?.eInvoiceStatus === "IRN_GENERATED") {
           _formState.formElements.btnEinvoice = {
@@ -430,8 +429,8 @@ export const useTransaction = (
           }
         }
       }
-      if(applicationSettings.gSTTaxesSettings.enableEWB&& formState.userConfig?.autoEwayBill){
-         if (_formState?.transaction?.eInvoiceStatus === "EWB_GENERATED") {
+      if (applicationSettings.gSTTaxesSettings.enableEWB && formState.userConfig?.autoEwayBill) {
+        if (_formState?.transaction?.eInvoiceStatus === "EWB_GENERATED") {
           _formState.formElements.btnEWB = {
             ..._formState.formElements.btnEWB,
             visible: true,

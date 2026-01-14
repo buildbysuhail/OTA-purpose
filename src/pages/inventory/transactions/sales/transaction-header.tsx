@@ -39,6 +39,7 @@ import OrderNo from "./components/order-number";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import DraftMode from "./draft-mode";
 import ERPRadio from "../../../../components/ERPComponents/erp-radio";
+import WareHouseStock from "./components/warehouse-stock";
 
 interface TransactionHeaderProps {
   formState: TransactionFormState;
@@ -315,6 +316,23 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
       console.error("Error updating purchase approval status:", error);
     }
   }, [formState.transaction.master.invTransactionMasterID]);
+
+  // Open W-stock list modal
+  const handleWStockList = () =>{
+    dispatch(
+          formStateHandleFieldChange({
+            fields: { wStockListOpen: true }
+          })
+        )
+    }
+    // close W-stock list modal
+    const CloseWStockList = () =>{
+      dispatch(
+            formStateHandleFieldChange({
+              fields: { wStockListOpen: false }
+            })
+          )
+      }
 
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
   const conditionalFooterComponents =
@@ -980,7 +998,19 @@ function mergeRefs<T>(...refs: React.Ref<T>[]) {
                   variant="secondary"
                   disabled={formState.transactionLoading}
                   className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+                  onClick={handleWStockList}
                 />
+
+                {formState.wStockListOpen && (
+                  <ERPModal
+                      isOpen={formState.wStockListOpen}
+                      title={t("stock_details")}
+                      width={500}
+                      height={300}
+                      closeModal={CloseWStockList}
+                      content={<WareHouseStock t={t} closeModal={CloseWStockList} productName={formState.currentCell?.data?.product || ""} productBatchID={formState.currentCell?.data?.productBatchID} />}
+                  />
+                )}
 
                 {["DURRAH_RYD", "986797588010", "BRIDCO"].includes(userSession.dbIdValue) && (
                 <ERPButton

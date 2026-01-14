@@ -1156,7 +1156,9 @@
   "address_3": "العنوان ٣",
   "mobile_phone": "رقم الجوال",
   "contact_phone": "رقم الاتصال",
-  "order_number": "رقم الطلب"
+  "order_number": "رقم الطلب",
+
+  "warehouse_name": "اسم المستودع"
 
 
 }

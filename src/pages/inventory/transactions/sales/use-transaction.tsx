@@ -606,8 +606,8 @@ export const useTransaction = (
       manualInvoiceNumber: manualInvoiceNumber,
       invokeUsingVoucherNumber: invokeUsingVoucherNumber,
       pDTInvTransMasterID: pDTInvTransMasterID,
-      isStockDetailVisible:formState.gridColumns.find((x) => x.dataField == "stockDetails")
-          ?.visible ?? false,
+      isStockDetailVisible: formState.gridColumns.find((x) => x.dataField == "stockDetails")
+        ?.visible ?? false,
     };
 
     // ByGRN
@@ -637,8 +637,7 @@ export const useTransaction = (
       }
     }
 
-    if(loadVType === "SO" || loadVType === "SQ" || loadVType === "GD" || loadVType === "GDQ")
-    {
+    if (loadVType === "SO" || loadVType === "SQ" || loadVType === "GD" || loadVType === "GDQ") {
       if (vch.master?.invTransactionMasterID > 0) {
         // uncomment after check - show in 1050 - checkIt
         const nextVoucherNo = await getNextVoucherNumber(
@@ -730,8 +729,13 @@ export const useTransaction = (
         billDiscount: voucherType == VoucherType.SalesInvoice && !clientSession.isAppGlobal ? getFormattedValueIgnoreRounding(vch?.master?.billDiscount)
           : [VoucherType.ServiceInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate, VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(voucherType as any)
             ? vch?.master?.billDiscount : round(vch?.master?.billDiscount),
-
-
+        adjustmentAmount: [VoucherType.SalesQuotation, VoucherType.SalesInvoice, VoucherType.GoodsDeliveryNote, VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(voucherType as any)
+          ? round(vch?.master?.adjustmentAmount)
+          : vch?.master?.adjustmentAmount,
+        srAmount: round(vch?.master?.srAmount),
+        bankAmt: [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(voucherType as any)
+          ? round(vch?.master?.bankAmt)
+          : vch?.master?.bankAmt
       },
       details: await refactorDetails(
         vch.details,

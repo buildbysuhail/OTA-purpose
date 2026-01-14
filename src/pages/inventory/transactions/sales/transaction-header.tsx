@@ -698,87 +698,49 @@ function mergeRefs<T>(...refs: React.Ref<T>[]) {
                   disabled={formState.formElements.pnlMasters?.disabled}
                 />
 
-                <ERPInput
-                  // ref={ordCardNoRef}
-                  id="ordCardNo"
-                  label={t("ord_card_no")}
-                  placeholder={t("enter_ord_card_no")}
-                  // onKeyDown={(e) => {
-                  //   if (e.key === "Enter") {
-                  //     e.preventDefault();
-                  //   }
-                  // }}
-                  onChangeData={(data: any) => handleFieldChange("ordCardNo", data.ordCardNo)}
-                />
+                   {([VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(formState.transaction.master.voucherType as any) &&
+                  <ERPInput
+                    id="orderCardNo"
+                    label={t("token_no")}
+                    placeholder={t("enter_token_number")}
+                    value={formState.transaction.master.orderCardNo}
+                    // data={formState.transaction.master}
+                      onChange={(e) =>
+                    dispatch(
+                      formStateMasterHandleFieldChange({
+                        fields: { orderCardNo: e.target?.value },
+                      })
+                    )
+                  }
 
-   
-
-                {formState.transaction.master.voucherType ===
-                  VoucherType.PurchaseOrder &&
-                  userSession.dbIdValue === "572054329920" && (
-                    <ERPDataCombobox
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      enableClearOption={false}
-                      fetching={formState.transactionLoading}
-                      id="orderStatus"
-                      className="min-w-[180px] !m-0 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text"
-                      label={t(formState.formElements.orderStatus.label)}
-                      data={formState.transaction.master}
-                      // onSelectItem={async (e) => {
-                      //   let barcodeTem = await loadTemplateById<TransactionDetail>(e.value);
-                      //   dispatch(formStateHandleFieldChange({ fields: { barcodeTemplate: barcodeTem } }));
-                      //   dispatch(formStateMasterHandleFieldChange({ fields: { labelDesignID: e.value, }, }));
-                      //   handleFieldKeyDown("labelDesignID", "Enter");
-                      // }}
-                      // value={formState.transaction.master.labelDesignID}
-                      field={{
-                        // params: `TemplateType=barcode`,
-                        // id: "labelDesignID",
-                        valueKey: "id",
-                        labelKey: "name",
-                        getListUrl: Urls.data_order_status,
-                      }}
-                      disabled={
-                        formState.formElements.cbLabelDesign.disabled ||
-                        formState.formElements.pnlMasters?.disabled
-                      }
-                      disableEnterNavigation
-                      onKeyDown={(e: any) => {
-                        handleKeyDown && handleKeyDown(e, "labelDesign");
-                      }}
-                    />
-                  )}
-
-                {formState.transaction.master.voucherType ===
-                  VoucherType.PurchaseOrder &&
-                  formState.transaction.master.gatePassNo === "Approved" && (
-                    <span className="bg-gradient-to-r from-green-400 to-green-600 p-2 rounded-xl text-white font-medium shadow-lg">
-                      {t("approved")}
-                    </span>
-                  )}
-
-                {formState.transaction.master.voucherType ===
-                  VoucherType.PurchaseOrder &&
-                  formState.transaction.master.gatePassNo !== "Approved" && (
-                    <div>
-                      <ERPButton
-                        title={t("approve")}
-                        variant="secondary"
-                        onClick={handleApproveClick}
-                      />
-                    </div>
-                  )}
-
-                {/* {formState.transaction.master.voucherType ===
-                  VoucherType.PurchaseOrder && (
-                  <div>
-                    <ERPButton
-                      title={t("update_status")}
-                      variant="secondary"
-                      onClick={() => setUpdateTriggered(true)}
-                    />
-                  </div>
-                )} */}
+                  />
+                )}
+                {(formState.transaction.master.voucherType == VoucherType.SalesQuotation &&
+                  <ERPInput
+                    id="notes1"
+                    label={t("notes_1")}
+                    placeholder={t("enter_notes")}
+                    value={formState.transaction.master.master2.notes1}
+                    data={formState.transaction.master.master2}
+                     onChange={(e) =>
+                    dispatch(
+                      formStateMasterHandleFieldChange({
+                        fields: { orderCardNo: e.target?.value },
+                      })
+                    )
+                  }
+                  />
+                )}
+                {(formState.transaction.master.voucherType == VoucherType.SalesQuotation &&
+                  <ERPInput
+                    id="notes2"
+                    label={t("notes_2")}
+                    placeholder={t("enter_notes")}
+                    value={formState.transaction.master.master2.notes2}
+                    data={formState.transaction.master.master2}
+                    onChangeData={(data: any) => handleFieldChange("notes2", data.notes2)}
+                  />
+                )}
 
                 {userSession.dbIdValue == "SEMAKA" && (
                 <div className="flex items-end gap-3 ml-2">

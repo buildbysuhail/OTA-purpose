@@ -5,16 +5,36 @@ import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combo
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { TransactionFormState } from "../transaction-types";
+import { APIClient } from "../../../../helpers/api-client";
+import Urls from "../../../../redux/urls";
 
 interface PrintAddressLabelProps {
   closeModal: () => void;
   t: any;
   formState: TransactionFormState;
 }
+interface PrintAddressData{
+  invTransactionMasterID: number;
+  voucherNumber: string;
+  orderNumber: string;
+  orderDate: string;
+  voucherType: string;
+  grandTotal: number;
+  transactionDate: string;
+  partyCode: string;
+  partyName: string;
+  displayName: string;
+  address1: string;
+  address2: string;
+  address3: string;
+  address4: string;
+  mobilePhone: string;
+  contactPhone: string;
+}
 
+const api = new APIClient();
 const PrintAddressLabel: React.FC<PrintAddressLabelProps> = ({ closeModal, t, formState }) => {
-  //   const formState = useSelector((state: RootState) => state.InventoryTransaction);
-  //   const dispatch = useDispatch()
+  const [gridData, setGridData] = useState<PrintAddressData[]>([]);
   const gridColumns: DevGridColumn[] = [
     {
       dataField: "partyCode",
@@ -45,7 +65,7 @@ const PrintAddressLabel: React.FC<PrintAddressLabelProps> = ({ closeModal, t, fo
     },
     {
       dataField: "address1",
-      caption: t("address1"),
+      caption: t("address_1"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
@@ -53,7 +73,7 @@ const PrintAddressLabel: React.FC<PrintAddressLabelProps> = ({ closeModal, t, fo
       width: 250,
     },
     {
-      dataField: "address2",
+      dataField: "address_2",
       caption: t("address2"),
       dataType: "string",
       allowSorting: true,
@@ -63,7 +83,7 @@ const PrintAddressLabel: React.FC<PrintAddressLabelProps> = ({ closeModal, t, fo
     },
     {
       dataField: "address3",
-      caption: t("address3"),
+      caption: t("address_3"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
@@ -72,7 +92,7 @@ const PrintAddressLabel: React.FC<PrintAddressLabelProps> = ({ closeModal, t, fo
     },
     {
       dataField: "address4",
-      caption: t("address4"),
+      caption: t("address_4"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
@@ -105,7 +125,24 @@ const PrintAddressLabel: React.FC<PrintAddressLabelProps> = ({ closeModal, t, fo
       allowSearch: true,
       allowFiltering: true,
       width: 250,
-      visible: formState.transaction.master?.voucherType === "SO" ? true : false,
+    },
+    {
+      dataField: "voucherType",
+      caption: t("voucher_type"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 250,
+    },
+    {
+      dataField: "grandTotal",
+      caption: t("grand_total"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 250,
     },
     {
       dataField: "transactionDate",
@@ -115,7 +152,6 @@ const PrintAddressLabel: React.FC<PrintAddressLabelProps> = ({ closeModal, t, fo
       allowSearch: true,
       allowFiltering: true,
       width: 250,
-      visible: formState.transaction.master?.voucherType === "SO" ? true : false,
     },
     {
       dataField: "orderNumber",
@@ -125,7 +161,6 @@ const PrintAddressLabel: React.FC<PrintAddressLabelProps> = ({ closeModal, t, fo
       allowSearch: true,
       allowFiltering: true,
       width: 250,
-      visible: formState.transaction.master?.voucherType !== "SO" ? true : false,
     },
     {
       dataField: "orderDate",
@@ -135,20 +170,34 @@ const PrintAddressLabel: React.FC<PrintAddressLabelProps> = ({ closeModal, t, fo
       allowSearch: true,
       allowFiltering: true,
       width: 250,
-      visible: formState.transaction.master?.voucherType !== "SO" ? true : false,
     },
   ];
 
   const [voucherType, setVoucherType] = useState<string>("SI");
   const [voucherNumber, setVoucherNumber] = useState<string>("");
+  const [notes, setNotes] = useState<{ notes1: string; notes2: string }>({notes1: "",notes2: "",});
+  const [numOfLabels, setNumberOfLabels] = useState<number>(1)
 
-  const handleClickShowBtn =()=>{
-    
+  // Show button click function
+  const handleClickShowBtn = async () =>{
+    try{
+      const response = await api.getAsync(`${Urls.inv_transaction_base}${formState.transactionType}/VoucherDetailsForLabelPrint/${voucherType}/${voucherNumber}`);
+      if(response.isOk){
+        setGridData(response)
+      }
+    }catch{
+      console.error("Error in fetching print label data")
+    }
+  }
+
+  // Print button click function
+  const handlePrintBtnClick = () => {
+    alert("Need to manage this section")
   }
 
   return (
     <>
-      <div className="flex items-center gap-2 w-full">
+      <div className="flex items-center justify-center gap-2 w-full">
         <ERPDataCombobox
           id="voucherType"
           label={t("voucher_type")}
@@ -157,7 +206,7 @@ const PrintAddressLabel: React.FC<PrintAddressLabelProps> = ({ closeModal, t, fo
             { value: "SO", label: t("sales_order") },
           ]}
           value={voucherType}
-          onChange={(val: string) => setVoucherType(val)}
+          onChange={(opt: any) => setVoucherType(opt.value)}
         />
         <ERPInput
           id="voucherNumber"
@@ -179,10 +228,9 @@ const PrintAddressLabel: React.FC<PrintAddressLabelProps> = ({ closeModal, t, fo
       <div className="my-2">
         <ErpDevGrid
           columns={gridColumns}
-          keyExpr="cardID"
-          // data={couponRows}
-          //   dataUrl={`${Urls.inv_transaction_base}${formState.transactionType}/LedgerList/${salesRoute && mainSalesRoute ? mainSalesRoute : 0}`}
-          gridId="ledgerDetailsGrid"
+          keyExpr="invTransactionMasterID"
+          data={gridData}
+          gridId="invTransactionMasterID"
           height={200}
           hideGridAddButton={true}
           columnHidingEnabled={true}
@@ -207,39 +255,56 @@ const PrintAddressLabel: React.FC<PrintAddressLabelProps> = ({ closeModal, t, fo
           }}
         />
       </div>
-      <div className="flex flex-col gap-2 mt-2">
+      <div className="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-3">
         <ERPInput
-          id=""
-          type="text"
-          labelDirection="horizontal"
-          label={t('notes_1')}
-          className="w-80"
+          id="Notes1"
+          label={t("notes_1")}
+          placeholder={t("notes_1")}
+          type="string"
+          onChange={(e) =>
+            setNotes(prev => ({
+              ...prev, notes1: e.target.value,
+          }))}
+          value={notes.notes1}
         />
         <ERPInput
-          id=""
-          type="text"
-          labelDirection="horizontal"
-          label={t('notes_2')}
-          className="w-80"
+          id="Notes2"
+          label={t("notes_2")}
+          placeholder={t("notes_2")}
+          type="string"
+          onChange={(e) =>
+            setNotes(prev => ({
+              ...prev, notes2: e.target.value,
+          }))}
+          value={notes.notes2}
         />
+      </div>
+      <div className="w-full flex items-center justify-center my-2">
         <ERPInput
-          id="noOfLabels"
-          labelDirection="horizontal"
-          label={t('no_of_labels')}
-          type="text"
-          className="w-40"
+          id="NumLabels"
+          label={t("no_of_labels")}
+          placeholder={t("no_of_labels")}
+          autoFocus={true}
+          className="w-80"
+          inputClassName="h-60"
+          type="number"
+          onChange={(e)=> setNumberOfLabels(Number(e.target.value))}
+          value={numOfLabels}
+
         />
       </div>
       <div className="flex items-center justify-end gap-1">
         <ERPButton
-          title={t("print")}
-          variant="primary"
-          className="!m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
-        />
-        <ERPButton
           title={t("close")}
           variant="secondary"
           className="!m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+          onClick={closeModal}
+        />
+        <ERPButton
+          title={t("print")}
+          variant="primary"
+          className="!m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+          onClick={() => handlePrintBtnClick()}
         />
       </div>
     </>

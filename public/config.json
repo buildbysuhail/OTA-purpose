@@ -1,5 +1,5 @@
 {
   "api": {
-    "APP_API_URL": "https://localhost:7213"
+    "APP_API_URL": "https://api.poldev.work"
   }
 }

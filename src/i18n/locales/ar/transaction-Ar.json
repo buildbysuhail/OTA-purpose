@@ -1158,7 +1158,8 @@
   "contact_phone": "رقم الاتصال",
   "order_number": "رقم الطلب",
 
-  "warehouse_name": "اسم المستودع"
+  "warehouse_name": "اسم المستودع",
+  "order_details": "تفاصيل الطلب"
 
 
 }

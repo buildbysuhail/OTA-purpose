@@ -1413,7 +1413,7 @@ debugger;
       if (PendingTransDetails && PendingTransDetails.details && PendingTransDetails.details.length > 0) {
         const calculatedDetails: TransactionDetail[] = [];
         const refactoredDetails = await refactorDetails(PendingTransDetails.details?.map((x: any) => {
-          return { ...x, qty: x.pendingQty }
+          return { ...x, quantity: x.pendingQty }
         }), formState.transaction.master.voucherForm, voucherType, { result: {} }, loadType);
         for (let index = 0; index < refactoredDetails.length; index++) {
           const _element = { ...refactoredDetails[index] };

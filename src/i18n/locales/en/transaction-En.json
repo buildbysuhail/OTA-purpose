@@ -1162,7 +1162,8 @@
   "contact_phone":"ContactPhone",
   "order_number":"OrderNumber",
 
-  "warehouse_name":"WarehouseName"
+  "warehouse_name":"WarehouseName",
+  "order_details":"Order Details"
 
 
 

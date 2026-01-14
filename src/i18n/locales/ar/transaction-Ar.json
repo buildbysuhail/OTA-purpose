@@ -1151,7 +1151,12 @@
   "no_balance_amount_in_this_card/coupon": "لا يوجد رصيد في هذه البطاقة/القسيمة",
   "bill_amount_is_too_low_to_add_this_coupon": "قيمة الفاتورة أقل من الحد الأدنى لإضافة هذه القسيمة",
   "invalid_card_number": "رقم البطاقة غير صالح",
-  "coupon_added_to_list": "تمت إضافة القسيمة إلى القائمة"
+  "coupon_added_to_list": "تمت إضافة القسيمة إلى القائمة",
+
+  "address_3": "العنوان ٣",
+  "mobile_phone": "رقم الجوال",
+  "contact_phone": "رقم الاتصال",
+  "order_number": "رقم الطلب"
 
 
 }

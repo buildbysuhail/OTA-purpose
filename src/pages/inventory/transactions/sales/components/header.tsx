@@ -364,39 +364,6 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
     return (
       <>
         <div className={`!overflow-visible flex items-center justify-evenly md:justify-end space-x-2 p-1 w-full overflow-x-auto bg-[#f9fafb] md:bg-transparent`}>
-          {/* SAMPLE BUTTONS CREATED FOR SHOW-E-INVOICE, GIFT/CASH COUPON SELECTOR, PRINT LABEL ADDRESS */}
-          {/* ----------------------------------------------------------------------------------------- */}
-          {/* <button onClick={handleShowEInvoiceModal} className="bg-gray-300">Show E-inv</button>
-          <button className="bg-gray-300">Gift</button>
-          <button className="bg-gray-300">Print Address</button> */}
-
-          {/* Load Temp Rows */}
-          <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("show_e_invoice")}>
-            <button
-              disabled={formState.formElements.pnlMasters?.disabled}
-              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
-              onClick={handleShowEInvoiceModal}>
-              <ReceiptText className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-            </button>
-          </div>
-
-          <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("gift_cash_coupon_selector")}>
-            <button
-              disabled={formState.formElements.pnlMasters?.disabled}
-              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
-              onClick={handleShowGifOrCashCouponModal}>
-              <Gift className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-            </button>
-          </div>
-
-          <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("print_address_label")}>
-            <button
-              disabled={formState.formElements.pnlMasters?.disabled}
-              className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
-              onClick={openPrintAddressModal}>
-              <MapPinHouse className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-            </button>
-          </div>
 
           <div className="group relative inline-flex flex-col items-center ps-[5px]" title={t("load_details")}>
             <button
@@ -1018,9 +985,9 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
             isOpen={formState.showEInvoice}
             title={t("show_e_invoice")}
             width={600}
-            height={200}
+            height={400}
             closeModal={closeShowEInvoiceModal}
-            content={<ShowEInvoice t={t} closeModal={closeShowEInvoiceModal} />}
+            content={<ShowEInvoice t={t} closeModal={closeShowEInvoiceModal} formState={formState} />}
           />
 
           <ERPModal

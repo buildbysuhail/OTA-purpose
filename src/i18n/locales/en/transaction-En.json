@@ -1155,7 +1155,12 @@
   "no_balance_amount_in_this_card/coupon":"No balance amount in this card/Coupon",
   "bill_amount_is_too_low_to_add_this_coupon":"Bill Amount is too low to add this coupon",
   "invalid_card_number":"Invalid Card Number",
-  "coupon_added_to_list":"Coupon added to the list"
+  "coupon_added_to_list":"Coupon added to the list",
+
+  "address_3":"Address3",
+  "mobile_phone":"MobilePhone",
+  "contact_phone":"ContactPhone",
+  "order_number":"OrderNumber"
 
 
 

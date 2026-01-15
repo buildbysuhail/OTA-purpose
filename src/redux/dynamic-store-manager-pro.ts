@@ -27,7 +27,10 @@ import InvTransactionReducer from "../pages/inventory/transactions/reducer";
 import AccTransactionReducer from "../pages/accounts/transactions/reducer";
 import ServiceTransactionReducer from "../pages/inventory/transactions/service/service-transaction-reducer";
 import DataContainerReducer from "../redux/slices/data/reducer";
-
+import RPosUiReducer from "../pages/rpos/reducers/ui-reducer";
+import RPosOperationalReducer from "../pages/rpos/reducers/operational-reducer";
+import RPosTransactionReducer from "../pages/rpos/reducers/transaction-reducer";
+import { rposApi } from "../pages/rpos/api/rpos-api";
 import { APIClient } from "../helpers/api-client";
 import { reducerNameFromUrl } from "./actions/AppActions";
 import Urls from "./urls";
@@ -192,7 +195,7 @@ class DynamicReduxManager {
       middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
           serializableCheck: false,
-        }),
+        }).concat(rposApi.middleware),
     });
   }
 
@@ -221,7 +224,10 @@ class DynamicReduxManager {
       InventoryTransaction: InvTransactionReducer,
       ServiceTransaction: ServiceTransactionReducer,
       Data: DataContainerReducer,
-
+      RPosUi: RPosUiReducer,
+      RPosOperational: RPosOperationalReducer,
+      RPosTransaction: RPosTransactionReducer,
+      [rposApi.reducerPath]: rposApi.reducer,
       ...reducerMap,
     };
     return red;

@@ -1191,7 +1191,8 @@ export const useTransactionHelper = (transactionType: string) => {
     formType: string,
     voucherType: string,
     commonParams: CommonParams,
-    loadType?: string
+    loadType?: string,
+    isMobile?: boolean
   ): TransactionDetail[] => {
     const detailsLength = _details.length;
     let details = [..._details];
@@ -1414,7 +1415,7 @@ export const useTransactionHelper = (transactionType: string) => {
 
     // Calculate empty rows needed
     const blankDetailsCount = detailsLength - validDetailsCount;
-    const emptyRowsNeeded = Math.max(0, 50 - blankDetailsCount);
+    const emptyRowsNeeded = isMobile ? 0 :Math.max(0, 50 - blankDetailsCount);
 
     // Fill remaining slots with empty rows if needed
     if (emptyRowsNeeded > 0) {

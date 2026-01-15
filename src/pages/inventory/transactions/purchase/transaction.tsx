@@ -54,8 +54,8 @@ import { getStorageString } from "../../../../utilities/storage-utils";
 import { getApLocalDataByUrl } from "../../../../redux/cached-urls";
 import BillWisePopup from "../../../transaction-base/billwise-popup";
 import DeletingOverlay from "../transaction-deleting";
-import { formStateHandleFieldChangeKeysOnly, resetState, formStateHandleFieldChange, updateFormElement } from "../reducer";
-import { TransactionProps, UserConfig, TransactionDetail, TransactionFormState, TransactionData, SummaryItems, GridQtyFactors, ColumnModel } from "../transaction-types";
+import { formStateHandleFieldChangeKeysOnly, resetState, formStateHandleFieldChange, updateFormElement, formStateTransactionDetailsRowAdd } from "../reducer";
+import { TransactionProps, UserConfig, TransactionDetail, TransactionFormState, TransactionData, SummaryItems, GridQtyFactors, ColumnModel, FormElementsState } from "../transaction-types";
 import { initialUserConfig, transactionInitialData, TransactionFormStateInitialData, initialFormElements, initialInventoryTotals, initialTransactionDetailData } from "../transaction-type-data";
 import { toggleIsPrintPreviewPopup } from "../../../../redux/slices/popup-reducer";
 import TemplatesPreView from "../../../transaction-base/transaction-print-preview";
@@ -362,6 +362,84 @@ const TransactionForm: React.FC<TransactionProps> = ({
     ) => { column: string; rowIndex: number } | null;
     gridRef: HTMLDivElement;
   }>(null);
+
+   const onSaveItem = async(item: TransactionDetail, mode:"Save" | "SaveAndNew") => {
+      debugger;
+      if(!(item.productBatchID > 0)) return;
+      const exist = formState.transaction.details.find(x => x.slNo == formState.row?.slNo);
+                          if(exist) {
+                            const ind = formState.transaction.details.findIndex(x => x.slNo == formState.row?.slNo)
+                            if(formState.row) {
+                              let final = [...formState?.transaction?.details];
+                              final[ind] = item
+                              final = final.filter(x => x.productID > 0);
+                              
+                              const summaryRes = calculateSummary(final, formState, {
+                                            result: {},
+                                          });
+                              
+                                          const totalRes = await calculateTotal(
+                                            formState.transaction.master,
+                                            summaryRes.summary as SummaryItems,
+                                            {
+                                              ...formState.formElements,
+                                            } as FormElementsState,
+                                            { result: {} }
+                                          );
+                                          const result = {
+                                            ...totalRes,
+                                            row: initialTransactionDetailData,
+                                            itemPopup: {isOpen:mode=="SaveAndNew", index:0},
+                                            summary: summaryRes.summary,
+                                            showQuantityFactors: { visible: false, rowIndex: -1, qtyDesc: "" },
+                                            transaction: {
+                                              ...totalRes.transaction,
+                                              details: [item],
+                                            },
+                                          };
+                              dispatch(formStateHandleFieldChangeKeysOnly({fields:{
+                                ...result
+                              },itemsToAddToDetails: undefined, rowIndex:ind}))
+                              dispatch(formStateTransactionDetailsRowAdd({...item,isRowEdit: true}))
+                            }
+                          } else {
+                            if(formState.row) {
+                              
+                              let final = [...formState?.transaction?.details];
+                              final.push(item);
+                              final = final.filter(x => x.productID > 0);
+                              
+                              const summaryRes = calculateSummary(final, formState, {
+                                            result: {},
+                                          });
+                              
+                                          const totalRes = await calculateTotal(
+                                            formState.transaction.master,
+                                            summaryRes.summary as SummaryItems,
+                                            {
+                                              ...formState.formElements,
+                                            } as FormElementsState,
+                                            { result: {} }
+                                          );
+                                          const result = {
+                                            ...totalRes,
+                                            row: initialTransactionDetailData,
+                                            itemPopup: {isOpen:mode=="SaveAndNew", index:0},
+                                            summary: summaryRes.summary,
+                                            showQuantityFactors: { visible: false, rowIndex: -1, qtyDesc: "" },
+                                            transaction: {
+                                              ...totalRes.transaction,
+                                              details: [],
+                                            },
+                                            
+                                          };
+                              dispatch(formStateHandleFieldChangeKeysOnly({fields:{
+                                ...result
+                              },itemsToAddToDetails: undefined}))
+                              dispatch(formStateTransactionDetailsRowAdd(item))
+                            }
+                          }
+    }
 
   const toggleHeaderDropdown = () => {
     setIsDropDownOpen((prev) => { return { open: !prev.open, autoAddressFocus: false } });
@@ -1034,7 +1112,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
       if (PendingTransDetails && PendingTransDetails.details && PendingTransDetails.details.length > 0) {
         const calculatedDetails: TransactionDetail[] = [];
         const refactoredDetails = refactorDetails(PendingTransDetails.details?.map((x: any) => {
-          return { ...x, qty: x.pendingQty }
+          return { ...x, quantity: x.pendingQty }
         }), formState.transaction.master.voucherForm, voucherType, { result: {} }, loadType);
         for (let index = 0; index < refactoredDetails.length; index++) {
           const _element = { ...refactoredDetails[index] };
@@ -1219,6 +1297,31 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
     batchSelectionData();
   }, [formState.batchSelectionData]);
+
+  // Recalculate summary and grandTotal whenever transaction details change (for mobile item additions)
+  // useEffect(() => {
+  //   if (formState.transaction.details.length > 0 && deviceInfo.isMobile) {
+  //     const details = formState.transaction.details.filter((x) => x.productID > 0);
+  //     if (details.length > 0) {
+  //       const summaryRes = calculateSummary(details, formState, { result: {} });
+  //       const totalRes = calculateTotal(
+  //         formState.transaction.master,
+  //         summaryRes.summary as SummaryItems,
+  //         formState.formElements,
+  //         { result: {} }
+  //       );
+  //       if (totalRes && summaryRes) {
+  //         totalRes.summary = summaryRes.summary;
+  //         dispatch(
+  //           formStateHandleFieldChangeKeysOnly({
+  //             fields: totalRes,
+  //           })
+  //         );
+  //       }
+  //     }
+  //   }
+  // }, [formState.transaction.details.length]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -1800,6 +1903,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   }}
                 >
                   <ErpPurchaseGrid
+                  onSaveItem={onSaveItem}
                     ref={purchaseGridRef}
                     onChange={handleTextDataChange}
                     zIndexController={40}
@@ -1807,13 +1911,14 @@ const TransactionForm: React.FC<TransactionProps> = ({
                       value: any,
                       e: React.KeyboardEvent<any>,
                       column: keyof TransactionDetail,
-                      rowIndex: number
+                      rowIndex: number,
+                      validateBarcode?: boolean
                     ) => {
                       handleTextDataKeyDown(value, e, column, rowIndex, {
                         result: {},
                         formStateHandleFieldChangeKeysOnly:
                           formStateHandleFieldChangeKeysOnly,
-                      });
+                      },deviceInfo.isMobile, validateBarcode);
                     }}
                     transactionType={transactionType}
                     _columns={_purchaseGridCol}
@@ -1994,22 +2099,24 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 {formState.lastChoosedTemplate?.id?.toString()}
                 <div className="space-y-2"></div>
                 <ErpPurchaseGrid
+                onSaveItem={onSaveItem}
                   isMobile={true}
                   ref={purchaseGridRef}
                   zIndexController={40}
                   onChange={handleTextDataChange}
-                  onKeyDown={(
-                    value: any,
-                    e: React.KeyboardEvent<any>,
-                    column: keyof TransactionDetail,
-                    rowIndex: number
-                  ) => {
-                    handleTextDataKeyDown(value, e, column, rowIndex, {
-                      result: {},
-                      formStateHandleFieldChangeKeysOnly:
-                        formStateHandleFieldChangeKeysOnly,
-                    });
-                  }}
+                   onKeyDown={(
+                      value: any,
+                      e: React.KeyboardEvent<any>,
+                      column: keyof TransactionDetail,
+                      rowIndex: number,
+                      validateBarcode?: boolean
+                    ) => {
+                      handleTextDataKeyDown(value, e, column, rowIndex, {
+                        result: {},
+                        formStateHandleFieldChangeKeysOnly:
+                          formStateHandleFieldChangeKeysOnly,
+                      },deviceInfo.isMobile, validateBarcode);
+                    }}
                   transactionType={transactionType}
                   _columns={_purchaseGridCol}
                   keyField={"productID"}

@@ -57,7 +57,8 @@ export type LoadAndSetTransVoucherFn = (
   loadFType?: string,
   loadPrefix?: string,
   showLoading?: boolean,
-  disablePnlMasters?: boolean
+  disablePnlMasters?: boolean,
+  invokeUsingVoucherNumber?: boolean,
 ) => Promise<boolean | undefined>; // ✅ fix return type
 
 const api = new APIClient();
@@ -134,7 +135,7 @@ export const useTransaction = (
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
-  const { round, roundAwayFromZero } = useNumberFormat();
+  const { round, roundAwayFromZero, getFormattedValueIgnoreRounding, getNumericFormat } = useNumberFormat();
   const clientSession = useAppSelector(
     (state: RootState) => state.ClientSession
   );
@@ -310,7 +311,8 @@ export const useTransaction = (
     loadFType,
     loadPrefix,
     showLoading,
-    disablePnlMasters = true
+    disablePnlMasters = true,
+    invokeUsingVoucherNumber = true,
   ) => {
 
     const _s_isDirty = isDirtyTransaction(
@@ -361,7 +363,9 @@ export const useTransaction = (
       transactionMasterID,
       loadVType,
       loadFType,
-      loadPrefix
+      loadPrefix,
+      transactionMasterID,
+      invokeUsingVoucherNumber
     );
 
 
@@ -381,6 +385,84 @@ export const useTransaction = (
 
     if (typeof _formState == "boolean") {
       return;
+    }
+    _formState.formElements.btnEdit = {
+      ..._formState.formElements.btnEdit,
+      disabled: false,
+    }
+
+    if (clientSession.isAppGlobal && [VoucherType.SalesInvoice, VoucherType.SalesReturn].includes(_formState.transaction.master.voucherType as any)) {
+      if (applicationSettings.gSTTaxesSettings.enableEInvoiceIndia ||
+        (["WHOLESALE", "INTERSTATE", "INT STATE"].includes(_formState?.transaction.master.voucherForm.toUpperCase()) && _formState.transaction.master.voucherType == VoucherType.SalesInvoice) ||
+        (["WHOLESALE", "INT", "B2B"].includes(_formState?.transaction.master.voucherForm.toUpperCase()) && _formState.transaction.master.voucherType == VoucherType.SalesReturn)
+      ) {
+        if (_formState?.transaction?.eInvoiceStatus === "IRN_GENERATED") {
+          _formState.formElements.btnEinvoice = {
+            ..._formState.formElements.btnEinvoice,
+            visible: true,
+          }
+          _formState.formElements.einvoiceLabel = {
+            ..._formState.formElements.einvoiceLabel,
+            visible: true,
+            label: "E-Invoice Submitted",
+            bg: "bg-green-400",
+          }
+
+        } else if (_formState?.transaction?.eInvoiceStatus === "IRN_CANCELLED") {
+          _formState.formElements.einvoiceLabel = {
+            ..._formState.formElements.einvoiceLabel,
+            visible: true,
+            label: "E-Invoice Cancelled",
+            bg: "bg-yellow-400",
+          }
+          _formState.formElements.btnSave = {
+            ..._formState.formElements.btnSave,
+            disabled: true,
+          }
+          _formState.formElements.btnEdit = {
+            ..._formState.formElements.btnEdit,
+            disabled: true,
+          }
+          _formState.formElements.btnDelete = {
+            ..._formState.formElements.btnDelete,
+            disabled: true,
+          }
+        }
+      }
+      if (applicationSettings.gSTTaxesSettings.enableEWB && formState.userConfig?.autoEwayBill) {
+        if (_formState?.transaction?.eInvoiceStatus === "EWB_GENERATED") {
+          _formState.formElements.btnEWB = {
+            ..._formState.formElements.btnEWB,
+            visible: true,
+          }
+          _formState.formElements.eWBLabel = {
+            ..._formState.formElements.eWBLabel,
+            visible: true,
+            label: "EWB Submited",
+            bg: "bg-green-400",
+          }
+
+        } else if (_formState?.transaction?.ewbStatus === "EWB_CANCELLED") {
+          _formState.formElements.eWBLabel = {
+            ..._formState.formElements.eWBLabel,
+            visible: true,
+            label: "EWB Cancelled",
+            bg: "bg-yellow-400",
+          }
+          _formState.formElements.btnSave = {
+            ..._formState.formElements.btnSave,
+            disabled: true,
+          }
+          _formState.formElements.btnEdit = {
+            ..._formState.formElements.btnEdit,
+            disabled: true,
+          }
+          _formState.formElements.btnDelete = {
+            ..._formState.formElements.btnDelete,
+            disabled: true,
+          }
+        }
+      }
     }
     _formState.formElements = {
       ..._formState.formElements,
@@ -469,14 +551,14 @@ export const useTransaction = (
     voucherPrefix?: string,
     voucherType?: string,
     formType?: string,
-    manualInvoiceNumber?: any,
+    manualInvoiceNumber: any = "",
     transactionMasterID?: number,
-    loadVType?: string,
+    loadVType: string = "",
     loadFType?: string,
     loadPrefix?: string,
-    pDTInvTransMasterID?: number
+    pDTInvTransMasterID: number = 0,
+    invokeUsingVoucherNumber: boolean = true,
   ) => {
-    loadVType = loadVType ?? "PI";
     let voucher: TransactionFormState = JSON.parse(
       JSON.stringify({
         ...formState,
@@ -486,59 +568,46 @@ export const useTransaction = (
 
     let url = `${Urls.inv_transaction_base}${transactionType}`;
 
-    let _voucherNumber =
-      voucherNumber ?? (formState.transaction?.master?.voucherNumber || 0);
-    let out_voucherNumber =
-      voucherNumber ?? (formState.transaction?.master?.voucherNumber || 0);
     let out_voucherType =
       voucherType ?? (formState.transaction?.master?.voucherType || "");
     let out_voucherForm =
       formType ?? (formState.transaction?.master?.voucherForm || "");
-    let out_voucherPrefix =
-      voucherPrefix ?? (formState.transaction?.master?.voucherPrefix || "");
 
-    if (loadVType == "PO") {
-      out_voucherNumber = manualInvoiceNumber ?? 0;
-      out_voucherType = loadVType;
-      out_voucherForm = loadFType ?? "";
-      out_voucherPrefix = loadPrefix ?? "";
+    if (loadVType == "SO") {
+      url = url + "/LoadSO";
     }
-    if (loadVType == "GRN") {
-      out_voucherNumber = manualInvoiceNumber ?? 0;
-      out_voucherType = loadVType;
-      out_voucherForm = loadFType ?? "";
-      out_voucherPrefix = loadPrefix ?? "";
-      url = url + "/ByGRN";
+    if (loadVType == "SQ") {
+      url = url + "/LoadSQ";
     }
-    if (loadVType == "GRR") {
-      out_voucherNumber = manualInvoiceNumber ?? 0;
-      out_voucherType = loadVType;
-      out_voucherForm = loadFType ?? "";
-      out_voucherPrefix = loadPrefix ?? "";
-      url = url + "/ByGRN";
+    if (loadVType == "GD") {
+      url = url + "/LoadGD";
     }
-    if (loadVType == "PI_Ref") {
-      out_voucherNumber = manualInvoiceNumber ?? 0;
-      out_voucherType = "PI";
-      out_voucherForm = "VAT";
-      out_voucherPrefix = loadPrefix ?? "";
-      url = url + "/ByReferenceNo";
+    if (loadVType == "GDQ") {
+      loadVType = "GD"
+      url = url + "/LoadGDQuotation";
     }
 
-    if (_voucherNumber == undefined || _voucherNumber <= 0) {
+    if (voucherNumber == undefined || voucherNumber <= 0) {
       return voucher;
+
     }
+    debugger;
     const params: Record<any, any> = {
-      VoucherNumber: out_voucherNumber, // Ensuring it's always a string
-      voucherPrefix: out_voucherPrefix,
-      voucherType: out_voucherType,
-      voucherForm: out_voucherForm,
-      InvokeUsingVoucherNumber: !usingManualInvNumber,
+      VoucherNumber: loadVType === "" ? voucherNumber ?? formState.transaction.master.voucherNumber : voucherNumber,
+      voucherPrefix: loadVType === "" ? voucherPrefix ?? formState.transaction.master.voucherPrefix : loadPrefix,
+      voucherType: loadVType === "" ? out_voucherType : loadVType,
+      voucherForm: loadVType === "" ? out_voucherForm : formType,
+      // InvokeUsingVoucherNumber: !usingManualInvNumber,
       isUsingManualInvNo: usingManualInvNumber, // Convert boolean to string
+      autoEwayBill: formState.userConfig?.autoEwayBill, // for india sales
       isActualPriceVisible:
         formState.gridColumns.find((x) => x.dataField == "actualSalesPrice")
           ?.visible ?? false,
-      referenceNumber: loadVType == "PI_Ref" ? out_voucherNumber : null,
+      manualInvoiceNumber: manualInvoiceNumber,
+      invokeUsingVoucherNumber: invokeUsingVoucherNumber,
+      pDTInvTransMasterID: pDTInvTransMasterID,
+      isStockDetailVisible: formState.gridColumns.find((x) => x.dataField == "stockDetails")
+        ?.visible ?? false,
     };
 
     // ByGRN
@@ -554,13 +623,55 @@ export const useTransaction = (
       }
     }
 
+    // Under Sales
+    if (loadVType == "GD") {
+      if (vch?.isOk == false) {
+        ERPAlert.show({
+          icon: "warning",
+          title: t(""),
+          text: `${vch?.message}`,
+          confirmButtonText: t("ok"),
+          showCancelButton: false,
+        });
+        return false;
+      }
+    }
+
+    if (loadVType === "SO" || loadVType === "SQ" || loadVType === "GD" || loadVType === "GDQ") {
+      if (vch.master?.invTransactionMasterID > 0) {
+        // uncomment after check - show in 1050 - checkIt
+        const nextVoucherNo = await getNextVoucherNumber(
+          formType ?? formState.transaction.master.voucherForm,
+          voucherType ?? formState.transaction.master.voucherType,
+          voucherPrefix ?? formState.transaction.master.voucherPrefix,
+          false
+        );
+        voucher.isEdit = false;
+        voucher.formElements = {
+          ...voucher.formElements,
+          btnSave: {
+            ...voucher.formElements.btnSave,
+            disabled: !hasRight(formState.formCode, UserAction.Add),
+          },
+          btnEdit: { ...voucher.formElements.btnEdit, disabled: true },
+          btnDelete: { ...voucher.formElements.btnDelete, disabled: true },
+          btnPrint: { ...voucher.formElements.btnPrint, disabled: true },
+        };
+        if (vch?.master) {
+          vch.master.invTransactionMasterID = 0;
+          vch.master.voucherNumber = nextVoucherNo;
+        }
+      }
+    }
+    // The above are newly added for sales
+
     if (vch == null || vch?.master == null) {
       // const vno = await getNextVoucherNumber(params.formType,params.voucherType,params.voucherPrefix, false);
       vch = {
         ...transactionInitialData,
         master: {
           ...transactionInitialData.master,
-          voucherNumber: _voucherNumber,
+          voucherNumber: voucherNumber,
           voucherType: voucherType ?? formState.transaction.master.voucherType,
           voucherPrefix:
             voucherPrefix ?? formState.transaction.master.voucherPrefix,
@@ -572,7 +683,7 @@ export const useTransaction = (
     if (usingManualInvNumber) {
       vch.master = {
         ...vch.master,
-        voucherNumber: _voucherNumber,
+        voucherNumber: voucherNumber,
         voucherType: voucherType ?? formState.transaction.master.voucherType,
         voucherPrefix:
           voucherPrefix ?? formState.transaction.master.voucherPrefix,
@@ -582,6 +693,11 @@ export const useTransaction = (
           : vch.master.invTransactionMasterID,
       };
     }
+    vch.master = {
+      ...vch.master,
+      voucherType: out_voucherType ?? formState.transaction.master.voucherType,
+      voucherForm: out_voucherForm ?? formState.transaction.master.voucherForm,
+    };
     // clearControlForNew();
     await undoEditMode(
       formState.isEdit,
@@ -604,8 +720,22 @@ export const useTransaction = (
       master: {
         ...(vch?.master || {}),
         hasroundOff: vch?.master?.roundAmount != 0,
-        cashReceived: vch?.master?.cashReceived,
+        cashReceived: [VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(voucherType as any)
+          ? vch?.master?.cashReturned
+          : voucherType == VoucherType.SalesInvoice && !clientSession.isAppGlobal
+            ? getFormattedValueIgnoreRounding(vch?.master?.cashReceived)
+            : round(vch?.master?.cashReceived),
         hasCashPaid: vch?.master?.cashReceived != 0,
+        billDiscount: voucherType == VoucherType.SalesInvoice && !clientSession.isAppGlobal ? getFormattedValueIgnoreRounding(vch?.master?.billDiscount)
+          : [VoucherType.ServiceInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate, VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(voucherType as any)
+            ? vch?.master?.billDiscount : round(vch?.master?.billDiscount),
+        adjustmentAmount: [VoucherType.SalesQuotation, VoucherType.SalesInvoice, VoucherType.GoodsDeliveryNote, VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(voucherType as any)
+          ? round(vch?.master?.adjustmentAmount)
+          : vch?.master?.adjustmentAmount,
+        srAmount: round(vch?.master?.srAmount),
+        bankAmt: [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(voucherType as any)
+          ? round(vch?.master?.bankAmt)
+          : vch?.master?.bankAmt
       },
       details: await refactorDetails(
         vch.details,
@@ -614,12 +744,22 @@ export const useTransaction = (
         { result: {} },
         loadVType
       ),
-      attachments: [...(vch.transaction?.attachments || [])],
+      attachments: [...(vch?.attachments || [])],
     };
-
     const summaryRes = calculateSummary(voucher.transaction.details, voucher, {
       result: {},
     });
+    debugger;
+    if (voucher.transaction.master.billDiscount > 0) {
+      const net = summaryRes.summary?.total ?? 0;
+      const bilDis = voucher.transaction.master.billDiscount;
+
+      if (net != 0) {
+        voucher.billDiscountPerc = bilDis / net * 100;
+      } else {
+        voucher.billDiscountPerc = 0
+      }
+    }
     voucher.summary = (
       summaryRes && summaryRes.summary
         ? summaryRes.summary
@@ -4611,7 +4751,7 @@ export const useTransaction = (
           })
         );
 
-        if (!formState.giftClaimed && formState.transaction.master.invTransactionMasterID <= 0) {
+        if (!formState.giftClaimed && !(formState.transaction.master.invTransactionMasterID > 0)) {
           const params = {
             grandTotal: String(formState.transaction.master.grandTotal || 0),
             warehouseID: String(formState.transaction.master.fromWarehouseID),
@@ -4619,43 +4759,48 @@ export const useTransaction = (
 
           const query = new URLSearchParams(params).toString();
 
-          const ds = await api.getAsync("/giftOnBilling", query);
+          const ds = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/GiftOnBilling`, query)
 
           if (ds?.giftProducts?.length > 0) {
             const row = ds.giftProductPrice;
 
             const Qty = Number(row.quantity ?? 0);
-            formState.giftProductQty = Qty;
+            // formState.giftProductQty = Qty;
 
-            const Price = Number(row.SpecialPrice ?? 0);
-            formState.giftProductPrice = Price;
+            const Price = Number(row.specialPrice ?? 0);
+            // formState.giftProductPrice = Price;
 
-            const giftProductBatchId = Number(row.GiftProductBatchID ?? 0);
-            const products = ds?.giftProducts.map((dr: any) => ({
-              barcode: dr.AutoBarcode,
-              productBatchID: Number(dr.ProductBatchID),
-              productCode: dr.ProductCode,
-              productID: Number(dr.ProductID),
-              productName: dr.ProductName,
-            }));
-            dispatch(
-              formStateHandleFieldChangeKeysOnly({
-                fields: {
-                  giftProductQty: Qty,
-                  giftProductPrice: Price,
-                  giftBatchId: giftProductBatchId,
-                  giftModels: products
+            const giftProductBatchId = Number(row.giftProductBatchID ?? 0);
+            if (Qty > 0 && giftProductBatchId > 0) {
+
+              if (ds?.giftProducts.length > 0) {
+                for (const dr of ds?.giftProducts) {
+
+                  const giftModel = {
+                    barcode: dr.autoBarcode,
+                    productBatchID: Number(dr.productBatchID),
+                    productCode: dr.productCode,
+                    productID: Number(dr.productID),
+                    productName: dr.productName,
+                  };
+                  dispatch(
+                    formStateHandleFieldChangeKeysOnly({
+                      fields: {
+                        giftProductQty: Qty,
+                        giftProductPrice: Price,
+                        giftBatchId: giftProductBatchId,
+                        giftModels: [giftModel]
+                      }
+                    })
+                  );
+
+                  if (invSettings.giftOnBilling && invSettings.giftOnBillingAs === "Products") {
+                    checkTheProductInSchemes(Qty, Price, [giftModel]);
+                  }
+                  else if (invSettings.giftOnBilling && invSettings.giftOnBillingAs === "Special Price") {
+                    checkTheProductInSchemes(Qty, Price, [giftModel]);
+                  }
                 }
-              })
-            );
-
-            for (const dr of products) {
-
-              // Apply scheme logic based on setting
-              if (invSettings.giftOnBillingAs === "Products") {
-                checkTheProductInSchemes(Qty, Price, products);
-              } else if (invSettings.giftOnBillingAs === "Special Price") {
-                checkTheProductPriceInSchemes(Qty, Price, products);
               }
             }
           }

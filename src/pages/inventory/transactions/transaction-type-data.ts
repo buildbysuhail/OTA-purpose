@@ -23,9 +23,9 @@ export const TransactionMaster3InitialData: TransactionMaster3 = {
   shipTradeName: "",
   shipGstIn: "",
   shipPinCode: 0,
-  shipAddress1: "0",
-  shipAddress2: "0",
-  shipLocation: "0",
+  shipAddress1: "",
+  shipAddress2: "",
+  shipLocation: "",
   shipStateCode: 0,
   invTransactionMasterID: 0,
   branchID: 0
@@ -307,14 +307,54 @@ export const initialTransactionDetailData: TransactionDetail = {
   taxCategoryID: 0,
   productCategoryID: 0,
 };
+
+  export const initialCouponDetails: CouponDetails = {
+    cardID: 0,
+    cardNumber: '',
+    amount: 0,
+    cardType: '',
+    customerName: '',
+    totalAmount: 0,
+    cardHolderName: '',
+    couponID: 0,
+    oBalance: 0,
+  };
+
+  export const initialPrivilegeCardOutput: PrivilegeCardDetails = {
+  privilegeCardsID: 0,
+  branchID: 0,
+  cardNumber: '',
+  cardHolderName: '',
+  address1: '',
+  address2: '',
+  phone: '',
+  mobile: '',
+  priceCategoryID: 0,
+  expiryDate: new Date(0),
+  activatedDate: new Date(0),
+  createdUserID: 0,
+  createdDate: new Date(0),
+  modifiedUserID: 0,
+  modifiedDate: new Date(0),
+  cardType: '',
+  oBalance: 0,
+  cardBalance: 0,
+  dob: new Date(0),
+  email: '',
+  changeID: 0,
+  adjustAmt: 0,
+  marginWiseBalancePoint: 0,
+  totalBalance: 0
+};
+
 export const transactionInitialData: TransactionData = {
   master: TransactionMasterInitialData, 
   details:[],
   attachments: [],
   masterValidations: initialTransactionMasterValidations,
   invAccTransactions: [],
-  couponDetails:[], //new
-  privilegeCardDetails:[], //new
+  couponDetails: initialCouponDetails, //new
+  privilegeCardDetails: initialPrivilegeCardOutput, //new
   bankCardDetails:[],// new
   uPIDetails:[],// new
 };
@@ -441,6 +481,11 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   btnSr: { visible: true, disabled: false, label:""},
   lBLCashPaid: { visible: false, disabled: false, label:"cash_paid"},
 
+  btnEWB: { visible: true, disabled: false, label: "" }, 
+  eWBLabel: { visible: true, disabled: false, label: "" }, 
+  btnEinvoice: { visible: true, disabled: false, label: "" }, 
+  einvoiceLabel: { visible: true, disabled: false, label: "" }, 
+
   // Need to verify the below 6
   lblProject: { visible: false, disabled: false, label: "" },
   rbCash: { visible: false, disabled: false, label: "" },
@@ -479,6 +524,8 @@ export const initialFormElements: { [key: string]: FormElementState } = {
     printPreview: false,
     setDefaultQuantity: false,
     editInNewTab:true,
+    autoEwayBill:false,
+    disableEinvoice:false,
     inputBoxStyle: {
       inputStyle: "normal",
       inputSize: "sm",
@@ -846,42 +893,6 @@ export const initialProductDisplayData: ProductDisplayDto = {
   stock: "",
   minSalePrice: "",
   image: ""
-};
-export const initialCouponDetails: CouponDetails = {
-  cardID: 0,
-  cardNumber: '',
-  amount: 0,
-  cardType: '',
-  customerName: '',
-  totalAmount: 0,
-  cardHolderName: '',
-  couponID: 0
-};
-export const initialPrivilegeCardOutput: PrivilegeCardDetails = {
-  privilegeCardsID: 0,
-  branchID: 0,
-  cardNumber: '',
-  cardHolderName: '',
-  address1: '',
-  address2: '',
-  phone: '',
-  mobile: '',
-  priceCategoryID: 0,
-  expiryDate: new Date(0),
-  activatedDate: new Date(0),
-  createdUserID: 0,
-  createdDate: new Date(0),
-  modifiedUserID: 0,
-  modifiedDate: new Date(0),
-  cardType: '',
-  oBalance: 0,
-  cardBalance: 0,
-  dob: new Date(0),
-  email: '',
-  changeID: 0,
-  adjustAmt: 0,
-  marginWiseBalancePoint: 0,
-  totalBalance: 0
 };
 export const initialSettlement: SettlementDetails = {
   invTransactionMasterID: 0,

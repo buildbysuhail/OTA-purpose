@@ -592,7 +592,7 @@ export const useTransaction = (
         voucherType ?? vch.master.voucherType,
         { result: {} }
       ),
-      attachments: [...(vch.transaction?.attachments || [])],
+      attachments: [...(vch?.attachments || [])],
     };
 const remarks = String(vch.master.pdtRemarks ?? "");
 const verified = Boolean(vch.master.pdtVerified);

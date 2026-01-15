@@ -2,150 +2,197 @@ import React, { useEffect, useState } from 'react';
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
-import { togglePrivilegeCardPopup } from "../../../../redux/slices/popup-reducer";
-import { useAppDispatch } from '../../../../utilities/hooks/useAppDispatch';
+import { useAppDispatch, useAppSelector } from '../../../../utilities/hooks/useAppDispatch';
 import { useRootState } from '../../../../utilities/hooks/useRootState';
 import PrivilegeCardManage from '../../../accounts/masters/account-privilege-card/privilege-card-manage';
+import { RootState } from '../../../../redux/store';
+import { TransactionFormState } from '../transaction-types';
+import { APIClient } from '../../../../helpers/api-client';
+import Urls from '../../../../redux/urls';
+import { formStateHandleFieldChangeKeysOnly } from '../reducer';
+import { merge } from 'lodash';
+import { initialUserConfig } from '../transaction-type-data';
 interface PrivilegeCardEntryProps {
   isOpen: boolean;
   onClose: () => void;
   t: (key: string) => string;
   data: string;
+  formState: TransactionFormState;
 }
 
-interface PrivilegeCardData {
-  cardNo: string;
-  customerName: string;
-  address: string;
-  mobileNo: string;
-  oldBalance: string;
-  add: string;
-  redeem: string;
-  balance: string;
-}
-
+const api = new APIClient();
 const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
   isOpen,
   onClose,
   t,
-  data
+  data,
+  formState
 }) => {
-  const [cardData, setCardData] = useState<PrivilegeCardData>({
-    cardNo: "",
-    customerName: "",
-    address: "",
-    mobileNo: "",
-    oldBalance: "0.00",
-    add: "0.00",
-    redeem: "0.00",
-    balance: "0.00",
-  });
 
-  const [redeemPoints, setRedeemPoints] = useState({
-    point200: 0,
-    point150: 0,
-    point100: 0,
-    point50: 0,
-    point0: 0,
-  });
+  const [redeemPoints,setRedeemPoints] = useState(0)
+  const [selectedPoint,setSelectedPoint] = useState(0)
+  const [confirToken,setConfirToken] = useState("")
+  const [showInvalidOtpMessage, setShowInvalidOtpMessage] = useState(false)
+  const [addAmount, setAddAmount] = useState(0)
     const dispatch = useAppDispatch();
-    const rootState = useRootState();
     const [addNewEntry, setAddNewEntry] = useState(false)
+    const [otpModalOpen, setOtpModalOpen] =  useState(false)
+    const [otpValue, setOtpValue ] = useState("")
+    const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
 
-  useEffect(() => {
-    if (data && data !== "") {
-      try {
-        const parsedData = JSON.parse(data);
-        setCardData(parsedData);
-      } catch (e) {
-        console.error("Error parsing privilege card data:", e);
-      }
-    }
-  }, [data]);
-
-  const handleFieldChange = (field: string, value: any) => {
-    setCardData(prev => {
-      const updated = {
-        ...prev,
-        [field]: value
-      };
-
-      // Auto-calculate balance
-      if (field === 'oldBalance' || field === 'add' || field === 'redeem') {
-        const oldBal = parseFloat(field === 'oldBalance' ? value : updated.oldBalance) || 0;
-        const addAmt = parseFloat(field === 'add' ? value : updated.add) || 0;
-        const redeemAmt = parseFloat(field === 'redeem' ? value : updated.redeem) || 0;
-        updated.balance = (oldBal + addAmt - redeemAmt).toFixed(2);
-      }
-
-      return updated;
-    });
-  };
-
-  const handleRedeemPointClick = (points: number) => {
-    const pointField = `point${points}` as keyof typeof redeemPoints;
-    setRedeemPoints(prev => ({
-      ...prev,
-      [pointField]: prev[pointField] + 1
-    }));
-
-    // Add to redeem amount
-    const currentRedeem = parseFloat(cardData.redeem) || 0;
-    handleFieldChange('redeem', (currentRedeem + points).toFixed(2));
-  };
+    useEffect(() => {
+      if(formState.formElements.btnPrivilegeCard.visible){
+        const PrivilegePercentage = applicationSettings.mainSettings?.previlegeCardPerc;
+        if(PrivilegePercentage> 0 ){
+          const grandTotal = Number(formState.transaction.master.grandTotal) || 0;
+          const addPrvAmount = (grandTotal * (PrivilegePercentage / 100)).toFixed(2);
+          setAddAmount(Number(addPrvAmount))
+      }}
+    },[formState.transaction.master.grandTotal])
 
   const handleReset = () => {
-    setRedeemPoints({
-      point200: 0,
-      point150: 0,
-      point100: 0,
-      point50: 0,
-      point0: 0,
-    });
-    handleFieldChange('redeem', '0.00');
+    dispatch(
+             formStateHandleFieldChangeKeysOnly({
+              fields: {
+                transaction:{
+                  privilegeCardDetails:{
+                    cardNumber:"",
+                    cardHolderName:"",
+                    address1:"",
+                    mobile:"",
+                }
+                }
+              },
+            }) 
+          );
+          setAddAmount(0)
+          setRedeemPoints(0)
   };
   
 
   const handleApply = () => {
-    alert(`Redeemable amount: ${cardData.redeem}`);
     onClose();
   };
   const handleAddNew = () => {
     // onClose();
     setAddNewEntry(true)
-    setCardData({
-      cardNo: "",
-      customerName: "",
-      address: "",
-      mobileNo: "",
-      oldBalance: "0.00",
-      add: "0.00",
-      redeem: "0.00",
-      balance: "0.00",
-    });
-    setRedeemPoints({
-      point200: 0,
-      point150: 0,
-      point100: 0,
-      point50: 0,
-      point0: 0,
-    });
   };
 
   const handlePrivilegeCardSubmit = (submittedData: any) => {
-      setCardData((prev) => ({
-        ...prev,
-        cardNo: submittedData.cardNumber ?? prev.cardNo,
-        customerName: submittedData.cardHolderName ?? prev.customerName,
-        address: submittedData.address1 ?? prev.address,
-        mobileNo: submittedData.mobile ?? prev.mobileNo,
-        oldBalance: submittedData.oBalance ?? prev.oldBalance, //Check it is opening or old balance
-        // add: submittedData.added ?? prev.add,
-        // redeem: submittedData.redeemed ?? prev.redeem,
-        // balance: submittedData.total_balance ?? prev.balance,
-      }));
+    dispatch(
+            formStateHandleFieldChangeKeysOnly({
+              fields: {
+                transaction: {
+                  privilegeCardDetails: {
+                    cardNumber: submittedData.cardNumber ?? "",
+                    cardHolderName: submittedData.cardHolderName ?? "",
+                    address1: submittedData.address1 ?? "",
+                    mobile: submittedData.mobile ?? "",
+                    oBalance: submittedData.oBalance ?? 0,
+                  },
+                  master: {
+                    partyName: submittedData.cardHolderName ?? "",
+                    address1: submittedData.address1 ?? "",
+                    address4: submittedData.mobile ?? "",
+                    gatePassNo: submittedData.cardNumber ?? "",
+                    privCardID: submittedData.privilegeCardsID ?? ""
+                  }
+                },
+              },
+            })
+          );
+    };
+    
+    // Function for handling clicking enter on card number field
+    const handleCardNumberKeydown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter') {
+        const enteredCardNumber = formState.transaction.privilegeCardDetails?.cardNumber;
+        if(enteredCardNumber !== ""){
+          const res = await api.getAsync(`${Urls.inv_transaction_base}${formState.transactionType}/PrivilegeCard/${enteredCardNumber}`);
+          if(res.cardType !== "Privilege"){
+            return;
+          }
+          dispatch(
+            formStateHandleFieldChangeKeysOnly({
+              fields: {
+                transaction: {
+                  privilegeCardDetails: {
+                    cardHolderName: res.cardHolderName,
+                    address1: res.address1,
+                    mobile: res.mobile,
+                    oBalance: res.oBalance + res.cardBalance,
+                  },
+                  master: {
+                    partyName: res.cardHolderName,
+                    address1: res.address1,
+                    address4: res.mobile,
+                    gatePassNo: res.cardNumber,
+                    privCardID: res.privilegeCardsID
+                  }
+                },
+              },
+            })
+          );
+        }}
+    }
+     
+    // Function handle redeem value button click - OTP Send
+    const handleRedeemPointClick = async (points: number) => {
+        setRedeemPoints(0);
+        if((formState.transaction.privilegeCardDetails.oBalance ?? 0) >= points) {
+          try{
+            setSelectedPoint(points)
+            const phone = formState.transaction.privilegeCardDetails.mobile ?? "";
+            const response = await api.postAsync(
+              `${Urls.inv_transaction_base}${formState.transactionType}/SendPointRedeemOTP?toPhone=${encodeURIComponent(phone)}`,{});
+
+            if(response.isOk === true ){
+              setConfirToken(response.item)
+              setOtpModalOpen(true)
+            }
+          }catch{
+            console.error("Error in redeem points api call")
+          }
+        }else{
+            setRedeemPoints(0);
+        }
     };
 
+    // Verify otp details function
+    const handleVerifyOtpNumber = async () =>{
+      try{
+         const phone = formState.transaction.privilegeCardDetails.mobile ?? "";
+         const res = await api.postAsync(`${Urls.inv_transaction_base}${formState.transactionType}/ValidatePointRedeemOTP?otp=${otpValue}&confirToken=${confirToken}&toPhone=${encodeURIComponent(phone)}`,{});
+         if(res.isOk === true ){
+          const oldBalanceValue = formState.transaction.privilegeCardDetails.oBalance;
+          setRedeemPoints(selectedPoint)
+
+          dispatch(
+            formStateHandleFieldChangeKeysOnly({
+              fields: {
+                transaction: {
+                  privilegeCardDetails: {
+                    totalBalance: (oldBalanceValue ?? 0) - selectedPoint,
+                  },
+                  master: {
+                    billDiscount: selectedPoint,
+                  }
+                },
+              },
+            })
+          );
+          setOtpModalOpen(false)
+          setShowInvalidOtpMessage(false)
+          setRedeemPoints(selectedPoint)
+ 
+         }else{
+              // Invalid otp message
+              setShowInvalidOtpMessage(true)
+         }
+      }catch{
+        console.error("Error in verifying Otp")
+      }
+    }
 
   return (
     <ERPModal
@@ -167,11 +214,23 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
                     {t("card_no")}
                   </label>
                   <ERPInput
-                    id="cardNo"
-                    value={cardData.cardNo}
+                    id="cardNumber"
                     className="flex-1 h-7 text-xs"
                     noLabel={true}
-                    onChange={(e) => handleFieldChange('cardNo', e.target.value)}
+                    value={formState.transaction.privilegeCardDetails.cardNumber}             
+                    onChange={(e) =>
+                      dispatch(
+                        formStateHandleFieldChangeKeysOnly({
+                          fields: {  transaction:{
+                              privilegeCardDetails:{
+                                cardNumber:e.target?.value
+                            }
+                            }},
+                        })
+                      )
+                    }
+                    onKeyDown={(e) => handleCardNumberKeydown(e)}
+                    disableEnterNavigation
                   />
                 </div>
 
@@ -181,11 +240,23 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
                     {t("customer_name")}
                   </label>
                   <ERPInput
-                    id="customerName"
-                    value={cardData.customerName}
+                    id="cardHolderName"
+                    value={formState.transaction.privilegeCardDetails.cardHolderName}             
+                    onChange={(e) =>
+                      dispatch(
+                        formStateHandleFieldChangeKeysOnly({
+                          fields: { 
+                            transaction:{
+                              privilegeCardDetails:{
+                                  cardHolderName:e.target?.value
+                              }
+                            }
+                           },
+                        })
+                      )
+                    }
                     className="flex-1 h-7 text-xs"
                     noLabel={true}
-                    onChange={(e) => handleFieldChange('customerName', e.target.value)}
                   />
                 </div>
 
@@ -195,11 +266,23 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
                     {t("address")}
                   </label>
                   <ERPInput
-                    id="address"
-                    value={cardData.address}
+                    id="address1"
+                    value={formState.transaction.privilegeCardDetails.address1}
                     className="flex-1 h-7 text-xs"
                     noLabel={true}
-                    onChange={(e) => handleFieldChange('address', e.target.value)}
+                    onChange={(e) =>
+                      dispatch(
+                        formStateHandleFieldChangeKeysOnly({
+                          fields: { 
+                            transaction:{
+                              privilegeCardDetails:{
+                                  address1:e.target?.value
+                              }
+                            }
+                           },
+                        })
+                      )
+                    }
                   />
                 </div>
 
@@ -209,11 +292,24 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
                     {t("mobile_no")}
                   </label>
                   <ERPInput
-                    id="mobileNo"
-                    value={cardData.mobileNo}
+                    id="mobile"
+                    value={formState.transaction.privilegeCardDetails.mobile}
                     className="flex-1 h-7 text-xs"
                     noLabel={true}
-                    onChange={(e) => handleFieldChange('mobileNo', e.target.value)}
+                    placeholder={t(" eg: +911234322345 ")}
+                    onChange={(e) =>
+                      dispatch(
+                        formStateHandleFieldChangeKeysOnly({
+                          fields: { 
+                            transaction:{
+                              privilegeCardDetails:{
+                                  mobile:e.target?.value
+                              }
+                            }
+                           },
+                        })
+                      )
+                    }
                   />
                 </div>
               </div>
@@ -226,11 +322,24 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
                     {t("old_balance")}
                   </label>
                   <ERPInput
-                    id="oldBalance"
-                    value={cardData.oldBalance}
+                    id="oBalance"
+                    value={formState.transaction.privilegeCardDetails.oBalance}
                     className="w-28 h-7 text-xs text-right"
                     noLabel={true}
-                    onChange={(e) => handleFieldChange('oldBalance', e.target.value)}
+                    readOnly={true}
+                    onChange={(e) =>
+                      dispatch(
+                        formStateHandleFieldChangeKeysOnly({
+                          fields: { 
+                            transaction:{
+                              privilegeCardDetails:{
+                                  oBalance:e.target?.value
+                              }
+                            }
+                           },
+                        })
+                      )
+                    }
                   />
                 </div>
 
@@ -240,11 +349,12 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
                     {t("add")}
                   </label>
                   <ERPInput
-                    id="add"
-                    value={cardData.add}
+                    id="pAddAmount"
+                    value={addAmount}
                     className="w-28 h-7 text-xs text-right"
                     noLabel={true}
-                    onChange={(e) => handleFieldChange('add', e.target.value)}
+                    readOnly={true}
+                    onChange={(e) => setAddAmount(Number(e.target?.value)) }
                   />
                 </div>
 
@@ -254,11 +364,11 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
                     {t("redeem")}
                   </label>
                   <ERPInput
-                    id="redeem"
-                    value={cardData.redeem}
+                    id="pRedeem"
+                    value={redeemPoints}
                     className="w-28 h-7 text-xs text-right"
                     noLabel={true}
-                    onChange={(e) => handleFieldChange('redeem', e.target.value)}
+                    onChange={(e) => setRedeemPoints(Number(e.target?.value))  }
                   />
                 </div>
 
@@ -268,11 +378,23 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
                     {t("balance")}
                   </label>
                   <ERPInput
-                    id="balance"
-                    value={cardData.balance}
+                    id="totalBalance"
+                    value={formState.transaction.privilegeCardDetails.totalBalance}
                     className="w-28 h-7 text-xs text-right"
                     noLabel={true}
-                    disabled={true}
+                    onChange={(e) =>
+                      dispatch(
+                        formStateHandleFieldChangeKeysOnly({
+                          fields: { 
+                            transaction:{
+                              privilegeCardDetails:{
+                                  totalBalance:e.target?.value
+                              }
+                            }
+                           },
+                        })
+                      )
+                    }
                   />
                 </div>
               </div>
@@ -282,7 +404,7 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
             <div className="border-t pt-3">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-bold text-red-600">
-                  {t("redeem_points")}
+                  {redeemPoints ===0 ? t("redeem_points") : t(`Redeem : ${redeemPoints}`)}
                 </span>
                 <button
                   onClick={()=>handleAddNew()}
@@ -314,18 +436,37 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
                 ))}
               </div>
 
-              {/* Display selected points count */}
-              <div className="flex items-center justify-between gap-2 mt-2 text-xs text-gray-600">
-                {[200, 150, 100, 50, 0].map((points) => {
-                  const pointField = `point${points}` as keyof typeof redeemPoints;
-                  return (
-                    <div key={points} className="flex-1 text-center">
-                      {redeemPoints[pointField] > 0 && `×${redeemPoints[pointField]}`}
-                    </div>
-                  );
-                })}
-              </div>
             </div>
+            {/* Otp enter Modal */}
+            <ERPModal
+                isOpen={otpModalOpen}
+                title={t("verify_otp")}
+                width={320}
+                height={150}
+                closeModal={() => setOtpModalOpen(false)}
+                content={
+                  <div className='flex flex-col gap-2'>
+                  <div className='flex items-end justify-center gap-3'>
+                    <ERPInput
+                       localInputBox={merge({}, initialUserConfig.inputBoxStyle, {inputHeight:2, fontSize:20, marginBottom: 0, fontColor:"255, 0, 0", borderColor: '200, 200, 200'})}
+                      customSize="customize"
+                      id="otp"
+                      value={otpValue}
+                      label = {t("please_enter_otp")}
+                      onChange={(e) => setOtpValue(e.target.value)}
+                    />
+                    <ERPButton
+                      title = {t("verify")}
+                      variant = "primary"
+                      onClick={() => handleVerifyOtpNumber() }
+                    />
+                  </div>
+                  {showInvalidOtpMessage === true && (
+                    <div className='text-sm w-full text-red-500 text-center'>{t("please_enter_valid_otp")}</div>
+                  )}
+                  </div>
+                }
+              />
             
             {/* Privilege manage modal */}
             {addNewEntry &&

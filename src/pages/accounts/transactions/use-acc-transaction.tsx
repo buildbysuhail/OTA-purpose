@@ -525,7 +525,7 @@ export const useAccTransaction = (
 
     voucher.transaction = {
       ...(vch || {}),
-      attachments: [...(vch.transaction?.attachments || [])],
+      attachments: [...(vch?.attachments || [])],
     };
     voucher.row = { ...AccTransactionRowInitialData };
     // Handle master data

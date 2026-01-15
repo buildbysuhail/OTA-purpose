@@ -15,6 +15,7 @@ import {
 } from "../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../redux/store";
 import {
+  ArchiveX,
   ChevronDown,
   ChevronUp,
   CirclePlus,
@@ -103,8 +104,9 @@ interface DataGridProps<T extends DataItem> {
     value: any,
     e: React.KeyboardEvent<HTMLElement>,
     column: keyof TransactionDetail,
-    rowIndex: number
-  ) => void;
+    rowIndex: number,
+    validateBarcode?: boolean
+  ) => any;
   allowColumnReordering?: boolean;
   summaryConfig?: SummaryConfig<TransactionDetail>[];
   gridFontSize?: number;
@@ -119,6 +121,7 @@ interface DataGridProps<T extends DataItem> {
   gridFooterBg?: string;
   gridFooterFontColor?: string;
   zIndexController?: number;
+  onSaveItem: (item: TransactionDetail, mode: "Save"|"SaveAndNew") => void;
   
 }
 
@@ -786,146 +789,152 @@ const VirtualRow = React.memo(
     return (
       <>
         {isMobileGridRow ? (
-          <>
+          <div
+            className="cursor-pointer active:bg-gray-50 transition-colors duration-150"
+            style={{
+              position: "absolute",
+              top: `${top}px`,
+              left: 0,
+              height: `${rowHeight}px`,
+              width: "100%",
+              padding: "8px 12px",
+            }}
+            onClick={() => dispatch(formStateHandleFieldChange({fields:{
+               currentCell: {
+                                    column: "slNo",
+                                    rowIndex: index,
+                                    data: item,
+                                  },
+              row:item, itemPopup: {isOpen: true,index}}}) )}
+          >
             <div
-              className={`py-0 ${rowBg} transition-all duration-300 ease-in-out group cursor-pointer`}
-              style={{
-                position: "absolute",
-                top: `${top}px`,
-                left: 0,
-                height: `${rowHeight}px`,
-                width: "100%",
-                display: "flex",
-                flexDirection: "row",
-                // borderBottom: `0.5px solid ${appState.mode === "dark" ? "rgba(255,255,255,0.1)" : `rgba(${formState.userConfig?.gridBorderColor || "203,213,225"}, 0.3)`}`,
-                backgroundColor: appState.mode === "dark" ? "#333333" : "#fff",
-                // marginTop: index === 0 ? '8px' : '0',
-                paddingBottom: index === details.length - 1 ? "0.5rem" : "0",
-              }}
-              onClick={() => dispatch(formStateHandleFieldChange({fields:{
-                 currentCell: {
-                                      column: "slNo",
-                                      rowIndex: index,
-                                      data: item,
-                                    },
-                row:item, itemPopup: {isOpen: true,index}}}) )}
-              
+              className={`w-full max-w-[730px] mx-auto h-full rounded-lg ${
+                appState.mode === "dark"
+                  ? "bg-[#1f1f1f] border border-[#333]"
+                  : "bg-white border border-gray-200 shadow-sm"
+              } ${
+                formState.currentCell?.rowIndex === index
+                  ? appState.mode === "dark"
+                    ? "border-blue-500"
+                    : "border-blue-400"
+                  : ""
+              }`}
             >
-              <div className="p-1 w-full">
-                <div
-                  className={`rounded-lg shadow-sm w-full hover:bg-[#8e8bdf] max-w-[730px] mx-auto ${
-                    appState.mode === "dark"
-                    ? "border border-[#444444]"
-                    :  "border border-[#e4e3e8]"
-                    }
-                   ${
-                    appState.mode === "dark"
-                    ? "bg-[#2d2d2d]"
-                    : formState.currentCell?.rowIndex == index ? "bg-[#605cce]" :  "bg-[#bfddd4]"
-                    }`}
-                >
-                  <div className="flex flex-col md:flex-row sm:flex-row xs:flex-row xs:items-center xs:justify-between p-2 xs:p-3 sm:p-4 !pb-0 gap-2 xs:gap-3">
-                    <div className="flex items-center justify-between gap-2 xs:gap-3 min-w-0 flex-1">
-                      <div className="flex items-center gap-2 min-w-0">
-                        <span
-                          className={`rounded-sm p-1 text-xs xs:text-sm font-medium whitespace-nowrap ${
-                            appState.mode === "dark"
-                            ? "bg-[#444444] text-[#e0e0e0]"
-                            : "bg-white text-gray-500"
-                            }`}
-                        >
-                          #{index + 1}
-                        </span>
-                        <span
-                          className={`font-medium text-sm xs:text-base truncate ${
-                            appState.mode === "dark"
-                            ? "text-[#e0e0e0]"
-                            : "text-gray-900"
-                            }`}
-                          title={item.product}
-                        >
-                          {item.product || "Product"}
-                        </span>
-                      </div>
+              {/* Left accent bar */}
+              <div className="flex h-full">
+                {/* <div
+                  className={`w-1 rounded-l-lg flex-shrink-0 ${
+                    appState.mode === "dark" ? "bg-blue-500" : "bg-blue-500"
+                  }`}
+                /> */}
+
+                <div className="flex-1 px-3 py-2.5 overflow-hidden">
+                  {/* Header: Index + Product + Price */}
+                  <div className="flex items-center justify-between gap-3 mb-2">
+                    <div className="flex items-center gap-2 min-w-0 flex-1">
                       <span
-                        className={`font-medium text-sm xs:text-base whitespace-nowrap self-end xs:self-auto ${
+                        className={`text-xs font-medium flex-shrink-0 ${
                           appState.mode === "dark"
-                          ? "text-[#e0e0e0]"
-                          : "text-gray-900"
-                          }`}
+                            ? "text-gray-500"
+                            : "text-gray-400"
+                        }`}
                       >
-                        ₹ {item.unitPrice || "Price"}
+                        #{index + 1}
+                      </span>
+                      <span
+                        className={`font-semibold text-sm truncate ${
+                          appState.mode === "dark"
+                            ? "text-white"
+                            : "text-gray-900"
+                        }`}
+                        title={item.product}
+                      >
+                        {item.product || "—"}
                       </span>
                     </div>
+                    <span
+                      className={`font-semibold text-sm whitespace-nowrap flex-shrink-0 ${
+                        appState.mode === "dark"
+                          ? "text-white"
+                          : "text-gray-900"
+                      }`}
+                    >
+                      ₹ {item.unitPrice || 0}
+                    </span>
                   </div>
-                  <div className="p-2 xs:p-3 sm:p-4 !pt-1 space-y-2 xs:space-y-3">
-                    <div className="flex items-start xs:items-center justify-between gap-2">
+
+                  {/* Details rows */}
+                  <div className="space-y-1">
+                    {/* Item Subtotal */}
+                    <div className="flex items-center justify-between">
                       <span
-                        className={`text-xs xs:text-sm whitespace-nowrap ${
+                        className={`text-xs ${
                           appState.mode === "dark"
-                          ? "text-[#a0a0a0]"
-                          : "text-gray-600"
-                          }`}
+                            ? "text-gray-400"
+                            : "text-gray-500"
+                        }`}
                       >
                         Item Subtotal
                       </span>
                       <span
-                        className={`text-xs xs:text-sm text-right ${
+                        className={`text-xs ${
                           appState.mode === "dark"
-                          ? "text-[#a0a0a0]"
-                          : "text-gray-600"
-                          }`}
+                            ? "text-gray-400"
+                            : "text-gray-500"
+                        }`}
                       >
-                        {item.qty} X  {item.unitPrice} = ₹ {item.total || "Sub Total"}
+                        {item.qty || 0} x {item.unitPrice || 0} = ₹ {item.total || 0}
                       </span>
                     </div>
-                    <div className="flex items-start xs:items-center justify-between gap-2">
+
+                    {/* Discount */}
+                    <div className="flex items-center justify-between">
                       <span
-                        className={`text-xs xs:text-sm whitespace-nowrap ${
+                        className={`text-xs ${
                           appState.mode === "dark"
-                          ? "text-[#ffa726]"
-                          : "text-orange-400"
-                          }`}
+                            ? "text-orange-400"
+                            : "text-orange-500"
+                        }`}
                       >
-                        Discount (%): {item.discPerc || "Discount"}%
+                        Discount ({item.discPerc || 0}%):
                       </span>
                       <span
-                        className={`text-xs xs:text-sm text-right whitespace-nowrap ${
+                        className={`text-xs ${
                           appState.mode === "dark"
-                          ? "text-[#ffa726]"
-                          : "text-orange-400"
-                          }`}
+                            ? "text-orange-400"
+                            : "text-orange-500"
+                        }`}
                       >
-                        ₹ {item.discount || "Discount"}
+                        ₹ {item.discount || 0}
                       </span>
                     </div>
-                    <div className="flex items-start xs:items-center justify-between gap-2">
+
+                    {/* Tax */}
+                    <div className="flex items-center justify-between">
                       <span
-                        className={`text-xs xs:text-sm whitespace-nowrap ${
+                        className={`text-xs ${
                           appState.mode === "dark"
-                          ? "text-[#a0a0a0]"
-                          : "text-gray-600"
-                          }`}
+                            ? "text-gray-400"
+                            : "text-gray-500"
+                        }`}
                       >
-                        Tax: {item.vatPerc || "Tax"}%
+                        Tax: {item.vatPerc || 0}%
                       </span>
                       <span
-                        className={`text-xs xs:text-sm text-right whitespace-nowrap ${
+                        className={`text-xs ${
                           appState.mode === "dark"
-                          ? "text-[#a0a0a0]"
-                          : "text-gray-600"
-                          }`}
+                            ? "text-gray-400"
+                            : "text-gray-500"
+                        }`}
                       >
-                        ₹ {item.totalAddExpense || "Tax"}
+                        ₹ {item.totalAddExpense || 0}
                       </span>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            
-            
-          </>
+          </div>
         ) : (
           <div
             className={`py-0 ${rowBg} transition-all duration-300 ease-in-out group`}
@@ -1473,6 +1482,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       gridFooterBg,
       gridFooterFontColor,
       zIndexController,
+      onSaveItem
     }: DataGridProps<T>,
     ref: Ref<any>
   ) {
@@ -2111,47 +2121,12 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       setCurrentCell(formState.currentCell);
     }, [formState.currentCell]);
 
-    const handleBarcodeScan = useCallback((result: BarcodeScanResult) => {
-      const targetRow = barcodeTargetRow >= 0 ? barcodeTargetRow :
-        (formState.currentCell?.rowIndex ?? 0);
-
-      console.log('🔍 handleBarcodeScan called:', { targetRow, barcode: result.text });
-
-      if (targetRow >= 0) {
-        // Set the barcode value to the field
-        onChange(
-          result.text,
-          'barCode' as keyof TransactionDetail,
-          targetRow,
-          true
-        );
-
-        // Set current cell to barCode field first to ensure proper state
-        const barcodeColumn = formState.gridColumns.find((x: ColumnModel) => x.dataField === 'barCode');
-        if (barcodeColumn) {
-          setCurrentCell({
-            column: barcodeColumn,
-            rowIndex: targetRow,
-            data: formState.transaction.details[targetRow],
-          } as any);
-        }
-      }
-    }, [barcodeTargetRow, formState.currentCell?.rowIndex, formState.transaction.details, formState.gridColumns, onChange]);
-
+   
     // Callback to trigger Enter key logic after barcode scan
-    const handleBarcodeEnterTrigger = useCallback((result: BarcodeScanResult) => {
+    const handleBarcodeEnterTrigger = useCallback(async(result: BarcodeScanResult) => {
       // Use barcodeTargetRow if set, otherwise use current cell row, fallback to 0
       const targetRow = barcodeTargetRow >= 0 ? barcodeTargetRow :
         (formState.currentCell?.rowIndex ?? 0);
-
-      console.log('⌨️ handleBarcodeEnterTrigger called:', {
-        targetRow,
-        barcode: result.text,
-        barcodeTargetRow,
-        currentCellRowIndex: formState.currentCell?.rowIndex,
-        hasOnKeyDownRef: !!onKeyDownRef.current
-      });
-
       if (targetRow >= 0) {
         // Simulate Enter key press on barCode field to trigger item lookup
         const syntheticEvent = {
@@ -2160,28 +2135,19 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
           stopPropagation: () => {},
         } as React.KeyboardEvent<HTMLElement>;
 
-        console.log('⌨️ Triggering onKeyDown with Enter for barCode:', {
-          value: result.text,
-          column: 'barCode',
-          rowIndex: targetRow
-        });
-
-        // Use the ref to get the latest onKeyDown function
-        // This ensures we're not using a stale closure
         if (onKeyDownRef.current) {
-          console.log('⌨️ Calling onKeyDownRef.current...');
-          onKeyDownRef.current(
+          debugger;
+         await onKeyDownRef.current(
             result.text,
             syntheticEvent,
             'barCode' as keyof TransactionDetail,
-            targetRow
+            targetRow,
+            true
           );
-          console.log('⌨️ onKeyDownRef.current called successfully');
+         
         } else {
-          console.error('❌ onKeyDownRef.current is null/undefined!');
         }
       } else {
-        console.warn('⚠️ targetRow is less than 0:', targetRow);
       }
     }, [barcodeTargetRow, formState.currentCell?.rowIndex]);
 
@@ -2825,7 +2791,9 @@ const hidColumns: string[] = [
           <BarcodeModalScanner
             isOpen={showBarcodeScanner}
             onClose={() => setShowBarcodeScanner(false)}
-            onScan={handleBarcodeScan}
+            onScan={(e: any) => {
+
+            }}
             onEnterTrigger={handleBarcodeEnterTrigger}
             title={t("scan_barcode")}
           />
@@ -3048,11 +3016,61 @@ const hidColumns: string[] = [
                 }}
               >
                 {
-                !columns ||
+                !formState.transactionLoading &&
+                (!columns ||
                 columns.length === 0 ||
                 !formState.transaction.details ||
-                formState.transaction.details.length === 0 ? (
-                  <></>
+                formState.transaction.details.length === 0) ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      padding: "48px 24px",
+                      textAlign: "center",
+                      color: "var(--text-muted, #6b7280)",
+                      gap: "12px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "64px",
+                        height: "64px",
+                        borderRadius: "50%",
+                        backgroundColor: "var(--bg-muted, #f3f4f6)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginBottom: "8px",
+                      }}
+                    >
+                      <ArchiveX
+                        size={32}
+                        strokeWidth={1.5}
+                        style={{ color: "var(--text-muted, #9ca3af)" }}
+                      />
+                    </div>
+                    <p
+                      style={{
+                        fontSize: "16px",
+                        fontWeight: 500,
+                        color: "var(--text-primary, #374151)",
+                        margin: 0,
+                      }}
+                    >
+                      {t("No items added yet")}
+                    </p>
+                    <p
+                      style={{
+                        fontSize: "14px",
+                        color: "var(--text-muted, #6b7280)",
+                        margin: 0,
+                      }}
+                    >
+                      {t("Tap the + button to add your first item")}
+                    </p>
+                  </div>
                 ) : (
                   visibleItems.map(({ index, top }) => (
                     <VirtualRow
@@ -3860,60 +3878,20 @@ const hidColumns: string[] = [
                    <div className="flex gap-0">
                      <button
                        className="flex-1 py-4 text-center text-base font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
-                       onClick={() => {
-                         const exist = formState.transaction.details.find(x => x.slNo == formState.row?.slNo);
-                        if(exist) {
-                          if(formState.row) {
-                            dispatch(formStateHandleFieldChangeKeysOnly({fields:{
-                             
-                              transaction:{
-                                details:[formState.row]
-                              }, row: {
-                                ...initialTransactionDetailData,
-                                slNo: generateUniqueKey()
-                              },
-                            }}))
-                          }
-                        } else {
-                          if(formState.row) { 
-                            
-                            dispatch(formStateHandleFieldChangeKeysOnly({fields:{
-                             
-                              row: {
-                                  ...initialTransactionDetailData,
-                                  slNo: generateUniqueKey()
-                                },
-                            }}))
-                            dispatch(formStateTransactionDetailsRowsAdd([formState.row]))
-                          }
-                        }
+                       onClick={(e: any) =>{
+                        debugger;
+                        if(!formState.row) return;
+                        onSaveItem && onSaveItem(formState.row,"SaveAndNew")
                        }}
                      >
                        Save & New
                      </button>
                      <button
                        className="flex-1 py-4 text-center bg-red-600 text-white text-base font-medium hover:bg-red-700"
-                       onClick={() => {
-                        const exist = formState.transaction.details.find(x => x.slNo == formState.row?.slNo);
-                        if(exist) {
-                          const ind = formState.transaction.details.findIndex(x => x.slNo == formState.row?.slNo)
-                          if(formState.row) {
-                            dispatch(formStateHandleFieldChangeKeysOnly({fields:{
-                              itemPopup: {isOpen:false, index:0},
-                              transaction:{
-                                details:[formState.row]
-                              }
-                            },itemsToAddToDetails: undefined, rowIndex:ind}))
-                          }
-                        } else {
-                          if(formState.row) {
-                            
-                            dispatch(formStateHandleFieldChangeKeysOnly({fields:{
-                              itemPopup: {isOpen:false, index:0}
-                            }}))
-                            dispatch(formStateTransactionDetailsRowsAdd([formState.row]))
-                          }
-                        }
+                       onClick={(e: any) =>{
+                        debugger;
+                        if(!formState.row) return;
+                        onSaveItem && onSaveItem(formState.row,"Save")
                        }}
                      >
                        Save

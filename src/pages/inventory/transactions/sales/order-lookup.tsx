@@ -1,159 +1,210 @@
 import React, { useState } from "react";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
+import { LoadAndSetTransVoucherFn } from "./use-transaction";
+import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 
 interface OrderLookupProps {
   t: (key: string) => string;
+  loadAndSetTransVoucher: LoadAndSetTransVoucherFn;
+  onHide?: () => void;
 }
 
-const OrderLookup: React.FC<OrderLookupProps> = ({  t }) => {
-  const [orderNo, setOrderNo] = useState<string>("");
-  const [quotationNo, setQuotationNo] = useState<string>("");
-  const [deliveryNo, setDeliveryNo] = useState<string>("");
-  const [deliveryQuotNo, setDeliveryQuotNo] = useState<string>("");
+const OrderLookup: React.FC<OrderLookupProps> = ({ t, loadAndSetTransVoucher, onHide }) => {
+  const [orderNo, setOrderNo] = useState<{vrPrefix: string; vrNumber: string;}>({vrPrefix: "",vrNumber: ""});
+  const [quotationNo, setQuotationNo] = useState<{vrPrefix: string; vrNumber: string;}>({vrPrefix: "",vrNumber: ""});
+  const [deliveryNo, setDeliveryNo] = useState<{vrPrefix: string; vrNumber: string;}>({vrPrefix: "",vrNumber: ""});
+  const [deliveryQuotNo, setDeliveryQuotNo] = useState<{vrPrefix: string; vrNumber: string;}>({vrPrefix: "",vrNumber: ""});
 
-  const handleLoad = (type: string) => {
-    console.log(`Load clicked for ${type}`, {
-      orderNo,
-      quotationNo,
-      deliveryNo,
-      deliveryQuotNo,
-    });
+  const handleLoadClick = async (LoadPrefixType: string) => {
+    let vNumber = "";
+    let vPrefix = "";
+    let vType = "";
+
+    if (LoadPrefixType.toUpperCase() === "SO") {
+      vNumber = orderNo.vrNumber;
+      vPrefix = orderNo.vrPrefix;
+      vType = "SO";
+    } else if (LoadPrefixType.toUpperCase() === "SQ") {
+      vNumber = quotationNo.vrNumber;
+      vPrefix = quotationNo.vrPrefix;
+      vType = "SQ";
+    } else if (LoadPrefixType.toUpperCase() === "GD") {
+      vNumber = deliveryNo.vrNumber;
+      vPrefix = deliveryNo.vrPrefix;
+      vType = "GD";
+    } else if (LoadPrefixType.toUpperCase() === "GDQ") {
+      vNumber = deliveryQuotNo.vrNumber;
+      vPrefix = deliveryQuotNo.vrPrefix;
+      vType = "GDQ";
+    }
+      const res = await loadAndSetTransVoucher(
+        false,
+        Number(vNumber),
+        vPrefix.toUpperCase(),
+        vType,
+        "",
+        "",
+        0,
+        undefined,
+        false,
+        false,
+        vType,
+        undefined,
+        vPrefix,
+        undefined,
+        undefined,
+        true,
+      );
+      if(res === true){
+        onHide?.();
+      }
   };
 
 
   return (
     <div className="space-y-3 p-2">
       {/* Order No */}
-      <div className="grid grid-cols-[140px_1fr_80px] gap-3 items-center">
-        <label className="text-left text-[11px] text-black">
+      <div className="grid grid-cols-[120px_1fr_80px] gap-3 items-center">
+        <label className="text-left text-md text-semibold text-black">
           {t('order_no')}:
         </label>
         <div className="flex gap-2">
           <ERPInput
-            id="orderNo"
+            id="orderPrefix"
             type="text"
-            value={orderNo}
+            value={orderNo.vrPrefix}
             noLabel={true}
-            onChange={(e) => setOrderNo(e.target.value)}
+            onChange={(e) =>
+              setOrderNo(prev => ({
+                ...prev,
+                vrPrefix: e.target.value.toUpperCase()
+              }))
+            }
             className="flex-1"
           />
           <ERPInput
-            id="orderNo2"
+            id="orderNumber"
             type="text"
-            value=""
+            value={orderNo.vrNumber}
             noLabel={true}
-            onChange={(e) => { }}
+            onChange={(e) =>
+              setOrderNo(prev => ({
+                ...prev,
+                vrNumber: e.target.value
+              }))
+            }
             className="flex-1"
           />
         </div>
         <ERPButton
           title={t("load")}
-          onClick={() => handleLoad('order')}
+          onClick={() => handleLoadClick("SO")}
           variant="secondary"
           className="w-full"
         />
       </div>
 
       {/* Quotation No */}
-      <div className="grid grid-cols-[140px_1fr_80px] gap-3 items-center">
-        <label className="text-left text-[11px] text-black">
+      <div className="grid grid-cols-[120px_1fr_80px] gap-3 items-center">
+        <label className="text-left text-md text-semibold text-black">
           {t('quotation_no')}:
         </label>
         <div className="flex gap-2">
           <ERPInput
-            id="quotationNo"
+            id="quotationPrefix"
             type="text"
-            value={quotationNo}
+            value={quotationNo.vrPrefix}
             noLabel={true}
-            onChange={(e) => setQuotationNo(e.target.value)}
+            onChange={(e) => setQuotationNo(prev => ({ ...prev, vrPrefix: e.target.value.toUpperCase() }))}
             className="flex-1"
           />
           <ERPInput
-            id="quotationDisplay"
+            id="quotationNumber"
             type="text"
-            value="0"
+            value={quotationNo.vrNumber}
             noLabel={true}
-            readOnly
+            onChange={(e) => setQuotationNo(prev => ({ ...prev, vrNumber: e.target.value }))}
             className="flex-1"
           />
         </div>
         <ERPButton
           title={t("load")}
-          onClick={() => handleLoad('quotation')}
+          onClick={() => handleLoadClick('SQ')}
           variant="secondary"
           className="w-full"
         />
       </div>
 
       {/* Delivery No */}
-      <div className="grid grid-cols-[140px_1fr_80px] gap-3 items-center">
-        <label className="text-left text-[11px] text-black">
+      <div className="grid grid-cols-[120px_1fr_80px] gap-3 items-center">
+        <label className="text-left text-md text-semibold text-black">
           {t('delivery_no')}:
         </label>
         <div className="flex gap-2">
           <ERPInput
-            id="deliveryNo"
+            id="deliveryPrefix"
             type="text"
-            value={deliveryNo}
+            value={deliveryNo.vrPrefix}
             noLabel={true}
-            onChange={(e) => setDeliveryNo(e.target.value)}
+            onChange={(e) => setDeliveryNo(prev => ({ ...prev, vrPrefix: e.target.value.toUpperCase() }))}
             className="flex-1"
           />
           <ERPInput
-            id="deliveryDisplay"
+            id="deliveryNumber"
             type="text"
-            value="0"
+            value={deliveryNo.vrNumber}
             noLabel={true}
-            readOnly
+            onChange={(e) => setDeliveryNo(prev => ({ ...prev, vrNumber: e.target.value }))}
             className="flex-1"
           />
         </div>
         <ERPButton
           title={t("load")}
-          onClick={() => handleLoad('delivery')}
+          onClick={() => handleLoadClick('GD')}
           variant="secondary"
           className="w-full"
         />
       </div>
 
       {/* Delivery Quot No */}
-      <div className="grid grid-cols-[140px_1fr_80px] gap-3 items-center">
-        <label className="text-left text-[11px] text-black">
+      <div className="grid grid-cols-[120px_1fr_80px] gap-3 items-center">
+        <label className="text-left text-md text-semibold text-black">
           {t('delivery_quot_no')}:
         </label>
         <div className="flex gap-2">
           <ERPInput
-            id="deliveryQuotNo"
+            id="deliveryQuotPrefix"
             type="text"
-            value={deliveryQuotNo}
+            value={deliveryQuotNo.vrPrefix}
             noLabel={true}
-            onChange={(e) => setDeliveryQuotNo(e.target.value)}
+            onChange={(e) => setDeliveryQuotNo(prev => ({ ...prev, vrPrefix: e.target.value.toUpperCase() }))}
             className="flex-1"
           />
           <ERPInput
-            id="deliveryQuotDisplay"
+            id="deliveryQuotNumber"
             type="text"
-            value="0"
+            value={deliveryQuotNo.vrNumber}
             noLabel={true}
-            readOnly
+            onChange={(e) => setDeliveryQuotNo(prev => ({ ...prev, vrNumber: e.target.value }))}
             className="flex-1"
           />
         </div>
         <ERPButton
           title={t("load")}
-          onClick={() => handleLoad('deliveryQuot')}
+          onClick={() => handleLoadClick('GDQ')}
           variant="secondary"
           className="w-full"
         />
       </div>
 
       {/* Hide Button */}
-      <div className="flex justify-center pt-4">
+      <div className="flex justify-end pt-4">
         <ERPButton
           title={t("hide")}
           variant="secondary"
           className="w-32"
+          onClick={onHide}
         />
       </div>
     </div>

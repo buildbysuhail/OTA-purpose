@@ -1,4 +1,10 @@
-import React, { useState, useCallback, useRef, useEffect, useMemo } from "react";
+import React, {
+  useState,
+  useCallback,
+  useRef,
+  useEffect,
+  useMemo,
+} from "react";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
@@ -91,24 +97,27 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
   const formState = useSelector(
     (state: RootState) => state.InventoryTransaction
   );
-  
+
   // State management
-  const [toDate] = useState<string>(() => new Date().toISOString().split("T")[0]);
+  const [toDate] = useState<string>(
+    () => new Date().toISOString().split("T")[0]
+  );
   const [fromDate] = useState<string>(() => {
     const date = new Date();
     date.setMonth(date.getMonth() - 1);
     return date.toISOString().split("T")[0];
   });
-  
+
   const [selectedMaster, setSelectedMaster] = useState<{
     masterID: number;
     branchID: number;
   }>({ masterID: 0, branchID: 0 });
-  
+
   const [lastShownMasterID, setLastShownMasterID] = useState<number>(0);
-  const [isProcessButtonVisible, setIsProcessButtonVisible] = useState<boolean>(true);
+  const [isProcessButtonVisible, setIsProcessButtonVisible] =
+    useState<boolean>(true);
   const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
-  
+
   const gridRef = useRef<any>(null);
   const detailGridRef = useRef<any>(null);
 
@@ -121,46 +130,53 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
     return objForm;
   }, [objForm, objFrmGSTsales, objfrmGd, frmGRN, objFrmsalestax]);
 
-  const [clickShowBtn, setClickShowBTn] = useState(false)
+  const [clickShowBtn, setClickShowBTn] = useState(false);
   const handleClickShow = useCallback(() => {
-      setClickShowBTn(true);
-  }, []); 
+    setClickShowBTn(true);
+  }, []);
 
   // Determine API endpoint based on voucher type and special conditions
   const getApiEndpoint = useCallback(() => {
-   
-    if (voucherType === "POC" && clickShowBtn) {
-      return `${Urls.inv_transaction_base}${formState.transactionType}/ConsolidatedOtherBranchPurchaseOrders/?fromDate=${selectedDate.FromDate}&toDate=${selectedDate.ToDate}&`;
-      
+    // For sales
+    if (voucherType == "SO") {
+      return `${Urls.inv_transaction_base}${formState.transactionType}/PendingTransactionMaster/`;
     }
-    
-    if (branchID && (voucherType === "GR" || (voucherType === "GR" && toVoucherType === "BTO"))) {
-      return `${Urls.inv_transaction_base}${formState.transactionType}/PendingTransDetailsForGR/`;
+    if (voucherType == "GD") {
+      return `${Urls.inv_transaction_base}${formState.transactionType}/PendingTransactionMaster/`;
     }
-    if(voucherType !=="POC"){
-       return `${Urls.inv_transaction_base}${formState.transactionType}/PendingTransactionMaster/`;
-    }
-    
-    
-  }, [ voucherType, toVoucherType, branchID, formState.transactionType, clickShowBtn]);
+    // Above for sales
+
+    // if (voucherType === "POC" && clickShowBtn) {
+    //   return `${Urls.inv_transaction_base}${formState.transactionType}/ConsolidatedOtherBranchPurchaseOrders/?fromDate=${selectedDate.FromDate}&toDate=${selectedDate.ToDate}&`;
+    // }
+
+    // if (branchID && (voucherType === "GR" || (voucherType === "GR" && toVoucherType === "BTO"))) {
+    //   return `${Urls.inv_transaction_base}${formState.transactionType}/PendingTransDetailsForGR/`;
+    // }
+    // if(voucherType !=="POC"){
+    //    return `${Urls.inv_transaction_base}${formState.transactionType}/PendingTransactionMaster/`;
+    // }
+  }, [
+    voucherType,
+    toVoucherType,
+    branchID,
+    formState.transactionType,
+    clickShowBtn,
+  ]);
 
   // Determine detail API endpoint
   const getDetailApiEndpoint = useCallback(() => {
-   
-    
     if (voucherType === "GR" && toVoucherType === "BTO" && branchID) {
       return `${Urls.inv_transaction_base}${formState.transactionType}/PendingTransProductDetails/`;
     }
-    
+
     return `${Urls.inv_transaction_base}${formState.transactionType}/PendingTransactionDetails/`;
-  }, [ voucherType, toVoucherType, branchID, formState.transactionType]);
+  }, [voucherType, toVoucherType, branchID, formState.transactionType]);
 
   // Build post data for main grid
   const getMainGridPostData = useCallback(() => {
     const baseData: any = {
       voucherType: voucherType === "POC" ? "PO" : voucherType,
-      // fromDate,
-      // toDate,
     };
 
     if (partyLedgerID > 0) {
@@ -171,13 +187,19 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
       baseData.branchID = branchID;
     }
 
-
     if (showAllBranchPending) {
       baseData.showAllBranch = true;
     }
 
     return baseData;
-  }, [voucherType, fromDate, toDate, partyLedgerID, branchID, showAllBranchPending]);
+  }, [
+    voucherType,
+    fromDate,
+    toDate,
+    partyLedgerID,
+    branchID,
+    showAllBranchPending,
+  ]);
 
   // Get voucher prefix for display
   const getVoucherPrefix = useCallback((vType: string): string => {
@@ -188,9 +210,9 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
       PO: "PO #:",
       GR: "GR #:",
       PQ: "PQ #:",
-      SI: "SI #:",
-      PI: "PI #:",
-      BTO: "BTO #:",
+      SI: "SI #:", //check it
+      PI: "PI #:", //check it
+      BTO: "BTO #:", //check it
     };
     return prefixMap[vType] || "Doc #:";
   }, []);
@@ -198,14 +220,13 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
   // Main grid columns configuration
   const mainGridColumns: DevGridColumn[] = useMemo(() => {
     const baseColumns: DevGridColumn[] = [
-      
       {
         dataField: "date",
         caption: t("date"),
         dataType: "date",
         allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        allowSearch: false,
+        allowFiltering: false,
         width: 120,
       },
       {
@@ -213,64 +234,22 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
         caption: t("voucher_number"),
         dataType: "string",
         allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        allowSearch: false,
+        allowFiltering: false,
         width: 150,
       },
-      
     ];
 
-    if ((voucherType === "POC")) {
+    // For sales
+    if (voucherType === "SO" || voucherType === "GD") {
       baseColumns.push(
         {
-          dataField: "branchName",
-          caption: t("branch_name"),
-          dataType: "string",
-          allowSorting: true,
-          allowSearch: false,
-          allowFiltering: true,
-          width: 120,
-        },
-        {
-          dataField: "partyName",
-          caption: t("party_name"),
-          dataType: "string",
-          allowSorting: true,
-          allowSearch: false,
-          allowFiltering: true,
-          width: 120,
-        },
-        {
-          dataField: "grandTotal",
-          caption: t("grand_total"),
-          dataType: "number",
-          allowSorting: true,
-          allowSearch: false,
-          allowFiltering: true,
-          width: 120,
-        },
-        {
-          dataField: "remarks",
-          caption: t("remarks"),
-          dataType: "string",
-          allowSorting: true,
-          allowSearch: false,
-          allowFiltering: true,
-          width: 120,
-        }
-      );
-    }
-
-    // Conditionally add columns based on voucher type
-    else if (!(voucherType === "GR" && toVoucherType === "BTO" )) {
-      baseColumns.push(
-          {
           dataField: "voucherForm",
           caption: t("voucher_form"),
           dataType: "string",
           allowSorting: true,
-          allowSearch: true,
-          allowFiltering: true,
+          allowSearch: false,
+          allowFiltering: false,
           width: 150,
         },
         {
@@ -278,8 +257,8 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
           caption: t("party"),
           dataType: "string",
           allowSorting: true,
-          allowSearch: true,
-          allowFiltering: true,
+          allowSearch: false,
+          allowFiltering: false,
           width: 200,
         },
         {
@@ -288,7 +267,7 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
           dataType: "number",
           allowSorting: true,
           allowSearch: false,
-          allowFiltering: true,
+          allowFiltering: false,
           width: 120,
         },
         {
@@ -297,7 +276,7 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
           dataType: "number",
           allowSorting: true,
           allowSearch: false,
-          allowFiltering: true,
+          allowFiltering: false,
           width: 120,
         },
         {
@@ -306,17 +285,36 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
           dataType: "number",
           allowSorting: true,
           allowSearch: false,
-          allowFiltering: true,
+          allowFiltering: false,
+          width: 120,
+        },
+        {
+          dataField: "pendingQty",
+          caption: t("pending_qty"),
+          dataType: "number",
+          allowSorting: true,
+          allowSearch: false,
+          allowFiltering: false,
+          width: 120,
+        },
+        {
+          dataField: "referenceNumber",
+          caption: t("reference_number"),
+          dataType: "number",
+          allowSorting: true,
+          allowSearch: false,
+          allowFiltering: false,
           width: 120,
         }
       );
     }
-
+    // Above for sales
     // Hide certain columns
     const hiddenColumns = ["invTransactionMasterID", "ledgerID"];
-    
 
-    return baseColumns.filter(col => !hiddenColumns.includes(col.dataField??""));
+    return baseColumns.filter(
+      (col) => !hiddenColumns.includes(col.dataField ?? "")
+    );
   }, [voucherType, toVoucherType, t]);
 
   // Detail grid columns configuration
@@ -327,8 +325,8 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
         caption: t("product_code"),
         dataType: "string",
         allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        allowSearch: false,
+        allowFiltering: false,
         width: 120,
       },
       {
@@ -336,9 +334,9 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
         caption: t("product_name"),
         dataType: "string",
         allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 250,
+        allowSearch: false,
+        allowFiltering: false,
+        width: 180,
       },
       {
         dataField: "quantity",
@@ -346,7 +344,7 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
         dataType: "number",
         allowSorting: true,
         allowSearch: false,
-        allowFiltering: true,
+        allowFiltering: false,
         width: 100,
       },
       {
@@ -354,25 +352,20 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
         caption: t("unit_name"),
         dataType: "string",
         allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        allowSearch: false,
+        allowFiltering: false,
         width: 80,
       },
-    ];
-
-    // Conditionally add unit price
-    if (!(voucherType === "GR" && toVoucherType === "BTO")) {
-      baseColumns.push({
+      {
         dataField: "unitPrice",
         caption: t("unit_price"),
         dataType: "number",
         allowSorting: true,
         allowSearch: false,
-        allowFiltering: true,
+        allowFiltering: false,
         width: 100,
-      });
-    }
-
+      },
+    ];
     baseColumns.push(
       {
         dataField: "processedQty",
@@ -380,7 +373,7 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
         dataType: "number",
         allowSorting: true,
         allowSearch: false,
-        allowFiltering: true,
+        allowFiltering: false,
         width: 120,
       },
       {
@@ -389,7 +382,7 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
         dataType: "number",
         allowSorting: true,
         allowSearch: false,
-        allowFiltering: true,
+        allowFiltering: false,
         width: 120,
       }
     );
@@ -398,30 +391,34 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
   }, [voucherType, toVoucherType, t]);
 
   const [selectedDate, setSelectedDate] = useState<any>({
-      FromDate: new Date().toISOString(),
-      ToDate: new Date().toISOString(),
-    });
+    FromDate: new Date().toISOString(),
+    ToDate: new Date().toISOString(),
+  });
 
-  const handleDateChange = (field: "FromDate" | "ToDate", value: string) => { 
-    setSelectedDate((prev:any) => ({ ...prev, [field]: value }));
-    setClickShowBTn(false)
-   };
+  const handleDateChange = (field: "FromDate" | "ToDate", value: string) => {
+    setSelectedDate((prev: any) => ({ ...prev, [field]: value }));
+    setClickShowBTn(false);
+  };
 
   // Handle row selection in main grid
-  const handleMainGridRowClick = useCallback((e: any) => {
-    const masterID = e.data?.invTransactionMasterID;
-    const branchID = e.data?.branchID || 0;
-    
-    if (masterID && masterID !== lastShownMasterID) {
-      setSelectedMaster({ masterID, branchID });
-      setLastShownMasterID(masterID);
-    }
-  }, [lastShownMasterID]);
+  const handleMainGridRowClick = useCallback(
+    (e: any) => {
+      const masterID = e.data?.invTransactionMasterID;
+      const branchID = e.data?.branchID || 0;
+
+      if (masterID && masterID !== lastShownMasterID) {
+        setSelectedMaster({ masterID, branchID });
+        setLastShownMasterID(masterID);
+      }
+    },
+    [lastShownMasterID]
+  );
 
   // Process selected orders
   const handleProcessSelected = useCallback(() => {
-    const selectedData = gridRef.current?.instance()?.getSelectedRowsData("all") || [];
-    
+    const selectedData =
+      gridRef.current?.instance()?.getSelectedRowsData("all") || [];
+
     if (selectedData.length === 0) {
       alert(t("please_select_items"));
       return;
@@ -450,21 +447,27 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
       voucherNumbers: voucherPrefix + voucherNumbers.join(","),
       referenceNumber,
     };
-
+    debugger;
     // Handle different form types and voucher type combinations
-    if ((voucherType === "SO" || voucherType === "GD") && toVoucherType === "SI") {
+    if (
+      (voucherType === "SO" || voucherType === "GD") &&
+      toVoucherType === "SI"
+    ) {
       if (formType === "VAT" && objFrmsalestax) {
         objFrmsalestax.StrPendingOrdListMasterIDs = processData.masterIDs;
-        objFrmsalestax.StrPendingOrdListVoucherNumbers = processData.voucherNumbers;
+        objFrmsalestax.StrPendingOrdListVoucherNumbers =
+          processData.voucherNumbers;
       } else if (activeFormObject) {
         activeFormObject.StrPendingOrdListMasterIDs = processData.masterIDs;
         activeFormObject.StrPendingOrdListBranchIDs = processData.branchIDs;
-        activeFormObject.StrPendingOrdListVoucherNumbers = processData.voucherNumbers;
+        activeFormObject.StrPendingOrdListVoucherNumbers =
+          processData.voucherNumbers;
         activeFormObject.StrPendingRefNo = processData.referenceNumber;
       }
     } else if (voucherType === "GRN" && activeFormObject) {
       activeFormObject.StrPendingOrdListMasterIDs = processData.masterIDs;
-      activeFormObject.StrPendingOrdListVoucherNumbers = processData.voucherNumbers;
+      activeFormObject.StrPendingOrdListVoucherNumbers =
+        processData.voucherNumbers;
     } else if (voucherType === "SO" && toVoucherType === "GD" && objfrmGd) {
       objfrmGd.StrPendingOrdListMasterIDs = processData.masterIDs;
       objfrmGd.StrPendingOrdListBranchIDs = processData.branchIDs;
@@ -472,13 +475,22 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
     } else if (voucherType === "PO" && toVoucherType === "GRN" && frmGRN) {
       frmGRN.StrPendingOrdListMasterIDs = processData.masterIDs;
       frmGRN.StrPendingOrdListVoucherNumbers = processData.voucherNumbers;
-    } else if ((voucherType === "PO" || voucherType === "PQ") && activeFormObject) {
+    } else if (
+      (voucherType === "PO" || voucherType === "PQ") &&
+      activeFormObject
+    ) {
       activeFormObject.StrPendingOrdListMasterIDs = processData.masterIDs;
-      activeFormObject.StrPendingOrdListVoucherNumbers = processData.voucherNumbers;
-    } else if (voucherType === "GR" && toVoucherType === "BTO" && activeFormObject) {
+      activeFormObject.StrPendingOrdListVoucherNumbers =
+        processData.voucherNumbers;
+    } else if (
+      voucherType === "GR" &&
+      toVoucherType === "BTO" &&
+      activeFormObject
+    ) {
       activeFormObject.StrPendingOrdListMasterIDs = processData.masterIDs;
       activeFormObject.StrPendingOrdListBranchIDs = processData.branchIDs;
-      activeFormObject.StrPendingOrdListVoucherNumbers = processData.voucherNumbers;
+      activeFormObject.StrPendingOrdListVoucherNumbers =
+        processData.voucherNumbers;
     }
 
     // Call parent callback if provided
@@ -510,7 +522,7 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
 
   // Initialize process button visibility based on conditions
   // useEffect(() => {
-    // Hide process button if no form object is provided
+  // Hide process button if no form object is provided
   //   if (!activeFormObject) {
   //     setIsProcessButtonVisible(false);
   //   } else {
@@ -524,8 +536,6 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
       transactionMasterID: selectedMaster.masterID,
     };
 
-    
-
     if ((voucherType === "GR" && toVoucherType === "BTO") || branchID) {
       baseData.branchID = branchID || selectedMaster.branchID;
     }
@@ -538,41 +548,43 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
   return (
     <div className="pending-order-list-container">
       <div className="flex justify-between">
-        {voucherType==="POC"
-        ?<div className="flex flex-row justify-center items-center gap-2 mb-4 w-fit">
-        <ERPDateInput
-            id=""
-            // label={t("FromDate")}
-            onChange={(e) => handleDateChange("FromDate", e.target.value)}
-            value={selectedDate.FromDate}
-            className="w-full sm:w-40"
-          />
-          <div>{t("to")}</div>
-          <ERPDateInput
-            id=""
-            // label={t("ToDate")}
-            onChange={(e) => handleDateChange("ToDate", e.target.value)}
-            value={selectedDate.ToDate}
-            className="w-full sm:w-40"
-          />
-          <ERPButton
-            variant="primary"
-            onClick={handleClickShow}
-            title="Show"
-          />
-      </div>
-        :<div></div>}
-      {/* Process Selected Button */}
-      {isProcessButtonVisible && (
-        <div className="flex justify-end mb-4">
-          <ERPButton
-            variant="primary"
-            onClick={handleProcessSelected}
-            title={t("process_selected")}
-            // disabled={selectedRows.size === 0}
-          />
-        </div>
-      )}
+        {voucherType === "POC" ? (
+          <div className="flex flex-row justify-center items-center gap-2 mb-4 w-fit">
+            <ERPDateInput
+              id=""
+              // label={t("FromDate")}
+              onChange={(e) => handleDateChange("FromDate", e.target.value)}
+              value={selectedDate.FromDate}
+              className="w-full sm:w-40"
+            />
+            <div>{t("to")}</div>
+            <ERPDateInput
+              id=""
+              // label={t("ToDate")}
+              onChange={(e) => handleDateChange("ToDate", e.target.value)}
+              value={selectedDate.ToDate}
+              className="w-full sm:w-40"
+            />
+            <ERPButton
+              variant="primary"
+              onClick={handleClickShow}
+              title="Show"
+            />
+          </div>
+        ) : (
+          <div></div>
+        )}
+        {/* Process Selected Button */}
+        {isProcessButtonVisible && (
+          <div className="flex justify-end mb-4">
+            <ERPButton
+              variant="primary"
+              onClick={handleProcessSelected}
+              title={t("process_selected")}
+              // disabled={selectedRows.size === 0}
+            />
+          </div>
+        )}
       </div>
 
       {/* Main Grid - Pending Orders */}
@@ -582,22 +594,21 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
           columns={mainGridColumns}
           dataUrl={memoDataUrl}
           postData={memoPostData}
-          method={ActionType.GET}
+          method={ActionType.POST}
           gridId={`grd_pending_orders_${voucherType}`}
           height={300}
           hideGridAddButton={true}
           enableScrollButton={false}
           selectionMode="multiple"
           initialSort={[{ selector: "voucherNumber", desc: true }]}
-          // gridHeader={t(`pending_${voucherType.toLowerCase()}_list`)}  
+          // gridHeader={t(`pending_${voucherType.toLowerCase()}_list`)}
           onRowClick={handleMainGridRowClick}
           // onSelectionChanged={handleSelectionChanged}
           showPrintButton={false}
-           allowExport={false}
+          allowExport={false}
           allowSearching={false}
           hideToolbar={true}
           // showRowIndex={true}
-          
         />
       </div>
 

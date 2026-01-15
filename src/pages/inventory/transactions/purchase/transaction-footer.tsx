@@ -275,8 +275,19 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   }, [isSidebar]);
 
   useEffect(() => {
-    calculateTotal(formState.transaction.master, formState.summary, formState.formElements, { result: {}, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly })
-  }, [formState.transaction.master.billDiscount, formState.transaction.master.hasroundOff, formState.transaction.master.adjustmentAmount]);
+    // Recalculate grandTotal whenever summary or discount/adjustment values change
+    // The calculateTotal function handles dispatching internally when formStateHandleFieldChangeKeysOnly is provided
+    calculateTotal(
+      formState.transaction.master,
+      formState.summary,
+      formState.formElements,
+      { result: {}, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly }
+    );
+  }, [
+    formState.transaction.master.billDiscount,
+    formState.transaction.master.hasroundOff,
+    formState.transaction.master.adjustmentAmount,
+  ]);
 
   let clickTimer: NodeJS.Timeout | null = null;
 

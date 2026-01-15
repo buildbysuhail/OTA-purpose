@@ -53,10 +53,12 @@ export interface TransactionData {
   details: TransactionDetail[];
   invAccTransactions: InvAccTransaction[];
   attachments: any[];
-  couponDetails: CouponDetails[]; // new
-  privilegeCardDetails: PrivilegeCardDetails[]; //new
+  couponDetails: CouponDetails; // new
+  privilegeCardDetails: PrivilegeCardDetails; //new
   bankCardDetails: List<SettlementDetails>[]; //new
   uPIDetails: List<SettlementDetails>[]; //new
+  eInvoiceStatus?: string
+  ewbStatus?: string
 }
 
 export interface InvAccTransaction {
@@ -224,6 +226,8 @@ export interface TransactionMaster {
   address?: string;  // Check use the address1
   purInvNumber?: number;
   toBranchWarehouseID?: number; // for stock branch transfer
+  itemLoadVoucherPrefix?: string;
+  itemLoadVoucherNumber?: number;
 }
 
 export interface TransactionMaster3 {
@@ -371,8 +375,8 @@ export interface TransactionDetail {
   pOTransDetailID: number;
   pO_PITransDetailIDs: number;
   pO_PITransDetailQtys: number;
-  netConvert?:string;
-  customer_LSP?:number;
+  netConvert?: string;
+  customer_LSP?: number;
   nLA_StdSalesPrice?: number;
   refBranchID?: number;
   itemType?: string;
@@ -383,17 +387,17 @@ export interface TransactionDetail {
   schemeQtyLimit?: number;
   isSchemeProcessed?: string;
 
-  isQtyFreezed:boolean; // new 
-  memo:string; // new
-  flavors:string; // new
-  smCode:string; // new
-  salesman:string; // new
-  salesmanID:number; // new
-  adjQty:number; // For SO,GD,SRV
-  gatePass:string; // For SI india
-  purchaseCost:number; // For SI india
-  taxCategoryID:number; // For SI india
-  productCategoryID:number; // For SI india
+  isQtyFreezed: boolean; // new 
+  memo: string; // new
+  flavors: string; // new
+  smCode: string; // new
+  salesman: string; // new
+  salesmanID: number; // new
+  adjQty: number; // For SO,GD,SRV
+  gatePass: string; // For SI india
+  purchaseCost: number; // For SI india
+  taxCategoryID: number; // For SI india
+  productCategoryID: number; // For SI india
 
   // stock
   stockTo?: number;
@@ -504,6 +508,9 @@ export interface UserConfig {
   stockOutConfirmation?: boolean;
   taxOnMRP?: boolean;
   taxOnFreeItem?: boolean;
+  //india
+  autoEwayBill?: boolean;
+  disableEinvoice?: boolean;
 
   // stock
   userSalesPriceForStockTransfer?: boolean;
@@ -750,9 +757,12 @@ export interface TransactionFormState {
   privConfig?: string;
   printGatepass?: boolean;
   lastChoosedTemplate?: { id?: number, group?: string, formType?: string, customerType?: string }; // nizam
-  itemPopup?:{isOpen?: boolean, index?:number}
+  itemPopup?: { isOpen?: boolean, index?: number }
   taxBreakdown?: { name: string, amount: number }[];
-  billDiscountPerc: number;
+  billDiscountPerc?: number;
+
+  // einvoiceLabel?: string;
+  // eWBLabel?: string;
 
   // Stocks
   chkCostFromExcel?: boolean;
@@ -762,6 +772,8 @@ export interface TransactionFormState {
   allPositiveStockToZero?: boolean;
   allNegativeStockToZero?: boolean;
   branchCheckbox?: boolean; // for stock branch transfer
+  checkedSO?: boolean; // Item load request - sales order
+  checkedSI?: boolean; // Item load request - sales
 }
 export interface GiftModel {
   productBatchID: number;
@@ -808,7 +820,7 @@ export type ColumnModel = {
     filter?: any,
     pdfCell?: any
   ) => any;
-  detailsOptionKey?:any
+  detailsOptionKey?: any
 }
 export interface PrintTransProps {
   masterAccount: string;
@@ -1115,6 +1127,7 @@ export interface CouponDetails {
   totalAmount: number;
   cardHolderName: string;
   couponID: number;
+  oBalance: number;
 }
 export interface PrivilegeCardDetails {
   privilegeCardsID: number;

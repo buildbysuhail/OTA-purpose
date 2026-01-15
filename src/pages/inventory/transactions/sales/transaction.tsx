@@ -37,7 +37,7 @@ import { formStateHandleFieldChangeKeysOnly, resetState, formStateHandleFieldCha
 import DeletingOverlay from "../transaction-deleting";
 import SavingOverlay from "../transaction-saving";
 import { initialUserConfig, transactionInitialData, TransactionFormStateInitialData, initialFormElements, initialInventoryTotals, initialTransactionDetailData } from "../transaction-type-data";
-import { TransactionProps, UserConfig, TransactionDetail, TransactionFormState, TransactionData, SummaryItems, GridQtyFactors, ColumnModel, GridQtyFactorsM } from "../transaction-types";
+import { TransactionProps, UserConfig, TransactionDetail, TransactionFormState, TransactionData, SummaryItems, GridQtyFactors, ColumnModel, GridQtyFactorsM, FormElementsState } from "../transaction-types";
 import BatchEntryModal from "./batch-entry";
 import ObjectViewer from "./components/fomstate-view";
 import Header from "./components/header";
@@ -646,6 +646,75 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
+  const onSaveItem = async(item: TransactionDetail, mode:"Save" | "SaveAndNew") => {
+    debugger;
+    const exist = formState.transaction.details.find(x => x.slNo == formState.row?.slNo);
+                        if(exist) {
+                          const ind = formState.transaction.details.findIndex(x => x.slNo == formState.row?.slNo)
+                          if(formState.row) {
+                            let final = [...formState?.transaction?.details];
+                            final[ind] = item
+                            final = final.filter(x => x.productID > 0);
+                            
+                            const summaryRes = calculateSummary(final, formState, {
+                                          result: {},
+                                        });
+                            
+                                        const totalRes = await calculateTotal(
+                                          formState.transaction.master,
+                                          summaryRes.summary as SummaryItems,
+                                          {
+                                            ...formState.formElements,
+                                          } as FormElementsState,
+                                          { result: {} }
+                                        );
+                                        const result = {
+                                          ...totalRes,
+                                          summary: summaryRes.summary,
+                                          showQuantityFactors: { visible: false, rowIndex: -1, qtyDesc: "" },
+                                          transaction: {
+                                            ...totalRes.transaction,
+                                            details: [item],
+                                          },
+                                        };
+                            dispatch(formStateHandleFieldChangeKeysOnly({fields:{
+                              ...result
+                            },itemsToAddToDetails: undefined, rowIndex:ind}))
+                          }
+                        } else {
+                          if(formState.row) {
+                            
+                            let final = [...formState?.transaction?.details];
+                            final.push(item);
+                            final = final.filter(x => x.productID > 0);
+                            
+                            const summaryRes = calculateSummary(final, formState, {
+                                          result: {},
+                                        });
+                            
+                                        const totalRes = await calculateTotal(
+                                          formState.transaction.master,
+                                          summaryRes.summary as SummaryItems,
+                                          {
+                                            ...formState.formElements,
+                                          } as FormElementsState,
+                                          { result: {} }
+                                        );
+                                        const result = {
+                                          ...totalRes,
+                                          summary: summaryRes.summary,
+                                          showQuantityFactors: { visible: false, rowIndex: -1, qtyDesc: "" },
+                                          transaction: {
+                                            ...totalRes.transaction,
+                                            details: [item],
+                                          },
+                                        };
+                            dispatch(formStateHandleFieldChangeKeysOnly({fields:{
+                              ...result
+                            },itemsToAddToDetails: undefined}))
+                          }
+                        }
+  }
   const { hasRight } = useUserRights();
   const gridHeight = useMemo(() => {
     if (formState?.transaction?.master?.voucherType === "LPO") {
@@ -1344,7 +1413,7 @@ debugger;
       if (PendingTransDetails && PendingTransDetails.details && PendingTransDetails.details.length > 0) {
         const calculatedDetails: TransactionDetail[] = [];
         const refactoredDetails = await refactorDetails(PendingTransDetails.details?.map((x: any) => {
-          return { ...x, qty: x.pendingQty }
+          return { ...x, quantity: x.pendingQty }
         }), formState.transaction.master.voucherForm, voucherType, { result: {} }, loadType);
         for (let index = 0; index < refactoredDetails.length; index++) {
           const _element = { ...refactoredDetails[index] };
@@ -2131,6 +2200,7 @@ debugger;
                     downloadImportTemplateHeadersOnly={downloadImportTemplateHeadersOnly}
                     importFromExcel={importFromExcel}
                     undoEditMode={undoEditMode}
+                    loadAndSetTransVoucher={loadAndSetTransVoucher}
                   />
                 </div>
               </div>
@@ -2146,6 +2216,7 @@ debugger;
               focusToNextColumn={focusToNextColumn}
               loadAndSetTransVoucher={loadAndSetTransVoucher}
               t={t}
+              isAppGlobal={clientSession.isAppGlobal}
               handleLoadByRefNo={handleLoadByRefNo}
               handleFieldChange={handleFieldChange}
               setIsPartyDetailsOpen={setIsPartyDetailsOpen}
@@ -2212,6 +2283,7 @@ debugger;
                           formStateHandleFieldChangeKeysOnly,
                       });
                     }}
+                    onSaveItem={onSaveItem}
                     transactionType={transactionType}
                     _columns={_purchaseGridCol}
                     keyField={"productID"}
@@ -2257,7 +2329,7 @@ debugger;
                         goToPreviousPage={goToPreviousPage}
                         save={save}
                         selectAttachment={selectAttachment}
-                        isDropUpOpen={isDropUpOpen}
+                        isAppGlobal={clientSession.isAppGlobal}
                         toggleDropup={toggleFooterDropup}
                         footerLayout={"vertical"}
                         applicationSettings={applicationSettings}
@@ -2355,6 +2427,7 @@ debugger;
                       downloadImportTemplateHeadersOnly={downloadImportTemplateHeadersOnly}
                       importFromExcel={importFromExcel}
                       undoEditMode={undoEditMode}
+                      loadAndSetTransVoucher={loadAndSetTransVoucher}
                     />
                   </div>
                 </div>
@@ -2371,6 +2444,7 @@ debugger;
                     handleKeyDown={handleKeyDown}
                     loadAndSetTransVoucher={loadAndSetTransVoucher}
                     t={t}
+                    isAppGlobal={clientSession.isAppGlobal}
                     handleLoadByRefNo={handleLoadByRefNo}
                     handleFieldChange={handleFieldChange}
                     setIsPartyDetailsOpen={setIsPartyDetailsOpen}
@@ -2397,6 +2471,7 @@ debugger;
               <div className="flex-1 bg-white text-zinc-800 overflow-y-auto">
                 <div className="space-y-2"></div>
                 <ErpPurchaseGrid
+                onSaveItem={onSaveItem}
                   isMobile={true}
                   ref={purchaseGridRef}
                   zIndexController={40}
@@ -2452,7 +2527,7 @@ debugger;
                   goToPreviousPage={goToPreviousPage}
                   save={save}
                   selectAttachment={selectAttachment}
-                  isDropUpOpen={isDropUpOpen}
+                  isAppGlobal={clientSession.isAppGlobal}
                   toggleDropup={toggleFooterDropup}
                   applicationSettings={applicationSettings}
                   loadAndSetTransVoucher={loadAndSetTransVoucher}
@@ -2508,7 +2583,7 @@ debugger;
             goToPreviousPage={goToPreviousPage}
             save={save}
             selectAttachment={selectAttachment}
-            isDropUpOpen={isDropUpOpen}
+            isAppGlobal={clientSession.isAppGlobal}
             toggleDropup={toggleFooterDropup}
             footerLayout={"horizontal"}
             applyDiscountsToItems={applyDiscountsToItems}
@@ -2544,6 +2619,7 @@ debugger;
           <div className="flex flex-col justify-between h-full">
             {/* <div className="h-[calc(100%-(350)px)]"> */}
               <ErpPurchaseGrid
+                onSaveItem={onSaveItem}
               ref={purchaseGridRef}
               onChange={handleTextDataChange}
               zIndexController={40}

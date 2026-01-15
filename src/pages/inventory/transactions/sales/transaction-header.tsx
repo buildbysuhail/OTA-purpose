@@ -61,13 +61,13 @@ interface TransactionHeaderProps {
   ledgerIdRef: any;
   voucherNumberRef: any;
   refNoRef: any;
-  isAppGlobal:boolean;
+  isAppGlobal: boolean;
   mobileNumRef: any;
   employeeRef?: any;
   isDropDownOpen: {
     open: boolean;
     autoAddressFocus: boolean;
-};
+  };
   toggleDropdown: () => void;
   onHeightChange?: (height: number) => void;
   footerLayout: "horizontal" | "vertical";
@@ -318,21 +318,21 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   }, [formState.transaction.master.invTransactionMasterID]);
 
   // Open W-stock list modal
-  const handleWStockList = () =>{
+  const handleWStockList = () => {
     dispatch(
-          formStateHandleFieldChange({
-            fields: { wStockListOpen: true }
-          })
-        )
-    }
-    // close W-stock list modal
-    const CloseWStockList = () =>{
-      dispatch(
-            formStateHandleFieldChange({
-              fields: { wStockListOpen: false }
-            })
-          )
-      }
+      formStateHandleFieldChange({
+        fields: { wStockListOpen: true }
+      })
+    )
+  }
+  // close W-stock list modal
+  const CloseWStockList = () => {
+    dispatch(
+      formStateHandleFieldChange({
+        fields: { wStockListOpen: false }
+      })
+    )
+  }
 
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
   const conditionalFooterComponents =
@@ -361,7 +361,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
             handleFieldKeyDown={handleFieldKeyDown}
           />
           <SupplyTypeCombobox
-           isAppGlobal={isAppGlobal}
+            isAppGlobal={isAppGlobal}
             formState={formState}
             dispatch={dispatch}
             t={t}
@@ -379,7 +379,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
       </>
     ) : null;
 
-    const containerRef = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -388,7 +388,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
       for (const entry of entries) {
         const height = entry.contentRect.height;
         if (typeof onHeightChange === "function") {
-          onHeightChange(height); 
+          onHeightChange(height);
         }
       }
     });
@@ -399,21 +399,21 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
       observer.disconnect();
     };
   }, [onHeightChange]);
-  
-function mergeRefs<T>(...refs: React.Ref<T>[]) {
-  return (value: T | null) => {
-    refs.forEach(ref => {
-      if (!ref) return;
 
-      if (typeof ref === "function") {
-        ref(value);
-      } else {
-        // ✅ cast is required because RefObject.current is readonly
-        (ref as React.MutableRefObject<T | null>).current = value;
-      }
-    });
-  };
-}
+  function mergeRefs<T>(...refs: React.Ref<T>[]) {
+    return (value: T | null) => {
+      refs.forEach(ref => {
+        if (!ref) return;
+
+        if (typeof ref === "function") {
+          ref(value);
+        } else {
+          // ✅ cast is required because RefObject.current is readonly
+          (ref as React.MutableRefObject<T | null>).current = value;
+        }
+      });
+    };
+  }
 
   return (
     <div>
@@ -428,7 +428,7 @@ function mergeRefs<T>(...refs: React.Ref<T>[]) {
           style={headerStyle}
           className="fixed top-[110px] z-[39] dark:bg-dark-bg bg-white shadow-md transition-all duration-300"
         >
-          <div  ref={containerRef} className="flex items-end gap-1 relative px-2 !pb-3">
+          <div ref={containerRef} className="flex items-end gap-1 relative px-2 !pb-3">
             <PartyLedger
               ref={ledgerIdRef}
               handleFieldKeyDown={handleFieldKeyDown}
@@ -481,7 +481,7 @@ function mergeRefs<T>(...refs: React.Ref<T>[]) {
                   ref={mergeRefs(referenceNumberInputRef, refNoRef)}
 
                   t={t}
-                  onKeyDown={(e:any) => handleInputNavigation(e, mobileNumberRef)}
+                  onKeyDown={(e: any) => handleInputNavigation(e, mobileNumberRef)}
 
                 />
               )}
@@ -490,7 +490,7 @@ function mergeRefs<T>(...refs: React.Ref<T>[]) {
               ref={inputRefs?.refDate}
               dispatch={dispatch}
               formState={formState}
-              handleKeyDown={(e) => { handleKeyDown(e,"refDate")}}
+              handleKeyDown={(e) => { handleKeyDown(e, "refDate") }}
               t={t}
             />
 
@@ -679,7 +679,7 @@ function mergeRefs<T>(...refs: React.Ref<T>[]) {
                   disableEnterNavigation
                   // ref={mobileNumberRef}
                   // ref={mobileNumRef}
-                   ref={(el) => {
+                  ref={(el) => {
                     mobileNumRef.current = el;
                     mobileNumberRef.current = el;
                   }}
@@ -698,22 +698,23 @@ function mergeRefs<T>(...refs: React.Ref<T>[]) {
                   disabled={formState.formElements.pnlMasters?.disabled}
                 />
 
-                   {([VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(formState.transaction.master.voucherType as any) &&
+                {([VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(formState.transaction.master.voucherType as any) &&
                   <ERPInput
                     id="orderCardNo"
                     label={t("token_no")}
                     placeholder={t("enter_token_number")}
                     value={formState.transaction.master.orderCardNo}
-                    // data={formState.transaction.master}
-                      onChange={(e) =>
-                    dispatch(
-                      formStateMasterHandleFieldChange({
-                        fields: { orderCardNo: e.target?.value },
-                      })
-                    )
-                  }
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, ""); // remove non-numbers
 
+                      dispatch(
+                        formStateMasterHandleFieldChange({
+                          fields: { orderCardNo: value },
+                        })
+                      );
+                    }}
                   />
+
                 )}
                 {(formState.transaction.master.voucherType == VoucherType.SalesQuotation &&
                   <ERPInput
@@ -721,14 +722,18 @@ function mergeRefs<T>(...refs: React.Ref<T>[]) {
                     label={t("notes_1")}
                     placeholder={t("enter_notes")}
                     value={formState.transaction.master.master2.notes1}
-                    data={formState.transaction.master.master2}
-                     onChange={(e) =>
-                    dispatch(
-                      formStateMasterHandleFieldChange({
-                        fields: { orderCardNo: e.target?.value },
-                      })
-                    )
-                  }
+                    onChange={(e) =>
+                      dispatch(
+                        formStateMasterHandleFieldChange({
+                          fields: {
+                            master2: {
+                              ...formState.transaction.master.master2,
+                              notes1: e.target.value,
+                            },
+                          },
+                        })
+                      )
+                    }
                   />
                 )}
                 {(formState.transaction.master.voucherType == VoucherType.SalesQuotation &&
@@ -737,30 +742,40 @@ function mergeRefs<T>(...refs: React.Ref<T>[]) {
                     label={t("notes_2")}
                     placeholder={t("enter_notes")}
                     value={formState.transaction.master.master2.notes2}
-                    data={formState.transaction.master.master2}
-                    onChangeData={(data: any) => handleFieldChange("notes2", data.notes2)}
+                    onChange={(e) =>
+                      dispatch(
+                        formStateMasterHandleFieldChange({
+                          fields: {
+                            master2: {
+                              ...formState.transaction.master.master2,
+                              notes2: e.target.value,
+                            },
+                          },
+                        })
+                      )
+                    }
                   />
                 )}
 
                 {userSession.dbIdValue == "SEMAKA" && (
-                <div className="flex items-end gap-3 ml-2">
-                  <ERPRadio
-                    id="cash"
-                    name="paymentMethod"
-                    value="cash"
-                    label={t("cash")}
-                    checked={paymentMethod === "cash"}
-                    onChange={(e) => handleChange(e.target.value)}
-                  />
-                  <ERPRadio
-                    id="credit"
-                    name="paymentMethod"
-                    value="credit"
-                    label={t("credit")}
-                    checked={paymentMethod === "credit"}
-                    onChange={(e) => handleChange(e.target.value)}
-                  />
-                </div>
+                  <div className="flex items-end gap-3 ml-2">
+                    <ERPRadio
+                      id="cash"
+                      name="paymentMethod"
+                      value="cash"
+                      label={t("cash")}
+                      checked={paymentMethod === "cash"}
+                      onChange={(e) => handleChange(e.target.value)}
+                    />
+                    <ERPRadio
+                      id="credit"
+                      name="paymentMethod"
+                      value="credit"
+                      label={t("credit")}
+                      checked={paymentMethod === "credit"}
+                      onChange={(e) => handleChange(e.target.value)}
+                    />
+                  </div>
                 )}
 
                 {formState.formElements.inSearch?.visible && (
@@ -965,22 +980,22 @@ function mergeRefs<T>(...refs: React.Ref<T>[]) {
 
                 {formState.wStockListOpen && (
                   <ERPModal
-                      isOpen={formState.wStockListOpen}
-                      title={t("stock_details")}
-                      width={500}
-                      height={300}
-                      closeModal={CloseWStockList}
-                      content={<WareHouseStock t={t} closeModal={CloseWStockList} productName={formState.currentCell?.data?.product || ""} productBatchID={formState.currentCell?.data?.productBatchID} />}
+                    isOpen={formState.wStockListOpen}
+                    title={t("stock_details")}
+                    width={500}
+                    height={300}
+                    closeModal={CloseWStockList}
+                    content={<WareHouseStock t={t} closeModal={CloseWStockList} productName={formState.currentCell?.data?.product || ""} productBatchID={formState.currentCell?.data?.productBatchID} />}
                   />
                 )}
 
                 {["DURRAH_RYD", "986797588010", "BRIDCO"].includes(userSession.dbIdValue) && (
-                <ERPButton
-                  title={t("b_stock")}
-                  variant="secondary"
-                  disabled={formState.transactionLoading}
-                  className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
-                />
+                  <ERPButton
+                    title={t("b_stock")}
+                    variant="secondary"
+                    disabled={formState.transactionLoading}
+                    className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+                  />
                 )}
               </div>
 
@@ -1315,14 +1330,14 @@ function mergeRefs<T>(...refs: React.Ref<T>[]) {
                   VoucherType.GoodsReceiptNote &&
                   formState.transaction.master.voucherType !==
                   VoucherType.PurchaseEstimate && ( */}
-                    <VatTokenInput
-                      formState={formState}
-                      dispatch={dispatch}
-                      t={t}
-                      handleFieldKeyDown={handleFieldKeyDown}
-                      handleKeyDown={handleKeyDown}
-                    />
-                  {/* )} */}
+                <VatTokenInput
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  handleFieldKeyDown={handleFieldKeyDown}
+                  handleKeyDown={handleKeyDown}
+                />
+                {/* )} */}
                 {/* Conditional Elements */}
                 {formState.formElements.inSearch?.visible && (
                   <ERPCheckbox

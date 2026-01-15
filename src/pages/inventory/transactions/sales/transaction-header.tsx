@@ -19,7 +19,7 @@ import Project from "./components/cb-project";
 import InvoiceValue from "./components/invoice-value";
 import VoucherLoader from "./components/grn-Number";
 import Urls from "../../../../redux/urls";
-import { formStateHandleFieldChange, formStateMasterHandleFieldChange, } from '../reducer';
+import { formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly, formStateMasterHandleFieldChange, } from '../reducer';
 import MoreOptionsModalContent from "./transaction-more";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
@@ -702,10 +702,11 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   <ERPInput
                     id="orderCardNo"
                     label={t("token_no")}
+                    type="number"
                     placeholder={t("enter_token_number")}
                     value={formState.transaction.master.orderCardNo}
                     onChange={(e) => {
-                      const value = e.target.value.replace(/\D/g, ""); // remove non-numbers
+                      const value = e.target.value; // remove non-numbers
 
                       dispatch(
                         formStateMasterHandleFieldChange({
@@ -724,12 +725,15 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     value={formState.transaction.master.master2.notes1}
                     onChange={(e) =>
                       dispatch(
-                        formStateMasterHandleFieldChange({
+                        formStateHandleFieldChangeKeysOnly({
                           fields: {
-                            master2: {
-                              ...formState.transaction.master.master2,
-                              notes1: e.target.value,
-                            },
+                            transaction:{
+                              master:{
+                                master2: {
+                                  notes1: e.target.value,
+                                },
+                              }
+                            }
                           },
                         })
                       )
@@ -744,12 +748,15 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     value={formState.transaction.master.master2.notes2}
                     onChange={(e) =>
                       dispatch(
-                        formStateMasterHandleFieldChange({
+                        formStateHandleFieldChangeKeysOnly({
                           fields: {
-                            master2: {
-                              ...formState.transaction.master.master2,
-                              notes2: e.target.value,
-                            },
+                            transaction:{
+                              master:{
+                                master2: {
+                                   notes2: e.target.value,
+                                },
+                              }
+                            }
                           },
                         })
                       )

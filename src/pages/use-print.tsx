@@ -983,10 +983,10 @@ export const getCommonValues = (
       v = data.custom.sumOfAddCessAmt.toString();
       break;
     case "sumOfGST":
-      v = data.custom.sumOfGST.toString();
+      v = data.custom?.sumOfGST.toString();
       break;
     case "gst":
-      v = data.custom.sumGST.toString();
+      v = data.custom?.sumGST.toString();
       break;
     case "totalTaxableValue0Percent":
       v = data.custom.zeroTaxable.toString();

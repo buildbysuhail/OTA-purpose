@@ -565,6 +565,104 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                     )}
 
                     {/* The below items are newly added for sales */}
+                    {/* Create invoice from other voucher */}
+                    <li>
+                      <button
+                        className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-sky-50 hover:text-sky-800 dark:hover:bg-sky-900/30 dark:hover:text-sky-300 transition-all duration-200 rounded-md group text-left"
+                        onClick={() => { openCreateInterfaceFromOtherVoucher() }}>
+                        <div className="w-8 h-8 bg-sky-100 dark:bg-sky-900/30 rounded-full flex items-center justify-center group-hover:bg-sky-200 dark:group-hover:bg-sky-900/50 group-hover:scale-110 transition-all duration-200">
+                          <FilePlus className="h-4 w-4 text-sky-800 dark:text-sky-300" />
+                        </div>
+                        <span className="font-medium">{t("create_invoice_from_other_voucher")}</span>
+                      </button>
+                    </li>
+
+
+                    {/* sales invoice */}
+                    {["SI", VoucherType.SalesInvoice].includes(formState.transaction.master.voucherType) && (
+                      <li>
+                        <button
+                          disabled={formState.formElements?.pnlMasters?.disabled}
+                          onClick={(e) => {
+                            closeMenuPopup();
+                            setIsPendingOrderOpen({ open: true, type: "SO" });
+                          }}
+                          className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#fff1f2] hover:text-[#be123c] dark:hover:bg-[#8813374d] dark:hover:text-[#fda4af]'}`}>
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#ffe4e6] dark:bg-[#8813374d] group-hover:bg-[#fecdd3] dark:group-hover:bg-[#88133799] group-hover:scale-110'}`} >
+                            <ShoppingCart className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#be123c] dark:text-[#fda4af]'}`} />
+                          </div>
+                          <span className="font-medium">{t('pending_order_list')}</span>
+                        </button>
+                      </li>
+                    )}
+
+                    {["SI", VoucherType.SalesInvoice].includes(formState.transaction.master.voucherType) && (
+                      <li>
+                        <button
+                          disabled={formState.formElements?.pnlMasters?.disabled}
+                          onClick={(e) => {
+                            closeMenuPopup();
+                            setIsPendingOrderOpen({ open: true, type: "GD" });
+                          }}
+                          className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#fef3c7] hover:text-[#92400e] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047]'}`}>
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#fef3c7] dark:bg-[#78350f4d] group-hover:bg-[#fde68a] dark:group-hover:bg-[#78350fcc] group-hover:scale-110'}`} >
+                            <PackageCheck className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#92400e] dark:text-[#fde047]'}`} />
+                          </div>
+                          <span className="font-medium">{t('pending_goods_delivery_list')}</span>
+                        </button>
+                      </li>
+                    )}
+                    {/* Good delivery - same in global, saudi */}
+                    {["GD", VoucherType.GoodsDeliveryNote].includes(formState.transaction.master.voucherType) && (
+                      <li>
+                        <button
+                          disabled={formState.formElements?.pnlMasters?.disabled}
+                          onClick={(e) => {
+                            closeMenuPopup();
+                            setIsPendingOrderOpen({ open: true, type: "SO" });
+                          }}
+                          className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#fef3c7] hover:text-[#92400e] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047]'}`}>
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#fef3c7] dark:bg-[#78350f4d] group-hover:bg-[#fde68a] dark:group-hover:bg-[#78350fcc] group-hover:scale-110'}`} >
+                            <PackageCheck className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#92400e] dark:text-[#fde047]'}`} />
+                          </div>
+                          <span className="font-medium">{t('pending_orders')}</span>
+                        </button>
+                      </li>
+                    )}
+
+                    {/* goods delivery receipt - saudi,global also same */}
+                    {["GRN", VoucherType.GoodsReceiptNote].includes(formState.transaction.master.voucherType) && (
+                      <li>
+                        <button
+                          disabled={formState.formElements?.pnlMasters?.disabled}
+                          onClick={(e) => {
+                            closeMenuPopup();
+                            setIsPendingOrderOpen({ open: true, type: "PO" });
+                          }}
+                          className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#fef3c7] hover:text-[#92400e] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047]'}`}>
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#fef3c7] dark:bg-[#78350f4d] group-hover:bg-[#fde68a] dark:group-hover:bg-[#78350fcc] group-hover:scale-110'}`} >
+                            <PackageCheck className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#92400e] dark:text-[#fde047]'}`} />
+                          </div>
+                          <span className="font-medium">{t('pending_purchase_order')}</span>
+                        </button>
+                      </li>
+                    )}
+
+                    {/* Print address label */}
+
+                    <li>
+                      <button
+                        onClick={openPrintAddressModal}
+                        // disabled={formState.formElements?.pnlMasters?.disabled}
+                        className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left  ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#fff7ed] hover:text-[#c2410c] dark:hover:bg-[#7c2d124d] dark:hover:text-[#fdba74]'}`}>
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200   ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#ffedd5] dark:bg-[#7c2d124d] group-hover:bg-[#fed7aa] dark:group-hover:bg-[#7c2d1299] group-hover:scale-110'}`}>
+                          <MapPinHouse className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#ea580c] dark:text-[#ffedd5]'}`} />
+                        </div>
+                        <span className="font-medium">{t("print_address_label")}</span>
+                      </button>
+                    </li>
+
+
                     {/* cash or gift coupons */}
                     <li>
                       <button
@@ -575,6 +673,19 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                           <Gift className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#ea580c] dark:text-[#ffedd5]'}`} />
                         </div>
                         <span className="font-medium">{t("cash/gift_coupons")}</span>
+                      </button>
+                    </li>
+
+                    {/* print packing slip */}
+                    <li>
+                      <button
+                        // onClick={handleShowGifOrCashCouponModal}
+                        // disabled={formState.formElements?.pnlMasters?.disabled}
+                        className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left  ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#fff7ed] hover:text-[#c2410c] dark:hover:bg-[#7c2d124d] dark:hover:text-[#fdba74]'}`}>
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200   ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#ffedd5] dark:bg-[#7c2d124d] group-hover:bg-[#fed7aa] dark:group-hover:bg-[#7c2d1299] group-hover:scale-110'}`}>
+                          <Gift className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#ea580c] dark:text-[#ffedd5]'}`} />
+                        </div>
+                        <span className="font-medium">{t("print_packing_slip")}</span>
                       </button>
                     </li>
 
@@ -592,33 +703,8 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                       </button>
                     </li>
 
-                    {/* Print address label */}
 
-                    <li>
-                      <button
-                        onClick={openPrintAddressModal}
-                        // disabled={formState.formElements?.pnlMasters?.disabled}
-                        className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left  ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#fff7ed] hover:text-[#c2410c] dark:hover:bg-[#7c2d124d] dark:hover:text-[#fdba74]'}`}>
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200   ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#ffedd5] dark:bg-[#7c2d124d] group-hover:bg-[#fed7aa] dark:group-hover:bg-[#7c2d1299] group-hover:scale-110'}`}>
-                          <MapPinHouse className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#ea580c] dark:text-[#ffedd5]'}`} />
-                        </div>
-                        <span className="font-medium">{t("print_address_label")}</span>
-                      </button>
-                    </li>
-
-                    {/* print packing slip */}
-                    <li>
-                      <button
-                        // onClick={handleShowGifOrCashCouponModal}
-                        // disabled={formState.formElements?.pnlMasters?.disabled}
-                        className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left  ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#fff7ed] hover:text-[#c2410c] dark:hover:bg-[#7c2d124d] dark:hover:text-[#fdba74]'}`}>
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200   ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#ffedd5] dark:bg-[#7c2d124d] group-hover:bg-[#fed7aa] dark:group-hover:bg-[#7c2d1299] group-hover:scale-110'}`}>
-                          <Gift className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#ea580c] dark:text-[#ffedd5]'}`} />
-                        </div>
-                        <span className="font-medium">{t("print_packing_slip")}</span>
-                      </button>
-                    </li>
-                    {/* Save temporary */}
+                    
                     <li>
                       <button
                         // onClick={handleShowGifOrCashCouponModal}
@@ -666,72 +752,11 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                     )}
 
                     {/* Available in sales - pending_order_list */}
-                      <li>
-                        <button
-                          // disabled={formState.formElements?.pnlMasters?.disabled}
-                          onClick={(e) => {
-                            closeMenuPopup();
-                            setIsPendingOrderOpen({ open: true, type: "SO" });
-                          }}
-                          className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#fff1f2] hover:text-[#be123c] dark:hover:bg-[#8813374d] dark:hover:text-[#fda4af]'}`}>
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#ffe4e6] dark:bg-[#8813374d] group-hover:bg-[#fecdd3] dark:group-hover:bg-[#88133799] group-hover:scale-110'}`} >
-                            <ShoppingCart className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#be123c] dark:text-[#fda4af]'}`} />
-                          </div>
-                          <span className="font-medium">{t('pending_order_list')}</span>
-                        </button>
-                      </li>
+                    
                     
 
                     {/* Available in sales - pending_goods_delivery_listr */}
-                      <li>
-                        <button
-                          disabled={formState.formElements?.pnlMasters?.disabled}
-                          onClick={(e) => {
-                            closeMenuPopup();
-                            setIsPendingOrderOpen({ open: true, type: "GRN" });
-                          }}
-                          className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#fef3c7] hover:text-[#92400e] dark:hover:bg-[#78350f4d] dark:hover:text-[#fde047]'}`}>
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#fef3c7] dark:bg-[#78350f4d] group-hover:bg-[#fde68a] dark:group-hover:bg-[#78350fcc] group-hover:scale-110'}`} >
-                            <PackageCheck className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#92400e] dark:text-[#fde047]'}`} />
-                          </div>
-                          <span className="font-medium">{t('pending_goods_delivery_list')}</span>
-                        </button>
-                      </li>
                     
-
-                    {["PO", VoucherType.PurchaseQuotation].includes(formState.transaction.master.voucherType) && (
-                      <li>
-                        <button
-                          // disabled={formState.formElements?.pnlMasters?.disabled}
-                          onClick={(e) => {
-                            closeMenuPopup();
-                            setIsPendingOrderOpen({ open: true, type: "POC" });
-                          }}
-                          className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#e0e7ff] hover:text-[#4338ca] dark:hover:bg-[#312e814d] dark:hover:text-[#c7d2fe]'}`}>
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#e0e7ff] dark:bg-[#312e814d] group-hover:bg-[#c7d2fe] dark:group-hover:bg-[#312e81cc] group-hover:scale-110'}`} >
-                            <PackageSearch className={`h-4 w-4 ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#4338ca] dark:text-[#c7d2fe]'}`} />
-                          </div>
-                          <span className="font-medium">{t('consolidated_all_branch_purchase_order_list')}</span>
-                        </button>
-                      </li>
-                    )}
-
-                    {["PO"].includes(formState.transaction.master.voucherType) && (
-                      <li>
-                        <button
-                          disabled={formState.formElements?.pnlMasters?.disabled}
-                          onClick={(e) => {
-                            closeMenuPopup();
-                            setIsPendingOrderOpen({ open: true, type: "PQ" });
-                          }}
-                          className={`w-full flex items-center gap-3 px-3 py-[5px] transition-all duration-200 rounded-md group text-left ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'hover:bg-[#fce7f3] hover:text-[#be185d] dark:hover:bg-[#831843]/30 dark:hover:text-[#f9a8d4]'}`}   >
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${formState.formElements?.pnlMasters?.disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#fce7f3] dark:bg-[#831843]/30 group-hover:bg-[#fbcfe8] dark:group-hover:bg-[#831843]/50 group-hover:scale-110'}`}>
-                            <FileText className={`h-4 w-4  ${formState.formElements?.pnlMasters?.disabled ? 'text-gray-500' : 'text-[#be185d] dark:text-[#f9a8d4]'}`} />
-                          </div>
-                          <span className="font-medium">{t('pending_purchase_quotation_list')}</span>
-                        </button>
-                      </li>
-                    )}
 
                     <li>
                       <button
@@ -779,16 +804,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                       </button>
                     </li>
                     {/* Available in sales - create_invoice_from_other_voucher */}
-                    <li>
-                      <button
-                        className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-sky-50 hover:text-sky-800 dark:hover:bg-sky-900/30 dark:hover:text-sky-300 transition-all duration-200 rounded-md group text-left"
-                        onClick={() => { openCreateInterfaceFromOtherVoucher() }}>
-                        <div className="w-8 h-8 bg-sky-100 dark:bg-sky-900/30 rounded-full flex items-center justify-center group-hover:bg-sky-200 dark:group-hover:bg-sky-900/50 group-hover:scale-110 transition-all duration-200">
-                          <FilePlus className="h-4 w-4 text-sky-800 dark:text-sky-300" />
-                        </div>
-                        <span className="font-medium">{t("create_invoice_from_other_voucher")}</span>
-                      </button>
-                    </li>
+                    
 
                     {formState.createInterfaceFromOtherVoucher && (
                       <ERPModal
@@ -948,7 +964,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
             <ERPModal
               isOpen={isPendingOrderOpen.open}
               closeModal={() => setIsPendingOrderOpen({ open: false, type: "" })}
-              title={t("pending_order")}
+              title={t("pending_list")}
               width={800}
               height={780}
               content={

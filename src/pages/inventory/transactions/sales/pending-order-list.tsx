@@ -128,18 +128,28 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
 
   // Determine API endpoint based on voucher type and special conditions
   const getApiEndpoint = useCallback(() => {
-   
-    if (voucherType === "POC" && clickShowBtn) {
-      return `${Urls.inv_transaction_base}${formState.transactionType}/ConsolidatedOtherBranchPurchaseOrders/?fromDate=${selectedDate.FromDate}&toDate=${selectedDate.ToDate}&`;
-      
-    }
-    
-    if (branchID && (voucherType === "GR" || (voucherType === "GR" && toVoucherType === "BTO"))) {
-      return `${Urls.inv_transaction_base}${formState.transactionType}/PendingTransDetailsForGR/`;
-    }
-    if(voucherType !=="POC"){
+
+    // For sales
+    if(voucherType =="SO"){
        return `${Urls.inv_transaction_base}${formState.transactionType}/PendingTransactionMaster/`;
     }
+    if(voucherType =="GD"){
+       return `${Urls.inv_transaction_base}${formState.transactionType}/PendingTransactionMaster/`;
+    }
+
+    // Above for sales
+   
+    // if (voucherType === "POC" && clickShowBtn) {
+    //   return `${Urls.inv_transaction_base}${formState.transactionType}/ConsolidatedOtherBranchPurchaseOrders/?fromDate=${selectedDate.FromDate}&toDate=${selectedDate.ToDate}&`;
+      
+    // }
+    
+    // if (branchID && (voucherType === "GR" || (voucherType === "GR" && toVoucherType === "BTO"))) {
+    //   return `${Urls.inv_transaction_base}${formState.transactionType}/PendingTransDetailsForGR/`;
+    // }
+    // if(voucherType !=="POC"){
+    //    return `${Urls.inv_transaction_base}${formState.transactionType}/PendingTransactionMaster/`;
+    // }
     
     
   }, [ voucherType, toVoucherType, branchID, formState.transactionType, clickShowBtn]);
@@ -159,8 +169,6 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
   const getMainGridPostData = useCallback(() => {
     const baseData: any = {
       voucherType: voucherType === "POC" ? "PO" : voucherType,
-      // fromDate,
-      // toDate,
     };
 
     if (partyLedgerID > 0) {
@@ -188,9 +196,9 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
       PO: "PO #:",
       GR: "GR #:",
       PQ: "PQ #:",
-      SI: "SI #:",
-      PI: "PI #:",
-      BTO: "BTO #:",
+      SI: "SI #:", //check it
+      PI: "PI #:", //check it
+      BTO: "BTO #:", //check it
     };
     return prefixMap[vType] || "Doc #:";
   }, []);
@@ -204,8 +212,8 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
         caption: t("date"),
         dataType: "date",
         allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        allowSearch: false,
+        allowFiltering: false,
         width: 120,
       },
       {
@@ -213,64 +221,24 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
         caption: t("voucher_number"),
         dataType: "string",
         allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        allowSearch: false,
+        allowFiltering: false,
         width: 150,
       },
       
     ];
-
-    if ((voucherType === "POC")) {
-      baseColumns.push(
-        {
-          dataField: "branchName",
-          caption: t("branch_name"),
-          dataType: "string",
-          allowSorting: true,
-          allowSearch: false,
-          allowFiltering: true,
-          width: 120,
-        },
-        {
-          dataField: "partyName",
-          caption: t("party_name"),
-          dataType: "string",
-          allowSorting: true,
-          allowSearch: false,
-          allowFiltering: true,
-          width: 120,
-        },
-        {
-          dataField: "grandTotal",
-          caption: t("grand_total"),
-          dataType: "number",
-          allowSorting: true,
-          allowSearch: false,
-          allowFiltering: true,
-          width: 120,
-        },
-        {
-          dataField: "remarks",
-          caption: t("remarks"),
-          dataType: "string",
-          allowSorting: true,
-          allowSearch: false,
-          allowFiltering: true,
-          width: 120,
-        }
-      );
-    }
-
-    // Conditionally add columns based on voucher type
-    else if (!(voucherType === "GR" && toVoucherType === "BTO" )) {
-      baseColumns.push(
-          {
+    
+    
+    // For sales
+    if ((voucherType === "SO" || voucherType === "GD")) {
+    baseColumns.push(
+       {
           dataField: "voucherForm",
           caption: t("voucher_form"),
           dataType: "string",
           allowSorting: true,
-          allowSearch: true,
-          allowFiltering: true,
+          allowSearch: false,
+          allowFiltering: false,
           width: 150,
         },
         {
@@ -278,8 +246,8 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
           caption: t("party"),
           dataType: "string",
           allowSorting: true,
-          allowSearch: true,
-          allowFiltering: true,
+          allowSearch: false,
+          allowFiltering: false,
           width: 200,
         },
         {
@@ -288,7 +256,7 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
           dataType: "number",
           allowSorting: true,
           allowSearch: false,
-          allowFiltering: true,
+          allowFiltering: false,
           width: 120,
         },
         {
@@ -297,7 +265,7 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
           dataType: "number",
           allowSorting: true,
           allowSearch: false,
-          allowFiltering: true,
+          allowFiltering: false,
           width: 120,
         },
         {
@@ -306,11 +274,125 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
           dataType: "number",
           allowSorting: true,
           allowSearch: false,
-          allowFiltering: true,
+          allowFiltering: false,
+          width: 120,
+        },
+        {
+          dataField: "pendingQty",
+          caption: t("pending_qty"),
+          dataType: "number",
+          allowSorting: true,
+          allowSearch: false,
+          allowFiltering: false,
+          width: 120,
+        },
+        {
+          dataField: "referenceNumber",
+          caption: t("reference_number"),
+          dataType: "number",
+          allowSorting: true,
+          allowSearch: false,
+          allowFiltering: false,
           width: 120,
         }
-      );
-    }
+    )
+  }
+
+
+
+    // Above for sales
+
+    // if ((voucherType === "POC")) {
+    //   baseColumns.push(
+    //     {
+    //       dataField: "branchName",
+    //       caption: t("branch_name"),
+    //       dataType: "string",
+    //       allowSorting: true,
+    //       allowSearch: false,
+    //       allowFiltering: true,
+    //       width: 120,
+    //     },
+    //     {
+    //       dataField: "partyName",
+    //       caption: t("party_name"),
+    //       dataType: "string",
+    //       allowSorting: true,
+    //       allowSearch: false,
+    //       allowFiltering: true,
+    //       width: 120,
+    //     },
+    //     {
+    //       dataField: "grandTotal",
+    //       caption: t("grand_total"),
+    //       dataType: "number",
+    //       allowSorting: true,
+    //       allowSearch: false,
+    //       allowFiltering: true,
+    //       width: 120,
+    //     },
+    //     {
+    //       dataField: "remarks",
+    //       caption: t("remarks"),
+    //       dataType: "string",
+    //       allowSorting: true,
+    //       allowSearch: false,
+    //       allowFiltering: true,
+    //       width: 120,
+    //     }
+    //   );
+    // }
+
+    // Conditionally add columns based on voucher type
+    // else if (!(voucherType === "GR" && toVoucherType === "BTO" )) {
+    //   baseColumns.push(
+    //       {
+    //       dataField: "voucherForm",
+    //       caption: t("voucher_form"),
+    //       dataType: "string",
+    //       allowSorting: true,
+    //       allowSearch: true,
+    //       allowFiltering: true,
+    //       width: 150,
+    //     },
+    //     {
+    //       dataField: "party",
+    //       caption: t("party"),
+    //       dataType: "string",
+    //       allowSorting: true,
+    //       allowSearch: true,
+    //       allowFiltering: true,
+    //       width: 200,
+    //     },
+    //     {
+    //       dataField: "orderAmount",
+    //       caption: t("order_amount"),
+    //       dataType: "number",
+    //       allowSorting: true,
+    //       allowSearch: false,
+    //       allowFiltering: true,
+    //       width: 120,
+    //     },
+    //     {
+    //       dataField: "processed",
+    //       caption: t("processed"),
+    //       dataType: "number",
+    //       allowSorting: true,
+    //       allowSearch: false,
+    //       allowFiltering: true,
+    //       width: 120,
+    //     },
+    //     {
+    //       dataField: "pendingAmount",
+    //       caption: t("pending_amount"),
+    //       dataType: "number",
+    //       allowSorting: true,
+    //       allowSearch: false,
+    //       allowFiltering: true,
+    //       width: 120,
+    //     }
+    //   );
+    // }
 
     // Hide certain columns
     const hiddenColumns = ["invTransactionMasterID", "ledgerID"];
@@ -327,8 +409,8 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
         caption: t("product_code"),
         dataType: "string",
         allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        allowSearch: false,
+        allowFiltering: false,
         width: 120,
       },
       {
@@ -336,9 +418,9 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
         caption: t("product_name"),
         dataType: "string",
         allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 250,
+        allowSearch: false,
+        allowFiltering: false,
+        width: 180,
       },
       {
         dataField: "quantity",
@@ -346,7 +428,7 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
         dataType: "number",
         allowSorting: true,
         allowSearch: false,
-        allowFiltering: true,
+        allowFiltering: false,
         width: 100,
       },
       {
@@ -354,25 +436,20 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
         caption: t("unit_name"),
         dataType: "string",
         allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
+        allowSearch: false,
+        allowFiltering: false,
         width: 80,
       },
-    ];
-
-    // Conditionally add unit price
-    if (!(voucherType === "GR" && toVoucherType === "BTO")) {
-      baseColumns.push({
+      {
         dataField: "unitPrice",
         caption: t("unit_price"),
         dataType: "number",
         allowSorting: true,
         allowSearch: false,
-        allowFiltering: true,
+        allowFiltering: false,
         width: 100,
-      });
-    }
-
+      }
+    ];
     baseColumns.push(
       {
         dataField: "processedQty",
@@ -380,7 +457,7 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
         dataType: "number",
         allowSorting: true,
         allowSearch: false,
-        allowFiltering: true,
+        allowFiltering: false,
         width: 120,
       },
       {
@@ -389,7 +466,7 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
         dataType: "number",
         allowSorting: true,
         allowSearch: false,
-        allowFiltering: true,
+        allowFiltering: false,
         width: 120,
       }
     );
@@ -450,7 +527,7 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
       voucherNumbers: voucherPrefix + voucherNumbers.join(","),
       referenceNumber,
     };
-
+  debugger;
     // Handle different form types and voucher type combinations
     if ((voucherType === "SO" || voucherType === "GD") && toVoucherType === "SI") {
       if (formType === "VAT" && objFrmsalestax) {
@@ -582,7 +659,7 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
           columns={mainGridColumns}
           dataUrl={memoDataUrl}
           postData={memoPostData}
-          method={ActionType.GET}
+          method={ActionType.POST}
           gridId={`grd_pending_orders_${voucherType}`}
           height={300}
           hideGridAddButton={true}

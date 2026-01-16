@@ -1159,7 +1159,11 @@
   "order_number": "رقم الطلب",
 
   "warehouse_name": "اسم المستودع",
-  "order_details": "تفاصيل الطلب"
+  "order_details": "تفاصيل الطلب",
+  "pending_list": "قائمة الانتظار",
+  "pending_list": "قائمة الانتظار",
+  "duplicate_voucher": "قسيمة مكررة",
+  "duplicate_order": "طلب مكرر"
 
 
 }

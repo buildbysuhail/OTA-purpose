@@ -597,6 +597,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                     </li>
                     )}
                     {/* Global case */}
+                    {/* Check is this needed */}
                     {clientSession.isAppGlobal === true &&
                      [VoucherType.SalesReturn, VoucherType.SalesQuotation, VoucherType.SalesOrder].includes(formState.transaction.master.voucherType as any) && (
                     <li>
@@ -747,7 +748,8 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                     </li>
                      )}
 
-                    {[VoucherType.SalesInvoice].includes(formState.transaction.master.voucherType as any) && (
+                    {/* Save temporary like function is working in grid - so commented */}
+                    {/* {[VoucherType.SalesInvoice].includes(formState.transaction.master.voucherType as any) && (
                     <li>
                       <button
                         onClick={()=> alert("Do this after discussion")}
@@ -759,10 +761,11 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         <span className="font-medium">{t("save_temporary")}</span>
                       </button>
                     </li>
-                    )}
+                    )} */}
                     {/* The above items are newly added for sales */}
 
-                    {[VoucherType.SalesQuotation].includes(formState.transaction.master.voucherType as any) && (
+                    {/* Already in our app in different form */}
+                    {/* {[VoucherType.SalesQuotation].includes(formState.transaction.master.voucherType as any) && (
                     <li>
                       <button
                         onClick={()=> alert("Do this after discussion")}
@@ -774,9 +777,10 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         <span className="font-medium">{t("duplicate_voucher")}</span>
                       </button>
                     </li>
-                    )}
+                    )} */}
 
-                    {[VoucherType.SalesOrder].includes(formState.transaction.master.voucherType as any) && (
+                    {/* Already in our app in different form */}
+                    {/* {[VoucherType.SalesOrder].includes(formState.transaction.master.voucherType as any) && (
                     <li>
                       <button
                         onClick={()=> alert("Do this after discussion")}
@@ -788,7 +792,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         <span className="font-medium">{t("duplicate_order")}</span>
                       </button>
                     </li>
-                    )}
+                    )} */}
 
                     {/* ----------------------------------------------------------------------
                                        Above are items in really in sales

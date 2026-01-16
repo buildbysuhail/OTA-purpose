@@ -14,6 +14,7 @@ const CostCentreCombobox = React.forwardRef<HTMLInputElement, CostCentreCombobox
     <>
       {/* {formState.formElements.cbCostCentre.visible && ( */}
         <ERPDataCombobox
+          ref={ref}
           localInputBox={formState?.userConfig?.inputBoxStyle}
           fetching={formState.transactionLoading}
           enableClearOption={false}

@@ -54,11 +54,32 @@ export interface TableInfo {
   tableId: number;
   tableNo: string;
   seatCount: number;
-  status: "available" | "occupied" | "reserved";
+  status: "available" | "occupied" | "reserved" | "kot_printed";
   currentOrderId?: number;
   floorId: number;
   floorName: string;
+  location: string;
+  priceCategoryId: number;
+  waiterId?: number;
+  waiterName?: string;
 }
+
+// Table Section/Location Types
+export interface TableSection {
+  location: string;
+  tableCount: number;
+}
+
+// Occupied Seat Info
+export interface OccupiedSeat {
+  tableId: number;
+  seatNumber: string;
+  invTransMasterId: number;
+  token: string;
+}
+
+// Table Selection Mode
+export type TableViewMode = "All" | "MarkOccupied" | "OccupiedOnly";
 
 // Customer Types
 export interface CustomerSearch {
@@ -198,13 +219,45 @@ export const rposApi = createApi({
     // ========================================================================
     // TABLE ENDPOINTS
     // ========================================================================
-    getTables: builder.query<TableInfo[], number | void>({
-      query: (floorId) => ({
+
+    /**
+     * Get all tables with optional filtering by location
+     * Equivalent to WinForms LoadAllTables / LoadOccupiedTables
+     */
+    getTables: builder.query<TableInfo[], { location?: string; mode?: TableViewMode } | void>({
+      query: (params) => ({
         url: "/RPOS/Tables",
-        params: floorId ? `floorId=${floorId}` : "",
+        params: params ? `location=${params.location || ""}&mode=${params.mode || "All"}` : "",
         method: "GET",
       }),
       providesTags: ["Tables"],
+    }),
+
+    /**
+     * Get table sections/locations for filtering
+     * Equivalent to WinForms LoadTableSections (SelectDistinctLocation)
+     */
+    getTableSections: builder.query<TableSection[], void>({
+      query: () => ({
+        url: "/RPOS/Tables/Sections",
+        method: "GET",
+      }),
+      providesTags: ["Tables"],
+    }),
+
+    /**
+     * Get occupied seats for a specific table
+     * Equivalent to WinForms SelectOccupiedSeats
+     */
+    getOccupiedSeats: builder.query<OccupiedSeat[], number>({
+      query: (tableId) => ({
+        url: "/RPOS/Tables/OccupiedSeats",
+        params: `tableId=${tableId}`,
+        method: "GET",
+      }),
+      providesTags: (result, error, tableId) => [
+        { type: "Tables", id: `seats-${tableId}` },
+      ],
     }),
 
     getTableStatus: builder.query<TableInfo, string>({
@@ -400,6 +453,10 @@ export const {
   useLazyGetProductByBarcodeQuery,
   // Tables
   useGetTablesQuery,
+  useLazyGetTablesQuery,
+  useGetTableSectionsQuery,
+  useGetOccupiedSeatsQuery,
+  useLazyGetOccupiedSeatsQuery,
   useGetTableStatusQuery,
   // Kitchens
   useGetKitchensQuery,

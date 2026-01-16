@@ -13,6 +13,43 @@ import {
   RPosVoucherIds,
 } from "../type/rpos-transaction";
 
+/**
+ * Helper: Auto-calculate summary after any order/payment change
+ * ✅ PERFORMANCE OPTIMIZATION: Eliminates need for separate calculateSummary dispatch
+ * Reduces dispatches from 2 to 1 per action = 50% fewer re-renders
+ */
+function recalculateSummary(state: RPosTransactionState) {
+  const items = state.activeOrder.items;
+
+  const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
+  const totalGross = items.reduce((sum, item) => sum + item.grossAmount, 0);
+  const totalDiscount = items.reduce((sum, item) => sum + item.discountAmount, 0);
+  const totalTax = items.reduce((sum, item) => sum + item.taxAmount, 0);
+  const totalVat = items.reduce((sum, item) => sum + item.vatAmount, 0);
+  const subTotal = items.reduce((sum, item) => sum + item.netAmount, 0);
+
+  const additionalAmount = state.summary.additionalAmount;
+  const grandTotal = subTotal + additionalAmount + state.payment.roundOff;
+  const cashReceived =
+    state.payment.cashReceived +
+    state.payment.cardAmount +
+    state.payment.upiAmount;
+  const balance = grandTotal - cashReceived;
+
+  state.summary = {
+    ...state.summary,
+    subTotal,
+    totalQuantity,
+    totalGross,
+    totalDiscount,
+    totalTax,
+    totalVat,
+    grandTotal,
+    cashReceived,
+    balance,
+  };
+}
+
 const rPosTransactionSlice = createSlice({
   name: "rPosTransaction",
   initialState: initialRPosTransactionState,
@@ -64,6 +101,9 @@ const rPosTransactionSlice = createSlice({
         });
       }
       state.activeOrder.isDirty = true;
+
+      // ✅ Auto-calculate summary (no separate dispatch needed)
+      recalculateSummary(state);
     },
 
     updateOrderItem(
@@ -80,6 +120,9 @@ const rPosTransactionSlice = createSlice({
           ...updates,
         };
         state.activeOrder.isDirty = true;
+
+        // ✅ Auto-calculate summary
+        recalculateSummary(state);
       }
     },
 
@@ -101,6 +144,9 @@ const rPosTransactionSlice = createSlice({
           item.taxAmount +
           item.vatAmount;
         state.activeOrder.isDirty = true;
+
+        // ✅ Auto-calculate summary
+        recalculateSummary(state);
       }
     },
 
@@ -118,6 +164,9 @@ const rPosTransactionSlice = createSlice({
           item.taxAmount +
           item.vatAmount;
         state.activeOrder.isDirty = true;
+
+        // ✅ Auto-calculate summary (50% fewer dispatches!)
+        recalculateSummary(state);
       }
     },
 
@@ -136,6 +185,9 @@ const rPosTransactionSlice = createSlice({
             item.taxAmount +
             item.vatAmount;
           state.activeOrder.isDirty = true;
+
+          // ✅ Auto-calculate summary
+          recalculateSummary(state);
         }
       }
     },
@@ -145,6 +197,9 @@ const rPosTransactionSlice = createSlice({
         (item) => item.rowIndex !== action.payload
       );
       state.activeOrder.isDirty = true;
+
+      // ✅ Auto-calculate summary
+      recalculateSummary(state);
     },
 
     clearOrderItems(state) {

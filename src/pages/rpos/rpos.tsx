@@ -3,6 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import RPosDropdownPanel from "./rpos-DropdownPanel";
 import { useTranslation } from "react-i18next";
 
+// Import the new TableSelectionPanel component
+import { TableSelectionPanel } from "./components";
+
 // Redux actions - UI
 import {
   setSearchQuery,
@@ -67,6 +70,7 @@ import type { ServeType } from "./type/rpos-operational";
 import type { RPosUIState } from "./type/rpos-ui-type";
 import type { RPosOperationalState } from "./type/rpos-operational";
 import type { RPosTransactionState, RPosOrderItem } from "./type/rpos-transaction";
+import ERPAlert from "../../components/ERPComponents/erp-sweet-alert";
 
 // Type for Redux state
 interface RootState {
@@ -275,21 +279,29 @@ useEffect(() => {
    * VoucherType: SO (Sales Order)
    */
   const handleOrderMode = useCallback(() => {
-    // Don't switch if already in order mode
-    if (voucherType === "SO") return;
+        //   // Set voucher type to SO (Sales Order/KOT)
+    // dispatch(setVoucherType("SO"));
+    // // Reset for new transaction if needed
+    // handleNewOrder(false);
+if (operationalState?.printConfig?.onlyDirectBilling) {
+          ERPAlert.show({
+            title: t("Direct Billing Mode activated. This option is not available"),
+            icon: "warning",
+          });
+    }      
+    const preserveCustomerInfo = uiState?.flags?.showGroupCategory;
+    const savedCustomerInfo = preserveCustomerInfo
+    ? {
+        customerName: operationalState.customer.customerName,
+        mobileNo: operationalState.customer.mobileNo,
+        address: { ...operationalState.customer.address },
+        notes1: operationalState.customer.notes1,
+      }
+    : null;
 
-    // If there are items, confirm switch (like WinForms checks GrandTotal > 0)
-    if (orderItems.length > 0) {
-      // In WinForms this shows a confirmation dialog, for now we just switch
-      // TODO: Add confirmation dialog
-    }
+     dispatch(setFormState({ key: "isBillingActive", value: false }));
 
-    // Set voucher type to SO (Sales Order/KOT)
-    dispatch(setVoucherType("SO"));
-    dispatch(setFormState({ key: "isBillingActive", value: false }));
 
-    // Reset for new transaction if needed
-    handleNewOrder(false);
   }, [dispatch, voucherType, orderItems.length]);
 
   /**
@@ -615,6 +627,7 @@ useEffect(() => {
 
   // Panel states from local state for now (will migrate to Redux panels later)
   const [isTablePanelOpen, setIsTablePanelOpen] = useState(false);
+  const [isTableSelectionModalOpen, setIsTableSelectionModalOpen] = useState(false);
   const [isCustomerPanelOpen, setIsCustomerPanelOpen] = useState(false);
   const [isGuestsPanelOpen, setIsGuestsPanelOpen] = useState(false);
   const [isCommentsPanelOpen, setIsCommentsPanelOpen] = useState(false);
@@ -625,6 +638,25 @@ useEffect(() => {
     setIsGuestsPanelOpen(false);
     setIsCommentsPanelOpen(false);
   };
+
+  // Open full table selection modal (frmTableView equivalent)
+  const openTableSelectionModal = useCallback(() => {
+    setIsTableSelectionModalOpen(true);
+    setIsTablePanelOpen(false);
+  }, []);
+
+  // Handle table selection from the new modal
+  const handleTableSelectionComplete = useCallback((tableNo: string, seatNo: string, tableId: number) => {
+    dispatch(setTableNo(tableNo));
+    dispatch(setSeatNo(seatNo));
+    setIsTableSelectionModalOpen(false);
+  }, [dispatch]);
+
+  // Handle view KOT from table selection
+  const handleViewKOTFromTable = useCallback((tableNo: string, tableId: number) => {
+    // TODO: Navigate to KOT view or open KOT panel for this table
+    console.log("View KOT for table:", tableNo, tableId);
+  }, []);
 
   const toggleCustomerPanel = () => {
     setIsCustomerPanelOpen(prev => !prev);
@@ -684,57 +716,79 @@ useEffect(() => {
                   setIsOpen={setIsTablePanelOpen}
                   title={t("table_no")}
                   content={
-                    <div className="p-4">
-                      <div className="flex items-center space-x-2">
+                    <div className="p-4 min-w-[320px]">
+                      {/* Quick Table Input */}
+                      <div className="flex items-center space-x-2 mb-4">
                         <input
                           type="text"
                           value={dining.tableNo}
                           onChange={(e) => handleTableSelect(e.target?.value)}
-                          placeholder=""
-                          className="w-20 p-2 border rounded-md text-center me-[6px]"
+                          placeholder={t("table_no")}
+                          className="w-20 p-2 border rounded-md text-center"
+                        />
+                        <input
+                          type="text"
+                          value={dining.seatNo}
+                          onChange={(e) => dispatch(setSeatNo(e.target?.value))}
+                          placeholder={t("seat")}
+                          className="w-16 p-2 border rounded-md text-center"
                         />
                         <button
-                          className="px-4 py-2 bg-[#f97316] text-white rounded-md hover:bg-orange-600"
+                          className="px-3 py-2 bg-[#f97316] text-white rounded-md hover:bg-orange-600 text-sm"
                           onClick={() => setIsTablePanelOpen(false)}
                         >
                           {t("view_kot")}
                         </button>
-                        {/* Load Pending Order Button - Like WinForms btnLoadOrderByTableNo */}
                         <button
-                          className="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600 disabled:opacity-50"
+                          className="px-3 py-2 bg-primary text-white rounded-md hover:bg-blue-600 disabled:opacity-50 text-sm"
                           onClick={() => {
                             handleLoadOrderByTable();
                             setIsTablePanelOpen(false);
                           }}
                           disabled={!dining.tableNo || isLoadingOrder}
                         >
-                          {isLoadingOrder ? t("loading") : t("load_order")}
+                          {isLoadingOrder ? t("loading") : t("load")}
                         </button>
                       </div>
-                      <div className="grid grid-cols-4 gap-2 mt-4">
+
+                      {/* Quick Number Buttons */}
+                      <div className="grid grid-cols-5 gap-2 mb-4">
                         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
                           <button
                             key={num}
                             onClick={() => handleTableSelect(num.toString())}
-                            className="p-2 border rounded-md hover:bg-gray-100 text-center"
+                            className={`p-2 border rounded-md hover:bg-gray-100 text-center transition-colors ${
+                              dining.tableNo === num.toString() ? "bg-primary text-white border-primary" : ""
+                            }`}
                           >
                             {num}
                           </button>
                         ))}
                       </div>
-                      <div className="p-4 bg-gray-50 rounded-b-md mt-[10px] w-[300px]">
-                        <div className="flex justify-between text-sm">
-                          <div className="flex items-center space-x-2">
-                            <div className="w-3 h-3 bg-[#32d62e] rounded-full me-[6px]"></div>
-                            <span className="text-gray-600 !me-[6px]">{t("available")}</span>
+
+                      {/* Open Full Table View Button */}
+                      <button
+                        onClick={openTableSelectionModal}
+                        className="w-full py-2 bg-gray-700 text-white rounded-md hover:bg-gray-800 flex items-center justify-center gap-2 mb-4"
+                      >
+                        <i className="ri-layout-grid-line"></i>
+                        {t("view_all_tables")}
+                      </button>
+
+                      {/* Legend */}
+                      <div className="p-3 bg-gray-50 rounded-md">
+                        <div className="flex flex-wrap justify-between text-xs">
+                          <div className="flex items-center gap-1">
+                            <div className="w-3 h-3 bg-[#5638a8] rounded"></div>
+                            <span className="text-gray-600">{t("available")}</span>
                           </div>
-                          <div className="flex items-center space-x-2">
-                            <div className="w-3 h-3 bg-[#f01717] rounded-full me-[6px]"></div>
-                            <span className="text-gray-600 !me-[6px]">{t("occupied")}</span>
+                          <div className="flex items-center gap-1">
+                            <div className="w-3 h-3 bg-[#be1e21] rounded"></div>
+                            <span className="text-gray-600">{t("occupied")}</span>
                           </div>
-                          <div className="flex items-center space-x-2">
-                            <div className="w-3 h-3 bg-[#f8e618] rounded-full me-[6px]"></div>
-                            <span className="text-gray-600 !me-[6px]">{t("reserved")}</span>
+                          <div className="flex items-center gap-1">
+                            <div className="w-3 h-3 bg-[#249664] rounded"></div>
+                            <span className="text-gray-600">{t("kot_printed")}</span>
                           </div>
                         </div>
                       </div>
@@ -1057,19 +1111,19 @@ useEffect(() => {
           <div className="flex-1" />
 
           {/* Cancel/New Order Button */}
-          <button
+          {/* <button
             className="px-4 py-2 rounded bg-gray-600 hover:bg-gray-700 text-white font-semibold transition-colors"
             onClick={handleCancel}
           >
             {t("cancel")}
-          </button>
+          </button> */}
 
           {/* Edit Mode Indicator */}
-          {isEdit && (
+          {/* {isEdit && (
             <span className="px-3 py-1 bg-yellow-500 text-black rounded text-sm font-semibold">
               {t("edit_mode")}
             </span>
-          )}
+          )} */}
         </div>
 
         {/* Order Type and Search Bar */}
@@ -1474,6 +1528,25 @@ useEffect(() => {
           </div>
         </div>
       </div>
+
+      {/* Table Selection Modal - Full frmTableView equivalent */}
+      {isTableSelectionModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <TableSelectionPanel
+            isOpen={isTableSelectionModalOpen}
+            onClose={() => setIsTableSelectionModalOpen(false)}
+            mode="MarkOccupied"
+            onSelect={handleTableSelectionComplete}
+            onLoadOrder={(tableNo, tableId) => {
+              handleTableSelect(tableNo);
+              handleLoadOrderByTable();
+              setIsTableSelectionModalOpen(false);
+            }}
+            onViewKOT={handleViewKOTFromTable}
+            currentTableNo={dining.tableNo}
+          />
+        </div>
+      )}
     </div>
   );
 }

@@ -41,6 +41,7 @@ import { isDirtyTransaction, setTransactionForHistory } from "../../../helpers/t
 import { Countries, UserModel } from "../../../redux/slices/user-session/reducer";
 import { getStorageString, setStorageString } from "../../../utilities/storage-utils";
 import { getApLocalData } from "../../../redux/cached-urls";
+import voucherNo from "../../inventory/transactions/sales/components/voucher-no";
 
 
 interface FormElementState {
@@ -727,7 +728,7 @@ export const useAccTransaction = (
     voucherType: string,
     voucherPrefix: string,
     isVoucherPrefix: boolean
-  ) => {
+  ): Promise<{ voucherNumber: number; voucherPrefix: string }> => {
     const response = await api.getAsync(
       Urls.get_last_voucher_no,
       `formType=${formType ? formType : ""}&voucherType=${voucherType ? voucherType : ""
@@ -735,7 +736,7 @@ export const useAccTransaction = (
       }`
     );
 
-    const nextVoucherNumber = response || 1;
+    const nextVoucherNumber = response || {voucherNumber: 1, voucherPrefix: ""};
 
     return nextVoucherNumber;
   };
@@ -1352,12 +1353,15 @@ export const useAccTransaction = (
     accTransactionMasterID: number
   ) => {
     await undoEditMode(isEdit, accTransactionMasterID);
-    const vNo = await getNextVoucherNumber(
+    const vNoRes = await getNextVoucherNumber(
       formState.transaction.master.formType,
       formState.transaction.master.voucherType,
       formState.transaction.master.voucherPrefix,
       false
     );
+
+    const vNo = vNoRes.voucherNumber || 0;
+    const vPrefix = vNoRes.voucherPrefix || "";
 
     dispatch(
       clearState({
@@ -1369,6 +1373,8 @@ export const useAccTransaction = (
         counterwiseCashLedgerId: 0,
         allowSalesCounter: 0,
         voucherNo: vNo,
+        rowOnly: false,
+        vPrefix: vPrefix,
       })
     );
     // Reset combobox specific states
@@ -2417,7 +2423,7 @@ export const useAccTransaction = (
       const lastPrefix = selectVoucherData
         ? selectVoucherData[0].lastPrefix
         : "";
-      const getVoucherNumber = await getNextVoucherNumber(
+      const getVoucherNumberRes = await getNextVoucherNumber(
         formState.transaction.master.formType,
         formState.transaction.master.voucherType,
         formState.transaction.master.voucherType,
@@ -2428,7 +2434,8 @@ export const useAccTransaction = (
         accFormStateTransactionMasterHandleFieldChange({
           fields: {
             // voucherPrefix: lastPrefix,
-            voucherNumber: getVoucherNumber,
+            voucherNumber: getVoucherNumberRes.voucherNumber,
+            voucherPrefix: getVoucherNumberRes.voucherPrefix,
             accTransactionMasterID: 0,
             transactionDate: moment(
               clientSession.softwareDate,

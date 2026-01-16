@@ -884,7 +884,7 @@ export const useTransaction = (
       }`
     ) : undefined;
 
-    const nextVoucherNumber = response || 1;
+    const nextVoucherNumber = response || {voucherNumber: 1, voucherPrefix: ""};
 
     return nextVoucherNumber;
   };
@@ -1556,12 +1556,15 @@ export const useTransaction = (
     if (transactionMasterID ?? 0 > 0) {
       await undoEditMode(isEdit, transactionMasterID ?? 0);
     }
-    const vNo = await getNextVoucherNumber(
+    const vNoRes = await getNextVoucherNumber(
       formState.transaction.master.voucherForm,
       formState.transaction.master.voucherType,
       formState.transaction.master.voucherPrefix,
       false
     );
+
+    const vNo = vNoRes.voucherNumber || 0;
+    const vPrefix = vNoRes.voucherPrefix || "";
     let employeeID = userSession.employeeId ?? 0;
     if (
       ["PR", "PQ", "wPO"].includes(
@@ -1577,7 +1580,7 @@ export const useTransaction = (
     const master: TransactionMaster = {
       ...TransactionMasterInitialData,
       voucherType: formState.transaction.master.voucherType ?? "",
-      voucherPrefix: formState.transaction.master.voucherPrefix ?? "",
+      voucherPrefix: vPrefix ?? formState.transaction.master.voucherPrefix ?? "",
       voucherForm: formState.transaction.master.voucherForm ?? "",
       transactionDate: moment(softwareDate, "DD/MM/YYYY").local().toISOString(),
       purchaseInvoiceDate: moment().local().toISOString(),
@@ -2817,18 +2820,18 @@ export const useTransaction = (
       const lastPrefix = selectVoucherData
         ? selectVoucherData[0].lastPrefix
         : "";
-      const getVoucherNumber = await getNextVoucherNumber(
-        formState.transaction.master.voucherForm,
-        formState.transaction.master.voucherType,
-        formState.transaction.master.voucherType,
-        false
-      );
-
-      dispatch(
-        formStateTransactionMasterHandleFieldChange({
-          fields: {
-            // voucherPrefix: lastPrefix,
-            voucherNumber: getVoucherNumber,
+      const getVoucherNumberRes = await getNextVoucherNumber(
+              formState.transaction.master.voucherForm,
+              formState.transaction.master.voucherType,
+              formState.transaction.master.voucherType,
+              false
+            );
+      
+            dispatch(
+              formStateTransactionMasterHandleFieldChange({
+                fields: {
+                  voucherNumber: getVoucherNumberRes.voucherNumber,
+                  voucherPrefix: getVoucherNumberRes.voucherPrefix,
             purchaseInvoiceNumber: "",
             // transactionMasterID: 0,
             transactionDate: moment(clientSession.softwareDate, "DD/MM/YYYY")

@@ -608,13 +608,16 @@ const TransactionForm: React.FC<TransactionProps> = ({
       ).local();
 
       let _voucherNo = 0;
+     let _voucherPrefix = "";
       if (!isInvoker) {
-        _voucherNo = await getNextVoucherNumber(
+        const vchrNoRslt = await getNextVoucherNumber(
           formType ?? "",
           voucherType ?? "",
           voucherPrefix ?? "",
           false
         );
+        _voucherNo = vchrNoRslt.voucherNumber;
+        _voucherPrefix = vchrNoRslt.voucherPrefix;
       }
 
       if (!isInvoker) {
@@ -630,7 +633,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
             master: {
               ...voucher.master,
               voucherType: voucherType ?? "",
-              voucherPrefix: voucherPrefix ?? "",
+              voucherPrefix: _voucherPrefix ?? voucherPrefix ?? "",
               voucherForm: formType ?? "",
               transactionDate: softwareDate.toISOString(),
               purchaseInvoiceDate: moment().local().toISOString(),

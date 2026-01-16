@@ -417,7 +417,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   <Search className="w-4 h-4 dark:text-dark-text text-gray-700" />
                 </button>
               </div> */}
-              {[VoucherType.ItemLoadRequest].includes(formState.transaction.master.voucherType as VoucherType) && (
+              {/* {[VoucherType.ItemLoadRequest].includes(formState.transaction.master.voucherType as VoucherType) && (
                 <div className="flex flex-row gap-1 items-end">
                 <div className="flex flex-col gap-1 px-2">
                   <label className="text-xs">
@@ -498,7 +498,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   </div>
                   </div>
 
-              )}
+              )} */}
 
               <AccVoucherPrefix
                 ref={voucherNumberRef}

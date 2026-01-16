@@ -53,6 +53,7 @@ const accTransactionSlice = createSlice({
         allowSalesCounter: number;
         voucherNo: number | undefined;
         rowOnly?: boolean | false;
+        vPrefix?: string | "";
       }>
     ) => {
       const {
@@ -64,6 +65,7 @@ const accTransactionSlice = createSlice({
         allowSalesCounter,
         voucherNo,
         rowOnly = false,
+        vPrefix = "",
       } = action.payload;
       state.row.ledgerCode = "";
       state.row.ledgerID = null;
@@ -120,6 +122,7 @@ const accTransactionSlice = createSlice({
         state.transaction.master.referenceNumber = "";
         state.transaction.master.commonNarration = "";
         state.transaction.master.voucherNumber = voucherNo ?? 0;
+        state.transaction.master.voucherPrefix = vPrefix ?? "";
         state.transaction.master.transactionDate = moment(
           softwareDate,
           "DD/MM/YYYY"

@@ -682,6 +682,7 @@ export interface TransactionFormState {
   templateChooserModal?: boolean;
   srOpen?: boolean;
   vatChecked?: boolean;
+  message?: string;
 
   //Sales
   privilegeCardOpen?: boolean;
@@ -867,6 +868,7 @@ export interface LoadProductDetailsByAutoBarcodeProps {
   searchColumn: string;
   rowIndex: number;
   setFocusToNextColumn: boolean;
+    validateBarcode?: boolean;
 }
 
 interface ProductBatchDetailsForAutoBarcodeData {
@@ -1127,7 +1129,6 @@ export interface CouponDetails {
   totalAmount: number;
   cardHolderName: string;
   couponID: number;
-  oBalance: number;
 }
 export interface PrivilegeCardDetails {
   privilegeCardsID: number;

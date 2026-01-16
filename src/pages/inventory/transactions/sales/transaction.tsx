@@ -817,13 +817,16 @@ const dataWarranty = voucherType != "LPO" ? await api.getWithCacheAsync(
 
       let employeeID = 0;
       let _voucherNo = 0;
+     let _voucherPrefix = "";
       if (!isInvoker) {
-        _voucherNo = await getNextVoucherNumber(
+        const vchrNoRslt = await getNextVoucherNumber(
           formType ?? "",
           voucherType ?? "",
           voucherPrefix ?? "",
           false
         );
+        _voucherNo = vchrNoRslt.voucherNumber;
+        _voucherPrefix = vchrNoRslt.voucherPrefix;
 
       }
 
@@ -838,13 +841,13 @@ debugger;
           ...TransactionFormStateInitialData,
               initialFormType: formType ?? "",              
               initialVrType: voucherType ?? "",
-              initialVrPrefix: voucherPrefix ?? "",
+              initialVrPrefix: _voucherPrefix ?? "",
           transaction: {
             ...voucher,
             master: {
               ...voucher.master,
               voucherType: voucherType ?? "",
-              voucherPrefix: voucherPrefix ?? "",
+              voucherPrefix: _voucherPrefix ?? "",
               voucherForm: formType ?? "",
               transactionDate: softwareDate.toISOString(),
               purchaseInvoiceDate: moment().local().toISOString(),

@@ -802,13 +802,16 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
       let employeeID = 0;
       let _voucherNo = 0;
+     let _voucherPrefix = "";
       if (!isInvoker) {
-        _voucherNo = await getNextVoucherNumber(
+        const vchrNoRslt = await getNextVoucherNumber(
           formType ?? "",
           voucherType ?? "",
           voucherPrefix ?? "",
           false
         );
+        _voucherNo = vchrNoRslt.voucherNumber;
+        _voucherPrefix = vchrNoRslt.voucherPrefix;
 
         employeeID = userSession.employeeId ?? 0;
         if (["PR", "PQ", "PO"].includes(voucherType as any) && employeeID <= 0) {
@@ -832,7 +835,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
             master: {
               ...voucher.master,
               voucherType: voucherType ?? "",
-              voucherPrefix: voucherPrefix ?? "",
+              voucherPrefix: _voucherPrefix ?? "",
               voucherForm: formType ?? "",
               transactionDate: softwareDate.toISOString(),
               purchaseInvoiceDate: moment().local().toISOString(),

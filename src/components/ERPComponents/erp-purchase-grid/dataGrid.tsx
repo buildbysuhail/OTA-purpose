@@ -121,7 +121,7 @@ interface DataGridProps<T extends DataItem> {
   gridFooterBg?: string;
   gridFooterFontColor?: string;
   zIndexController?: number;
-  onSaveItem: (item: TransactionDetail, mode: "Save"|"SaveAndNew") => void;
+  onSaveItem?: (item: TransactionDetail, mode: "Save"|"SaveAndNew") => void;
   
 }
 

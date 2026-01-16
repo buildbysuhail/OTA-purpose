@@ -578,13 +578,16 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       let masterAccountID = -2;
       let employeeID = 0;
       let _voucherNo = 0;
+      let _voucherPrefix = "";
       if (!isInvoker) {
-        _voucherNo = await getNextVoucherNumber(
+        const vchrNoRslt = await getNextVoucherNumber(
           formType ?? "",
           voucherType ?? "",
           voucherPrefix ?? "",
           false
         );
+        _voucherNo = vchrNoRslt.voucherNumber;
+        _voucherPrefix = vchrNoRslt.voucherPrefix;
 
         employeeID = userSession.employeeId ?? -2;
         if (voucherType == "CP" || voucherType == "CR") {
@@ -625,7 +628,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             master: {
               ...voucher.master,
               voucherType: voucherType ?? "",
-              voucherPrefix: voucherPrefix ?? "",
+              voucherPrefix: _voucherPrefix ?? "",
               formType: formType ?? "",
               transactionDate: softwareDate.toISOString(),
               referenceDate: moment().local().toISOString(),

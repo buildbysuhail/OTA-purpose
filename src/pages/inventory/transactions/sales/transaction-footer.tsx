@@ -64,6 +64,7 @@ interface TransactionFooterProps {
   handleDiscountSlab: any;
   applyTaxOnBillDiscount: any;
   giftOnBilling: any;
+  costCenterRef?: any;
 }
 
 interface Confetti {
@@ -193,7 +194,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   loadAndSetTransVoucher,
   handleDiscountSlab,
   giftOnBilling,
-  applyTaxOnBillDiscount
+  applyTaxOnBillDiscount,
+  costCenterRef,
 }) => {
   const [hasAnimated, setHasAnimated] = useState(false);
   const [isOpentwo, setIsOpentwo] = useState(false);
@@ -516,6 +518,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         formState.transaction.master.voucherType === VoucherType.SalesReturn
       ) && (
           <CostCentreCombobox
+            ref={costCenterRef}
             formState={formState}
             dispatch={dispatch}
             t={t}

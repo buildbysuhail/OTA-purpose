@@ -1465,6 +1465,8 @@ export const useTransaction = (
         } else {
           // dispatch(acc)
           const isMobileNumberError = saveRes?.errorCode === 3055 || saveRes?.message?.toLowerCase().includes("please enter the mobile number,invalid mobile number");
+          const costCenterError = saveRes?.message?.includes("Select a valid cost centre and try again.");
+          const salesManError = saveRes?.message?.includes("Please select a valid  salesman and try again.");
           if (isMobileNumberError) {
             ERPAlert.show({
               icon: "warning",
@@ -1478,7 +1480,33 @@ export const useTransaction = (
                 }, 100);
               },
             });
-          } else {
+          }
+          else if(costCenterError){
+            ERPAlert.show({
+              icon: "warning",
+              title: saveRes.message,
+              onConfirm: () => {
+                setTimeout(() => {
+                  costCenterRef?.current?.focus();
+                  costCenterRef?.current?.click();
+                }, 100);
+              },
+            });
+          }
+          else if(salesManError){
+            ERPAlert.show({
+              icon: "warning",
+              title: saveRes.message,
+              onConfirm: () => {
+                setIsDropDownOpen?.({ open: true, autoAddressFocus: false });
+                setTimeout(() => {
+                  employeeRef?.current?.focus();
+                  employeeRef?.current?.click();
+                }, 100);
+              },
+            });
+          }
+          else {
             ERPAlert.show({
               icon: "warning",
               title: saveRes.message,
@@ -3390,20 +3418,23 @@ export const useTransaction = (
           if (columnName === "qty") {
             if (formState.gridColumns?.find((x) => x.dataField == "free")?.visible) {
               let data = { ...formState.transaction.details[rowIndex] };
-              data.free == 1;
-              data.qty = 0;
+              const outRow ={
+                free: 1,
+                qty: 0
+              }
+              
               let sd = await calculateRowAmount(
                 data,
                 columnName,
                 {
                   result: {
                     transaction: {
-                      details: [data],
+                      details: [outRow],
                     },
                   },
                   formStateHandleFieldChangeKeysOnly:
                     formStateHandleFieldChangeKeysOnly,
-                }, false, rowIndex
+                }, true, rowIndex
               );
 
               break;

@@ -1163,7 +1163,10 @@
   "order_number":"OrderNumber",
 
   "warehouse_name":"WarehouseName",
-  "order_details":"Order Details"
+  "order_details":"Order Details",
+  "pending_list":"Pending List",
+  "duplicate_voucher":"Duplicate Voucher",
+  "duplicate_order":"Duplicate Order"
 
 
 

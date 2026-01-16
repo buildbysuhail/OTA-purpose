@@ -2340,6 +2340,7 @@ debugger;
                       // generateLPO={generateLPO}
                       // generateLPQ={generateLPQ}
                       // clientSession={clientSession}
+                       costCenterRef={costCenterRef}
                       />
                     )}
                 </div>
@@ -2545,6 +2546,7 @@ debugger;
                       ? "vertical"
                       : "horizontal"
                   }
+                  costCenterRef={costCenterRef}
                 />
 
                 {/* Total Summary */}
@@ -2595,6 +2597,7 @@ debugger;
           // generateLPO={generateLPO}
           // generateLPQ={generateLPQ}
           // clientSession={clientSession}
+            costCenterRef={costCenterRef}
           />
         )}
         {/* footer ends here */}

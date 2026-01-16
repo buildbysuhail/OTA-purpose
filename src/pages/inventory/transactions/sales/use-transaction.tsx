@@ -599,7 +599,7 @@ export const useTransaction = (
       voucherForm: loadVType === "" ? out_voucherForm : formType,
       // InvokeUsingVoucherNumber: !usingManualInvNumber,
       isUsingManualInvNo: usingManualInvNumber, // Convert boolean to string
-      autoEwayBill: formState.userConfig?.autoEwayBill, // for india sales
+      autoEwayBill: formState.userConfig?.autoEwayBill??false, // for india sales
       isActualPriceVisible:
         formState.gridColumns.find((x) => x.dataField == "actualSalesPrice")
           ?.visible ?? false,
@@ -715,27 +715,28 @@ export const useTransaction = (
       voucher.transaction.master.gRNMasterID =
         voucher.transaction.master.invTransactionMasterID;
     }
+    const master = vch?.master;
     voucher.transaction = {
       ...(vch || {}),
       master: {
-        ...(vch?.master || {}),
-        hasroundOff: vch?.master?.roundAmount != 0,
+        ...(master || {}),
+        hasroundOff: master?.roundAmount != 0,
         cashReceived: [VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(voucherType as any)
-          ? vch?.master?.cashReturned
+          ? master?.cashReturned
           : voucherType == VoucherType.SalesInvoice && !clientSession.isAppGlobal
-            ? getFormattedValueIgnoreRounding(vch?.master?.cashReceived)
-            : round(vch?.master?.cashReceived),
-        hasCashPaid: vch?.master?.cashReceived != 0,
-        billDiscount: voucherType == VoucherType.SalesInvoice && !clientSession.isAppGlobal ? getFormattedValueIgnoreRounding(vch?.master?.billDiscount)
+            ? getFormattedValueIgnoreRounding(master?.cashReceived)
+            : round(master?.cashReceived),
+        hasCashPaid: master?.cashReceived != 0,
+        billDiscount: voucherType == VoucherType.SalesInvoice && !clientSession.isAppGlobal ? getFormattedValueIgnoreRounding(master?.billDiscount)
           : [VoucherType.ServiceInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate, VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(voucherType as any)
-            ? vch?.master?.billDiscount : round(vch?.master?.billDiscount),
+            ? master?.billDiscount : round(master?.billDiscount),
         adjustmentAmount: [VoucherType.SalesQuotation, VoucherType.SalesInvoice, VoucherType.GoodsDeliveryNote, VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(voucherType as any)
-          ? round(vch?.master?.adjustmentAmount)
-          : vch?.master?.adjustmentAmount,
-        srAmount: round(vch?.master?.srAmount),
+          ? round(master?.adjustmentAmount)
+          : master?.adjustmentAmount,
+        srAmount: round(master?.srAmount),
         bankAmt: [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(voucherType as any)
-          ? round(vch?.master?.bankAmt)
-          : vch?.master?.bankAmt
+          ? round(master?.bankAmt)
+          : master?.bankAmt
       },
       details: await refactorDetails(
         vch.details,

@@ -774,7 +774,6 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   partyAccTransDetailId: 0,
   partyCashRcvdTransDetailId: 0,
   partyBankRcvdTransDetailId: 0,
-  salesDraftTransactionMasterId: 0,
   defaultPriceCategoryId: 0,
   oldLedgerId: 0,
   privilegeCardId: 0,

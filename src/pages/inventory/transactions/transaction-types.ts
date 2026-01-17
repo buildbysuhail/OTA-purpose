@@ -217,6 +217,7 @@ export interface TransactionMaster {
   lblSRAmount: string; //new
   totalTax?: number; //new
   advAmntFroSO: number;
+  RefInvTransactionMasterSOID: number;
 
   // stock
   stockCountPrefix?: string;
@@ -713,7 +714,6 @@ export interface TransactionFormState {
   partyAccTransDetailId: number;
   partyCashRcvdTransDetailId: number;
   partyBankRcvdTransDetailId: number;
-  salesDraftTransactionMasterId: number;
   defaultPriceCategoryId: number;
   oldLedgerId: number;
   privilegeCardId: number;

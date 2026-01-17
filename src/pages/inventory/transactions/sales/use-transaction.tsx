@@ -369,19 +369,7 @@ export const useTransaction = (
     );
 
 
-    if (loadVType == "GRN" || loadVType == "GRR") {
-      _formState = merge({}, _formState, {
-        transaction: { master: { deliveryNoteNumber: manualInvoiceNumber } },
-      });
-    } else if (
-      loadVType == "PO" &&
-      (formState.transaction.master.voucherType == "GRN" ||
-        formState.transaction.master.voucherType == "PI")
-    ) {
-      _formState = merge({}, _formState, {
-        transaction: { master: { orderNumber: manualInvoiceNumber } },
-      });
-    }
+    
 
     if (typeof _formState == "boolean") {
       return;
@@ -558,6 +546,10 @@ export const useTransaction = (
     loadPrefix?: string,
     pDTInvTransMasterID: number = 0,
     invokeUsingVoucherNumber: boolean = true,
+    sbLedgerID?: number,
+    isSalesBookingLoaded: boolean = false,
+    sbCashReceived?: number | 0,
+    sbBillDiscount?: number | 0,
   ) => {
     let voucher: TransactionFormState = JSON.parse(
       JSON.stringify({
@@ -688,55 +680,180 @@ export const useTransaction = (
         voucherPrefix:
           voucherPrefix ?? formState.transaction.master.voucherPrefix,
         voucherForm: formType ?? formState.transaction.master.voucherForm,
-        invTransactionMasterID: ["GRN", "PO", "SO"].includes(loadVType ?? "")
-          ? null
-          : vch.master.invTransactionMasterID,
+        invTransactionMasterID:  vch.master.invTransactionMasterID,
+
       };
     }
-    vch.master = {
-      ...vch.master,
-      voucherType: out_voucherType ?? formState.transaction.master.voucherType,
-      voucherForm: out_voucherForm ?? formState.transaction.master.voucherForm,
-    };
     // clearControlForNew();
     await undoEditMode(
       formState.isEdit,
       transactionMasterID ?? formState.transaction.master.invTransactionMasterID
     );
-    voucher.transaction.master.inventoryLedgerID =
-      loadVType == "PR" || loadVType == "DNS"
-        ? vch.master.inventoryLedgerID
-        : formState.transaction.master.inventoryLedgerID;
-    voucher.transaction.master.orderNumber =
-      loadVType !== "PO" && loadVType !== "GRN"
-        ? voucher.transaction.master.orderNumber
-        : undefined;
-    if (loadVType == "GRN" && voucherType == "PI") {
-      voucher.transaction.master.gRNMasterID =
-        voucher.transaction.master.invTransactionMasterID;
-    }
     voucher.transaction = {
       ...(vch || {}),
       master: {
         ...(vch?.master || {}),
+         voucherType: out_voucherType ?? formState.transaction.master.voucherType,
+      voucherForm: out_voucherForm ?? formState.transaction.master.voucherForm,
         hasroundOff: vch?.master?.roundAmount != 0,
-        cashReceived: [VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(voucherType as any)
-          ? vch?.master?.cashReturned
-          : voucherType == VoucherType.SalesInvoice && !clientSession.isAppGlobal
-            ? getFormattedValueIgnoreRounding(vch?.master?.cashReceived)
-            : round(vch?.master?.cashReceived),
-        hasCashPaid: vch?.master?.cashReceived != 0,
-        billDiscount: voucherType == VoucherType.SalesInvoice && !clientSession.isAppGlobal ? getFormattedValueIgnoreRounding(vch?.master?.billDiscount)
-          : [VoucherType.ServiceInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate, VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(voucherType as any)
-            ? vch?.master?.billDiscount : round(vch?.master?.billDiscount),
+        
         adjustmentAmount: [VoucherType.SalesQuotation, VoucherType.SalesInvoice, VoucherType.GoodsDeliveryNote, VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(voucherType as any)
           ? round(vch?.master?.adjustmentAmount)
           : vch?.master?.adjustmentAmount,
-        srAmount: round(vch?.master?.srAmount),
+        
         bankAmt: [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(voucherType as any)
           ? round(vch?.master?.bankAmt)
-          : vch?.master?.bankAmt
-      },
+          : vch?.master?.bankAmt,
+        RefInvTransactionMasterSOID: vch.master.RefInvTransactionMasterSOID??0,
+         draftTransactionMasterID: formState.draftMode
+      ? vch.master.invTransactionMasterID
+      : 0,
+
+    /** ---------------- Dates ---------------- */
+    transactionDate:
+      loadVType === ""
+        ? new Date(vch.master.transactionDate)
+        : formState.transaction.master.transactionDate,
+
+    prevTransDate: new Date(vch.master.transactionDate),
+
+    orderDate: new Date(vch.master.orderDate),
+    deliveryDate: new Date(vch.master.deliveryDate),
+    quotationDate: new Date(vch.master.quotationDate),
+    purchaseInvoiceDate: new Date(vch.master.purchaseInvoiceDate),
+    despatchDate: new Date(vch.master.despatchDate),
+    dueDate: new Date(vch.master.dueDate),
+
+    /** ---------------- Party / Ledger ---------------- */
+    ledgerID: sbLedgerID !== 0 ? sbLedgerID : vch.master.ledgerID,
+    inventoryLedgerID: vch.master.inventoryLedgerID,
+    oldLedgerID: vch.master.ledgerID,
+
+    partyName: vch.master.partyName,
+    address1: vch.master.address1,
+    address2: vch.master.address2,
+    address3: vch.master.address3,
+    mobileNo: vch.master.address4,
+
+    /** ---------------- Order / Reference ---------------- */
+    orderNumber: vch.master.orderNumber,
+    deliveryNoteNumber:
+      vch.master.deliveryNoteNumber === "0"
+        ? ""
+        : vch.master.deliveryNoteNumber,
+    refNumber: vch.master.deliveryNoteNumber,
+
+    /** ---------------- VAT / Customer ---------------- */
+    vatNumber:
+      loadVType === "SI" || loadVType === ""
+        ? vch.master.tokenNumber
+        : "",
+    customerType:
+      loadVType === "SI" || loadVType === ""
+        ? vch.master.customerType
+        : "",
+
+    /** ---------------- Remarks ---------------- */
+    remarks: vch.master.remarks,
+
+    /** ---------------- Amounts ---------------- */
+    cashReceived: 
+    !isSalesBookingLoaded ?
+      [VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(voucherType as any)
+          ? vch?.master?.cashReturned
+          : voucherType == VoucherType.SalesInvoice && !clientSession.isAppGlobal
+            ? getFormattedValueIgnoreRounding(vch?.master?.cashReceived)
+            : round(vch?.master?.cashReceived)
+      : sbCashReceived,
+
+    billDiscount: !isSalesBookingLoaded
+      ? voucherType == VoucherType.SalesInvoice && !clientSession.isAppGlobal ? getFormattedValueIgnoreRounding(vch?.master?.billDiscount)
+          : [VoucherType.ServiceInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate, VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(voucherType as any)
+            ? vch?.master?.billDiscount : round(vch?.master?.billDiscount)
+      : sbBillDiscount,
+
+    taxOnDiscount: !isSalesBookingLoaded
+      ? vch.master.taxOnDiscount
+      : 0,
+
+    additionalAmount: vch.master.adjustmentAmount,
+    srAmount: round(vch?.master?.srAmount),
+    couponAmt: vch.master.couponAmt,
+
+    bankAmount: vch.master.bankAmt,
+    cardAmount: vch.master.bankAmt,
+
+    /** ---------------- Cash Received Flag ---------------- */
+    hasCashPaid:
+      formState.sbCashReceived &&
+      vch.master.cashReceived >= vch.master.grandTotal,
+
+    /** ---------------- Lock ---------------- */
+    isLocked: vch.master.isLocked,
+    isLockedEditable:
+      vch.master.isLocked && General.USERTYPECODE === "BA",
+
+    /** ---------------- Stock ---------------- */
+    allowStockUpdate: Boolean(vch.master.stockUpdate),
+
+    /** ---------------- Dispatch ---------------- */
+    despatchDocumentNumber: vch.master.despatchDocumentNumber,
+
+    /** ---------------- Logistics ---------------- */
+    driverID: vch.master.driverID,
+    deliveryManID: vch.master.deliveryManID,
+    vehicleID: vch.master.vehicelID,
+    gatePassNo: vch.master.gatePassNo,
+
+    /** ---------------- Sales / Incentive ---------------- */
+    salesmanIncentive: vch.master.salesManIncentive,
+
+    /** ---------------- Warehouse ---------------- */
+    fromWarehouseID: vch.master.fromWarehouseID,
+
+    /** ---------------- Cost Centre ---------------- */
+    costCentreID:
+      vch.master.costCentreID > 0
+        ? vch.master.costCentreID
+        : General.PRESET_COSTCENTER_ID > 0
+        ? General.PRESET_COSTCENTER_ID
+        : Settings.AccountsSettings.DefaultCostCenterID,
+
+    /** ---------------- Project ---------------- */
+    projectID: vch.master.projectID,
+
+    /** ---------------- Posting ---------------- */
+    isPosted: Boolean(vch.master.isPosted),
+
+    /** ---------------- Privilege Card ---------------- */
+    privilageCardID: vch.master.privCardID,
+    privilageAddAmount: vch.master.privAddAmount,
+    privilageRedeem: vch.master.privRedeem,
+
+    /** ---------------- Advance ---------------- */
+    advanceAmount: vch.master.advanceAmt,
+
+    /** ---------------- SO Advance Logic ---------------- */
+    soAdvanceSummary:
+      VrType === "SO" && vch.master.advanceAmt > 0
+        ? {
+            total: vch.master.grandTotal,
+            advance:
+              vch.master.bankAmt + vch.master.cashReceived,
+            balance:
+              vch.master.grandTotal -
+              (vch.master.bankAmt +
+                vch.master.cashReceived),
+          }
+        : null,
+
+    /** ---------------- Cash / Credit ---------------- */
+    cashOrCredit:
+      vch.master.cashrOrCredit === "Cash"
+        ? "CASH"
+        : "CREDIT",
+        
+      } as TransactionMaster,
       details: await refactorDetails(
         vch.details,
         formType ?? vch.master.voucherForm,

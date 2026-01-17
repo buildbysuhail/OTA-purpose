@@ -311,7 +311,7 @@ export const transactionRoutes: TransactionRoute[] = [
     icon: ShoppingCart,
   },
   {
-    transactionBase: TransactionBase.Goods,
+    transactionBase: TransactionBase.Sales,
     formCode: "GR",
     action: UserAction.Show,
     voucherType: VoucherType.GoodRequest,
@@ -461,7 +461,7 @@ export const transactionRoutes: TransactionRoute[] = [
   //   icon: Truck,
   // },
   {
-    transactionBase: TransactionBase.Goods,
+    transactionBase: TransactionBase.Sales,
     formCode: "GD",
     action: UserAction.Show,
     voucherType: VoucherType.GoodsDeliveryNote,
@@ -473,7 +473,7 @@ export const transactionRoutes: TransactionRoute[] = [
     icon: Send,
   },
   {
-    transactionBase: TransactionBase.Goods,
+    transactionBase: TransactionBase.Sales,
     formCode: "DR",
     action: UserAction.Show,
     voucherType: VoucherType.GoodsDeliveryReturn,
@@ -485,7 +485,7 @@ export const transactionRoutes: TransactionRoute[] = [
     icon: ArrowUpFromLine,
   },
   {
-    transactionBase: TransactionBase.Goods,
+    transactionBase: TransactionBase.Purchase,
     formCode: "GRN",
     action: UserAction.Show,
     voucherType: VoucherType.GoodsReceiptNote,
@@ -497,7 +497,7 @@ export const transactionRoutes: TransactionRoute[] = [
     icon: Download,
   },
   {
-    transactionBase: TransactionBase.Goods,
+    transactionBase: TransactionBase.Sales,
     formCode: "GRR",
     action: UserAction.Show,
     voucherType: VoucherType.GoodsReceiptReturn,
@@ -509,7 +509,7 @@ export const transactionRoutes: TransactionRoute[] = [
     icon: PackageCheck,
   },
   {
-    transactionBase: TransactionBase.OtherTransactions,
+    transactionBase: TransactionBase.Sales,
     formCode: "SRV",
     action: UserAction.Show,
     voucherType: VoucherType.ServiceInventory,

@@ -4,6 +4,7 @@ import React from "react";
 import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
 import { formStateMasterHandleFieldChange } from "../../reducer";
 import { VoucherElementProps } from "../../transaction-types";
+import VoucherType from "../../../../../enums/voucher-types";
 
 const api = new APIClient();
 
@@ -14,13 +15,18 @@ interface ReferenceNumberProps extends VoucherElementProps {
 
 const ReferenceNumber = React.forwardRef<HTMLInputElement, ReferenceNumberProps>(
   ({ formState, dispatch, handleLoadByRefNo, t, onKeyDown }, ref) => {
-    const { value, onChange } = useDebouncedInput(
-      formState.transaction.master.purchaseInvoiceNumber || '',
+    const { value, onChange } = useDebouncedInput(formState.transaction.master.voucherType == VoucherType.ServiceInvoice ?
+      formState.transaction.master.orderNumber || '' : formState.transaction.master.deliveryNoteNumber || '',
       (debouncedValue) => {
         dispatch(
-          formStateMasterHandleFieldChange({
-            fields: { purchaseInvoiceNumber: debouncedValue },
-          })
+          formStateMasterHandleFieldChange(
+
+            formState.transaction.master.voucherType == VoucherType.ServiceInvoice ?
+              {
+                fields: { orderNumber: debouncedValue },
+              } : {
+                fields: { deliveryNoteNumber: debouncedValue },
+              })
         );
       },
       300
@@ -28,9 +34,10 @@ const ReferenceNumber = React.forwardRef<HTMLInputElement, ReferenceNumberProps>
 
     return (
       <>
-        {formState.formElements.referenceNumber.visible && (
+        {formState.formElements.referenceNumber.visible && ![VoucherType.GoodsDeliveryReturn,VoucherType.GoodsReceiptReturn].includes(formState.transaction.master.voucherType as any) && (
           <>
             <div>
+
               <ERPInput
                 ref={ref}
                 localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -47,23 +54,6 @@ const ReferenceNumber = React.forwardRef<HTMLInputElement, ReferenceNumberProps>
                   formState.formElements.referenceNumber?.disabled ||
                   formState.formElements.pnlMasters?.disabled
                 }
-                // labelInfo={
-            //   // <ERPButton
-            //   //   id="btnLoadByRef"
-            //   //   title=":"
-            //   //   className="!p-0 !m-0 !bg-none"
-            //   //   onClick={handleLoadByRefNo}
-            //   // ></ERPButton>
-            //   <div className="relative">
-            //     {/* <button onClick={handleLoadByRefNo} className="m-[-1px_0_-13px_0] p-[0px_0_7px_0] text-[#0ea5e9]"> */}
-            //     <button
-            //       onClick={handleLoadByRefNo}
-            //       className="absolute right-0 top-[-5px] text-[#0ea5e9]"
-            //     >
-            //       <Ellipsis />
-            //     </button>
-            //   </div>
-            // }
               />
             </div>
           </>

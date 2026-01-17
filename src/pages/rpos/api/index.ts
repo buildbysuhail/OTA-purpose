@@ -23,6 +23,10 @@ export {
   useLazyGetProductByBarcodeQuery,
   // Tables
   useGetTablesQuery,
+  useLazyGetTablesQuery,
+  useGetTableSectionsQuery,
+  useGetOccupiedSeatsQuery,
+  useLazyGetOccupiedSeatsQuery,
   useGetTableStatusQuery,
   // Kitchens
   useGetKitchensQuery,
@@ -59,6 +63,9 @@ export type {
   ProductGroup,
   ProductItem,
   TableInfo,
+  TableSection,
+  OccupiedSeat,
+  TableViewMode,
   CustomerSearch,
   Waiter,
   SaveOrderRequest,

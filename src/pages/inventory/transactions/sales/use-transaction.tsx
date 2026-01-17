@@ -591,7 +591,7 @@ export const useTransaction = (
       voucherForm: loadVType === "" ? out_voucherForm : formType,
       // InvokeUsingVoucherNumber: !usingManualInvNumber,
       isUsingManualInvNo: usingManualInvNumber, // Convert boolean to string
-      autoEwayBill: formState.userConfig?.autoEwayBill, // for india sales
+      autoEwayBill: formState.userConfig?.autoEwayBill??false, // for india sales
       isActualPriceVisible:
         formState.gridColumns.find((x) => x.dataField == "actualSalesPrice")
           ?.visible ?? false,

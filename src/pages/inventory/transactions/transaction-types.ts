@@ -1129,6 +1129,7 @@ export interface CouponDetails {
   totalAmount: number;
   cardHolderName: string;
   couponID: number;
+  oBalance: number;
 }
 export interface PrivilegeCardDetails {
   privilegeCardsID: number;

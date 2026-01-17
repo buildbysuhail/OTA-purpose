@@ -717,10 +717,10 @@ export const useTransaction = (
 
     prevTransDate: new Date(vch.master.transactionDate),
 
-    orderDate: new Date(vch.master.orderDate),
-    deliveryDate: new Date(vch.master.deliveryDate),
+    // orderDate: new Date(vch.master.orderDate),
+    // deliveryDate: new Date(vch.master.deliveryDate),
     quotationDate: new Date(vch.master.quotationDate),
-    purchaseInvoiceDate: new Date(vch.master.purchaseInvoiceDate),
+    // purchaseInvoiceDate: new Date(vch.master.purchaseInvoiceDate),
     despatchDate: new Date(vch.master.despatchDate),
     dueDate: new Date(vch.master.dueDate),
 
@@ -733,25 +733,25 @@ export const useTransaction = (
     address1: vch.master.address1,
     address2: vch.master.address2,
     address3: vch.master.address3,
-    mobileNo: vch.master.address4,
+    address4: vch.master.address4,
 
     /** ---------------- Order / Reference ---------------- */
-    orderNumber: vch.master.orderNumber,
-    deliveryNoteNumber:
-      vch.master.deliveryNoteNumber === "0"
-        ? ""
-        : vch.master.deliveryNoteNumber,
-    refNumber: vch.master.deliveryNoteNumber,
+    // orderNumber: vch.master.orderNumber,
+    // deliveryNoteNumber:
+    //   vch.master.deliveryNoteNumber === "0"
+    //     ? ""
+    //     : vch.master.deliveryNoteNumber,
+    // refNumber: vch.master.deliveryNoteNumber,
 
     /** ---------------- VAT / Customer ---------------- */
     vatNumber:
       loadVType === "SI" || loadVType === ""
         ? vch.master.tokenNumber
         : "",
-    customerType:
-      loadVType === "SI" || loadVType === ""
-        ? vch.master.customerType
-        : "",
+    // tokenNumber:
+    //   loadVType === "SI" || loadVType === ""
+    //     ? vch.master.customerType
+    //     : "",
 
     /** ---------------- Remarks ---------------- */
     remarks: vch.master.remarks,
@@ -773,15 +773,14 @@ export const useTransaction = (
       : sbBillDiscount,
 
     taxOnDiscount: !isSalesBookingLoaded
-      ? vch.master.taxOnDiscount
+      ?getFormattedValueIgnoreRounding(vch?.master.taxOnDiscount)
       : 0,
 
-    additionalAmount: vch.master.adjustmentAmount,
     srAmount: round(vch?.master?.srAmount),
-    couponAmt: vch.master.couponAmt,
+    couponAmt:round(vch.master.couponAmt),
 
-    bankAmount: vch.master.bankAmt,
-    cardAmount: vch.master.bankAmt,
+    // bankAmount: vch.master.bankAmt,
+    // cardAmount: vch.master.bankAmt,
 
     /** ---------------- Cash Received Flag ---------------- */
     hasCashPaid:
@@ -790,14 +789,18 @@ export const useTransaction = (
 
     /** ---------------- Lock ---------------- */
     isLocked: vch.master.isLocked,
-    isLockedEditable:
-      vch.master.isLocked && General.USERTYPECODE === "BA",
+    // if(isLocked==true){
+       
+    // }
+    // isLockedEditable:
+    //   vch.master.isLocked && userSession.userTypeCode === "BA",
 
     /** ---------------- Stock ---------------- */
     allowStockUpdate: Boolean(vch.master.stockUpdate),
 
     /** ---------------- Dispatch ---------------- */
-    despatchDocumentNumber: vch.master.despatchDocumentNumber,
+    // DespatchDate
+    // despatchDocumentNumber: vch.master.despatchDocumentNumber,
 
     /** ---------------- Logistics ---------------- */
     driverID: vch.master.driverID,
@@ -815,9 +818,9 @@ export const useTransaction = (
     costCentreID:
       vch.master.costCentreID > 0
         ? vch.master.costCentreID
-        : General.PRESET_COSTCENTER_ID > 0
-        ? General.PRESET_COSTCENTER_ID
-        : Settings.AccountsSettings.DefaultCostCenterID,
+        : formState.userConfig?.presetCostenterId??0 > 0
+        ? formState.userConfig?.presetCostenterId //disable cost centre
+        : applicationSettings.accountsSettings.defaultCostCenterID,
 
     /** ---------------- Project ---------------- */
     projectID: vch.master.projectID,
@@ -835,7 +838,7 @@ export const useTransaction = (
 
     /** ---------------- SO Advance Logic ---------------- */
     soAdvanceSummary:
-      VrType === "SO" && vch.master.advanceAmt > 0
+      loadVType === "SO" && vch.master.advanceAmt > 0
         ? {
             total: vch.master.grandTotal,
             advance:
@@ -1732,11 +1735,9 @@ export const useTransaction = (
       employeeID: employeeID,
       voucherNumber: vNo ?? 0,
       inventoryLedgerID:
-        formState.transaction.master.voucherType == VoucherType.PurchaseReturn
-          ? applicationSettings.inventorySettings?.defaultPurchaseReturnAcc
-          : formState.transaction.master.voucherType == "DNS"
-            ? applicationSettings.inventorySettings?.defaultSalesAcc
-            : applicationSettings.inventorySettings?.defaultPurchaseAcc,
+        formState.transaction.master.voucherType == VoucherType.SalesReturn
+          ? applicationSettings.inventorySettings?.defaultSalesReturnAcc
+          :  applicationSettings.inventorySettings?.defaultSalesAcc,
       ledgerID: applicationSettings.accountsSettings.defaultCashAcc,
       isLocked: false,
       grandTotal: 0,

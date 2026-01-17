@@ -190,7 +190,8 @@ export const TransactionMasterInitialData: TransactionMaster = {
   master2: initialInvTransactionMaster2,
   master3: TransactionMaster3InitialData,
   lblSRAmount: "",
-  advAmntFroSO: 0
+  advAmntFroSO: 0,
+  RefInvTransactionMasterSOID:0
 }
 export const initialTransactionDetailData: TransactionDetail = {
   slNo: "",

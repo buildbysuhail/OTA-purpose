@@ -1777,14 +1777,17 @@ debugger;
       let currentDetails = [
         ...formState.transaction.details.filter((x) => x.productID > 0),
       ];
-      let res: DeepPartial<TransactionFormState> = {};
       let addDetails: TransactionDetail[] = [];
-      quantityFactor.forEach(async(value: GridQtyFactors, index: number) => {
-        if (index == 0) {
+      for (let index = 0; index < quantityFactor.length; index++) {
+        const value = quantityFactor[index];
+
+        if (index === 0) {
           const rowData = { ...baseRowData, qty: value.total };
-          currentDetails[rowIndex] = rowData;
-          res = await calculateRowAmount(rowData, "qty", { result: { transaction: { details: [{ qty: value.total, slNo: baseRowData.slNo }] } } }, true);
-          res!.transaction!.details![0]!.productDescription = `${value.width} X ${value.height} X ${value.nos}`;
+          const res = await calculateRowAmount(rowData, "qty", { result: { transaction: { details: [{ qty: value.total, slNo: baseRowData.slNo }] } } }, true);
+          if (res?.transaction?.details && res.transaction.details.length > 0) {
+            res.transaction.details[0]!.productDescription = `${value.width} X ${value.height} X ${value.nos}`;
+            currentDetails[rowIndex] = res.transaction.details[0]! as TransactionDetail;
+          }
         } else {
           const rowData = {
             ...baseRowData,
@@ -1792,17 +1795,17 @@ debugger;
             slNo: generateUniqueKey(),
             productDescription: `${value.width} X ${value.height} X ${value.nos}`,
           };
-          res = await calculateRowAmount(rowData, "qty", { result: { transaction: { details: [rowData] } } }, true);
+          const res = await calculateRowAmount(rowData, "qty", { result: { transaction: { details: [rowData] } } }, true);
           if (
             res?.transaction?.details &&
             res?.transaction?.details.length > 0
           ) {
-            addDetails.push(res!.transaction!.details![0] as TransactionDetail);
+            addDetails.push(res.transaction.details[0] as TransactionDetail);
           }
         }
-      });
+      }
 
-      let final = [...currentDetails, ...addDetails];
+      const final = [...currentDetails, ...addDetails];
       const summaryRes = calculateSummary(final, formState, { result: {} });
 
       const totalRes = await calculateTotal(
@@ -1819,7 +1822,7 @@ debugger;
             showQuantityFactors: { visible: false, rowIndex: -1, qtyDesc: "" }, // For Q
             transaction: {
               ...totalRes.transaction,
-              details: res.transaction?.details,
+              details: final,
             },
           },
           updateOnlyGivenDetailsColumns: true,
@@ -1844,14 +1847,17 @@ debugger;
       let currentDetails = [
         ...formState.transaction.details.filter((x) => x.productID > 0),
       ];
-      let res: DeepPartial<TransactionFormState> = {};
       let addDetails: TransactionDetail[] = [];
-      quantityFactor.forEach(async(value: GridQtyFactorsM, index: number) => {
-        if (index == 0) {
+      for (let index = 0; index < quantityFactor.length; index++) {
+        const value = quantityFactor[index];
+
+        if (index === 0) {
           const rowData = { ...baseRowData, qty: value.total };
-          currentDetails[rowIndex] = rowData;
-          res = await calculateRowAmount(rowData, "qty", { result: { transaction: { details: [{ qty: value.total, slNo: baseRowData.slNo }] } } }, true);
-          res!.transaction!.details![0]!.productDescription = `${value.mann} X ${value.kg} X ${value.nos}`;
+          const res = await calculateRowAmount(rowData, "qty", { result: { transaction: { details: [{ qty: value.total, slNo: baseRowData.slNo }] } } }, true);
+          if (res?.transaction?.details && res.transaction.details.length > 0) {
+            res.transaction.details[0]!.productDescription = `${value.mann} X ${value.kg} X ${value.nos}`;
+            currentDetails[rowIndex] = res.transaction.details[0]! as TransactionDetail;
+          }
         } else {
           const rowData = {
             ...baseRowData,
@@ -1859,17 +1865,14 @@ debugger;
             slNo: generateUniqueKey(),
             productDescription: `${value.mann} X ${value.kg} X ${value.nos}`,
           };
-          res = await calculateRowAmount(rowData, "qty", { result: { transaction: { details: [rowData] } } }, true);
-          if (
-            res?.transaction?.details &&
-            res?.transaction?.details.length > 0
-          ) {
-            addDetails.push(res!.transaction!.details![0] as TransactionDetail);
+          const res = await calculateRowAmount(rowData, "qty", { result: { transaction: { details: [rowData] } } }, true);
+          if (res?.transaction?.details && res.transaction.details.length > 0) {
+            addDetails.push(res.transaction.details[0]! as TransactionDetail);
           }
         }
-      });
+      }
 
-      let final = [...currentDetails, ...addDetails];
+      const final = [...currentDetails, ...addDetails];
       const summaryRes = calculateSummary(final, formState, { result: {} });
 
       const totalRes = await calculateTotal(
@@ -1886,7 +1889,7 @@ debugger;
             showQuantityFactorsM: { visible: false, rowIndex: -1, qtyDesc: "" }, // For M
             transaction: {
               ...totalRes.transaction,
-              details: res.transaction?.details,
+              details: final,
             },
           },
           updateOnlyGivenDetailsColumns: true,
@@ -2310,6 +2313,7 @@ debugger;
                     activeRowBg={formState.userConfig?.activeRowBg}
                     gridFooterBg={formState.userConfig?.gridFooterBg}
                     gridFooterFontColor={formState.userConfig?.gridFooterFontColor}
+                    ignoreKeyMovesInCell={true}
                   />
                   {/* Grid Under Modification */}
                 </div>
@@ -2515,6 +2519,7 @@ debugger;
                   activeRowBg={formState.userConfig?.activeRowBg}
                   gridFooterBg={formState.userConfig?.gridFooterBg}
                   gridFooterFontColor={formState.userConfig?.gridFooterFontColor}
+                  ignoreKeyMovesInCell={true}
                 />
                 {/* Grid Under Modification */}
                 <TransactionFooter
@@ -2663,6 +2668,7 @@ debugger;
               activeRowBg={formState.userConfig?.activeRowBg}
               gridFooterBg={formState.userConfig?.gridFooterBg}
               gridFooterFontColor={formState.userConfig?.gridFooterFontColor}
+              ignoreKeyMovesInCell={true}
             />
             {/* </div> */}
             <PosFooter formState={formState} dispatch={dispatch} />

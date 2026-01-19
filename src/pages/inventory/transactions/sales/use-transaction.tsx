@@ -3226,13 +3226,20 @@ export const useTransaction = (
     const url = `${Urls.inv_transaction_base}${transactionType}/ProductBatchUnitPrices/${detail.productBatchID}/${outDetail.unitID}/${actualPriceVisible}`;
 
     const res = await api.getAsync(url);
+    const updatedDetail = Object.assign(detail, {
+      ...outDetail,
+      ...res,
+      purchasePrice: res.stdPurchasePrice,
+      unitPrice: res.stdSalesPrice,
+      ratePlusTax: res.stdSalesPrice,
+    });
     outState = await calculateRowAmount(
       Object.assign(detail, { ...outDetail, ...res }),
       columnName as any,
       {
         result: {
           transaction: {
-            details: [{ ...outDetail, ...res }],
+            details: [updatedDetail],
           },
         },
       },
@@ -3345,7 +3352,128 @@ export const useTransaction = (
       console.log('🔑 handleTextDataKeyDown called:', { key, value, columnName, rowIndex });
       const isShiftPressed = event.shiftKey;
       const isCtrlPressed = event.ctrlKey;
-      if (columnName === "global") {
+      // Newly Adding in sales
+      let data = { ...formState.transaction.details[rowIndex] };
+      if((event.key === "ArrowRight" || event.key === "ArrowLeft" || event.key === "ArrowDown" || event.key === "ArrowUp" || event.key === "Enter") && columnName==="unitPrice"){
+        if(event.key === "Enter"){
+          if(formState.userConfig?.blockZeroFigureEntry){
+                if(Number(data.qty) === 0 ){
+                  event.preventDefault();
+                  event.stopPropagation();
+                  await ERPAlert.show({
+                    icon: "info",
+                    title: t("warning"),
+                    text: t("zero_rate_or_quantity_entered_please_check!"),
+                    confirmButtonText: t("ok"),
+                    showCancelButton: true,
+                  });
+                }
+          }
+          if(formState.userConfig?.showRateBeforeTax){
+            const formattedValue = round(Number(value) || 0, 4);
+            data.unitPrice = formattedValue;
+          }
+        }
+        if((applicationSettings.inventorySettings?.showRateWarning.toUpperCase() =="WARN" && data.minSalePrice > 0) &&
+           (formState.transaction.master?.voucherForm !=="BT" || applicationSettings.inventorySettings?.useCostForStockTransferToBranch === false ||
+            (formState.transaction.master?.voucherForm =="BT" && formState.userConfig?.UserSalesPriceForTransfer) )){
+              if(data.salesPrice < data.minSalePrice){
+                event.preventDefault();
+                event.stopPropagation();
+                const confirm = await ERPAlert.show({
+                icon: "info",
+                title: t("warning"),
+                text: t("sales_price_less_than_the_minimum_sales_price, Do_you_want_to_continue?"),
+                confirmButtonText: t("yes"),
+                cancelButtonText: t("no"),
+                showCancelButton: true,
+                onConfirm:() => { return true; },
+                onCancel: () => { return false; },
+              });
+              if (confirm) {
+                const res = focusToNextColumn(rowIndex, columnName);
+                setCurrentCell(res, data, false);
+              } else {
+                const res = focusCurrentColumn(rowIndex, columnName);
+                setCurrentCell(res, data, false);
+              }
+              return { ...result, handled: true, preventDefault: true };
+              }
+        }else if(applicationSettings.inventorySettings?.showRateWarning.toUpperCase() =="WARN" && data.purchasePrice > 0 && data.minSalePrice === 0 &&
+            (formState.transaction.master?.voucherForm !=="BT" || applicationSettings.inventorySettings?.useCostForStockTransferToBranch === false ||
+              (formState.transaction.master?.voucherForm =="BT" && formState.userConfig?.UserSalesPriceForTransfer) )){
+              if(data.salesPrice < data.purchasePrice){
+                event.preventDefault();
+                event.stopPropagation();
+                const confirm = await ERPAlert.show({
+                icon: "info",
+                title: t("warning"),
+                text: t("sales_price_less_than_purchase_price.do_you_want_to_continue?"),
+                confirmButtonText: t("yes"),
+                cancelButtonText: t("no"),
+                showCancelButton: true,
+                onConfirm:() => { return true; },
+                onCancel: () => { return false; },
+              });
+              if (confirm) {
+                const res = focusToNextColumn(rowIndex, columnName);
+                setCurrentCell(res, data, false);
+              } else {
+                const res = focusCurrentColumn(rowIndex, columnName);
+                setCurrentCell(res, data, false);
+              }
+              return { ...result, handled: true, preventDefault: true };
+              }
+      }else if(applicationSettings.inventorySettings?.showRateWarning.toUpperCase() =="BLOCK" && data.minSalePrice > 0 && formState.transaction.master?.voucherForm !=="BT"){
+          if(data.salesPrice < data.minSalePrice){
+            event.preventDefault();
+            event.stopPropagation();
+            const confirm = await ERPAlert.show({
+            icon: "info",
+            title: t("warning"),
+            text: t(`sales_price_less_than_min_sales_price,${data.product}`),
+            confirmButtonText: t("yes"),
+            cancelButtonText: t("no"),
+            showCancelButton: true,
+            onConfirm:() => { return true; },
+            onCancel: () => { return false; },
+          });
+          if (confirm) {
+            const res = focusToNextColumn(rowIndex, columnName);
+            setCurrentCell(res, data, false);
+          } else {
+            const res = focusCurrentColumn(rowIndex, columnName);
+            setCurrentCell(res, data, false);
+          }
+          return { ...result, handled: true, preventDefault: true };
+          }
+      }else if(applicationSettings.inventorySettings?.showRateWarning.toUpperCase() =="BLOCK" && data.purchasePrice > 0 && data.minSalePrice === 0 && formState.transaction.master?.voucherForm !=="BT"){
+          if((data.salesPrice < data.purchasePrice) && data.isSchemeItem !=="S" ){
+            event.preventDefault();
+            event.stopPropagation();
+            const confirm = await ERPAlert.show({
+            icon: "info",
+            title: t("warning"),
+            text: t(`sales_price_less_than_purchase_price,${data.product}`),
+            confirmButtonText: t("yes"),
+            cancelButtonText: t("no"),
+            showCancelButton: true,
+            onConfirm:() => { return true; },
+            onCancel: () => { return false; },
+          });
+          if (confirm) {
+            const res = focusToNextColumn(rowIndex, columnName);
+            setCurrentCell(res, data, false);
+          } else {
+            const res = focusCurrentColumn(rowIndex, columnName);
+            setCurrentCell(res, data, false);
+          }
+          return { ...result, handled: true, preventDefault: true };
+          }
+      }
+      }
+      // Above Newly Adding in sales
+      // if (columnName === "global") {
         if (event.shiftKey && event.key.toUpperCase() === "F") {
           event.preventDefault();
           if (voucherNumberRef.current) {
@@ -3517,9 +3645,9 @@ export const useTransaction = (
             ))
           }
         }
+        //  }
+        // return { handled: true };
 
-        return { handled: true };
-      }
       if (!result.formElements) {
         result.formElements = {};
       }
@@ -3555,7 +3683,7 @@ export const useTransaction = (
                   },
                   formStateHandleFieldChangeKeysOnly:
                     formStateHandleFieldChangeKeysOnly,
-                }, true, rowIndex
+                }, false, rowIndex
               );
 
               break;
@@ -3708,6 +3836,11 @@ export const useTransaction = (
               isMobRow ? -1 : rowIndex
             );
           }
+          if(columnName === "unitPrice"){ 
+            if(userSession.dbIdValue !=="543140180640"){
+              alert("Need to manage this section")
+            }
+          }
           // else if (columnName === "unitPrice") {
           //   const units = formState.batchesUnits?.filter(
           //     (xer) => xer.productBatchID == detail.productBatchID
@@ -3831,20 +3964,83 @@ export const useTransaction = (
               const res = focusToNextColumn(rowIndex, columnName);
               setCurrentCell(res, data, rowIndex != res?.rowIndex);
             }
-          } else if (columnName == "unitPrice") {
-            if (!formState.productInfo == true) {
-              if (formState.userConfig?.showProductInfoPopup) {
-                dispatch(
-                  commonParams.formStateHandleFieldChangeKeysOnly({
-                    fields: {
-                      productInfo: true,
-                    },
-                  })
-                );
+          } else if(columnName == "unitDiscount"){
+            // Need to check the working
+            const res = focusToNextColumn(rowIndex, columnName);
+            setCurrentCell(res, data, false);
+          }else if(columnName == "qty"){
+            const ShowNegativeStockWarning = applicationSettings.inventorySettings.showRateWarning;
+            if(ShowNegativeStockWarning === "Block" && data.itemType ==="Inventory"){
+              let Qty = Number(data.qty)
+              const prevQty = (data.qtyTag ?? 0);
+              Qty = Qty - prevQty;
+              const unitQty = await api.getAsync(`${Urls.products}SelectProductUnits/${data.productBatchID}`);
+              const selectedUnit = unitQty?.find((u: any) => u.unitID === data.unitID);
+              Qty = Qty * selectedUnit.multiFactor;
+              if(Qty > data.stock ){
+                await ERPAlert.show({
+                icon: "info",
+                title: t("warning"),
+                text: `${t("available_stock")} ${data.stock} | ` +`${t("shortage")} : ${Qty - data.stock}`,
+                confirmButtonText: t("yes"),
+                cancelButtonText: t("no"),
+                showCancelButton: false,
+              });
               }
+              
+            }else if(ShowNegativeStockWarning === "Warn" && data.itemType ==="Inventory"){
+              let Qty = Number(data.qty)
+              const prevQty = (data.qtyTag ?? 0);
+              Qty = Qty - prevQty;
+              const unitQty = await api.getAsync(`${Urls.products}SelectProductUnits/${data.productBatchID}`);
+              const selectedUnit = unitQty?.find((u: any) => u.unitID === data.unitID);
+              Qty = Qty * selectedUnit.multiFactor;
+              if(Qty > data.stock ){
+                await ERPAlert.show({
+                icon: "info",
+                title: t("warning"),
+                text: `${t("available_stock")} ${data.stock} | ` +`${t("shortage")} : ${Qty - data.stock}`,
+                confirmButtonText: t("yes"),
+                cancelButtonText: t("no"),
+                showCancelButton: false,
+              });
+
+              }
+            }
+            if(formState.userConfig?.blockZeroFigureEntry){
+              if(Number(data.qty) === 0 ){
+                ERPAlert.show({
+                  icon: "info",
+                  title: t("warning"),
+                  text: t("zero_rate_or_quantity_entered_please_check!"),
+                  confirmButtonText: t("ok"),
+                  showCancelButton: true,
+                });
+              }
+            }
+            if(applicationSettings.productsSettings.giftOnBilling){
+              await removeGiftFromGrid();
             }
             const res = focusToNextColumn(rowIndex, columnName);
             setCurrentCell(res, data, rowIndex != res?.rowIndex);
+
+          }else if (columnName == "unitPrice") {
+
+            
+            
+            // if (!formState.productInfo == true) {
+            //   if (formState.userConfig?.showProductInfoPopup) {
+            //     dispatch(
+            //       commonParams.formStateHandleFieldChangeKeysOnly({
+            //         fields: {
+            //           productInfo: true,
+            //         },
+            //       })
+            //     );
+            //   }
+            // }
+            // const res = focusToNextColumn(rowIndex, columnName);
+            // setCurrentCell(res, data, rowIndex != res?.rowIndex);
           } else if (columnName == "unitPriceFC") {
             if (
               (() => {
@@ -3855,7 +4051,8 @@ export const useTransaction = (
                 }
               })() === 0
             ) {
-              // event.preventDefault();
+              event.preventDefault();
+              event.stopPropagation();
               const confirm = await ERPAlert.show({
                 icon: "info",
                 title: t("warning"),
@@ -3876,67 +4073,75 @@ export const useTransaction = (
                 setCurrentCell(res, data, false);
               }
             }
-          } else if (columnName == "margin" || columnName == "salesPrice") {
-            data.margin = columnName == "margin" ? value : data.margin;
-            data.salesPrice =
-              columnName == "salesPrice" ? value : data.salesPrice;
+          } else if (columnName == "margin" || columnName == "salesPrice" || columnName == "ratePlusTax") {
+            // check the below written code and compare with 1050 - check its working
+            const res = focusToNextColumn(rowIndex, columnName);
+            setCurrentCell(res, data, rowIndex != res?.rowIndex);
+            
 
-            await calculateRowAmount(
-              data,
-              columnName,
-              {
-                result: {
-                  transaction: {
-                    details: [data],
-                  },
-                },
-                formStateHandleFieldChangeKeysOnly:
-                  formStateHandleFieldChangeKeysOnly,
-              },
-              false
-            );
+            // data.margin = columnName == "margin" ? value : data.margin;
+            // data.salesPrice =
+            //   columnName == "salesPrice" ? value : data.salesPrice;
 
-            if (
-              applicationSettings.inventorySettings?.showRateWarning.toUpperCase() ==
-              "WARN" &&
-              data.salesPrice > 0
-            ) {
-              if (data.unitPrice > data.salesPrice) {
-                // event.preventDefault();
-                event.preventDefault();
-                event.stopPropagation();
-                const confirm = await ERPAlert.show({
-                  icon: "info",
-                  title: t("warning"),
-                  text: t(
-                    "sales_price_less_than_purchase_price_do_you_want_to_continue"
-                  ),
-                  confirmButtonText: t("yes"),
-                  cancelButtonText: t("no"),
-                  showCancelButton: true,
-                  onCancel: () => {
-                    return false;
-                  },
-                });
-                if (confirm) {
-                  const res = focusToNextColumn(rowIndex, columnName);
-                  setCurrentCell(res, data, rowIndex != res?.rowIndex);
-                  break;
-                } else {
-                  const res = focusCurrentColumn(rowIndex, columnName);
-                  setCurrentCell(res, data, false);
-                }
-              }
-            } else if (
-              applicationSettings.inventorySettings?.showRateWarning.toUpperCase() ==
-              "BLOCK" &&
-              data.salesPrice > 0
-            ) {
-              if (data.unitPrice > data.salesPrice) {
-                const res = focusCurrentColumn(rowIndex, columnName);
-                setCurrentCell(res, data, false);
-              }
-            }
+            // await calculateRowAmount(
+            //   data,
+            //   columnName,
+            //   {
+            //     result: {
+            //       transaction: {
+            //         details: [data],
+            //       },
+            //     },
+            //     formStateHandleFieldChangeKeysOnly:
+            //       formStateHandleFieldChangeKeysOnly,
+            //   },
+            //   false
+            // );
+
+            // if (
+            //   applicationSettings.inventorySettings?.showRateWarning.toUpperCase() ==
+            //   "WARN" &&
+            //   data.salesPrice > 0
+            // ) {
+            //   if (data.unitPrice > data.salesPrice) {
+            //     // event.preventDefault();
+            //     event.preventDefault();
+            //     event.stopPropagation();
+            //     const confirm = await ERPAlert.show({
+            //       icon: "info",
+            //       title: t("warning"),
+            //       text: t(
+            //         "sales_price_less_than_purchase_price_do_you_want_to_continue"
+            //       ),
+            //       confirmButtonText: t("yes"),
+            //       cancelButtonText: t("no"),
+            //       showCancelButton: true,
+            //       onCancel: () => {
+            //         return false;
+            //       },
+            //     });
+            //     if (confirm) {
+            //       const res = focusToNextColumn(rowIndex, columnName);
+            //       setCurrentCell(res, data, rowIndex != res?.rowIndex);
+            //       break;
+            //     } else {
+            //       const res = focusCurrentColumn(rowIndex, columnName);
+            //       setCurrentCell(res, data, false);
+            //     }
+            //   }
+            // } else if (
+            //   applicationSettings.inventorySettings?.showRateWarning.toUpperCase() ==
+            //   "BLOCK" &&
+            //   data.salesPrice > 0
+            // ) {
+            //   if (data.unitPrice > data.salesPrice) {
+            //     const res = focusCurrentColumn(rowIndex, columnName);
+            //     setCurrentCell(res, data, false);
+            //   }
+            // }
+          }else if (columnName == "smCode"){
+            alert("Need to manage this")
+
           } else if (columnName == "btnPrintBarcode") {
             if (
               formState.transaction.details[rowIndex].qty +

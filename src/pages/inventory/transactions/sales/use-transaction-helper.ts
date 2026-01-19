@@ -3447,6 +3447,11 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
             outRow = await calculateRowAmount(updatedRow, "qty", { result: {} }, false, i);
             finalRows[i] = outRow.transaction!.details![0] as TransactionDetail;
             giftClaimed = true;
+            dispatch(
+              formStateHandleFieldChange({
+                fields: { giftClaimed: true },
+              })
+            );
             result = true;
             break;
           } else {
@@ -3555,6 +3560,11 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
             finalRows[i] = outRow.transaction!.details![0] as TransactionDetail;
 
             giftClaimed = true;
+            dispatch(
+              formStateHandleFieldChange({
+                fields: { giftClaimed: true },
+              })
+            );
             result = true;
             break;
           } else {
@@ -3599,9 +3609,9 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
 
       // ------------------ 1. Ask user for confirmation ------------------
       const confirm = await ERPAlert.show({
-        icon: "warning",
-        title: "Gift Product",
-        text: "Gift Product added! Gift will be removed. add it later if you want",
+        icon: "question",
+        title: t("gift_Product"),
+        text: t("gift_product_added! Please_remove_and_continue"),
         confirmButtonText: "OK",
         showCancelButton: false,
       });
@@ -3659,12 +3669,22 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
 
         if (isGiftRow) {
           // ------------------ 4. Reset to normal product values ------------------
-          row.qty = 1;
-          row.schemeFreeQty = 0;
-          row.unitPrice = Number(stdItem.stdSalesPrice || 0);
-          row.vatPerc = (clientSession.isAppGlobal === true && formState.transaction.master.voucherType != VoucherType.SalesEstimate)
-            || (!clientSession.isAppGlobal && formState.transaction.master.voucherForm === "VAT") ? Number(stdItem.sVatPerc || 0) : 0;
-          row.ratePlusTax = row.unitPrice;
+          // row.qty = 1;
+          // row.schemeFreeQty = 0;
+          // row.unitPrice = Number(stdItem.stdSalesPrice || 0);
+          // row.vatPerc = (clientSession.isAppGlobal === true && formState.transaction.master.voucherType != VoucherType.SalesEstimate)
+          //   || (!clientSession.isAppGlobal && formState.transaction.master.voucherForm === "VAT") ? Number(stdItem.sVatPerc || 0) : 0;
+          // row.ratePlusTax = row.unitPrice;
+
+            let updatedRow = {
+              ...row,
+              qty: 1,
+              schemeFreeQty: 0,
+              unitPrice: Number(stdItem[i].stdSalesPrice || 0),
+              vatPerc: stdItem[i].sVatPerc,
+              ratePlusTax: row.unitPrice
+
+           }
 
           // Reverse calculate base price from ratePlusTax
           const taxP = Number(row.vatPerc || 0);
@@ -3674,10 +3694,9 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
               Number(row.ratePlusTax || 0) / (1 + taxP / 100);
             row.unitPrice = Number(uRate.toFixed(3));
           }
-
           // Recalculate the row
           const newRow = await calculateRowAmount(
-            row,
+            updatedRow,
             "qty",
             { result: {} },
             false,

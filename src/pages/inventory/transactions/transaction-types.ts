@@ -229,6 +229,7 @@ export interface TransactionMaster {
   toBranchWarehouseID?: number; // for stock branch transfer
   itemLoadVoucherPrefix?: string;
   itemLoadVoucherNumber?: number;
+  soTotalAdvance?: string;
 }
 
 export interface TransactionMaster3 {

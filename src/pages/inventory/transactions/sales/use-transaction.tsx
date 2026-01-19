@@ -369,7 +369,7 @@ export const useTransaction = (
     );
 
 
-    
+
 
     if (typeof _formState == "boolean") {
       return;
@@ -378,7 +378,12 @@ export const useTransaction = (
       ..._formState.formElements.btnEdit,
       disabled: false,
     }
-
+    if (formState.userConfig?.presetCostenterId ?? 0 > 0) {
+      _formState.formElements.cbCostCentre = {
+        ..._formState.formElements.cbCostCentre,
+        disabled: true,
+      }
+    }
     if (clientSession.isAppGlobal && [VoucherType.SalesInvoice, VoucherType.SalesReturn].includes(_formState.transaction.master.voucherType as any)) {
       if (applicationSettings.gSTTaxesSettings.enableEInvoiceIndia ||
         (["WHOLESALE", "INTERSTATE", "INT STATE"].includes(_formState?.transaction.master.voucherForm.toUpperCase()) && _formState.transaction.master.voucherType == VoucherType.SalesInvoice) ||
@@ -483,6 +488,13 @@ export const useTransaction = (
             ? true
             : _formState.formElements.btnSave.disabled,
       },
+      cashPaid: {
+        ..._formState.formElements.cashPaid,
+        disabled:
+          _formState.transaction.master.isLocked === true && userSession.userTypeCode === "BA"
+            ? false
+            : true,
+      }
     };
     if (showLoading) {
       _formState.transactionLoading = false;
@@ -550,6 +562,7 @@ export const useTransaction = (
     isSalesBookingLoaded: boolean = false,
     sbCashReceived?: number | 0,
     sbBillDiscount?: number | 0,
+    stockUpdate?: string | 0,
   ) => {
     let voucher: TransactionFormState = JSON.parse(
       JSON.stringify({
@@ -591,7 +604,7 @@ export const useTransaction = (
       voucherForm: loadVType === "" ? out_voucherForm : formType,
       // InvokeUsingVoucherNumber: !usingManualInvNumber,
       isUsingManualInvNo: usingManualInvNumber, // Convert boolean to string
-      autoEwayBill: formState.userConfig?.autoEwayBill??false, // for india sales
+      autoEwayBill: formState.userConfig?.autoEwayBill ?? false, // for india sales
       isActualPriceVisible:
         formState.gridColumns.find((x) => x.dataField == "actualSalesPrice")
           ?.visible ?? false,
@@ -680,7 +693,7 @@ export const useTransaction = (
         voucherPrefix:
           voucherPrefix ?? formState.transaction.master.voucherPrefix,
         voucherForm: formType ?? formState.transaction.master.voucherForm,
-        invTransactionMasterID:  vch.master.invTransactionMasterID,
+        invTransactionMasterID: vch.master.invTransactionMasterID,
 
       };
     }
@@ -693,169 +706,160 @@ export const useTransaction = (
       ...(vch || {}),
       master: {
         ...(vch?.master || {}),
-         voucherType: out_voucherType ?? formState.transaction.master.voucherType,
-      voucherForm: out_voucherForm ?? formState.transaction.master.voucherForm,
+        voucherType: out_voucherType ?? formState.transaction.master.voucherType,
+        voucherForm: out_voucherForm ?? formState.transaction.master.voucherForm,
         hasroundOff: vch?.master?.roundAmount != 0,
-        
+
         adjustmentAmount: [VoucherType.SalesQuotation, VoucherType.SalesInvoice, VoucherType.GoodsDeliveryNote, VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(voucherType as any)
           ? round(vch?.master?.adjustmentAmount)
           : vch?.master?.adjustmentAmount,
-        
+
         bankAmt: [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(voucherType as any)
           ? round(vch?.master?.bankAmt)
           : vch?.master?.bankAmt,
-        RefInvTransactionMasterSOID: vch.master.RefInvTransactionMasterSOID??0,
-         draftTransactionMasterID: formState.draftMode
-      ? vch.master.invTransactionMasterID
-      : 0,
+        RefInvTransactionMasterSOID: vch.master.RefInvTransactionMasterSOID ?? 0,
+        draftTransactionMasterID: formState.draftMode
+          ? vch.master.invTransactionMasterID
+          : 0,
 
-    /** ---------------- Dates ---------------- */
-    transactionDate:
-      loadVType === ""
-        ? new Date(vch.master.transactionDate)
-        : formState.transaction.master.transactionDate,
+        /** ---------------- Dates ---------------- */
+        transactionDate:
+          loadVType === ""
+            ? new Date(vch.master.transactionDate)
+            : formState.transaction.master.transactionDate,
 
-    prevTransDate: new Date(vch.master.transactionDate),
+        prevTransDate: new Date(vch.master.transactionDate),
 
-    // orderDate: new Date(vch.master.orderDate),
-    // deliveryDate: new Date(vch.master.deliveryDate),
-    quotationDate: new Date(vch.master.quotationDate),
-    // purchaseInvoiceDate: new Date(vch.master.purchaseInvoiceDate),
-    despatchDate: new Date(vch.master.despatchDate),
-    dueDate: new Date(vch.master.dueDate),
+        // orderDate: new Date(vch.master.orderDate),
+        // deliveryDate: new Date(vch.master.deliveryDate),
+        quotationDate: new Date(vch.master.quotationDate),
+        // purchaseInvoiceDate: new Date(vch.master.purchaseInvoiceDate),
+        despatchDate: new Date(vch.master.despatchDate),
+        dueDate: new Date(vch.master.dueDate),
 
-    /** ---------------- Party / Ledger ---------------- */
-    ledgerID: sbLedgerID !== 0 ? sbLedgerID : vch.master.ledgerID,
-    inventoryLedgerID: vch.master.inventoryLedgerID,
-    oldLedgerID: vch.master.ledgerID,
+        /** ---------------- Party / Ledger ---------------- */
+        ledgerID: sbLedgerID !== 0 ? sbLedgerID : vch.master.ledgerID,
+        inventoryLedgerID: vch.master.inventoryLedgerID,
+        oldLedgerID: vch.master.ledgerID,
 
-    partyName: vch.master.partyName,
-    address1: vch.master.address1,
-    address2: vch.master.address2,
-    address3: vch.master.address3,
-    address4: vch.master.address4,
+        partyName: vch.master.partyName,
+        address1: vch.master.address1,
+        address2: vch.master.address2,
+        address3: vch.master.address3,
+        address4: vch.master.address4,
 
-    /** ---------------- Order / Reference ---------------- */
-    // orderNumber: vch.master.orderNumber,
-    // deliveryNoteNumber:
-    //   vch.master.deliveryNoteNumber === "0"
-    //     ? ""
-    //     : vch.master.deliveryNoteNumber,
-    // refNumber: vch.master.deliveryNoteNumber,
+        /** ---------------- Order / Reference ---------------- */
+        // orderNumber: vch.master.orderNumber,
+        // deliveryNoteNumber:
+        //   vch.master.deliveryNoteNumber === "0"
+        //     ? ""
+        //     : vch.master.deliveryNoteNumber,
+        // refNumber: vch.master.deliveryNoteNumber,
 
-    /** ---------------- VAT / Customer ---------------- */
-    vatNumber:
-      loadVType === "SI" || loadVType === ""
-        ? vch.master.tokenNumber
-        : "",
-    // tokenNumber:
-    //   loadVType === "SI" || loadVType === ""
-    //     ? vch.master.customerType
-    //     : "",
+        /** ---------------- VAT / Customer ---------------- */
+        vatNumber:
+          loadVType === "SI" || loadVType === ""
+            ? vch.master.tokenNumber
+            : "",
+        // tokenNumber:
+        //   loadVType === "SI" || loadVType === ""
+        //     ? vch.master.customerType
+        //     : "",
 
-    /** ---------------- Remarks ---------------- */
-    remarks: vch.master.remarks,
+        /** ---------------- Remarks ---------------- */
+        remarks: vch.master.remarks,
 
-    /** ---------------- Amounts ---------------- */
-    cashReceived: 
-    !isSalesBookingLoaded ?
-      [VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(voucherType as any)
-          ? vch?.master?.cashReturned
-          : voucherType == VoucherType.SalesInvoice && !clientSession.isAppGlobal
-            ? getFormattedValueIgnoreRounding(vch?.master?.cashReceived)
-            : round(vch?.master?.cashReceived)
-      : sbCashReceived,
+        /** ---------------- Amounts ---------------- */
+        cashReceived:
+          !isSalesBookingLoaded ?
+            [VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(voucherType as any)
+              ? vch?.master?.cashReturned
+              : voucherType == VoucherType.SalesInvoice && !clientSession.isAppGlobal
+                ? getFormattedValueIgnoreRounding(vch?.master?.cashReceived)
+                : round(vch?.master?.cashReceived)
+            : sbCashReceived,
 
-    billDiscount: !isSalesBookingLoaded
-      ? voucherType == VoucherType.SalesInvoice && !clientSession.isAppGlobal ? getFormattedValueIgnoreRounding(vch?.master?.billDiscount)
-          : [VoucherType.ServiceInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate, VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(voucherType as any)
-            ? vch?.master?.billDiscount : round(vch?.master?.billDiscount)
-      : sbBillDiscount,
+        billDiscount: !isSalesBookingLoaded
+          ? voucherType == VoucherType.SalesInvoice && !clientSession.isAppGlobal ? getFormattedValueIgnoreRounding(vch?.master?.billDiscount)
+            : [VoucherType.ServiceInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate, VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(voucherType as any)
+              ? vch?.master?.billDiscount : round(vch?.master?.billDiscount)
+          : sbBillDiscount,
 
-    taxOnDiscount: !isSalesBookingLoaded
-      ?getFormattedValueIgnoreRounding(vch?.master.taxOnDiscount)
-      : 0,
+        taxOnDiscount: !isSalesBookingLoaded
+          ? getFormattedValueIgnoreRounding(vch?.master.taxOnDiscount)
+          : 0,
 
-    srAmount: round(vch?.master?.srAmount),
-    couponAmt:round(vch.master.couponAmt),
+        srAmount: round(vch?.master?.srAmount),
+        couponAmt: round(vch.master.couponAmt),
 
-    // bankAmount: vch.master.bankAmt,
-    // cardAmount: vch.master.bankAmt,
+        // bankAmount: vch.master.bankAmt,
+        // cardAmount: vch.master.bankAmt,
 
-    /** ---------------- Cash Received Flag ---------------- */
-    hasCashPaid:
-      formState.sbCashReceived &&
-      vch.master.cashReceived >= vch.master.grandTotal,
+        /** ---------------- Cash Received Flag ---------------- */
+        hasCashPaid:
+          vch.master.cashReceived >= vch.master.grandTotal,
 
-    /** ---------------- Lock ---------------- */
-    isLocked: vch.master.isLocked,
-    // if(isLocked==true){
-       
-    // }
-    // isLockedEditable:
-    //   vch.master.isLocked && userSession.userTypeCode === "BA",
+        /** ---------------- Lock ---------------- */
+        isLocked: vch.master.isLocked,
+        // if(isLocked==true){
 
-    /** ---------------- Stock ---------------- */
-    allowStockUpdate: Boolean(vch.master.stockUpdate),
+        // }
+        // isLockedEditable:
+        //   vch.master.isLocked && userSession.userTypeCode === "BA",
 
-    /** ---------------- Dispatch ---------------- */
-    // DespatchDate
-    // despatchDocumentNumber: vch.master.despatchDocumentNumber,
+        /** ---------------- Stock ---------------- */
+        stockUpdate: Boolean(vch.master.StockUpdate), //not a field ,for condition check
 
-    /** ---------------- Logistics ---------------- */
-    driverID: vch.master.driverID,
-    deliveryManID: vch.master.deliveryManID,
-    vehicleID: vch.master.vehicelID,
-    gatePassNo: vch.master.gatePassNo,
+        /** ---------------- Dispatch ---------------- */
+        // DespatchDate
+        // despatchDocumentNumber: vch.master.despatchDocumentNumber,
 
-    /** ---------------- Sales / Incentive ---------------- */
-    salesmanIncentive: vch.master.salesManIncentive,
+        /** ---------------- Logistics ---------------- */
+        // driverID: vch.master.driverID,
+        // deliveryManID: vch.master.deliveryManID,
+        // vehicleID: vch.master.vehicelID,
+        // gatePassNo: vch.master.gatePassNo,
 
-    /** ---------------- Warehouse ---------------- */
-    fromWarehouseID: vch.master.fromWarehouseID,
+        // /** ---------------- Sales / Incentive ---------------- */
+        // salesmanIncentive: vch.master.salesManIncentive,
 
-    /** ---------------- Cost Centre ---------------- */
-    costCentreID:
-      vch.master.costCentreID > 0
-        ? vch.master.costCentreID
-        : formState.userConfig?.presetCostenterId??0 > 0
-        ? formState.userConfig?.presetCostenterId //disable cost centre
-        : applicationSettings.accountsSettings.defaultCostCenterID,
+        // /** ---------------- Warehouse ---------------- */
+        // fromWarehouseID: vch.master.fromWarehouseID,
 
-    /** ---------------- Project ---------------- */
-    projectID: vch.master.projectID,
+        /** ---------------- Cost Centre ---------------- */
+        costCentreID:
+          vch.master.costCentreID > 0
+            ? vch.master.costCentreID
+            : formState.userConfig?.presetCostenterId ?? 0 > 0
+              ? formState.userConfig?.presetCostenterId //disable cost centre -done
+              : applicationSettings.accountsSettings.defaultCostCenterID,
 
-    /** ---------------- Posting ---------------- */
-    isPosted: Boolean(vch.master.isPosted),
+        /** ---------------- Project ---------------- */
+        // projectID: vch.master.projectID,
 
-    /** ---------------- Privilege Card ---------------- */
-    privilageCardID: vch.master.privCardID,
-    privilageAddAmount: vch.master.privAddAmount,
-    privilageRedeem: vch.master.privRedeem,
+        /** ---------------- Posting ---------------- */
+        isPosted: Boolean(vch.master.isPosted),//logic for lblPosted
 
-    /** ---------------- Advance ---------------- */
-    advanceAmount: vch.master.advanceAmt,
+        /** ---------------- Privilege Card ---------------- */
+        // privCardID: vch.master.privCardID,
+        // privAddAmount: vch.master.privAddAmount,
+        // privRedeem: vch.master.privRedeem,
 
-    /** ---------------- SO Advance Logic ---------------- */
-    soAdvanceSummary:
-      loadVType === "SO" && vch.master.advanceAmt > 0
-        ? {
-            total: vch.master.grandTotal,
-            advance:
-              vch.master.bankAmt + vch.master.cashReceived,
-            balance:
-              vch.master.grandTotal -
-              (vch.master.bankAmt +
-                vch.master.cashReceived),
-          }
-        : null,
 
-    /** ---------------- Cash / Credit ---------------- */
-    cashOrCredit:
-      vch.master.cashrOrCredit === "Cash"
-        ? "CASH"
-        : "CREDIT",
-        
+        /** ---------------- SO Advance Logic ---------------- */
+        soTotalAdvance: vch.master.advanceAmt > 0
+          ? `Advance : ${vch.master.advanceAmt}`
+          : loadVType == 'SO' && vch.master.cashAmt + vch.master.bankAmt > 0
+            ? `Tot: ${round(vch.master.grandTotal)} : 
+         Adv: ${round(vch.master.cashAmt + vch.master.bankAmt)}, 
+         Bal: (${round(vch.master.grandTotal - vch.master.cashAmt + vch.master.bankAmt)}` : '',
+
+        // /** ---------------- Cash / Credit ---------------- */
+        // cashOrCredit:
+        //   vch.master.cashrOrCredit === "Cash"
+        //     ? "CASH"
+        //     : "CREDIT", //added logic in UI
+
       } as TransactionMaster,
       details: await refactorDetails(
         vch.details,
@@ -1004,7 +1008,7 @@ export const useTransaction = (
       }`
     ) : undefined;
 
-    const nextVoucherNumber = response || {voucherNumber: 1, voucherPrefix: ""};
+    const nextVoucherNumber = response || { voucherNumber: 1, voucherPrefix: "" };
 
     return nextVoucherNumber;
   };
@@ -1601,7 +1605,7 @@ export const useTransaction = (
               },
             });
           }
-          else if(costCenterError){
+          else if (costCenterError) {
             ERPAlert.show({
               icon: "warning",
               title: saveRes.message,
@@ -1613,7 +1617,7 @@ export const useTransaction = (
               },
             });
           }
-          else if(salesManError){
+          else if (salesManError) {
             ERPAlert.show({
               icon: "warning",
               title: saveRes.message,
@@ -1737,7 +1741,7 @@ export const useTransaction = (
       inventoryLedgerID:
         formState.transaction.master.voucherType == VoucherType.SalesReturn
           ? applicationSettings.inventorySettings?.defaultSalesReturnAcc
-          :  applicationSettings.inventorySettings?.defaultSalesAcc,
+          : applicationSettings.inventorySettings?.defaultSalesAcc,
       ledgerID: applicationSettings.accountsSettings.defaultCashAcc,
       isLocked: false,
       grandTotal: 0,
@@ -2967,17 +2971,17 @@ export const useTransaction = (
         ? selectVoucherData[0].lastPrefix
         : "";
       const getVoucherNumberRes = await getNextVoucherNumber(
-              formState.transaction.master.voucherForm,
-              formState.transaction.master.voucherType,
-              formState.transaction.master.voucherType,
-              false
-            );
-      
-            dispatch(
-              formStateTransactionMasterHandleFieldChange({
-                fields: {
-                  voucherNumber: getVoucherNumberRes.voucherNumber,
-                  voucherPrefix: getVoucherNumberRes.voucherPrefix,
+        formState.transaction.master.voucherForm,
+        formState.transaction.master.voucherType,
+        formState.transaction.master.voucherType,
+        false
+      );
+
+      dispatch(
+        formStateTransactionMasterHandleFieldChange({
+          fields: {
+            voucherNumber: getVoucherNumberRes.voucherNumber,
+            voucherPrefix: getVoucherNumberRes.voucherPrefix,
             purchaseInvoiceNumber: "",
             // transactionMasterID: 0,
             transactionDate: moment(clientSession.softwareDate, "DD/MM/YYYY")
@@ -3539,11 +3543,11 @@ export const useTransaction = (
           if (columnName === "qty") {
             if (formState.gridColumns?.find((x) => x.dataField == "free")?.visible) {
               let data = { ...formState.transaction.details[rowIndex] };
-              const outRow ={
+              const outRow = {
                 free: 1,
                 qty: 0
               }
-              
+
               let sd = await calculateRowAmount(
                 data,
                 columnName,

@@ -179,7 +179,15 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   const [paymentMethod, setPaymentMethod] = useState<"cash" | "credit" | null>(null);
 
   const handleChange = (value: string) => {
-    setPaymentMethod(value as "cash" | "credit");
+    dispatch(formStateHandleFieldChangeKeysOnly({
+      fields:{
+        transaction:{
+          master:{
+            cashrOrCredit: value
+          }
+        }
+      }
+    }))
   };
 
   // Input navigation refs
@@ -771,7 +779,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       name="paymentMethod"
                       value="cash"
                       label={t("cash")}
-                      checked={paymentMethod === "cash"}
+                      checked={formState.transaction.master.cashrOrCredit === "cash"}
                       onChange={(e) => handleChange(e.target.value)}
                     />
                     <ERPRadio
@@ -779,7 +787,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       name="paymentMethod"
                       value="credit"
                       label={t("credit")}
-                      checked={paymentMethod === "credit"}
+                      checked={formState.transaction.master.cashrOrCredit !== "cash"}
                       onChange={(e) => handleChange(e.target.value)}
                     />
                   </div>

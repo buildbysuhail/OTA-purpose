@@ -122,6 +122,7 @@ interface DataGridProps<T extends DataItem> {
   gridFooterFontColor?: string;
   zIndexController?: number;
   onSaveItem?: (item: TransactionDetail, mode: "Save"|"SaveAndNew") => void;
+  ignoreKeyMovesInCell?: boolean;  // In sales some columns have key working
   
 }
 
@@ -1482,7 +1483,8 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       gridFooterBg,
       gridFooterFontColor,
       zIndexController,
-      onSaveItem
+      onSaveItem,
+      ignoreKeyMovesInCell
     }: DataGridProps<T>,
     ref: Ref<any>
   ) {
@@ -2392,6 +2394,15 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
         const currentColumnIndex = visibleColumns.findIndex(
           (col) => col.dataField === column?.dataField
         );
+        if (ignoreKeyMovesInCell === true && column.dataField === "unitPrice") {
+          onKeyDown(
+            value,
+            e,
+            column.dataField as keyof TransactionDetail,
+            rowIndex
+          );
+          return;
+        }
 
         if (
           !["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(e.key)

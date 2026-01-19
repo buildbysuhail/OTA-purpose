@@ -34,7 +34,7 @@ const MQtyFactorsModal: React.FC<MQtyFactorsModalProps> = ({
   const [qtyFactorsM, setQtyFactorsM] = useState<QtyFactorsM>({
     mann: 0,
     kg: 0,
-    nos: 1,
+    nos: 16,
   });
 
   const [gridData, setGridData] = useState<GridQtyFactors[]>([]);
@@ -70,7 +70,7 @@ const MQtyFactorsModal: React.FC<MQtyFactorsModalProps> = ({
     nosValue: number
   ): number => {
     if (!nosValue || nosValue === 0) return 0; // For preventing divided by zero
-    const totalValue = (kgValue / nosValue) * mannValue;
+    const totalValue = (kgValue / nosValue) + mannValue;
     return totalValue;
   };
 
@@ -181,7 +181,7 @@ const MQtyFactorsModal: React.FC<MQtyFactorsModalProps> = ({
           <div className="mt-2">
             {t("total")} :{" "}
             {qtyFactorsM.nos > 0
-              ? (qtyFactorsM.kg / qtyFactorsM.nos) * qtyFactorsM.mann
+              ? (qtyFactorsM.kg / qtyFactorsM.nos) + qtyFactorsM.mann
               : 0}
           </div>
         </>

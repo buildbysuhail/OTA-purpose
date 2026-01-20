@@ -53,10 +53,10 @@ export interface TransactionData {
   details: TransactionDetail[];
   invAccTransactions: InvAccTransaction[];
   attachments: any[];
-  couponDetails: CouponDetails; // new
+  couponDetails: CouponDetails[]; // new
   privilegeCardDetails: PrivilegeCardDetails; //new
-  bankCardDetails: List<SettlementDetails>[]; //new
-  uPIDetails: List<SettlementDetails>[]; //new
+  bankCardDetails: SettlementDetails[]; //new
+  uPIDetails: SettlementDetails[]; //new
   eInvoiceStatus?: string
   ewbStatus?: string
   postedTransactionLabel?: string

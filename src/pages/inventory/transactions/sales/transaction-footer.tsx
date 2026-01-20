@@ -450,12 +450,27 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
     )
   }
 
+  // Have some discussion
   const handleTenderOpen = () => {
-    dispatch(
-      formStateHandleFieldChange({
-        fields: { tenderOpen: true }
-      })
-    )
+    if(applicationSettings.accountsSettings.allowMultiPayments){
+      // Opens Global Tender
+      if(applicationSettings.accountsSettings.showTenderDialogInSales){
+        dispatch(
+          formStateHandleFieldChange({
+            fields: { tenderOpen: true }
+          })
+        )
+      }
+    }else{
+      // Open Tender
+      if(applicationSettings.accountsSettings.showTenderDialogInSales){
+        dispatch(
+          formStateHandleFieldChange({
+            fields: { tenderOpen: true }
+          })
+        )
+      }
+    }
   }
 
   const handleTenderClose = () => {
@@ -701,7 +716,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 formState.transaction.master.voucherType === VoucherType.SalesQuotation
               ) && formState.formElements.lblBillBalance.visible && (
                   <div>
-                    <span className="text-xs font-medium whitespace-nowrap">{t("bal")}sdsdsdsdsds: {formState.formElements.lblBillBalance.label}</span><span className="text-xs font-semibold"></span>
+                    <span className="text-xs font-bold text-blue-700 whitespace-nowrap">{t("bal")}: {formState.formElements.lblBillBalance.label}</span><span className="text-xs font-semibold"></span>
                   </div>
                 )}
             </div>
@@ -915,7 +930,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   formState.transaction.master.voucherType === VoucherType.SalesQuotation
                 ) && formState.formElements.lblBillBalance.visible && (
                     <div>
-                      <span className="text-xs font-medium whitespace-nowrap">{t("bal")}: {formState.formElements.lblBillBalance.label}</span><span className="text-xs font-semibold"></span>
+                      <span className="text-xs font-bold text-blue-700 whitespace-nowrap">{t("bal")}: {formState.formElements.lblBillBalance.label}</span><span className="text-xs font-semibold"></span>
                     </div>
                   )}
               </div>
@@ -1461,7 +1476,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               formState.transaction.master.voucherType === VoucherType.SalesQuotation
             ) && formState.formElements.lblBillBalance.visible && (
                 <div>
-                  <span className="text-xs font-medium whitespace-nowrap">{t("bal")}: {formState.formElements.lblBillBalance.label}</span><span className="text-xs font-semibold"></span>
+                  <span className="text-xs font-bold text-blue-700 whitespace-nowrap">{t("bal")}: {formState.formElements.lblBillBalance.label}</span><span className="text-xs font-semibold"></span>
                 </div>
               )}
 

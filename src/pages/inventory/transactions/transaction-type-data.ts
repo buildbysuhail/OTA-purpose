@@ -354,7 +354,7 @@ export const transactionInitialData: TransactionData = {
   attachments: [],
   masterValidations: initialTransactionMasterValidations,
   invAccTransactions: [],
-  couponDetails: initialCouponDetails, //new
+  couponDetails: [], //new
   privilegeCardDetails: initialPrivilegeCardOutput, //new
   bankCardDetails:[],// new
   uPIDetails:[],// new

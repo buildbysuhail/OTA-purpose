@@ -13,6 +13,8 @@ import {
   PartialTransactionFormFields,
   UnitByBatchDetailsDto,
   ColumnModel,
+  SettlementDetails,
+  CouponDetails,
 } from "./transaction-types";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
 import { UserAction } from "../../../helpers/user-right-helper";
@@ -289,7 +291,64 @@ const InvTransactionSlice = createSlice({
       })
       
     },
-
+    // UPi Add row
+    formStateTransactionUpiAddRowsAddSingle: (
+        state,
+        action: PayloadAction<SettlementDetails>
+      ) => {
+        state.transaction.uPIDetails.push(action.payload);
+    },
+    // Upi Remove row
+    formStateTransactionUpiRemoveRow: (
+      state,
+      action: PayloadAction<{
+        index: number;
+      }>
+    ) => {
+      const index = action.payload.index;
+      if (index >= 0 && index < state.transaction.uPIDetails.length) {
+        state.transaction.uPIDetails.splice(index, 1);
+      }
+    },
+    // bank card Add row
+    formStateTransactionBankCardAddRowsAddSingle: (
+        state,
+        action: PayloadAction<SettlementDetails>
+      ) => {
+        state.transaction.bankCardDetails.push(action.payload);
+    },
+    // Upi Remove row
+    formStateTransactionBankCardRemoveRow: (
+      state,
+      action: PayloadAction<{
+        index: number;
+      }>
+    ) => {
+      const index = action.payload.index;
+      if (index >= 0 && index < state.transaction.bankCardDetails.length) {
+        state.transaction.bankCardDetails.splice(index, 1);
+      }
+    },
+    // Coupon Add row
+    formStateTransactionCouponAddRowsAddSingle: (
+        state,
+        action: PayloadAction<CouponDetails>
+      ) => {
+        state.transaction.couponDetails.push(action.payload);
+        
+      },
+    // Coupon delete row
+    formStateTransactionCouponRemoveRow: (
+      state,
+      action: PayloadAction<{
+        index: number;
+      }>
+    ) => {
+      const index = action.payload.index;
+      if (index >= 0 && index < state.transaction.couponDetails.length) {
+        state.transaction.couponDetails.splice(index, 1);
+      }
+    },
     // Add multiple rows to the transaction details
     formStateTransactionDetailsRowsEmptyAdd: (
       state,
@@ -809,7 +868,6 @@ const InvTransactionSlice = createSlice({
     resetState: () => TransactionFormStateInitialData,
   },
 });
-
 export const {
   formStateSet,
   templatesData,
@@ -843,7 +901,13 @@ export const {
   reOrderGridCols,
   formStateDeleteDetails,
   resetState,
-  themeChangeCountdownTick
+  themeChangeCountdownTick,
+  formStateTransactionUpiAddRowsAddSingle,
+  formStateTransactionUpiRemoveRow,
+  formStateTransactionCouponAddRowsAddSingle,
+  formStateTransactionCouponRemoveRow,
+  formStateTransactionBankCardAddRowsAddSingle,
+  formStateTransactionBankCardRemoveRow,
 } = InvTransactionSlice.actions;
 interface FormElementsState {
   formElements: {

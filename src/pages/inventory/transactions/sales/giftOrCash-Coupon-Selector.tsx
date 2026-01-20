@@ -4,12 +4,13 @@ import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import { Plus, Trash2 } from "lucide-react";
-import { TransactionFormState } from "../transaction-types";
-import { formStateHandleFieldChangeKeysOnly } from "../reducer";
+import { CouponDetails, TransactionFormState } from "../transaction-types";
+import { formStateHandleFieldChangeKeysOnly, formStateTransactionCouponAddRowsAddSingle, formStateTransactionCouponRemoveRow } from "../reducer";
 import { useDispatch } from "react-redux";
 import Urls from "../../../../redux/urls";
 import { APIClient } from "../../../../helpers/api-client";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
+import { initialCouponDetails } from "../transaction-type-data";
 
 interface GiftOrCashCouponSelectorProps {
   closeModal: () => void;
@@ -31,15 +32,14 @@ const GiftOrCashCouponSelector: React.FC<GiftOrCashCouponSelectorProps> = ({ clo
   //   const formState = useSelector((state: RootState) => state.InventoryTransaction);
   const dispatch = useDispatch()
   const billAmount = formState.transaction.master.grandTotal;
-  const lblTotalAmt = formState.transaction.couponDetails.totalAmount;
-  const [couponRows, setCouponRows] = useState<CouponRow[]>([]);
+  const lblTotalAmt = formState.transaction.master.couponAmt;
+  const [couponRow, setCouponRow] = useState<CouponDetails>(initialCouponDetails);
 
   // Calculate total amount from grid rows
-  const totalAmount = couponRows.reduce((sum, row) => sum + (Number(row.amount) || 0), 0);
+  const totalAmount = formState.transaction.couponDetails.reduce((sum, row) => sum + (Number(row.amount) || 0), 0);
 
   const handleDeleteClick = (rowIndex: number) => {
-    setCouponRows(prevRows => prevRows.filter((_, index) => index !== rowIndex));
-    // CalculateTotal();
+    dispatch(formStateTransactionCouponRemoveRow({index: rowIndex}))
   };
 
 
@@ -54,7 +54,7 @@ const GiftOrCashCouponSelector: React.FC<GiftOrCashCouponSelectorProps> = ({ clo
       width: 100,
     },
     {
-      dataField: "type",
+      dataField: "cardType",
       caption: t("type"),
       dataType: "string",
       allowSorting: true,
@@ -63,7 +63,7 @@ const GiftOrCashCouponSelector: React.FC<GiftOrCashCouponSelectorProps> = ({ clo
       width: 250,
     },
     {
-      dataField: "name",
+      dataField: "cardHolderName",
       caption: t("name"),
       dataType: "string",
       allowSorting: true,
@@ -72,7 +72,7 @@ const GiftOrCashCouponSelector: React.FC<GiftOrCashCouponSelectorProps> = ({ clo
       width: 250,
     },
     {
-      dataField: "cNumber",
+      dataField: "cardNumber",
       caption: t("c_number"),
       dataType: "string",
       allowSorting: true,
@@ -116,8 +116,8 @@ const GiftOrCashCouponSelector: React.FC<GiftOrCashCouponSelectorProps> = ({ clo
   ];
 
   const handleCouponNumberKeydown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter' && formState.transaction.couponDetails?.cardNumber.trim() !== "" ) {
-          const enteredCardNumber = formState.transaction.couponDetails?.cardNumber;
+        if (e.key === 'Enter' && couponRow?.cardNumber.trim() !== "" ) {
+          const enteredCardNumber = couponRow?.cardNumber;
           const res = await api.getAsync(`${Urls.inv_transaction_base}${formState.transactionType}/PrivilegeCard/${enteredCardNumber}`);
           if(res){
             if(res.cardType === "Gift Card" || res.cardType === "Cash Card" || res.cardType === "Voucher"){
@@ -130,21 +130,15 @@ const GiftOrCashCouponSelector: React.FC<GiftOrCashCouponSelectorProps> = ({ clo
                 });
                return;
               }
-              dispatch(
-                formStateHandleFieldChangeKeysOnly({
-                  fields: {
-                    transaction: {
-                      couponDetails: {
-                        cardHolderName: res.cardHolderName,
-                        cardType: res.cardType,
-                        cardID: res.privilegeCardsID,
-                        amount: res.cardBalance,
-                        oBalance: res.oBalance
-                      },
-                    },
-                  },
+              setCouponRow((prev:CouponDetails)=> { 
+                return {
+                  ...prev,
+                  cardHolderName: res.cardHolderName,
+                  cardType: res.cardType,
+                  cardID: res.privilegeCardsID,
+                  amount: res.cardBalance,
+                  oBalance: res.oBalance}
                 })
-              );
               if(billAmount - lblTotalAmt <= 0 ){
                 ERPAlert.show({
                   icon: "info",
@@ -155,18 +149,13 @@ const GiftOrCashCouponSelector: React.FC<GiftOrCashCouponSelectorProps> = ({ clo
                 return;
               }
               debugger;
-              if(billAmount - totalAmount < billAmount){
-                dispatch(
-                formStateHandleFieldChangeKeysOnly({
-                  fields: {
-                    transaction: {
-                      couponDetails: {
-                        amount: billAmount -totalAmount,
-                      },
-                    },
-                  },
-                })
-              );
+              if(billAmount - totalAmount < res.cardBalance){
+                setCouponRow((prev: any) => {
+                    return {
+                      ...prev,
+                       amount: billAmount-totalAmount
+                    }
+                  })
 
               }
             }else{
@@ -190,10 +179,10 @@ const GiftOrCashCouponSelector: React.FC<GiftOrCashCouponSelectorProps> = ({ clo
       
 
         const handleAddBtnClick = () => { 
-            const exists = couponRows.some(
+            const exists = formState.transaction.couponDetails.some(
               row =>
-                row.cardID === String(formState.transaction.couponDetails.cardID) &&
-                formState.transaction.couponDetails.cardType !== "Voucher"
+                row.cardID === (couponRow.cardID) &&
+                couponRow.cardType !== "Voucher"
             );
 
             if (exists) {
@@ -205,28 +194,8 @@ const GiftOrCashCouponSelector: React.FC<GiftOrCashCouponSelectorProps> = ({ clo
               return;
             }
 
-            const newRow: CouponRow = {
-              cardID: String(formState.transaction.couponDetails.cardID),
-              name: formState.transaction.couponDetails.cardHolderName,
-              amount: formState.transaction.couponDetails.amount,
-              cNumber: formState.transaction.couponDetails.cardNumber,
-              type: formState.transaction.couponDetails.cardType,
-            };
-
-            setCouponRows(prev => [...prev, newRow]);
-
             dispatch(
-                formStateHandleFieldChangeKeysOnly({
-                  fields: {  transaction:{
-                      couponDetails:{
-                        cardNumber: "",
-                        amount: 0,
-                        cardHolderName: "",
-                        cardType: "",
-                        oBalance: 0,
-                    }
-                    }},
-                })
+                formStateTransactionCouponAddRowsAddSingle(couponRow)
               )
         }
 
@@ -259,18 +228,15 @@ const GiftOrCashCouponSelector: React.FC<GiftOrCashCouponSelectorProps> = ({ clo
             className="w-60"
             label={t("coupon_card_number")}
             onKeyDown={(e) => handleCouponNumberKeydown(e)}
-            value={formState.transaction.couponDetails.cardNumber}     
+            value={couponRow.cardNumber}     
             disableEnterNavigation        
             onChange={(e) =>
-              dispatch(
-                formStateHandleFieldChangeKeysOnly({
-                  fields: {  transaction:{
-                      couponDetails:{
-                        cardNumber:e.target?.value
+              setCouponRow((prev: any) => {
+                    return {
+                      ...prev,
+                       cardNumber: e.target?.value
                     }
-                    }},
-                })
-              )
+                  })
             }
           />
           <ERPInput
@@ -278,17 +244,14 @@ const GiftOrCashCouponSelector: React.FC<GiftOrCashCouponSelectorProps> = ({ clo
             type="number"
             className="w-60"
             label={t("amount")}
-            value={formState.transaction.couponDetails.amount}             
+            value={couponRow.amount}             
             onChange={(e) =>
-              dispatch(
-                formStateHandleFieldChangeKeysOnly({
-                  fields: {  transaction:{
-                      couponDetails:{
-                        amount:e.target?.value
+              setCouponRow((prev: any) => {
+                    return {
+                      ...prev,
+                       amount: e.target?.value
                     }
-                    }},
-                })
-              )
+                  })
             }
           />
           <div>
@@ -310,21 +273,21 @@ const GiftOrCashCouponSelector: React.FC<GiftOrCashCouponSelectorProps> = ({ clo
         <div className="flex flex-row justify-around w-full">
           {/* <div className="text-[#ff0000] font-medium">{formState.transaction.couponDetails.cardID === 0 ? t("card_id") : formState.transaction.couponDetails.cardID }</div> */}
           <div className="text-[#ff0000] font-medium">
-            {formState.transaction.couponDetails.cardHolderName === ""
+            {couponRow.cardHolderName === ""
               ? t("name")
-              : `${t("name")} : ${formState.transaction.couponDetails.cardHolderName}`}
+              : `${t("name")} : ${couponRow.cardHolderName}`}
           </div>
 
           <div className="text-[#ff0000] font-medium">
-            {formState.transaction.couponDetails.cardType === ""
+            {couponRow.cardType === ""
               ? t("type")
-              : `${t("type")} : ${formState.transaction.couponDetails.cardType}`}
+              : `${t("type")} : ${couponRow.cardType}`}
           </div>
 
           <div className="text-[#ff0000] font-medium">
-            {formState.transaction.couponDetails.oBalance === 0
+            {couponRow.oBalance === 0
               ? t("ob")
-              : `${t("ob")} : ${Number(formState.transaction.couponDetails.oBalance).toFixed(2)}`}
+              : `${t("ob")} : ${Number(couponRow.oBalance).toFixed(2)}`}
           </div>
 
         </div>
@@ -332,9 +295,9 @@ const GiftOrCashCouponSelector: React.FC<GiftOrCashCouponSelectorProps> = ({ clo
           <ErpDevGrid
             columns={gridColumns}
             keyExpr="cardID"
-            data={couponRows}
+            data={formState.transaction.couponDetails}
             //   dataUrl={`${Urls.inv_transaction_base}${formState.transactionType}/LedgerList/${salesRoute && mainSalesRoute ? mainSalesRoute : 0}`}
-            gridId="ledgerDetailsGrid"
+            gridId="giftOrCashCouponGrid"
             height={300}
             hideGridAddButton={true}
             columnHidingEnabled={true}

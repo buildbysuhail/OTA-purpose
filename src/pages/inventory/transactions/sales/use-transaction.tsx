@@ -1553,6 +1553,9 @@ export const useTransaction = (
         invAccTransactions: formState.transaction.invAccTransactions,
         pendingOrderListMasterIDs: formState.pendingOrdListMasterIDs,
         PendingOrderListBranchIDs: formState.pendingOrdListBranchIDs,
+        couponDetails: formState.transaction.couponDetails,
+        upiDetails: formState.transaction.uPIDetails,
+        bankCardDetails: formState.transaction.bankCardDetails
       };
 
       params = sanitizeDataAdvanced(params, transactionInitialData);

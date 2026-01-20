@@ -180,9 +180,9 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
 
   const handleChange = (value: string) => {
     dispatch(formStateHandleFieldChangeKeysOnly({
-      fields:{
-        transaction:{
-          master:{
+      fields: {
+        transaction: {
+          master: {
             cashrOrCredit: value
           }
         }
@@ -735,8 +735,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       dispatch(
                         formStateHandleFieldChangeKeysOnly({
                           fields: {
-                            transaction:{
-                              master:{
+                            transaction: {
+                              master: {
                                 master2: {
                                   notes1: e.target.value,
                                 },
@@ -758,10 +758,10 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       dispatch(
                         formStateHandleFieldChangeKeysOnly({
                           fields: {
-                            transaction:{
-                              master:{
+                            transaction: {
+                              master: {
                                 master2: {
-                                   notes2: e.target.value,
+                                  notes2: e.target.value,
                                 },
                               }
                             }
@@ -772,7 +772,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   />
                 )}
 
-                {userSession.dbIdValue == "SEMAKA" && (
+                {userSession.dbIdValue == "SEMAKA" && formState.transaction.master.voucherType == VoucherType.SalesInvoice && (
                   <div className="flex items-end gap-3 ml-2">
                     <ERPRadio
                       id="cash"
@@ -810,46 +810,48 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     disabled={formState.formElements.pnlMasters?.disabled}
                   />
                 )}
-
-                <div className="flex items-end gap-2">
-                  <ERPCheckbox
-                    localInputBox={formState?.userConfig?.inputBoxStyle}
-                    id="draftMode"
-                    className="text-left !m-0 dark:text-dark-text"
-                    label={t(formState.formElements.draftMode?.label)}
-                    checked={formState.draftMode}
-                    onChange={(e) => {
-                      dispatch(
-                        formStateHandleFieldChange({
-                          fields: { draftMode: e.target.checked },
-                        })
-                      );
-                    }}
-                    disabled={formState.formElements.pnlMasters?.disabled}
-                  />
-                  <button
-                    disabled={!formState.draftMode}
-                    onClick={handleDraftModeOpen}
-                    className={`bg-gray-300 p-2 rounded-md transition duration-300 flex-shrink-0   ${!formState.draftMode ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-md'}`}>
-                    <ArrowBigDownDash className="w-4 h-4" />
-                  </button>
-
-                  {formState.draftModeModal && (
-                    <ERPModal
-                      isOpen={formState.draftModeModal}
-                      closeModal={handleDraftModeClose}
-                      title={t('draft_mode')}
-                      width={800}
-                      height={500}
-                      content={
-                        <DraftMode
-                          closeModal={handleDraftModeClose}
-                          t={t}
-                        />
-                      }
+                {(formState.transaction.master.voucherType == VoucherType.SalesInvoice &&
+                  <div className="flex items-end gap-2">
+                    <ERPCheckbox
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                      id="draftMode"
+                      className="text-left !m-0 dark:text-dark-text"
+                      label={t(formState.formElements.draftMode?.label)}
+                      checked={formState.draftMode}
+                      onChange={(e) => {
+                        dispatch(
+                          formStateHandleFieldChange({
+                            fields: { draftMode: e.target.checked },
+                          })
+                        );
+                      }}
+                      disabled={formState.formElements.pnlMasters?.disabled}
                     />
-                  )}
-                </div>
+                    <button
+                      disabled={!formState.draftMode}
+                      onClick={handleDraftModeOpen}
+                      className={`bg-gray-300 p-2 rounded-md transition duration-300 flex-shrink-0   ${!formState.draftMode ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-md'}`}>
+                      <ArrowBigDownDash className="w-4 h-4" />
+                    </button>
+
+                    {formState.draftModeModal && (
+                      <ERPModal
+                        isOpen={formState.draftModeModal}
+                        closeModal={handleDraftModeClose}
+                        title={t('draft_mode')}
+                        width={800}
+                        height={500}
+                        content={
+                          <DraftMode
+                            closeModal={handleDraftModeClose}
+                            t={t}
+                          />
+                        }
+                      />
+                    )}
+                  </div>
+                )}
+
 
                 {formState.transaction.master.voucherType ===
                   VoucherType.PurchaseReturn && (
@@ -953,46 +955,49 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     />
                   )}
 
-                {formState.transaction.master.voucherType !=
-                  VoucherType.PurchaseOrder && (
-                    <div>
-                      <ERPButton
-                        title={t("more")}
-                        variant="secondary"
-                        onClick={handleMoreButtonClick}
-                        disabled={formState.transactionLoading}
-                        className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
-                      />
-                    </div>
-                  )}
-                {isMoreModalOpen && (
-                  <ERPModal
-                    isOpen={isMoreModalOpen}
-                    title={t("more_options")}
-                    width={710}
-                    height={450}
-                    closeModal={closeMoreModal}
-                    closeOnEscape={true}
-                    content={
-                      <MoreOptionsModalContent
-                        transactionType={transactionType}
-                        loadAndSetTransVoucher={loadAndSetTransVoucher}
-                        formState={formState}
-                        dispatch={dispatch}
-                        handleFieldChange={handleFieldChange}
-                        t={t}
-                      />
-                    }
+                {([VoucherType.SalesInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(formState.transaction.master.voucherType as any) &&
+                  <div>
+                    <ERPButton
+                      title={t("more")}
+                      variant="secondary"
+                      onClick={handleMoreButtonClick}
+                      disabled={formState.transactionLoading}
+                      className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+                    />
+                  </div>
+                )}
+                {([VoucherType.SalesInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(formState.transaction.master.voucherType as any) &&
+                  isMoreModalOpen && (
+                    <ERPModal
+                      isOpen={isMoreModalOpen}
+                      title={t("more_options")}
+                      width={710}
+                      height={450}
+                      closeModal={closeMoreModal}
+                      closeOnEscape={true}
+                      content={
+                        <MoreOptionsModalContent
+                          transactionType={transactionType}
+                          loadAndSetTransVoucher={loadAndSetTransVoucher}
+                          formState={formState}
+                          dispatch={dispatch}
+                          handleFieldChange={handleFieldChange}
+                          t={t}
+                        />
+                      }
+                    />
+                  )
+                )}
+                {(formState.transaction.master.voucherType == VoucherType.SalesInvoice &&
+
+                  <ERPButton
+                    title={t("w_stock")}
+                    variant="secondary"
+                    disabled={formState.transactionLoading}
+                    className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+                    onClick={handleWStockList}
                   />
                 )}
-                <ERPButton
-                  title={t("w_stock")}
-                  variant="secondary"
-                  disabled={formState.transactionLoading}
-                  className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
-                  onClick={handleWStockList}
-                />
-
                 {formState.wStockListOpen && (
                   <ERPModal
                     isOpen={formState.wStockListOpen}
@@ -1490,16 +1495,16 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     />
                   )}
 
-                {formState.transaction.master.voucherType !=
-                  VoucherType.PurchaseOrder && (
-                    <ERPButton
-                      title={t("more")}
-                      variant="secondary"
-                      onClick={handleMoreButtonClick}
-                      className=" dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
-                      disabled={formState.transactionLoading}
-                    />
-                  )}
+                {([VoucherType.SalesInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(formState.transaction.master.voucherType as any) &&
+
+                  <ERPButton
+                    title={t("more")}
+                    variant="secondary"
+                    onClick={handleMoreButtonClick}
+                    className=" dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+                    disabled={formState.transactionLoading}
+                  />
+                )}
               </div>
 
               {/* Modals */}
@@ -1536,26 +1541,28 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   }
                 />
               )}
-
-              {isMoreModalOpen && (
-                <ERPModal
-                  isOpen={isMoreModalOpen}
-                  title={t("more_options")}
-                  width={650}
-                  height={600}
-                  closeModal={closeMoreModal}
-                  content={
-                    <MoreOptionsModalContent
-                      transactionType={transactionType}
-                      formState={formState}
-                      dispatch={dispatch}
-                      handleFieldChange={handleFieldChange}
-                      loadAndSetTransVoucher={loadAndSetTransVoucher}
-                      t={t}
-                    />
-                  }
-                />
-              )}
+              {
+                isMoreModalOpen && (
+                  <ERPModal
+                    isOpen={isMoreModalOpen}
+                    title={t("more_options")}
+                    width={710}
+                    height={450}
+                    closeModal={closeMoreModal}
+                    closeOnEscape={true}
+                    content={
+                      <MoreOptionsModalContent
+                        transactionType={transactionType}
+                        loadAndSetTransVoucher={loadAndSetTransVoucher}
+                        formState={formState}
+                        dispatch={dispatch}
+                        handleFieldChange={handleFieldChange}
+                        t={t}
+                      />
+                    }
+                  />
+                )
+              }
 
               {/* Conditional Footer Components */}
               {conditionalFooterComponents}

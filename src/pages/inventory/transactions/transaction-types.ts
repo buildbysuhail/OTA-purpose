@@ -503,7 +503,6 @@ export interface UserConfig {
   enableVoucherPrefixAndDate?: boolean;
   showCustomersAfterSales?: boolean;
   UserSalesPriceForTransfer?: boolean;
-  gatePass?: boolean;
   showSrInProductInfoPopup?: boolean;
   setDefaultCashPaid?: boolean;
   showProductInfoPopupForSq?: boolean;
@@ -758,7 +757,7 @@ export interface TransactionFormState {
   skipZeroQty: boolean;
   isUserConfigOpen?: boolean;
   privConfig?: string;
-  printGatepass?: boolean;
+  gatePassPrint?: boolean;
   lastChoosedTemplate?: { id?: number, group?: string, formType?: string, customerType?: string }; // nizam
   itemPopup?: { isOpen?: boolean, index?: number }
   taxBreakdown?: { name: string, amount: number }[];

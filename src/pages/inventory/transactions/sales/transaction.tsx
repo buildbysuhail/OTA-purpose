@@ -1246,7 +1246,7 @@ debugger;
         applicationSettings.printerSettings?.printSelectedGatePass ||
         applicationSettings.printerSettings?.printGatePass
       ) {
-        _formState.printGatepass = true;
+        _formState.gatePassPrint = true;           
         _formState.formElements = {
           ..._formState.formElements,
           chkPrintGatepass: {
@@ -1255,7 +1255,7 @@ debugger;
           }
         } as any;
       } else {
-        _formState.printGatepass = false;
+        _formState.gatePassPrint = false;
         _formState.formElements = {
           ..._formState.formElements,
           chkPrintGatepass: {

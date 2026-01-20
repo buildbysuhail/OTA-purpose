@@ -1949,7 +1949,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         lastSelectedWareHouseIdOfItemPopUpsSearch:
           await _lastSelectedWarehouseIDOfItemPopupsSearch,
         priceCategoryId: formState.transaction.master.priceCategoryID,
-        isPrintGatepassChecked: formState.userConfig?.gatePass,
+        isPrintGatepassChecked: formState.gatePassPrint,
         lsAlowExcessCashReceipt: formState.userConfig?.allowExcessCashReceipt,
         lsBlockZeroFigureEntry: formState.userConfig?.blockZeroFigureEntry,
         lsBlockNonStockItemInSO: formState.userConfig?.blockNonStockItemsSO,

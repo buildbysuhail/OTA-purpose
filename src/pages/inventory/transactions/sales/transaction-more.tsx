@@ -178,6 +178,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({ formS
                   </label>
                   <div className="flex items-center flex-1">
                     <OrderNo
+                      type="number"
                       formState={formState}
                       dispatch={dispatch}
                       t={t}
@@ -212,6 +213,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({ formS
                     {t("quotation_no")} :
                   </label>
                   <ERPInput
+                    type="number"
                     id="quotationNumber"
                     noLabel={true}
                     value={quotationNumberValue}
@@ -245,6 +247,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({ formS
                     {t("pi_inv_no")} :
                   </label>
                   <ERPInput
+                    type="number"
                     id="purchaseInvoiceNumber"
                     noLabel={true}
                     value={purchaseInvoiceNumberValue}
@@ -388,6 +391,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({ formS
                   </label>
                   <ERPInput
                     noLabel={true}
+                    type="number"
                     id="salesManIncentive"
                     value={salesManIncentiveValue}
                     className="w-full sm:w-20 h-6 text-xs"

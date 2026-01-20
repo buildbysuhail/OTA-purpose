@@ -59,6 +59,7 @@ export interface TransactionData {
   uPIDetails: List<SettlementDetails>[]; //new
   eInvoiceStatus?: string
   ewbStatus?: string
+  postedTransactionLabel?: string
 }
 
 export interface InvAccTransaction {

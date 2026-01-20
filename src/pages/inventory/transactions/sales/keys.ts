@@ -72,3 +72,4 @@
 //gstin  
 //pin_code  
 //state_code  
+//posted_transaction

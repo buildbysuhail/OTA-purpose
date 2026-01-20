@@ -486,6 +486,8 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   eWBLabel: { visible: true, disabled: false, label: "" }, 
   btnEinvoice: { visible: true, disabled: false, label: "" }, 
   einvoiceLabel: { visible: true, disabled: false, label: "" }, 
+  postedTransactionLabel: { visible: false, disabled: false, label: "" }, 
+  sRAmountLabel: { visible: false, disabled: false, label: "" }, 
 
   // Need to verify the below 6
   lblProject: { visible: false, disabled: false, label: "" },

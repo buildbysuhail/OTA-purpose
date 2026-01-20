@@ -1166,7 +1166,33 @@
   "order_details":"Order Details",
   "pending_list":"Pending List",
   "duplicate_voucher":"Duplicate Voucher",
-  "duplicate_order":"Duplicate Order"
+  "duplicate_order":"Duplicate Order",
+
+  "sales_price_less_than_the_minimum_sales_price, Do_you_want_to_continue?":"Sales Price Less than Min Sales Price, Do you Want to Continue ?",
+  "sales_price_less_than_purchase_price.do_you_want_to_continue?":"Sales Price Less than Purchase Price, Do you Want to Continue ?",
+  "sales_price_less_than_min_sales_price":"Sales Price Less than Min Sales Price",
+  "sales_price_less_than_purchase_price":"Sales Price Less than Purchase Price",
+  "available_stock":"Available Stock :",
+  "shortage":"shortage",
+  "zero_rate_or_quantity_entered_please_check!":"Zero rate or quantity entered,please check!",
+  "gift_Product":"Gift Product",
+  "gift_product_added! Please_remove_and_continue":"Gift Product added! Please Remove and Continue",
+  "upi_amount_greater_than_balance_amount":"UPI Amount Is Greater Than Balance Amount",
+  "please_check_balance_amount":"Please Check Balance Amount",
+  "card_amount_is_greater_than_balance_amount":"CardAmount Is Greater Than Balance Amount",
+  "invalid_balance_amount!":"Invalid balance amount!",
+  "balance_amount_is_pending!":"Balance Amount Is Pending!",
+  "excess_amount_entered!":"Excess Amount Entered!",
+  "wrong_discount_entered":"Wrong Discount entered.",
+  "insufficient_amount_received!":"insufficient_amount_received!",
+  "qr_pay":"QRPay",
+  "qr_pay_type":"QRPay Type",
+  "qr_pay_amount":"QRPay Amount",
+  "upi_type":"UPI Type",
+  "upi_type_id":"UPITypeID",
+  "card_type_id":"CardTypeID",
+  "card_type":"CardType",
+  "bank_cards":"Bank Cards"
 
 
 

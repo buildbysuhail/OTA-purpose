@@ -4,7 +4,7 @@ import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPDataComboBox from "../../../../components/ERPComponents/erp-data-combobox";
-import { ChevronUp, Trash2 } from "lucide-react";
+import { ChevronDown, Trash2 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
 import { useSelector } from "react-redux";
@@ -24,22 +24,16 @@ interface TenderProps {
 }
 
 const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
-  const [discEnabled, setDiscEnabled] = useState<boolean>(false);
+  const [discEnabled, setDiscEnabled] = useState<boolean>(true);
   const [ledgerEnabled, setLedgerEnabled] = useState<boolean>(false);
   const [discAmount, setDiscAmount] = useState<number>(0);
   const [discPercent, setDiscPercent] = useState<number>(0);
-  // const [taxOnDisc, setTaxOnDisc] = useState<string>("");
   const [taxOnDiscAmount, setTaxOnDiscAmount] = useState<number>(0);
-
-  // const [upiEnabled, setUpiEnabled] = useState<boolean>(false);
   const [cardAmt, setCardAmt] = useState<number>(0);
-  // const [bankAcEnabled, setBankAcEnabled] = useState<boolean>(false);
-  // const [bankAc, setBankAc] = useState<string>("");
   const [balance, setBalance] = useState<number>(0);
   const formState = useSelector((state:RootState) => state.InventoryTransaction)
   const discAmountRef = useRef<HTMLInputElement>(null);
 
-  // Newly added for tender
   const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
   const clientSession = useAppSelector((state: RootState) => state.ClientSession);
   const [couponAmt, setCouponAmt] = useState(0);
@@ -53,7 +47,6 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
   const [uPIDetails, setUPIDetails] = useState<SettlementDetails>(initialSettlement);
   const [bankCardDetails, setBankCardDetails] = useState<SettlementDetails>(initialSettlement);
   const [paymentMode, setPaymentMode] = useState<"CARD" | "UPI" | null>(null);
-  const [selectedLedgerId, setSelectedLedgerId] = useState<number | null>(null);
   const totalQrPayAmount =formState.transaction.uPIDetails?.reduce((sum: number, row: SettlementDetails) => sum + Number(row.amount || 0), 0 ) || 0;
   const totalBankCardAmount =formState.transaction.bankCardDetails?.reduce((sum: number, row: SettlementDetails) => sum + Number(row.amount || 0), 0 ) || 0;
   let isBillEdited = formState.transaction.master.invTransactionMasterID > 0  // Found in 1050, but check is using
@@ -73,7 +66,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
         }
       }
     } catch (err) {
-      // silent catch – same as C#
+      console.log(err)
     }
     return maxTaxPerc;
   }
@@ -94,8 +87,13 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
     }else{
       setMaxTaxPercentage(0);
     }
+    // Attach the master cash received value
     if(Number(formState.transaction.master.cashReceived) > 0 ){
       setCashRcvd(Number(formState.transaction.master.cashReceived))
+    }
+    // Attach the master discount value
+    if(Number(formState.transaction.master.billDiscount) > 0 ){
+      setDiscAmount(Number(formState.transaction.master.billDiscount))
     }
     
 
@@ -108,13 +106,11 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
 
     useEffect(() => {
     let calculatedNetTotal = (total + addAmount + roundOf) - (couponAmt);
-    if (discEnabled) {
-      calculatedNetTotal = total - discAmount + taxOnDiscAmount;
-    }
+    calculatedNetTotal = total - discAmount + taxOnDiscAmount;
     setNetTotal(calculatedNetTotal);
     // Calculate balance
     const totalReceived = cashRcvd;
-    setBalance(Math.abs(calculatedNetTotal-(totalReceived + totalQrPayAmount + totalBankCardAmount)));
+    setBalance(calculatedNetTotal-(totalReceived + totalQrPayAmount + totalBankCardAmount));
   }, [total, discAmount, taxOnDiscAmount, cashRcvd, totalQrPayAmount, totalBankCardAmount]);
 
   const handleAddCashClick =()=>{
@@ -195,22 +191,15 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
     },
     {
       dataField: "paymentTypeID",
-      caption: t("upi_type_id"),
+      caption: t("card_type_id"),
       dataType: "string",
       allowSorting: true,
       width: 45,
-    },
-    {
-      dataField: "paymentType",
-      caption: t("upi_type"),
-      dataType: "string",
-      allowSorting: true,
       visible: false,
-      width: 45,
     },
     {
       dataField: "paymentName",
-      caption: t("upi_type"),
+      caption: t("card_type"),
       dataType: "string",
       allowSorting: true,
       width: 45,
@@ -264,7 +253,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
     },
     {
       dataField: "paymentTypeID",
-      caption: t("upi_type"),
+      caption: t("upi_type_id"),
       dataType: "string",
       allowSorting: true,
       width: 45,
@@ -300,59 +289,63 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
   },
   ]
 
-  const handleQRPayAddClick = () => {
+  const upiValidate = () =>{
     if(uPIDetails?.amount > balance ){
       ERPAlert.show({
         icon: "info",
-        title: t(""),
+        title: t("upi_amount_greater_than_balance_amount"),
         showCancelButton: false,
-        text: t("upi_amount_greater_than_balance_amount"),
+        text: t(""),
         confirmButtonText: t("ok"),
-        onConfirm: ()=> { return }
       });
-      return;
+      return false;
     }
-    if(uPIDetails?.amount > 0 ){
-      const newUpiRow: SettlementDetails = {
-        ...uPIDetails,
-        ledgerId: formState.transaction.master.ledgerID
-      };
-      dispatch(formStateTransactionUpiAddRowsAddSingle(newUpiRow));
+    return true;
+  }
+
+  const handleQRPayAddClick = () => {
+    const validate = upiValidate()
+    if(validate){
+      if(uPIDetails?.amount > 0 ){
+      dispatch(formStateTransactionUpiAddRowsAddSingle(uPIDetails));
     }else{
       ERPAlert.show({
         icon: "info",
-        title: t(""),
+        title: t("please_check_balance_amount"),
         showCancelButton: false,
-        text: t("please_check_balance_amount"),
+        text: t(""),
         confirmButtonText: t("ok"),
-        onConfirm: ()=> { return }
+        onConfirm: ()=> { return false }
       });
+      return false;
     }
+  }
   }
 
   const handleBankCardAddClick =()=> {
     if(bankCardDetails?.amount > balance ){
       ERPAlert.show({
         icon: "info",
-        title: t(""),
-        text: t("card_amount_is_greater_than_balance_amount"),
+        title: t("card_amount_is_greater_than_balance_amount"),
+        text: t(""),
         confirmButtonText: t("ok"),
         showCancelButton: false,
-        onConfirm: ()=> { return }
+        onConfirm: ()=> { return false }
       });
-      return;
+      return false;
     }
     if(bankCardDetails?.amount > 0 ){
       dispatch(formStateTransactionBankCardAddRowsAddSingle(bankCardDetails));
     }else{
       ERPAlert.show({
         icon: "info",
-        title: t(""),
+        title: t("please_check_balance_amount"),
         showCancelButton: false,
-        text: t("please_check_balance_amount"),
+        text: t(""),
         confirmButtonText: t("ok"),
-        onConfirm: ()=> { return }
+        onConfirm: ()=> { return false }
       });
+      return false;
     }
     
   }
@@ -361,65 +354,60 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
     if (isNaN(balance)) {
       ERPAlert.show({
         icon: "info",
-        title: t(""),
+        title: t("invalid_balance_amount!"),
         showCancelButton: false,
-        text: t("invalid_balance_amount!"),
+        text: t(""),
         confirmButtonText: t("ok"),
         onConfirm: ()=> { return false; }
       });
+      return false;
     }
     if(!isCreditable && balance > 0 ){
       ERPAlert.show({
         icon: "info",
-        title: t(""),
+        title: t("balance_amount_is_pending!"),
         showCancelButton: false,
-        text: t("balance_amount_is_pending!"),
+        text: t(""),
         confirmButtonText: t("ok"),
-        onConfirm: ()=> { return false;}
+        onConfirm: ()=> { return false}
       });
+      return false;
     }
     if(isCreditable && !isExcessCashRcpt && balance < 0 ){
       ERPAlert.show({
         icon: "info",
-        title: t(""),
+        title: t("excess_amount_entered!"),
         showCancelButton: false,
-        text: t("excess_amount_entered!"),
+        text: t(""),
         confirmButtonText: t("ok"),
         onConfirm: ()=> { return false; }
       });
+      return false;
     }
-    return true;
-  }
-
-
-
-  const handleApply = () => {
-    const validate = validateAmount()
-    if(validate){
-      if(total > 0){
+    if(total > 0){
         if(discAmount > total){
           ERPAlert.show({
             icon: "info",
-            title: t(""),
+            title: t("wrong_discount_entered"),
             showCancelButton: false,
-            text: t("wrong_discount_entered"),
+            text: t(""),
             confirmButtonText: t("ok"),
             onConfirm: ()=> { return false; }
           });
-          return
+          return false
         }
       }
       if(isCreditable === false){
         if(balance > 0 && (cashRcvd + totalBankCardAmount + totalQrPayAmount) > 0){
           ERPAlert.show({
             icon: "info",
-            title: t(""),
+            title: t("insufficient_amount_received!"),
             showCancelButton: false,
-            text: t("insufficient_amount_received!"),
+            text: t(""),
             confirmButtonText: t("ok"),
             onConfirm: ()=> { return false; }
           });
-          return;
+          return false;
         }
       }
       if(cashRcvd === 0){
@@ -427,6 +415,12 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
           setCashRcvd(0)
         }
       }
+      return true;
+  }
+
+  const handleApply = () => {
+    const validate = validateAmount()
+    if(validate){
       dispatch(
         formStateHandleFieldChangeKeysOnly({
           fields: {
@@ -437,17 +431,11 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                 billDiscount: discAmount
               }
             },
-            formElements: {
-              lblBillBalance: {
-                ...formState.formElements.lblBillBalance,
-                label: balance.toFixed(2)
-              }
-            }
           },
         })
       )
+      onClose();
     }
-    onClose();
   };
 
   return (
@@ -455,13 +443,13 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
       isOpen={isOpen}
       closeModal={onClose}
       title={""}
-      width={800}
-      height={650}
+      width={ (paymentMode==="CARD" || paymentMode==="UPI") ? 800 : 450}
+      height={(paymentMode==="CARD" || paymentMode==="UPI") ? 630 : 500}
       content={
         <div className="flex flex-row gap-4">
           {/* Left Section - Form */}
           <div className="flex-1 px-4 w-1/2 max-w-1/2">
-          <h1 className="text-2xl font-bold text-purple-800 my-3 text-center">{t("tender")}</h1>
+          <h1 className="text-2xl font-bold text-purple-800 my-3 text-center">{t("tender").toUpperCase()}</h1>
             {/* Total */}
             <div className="grid grid-cols-[120px_1fr] gap-4 items-center">
               <label className="text-left sm:text-[10px] leading-[12px] font-bold md:text-lg  text-black">{t("total").toUpperCase()}</label>
@@ -493,7 +481,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                   customSize="customize"
                   type="number"
                   noLabel={true}
-                  value={discPercent}
+                  value={Number(discPercent.toFixed(2))}
                   onChange={(e) => handleDiscPercentChange(parseFloat(e.target.value) || 0)}
                   disabled={!discEnabled}
                 />
@@ -515,15 +503,6 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
             <div className="grid grid-cols-[120px_1fr] gap-4 items-center">
               <label className="text-left text-[10px] leading-[12px] font-semibold md:text-[12px] text-black">{t('tax_on_disc').toUpperCase()}</label>
               <div className="flex gap-2 items-center">
-                {/* <ERPDataComboBox
-                  id="taxOnDisc"
-                  noLabel={true}
-                  value={taxOnDisc}
-                  onChange={(value) => setTaxOnDisc(value)}
-                  options={taxOptions}
-                  disabled={!discEnabled}
-                /> */}
-                {/* This button component is available in footer, can use that component if needed */}
                 <button
                   type="button"
                   style={{
@@ -538,7 +517,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                   }}
                   onClick={handleBillDiscountDownTaxRate}
                   >
-                  <ChevronUp size={20} color="#fff" />
+                  <ChevronDown size={20} color="#fff" />
                 </button>
 
                 <ERPInput
@@ -609,9 +588,6 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
               </div>
 
               <div className="flex gap-2 items-center">
-                {/* <button className="px-2 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded">
-                  <ChevronUp size={16} />
-                </button> */}
                 <ERPInput
                   localInputBox={merge({}, initialUserConfig.inputBoxStyle, {inputHeight:2, fontSize:25, fontColor:"0, 0, 0", borderColor: '200, 200, 200'})}
                   customSize="customize"
@@ -649,13 +625,13 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
               />
             </div>
           </div>
-        {/* 😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁😁 */}
           {/* Right Section */}
             {paymentMode === "UPI" &&(
             <div className="flex flex-col flex-1 px-4 w-1/2">
 
-            <h1 className="text-2xl font-bold text-purple-800 my-2 text-center">{t("qrpay")}</h1>
+            <h1 className="text-2xl font-bold text-purple-800 my-2 text-center">{t("qr_pay")}</h1>
             <div className="flex flex-col">
+              {/*  In api call there will be default ledger */}
               <ERPDataComboBox
                 id="QrPayType"
                 label={t("qr_pay_type")}
@@ -664,24 +640,27 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                   getListUrl: `${Urls.inv_transaction_base}${formState.transactionType}/Data/UPIs`,
                   valueKey: "id",
                   labelKey: "name",
+                  nameKey: "alias", // Map alias to name property for ledgerId
                 }}
+                value={uPIDetails.paymentTypeID || -2}
                 onChange={(e) =>
                   setUPIDetails((prev: any) => {
                     return {
                       ...prev,
-                      paymentTypeID : e?.value,
-                      paymentName: e?.name
+                      paymentTypeID: e?.value,
+                      paymentName: e?.label,
+                      ledgerId: Number(e?.name) // alias value is mapped to name
                     }
                   })
                 }
               />
               <ERPInput
                 id="QrAmount"
-                localInputBox={merge({}, initialUserConfig.inputBoxStyle, {inputHeight:2, fontSize:30, marginBottom:0, fontColor:"255, 0, 0", borderColor: '200, 200, 200'})}
+                localInputBox={merge({}, initialUserConfig.inputBoxStyle, {inputHeight:2, fontSize:20, marginBottom:0, fontColor:"0, 0, 0", borderColor: '200, 200, 200'})}
                 customSize="customize"
                 type="number"
-                label={t("qrpay_amount")}
-                value={uPIDetails?.amount}             
+                label={t("qr_pay_amount")}
+                value={Number(Number(uPIDetails?.amount).toFixed(2))}
                 onChange={(e) =>
                   setUPIDetails((prev: any) => {
                     return {
@@ -720,6 +699,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
               <ErpDevGrid
                 columns={gridColumnsUpi}
                 showChooserOnGridHead
+                chooserClass="absolute z-10 pointer-events-auto mt-4"
                 data={formState.transaction.uPIDetails}
                 gridId="TenderUpiGrid"
                 height={250}
@@ -745,6 +725,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
 
             <h1 className="text-2xl font-bold text-purple-800 my-2 text-center">{t("bank_cards")}</h1>
             <div className="flex flex-col">
+              {/*  In api call there will be default ledger */}
               <ERPDataComboBox
                 id="cardType"
                 label={t("card_type")}
@@ -753,15 +734,16 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                   getListUrl: `${Urls.inv_transaction_base}${formState.transactionType}/Data/BankCards`,
                   valueKey: "id",
                   labelKey: "name",
+                  nameKey: "alias", // Map alias to name property for ledgerId
                 }}
-                
+                value={bankCardDetails.paymentTypeID || -2}
                 onChange={(e) =>
-                  
                   setBankCardDetails((prev: any) => {
                     return {
                       ...prev,
                       paymentTypeID : e?.value,
-                      paymentName: e?.name
+                      paymentName: e?.name,
+                      ledgerId: Number(e?.name)
                     }
                   })
                 }
@@ -771,7 +753,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                   checked={ledgerEnabled}
                   label={t('ledger')}
                   onChange={(e) => setLedgerEnabled(e.target.checked)}
-                  labelClassName="font-bold text-lg text-black"
+                  labelClassName="font-bold text-lg text-black mt-2 mb-0"
                 />
               <ERPDataComboBox
                   id=""
@@ -783,7 +765,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                     labelKey: "name",
                   }}
                   label={t("ledger")}
-                  value={bankCardDetails.ledgerId || -2}
+                  value={bankCardDetails.ledgerId || -2} // In api call there will be default ledger
                   onChange={(e) =>
                     setBankCardDetails((prev: any) => {
                       return {
@@ -814,6 +796,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                 id="description"
                 type="string"
                 label={t("description")}
+                className="mb-2"
                 value={bankCardDetails?.description}
                 onChange={(e) =>
                   setBankCardDetails((prev: any) => {
@@ -836,6 +819,8 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
             <div className="flex-1">
               <ErpDevGrid
                 columns={gridColumnsBankCard}
+                showChooserOnGridHead
+                chooserClass="absolute z-10 pointer-events-auto mt-4"
                 data={formState.transaction.bankCardDetails}
                 gridId="TenderBankCardPaymentGrid"
                 height={250}

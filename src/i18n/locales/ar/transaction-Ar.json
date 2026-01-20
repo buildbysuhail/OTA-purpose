@@ -1163,7 +1163,31 @@
   "pending_list": "قائمة الانتظار",
   "pending_list": "قائمة الانتظار",
   "duplicate_voucher": "قسيمة مكررة",
-  "duplicate_order": "طلب مكرر"
+  "duplicate_order": "طلب مكرر",
+
+  "sales_price_less_than_min_sales_price": "سعر البيع أقل من الحد الأدنى لسعر البيع",
+  "sales_price_less_than_purchase_price": "سعر البيع أقل من سعر الشراء",
+  "available_stock": "المخزون المتوفر:",
+  "shortage": "عجز في المخزون",
+  "zero_rate_or_quantity_entered_please_check!": "تم إدخال كمية أو سعر بقيمة صفر، يرجى التحقق!",
+  "gift_Product": "منتج هدايا",
+  "gift_product_added! Please_remove_and_continue": "تم إضافة منتج هدايا! يرجى الإزالة للمتابعة",
+  "upi_amount_greater_than_balance_amount": "مبلغ UPI أكبر من المبلغ المتبقي",
+  "please_check_balance_amount": "يرجى التحقق من المبلغ المتبقي",
+  "card_amount_is_greater_than_balance_amount": "مبلغ البطاقة أكبر من المبلغ المتبقي",
+  "invalid_balance_amount!": "رصيد غير صالح!",
+  "balance_amount_is_pending!": "المبلغ المتبقي معلق!",
+  "excess_amount_entered!": "تم إدخال مبلغ زائد!",
+  "wrong_discount_entered": "تم إدخال خصم خاطئ.",
+  "insufficient_amount_received!": "المبلغ المستلم غير كافٍ!",
+  "qr_pay": "الدفع عبر رمز QR",
+  "qr_pay_type": "نوع الدفع عبر QR",
+  "qr_pay_amount": "مبلغ الدفع عبر QR",
+  "upi_type": "نوع UPI",
+  "upi_type_id": "معرف نوع UPI",
+  "card_type_id": "معرف نوع البطاقة",
+  "card_type": "نوع البطاقة",
+  "bank_cards": "البطاقات البنكية"
 
 
 }

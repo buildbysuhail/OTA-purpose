@@ -122,6 +122,28 @@ const TransactionForm: React.FC<TransactionProps> = ({
   }, []);
 
   const [triggerEffect, setTriggerEffect] = useState(false);
+
+  // Footer height state for dynamic grid height calculation
+  const [footerHeight, setFooterHeight] = useState<number>(0);
+
+  // Window height state for dynamic grid height on resize
+  const [windowHeight, setWindowHeight] = useState<number>(window.innerHeight);
+
+  // Callback handler for footer height changes
+  const handleFooterHeightChange = useCallback((height: number) => {
+    setFooterHeight(height);
+  }, []);
+
+  // Window resize listener for dynamic grid height update
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowHeight(window.innerHeight);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // const handleClearControls = () => {
   //   clearControls(
   //     formState.isEdit,
@@ -716,34 +738,37 @@ const TransactionForm: React.FC<TransactionProps> = ({
                         }
   }
   const { hasRight } = useUserRights();
+
+  // Constants for layout calculations
+  const HEADER_HEIGHT = 170; // Header and toolbar height in pixels
+  const HEADER_PADDING = 10; // Additional padding for header area
+  const FIXED_FOOTER_HEIGHT = 320; // Fallback footer height (actual height measured dynamically via ResizeObserver)
+  const GRID_INTERNAL_OFFSET = 110; // Grid component adds 110px internally (see dataGrid.tsx line 2805)
+
   const gridHeight = useMemo(() => {
     if (formState?.transaction?.master?.voucherType === "LPO") {
-      return window.innerHeight - 425;
+      return windowHeight - 425 - GRID_INTERNAL_OFFSET;
     }
 
     if (deviceInfo?.isMobile) {
-      return window.innerHeight - 330;
+      return windowHeight - 250 - GRID_INTERNAL_OFFSET;
     }
 
     let height;
+    const isFooterOnRight = (formState.transactionLoading && _st.footerPosition === "right") ||
+      (!formState.transactionLoading && formState.userConfig?.footerPosition === "right");
 
-    if (
-      (formState.transactionLoading && _st.footerPosition === "right") ||
-      (!formState.transactionLoading && formState.userConfig?.footerPosition === "right")
-    ) {
-      height = window.innerHeight - 296;
+    if (isFooterOnRight) {
+      // Footer is on the right side, so grid can use full height minus header only
+      height = windowHeight - 184 - GRID_INTERNAL_OFFSET;
     } else {
-      // height = window.innerHeight - (484 +15); - in Sales
-      height = window.innerHeight - (484 + 70); // Temporary change setup
+      // Footer is at the bottom - use dynamic footer height for accurate calculation
+      const actualFooterHeight = footerHeight > 0 ? footerHeight : FIXED_FOOTER_HEIGHT;
+      height = windowHeight - HEADER_HEIGHT - HEADER_PADDING - actualFooterHeight - GRID_INTERNAL_OFFSET;
     }
 
-    console.log('Max safe integer:', Number.MAX_SAFE_INTEGER);
-    console.log('Max value:', Number.MAX_VALUE);
-    console.log('Positive infinity:', Number.POSITIVE_INFINITY);
-    console.log('Current grid height:', height);
-
     return height;
-  }, [formState?.transaction?.master?.voucherType, formState.transactionLoading, formState.userConfig?.footerPosition, deviceInfo?.isMobile, _st.footerPosition,]);
+  }, [formState?.transaction?.master?.voucherType, formState.transactionLoading, formState.userConfig?.footerPosition, deviceInfo?.isMobile, _st.footerPosition, footerHeight, windowHeight]);
 
 
   useEffect(() => {
@@ -873,11 +898,7 @@ debugger;
       employeeID:formState.userConfig?.holdSalesMan ? formState.transaction.master.employeeID : userSession.employeeId > 0
         ? userSession.employeeId
         : voucher.master.employeeID,
-        hasroundOff:  !(
-          applicationSettings.mainSettings.pOSRoundingMethod === "No Rounding" ||
-          (applicationSettings.mainSettings.pOSRoundingMethod === "Not Set" &&
-            applicationSettings.mainSettings.roundingMethod === "No Rounding")
-        ),
+       
             },
           },
           formElements: {
@@ -1141,6 +1162,11 @@ debugger;
 
         _formState.userConfig!.duplicationMessage = _formState.userConfig!.duplicationMessage ?? applicationSettings.inventorySettings.showProductDuplicationMessage
         _formState.userConfig!.focusToQtyAfterBarcode = _formState.userConfig!.focusToQtyAfterBarcode ?? applicationSettings.productsSettings.focusToQtyAfterBarcode
+        _formState.userConfig!.roundOff =   (
+          applicationSettings.mainSettings.pOSRoundingMethod === "No Rounding" ||
+          (applicationSettings.mainSettings.pOSRoundingMethod === "Not Set" &&
+            applicationSettings.mainSettings.roundingMethod === "No Rounding")
+        )
       };
 
       // 7️⃣ Tender button visibility
@@ -1777,6 +1803,7 @@ debugger;
       let currentDetails = [
         ...formState.transaction.details.filter((x) => x.productID > 0),
       ];
+      // let res: DeepPartial<TransactionFormState> = {};
       let addDetails: TransactionDetail[] = [];
       for (let index = 0; index < quantityFactor.length; index++) {
         const value = quantityFactor[index];
@@ -1847,6 +1874,7 @@ debugger;
       let currentDetails = [
         ...formState.transaction.details.filter((x) => x.productID > 0),
       ];
+      // let res: DeepPartial<TransactionFormState> = {};
       let addDetails: TransactionDetail[] = [];
       for (let index = 0; index < quantityFactor.length; index++) {
         const value = quantityFactor[index];
@@ -2348,6 +2376,7 @@ debugger;
                       // generateLPQ={generateLPQ}
                       // clientSession={clientSession}
                        costCenterRef={costCenterRef}
+                       onFooterHeightChange={handleFooterHeightChange}
                       />
                     )}
                 </div>
@@ -2394,7 +2423,7 @@ debugger;
             </div>
 
             {/* Main Content */}
-            <div className="flex flex-col w-full h-full mt-12 overflow-y-auto pb-[43px]">
+            <div className="flex flex-col w-full h-full mt-12 overflow-y-auto pb-[150px]">
               <div className="py-0">
                 <div
                   className="w-full max-w-full mx-0"
@@ -2476,7 +2505,7 @@ debugger;
               </div>
 
               {/* Form Section */}
-              <div className="flex-1 bg-white text-zinc-800 overflow-y-auto">
+              <div className="flex-1 bg-white text-zinc-800 min-h-0">
                 <div className="space-y-2"></div>
                 <ErpPurchaseGrid
                 onSaveItem={onSaveItem}
@@ -2499,7 +2528,7 @@ debugger;
                   transactionType={transactionType}
                   _columns={_purchaseGridCol}
                   keyField={"productID"}
-                  height={gridHeight}
+                  height={windowHeight - 330}
                   gridId={`${gridCode}`}
                   onAddData={handleAddData}
                   summaryConfig={formState.summaryConfig}
@@ -2555,6 +2584,7 @@ debugger;
                       : "horizontal"
                   }
                   costCenterRef={costCenterRef}
+                  onFooterHeightChange={handleFooterHeightChange}
                 />
 
                 {/* Total Summary */}
@@ -2606,6 +2636,7 @@ debugger;
           // generateLPQ={generateLPQ}
           // clientSession={clientSession}
             costCenterRef={costCenterRef}
+            onFooterHeightChange={handleFooterHeightChange}
           />
         )}
         {/* footer ends here */}

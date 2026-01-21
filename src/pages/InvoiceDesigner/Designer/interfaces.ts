@@ -268,6 +268,7 @@ export interface PropertiesState {
   pageSize?: string;
   width?:number;
   height?:number;
+  isAutoHeight?:boolean;
   orientation?: "portrait" | "landscape";
   // Martgins
   padding?: {

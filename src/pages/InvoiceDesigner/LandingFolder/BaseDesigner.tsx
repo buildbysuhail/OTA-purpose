@@ -8,7 +8,7 @@ import { setTemplatePropertiesState } from "../../../redux/slices/templates/redu
 import { ERPScrollArea } from "../../../components/ERPComponents/erp-scrollbar"
 import HeaderDesigner from "../Designer/HeaderDesigner"
 import FooterDesigner from "../Designer/FooterDesigner"
-import TablePremiumDesigner from "./account/premium/designer/table-designer"
+import TablePremiumDesigner from "../Designer/table-designer"
 import { PrintDetailDto } from "../../use-print-type"
 import SharedTemplatePreview from "../DesignPreview/shared"
 import { TableColumn } from "../Designer/interfaces"
@@ -43,8 +43,11 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
       masterId
     } = useTemplateDesigner({ templateGroup, templateKind: designerKind, designerType })
     const tableColumns: TableColumn<PrintDetailDto>[] = [];
-    const previewWidth = templateStyleProperties.previewWidth ?? 500;
-  const previewHeight = templateStyleProperties.previewHeight ?? 500;
+
+  const previewWidth = templateStyleProperties.previewWidth ?? 500;
+const previewHeight = templateStyleProperties.previewHeight; // Can be number or "auto"
+const isAutoHeight = templateStyleProperties.isAutoHeight ?? false;
+
     return (
       <div className="flex h-full text-black dark:text-white bg-white dark:bg-body_dark">
         {/* Mini Tab Icons */}
@@ -113,7 +116,7 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
             <div className="flex items-center gap-2">
               <h2 className="text-sm font-medium text-gray-700 dark:text-gray-300">Preview</h2>
               <div className="text-xs text-gray-500 dark:text-gray-400">
-                {previewWidth }pt × {previewHeight }pt
+               {previewWidth}pt × {isAutoHeight ? "Auto" : `${previewHeight}pt`}
               </div>
             </div>
 
@@ -139,13 +142,24 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
             <div className="flex justify-center"  >
               <div className="relative">
                 {/* Preview Container with Modern Styling */}
-                <div ref={previewContainerRef} className="shadow-lg   border border-gray-200 dark:border-dark-border overflow-hidden bg-white dark:bg-dark-bg-card" style={{ width: `${templateStyleProperties.previewWidth ?? 500}pt`, height: `${templateStyleProperties.previewHeight ?? 500}pt`,transformOrigin: 'top left', }}>
+                <div 
+                  ref={previewContainerRef} 
+                  className="shadow-lg border border-gray-200 dark:border-dark-border overflow-hidden bg-white dark:bg-dark-bg-card" 
+                  style={{ 
+                    width: `${previewWidth}pt`, 
+                    height: isAutoHeight ? 'auto' : `${previewHeight}pt`,
+                    minHeight: isAutoHeight ? '200pt' : undefined,
+                    transformOrigin: 'top left',
+                  }}
+                 >
+
                   {loading ? (
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                     </div>
                   ) : (
-                    <div className="relative h-full   w-full ">
+                    <div className={`relative w-full ${isAutoHeight ? 'flex flex-col' : 'h-full'}`}>
+
                       {/* {React.cloneElement(templateComponent,  stableTemplateProps)} */}
                       <SharedTemplatePreview
                         template={stableTemplateProps?.template}
@@ -155,10 +169,12 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
                       />
                     </div>
                   )}
-                </div>
+                  </div>
 
                 {/* Drop Shadow Effect */}
-                <div className="absolute -bottom-2 -right-2 bg-gray-400/20 dark:bg-gray-600/20 rounded-lg -z-10" style={{ width: `${templateStyleProperties.previewWidth}pt`, height: `${templateStyleProperties.previewHeight}pt`, minHeight: "400px", }} />
+              {!isAutoHeight && (
+                <div className="absolute -bottom-2 -right-2 bg-gray-400/20 dark:bg-gray-600/20 rounded-lg -z-10" style={{ width: `${previewWidth}pt`, height: `${previewHeight}pt`, minHeight: "400px", }} />
+              )}
               </div>
             </div>
           </ERPScrollArea>

@@ -105,7 +105,7 @@ export const useTemplateDesigner = ({
     const pageOrientation =
       activeTemplate?.propertiesState?.orientation === "landscape" ? "landscape" : "portrait";
     const pageSize = activeTemplate?.propertiesState?.pageSize ?? "A4";
-
+ const isAutoHeight = activeTemplate?.propertiesState?.isAutoHeight ?? false;
     const selectedPageSize = getPageDimensions(
       pageSize,
       activeTemplate?.propertiesState?.width,
@@ -116,13 +116,15 @@ export const useTemplateDesigner = ({
 
     return {
       previewWidth: orientedDimensions.width,
-      previewHeight: orientedDimensions.height,
+      previewHeight: isAutoHeight ? "auto" : orientedDimensions.height,
+      isAutoHeight,
     };
   }, [
     activeTemplate?.propertiesState?.orientation,
     activeTemplate?.propertiesState?.pageSize,
     activeTemplate?.propertiesState?.width,
     activeTemplate?.propertiesState?.height,
+     activeTemplate?.propertiesState?.isAutoHeight,
   ]);
 
   // Effect 1: Load print data (only depends on parameters, NOT on activeTemplate)

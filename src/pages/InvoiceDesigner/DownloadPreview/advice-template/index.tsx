@@ -2,13 +2,16 @@ import { Document, Page, View, Text, StyleSheet,PDFViewer,Image  } from "@react-
 import { TemplateState } from "../../Designer/interfaces";
 import FontRegistration from "../../../LabelDesigner/fontRegister";
 
-import { AccountTransactionProps } from "../account/account_transactiocn-premium";
 import { Header } from "./Header";
 import { Content } from "./Content";
 // import Table from "./Table";
 import { Footer } from "./Footer";
-
-const AdviceTemplate = ({ data, template, }: AccountTransactionProps) => {
+export interface AdviceTemplateProps {
+  data?: any
+  template?: TemplateState<unknown>
+  
+}
+const AdviceTemplate = ({ data, template, }: AdviceTemplateProps) => {
 // Paddings
 const paddingLeft = template?.propertiesState?.padding?.left || 10;
 const paddingRight = template?.propertiesState?.padding?.right || 10;

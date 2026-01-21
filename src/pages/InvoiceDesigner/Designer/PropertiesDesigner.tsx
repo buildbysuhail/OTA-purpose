@@ -87,7 +87,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
         />
 
         {
-          propertiesState?.pageSize == "CUSTOM" && (
+          propertiesState?.pageSize == "CUSTOM" ? (
             <>
               <div className="flex items-center space-x-3">
                 <div className="basis-2/3 ">
@@ -153,6 +153,14 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
                 </div>
               </div>
             </>
+          ):(
+          <ERPCheckbox
+            id="isAutoHeight"
+            label={t("auto_height")}
+            checked={propertiesState?.isAutoHeight}
+            onChange={(e) => onChange?.({ ...propertiesState, isAutoHeight: e.target.checked })}
+          />
+
           )
         }
 

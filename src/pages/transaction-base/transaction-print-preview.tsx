@@ -24,7 +24,8 @@ export type TemplatesPreViewHandle = {
     template: any;
     printData?: any
   } | null;
-  openTemplateChooser: () => {}};
+  // openTemplateChooser: () => {}
+};
 type TemplatesProps = {
   voucherType: string;
   isInvTrans?: boolean;
@@ -81,10 +82,11 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
           data: stableTemplateProps.data,
         };
       },
-      openTemplateChooser: () =>
-        dispatch(
-          toggleTemplateChooserModal({ isOpen: true, templateGroup: formState.transaction.master?.voucherType, customerType: formState.transaction.master?.customerType, formType: formState.transaction.master?.voucherForm })
-        )
+      // openTemplateChooser: () =>
+      //   dispatch(
+      //     toggleTemplateChooserModal({ isOpen: true, templateGroup: formState.transaction.master?.voucherType, customerType: formState.transaction.master?.customerType, formType: formState.transaction.master?.voucherForm })
+      //   )
+        
     }));
 
     if (loading) {

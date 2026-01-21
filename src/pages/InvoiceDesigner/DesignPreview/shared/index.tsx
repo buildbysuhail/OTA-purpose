@@ -23,6 +23,7 @@ export type TemplateChangeHandler = {
 };
 const SharedTemplatePreview = ({ data, template, qrCodeImages = {}, isTemplateDesigner = true, isInvTrans }: AccountTransactionProps) => {
   const headerState = template?.headerState;
+  const isAutoHeight =template?.propertiesState?.isAutoHeight??false; 
   const propertiesState = template?.propertiesState;
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
@@ -58,8 +59,9 @@ const SharedTemplatePreview = ({ data, template, qrCodeImages = {}, isTemplateDe
   return (
     <>
       <div
-        className="flex flex-col h-full w-full group"
+        className="flex flex-col w-full group"
         style={{
+          minHeight: isAutoHeight ? 'auto' : '100%',
           backgroundColor: template?.propertiesState?.bg_color || "#fff",
           paddingTop: `${propertiesState?.padding?.top ?? 0}pt`,
           paddingRight: `${propertiesState?.padding?.right ?? 0}pt`,

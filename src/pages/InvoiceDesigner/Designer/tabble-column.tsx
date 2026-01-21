@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { initialTableColumn, TableColumn, templateDesignerFormatOptions } from "../../../../Designer/interfaces";
-import { addTemplateTableColumn,  } from "../../../../../../redux/slices/templates/reducer";
-import { InvDetail2ForPrint, PrintDetailDto } from "../../../../../use-print-type";
-import ErpInput from "../../../../../../components/ERPComponents/erp-input";
-import ERPButton from "../../../../../../components/ERPComponents/erp-button";
-import ERPDataCombobox from "../../../../../../components/ERPComponents/erp-data-combobox";
-import { modelToListFromObject } from "../../../../../../utilities/Utils";
-import { initialInvDetail2ForPrint, initialPrintDetailDto } from "../../../../../use-print-type-data";
-import { RootState } from "../../../../../../redux/store";
-import ERPToast from "../../../../../../components/ERPComponents/erp-toast";
+import { initialTableColumn, TableColumn, templateDesignerFormatOptions } from "./interfaces";
+import { addTemplateTableColumn,  } from "../../../redux/slices/templates/reducer";
+import { InvDetail2ForPrint, PrintDetailDto } from "../../use-print-type";
+import ErpInput from "../../../components/ERPComponents/erp-input";
+import ERPButton from "../../../components/ERPComponents/erp-button";
+import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
+import { modelToListFromObject } from "../../../utilities/Utils";
+import { initialInvDetail2ForPrint, initialPrintDetailDto } from "../../use-print-type-data";
+import { RootState } from "../../../redux/store";
+import ERPToast from "../../../components/ERPComponents/erp-toast";
 
 interface TableManagerContentProps {
   onClose: any;

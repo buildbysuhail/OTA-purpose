@@ -19,6 +19,7 @@ import { mergeObjectsRemovingIdenticalKeys } from "../../utilities/Utils";
 import { Rnd } from "react-rnd";
 import { useDynamicModalSize } from "../../utilities/hooks/useDynamicModalSize";
 import { useCommenPrint } from "../../pages/transaction-base/use-commen-print";
+import { useDirectPrint } from "../../utilities/hooks/use-direct-print";
 
 type ModalPosition = "center" | "left" | "right" | "top" | "bottom" | "top-left" | "top-right" | "bottom-left" | "bottom-right";
 
@@ -114,7 +115,7 @@ const ERPModal = React.memo(
   }: ERPModalProps) => {
     // Detect mobile device
     const isMobile = window.innerWidth <= 768;
-
+   
     // Use content-fitted size on mobile, with a max width
     const effectiveDynamicMinWidth = isMobile ? 300 : dynamicMinWidth; // Minimum 300px, adjustable
     const effectiveDynamicMinHeight = isMobile ? 200 : dynamicMinHeight;
@@ -142,6 +143,7 @@ const ERPModal = React.memo(
     const [isPositionCalculated, setIsPositionCalculated] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
      const { printVoucher} = useCommenPrint();
+      const { directPrint } = useDirectPrint();
     // Dynamic sizing effects
     useEffect(() => {
       if (enableDynamicSize && isOpen) {
@@ -332,6 +334,8 @@ const ERPModal = React.memo(
     const effectiveMinWidth = enableDynamicSize ? effectiveDynamicMinWidth : minWidth;
     const effectiveMinHeight = enableDynamicSize ? effectiveDynamicMinHeight : minHeight;
 
+
+
     return (
       <>
         <Transition appear show={isOpen} as={Fragment}>
@@ -453,24 +457,13 @@ const ERPModal = React.memo(
                                           printData.data,               // printData (the actual data)
                            
                                         );
+                                        // await directPrint({ template: printData.template, data: printData.data, })
                                   }
                                 }}
                               >
                                 <Printer className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                               </button>
                             </div>
-                             {/* <div className="group relative inline-flex flex-col items-center ps-[5px]" title={"templates"}>
-                              <button
-                                className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
-                                onClick={async() => {
-                                 printtRef.current?.openTemplateChooser?.()
-                                      console.log("Print  Chooser clicked");                             
-
-                                }}
-                              >
-                                <Layout className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-                              </button>
-                            </div> */}
                             </>
                           )}
 

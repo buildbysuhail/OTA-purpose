@@ -1194,7 +1194,9 @@
   "card_type":"CardType",
   "bank_cards":"Bank Cards",
 
-  "add_payment":"Add Payment"
+  "add_payment":"Add Payment",
+  "card_amount_tender":"Card Amount",
+  "bank_ac":"Bank A/C"
 
 
 

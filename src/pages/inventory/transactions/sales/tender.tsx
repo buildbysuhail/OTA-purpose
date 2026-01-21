@@ -4,7 +4,7 @@ import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPDataComboBox from "../../../../components/ERPComponents/erp-data-combobox";
-import { ChevronDown, Trash2, CreditCard, Smartphone } from "lucide-react";
+import { ChevronDown, Trash2, CreditCard, Smartphone, ChevronUp } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
 import { useSelector } from "react-redux";
@@ -30,6 +30,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
   const [discPercent, setDiscPercent] = useState<number>(0);
   const [taxOnDiscAmount, setTaxOnDiscAmount] = useState<number>(0);
   const [cardAmt, setCardAmt] = useState<number>(0);
+  const [cardEnabled, setCardEnabled] = useState<boolean>(false);
   const [balance, setBalance] = useState<number>(0);
   const formState = useSelector((state:RootState) => state.InventoryTransaction)
   const discAmountRef = useRef<HTMLInputElement>(null);
@@ -52,6 +53,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
   let isBillEdited = formState.transaction.master.invTransactionMasterID > 0  // Found in 1050, but check is using
   let isCreditable = false   // Found in 1050, but check is using!
   let isExcessCashRcpt = false  // Found in 1050, but check is using
+  const allowMultiPayment = applicationSettings.accountsSettings.allowMultiPayments;
 
   function getMaxTaxPercInItemList(): number {
     let maxTaxPerc = 0;
@@ -77,6 +79,9 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
     // Net total value of the grid
     const totalNet = (formState.summary.netValue || 0) - (formState.transaction.master.srAmount || 0);
     const round = formState.transaction.master.roundAmount || 0;
+
+    // Reading the allow multi payment
+    
     setAddAmount(additionalAmt)
     setCouponAmt(couponAmt);
     setTotal(totalNet);
@@ -110,8 +115,9 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
     setNetTotal(calculatedNetTotal);
     // Calculate balance
     const totalReceived = cashRcvd;
-    setBalance(calculatedNetTotal-(totalReceived + totalQrPayAmount + totalBankCardAmount));
-  }, [total, discAmount, taxOnDiscAmount, cashRcvd, totalQrPayAmount, totalBankCardAmount]);
+    const cardAmount = cardEnabled ? cardAmt : 0;
+    setBalance(calculatedNetTotal-(totalReceived + totalQrPayAmount + totalBankCardAmount + cardAmount));
+  }, [total, discAmount, taxOnDiscAmount, cashRcvd, totalQrPayAmount, totalBankCardAmount, cardAmt, cardEnabled]);
 
   const handleAddCashClick =()=>{
     if (balance > 0) {
@@ -420,14 +426,14 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
   const handleApply = () => {
     const validate = validateAmount()
     if(validate){
+      const cardAmount = cardEnabled ? cardAmt : 0;
       dispatch(
         formStateHandleFieldChangeKeysOnly({
           fields: {
-            // tenderApplied: true,  // Just checking a condition test-purpose
             transaction:{
               master:{
                 cashReceived: cashRcvd,
-                bankAmt: totalBankCardAmount + totalQrPayAmount,
+                bankAmt: totalBankCardAmount + totalQrPayAmount + cardAmount,
                 billDiscount: discAmount
               }
             },
@@ -537,13 +543,15 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
             <div className="mb-2">
               <label className="text-black text-xs font-medium mb-1 block">{t('cash_received')}</label>
               <div className="flex gap-2 items-center">
-                <button
-                  type="button"
-                  className="bg-gray-600 hover:bg-gray-700 text-white text-xs font-semibold px-3 py-2 rounded-md transition-colors flex-shrink-0"
-                  onClick={()=> handleAddCashClick()}
-                >
+                {allowMultiPayment && (
+                  <button
+                    type="button"
+                    className="bg-gray-600 hover:bg-gray-700 text-white text-xs font-semibold px-3 py-2 rounded-md transition-colors flex-shrink-0"
+                    onClick={handleAddCashClick}
+                  >
                   {t("add")}
-                </button>
+                  </button>
+                )}
                 <input
                   type="number"
                   min="0"
@@ -558,6 +566,8 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
             </div>
 
             {/* Bank Card */}
+            {allowMultiPayment === true ?
+            <div>
             <div
               className={`flex items-center justify-between p-3 mb-2 rounded-md border cursor-pointer transition-colors ${
                 paymentMode === "CARD"
@@ -599,7 +609,87 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                 <span className="text-black text-sm font-medium">{t("qr_pay")}</span>
               </div>
               <span className="text-blue-500 text-lg font-semibold">{totalQrPayAmount.toFixed(1)}</span>
+            </div></div>
+            : 
+            <div>
+              {/* CARD AMOUNT ROW */}
+              <div className="mb-2">
+              <div className="flex items-center gap-2 mb-1">
+                <input
+                  type="checkbox"
+                  checked={cardEnabled}
+                  onChange={(e) => {
+                    const checked = e.target.checked;
+                    setCardEnabled(checked);
+                    if (checked && balance > 0) {
+                      setCardAmt(balance);
+                    } else if (!checked) {
+                      setCardAmt(0);
+                    }
+                  }}
+                  className="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <span className="text-black text-xs font-medium">{t('card_amount_tender')}</span>
+              </div>
+              <div className="flex gap-2 items-center">
+                <button
+                  type="button"
+                  className="bg-gray-600 hover:bg-gray-700 text-white text-xs font-semibold px-3 py-2 rounded-md transition-colors flex-shrink-0 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                  onClick={() => alert("Need to manage this section - btnSendToBankPOS_Click")}
+                  disabled={!cardEnabled}
+                >
+                  <ChevronUp size={16} color="#fff"/>
+                </button>
+                <input
+                  type="number"
+                  min="0"
+                  value={cardAmt}
+                  onChange={(e) => {
+                    const val = parseFloat(e.target.value) || 0;
+                    setCardAmt(val < 0 ? 0 : val);
+                  }}
+                  disabled={!cardEnabled}
+                  className="flex-1 min-w-0 bg-gray-100 text-black text-right text-xl font-semibold px-3 py-2 rounded-md border border-gray-200 outline-none focus:border-blue-400 disabled:bg-gray-200 disabled:opacity-60"
+                />
+              </div>
             </div>
+            {/* BANK AC ROW */}
+            <div className="mb-3">
+                  <div className="flex items-center gap-2 mb-1">
+                    <input
+                      type="checkbox"
+                      checked={ledgerEnabled}
+                      onChange={(e) => setLedgerEnabled(e.target.checked)}
+                      className="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <label className="text-black text-xs font-medium">{t('bank_ac')}</label>
+                  </div>
+                  <ERPDataComboBox
+                    id="ledgerCombo"
+                    noLabel={true}
+                    variant="outlined"
+                    className="tender-combobox"
+                    style={{ backgroundColor: 'white', borderRadius: '6px' }}
+                    field={{
+                      id: "ledgerID",
+                      required: true,
+                      getListUrl: Urls.data_BankAccounts,
+                      valueKey: "id",
+                      labelKey: "name",
+                    }}
+                    value={bankCardDetails.ledgerId || -2}
+                    onChange={(e) =>
+                      setBankCardDetails((prev: any) => {
+                        return {
+                          ...prev,
+                          ledgerId: e?.value
+                        }
+                      })
+                    }
+                    disabled={!ledgerEnabled}
+                  />
+                </div>
+            </div>}
 
             {/* Balance */}
             <div className="mb-2">

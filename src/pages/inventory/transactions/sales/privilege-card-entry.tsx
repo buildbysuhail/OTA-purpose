@@ -176,6 +176,9 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
                   },
                   master: {
                     billDiscount: selectedPoint,
+                      // privCardID: Already dispatch in keydown
+                      privAddAmount: addAmount,
+                      privRedeem: selectedPoint   
                   }
                 },
               },

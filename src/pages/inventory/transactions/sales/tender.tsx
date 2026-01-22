@@ -1,21 +1,20 @@
 import React, { useState, useRef, useEffect } from "react";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
-import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPDataComboBox from "../../../../components/ERPComponents/erp-data-combobox";
 import { ChevronDown, Trash2, CreditCard, Smartphone, ChevronUp } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
 import { useSelector } from "react-redux";
-import { initialSettlement, initialUserConfig } from "../transaction-type-data";
-import { merge } from 'lodash';
+import { initialSettlement } from "../transaction-type-data";
 import Urls from "../../../../redux/urls";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { formStateHandleFieldChangeKeysOnly, formStateTransactionBankCardAddRowsAddSingle, formStateTransactionBankCardRemoveRow, formStateTransactionUpiAddRowsAddSingle, formStateTransactionUpiRemoveRow } from "../reducer";
 import { SettlementDetails } from "../transaction-types";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
+import { APIClient } from "../../../../helpers/api-client";
 
 interface TenderProps {
   isOpen: boolean;
@@ -23,23 +22,26 @@ interface TenderProps {
   t: (key: string) => string;
 }
 
+const api = new APIClient();
 const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
+  const dispatch = useAppDispatch();
+  const formState = useSelector((state:RootState) => state.InventoryTransaction);
+  const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
+  const clientSession = useAppSelector((state: RootState) => state.ClientSession);
   const [discEnabled, setDiscEnabled] = useState<boolean>(true);
   const [ledgerEnabled, setLedgerEnabled] = useState<boolean>(false);
+  const [discAuthModalOpen, setDiscAuthModalOpen] = useState<boolean>(false);
+  const [initialDiscount, setInitialDiscount] = useState<number>(0);
   const [discAmount, setDiscAmount] = useState<number>(0);
   const [discPercent, setDiscPercent] = useState<number>(0);
   const [taxOnDiscAmount, setTaxOnDiscAmount] = useState<number>(0);
   const [cardAmt, setCardAmt] = useState<number>(0);
   const [cardEnabled, setCardEnabled] = useState<boolean>(false);
   const [balance, setBalance] = useState<number>(0);
-  const formState = useSelector((state:RootState) => state.InventoryTransaction)
   const discAmountRef = useRef<HTMLInputElement>(null);
 
-  const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
-  const clientSession = useAppSelector((state: RootState) => state.ClientSession);
   const [couponAmt, setCouponAmt] = useState(0);
   const [addAmount, setAddAmount] = useState(0);
-  const dispatch = useAppDispatch();
   const [total, setTotal] = useState(0);
   const [roundOf, setRoundOf] = useState(0);
   const [maxTaxPercentage, setMaxTaxPercentage] = useState(0);
@@ -48,13 +50,19 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
   const [uPIDetails, setUPIDetails] = useState<SettlementDetails>(initialSettlement);
   const [bankCardDetails, setBankCardDetails] = useState<SettlementDetails>(initialSettlement);
   const [paymentMode, setPaymentMode] = useState<"CARD" | "UPI" | null>(null);
-  const totalQrPayAmount =formState.transaction.uPIDetails?.reduce((sum: number, row: SettlementDetails) => sum + Number(row.amount || 0), 0 ) || 0;
-  const totalBankCardAmount =formState.transaction.bankCardDetails?.reduce((sum: number, row: SettlementDetails) => sum + Number(row.amount || 0), 0 ) || 0;
   let isBillEdited = formState.transaction.master.invTransactionMasterID > 0  // Found in 1050, but check is using
   let isCreditable = false   // Found in 1050, but check is using!
   let isExcessCashRcpt = false  // Found in 1050, but check is using
   const allowMultiPayment = applicationSettings.accountsSettings.allowMultiPayments;
+  const [isCashOrBank, setIsCashOrBank] = useState(false)
+  const [discAuthPassword, setDiscAuthPassword] = useState("")
+  const authResolveRef = useRef<((value: boolean) => void) | null>(null);
 
+  // Calculate total Qr and Bank card amount in tender Global
+  const totalQrPayAmount =formState.transaction.uPIDetails?.reduce((sum: number, row: SettlementDetails) => sum + Number(row.amount || 0), 0 ) || 0;
+  const totalBankCardAmount =formState.transaction.bankCardDetails?.reduce((sum: number, row: SettlementDetails) => sum + Number(row.amount || 0), 0 ) || 0;
+
+  // Function For getting maximum vat percentage for tax on disc
   function getMaxTaxPercInItemList(): number {
     let maxTaxPerc = 0;
     try {
@@ -73,19 +81,71 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
     return maxTaxPerc;
   }
 
-  useEffect(() => {
-    const additionalAmt = formState.transaction.master.adjustmentAmount;
-    const couponAmt = formState.transaction.master.couponAmt || 0;
-    // Net total value of the grid
-    const totalNet = (formState.summary.netValue || 0) - (formState.transaction.master.srAmount || 0);
-    const round = formState.transaction.master.roundAmount || 0;
+  // Password Encryption test concept function - Code is pending
+  const testEncryptFunction = (password : string) => {
+    let encryptedPassword = password;
+    return encryptedPassword;
+  }
 
-    // Reading the allow multi payment
-    
+  // Discount amount authorize click function
+  const handleAuthorize = async (action: string)=>{
+    if(discAuthPassword === ""){
+      ERPAlert.show({
+        icon: "info",
+        title: t("authorization_required"),
+        showCancelButton: false,
+        text: t(""),
+        confirmButtonText: t("ok"),
+      });
+      authResolveRef.current?.(false);
+      authResolveRef.current = null;
+      return false;
+    }else{
+      const encryptPassword = testEncryptFunction(discAuthPassword) 
+      try{
+        // Finalize the end point after discussion - the end point is not correct
+        const res = await api.postAsync(`${Urls.authorization_settings}`,{password: encryptPassword,action: action,formCode: "",});
+
+        if(res.isOk === true){
+          setDiscAuthModalOpen(false);
+          setDiscAuthPassword("");
+          authResolveRef.current?.(true);
+          authResolveRef.current = null;
+          return true;
+        }else{
+          ERPAlert.show({
+            icon: "info",
+            title: t("authorization_failed"),
+            showCancelButton: false,
+            text: t(""),
+            confirmButtonText: t("ok"),
+          });
+          authResolveRef.current?.(false);
+          authResolveRef.current = null;
+          return false;
+        }
+
+
+      }catch{
+         console.log("Error in discount Authorization")
+         authResolveRef.current?.(false);
+         authResolveRef.current = null;
+      }
+    }
+  }
+
+  useEffect(() => {
+    const additionalAmt = formState.transaction.master.adjustmentAmount; // Additional amount
+    const couponAmt = formState.transaction.master.couponAmt || 0;  // Coupon anount
+    const totalNet = (formState.summary.netValue || 0) - (formState.transaction.master.srAmount || 0); // net amount value
+    const round = formState.transaction.master.roundAmount || 0; // round amount
+
+    // Set the values into state initially
     setAddAmount(additionalAmt)
     setCouponAmt(couponAmt);
     setTotal(totalNet);
     setRoundOf(round);
+    // Set maxTaxPercentage from settings
     if(applicationSettings.branchSettings.enableTaxOnBillDiscount){
       const maxTaxPercentage = getMaxTaxPercInItemList()
       setMaxTaxPercentage(maxTaxPercentage)
@@ -99,26 +159,25 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
     // Attach the master discount value
     if(Number(formState.transaction.master.billDiscount) > 0 ){
       setDiscAmount(Number(formState.transaction.master.billDiscount))
+      setInitialDiscount(Number(formState.transaction.master.billDiscount)) // Storing the master value for auth use
     }
     
 
-  }, [
-    formState.transaction.master.couponAmt,
-    formState.summary.netValue,
-    formState.transaction.master.srAmount,
-    formState.transaction.master.roundAmount
-  ]);
-
+  }, [formState.transaction.master.couponAmt,formState.summary.netValue,formState.transaction.master.srAmount,formState.transaction.master.roundAmount]);
+    // Calculating the balance amount
     useEffect(() => {
-    let calculatedNetTotal = (total + addAmount + roundOf) - (couponAmt);
-    calculatedNetTotal = total - discAmount + taxOnDiscAmount;
-    setNetTotal(calculatedNetTotal);
-    // Calculate balance
-    const totalReceived = cashRcvd;
-    const cardAmount = cardEnabled ? cardAmt : 0;
-    setBalance(calculatedNetTotal-(totalReceived + totalQrPayAmount + totalBankCardAmount + cardAmount));
-  }, [total, discAmount, taxOnDiscAmount, cashRcvd, totalQrPayAmount, totalBankCardAmount, cardAmt, cardEnabled]);
+      // Net total calculation
+      let calculatedNetTotal = (total + addAmount + roundOf) - (couponAmt);
+      calculatedNetTotal = total - discAmount + taxOnDiscAmount;
+      // Set net Total value
+      setNetTotal(calculatedNetTotal);
+      const totalReceived = cashRcvd;
+      const cardAmount = cardEnabled ? cardAmt : 0;
+      // Calculate balance value
+      setBalance(calculatedNetTotal-(totalReceived + totalQrPayAmount + totalBankCardAmount + cardAmount));
+    }, [total, discAmount, taxOnDiscAmount, cashRcvd, totalQrPayAmount, totalBankCardAmount, cardAmt, cardEnabled]);
 
+  // cash received button click 
   const handleAddCashClick =()=>{
     if (balance > 0) {
       if (isBillEdited) {
@@ -129,6 +188,18 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
     }
   }
 
+  // Initially setting the isCashOrBank from - CheckIsLedgerUnderCashOrBank
+  useEffect(() => {
+    const ledgerId = formState.transaction.master.ledgerID;
+    if (!ledgerId || ledgerId === 0) return;
+    const checkCashOrBank = async () => {
+      const isCashOrBank = await api.getAsync(`${Urls.inv_transaction_base}${formState.transactionType}/IsCashOrBank/${ledgerId}`);
+      setIsCashOrBank(isCashOrBank)
+    };
+    checkCashOrBank();
+  }, [formState.transaction.master.ledgerID]);
+
+  // Tax on bill discount button click function
   const handleBillDiscountDownTaxRate = () => {
     if ( !applicationSettings.branchSettings.enableTaxOnBillDiscount || !applicationSettings.branchSettings.maintainKSA_EInvoice){
       return;
@@ -147,6 +218,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
     }
   };
 
+  // Discount amount value change function
   const handleDiscAmountChange = (value: number) => {
     setDiscAmount(value);
     if (total > 0) {
@@ -154,24 +226,22 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
     }
   };
 
+  // Discount percentage value change function
   const handleDiscPercentChange = (value: number) => {
     setDiscPercent(value);
     setDiscAmount((total * value) / 100);
   };
 
+  // Delete row from upi details grid
   const handleDeleteUpiRow = (rowIndex: number) => {
       dispatch(formStateTransactionUpiRemoveRow({index: rowIndex}))
   };
 
+  // Delete row from bank card details grid
   const handleDeleteBankCardRow = (rowIndex: number) => {
       dispatch(formStateTransactionBankCardRemoveRow({index: rowIndex}))
   };
-
-  useEffect(() => {
-    setNetTotal(total-discAmount)
-  }, [discAmount]);
-
-
+    // Bank card grid columns
     const gridColumnsBankCard: DevGridColumn[] = [
     {
       dataField: "ledgerId",
@@ -233,7 +303,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
   },
   ]
 
-
+  // Upi grid columns
   const gridColumnsUpi: DevGridColumn[] = [
     {
       dataField: "ledgerId",
@@ -295,6 +365,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
   },
   ]
 
+  // Upi add click validate function
   const upiValidate = () =>{
     if(uPIDetails?.amount > balance ){
       ERPAlert.show({
@@ -309,6 +380,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
     return true;
   }
 
+  // Function for add click in QRPay
   const handleQRPayAddClick = () => {
     const validate = upiValidate()
     if(validate){
@@ -328,6 +400,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
   }
   }
 
+  // Function for add click in BAnk card
   const handleBankCardAddClick =()=> {
     if(bankCardDetails?.amount > balance ){
       ERPAlert.show({
@@ -356,19 +429,44 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
     
   }
 
-  const validateAmount = () => {
-    if (isNaN(balance)) {
-      ERPAlert.show({
-        icon: "info",
-        title: t("invalid_balance_amount!"),
-        showCancelButton: false,
-        text: t(""),
-        confirmButtonText: t("ok"),
-        onConfirm: ()=> { return false; }
-      });
-      return false;
-    }
-    if(!isCreditable && balance > 0 ){
+  // Discount auth modal open
+  const openAuthModal = (): Promise<boolean> => {
+    return new Promise((resolve) => {
+      authResolveRef.current = resolve;
+      setDiscAuthModalOpen(true);
+    });
+  };
+
+
+  const validateAmount = async () => {
+    // Common validation condition for tender, tender global
+    if(total > 0){
+        if(discAmount > total){
+          ERPAlert.show({
+            icon: "info",
+            title: t("wrong_discount_entered"),
+            showCancelButton: false,
+            text: t(""),
+            confirmButtonText: t("ok"),
+            onConfirm: ()=> { return false; }
+          });
+          return false
+        }
+      }
+    // if tender global condition true
+    if(allowMultiPayment){
+      if (isNaN(balance)) {
+        ERPAlert.show({
+          icon: "info",
+          title: t("invalid_balance_amount!"),
+          showCancelButton: false,
+          text: t(""),
+          confirmButtonText: t("ok"),
+          onConfirm: ()=> { return false; }
+        });
+        return false;
+      }
+      if(!isCreditable && balance > 0 ){
       ERPAlert.show({
         icon: "info",
         title: t("balance_amount_is_pending!"),
@@ -390,20 +488,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
       });
       return false;
     }
-    if(total > 0){
-        if(discAmount > total){
-          ERPAlert.show({
-            icon: "info",
-            title: t("wrong_discount_entered"),
-            showCancelButton: false,
-            text: t(""),
-            confirmButtonText: t("ok"),
-            onConfirm: ()=> { return false; }
-          });
-          return false
-        }
-      }
-      if(isCreditable === false){
+    if(isCreditable === false){
         if(balance > 0 && (cashRcvd + totalBankCardAmount + totalQrPayAmount) > 0){
           ERPAlert.show({
             icon: "info",
@@ -421,10 +506,74 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
           setCashRcvd(0)
         }
       }
+    // Tender not global condition
+    }else{
+      // authorization - frm tender - complete the working and check it
+      debugger;
+      if(initialDiscount === 0 || initialDiscount !== discAmount ){
+        if(applicationSettings.inventorySettings.blockBillDiscount === "If Authentication Fails"){
+          if(discAmount > 0 && discAmount > applicationSettings.inventorySettings.discontAuthorizationIfDiscountAbove){
+            const isAuthorized = await openAuthModal();
+            if (!isAuthorized) {
+              return false;
+            }
+          }
+        }
+      }
+      if(cardAmt> netTotal){
+        if(cardAmt>0){
+          ERPAlert.show({
+            icon: "info",
+            title: t("excess_card_amount_entered"),
+            showCancelButton: false,
+            text: t(""),
+            confirmButtonText: t("ok"),
+            onConfirm: ()=> { return false; }
+          });
+          return false;
+
+        }
+
+      }
+      if (!isCashOrBank && applicationSettings.accountsSettings.showTenderDialogForParty){
+        if(!isExcessCashRcpt && (cashRcvd+cardAmt > netTotal)){
+          ERPAlert.show({
+            icon: "info",
+            title: t("excess_amount_entered!"),
+            showCancelButton: false,
+            text: t(""),
+            confirmButtonText: t("ok"),
+            onConfirm: ()=> { return false; }
+          });
+          return false;
+          }
+      }
+      if (isCreditable === false && isCashOrBank === true){
+        if(balance < 0 && (cashRcvd + cardAmt) > 0){
+          ERPAlert.show({
+            icon: "info",
+            title: t("insufficient_amount_received!"),
+            showCancelButton: false,
+            text: t(""),
+            confirmButtonText: t("ok"),
+            onConfirm: ()=> { return false; }
+          });
+          return false;
+        }
+      }
+      if(cashRcvd === 0){
+        if(isCreditable && clientSession.isAppGlobal){
+          setCashRcvd(0)
+        }else if(isCashOrBank){
+          setCashRcvd(netTotal);
+        }
+      }
+    }
       return true;
   }
-  const handleApply = () => {
-    const validate = validateAmount()
+  // Apply button function in tender both
+  const handleApply = async () => {
+    const validate = await validateAmount()
     if(validate){
       const cardAmount = cardEnabled ? cardAmt : 0;
       dispatch(
@@ -445,6 +594,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
   };
 
   return (
+    <>
     <ERPModal
       key={paymentMode || "none"}
       isOpen={isOpen}
@@ -971,6 +1121,34 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
         </div>
       }
     />
+      {/* Authorization Modal */}
+      <ERPModal
+        isOpen={discAuthModalOpen}
+        closeModal={()=>false}
+        title={t("authorizations")}
+        width={400}
+        height={220}
+        content={
+          <div className="flex flex-col gap-4 p-4">
+            <ERPInput
+              id="authPassword"
+              label= {t("authentication_password")} 
+              type="password"
+              value={discAuthPassword}
+              onChange={(e:any) => setDiscAuthPassword(e.target.value)}
+            />
+            <div className="flex justify-center">
+              <ERPButton
+                title={t("apply")}
+                variant="primary"
+                className="w-40"
+                onClick={() => handleAuthorize(`Are you sure to allow discount : ${discAmount} in SI`)}
+              />
+            </div>
+          </div>
+        }
+      />
+    </>
   );
 };
 

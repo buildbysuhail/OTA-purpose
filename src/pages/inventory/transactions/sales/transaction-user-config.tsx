@@ -378,6 +378,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                     label={t("round_off")}
                     data={formState.userConfig}
                     checked={formState?.userConfig?.roundOff}
+                    disabled={formState.formElements.hasroundOff.disabled}
                     onChangeData={(e) => handleFieldChange("roundOff", e.roundOff)}
                     className="w-1/3"
                   />

@@ -4,7 +4,7 @@ import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPDataComboBox from "../../../../components/ERPComponents/erp-data-combobox";
-import { ChevronDown, Trash2 } from "lucide-react";
+import { ChevronDown, Trash2, CreditCard, Smartphone, ChevronUp } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
 import { useSelector } from "react-redux";
@@ -30,6 +30,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
   const [discPercent, setDiscPercent] = useState<number>(0);
   const [taxOnDiscAmount, setTaxOnDiscAmount] = useState<number>(0);
   const [cardAmt, setCardAmt] = useState<number>(0);
+  const [cardEnabled, setCardEnabled] = useState<boolean>(false);
   const [balance, setBalance] = useState<number>(0);
   const formState = useSelector((state:RootState) => state.InventoryTransaction)
   const discAmountRef = useRef<HTMLInputElement>(null);
@@ -52,6 +53,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
   let isBillEdited = formState.transaction.master.invTransactionMasterID > 0  // Found in 1050, but check is using
   let isCreditable = false   // Found in 1050, but check is using!
   let isExcessCashRcpt = false  // Found in 1050, but check is using
+  const allowMultiPayment = applicationSettings.accountsSettings.allowMultiPayments;
 
   function getMaxTaxPercInItemList(): number {
     let maxTaxPerc = 0;
@@ -77,6 +79,9 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
     // Net total value of the grid
     const totalNet = (formState.summary.netValue || 0) - (formState.transaction.master.srAmount || 0);
     const round = formState.transaction.master.roundAmount || 0;
+
+    // Reading the allow multi payment
+    
     setAddAmount(additionalAmt)
     setCouponAmt(couponAmt);
     setTotal(totalNet);
@@ -110,8 +115,9 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
     setNetTotal(calculatedNetTotal);
     // Calculate balance
     const totalReceived = cashRcvd;
-    setBalance(calculatedNetTotal-(totalReceived + totalQrPayAmount + totalBankCardAmount));
-  }, [total, discAmount, taxOnDiscAmount, cashRcvd, totalQrPayAmount, totalBankCardAmount]);
+    const cardAmount = cardEnabled ? cardAmt : 0;
+    setBalance(calculatedNetTotal-(totalReceived + totalQrPayAmount + totalBankCardAmount + cardAmount));
+  }, [total, discAmount, taxOnDiscAmount, cashRcvd, totalQrPayAmount, totalBankCardAmount, cardAmt, cardEnabled]);
 
   const handleAddCashClick =()=>{
     if (balance > 0) {
@@ -417,17 +423,17 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
       }
       return true;
   }
-
   const handleApply = () => {
     const validate = validateAmount()
     if(validate){
+      const cardAmount = cardEnabled ? cardAmt : 0;
       dispatch(
         formStateHandleFieldChangeKeysOnly({
           fields: {
             transaction:{
               master:{
                 cashReceived: cashRcvd,
-                bankAmt: totalBankCardAmount + totalQrPayAmount,
+                bankAmt: totalBankCardAmount + totalQrPayAmount + cardAmount,
                 billDiscount: discAmount
               }
             },
@@ -440,403 +446,526 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
 
   return (
     <ERPModal
+      key={paymentMode || "none"}
       isOpen={isOpen}
       closeModal={onClose}
       title={""}
-      width={ (paymentMode==="CARD" || paymentMode==="UPI") ? 800 : 450}
-      height={(paymentMode==="CARD" || paymentMode==="UPI") ? 630 : 500}
+      width={(paymentMode === "CARD" || paymentMode === "UPI") ? 930 : 480}
+      height={(paymentMode==="CARD" || paymentMode==="UPI") ? 700 : 700}
       content={
         <div className="flex flex-row gap-4">
           {/* Left Section - Form */}
-          <div className="flex-1 px-4 w-1/2 max-w-1/2">
-          <h1 className="text-2xl font-bold text-purple-800 my-3 text-center">{t("tender").toUpperCase()}</h1>
+          <div className="flex-1 w-1/2 max-w-1/2 bg-white rounded-xl px-4">
+            <h1 className="text-2xl font-bold text-black my-2 text-center">{t("tender").toUpperCase()}</h1>
+
             {/* Total */}
-            <div className="grid grid-cols-[120px_1fr] gap-4 items-center">
-              <label className="text-left sm:text-[10px] leading-[12px] font-bold md:text-lg  text-black">{t("total").toUpperCase()}</label>
-              <ERPInput
-                localInputBox={merge({}, initialUserConfig.inputBoxStyle, {inputHeight:2, fontSize:30, fontColor:"255, 0, 0", borderColor: '200, 200, 200'})}
-                id=""
-                customSize="customize"
-                type="number"
-                value={total}
-                noLabel={true}
+            <div className="mb-2">
+              <label className="text-black text-xs font-medium mb-1 block">{t("total")}</label>
+              <input
+                type="text"
+                value={total.toFixed(2)}
+                readOnly
+                className="w-full bg-gray-100 text-red-500 text-right text-2xl font-bold px-3 py-2 rounded-md border border-gray-200 outline-none"
               />
             </div>
 
             {/* Discount Row */}
-            <div className="grid grid-cols-[120px_1fr] gap-4 items-center">
-              <div className="flex items-center gap-2">
-                <ERPCheckbox
-                  id="discEnabled"
+            <div className="mb-2">
+              <div className="flex items-center gap-2 mb-1">
+                <input
+                  type="checkbox"
                   checked={discEnabled}
-                  label={t('disc').toUpperCase()}
                   onChange={(e) => setDiscEnabled(e.target.checked)}
-                  labelClassName="font-bold text-lg text-black"
+                  className="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
                 />
+                <span className="text-black text-xs font-medium">{t('disc')}</span>
               </div>
-              <div className="grid grid-cols-2 gap-2">
-                <ERPInput
-                  localInputBox={merge({}, initialUserConfig.inputBoxStyle, {inputHeight:2, fontSize:25, fontColor:"0, 0, 0", borderColor: '200, 200, 200'})}
-                  id="discPercent"
-                  customSize="customize"
+              <div className="flex gap-2 w-full">
+                <input
                   type="number"
-                  noLabel={true}
+                  min="0"
                   value={Number(discPercent.toFixed(2))}
-                  onChange={(e) => handleDiscPercentChange(parseFloat(e.target.value) || 0)}
+                  onChange={(e) => {
+                    const val = parseFloat(e.target.value) || 0;
+                    handleDiscPercentChange(val < 0 ? 0 : val);
+                  }}
                   disabled={!discEnabled}
+                  placeholder="%"
+                  className="w-1/2 min-w-0 bg-gray-100 text-black text-right text-lg font-semibold px-3 py-2 rounded-md border border-gray-200 outline-none focus:border-blue-400 disabled:bg-gray-200 disabled:opacity-60"
                 />
-                <ERPInput
-                  localInputBox={merge({}, initialUserConfig.inputBoxStyle, {inputHeight:2, fontSize:25, fontColor:"0, 0, 0", borderColor: '200, 200, 200'})}
+                <input
                   ref={discAmountRef}
-                  id="discAmount"
-                  customSize="customize"
                   type="number"
-                  noLabel={true}
+                  min="0"
                   value={discAmount}
-                  onChange={(e) => handleDiscAmountChange(parseFloat(e.target.value) || 0)}
+                  onChange={(e) => {
+                    const val = parseFloat(e.target.value) || 0;
+                    handleDiscAmountChange(val < 0 ? 0 : val);
+                  }}
                   disabled={!discEnabled}
+                  className="w-1/2 min-w-0 bg-gray-100 text-black text-right text-lg font-semibold px-3 py-2 rounded-md border border-gray-200 outline-none focus:border-blue-400 disabled:bg-gray-200 disabled:opacity-60"
                 />
               </div>
             </div>
 
             {/* Tax on Disc */}
-            <div className="grid grid-cols-[120px_1fr] gap-4 items-center">
-              <label className="text-left text-[10px] leading-[12px] font-semibold md:text-[12px] text-black">{t('tax_on_disc').toUpperCase()}</label>
+            <div className="mb-2">
+              <label className="text-black text-xs font-medium mb-1 block">{t('tax_on_disc')}</label>
               <div className="flex gap-2 items-center">
                 <button
                   type="button"
-                  style={{
-                    background: "#8080809c",
-                    border: "none",
-                    borderRadius: "6px 6px 6px 6px",
-                    padding: "0px 0px",
-                    height: "100%",
-                    display: "flex",
-                    alignItems: "center",
-                    cursor: "pointer",
-                  }}
+                  className="bg-gray-600 hover:bg-gray-700 p-2 rounded-md transition-colors flex-shrink-0"
                   onClick={handleBillDiscountDownTaxRate}
-                  >
-                  <ChevronDown size={20} color="#fff" />
+                >
+                  <ChevronDown size={16} color="#fff" />
                 </button>
-
-                <ERPInput
-                  localInputBox={merge({}, initialUserConfig.inputBoxStyle, {inputHeight:2, fontSize:20, fontColor:"255, 0, 0", borderColor: '200, 200, 200'})}
-                  id="taxOnDisc"
-                  customSize="customize"
-                  type="number"
-                  noLabel={true}
+                <input
+                  type="text"
                   value={taxOnDiscAmount.toFixed(2)}
-                  readOnly={true}
+                  readOnly
+                  className="flex-1 min-w-0 bg-gray-100 text-red-500 text-right text-base font-medium px-3 py-2 rounded-md border border-gray-200 outline-none"
                 />
               </div>
             </div>
 
             {/* Net Total */}
-            <div className="grid grid-cols-[120px_1fr] gap-4 items-center">
-              <label className="text-left text-[10px] leading-[12px] font-semibold md:text-[12px] text-black">{t('net_total').toUpperCase()}</label>
-              <ERPInput
-                localInputBox={merge({}, initialUserConfig.inputBoxStyle, {inputHeight:2, fontSize:30, fontColor:"255, 0, 0", borderColor: '200, 200, 200'})}
-                id="netTotal"
-                customSize="customize"
-                type="number"
-                noLabel={true}
+            <div className="mb-2">
+              <label className="text-black text-xs font-medium mb-1 block">{t('net_total')}</label>
+              <input
+                type="text"
                 value={netTotal.toFixed(2)}
                 readOnly
+                className="w-full bg-gray-100 text-black text-right text-2xl font-bold px-3 py-2 rounded-md border border-gray-200 outline-none"
               />
             </div>
 
             {/* Cash Received */}
-            <div className="grid grid-cols-[120px_1fr] gap-4 items-center">
-              <label className="text-left text-[10px] leading-[12px] font-semibold md:text-[12px] text-black">{t('cash_received').toUpperCase()}</label>
+            <div className="mb-2">
+              <label className="text-black text-xs font-medium mb-1 block">{t('cash_received')}</label>
               <div className="flex gap-2 items-center">
-                <ERPButton
-                  className="h-8 bg-[#8080809c] text-blaxk"
-                  title={t("add")}
-                  onClick={()=> handleAddCashClick() }
-                />
-              <ERPInput
-                localInputBox={merge({}, initialUserConfig.inputBoxStyle, {inputHeight:2, fontSize:25, fontColor:"0, 0, 0", borderColor: '200, 200, 200'})}
-                customSize="customize"
-                id="cashRcvd"
-                type="number"
-                noLabel={true}
-                value={cashRcvd}
-                onChange={(e) => setCashRcvd(parseFloat(e.target.value) || 0)}
-              />
-              </div>
-            </div>
-
-            {/* Card Amount */}
-            <div className="grid grid-cols-[120px_1fr] gap-4 items-center">
-              <div className="flex flex-col items-left">
-                <ERPCheckbox
-                  id="cardAmtEnabled"
-                  label={t("bank_card")}
-                  checked={paymentMode === "CARD"}
-                  onChange={() => setPaymentMode("CARD")}
-                  labelClassName="font-bold text-lg text-black"
-                />
-
-                <ERPCheckbox
-                  id="upiEnabled"
-                  label={t("qr_pay")}
-                  checked={paymentMode === "UPI"}
-                  onChange={() => setPaymentMode("UPI")}
-                  labelClassName="font-bold text-lg text-black"
-                />
-              </div>
-
-              <div className="flex gap-2 items-center">
-                <ERPInput
-                  localInputBox={merge({}, initialUserConfig.inputBoxStyle, {inputHeight:2, fontSize:25, fontColor:"0, 0, 0", borderColor: '200, 200, 200'})}
-                  customSize="customize"
-                  id="cardAmt"
+                {allowMultiPayment && (
+                  <button
+                    type="button"
+                    className="bg-gray-600 hover:bg-gray-700 text-white text-xs font-semibold px-3 py-2 rounded-md transition-colors flex-shrink-0"
+                    onClick={handleAddCashClick}
+                  >
+                  {t("add")}
+                  </button>
+                )}
+                <input
                   type="number"
-                  noLabel={true}
-                  value={totalQrPayAmount+totalBankCardAmount}
-                  onChange={(e) => setCardAmt(parseFloat(e.target.value) || 0)}
-                  readOnly={true}
+                  min="0"
+                  value={cashRcvd}
+                  onChange={(e) => {
+                    const val = parseFloat(e.target.value) || 0;
+                    setCashRcvd(val < 0 ? 0 : val);
+                  }}
+                  className="flex-1 min-w-0 bg-gray-100 text-black text-right text-xl font-semibold px-3 py-2 rounded-md border border-gray-200 outline-none focus:border-blue-400"
                 />
               </div>
             </div>
+
+            {/* Bank Card */}
+            {allowMultiPayment === true ?
+            <div>
+            <div
+              className={`flex items-center justify-between p-3 mb-2 rounded-md border cursor-pointer transition-colors ${
+                paymentMode === "CARD"
+                  ? "border-blue-500 bg-blue-50"
+                  : "border-gray-200 bg-gray-100 hover:bg-gray-50"
+              }`}
+              onClick={() => setPaymentMode(paymentMode === "CARD" ? null : "CARD")}
+            >
+              <div className="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  checked={paymentMode === "CARD"}
+                  onChange={() => {}}
+                  className="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <CreditCard size={18} className="text-gray-500" />
+                <span className="text-black text-sm font-medium">{t("bank_card")}</span>
+              </div>
+              <span className="text-blue-500 font-bold text-lg">{totalBankCardAmount.toFixed(1)}</span>
+            </div>
+
+            {/* UPI */}
+            <div
+              className={`flex items-center justify-between p-3 mb-3 rounded-md border cursor-pointer transition-colors ${
+                paymentMode === "UPI"
+                  ? "border-blue-500 bg-blue-50"
+                  : "border-gray-200 bg-gray-100 hover:bg-gray-50"
+              }`}
+              onClick={() => setPaymentMode(paymentMode === "UPI" ? null : "UPI")}
+            >
+              <div className="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  checked={paymentMode === "UPI"}
+                  onChange={() => {}}
+                  className="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <Smartphone size={18} className="text-gray-500" />
+                <span className="text-black text-sm font-medium">{t("qr_pay")}</span>
+              </div>
+              <span className="text-blue-500 text-lg font-semibold">{totalQrPayAmount.toFixed(1)}</span>
+            </div></div>
+            : 
+            <div>
+              {/* CARD AMOUNT ROW */}
+              <div className="mb-2">
+              <div className="flex items-center gap-2 mb-1">
+                <input
+                  type="checkbox"
+                  checked={cardEnabled}
+                  onChange={(e) => {
+                    const checked = e.target.checked;
+                    setCardEnabled(checked);
+                    if (checked && balance > 0) {
+                      setCardAmt(balance);
+                    } else if (!checked) {
+                      setCardAmt(0);
+                    }
+                  }}
+                  className="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <span className="text-black text-xs font-medium">{t('card_amount_tender')}</span>
+              </div>
+              <div className="flex gap-2 items-center">
+                <button
+                  type="button"
+                  className="bg-gray-600 hover:bg-gray-700 text-white text-xs font-semibold px-3 py-2 rounded-md transition-colors flex-shrink-0 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                  onClick={() => alert("Need to manage this section - btnSendToBankPOS_Click")}
+                  disabled={!cardEnabled}
+                >
+                  <ChevronUp size={16} color="#fff"/>
+                </button>
+                <input
+                  type="number"
+                  min="0"
+                  value={cardAmt}
+                  onChange={(e) => {
+                    const val = parseFloat(e.target.value) || 0;
+                    setCardAmt(val < 0 ? 0 : val);
+                  }}
+                  disabled={!cardEnabled}
+                  className="flex-1 min-w-0 bg-gray-100 text-black text-right text-xl font-semibold px-3 py-2 rounded-md border border-gray-200 outline-none focus:border-blue-400 disabled:bg-gray-200 disabled:opacity-60"
+                />
+              </div>
+            </div>
+            {/* BANK AC ROW */}
+            <div className="mb-3">
+                  <div className="flex items-center gap-2 mb-1">
+                    <input
+                      type="checkbox"
+                      checked={ledgerEnabled}
+                      onChange={(e) => setLedgerEnabled(e.target.checked)}
+                      className="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <label className="text-black text-xs font-medium">{t('bank_ac')}</label>
+                  </div>
+                  <ERPDataComboBox
+                    id="ledgerCombo"
+                    noLabel={true}
+                    variant="outlined"
+                    className="tender-combobox"
+                    style={{ backgroundColor: 'white', borderRadius: '6px' }}
+                    field={{
+                      id: "ledgerID",
+                      required: true,
+                      getListUrl: Urls.data_BankAccounts,
+                      valueKey: "id",
+                      labelKey: "name",
+                    }}
+                    value={bankCardDetails.ledgerId || -2}
+                    onChange={(e) =>
+                      setBankCardDetails((prev: any) => {
+                        return {
+                          ...prev,
+                          ledgerId: e?.value
+                        }
+                      })
+                    }
+                    disabled={!ledgerEnabled}
+                  />
+                </div>
+            </div>}
 
             {/* Balance */}
-            <div className="grid grid-cols-[120px_1fr] gap-4 items-center">
-              <label className="text-left text-[10px] leading-[12px] font-bold md:text-lg text-black">{t('balance').toUpperCase()}</label>
-              <ERPInput
-                id="balance"
-                localInputBox={merge({}, initialUserConfig.inputBoxStyle, {inputHeight:2, fontSize:30, fontColor:"255, 0, 0", borderColor: '200, 200, 200'})}
-                customSize="customize"
-                type="number"
-                noLabel={true}
+            <div className="mb-2">
+              <label className="text-black text-xs font-medium mb-1 block">{t('balance')}</label>
+              <input
+                type="text"
                 value={balance.toFixed(2)}
                 readOnly
+                className="w-full bg-gray-100 text-red-500 text-right text-2xl font-bold px-3 py-2 rounded-md border border-gray-200 outline-none"
               />
             </div>
 
             {/* Apply Button */}
-            <div className="flex justify-center py-4">
-              <ERPButton
-                title={t("apply")}
+            <div className="flex justify-center pt-2">
+              <button
+                type="button"
                 onClick={handleApply}
-                variant="primary"
-                className="w-60"
-              />
+                className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors text-base"
+              >
+                {t("apply")}
+              </button>
             </div>
           </div>
           {/* Right Section */}
             {paymentMode === "UPI" &&(
-            <div className="flex flex-col flex-1 px-4 w-1/2">
+            <div className="flex flex-col flex-1 w-1/2">
+              <h1 className="text-2xl font-bold text-purple-800 my-2 text-center">{t("qr_pay")}</h1>
 
-            <h1 className="text-2xl font-bold text-purple-800 my-2 text-center">{t("qr_pay")}</h1>
-            <div className="flex flex-col">
-              {/*  In api call there will be default ledger */}
-              <ERPDataComboBox
-                id="QrPayType"
-                label={t("qr_pay_type")}
-                field={{
-                  id: "id",
-                  getListUrl: `${Urls.inv_transaction_base}${formState.transactionType}/Data/UPIs`,
-                  valueKey: "id",
-                  labelKey: "name",
-                  nameKey: "alias", // Map alias to name property for ledgerId
-                }}
-                value={uPIDetails.paymentTypeID || -2}
-                onChange={(e) =>
-                  setUPIDetails((prev: any) => {
-                    return {
-                      ...prev,
-                      paymentTypeID: e?.value,
-                      paymentName: e?.label,
-                      ledgerId: Number(e?.name) // alias value is mapped to name
-                    }
-                  })
-                }
-              />
-              <ERPInput
-                id="QrAmount"
-                localInputBox={merge({}, initialUserConfig.inputBoxStyle, {inputHeight:2, fontSize:20, marginBottom:0, fontColor:"0, 0, 0", borderColor: '200, 200, 200'})}
-                customSize="customize"
-                type="number"
-                label={t("qr_pay_amount")}
-                value={Number(Number(uPIDetails?.amount).toFixed(2))}
-                onChange={(e) =>
-                  setUPIDetails((prev: any) => {
-                    return {
-                      ...prev,
-                       amount: e.target?.value
-                    }
-                  })
-                }
-              />
+              {/* Add New Payment Card */}
+              <div className="bg-gray-50 rounded-lg p-4 mb-2">
 
-              <ERPInput
-                id="description"
-                type="string"
-                label={t("description")}
-                className="mb-2"
-                value={uPIDetails?.description}             
-                onChange={(e) =>
-                  setUPIDetails((prev: any) => {
-                    return {
-                      ...prev,
-                       description: e.target?.value
+                {/* QR Pay Type */}
+                <div className="mb-3">
+                  <label className="text-black text-xs font-medium mb-1 block">{t("qr_pay_type")}</label>
+                  <ERPDataComboBox
+                    id="QrPayType"
+                    noLabel={true}
+                    variant="outlined"
+                    className="tender-combobox"
+                    style={{ backgroundColor: 'white', borderRadius: '6px' }}
+                    field={{
+                      id: "id",
+                      getListUrl: `${Urls.inv_transaction_base}${formState.transactionType}/Data/UPIs`,
+                      valueKey: "id",
+                      labelKey: "name",
+                      nameKey: "alias",
+                    }}
+                    value={uPIDetails.paymentTypeID || -2}
+                    onChange={(e) =>
+                      setUPIDetails((prev: any) => {
+                        return {
+                          ...prev,
+                          paymentTypeID: e?.value,
+                          paymentName: e?.label,
+                          ledgerId: Number(e?.name)
+                        }
+                      })
                     }
-                  })
-                }
-              />
-              <div className="flex justify-center mt-2">
-                <ERPButton
-                  title={t("add")}
-                  variant="primary"
-                  className="w-40"
+                  />
+                </div>
+
+                {/* Amount */}
+                <div className="mb-3">
+                  <label className="text-black text-xs font-medium mb-1 block">{t("amount")}</label>
+                  <input
+                    type="number"
+                    value={Number(Number(uPIDetails?.amount).toFixed(2))}
+                    onChange={(e) =>
+                      setUPIDetails((prev: any) => {
+                        return {
+                          ...prev,
+                          amount: e.target?.value
+                        }
+                      })
+                    }
+                    className="w-full bg-white text-black text-right text-base font-medium px-3 py-2 rounded-md border border-gray-200 outline-none focus:border-blue-400"
+                  />
+                </div>
+
+                {/* Description */}
+                <div className="mb-3">
+                  <label className="text-black text-xs font-medium mb-1 block">{t("description")}</label>
+                  <input
+                    type="text"
+                    value={uPIDetails?.description || ''}
+                    onChange={(e) =>
+                      setUPIDetails((prev: any) => {
+                        return {
+                          ...prev,
+                          description: e.target?.value
+                        }
+                      })
+                    }
+                    className="w-full bg-white text-black text-base font-medium px-3 py-2 rounded-md border border-gray-200 outline-none focus:border-blue-400"
+                  />
+                </div>
+
+                {/* Add Payment Button */}
+                <button
+                  type="button"
                   onClick={handleQRPayAddClick}
+                  className="w-full bg-blue-400 hover:bg-blue-500 text-white font-medium py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+                >
+                  <span>+</span> {t("add_payment")}
+                </button>
+              </div>
+
+              {/* Grid */}
+              <div className="flex-1">
+                <ErpDevGrid
+                  columns={gridColumnsUpi}
+                  showChooserOnGridHead
+                  chooserClass="absolute z-10 pointer-events-auto mt-4"
+                  data={formState.transaction.uPIDetails}
+                  gridId="TenderUpiGrid"
+                  height={250}
+                  hideGridAddButton={true}
+                  columnHidingEnabled={true}
+                  hideDefaultExportButton={true}
+                  hideDefaultSearchPanel={true}
+                  allowSearching={false}
+                  allowExport={false}
+                  hideGridHeader={true}
+                  enablefilter={false}
+                  enableScrollButton={false}
+                  ShowGridPreferenceChooser={false}
+                  showPrintButton={false}
                 />
               </div>
-            </div>
-            <div className="flex-1">
-              <ErpDevGrid
-                columns={gridColumnsUpi}
-                showChooserOnGridHead
-                chooserClass="absolute z-10 pointer-events-auto mt-4"
-                data={formState.transaction.uPIDetails}
-                gridId="TenderUpiGrid"
-                height={250}
-                hideGridAddButton={true}
-                columnHidingEnabled={true}
-                hideDefaultExportButton={true}
-                hideDefaultSearchPanel={true}
-                allowSearching={false}
-                allowExport={false}
-                hideGridHeader={true}
-                enablefilter={false}
-                enableScrollButton={false}
-                ShowGridPreferenceChooser={false}
-                showPrintButton={false}
-              />
-            </div>
             </div>
             )}
 
-            {/* upi */}
+            {/* Bank Card */}
             {paymentMode === "CARD" &&(
-            <div className="flex flex-col flex-1 px-4 w-1/2">
+            <div className="flex flex-col flex-1 w-1/2">
+              <h1 className="text-2xl font-bold text-purple-800 my-2 text-center">{t("bank_cards")}</h1>
 
-            <h1 className="text-2xl font-bold text-purple-800 my-2 text-center">{t("bank_cards")}</h1>
-            <div className="flex flex-col">
-              {/*  In api call there will be default ledger */}
-              <ERPDataComboBox
-                id="cardType"
-                label={t("card_type")}
-                field={{
-                  id: "id",
-                  getListUrl: `${Urls.inv_transaction_base}${formState.transactionType}/Data/BankCards`,
-                  valueKey: "id",
-                  labelKey: "name",
-                  nameKey: "alias", // Map alias to name property for ledgerId
-                }}
-                value={bankCardDetails.paymentTypeID || -2}
-                onChange={(e) =>
-                  setBankCardDetails((prev: any) => {
-                    return {
-                      ...prev,
-                      paymentTypeID : e?.value,
-                      paymentName: e?.name,
-                      ledgerId: Number(e?.name)
+              {/* Add New Payment Card */}
+              <div className="bg-gray-50 rounded-lg p-4 mb-2">
+
+                {/* Card Type */}
+                <div className="mb-2">
+                  <label className="text-black text-xs font-medium mb-1 block">{t("card_type")}</label>
+                  <ERPDataComboBox
+                    id="cardType"
+                    noLabel={true}
+                    variant="outlined"
+                    className="tender-combobox"
+                    style={{ backgroundColor: 'white', borderRadius: '6px' }}
+                    field={{
+                      id: "id",
+                      getListUrl: `${Urls.inv_transaction_base}${formState.transactionType}/Data/BankCards`,
+                      valueKey: "id",
+                      labelKey: "name",
+                      nameKey: "alias",
+                    }}
+                    value={bankCardDetails.paymentTypeID || -2}
+                    onChange={(e) =>
+                      setBankCardDetails((prev: any) => {
+                        return {
+                          ...prev,
+                          paymentTypeID: e?.value,
+                          paymentName: e?.name,
+                          ledgerId: Number(e?.name)
+                        }
+                      })
                     }
-                  })
-                }
-              />
-              <ERPCheckbox
-                  id="ledgerId"
-                  checked={ledgerEnabled}
-                  label={t('ledger')}
-                  onChange={(e) => setLedgerEnabled(e.target.checked)}
-                  labelClassName="font-bold text-lg text-black mt-2 mb-0"
-                />
-              <ERPDataComboBox
-                  id=""
-                  field={{
-                    id: "ledgerID",
-                    required: true,
-                    getListUrl: Urls.data_BankAccounts,
-                    valueKey: "id",
-                    labelKey: "name",
-                  }}
-                  label={t("ledger")}
-                  value={bankCardDetails.ledgerId || -2} // In api call there will be default ledger
-                  onChange={(e) =>
-                    setBankCardDetails((prev: any) => {
-                      return {
-                        ...prev,
-                        ledgerId: e?.value
-                      }
-                    })
-                  }
-                  disabled={!ledgerEnabled}
-                />
-              <ERPInput
-                id="CardAmount"
-                localInputBox={merge({}, initialUserConfig.inputBoxStyle, {inputHeight:2, fontSize:30, fontColor:"255, 0, 0", borderColor: '200, 200, 200'})}
-                customSize="customize"
-                type="number"
-                label={t("card_amount")}
-                value={bankCardDetails?.amount}
-                onChange={(e) =>
-                  setBankCardDetails((prev: any) => {
-                    return {
-                      ...prev,
-                       amount: e.target?.value
+                  />
+                </div>
+                {/* Ledger Row */}
+                <div className="mb-3">
+                  <div className="flex items-center gap-2 mb-1">
+                    <input
+                      type="checkbox"
+                      checked={ledgerEnabled}
+                      onChange={(e) => setLedgerEnabled(e.target.checked)}
+                      className="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <label className="text-black text-xs font-medium">{t('ledger')}</label>
+                  </div>
+                  <ERPDataComboBox
+                    id="ledgerCombo"
+                    noLabel={true}
+                    variant="outlined"
+                    className="tender-combobox"
+                    style={{ backgroundColor: 'white', borderRadius: '6px' }}
+                    field={{
+                      id: "ledgerID",
+                      required: true,
+                      getListUrl: Urls.data_BankAccounts,
+                      valueKey: "id",
+                      labelKey: "name",
+                    }}
+                    value={bankCardDetails.ledgerId || -2}
+                    onChange={(e) =>
+                      setBankCardDetails((prev: any) => {
+                        return {
+                          ...prev,
+                          ledgerId: e?.value
+                        }
+                      })
                     }
-                  })
-                }
-              />
-              <ERPInput
-                id="description"
-                type="string"
-                label={t("description")}
-                className="mb-2"
-                value={bankCardDetails?.description}
-                onChange={(e) =>
-                  setBankCardDetails((prev: any) => {
-                    return {
-                      ...prev,
-                       description: e.target?.value
+                    disabled={!ledgerEnabled}
+                  />
+                </div>
+
+                {/* Amount */}
+                <div className="mb-2">
+                  <label className="text-black text-xs font-medium mb-1 block">{t("amount")}</label>
+                  <input
+                    type="number"
+                    value={bankCardDetails?.amount || 0}
+                    onChange={(e) =>
+                      setBankCardDetails((prev: any) => {
+                        return {
+                          ...prev,
+                          amount: e.target?.value
+                        }
+                      })
                     }
-                  })
-                }
-              />
-              <div className="flex justify-center mt-2">
-                <ERPButton
-                  title={t("add")}
-                  variant="primary"
-                  className="w-40"
+                    className="w-full bg-white text-black text-right text-base font-medium px-3 py-2 rounded-md border border-gray-200 outline-none focus:border-blue-400"
+                  />
+                </div>
+
+                {/* Description */}
+                <div className="mb-2">
+                  <label className="text-black text-xs font-medium mb-1 block">{t("description")}</label>
+                  <input
+                    type="text"
+                    value={bankCardDetails?.description || ''}
+                    onChange={(e) =>
+                      setBankCardDetails((prev: any) => {
+                        return {
+                          ...prev,
+                          description: e.target?.value
+                        }
+                      })
+                    }
+                    className="w-full bg-white text-black text-base font-medium px-3 py-2 rounded-md border border-gray-200 outline-none focus:border-blue-400"
+                  />
+                </div>
+
+                
+
+                {/* Add Payment Button */}
+                <button
+                  type="button"
                   onClick={handleBankCardAddClick}
+                  className="w-full bg-blue-400 hover:bg-blue-500 text-white font-medium py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+                >
+                  <span>+</span> {t("add_payment")}
+                </button>
+              </div>
+
+              {/* Grid */}
+              <div className="flex-1">
+                <ErpDevGrid
+                  columns={gridColumnsBankCard}
+                  showChooserOnGridHead
+                  chooserClass="absolute z-10 pointer-events-auto mt-4"
+                  data={formState.transaction.bankCardDetails}
+                  gridId="TenderBankCardPaymentGrid"
+                  height={250}
+                  hideGridAddButton={true}
+                  columnHidingEnabled={true}
+                  hideDefaultExportButton={true}
+                  hideDefaultSearchPanel={true}
+                  allowSearching={false}
+                  allowExport={false}
+                  hideGridHeader={true}
+                  enablefilter={false}
+                  enableScrollButton={false}
+                  ShowGridPreferenceChooser={false}
+                  showPrintButton={false}
                 />
               </div>
-            </div>
-            <div className="flex-1">
-              <ErpDevGrid
-                columns={gridColumnsBankCard}
-                showChooserOnGridHead
-                chooserClass="absolute z-10 pointer-events-auto mt-4"
-                data={formState.transaction.bankCardDetails}
-                gridId="TenderBankCardPaymentGrid"
-                height={250}
-                hideGridAddButton={true}
-                columnHidingEnabled={true}
-                hideDefaultExportButton={true}
-                hideDefaultSearchPanel={true}
-                allowSearching={false}
-                allowExport={false}
-                hideGridHeader={true}
-                enablefilter={false}
-                enableScrollButton={false}
-                ShowGridPreferenceChooser={false}
-                showPrintButton={false}
-              />
-            </div>
             </div>
             )}
         </div>

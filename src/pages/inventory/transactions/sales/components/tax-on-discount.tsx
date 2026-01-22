@@ -24,18 +24,19 @@ const TaxOnDiscount: React.FC<taxOnDiscProps> = ({ formState, t, taxOnDiscBtnCli
   return (
     <>
     {applicationSettings?.branchSettings?.enableTaxOnBillDiscount && (
-    <div className="flex items-center group">
-      <span className="flex items-center gap-1">
-        <span className="flex items-center gap-1 text-xs dark:text-dark-text text-gray-600 font-medium w-24">
+    <div className="flex items-center gap-2 group min-w-0">
+      <span className="flex items-center gap-1 flex-shrink-0">
+        <span className="flex items-center gap-1 text-xs dark:text-dark-text text-gray-600 font-medium">
           {t("tax_on_disc")}
           <CircleArrowDown onClick={()=>taxOnDiscBtnClick()} size={14} className="text-gray-600 "/>
         </span>
       </span>
-      <span className="text-xs dark:text-dark-text text-gray-600 mr-2">:</span>
+      <span className="text-xs dark:text-dark-text text-gray-600">:</span>
       <span
-        className={`text-sm font-semibold dark:text-dark-text text-gray-900 flex-1 ${
+        className={`text-sm font-semibold dark:text-dark-text text-gray-900 flex-1 truncate min-w-0 ${
           isRtl ? "text-left" : "text-right"
         }`}
+        title={getFormattedValue(formState.transaction.master.taxOnDiscount ?? 0)}
       >
         {getFormattedValue(formState.transaction.master.taxOnDiscount ?? 0)}
       </span>

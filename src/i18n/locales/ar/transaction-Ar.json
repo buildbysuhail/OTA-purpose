@@ -1187,7 +1187,11 @@
   "upi_type_id": "معرف نوع UPI",
   "card_type_id": "معرف نوع البطاقة",
   "card_type": "نوع البطاقة",
-  "bank_cards": "البطاقات البنكية"
+  "bank_cards": "البطاقات البنكية",
+
+  "add_payment": "إضافة وسيلة دفع",
+  "card_amount_tender": "مبلغ البطاقة",
+  "bank_ac": "الحساب البنكي"
 
 
 }

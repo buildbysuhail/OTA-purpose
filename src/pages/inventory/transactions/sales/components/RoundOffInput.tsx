@@ -30,7 +30,7 @@ const RoundOffInput: React.FC<RoundOffInputProps> = ({ formState, t, handleKeyDo
 
   return (
       <>
-      {formState.formElements.hasroundOff?.visible==true&&
+      {/* {formState.formElements.hasroundOff?.visible==true&& */}
     <div className="flex flex-col gap-0">
       <ERPCheckbox
         localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -68,7 +68,8 @@ const RoundOffInput: React.FC<RoundOffInputProps> = ({ formState, t, handleKeyDo
         onChange={(e) => onChange(e.target.value)}
         readOnly
       />
-    </div>}
+    </div>
+    {/* } */}
       </>
   );
 };

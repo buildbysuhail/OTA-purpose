@@ -1192,7 +1192,11 @@
   "upi_type_id":"UPITypeID",
   "card_type_id":"CardTypeID",
   "card_type":"CardType",
-  "bank_cards":"Bank Cards"
+  "bank_cards":"Bank Cards",
+
+  "add_payment":"Add Payment",
+  "card_amount_tender":"Card Amount",
+  "bank_ac":"Bank A/C"
 
 
 

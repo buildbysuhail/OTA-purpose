@@ -1736,7 +1736,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
 
     /** ---------------- External API ---------------- */
     refInvTransactionMasterSOID:
-      applicationSettings.mainSettings.enableExternalAPI &&
+      applicationSettings.miscellaneousSettings.enableExternalAPI &&
       m.voucherPrefix === "ESI/"
         ? m.refInvTransactionMasterSOID ?? ""
         : "",

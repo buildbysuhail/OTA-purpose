@@ -343,5 +343,6 @@
   "enable_external_api":"Enable External API",
 
   "default_si_bt_account":"Default SI-BT Account",
-  "default_pi_bt_account":"Default PI-BT Account"
+  "default_pi_bt_account":"Default PI-BT Account",
+  "use_empty_tax_type_template_if_missing":"Use Empty Tax Type Template If Missing"
 }

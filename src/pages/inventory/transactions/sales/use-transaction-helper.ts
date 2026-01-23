@@ -1623,7 +1623,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
    inventoryLedgerID:
     m.inventoryLedgerID > 0
       ? m.inventoryLedgerID
-      : applicationSettings.accountsSettings.defaultSIBTAcc > 0 && m.voucherForm === "BT"
+      : applicationSettings.branchSettings.defaultSIBTAcc > 0 && m.voucherForm === "BT"
       ? applicationSettings.accountsSettings.defaultBankAcc
       : applicationSettings.inventorySettings.defaultSalesAcc,
     

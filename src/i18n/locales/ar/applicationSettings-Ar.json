@@ -340,5 +340,8 @@
   "E-Invoice TaxPro": "فاتورة إلكترونية TaxPro",
 
   "show_tender_window_for_party": "إظهار نافذة المناقصة للطرف",
-  "enable_external_api": "تفعيل واجهة برمجة التطبيقات الخارجية"
+  "enable_external_api": "تفعيل واجهة برمجة التطبيقات الخارجية",
+
+  "default_si_bt_account": "الحساب الافتراضي لـ SI-BT",
+  "default_pi_bt_account": "الحساب الافتراضي لـ PI-BT"
 }

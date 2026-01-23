@@ -34,6 +34,8 @@ export interface ApplicationBranchSettings {
     maximum_Allowed_LineItem_Amount: number;
     fileAttachmentMethod: string;
     fileAttachmentFolder: string;
+    defaultSIBTAcc: number;
+    defaultPIBTAcc: number;
   }
   export const ApplicationBranchSettingsInitialState: ApplicationBranchSettings = {
     maintainTaxes: true,
@@ -69,4 +71,6 @@ export interface ApplicationBranchSettings {
     maximum_Allowed_LineItem_Amount: 0.0,
     fileAttachmentMethod: "No",
     fileAttachmentFolder: "",
+    defaultSIBTAcc: 0,
+    defaultPIBTAcc: 0
   };

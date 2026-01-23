@@ -340,5 +340,8 @@
   "e_invoice_taxPro": "E-Invoice TaxPro",
   
   "show_tender_window_for_party":"Show Tender Window For Party",
-  "enable_external_api":"Enable External API"
+  "enable_external_api":"Enable External API",
+
+  "default_si_bt_account":"Default SI-BT Account",
+  "default_pi_bt_account":"Default PI-BT Account"
 }

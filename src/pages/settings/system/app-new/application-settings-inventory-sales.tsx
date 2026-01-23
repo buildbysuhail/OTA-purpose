@@ -869,6 +869,56 @@ const InventorySalesFilterableComponents: React.FC<ApplicationSettingsProps> = (
         />
       ),
     },
+    {
+      condition: filterComponent([t("default_pi_bt_account")], filterText),
+      element: (
+        <ERPDataCombobox
+          isInModal={false}
+          id="defaultPIBTAcc"
+          data={settings?.branchSettings}
+          field={{
+            id: "defaultPIBTAcc",
+            getListUrl: Urls.data_acc_ledgers,
+            params: `ledgerID=0&ledgerType=${LedgerType.PurchaseAndDirectExpense}`,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onChangeData={(data: any) =>
+            handleFieldChange(
+              "branchSettings",
+              "defaultPIBTAcc",
+              data.defaultPIBTAcc
+            )
+          }
+          label={t("default_pi_bt_account")}
+        />
+      ),
+    },
+    {
+      condition: filterComponent([t("default_si_bt_account")], filterText),
+      element: (
+        <ERPDataCombobox
+          isInModal={false}
+          id="defaultSIBTAcc"
+          data={settings?.branchSettings}
+          field={{
+            id: "defaultSIBTAcc",
+            getListUrl: Urls.data_acc_ledgers,
+            params: `ledgerID=0&ledgerType=${LedgerType.SalesAndDirectIncome}`,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onChangeData={(data: any) =>
+            handleFieldChange(
+              "branchSettings",
+              "defaultSIBTAcc",
+              data.defaultSIBTAcc
+            )
+          }
+          label={t("default_si_bt_account")}
+        />
+      ),
+    },
 
   ];
   const [hasMatchedItems, setHasMatchedItems] = useState<boolean>(true);

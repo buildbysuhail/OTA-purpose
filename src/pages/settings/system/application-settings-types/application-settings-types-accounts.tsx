@@ -44,6 +44,7 @@ export interface ApplicationAccountSettings {
     enable24Hours: boolean;
     allowMultiPayments: boolean;
     enableCPEandCRE: boolean;
+    defaultSIBTAcc: number;
     showTenderDialogForParty: boolean; // Need to add in settings
 }
 
@@ -94,4 +95,5 @@ export const ApplicationAccountSettingsInitialState: ApplicationAccountSettings 
     allowMultiPayments: false,
     enableCPEandCRE: false,
     showTenderDialogForParty: false,
+    defaultSIBTAcc: 0
 };

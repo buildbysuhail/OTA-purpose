@@ -1597,8 +1597,187 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       errors,
     };
   };
+ const attachMaster = (formState: TransactionFormState) => {
 
-  const attachMaster = (formState: TransactionFormState) => {
+     const m = formState.transaction.master;
+
+  const master = {
+    ...m,
+      salesManID: formState.transaction.master.employeeID,
+
+    /** ---------------- Identity ---------------- */
+    // invTransactionMasterID: options.isEdit
+    //   ? options.invTransMasterID
+    //   : 0,
+
+    // randomKey: options.randomKey,
+    activeStatus: true,
+
+    /** ---------------- Party ---------------- */
+    // partyName:
+    //   m.partyName && m.partyName !== ""
+    //     ? m.partyName
+    //     : formState..partyText,
+
+    ledgerID: m.ledgerID,
+   inventoryLedgerID:
+    m.inventoryLedgerID > 0
+      ? m.inventoryLedgerID
+      : applicationSettings.accountsSettings.defaultSIBTAcc > 0 && m.voucherForm === "BT"
+      ? applicationSettings.accountsSettings.defaultBankAcc
+      : applicationSettings.inventorySettings.defaultSalesAcc,
+    
+
+    /** ---------------- Address ---------------- */
+    address1: m.address1,
+    address2: m.address2,
+    address3: m.address3,
+    address4: m.address4,
+
+    /** ---------------- Dates ---------------- */
+    transactionDate: m.transactionDate,
+    orderDate: m.orderDate,
+    quotationDate: m.quotationDate,
+    purchaseInvoiceDate: m.purchaseInvoiceDate,
+    deliveryDate: m.deliveryDate,
+    despatchDate: m.despatchDate,
+    dueDate: m.dueDate,
+
+    /** ---------------- Amounts ---------------- */
+    adjustmentAmount: m.adjustmentAmount,
+    adjustmentType: "Add",
+    billDiscount: m.billDiscount,
+    taxOnDiscount: m.taxOnDiscount,
+    cashReceived: m.cashReceived,
+    cashReturned: 0,
+    srAmount: m.srAmount,
+
+    totalGross: m.totalGross,
+    totalDiscount: m.totalDiscount,
+    vatAmount: m.vatAmount,
+    grandTotal: m.grandTotal,
+    totalProfit: m.totalProfit,
+
+    /** ---------------- Cash / Bank ---------------- */
+    cashAmt: m.cashAmt,
+    bankAmt: m.bankAmt,
+    couponAmt: m.couponAmt,
+
+    creditAmt:
+      formState.ledgerData.isCashLedger !== true
+        ? Math.max(
+            m.grandTotal -
+              m.cashAmt -
+              m.bankAmt -
+              m.couponAmt,
+            0
+          )
+        : 0,
+
+    /** ---------------- Rounding ---------------- */
+    roundAmount: m.roundAmount,
+
+    /** ---------------- Warehouse ---------------- */
+    fromWarehouseID: m.fromWarehouseID || 1,
+
+    /** ---------------- Sales / Employee ---------------- */
+    employeeID: m.employeeID,
+    salesManIncentive:
+      applicationSettings.miscellaneousSettings.salesmanIncentive > 0
+        ? m.grandTotal *
+          (applicationSettings.miscellaneousSettings.salesmanIncentive /
+            100)
+        : m.salesManIncentive,
+
+    /** ---------------- Logistics ---------------- */
+    driverID: m.driverID,
+    deliveryManID: m.deliveryManID,
+    vehicelID: m.vehicleID,
+    gatePassNo: m.gatePassNo,
+    despatchDocumentNumber: m.despatchDocumentNumber,
+
+    /** ---------------- Voucher ---------------- */
+    voucherNumber: m.voucherNumber,
+    voucherPrefix: m.voucherPrefix,
+    voucherType: m.voucherType,
+    voucherForm: m.voucherForm,
+
+    /** ---------------- Lock / Invoice ---------------- */
+    isLocked: m.isLocked,
+    isInvoiced:
+      userSession.dbIdValue === "543140180640"
+        ? false
+        : true,
+
+    tokenNumber: m.tokenNumber,
+
+    /** ---------------- Privilege ---------------- */
+    // privilageCardId: formState.transaction.privilegeCardDetails.privilegeCardsID,
+    // privilageAddAmount: formState.transaction.privilegeCardDetails.red,
+    // privilageRedeem: m.privilageRedeem,
+
+    /** ---------------- Project / Cost ---------------- */
+    costCentreID: m.costCentreID,
+    projectID: m.projectID || 0,
+
+    /** ---------------- Advance ---------------- */
+    advanceAmt: formState.advanceAmtFromSo || 0,
+
+    /** ---------------- Customer ---------------- */
+    customerType:
+      m.customerType ||
+      "B2C",
+
+    /** ---------------- Draft ---------------- */
+    draftTransactionMasterID:
+      m.draftTransactionMasterID > 0
+        ? m.draftTransactionMasterID
+        : 0,
+
+    /** ---------------- External API ---------------- */
+    refInvTransactionMasterSOID:
+      applicationSettings.mainSettings.enableExternalAPI &&
+      m.voucherPrefix === "ESI/"
+        ? m.refInvTransactionMasterSOID ?? ""
+        : "",
+  };
+
+  /** ---------------- Cash Returned Adjustment ---------------- */
+  master.cashReturned =
+    master.cashAmt +
+    master.bankAmt +
+    master.srAmount +
+    master.couponAmt -
+    master.grandTotal;
+
+  if (master.cashReturned > 0) {
+    master.cashAmt -= master.cashReturned;
+  }
+
+  /** ---------------- BT Exception ---------------- */
+  if (m.voucherForm === "BT") {
+    master.isLocked = false;
+    master.customerType = "";
+  }
+
+  /** ---------------- KSA E-Invoice Rule ---------------- */
+  if (
+    applicationSettings.branchSettings.maintainKSA_EInvoice &&
+    m.voucherForm === "VAT" &&
+    m.voucherType === "SI"
+  ) {
+    if (new Date(m.transactionDate) >= new Date("2021-12-04")) {
+      master.isLocked = true;
+    }
+
+    if (!master.customerType) {
+      master.customerType = "B2C";
+    }
+  }
+
+  return master;
+  };
+  const attachMaster2 = (formState: TransactionFormState) => {
     const master: TransactionMaster = {
       ...formState.transaction.master,
       salesManID: formState.transaction.master.employeeID,

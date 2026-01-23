@@ -732,7 +732,7 @@ export const useTransaction = (
         bankAmt: [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(voucherType as any)
           ? round(vch?.master?.bankAmt)
           : vch?.master?.bankAmt,
-        RefInvTransactionMasterSOID: vch.master.RefInvTransactionMasterSOID ?? 0,
+        refInvTransactionMasterSOID: vch.master.refInvTransactionMasterSOID ?? 0,
         draftTransactionMasterID: formState.draftMode
           ? vch.master.invTransactionMasterID
           : 0,
@@ -2694,6 +2694,9 @@ export const useTransaction = (
           formStateHandleFieldChange({
             fields: {
               isEdit: true,
+              isEditBill: true,
+              oldPartyLedId: formState.transaction.master.ledgerID,
+              oldLedgerId: formState.transaction.master.ledgerID,
             },
           })
         );
@@ -2707,6 +2710,7 @@ export const useTransaction = (
               btnPrint: { disabled: true },
               btnEdit: { disabled: true },
               pnlMasters: { disabled: false },
+              chkDraftMode1: { disabled: true },
               dxGrid: { disabled: true },
             },
           })

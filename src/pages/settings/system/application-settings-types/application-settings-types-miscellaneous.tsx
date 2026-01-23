@@ -10,6 +10,7 @@ export interface ApplicationMiscellaneousSettings {
     allowSalesDetailedEdit: boolean;
     maintainUntalliedBills: boolean;
     password: string;
+    enableExternalAPI: boolean;
 }
 
 export const ApplicationMiscellaneousSettingsInitialState: ApplicationMiscellaneousSettings = {
@@ -24,4 +25,5 @@ export const ApplicationMiscellaneousSettingsInitialState: ApplicationMiscellane
     allowSalesDetailedEdit: false,
     maintainUntalliedBills: false,
     password: "",
+    enableExternalAPI: false
 };

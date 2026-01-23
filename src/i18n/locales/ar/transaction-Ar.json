@@ -1191,7 +1191,13 @@
 
   "add_payment": "إضافة وسيلة دفع",
   "card_amount_tender": "مبلغ البطاقة",
-  "bank_ac": "الحساب البنكي"
+  "bank_ac": "الحساب البنكي",
+
+  "excess_card_amount_entered": "المبلغ المدخل في البطاقة زائد عن الحد!",
+  "authorizations": "التصاريح",
+  "authorization_required": "مطلوب تصريح",
+  "authentication_password": "كلمة مرور التحقق",
+  "authorization_failed": "فشل التصريح"
 
 
 }

@@ -337,5 +337,8 @@
   "enter_username": "Enter Username",
   "password": "Password",
   "enter_password": "Enter Password",
-  "e_invoice_taxPro": "E-Invoice TaxPro"
+  "e_invoice_taxPro": "E-Invoice TaxPro",
+  
+  "show_tender_window_for_party":"Show Tender Window For Party",
+  "enable_external_api":"Enable External API"
 }

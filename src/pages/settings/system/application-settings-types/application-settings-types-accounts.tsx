@@ -45,7 +45,6 @@ export interface ApplicationAccountSettings {
     allowMultiPayments: boolean;
     enableCPEandCRE: boolean;
     showTenderDialogForParty: boolean; // Need to add in settings
-    enableExternalAPI: boolean;
 }
 
 export const ApplicationAccountSettingsInitialState: ApplicationAccountSettings = {
@@ -95,5 +94,4 @@ export const ApplicationAccountSettingsInitialState: ApplicationAccountSettings 
     allowMultiPayments: false,
     enableCPEandCRE: false,
     showTenderDialogForParty: false,
-    enableExternalAPI: false,
 };

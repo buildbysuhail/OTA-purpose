@@ -95,12 +95,12 @@ const ApplicationMiscellaneousComponents: React.FC<ApplicationMiscellaneousProps
       element: (
         <ERPCheckbox
           id="enableExternalAPI"
-          checked={settings?.accountsSettings?.enableExternalAPI}
-          data={settings?.accountsSettings}
+          checked={settings?.miscellaneousSettings?.enableExternalAPI}
+          data={settings?.miscellaneousSettings}
           label={t("enable_external_api")}
           onChangeData={(data) =>
             handleFieldChange(
-              "accountsSettings",
+              "miscellaneousSettings",
               "enableExternalAPI",
               data.enableExternalAPI
             )

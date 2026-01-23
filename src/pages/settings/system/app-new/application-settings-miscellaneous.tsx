@@ -90,6 +90,26 @@ const ApplicationMiscellaneousComponents: React.FC<ApplicationMiscellaneousProps
         />
       ),
     },
+    {
+      condition: filterComponent([t("enable_external_api")], filterText),
+      element: (
+        <ERPCheckbox
+          id="enableExternalAPI"
+          checked={settings?.accountsSettings?.enableExternalAPI}
+          data={settings?.accountsSettings}
+          label={t("enable_external_api")}
+          onChangeData={(data) =>
+            handleFieldChange(
+              "accountsSettings",
+              "enableExternalAPI",
+              data.enableExternalAPI
+            )
+          }
+        />
+      ),
+    },
+    
+
   ]
   const [hasMatchedItems, setHasMatchedItems] = useState<boolean>(true);
   useEffect(() => {

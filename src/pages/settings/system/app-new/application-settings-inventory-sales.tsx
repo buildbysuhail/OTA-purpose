@@ -851,6 +851,24 @@ const InventorySalesFilterableComponents: React.FC<ApplicationSettingsProps> = (
         />
       ),
     },
+    {
+      condition: filterComponent([t("show_tender_window_for_party")], filterText),
+      element: (
+        <ERPCheckbox
+          id="showTenderDialogForParty"
+          checked={settings?.accountsSettings?.showTenderDialogForParty}
+          data={settings?.accountsSettings}
+          label={t("show_tender_window_for_party")}
+          onChangeData={(data) =>
+            handleFieldChange(
+              "accountsSettings",
+              "showTenderDialogForParty",
+              data.showTenderDialogForParty
+            )
+          }
+        />
+      ),
+    },
 
   ];
   const [hasMatchedItems, setHasMatchedItems] = useState<boolean>(true);

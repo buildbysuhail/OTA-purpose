@@ -337,5 +337,8 @@
   "enter_username": "أدخل اسم المستخدم",
   "password": "كلمة المرور",
   "enter_password": "أدخل كلمة المرور",
-  "E-Invoice TaxPro": "فاتورة إلكترونية TaxPro"
+  "E-Invoice TaxPro": "فاتورة إلكترونية TaxPro",
+
+  "show_tender_window_for_party": "إظهار نافذة المناقصة للطرف",
+  "enable_external_api": "تفعيل واجهة برمجة التطبيقات الخارجية"
 }

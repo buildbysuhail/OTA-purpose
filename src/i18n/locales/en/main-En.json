@@ -770,5 +770,15 @@
   "service_invoices": "Service Invoices",
   "pdf_width": "PDF Width",
   "other": "Other",
-  "cashier_view": "Cashier View"
+  "cashier_view": "Cashier View",
+
+  "hr_masters": "HR Masters",
+  "emp_documents": "Employee Documents",
+  "job_works": "Job Works",
+  "leave_type": "Leave Type",
+  "employee_designations": "Employee Designations",
+  "employee": "Employee",
+  "benefits_and_deductions": "Benefits & Deductions"
+
+
 }

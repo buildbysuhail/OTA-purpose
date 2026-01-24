@@ -32,7 +32,6 @@
 // sales_other_reports
 // delete_transaction_question
 // once_deleted_this_transaction_cannot_be_recovered
-// clearing_transaction_question
 // once_clearing_this_transaction_cannot_be_recovered
 // Duplicate serial
 // price_category_name
@@ -41,7 +40,6 @@
 // Pending Purchase Quotation List
 // PI_Ref
 //billwise
-//zero_qty_in_row
 
 
 //This Voucher is already Cleared..
@@ -60,7 +58,6 @@
 
 // profit_percentage
 //text: t(`Qualified for Gift: ${gt.productName} at price ${price}. Proceed?`),
-// "Product not found in bill. Please check!"
 // "Product Not Found",
 // "checkTheProductPriceInSchemes error",
 // Qualified for Gift: ${gt.productName} at Price ${price}. Proceed?`,
@@ -69,7 +66,5 @@
 //shipping_details  
 //legal_name  
 //trade_name  
-//gstin  
-//pin_code  
-//state_code  
+//gstin 
 //posted_transaction

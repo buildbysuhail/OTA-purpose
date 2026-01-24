@@ -26,6 +26,7 @@ import {
   toggleHideAccLedger,
   toggleCompanyProfileIndiaPopup,
   toggleTestPopup,
+  toggleEmpDocuments
 } from "../../../redux/slices/popup-reducer";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../../redux/store";
@@ -51,6 +52,7 @@ const ResetBranchDataForSync = lazy(() => import("../system/reset-branch-data-fo
 const RefreshAllBranches = lazy(() => import("../system/refresh-all-branches"));
 const HeadersAndFooters = lazy(() => import("../system/headres-footer"));
 const TestPopup = lazy(() => import("../Integration/test-popup"));
+const EmpDocumentsManage = lazy(() => import("../../hr/masters/EmpDocuments/EmpDocuments-manage"));
 
 
 const Settings = () => {
@@ -350,6 +352,19 @@ const Settings = () => {
           dispatch(toggleHeaderFooterPopup({ isOpen: false }));
         }}
         content={<HeadersAndFooters />}
+      />
+      }
+      {rootState.PopupData.EmpDocuments.isOpen &&
+      <ERPModal
+        isOpen={rootState.PopupData.EmpDocuments.isOpen || false}
+        title={t("emp_documents")}
+        width={800}
+        height={300}
+        isForm={true}
+        closeModal={() => {
+          dispatch(toggleEmpDocuments({ isOpen: false }));
+        }}
+        content={<EmpDocumentsManage />}
       />
       }
     </Fragment>

@@ -6,6 +6,7 @@ import RouteGuard from "../../../utilities/route-guard";
 import { UserAction } from "../../../helpers/user-right-helper";
 import { TransactionBase, transactionRoutes } from "./transaction-routes";
 import { ReportsMenuItems } from "../sidebar/sidemenu/reports-routes";
+import { c } from "framer-motion/dist/types.d-6pKw1mTI";
 
 // Pages / Components (lazy)
 const ApplicationSettingsVirtual = lazy(() => import("../../../pages/settings/system/app-new/application-settings-virtual"));
@@ -116,6 +117,13 @@ const TwilioPdfDownloader = lazy(() => import("../../../pages/inventory/masters/
 const ProductPricesGCC = lazy(() => import("../../../pages/inventory/masters/product-prices/products-price-gcc"));
 const ProductPricesIndia = lazy(() => import("../../../pages/inventory/masters/product-prices/products-price-india"));
 
+// HR Masters
+const BenefitsAndDeductions = lazy(() => import("../../../pages/hr/masters/benefitsdeductions/benefits-and-deductions"));
+const Employee = lazy(() => import("../../../pages/hr/masters/Employee/Employee"));
+const EmpDesignations = lazy(() => import("../../../pages/hr/masters/EmpDesignations/EmpDesignations"));
+const LeaveType = lazy(() => import("../../../pages/hr/masters/Leavetype/Leavetype"));
+const JobWorks = lazy(() => import("../../../pages/hr/masters/JobWorks/JobWorks"));
+
 // Misc / Test Pages
 const Test = lazy(() => import("../../../pages/test"));
 const TotalSummary = lazy(() => import("../../../pages/total-summary"));
@@ -225,8 +233,12 @@ const Content: FC<ContentProps> = () => {
     { path: "/inventory-masters/sales-route", element: <SalesRoute /> },
     { path: "/inventory-masters/group-category", element: <GroupCategory /> },
     { path: "/inventory-masters/general_master", element: <GeneralMaster /> },
-
-    { path: "/hr-masters/test-route", element: "nizma" },
+    
+    { path: "/hr-masters/benefits-and-deductions", element: <BenefitsAndDeductions /> },
+    { path: "/hr-masters/employee", element: <Employee /> },
+    { path: "/hr-masters/emp-designations", element: <EmpDesignations /> },
+    { path: "/hr-masters/leave-type", element: <LeaveType /> },
+    { path: "/hr-masters/job-works", element: <JobWorks /> },
   ];
 
   return (

@@ -1335,5 +1335,7 @@
   "gstr_report": "GSTR1 Report",
   "app_settings_new": "Application Settings new",
   "details": "details",
-  "check_listed_product_prices_in_purchase_invoice": "Check Listed Product Prices in Purchase Invoice"
+  "check_listed_product_prices_in_purchase_invoice": "Check Listed Product Prices in Purchase Invoice",
+
+  "emp_documents": "Employee Documents"
 }

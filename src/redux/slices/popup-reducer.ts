@@ -88,6 +88,12 @@ interface popupData {
   IsPrintPreviewPopup: popupDataProps;
   TemplateChooserModal: popupDataProps;
   configureEgs: popupDataProps;
+  BenefitDiduction: popupDataProps;
+  employee: popupDataProps;
+  EmpDesignations: popupDataProps;
+  Leavetype: popupDataProps;
+  JobWorks: popupDataProps;
+  EmpDocuments: popupDataProps;
 }
 const initialState: popupData = {
   IsPrintPreviewPopup: { isOpen: false, templateGroup:"",formState:"",customerType:""},
@@ -160,6 +166,12 @@ const initialState: popupData = {
   GrnNumber: { isOpen: false, key: null, mode: "edit", reload: true },
   TemplateChooserModal: { isOpen: false,},
   configureEgs: { isOpen: false, key: null, mode: "edit", reload: true },
+  BenefitDiduction: { isOpen: false, key: null, mode: "edit", reload: true },
+  employee: { isOpen: false, key: null, mode: "edit", reload: true },
+  EmpDesignations: { isOpen: false, key: null, mode: "edit", reload: true },
+  Leavetype: { isOpen: false, key: null, mode: "edit", reload: true },
+  JobWorks: { isOpen: false, key: null, mode: "edit", reload: true },
+  EmpDocuments: { isOpen: false, key: null, mode: "edit", reload: true }
 };
 
 const popupDataSlice = createSlice({
@@ -395,6 +407,25 @@ const popupDataSlice = createSlice({
     toggleConfigureEgs: (state, action: PayloadAction<popupDataProps>) => {
       state.configureEgs = action.payload;
     },
+    toggleBenefitDeduction: (state, action: PayloadAction<popupDataProps>) => {
+      state.BenefitDiduction = action.payload;
+    },
+    toggleEmployee: (state, action: PayloadAction<popupDataProps>) => {
+      state.employee = action.payload;
+    },
+    toggleEmpDesignations: (state, action: PayloadAction<popupDataProps>) => {
+      state.EmpDesignations = action.payload;
+    },
+    toggleLeavetype: (state, action: PayloadAction<popupDataProps>) => {
+      state.Leavetype = action.payload;
+    },
+    toggleJobWorks: (state, action: PayloadAction<popupDataProps>) => {
+      state.JobWorks = action.payload;
+    },
+    toggleEmpDocuments: (state, action: PayloadAction<popupDataProps>) => {
+      state.EmpDocuments = action.payload;
+    }
+
   },
 });
 
@@ -470,6 +501,12 @@ export const {
   toggleIsPrintPreviewPopup,
   toggleTemplateChooserModal,
   toggleConfigureEgs,
+  toggleBenefitDeduction,
+  toggleEmployee,
+  toggleEmpDesignations,
+  toggleLeavetype,
+  toggleJobWorks,
+  toggleEmpDocuments
 } = popupDataSlice.actions;
 
 export default popupDataSlice.reducer;

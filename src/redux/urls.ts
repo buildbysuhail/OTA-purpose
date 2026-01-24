@@ -1,5 +1,4 @@
 import config from "../../public/config.json";
-
 export const domain = config.api.APP_API_URL;
 export const signupUrl = import.meta.env.VITE_SIGNUP;
 export const companyName = import.meta.env.VITE_COMPANY_NAME;
@@ -810,8 +809,14 @@ const Urls = {
   eInvoice_apiPortal_send_otp: '/EInvoiceAPIPortal/send-otp',
   eInvoice_apiPortal_validate_otp: '/EInvoiceAPIPortal/validate-otp',
 
+  // HR //
 
-
+  benefits_and_deductions: '/HR/BenefitsAndDeductions/',
+  employee: '/HR/Employee/',
+  emp_designations: '/HR/EmpDesignations/',
+  leave_type: '/HR/LeaveType/',
+  job_works: '/HR/JobWorks/',
+  emp_documents: '/HR/EmpDocuments/',
 };
 
 export default Urls;

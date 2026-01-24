@@ -22,6 +22,8 @@ import transactionEn from "./locales/en/transaction-En.json";
 import transactionAr from "./locales/ar/transaction-Ar.json";
 import inventoryEn from "./locales/en/inventory-En.json";
 import inventoryAr from "./locales/ar/inventory-Ar.json";
+import hrEn from "./locales/en/hr-En.json";
+import hrAn from "./locales/ar/hr-Ar.json";
 
 i18n.use(initReactI18next).init({
   fallbackLng: "en",
@@ -38,6 +40,7 @@ i18n.use(initReactI18next).init({
     "labelDesigner",
     "accountsReport",
     "transaction",
+    "hr",
   ],
   defaultNS: "main",
   resources: {
@@ -53,6 +56,7 @@ i18n.use(initReactI18next).init({
       accountsReport: accountsReportEn,
       transaction: transactionEn,
       inventory: inventoryEn,
+      hr: hrEn,
     },
     ar: {
       main: mainAr,
@@ -66,6 +70,7 @@ i18n.use(initReactI18next).init({
       accountsReport: accountsReportAr,
       transaction: transactionAr,
       inventory: inventoryAr,
+      hr: hrAn,
     },
   },
 });

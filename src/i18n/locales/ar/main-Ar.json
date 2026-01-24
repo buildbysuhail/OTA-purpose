@@ -770,5 +770,15 @@
   "service_invoices": "فواتير الخدمات",
   "pdf_width": "عرض قوات الدفاع الشعبي",
   "other": "أخرى",
-  "cashier_view": "عرض الكاشير"
+  "cashier_view": "عرض الكاشير",
+
+  
+  "hr_masters": "البيانات الأساسية للموارد البشرية",
+  "emp_documents": "وثائق الموظف",
+  "job_works": "أعمال الوظائف",
+  "leave_type": "نوع الإجازة",
+  "employee_designations": "المسميات الوظيفية للموظفين",
+  "employee": "الموظف",
+  "benefits_and_deductions": "الاستحقاقات والاستقطاعات"
+
 }

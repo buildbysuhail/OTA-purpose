@@ -1337,7 +1337,9 @@
   "gstr_report": "تقرير GSTR1",
   "app_settings_new": "إعدادات التطبيق الجديدة",
   "details":  "تفاصيل",
-  "check_listed_product_prices_in_purchase_invoice": "التحقق من أسعار المنتجات المدرجة في فاتورة الشراء"
+  "check_listed_product_prices_in_purchase_invoice": "التحقق من أسعار المنتجات المدرجة في فاتورة الشراء",
+
+  "emp_documents": "وثائق الموظف"
 
 
 }

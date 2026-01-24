@@ -10,6 +10,7 @@ import accountsReportEn from "./locales/en/accountsReport-En.json";
 import labelDesignerEn from "./locales/en/labelDesigner-En.json";
 import transactionEn from "./locales/en/transaction-En.json";
 import inventoryEn from './locales/en/inventory-En.json'
+import hrEn from "./locales/en/hr-En.json";
 declare module "i18next" {
   interface CustomTypeOptions {
     defaultNS: "main";
@@ -25,6 +26,7 @@ declare module "i18next" {
       labelDesigner: typeof labelDesignerEn;
       transaction: typeof transactionEn;
       inventory: typeof inventoryEn;
+      hr: typeof hrEn;
     };
   }
 }

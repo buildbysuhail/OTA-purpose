@@ -337,5 +337,12 @@
   "enter_username": "Enter Username",
   "password": "Password",
   "enter_password": "Enter Password",
-  "e_invoice_taxPro": "E-Invoice TaxPro"
+  "e_invoice_taxPro": "E-Invoice TaxPro",
+  
+  "show_tender_window_for_party":"Show Tender Window For Party",
+  "enable_external_api":"Enable External API",
+
+  "default_si_bt_account":"Default SI-BT Account",
+  "default_pi_bt_account":"Default PI-BT Account",
+  "use_empty_tax_type_template_if_missing":"Use Empty Tax Type Template If Missing"
 }

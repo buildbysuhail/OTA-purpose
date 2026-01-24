@@ -44,6 +44,7 @@ export interface ApplicationAccountSettings {
     enable24Hours: boolean;
     allowMultiPayments: boolean;
     enableCPEandCRE: boolean;
+    showTenderDialogForParty: boolean; // Need to add in settings
 }
 
 export const ApplicationAccountSettingsInitialState: ApplicationAccountSettings = {
@@ -92,4 +93,5 @@ export const ApplicationAccountSettingsInitialState: ApplicationAccountSettings 
     enable24Hours: false,
     allowMultiPayments: false,
     enableCPEandCRE: false,
+    showTenderDialogForParty: false,
 };

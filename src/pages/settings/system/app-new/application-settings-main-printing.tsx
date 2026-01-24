@@ -151,6 +151,24 @@ const MainPrintingFilterableComponents: React.FC<ApplicationSettingsProps> = ({
         />
       ),
     },
+    {
+      condition: filterComponent([t("use_empty_tax_type_template_if_missing")], filterText),
+      element: (
+        <ERPCheckbox
+          id="useEmptyTaxTypeTemplateIfMissing"
+          data={settings?.printerSettings}
+          label={t("use_empty_tax_type_template_if_missing")}
+          checked={settings?.printerSettings?.useEmptyTaxTypeTemplateIfMissing}
+          onChangeData={(data) =>
+            handleFieldChange(
+              "printerSettings",
+              "useEmptyTaxTypeTemplateIfMissing",
+              data.useEmptyTaxTypeTemplateIfMissing
+            )
+          }
+        />
+      ),
+    },
   ];
   const [hasMatchedItems, setHasMatchedItems] = useState<boolean>(true);
   useEffect(() => {

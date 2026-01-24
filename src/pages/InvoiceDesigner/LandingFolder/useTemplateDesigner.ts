@@ -23,6 +23,7 @@ import { generateQRCodeDataUrl } from "../utils/qrSvgToImg";
 import { PrintDetailDto, PrintResponse } from "../../use-print-type";
 import { compressData } from "../../../utilities/compression";
 import { removeDefaults } from "../../../utilities/Utils";
+import { Countries } from "../../../redux/slices/user-session/reducer";
 
 const api = new APIClient();
 
@@ -85,6 +86,7 @@ export const useTemplateDesigner = ({
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
   const activeTemplate = useSelector((state: RootState) => state.Template?.activeTemplate);
+  const userSession = useSelector((state: RootState) => state.UserSession);
 
   const [stableTemplateProps, setStableTemplateProps] = useState<any>(null);
   const [printData, setPrintData] = useState<PrintResponse | null>(null);
@@ -369,6 +371,38 @@ export const useTemplateDesigner = ({
       const cleanedTemplate = removeDefaults(activeTemplates, initial);
       // dispatch(setTemplate(_returnData));
 
+// const taxType = userSession.countryId == Countries.India ? "GST" : "VAT"      
+// const templateViewToCopy: any = {
+//   TemplateType: activeTemplate.propertiesState?.template_type ?? "standard",
+//   TemplateKind: activeTemplate.propertiesState?.template_kind ?? "",
+//   TemplateGroup: activeTemplate.propertiesState?.template_group ?? "",
+//   TemplateName:
+//     `${templateGroup}-${taxType}-${
+//       activeTemplate.propertiesState?.template_kind === "universal" ? "UN" : "STD"
+//     }-${templateKind.toUpperCase()}`,
+
+//   Content: compressedContent, // or tmpTemplate if you want raw before compression
+//   TemplateDescription: "",
+
+//   thumbImage,
+//   background_image: backgroundImage,
+//   background_image_header: backgroundImageHeader,
+//   background_image_footer: backgroundImageFooter,
+//   signature_image: signatureImage,
+
+//   TaxType: tmpTemplate.propertiesState?.template_formType ?? "",
+// };
+// const copyText = JSON.stringify(templateViewToCopy, null, 2);
+
+// // Alert preview
+// alert(copyText);
+// console.log(`('${templateViewToCopy.TemplateType}','en','${templateViewToCopy.TemplateGroup}','${templateViewToCopy.TemplateName}','${templateViewToCopy.Content}',NULL,'${templateViewToCopy.thumbImage}',NULL,NULL,NULL,NULL,'${taxType}'),`);
+
+// // Auto-copy
+// navigator.clipboard.writeText(copyText).catch(() => {
+//   console.warn("Clipboard copy failed");
+// });
+// return;
       try {
         const res = await api.postAsync(Urls.templates, cleanedTemplate);
         handleResponse(res, () => {
@@ -392,6 +426,7 @@ export const useTemplateDesigner = ({
     try {
       setLoading(true);
       const imageDataUrl = await capturePreviewAsImage();
+      
       await handleSave(imageDataUrl);
     } catch (error) {
       console.error("Error saving template:", error);

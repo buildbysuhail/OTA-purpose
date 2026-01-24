@@ -140,16 +140,6 @@ const Templates = () => {
         false,
       )
 
-      var resCrm = await api.getAsync(Urls.crm_templates, `template_group=${templateGroup}`)
-      handlePlainResponse(
-        resCrm,
-        () => {
-          setTempCRMData(resCrm)
-        },
-        undefined,
-        false,
-        false,
-      )
     } catch (error) {
       console.error("Error fetching templates:", error)
     } finally {
@@ -909,7 +899,7 @@ const Templates = () => {
         <ChooseTemplate
           templateGroup={templateGroup}
           setShowTemplateListing={setShowTemplateListing}
-          tempData={tempCrmData}
+          // tempData={tempCrmData}
         />
       )}
     </div>

@@ -240,7 +240,7 @@
   "delete": "Delete",
   "default": "Default",
 
-  "invoice": "Invoice",
+  "invoice": "Sales Invoice",
   "cash_payment": "Cash payment",
   "tax_on_expenses": "Tax on expenses",
   "damage_expiry_substitute": "Damage expiry substitute",

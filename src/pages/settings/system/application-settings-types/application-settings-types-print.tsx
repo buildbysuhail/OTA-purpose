@@ -4,6 +4,8 @@ export interface ApplicationPrintSettings {
     printSelectedGatePass: boolean;
     showReprintAuthorization: boolean;
     showReprintAuthorisation: boolean;
+    useEmptyTaxTypeTemplateIfMissing: boolean;
+
 }
 
 export const ApplicationPrintSettingsInitialState: ApplicationPrintSettings = {
@@ -12,4 +14,5 @@ export const ApplicationPrintSettingsInitialState: ApplicationPrintSettings = {
     printSelectedGatePass: false,
     showReprintAuthorization: false,
     showReprintAuthorisation: false,
+    useEmptyTaxTypeTemplateIfMissing: false
 };

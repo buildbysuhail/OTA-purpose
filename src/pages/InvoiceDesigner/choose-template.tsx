@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { XMarkIcon } from "@heroicons/react/24/outline"
@@ -17,16 +17,16 @@ import { useAppDispatch } from "../../utilities/hooks/useAppDispatch"
 import { fetchCRMTemplateFromApiById, fetchTemplateFromApiById } from "../use-print"
 import { merge } from "lodash"
 import { templateInitialState } from "../../redux/reducers/TemplateReducer"
+import { handlePlainResponse } from "../../utilities/HandleResponse"
 
 interface ChooseTemplateProps {
   templateGroup: VoucherType | string
   setShowTemplateListing: (show: boolean) => void
-  tempData: any
 }
 
 const api = new APIClient()
 
-const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: ChooseTemplateProps) => {
+const ChooseTemplate = ({ templateGroup, setShowTemplateListing }: ChooseTemplateProps) => {
   const navigate = useNavigate()
   const appDispatch = useAppDispatch()
   const dispatch = useDispatch()
@@ -34,6 +34,8 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
   const [activeTab, setActiveTab] = useState<string>("all")
   const [searchQuery, setSearchQuery] = useState("")
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
+  const [tempCrmData, setTempCRMData] = useState([])
+  const [loading, setLoading] = useState(false)
 
   // Function to get icon for template type
   const getTemplateTypeIcon = (templateType: string) => {
@@ -49,6 +51,29 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
     return <IconComponent className="w-4 h-4" />
   }
 
+  useEffect(() => {
+    getTemplates()
+  }, [templateGroup])
+ const getTemplates = async () => {
+    setLoading(true)
+    try {
+      
+      var resCrm = await api.getAsync(Urls.crm_templates, `template_group=${templateGroup}`)
+      handlePlainResponse(
+        resCrm,
+        () => {
+          setTempCRMData(resCrm)
+        },
+        undefined,
+        false,
+        false,
+      )
+    } catch (error) {
+      console.error("Error fetching templates:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
   // Enhanced color schemes with gradients
   const getTemplateTypeColor = (templateType: string) => {
     const colorMap: {
@@ -114,9 +139,9 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
 
   // Group templates by templateType and get counts
   const groupedTemplates = useMemo(() => {
-    if (!tempData) return {}
+    if (!tempCrmData) return {}
 
-    return tempData.reduce((acc: any, template: TemplateState<unknown>) => {
+    return tempCrmData.reduce((acc: any, template: TemplateState<unknown>) => {
       const type = template.templateType || "standard"
       if (!acc[type]) {
         acc[type] = []
@@ -124,12 +149,12 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
       acc[type].push(template)
       return acc
     }, {})
-  }, [tempData])
+  }, [tempCrmData])
 
   // Get available template types with counts
   const templateTypes = useMemo(() => {
     const types = Object.keys(groupedTemplates)
-    const allCount = tempData?.length || 0
+    const allCount = tempCrmData?.length || 0
 
     return [
       { key: "all", label: t("all"), count: allCount },
@@ -139,19 +164,19 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
         count: groupedTemplates[type]?.length || 0,
       })),
     ]
-  }, [groupedTemplates, tempData, t])
+  }, [groupedTemplates, tempCrmData, t])
 
   // Filter templates based on search query
   const filteredBySearch = useMemo(() => {
-    if (!searchQuery) return tempData || []
+    if (!searchQuery) return tempCrmData || []
 
-    return (tempData || []).filter(
+    return (tempCrmData || []).filter(
       (template: TemplateState<unknown>) =>
         template.templateName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         template.templateKind?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         template.templateType?.toLowerCase().includes(searchQuery.toLowerCase()),
     )
-  }, [tempData, searchQuery])
+  }, [tempCrmData, searchQuery])
 
   // Get filtered templates based on active tab
   const filteredTemplates = useMemo(() => {
@@ -193,7 +218,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
   }
 
   const handleChooseTemplate = async (template: TemplateState<unknown>) => {
-    const length = tempData?.length || 0
+    const length = tempCrmData?.length || 0
     const _template = await fetchCRMTemplateFromApiById(template.id);
     if (!_template) return null;
     const initial = templateInitialState().activeTemplate;

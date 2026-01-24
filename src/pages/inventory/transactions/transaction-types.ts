@@ -218,7 +218,7 @@ export interface TransactionMaster {
   lblSRAmount: string; //new
   totalTax?: number; //new
   advAmntFroSO: number;
-  RefInvTransactionMasterSOID: number;
+  refInvTransactionMasterSOID: number;
 
   // stock
   stockCountPrefix?: string;

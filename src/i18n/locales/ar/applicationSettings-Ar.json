@@ -337,5 +337,12 @@
   "enter_username": "أدخل اسم المستخدم",
   "password": "كلمة المرور",
   "enter_password": "أدخل كلمة المرور",
-  "E-Invoice TaxPro": "فاتورة إلكترونية TaxPro"
+  "E-Invoice TaxPro": "فاتورة إلكترونية TaxPro",
+
+  "show_tender_window_for_party": "إظهار نافذة المناقصة للطرف",
+  "enable_external_api": "تفعيل واجهة برمجة التطبيقات الخارجية",
+
+  "default_si_bt_account": "الحساب الافتراضي لـ SI-BT",
+  "default_pi_bt_account": "الحساب الافتراضي لـ PI-BT",
+  "use_empty_tax_type_template_if_missing": "استخدام قالب نوع ضريبة فارغ في حال فقدانه"
 }

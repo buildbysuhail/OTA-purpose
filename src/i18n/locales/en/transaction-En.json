@@ -1196,7 +1196,12 @@
 
   "add_payment":"Add Payment",
   "card_amount_tender":"Card Amount",
-  "bank_ac":"Bank A/C"
+  "bank_ac":"Bank A/C",
+  "excess_card_amount_entered":"Excess card amount entered!",
+  "authorizations":"Authorizations",
+  "authorization_required":"Authorization Required",
+  "authentication_password":"Authentication Password",
+  "authorization_failed":"Authorization Failed"
 
 
 

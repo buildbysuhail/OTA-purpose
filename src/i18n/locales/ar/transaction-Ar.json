@@ -1161,7 +1161,6 @@
   "warehouse_name": "اسم المستودع",
   "order_details": "تفاصيل الطلب",
   "pending_list": "قائمة الانتظار",
-  "pending_list": "قائمة الانتظار",
   "duplicate_voucher": "قسيمة مكررة",
   "duplicate_order": "طلب مكرر",
 
@@ -1197,8 +1196,13 @@
   "authorizations": "التصاريح",
   "authorization_required": "مطلوب تصريح",
   "authentication_password": "كلمة مرور التحقق",
-  "authorization_failed": "فشل التصريح"
-
+  "authorization_failed": "فشل التصريح",
+"emp_documents": "وثائق الموظف",
+"Empdesignations": "المسميات الوظيفية للموظفين",
+  "display_the_footer_on_the_right": "إظهار التذييل في الشبكة",
+  "zero_qty_in_row": "كمية صفرية في الصف",
+  "product_not_found_error": "المنتج غير موجود في الفاتورة. يرجى التحقق!",
+  "state_code": "رمز الولاية"
 
 }
 

@@ -908,9 +908,10 @@ export const purchaseGridCol = (
         dataField: "smCode",
         caption: t("smCode"),
         dataType: "string",
+        allowEditing: true,
         width: 150,
         alignment: "left",
-        visible: false,
+        visible: true,
       },
       {
         dataField: "salesman",

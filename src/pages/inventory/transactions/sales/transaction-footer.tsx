@@ -503,24 +503,14 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
 
   // Have some discussion
   const handleTenderOpen = () => {
-    if(applicationSettings.accountsSettings.allowMultiPayments){
-      // Opens Global Tender
+    // Allow multi payment settings is used in tender page,
+    //  so here check only showTenderDialogInSales
       if(applicationSettings.accountsSettings.showTenderDialogInSales){
         dispatch(
           formStateHandleFieldChange({
             fields: { tenderOpen: true }
           })
         )
-      }
-    }else{
-      // Open Tender
-      if(applicationSettings.accountsSettings.showTenderDialogInSales){
-        dispatch(
-          formStateHandleFieldChange({
-            fields: { tenderOpen: true }
-          })
-        )
-      }
     }
   }
 

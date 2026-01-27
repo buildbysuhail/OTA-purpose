@@ -465,7 +465,7 @@ const Content: FC<ContentProps> = () => {
                   </RouteGuard>
                 }
               />
-              {route.transactionBase == TransactionBase.Sales && (
+                        {route.transactionBase == TransactionBase.Sales && (
                 <>
                   <Route
                     key={`${index}-${route.transactionBase}-${route.transactionType}-`}

@@ -326,8 +326,9 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
                 const isMoreDetails = Object.keys(
                   transactionInitialMoreDetails
                 ).includes(column.dataField as keyof TransactionDetailsMore);
-                const fieldKey = column.dataField as TransactionDetailKeys;
                 const idField = column.idField as keyof TransactionDetail;
+                const fieldKeyForCb = column.dataType === "cb" ?idField : column.dataField as TransactionDetailKeys;
+                const fieldKey =  column.dataField as TransactionDetailKeys;
                 const productId = item.productID;
                 const cellValue = ((isDetails2
                   ? item.details2?.[fieldKey as keyof TransactionDetails2]
@@ -336,10 +337,19 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
                     : item[fieldKey as keyof TransactionDetail]) ?? "") as
                   | string
                   | boolean;
+                const cellValueForCbEdit = ((isDetails2
+                  ? item.details2?.[fieldKeyForCb as keyof TransactionDetails2]
+                  : isMoreDetails
+                    ? item.moreDetail?.[fieldKeyForCb as keyof TransactionDetailsMore]
+                    : item[fieldKeyForCb as keyof TransactionDetail]) ?? "") as
+                  | string
+                  | boolean;
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
 
-  console.log("gcrowHeight:",rowHeight);
-  
+  if (item.productID > 0 && fieldKey == "brand") {
+  console.log("SAFVAN:",cellValue);
+  console.log("SAFVAN:",fieldKey);
+  }
   
 
   const borderColor = useMemo(() =>
@@ -647,7 +657,7 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
           decimalLimit={column.decimalPoint || 2}
           rowIndex={index}
           column={column}
-          value={cellValue as string | number}
+          value={cellValueForCbEdit as string | number}
           options={column.dataField === "unit" ? formState.batchesUnits?.filter((x: any) => x.productBatchID === item.productBatchID) ?? [] :
                    column.dataField === "warranty" ? formState.dataWarranty ?? [] :
                    column.dataField === "brand" ? formState.dataBrands ?? [] : []}

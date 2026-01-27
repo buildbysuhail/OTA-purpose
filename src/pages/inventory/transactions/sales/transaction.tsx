@@ -65,6 +65,7 @@ import PosSideMenu from "./pos-components/pos-side-menu";
 import { fetchUserConfig } from "../transaction-utils";
 import MQtyFactorsModal from "./mqty-factors";
 import { merge } from "lodash";
+import { AuthorizationModal } from "./components/AuthorizationSales";
 
 interface BilledItem {
   id?: number;
@@ -3205,6 +3206,9 @@ debugger;
             }
           />
         )}
+
+      {/* Authorization Modal for edit authorization */}
+      <AuthorizationModal />
     </>
   );
 };

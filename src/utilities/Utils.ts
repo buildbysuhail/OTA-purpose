@@ -902,6 +902,12 @@ export const isEnterKey = (key: string | number) => {
     key === "NumpadEnter" // Numpad Enter key (for numeric keypad)
   );
 };
+
+// This is written for test purpose - Make the code as needed
+export const encryptData = async (input: string): Promise<string> => {
+  return input.split("").reverse().join("");
+};
+
 export const decryptAES = async (encryptedText: string): Promise<string> => {
   const keyStr = "G7d!mZr@QpL2xY#bVw9%kF6^TnM0sC3J"; // Must match C# key
   const ivStr = "A1b2C3d4E5f6G7h8"; // Must match C# IV

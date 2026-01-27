@@ -29,6 +29,7 @@ import { formStateHandleFieldChangeKeysOnly, formStateHandleFieldChange, formSta
 import { transactionInitialData, initialInventoryTotals, TransactionMasterInitialData, initialTransactionDetailData, initialTransactionDetails2, initialUserConfig, } from "../transaction-type-data";
 import { TransactionDetail, UserConfig, TransactionFormState, SummaryItems, TransactionMaster, TransactionData, LoadProductDetailsByAutoBarcodeProps, CommonParams, DataAutoBarcode, ExcelRowData, LoadSrParams, } from "../transaction-types";
 import PostedTransactionLabel from "./components/PostedTransactionLabel";
+import { EditAuthorization } from "./components/AuthorizationSales";
 
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;
@@ -2680,6 +2681,19 @@ export const useTransaction = (
       });
       return;
     }
+    // Edit Authorization
+    if(applicationSettings.inventorySettings.setAuthorizationinSales && !applicationSettings.branchSettings.createCreditNoteAutomaticallyOnSalesEdit){
+      let isAuthorized = false;
+      const voucherType = formState.transaction.master.voucherType;
+      const formType = formState.transaction.master.voucherForm;
+      const vrPrefix = formState.transaction.master.voucherPrefix;
+      const vrNumber = formState.transaction.master.voucherNumber;
+      const action = `User tried to edit the transaction ${voucherType}:${formType}:${vrPrefix}${vrNumber}`;
+      isAuthorized = await EditAuthorization(action);
+      if (!isAuthorized) {
+        return false;
+      }
+    }
     try {
       const result = await api.postAsync(
         `${Urls.inv_transaction_base}${transactionType}/GetAndSetTransactionEditMode`,
@@ -3252,16 +3266,31 @@ export const useTransaction = (
         Object.entries(apiParams).map(([k, v]) => [k, String(v ?? "")])
       )
     ).toString();
-    const url = `${Urls.inv_transaction_base}${transactionType}/ProductBatchUnitPrices/${detail.productBatchID}/${outDetail.unitID}/${actualPriceVisible}`;
-
-    const res = await api.getAsync(url);
-    const updatedDetail = Object.assign(detail, {
+    const url = `${Urls.inv_transaction_base}${transactionType}/change-unit`;
+    const customer_LSPVisible = formState.gridColumns?.find(x => x.dataField === "customer_LSP")?.visible
+    const body = {
+      productBatchID: detail.productBatchID,
+      unitID: outDetail.unitID,
+      priceCategoryID: formState.transaction.master.priceCategoryID,
+      ledgerID: formState.transaction.master.ledgerID,
+      vatPerc: outDetail.vatPerc ?? 0,
+      isCustomer_LSP_Visible: customer_LSPVisible,
+      showRateBeforeTax: formState.userConfig?.showRateBeforeTax?? false,
+      userSalesPriceForTransfer: formState.userConfig?.UserSalesPriceForTransfer ?? false,
+      formType: formState.transaction.master.voucherForm,
+    };
+    // Not completed - response issue noted
+    const res = await api.postAsync(url,body);
+    const updatedDetail = {
       ...outDetail,
-      ...res,
-      purchasePrice: res.stdPurchasePrice,
-      unitPrice: res.stdSalesPrice,
-      ratePlusTax: res.stdSalesPrice,
-    });
+      unitPrice: res.unitPrice,
+      ratePlusTax: res.ratePlusTax,
+      purchasePrice: res.purchasePrice,
+      minSalePrice: res.minSalePrice,
+      boxQty: res.boxQty,
+      customerLastSalesPrice: res.customerLastSalesPrice,
+      nlaSalesPrice: res.nlaSalesPrice
+    };
     outState = await calculateRowAmount(
       Object.assign(detail, { ...outDetail, ...res }),
       columnName as any,
@@ -3855,6 +3884,7 @@ export const useTransaction = (
             const unitID = units[nextUnitIndex].value;
             outDetail.unit = unitName;
             outDetail.unitID = unitID;
+            debugger;
 
             handleChangeUnit(
               outDetail,
@@ -3865,36 +3895,58 @@ export const useTransaction = (
               isMobRow ? -1 : rowIndex
             );
           }
-          if (columnName === "unitPrice") {
+          else if (columnName === "unitPrice") {
             if (userSession.dbIdValue !== "543140180640") {
-              alert("Need to manage this section")
-            }
-          }
-          // else if (columnName === "unitPrice") {
-          //   const units = formState.batchesUnits?.filter(
-          //     (xer) => xer.productBatchID == detail.productBatchID
-          //   );
-          //   const unitIndex =
-          //     units?.findIndex((xer) => xer.value == detail.unitID) ?? 0;
-          //   const nextUnitIndex =
-          //     unitIndex < (units?.length ?? 0) - 1 ? unitIndex + 1 : 0;
-          //   if (!units) {
-          //     return { handled: true };
-          //   }
-          //   const unitName = units[nextUnitIndex].label;
-          //   const unitID = units[nextUnitIndex].value;
-          //   outDetail.unit = unitName;
-          //   outDetail.unitID = unitID;
+              // Change the price category
+              const priceCategoryList = await getApLocalData("PriceCategories");
+              if (!priceCategoryList || priceCategoryList.length === 0) {
+                return {
+                  handled: false,
+                };
+              }
+              const priceCategoryCount = priceCategoryList?.length ?? 0;
+              const currentId = formState.transaction.master.priceCategoryID;
+              let currentIndex = priceCategoryList?.findIndex((x: any) => x.id === currentId) ?? 0;
+              if(currentIndex == priceCategoryCount - 1){
+                currentIndex = 0;
+              }else{
+                currentIndex = currentIndex + 1;
+              }
+              
+              const nextPriceCategoryId = priceCategoryList[currentIndex].id ?? 0;
+              dispatch(
+                formStateMasterHandleFieldChange({
+                  fields: {
+                    priceCategoryID: nextPriceCategoryId,
+                  },
+                })
+              );
+              // Need a api call for changing unit price
+            // const units = formState.batchesUnits?.filter(
+            //   (xer) => xer.productBatchID == detail.productBatchID
+            // );
+            // const unitIndex =
+            //   units?.findIndex((xer) => xer.value == detail.unitID) ?? 0;
+            // const nextUnitIndex =
+            //   unitIndex < (units?.length ?? 0) - 1 ? unitIndex + 1 : 0;
+            // if (!units) {
+            //   return { handled: true };
+            // }
+            // const unitName = units[nextUnitIndex].label;
+            // const unitID = units[nextUnitIndex].value;
+            // outDetail.unit = unitName;
+            // outDetail.unitID = unitID;
+            // debugger;
 
-          //   handleChangeUnit(
-          //     outDetail,
-          //     detail,
-          //     actualPriceVisible ?? false,
-          //     outState,
-          //     columnName,
-          //     isMobRow ? -1 : rowIndex
-          //   );
-          // }
+            // handleChangeUnit(
+            //   outDetail,
+            //   detail,
+            //   actualPriceVisible ?? false,
+            //   outState,
+            //   columnName,
+            //   isMobRow ? -1 : rowIndex
+            // );
+          }}
           break;
         }
 
@@ -4169,7 +4221,40 @@ export const useTransaction = (
             //   }
             // }
           } else if (columnName == "smCode") {
-            alert("Need to manage this")
+            if(data.smCode !==""){
+              const employeeList = await getApLocalData("Employees");
+              if (!employeeList || employeeList.length === 0) {
+                return { handled: false };
+              }
+              // Get the employee code written in sm code filed
+              const empCode = data.smCode.toString();
+              // find employee whose name starts with the code
+              const employee = employeeList.find((emp: any) =>
+                emp.name?.startsWith(empCode + " ")
+              );
+              if (!employee) {
+                return { handled: false };
+              }
+              // Get the employee name only
+              const employeeName = employee.name.replace(empCode, "").trim();
+              const updatedDetails = [...formState.transaction.details];
+              updatedDetails[rowIndex] = {
+                ...updatedDetails[rowIndex],
+                salesman: employeeName,
+                salesmanID: employee.id
+              };
+              dispatch(formStateHandleFieldChangeKeysOnly({
+                fields: {
+                  transaction: {
+                    details: updatedDetails
+                  }
+                }
+              }))
+              break;
+            }else{
+              const res = focusToNextColumn(rowIndex, columnName);
+              setCurrentCell(res, data, rowIndex != res?.rowIndex);
+            }
 
           } else if (columnName == "btnPrintBarcode") {
             if (

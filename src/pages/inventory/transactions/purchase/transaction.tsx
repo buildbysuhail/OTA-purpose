@@ -2009,7 +2009,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
         )}
 
         {deviceInfo?.isMobile && (
-          <div className="fixed inset-0 z-40 flex flex-col bg-gray-100 w-full h-full font-sans overflow-hidden">
+          <div className="fixed inset-0 z-50 flex flex-col bg-gray-100 w-full h-full font-sans overflow-hidden">
             {/* Sale Header */}
             <div className="flex items-center bg-white dark:bg-dark-bg-card shadow-sm p-3 border-b-2 dark:border-dark-border fixed top-0 left-0 w-full z-50 h-12">
               <ERPPreviousUrlButton />

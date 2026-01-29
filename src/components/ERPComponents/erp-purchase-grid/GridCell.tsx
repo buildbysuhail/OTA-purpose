@@ -232,7 +232,7 @@ const EditableCell: React.FC<{
         // border: isMobile_ ? "1px solid orange" :"none",
         border: isMobile_ ? "none" :"none",
         // height: isMobile_ ? "20px" : cellStyle.height,
-        height: isMobile_ ? rowHeight  : cellStyle.height,
+        height: isMobile_ ? "40px"  : cellStyle.height,
       }}
       className="!w-full !h-full !bg-inherit !p-0 !space-y-0"
       disableEnterNavigation
@@ -256,7 +256,8 @@ const EditableCell: React.FC<{
       className="bg-transparent border-none focus:ring-0 focus:outline-none"
       style={{
         ...cellStyle,
-        height: isMobile_ ? "20px" : cellStyle.height,
+        height: isMobile_ ? "40px" : cellStyle.height,
+        minHeight: isMobile_ ? "40px" : cellStyle.height,
         
         whiteSpace: "nowrap",
         overflow: "hidden",
@@ -326,6 +327,7 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
                 const isMoreDetails = Object.keys(
                   transactionInitialMoreDetails
                 ).includes(column.dataField as keyof TransactionDetailsMore);
+                // const fieldKey = column.dataField as TransactionDetailKeys;
                 const idField = column.idField as keyof TransactionDetail;
                 const fieldKeyForCb = column.dataType === "cb" ?idField : column.dataField as TransactionDetailKeys;
                 const fieldKey =  column.dataField as TransactionDetailKeys;
@@ -395,7 +397,7 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
     boxSizing: "border-box" as const,
     color: appState.mode === "dark" ? "#e0e0e0" : "#000000",
   }), [gridFontSize, gridIsBold, rowHeight, appState.mode]);
-
+const cellContentStyle = {...getCellContentStyle(column)}
   const handleInfoClick = useCallback((idx: number) => {
     dispatch(
       formStateHandleFieldChange({
@@ -571,7 +573,7 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
           zIndexController={zIndexController}
           textAlign={column.alignment === "right" ? "right" : "left"}
           rowIndex={index}
-          height={rowHeight}
+          height={isMobile_ ? 40  :rowHeight}
           isMobileInput={deviceInfo.isMobile}
           // isMobileInput={true}
           gridHeightAdjust={true}
@@ -678,14 +680,16 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
     return (
       <div
         style={currentCell?.column === column.dataField && currentCell?.rowIndex === index ?
-          { ...getCellContentStyle(column), 
+          { ...cellContentStyle, 
+            height: isMobile_ ?"40px":cellContentStyle.height,
             border: isMobile_
             // ? "1px solid pink"
             ? "none"
             : `3px solid rgb(${formState.userConfig?.inputBoxStyle?.focusBgColor})`,
              background: "#fff" } :
           // { ...getCellContentStyle(column) , border : isMobile_ ? "1px solid pink" : ""  }}
-          { ...getCellContentStyle(column) , border : isMobile_ ? "none" : ""  }}
+          { ...cellContentStyle , border : isMobile_ ? "none" : "",
+            height: isMobile_ ?"40px":cellContentStyle.height,  }}
         id={cellId}
         tabIndex={0}
         className="px-1 cursor-default"
@@ -778,14 +782,16 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
     key={`${column.dataField}`}
     style={
       isMobile_
-        ? { border: "" , height: rowHeight ,display: "flex",  alignItems: "center",  justifyContent: "center", }
+        ? { border: "" ,  height: isMobile_ ?"40px" : rowHeight ,
+            minHeight: isMobile_ ?"40px" : rowHeight  ,display: "flex",  alignItems: "center",  justifyContent: "center", }
         // ? { border: "1px solid blue" }
         : {
             width: typeof cellWidth === "number" ? `${cellWidth}px` : cellWidth,
             minWidth: typeof cellWidth === "number" ? `${cellWidth}px` : cellWidth,
             maxWidth: typeof cellWidth === "number" ? `${cellWidth}px` : cellWidth,
             // height: "100%",
-            height: rowHeight,
+            height: isMobile_ ?"40px" : rowHeight ,
+            minHeight: isMobile_ ?"40px" : rowHeight ,
             ...(isMobile_ ? getMobileBorderStyles() : getDesktopBorderStyles()),
             fontSize: `${gridFontSize}px`,
             textAlign:

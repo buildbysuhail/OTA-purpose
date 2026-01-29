@@ -3005,6 +3005,7 @@ master.cashAmt=m.grandTotal-m.bankAmt-m.creditAmt-m.couponAmt;
                 ?.maintainInventoryTransactionsEntry == false,
           },
         };
+        let final: DeepPartial<TransactionDetail> = {};
         if (proceedAll) {
           const latestData = outDetail;
 
@@ -3019,12 +3020,13 @@ master.cashAmt=m.grandTotal-m.bankAmt-m.creditAmt-m.couponAmt;
               (x) => x.productID > 0 || x.slNo == latestData.slNo
             ),
           ];
-          let final =
+          final =
             _res?.transaction?.details != undefined &&
               _res?.transaction?.details.length > 0
               ? (_res?.transaction
                 ?.details[0] as DeepPartial<TransactionDetail>)
               : latestData;
+               if (data.rowIndex >= 0) {
           currentDetails[data.rowIndex] = final as TransactionDetail;
           const summaryRes = calculateSummary(currentDetails, formState, {
             result: {},
@@ -3048,6 +3050,12 @@ master.cashAmt=m.grandTotal-m.bankAmt-m.creditAmt-m.couponAmt;
               details: [final],
             },
           };
+         }
+        }
+        // Handle mobile row update (rowIndex < 0 indicates mobile)
+        if (data.rowIndex < 0 && result.transaction) {
+          result.transaction!.details = [];
+          result.row = final as TransactionDetail;
         }
         if (product.units) {
           for (const unit of product.units) {

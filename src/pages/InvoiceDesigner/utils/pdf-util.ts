@@ -58,11 +58,16 @@ export const PAGE_DIMENSIONS = {
    * @param dimensions - The page dimensions object with width and height properties
    * @returns The page size value for the Page component
    */
-  export const getPageSizeForPDF = (pageSize: string, dimensions: { width: number; height: number }) => {
-    if (pageSize.toUpperCase() === "CUSTOM") {
-      return [dimensions.width, dimensions.height]
+   export const getPageSizeForPDF = (pageSize: string, dimensions: { width: number; height?: number },isAuto?:boolean) => {
+    const key = pageSize.toUpperCase()
+    if (key === "CUSTOM") {
+      return [dimensions.width, dimensions?.height]
+      
     }
-    return pageSize as any
+      if (key.startsWith("ROLL")) {
+        return isAuto?[dimensions.width]:[dimensions.width, dimensions?.height]
+      }
+     return key as any
   }
   
   /**
@@ -72,13 +77,13 @@ export const PAGE_DIMENSIONS = {
    * @returns The page dimensions adjusted for orientation
    */
   export const getOrientedDimensions = (
-    dimensions: { width: number; height: number },
+    dimensions: { width: number; height?: number },
     orientation: "portrait" | "landscape" = "portrait",
   ) => {
     if (orientation === "landscape") {
       return {
-        width: dimensions.height,
-        height: dimensions.width,
+        width: dimensions?.height,
+        height: dimensions?.width,
       }
     }
     return dimensions

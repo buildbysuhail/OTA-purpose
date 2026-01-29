@@ -118,7 +118,7 @@ export const useTemplateDesigner = ({
 
     return {
       previewWidth: orientedDimensions.width,
-      previewHeight: isAutoHeight ? "auto" : orientedDimensions.height,
+      previewHeight: isAutoHeight ? "auto" : orientedDimensions?.height,
       isAutoHeight,
     };
   }, [

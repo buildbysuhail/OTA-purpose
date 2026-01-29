@@ -54,7 +54,9 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
       transactionType: transactionType,
 
     });
-
+  const previewWidth = templateStyleProperties.previewWidth ?? 500;
+  const previewHeight = templateStyleProperties.previewHeight??500; // Can be number or "auto"
+  const isAutoHeight = templateStyleProperties.isAutoHeight ?? false;
     useEffect(() => {
       if (prevTemplateIdRef.current === null) {
         prevTemplateIdRef.current = lastChooseTemp?.id;
@@ -103,11 +105,14 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
           <div
             className="shadow-lg border border-gray-200 overflow-hidden"
             style={{
-              width: `${templateStyleProperties.previewWidth ?? 500}pt`,
-              height: `${templateStyleProperties.previewHeight ?? 500}pt`,
+
+                     width: `${previewWidth}pt`, 
+                    height: isAutoHeight ? 'auto' : `${previewHeight}pt`,
+                    minHeight: isAutoHeight ? '200pt' : undefined,
+                    transformOrigin: 'top left',
             }}
           >
-            <div className="relative h-full w-full">
+            <div className={`relative w-full ${isAutoHeight ? 'flex flex-col' : 'h-full'}`}>
               <SharedTemplatePreview
                 template={activeTemplate}
                 data={stableTemplateProps?.data}

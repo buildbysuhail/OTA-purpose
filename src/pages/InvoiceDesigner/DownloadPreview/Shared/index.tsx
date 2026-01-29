@@ -1,5 +1,5 @@
 import { Document, Page, View, Image } from "@react-pdf/renderer"
-
+                                                                                                                                  
 // import Table from "./Table"
 import { TemplateState } from "../../Designer/interfaces"
 import { getPageDimensions, getPageSizeForPDF } from "../../utils/pdf-util"
@@ -16,12 +16,13 @@ import { SharedDownTable } from "./Table"
     const paddingTop = template?.propertiesState?.padding?.top || 10
     const paddingBottom = template?.propertiesState?.padding?.bottom || 10
     const pageSize = template?.propertiesState?.pageSize ?? "A4"
-    const selectedPageSize = getPageDimensions(
+    const isAutoHeight = template?.propertiesState?.isAutoHeight ?? false;
+      const selectedPageSize = getPageDimensions(
               pageSize,
               template?.propertiesState?.width,
               template?.propertiesState?.height,
             )
-    const pdfPageSize = getPageSizeForPDF(pageSize, selectedPageSize)
+    const pdfPageSize = getPageSizeForPDF(pageSize, selectedPageSize,isAutoHeight)
  return (
       <Document>
         <FontRegistration />

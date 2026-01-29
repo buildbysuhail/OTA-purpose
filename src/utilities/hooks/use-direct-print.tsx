@@ -204,10 +204,10 @@ export const useDirectPrint = () => {
           />
         );
       }
-        
+        const blob = await pdf(pdfDocument).toBlob();
         // 2️⃣ Convert the React PDF document into a Blob
         if(params.isDirectDownload){
-        const blob = await pdf(pdfDocument).toBlob();
+   
                 // 3️⃣ Download the file using FileSaver
        const fileName =
         template?.propertiesState?.fileName ||
@@ -215,101 +215,120 @@ export const useDirectPrint = () => {
          saveAs(blob, fileName);
         return { success: true };
         }
-      const blob = await pdf(pdfDocument).toBlob();
-
-      // 3️⃣ Download the file using FileSaver
-      const fileName =
-        template?.propertiesState?.fileName ||
-        `${template?.templateGroup || "document"}.pdf`;
-      saveAs(blob, fileName);
-      return { success: true };
-
-        // const pdfUrl = URL.createObjectURL(blob);
-        // const printWindow = window.open(pdfUrl);
-        // if (!printWindow) {
-        //   console.error("Failed to open print window. Please allow popups.");
-        //   alert("Failed to open print window. Please allow popups and try again.");
-        //   return { success: false, reason: "popup-blocked" };
-        // }
-        // printWindow.onload = () => printWindow.print();
-        // return { success: true, reason: "browser-print" };
       
 
+      // 3️⃣ Download the file using FileSaver
+
+
+    // 4. Handle Browser Print with Promise to wait for dialog
+
+
       // 2. If no printer detected, ask user
-      // if (!PrinterName || PrinterName.trim() === "") {
-      //   await ERPAlert.show({
-      //     text: t("Oops! No printer detected. Please set a printer before continuing."),
-      //     title: t("select_a_printer"),
-      //     icon: "warning",
-      //     confirmButtonText: t("set_printer"),
-      //     cancelButtonText: t("cancel"),
-      //     onConfirm: async() => {
-      //       const templateData = await fetchTemplateData(params);
-      //       dispatch?.(
-      //         toggleSelectPrinterPopup({ isOpen: true, template, data })
-      //       );
-      //       setPrinter = true;
-      //     },
-      //     onCancel: () => {
-      //       noDefaultPrint = true;
-      //     },
-      //   });
-      // }
+      if (!PrinterName || PrinterName.trim() === "") {
+        await ERPAlert.show({
+          text: t("Oops! No printer detected. Please set a printer before continuing."),
+          title: t("select_a_printer"),
+          icon: "warning",
+          confirmButtonText: t("set_printer"),
+          cancelButtonText: t("cancel"),
+          onConfirm: async() => {
+            const templateData = await fetchTemplateData(params);
+            dispatch?.(
+              toggleSelectPrinterPopup({ isOpen: true, template, data })
+            );
+            setPrinter = true;
+          },
+          onCancel: () => {
+            noDefaultPrint = true;
+          },
+        });
+      }
 
-      // // 3. Build PDF blob
-      // const blob = await pdf(pdfDocument).toBlob();
 
-      // if (setPrinter) return { success: true, reason: "setPrinter" };
-      // if (noDefaultPrint) {
-      //   const pdfUrl = URL.createObjectURL(blob);
-      //   const printWindow = window.open(pdfUrl);
-      //   if (!printWindow) {
-      //     console.error("Failed to open print window. Please allow popups.");
-      //     alert("Failed to open print window. Please allow popups and try again.");
-      //     return { success: false, reason: "popup-blocked" };
-      //   }
-      //   printWindow.onload = () => printWindow.print();
-      //   return { success: true, reason: "browser-print" };
-      // }
+
+      if (setPrinter) return { success: true, reason: "setPrinter" };
+      if (noDefaultPrint) {
+      return await new Promise((resolve) => {
+        const blobURL = URL.createObjectURL(blob);
+        const printFrame = document.createElement('iframe');
+
+        Object.assign(printFrame.style, {
+          position: 'fixed',
+          right: '0',
+          bottom: '0',
+          width: '0',
+          height: '0',
+          border: 'none'
+        });
+
+        printFrame.src = blobURL;
+        document.body.appendChild(printFrame);
+
+        printFrame.onload = () => {
+          const targetWindow = printFrame.contentWindow;
+
+          if (targetWindow) {
+            // We use onafterprint to know when the user closed the dialog
+            targetWindow.onafterprint = () => {
+              setTimeout(() => {
+                URL.revokeObjectURL(blobURL);
+                if (document.body.contains(printFrame)) {
+                  document.body.removeChild(printFrame);
+                }
+              }, 1000);
+              resolve({ success: true, reason: "printed" });
+            };
+
+            targetWindow.focus();
+            targetWindow.print();
+          } else {
+            console.error("Print Failed: Iframe contentWindow is null.");
+            URL.revokeObjectURL(blobURL);
+            document.body.removeChild(printFrame);
+            resolve({ success: false, reason: "window_null" });
+          }
+        };
+      });  
+      }
 
       // // 4. Ensure JSPM agent is running
-      // if (!JSPrintManager.WS || JSPrintManager.websocket_status !== WSStatus.Open) {
-      //   try {
-      //     await JSPrintManager.start();
-      //   } catch {
-      //     await ERPAlert.show({
-      //       text: t("JSPrintManager is not installed or not running. Please install it before printing."),
-      //       title: t("install_jsprintmanager"),
-      //       icon: "warning",
-      //       confirmButtonText: t("download"),
-      //       cancelButtonText: t("cancel"),
-      //       onConfirm: () => {
-      //         window.open("https://www.neodynamic.com/downloads/jspm", "_blank");
-      //       },
-      //     });
-      //     return { success: false, reason: "jspm-missing" };
-      //   }
-      // }
+      if (!JSPrintManager.WS || JSPrintManager.websocket_status !== WSStatus.Open) {
+        try {
+          await JSPrintManager.start();
+        } catch {
+          await ERPAlert.show({
+            text: t("JSPrintManager is not installed or not running. Please install it before printing."),
+            title: t("install_jsprintmanager"),
+            icon: "warning",
+            confirmButtonText: t("download"),
+            cancelButtonText: t("cancel"),
+            onConfirm: () => {
+              window.open("https://www.neodynamic.com/downloads/jspm", "_blank");
+            },
+          });
+          return { success: false, reason: "jspm-missing" };
+        }
+      }
 
       // // 5. Create & send silent print job
-      // const cpj = new ClientPrintJob();
-      // cpj.clientPrinter =
-      //   PrinterName && PrinterName.trim() !== ""
-      //     ? new InstalledPrinter(PrinterName)
-      //     : new DefaultPrinter();
-      // cpj.files.push(
-      //   new PrintFilePDF(blob, FileSourceType.BLOB, "document.pdf", 1)
-      // );
+      const cpj = new ClientPrintJob();
+      cpj.clientPrinter =
+        PrinterName && PrinterName.trim() !== ""
+          ? new InstalledPrinter(PrinterName)
+          : new DefaultPrinter();
+      cpj.files.push(
+        new PrintFilePDF(blob, FileSourceType.BLOB, "document.pdf", 1)
+      );
 
-      // cpj.onUpdated = (status) => console.log("Print job status update:", status);
-      // cpj.onFinished = (result) => {
-      //   console.log("Print job finished:", result);
-      //   if (!result.success) console.error("Print job failed:", result.error);
-      // };
+      cpj.onUpdated = (status) => console.log("Print job status update:", status);
+      cpj.onFinished = (result) => {
+        console.log("Print job finished:", result);
+        if (!result.success) console.error("Print job failed:", result.error);
+      };
 
-      // await cpj.sendToClient();
+      await cpj.sendToClient();
 
-      // return { success: true, reason: "printed" };
+      return { success: true, reason: "printed" };
       
     } catch (error) {
       console.error("Error printing:", error);

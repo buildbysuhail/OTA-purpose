@@ -1895,7 +1895,6 @@ export const useTransaction = (
     }
   };
   const handleRemoveItem = async (slNo: string) => {
-    debugger;
     dispatch(
       formStateTransactionDetailsRowRemove({
         slNo: slNo,
@@ -2397,21 +2396,21 @@ export const useTransaction = (
     }
     if (key === "a" || key === "A") {
     }
-    if (key === "d" || key === "D") {
-      ERPAlert.show({
-        title: t("confirm_delete"),
-        text: t("you_want_to_delete"),
-        icon: "warning",
-        confirmButtonText: t("delete_it"),
-        onConfirm: async () => {
-          const dataGridInstance = gridRef.current.instance(); // Access DataGrid instance
-          const focusedRowIndex = dataGridInstance.option("focusedRowIndex");
-          const rowData =
-            dataGridInstance.getVisibleRows()[focusedRowIndex]?.data;
-          await handleRemoveItem(rowData.slNo);
-        },
-      });
-    }
+    // if (key === "d" || key === "D") {
+    //   ERPAlert.show({
+    //     title: t("confirm_delete"),
+    //     text: t("you_want_to_delete"),
+    //     icon: "warning",
+    //     confirmButtonText: t("delete_it"),
+    //     onConfirm: async () => {
+    //       const dataGridInstance = gridRef.current.instance(); // Access DataGrid instance
+    //       const focusedRowIndex = dataGridInstance.option("focusedRowIndex");
+    //       const rowData =
+    //         dataGridInstance.getVisibleRows()[focusedRowIndex]?.data;
+    //       await handleRemoveItem(rowData.slNo);
+    //     },
+    //   });
+    // }
   };
 
   // Ledger code keydown handler
@@ -3532,7 +3531,7 @@ export const useTransaction = (
       }
       // Above Newly Adding in sales
       // if (columnName === "global") {
-      if (event.shiftKey && event.key.toUpperCase() === "F") {
+      if (event.ctrlKey && event.key.toUpperCase() === "F") {
         event.preventDefault();
         if (voucherNumberRef.current) {
           voucherNumberRef.current.focus();
@@ -3649,40 +3648,52 @@ export const useTransaction = (
 
       // Shift + F1 => toggle product info for focused row
       if (event.shiftKey && event.key.toUpperCase() === "F1") {
-        event.preventDefault();
-        const currentFormState = formStateRef.current;
-        const currentRowIndex = currentFormState.currentCell?.rowIndex ?? 0;
-        const rowData = currentFormState.transaction.details[currentRowIndex];
-        if (rowData && rowData.productID > 0) {
-          const isCurrentlyOpen = currentFormState.showProductInformation?.show;
-          dispatch(formStateHandleFieldChange({
-            fields: {
-              showProductInformation: {
-                show: !isCurrentlyOpen,
-                index: currentRowIndex
-              },
-            },
-          }));
+        if (!formState.productInfo == true) {
+          if (formState.userConfig?.showProductInfoPopup) {
+            dispatch(
+              commonParams.formStateHandleFieldChangeKeysOnly({
+                fields: {
+                  productInfo: true,
+                },
+              })
+            );
+        }
+        }else{
+          if (formState.userConfig?.showProductInfoPopup) {
+              dispatch(
+                commonParams.formStateHandleFieldChangeKeysOnly({
+                  fields: {
+                    productInfo: false,
+                  },
+                })
+              );
+          }
         }
       }
-      // page down => close product info
-      if (event.key.toUpperCase() === "PAGEDOWN") {
-        event.preventDefault();
-        const currentFormState = formStateRef.current;
-        const currentRowIndex = currentFormState.currentCell?.rowIndex ?? 0;
-        const rowData = currentFormState.transaction.details[currentRowIndex];
-        if (rowData && rowData.productID > 0) {
-          const isCurrentlyOpen = currentFormState.showProductInformation?.show;
-          dispatch(formStateHandleFieldChange({
-            fields: {
-              showProductInformation: {
-                show: !isCurrentlyOpen,
-                index: currentRowIndex
+      
+      // page down => open close product info down popup
+      if (event.key === "PageDown") {
+       event.preventDefault();
+        if (!formState.userConfig?.showProductInfoPopup) {
+          if (formState.productInfo == true) {
+          dispatch(
+            commonParams.formStateHandleFieldChangeKeysOnly({
+              fields: {
+                productInfo: false,
               },
-            },
-          }));
+            })
+          );
+         }else{
+                dispatch(
+                  commonParams.formStateHandleFieldChangeKeysOnly({
+                    fields: {
+                      productInfo: true,
+                    },
+                  })
+                );
+            }
         }
-      }
+        }
 
       // ctrl + F11 => if draft mode checked then do something
       if (event.ctrlKey && event.key.toUpperCase() === "F11") {
@@ -3695,6 +3706,25 @@ export const useTransaction = (
           );
         }
       }
+      if (event.ctrlKey && event.key.toUpperCase() === "D") {
+        event.preventDefault();
+        ERPAlert.show({
+          title: t("confirm_delete"),
+          text: t("you_want_to_delete"),
+          icon: "warning",
+          confirmButtonText: t("delete_it"),
+          onConfirm: async () => {
+            event.preventDefault();
+            const currentFormState = formStateRef.current;
+            const currentRowIndex = currentFormState.currentCell?.rowIndex ?? -1;
+            if (currentRowIndex >= 0 && currentFormState.transaction.details[currentRowIndex]) {
+              const slNo = currentFormState.transaction.details[currentRowIndex].slNo;
+              if (slNo) {
+                handleRemoveItem(slNo);
+            }
+          }},
+        });
+    }
       if (event.key.toUpperCase() === "ESCAPE") {
         const currentFormState = formStateRef.current;
         if (currentFormState.isUserConfigOpen === true) {

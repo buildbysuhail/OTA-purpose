@@ -1597,10 +1597,10 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       errors,
     };
   };
- const attachMaster = (formState: TransactionFormState) => {
+ const attachMaster = async(formState: TransactionFormState) => {
 
      const m = formState.transaction.master;
-
+  const isCashOrBank = await api.getAsync(`${Urls.inv_transaction_base}${formState.transactionType}/IsCashOrBank/${m.ledgerID}`);
   const master = {
     ...m,
       salesManID: formState.transaction.master.employeeID,
@@ -1623,8 +1623,8 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
    inventoryLedgerID:
     m.inventoryLedgerID > 0
       ? m.inventoryLedgerID
-      : applicationSettings.branchSettings.defaultSIBTAcc > 0 && m.voucherForm === "BT"
-      ? applicationSettings.accountsSettings.defaultBankAcc
+      : applicationSettings.branchSettings.defaultSIBTAcc > 0 && m.voucherForm === "BT" && !clientSession.isAppGlobal
+      ? applicationSettings.branchSettings.defaultSIBTAcc
       : applicationSettings.inventorySettings.defaultSalesAcc,
     
 
@@ -1664,7 +1664,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     couponAmt: m.couponAmt,
 
     creditAmt:
-      formState.ledgerData.isCashLedger !== true
+      isCashOrBank!== true
         ? Math.max(
             m.grandTotal -
               m.cashAmt -
@@ -1672,7 +1672,15 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
               m.couponAmt,
             0
           )
-        : 0,
+        : clientSession.isAppGlobal?
+Math.max(
+            m.grandTotal -
+              m.cashAmt -
+              m.bankAmt -
+              m.couponAmt-
+              m.srAmount,
+            0
+          ):0,
 
     /** ---------------- Rounding ---------------- */
     roundAmount: m.roundAmount,
@@ -1694,7 +1702,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     deliveryManID: m.deliveryManID,
     vehicelID: m.vehicleID,
     gatePassNo: m.gatePassNo,
-    despatchDocumentNumber: m.despatchDocumentNumber,
+    despatchDocumentNumber: applicationSettings.inventorySettings.enableDummyTransation && clientSession.isAppGlobal?formState.userConfig?.dummyBill:m.despatchDocumentNumber,
 
     /** ---------------- Voucher ---------------- */
     voucherNumber: m.voucherNumber,
@@ -1753,7 +1761,12 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
   if (master.cashReturned > 0) {
     master.cashAmt -= master.cashReturned;
   }
-
+if( userSession.dbIdValue !== "543140180640" && clientSession.isAppGlobal){
+master.cashAmt=m.grandTotal-m.bankAmt-m.creditAmt-m.couponAmt-m.srAmount
+}
+if( userSession.dbIdValue !== "543140180640" && !clientSession.isAppGlobal){
+master.cashAmt=m.grandTotal-m.bankAmt-m.creditAmt-m.couponAmt;
+}
   /** ---------------- BT Exception ---------------- */
   if (m.voucherForm === "BT") {
     master.isLocked = false;

@@ -57,6 +57,7 @@ export interface ApplicationInventorySettings {
     blockUnitOnDecimalPoint:boolean
     enableImportSales?:boolean
     setMagininSales?:boolean
+    enableDummyTransation?:boolean
   }
   export const ApplicationInventorySettingsInitialState: ApplicationInventorySettings = {
       defaultSalesAcc: 1,

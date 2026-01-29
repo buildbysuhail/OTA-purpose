@@ -513,6 +513,7 @@ export interface UserConfig {
   //india
   autoEwayBill?: boolean;
   disableEinvoice?: boolean;
+  dummyBill?: boolean;
 
   // stock
   userSalesPriceForStockTransfer?: boolean;

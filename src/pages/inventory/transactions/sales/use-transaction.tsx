@@ -1541,7 +1541,7 @@ export const useTransaction = (
         },
       })
     );
-      const master = attachMaster(formState);
+      const master = await attachMaster(formState);
       const attachments = formState.transaction.attachments
         ?.filter((x) => x.id > 0)
         ?.map((x) => ({

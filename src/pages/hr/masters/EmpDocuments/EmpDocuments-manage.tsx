@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 
@@ -11,94 +11,46 @@ import Urls from "../../../../redux/urls";
 import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 
-/* ================= INITIAL DATA ================= */
+/* ---------- Initial Data ---------- */
+const initialEmpDocuments = {
+  employeeID: 0,
 
-export const initialEmployeeDocuments = {
-  data: {
-    employeeID: 0,
-    branchID: 0,
+  passPortNo: "",
+  passIssueDate: "",
+  passExpDate: "",
 
-    passPortNo: "",
-    passIssueDate: "",
-    passExpDate: "",
+  residensePNo: "",
+  resiIssueDate: "",
+  resiExpDate: "",
 
-    residensePNo: "",
-    resiIssueDate: "",
-    resiExpDate: "",
+  visaNo: "",
+  visaIssueDate: "",
+  visaExpDate: "",
 
-    visaNo: "",
-    visaIssueDate: "",
-    visaExpDate: "",
+  driveLicenseNo: "",
+  driveLicIssueDate: "",
+  driveLicExpDate: "",
 
-    driveLicenseNo: "",
-    driveLicIssueDate: "",
-    driveLicExpDate: "",
+  insuranceNo: "",
+  insuranceIssueDate: "",
+  insuranceExpDate: "",
 
-    insuranceNo: "",
-    insuranceIssueDate: "",
-    insuranceExpDate: "",
+  insurance2No: "",
+  insurance2IssueDate: "",
+  insurance2ExpDate: "",
 
-    insurance2No: "",
-    insurance2IssueDate: "",
-    insurance2ExpDate: "",
+  medical: "",
+  medicalIssueDate: "",
+  medicalExpDate: "",
 
-    medical: "",
-    medicalIssueDate: "",
-    medicalExpDate: "",
+  contractNo: "",
+  contractIssueDate: "",
+  contractExpDate: "",
 
-    contractNo: "",
-    contractIssueDate: "",
-    contractExpDate: "",
-
-    vacation: "",
-    vacationIssueDate: "",
-    vacationExpDate: "",
-  },
-  validations: {},
+  vacation: "",
+  vacationIssueDate: "",
+  vacationExpDate: "",
 };
-
-export interface EmpDocumentsData {
-  employeeID: number;
-  branchID: number;
-
-  passPortNo: string;
-  passIssueDate: string;
-  passExpDate: string;
-
-  residensePNo: string;
-  resiIssueDate: string;
-  resiExpDate: string;
-
-  visaNo: string;
-  visaIssueDate: string;
-  visaExpDate: string;
-
-  driveLicenseNo: string;
-  driveLicIssueDate: string;
-  driveLicExpDate: string;
-
-  insuranceNo: string;
-  insuranceIssueDate: string;
-  insuranceExpDate: string;
-
-  insurance2No: string;
-  insurance2IssueDate: string;
-  insurance2ExpDate: string;
-
-  medical: string;
-  medicalIssueDate: string;
-  medicalExpDate: string;
-
-  contractNo: string;
-  contractIssueDate: string;
-  contractExpDate: string;
-
-  vacation: string;
-  vacationIssueDate: string;
-  vacationExpDate: string;
-}
-
-/* ================= COMPONENT ================= */
 
 const EmpDocumentsManage: React.FC = React.memo(() => {
   const dispatch = useDispatch();
@@ -113,78 +65,73 @@ const EmpDocumentsManage: React.FC = React.memo(() => {
     getFieldProps,
     isLoading,
     handleClose,
-  } = useFormManager<EmpDocumentsData>({
+  } = useFormManager<any>({
     url: Urls.emp_documents,
-    initialData: initialEmployeeDocuments,
     useApiClient: true,
-    key: rootState.PopupData.EmpDocuments?.key,
+    initialData: initialEmpDocuments,
     onSuccess: useCallback(
       () => dispatch(toggleEmpDocuments({ isOpen: false, reload: true })),
       [dispatch]
     ),
     onClose: useCallback(
-      () => dispatch(toggleEmpDocuments({ isOpen: false, reload: false })),
+      () => dispatch(toggleEmpDocuments({ isOpen: false })),
       [dispatch]
     ),
   });
 
-  const DocRow = (
+  /* ---------- Row Renderer ---------- */
+  const Row = (
     label: string,
-    noField: keyof EmpDocumentsData,
-    issueField: keyof EmpDocumentsData,
-    expField: keyof EmpDocumentsData
+    no: string,
+    issue: string,
+    exp: string
   ) => (
-    <div className="grid grid-cols-4 gap-2 items-center">
+    <div className="grid grid-cols-4 gap-3 items-center">
       <div className="font-medium">{label}</div>
 
       <ERPInput
-        {...getFieldProps(noField)}
-        disabled={rootState.PopupData.EmpDocuments?.mode === "view"}
-        onChangeData={(d: any) => handleFieldChange(noField, d[noField])}
+        {...getFieldProps(no)}
+        onChangeData={(d: any) => handleFieldChange(no, d[no])}
       />
 
       <ERPInput
-        {...getFieldProps(issueField)}
+        {...getFieldProps(issue)}
         type="date"
-        disabled={rootState.PopupData.EmpDocuments?.mode === "view"}
-        onChangeData={(d: any) => handleFieldChange(issueField, d[issueField])}
+        onChangeData={(d: any) => handleFieldChange(issue, d[issue])}
       />
 
       <ERPInput
-        {...getFieldProps(expField)}
+        {...getFieldProps(exp)}
         type="date"
-        disabled={rootState.PopupData.EmpDocuments?.mode === "view"}
-        onChangeData={(d: any) => handleFieldChange(expField, d[expField])}
+        onChangeData={(d: any) => handleFieldChange(exp, d[exp])}
       />
     </div>
   );
 
   return (
     <div className="w-full modal-content">
-      <h2 className="text-center text-lg font-bold mb-4">
-        {t("document_details")}
-      </h2>
 
-      <div className="mb-4 grid grid-cols-4 items-center gap-2">
-        <label className="font-medium">{t("employee")}</label>
+      {/* Employee */}
+      <div className="grid grid-cols-4 gap-3 items-center mb-4">
+        <div className="font-medium">{t("employee")}</div>
         <div className="col-span-3">
           <ERPDataCombobox
-            {...getFieldProps("employeeID")}
-            field={{
-              id: "employeeID",
-              required: true,
-              getListUrl: Urls.employee,
-              valueKey: "employeeID",
-              labelKey: "employeeName",
-            }}
-            disabled={rootState.PopupData.EmpDocuments?.mode === "view"}
-            onChangeData={(d: any) =>
-              handleFieldChange("employeeID", d.employeeID)
-            }
-          />
+                  {...getFieldProps("employeeID")}
+                  label={t("employee")}
+                  field={{
+                    id: "employeeID",
+                    getListUrl: Urls.data_employees,
+                    valueKey: "id",
+                    labelKey: "name",
+                  }}
+                  onSelectItem={(data) =>
+                    handleFieldChange({ employeeID: data.value, employeeName: data.name })
+                  }
+                />
         </div>
       </div>
 
+      {/* Table Header */}
       <div className="grid grid-cols-4 font-semibold border-b pb-1 mb-2">
         <div>{t("document")}</div>
         <div>{t("document_no")}</div>
@@ -192,29 +139,29 @@ const EmpDocumentsManage: React.FC = React.memo(() => {
         <div>{t("expiry_date")}</div>
       </div>
 
+      {/* Rows */}
       <div className="space-y-2">
-        {DocRow(t("Pass Port"), "passPortNo", "passIssueDate", "passExpDate")}
-        {DocRow(t("Residence"), "residensePNo", "resiIssueDate", "resiExpDate")}
-        {DocRow(t("Visa"), "visaNo", "visaIssueDate", "visaExpDate")}
-        {DocRow(t("Driving License"), "driveLicenseNo", "driveLicIssueDate", "driveLicExpDate")}
-        {DocRow(t("Insurance 1"), "insuranceNo", "insuranceIssueDate", "insuranceExpDate")}
-        {DocRow(t("Insurance 2"), "insurance2No", "insurance2IssueDate", "insurance2ExpDate")}
-        {DocRow(t("Medical"), "medical", "medicalIssueDate", "medicalExpDate")}
-        {DocRow(t("Contract"), "contractNo", "contractIssueDate", "contractExpDate")}
-        {DocRow(t("Vacation"), "vacation", "vacationIssueDate", "vacationExpDate")}
+        {Row("Pass Port", "passPortNo", "passIssueDate", "passExpDate")}
+        {Row("Residence", "residensePNo", "resiIssueDate", "resiExpDate")}
+        {Row("Visa", "visaNo", "visaIssueDate", "visaExpDate")}
+        {Row("Driving License", "driveLicenseNo", "driveLicIssueDate", "driveLicExpDate")}
+        {Row("Insurance 1", "insuranceNo", "insuranceIssueDate", "insuranceExpDate")}
+        {Row("Insurance 2", "insurance2No", "insurance2IssueDate", "insurance2ExpDate")}
+        {Row("Medical", "medical", "medicalIssueDate", "medicalExpDate")}
+        {Row("Contract", "contractNo", "contractIssueDate", "contractExpDate")}
+        {Row("Vacation Period", "vacation", "vacationIssueDate", "vacationExpDate")}
       </div>
 
-      <ERPFormButtons
-        onClear={handleClear}
-        isEdit={isEdit}
-        isLoading={isLoading}
-        onCancel={handleClose}
-        onSubmit={
-          rootState.PopupData.EmpDocuments?.mode === "view"
-            ? undefined
-            : handleSubmit
-        }
-      />
+      {/* Buttons */}
+      <div className="mt-4">
+        <ERPFormButtons
+          onClear={handleClear}
+          isEdit={isEdit}
+          isLoading={isLoading}
+          onCancel={handleClose}
+          onSubmit={handleSubmit}
+        />
+      </div>
     </div>
   );
 });

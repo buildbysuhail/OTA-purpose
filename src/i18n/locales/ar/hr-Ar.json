@@ -5,8 +5,8 @@
   "employee_name": "اسم الموظف",
   "department": "القسم",
   "designation": "المسمى الوظيفي",
-
-
+  "enter_employee_code": "أدخل كود الموظف",
+  "enter_employee_name": "أدخل اسم الموظف",
   "employee_ID": "معرف الموظف",
   "short_Name": "الاسم المختصر",
   "gender": "الجنس",
@@ -14,7 +14,7 @@
   "accLedgerID": "معرف دفتر الأستاذ المحاسبي",
   "doj": "تاريخ الالتحاق بالعمل",
   "probotion_Period": "فترة التجربة",
-  "isActive": "نشط",
+  "is_active": "نشط",
   "isName_Changed": "تم تغيير الاسم",
   "address1": "العنوان 1",
   "address2": "العنوان 2",
@@ -25,7 +25,7 @@
   "mobile": "الجوال",
   "email": "البريد الإلكتروني",
   "nationality": "الجنسية",
-  "bloodGroup": "فصيلة الدم",
+  "blood_group": "فصيلة الدم",
   "passportNo": "رقم الجواز",
   "passportExpDate": "تاريخ انتهاء الجواز",
   "visaDetails": "تفاصيل التأشيرة",
@@ -48,8 +48,7 @@
   "costCentreID": "معرف مركز التكلفة",
   "salesTarget": "هدف المبيعات",
   "designationName": "اسم المسمى الوظيفي",
-  "costCentre": "مركز التكلفة",
-
+  "cost_center": "مركز التكلفة",
   
   "benefitDeductType": "نوع الاستحقاق أو الاستقطاع",
   "isBasic": "أساسي",
@@ -112,7 +111,15 @@
   "contract_exp_date": "تاريخ انتهاء العقد",
   "vacation": "الإجازة",
   "vacation_issue_date": "تاريخ إصدار الإجازة",
-  "vacation_exp_date": "تاريخ انتهاء الإجازة"
+  "vacation_exp_date": "تاريخ انتهاء الإجازة",
+
+  "general": "عام",
+  "more_details": "مزيد من التفاصيل",
+  "contact_details": "تفاصيل الاتصال",
+  "salary_monthly": "الراتب (شهرياً)",
+  "total_working_hours": "ساعات العمل العادية",
+  "ot_amount": "قيمة العمل الإضافي",
+  "actions": "الإجراءات"
 
 
   

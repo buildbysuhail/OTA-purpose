@@ -4,9 +4,10 @@ import {
   toggleDayClosePopup, toggleDeleteInactiveTransactionPopup, toggleEmpDocuments, toggleExchangeRatesPopup, toggleHeaderFooterPopup, toggleHideAccLedger, toggleImportExportPopup, toggleRefreshAllBranches,
   toggleResetBranchDataForSync, toggleResetDataBasePopup, toggleTestPopup, toggleUserTypePrivilegePopup
 } from "../../../../redux/slices/popup-reducer";
-import { BellDot, BellRing, BookOpenText, Calculator, CalendarDays, ChartNoAxesCombined, CircleDollarSign, ClipboardMinus, Cog, Component, Crown, FileUp, FolderCog, GitBranchPlus, GitMerge, Handshake, IdCard, Layers2, LayoutTemplate, Mail, MessageCircle, MonitorCog, QrCode, RefreshCw, RotateCcw, Ticket, Truck, UserCog, UserRound, UserRoundCheck, UsersRound } from "lucide-react";
+import { BadgeCheck, BellDot, BellRing, BookOpenText, BookUser, BriefcaseBusiness, Calculator, CalendarDays, CalendarFold, ChartNoAxesCombined, CircleDollarSign, ClipboardMinus, Cog, Component, Crown, FileUp, FileUser, FolderCog, Gift, GitBranchPlus, GitMerge, Handshake, IdCard, Layers2, LayoutTemplate, Mail, MessageCircle, MonitorCog, PersonStanding, QrCode, RefreshCw, RotateCcw, Ticket, Truck, UserCog, UserRound, UserRoundCheck, UserRoundCog, UsersRound } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { UserAction } from "../../../../helpers/user-right-helper";
+import { icon } from "@fortawesome/fontawesome-svg-core";
 export const SettingsMenuItems = [
   {
     menutitle: 'settings',
@@ -78,9 +79,9 @@ export const SettingsMenuItems = [
       // { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/listed-product-prices`, type: 'link', active: false, selected: false, title: 'listed_product_prices' },
     ]
   },
-  //user rights adding pending
+  //user rights adding pending < />
     {
-    icon: (<CheckBadgeIcon className="side-menu__icon" />),
+    icon: (<PersonStanding  className="side-menu__icon" />),
     type: 'sub',
     Name: '',
     active: false,
@@ -91,11 +92,11 @@ export const SettingsMenuItems = [
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     columns: 1,
     children: [
-      { path: `${import.meta.env.BASE_URL}settings/_/hr-masters/benefits-and-deductions`, type: 'link', active: false, selected: false, title: 'benefits_and_deductions' },
-      { path: `${import.meta.env.BASE_URL}settings/_/hr-masters/employee`, type: 'link', active: false, selected: false, title: 'employee' },
-      { path: `${import.meta.env.BASE_URL}settings/_/hr-masters/emp-designations`, type: 'link', active: false, selected: false, title: 'employee_designations' },
-      { path: `${import.meta.env.BASE_URL}settings/_/hr-masters/leave-type`, type: 'link', active: false, selected: false, title: 'leave_type' },
-      { path: `${import.meta.env.BASE_URL}settings/_/hr-masters/job-works`, type: 'link', active: false, selected: false, title: 'job_works' },
+      { path: `${import.meta.env.BASE_URL}settings/_/hr-masters/benefits-and-deductions`, type: 'link', active: false, selected: false, title: 'benefits_and_deductions', icon: Gift },
+      { path: `${import.meta.env.BASE_URL}settings/_/hr-masters/employee`, type: 'link', active: false, selected: false, title: 'employee', icon: FileUser },
+      { path: `${import.meta.env.BASE_URL}settings/_/hr-masters/emp-designations`, type: 'link', active: false, selected: false, title: 'employee_designations', icon: BadgeCheck },
+      { path: `${import.meta.env.BASE_URL}settings/_/hr-masters/leave-type`, type: 'link', active: false, selected: false, title: 'leave_type', icon: CalendarFold },
+      { path: `${import.meta.env.BASE_URL}settings/_/hr-masters/job-works`, type: 'link', active: false, selected: false, title: 'job_works', icon: BriefcaseBusiness },
       { action: toggleEmpDocuments, type: 'popup', active: false, selected: false, title: 'emp_documents' },
     ]                                                 
   },

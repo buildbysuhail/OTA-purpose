@@ -20,8 +20,7 @@ const Employee = () => {
       [
         {
           dataField: "employeeID",
-          caption: t("employeeID"),
-          dataType: "string",
+          caption: t("employee_ID"),
           allowSorting: true,
           allowSearch: true,
           allowFiltering: true,
@@ -115,7 +114,7 @@ const Employee = () => {
         },
         {
           dataField: "isActive",
-          caption: t("is_Active"),
+          caption: t("is_active"),
           dataType: "boolean",
           allowSorting: true,
           allowSearch: true,
@@ -231,7 +230,7 @@ const Employee = () => {
         },
         {
           dataField: "bloodGroup",
-          caption: t("blood_Group"),
+          caption: t("blood_group"),
           dataType: "string",
           allowSorting: true,
           allowSearch: true,
@@ -483,7 +482,7 @@ const Employee = () => {
         },
         {
           dataField: "costCentre",
-          caption: t("cost_Centre"),
+          caption: t("cost_center"),
           dataType: "string",
           allowSorting: true,
           allowSearch: true,
@@ -526,7 +525,7 @@ const Employee = () => {
                 columns={columns}
                 gridHeader={t("employee")}
                 dataUrl={Urls.employee}
-                gridId="grd_employee"
+                gridId="employee"
                 popupAction={toggleEmployee}
 
                 gridAddButtonType="popup"
@@ -542,8 +541,8 @@ const Employee = () => {
       <ERPModal
         isOpen={rootState.PopupData.employee.isOpen || false}
         title={t("employee")}
-        width={600}
-        height={250}
+        width={1000}
+        height={200}
         isForm={true}
         closeModal={() => { dispatch(toggleEmployee({ isOpen: false, key: null, reload: false })); }}
         content={<MemoizedEmployeeManage />}

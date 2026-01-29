@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowBigDownDash, BadgePlus, ChevronDown, Ellipsis, Search, X } from "lucide-react";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
@@ -40,6 +40,7 @@ import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import DraftMode from "./draft-mode";
 import ERPRadio from "../../../../components/ERPComponents/erp-radio";
 import WareHouseStock from "./components/warehouse-stock";
+import PartiesManage from "../../../accounts/masters/parties/parties-manage";
 
 interface TransactionHeaderProps {
   formState: TransactionFormState;
@@ -73,6 +74,7 @@ interface TransactionHeaderProps {
   footerLayout: "horizontal" | "vertical";
   userSession: any;
   inputRefs: Record<string, React.RefObject<HTMLInputElement>>
+  partyNameRef: any;
 }
 // clientSession
 const TransactionHeader: React.FC<TransactionHeaderProps> = ({
@@ -99,7 +101,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   focusToNextColumn,
   userSession,
   isAppGlobal,
-  inputRefs
+  inputRefs,
+  partyNameRef
 }) => {
   const { appState } = useAppState();
   const [isMoreModalOpen, setIsMoreModalOpen] = useState(false);
@@ -117,6 +120,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
     left: isRtl ? "0" : headerLeft,
     right: isRtl ? headerLeft : "0",
   };
+  const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
 
   useEffect(() => {
     const handleResize = () => {
@@ -191,7 +195,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   };
 
   // Input navigation refs
-  const partyNameRef = useRef<HTMLInputElement>(null);
+  // const partyNameRef = React.useRef<HTMLInputElement | null>(null);
   const address1Ref = useRef<HTMLInputElement>(null);
   // const mobileNumberRef = useRef<HTMLInputElement>(null);
   const mobileNumberRef = React.useRef<HTMLInputElement | null>(null);
@@ -199,16 +203,45 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   // const ReferenceNumberRef = useRef<HTMLInputElement>(null);
   const referenceNumberInputRef = useRef<HTMLInputElement>(null);
 
-
+const [openPartyModal, setOpenPartyModal] = useState(false);
+const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
   // Handle sequential input navigation
   const handleInputNavigation = useCallback(
     (e: React.KeyboardEvent, nextRef: React.RefObject<HTMLInputElement | any>) => {
       if (e.key === "Enter") {
-        e.preventDefault();
-        setTimeout(() => {
-          nextRef.current?.focus();
-          nextRef.current?.select?.();
-        }, 0);
+        // The below code is not completed, Waiting for api 
+        const mobileNo = formState.transaction.master.address4;
+        if (applicationSettings.inventorySettings.allowCustomerCreationByMobNo && mobileNo?.trim()) {
+          //An Api call SelectLedgerIDByMobNo needed Here, The ledger id is getting from the res
+          const LedgerID: number = 0;
+          if(LedgerID>0){
+            dispatch(
+              formStateMasterHandleFieldChange({
+                fields: { ledgerID: LedgerID },
+              })
+            );
+          }
+          if(LedgerID === 0){
+            // Opens the modal for customer creation
+            setOpenPartyModal(true);
+             return;
+          }
+        }else{
+          e.preventDefault();
+          e.stopPropagation();
+          setTimeout(() => {
+            nextRef.current?.focus();
+            nextRef.current?.select?.();
+          }, 0);
+          return;
+        }
+         e.preventDefault();
+         e.stopPropagation();
+          setTimeout(() => {
+            nextRef.current?.focus();
+            nextRef.current?.select?.();
+          }, 0);
+         return;
       }
     },
     []
@@ -629,7 +662,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                 <ERPInput
                   localInputBox={formState?.userConfig?.inputBoxStyle}
                   // disableEnterNavigation
-                  // ref={partyNameRef}
+                  ref={partyNameRef}
                   id="partyName"
                   label={t("name")}
                   value={formState.transaction.master.partyName}
@@ -844,6 +877,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                         content={
                           <DraftMode
                             closeModal={handleDraftModeClose}
+                            formState={formState}
                             t={t}
                           />
                         }
@@ -998,6 +1032,17 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     onClick={handleWStockList}
                   />
                 )}
+                {(formState.transaction.master.voucherType == VoucherType.SalesInvoice &&
+                <OrderNo
+                    localInputBox={formState?.userConfig?.inputBoxStyle}
+                    formState={formState}
+                    dispatch={dispatch}
+                    t={t}
+                    type="PI_Ref"
+                    label={t("m_invoice_no")}
+                    loadAndSetTransVoucher={loadAndSetTransVoucher}
+                  />
+                  )}
                 {formState.wStockListOpen && (
                   <ERPModal
                     isOpen={formState.wStockListOpen}
@@ -1481,7 +1526,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       />
                     </div>
                   )}
-                {formState.transaction.master.voucherType ===
+                {/* {formState.transaction.master.voucherType ===
                   VoucherType.PurchaseReturn && (
 
                     <OrderNo
@@ -1493,7 +1538,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       label={t("pi_ref")}
                       loadAndSetTransVoucher={loadAndSetTransVoucher}
                     />
-                  )}
+                  )} */}
 
                 {([VoucherType.SalesInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(formState.transaction.master.voucherType as any) &&
 
@@ -1682,6 +1727,14 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
         height={610}
         closeModal={closeLedgerDetailsModal}
         content={<LedgerDetails t={t} closeModal={closeLedgerDetailsModal} />}
+      />
+      <ERPModal
+        isOpen={openPartyModal}
+        title="Customer"
+        width={950}
+        height={700}
+        closeModal={() => setOpenPartyModal(false)}
+        content={<MemoizedPartiesManage type={"Cust"} />}
       />
     </div>
   );

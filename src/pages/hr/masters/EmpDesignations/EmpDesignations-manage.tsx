@@ -62,31 +62,29 @@ export const EmpDesignationsManage: React.FC = React.memo(() => {
                     readOnly={rootState.PopupData.EmpDesignations.mode == "view"}
                     fetching={formState?.loading !== false ? true : false}
                 />
-
-                <ERPCheckbox
-                    {...getFieldProps("isEditable")}
-                    label={t("is_editable")}
-                    onChangeData={(data: any) => handleFieldChange("isEditable", data.isEditable)}
-                    disabled={rootState.PopupData.EmpDesignations.mode == "view"}
-                    fetching={formState?.loading !== false ? true : false}
-                />
-
-                <ERPCheckbox
-                    {...getFieldProps("isDeletable")}
-                    label={t("is_deletable")}
-                    onChangeData={(data: any) => handleFieldChange("isDeletable", data.isDeletable)}
-                    disabled={rootState.PopupData.EmpDesignations.mode == "view"}
-                    fetching={formState?.loading !== false ? true : false}
-                />
-
+                   <ERPCheckbox
+                       {...getFieldProps("isEditable")}
+                       label={t("editable")}
+                       onChangeData={(data: any) => handleFieldChange("isEditable", data.isEditable)}
+                       disabled={rootState.PopupData.EmpDesignations.mode == "view"}
+                       fetching={formState?.loading !== false ? true : false}
+                   />
+                   <ERPCheckbox
+                       {...getFieldProps("isDeleted")}
+                       label={t("deletable")}
+                       onChangeData={(data: any) => handleFieldChange("isDeleted", data.isDeleted)}
+                       disabled={rootState.PopupData.EmpDesignations.mode == "view"}
+                       fetching={formState?.loading !== false ? true : false}
+                   />
+               
             </div>
             <ERPFormButtons
-                    onClear={rootState.PopupData.EmpDesignations.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleClear}
-                    isEdit={isEdit}
-                    isLoading={isLoading}
-                    onCancel={handleClose}
-                    onSubmit={rootState.PopupData.EmpDesignations.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleSubmit}
-                  />
-                </div>
+                onClear={rootState.PopupData.EmpDesignations.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleClear}
+                isEdit={isEdit}
+                isLoading={isLoading}
+                onCancel={handleClose}
+                onSubmit={rootState.PopupData.EmpDesignations.mode == "view" ? undefined : formState?.loading !== false ? undefined : handleSubmit}
+            />
+        </div>
     );
 });

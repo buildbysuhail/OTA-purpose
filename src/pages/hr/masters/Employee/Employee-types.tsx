@@ -115,12 +115,12 @@ export interface Employee {
   nationality: string;
   bloodGroup: string;
   passportNo: string;
-  passportExpDate: string;
+  passportExpDate: Date;
   visaDetails: string;
-  visaExpDate: string;
-  dob: string;
+  visaExpDate: Date;
+  dob: Date;
   isResign: boolean;
-  resignDate: string;
+  resignDate: Date;
   qualification: string;
   notes: string;
   remarks: string;

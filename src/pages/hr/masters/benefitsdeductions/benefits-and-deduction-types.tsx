@@ -1,15 +1,15 @@
 export const initialBenefitsAndDeductions = {
   data: {
-    benefitDeductionID: 0,
+    benefitDeductionID: 9,
     benefitDeductionName: "",
     benefitDeductType: "",
-    isBasic:""
+    isBasic:false
   },
   validations: {
-    benefitDeductionID: "",
+    benefitDeductionID: 9,
     benefitDeductionName: "",
     benefitDeductType: "",
-    isBasic: ""
+    isBasic: false
   },
 };
 
@@ -17,5 +17,5 @@ export interface BenefitsAndDeductions {
     benefitDeductionID: number,
     benefitDeductionName: string,
     benefitDeductType: string,
-   
+    isBasic: boolean
 }

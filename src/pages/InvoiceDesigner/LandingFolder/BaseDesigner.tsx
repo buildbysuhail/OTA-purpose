@@ -45,8 +45,8 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
     const tableColumns: TableColumn<PrintDetailDto>[] = [];
 
   const previewWidth = templateStyleProperties.previewWidth ?? 500;
-const previewHeight = templateStyleProperties.previewHeight; // Can be number or "auto"
-const isAutoHeight = templateStyleProperties.isAutoHeight ?? false;
+  const previewHeight = templateStyleProperties.previewHeight??500; // Can be number or "auto"
+  const isAutoHeight = templateStyleProperties.isAutoHeight ?? false;
 
     return (
       <div className="flex h-full text-black dark:text-white bg-white dark:bg-body_dark">

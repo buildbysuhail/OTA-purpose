@@ -67,7 +67,7 @@ const EmpDesignations = () => {
                     showInPdf: true,
                 },
                 {
-                    dataField: "isDeletable",
+                    dataField: "isDeleted",
                     caption: t("is_deletable"),
                     dataType: "boolean",
                     allowSorting: true,
@@ -129,12 +129,14 @@ const EmpDesignations = () => {
                             view={{ type: "popup", action: () => toggleEmpDesignations({ isOpen: true, key: cellElement?.data?.designationID, reload: false, mode: "view" }), }}
                             edit={{ type: "popup", action: () => toggleEmpDesignations({ isOpen: true, key: cellElement?.data?.designationID, reload: false, mode: "edit" }), }}
                             delete={{
-                                onSuccess: () => { dispatch(toggleEmpDesignations({ isOpen: false, key: null, reload: true, })); },
-                                confirmationRequired: true,
-                                confirmationMessage: t("are_you_sure_you_want_to_delete_this_item"),
-                                url: Urls?.emp_designations,
-                                key: cellElement?.data?.designationID,
-                            }}
+                                       onSuccess: () => { dispatch(toggleEmpDesignations({ isOpen: false, key: null, reload: true, })) },
+                                       visible: cellElement?.data?.isDeleted == true,
+                                       confirmationRequired: true,
+                                       confirmationMessage: t("are_you_sure_you_want_to_delete_this_item"),
+                                       url: Urls?.emp_designations,
+                                       key: cellElement?.data?.designationID,
+                                     }
+                                   }
                         />
                     ),
                 },

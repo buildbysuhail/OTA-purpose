@@ -64,6 +64,13 @@ export const PAGE_DIMENSIONS = {
     }
     return pageSize as any
   }
+    export const isRollpe
+     = (pageSize: string, dimensions: { width: number; height: number }) => {
+    if (pageSize.toUpperCase() === "CUSTOM") {
+      return [dimensions.width, dimensions.height]
+    }
+    return pageSize as any
+  }
   
   /**
    * Calculate page dimensions based on orientation

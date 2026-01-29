@@ -785,12 +785,12 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 variant="custom"
                 customVariant="bg-[#0d7377] hover:bg-[#0a5c5f] text-white"
               /> */}
-              <BtnPending
+              {/* <BtnPending
                 formState={formState}
                 dispatch={dispatch}
-                pendingBtnClick={() => console.log("Pending Clicked")}
+                pendingBtnClick={() => window.open(window.location.href, "_blank")}
                 t={t}
-              />
+              /> */}
               <BtnPrivilegeCard
                 formState={formState}
                 dispatch={dispatch}
@@ -848,12 +848,12 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 variant="custom"
                 customVariant="bg-[#0d7377] hover:bg-[#0a5c5f] text-white"
               /> */}
-              <BtnPending
+              {/* <BtnPending
                 formState={formState}
                 dispatch={dispatch}
-                pendingBtnClick={() => console.log("Pending Clicked")}
+                pendingBtnClick={() => window.open(window.location.href, "_blank")}
                 t={t}
-              />
+              /> */}
               {/* Need to make the P button into standard btn component format */}
               <ERPButton
                 title={t("p")}
@@ -1157,12 +1157,12 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                       tenderBtnClick={() => handleTenderOpen()}
                       t={t}
                     />
-                    <BtnPending
+                    {/* <BtnPending
                       formState={formState}
                       dispatch={dispatch}
-                      pendingBtnClick={() => console.log("Pending Clicked")}
+                      pendingBtnClick={() => window.open(window.location.href, "_blank")}
                       t={t}
-                    />
+                    /> */}
                     <BtnPrivilegeCard
                       formState={formState}
                       dispatch={dispatch}
@@ -1180,12 +1180,12 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                       tenderBtnClick={() => handleTenderOpen()}
                       t={t}
                     />
-                    <BtnPending
+                    {/* <BtnPending
                       formState={formState}
                       dispatch={dispatch}
-                      pendingBtnClick={() => console.log("Pending Clicked")}
+                      pendingBtnClick={() => window.open(window.location.href, "_blank")}
                       t={t}
-                    />
+                    /> */}
                   </li>
                 )}
                 {/* Field 13: Offer Achieved & Discount Slab Buttons */}
@@ -1470,12 +1470,12 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     tenderBtnClick={() => handleTenderOpen()}
                     t={t}
                   />
-                  <BtnPending
+                  {/* <BtnPending
                     formState={formState}
                     dispatch={dispatch}
-                    pendingBtnClick={() => console.log("Pending Clicked")}
+                    pendingBtnClick={() => window.open(window.location.href, "_blank")}
                     t={t}
-                  />
+                  /> */}
                   <BtnPrivilegeCard
                     formState={formState}
                     dispatch={dispatch}
@@ -1493,12 +1493,12 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     tenderBtnClick={() => handleTenderOpen()}
                     t={t}
                   />
-                  <BtnPending
+                  {/* <BtnPending
                     formState={formState}
                     dispatch={dispatch}
-                    pendingBtnClick={() => console.log("Pending Clicked")}
+                    pendingBtnClick={() => window.open(window.location.href, "_blank")}
                     t={t}
-                  />
+                  /> */}
                 </div>
               )}
               {/* Field 13: Offer Achieved & Discount Slab Buttons */}
@@ -1866,12 +1866,12 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               variant="custom"
               customVariant="bg-[#0d7377] hover:bg-[#0a5c5f] text-white"
             /> */}
-            <BtnPending
+            {/* <BtnPending
               formState={formState}
               dispatch={dispatch}
-              pendingBtnClick={() => console.log("Pending Clicked")}
+              pendingBtnClick={() => window.open(window.location.href, "_blank")}
               t={t}
-            />
+            /> */}
 
             <BtnPrivilegeCard
               formState={formState}
@@ -1917,12 +1917,12 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 variant="custom"
                 customVariant="bg-[#0d7377] hover:bg-[#0a5c5f] text-white"
               /> */}
-            <BtnPending
+            {/* <BtnPending
               formState={formState}
               dispatch={dispatch}
-              pendingBtnClick={() => console.log("Pending Clicked")}
+              pendingBtnClick={() => window.open(window.location.href, "_blank")}
               t={t}
-            />
+            /> */}
             {/* Need to make the P button into standard btn component format */}
             <ERPButton
               title={t("p")}

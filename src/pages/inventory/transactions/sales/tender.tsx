@@ -15,6 +15,7 @@ import { formStateHandleFieldChangeKeysOnly, formStateTransactionBankCardAddRows
 import { SettlementDetails } from "../transaction-types";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import { APIClient } from "../../../../helpers/api-client";
+import { resolveTenderPromise } from "./use-transaction";
 
 interface TenderProps {
   isOpen: boolean;
@@ -437,7 +438,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
     });
   };
 
-
+  let updatedCash = cashRcvd;
   const validateAmount = async () => {
     // Common validation condition for tender, tender global
     if(total > 0){
@@ -509,7 +510,6 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
     // Tender not global condition
     }else{
       // authorization - frm tender - complete the working and check it
-      debugger;
       if(initialDiscount === 0 || initialDiscount !== discAmount ){
         if(applicationSettings.inventorySettings.blockBillDiscount === "If Authentication Fails"){
           if(discAmount > 0 && discAmount > applicationSettings.inventorySettings.discontAuthorizationIfDiscountAbove){
@@ -549,7 +549,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
           }
       }
       if (isCreditable === false && isCashOrBank === true){
-        if(balance < 0 && (cashRcvd + cardAmt) > 0){
+        if(balance > 0 && (cashRcvd + cardAmt) > 0){
           ERPAlert.show({
             icon: "info",
             title: t("insufficient_amount_received!"),
@@ -563,9 +563,9 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
       }
       if(cashRcvd === 0){
         if(isCreditable && clientSession.isAppGlobal){
-          setCashRcvd(0)
+          updatedCash = 0;
         }else if(isCashOrBank){
-          setCashRcvd(netTotal);
+          updatedCash = netTotal;
         }
       }
     }
@@ -581,7 +581,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
           fields: {
             transaction:{
               master:{
-                cashReceived: cashRcvd,
+                cashReceived: updatedCash,
                 bankAmt: totalBankCardAmount + totalQrPayAmount + cardAmount,
                 billDiscount: discAmount
               }
@@ -589,6 +589,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
           },
         })
       )
+      resolveTenderPromise(true);
       onClose();
     }
   };
@@ -815,10 +816,11 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                     <label className="text-black text-xs font-medium">{t('bank_ac')}</label>
                   </div>
                   <ERPDataComboBox
-                    id="ledgerCombo"
+                    id="bank_ac"
                     noLabel={true}
                     variant="outlined"
                     className="tender-combobox"
+                    noPlaceholder
                     style={{ backgroundColor: 'white', borderRadius: '6px' }}
                     field={{
                       id: "ledgerID",
@@ -827,7 +829,8 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                       valueKey: "id",
                       labelKey: "name",
                     }}
-                    value={bankCardDetails.ledgerId || -2}
+                    value={bankCardDetails.ledgerId}
+                    // value={bankCardDetails.ledgerId || -2}  // Use This if need to select the first item initially
                     onChange={(e) =>
                       setBankCardDetails((prev: any) => {
                         return {

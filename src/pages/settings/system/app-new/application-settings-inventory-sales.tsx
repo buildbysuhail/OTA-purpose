@@ -919,6 +919,24 @@ const InventorySalesFilterableComponents: React.FC<ApplicationSettingsProps> = (
         />
       ),
     },
+    {
+      condition: filterComponent([t("allow_customer_creation_by_mobile_number")], filterText),
+      element: (
+        <ERPCheckbox
+          id="allowCustomerCreationByMobNo"
+          checked={settings?.inventorySettings?.allowCustomerCreationByMobNo}
+          data={settings?.inventorySettings}
+          label={t("allow_customer_creation_by_mobile_number")}
+          onChangeData={(data: any) =>
+            handleFieldChange(
+              "inventorySettings",
+              "allowCustomerCreationByMobNo",
+              data.allowCustomerCreationByMobNo
+            )
+          }
+        />
+      ),
+    },
 
   ];
   const [hasMatchedItems, setHasMatchedItems] = useState<boolean>(true);

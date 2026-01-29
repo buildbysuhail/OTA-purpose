@@ -1578,10 +1578,7 @@ export const useTransaction = (
               value: undefined,
             })
           );
-          clearControls(
-            formState.transaction.master.invTransactionMasterID > 0,
-            formState.transaction.master.invTransactionMasterID
-          );
+          clearControls(true, true);
           if (formState.printOnSave == true && saveMode != "LPO" && saveMode != "LPQ") {
             await printVoucher(
               saveRes?.item?.master?.invTransactionMasterID, // masterID
@@ -1720,74 +1717,162 @@ export const useTransaction = (
     );
   };
   const clearControls = async (
-    isEdit: boolean,
-    transactionMasterID?: number,
+    loadNextVrNo: boolean = true,
+    clearMannualInvoiceNumber: boolean = true,
     focusFirstRow: boolean = true
   ) => {
-    if (transactionMasterID ?? 0 > 0) {
-      await undoEditMode(isEdit, transactionMasterID ?? 0);
+    // UndoEditMode
+    if ((formState.transaction.master.invTransactionMasterID ?? 0) > 0) {
+      await undoEditMode(formState.isEdit, formState.transaction.master.invTransactionMasterID ?? 0);
     }
-    const vNoRes = await getNextVoucherNumber(
-      formState.transaction.master.voucherForm,
-      formState.transaction.master.voucherType,
-      formState.transaction.master.voucherPrefix,
-      false
-    );
 
-    const vNo = vNoRes.voucherNumber || 0;
-    const vPrefix = vNoRes.voucherPrefix || "";
-    let employeeID = userSession.employeeId ?? 0;
-    if (
-      ["PR", "PQ", "wPO"].includes(
-        formState.transaction.master.voucherType ?? ("" as any)
-      ) &&
-      employeeID <= 0
-    ) {
-      const emps = await getApLocalDataByUrl(
-        `${Urls.inv_transaction_base}${transactionType}/Data/Employee/`
+    // Get next voucher number if required
+    let vNo = 0;
+    let vPrefix = formState.transaction.master.voucherPrefix ?? "";
+    if (loadNextVrNo) {
+      const vNoRes = await getNextVoucherNumber(
+        formState.transaction.master.voucherForm,
+        formState.transaction.master.voucherType,
+        formState.transaction.master.voucherPrefix,
+        false
       );
-      employeeID = emps && emps.length > 0 ? emps[0].id : employeeID;
+      vNo = vNoRes.voucherNumber || 0;
+      vPrefix = vNoRes.voucherPrefix || "";
     }
+
+    // Determine employee ID
+    let employeeID = userSession.employeeId ?? 0;
+
+    // Determine default ledgerID based on settings
+    let defaultLedgerID = applicationSettings.accountsSettings.defaultCashAcc;
+    if (applicationSettings.accountsSettings?.allowSalesCounter && (userSession.counterwiseCashLedgerId ?? 0) > 0) {
+      defaultLedgerID = userSession.counterwiseCashLedgerId;
+    }
+    if (applicationSettings.accountsSettings?.setDefaultCustomerInSales) {
+      defaultLedgerID = applicationSettings.accountsSettings.defaultCustomerLedgerID ?? defaultLedgerID;
+    }
+
+    // Determine default customer type
+    let customerType = "";
+    if (applicationSettings.branchSettings?.maintainKSA_EInvoice) {
+      customerType = "B2C";
+    }
+
+    // Build the master object with all reset values
     const master: TransactionMaster = {
       ...TransactionMasterInitialData,
       voucherType: formState.transaction.master.voucherType ?? "",
-      voucherPrefix: vPrefix ?? formState.transaction.master.voucherPrefix ?? "",
+      voucherPrefix: vPrefix,
       voucherForm: formState.transaction.master.voucherForm ?? "",
       transactionDate: moment(softwareDate, "DD/MM/YYYY").local().toISOString(),
-      purchaseInvoiceDate: moment().local().toISOString(),
+      dueDate: moment(softwareDate, "DD/MM/YYYY").local().toISOString(),
+      orderDate: moment(softwareDate, "DD/MM/YYYY").local().toISOString(),
+      quotationDate: moment(softwareDate, "DD/MM/YYYY").local().toISOString(),
+      purchaseInvoiceDate: moment(softwareDate, "DD/MM/YYYY").local().toISOString(),
+      deliveryDate: moment(softwareDate, "DD/MM/YYYY").local().toISOString(),
+      despatchDate: moment(softwareDate, "DD/MM/YYYY").local().toISOString(),
       employeeID: employeeID,
-      voucherNumber: vNo ?? 0,
+      voucherNumber: vNo,
       inventoryLedgerID:
         formState.transaction.master.voucherType == VoucherType.SalesReturn
           ? applicationSettings.inventorySettings?.defaultSalesReturnAcc
           : applicationSettings.inventorySettings?.defaultSalesAcc,
-      ledgerID: applicationSettings.accountsSettings.defaultCashAcc,
+      ledgerID: defaultLedgerID,
       isLocked: false,
       grandTotal: 0,
       grandTotalFc: 0,
+      totalGross: 0,
+      totalDiscount: 0,
+      billDiscount: 0,
+      vatAmount: 0,
+      roundAmount: 0,
+      cashReceived: 0,
+      bankAmt: 0,
+      creditAmt: 0,
+      srAmount: 0,
+      advanceAmt: 0,
+      couponAmt: 0,
+      taxOnDiscount: 0,
+      salesManIncentive: 0,
+      partyName: "",
+      address1: "",
+      address2: "",
+      address3: "",
+      remarks: "",
+      quotationNumber: "",
+      orderNumber: 0,
+      purchaseInvoiceNumber: "",
+      deliveryNoteNumber: "",
+      despatchDocumentNumber: "",
+      gatePassNo: "",
+      dueDays: 0,
+      mannualInvoiceNumber: clearMannualInvoiceNumber ? "" : formState.transaction.master.mannualInvoiceNumber,
+      priceCategoryID: formState.defaultPriceCategoryId > 0
+        ? formState.defaultPriceCategoryId
+        : 0,
+      driverID: 0,
+      vehicleID: 0,
+      deliveryManID: 0,
+      salesManID: formState.userConfig?.holdSalesMan ? formState.transaction.master.salesManID : 0,
+      customerType: customerType,
+      draftTransactionMasterID: 0,
+      randomKey: 0,
+      privCardID: 0,
+      privAddAmount: 0,
+      privRedeem: 0,
       fromWarehouseID:
-        formState.userConfig?.presetWarehouseId ?? 0 > 0
+        (formState.userConfig?.presetWarehouseId ?? 0) > 0
           ? formState.userConfig?.presetWarehouseId ?? 0
           : applicationSettings.inventorySettings?.defaultWareHouse,
       costCentreID:
-        formState.userConfig?.presetCostenterId ?? 0 > 0
+        (formState.userConfig?.presetCostenterId ?? 0) > 0
           ? formState.userConfig?.presetCostenterId ?? 0
           : applicationSettings.accountsSettings.defaultCostCenterID,
     };
+
+    // Reset form state fields specific to sales
     dispatch(
       formStateHandleFieldChange({
         fields: {
           isRowEdit: false,
+          isEdit: false,
           total: 0,
           netTotal: 0,
           netAmount: 0,
           amountInWords: "",
           barcodeData: "",
           barcodeTemplate: null,
-          isEdit: false,
           summary: initialInventoryTotals,
           printOnSave: true,
-
+          // Sales specific resets
+          blnCreateCreditNoteAutomatically: false,
+          selectedPartiesDefaultPriceCategoryId: 0,
+          giftClaimed: false,
+          giftBatchId: 0,
+          giftProductBatchId: 0,
+          giftProductQty: 0,
+          giftProductPrice: 0,
+          isSaveClicked: false,
+          allowStockUpdate: true,
+          creditStopped: false,
+          currentLoadedPrefix: "",
+          currentLoadedVno: "",
+          oldQuoteVatPercentage: 0,
+          advanceAmtFromSo: 0,
+          randomKey: 0,
+          previousGrandTotal: 0,
+          partyAccTransDetailId: 0,
+          privilegeCardId: 0,
+          partyCashRcvdTransDetailId: 0,
+          partyBankRcvdTransDetailId: 0,
+          oldLedgerId: 0,
+          dsBillWiseTrans: null,
+          address2: "",
+          address3: "",
+          guidTransaction: "",
+          dtCouponDetails: undefined,
+          draftMode: true,
+          billDiscountPerc: 0,
           prev: modelToBase64Unicode(
             setTransactionForHistory(
               {
@@ -1803,80 +1888,122 @@ export const useTransaction = (
       })
     );
 
+    // Update master fields
     dispatch(
       formStateMasterHandleFieldChange({
         fields: { ...master },
       })
     );
+
+    // Clear details grid
     dispatch(formStateClearDetails(deviceInfo.isMobile));
+
+    // Clear current cell
     dispatch(
       formStateHandleFieldChange({
         fields: { currentCell: undefined },
       })
     );
+
+    // Clear attachments
     dispatch(formStateClearAttachments());
+
+    // Clear account transactions
     dispatch(
       formStateTransactionUpdate({ key: "invAccTransactions", value: [] })
     );
+
+    // Update form elements state
     dispatch(
       formStateHandleFieldChangeKeysOnly({
-        // Form elements
         fields: {
           formElements: {
             btnAdd: {
               label: "Add",
             },
+            btnSave: {
+              disabled: false,
+            },
+            btnEdit: {
+              disabled: false,
+            },
+            btnDelete: {
+              disabled: false,
+            },
+            btnPrint: {
+              disabled: false,
+            },
+            btnConvertToInvoice: {
+              visible: false,
+            },
             ledgerID: {
               reload: true,
+              disabled: applicationSettings.accountsSettings?.allowSalesCounter &&
+                        (userSession.counterwiseCashLedgerId ?? 0) > 0 &&
+                        formState.transaction.master.voucherType !== "BT",
             },
             cbCostCentre: {
               reload: true,
-              visible:
-                applicationSettings?.accountsSettings?.maintainCostCenter,
+              visible: applicationSettings?.accountsSettings?.maintainCostCenter,
               disabled: (formState.userConfig?.presetCostenterId ?? 0) > 0,
             },
             cbWarehouse: {
               reload: true,
-              visible:
-                applicationSettings?.inventorySettings?.maintainWarehouse,
+              visible: applicationSettings?.inventorySettings?.maintainWarehouse,
               disabled: (formState.userConfig?.presetWarehouseId ?? 0) > 0,
             },
-            amount: {
+            cbSalesMan: {
               disabled: false,
             },
             pnlMasters: {
               disabled: false,
             },
+            pnlPrivilage: {
+              visible: false,
+            },
+            pnlWarehouseStock: {
+              visible: false,
+            },
+            pnlProductInfo: {
+              visible: false,
+            },
+            pnlSearch: {
+              visible: false,
+            },
             employee: {
-              disabled: false,
-            },
-            jvDrCr: {
-              disabled: false,
-            },
-            masterAccount: {
-              disabled: false,
-            },
-            referenceDate: {
-              disabled: false,
-            },
-            referenceNumber: {
               disabled: false,
             },
             transactionDate: {
               disabled: false,
             },
-            linkEdit: {
-              // visible: !((formState.userConfig?.presetCostenterId ?? 0) > 0),
+            chkDraftMode: {
+              disabled: false,
+            },
+            chkIsLocked: {
+              disabled: false,
+            },
+            lblSoTotalAdvance: {
+              visible: false,
             },
             postedTransactionLabel: {
-              visible: false
-            }
+              visible: false,
+            },
+            sRAmountLabel: {
+              visible: false,
+            },
+            pendingGoodsDeliveryListMenuItem: {
+              disabled: false,
+            },
+            pendingOrderListMenuItem: {
+              disabled: false,
+            },
           },
         },
         updateOnlyGivenDetailsColumns: true,
       })
     );
 
+    // Focus first editable column if required
     const editableColumns = formState.gridColumns?.filter(
       (col) =>
         col.visible != false &&
@@ -3997,6 +4124,9 @@ export const useTransaction = (
         case "Enter":
           let data = { ...formState.transaction.details[rowIndex] };
           if (columnName == "actionCol") {
+            if(applicationSettings.productsSettings.giftOnBilling){
+              await removeGiftFromGrid(formState.transaction.details, formState.currentCell);
+            }
             if (!isNullOrUndefinedOrEmpty(value)) {
               await handleRemoveItem(value);
             } else {

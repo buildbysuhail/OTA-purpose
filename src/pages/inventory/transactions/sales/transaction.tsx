@@ -196,8 +196,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
       });
 
       const maybePromise = clearControls(
-        formState.isEdit,
-        formState.transaction.master.invTransactionMasterID,
+        true, // loadNextVrNo
+        true, // clearMannualInvoiceNumber
         false // don't focus first grid row when invoked from header button
       );
 
@@ -1343,6 +1343,7 @@ debugger;
           ..._formState.transaction,
           master: {
             ..._formState.transaction.master,
+            hasCashPaid: _formState.userConfig.setDefaultCashReceived??false,
 
             customerType: getCustomerTypeAndTitle(_formState.transaction.master.voucherForm, _formState.title, clientSession.isAppGlobal, applicationSettings.branchSettings.maintainKSA_EInvoice).CUSTOMER_TYPE,
           },

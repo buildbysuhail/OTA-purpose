@@ -43,7 +43,7 @@ const BenefitDeduction = () => {
     },
     {
       dataField: "isBasic",
-      caption: t("is_Basic"),
+      caption: t("is_basic"),
       dataType: "boolean",
       allowSorting: true,
       allowSearch: true,

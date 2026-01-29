@@ -3,6 +3,7 @@
     "employee": "Employee",
     "employee_code": "Employee Code",
     "employee_name": "Employee Name",
+    "enter_employee_name": "Enter Employee Name",
     "department": "Department",
     "designation": "Designation",
     "employee_ID": "Employee ID",
@@ -13,8 +14,9 @@
     "designation_ID": "Designation ID",
     "accLedger_ID": "Account Ledger ID",
     "doj": "Date of Joining",
+    "enter_employee_code": "Enter Employee Code",
     "probotion_Period": "Probation Period",
-    "isActive": "Is Active",
+    "is_active": "Is Active",
     "isNameChanged": "Is Name Changed",
     "address1": "Address 1",
     "address2": "Address 2",
@@ -25,7 +27,7 @@
     "mobile": "Mobile",
     "email": "Email",
     "nationality": "Nationality",
-    "blood_Group": "Blood Group",
+    "blood_group": "Blood Group",
     "passportNo": "Passport No",
     "passport_ExpDate": "Passport Expiry Date",
     "visa_Details": "Visa Details",
@@ -39,7 +41,7 @@
     "windows_EmpImage": "Employee Image",
     "wage_Type": "Wage Type",
     "wage_Amt": "Wage Amount",
-    "cl": "Casual Leave",
+    "cl": "No Of Casual Leave",
     "da": "Dearness Allowance",
     "pf": "Provident Fund",
     "incentive_Perc": "Incentive Percentage",
@@ -48,7 +50,7 @@
     "cost_Centre_ID": "Cost Centre ID",
     "sales_Target": "Sales Target",
     "designation_Name": "Designation Name",
-    "cost_Centre": "Cost Centre",
+    "cost_center": "Cost Centre",
 
     "benefit_Deduction_ID": "Benefit Deduction ID",
     "benefit_Deduction_Name": "Benefit Deduction Name",
@@ -110,7 +112,17 @@
   "contract_exp_date": "Contract Expiry Date",
   "vacation": "Vacation/Leave",
   "vacation_issue_date": "Vacation Issue Date",
-  "vacation_exp_date": "Vacation Expiry Date"
+  "vacation_exp_date": "Vacation Expiry Date",
+
+  "general": "General",
+  "more_details": "More Details",
+  "contact_details": "Contact Details",
+  "salary_monthly": "Salary (Monthly)",
+  "total_working_hours": "Normal Working Hours",
+  "ot_amount": "OT Amount",
+  "actions": "Actions"
+
+  
 
   
 }

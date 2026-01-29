@@ -5,7 +5,7 @@ export const initialEmpDesignation = {
     designationName: "",
     shortName: "",
     remarks: "",
-    isDeleted: false,
+    isDeleted: true,
     isEditable: true,
   },
   validations: {
@@ -24,6 +24,6 @@ export interface EmpDesignation {
   designationName: string;
   shortName: string;
   remarks: string;
-  isDeletable: boolean;
+  isDeleted: boolean;
   isEditable: boolean;
 }

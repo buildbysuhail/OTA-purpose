@@ -68,39 +68,31 @@ export const BenefitAndDeductionManage: React.FC = React.memo(() => {
           fetching={formState?.loading !== false}
         />
 
-        {/* Benefit / Deduction Type */}
-        {/* <ERPDataCombobox
+
+        <ERPDataCombobox
           {...getFieldProps("benefitDeductType")}
+          id="benefitDeductType"
           field={{
             id: "benefitDeductType",
-            required: true,
-            getListUrl: Urls.benefits_and_deductions,
             valueKey: "id",
             labelKey: "name",
           }}
+          options={[
+            { id: "Benefit", name: "Benefits" },
+            { id: "Deduction", name: "Deduction" },
+          ]}
           label={t("benefit_Deduct_Type")}
           onChangeData={(data: any) =>
             handleFieldChange("benefitDeductType", data.benefitDeductType)
           }
-          disabled={rootState.PopupData.BenefitDiduction.mode === "view"}
-          fetching={formState?.loading !== false}
-        /> */}
-
-        <ERPDataCombobox
-          id="selectBox"
-          label={t("benefitDeductType")}
-          field={{
-            id: "selectBox",
-            valueKey: "value",
-            labelKey: "label",
-          }}
-          onChangeData={(data: any) =>
-            handleFieldChange("benefitDeductType", data.benefitDeductType)
+          disabled={
+            (rootState.PopupData.BenefitDiduction.data != undefined &&
+            rootState.PopupData.BenefitDiduction.data != null &&
+            rootState.PopupData.BenefitDiduction.data?.benefitDeductionID != undefined &&
+            rootState.PopupData.BenefitDiduction.data?.benefitDeductionID != null) ||
+            rootState.PopupData.BenefitDiduction.mode == "view"
           }
-          options={[
-            { value: 0, label: "Benefits" },
-            { value: 1, label: "Deduction" },
-          ]}
+          fetching={formState?.loading !== false}
         />
 
         {/* Is Basic */}

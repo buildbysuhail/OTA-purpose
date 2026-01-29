@@ -76,8 +76,8 @@ const JobWorks = () => {
                     width: 100,
                     cellRender: (cellElement: any, cellInfo: any) => (
                         <ERPGridActions
-                            view={{ type: "popup", action: () => toggleJobWorks({ isOpen: true, key: cellElement?.data?.leaveTypeID, reload: false, mode: "view" }), }}
-                            edit={{ type: "popup", action: () => toggleJobWorks({ isOpen: true, key: cellElement?.data?.leaveTypeID, reload: false, mode: "edit" }), }}
+                            view={{ type: "popup", action: () => toggleJobWorks({ isOpen: true, key: cellElement?.data?.jobID, reload: false, mode: "view" }), }}
+                            edit={{ type: "popup", action: () => toggleJobWorks({ isOpen: true, key: cellElement?.data?.jobID, reload: false, mode: "edit" }), }}
                             delete={{
                                 onSuccess: () => { dispatch(toggleJobWorks({ isOpen: false, key: null, reload: true, })); },
                                 confirmationRequired: true,

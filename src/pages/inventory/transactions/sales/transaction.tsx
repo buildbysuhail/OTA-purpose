@@ -868,6 +868,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   }, [formState.transaction.master.ledgerID]);
 
   useEffect(() => {
+    // if(voucherType??"" == "") return;
    initializeFormElements(voucherType??"", voucherPrefix??"", formType??"",formCode??"",title??"",voucherNo??0,transactionMasterID??0);
   }, [voucherType, voucherPrefix, formType]);
 

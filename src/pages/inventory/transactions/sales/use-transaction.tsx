@@ -371,10 +371,10 @@ export const useTransaction = (
     debugger;
     let _formState = await loadTransVoucher(
       usingManualInvNumber,
-      voucherNumber,
-      voucherPrefix,
-      voucherType,
-      formType,
+      voucherNumber||formState.transaction.master.voucherNumber,
+      voucherPrefix||formState.transaction.master.voucherPrefix,
+      voucherType||formState.transaction.master.voucherType,
+      formType??formState.transaction.master.voucherForm,
       manualInvoiceNumber,
       transactionMasterID,
       loadVType,
@@ -1126,126 +1126,120 @@ debugger;
   async function validate(): Promise<boolean> {
     const master = formState.transaction.master;
     const details = formState.transaction.details;
+    const formType = master.voucherForm ?? "";
+    const voucherType = master.voucherType ?? "";
+    const isKSAEInvoice = applicationSettings.branchSettings.maintainKSA_EInvoice;
+    const isIndia = clientSession.isAppGlobal;
+    const cashReceived = master.cashReceived || 0;
+    const cardAmount = master.bankAmt || 0;
+    const grandTotal = master.grandTotal || 0;
+    const vatNumber = (master.tokenNumber ?? "").trim();
+    const customerType = master.customerType ?? "";
 
-    const creditMode = applicationSettings.accountsSettings.blockOnCreditLimit; // "Block" | "Allow Cash Sales" | "Warn"
+    // Get first free row index (first row without a product)
+    const firstFreeRow = details.findIndex((x) => !x.productID || x.productID === 0);
+    const validDetails = firstFreeRow === -1 ? details : details.slice(0, firstFreeRow);
 
-    const creditRes = checkThePartyCreditLimit(
-      formState.transaction.master.ledgerID,
-      formState.transaction.master.grandTotal || 0,
-      formState.oldLedgerId || 0,
-      formState.previousGrandTotal || 0
-    );
+    // ============ Cash/Card Amount Validations ============
+    if (cashReceived < 0 || cardAmount < 0) {
+      await ERPAlert.show({
+        icon: "error",
+        title: t("validation_error"),
+        text: t("invalid_cash_bank_amount_positive"),
+        confirmButtonText: t("ok"),
+      });
+      return false;
+    }
 
-    /* ---------------- BLOCK ---------------- */
-    if (creditMode === "Block") {
-      if (creditRes.exceeded) {
-        ERPAlert.show({
+    if (cashReceived + cardAmount > grandTotal * 100 && cashReceived + cardAmount > 10000) {
+      await ERPAlert.show({
+        icon: "error",
+        title: t("validation_error"),
+        text: t("cash_card_exceeds_100_times_total"),
+        confirmButtonText: t("ok"),
+      });
+      return false;
+    }
+
+    // ============ B2B/B2C Tax Reg Number Validation (KSA) ============
+    if (isKSAEInvoice && !isIndia) {
+      if (customerType === "B2B" && vatNumber.length !== 15) {
+        await ERPAlert.show({
           icon: "error",
-          title: "Credit Limit Exceeded",
-          text: `${creditRes.message}. Cannot be proceeded.`,
-          confirmButtonText: "OK",
+          title: t("validation_error"),
+          text: t("b2b_invoice_15_digit_tax_reg_required"),
+          confirmButtonText: t("ok"),
         });
         return false;
       }
-    }
 
-    /* ----------- ALLOW CASH SALES ----------- */
-    if (creditMode === "Allow Cash Sales") {
-      if (creditRes.exceeded) {
-        const grandTotal = formState.transaction.master.grandTotal || 0;
-        const cashReceived = formState.transaction.master.cashReceived || 0;
-        const cardAmount = formState.transaction.master.bankAmt || 0;
+      if (customerType === "B2C" && vatNumber.length > 0) {
+        await ERPAlert.show({
+          icon: "error",
+          title: t("validation_error"),
+          text: t("b2c_invoice_tax_reg_should_be_empty"),
+          confirmButtonText: t("ok"),
+        });
+        return false;
+      }
 
-        if (grandTotal > cashReceived + cardAmount) {
-          ERPAlert.show({
-            icon: "warning",
-            title: "Credit Limit Exceeded",
-            text: `${creditRes.message}. Please proceed with Cash/Bank receipt amount`,
-            confirmButtonText: "OK",
+      // Tax Registration number format validation (15 digits, starts with 3, ends with 3)
+      if (vatNumber !== "") {
+        if (vatNumber.length !== 15 || !vatNumber.startsWith("3") || !vatNumber.endsWith("3")) {
+          await ERPAlert.show({
+            icon: "error",
+            title: t("validation_error"),
+            text: t("invalid_tax_registration_number"),
+            confirmButtonText: t("ok"),
+          });
+          return false;
+        }
+      }
+
+      // E-Invoice: Transaction date should not be post-dated
+      if (formType === "VAT") {
+        const transDate = new Date(master.transactionDate);
+        const today = new Date();
+        transDate.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
+        if (transDate >= today) {
+          await ERPAlert.show({
+            icon: "error",
+            title: t("validation_error"),
+            text: t("transaction_date_should_not_be_post_dated"),
+            confirmButtonText: t("ok"),
+          });
+          return false;
+        }
+
+        // E-Invoice: Grand total should be greater than zero
+        if (grandTotal <= 0) {
+          await ERPAlert.show({
+            icon: "error",
+            title: t("validation_error"),
+            text: t("einvoice_total_should_be_greater_than_zero"),
+            confirmButtonText: t("ok"),
           });
           return false;
         }
       }
     }
 
-    /* ---------------- WARN ---------------- */
-    if (creditMode === "Warn") {
-      if (creditRes.exceeded) {
-        ERPAlert.show({
-          icon: "warning",
-          title: "Warning",
-          text: creditRes.message,
-          confirmButtonText: "OK",
-        });
-      }
-    }
-
-    // Stock update restriction
-
-    const setting = applicationSettings.productsSettings.mRPLessThanSalesPrice;
-
-    // Equivalent condition:
-    // if ((setting is not "Block" && UserSession.IsAPPGlobal) || !UserSession.IsAPPGlobal)
-    if (setting == "Block" && clientSession.isAppGlobal) {
-      // Find invalid rows (Sales price greater than MRP)
-      const invalidRows = details
-        .map((item, index) => ({ item, index }))
-        .filter(({ item }) => item.salesPrice > item.mrp)
-        .map(({ index }) => index + 1);
-
-      if (invalidRows.length > 0) {
+    // ============ Excess Card Amount Check ============
+    if (cashReceived + cardAmount > grandTotal) {
+      if (cardAmount > 0) {
         await ERPAlert.show({
           icon: "error",
           title: t("validation_error"),
-          text: t(
-            `Sales price greater than MRP at rows: ${invalidRows.join(", ")}`
-          ),
+          text: t("excess_card_amount_entered"),
           confirmButtonText: t("ok"),
         });
         return false;
       }
     }
 
-    if (
-      !formState.transaction.master.stockUpdate &&
-      (formState.transaction.master.voucherType === "PI" ||
-        formState.transaction.master.voucherType === "PR")
-    ) {
-      const voucherType = formState.transaction.master.voucherType;
-      const confirm = await ERPAlert.show({
-        icon: "info",
-        title: t("stock_update_warning"),
-        text:
-          voucherType === "PI"
-            ? "Stock cannot be updated in this invoice.In goods Receipt voucher stock already updated. Do you want to continue?"
-            : voucherType === "PR"
-              ? "Stock cannot be updated in this invoice.In Goods Receipt Return voucher stock already updated. Do you want to continue?"
-              : "",
-        confirmButtonText: t("yes"),
-        cancelButtonText: t("no"),
-        showCancelButton: true,
-      });
-      if (!confirm) {
-        return false;
-      }
-    }
-
-    // Cost centre validation
-    // if (
-    //   applicationSettings.accountsSettings.maintainCostCenter &&
-    //   isNullOrUndefinedOrZero(master.costCentreID)
-    // ) {
-    //   await ERPAlert.show({
-    //     icon: "error",
-    //     title: t("validation_error"),
-    //     text: t("select_valid_cost_centre"),
-    //     confirmButtonText: t("ok"),
-    //   });
-    //   return false;
-    // }
-
-    // Grand total check
-    if (master.grandTotal < 0) {
+    // ============ Grand Total Check ============
+    if (grandTotal < 0) {
       await ERPAlert.show({
         icon: "error",
         title: t("validation_error"),
@@ -1255,9 +1249,65 @@ debugger;
       return false;
     }
 
-    // Transaction date check
+    // ============ Credit Stopped Validation ============
+    if (formState.ledgerData?.creditStopped) {
+      if (cashReceived + cardAmount < grandTotal) {
+        await ERPAlert.show({
+          icon: "error",
+          title: t("validation_error"),
+          text: t("credit_stopped_for_customer"),
+          confirmButtonText: t("ok"),
+        });
+        return false;
+      }
+    }
+
+    // ============ Stock Update Warning ============
+    if (!master.stockUpdate && (voucherType === "SI" || voucherType === "SR")) {
+      const confirm = await ERPAlert.show({
+        icon: "info",
+        title: t("stock_update_warning"),
+        text: voucherType === "SI"
+          ? t("stock_cannot_be_updated_gd_already_deducted")
+          : t("stock_cannot_be_updated_gdr_already_updated"),
+        confirmButtonText: t("yes"),
+        cancelButtonText: t("no"),
+        showCancelButton: true,
+      });
+      if (!confirm) {
+        return false;
+      }
+    }
+
+    // ============ Cost Centre Validation ============
+    if (applicationSettings.accountsSettings.maintainCostCenter) {
+      if (isNullOrUndefinedOrZero(master.costCentreID)) {
+        await ERPAlert.show({
+          icon: "error",
+          title: t("validation_error"),
+          text: t("select_valid_cost_centre"),
+          confirmButtonText: t("ok"),
+        });
+        return false;
+      }
+    }
+
+    // ============ Salesman Validation ============
+    if (formState.userConfig?.enableSalesMan) {
+      if (isNullOrUndefinedOrZero(master.salesManID)) {
+        await ERPAlert.show({
+          icon: "error",
+          title: t("validation_error"),
+          text: t("select_valid_salesman"),
+          confirmButtonText: t("ok"),
+        });
+        return false;
+      }
+    }
+
+    // ============ Transaction Date Validation ============
     const transDateValidation = validateTransactionDate(
-      new Date(new Date(formState.transaction.master.transactionDate)),
+      new Date(master.transactionDate),
       false,
       undefined,
       hasBlockedRight
@@ -1268,159 +1318,232 @@ debugger;
         text: transDateValidation.message,
         icon: "warning",
       });
+      return false;
     }
 
-    // Day close check
-    // const closedDate = await getClosedDate(api, formState.transactionType);
-    // const tmpDate = new Date(master.transactionDate)
-    // tmpDate.setHours(0, 0, 0, 0);
-    // if (closedDate >= new Date(tmpDate)) {
-    //   await ERPAlert.show({
-    //     icon: "error",
-    //     title: t("invalid_transaction_date"),
-    //     text: t("day_closed"),
-    //     confirmButtonText: t("ok"),
-    //   });
-    //   return false;
-    // }
+    // ============ Credit Limit Check ============
+    const creditMode = applicationSettings.accountsSettings.blockOnCreditLimit;
+    const creditRes = checkThePartyCreditLimit(
+      master.ledgerID,
+      grandTotal,
+      formState.oldLedgerId || 0,
+      formState.previousGrandTotal || 0
+    );
 
-    // if (master.invTransactionMasterID > 0 && new Date(closedDate) >= new Date(formState.prevTransactionDate??"01/01/1900")) {
-    //   await ERPAlert.show({
-    //     icon: "error",
-    //     title: t("invalid_transaction_date"),
-    //     text: t("cannot_edit_day_closed"),
-    //     confirmButtonText: t("ok"),
-    //   });
-    //   return false;
-    // }
+    if (creditMode === "Block") {
+      if (creditRes.exceeded) {
+        await ERPAlert.show({
+          icon: "error",
+          title: t("credit_limit_exceeded"),
+          text: `${creditRes.message}. ${t("cannot_be_proceeded")}`,
+          confirmButtonText: t("ok"),
+        });
+        return false;
+      }
+    }
 
-    // Party selection check
-    // if (!master.ledgerID) {
-    //   await ERPAlert.show({
-    //     icon: "error",
-    //     title: t("invalid_party"),
-    //     text: t("select_cash_or_party"),
-    //     confirmButtonText: t("ok"),
-    //   });
-    //   return false;
-    // }
+    if (creditMode === "Allow Cash Sales") {
+      if (creditRes.exceeded) {
+        if (grandTotal > cashReceived + cardAmount) {
+          await ERPAlert.show({
+            icon: "warning",
+            title: t("credit_limit_exceeded"),
+            text: `${creditRes.message}. ${t("proceed_with_cash_bank_receipt")}`,
+            confirmButtonText: t("ok"),
+          });
+          return false;
+        }
+      }
+    }
 
-    // // Reference number validation
-    // if (
-    //   applicationSettings.inventorySettings
-    //     .isReferenceNumberMandatoryInPurchase &&
-    //   !master.purchaseInvoiceNumber
-    // ) {
-    //   await ERPAlert.show({
-    //     icon: "error",
-    //     title: t("reference_number_required"),
-    //     text: t("reference_number_not_entered"),
-    //     confirmButtonText: t("ok"),
-    //   });
-    //   return false;
-    // }
+    if (creditMode === "Warn") {
+      if (creditRes.exceeded) {
+        await ERPAlert.show({
+          icon: "warning",
+          title: t("warning"),
+          text: creditRes.message,
+          confirmButtonText: t("ok"),
+        });
+      }
+    }
 
-    // if (master.purchaseInvoiceNumber) {
-    //   const refExists = await checkReferenceNumberExists(master);
-    //   if (refExists) {
-    //     if (!isEdit || refExists.toString() !== master.voucherNumber) {
-    //       await ERPAlert.show({
-    //         icon: "error",
-    //         title: t("invalid_reference_number"),
-    //         text: t("reference_exists_in_pi", { ref: refExists }),
-    //         confirmButtonText: t("ok"),
-    //       });
-    //       return false;
-    //     }
-    //   }
-    // }
+    // ============ Party Selection Check ============
+    if (isNullOrUndefinedOrZero(master.ledgerID)) {
+      await ERPAlert.show({
+        icon: "error",
+        title: t("invalid_party"),
+        text: t("party_or_cash_account_should_be_selected"),
+        confirmButtonText: t("ok"),
+      });
+      return false;
+    }
 
-    // Scheme discount account check
-    // if (
-    //   DBID_VALUE === "SAMAPLASTICS" &&
-    //   getSchemeDiscount(details) > 0 &&
-    //   !master.schemeDiscountPostingLedgerId
-    // ) {
-    //   await ERPAlert.show({
-    //     icon: "error",
-    //     title: t("scheme_discount_warning"),
-    //     text: t("select_scheme_discount_posting_ledger"),
-    //     confirmButtonText: t("ok"),
-    //   });
-    //   return false;
-    // }
+    // ============ Mobile Number Mandatory Check ============
+    if (applicationSettings.inventorySettings?.mobileNumberMandotryInSales) {
+      if (isNullOrUndefinedOrEmpty(master.tokenNumber)) {
+        await ERPAlert.show({
+          icon: "error",
+          title: t("validation_error"),
+          text: t("please_enter_mobile_number"),
+          confirmButtonText: t("ok"),
+        });
+        return false;
+      }
+    }
 
-    // Product validation
-    // for (let i = 0; i < details.length; i++) {
-    //   const row = details[i];
-    //   if (!row.productBatchId || row.productBatchId === 0) {
-    //     await ERPAlert.show({
-    //       icon: "error",
-    //       title: t("validation_error"),
-    //       text: t("invalid_item_details_in_row", { row: i + 1 }),
-    //       confirmButtonText: t("ok"),
-    //     });
-    //     return false;
-    //   }
-    // }
+    // ============ Row Level Validations ============
+    for (let i = 0; i < validDetails.length; i++) {
+      const row = validDetails[i];
 
-    // // Purchase cost change warning
-    // if (Settings.inventorySettings?.ShowPurchaseCostChangeWarning && !isEdit) {
-    //   let priceChangeItems = "";
-    //   for (const item of details) {
-    //     if (item.unitPrice !== item.unitPriceOriginal) {
-    //       priceChangeItems += `\n${item.product} [${item.barCode}]`;
-    //     }
-    //   }
-    //   if (priceChangeItems) {
-    //     await ERPAlert.show({
-    //       icon: "info",
-    //       title: t("purchase_price_changed"),
-    //       text: priceChangeItems,
-    //       confirmButtonText: t("ok"),
-    //     });
-    //   }
-    // }
+      // Tax calculation validation
+      if ((row.vatPerc ?? 0) === 0 && (row.vatAmount ?? 0) > 0) {
+        await ERPAlert.show({
+          icon: "error",
+          title: t("validation_error"),
+          text: `${t("invalid_tax_calculation_in_row")} ${i + 1}`,
+          confirmButtonText: t("ok"),
+        });
+        return false;
+      }
 
-    // Gross amount zero validation
-    if (!formState.skipZeroQty) {
-      for (let i = 0; i < details.length; i++) {
-        const row = details[i];
-        if (row.gross === 0 && row.productID > 0) {
+      // Product batch ID validation
+      if (isNullOrUndefinedOrZero(row.productBatchID)) {
+        await ERPAlert.show({
+          icon: "error",
+          title: t("validation_error"),
+          text: `${t("invalid_item_details_in_row")} ${i + 1}. ${t("please_correct_or_remove_row")}`,
+          confirmButtonText: t("ok"),
+        });
+        return false;
+      }
+
+      // Unit validation
+      if (isNullOrUndefinedOrZero(row.unitID)) {
+        await ERPAlert.show({
+          icon: "error",
+          title: t("validation_error"),
+          text: `${t("invalid_unit_selection_in_row")} ${i + 1}`,
+          confirmButtonText: t("ok"),
+        });
+        return false;
+      }
+
+      // Zero quantity/rate validation
+      if (!formState.skipZeroQty) {
+        if ((row.free ?? 0) === 0 && row.gross === 0 && row.productID > 0) {
           const confirm = await ERPAlert.show({
             icon: "question",
             title: t("zero_rate_or_qty"),
-            text: `${t("zero_rate_or_qty_entered_in_row")} row: ${i + 1}`,
+            text: `${t("zero_rate_or_qty_entered_in_row")} ${i + 1}. ${t("do_you_want_to_continue")}`,
             confirmButtonText: t("yes"),
             cancelButtonText: t("no"),
             showCancelButton: true,
           });
           if (!confirm) {
-            const rowIndex = details.findIndex((x) => x.slNo == row.slNo);
+            const rowIndex = details.findIndex((x) => x.slNo === row.slNo);
             const res = focusColumn(rowIndex, "qty");
             setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
             return false;
           }
         }
       }
+
+      // Bulk quantity warning
+      if ((row.qty ?? 0) > 100000) {
+        const confirm = await ERPAlert.show({
+          icon: "question",
+          title: t("bulk_qty"),
+          text: `${t("bulk_qty_in_row")} ${i + 1}. ${t("do_you_want_to_continue")}`,
+          confirmButtonText: t("yes"),
+          cancelButtonText: t("no"),
+          showCancelButton: true,
+        });
+        if (!confirm) {
+          return false;
+        }
+      }
     }
 
-    // Check no items after blank rows
-    // const firstFreeIndex = details.findIndex((x) => !x.productId);
-    // for (let i = firstFreeIndex + 1; i < details.length; i++) {
-    //   if (details[i].productId) {
-    //     await ERPAlert.show({
-    //       icon: "error",
-    //       title: t("validation_error"),
-    //       text: t("items_after_blank_row", { row: firstFreeIndex + 1 }),
-    //       confirmButtonText: t("ok"),
-    //     });
-    //     return false;
-    //   }
-    // }
+    // ============ Items After Blank Row Check ============
+    if (firstFreeRow !== -1) {
+      for (let i = firstFreeRow + 1; i < details.length; i++) {
+        if (details[i].productID && details[i].productID > 0) {
+          await ERPAlert.show({
+            icon: "error",
+            title: t("validation_error"),
+            text: `${t("items_entered_after_blank_row_will_be_skipped")} ${t("please_remove_blank_row")} ${firstFreeRow + 1}`,
+            confirmButtonText: t("ok"),
+          });
+          return false;
+        }
+      }
+    }
 
-    // Finalize
-    // calculateTotal();
+    // ============ Negative Stock Validation ============
+    const showNegStockWarning = applicationSettings.inventorySettings?.showNegStockWarning;
+    if (master.stockUpdate && showNegStockWarning === "Block") {
+      for (let i = 0; i < validDetails.length; i++) {
+        const row = validDetails[i];
+        if (row.itemType === "Inventory") {
+          const qty = row.qty ?? 0;
+          const stock = row.stock ?? 0;
+          if (qty > stock) {
+            await ERPAlert.show({
+              icon: "error",
+              title: t("validation_error"),
+              text: `${t("negative_stock_in_row")} ${i + 1}. ${t("cannot_proceed")}`,
+              confirmButtonText: t("ok"),
+            });
+            return false;
+          }
+        }
+      }
+    }
+
+    // ============ Rate Warning Check (Sales price less than purchase/min price) ============
+    const showRateWarning = applicationSettings.inventorySettings?.showRateWarning;
+    if (showRateWarning?.toUpperCase() === "BLOCK" && formType !== "BT") {
+      for (let i = 0; i < validDetails.length; i++) {
+        const row = validDetails[i];
+        const purchasePrice = row.purchasePrice ?? 0;
+        const minSalePrice = row.minSalePrice ?? 0;
+        const qty = row.qty ?? 0;
+        const netValue = row.netValue ?? 0;
+        const isSchemeItem = row.isSchemeItem === "S";
+
+        if (minSalePrice > 0 && minSalePrice * qty > netValue) {
+          await ERPAlert.show({
+            icon: "error",
+            title: t("validation_error"),
+            text: `${t("sales_price_less_than_min_selling_price_in_row")} ${i + 1}. ${t("cannot_proceed")}`,
+            confirmButtonText: t("ok"),
+          });
+          return false;
+        }
+
+        if (purchasePrice * qty > netValue && minSalePrice === 0 && !isSchemeItem) {
+          await ERPAlert.show({
+            icon: "error",
+            title: t("validation_error"),
+            text: `${t("sales_price_less_than_purchase_price_in_row")} ${i + 1}. ${t("cannot_proceed")}`,
+            confirmButtonText: t("ok"),
+          });
+          return false;
+        }
+      }
+    }
+
+    // ============ Voucher Number Zero Check (Edit Mode) ============
+    if (formState.isEdit && master.voucherNumber === 0) {
+      await ERPAlert.show({
+        icon: "error",
+        title: t("validation_error"),
+        text: t("voucher_number_cannot_be_zero"),
+        confirmButtonText: t("ok"),
+      });
+      return false;
+    }
+
     return true;
   }
 

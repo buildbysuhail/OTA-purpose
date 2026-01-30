@@ -2637,17 +2637,18 @@ export const useTransaction = (
   const handleTextDataChange = async (
     value: any,
     columnName: string,
-    rowIndex: number
+    rowIndex: number,
+    isMobRow?: boolean
   ) => {
     try {
-    const isMobRow = deviceInfo.isMobile
+    const _isMobRow = isMobRow ?? deviceInfo.isMobile
       console.log("handleTextDataChange");
 
-      if (!isMobRow && !formState.transaction?.details?.[rowIndex]) {
+      if (!_isMobRow && !formState.transaction?.details?.[rowIndex]) {
         return false;
       }
 
-      const detail = isMobRow ? { ...formState.row } : { ...formState.transaction.details[rowIndex] };
+      const detail = _isMobRow ? { ...(formState.row ?? initialTransactionDetailData) } : { ...formState.transaction.details[rowIndex] };
       if (!detail) return;
       let outState: DeepPartial<TransactionFormState> = {
         transaction: { details: [{ [columnName]: value, slNo: detail.slNo }] },
@@ -2676,7 +2677,7 @@ export const useTransaction = (
             actualPriceVisible ?? false,
             outState,
             columnName,
-            isMobRow ? -1 : rowIndex
+            _isMobRow ? -1 : rowIndex
           );
         }
       }
@@ -2772,7 +2773,7 @@ export const useTransaction = (
         calculateSummaryAndTotal = true;
       }
 
-      if (isMobRow) {
+      if (_isMobRow) {
         // For mobile: also calculate summary and total
         // if (calculateSummaryAndTotal) {
         //   const details = [...formState.transaction.details] as any;
@@ -2795,6 +2796,7 @@ export const useTransaction = (
             fields: { row: { ...outState!.transaction!.details![0] } }
           })
         );
+        return;
       }
       else if (calculateSummaryAndTotal) {
         const details = [...formState.transaction.details] as any;
@@ -3663,7 +3665,7 @@ export const useTransaction = (
           break;
 
         case "Enter":
-          let data = { ...formState.transaction.details[rowIndex] };
+          let data = isMobRow  ? { ...(formState.row ?? initialTransactionDetailData) } : { ...formState.transaction.details[rowIndex] };
           if (columnName == "actionCol") {
             if (!isNullOrUndefinedOrEmpty(value)) {
               await handleRemoveItem(value);
@@ -3861,15 +3863,16 @@ export const useTransaction = (
               }
             }
           } else if (columnName == "btnPrintBarcode") {
+            const pbData: TransactionDetail =
+              isMobRow ? (formState.row ?? initialTransactionDetailData) : formState.transaction.details[rowIndex];
             if (
-              formState.transaction.details[rowIndex].qty +
-              formState.transaction.details[rowIndex].stickerQty <=
+              pbData.qty +
+              pbData.stickerQty <=
               0
             ) {
               break;
             }
-            const isReprint =
-              formState.transaction.details[rowIndex].barcodePrinted;
+            const isReprint = pbData.barcodePrinted;
             if (isReprint) {
               // event.preventDefault();
               const confirm = await ERPAlert.show({
@@ -3885,7 +3888,7 @@ export const useTransaction = (
               });
               if (confirm) {
                 printBarcode(
-                  [data.slNo],
+                  [pbData.slNo],
                   true,
                   true,
                   formState.transaction.master.ledgerID,
@@ -3898,7 +3901,7 @@ export const useTransaction = (
               }
             } else {
               printBarcode(
-                [data.slNo],
+                [pbData.slNo],
                 false,
                 true,
                 formState.transaction.master.ledgerID,
@@ -3914,7 +3917,7 @@ export const useTransaction = (
           // }
           else if (columnName == "bd") {
             const data: TransactionDetail =
-              formState.transaction.details[rowIndex];
+              isMobRow ? (formState.row ?? initialTransactionDetailData) : formState.transaction.details[rowIndex];
 
             const batchDetails = {
               // Required fields
@@ -3976,7 +3979,7 @@ export const useTransaction = (
             changeGrossToUnitRate(rowIndex, columnName);
           } else if (columnName == "serial") {
             const rowData: TransactionDetail =
-              formState.transaction.details[rowIndex];
+              isMobRow  ? (formState.row ?? initialTransactionDetailData) : formState.transaction.details[rowIndex];
             dispatch(
               commonParams.formStateHandleFieldChangeKeysOnly({
                 fields: {

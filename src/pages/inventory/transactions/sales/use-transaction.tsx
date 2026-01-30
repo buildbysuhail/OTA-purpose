@@ -1801,7 +1801,7 @@ export const useTransaction = (
     const master: TransactionMaster = {
       ...TransactionMasterInitialData,
       voucherType: formState.transaction.master.voucherType ?? "",
-      voucherPrefix: vPrefix,
+      voucherPrefix: vPrefix ?? formState.transaction.master.voucherPrefix ?? "",
       voucherForm: formState.transaction.master.voucherForm ?? "",
       transactionDate: moment(softwareDate, "DD/MM/YYYY").local().toISOString(),
       dueDate: moment(softwareDate, "DD/MM/YYYY").local().toISOString(),
@@ -2061,6 +2061,23 @@ export const useTransaction = (
     }
   };
   const handleRemoveItem = async (slNo: string) => {
+    let allow = true
+    if (formState.userConfig?.askConfirmationForRemoveItem) {
+      allow = await ERPAlert.show({
+        icon: "warning",
+        title: t("are_you_sure_to_remove_item"),    
+        confirmButtonText: t("yes"),
+        cancelButtonText: t("no"),
+        showCancelButton: true,
+      })??false;
+    }
+    if(!allow){
+      return;
+    }
+    if(applicationSettings.productsSettings.giftOnBilling){
+              await removeGiftFromGrid(formState.transaction.details, formState.currentCell);
+            }
+    
     dispatch(
       formStateTransactionDetailsRowRemove({
         slNo: slNo,
@@ -3238,7 +3255,7 @@ export const useTransaction = (
         return false;
       }
 
-      const detail = isMobRow ? { ...formState.row } : { ...formState.transaction.details[rowIndex] };
+      const detail = isMobRow ? { ...(formState.row ?? initialTransactionDetailData) } : { ...formState.transaction.details[rowIndex] };
       if (!detail) return;
       let outState: DeepPartial<TransactionFormState> = {
         transaction: { details: [{ [columnName]: value, slNo: detail.slNo }] },
@@ -3369,6 +3386,7 @@ export const useTransaction = (
             fields: { row: { ...outState!.transaction!.details![0] } }
           })
         );
+        return;
       }
       else if (calculateSummaryAndTotal) {
         const details = [...formState.transaction.details] as any;
@@ -4161,12 +4179,9 @@ export const useTransaction = (
           break;
 
         case "Enter":
-          let data = { ...formState.transaction.details[rowIndex] };
+          let data = rowIndex < 0 ? { ...(formState.row ?? initialTransactionDetailData) } : { ...formState.transaction.details[rowIndex] };
           if (columnName == "actionCol") {
-            if(applicationSettings.productsSettings.giftOnBilling){
-              await removeGiftFromGrid(formState.transaction.details, formState.currentCell);
-            }
-            if (!isNullOrUndefinedOrEmpty(value)) {
+                        if (!isNullOrUndefinedOrEmpty(value)) {
               await handleRemoveItem(value);
             } else {
               // const res = focusToNextColumn(rowIndex, columnName);
@@ -4456,15 +4471,16 @@ export const useTransaction = (
             }
 
           } else if (columnName == "btnPrintBarcode") {
+            const pbData: TransactionDetail =
+              isMobRow  ? (formState.row ?? initialTransactionDetailData) : formState.transaction.details[rowIndex];
             if (
-              formState.transaction.details[rowIndex].qty +
-              formState.transaction.details[rowIndex].stickerQty <=
+              pbData.qty +
+              pbData.stickerQty <=
               0
             ) {
               break;
             }
-            const isReprint =
-              formState.transaction.details[rowIndex].barcodePrinted;
+            const isReprint = pbData.barcodePrinted;
             if (isReprint) {
               // event.preventDefault();
               const confirm = await ERPAlert.show({
@@ -4480,7 +4496,7 @@ export const useTransaction = (
               });
               if (confirm) {
                 printBarcode(
-                  [data.slNo],
+                  [pbData.slNo],
                   true,
                   true,
                   formState.transaction.master.ledgerID,
@@ -4493,7 +4509,7 @@ export const useTransaction = (
               }
             } else {
               printBarcode(
-                [data.slNo],
+                [pbData.slNo],
                 false,
                 true,
                 formState.transaction.master.ledgerID,
@@ -4508,8 +4524,8 @@ export const useTransaction = (
           //     dgvInventory.CurrentCell = dgvInventory[dgvInventory.FirstVisibleWritableColumnIndex, dgvInventory.FirstFreeRow];
           // }
           else if (columnName == "bd") {
-            const data: TransactionDetail =
-              formState.transaction.details[rowIndex];
+          const data: TransactionDetail =
+              isMobRow  ? (formState.row ?? initialTransactionDetailData) : formState.transaction.details[rowIndex];
 
             const batchDetails = {
               // Required fields
@@ -4570,9 +4586,9 @@ export const useTransaction = (
           } else if (columnName == "grossConvert") {
             changeGrossToUnitRate(rowIndex, columnName);
           } else if (columnName == "serial") {
-            const rowData: TransactionDetail =
-              formState.transaction.details[rowIndex];
-            dispatch(
+           const rowData: TransactionDetail =
+              isMobRow ? (formState.row ?? initialTransactionDetailData) : formState.transaction.details[rowIndex];
+              dispatch(
               commonParams.formStateHandleFieldChangeKeysOnly({
                 fields: {
                   serialNoEntryData: {
@@ -6188,16 +6204,28 @@ debugger;
       const editableColumn = _formState.gridColumns?.find(
         (col) => col.visible !== false && col.dataField != null && col.allowEditing == true && col.readOnly !== true
       );
-      _formState.currentCell = {
-        column: editableColumn?.dataField ?? "",
-        data: formState.transaction.details[0],
-        rowIndex: 0,
-        reCenterRow: false
+      if(applicationSettings.mainSettings.maintainBusinessType == "Distribution") {
+        _formState.formElements.transactionDate = {
+          ..._formState.formElements.transactionDate,
+          autoFocus: true
+        };
+      } else if (formState.userConfig?.initialFocusToCustomer){
+        _formState.formElements.ledgerID = {
+          ..._formState.formElements.ledgerID,
+          autoFocus: true
+        };
+      } else {
+        _formState.currentCell = {
+          column: editableColumn?.dataField ?? "",
+          data: formState.transaction.details[0],
+          rowIndex: 0,
+          reCenterRow: false
+        };
       }
-      if (_formState.formElements.cbDebitAccount ?? {})
+      // if (_formState.formElements.cbDebitAccount ?? {})
+      // }
 
-
-  debugger;
+      // debugger;
         //  
         // _formState = await loadLedgerData(_formState) as any;
         // _formState.isInitialLedger = true;

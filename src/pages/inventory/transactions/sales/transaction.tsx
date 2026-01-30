@@ -33,7 +33,7 @@ import { ApplicationMainSettings, ApplicationMainSettingsInitialState } from "..
 import CustomerDetailsSidebar from "../../../transaction-base/customer-details";
 import TemplatesPreView from "../../../transaction-base/transaction-print-preview";
 import ProductSummaryMaster from "../../reports/other-inventory-reports/product-summary/product-summary-master";
-import { formStateHandleFieldChangeKeysOnly, resetState, formStateHandleFieldChange, updateFormElement } from "../reducer";
+import { formStateHandleFieldChangeKeysOnly, resetState, formStateHandleFieldChange, updateFormElement, formStateTransactionDetailsRowAdd } from "../reducer";
 import DeletingOverlay from "../transaction-deleting";
 import SavingOverlay from "../transaction-saving";
 import { initialUserConfig, transactionInitialData, TransactionFormStateInitialData, initialFormElements, initialInventoryTotals, initialTransactionDetailData } from "../transaction-type-data";
@@ -720,6 +720,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   );
   const onSaveItem = async(item: TransactionDetail, mode:"Save" | "SaveAndNew") => {
     debugger;
+    if(!(item.productBatchID > 0)) return;
     const exist = formState.transaction.details.find(x => x.slNo == formState.row?.slNo);
                         if(exist) {
                           const ind = formState.transaction.details.findIndex(x => x.slNo == formState.row?.slNo)
@@ -727,11 +728,11 @@ const TransactionForm: React.FC<TransactionProps> = ({
                             let final = [...formState?.transaction?.details];
                             final[ind] = item
                             final = final.filter(x => x.productID > 0);
-                            
+
                             const summaryRes = calculateSummary(final, formState, {
                                           result: {},
                                         });
-                            
+
                                         const totalRes = await calculateTotal(
                                           formState.transaction.master,
                                           summaryRes.summary as SummaryItems,
@@ -742,6 +743,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
                                         );
                                         const result = {
                                           ...totalRes,
+                                          row: initialTransactionDetailData,
+                                          itemPopup: {isOpen:mode=="SaveAndNew", index:0},
                                           summary: summaryRes.summary,
                                           showQuantityFactors: { visible: false, rowIndex: -1, qtyDesc: "" },
                                           transaction: {
@@ -752,18 +755,19 @@ const TransactionForm: React.FC<TransactionProps> = ({
                             dispatch(formStateHandleFieldChangeKeysOnly({fields:{
                               ...result
                             },itemsToAddToDetails: undefined, rowIndex:ind}))
+                            dispatch(formStateTransactionDetailsRowAdd({...item,isRowEdit: true}))
                           }
                         } else {
                           if(formState.row) {
-                            
+
                             let final = [...formState?.transaction?.details];
                             final.push(item);
                             final = final.filter(x => x.productID > 0);
-                            
+
                             const summaryRes = calculateSummary(final, formState, {
                                           result: {},
                                         });
-                            
+
                                         const totalRes = await calculateTotal(
                                           formState.transaction.master,
                                           summaryRes.summary as SummaryItems,
@@ -774,16 +778,19 @@ const TransactionForm: React.FC<TransactionProps> = ({
                                         );
                                         const result = {
                                           ...totalRes,
+                                          row: initialTransactionDetailData,
+                                          itemPopup: {isOpen:mode=="SaveAndNew", index:0},
                                           summary: summaryRes.summary,
                                           showQuantityFactors: { visible: false, rowIndex: -1, qtyDesc: "" },
                                           transaction: {
                                             ...totalRes.transaction,
-                                            details: [item],
+                                            details: [],
                                           },
                                         };
                             dispatch(formStateHandleFieldChangeKeysOnly({fields:{
                               ...result
                             },itemsToAddToDetails: undefined}))
+                            dispatch(formStateTransactionDetailsRowAdd(item))
                           }
                         }
   }
@@ -1032,10 +1039,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
     const batchSelectionData = async () => {
       if (formState.batchSelectionData != "") {
         const data = JSON.parse(formState.batchSelectionData);
+       let baseDetail = { ...formState.transaction.details[data.rowIndex] };
         if (data.rowIndex < 0) {
-          return;
+          baseDetail = { ...formState.row??initialTransactionDetailData };
         }
-        const baseDetail = { ...formState.transaction.details[data.rowIndex] };
         await loadProductDetailsByAutoBarcode(
           {
             productCode: data.productCode,

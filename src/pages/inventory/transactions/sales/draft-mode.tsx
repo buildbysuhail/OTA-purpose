@@ -1,13 +1,30 @@
-import React, { Fragment, useMemo } from "react";
+import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
+import Urls from "../../../../redux/urls";
+import { APIClient } from "../../../../helpers/api-client";
+import { TransactionFormState } from "../transaction-types";
 
-interface DraftModeProps {
-  closeModal: () => void;
-  t: any;
-}
+  interface DraftModeProps {
+    closeModal: () => void;
+    formState: TransactionFormState;
+    t: any;
+  }
 
-const VoucherDraftGrid: React.FC<DraftModeProps> = ({ closeModal, t }) => {
+  const api = new APIClient();
+  const VoucherDraftGrid: React.FC<DraftModeProps> = ({ closeModal, t, formState }) => {
+  
+  const [draftGridData, setDraftGridData] = useState<any[]>([])
+
+  useEffect(() => {
+    const loadData = async () => {
+    const draftDetails = await api.getAsync(`${Urls.inv_transaction_base}${formState.transactionType}/Draft`);
+    setDraftGridData(draftDetails)
+    };
+
+    loadData();
+  }, []);
+
   const columns: DevGridColumn[] = useMemo(
     () => [
       {
@@ -122,6 +139,8 @@ const VoucherDraftGrid: React.FC<DraftModeProps> = ({ closeModal, t }) => {
               <ErpDevGrid
                 height={450}
                 columns={columns}
+                keyExpr="si"
+                data={draftGridData}
                 gridId="grd_voucher_draft"
                 hideGridAddButton={true}
                 columnHidingEnabled={true}

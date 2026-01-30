@@ -3299,7 +3299,7 @@ const hidColumns: string[] = [
                    >
                      <StepBack className="w-3 h-3" />
                    </button>
-                   <h6 className="text-sm font-semibold">Add Items to Sale</h6>
+                   <h6 className="text-sm font-semibold">Add Items</h6>
                    <div className="ml-auto"> 
                      <GridPreferenceChooser
                        initialPreferences={preferences}
@@ -3322,7 +3322,7 @@ const hidColumns: string[] = [
                      <label className="block text-xs font-medium text-blue-600 mb-1 dark:text-blue-400">
                        Item Name
                      </label>
-                     <div className="border-2 border-blue-500 rounded-lg overflow-hidden">
+                     <div className="border-2 border-blue-500 rounded-lg overflow-hidden"   >
                        <GridCell
                          isMobile_={true}
                          column={formState.gridColumns.find((x) => x?.dataField == "product") as ColumnModel}
@@ -3340,7 +3340,7 @@ const hidColumns: string[] = [
                          isLastColumn={false}
                          showBorder={false}
                          columnWidths={columnWidths}
-                         onChange={onChange}
+                         onChange={(v, c, r) => onChange(v, c, r, true)}
                          onKeyDown={onKeyDown}
                          handlRowKeyDown={handlRowKeyDown}
                          handleFocus={handleFocus}
@@ -3364,13 +3364,14 @@ const hidColumns: string[] = [
                        />
                      </div>
                    </div>
-         
+
                    {/* Row: Quantity | Unit */}
                    <div className="grid grid-cols-2 gap-3 mb-2">
                      <div>
                        <label className="block text-xs font-medium text-gray-600 mb-1 dark:text-gray-400">
                          Quantity
                        </label>
+
                        <div className="border border-gray-300 rounded-lg overflow-hidden dark:border-gray-600">
                          <GridCell
                            isMobile_={true}
@@ -3389,7 +3390,7 @@ const hidColumns: string[] = [
                            isLastColumn={false}
                            showBorder={false}
                            columnWidths={columnWidths}
-                           onChange={(value: string, column: any, rowIndex: number) => {debugger; onChange(value, column, rowIndex);}}
+                           onChange={(v, c, r) => onChange(v, c, r, true)}
                            onKeyDown={onKeyDown}
                            handlRowKeyDown={handlRowKeyDown}
                            handleFocus={handleFocus}
@@ -3428,16 +3429,16 @@ const hidColumns: string[] = [
                            isLastColumn={false}
                            showBorder={false}
                            columnWidths={columnWidths}
-                           onChange={onChange}
+                           onChange={(v, c, r) => onChange(v, c, r, true)}
                            onKeyDown={onKeyDown}
                            handlRowKeyDown={handlRowKeyDown}
                            handleFocus={handleFocus}
                            handleBlur={handleBlur}
                            gridId={gridId}
                            zIndexController={55}
-                           details={formState.transaction.details} 
-                           blockUnitOnDecimalPoint={false} 
-                           applicationSettings={undefined} 
+                           details={formState.transaction.details}
+                           blockUnitOnDecimalPoint={false}
+                           applicationSettings={undefined}
                            nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
                              throw new Error("Function not implemented.");
                            }}
@@ -3445,7 +3446,7 @@ const hidColumns: string[] = [
                        </div>
                      </div>
                    </div>
-         
+
                    {/* Row: Rate | Tax Mode */}
                    <div className="grid grid-cols-2 gap-3 mb-3">
                      <div>
@@ -3470,22 +3471,22 @@ const hidColumns: string[] = [
                            isLastColumn={false}
                            showBorder={false}
                            columnWidths={columnWidths}
-                           onChange={onChange}
+                           onChange={(v, c, r) => onChange(v, c, r, true)}
                            onKeyDown={onKeyDown}
                            handlRowKeyDown={handlRowKeyDown}
                            handleFocus={handleFocus}
                            handleBlur={handleBlur}
                            gridId={gridId}
                            zIndexController={55}
-                           details={formState.transaction.details} 
-                           blockUnitOnDecimalPoint={false} 
-                           applicationSettings={undefined} 
+                           details={formState.transaction.details}
+                           blockUnitOnDecimalPoint={false}
+                           applicationSettings={undefined}
                            nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
                              throw new Error("Function not implemented.");
                            }}
                          />
                        </div>
-                       
+
                      </div>
                      {/* <div>
                        <label className="block text-xs font-medium text-gray-600 mb-2 dark:text-gray-400">
@@ -3524,7 +3525,7 @@ const hidColumns: string[] = [
                         isLastColumn={false}
                         showBorder={false}
                         columnWidths={columnWidths}
-                        onChange={onChange}
+                        onChange={(v, c, r) => onChange(v, c, r, true)}
                         onKeyDown={onKeyDown}
                         handlRowKeyDown={handlRowKeyDown}
                         handleFocus={handleFocus}
@@ -3538,7 +3539,7 @@ const hidColumns: string[] = [
                       />
                     </div>
                     {/* Barcode Scanner Button - Uses unified barcode scanner */}
-                    {/* {Capacitor.isNativePlatform() && ( */}
+                    {Capacitor.isNativePlatform() && (
                     <div className="px-3 py-2 bg-orange-100 dark:bg-orange-800/30 border-l border-orange-300 text-orange-600 dark:text-orange-400 font-medium"
                                             style={{ height: rowHeight , display: "flex", justifyContent: "center",  alignItems: "center"  }}
                                           >
@@ -3557,7 +3558,7 @@ const hidColumns: string[] = [
                     <ScanBarcode className="w-5 h-5 text-black dark:text-white" />
                   </button>
                   </div>
-                  {/* )}  */}
+                   )}  
 
                   </div>
                   </div>
@@ -3594,16 +3595,16 @@ const hidColumns: string[] = [
                            isLastColumn={false}
                            showBorder={false}
                            columnWidths={columnWidths}
-                           onChange={onChange}
+                           onChange={(v, c, r) => onChange(v, c, r, true)}
                            onKeyDown={onKeyDown}
                            handlRowKeyDown={handlRowKeyDown}
                            handleFocus={handleFocus}
                            handleBlur={handleBlur}
                            gridId={gridId}
                            zIndexController={55}
-                           details={formState.transaction.details} 
-                           blockUnitOnDecimalPoint={false} 
-                           applicationSettings={undefined} 
+                           details={formState.transaction.details}
+                           blockUnitOnDecimalPoint={false}
+                           applicationSettings={undefined}
                            nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
                              throw new Error("Function not implemented.");
                            }}
@@ -3636,30 +3637,30 @@ const hidColumns: string[] = [
                              isLastColumn={false}
                              showBorder={false}
                              columnWidths={columnWidths}
-                             onChange={onChange}
+                             onChange={(v, c, r) => onChange(v, c, r, true)}
                              onKeyDown={onKeyDown}
                              handlRowKeyDown={handlRowKeyDown}
                              handleFocus={handleFocus}
                              handleBlur={handleBlur}
                              gridId={gridId}
                              zIndexController={55}
-                             details={formState.transaction.details} 
-                             blockUnitOnDecimalPoint={false} 
-                             applicationSettings={undefined} 
+                             details={formState.transaction.details}
+                             blockUnitOnDecimalPoint={false}
+                             applicationSettings={undefined}
                              nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
                                throw new Error("Function not implemented.");
                              }}
                            />
                          </div>
                          <div className="px-3 py-2 bg-orange-100 dark:bg-orange-800/30 border-l border-orange-300 text-orange-600 dark:text-orange-400 font-medium"
-                          style={{ height: rowHeight , display: "flex", justifyContent: "center",  alignItems: "center"  }}
+                          style={{ height: isMobile? "40px" : rowHeight , display: "flex", justifyContent: "center",  alignItems: "center"  }}
                          >
                            %
                          </div>
                        </div>
                        <div className="border border-gray-300 rounded-lg overflow-hidden dark:border-gray-600 flex items-center">
                          <div className="px-3 py-2 bg-gray-100 dark:bg-gray-700 border-r border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 font-medium" 
-                          style={{ height: rowHeight , display: "flex", justifyContent: "center",  alignItems: "center"  }}
+                          style={{ height: isMobile? "40px" : rowHeight , display: "flex", justifyContent: "center",  alignItems: "center"  }}
                          >
                            ₹
                          </div>
@@ -3681,16 +3682,16 @@ const hidColumns: string[] = [
                              isLastColumn={false}
                              showBorder={false}
                              columnWidths={columnWidths}
-                             onChange={onChange}
+                             onChange={(v, c, r) => onChange(v, c, r, true)}
                              onKeyDown={onKeyDown}
                              handlRowKeyDown={handlRowKeyDown}
                              handleFocus={handleFocus}
                              handleBlur={handleBlur}
                              gridId={gridId}
                              zIndexController={55}
-                             details={formState.transaction.details} 
-                             blockUnitOnDecimalPoint={false} 
-                             applicationSettings={undefined} 
+                             details={formState.transaction.details}
+                             blockUnitOnDecimalPoint={false}
+                             applicationSettings={undefined}
                              nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
                                throw new Error("Function not implemented.");
                              }}
@@ -3722,16 +3723,16 @@ const hidColumns: string[] = [
                            isLastColumn={false}
                            showBorder={false}
                            columnWidths={columnWidths}
-                           onChange={onChange}
+                           onChange={(v, c, r) => onChange(v, c, r, true)}
                            onKeyDown={onKeyDown}
                            handlRowKeyDown={handlRowKeyDown}
                            handleFocus={handleFocus}
                            handleBlur={handleBlur}
                            gridId={gridId}
                            zIndexController={55}
-                           details={formState.transaction.details} 
-                           blockUnitOnDecimalPoint={false} 
-                           applicationSettings={undefined} 
+                           details={formState.transaction.details}
+                           blockUnitOnDecimalPoint={false}
+                           applicationSettings={undefined}
                            nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
                              throw new Error("Function not implemented.");
                            }}
@@ -3739,7 +3740,7 @@ const hidColumns: string[] = [
                        </div>
                        <div className="border border-gray-300 rounded-lg overflow-hidden dark:border-gray-600 flex items-center">
                          <div className="px-3 py-2 bg-gray-100 dark:bg-gray-700 border-r border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 font-medium"
-                          style={{ height: rowHeight , display: "flex", justifyContent: "center",  alignItems: "center"  }}
+                          style={{ height: isMobile? "40px" : rowHeight , display: "flex", justifyContent: "center",  alignItems: "center"  }}
                          >
                            ₹
                          </div>
@@ -3761,16 +3762,16 @@ const hidColumns: string[] = [
                            isLastColumn={false}
                            showBorder={false}
                            columnWidths={columnWidths}
-                           onChange={onChange}
+                           onChange={(v, c, r) => onChange(v, c, r, true)}
                            onKeyDown={onKeyDown}
                            handlRowKeyDown={handlRowKeyDown}
                            handleFocus={handleFocus}
                            handleBlur={handleBlur}
                            gridId={gridId}
                            zIndexController={55}
-                           details={formState.transaction.details} 
-                           blockUnitOnDecimalPoint={false} 
-                           applicationSettings={undefined} 
+                           details={formState.transaction.details}
+                           blockUnitOnDecimalPoint={false}
+                           applicationSettings={undefined}
                            nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
                              throw new Error("Function not implemented.");
                            }}
@@ -3792,7 +3793,7 @@ const hidColumns: string[] = [
                      {showMore && (
                        <div className="mt-4">
                          {formState.gridColumns.filter(x => x && x.visible == true && !["slNo", "action", ...hidColumns].includes(x.dataField??""))?.map((col, index) => (
-                           <div key={generateUniqueKey()} className="grid grid-cols-2 gap-3 items-center mb-3">
+                           <div key={`showMore_${col.dataField}`} className="grid grid-cols-2 gap-3 items-center mb-3">
                              <div className="text-sm text-gray-600 dark:text-gray-400">
                                {col.caption}
                              </div>
@@ -3803,9 +3804,9 @@ const hidColumns: string[] = [
 
                                  column={col as ColumnModel}
                                  item={formState.row ?? initialTransactionDetailData}
-                                 index={formState.itemPopup?.index ?? 0}
-                                 currentCell={currentCell}
-                                 setCurrentCell={setCurrentCell}
+                                 index={-1}
+                                 currentCell={undefined}
+                                 setCurrentCell={() => {}}
                                  formState={formState}
                                  appState={appState}
                                  gridFontSize={gridFontSize}
@@ -3816,21 +3817,21 @@ const hidColumns: string[] = [
                                  isLastColumn={false}
                                  showBorder={false}
                                  columnWidths={columnWidths}
-                                 onChange={onChange}
+                                 onChange={(v, c, r) => onChange(v, c, r, true)}
                                  onKeyDown={onKeyDown}
                                  handlRowKeyDown={handlRowKeyDown}
-                                 handleFocus={handleFocus}
-                                 handleBlur={handleBlur}
+                                 handleFocus={() => {}}
+                                 handleBlur={() => {}}
                                  gridId={gridId}
                                  zIndexController={55}
-                                 details={formState.transaction.details} 
-                                 blockUnitOnDecimalPoint={false} 
-                                 applicationSettings={undefined} 
+                                 details={formState.transaction.details}
+                                 blockUnitOnDecimalPoint={false}
+                                 applicationSettings={undefined}
                                  nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
                                    throw new Error("Function not implemented.");
                                  }}
                                />
-                             </div>                  
+                             </div>
                            </div>
                          ))}
                        </div>
@@ -3864,16 +3865,16 @@ const hidColumns: string[] = [
                            isLastColumn={false}
                            showBorder={false}
                            columnWidths={columnWidths}
-                           onChange={onChange}
+                           onChange={(v, c, r) => onChange(v, c, r, true)}
                            onKeyDown={onKeyDown}
                            handlRowKeyDown={handlRowKeyDown}
                            handleFocus={handleFocus}
                            handleBlur={handleBlur}
                            gridId={gridId}
                            zIndexController={55}
-                           details={formState.transaction.details} 
-                           blockUnitOnDecimalPoint={false} 
-                           applicationSettings={undefined} 
+                           details={formState.transaction.details}
+                           blockUnitOnDecimalPoint={false}
+                           applicationSettings={undefined}
                            nextCellFind={function (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]): { column: string; rowIndex: number; } | null {
                              throw new Error("Function not implemented.");
                            }}

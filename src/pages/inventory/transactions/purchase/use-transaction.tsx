@@ -623,10 +623,10 @@ export const useTransaction = (
         master: {
           ...transactionInitialData.master,
           voucherNumber: _voucherNumber,
-          voucherType: voucherType ?? formState.transaction.master.voucherType,
+          voucherType: voucherType || (formState.transaction.master.voucherType ?? ""),
           voucherPrefix:
-            voucherPrefix ?? formState.transaction.master.voucherPrefix,
-          voucherForm: formType ?? formState.transaction.master.voucherForm,
+            voucherPrefix || (formState.transaction.master.voucherPrefix ?? ""),
+          voucherForm: formType || (formState.transaction.master.voucherForm ?? ""),
         },
       };
     }
@@ -635,10 +635,10 @@ export const useTransaction = (
       vch.master = {
         ...vch.master,
         voucherNumber: _voucherNumber,
-        voucherType: voucherType ?? formState.transaction.master.voucherType,
+        voucherType: voucherType || (formState.transaction.master.voucherType ?? ""),
         voucherPrefix:
-          voucherPrefix ?? formState.transaction.master.voucherPrefix,
-        voucherForm: formType ?? formState.transaction.master.voucherForm,
+          voucherPrefix || (formState.transaction.master.voucherPrefix ?? ""),
+        voucherForm: formType || (formState.transaction.master.voucherForm ?? ""),
         invTransactionMasterID: ["GRN", "PO", "SO"].includes(loadVType ?? "")
           ? null
           : vch.master.invTransactionMasterID,

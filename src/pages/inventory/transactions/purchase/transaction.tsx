@@ -1555,8 +1555,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
 
   const _purchaseGridCol: ColumnModel[] = purchaseGridCol(applicationSettings, userSession
-    , voucherType ?? formState.transaction.master.voucherType
-    , formType ?? formState.transaction.master.voucherForm, t, formState) ?? []
+    , voucherType || (formState.transaction.master.voucherType ?? "")
+    , formType || (formState.transaction.master.voucherForm ?? ""), t, formState) ?? []
   // const [invoiceNo, setInvoiceNo] = useState<number>(3); // Default Invoice No.
   // const [date, setDate] = useState<string>("2024-09-23"); // Default Date
 

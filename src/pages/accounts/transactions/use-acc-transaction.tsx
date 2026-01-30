@@ -490,10 +490,10 @@ export const useAccTransaction = (
     const params: Record<any, any> = {
       VoucherNumber: _voucherNumber, // Ensuring it's always a string
       voucherPrefix:
-        voucherPrefix ?? (formState.transaction?.master?.voucherPrefix || ""),
+        voucherPrefix || (formState.transaction?.master?.voucherPrefix || ""),
       voucherType:
-        voucherType ?? (formState.transaction?.master?.voucherType || ""),
-      formType: formType ?? (formState.transaction?.master?.formType || ""),
+        voucherType || (formState.transaction?.master?.voucherType || ""),
+      formType: formType || (formState.transaction?.master?.formType || ""),
       MannualInvoiceNumber: manualInvoiceNumber ?? "", // Convert undefined to an empty string or appropriate string value
       SearchUsingMannualInvNo: usingManualInvNumber, // Convert boolean to string
     };
@@ -509,10 +509,10 @@ export const useAccTransaction = (
         master: {
           ...accTransactionInitialData.master,
           voucherNumber: _voucherNumber,
-          voucherType: voucherType ?? formState.transaction.master.voucherType,
+          voucherType: voucherType || (formState.transaction.master.voucherType??""),
           voucherPrefix:
-            voucherPrefix ?? formState.transaction.master.voucherPrefix,
-          formType: formType ?? formState.transaction.master.formType,
+            voucherPrefix || (formState.transaction.master.voucherPrefix??""),
+          formType: formType || (formState.transaction.master.formType??""),
         },
       };
     }
